@@ -4,6 +4,8 @@ public static partial class BackendChecks
 {
     private static void GeneralCasts(World world, SubViewport root)
     {
+        using var trace = PhysicsAllocationTrace.Open(world.PhysicsBackendName == "GPU" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, 0x1_0000_0000UL);
+        ulong scenario = 1;
         using var rectangle = new RectangleShape { Size = new(2, 2) };
         using var capsule = new CapsuleShape { Radius = 1, Height = 6 };
         using var segment = new SegmentShape { A = new(0, -2), B = new(0, 2) };
@@ -23,9 +25,16 @@ public static partial class BackendChecks
                     var extent = shape == segment || shape == concave ? 0 : 1;
                     var analytic = (10f - extent - (queryShape == probe ? 1 : 0)) / 20;
                     Verify(); for (var i = 0; i < 128; i++) Verify(); Collect();
-                    var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-                    for (var i = 0; i < 128; i++) Verify();
-                    own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
+                    var tag = trace?.Tag(scenario++) ?? 0; trace?.Begin(tag);
+                    long own, all;
+                    try
+                    {
+                        own = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+                        for (var i = 0; i < 128; i++) Verify();
+                        own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;
+                    }
+                    finally { trace?.End(); }
+                    if (trace is not null) Console.WriteLine($"General cast trace {tag}: {world.PhysicsBackendName}, {queryShape.GetType().Name}/{shape.GetType().Name}, owner/all={own}/{all} B.");
                     Check(own == 0 && all == 0, $"General geometric casts allocate {own}/{all} B");
                     void Verify()
                     {

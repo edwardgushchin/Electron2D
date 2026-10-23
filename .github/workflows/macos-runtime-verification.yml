@@ -1,4 +1,5 @@
 name: macOS runtime verification
+run-name: macOS ${{ inputs.allocation_trace && 'allocation diagnostics' || 'runtime verification' }}
 
 on:
   workflow_dispatch:
@@ -7,6 +8,10 @@ on:
         description: Workflow run containing audited macOS native packages
         required: true
         type: string
+      allocation_trace:
+        description: Diagnose allocations with a calibrated native profiler; does not replace an untraced gate
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -71,6 +76,14 @@ jobs:
           test "$(arch -x86_64 /usr/bin/uname -m)" = x86_64
       - name: Publish the complete test runner
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r '${{ matrix.rid }}' --self-contained true -o bin/diagnostics/runner --nologo
+      - name: Prepare calibrated allocation diagnostics
+        if: inputs.allocation_trace
+        run: |
+          clang++ -std=c++17 -O2 -dynamiclib -pthread -arch '${{ matrix.rid == 'osx-x64' && 'x86_64' || 'arm64' }}' tools/ci/managed_allocation_trace.cpp -o bin/diagnostics/libManagedAllocationTrace.dylib
+          codesign --force --sign - bin/diagnostics/libManagedAllocationTrace.dylib
+          lipo -info bin/diagnostics/libManagedAllocationTrace.dylib
+          dotnet publish tools/ci/managed-allocation/Calibration.csproj -c Release -r '${{ matrix.rid }}' --self-contained true -o bin/diagnostics/calibration-runner --nologo
+          python3 -B tools/ci/test_managed_allocation_trace.py bin/diagnostics/libManagedAllocationTrace.dylib bin/diagnostics/calibration-runner/Calibration bin/diagnostics/allocation-calibration
       - name: Check platform input and fresh-process contact history
         id: focused
         continue-on-error: true
@@ -83,12 +96,21 @@ jobs:
           ELECTRON2D_TEST_TEXT_PARAGRAPH=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/text-paragraph.log
           ELECTRON2D_TEST_LINK=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/link-button.log
           ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-history.log
-      - name: Run the complete untraced suite
+      - name: Run the complete ${{ inputs.allocation_trace && 'profiled' || 'untraced' }} suite
         id: fixture
+        if: inputs.allocation_trace || steps.focused.outcome == 'success'
         continue-on-error: true
         run: |
           set -o pipefail
           mkdir -p bin/diagnostics
+          if [[ '${{ inputs.allocation_trace }}' == true ]]; then
+            umask 077
+            export CORECLR_ENABLE_PROFILING=1
+            export CORECLR_PROFILER='{4CB0917C-5E03-4787-83BC-98C86DC7BE4C}'
+            export CORECLR_PROFILER_PATH="$PWD/bin/diagnostics/libManagedAllocationTrace.dylib"
+            export ELECTRON2D_POINT_ALLOCATION_TRACE="$CORECLR_PROFILER_PATH"
+            export E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/full-allocation.trace"
+          fi
           bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/full-runtime.log
           grep -Fx 'Electron2D checks passed.' bin/diagnostics/full-runtime.log
       - uses: actions/upload-artifact@v4
@@ -96,6 +118,19 @@ jobs:
         with:
           name: macos-runtime-${{ matrix.rid }}
           path: bin/diagnostics/*.log
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.allocation_trace
+        with:
+          name: macos-allocation-${{ matrix.rid }}
+          path: |
+            bin/diagnostics/full-allocation.trace.*
+            bin/diagnostics/allocation-calibration/
+            bin/diagnostics/libManagedAllocationTrace.dylib
+            bin/diagnostics/runner/System.Private.CoreLib.dll
+            bin/diagnostics/runner/Electron2D.dll
+            bin/diagnostics/runner/Electron2D.Tests.dll
+            bin/diagnostics/runner/PhysicsBackendExtension.Consumer.dll
           if-no-files-found: error
       - name: Preserve the full-suite failure
         if: steps.fixture.outcome == 'failure' || steps.focused.outcome == 'failure'

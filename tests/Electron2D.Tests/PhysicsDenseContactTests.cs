@@ -110,6 +110,7 @@ internal static class PhysicsDenseContactTests
 
     private static void Verify(PhysicsServer.Backend from, PhysicsServer.Backend to, bool raw, bool separate)
     {
+        using var trace = PhysicsAllocationTrace.Open(to, 0x2_0000_0000UL);
         using var a = new Rig(from, raw, false); using var b = new Rig(to, raw, true);
         var before = a.View.LinearVelocity; a.Tick();
         var impulse = a.Contacts(Slots);
@@ -134,9 +135,16 @@ internal static class PhysicsDenseContactTests
         for (var i = 0; i < 96; i++) Cycle();
         GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers();
         for (var i = 0; i < 32; i++) Cycle();
-        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
-        for (var i = 0; i < 64; i++) Cycle();
-        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        var tag = trace?.Tag(1) ?? 0; trace?.Begin(tag);
+        long owner, all;
+        try
+        {
+            owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 64; i++) Cycle();
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        }
+        finally { trace?.End(); }
+        if (trace is not null) Console.WriteLine($"Dense contact trace {tag}: {from}->{to}, raw={raw}, separate={separate}, owner/all={owner}/{all} B.");
         Check(owner == 0 && all == 0, $"Dense capture/transport/apply/replay allocated owner/all-thread {owner}/{all} bytes.");
         Check(a.Contacts(Slots).Y < -.5f && b.Contacts(Slots).Y < -.5f, "Both dense continuations still carry the real downward load after measurement.");
         Console.WriteLine($"Dense contacts {from}->{to}, raw={raw}, separate={separate}: {Slots} local slots, momentum/caps/identity/imported events; 64 warmed cycles owner/all-thread={owner}/{all}, packet={sent.GetEncodedSize()} bytes.");

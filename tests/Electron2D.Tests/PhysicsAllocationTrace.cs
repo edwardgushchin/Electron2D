@@ -13,9 +13,16 @@ internal sealed class PhysicsAllocationTrace : IDisposable
     private readonly nint _contextLibrary, _contextSnapshot;
     private readonly ulong[]? _frameContexts;
     private readonly long[] _frameOwners = new long[129];
-    private readonly ulong _base = 1_000_000UL + (ulong)Interlocked.Increment(ref _runs) * 1000;
-    private unsafe PhysicsAllocationTrace(nint library)
+    private readonly ulong _base;
+    private unsafe PhysicsAllocationTrace(nint library, ulong tagDomain)
     {
+        var assemblyDomain = typeof(PhysicsAllocationTrace).Assembly.GetName().Name switch
+        {
+            "Electron2D.Tests" => 0UL,
+            "PhysicsBackendExtension.Consumer" => 0x1_0000_0000_0000UL,
+            _ => throw new InvalidOperationException("Allocation tracing needs a unique assembly tag domain.")
+        };
+        _base = assemblyDomain + tagDomain + 1_000_000UL + (ulong)Interlocked.Increment(ref _runs) * 1000;
         _library = library;
         _begin = Marshal.GetDelegateForFunctionPointer<BeginTrace>(NativeLibrary.GetExport(library, "e2d_gc_trace_begin"));
         _end = Marshal.GetDelegateForFunctionPointer<EndTrace>(NativeLibrary.GetExport(library, "e2d_gc_trace_end"));
@@ -35,18 +42,20 @@ internal sealed class PhysicsAllocationTrace : IDisposable
             catch { NativeLibrary.Free(_contextLibrary); throw; }
         }
     }
-    internal static PhysicsAllocationTrace? Open(PhysicsServer.Backend backend)
+    internal static PhysicsAllocationTrace? Open(PhysicsServer.Backend backend, ulong tagDomain = 0)
     {
         if (Environment.GetEnvironmentVariable("ELECTRON2D_POINT_ALLOCATION_TRACE") is not { } path) return null;
-        if (!OperatingSystem.IsLinux() || !RuntimeFeature.IsDynamicCodeSupported || Environment.GetEnvironmentVariable("CORECLR_ENABLE_PROFILING") != "1")
-            throw new InvalidOperationException("Point allocation tracing requires a Linux CoreCLR profiling process.");
+        if (!(OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()) || !RuntimeFeature.IsDynamicCodeSupported || Environment.GetEnvironmentVariable("CORECLR_ENABLE_PROFILING") != "1")
+            throw new InvalidOperationException("Allocation tracing requires a Linux or macOS CoreCLR profiling process.");
+        if (!OperatingSystem.IsLinux() && Environment.GetEnvironmentVariable("ELECTRON2D_POINT_CONTEXT_TRACE") is not null)
+            throw new InvalidOperationException("Allocation-context snapshots require the Linux runtime-specific helper.");
         if (Environment.GetEnvironmentVariable("E2D_TRACE_STATE") is not null)
             throw new InvalidOperationException("Point allocation tracing uses native begin/end markers, without shared-state overrides.");
         var library = NativeLibrary.Load(System.IO.Path.GetFullPath(path));
         PhysicsAllocationTrace? trace = null;
         try
         {
-            trace = new PhysicsAllocationTrace(library);
+            trace = new PhysicsAllocationTrace(library, tagDomain);
             trace.Begin(trace._base + 999); trace.End();
             trace.Controls(backend);
             return trace;

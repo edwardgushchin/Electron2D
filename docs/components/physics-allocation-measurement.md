@@ -594,3 +594,40 @@ snapshots and zero recursive callbacks; receipts are retained under ignored
 of later real allocations on that runtime. It does not attribute the earlier
 macOS 64-byte failures or certify target execution; those intervals lack object
 and allocation-context traces. The corrected target aggregate remains required.
+
+## General-cast allocation diagnostics on macOS (2026-10-23)
+
+An untraced macOS x64 aggregate at 23fed8a78 reports 0/64 owner/all-thread bytes
+in the public general-cast interval. That fixture already finishes its two
+collection/finalization passes after 128 warmup queries. The failed 128-query
+interval has no object trace and remains unattributed and rejected.
+
+A later untraced x64 aggregate at 16a65ea38 reports the same 0/64-byte delta in
+the 64-cycle dense contact snapshot/transport/replay interval. It also remains
+unattributed.
+
+GeneralCasts now opens the existing optional PhysicsAllocationTrace around each
+unchanged interval. It retains ten shape combinations, all numerical assertions
+and the strict 0/0 byte gate. A separate tag domain distinguishes this consumer
+assembly from root point-field controls. Dense contact measurements use another
+scenario domain around their unchanged 64 complete cycles. Assembly domains
+prevent collisions between independently compiled copies of the shared helper. Begin/end markers close on exceptions;
+geometry labels and counter deltas are printed after the interval. Ordinary runs
+leave profiling disabled. macOS supports object/stack tracing; native allocation-
+context snapshots retain their Linux-only runtime guard.
+
+The manual macOS workflow's allocation_trace input builds a matching native
+profiling library and self-contained calibration executable before a diagnostic
+full run. Calibration distinguishes one 64-byte object, two 32-byte objects and a
+worker's 0/64/64 owner/all-thread/worker bytes; two empty brackets, successful
+managed stacks, seven balanced native brackets and zero recursive callbacks are
+required. The shared second-finalization preparation is checked as well. The
+profiler records object sizes, thread identities, module/method tokens and stacks,
+without object contents. Callback output is flushed and I/O failure rejects the
+process. Native interface and library references are released by their owners.
+
+Trace, calibration, native-library and relevant managed-assembly receipts are
+uploaded separately from ordinary logs. They do not replace an untraced target
+gate, retrospectively attribute the 64 bytes or establish native allocator totals.
+The local Linux calibration and traced/untraced CPU/GPU compound controls provide
+helper evidence; matching macOS execution remains required.
