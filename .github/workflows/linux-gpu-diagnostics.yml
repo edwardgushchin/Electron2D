@@ -134,6 +134,44 @@ jobs:
           set -o pipefail
           bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/lavapipe.log
           grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/lavapipe.log
+      - name: Record cold device identity for SIMD controls
+        if: steps.baseline.outcome == 'failure'
+        run: |
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          path = Path('src/Servers/Physics/GPUPhysicsDevice.cs')
+          original = path.read_bytes()
+          source = original.decode()
+          marker, = [line for line in source.splitlines() if line.strip().startswith('DeviceName = SDL.GetStringProperty(')]
+          assert source.count(marker) == 1 and 'Diagnostic GPU:' not in source
+          newline = '\r\n' if b'\r\n' in original else '\n'
+          path.write_bytes(source.replace(marker, marker + newline + '            Console.WriteLine($"Diagnostic GPU: {Driver}, {DeviceName}");', 1).encode())
+          receipt = {'headSHA': os.environ['GITHUB_SHA'], 'source': str(path),
+                     'originalSHA256': hashlib.sha256(original).hexdigest(),
+                     'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest()}
+          Path('bin/diagnostics/simd-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          PY
+          dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
+          cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json
+          sha256sum bin/diagnostics/runner/Electron2D.dll bin/diagnostics/runner/Electron2D.Tests.dll > bin/diagnostics/simd-binaries.txt
+      - name: Compare Lavapipe SIMD widths with the complete compound fixture
+        if: steps.baseline.outcome == 'failure'
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          failed=0
+          for width in 128 256; do
+            log="bin/diagnostics/simd-$width.log"
+            set +e
+            LP_NATIVE_VECTOR_WIDTH="$width" GALLIUM_DUMP_CPU=1 MESA_SHADER_CACHE_DIR="$GITHUB_WORKSPACE/bin/diagnostics/cache-$width" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee "$log"
+            code=${PIPESTATUS[0]}
+            set -e
+            echo "Runtime exit: $code" | tee -a "$log"
+            if [[ "$code" -ne 0 ]] || ! grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' "$log"; then failed=1; fi
+            if ! grep -E "^Diagnostic GPU: vulkan, .* $width bits" "$log"; then failed=1; fi
+          done
+          exit "$failed"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

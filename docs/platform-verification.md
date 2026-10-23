@@ -109,6 +109,19 @@ The separate x64 full run `40019553649` reaches its 65-minute fixture deadline
 while continuing cold pipeline creation (artifact `12534012054`, 9,274 log lines).
 It has no zero exit or completion marker and does not establish full acceptance.
 
+Linux x64 job `120658099003` in matrix `40021281291` fails the complete compound
+CastRay check at `x=60`, velocity `(1200, 0)`, instead of stopping at the wall.
+Diagnostic [40029824468](https://github.com/edwardgushchin/Electron2D/actions/runs/40029824468)
+at `3bddfb403` reproduces the same failure in its original, traced and restored
+explicit-Lavapipe processes (artifact `12533903315`). The four substeps find
+6/2/4/2 candidate pairs and each returns status zero, fraction one. This excludes
+an empty broad phase as the immediate cause. The host has Mesa 26.0.8, LLVM 21
+and an AVX-512-capable AMD EPYC 9V45; prior local controls on the same Mesa version
+use a Ryzen 5700X without AVX-512 and do not explain the hosted failure. The next
+diagnostic compares 128/256-bit vector widths with the complete unchanged
+fixture, actual device identities, binary/source receipts and cold shader caches.
+CPU SIMD dependence remains a hypothesis; no ordinary driver policy is changed.
+
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute
 for those gates; no published 0.2.0-alpha release is claimed by these checks.

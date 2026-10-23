@@ -223,6 +223,57 @@ class Checks(unittest.TestCase):
         finally:
             os.chdir(previous)
 
+    def test_linux_simd_control_retains_raw_exits_driver_identity_and_both_workloads(self):
+        workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()
+        step = workflow.partition('      - name: Record cold device identity for SIMD controls')[2].split('\n      - ', 1)[0]
+        inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
+        code = '\n'.join(line[10:] for line in inline.splitlines())
+        step = workflow.partition('      - name: Compare Lavapipe SIMD widths with the complete compound fixture')[2].split('\n      - ', 1)[0]
+        self.assertIn("if: steps.baseline.outcome == 'failure'", step)
+        inline = step.partition('        run: |\n')[2]
+        command = '\n'.join(line[10:] for line in inline.splitlines())
+        path = Path('src/Servers/Physics/GPUPhysicsDevice.cs')
+        original = (rids.ROOT / path).read_bytes().replace(b'\r\n', b'\n')
+        previous = Path.cwd()
+        try:
+            with tempfile.TemporaryDirectory(prefix='e2d SIMD control ') as directory:
+                os.chdir(directory)
+                path.parent.mkdir(parents=True)
+                runner = Path('bin/diagnostics/runner/Electron2D.Tests')
+                runner.parent.mkdir(parents=True)
+                for newline in (b'\n', b'\r\n'):
+                    before = original.replace(b'\n', newline); path.write_bytes(before)
+                    with patch.dict(os.environ, GITHUB_SHA='self-check'):
+                        exec(compile(code, 'linux-simd-identity', 'exec'), {})
+                    after = path.read_bytes()
+                    self.assertEqual(after.count(b'Diagnostic GPU:'), 1)
+                    self.assertEqual(b'\r\n' in after, newline == b'\r\n')
+                    receipt = json.loads(Path('bin/diagnostics/simd-source.json').read_text())
+                    self.assertEqual(receipt['originalSHA256'], hashlib.sha256(before).hexdigest())
+                    self.assertEqual(receipt['actualSHA256'], hashlib.sha256(after).hexdigest())
+                    with self.assertRaises(AssertionError): exec(compile(code, 'linux-simd-identity', 'exec'), {})
+                    self.assertEqual(path.read_bytes(), after)
+                runner.write_text('#!/usr/bin/env python3\nimport os\n'
+                    'print("Diagnostic GPU: vulkan, llvmpipe (LLVM, " + os.environ.get("FAKE_WIDTH", os.environ["LP_NATIVE_VECTOR_WIDTH"]) + " bits)")\n'
+                    'print("cache=" + os.environ["MESA_SHADER_CACHE_DIR"])\n'
+                    'print("cpu=" + os.environ["GALLIUM_DUMP_CPU"])\n'
+                    'if os.environ["FAKE_MARKER"] == "1": print("Compound GPU: transformed slots, gaps and disabled indices passed.")\n'
+                    'raise SystemExit(int(os.environ["FAKE_EXIT"]))\n')
+                runner.chmod(0o755)
+                for exit_code, marker, fake_width, expected in ((0, '1', '', 0), (7, '1', '', 1), (0, '0', '', 1), (0, '1', '999', 1)):
+                    env = dict(os.environ, GITHUB_WORKSPACE=directory, FAKE_EXIT=str(exit_code), FAKE_MARKER=marker)
+                    if fake_width: env['FAKE_WIDTH'] = fake_width
+                    else: env.pop('FAKE_WIDTH', None)
+                    result = subprocess.run(['bash', '-e', '-o', 'pipefail', '-c', command], env=env, capture_output=True)
+                    self.assertEqual(result.returncode, expected, result.stderr.decode())
+                    for width in (128, 256):
+                        log = Path(f'bin/diagnostics/simd-{width}.log').read_text()
+                        self.assertIn(f'Runtime exit: {exit_code}', log)
+                        self.assertIn(f'cache={directory}/bin/diagnostics/cache-{width}', log)
+                        self.assertIn('cpu=1', log)
+        finally:
+            os.chdir(previous)
+
     def test_tls_diagnostic_uses_the_registered_arm64_host_and_prerequisites(self):
         workflow = (rids.ROOT / '.github/workflows/linux-tls-diagnostics.yml').read_text()
         row = next(row for row in rids.matrix() if row['rid'] == 'linux-arm64')
