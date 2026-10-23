@@ -96,6 +96,19 @@ same compound, joint and motion cohorts with app-local WARP 1.0.21 and confirms
 its actual loaded identity. That control and ordinary target acceptance remain
 pending; neither an exception location nor a driver version proves root cause.
 
+That paired ARM64 run, `40027608406` at `eaa144311`, fails all three raw focused
+exits with `0xC0000005`; the full executable is correctly skipped. Artifact
+`12533368686` confirms actual app-local WARP 1.0.21 selection and unchanged motion
+source hashes. Its CDB artifact `12534315453` reaches
+`UMDevice::CopyDescriptorsSimple`. Native reflection and SDL's descriptor-copy
+path expose a host mismatch: the first three motion stages declare three
+writable buffers but were submitted in a four-binding pass. The host now binds
+three until final output, which retains four. Corrected ARM64 and final ordinary
+matrix execution remain required.
+The separate x64 full run `40019553649` reaches its 65-minute fixture deadline
+while continuing cold pipeline creation (artifact `12534012054`, 9,274 log lines).
+It has no zero exit or completion marker and does not establish full acceptance.
+
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute
 for those gates; no published 0.2.0-alpha release is claimed by these checks.

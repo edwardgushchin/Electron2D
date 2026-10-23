@@ -42,7 +42,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int[] _motionQueryCounts = [];
 
     /// <summary>Tests each body's shapes at a supplied pose, including recovery and first impact; the live bodies stay unchanged.</summary>
-    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear. Portable geometry returns both contact snapshots by value. Portable recovery projects retained planes after the geometry scan returns. Each portable recovery pass retains its reduction and convergence state in the result prefix across geometry calls. Portable translation starts with a fresh full-motion bracket after recovery, retaining it across candidate calls in the existing result prefix. Final rest sampling retains the deepest accepted contact there before publishing the result. A moving one-way obstacle extends recovery depth by its linear approach over the supplied last-step duration, defaulting to the retained simulation tick.</remarks>
+    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear. Portable geometry returns both contact snapshots by value. Portable recovery projects retained planes after the geometry scan returns. Ordered native passes bind three writable buffers until final output binds the center buffer as the fourth. Each portable recovery pass retains its reduction and convergence state in the result prefix across geometry calls. Portable translation starts with a fresh full-motion bracket after recovery, retaining it across candidate calls in the existing result prefix. Final rest sampling retains the deepest accepted contact there before publishing the result. A moving one-way obstacle extends recovery depth by its linear approach over the supplied last-step duration, defaulting to the retained simulation tick.</remarks>
     internal void TestMotion(ReadOnlySpan<MotionQuery> queries, ReadOnlySpan<ulong> excludedBodies, ReadOnlySpan<ulong> excludedObjects, Span<MotionQueryResult> results, float? lastStep = null)
     {
         EnsureAccess();
@@ -106,7 +106,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ReadOnlySpan<byte> order = [0, 1, 1, 1, 2, 3];
         ExecuteQueries<MotionQueryInput, MotionQueryResult>(_motionQueryInputs.AsSpan(0, queries.Length), _motionPayload.AsSpan(0, at), _motionQueryCounts, results, queries.Length,
             ordered ? _motionQueryPipelines : _motionQueryPipelines.AsSpan(0, 1), ordered ? "PhysicsResidentMotionQueries" : "PhysicsResidentMotionQueries.comp.spv",
-            centers: true, scratchBytesPerQuery: 64 * 16, pipelineMask: ordered ? 15u : 1u, dependentPasses: ordered, pipelineOrder: ordered ? order : default);
+            centers: true, scratchBytesPerQuery: 64 * 16, pipelineMask: ordered ? 15u : 1u, orderedMotion: ordered, pipelineOrder: ordered ? order : default);
         for (var i = 0; i < queries.Length; i++)
             if (_motionQueryCounts[i] == 0) results[i] = new() { TravelRemainder = new(queries[i].Motion.X, queries[i].Motion.Y, 0, 0), Fractions = new(1, 1, 0, 0) };
     }

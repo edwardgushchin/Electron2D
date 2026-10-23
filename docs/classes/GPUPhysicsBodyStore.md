@@ -17,8 +17,11 @@ control and separates local checks from target acceptance of the return boundary
 Portable recovery projects its retained planes from the main stage after the
 geometry scan returns, preserving the same formula and device passes. The
 Windows trace reaches accepted planes but skips the former in-scan projection;
-ordinary Windows joint and functional-motion preflights now pass with the new
+ordinary Windows x64 joint and functional-motion preflights now pass with the new
 call boundary. Full executable and final-source platform acceptance remain open.
+Ordered motion binds three writable buffers for recovery/translation and four
+for final output, matching native reflection. The ARM64 driver control exposed
+the former extra descriptor; corrected target execution remains required.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one

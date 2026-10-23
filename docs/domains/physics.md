@@ -7,8 +7,11 @@ translation fractions after recovery instead of carrying unused fractions throug
 recovery passes. Existing iteration/transfer limits and public declarations stay
 unchanged; the component distinguishes the Windows failure from target acceptance.
 Portable recovery invokes its unchanged projection after the geometry scan;
-ordinary Windows joint/motion preflights pass after a trace reached contacts but
+ordinary Windows x64 joint/motion preflights pass after a trace reached contacts but
 not projection. Complete native and final-source platform acceptance remain open.
+Ordered motion now matches each stage's reflected writable prefix: three buffers
+for recovery/translation and four for final output. The ARM64 descriptor-copy
+failure and corrected target gate are tracked in the linked component.
 
 [Resident shape-query specialization](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 compiles all four operations independently while retaining mixed batches in one

@@ -121,7 +121,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Array.Resize(ref _queryReadbackLimits, capacity); Array.Resize(ref _queryFound, capacity);
     }
     private void ExecuteQueries<TInput, THit>(ReadOnlySpan<TInput> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<THit> hits,
-        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1, bool dependentPasses = false, ReadOnlySpan<byte> pipelineOrder = default) where TInput : unmanaged where THit : unmanaged
+        int total, Span<RenderHandle?> pipelines, string shader, bool centers = false, int scratchBytesPerQuery = 0, uint pipelineMask = 1, bool orderedMotion = false, ReadOnlySpan<byte> pipelineOrder = default) where TInput : unmanaged where THit : unmanaged
     {
         PrepareQuerySpatial();
         if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); _queryFound.AsSpan(0, queries.Length).Clear(); return; }
@@ -177,7 +177,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[4];
             outputs[0] = new() { Buffer = _queryOutputGPU!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _queryCountsGPU!.DangerousGetHandle() }; outputs[2] = new() { Buffer = _queryStatus.DangerousGetHandle() };
             if (centers) outputs[3] = new() { Buffer = _centers!.DangerousGetHandle() };
-            var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers ? 4u : 3u);
+            // Ordered motion uses the center binding only in its final stage.
+            var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers && !orderedMotion ? 4u : 3u);
             if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident queries");
             var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
                 _nodesGPU!.DangerousGetHandle(), _queryMappingGPU!.DangerousGetHandle(), _queryInputGPU!.DangerousGetHandle(), _queryExcludedGPU!.DangerousGetHandle() };
@@ -187,10 +188,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 var i = pipelineOrder.IsEmpty ? pass : pipelineOrder[pass];
                 if ((pipelineMask & (1u << i)) != 0)
                 {
-                    if (dependentPasses && pass > 0)
+                    if (orderedMotion && pass > 0)
                     {
                         SDL.EndGPUComputePass(compute);
-                        compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers ? 4u : 3u);
+                        compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, centers && i == 3 ? 4u : 3u);
                         if (compute == 0) throw GPUPhysicsDevice.Failure("begin dependent resident query stage");
                     }
                     SDL.BindGPUComputePipeline(compute, pipelines[i]!.DangerousGetHandle());

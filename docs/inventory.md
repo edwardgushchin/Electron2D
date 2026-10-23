@@ -11,8 +11,11 @@ iteration limits and public declarations remain; [verification](components/gpu-r
 distinguishes local execution from Windows/Metal acceptance. Translation owns the
 fresh motion bracket; recovery no longer transports unused fractions.
 Portable recovery projects its retained planes after scan returns, without adding
-types, resources or device passes. Ordinary Windows joint/motion preflights pass;
+types, resources or device passes. Ordinary Windows x64 joint/motion preflights pass;
 the complete native and final-source gates remain open.
+Ordered motion uses exactly three writable bindings before its four-binding final
+stage. This corrects descriptor submission without changing resource ownership,
+types or public declarations; corrected ARM64 execution remains required.
 
 [GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) uses four operation-specific
 shape-query pipelines, each with Vulkan and portable modules from one source.

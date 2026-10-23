@@ -115,9 +115,25 @@ module retains SHA-256
 All five modules retain eight readonly buffers, one uniform and 64x1x1 workgroups.
 Optimization removes the unused center binding from the first three portable
 stages, which reflect three writable buffers; final output and ordinary Vulkan
-reflect four. Host storage, binding positions and final result size are unchanged.
+reflect four. Ordered host passes now bind exactly those reflected prefixes:
+three for each recovery/translation pass and four for final output. Host storage,
+binding positions, six passes and final result size are unchanged.
 Generation checks pass include invalidation, phase separation, cleanup and
 fresh-consumer embedding. These are local checks, not Windows/Metal acceptance.
+
+Windows ARM64 control [40027608406](https://github.com/edwardgushchin/Electron2D/actions/runs/40027608406)
+at `eaa144311` confirms app-local WARP 1.0.21 but all three complete focused
+cohorts exit `0xC0000005` (artifact `12533368686`). Its CDB replay reaches
+`UMDevice::CopyDescriptorsSimple` (artifact `12534315453`). The former host opened
+every motion pass with four writable buffers, although the first three modules
+reflect only three. SDL 3.4.18's
+[D3D12 binding code](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/gpu/d3d12/SDL_gpu_d3d12.c#L5134-L5144)
+initializes the pipeline's descriptor prefix but copies the pass's count. Matching
+both counts removes that uninitialized descriptor. Corrected ARM64 and complete
+ordinary target execution remain required; selecting the newer driver alone did
+not resolve the failure. All eight shape-query modules reflect four writable
+buffers, and ordinary point/ray queries reflect three; their binding counts stay
+unchanged.
 
 ## Portable recovery state
 
