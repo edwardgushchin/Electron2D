@@ -26,6 +26,43 @@ import select_lavapipe
 
 
 class Checks(unittest.TestCase):
+    def test_windows_motion_probe_preserves_default_shader_and_reports_device_state(self):
+        workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
+        step = workflow.partition('      - name: Record source and trace cold pipeline preparation')[2].split('\n      - ', 1)[0]
+        inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
+        code = '\n'.join(line[10:] for line in inline.splitlines())
+        names = ('src/Servers/Physics/GPUPhysicsDevice.cs', 'src/Servers/Rendering/ShaderCompiler.cs',
+                 'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',
+                 'src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
+        originals = {name: (rids.ROOT / name).read_bytes().replace(b'\r\n', b'\n') for name in names}
+        previous = Path.cwd()
+        try:
+            with tempfile.TemporaryDirectory(prefix='e2d motion probe ') as directory:
+                os.chdir(directory)
+                for compiler in ('dxil', 'dxbc'):
+                    for newline in (b'\n', b'\r\n'):
+                        with self.subTest(compiler=compiler, newline=newline):
+                            for name, original in originals.items():
+                                path = Path(name); path.parent.mkdir(parents=True, exist_ok=True)
+                                path.write_bytes(original.replace(b'\n', newline))
+                            with patch.dict(os.environ, RECOVERY_COMPILER=compiler, GITHUB_SHA='self-check'), redirect_stdout(StringIO()):
+                                exec(compile(code, 'windows-motion-workflow', 'exec'), {})
+                            query = Path(names[2]).read_text()
+                            shader = Path(names[3]).read_text()
+                            if compiler == 'dxil':
+                                self.assertEqual(query, originals[names[2]].decode())
+                                self.assertEqual(shader, originals[names[3]].decode())
+                            else:
+                                self.assertEqual(query.count('Motion stage receipt:'), 1)
+                                self.assertIn('result.objectID.zw=fractions.xy;', shader)
+                                self.assertIn('result.owner.w=state.w|(blocked?256u:0u)|(rested?65536u:0u);', shader)
+                            receipt = json.loads(Path('bin/diagnostics/compiler-source.json').read_text())
+                            self.assertEqual(receipt['actualSHA256'], hashlib.sha256(Path(names[0]).read_bytes()).hexdigest())
+                            self.assertEqual(receipt['headSHA'], 'self-check')
+        finally:
+            os.chdir(previous)
+        self.assertLess(workflow.index('name: windows-gpu-fixture'), workflow.index('name: Capture native exception context'))
+
     def test_headless_linux_selects_one_installed_lavapipe_driver(self):
         for workflow in ('rid.yml', 'linux-tls-diagnostics.yml', 'linux-gpu-diagnostics.yml'):
             self.assertIn('python -B tools/ci/select_lavapipe.py', (rids.ROOT / '.github/workflows' / workflow).read_text())

@@ -114,6 +114,23 @@ jobs:
               assert text.count(call) == 1
               kinds = 'name is "PhysicsResidentMotionQueries0.comp.portable.spv" or "PhysicsResidentMotionQueries1.comp.portable.spv" or "PhysicsResidentMotionQueries2.comp.portable.spv" or "PhysicsResidentMotionQueries3.comp.portable.spv"'
               path.write_text(text.replace(call, 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray(), ' + kinds + ')'))
+              shader = Path('src/Servers/Physics/Shaders/PhysicsResidentMotionQueries.comp.glsl')
+              text = shader.read_text()
+              result = 'if(rested)result=restResult;else safe=unsafeFraction=1;'
+              assert text.count(result) == 1
+              probe = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
+              result.owner.w=state.w|(blocked?256u:0u)|(rested?65536u:0u);
+              result.objectID.zw=fractions.xy;
+              #endif'''
+              shader.write_text(text.replace(result, result + '\n' + probe))
+              query = Path('src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs')
+              text = query.read_text()
+              returned = '        for (var i = 0; i < queries.Length; i++)\n            if (_motionQueryCounts[i] == 0)'
+              field = 'private int[] _motionQueryCounts = [];'
+              assert text.count(returned) == text.count(field) == 1
+              text = text.replace(field, field + '\n    private bool _motionProbeWritten;')
+              probe = '        if (!_motionProbeWritten) { _motionProbeWritten = true; Console.WriteLine($"Motion stage receipt: count={_motionQueryCounts[0]}, flags={results[0].Flags}, state={results[0].Padding}, incomingFractions=0x{results[0].Padding2:X16}, finalFractions={results[0].Fractions}, travel={results[0].TravelRemainder}"); }\n'
+              query.write_text(text.replace(returned, probe + returned))
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
           receipt = {'compiler': selection + ' motion; DXIL remaining kernels', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
@@ -146,6 +163,15 @@ jobs:
           if (!((Get-Content $log) -ccontains 'Compound GPU: transformed slots, gaps and disabled indices passed.')) {
               throw 'The compound completion marker is missing.'
           }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-gpu-fixture
+          path: |
+            bin/diagnostics/compiler-source.json
+            bin/diagnostics/warp-source.json
+            bin/diagnostics/compound.log
+          if-no-files-found: error
       - name: Capture native exception context
         if: steps.fixture.outcome == 'failure'
         continue-on-error: true
