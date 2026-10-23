@@ -34,13 +34,18 @@ Physics query/CCD compiler-profile changes must retain unchanged optimized Vulka
 
 An ARM64 Windows native crash reruns the same complete executable under CDB, without the historical DTLS-only selector. The diagnostic retains symbolic exception context/module identities and an eight-minute child deadline inside the ten-minute CI step. It cannot hide or replace the original failed full-suite status.
 
-The manual Windows GPU diagnostic records a timestamp before each cold pipeline
-creation in its temporary source copy, preserving original/instrumented source
-and compiler hashes. It compares the current DXIL path and the native convenience
-compiler with the operation-specific kernels. Its fresh compound fixture has a
+The manual Windows GPU diagnostic records timestamps before and after each cold
+pipeline creation in its temporary source copy, preserving original/instrumented
+source and compiler hashes. It exercises the current DXIL path after the native
+convenience compiler failed its separate controls. Its fresh compound fixture has a
 ten-minute deadline so a cold preparation stall can still reach CDB and artifact
 upload within the job deadline. Retired lifetime controls are not production fixes;
-both compiler controls retain current ownership and preserve the actual fixture failure.
+the current compiler retains production ownership and preserves the actual fixture failure.
+For a stalled CDB replay, the debugger interrupts only one exact executable child
+after six minutes and records every native thread stack at that breakpoint. The
+process is checked again through its opened handle before interruption, and the
+original eight-minute debugger budget still bounds cleanup. The PowerShell
+self-check rejects missing, ambiguous, foreign and reused process identities.
 
 The manual Linux TLS diagnostic runs the complete ARM64 executable with a separate
 native `pthread_key_create`/`pthread_key_delete` interposer. It records process,

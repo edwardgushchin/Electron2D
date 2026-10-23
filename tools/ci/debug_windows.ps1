@@ -1,6 +1,33 @@
 param([Parameter(Mandatory)][string]$Executable, [Parameter(Mandatory)][string]$Output,
       [ValidateSet('arm64', 'x64', 'x86')][string]$Architecture = 'arm64')
 $ErrorActionPreference = 'Stop'
+function Invoke-OwnedRuntimeBreak($Debugger, [string]$Executable) {
+    $children = @(Get-CimInstance Win32_Process -Filter "ParentProcessId = $($Debugger.Id)" -ErrorAction Stop |
+        Where-Object { $_.ParentProcessId -eq $Debugger.Id -and [string]::Equals($_.ExecutablePath, $Executable, [StringComparison]::OrdinalIgnoreCase) })
+    if ($children.Count -ne 1) { throw 'Cannot identify one owned runtime to interrupt.' }
+    $runtime = Get-Process -Id $children[0].ProcessId -ErrorAction Stop
+    try {
+        if (![string]::Equals($runtime.MainModule.FileName, $Executable, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'Owned runtime identity changed before interruption.'
+        }
+        if (!("Electron2DNativeDebug" -as [type])) {
+            Add-Type @'
+using System;
+using System.Runtime.InteropServices;
+public static class Electron2DNativeDebug {
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool DebugBreakProcess(IntPtr process);
+}
+'@
+        }
+        if (![Electron2DNativeDebug]::DebugBreakProcess($runtime.Handle)) {
+            throw "Owned runtime interruption failed: $([Runtime.InteropServices.Marshal]::GetLastWin32Error())."
+        }
+        Write-Host "Interrupted owned runtime $($runtime.Id) for all-thread stacks."
+    }
+    finally { $runtime.Dispose() }
+}
 $Executable = (Resolve-Path $Executable).Path
 New-Item -ItemType Directory -Force $Output | Out-Null
 $Output = (Resolve-Path $Output).Path
@@ -25,7 +52,7 @@ if (!(Test-Path $cdb)) { throw "Native $Architecture CDB is unavailable." }
 $commands = Join-Path $Output 'commands.txt'
 @'
 sxe -c ".ecxr; k; lm; q" 0xc0000374
-sxe -c ".ecxr; k; lm; q" bpe
+sxe -c "~* k; lm; q" bpe
 sxe -c ".ecxr; k; lm; q" av
 sxd -c2 ".ecxr; k; lm; q" ii
 sxd -c2 ".ecxr; k; lm; q" clr
@@ -34,6 +61,14 @@ g
 '@ | Set-Content -Encoding ascii $commands
 $log = Join-Path $Output 'runtime-cdb.log'
 $debugger = Start-Process -FilePath $cdb -ArgumentList @('-G', '-cf', "`"$commands`"", '-logo', "`"$log`"", "`"$Executable`"") -PassThru -NoNewWindow
-if (!$debugger.WaitForExit(480000)) { & taskkill /PID $debugger.Id /T /F; throw 'Native runtime debugger deadline.' }
+$watch = [Diagnostics.Stopwatch]::StartNew()
+try {
+    if (!$debugger.WaitForExit(360000)) {
+        if (!$debugger.HasExited) { Invoke-OwnedRuntimeBreak $debugger $Executable }
+        $remaining = [int][Math]::Max(1, 480000 - $watch.ElapsedMilliseconds)
+        if (!$debugger.WaitForExit($remaining)) { throw 'Native runtime debugger deadline.' }
+    }
+}
+finally { if (!$debugger.HasExited) { & taskkill /PID $debugger.Id /T /F } }
 if (!(Test-Path $log)) { throw 'CDB produced no diagnostic log.' }
 Get-Content $log

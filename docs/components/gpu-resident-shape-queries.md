@@ -100,9 +100,12 @@ Build-generation checks cover all eight module names, distinct operations/profil
 include invalidation, failure preservation, stale cleanup and fresh-consumer
 embedding. Target and full-suite acceptance remain open.
 
-The timed Windows DXIL control in run `39899286178` completed cold Intersect
-pipeline preparation in about 63 seconds, then entered Contacts preparation and
-did not complete within the ten-minute fixture deadline. The native convenience
+The timed Windows DXIL control in run `39899286178` reached Contacts after about
+63 seconds in the cold Intersect operation, then did not complete within the
+ten-minute fixture deadline. The original entry-only markers do not distinguish
+pipeline creation from its first dispatch and result completion. A separate
+ready marker and bounded all-thread native stacks now isolate that boundary.
+The native convenience
 compiler control failed the first transformed logical-slot result; its separate
 CDB replay entered `d3dcompiler_47!ArrayData::GetArrayLocationAndValue` again.
 Specialization therefore has local functional evidence but does not yet provide

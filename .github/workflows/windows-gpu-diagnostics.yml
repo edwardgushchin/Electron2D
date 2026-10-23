@@ -14,10 +14,6 @@ permissions:
 
 jobs:
   compound:
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler: [current, native]
     runs-on: windows-2025
     timeout-minutes: 30
     defaults:
@@ -27,7 +23,6 @@ jobs:
       RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
       DOTNET_TieredCompilation: '0'
       ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
-      DIAGNOSTIC_COMPILER: ${{ matrix.compiler }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
@@ -60,6 +55,9 @@ jobs:
               assert receipt['sourceSHA256'] == package.source_hash()
               assert receipt['minimumEngineVersion'] == receipt['version'] == package.configuration()['version']
           PY
+      - name: Verify owned debugger interruption
+        shell: pwsh
+        run: ./tools/ci/test_debug_windows.ps1
       - name: Record source and trace cold pipeline preparation
         run: |
           python - <<'PY'
@@ -72,19 +70,15 @@ jobs:
           assert original.count(observer) == 1
           newline = '\r\n' if b'\r\n' in original_bytes else '\n'
           trace = 'Console.WriteLine($"Cold GPU pipeline {DateTime.UtcNow:O}: {name}");'
-          path.write_bytes(original.replace(observer, trace + newline + '        ' + observer, 1).encode())
+          instrumented = original.replace(observer, trace + newline + '        ' + observer, 1)
+          finish = 'return new(ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray()), handle => SDL.ReleaseGPUComputePipeline(Device, handle), Handle);'
+          assert original.count(finish) == 1
+          ready = finish.replace('return new(', 'var pipeline = new RenderHandle(', 1) + newline + '        Console.WriteLine($"GPU pipeline ready {DateTime.UtcNow:O}: {name}");' + newline + '        return pipeline;'
+          path.write_bytes(instrumented.replace(finish, ready, 1).encode())
           compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
           compiler_bytes = compiler.read_bytes()
-          mode = os.environ['DIAGNOSTIC_COMPILER']
-          assert mode in ('current', 'native')
-          if mode == 'native':
-              source = compiler_bytes.decode()
-              first = source.index('                if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)')
-              end = '                finally { SDL.Free(compiled); }'
-              last = source.index(end, first) + len(end)
-              compiler.write_bytes((source[:first] + '                return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);' + source[last:]).encode())
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
-          receipt = {'compiler': mode, 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
+          receipt = {'compiler': 'current', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'originalCompilerSHA256': hashlib.sha256(compiler_bytes).hexdigest(),
@@ -111,7 +105,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: windows-gpu-diagnostics-${{ matrix.compiler }}
+          name: windows-gpu-diagnostics-current
           path: |
             bin/diagnostics/compiler-source.json
             bin/diagnostics/compound.log
