@@ -104,6 +104,7 @@ class Checks(unittest.TestCase):
         self.assertLess(workflow.index('name: windows-gpu-fixture'), workflow.index('name: Capture native exception context'))
         complete = workflow.partition('      - name: Run the complete untraced runtime suite')[2].split('\n      - ', 1)[0]
         self.assertNotIn('ELECTRON2D_TEST_', complete)
+        self.assertIn("if: steps.joints.outcome == 'success' && steps.motion.outcome == 'success'", complete)
         for selector in ('ELECTRON2D_TEST_GPU_JOINT_CONTRACT', 'ELECTRON2D_TEST_GPU_MOTION_QUERIES'):
             self.assertIn('finally { Remove-Item Env:' + selector + ' }', workflow)
         self.assertIn("steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'", workflow)

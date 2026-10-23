@@ -43,10 +43,14 @@ job budget while leaving time for CDB and artifact upload. Before the full run,
 two standalone existing selectors exercise the complete public joint and
 functional motion cohorts. Each selector is process-local and removed in
 `finally`; each raw exit/log is retained in an early focused artifact. Any focused
-failure remains a failed job even if the complete suite passes. These controls
-consume the same overall 90-minute job budget and do not shorten physical work.
-Historical DXBC,
-optimizer and result-lane source-copy controls are retired; their successful
+failure remains a failed job. The complete suite runs only after both focused
+outcomes succeed; a failed preflight cannot produce a green complete gate.
+These controls consume the same overall 90-minute job budget and do not shorten
+physical work. With `continue-on-error`, the API's step conclusion can be success
+after a failed native exit. Read the raw exit/log and preserved final job result,
+not that intermediate conclusion.
+
+Historical DXBC, optimizer and result-lane source-copy controls are retired; their successful
 focused results do not replace the complete production target gate.
 For a stalled CDB replay, the debugger interrupts only one exact executable child
 after six minutes and records every native thread stack at that breakpoint. The
@@ -61,8 +65,11 @@ Portable motion initializes bounds from its first vertex after the existing
 empty-geometry rejection, retaining the remaining vertex order. Translation loads
 and saves its bracket around every candidate, and final sampling retains accepted
 deeper contacts in the existing result prefix. Preserve the depth threshold,
-source slot, rejected keys, six device passes and single final readback. All four
-portable stages use offline optimization. Their complete target execution must
+source slot, rejected keys, six device passes and single final readback. Recovery
+retains plane/key counts, maximum depth, accepted/rejected pair flags, accumulated
+correction and convergence input in the existing prefix across geometry calls.
+The first two prefix words are phase-local scratch; final sampling replaces them
+with its actual contact. All four portable stages use offline optimization. Complete target execution must
 use the production shader source without diagnostic result-lane writes.
 
 Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu`

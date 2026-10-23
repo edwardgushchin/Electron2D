@@ -8,9 +8,11 @@ and complete target execution remain distinct acceptance evidence.
 Portable recovery carries recovery state only. Translation retains its bracket
 across candidate calls in the existing result prefix; final sampling retains the
 deepest accepted contact there before result publication. The four portable
-stages use offline optimization and first-vertex bounds. The linked component
-separates the passing instrumented compound fixture from pending complete target
-execution of this production port.
+stages use offline optimization and first-vertex bounds. Recovery also retains
+its reduction counts/depth, pair flags, correction and convergence input across
+geometry calls in the existing prefix. The linked component retains the native
+zero-recovery failure and separates local controls from pending target acceptance
+of this correction.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one

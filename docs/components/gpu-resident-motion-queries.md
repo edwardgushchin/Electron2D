@@ -118,6 +118,31 @@ reflect four. Host storage, binding positions and final result size are unchange
 Generation checks pass include invalidation, phase separation, cleanup and
 fresh-consumer embedding. These are local checks, not Windows/Metal acceptance.
 
+## Portable recovery state
+
+Raw focused logs from run 40006886721 at `1823f7745` confirm zero returned GPU
+recovery on the unmodified production shader. The joint fixture has zero remaining
+exceptions but reports no hit and zero travel, versus CPU travel 13.12215 and
+depth 1.9578487. The direct comparison independently returns zero travel from
+(0, 82), zero motion and no one-way policy, versus CPU (0, -1.8069474).
+Both native processes exit -532462766 (`0xE0434352`). Their intermediate API step
+conclusions are success because of `continue-on-error`; those conclusions are
+not successful tests. The raw errors and final failure policy remain authoritative.
+
+Portable recovery now retains plane/key counts, maximum depth and accepted/
+rejected pair flags in one existing prefix word, and its incoming correction in
+the next. The original 32-plane/key caps, geometric visits, priority projection,
+40% correction and four attempts remain. Each pass reloads the actual correction,
+recovered flag and rejected count before testing convergence and publishing the
+next phase. Final sampling replaces that phase-local prefix scratch with its
+actual contact. No buffer, host transfer or additional physical pass is introduced.
+This is a recovery-state correction awaiting its own native Windows/Metal gate;
+it does not establish a definitive driver/compiler root cause.
+Local forced-ordered joint, motion, compound and resident/public one-way cohorts
+pass with the correction, including their existing zero-byte intervals. The five
+modules retain their expected per-stage resource/workgroup reflection, and the
+ordinary Vulkan bytecode hash above remains unchanged. Native acceptance is pending.
+
 ## CPU corrections found by comparison
 
 Backend pieces of a large convex polygon previously produced opposite recovery

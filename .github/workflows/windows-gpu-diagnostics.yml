@@ -146,6 +146,7 @@ jobs:
           if-no-files-found: error
       - name: Run the complete untraced runtime suite
         id: fixture
+        if: steps.joints.outcome == 'success' && steps.motion.outcome == 'success'
         continue-on-error: true
         timeout-minutes: 65
         shell: pwsh

@@ -51,8 +51,19 @@ bool oneWayContact(Contact c);
 void retainRecovery(Contact c)
 {
     if(c.depth<=0||!oneWayContact(c))return;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+    uint recoveryAt=gl_GlobalInvocationID.x*8u;
+    recoveryCount=outputWords[recoveryAt].x;
+#endif
     vec4 plane=vec4(c.normal,c.depth,bodyB.surface.w);
-    if(recoveryCount<32u){WRITE_FLOAT(scratchStart+recoveryCount++,plane);return;}
+    if(recoveryCount<32u)
+    {
+        WRITE_FLOAT(scratchStart+recoveryCount++,plane);
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+        outputWords[recoveryAt].x=recoveryCount;
+#endif
+        return;
+    }
     uint shallowest=0u;
     [[dont_unroll]] for(uint j=1u;j<32u;j++)if(READ_FLOAT(scratchStart+j).z<READ_FLOAT(scratchStart+shallowest).z)shallowest=j;
     if(c.depth>READ_FLOAT(scratchStart+shallowest).z)WRITE_FLOAT(scratchStart+shallowest,plane);
@@ -226,6 +237,11 @@ void scan(uint phase)
 {
     bool recovering=phase==0u,resting=phase==2u;
     recoveryCount=0u;if(recovering)rejectedCount=0u;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+    uint recoveryAt=gl_GlobalInvocationID.x*8u;
+    outputWords[recoveryAt]=uvec4(0);
+    outputWords[recoveryAt+6u].z=0u;
+#endif
     float bestDepth=resting?min(length(q.motionMargin.xy),q.motionMargin.z*0.05):0;Result best;
     bool found=false;
     for(uint own=0u;own<q.body.w;own++)
@@ -254,6 +270,9 @@ void scan(uint phase)
                     {
                         uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;
                         bool accepted=false,invalid=false;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+                        outputWords[recoveryAt].w=0u;
+#endif
                         for(uint pa=0u;pa<na;pa++)for(uint pb=0u;pb<nb;pb++)
                         {
                             Hull a=hull(shapeA,ga,bodyA,pa),b=hull(shapeB,gb,bodyB,pb);
@@ -266,8 +285,18 @@ void scan(uint phase)
                                     Contact contact=point==0u?pairContact:pairSecond;
                                     if(!contact.valid||contact.depth<0)continue;
                                     if(resting&&blocked&&unsafeFraction>0&&ga.data.z!=6u&&gb.data.z!=6u&&dot2(contact.normal,q.motionMargin.xy)>0)contact.normal=-contact.normal;
-                                    if(!oneWayContact(contact)){invalid=true;continue;}
+                                    if(!oneWayContact(contact))
+                                    {
+                                        invalid=true;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+                                        outputWords[recoveryAt].w|=2u;
+#endif
+                                        continue;
+                                    }
                                     accepted=true;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+                                    outputWords[recoveryAt].w|=1u;
+#endif
                                     if(recovering)retainRecovery(contact);
 #if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
                                     uint restAt=gl_GlobalInvocationID.x*8u;
@@ -279,6 +308,8 @@ void scan(uint phase)
                                         outputWords[restAt+4u]=floatBitsToUint(restSample.pointNormal);
                                         outputWords[restAt+5u]=floatBitsToUint(restSample.velocityDepth);
                                     }
+#elif defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+                                    outputWords[recoveryAt].z=floatBitsToUint(max(uintBitsToFloat(outputWords[recoveryAt].z),contact.depth));
 #else
                                     if(contact.depth>bestDepth)
                                     {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}
@@ -298,18 +329,35 @@ void scan(uint phase)
 #endif
                             }
                         }
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+                        uvec4 recoveryState=outputWords[recoveryAt];
+                        rejectedCount=recoveryState.y;accepted=(recoveryState.w&1u)!=0u;invalid=(recoveryState.w&2u)!=0u;
+#endif
                         if(recovering&&invalid&&!accepted&&rejectedCount<32u)
+                        {
                             WRITE_UINT(scratchStart+32u+rejectedCount++,uvec4(shapeA.owner.zw,indexB,shapeB.policy.x));
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+                            outputWords[recoveryAt].y=rejectedCount;
+#endif
+                        }
                     }
                 }
             }
             while(at>1&&(at&1)!=0)at/=2;at=at==1?0:at+1;
         }
     }
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+    uvec4 recoveryState=outputWords[recoveryAt];
+    recoveryCount=recoveryState.x;rejectedCount=recoveryState.y;bestDepth=uintBitsToFloat(recoveryState.z);
+    outputWords[recoveryAt+6u].z=rejectedCount;
+#endif
     if(resting){rested=found;if(found)restResult=best;return;}
     if(recovering&&bestDepth>0)
     {
         recovered=true;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+        outputWords[recoveryAt+6u].w|=1u;
+#endif
         float maximum=0,scaledTotal=0;
         [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)maximum=max(maximum,READ_FLOAT(scratchStart+j).w);
         if(maximum==0)return;
@@ -322,7 +370,13 @@ void scan(uint phase)
             float weight=tiny?plane.w:relativePriority(plane.w,maximum)*(float(recoveryCount)/scaledTotal);
             if(depth>0.00001)correction+=plane.xy*(depth*0.4*weight);
         }
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+        recovery=uintBitsToFloat(outputWords[recoveryAt+6u].xy);
+#endif
         recovery+=correction;
+#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE < 2
+        outputWords[recoveryAt+6u].xy=floatBitsToUint(recovery);
+#endif
     }
 }
 void main()
@@ -346,7 +400,15 @@ void main()
     bodyA.pose.xy=q.pose.xy+recovery;
 #endif
 #if E2D_MOTION_STAGE < 2
-    if(!converged){vec2 before=recovery;scan(0u);converged=before==recovery;}
+    if(!converged)
+    {
+        outputWords[stateAt+1u].xy=floatBitsToUint(recovery);
+        outputWords[stateAt+6u]=uvec4(floatBitsToUint(recovery),rejectedCount,recovered?1u:0u);
+        scan(0u);
+        uvec4 recoveryState=outputWords[stateAt+6u];
+        recovery=uintBitsToFloat(recoveryState.xy);rejectedCount=recoveryState.z;recovered=(recoveryState.w&1u)!=0u;
+        converged=uintBitsToFloat(outputWords[stateAt+1u].xy)==recovery;
+    }
 #elif E2D_MOTION_STAGE == 2
     safe=unsafeFraction=1;motionShape=0u;blocked=false;
     outputWords[stateAt+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);
