@@ -82,6 +82,12 @@ Its complete runner saves a one-second native thread sample after five minutes
 without output, repeating only while its own child remains silent. Sampling
 failure is retained separately and cannot turn a failed or incomplete suite green.
 The original 90-minute job budget, zero exit and exact completion line remain.
+Joint-policy allocation diagnostics use domain `8UL << 32` around the original
+128 edit-active physical frames, with backend, host-GPU and separate-thread roles
+in the log. The existing `ELECTRON2D_TEST_PHYSICS_THREAD=1` selector repeats the
+complete CPU separate-thread cohort before the full macOS suite, both ordinarily
+and with calibrated object markers. Original warmups, counters and zero limits
+remain unchanged; a passing isolated cohort does not explain a failed aggregate.
 See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
 The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
 Compiler exceptions also record the first DWORD and one symbolic type pointer of

@@ -37,6 +37,19 @@ The macOS diagnostic captures both the standalone audio intervals and their
 later aggregate execution. The older failure still needs its own matching
 numeric/physical evidence; successful controls do not identify its producer.
 
+The next profiled cohort, run 39987153000 at `3fa842b13`, passes the complete
+ARM64 suite. Both architectures record four zero-byte audio intervals with no
+physical object events; each root trace has 5,108 balanced boundaries. ARM64 ends
+with `SHUTDOWN recursive:0`. The x64 root has no shutdown and its complete suite
+fails later in separate-thread `PhysicsJointPolicyTests.VerifyLifetime`, at
+2,784/19,336 owner/all-thread bytes. That interval had no physical marker, so its
+producer remains unattributed. The fixture now brackets its original counter
+interval through the existing recorder, domain `8UL << 32`, and logs backend,
+host-GPU and separate-thread roles before asserting the same zero-byte limits.
+Its 128 warm/128 measured frames, edits, thread/lifetime checks and collection
+policy are unchanged. The macOS workflow retains the existing full separate-thread
+CPU selector in ordinary and traced standalone controls before its full suite.
+
 The resting-body fixture drains the existing calibrated collection/finalization
 warmup before its first 64-frame counter interval. Its failure records both
 owner and all-thread bytes; the zero-byte assertions and physical frames remain.

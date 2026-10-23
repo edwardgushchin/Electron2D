@@ -6,7 +6,8 @@ internal sealed class PhysicsJointPolicyTests(bool gpu, PhysicsServer.Backend ba
     internal static void Run(PhysicsServer.Backend backend) => new PhysicsJointPolicyTests(false, backend).RunCore();
     private void RunCore()
     {
-        VerifyParametersAndPacking(); VerifyBias(gpu); VerifySoftness(gpu); VerifyLimits(gpu); VerifyFiniteSpringCaps(gpu); VerifyKinematicBudget(gpu); VerifyLifetime(gpu);
+        using var trace = PhysicsAllocationTrace.Open(backend, 8UL << 32);
+        VerifyParametersAndPacking(); VerifyBias(gpu); VerifySoftness(gpu); VerifyLimits(gpu); VerifyFiniteSpringCaps(gpu); VerifyKinematicBudget(gpu); VerifyLifetime(gpu, trace);
         Console.WriteLine($"Public joint policies passed on {(gpu ? "CPU host/GPU stages" : backend.ToString())}: defaults, bias, softness, force/correction caps, packing, lifecycle and allocation.");
     }
     private sealed class Rig : IDisposable
@@ -161,7 +162,7 @@ internal sealed class PhysicsJointPolicyTests(bool gpu, PhysicsServer.Backend ba
         Near(PhysicsServer.BodyGetTransform(r.A).Origin.X, 20, 0.003f, "The kinematic endpoint consumes its full authored interval");
         Near(r.Velocity.X, 1, 0.003f, "Kinematic path subdivisions do not multiply the joint force allowance");
     }
-    private void VerifyLifetime(bool gpu)
+    private void VerifyLifetime(bool gpu, PhysicsAllocationTrace? trace)
     {
         using var r = new Rig(gpu, backend); r.Pin(); PhysicsServer.JointSetBias(r.Joint, 0.3f); PhysicsServer.JointSetMaxBias(r.Joint, 5); PhysicsServer.JointSetMaxForce(r.Joint, 10); PhysicsServer.PinJointSetSoftness(r.Joint, 2);
         Reject<InvalidOperationException>(() => Task.Run(() => PhysicsServer.JointSetMaxForce(r.Joint, 0)).GetAwaiter().GetResult());
@@ -174,11 +175,19 @@ internal sealed class PhysicsJointPolicyTests(bool gpu, PhysicsServer.Backend ba
         PhysicsServer.BodySetCanSleep(r.B, false);
         for (var i = 0; i < 128; i++) { PhysicsServer.JointSetMaxForce(r.Joint, 10 + i % 2); PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(); }
         _ = GC.GetTotalAllocatedBytes(true);
-        var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
-        for (var i = 0; i < 128; i++) { PhysicsServer.JointSetMaxForce(r.Joint, 10 + i % 2); PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(); }
-        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before; var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        var separate = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        var tag = trace?.Tag((gpu ? 4UL : 0UL) + (separate ? 2UL : 1UL)) ?? 0;
+        long ownerBytes, allBytes;
+        trace?.Begin(tag);
+        try
+        {
+            var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 128; i++) { PhysicsServer.JointSetMaxForce(r.Joint, 10 + i % 2); PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(); }
+            ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before; allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        }
+        finally { trace?.End(); }
+        Console.WriteLine($"Joint policies {backend}, hostGPU={gpu}, separate={separate}: 128 warmup/128 edit-active frames, {ownerBytes}/{allBytes} owner/all-thread managed B, trace={tag}.");
         Check(ownerBytes == 0 && allBytes == 0, $"Warm public policy edits and physical frames allocated {ownerBytes}/{allBytes} owner/all-thread managed bytes.");
-        Console.WriteLine($"Joint policies: 128 warmup/128 edit-active frames, {ownerBytes}/{allBytes} owner/all-thread managed B.");
     }
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string message) => Near(actual.DistanceTo(expected), 0, tolerance, message);
     private static void Near(float actual, float expected, float tolerance, string message) => Check(MathF.Abs(actual - expected) <= tolerance, $"{message}: {actual} vs {expected}");
