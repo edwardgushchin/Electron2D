@@ -61,6 +61,10 @@ class Checks(unittest.TestCase):
                                 self.assertIn('outputWords[stateAt+3u]=uvec4(0u);', shader)
                                 self.assertIn('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));', shader)
                                 self.assertIn('((outputWords[stateAt+3u].z|(safe==0?16u:0u))<<6)', shader)
+                                self.assertIn('outputWords[gl_GlobalInvocationID.x*8u+3u].x=ga.data.y;', shader)
+                                bounds = shader.index('vec4 bounds=queryBounds(shapeA,ga,recovering||resting);int at=1;')
+                                self.assertLess(shader.index('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,128u);'), bounds)
+                                self.assertGreater(shader.index('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,256u);'), bounds)
                                 if compiler == 'dxbc':
                                     self.assertIn('Marshal.Copy(compiled, actualBytecode, 0, actualBytecode.Length);', Path(names[1]).read_text())
                                 else:

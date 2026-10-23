@@ -61,9 +61,10 @@ The optional structured_motion_scan input compares explicit BVH descent/advance
 branches across the four portable phases. It retains internal-node pruning and
 leaf order, rather than replacing the tree or changing collision iterations.
 Its default is false; it changes only the diagnostic checkout copy.
-The source-header probe uses the existing unused object-result words for vertex
-count, geometry kind and policy flags, with root/category/culling bits in the
-diagnostic state. Earlier receipts retain their incoming-fraction interpretation;
+The source-header probe uses the existing unused object-result words for the live
+geometry vertex count, geometry kind and policy flags. Diagnostic state bits mark
+query-bound entry/return and any BVH node/category read. Earlier receipts retain
+their incoming-fraction or root-predicate interpretation;
 the current receipt names its source-header layout explicitly.
 
 Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu`

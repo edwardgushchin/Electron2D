@@ -219,12 +219,17 @@ jobs:
               '''
               text = text.replace(policy, source + policy)
               root = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2
-                          if(at==1)atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,32u|
-                              (node.hasCategory!=0?64u:0u)|
-                              (ga.data.z==7u||(node.typeMask&16)!=0||(all(lessThanEqual(node.bounds.xy,bounds.zw))&&all(greaterThanEqual(node.bounds.zw,bounds.xy)))?128u:0u)|
-                              (at<int(leaves)?256u:0u));
+                          atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,32u|(node.hasCategory!=0?64u:0u));
               #endif'''
               text = text.replace(node, node + '\n' + root)
+              geometry = '        Geometry ga=geometries[shapeA.owner.z];'
+              bounds = '        vec4 bounds=queryBounds(shapeA,ga,recovering||resting);int at=1;'
+              assert text.count(geometry) == text.count(bounds) == 1
+              text = text.replace(geometry, geometry + '\n#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n        outputWords[gl_GlobalInvocationID.x*8u+3u].x=ga.data.y;\n#endif\n')
+              entered = '#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n        atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,128u);\n#endif\n'
+              returned_bounds = '\n#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 2\n        atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].w,256u);\n#endif'
+              text = text.replace(bounds, entered + bounds + returned_bounds)
+
               history = '''#if E2D_MOTION_STAGE == 0
               motionProbe=safe==1?1u:0u;
               #elif E2D_MOTION_STAGE == 1
@@ -291,10 +296,10 @@ jobs:
                      'probeResultBits': {'0-7': 'incoming state flags', '8-18': 'probe history', '20': 'final blocked', '21': 'rested',
                                          '22': 'any pair entered', '23': 'any pair returned',
                                          '24': 'any source shape visited', '25': 'any BVH leaf visited',
-                                         '26': 'any candidate passed filters', '27': 'root node read',
-                                         '28': 'root category nonzero', '29': 'root broad test passes',
-                                         '30': 'root is internal'},
-                     'probeSourceHeader': {'low32': 'last visited source vertex count',
+                                         '26': 'any candidate passed filters', '27': 'any BVH node read',
+                                         '28': 'any read node category nonzero', '29': 'query bounds entered',
+                                         '30': 'query bounds returned'},
+                     'probeSourceHeader': {'low32': 'last visited live geometry vertex count',
                                            'high32': 'source policy flags in low8, geometry kind above bit7'},
                      'shaderSHA256': {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in
                          ['src/Servers/Rendering/ShaderCompiler.cs', 'src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs',

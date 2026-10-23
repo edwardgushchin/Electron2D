@@ -317,3 +317,13 @@ retains that complete measurement. Software execution is not hardware performanc
 The resident motion kernel separates initial-overlap departure from [new impact side selection](physics-queries.md#one-way-body-motion-entry). A new one-way impact evaluates its normal at the unsafe pose before committing the earliest fraction, including tangent/receding front-corner approaches. Ordinary prospective geometry includes the query margin in its local hull radius, preventing a rounded cast root from losing its validation contact. Directed source bypass and recovery/final-depth checks retain their existing policy. The extra narrow contact evaluation stays on device; request/result layouts, scratch storage, uploads, readbacks and fence count are unchanged. This is a functional change, with no new hardware performance claim.
 
 All-motion native DXBC run 39948784588 creates the four pipelines, then rejects the first compound response motion result. The integer-word transport change is a candidate correction; it retains the numerical workload and requires target verification. Failure messages now report hit, actual/expected RID, local/peer slots, travel and unchanged pose without allocating in successful measured cycles.
+
+Optimized DXIL diagnostic run 39986163256 at 59aa16412 creates all four pipelines
+but returns the same first-query miss. Its source header is
+`0x0000000100000001`: one vertex, enabled circle policy and circle geometry kind.
+The source-visit bit is present; root, leaf, candidate and pair bits are absent.
+The explicit descent/advance control also misses. These receipts narrow the gap
+to source validation through the first node read, without establishing a compiler
+or driver cause. The next diagnostic brackets query-bound evaluation and reads
+the vertex count from the live local geometry. Its unchanged compound control
+passes locally with all reachability bits, but Windows execution remains required.
