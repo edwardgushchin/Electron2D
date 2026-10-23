@@ -93,6 +93,11 @@ in the log. The existing `ELECTRON2D_TEST_PHYSICS_THREAD=1` selector repeats the
 complete CPU separate-thread cohort before the full macOS suite, both ordinarily
 and with calibrated object markers. Original warmups, counters and zero limits
 remain unchanged; a passing isolated cohort does not explain a failed aggregate.
+Contact-policy intervals use domain `9UL << 32` for the same 256 warmup/128
+edit-active full steps, with scene/server, CPU-hosted GPU-stage and resident roles.
+The macOS diagnostics repeat existing CPU/GPU contact-correction selectors both
+ordinarily and with physical markers. No collection, workload or zero limit is
+changed; retain failed aggregate values until their own object trace is available.
 See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
 The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
 Compiler exceptions also record the first DWORD and one symbolic type pointer of

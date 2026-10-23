@@ -8,13 +8,15 @@ internal sealed class PhysicsContactPolicyTests(PhysicsServer.Backend backend)
     internal static void Run(PhysicsServer.Backend backend) => new PhysicsContactPolicyTests(backend).RunCore(false);
     private void RunCore(bool stages)
     {
-        VerifyResources(); VerifyDefaults(false); VerifyCorrection(false, stages); VerifyLiveEdits(false, stages); VerifyScene(stages); Measure(false, stages);
+        using var trace = PhysicsAllocationTrace.Open(backend, 9UL << 32);
+        VerifyResources(); VerifyDefaults(false); VerifyCorrection(false, stages); VerifyLiveEdits(false, stages); VerifyScene(stages); Measure(false, stages, trace);
         Console.WriteLine($"Contact policy passed on {(stages ? "CPU host/GPU stages" : backend.ToString())}: bias/slack, shape mixing, duration, resource state and live edits.");
     }
     internal static void RunResident() => new PhysicsContactPolicyTests(PhysicsServer.Backend.GPU).RunResidentCore();
     private void RunResidentCore()
     {
-        VerifyDefaults(true); VerifyCorrection(true, false); VerifyLiveEdits(true, false); Measure(true, false);
+        using var trace = PhysicsAllocationTrace.Open(backend, 9UL << 32);
+        VerifyDefaults(true); VerifyCorrection(true, false); VerifyLiveEdits(true, false); Measure(true, false, trace);
         Console.WriteLine("Resident contact policy passed: shared world defaults, shape mixing, duration, live metadata and allocation.");
     }
     private sealed class Rig : IDisposable
@@ -251,19 +253,27 @@ internal sealed class PhysicsContactPolicyTests(PhysicsServer.Backend backend)
         }
         finally { foreach (var shape in shapes) shape.Dispose(); Directory.Delete(folder, true); }
     }
-    private void Measure(bool resident, bool stages)
+    private void Measure(bool resident, bool stages, PhysicsAllocationTrace? trace)
     {
         using var r = new Rig(backend, resident, stages); r.Set(new(0, 1.2f));
         for (var i = 0; i < 256; i++) { r.Shape.CustomSolverBias = (i & 1) == 0 ? .25f : .5f; r.Step(1f / 60); }
         var selected = r.Store ?? PhysicsServer.Service.GetSceneSpace(r.Space).GPUStore;
         var upload = selected?.UploadBytes ?? 0; var uniforms = selected?.UniformBytes ?? 0; var readback = selected?.ReadbackBytes ?? 0; var wait = selected?.WaitMS ?? 0;
-        var samples = new long[128]; var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
-        for (var i = 0; i < samples.Length; i++)
+        var samples = new long[128]; var tag = trace?.Tag(resident ? 3UL : stages ? 2UL : 1UL) ?? 0;
+        long ownerBytes, bytes;
+        trace?.Begin(tag);
+        try
         {
-            var start = Stopwatch.GetTimestamp(); r.Shape.CustomSolverBias = (i & 1) == 0 ? .25f : .5f; r.Step(1f / 60); samples[i] = Stopwatch.GetTimestamp() - start;
+            var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var before = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < samples.Length; i++)
+            {
+                var start = Stopwatch.GetTimestamp(); r.Shape.CustomSolverBias = (i & 1) == 0 ? .25f : .5f; r.Step(1f / 60); samples[i] = Stopwatch.GetTimestamp() - start;
+            }
+            ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; bytes = GC.GetTotalAllocatedBytes(true) - before;
         }
-        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore; var bytes = GC.GetTotalAllocatedBytes(true) - before; Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
-        Console.WriteLine($"Contact policy {(resident ? "resident GPU" : stages ? "CPU host/GPU stages" : backend.ToString())}: one active contact, changing shape bias, 256 warmup/128 whole 1/60 s steps; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {ownerBytes}/{bytes} owner/all-thread managed B.");
+        finally { trace?.End(); }
+        Array.Sort(samples); var ms = 1000d / Stopwatch.Frequency;
+        Console.WriteLine($"Contact policy {(resident ? "resident GPU" : stages ? "CPU host/GPU stages" : backend.ToString())}: one active contact, changing shape bias, 256 warmup/128 whole 1/60 s steps; p50/p95/p99={samples[64] * ms:F4}/{samples[121] * ms:F4}/{samples[126] * ms:F4} ms; {ownerBytes}/{bytes} owner/all-thread managed B; trace={tag}.");
         if (selected is { } gpu) Console.WriteLine($"Selected contact policy traffic/frame: upload={(gpu.UploadBytes - upload) / 128}, uniforms={(gpu.UniformBytes - uniforms) / 128}, readback={(gpu.ReadbackBytes - readback) / 128} B; wait={(gpu.WaitMS - wait) / 128:F4} ms; {gpu.Driver}, {gpu.DeviceName}.");
         Check(ownerBytes == 0 && bytes == 0, "Warmed shape policy edits and active steps allocate zero owner/all-thread managed memory.");
     }

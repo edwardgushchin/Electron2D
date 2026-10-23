@@ -50,6 +50,25 @@ Its 128 warm/128 measured frames, edits, thread/lifetime checks and collection
 policy are unchanged. The macOS workflow retains the existing full separate-thread
 CPU selector in ordinary and traced standalone controls before its full suite.
 
+Ordinary x64 run 39991319732 at `4a80378d0` later fails the same separate-thread
+joint-policy interval at 0/9,024 owner/all-thread bytes. Profiled x64 run
+39996059802 at `87042214a` stops earlier, in the public GPU contact-policy interval
+at 0/64 bytes, before reaching its newly marked late joint-policy interval.
+Neither failed interval has a matching physical marker. Contact-policy fixtures
+now use domain `9UL << 32` around their original 128 measured shape-bias edits
+and full steps after 256 warmups, including the existing owner/all-thread reads.
+Markers close in `finally`; role and tag accompany the original counter deltas.
+The physical workload, timings, collection policy and zero thresholds remain
+unchanged. CPU/GPU standalone corrections are diagnostic controls, not an
+explanation of either failed full-process interval.
+
+Local Linux x64 controls pass all four contact-policy roles, each ordinarily
+and profiled at 0/0 bytes. Every trace retains 163 balanced boundaries,
+128 positive and 32 empty controls, successful stacks and zero recursion;
+its physical interval contains no object events. CPU/GPU calibration controls
+also account for foreign finalizer objects separately from that physical interval.
+These receipts do not resolve either macOS aggregate failure.
+
 The resting-body fixture drains the existing calibrated collection/finalization
 warmup before its first 64-frame counter interval. Its failure records both
 owner and all-thread bytes; the zero-byte assertions and physical frames remain.

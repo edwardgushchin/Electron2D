@@ -7,8 +7,9 @@ Last updated: 2026-10-23
 The complete ordinary Linux x64 suite at `58bbb2439` passes in 651.6 seconds
 with the audited native closure. The complete ordinary macOS ARM64 suite at
 `4a80378d0` passes in 37 minutes 43 seconds, including the final separate-thread
-CPU cohort. Its x64 job in run 39991319732 remains in progress. The preceding
-ordinary x64 run 39976121450 at `c847dc38d` reached the CPU sleeping-Area field
+CPU cohort. Its x64 job in run 39991319732 fails later in separate-thread
+joint-policy edits at 0/9,024 owner/all-thread bytes. The preceding ordinary x64
+run 39976121450 at `c847dc38d` reached the CPU sleeping-Area field
 check, then expired at the 90-minute job budget; it is not a successful gate.
 The manual macOS runner now retains native thread samples during prolonged
 silent intervals without replacing the original exit/marker checks.
@@ -19,8 +20,11 @@ intervals contain no object events. The x64 aggregate instead fails later in
 separate-thread joint-policy edits at 2,784/19,336 owner/all-thread bytes. That
 interval lacked a physical marker and remains unattributed. The joint fixture
 now retains exact physical boundaries, while standalone ordinary/traced controls
-remain separate from complete target acceptance. Profiling does not replace an
-ordinary platform gate or explain an older untraced allocation delta.
+remain separate from complete target acceptance. The next profiled x64 run
+39996059802 at `87042214a` fails earlier in public GPU contact-policy edits at
+0/64 bytes, before the late joint-policy interval. That contact interval now has
+physical markers without changing its steps or zero thresholds. Profiling does
+not replace an ordinary gate or explain an older untraced allocation delta.
 
 Windows diagnostic run 39997310087 at `dbbfc9c2b` passes the complete public GPU
 compound fixture, including scene/raw/Area slots, momentum, private history and

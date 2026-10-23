@@ -96,7 +96,7 @@ jobs:
             bin/diagnostics/runner/Electron2D.Tests.dll
             bin/diagnostics/runner/PhysicsBackendExtension.Consumer.dll
           if-no-files-found: error
-      - name: Profile the button, Area, compressed-audio and threaded-physics intervals
+      - name: Profile the prepared allocation intervals
         id: button_trace
         if: inputs.allocation_trace
         continue-on-error: true
@@ -113,6 +113,8 @@ jobs:
           ELECTRON2D_TEST_AREA_BACKEND=gpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/area-gpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-gpu-trace.log
           ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/audio-compressed.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/audio-compressed-trace.log
           ELECTRON2D_TEST_PHYSICS_THREAD=1 E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/joint-policy.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/joint-policy-trace.log
+          ELECTRON2D_TEST_CONTACT_CORRECTION=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/contact-policy-cpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-cpu-trace.log
+          ELECTRON2D_TEST_CONTACT_CORRECTION=gpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/contact-policy-gpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-gpu-trace.log
       - name: Check platform input and fresh-process contact history
         id: focused
         continue-on-error: true
@@ -130,6 +132,8 @@ jobs:
           ELECTRON2D_TEST_AREA_BACKEND=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-gpu.log
           ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/audio-compressed.log
           ELECTRON2D_TEST_PHYSICS_THREAD=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/joint-policy.log
+          ELECTRON2D_TEST_CONTACT_CORRECTION=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-cpu.log
+          ELECTRON2D_TEST_CONTACT_CORRECTION=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-gpu.log
           ELECTRON2D_TEST_TILE_TERRAINS=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/terrain.log
           ELECTRON2D_TEST_PUBLIC_CONTACT_HISTORY=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-history.log
       - uses: actions/upload-artifact@v4
@@ -142,6 +146,7 @@ jobs:
             bin/diagnostics/area-*.trace.*
             bin/diagnostics/audio-compressed.trace.*
             bin/diagnostics/joint-policy.trace.*
+            bin/diagnostics/contact-policy-*.trace.*
           if-no-files-found: error
       - name: Run the complete ${{ inputs.allocation_trace && 'profiled' || 'untraced' }} suite
         id: fixture
@@ -175,6 +180,7 @@ jobs:
             bin/diagnostics/area-*.trace.*
             bin/diagnostics/audio-compressed.trace.*
             bin/diagnostics/joint-policy.trace.*
+            bin/diagnostics/contact-policy-*.trace.*
           if-no-files-found: error
       - name: Preserve the full-suite failure
         if: steps.fixture.outcome == 'failure' || steps.focused.outcome == 'failure' || steps.button_trace.outcome == 'failure'
