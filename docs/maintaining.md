@@ -39,7 +39,13 @@ pipeline creation in its temporary source copy, preserving original/instrumented
 device hashes and the unchanged motion/compiler/generator source hashes. It runs
 the current production DXIL shaders and the entire untraced executable without
 a test selector. Its 65-minute fixture budget fits the ordinary 90-minute target
-job budget while leaving time for CDB and artifact upload. Historical DXBC,
+job budget while leaving time for CDB and artifact upload. Before the full run,
+two standalone existing selectors exercise the complete public joint and
+functional motion cohorts. Each selector is process-local and removed in
+`finally`; each raw exit/log is retained in an early focused artifact. Any focused
+failure remains a failed job even if the complete suite passes. These controls
+consume the same overall 90-minute job budget and do not shorten physical work.
+Historical DXBC,
 optimizer and result-lane source-copy controls are retired; their successful
 focused results do not replace the complete production target gate.
 For a stalled CDB replay, the debugger interrupts only one exact executable child

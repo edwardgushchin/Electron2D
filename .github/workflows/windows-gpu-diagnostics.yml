@@ -108,6 +108,42 @@ jobs:
       - name: Install the pinned app-local test WARP
         shell: pwsh
         run: ./tools/ci/install_test_warp.ps1 bin/diagnostics/runner bin/diagnostics x64
+      - name: Check the complete public joint cohort
+        id: joints
+        continue-on-error: true
+        timeout-minutes: 10
+        shell: pwsh
+        run: |
+          $env:ELECTRON2D_TEST_GPU_JOINT_CONTRACT = '1'
+          try {
+              & bin/diagnostics/runner/Electron2D.Tests.exe 2>&1 | Tee-Object -FilePath bin/diagnostics/joints.log
+              $code = [int]$LASTEXITCODE
+              ('Runtime exit: {0} (0x{0:X8})' -f $code) | Tee-Object -FilePath bin/diagnostics/joints.log -Append
+          } finally { Remove-Item Env:ELECTRON2D_TEST_GPU_JOINT_CONTRACT }
+          if ($code -ne 0) { exit 1 }
+      - name: Check the complete functional motion cohort
+        id: motion
+        continue-on-error: true
+        timeout-minutes: 10
+        shell: pwsh
+        run: |
+          $env:ELECTRON2D_TEST_GPU_MOTION_QUERIES = 'functional'
+          try {
+              & bin/diagnostics/runner/Electron2D.Tests.exe 2>&1 | Tee-Object -FilePath bin/diagnostics/motion.log
+              $code = [int]$LASTEXITCODE
+              ('Runtime exit: {0} (0x{0:X8})' -f $code) | Tee-Object -FilePath bin/diagnostics/motion.log -Append
+          } finally { Remove-Item Env:ELECTRON2D_TEST_GPU_MOTION_QUERIES }
+          if ($code -ne 0) { exit 1 }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-gpu-focused
+          path: |
+            bin/diagnostics/compiler-source.json
+            bin/diagnostics/warp-source.json
+            bin/diagnostics/joints.log
+            bin/diagnostics/motion.log
+          if-no-files-found: error
       - name: Run the complete untraced runtime suite
         id: fixture
         continue-on-error: true
@@ -149,5 +185,5 @@ jobs:
             bin/diagnostics/cdb/
           if-no-files-found: error
       - name: Preserve the fixture failure
-        if: steps.fixture.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'
         run: exit 1

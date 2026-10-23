@@ -389,8 +389,12 @@ internal sealed class PhysicsServerJointTests(PhysicsServer.Backend backend)
                   !body.TestMove(body.GlobalTransform, Vector2.Zero, recoveryAsCollision: true),
                 "Another joint's contribution survives both a sibling enable and explicit-exception removal.");
             PhysicsServer.JointDisableCollisionsBetweenBodies(two, false);
-            Check(body.GetCollisionExceptions().Length == 0 &&
-                  body.TestMove(body.GlobalTransform, Vector2.Zero, recoveryAsCollision: true),
+            var remaining = body.GetCollisionExceptions().Length;
+            Check(remaining == 0, $"The last joint contribution releases the exception snapshot: {remaining} remaining.");
+            using var recovered = new KinematicCollision();
+            var released = body.TestMove(body.GlobalTransform, Vector2.Zero, recovered, recoveryAsCollision: true);
+            Console.WriteLine($"Joint-filter recovery {backend}: exceptions={remaining}, hit={released}, travel={recovered.GetTravel()}, depth={recovered.GetDepth()}, normal={recovered.GetNormal()}.");
+            Check(released,
                 "The last joint contribution releases the pair for motion tests.");
             body.AddCollisionExceptionWith(first);
             PhysicsServer.JointDisableCollisionsBetweenBodies(one, true);

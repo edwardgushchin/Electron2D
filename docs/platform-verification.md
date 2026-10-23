@@ -4,7 +4,7 @@ Last updated: 2026-10-23
 
 ## Current release checks
 
-The complete ordinary Linux x64 suite at `58bbb2439` passes in 651.6 seconds
+The complete ordinary Linux x64 suite at `1401a95ff` passes in 617.6 seconds
 with the audited native closure. The complete ordinary macOS ARM64 suite at
 `4a80378d0` passes in 37 minutes 43 seconds, including the final separate-thread
 CPU cohort. Its x64 job in run 39991319732 fails later in separate-thread
@@ -31,12 +31,22 @@ compound fixture, including scene/raw/Area slots, momentum, private history and
 128 cycles at 0/0 bytes. Its temporary optimized portable motion candidate seeds
 query bounds from the first vertex and retains sweep/final-contact state in the
 existing device buffer. The first real result has safe/unsafe fractions
-0.49609375/0.5 and travel 9.921875, matching the local control. The complete instrumented Windows control is run 39999737324 at `7e186ac72`;
-its final result is pending. The source now contains the corresponding portable
-bounds, sweep and final-contact retention, with offline optimization. Temporary
-shader rewrites and result-lane observations are removed from the manual
-workflow. This production port still needs its own complete target execution;
-the focused instrumented pass alone does not establish Windows acceptance.
+0.49609375/0.5 and travel 9.921875, matching the local control. The complete
+instrumented Windows control, run 39999737324 at `7e186ac72`, later fails
+`PhysicsServerJointTests.VerifyJointExceptionContributions`: its combined
+exception-snapshot/zero-motion recovery assertion fails after disabling the final
+joint contribution. The signed runtime exit is -532462766 (`0xE0434352`). Its
+first-query diagnostic receipt describes the earlier vetoed request and cannot
+identify which half of the later combined assertion failed.
+The fixture now separates snapshot count and motion membership and logs the same
+query's travel/depth/normal. Standalone complete public joint and functional motion
+cohorts run before the full manual Windows executable, retaining their own raw
+exits and logs; failure in any cohort remains failure. The full executable retains
+its unselected original workload and the overall 90-minute job budget.
+The source contains the portable bounds, sweep and final-contact retention at
+`1401a95ff`, without temporary shader rewrites or result-lane observations. Its
+separate complete Windows run 40003829560 remains in progress. Neither the focused
+instrumented pass nor the passing local Linux suite closes Windows acceptance.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

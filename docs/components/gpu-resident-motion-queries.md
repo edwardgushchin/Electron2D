@@ -91,9 +91,13 @@ The preceding optimized DXIL diagnostic passes the complete public GPU compound
 fixture in run 39997310087 at `dbbfc9c2b`, including scene/raw/Area slots, momentum,
 private history and 128 cycles at 0/0 bytes. The first hit retains safe/unsafe
 fractions 0.49609375/0.5 and travel 9.921875. The corresponding complete Windows
-control is run 39999737324 at `7e186ac72`; its final result is still pending.
+control, run 39999737324 at `7e186ac72`, later fails the combined exception-list/
+zero-motion recovery assertion after releasing the last joint contribution.
+Its first-query receipt describes the earlier vetoed request, not this failure.
+The fixture now reports both conditions separately and retains travel/depth/normal.
 That control includes diagnostic result-lane observations. The production port
-removes them and requires its own complete Windows/Metal execution gate.
+removes them; its full Windows run 40003829560 at `1401a95ff` remains in progress
+and complete Windows/Metal execution gates are still required.
 
 Earlier DXBC, explicit pair-result, traversal and bounds-only controls did not
 correct the Windows miss. The pair/scan observations narrowed lost state to the

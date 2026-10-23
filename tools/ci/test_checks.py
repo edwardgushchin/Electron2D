@@ -102,7 +102,11 @@ class Checks(unittest.TestCase):
         for retired in ('recovery_compiler', 'optimize_motion_spirv', 'seed_motion_bounds'):
             self.assertNotIn(retired, workflow)
         self.assertLess(workflow.index('name: windows-gpu-fixture'), workflow.index('name: Capture native exception context'))
-        self.assertNotIn('ELECTRON2D_TEST_', workflow)
+        complete = workflow.partition('      - name: Run the complete untraced runtime suite')[2].split('\n      - ', 1)[0]
+        self.assertNotIn('ELECTRON2D_TEST_', complete)
+        for selector in ('ELECTRON2D_TEST_GPU_JOINT_CONTRACT', 'ELECTRON2D_TEST_GPU_MOTION_QUERIES'):
+            self.assertIn('finally { Remove-Item Env:' + selector + ' }', workflow)
+        self.assertIn("steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'", workflow)
         self.assertIn('Run the complete untraced runtime suite', workflow)
         self.assertIn("-ccontains 'Electron2D checks passed.'", workflow)
         self.assertIn('timeout-minutes: 90', workflow)
