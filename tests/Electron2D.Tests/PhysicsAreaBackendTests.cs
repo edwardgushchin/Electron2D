@@ -4,6 +4,7 @@ internal static class PhysicsAreaBackendTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        AllocationWarmupCheck.Verify(AllocationWarmupCheck.Collect);
         using var world = new World(backend);
         using var region = new RectangleShape { Size = new(1000, 1000) };
         using var circle = new CircleShape { Radius = 3 };
@@ -69,7 +70,8 @@ internal static class PhysicsAreaBackendTests
             Check(tree.ResolveSpatialAudioBus(sceneBody, Vector2.Zero, 1, "Master") == "Region", "Audio uses shape containment independently of monitoring");
             sceneArea.Monitoring = true; tree.PhysicsFrame(1d / 60);
             var entries = sceneEntries; var rawObserved = rawEntries;
-            Collect();
+            using var trace = PhysicsAllocationTrace.Open(backend, 6UL << 32);
+            AllocationWarmupCheck.Collect();
             for (var i = 0; i < 64; i++)
             {
                 tree.PhysicsFrame(1d / 60);
@@ -77,16 +79,24 @@ internal static class PhysicsAreaBackendTests
                 _ = tree.ResolveSpatialAudioBus(sceneBody, new(2000, 2000), 1, "Master");
                 _ = state.TotalGravity;
             }
-            var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
-            for (var i = 0; i < 64; i++)
+            AllocationWarmupCheck.Collect();
+            long all, owner; var tag = trace?.Tag(1) ?? 0;
+            trace?.Begin(tag);
+            try
             {
-                tree.PhysicsFrame(1d / 60);
-                _ = tree.ResolveSpatialAudioBus(sceneBody, Vector2.Zero, 1, "Master");
-                _ = tree.ResolveSpatialAudioBus(sceneBody, new(2000, 2000), 1, "Master");
-                _ = state.TotalGravity;
+                all = GC.GetTotalAllocatedBytes(true); owner = GC.GetAllocatedBytesForCurrentThread();
+                for (var i = 0; i < 64; i++)
+                {
+                    tree.PhysicsFrame(1d / 60);
+                    _ = tree.ResolveSpatialAudioBus(sceneBody, Vector2.Zero, 1, "Master");
+                    _ = tree.ResolveSpatialAudioBus(sceneBody, new(2000, 2000), 1, "Master");
+                    _ = state.TotalGravity;
+                }
+                owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
             }
-            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
-            Check(owner == 0 && all == 0, $"Area step/audio/field reads allocate {owner}/{all} owner/all-thread bytes");
+            finally { trace?.End(); }
+            if (trace is not null) Console.WriteLine($"Area step/audio/field trace {tag}: {backend}, owner/all={owner}/{all} B.");
+            Check(owner == 0 && all == 0, $"Area step/audio/field reads {backend} allocate {owner}/{all} owner/all-thread bytes, trace={tag}");
             Check(sceneEntries == entries && rawEntries == rawObserved && rawExits == 0, "Warmed scans preserve observer history");
             sceneArea.ShapeOwnerSetDisabled(slots, true); tree.PhysicsFrame(1d / 60);
             Near(sceneBody.GetGravity(), new(40, 0), "Disabled scene slots leave field reduction");
@@ -111,7 +121,6 @@ internal static class PhysicsAreaBackendTests
             PhysicsServer.FreeRID(rawBody); PhysicsServer.FreeRID(otherSpace);
         }
     }
-    private static void Collect() { GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); }
     private static void Near(Vector2 actual, Vector2 expected, string message) => Check(actual.DistanceTo(expected) < .002f, $"{message}: {actual} != {expected}");
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
 }

@@ -4,6 +4,24 @@ Last updated: 2026-10-23
 
 ## Scope and ownership
 
+The selected-backend Area fixture now uses the calibrated collection/finalization
+helper both before and after its 64 warm full-frame/audio/field cycles. Its former
+private collector did not wait for finalizers after the second collection. The
+controlled second-finalization probe verifies that preparation completes before
+measurement. The 64 measured cycles still require zero owner/all-thread bytes.
+Optional physical markers use domain `6UL << 32`, and both backend selectors run
+before the complete macOS suite. The original untraced ARM64 run 39968402941
+failed at 0/720 bytes; its allocation producer remains unattributed until a
+matching physical trace is available. Preparation alone does not explain that
+failure or establish target acceptance.
+
+The Linux .NET 10.0.13 controls reject the former collector while its controlled
+second finalizer is blocked and accept the shared helper. The four ordinary and
+profiled CPU/GPU Area processes pass at 0/0 bytes. Each profiled process retains
+163 balanced native boundaries, including its physical interval, with no object
+events in that interval, successful stacks and zero recursion. Evidence is in
+ignored `bin/release-audit/area-prepared/`; foreign execution remains separate.
+
 The resting-body fixture drains the existing calibrated collection/finalization
 warmup before its first 64-frame counter interval. Its failure records both
 owner and all-thread bytes; the zero-byte assertions and physical frames remain.

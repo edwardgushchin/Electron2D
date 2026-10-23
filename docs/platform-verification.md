@@ -9,8 +9,14 @@ with the audited native closure. The complete ordinary macOS ARM64 suite at
 `73c8a101f` passed, including native URI capture and prepared character checks.
 The same x64 macOS cohort failed the terrain child deadline at 30.359 seconds,
 despite its zero exit and successful physics/navigation marker; archive loading
-took 27.774 seconds. Its cold-process budget is now 60 seconds, with target
-verification still required. Windows motion remains unresolved; manual compiler
+took 27.774 seconds. Its cold-process budget is now 60 seconds; the focused x64
+terrain workflow passes at `a5abef302`. That cohort's ARM64 aggregate instead
+fails the CPU Area frame/audio/field interval at 0/720 owner/all-thread bytes.
+The Area fixture now drains its calibrated finalization boundary after warmup
+and supports physical trace markers, retaining 64 measured cycles and strict
+zero counters. Four local ordinary/traced CPU/GPU controls pass at 0/0 bytes;
+neither they nor the preparation correction attribute the original 720 bytes.
+Complete target verification remains required. Windows motion remains unresolved; manual compiler
 and staged SPIR-V optimization controls do not replace the ordinary release gate.
 Public packages, final CI, rendered consumers and release publication are separate
 pending checks.
