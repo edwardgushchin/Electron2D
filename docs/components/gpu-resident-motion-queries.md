@@ -82,13 +82,21 @@ fractions record consumed by final rest sampling. The Windows DXBC probe at
 `a3e869b03` observed zero incoming fractions with no blocked flag, causing sweep
 to skip. The revised ownership removes those unused recovery-stage fraction
 reads/writes. The target probe at `f46bdc94b` still observes the same zero-fraction
-miss, so this simplification does not correct the Windows failure. The next
-diagnostic records bracket/blocked flags at each phase boundary in unused result
-padding and retains actual compiled DXBC plus separate compiler/pipeline timing.
-Ordinary full suites remain required; production compiler selection is unchanged.
-The staged optimization control applies the existing SPIR-V optimizer separately
-to the four motion stages, keeping the ordinary optimized Vulkan module and other
-portable shader profiles unchanged. It remains a manual diagnostic comparison.
+miss, so this simplification does not correct the Windows failure. The completed
+`9df050e6e` diagnostic records history mask 15: translation enters with a full
+bracket and nonzero motion, then exits scan with safe zero and blocked false.
+Compiled diagnostic DXBC and SDK assembly are retained; compilation dominates
+cold pipeline cost. Staged SPIR-V optimization at `fdf81533a` lets DXIL create all
+four pipelines, but its first public motion query still misses.
+
+Pair casts now return candidate fractions and a logical source slot explicitly.
+The scan applies those fields and blocked state together after a successful pair,
+instead of mutating the aggregate through a nested function. All five numerical/
+allocation groups pass locally under Vulkan, portable and optimized-stage profiles;
+the Vulkan module changes from `79fb6af` to `bfe409ad`. Target execution remains
+required for this candidate. Iteration limits, GPU buffers, submissions and readback
+are unchanged; the SPIR-V optimization switch remains diagnostic and production
+compiler selection is unchanged.
 
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep

@@ -5,7 +5,7 @@
 [Portable body motion](../components/gpu-resident-motion-queries.md) initializes
 translation fractions after recovery instead of carrying unused fractions through
 recovery passes. Existing iteration/transfer limits and public declarations stay
-unchanged; the component distinguishes the Windows failure from target acceptance.
+unchanged; the component distinguishes the Windows failure from target acceptance. Pair casts return candidate fractions and source identity for one aggregate update, without nested writes to that state.
 
 [Resident shape-query specialization](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 compiles all four operations independently while retaining mixed batches in one

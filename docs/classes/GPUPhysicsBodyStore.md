@@ -2,12 +2,12 @@
 
 [Portable body-motion traversal](../components/gpu-resident-motion-queries.md)
 shares the recovery, sweep and resting scan call site while preserving iteration
-bounds, result buffers and the optimized Vulkan bytecode. Local numerical checks
+bounds, result buffers and the optimized Vulkan backend profile. Local numerical checks
 and complete target execution remain distinct acceptance evidence.
 
 Portable recovery carries recovery state only; translation initializes the full
 motion bracket and publishes fractions for final rest sampling. The linked
-component records the Windows zero-fraction failure and pending target correction.
+component records the Windows zero-fraction failure and pending target correction. Pair casts return fractions and a source slot explicitly; the caller applies the candidate fields together.
 
 [Shape-query operation kernels](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
 retain separate Intersect/Contacts/Rest/Cast pipelines. Mixed batches use one
