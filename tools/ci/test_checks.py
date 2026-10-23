@@ -1,7 +1,7 @@
 """Regression checks for CI matrix drift and target artifact rejection."""
 
 from contextlib import redirect_stdout
-from io import StringIO
+from io import BytesIO, StringIO
 import hashlib
 import json
 import os
@@ -11,6 +11,8 @@ import struct
 import subprocess
 import shutil
 import tempfile
+import threading
+from types import SimpleNamespace
 import unittest
 import xml.etree.ElementTree as ET
 from unittest.mock import Mock, patch
@@ -22,10 +24,45 @@ import rids
 import run_android
 import run_apple
 import run_browser
+import run_macos_runtime
 import select_lavapipe
 
 
 class Checks(unittest.TestCase):
+    def test_macos_runtime_samples_its_silent_child_and_keeps_exit_and_marker_gates(self):
+        with tempfile.TemporaryDirectory(prefix='e2d macOS sample ') as directory:
+            root = Path(directory)
+            fixture = root / 'fixture'
+            output = root / 'full-runtime.log'
+            for code, marker, expected in ((0, 'Electron2D checks passed.', 0),
+                                           (7, 'Electron2D checks passed.', 7), (0, 'Missing result', 1)):
+                with self.subTest(code=code, marker=marker):
+                    fixture.write_text('#!/usr/bin/env python3\nimport os,time\nos.write(1,b"prefix\\xff\\n")\ntime.sleep(.15)\nos.write(1,' + repr((marker + '\n').encode()) + ')\nraise SystemExit(' + str(code) + ')\n')
+                    fixture.chmod(0o755)
+                    def sample(command, **kwargs):
+                        self.assertEqual(command[0], '/usr/bin/sample')
+                        os.kill(int(command[1]), 0)
+                        self.assertEqual(command[2:4], ['1', '-file'])
+                        Path(command[4]).write_text('Owned process sample\n')
+                        return subprocess.CompletedProcess(command, 0, b'')
+                    console = BytesIO()
+                    with patch.object(run_macos_runtime, 'IDLE_SECONDS', .03), patch.object(run_macos_runtime, 'POLL_SECONDS', .005), \
+                         patch.object(run_macos_runtime.subprocess, 'run', side_effect=sample) as sampled, \
+                         patch.object(run_macos_runtime.sys, 'stdout', SimpleNamespace(buffer=console)):
+                        self.assertEqual(run_macos_runtime.run(fixture, output), expected)
+                    self.assertGreater(sampled.call_count, 0)
+                    self.assertEqual(output.read_bytes(), b'prefix\xff\n' + (marker + '\n').encode())
+                    self.assertIn(f'Runtime exit: {code}\n'.encode(), console.getvalue())
+                    self.assertFalse(any(t.name == 'macos-runtime-sampler' for t in threading.enumerate()))
+            with patch.object(run_macos_runtime, 'IDLE_SECONDS', .03), patch.object(run_macos_runtime, 'POLL_SECONDS', .005), \
+                 patch.object(run_macos_runtime.subprocess, 'run', side_effect=FileNotFoundError('sample unavailable')), \
+                 patch.object(run_macos_runtime.sys, 'stdout', SimpleNamespace(buffer=BytesIO())):
+                self.assertEqual(run_macos_runtime.run(fixture, output), 1)
+            self.assertIn('Sample unavailable:', (root / 'full-runtime-stall-1.log').read_text())
+        workflow = (rids.ROOT / '.github/workflows/macos-runtime-verification.yml').read_text()
+        self.assertIn('python3 -B tools/ci/run_macos_runtime.py bin/diagnostics/runner/Electron2D.Tests bin/diagnostics/full-runtime.log', workflow)
+        self.assertIn('timeout-minutes: 90', workflow)
+
     def test_windows_motion_probe_preserves_default_shader_and_reports_device_state(self):
         workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
         step = workflow.partition('      - name: Record source and trace cold pipeline preparation')[2].split('\n      - ', 1)[0]

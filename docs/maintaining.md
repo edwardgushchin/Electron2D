@@ -74,6 +74,10 @@ Optional calibrated native markers retain all four MP3/Ogg active/idle intervals
 their exact owner-byte deltas and the original warmup/workload/zero threshold.
 The macOS allocation workflow saves these standalone traces and the complete
 aggregate trace; one successful profile does not attribute another failed one.
+Its complete runner saves a one-second native thread sample after five minutes
+without output, repeating only while its own child remains silent. Sampling
+failure is retained separately and cannot turn a failed or incomplete suite green.
+The original 90-minute job budget, zero exit and exact completion line remain.
 See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
 The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
 Compiler exceptions also record the first DWORD and one symbolic type pointer of

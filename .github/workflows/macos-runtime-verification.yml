@@ -155,8 +155,7 @@ jobs:
             export ELECTRON2D_POINT_ALLOCATION_TRACE="$CORECLR_PROFILER_PATH"
             export E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/full-allocation.trace"
           fi
-          bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/full-runtime.log
-          grep -Fx 'Electron2D checks passed.' bin/diagnostics/full-runtime.log
+          python3 -B tools/ci/run_macos_runtime.py bin/diagnostics/runner/Electron2D.Tests bin/diagnostics/full-runtime.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
