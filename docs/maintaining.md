@@ -46,6 +46,13 @@ after six minutes and records every native thread stack at that breakpoint. The
 process is checked again through its opened handle before interruption, and the
 original eight-minute debugger budget still bounds cleanup. The PowerShell
 self-check rejects missing, ambiguous, foreign and reused process identities.
+The next Windows control uses Microsoft's test-only WARP 1.0.21, whose release
+notes describe redesigned control-flow transforms. Its package and architecture
+DLL hashes are pinned; NuGet and Microsoft Authenticode signatures must validate.
+The temporary source probe also requires the actual loaded module to match the
+app-local test DLL. This development/test driver is never added to runtime
+projects, native packages or release consumers; its result cannot establish a
+correction in the operating system's older WARP driver.
 
 The manual Linux GPU diagnostic first runs the unchanged public compound fixture
 on the registered x64 host. A failed baseline is replayed with candidate-count and

@@ -57,7 +57,9 @@ jobs:
           PY
       - name: Verify owned debugger interruption
         shell: pwsh
-        run: ./tools/ci/test_debug_windows.ps1
+        run: |
+          ./tools/ci/test_debug_windows.ps1
+          ./tools/ci/test_test_warp.ps1
       - name: Record source and trace cold pipeline preparation
         run: |
           python - <<'PY'
@@ -70,6 +72,16 @@ jobs:
           assert original.count(observer) == 1
           newline = '\r\n' if b'\r\n' in original_bytes else '\n'
           trace = 'Console.WriteLine($"Cold GPU pipeline {DateTime.UtcNow:O}: {name}");'
+          module_check = '''if (name == "PhysicsResidentBodies.comp.spv")
+                  {
+                      using var process = System.Diagnostics.Process.GetCurrentProcess();
+                      using var warp = process.Modules.Cast<System.Diagnostics.ProcessModule>().FirstOrDefault(module => module.ModuleName.Equals("d3d10warp.dll", StringComparison.OrdinalIgnoreCase))
+                          ?? throw new InvalidOperationException("The expected test WARP module was not loaded.");
+                      if (!warp.FileName.Equals(System.IO.Path.Combine(AppContext.BaseDirectory, "d3d10warp.dll"), StringComparison.OrdinalIgnoreCase))
+                          throw new InvalidOperationException("The expected app-local test WARP module was not selected.");
+                      Console.WriteLine($"Test WARP module {warp.FileName}: {warp.FileVersionInfo.FileVersion}");
+                  }'''.replace('\n', newline)
+          trace += newline + '        ' + module_check
           instrumented = original.replace(observer, trace + newline + '        ' + observer, 1)
           finish = 'return new(ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray()), handle => SDL.ReleaseGPUComputePipeline(Device, handle), Handle);'
           assert original.count(finish) == 1
@@ -88,6 +100,9 @@ jobs:
           PY
       - name: Publish the existing test runner
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r win-x64 --self-contained true -o bin/diagnostics/runner --nologo
+      - name: Install the pinned app-local test WARP
+        shell: pwsh
+        run: ./tools/ci/install_test_warp.ps1 bin/diagnostics/runner bin/diagnostics x64
       - name: Run the public compound fixture
         id: fixture
         continue-on-error: true
@@ -108,6 +123,7 @@ jobs:
           name: windows-gpu-diagnostics-current
           path: |
             bin/diagnostics/compiler-source.json
+            bin/diagnostics/warp-source.json
             bin/diagnostics/compound.log
             bin/diagnostics/cdb/
           if-no-files-found: error
