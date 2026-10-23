@@ -16,6 +16,10 @@ jobs:
   compound:
     runs-on: windows-2025
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [current, native-motion]
     defaults:
       run:
         shell: bash
@@ -23,6 +27,7 @@ jobs:
       RestoreAdditionalProjectSources: ${{ github.workspace }}/bin/native-feed
       DOTNET_TieredCompilation: '0'
       ELECTRON2D_TEST_COMPOUND_PHYSICS: gpu
+      MOTION_COMPILER: ${{ matrix.compiler }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
@@ -98,16 +103,43 @@ jobs:
           fixture = Path('tools/ci/motion_linear.glsl').read_text()
           assert fixture.count(start) == 1 and fixture.endswith('}\n')
           motion_text = motion_text[:first] + fixture.replace('\n', motion_newline) + motion_text[last:]
+          nested = 'for(uint pa=0u;pa<na;pa++)for(uint pb=0u;pb<nb;pb++)'
+          pair = 'Hull a=hull(shapeA,ga,bodyA,pa),b=hull(shapeB,gb,bodyB,pb);'
+          assert motion_text.count(nested) == motion_text.count(pair) == 1
+          assert 'ga.data.z==5u&&gb.data.z==5u' in motion_text
+          motion_text = motion_text.replace(nested, 'for(uint piece=0u;piece<(min(na,nb)==0u?0u:max(na,nb));piece++)')
+          motion_text = motion_text.replace(pair, 'uint pa=na>1u?piece:0u,pb=nb>1u?piece:0u;' + motion_newline + '                            ' + pair)
           motion.write_bytes(motion_text.encode())
           compiler = Path('src/Servers/Rendering/ShaderCompiler.cs')
           compiler_bytes = compiler.read_bytes()
+          if os.environ['MOTION_COMPILER'] == 'native-motion':
+              text = compiler_bytes.decode()
+              signature = 'CreateComputePipeline(nint device, byte[] code)'
+              condition = 'if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.DXIL) == 0)'
+              assert text.count(signature) == text.count(condition) == 1
+              text = text.replace(signature, 'CreateComputePipeline(nint device, byte[] code, bool nativeMotion = false)')
+              probe = '''if (nativeMotion)
+                          {
+                              if ((SDL.GetGPUShaderFormats(device) & ShaderCross.GetSPIRVShaderFormats() & SDL.GPUShaderFormat.DXBC) == 0)
+                                  throw new NotSupportedException("The motion control requires native DXBC compilation.");
+                              Console.WriteLine("Motion compiler control: native FXC/DXBC.");
+                          }
+                          '''.replace('\n', '\r\n' if b'\r\n' in compiler_bytes else '\n')
+              text = text.replace(condition, probe + condition.replace('if (', 'if (nativeMotion || ', 1))
+              compiler.write_bytes(text.encode())
+              call = 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray())'
+              text = path.read_text()
+              assert text.count(call) == 1
+              path.write_text(text.replace(call, 'ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray(), name == "PhysicsResidentMotionQueries.comp.portable.spv")'))
+          else:
+              assert os.environ['MOTION_COMPILER'] == 'current'
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
-          receipt = {'compiler': 'current', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
+          receipt = {'compiler': os.environ['MOTION_COMPILER'], 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
                      'originalSHA256': hashlib.sha256(original_bytes).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'originalCompilerSHA256': hashlib.sha256(compiler_bytes).hexdigest(),
                      'actualCompilerSHA256': hashlib.sha256(compiler.read_bytes()).hexdigest(),
-                     'motionControl': 'linear overlap, directed reach/refinement and common impact; eight refinements unchanged',
+                     'motionControl': 'linear motion and one concave-piece loop; excluded concave/concave and eight refinements unchanged',
                      'originalMotionSHA256': hashlib.sha256(motion_original).hexdigest(),
                      'actualMotionSHA256': hashlib.sha256(motion.read_bytes()).hexdigest()}
           Path('bin/diagnostics/compiler-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
@@ -142,7 +174,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: windows-gpu-diagnostics-current
+          name: windows-gpu-diagnostics-${{ matrix.compiler }}
           path: |
             bin/diagnostics/compiler-source.json
             bin/diagnostics/warp-source.json

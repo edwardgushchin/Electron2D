@@ -61,7 +61,21 @@ The bounded rolled control still fails the same missing-preheader check. Its
 unrolled alternative expands to 713584 bytes/14254 blocks and takes 98.6 s to
 compile locally; the linear control compiles in 9.9 s at 202052 bytes/4297 blocks.
 Five local numerical/allocation groups pass, but driver and full target gates
-remain separate. The fixture stays under tools/ci and changes only the temporary
+remain separate. With the ordinary heap, the linear control exits `0xC0000409`
+and repeats the missing-preheader exception; all 174 loops in its input DXIL have
+valid preheaders. The public optimizer does not expose that internal pass.
+The next control flattens the two piece loops into one: concave/concave candidates
+are already excluded, so only one operand can have multiple pieces. Zero counts,
+both operand orders and enumeration order remain unchanged, without multiplying
+counts. Its offline DXIL is 201736 bytes/4294 blocks and compiles in 13.0 s.
+The two diagnostic jobs compare the current DXIL path with native FXC/DXBC only
+for this motion pipeline. All other compute pipelines keep the production
+compiler. The latter control requires advertised DXBC support from both the
+device and ShaderCross and records that selection; source receipts identify the
+temporary compiler and device edits. Both jobs preserve their original failure
+and retain ordinary native ownership. This comparison does not select a new
+production compiler policy or package a test driver.
+The fixture stays under tools/ci and changes only the temporary
 checkout copy. Source receipts include both motion shader hashes; this diagnostic
 rewrite does not change the production shader or establish target acceptance.
 The next Windows control uses Microsoft's test-only WARP 1.0.21, whose release
