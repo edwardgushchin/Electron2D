@@ -131,9 +131,8 @@ bool candidate(Shape s,Mapping mapping)
     if(excluded(mapping.identity.xy,q.exclusions.x,q.exclusions.y)||excluded(s.owner.xy,q.policy.x,q.policy.y))return false;
     return mapping.associations.zw==uvec2(0)||!excluded(mapping.associations.zw,q.exclusions.z,q.exclusions.w);
 }
-bool movingPair(Hull a,Hull b,Geometry ga,Geometry gb,float limit,bool alreadyBlocked,out vec2 fractions,out uint sourceShape)
+void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
 {
-    fractions=vec2(1);sourceShape=mapA.identity.z;
     bool ignored=ga.data.z==7u||(ga.data.z==5u&&gb.data.z!=7u);
     vec2 motion=ignored?vec2(0):q.motionMargin.xy;
     bool oneWay=ga.data.z!=6u&&(shapeB.policy.w&4u)!=0u;
@@ -150,32 +149,33 @@ bool movingPair(Hull a,Hull b,Geometry ga,Geometry gb,float limit,bool alreadyBl
         if(phase==initialPhase)
         {
             initial=contact;
-            if(contact.valid&&oneWay&&dot2(q.motionMargin.xy,passDirection())<0)return false;
+            if(contact.valid&&oneWay&&dot2(q.motionMargin.xy,passDirection())<0)return;
             if(directed){extension=motion;phase=reachPhase;continue;}
             if(contact.valid)
             {
                 if((contact.depth>0.05||dot2(q.motionMargin.xy,contact.normal)<-0.0001)&&oneWayContact(contact))
-                {fractions=vec2(0);return true;}
-                return false;
+                {safe=unsafeFraction=0;motionShape=mapA.identity.z;blocked=true;}
+                return;
             }
-            if(limit==0||ignored)return false;
+            if(safe==0||ignored)return;
             float fraction;
-            if(!querySweep(a,b,motion,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return false;
+            if(!querySweep(a,b,motion,vec2(0),a.radius+b.radius,0.00001,fraction,normal))return;
             vec2 bracket=querySweepBracket(fraction);low=bracket.x;high=bracket.y;
-            if(low>=limit)return false;
+            if(low>=safe)return;
             if(oneWay){probe.pose.xy+=high*motion;probe.radius+=q.motionMargin.z;phase=impactPhase;continue;}
-            fractions=vec2(low,high);return true;
+            safe=low;unsafeFraction=high;
+            motionShape=mapA.identity.z;blocked=true;return;
         }
         if(phase==impactPhase)
         {
-            if(!contact.valid){if(!directed)return false;contact=full;}
-            if(oneWay&&dot2(contact.normal,passDirection())>=0)return false;
-            fractions=vec2(low,high);return true;
+            if(!contact.valid){if(!directed)return;contact=full;}
+            if(oneWay&&dot2(contact.normal,passDirection())>=0)return;
+            safe=low;unsafeFraction=high;motionShape=mapA.identity.z;blocked=true;return;
         }
         if(phase==reachPhase)
         {
-            full=contact;if(!full.valid)return false;
-            if(initial.valid&&initial.depth<=0.05&&dot2(q.motionMargin.xy,initial.normal)>=-0.0001)return false;
+            full=contact;if(!full.valid)return;
+            if(initial.valid&&initial.depth<=0.05&&dot2(q.motionMargin.xy,initial.normal)>=-0.0001)return;
             high=initial.valid?0:1;
             if(!initial.valid){middle=low+(high-low)*coefficient;extension=motion*middle;phase=bisectPhase;continue;}
         }
@@ -185,7 +185,7 @@ bool movingPair(Hull a,Hull b,Geometry ga,Geometry gb,float limit,bool alreadyBl
             else{low=middle;coefficient=refinements==0u||high<1?0.5:0.75;}
             if(++refinements<8u){middle=low+(high-low)*coefficient;extension=motion*middle;continue;}
         }
-        if(low>=limit&&alreadyBlocked)return false;
+        if(low>=safe&&blocked)return;
         if(ga.data.z==6u&&gb.data.z!=7u&&!initial.valid)
         {
             float advance=dot2(normalized(vertex(a,1u)-vertex(a,0u)),motion);
@@ -193,7 +193,6 @@ bool movingPair(Hull a,Hull b,Geometry ga,Geometry gb,float limit,bool alreadyBl
         }
         probe.pose.xy+=high*motion;extension=vec2(0);margin=q.motionMargin.z;phase=impactPhase;
     }
-    return false;
 }
 vec4 queryBounds(Shape shape,Geometry g,bool recovering)
 {
@@ -269,12 +268,7 @@ void scan(uint phase)
                                     {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}
                                 }
                             }
-                            else
-                            {
-                                vec2 fractions;uint sourceShape;
-                                if(movingPair(a,b,ga,gb,safe,blocked,fractions,sourceShape))
-                                {safe=fractions.x;unsafeFraction=fractions.y;motionShape=sourceShape;blocked=true;}
-                            }
+                            else movingPair(a,b,ga,gb);
                         }
                         if(recovering&&invalid&&!accepted&&rejectedCount<32u)
                             WRITE_UINT(scratchStart+32u+rejectedCount++,uvec4(shapeA.owner.zw,indexB,shapeB.policy.x));

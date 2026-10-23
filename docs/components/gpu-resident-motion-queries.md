@@ -85,18 +85,17 @@ reads/writes. The target probe at `f46bdc94b` still observes the same zero-fract
 miss, so this simplification does not correct the Windows failure. The completed
 `9df050e6e` diagnostic records history mask 15: translation enters with a full
 bracket and nonzero motion, then exits scan with safe zero and blocked false.
-Compiled diagnostic DXBC and SDK assembly are retained; compilation dominates
-cold pipeline cost. Staged SPIR-V optimization at `fdf81533a` lets DXIL create all
-four pipelines, but its first public motion query still misses.
+Actual diagnostic DXBC and SDK assembly are retained; compilation dominates cold
+pipeline cost. Staged SPIR-V optimization lets DXIL create all four pipelines,
+but its first public motion query still misses.
 
-Pair casts now return candidate fractions and a logical source slot explicitly.
-The scan applies those fields and blocked state together after a successful pair,
-instead of mutating the aggregate through a nested function. All five numerical/
-allocation groups pass locally under Vulkan, portable and optimized-stage profiles;
-the Vulkan module changes from `79fb6af` to `bfe409ad`. Target execution remains
-required for this candidate. Iteration limits, GPU buffers, submissions and readback
-are unchanged; the SPIR-V optimization switch remains diagnostic and production
-compiler selection is unchanged.
+An explicit pair-result refactor passed fifteen local numerical/allocation groups
+across three compiler profiles, but `a88b26ee5` still fails Windows: ordinary DXIL
+aborts in initial pipeline creation; optimized DXIL creates all pipelines and
+returns the same miss. That refactor is removed from production. Its prototype
+and receipts remain diagnostic evidence. The staged optimizer remains a manual
+comparison; ordinary full suites are required and production compiler selection
+is unchanged.
 
 The earlier single portable traversal still aborted in Windows WARP 1.0.21
 `ScopeNestedCFG::runOnFunction`. Flattening motion phases and removing one sweep
