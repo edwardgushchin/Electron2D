@@ -2,6 +2,7 @@
 
 from contextlib import redirect_stdout
 from io import StringIO
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -24,6 +25,44 @@ import run_browser
 
 
 class Checks(unittest.TestCase):
+    def test_linux_gpu_diagnostic_preserves_the_baseline_and_shader_identity(self):
+        workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()
+        row = next(row for row in rids.matrix() if row['rid'] == 'linux-x64')
+        self.assertIn('runs-on: ' + row['runner'], workflow)
+        self.assertIn('key: shader-tools-' + row['runner'] + '-', workflow)
+        self.assertLess(workflow.index('Run the unchanged compound fixture'), workflow.index('Trace candidate and impact boundaries'))
+        self.assertIn('cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json', workflow)
+        self.assertIn("if: steps.baseline.outcome == 'failure'\n        run: exit 1", workflow)
+        step = workflow.partition('      - name: Trace candidate and impact boundaries')[2].split('\n      - ', 1)[0]
+        inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
+        code = '\n'.join(line[10:] for line in inline.splitlines())
+        path = Path('src/Servers/Physics/GPUPhysicsBodyStore.Continuous.cs')
+        original = (rids.ROOT / path).read_bytes().replace(b'\r\n', b'\n')
+        previous = Path.cwd()
+        try:
+            with tempfile.TemporaryDirectory(prefix='e2d GPU trace ') as directory, patch.dict(os.environ, GITHUB_SHA='self-check'):
+                os.chdir(directory)
+                path.parent.mkdir(parents=True)
+                Path('bin/diagnostics').mkdir(parents=True)
+                for newline in (b'\n', b'\r\n'):
+                    with self.subTest(newline=newline):
+                        before = original.replace(b'\n', newline)
+                        path.write_bytes(before)
+                        exec(compile(code, 'linux-gpu-workflow', 'exec'), {})
+                        after = path.read_bytes()
+                        self.assertEqual(after.count(b'CCD candidates delta='), 1)
+                        self.assertEqual(after.count(b'CCD result status='), 1)
+                        self.assertEqual(b'\r\n' in after, newline == b'\r\n')
+                        receipt = json.loads(Path('bin/diagnostics/trace-source.json').read_text())
+                        self.assertEqual(receipt['originalSHA256'], hashlib.sha256(before).hexdigest())
+                        self.assertEqual(receipt['actualSHA256'], hashlib.sha256(after).hexdigest())
+                missing = original.replace(b'result = ((float*)mapped)[1];', b'/* missing marker */')
+                path.write_bytes(missing)
+                with self.assertRaises(AssertionError): exec(compile(code, 'linux-gpu-workflow', 'exec'), {})
+                self.assertEqual(path.read_bytes(), missing)
+        finally:
+            os.chdir(previous)
+
     def test_tls_diagnostic_uses_the_registered_arm64_host_and_prerequisites(self):
         workflow = (rids.ROOT / '.github/workflows/linux-tls-diagnostics.yml').read_text()
         row = next(row for row in rids.matrix() if row['rid'] == 'linux-arm64')

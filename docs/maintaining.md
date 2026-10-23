@@ -47,6 +47,12 @@ process is checked again through its opened handle before interruption, and the
 original eight-minute debugger budget still bounds cleanup. The PowerShell
 self-check rejects missing, ambiguous, foreign and reused process identities.
 
+The manual Linux GPU diagnostic first runs the unchanged public compound fixture
+on the registered x64 host. A failed baseline is replayed with candidate-count and
+impact-fraction logging in a temporary source copy; the shader manifest must stay
+byte-identical. CPU/driver identities, both logs and source hashes are retained.
+Neither a traced replay nor a local pass replaces the failed untraced target gate.
+
 The manual Linux TLS diagnostic runs the complete ARM64 executable with a separate
 native `pthread_key_create`/`pthread_key_delete` interposer. It records process,
 key, result, live count and caller module/offset; a failed allocation includes a

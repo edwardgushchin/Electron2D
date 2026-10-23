@@ -81,6 +81,16 @@ shader hashes match the actual CI assembly. These controls do not explain or
 clear the CI failure; complete Linux Mesa, Windows and Metal execution remains
 open.
 
+Run `39899252158` reproduced the same Linux x64 compound CastRay miss in a fresh
+process before the full suite, with Mesa 26.0.8. It reached `x=60` with unchanged
+incident velocity instead of stopping at the transformed wall. The separate Linux
+GPU diagnostic retains an unchanged baseline before tracing the candidate/impact
+boundary; source logging and shader identity are recorded separately.
+A local self-contained .NET 10.0.13 replay with a fresh shader cache, the same
+Mesa version and all eight native receipt hashes passed in 130 seconds, retaining
+128 cycles at zero owner/all-thread managed bytes. This cold local pass still
+does not reproduce or clear the hosted x64 failure.
+
 The explicit-slot candidate passes six local profiles on .NET 10.0.13: CPU/GPU
 public compound consumers, functional shape/motion queries, pipeline ownership
 and the public compound consumer with the isolated CI Mesa library. Compound
