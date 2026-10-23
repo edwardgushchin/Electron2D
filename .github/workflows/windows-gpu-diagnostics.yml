@@ -18,7 +18,7 @@ on:
         default: false
 
       seed_motion_bounds:
-        description: Compare first-vertex bounds and persisted sweep state between candidate visits
+        description: Compare first-vertex bounds and persisted motion/contact state
         type: boolean
         default: false
 
@@ -179,6 +179,9 @@ jobs:
               uint motionProbe=0u;
               #else
               uint motionProbe=outputWords[stateAt+2u].w;
+              #if E2D_MOTION_STAGE == 3
+              outputWords[scratchStart]=uvec4(outputWords[stateAt+2u].xy,outputWords[stateAt+3u].zw);
+              #endif
               #endif'''
               text = text.replace(state, state + '\n' + history)
               text = text.replace(translate, translate + '\n    motionProbe|=(safe==1&&unsafeFraction==1?4u:0u)|(q.motionMargin.xy!=vec2(0)?8u:0u);\n    outputWords[stateAt+3u]=uvec4(0u);\n    outputWords[stateAt+2u].xy=floatBitsToUint(vec2(1));')
@@ -237,8 +240,8 @@ jobs:
               #endif'''
               text = text.replace(publish, history + '\n' + publish)
               probe = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
-              result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[stateAt+3u].w<<22);
-              result.objectID.zw=outputWords[stateAt+2u].xy;
+              result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[scratchStart].w<<22);
+              result.objectID.zw=outputWords[scratchStart].xy;
               #endif'''
               shader.write_text(text.replace(result, result + '\n' + probe))
               query = Path('src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs')
@@ -277,6 +280,30 @@ jobs:
               sweep_scan = '    if(q.motionMargin.xy!=vec2(0))scan(1u);'
               assert text.count(sweep_scan) == 2
               text = text.replace(sweep_scan, sweep_scan + '\n' + load_sweep, 1)
+              best_contact = '                                    if(contact.depth>bestDepth)\n                                    {bestDepth=contact.depth;if(resting)best=snapshot(contact);found=true;}'
+              assert text.count(best_contact) == 1
+              retained_contact = '''#if defined(E2D_MOTION_STAGE) && E2D_MOTION_STAGE == 3
+                                                  uint restAt=gl_GlobalInvocationID.x*8u;
+                                                  if(contact.depth>uintBitsToFloat(outputWords[restAt+5u].z))
+                                                  {
+                                                      Result restSample=snapshot(contact);
+                                                      outputWords[restAt]=restSample.identity;outputWords[restAt+1u]=restSample.shapes;
+                                                      outputWords[restAt+2u]=restSample.owner;outputWords[restAt+3u]=restSample.objectID;
+                                                      outputWords[restAt+4u]=floatBitsToUint(restSample.pointNormal);
+                                                      outputWords[restAt+5u]=floatBitsToUint(restSample.velocityDepth);
+                                                  }
+              #else
+              ''' + best_contact + '\n#endif'
+              text = text.replace(best_contact, retained_contact)
+              rest_scan = '    if(blocked||(recovered&&(q.policy.z&1u)!=0u))\n    {bodyA.pose.xy+=unsafeFraction*q.motionMargin.xy;scan(2u);}'
+              assert text.count(rest_scan) == 1
+              restore_contact = '''
+                  recovery=uintBitsToFloat(state.xy);
+                  rested=outputWords[stateAt+2u].z!=0u;
+                  if(rested)restResult=Result(outputWords[stateAt],outputWords[stateAt+1u],
+                      outputWords[stateAt+2u],outputWords[stateAt+3u],uintBitsToFloat(outputWords[stateAt+4u]),
+                      uintBitsToFloat(outputWords[stateAt+5u]),vec4(0),vec4(0));'''
+              text = text.replace(rest_scan, '    outputWords[stateAt+2u].z=0u;\n    outputWords[stateAt+5u].z=floatBitsToUint(min(length(q.motionMargin.xy),q.motionMargin.z*0.05));\n' + rest_scan + '\n' + load_sweep + restore_contact)
               shader.write_text(text)
           Path('bin/diagnostics').mkdir(parents=True, exist_ok=True)
           receipt = {'compiler': selection + ' motion; DXIL remaining kernels', 'headSHA': os.environ['GITHUB_SHA'], 'instrumentedSource': str(path),
@@ -287,6 +314,7 @@ jobs:
                      'motionSPIRVOptimization': optimization == 'true',
                      'motionSeededBounds': seeded == 'true',
                      'motionPersistentSweep': seeded == 'true',
+                     'motionPersistentRest': seeded == 'true',
                      'originalGeneratorSHA256': hashlib.sha256(generator_original).hexdigest(),
                      'actualGeneratorSHA256': hashlib.sha256(generator.read_bytes()).hexdigest(),
                      'motionStages': ['initial recovery', 'continued recovery x3', 'translation', 'rest and result'],

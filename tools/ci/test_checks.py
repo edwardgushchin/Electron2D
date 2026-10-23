@@ -92,8 +92,8 @@ class Checks(unittest.TestCase):
                                 if seeded == 'false': self.assertEqual(shader, originals[names[3]].decode())
                             else:
                                 self.assertEqual(query.count('Motion stage receipt:'), 1)
-                                self.assertIn('result.objectID.zw=outputWords[stateAt+2u].xy;', shader)
-                                self.assertIn('result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[stateAt+3u].w<<22);', shader)
+                                self.assertIn('result.objectID.zw=outputWords[scratchStart].xy;', shader)
+                                self.assertIn('result.owner.w=state.w|(motionProbe<<8)|(blocked?1048576u:0u)|(rested?2097152u:0u)|(outputWords[scratchStart].w<<22);', shader)
                                 self.assertIn('outputWords[stateAt+2u].w=motionProbe;', shader)
                                 self.assertIn('outputWords[stateAt+3u]=uvec4(0u);', shader)
                                 self.assertIn('atomicOr(outputWords[gl_GlobalInvocationID.x*8u+3u].z,(safe==0?4u:0u)|(blocked?8u:0u));', shader)
@@ -112,9 +112,12 @@ class Checks(unittest.TestCase):
                             self.assertEqual(receipt['motionSPIRVOptimization'], optimization == 'true')
                             self.assertEqual(receipt['motionSeededBounds'], seeded == 'true')
                             self.assertEqual(receipt['motionPersistentSweep'], seeded == 'true')
+                            self.assertEqual(receipt['motionPersistentRest'], seeded == 'true')
                             if seeded == 'true':
                                 self.assertIn('for(uint i=1u;i<g.data.y;i++)', shader)
-                                self.assertEqual(shader.count('uvec4 savedSweep=outputWords[gl_GlobalInvocationID.x*8u+7u];'), 2)
+                                self.assertIn('rested=outputWords[stateAt+2u].z!=0u;', shader)
+                                self.assertIn('if(contact.depth>uintBitsToFloat(outputWords[restAt+5u].z))', shader)
+                                self.assertEqual(shader.count('uvec4 savedSweep=outputWords[gl_GlobalInvocationID.x*8u+7u];'), 3)
                                 self.assertEqual(shader.count('outputWords[gl_GlobalInvocationID.x*8u+7u]=uvec4(floatBitsToUint(vec2(safe,unsafeFraction)),motionShape,blocked?1u:0u);'), 2)
                             if optimization == 'false':
                                 self.assertEqual(Path(names[4]).read_text(), originals[names[4]].decode())

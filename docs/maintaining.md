@@ -65,7 +65,11 @@ its default is false and it changes only the diagnostic checkout copy. It now
 also retains the translation accumulator in the existing phase-state word before
 and after each candidate pair, restoring it after the complete scan. This keeps
 safe/unsafe fractions, source identity and blocked state together without adding
-a buffer, host transfer or numerical operation.
+a buffer, host transfer or numerical operation. The next control also retains
+accepted deepest rest contacts in the existing result prefix, comparing the same
+depth threshold in device memory. It restores that record and phase state after
+scan. Diagnostic observations use a retired recovery-plane word during the final
+phase so contact writes cannot erase them; rejected-pair keys remain intact.
 The fraction probe uses the existing unused object-result words for the last
 pair-return and end-of-scan safe fractions. Diagnostic state bits retain
 query-bound entry/return and any BVH node/category read. Earlier receipts retain

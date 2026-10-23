@@ -359,3 +359,16 @@ are unchanged. Native execution is required before adopting either change.
 The local ordered compound and functional motion controls pass with persistence;
 their pair/end-of-scan fractions both remain `0.49609375`, and ordinary Vulkan
 retains SHA-256 `79fb6af39ee14df2d86e25cbc419dfc1596ad1275211eb97258c165cab41d87f`.
+
+Persistent-sweep run 39994374405 at 173ab9152 records `0x7FD2FF02`: the translation
+history is now 767 and final blocked is true, while rested remains false and the
+public query still misses. The candidate therefore preserves translation state
+without completing the target fix. The next control stores each accepted deepest
+rest contact directly in the result prefix, retaining its original strict depth
+comparison and clearing the hit marker before scan. It restores fractions and
+recovery after scan, with diagnostic words kept in a retired recovery-plane slot.
+Request/result sizes, excluded-pair keys, workloads and transfers are unchanged;
+this remains a diagnostic copy until target execution passes.
+Local ordered compound, functional motion and resident/public one-way/polygon
+checks pass, including their original zero-byte gates. The ordinary Vulkan module
+still has SHA-256 `79fb6af39ee14df2d86e25cbc419dfc1596ad1275211eb97258c165cab41d87f`.
