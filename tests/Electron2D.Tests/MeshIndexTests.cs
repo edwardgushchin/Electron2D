@@ -73,8 +73,7 @@ internal static class MeshIndexTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-indices-" + Guid.NewGuid().ToString("N") + ".e2dres");
         try
         {
-            ResourceSaver.Save(mesh, path); var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            start.ArgumentList.Add(typeof(MeshIndexTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_MESH_INDICES"); start.Environment.Remove("ELECTRON2D_TEST_MESH_INDICES_NATIVE"); start.Environment["ELECTRON2D_TEST_MESH_INDICES_CHILD"] = path;
+            ResourceSaver.Save(mesh, path); var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(MeshIndexTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_MESH_INDICES"); start.Environment.Remove("ELECTRON2D_TEST_MESH_INDICES_NATIVE"); start.Environment["ELECTRON2D_TEST_MESH_INDICES_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Mesh index archive child."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh mesh indices passed"), error.GetAwaiter().GetResult());

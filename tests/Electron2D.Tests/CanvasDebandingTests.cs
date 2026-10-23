@@ -32,8 +32,7 @@ internal static class CanvasDebandingTests
             ResourceSaver.Save(packed, System.IO.Path.Combine(folder, "scene.e2dscene"));
             using (var settings = new ProjectSettingsRegistry(folder))
             { settings.Set(ProjectSettings.UseDebanding, false); settings.SetFeatureOverride(ProjectSettings.UseDebanding, "dotnet", true); settings.Save(); }
-            var info = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            info.ArgumentList.Add(typeof(CanvasDebandingTests).Assembly.Location); info.ArgumentList.Add("--debanding-storage"); info.ArgumentList.Add(folder);
+            var info = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(info.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) info.ArgumentList.Add(typeof(CanvasDebandingTests).Assembly.Location); info.ArgumentList.Add("--debanding-storage"); info.ArgumentList.Add(folder);
             info.Environment.Remove("ELECTRON2D_TEST_DEBANDING");
             using var child = Process.Start(info)!; var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd();
             Check(child.WaitForExit(30000) && child.ExitCode == 0, $"Fresh debanding storage: {output} {error}");

@@ -94,7 +94,7 @@ internal static class AnimationResetSaveTests
     }
     private static void Child(string path)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(AnimationResetSaveTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_RESET_SAVE"); start.Environment["ELECTRON2D_TEST_RESET_SAVE_CHILD"] = path;
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(AnimationResetSaveTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_RESET_SAVE"); start.Environment["ELECTRON2D_TEST_RESET_SAVE_CHILD"] = path;
         using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("RESET save child."); }
         Check(child.ExitCode == 0, output.GetAwaiter().GetResult() + error.GetAwaiter().GetResult());
     }

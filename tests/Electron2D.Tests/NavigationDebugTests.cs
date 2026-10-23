@@ -87,7 +87,7 @@ internal static class NavigationDebugTests
     }
     private static void RunChild(string flag, string path)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(NavigationDebugTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION_DEBUG"); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION_DEBUG_NATIVE"); start.Environment[flag] = path;
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(NavigationDebugTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION_DEBUG"); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION_DEBUG_NATIVE"); start.Environment[flag] = path;
         using var child = Process.Start(start)!; var stdout = child.StandardOutput.ReadToEndAsync(); var stderr = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Navigation debug child."); }
         Check(child.ExitCode == 0 && stdout.GetAwaiter().GetResult().Contains("Fresh navigation diagnostics passed"), stderr.GetAwaiter().GetResult());
     }

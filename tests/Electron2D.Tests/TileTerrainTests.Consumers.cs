@@ -45,7 +45,7 @@ internal static partial class TileTerrainTests
         try
         {
             ResourceSaver.Save(packed, path); using var local = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); using var instance = (TileMapLayer)local.Instantiate(); Check(instance.TileSet!.GetTerrainSetsCount() == 1 && instance.GetUsedCells().OrderBy(c => c.X).ThenBy(c => c.Y).SequenceEqual(layer.GetUsedCells().OrderBy(c => c.X).ThenBy(c => c.Y)), "Local authored terrain scene roundtrip");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TileTerrainTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_TERRAINS"); start.Environment.Remove("ELECTRON2D_TEST_TILE_TERRAINS_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_TERRAINS_FILE"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileTerrainTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_TERRAINS"); start.Environment.Remove("ELECTRON2D_TEST_TILE_TERRAINS_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_TERRAINS_FILE"] = path;
             var elapsed = Stopwatch.StartNew();
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
             var exited = process.WaitForExit(30000);

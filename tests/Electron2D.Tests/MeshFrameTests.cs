@@ -71,7 +71,7 @@ internal static class MeshFrameTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-mesh-frames-" + Guid.NewGuid().ToString("N") + ".e2dres");
         try
         {
-            ResourceSaver.Save(mesh, path); var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(MeshFrameTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_MESH_FRAMES"); start.Environment.Remove("ELECTRON2D_TEST_MESH_FRAMES_NATIVE"); start.Environment["ELECTRON2D_TEST_MESH_FRAMES_CHILD"] = path;
+            ResourceSaver.Save(mesh, path); var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(MeshFrameTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_MESH_FRAMES"); start.Environment.Remove("ELECTRON2D_TEST_MESH_FRAMES_NATIVE"); start.Environment["ELECTRON2D_TEST_MESH_FRAMES_CHILD"] = path;
             using var child = Process.Start(start)!; var stdout = child.StandardOutput.ReadToEndAsync(); var stderr = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Mesh frame child."); }
             Check(child.ExitCode == 0 && stdout.GetAwaiter().GetResult().Contains("Fresh frame archive passed"), stderr.GetAwaiter().GetResult());
         }

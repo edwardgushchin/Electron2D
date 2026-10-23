@@ -1,6 +1,16 @@
 # Platform verification matrix
 
-Last updated: 2026-10-06
+Last updated: 2026-10-23
+
+Fresh-process desktop fixtures now restart the current executable and add their
+assembly only for a framework `dotnet` host. Run `39890302781` reached terrain
+scene persistence on the x64 macOS apphost, then failed because its child selected
+an ARM64 SDK host and rejected the published x64 `libhostpolicy.dylib`. The same
+host-selection problem reproduces locally with a rejecting PATH host under an
+apphost, while the framework-host control retains its own executable directory.
+Scene/asset, font, animation, rendering, navigation and time consumers share the
+correction. SDK compilation and the independent decoder keep their separate host
+selection. Local launch checks cannot replace corrected x64 macOS execution.
 
 This matrix records execution on hosts and devices available during this audit. A successful build or packaged native library is not a runtime check. A blocked backend is a measured result for this build and device, not a claim that an entire platform can never support it.
 

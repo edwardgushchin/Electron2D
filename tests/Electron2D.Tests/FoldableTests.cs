@@ -51,7 +51,7 @@ internal static class FoldableTests
         try
         {
             using var scene = new PackedScene(); scene.Pack(root); var path = System.IO.Path.Combine(folder, "scene.e2dscene"); ResourceSaver.Save(scene, path); RunArchive(path);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(FoldableTests).Assembly.Location); start.ArgumentList.Add("--foldable-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_FOLDABLE");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(FoldableTests).Assembly.Location); start.ArgumentList.Add("--foldable-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_FOLDABLE");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh foldable process deadline."); }
             Check(child.ExitCode == 0, "Fresh process: " + output.GetAwaiter().GetResult() + errors.GetAwaiter().GetResult());
         }

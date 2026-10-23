@@ -85,8 +85,7 @@ internal static class TouchControlTests
         {
             using var scene = new PackedScene(); scene.Pack(root); ResourceSaver.Save(scene, path, SaverFlags.BundleResources);
             RunArchive(path);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            start.ArgumentList.Add(typeof(TouchControlTests).Assembly.Location); start.ArgumentList.Add("--touch-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_TOUCH");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TouchControlTests).Assembly.Location); start.ArgumentList.Add("--touch-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_TOUCH");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh touch scene deadline."); }
             Check(child.ExitCode == 0, "Fresh process: " + output.GetAwaiter().GetResult() + errors.GetAwaiter().GetResult());

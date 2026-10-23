@@ -102,7 +102,7 @@ internal static class AnimationControllerPersistenceTests
     }
     private static void Child(string path, bool unknown)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(AnimationControllerPersistenceTests).Assembly.Location);
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(AnimationControllerPersistenceTests).Assembly.Location);
         start.Environment.Remove("ELECTRON2D_TEST_CONTROLLER_FILE"); start.Environment["ELECTRON2D_TEST_CONTROLLER_FILE_CHILD"] = path; start.Environment["ELECTRON2D_TEST_CONTROLLER_UNKNOWN"] = unknown ? "1" : "0";
         using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
         if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Controller file child."); }

@@ -96,7 +96,7 @@ internal static partial class MeshPackedTests
         try
         {
             File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(Minimal(), PackedJSON));
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(MeshPackedTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_MESH_PACKED"); start.Environment["ELECTRON2D_TEST_MESH_PACKED_CHILD"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(MeshPackedTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_MESH_PACKED"); start.Environment["ELECTRON2D_TEST_MESH_PACKED_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Packed mesh child."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh packed surface passed"), errors.GetAwaiter().GetResult());
         }

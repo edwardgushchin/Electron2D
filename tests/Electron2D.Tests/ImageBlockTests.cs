@@ -55,8 +55,7 @@ internal static partial class ImageBlockTests
                 Check(changes == 1 && image.PixelFormat == expected.PixelFormat && image.MIPMapCount == 2 && image.GetData().AsSpan().SequenceEqual(expected.GetData()), "Independent complete-chain decoder parity: " + name);
                 image.Decompress(); Check(changes == 1, "Repeated decode is silent.");
             }
-            var info = new ProcessStartInfo("dotnet") { UseShellExecute = false };
-            foreach (var argument in new[] { typeof(ImageBlockTests).Assembly.Location, "--image-block-archive", directory }) info.ArgumentList.Add(argument);
+            var info = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(info.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) info.ArgumentList.Add(typeof(ImageBlockTests).Assembly.Location); foreach (var argument in new[] { "--image-block-archive", directory }) info.ArgumentList.Add(argument);
             using var child = Process.Start(info)!; child.WaitForExit(); Check(child.ExitCode == 0, "Fresh process restores all original block roles.");
             Failure();
         }

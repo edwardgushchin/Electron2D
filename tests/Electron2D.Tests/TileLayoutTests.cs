@@ -81,7 +81,7 @@ internal static partial class TileLayoutTests
                 var path = System.IO.Path.Combine(directory, $"{index++}.e2dscene"); ResourceSaver.Save(packed, path);
                 using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); using var instance = (TileMapLayer)loaded.Instantiate(); Same(set, instance.TileSet!); Check(instance.GetUsedCells().Single() == new Vector2i(-2, 3), "Packed authored coordinates remain layout coordinates");
             }
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TileLayoutTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_LAYOUTS"); start.Environment["ELECTRON2D_TEST_TILE_LAYOUTS_FILE"] = directory;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileLayoutTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_LAYOUTS"); start.Environment["ELECTRON2D_TEST_TILE_LAYOUTS_FILE"] = directory;
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh layout scene process."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh layouts passed"), errors.GetAwaiter().GetResult());

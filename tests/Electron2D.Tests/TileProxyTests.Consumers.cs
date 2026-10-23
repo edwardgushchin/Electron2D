@@ -44,7 +44,7 @@ internal static partial class TileProxyTests
         try
         {
             ResourceSaver.Save(packed, path); using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); using var local = (TileMapLayer)loaded.Instantiate(); Check(local.TileSet!.GetAlternativeLevelTileProxy(102, new(4, 4), 5) == (0, Vector2i.Zero, TileSetAtlasSource.TransformTranspose), "Local proxy graph roundtrip");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TileProxyTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_PROXIES"); start.Environment.Remove("ELECTRON2D_TEST_TILE_PROXIES_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_PROXIES_FILE"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileProxyTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_PROXIES"); start.Environment.Remove("ELECTRON2D_TEST_TILE_PROXIES_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_PROXIES_FILE"] = path;
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync(); if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh proxy scene process."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh proxy scene passed"), errors.GetAwaiter().GetResult());
         }

@@ -167,7 +167,9 @@ internal static class FileSaveAndSwapTests
     private static void Crash(string root)
     {
         var path = PathIn(root, "crash.bin"); var marker = PathIn(root, "crash.json"); NativeFile.WriteAllText(path, "old committed");
-        using var child = Process.Start(new ProcessStartInfo("dotnet") { ArgumentList = { typeof(FileSaveAndSwapTests).Assembly.Location, "--save-swap-child", path, marker }, UseShellExecute = false })!;
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { ArgumentList = { "--save-swap-child", path, marker }, UseShellExecute = false };
+        if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Insert(0, typeof(FileSaveAndSwapTests).Assembly.Location);
+        using var child = Process.Start(start)!;
         Check(child.WaitForExit(15000) && child.ExitCode == 23, "Child exits without disposal"); var staging = JsonSerializer.Deserialize<string>(NativeFile.ReadAllText(marker))!;
         Check(NativeFile.ReadAllText(path) == "old committed" && NativeFile.ReadAllText(staging) == "uncommitted", "Abrupt process exit preserves old file and leaves recoverable staging"); NativeFile.Delete(staging);
     }

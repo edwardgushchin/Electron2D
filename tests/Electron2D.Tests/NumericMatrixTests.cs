@@ -81,8 +81,7 @@ internal static class NumericMatrixTests
         try
         {
             ResourceSaver.Save(material, file);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            start.ArgumentList.Add(typeof(NumericMatrixTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_NUMERIC_MATRICES"] = "archive"; start.Environment["ELECTRON2D_MATRIX_ARCHIVE"] = file;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(NumericMatrixTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_NUMERIC_MATRICES"] = "archive"; start.Environment["ELECTRON2D_MATRIX_ARCHIVE"] = file;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd(); child.WaitForExit();
             Check(child.ExitCode == 0, "Fresh-process archive: " + output + error);
         }

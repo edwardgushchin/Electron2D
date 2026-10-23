@@ -141,7 +141,7 @@ internal static class AnimationGraphPersistenceTests
     }
     private static void Child(string path, bool unknown)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(AnimationGraphPersistenceTests).Assembly.Location);
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(AnimationGraphPersistenceTests).Assembly.Location);
         start.Environment.Remove("ELECTRON2D_TEST_GRAPH_FILE"); start.Environment["ELECTRON2D_TEST_GRAPH_FILE_CHILD"] = path; start.Environment["ELECTRON2D_TEST_GRAPH_FILE_UNKNOWN"] = unknown ? "1" : "0";
         using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Graph file child."); }
         Check(child.ExitCode == 0, output.GetAwaiter().GetResult() + error.GetAwaiter().GetResult());

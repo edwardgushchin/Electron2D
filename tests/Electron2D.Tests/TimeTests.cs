@@ -118,8 +118,7 @@ internal static class TimeTests
         if (!OperatingSystem.IsLinux()) return;
         foreach (var zone in new[] { "UTC", "Asia/Kathmandu", "America/New_York" })
         {
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            start.ArgumentList.Add(typeof(TimeTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_TIME"] = "zone"; start.Environment["TZ"] = zone;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TimeTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_TIME"] = "zone"; start.Environment["TZ"] = zone;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Timezone process."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Timezone passed", StringComparison.Ordinal), error.GetAwaiter().GetResult());

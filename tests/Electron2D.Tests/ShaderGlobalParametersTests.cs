@@ -31,8 +31,7 @@ internal static class ShaderGlobalParametersTests
         try
         {
             var path = System.IO.Path.Combine(folder, "global.e2dres"); ResourceSaver.Save(shader, path);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            start.ArgumentList.Add(typeof(ShaderGlobalParametersTests).Assembly.Location); start.ArgumentList.Add("--global-shader-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_SHADER_GLOBALS");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(ShaderGlobalParametersTests).Assembly.Location); start.ArgumentList.Add("--global-shader-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_SHADER_GLOBALS");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh global shader archive deadline."); }
             Check(child.ExitCode == 0, "Fresh global shader archive: " + output.GetAwaiter().GetResult() + errors.GetAwaiter().GetResult());

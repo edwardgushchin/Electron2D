@@ -71,8 +71,7 @@ internal static class CanvasVertexProgramTests
             var path = System.IO.Path.Combine(folder, "pair.e2dres"); ResourceSaver.Save(shader, path);
             using var restored = ResourceLoader.Load<Shader>(path, ResourceLoader.CacheMode.Ignore);
             Check(restored.GetSPIRV(RenderingDevice.ShaderStage.Vertex).SequenceEqual(vertexCode) && restored.GetSPIRV().SequenceEqual(fragmentCode), "Stored shader code restores both stages atomically.");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            start.ArgumentList.Add(typeof(CanvasVertexProgramTests).Assembly.Location); start.ArgumentList.Add("--canvas-vertex-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_CANVAS_VERTEX");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(CanvasVertexProgramTests).Assembly.Location); start.ArgumentList.Add("--canvas-vertex-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_CANVAS_VERTEX");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh paired shader archive deadline."); }
             Check(child.ExitCode == 0, "Fresh paired shader archive: " + output.GetAwaiter().GetResult() + errors.GetAwaiter().GetResult());

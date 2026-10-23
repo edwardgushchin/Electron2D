@@ -108,7 +108,7 @@ internal static class AnimationCuePersistenceTests
     }
     private static void Child(string path, string mode)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(AnimationCuePersistenceTests).Assembly.Location);
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(AnimationCuePersistenceTests).Assembly.Location);
         start.Environment["ELECTRON2D_TEST_CUE_FILE_CHILD"] = path; start.Environment["ELECTRON2D_TEST_CUE_FILE_MODE"] = mode; start.Environment.Remove("ELECTRON2D_TEST_CUE_FILE");
         using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
         if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Cue file child."); }

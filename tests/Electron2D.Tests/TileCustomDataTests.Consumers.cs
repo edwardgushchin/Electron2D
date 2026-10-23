@@ -56,7 +56,7 @@ internal static partial class TileCustomDataTests
         try
         {
             ResourceSaver.Save(packed, path); using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); using var local = (Layer)loaded.Instantiate(); Check(local.TileSet!.GetCustomDataLayerByName("Tint") == 0 && local.TileSet.GetCustomDataLayerType(0) == typeof(Color), "Local custom schema graph");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TileCustomDataTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_CUSTOM"); start.Environment.Remove("ELECTRON2D_TEST_TILE_CUSTOM_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_CUSTOM_FILE"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileCustomDataTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_CUSTOM"); start.Environment.Remove("ELECTRON2D_TEST_TILE_CUSTOM_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_CUSTOM_FILE"] = path;
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync(); if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh custom-data scene process."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh custom-data scene passed"), errors.GetAwaiter().GetResult());
         }

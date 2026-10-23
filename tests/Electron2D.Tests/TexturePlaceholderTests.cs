@@ -89,8 +89,7 @@ internal static class TexturePlaceholderTests
                 ResourceSaver.Save(scene, System.IO.Path.Combine(folder, "scene.e2dscene"), SaverFlags.BundleResources);
             }
             ReadArchive(folder);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            start.ArgumentList.Add(typeof(TexturePlaceholderTests).Assembly.Location); start.ArgumentList.Add("--texture-placeholder-archive"); start.ArgumentList.Add(folder); start.Environment.Remove("ELECTRON2D_TEST_TEXTURE_PLACEHOLDER");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TexturePlaceholderTests).Assembly.Location); start.ArgumentList.Add("--texture-placeholder-archive"); start.ArgumentList.Add(folder); start.Environment.Remove("ELECTRON2D_TEST_TEXTURE_PLACEHOLDER");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh texture-placeholder process deadline."); }
             Check(child.ExitCode == 0, "Fresh archive process: " + output.GetAwaiter().GetResult() + errors.GetAwaiter().GetResult());

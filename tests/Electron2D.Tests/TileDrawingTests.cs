@@ -27,7 +27,7 @@ internal static partial class TileDrawingTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "tile-draw-" + Guid.NewGuid() + ".e2dscene"); using var packed = new PackedScene(); packed.Pack(layer);
         try
         {
-            ResourceSaver.Save(packed, path); var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TileDrawingTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_DRAW"); start.Environment.Remove("ELECTRON2D_TEST_TILE_DRAW_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_DRAW_FILE"] = path;
+            ResourceSaver.Save(packed, path); var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileDrawingTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_DRAW"); start.Environment.Remove("ELECTRON2D_TEST_TILE_DRAW_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_DRAW_FILE"] = path;
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync(); if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh tile drawing scene process."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh tile drawing schema passed"), errors.GetAwaiter().GetResult());
         }

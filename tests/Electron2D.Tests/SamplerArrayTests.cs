@@ -133,8 +133,7 @@ internal static partial class SamplerArrayTests
 
     private static void CheckArchive(string file)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-        start.ArgumentList.Add(typeof(SamplerArrayTests).Assembly.Location);
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(SamplerArrayTests).Assembly.Location);
         start.Environment["ELECTRON2D_TEST_SAMPLER_ARRAYS"] = "archive"; start.Environment["ELECTRON2D_SAMPLER_ARCHIVE"] = file;
         using var child = Process.Start(start)!;
         var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd(); child.WaitForExit();

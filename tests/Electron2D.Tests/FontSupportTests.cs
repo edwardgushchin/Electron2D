@@ -68,7 +68,7 @@ internal static partial class FontSupportTests
             native.LoadBitmapFont(FontCacheTests.Fixture(directory)); Check(native.GetLanguageSupportOverrides().Contains("en") && !native.IsLanguageSupported("en"), "Bitmap import preserves source policy.");
             var path = System.IO.Path.Combine(directory, "fallback.e2dres"); root.Fallbacks = [first, second]; ResourceSaver.Save(root, path, SaverFlags.BundleResources);
             using var loaded = ResourceLoader.Load<FontFile>(path, ResourceLoader.CacheMode.Ignore); Check(Width(loaded) == 11, "Typed archive restores policy and fallback identity.");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(FontSupportTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_FONT_SUPPORT_CHILD"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(FontSupportTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_FONT_SUPPORT_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException(); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh support policy restored."), "Fresh archive process: " + error.GetAwaiter().GetResult());
         }

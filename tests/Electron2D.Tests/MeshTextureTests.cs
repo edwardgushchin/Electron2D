@@ -113,8 +113,7 @@ internal static partial class MeshTextureTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "electron2d-mesh-texture-" + Guid.NewGuid().ToString("N") + ".e2dres");
         try
         {
-            ResourceSaver.Save(view, path); var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            start.ArgumentList.Add(typeof(MeshTextureTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_MESH_TEXTURE"] = "archive"; start.Environment["ELECTRON2D_MESH_TEXTURE_ARCHIVE"] = path;
+            ResourceSaver.Save(view, path); var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(MeshTextureTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_MESH_TEXTURE"] = "archive"; start.Environment["ELECTRON2D_MESH_TEXTURE_ARCHIVE"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd(); child.WaitForExit();
             Check(child.ExitCode == 0, "Fresh-process archive: " + output + error);
         }

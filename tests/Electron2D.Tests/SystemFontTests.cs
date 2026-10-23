@@ -42,7 +42,7 @@ internal static class SystemFontTests
             File.WriteAllBytes(System.IO.Path.Combine(fonts, "arabic.woff2"), FontTestFixtures.Arabic);
             var config = System.IO.Path.Combine(directory, "fonts.conf");
             File.WriteAllText(config, "<?xml version=\"1.0\"?><fontconfig><dir>" + System.Security.SecurityElement.Escape(fonts) + "</dir><cachedir>" + System.Security.SecurityElement.Escape(System.IO.Path.Combine(directory, "cache")) + "</cachedir></fontconfig>");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(SystemFontTests).Assembly.Location);
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(SystemFontTests).Assembly.Location);
             start.Environment["FONTCONFIG_FILE"] = config; start.Environment["ELECTRON2D_TEST_SYSTEM_FONT_CATALOG"] = "1";
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Isolated font catalog."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Isolated font catalog passed"), error.GetAwaiter().GetResult());
@@ -116,7 +116,7 @@ internal static class SystemFontTests
         {
             ResourceSaver.Save(font, path); using var loaded = ResourceLoader.Load<SystemFont>(path, ResourceLoader.CacheMode.Ignore);
             Check(loaded.FontNames.SequenceEqual(font.FontNames) && loaded.FontWeight == font.FontWeight && loaded.GetStringSize("Restored").X > 0, "Typed storage keeps requested settings and rematches native sources.");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(SystemFontTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_SYSTEM_FONT_CHILD"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(SystemFontTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_SYSTEM_FONT_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("System font child."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh system font passed"), error.GetAwaiter().GetResult());
         }

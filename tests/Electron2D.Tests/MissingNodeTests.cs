@@ -48,8 +48,7 @@ internal static class MissingNodeTests
         {
             foreach (var phase in new[] { "write", "recover", "restore", "missing-scene", "archive-boundaries" }.Concat(Environment.GetEnvironmentVariable("ELECTRON2D_MISSING_NODE_NATIVE") == "1" ? ["native"] : Array.Empty<string>()))
             {
-                var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-                start.ArgumentList.Add(typeof(MissingNodeTests).Assembly.Location);
+                var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(MissingNodeTests).Assembly.Location);
                 start.Environment["ELECTRON2D_TEST_SCENE_CONNECTIONS"] = "1";
                 start.Environment["ELECTRON2D_MISSING_NODE_PHASE"] = phase; start.Environment["ELECTRON2D_MISSING_NODE_FOLDER"] = folder;
                 using var child = Process.Start(start)!; var stdout = child.StandardOutput.ReadToEndAsync(); var stderr = child.StandardError.ReadToEndAsync();

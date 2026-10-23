@@ -22,8 +22,7 @@ internal static class CanvasMSAATests
             var file = Path.Combine(directory, "viewport.e2dscene"); ResourceSaver.Save(scene, file);
             using var loaded = ResourceLoader.Load<PackedScene>(file, cacheMode: ResourceLoader.CacheMode.Ignore); using var restored = (SubViewport)loaded!.Instantiate();
             Check(restored.MSAA2D == Viewport.MSAA.Samples4X, "File scene retains typed MSAA.");
-            var info = new System.Diagnostics.ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            info.ArgumentList.Add(typeof(CanvasMSAATests).Assembly.Location); info.ArgumentList.Add("--msaa-scene"); info.ArgumentList.Add(file);
+            var info = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(info.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) info.ArgumentList.Add(typeof(CanvasMSAATests).Assembly.Location); info.ArgumentList.Add("--msaa-scene"); info.ArgumentList.Add(file);
             using var child = System.Diagnostics.Process.Start(info)!; var stdout = child.StandardOutput.ReadToEnd(); var stderr = child.StandardError.ReadToEnd();
             child.WaitForExit(); Check(child.ExitCode == 0, $"Fresh scene process: {stdout} {stderr}");
         }

@@ -48,7 +48,7 @@ internal static partial class TileSceneTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "scene-tiles-" + Guid.NewGuid() + ".e2dscene");
         try
         {
-            ResourceSaver.Save(packed, path); var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TileSceneTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_SCENES"); start.Environment["ELECTRON2D_TEST_TILE_SCENES_FILE"] = path;
+            ResourceSaver.Save(packed, path); var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileSceneTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_SCENES"); start.Environment["ELECTRON2D_TEST_TILE_SCENES_FILE"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh scene tile file."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh scene tile graph passed"), errors.GetAwaiter().GetResult());
         }

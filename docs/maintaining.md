@@ -36,6 +36,15 @@ An ARM64 Windows native crash reruns the same complete executable under CDB, wit
 
 The x64 macOS Tests job runs the unchanged `osx-x64` target on Apple Silicon through Rosetta for Metal availability. Keep native production and Build on their registered Intel host, verify the test app's x64 Mach-O architecture, and retain the full suite plus trimmed/NativeAOT checks. `tools/ci/test_checks.py` executes the actual Rosetta setup script for already available, installed, failed-install and wrong-architecture cases; these dispatch checks do not establish target execution or physical Intel GPU acceptance.
 
+Fresh-process fixtures restart `Environment.ProcessPath`, adding the test assembly
+only when the current executable is the `dotnet` host. Keep child arguments,
+environment selection, redirected diagnostics, deadlines and failure assertions.
+This preserves a self-contained apphost's architecture under Rosetta instead of
+selecting a different SDK host from PATH. The independent decoder oracle and SDK
+build checks still invoke `dotnet` for their distinct tool/assembly inputs.
+Verify both framework-hosted and apphost launches with a rejecting `dotnet` on
+PATH, and retain the complete target suite as the native execution gate.
+
 One CI workflow prepares native packages once and shares them across separate Build and Tests matrices. Both consume `tools/ci/rids.json` through `python3 -B tools/ci/rids.py`; keep it synchronized with the accepted mappings in `Electron2D.csproj`. `tools/ci/test_checks.py` checks matrix/dependency/layout drift, mobile results and strict aggregate status; `tools/native/test_windows.py` covers real PE rejection/import libraries with the pinned PE auditor. Final Build/Tests checks reject failed, skipped, cancelled or missing dependencies. The RID workflow enables trimming/AOT analysis and selects the full self-contained Linux/macOS/Windows headless suite; all seven desktop profiles passed at `975c9693`. Trimmed/NativeAOT desktop contracts exclude Windows x86 AOT; Android emulators, Apple simulators and Chromium execute managed and target-native contracts. All eighteen rows passed in run `37412313488`, with a separate iOS x64 job rerun after a system-boot timeout. Physical Apple profiles build unsigned apps only. Read [exact scope and limits](platform-verification.md#automated-rid-checks); these checks do not establish rendering, production-host lifecycle or hardware acceptance.
 
 Mobile and browser contract apps share `FontTestFixtures`; embed every font resource read by its type initializer, including OTF and TTC fixtures. `tools/ci/test_checks.py` checks the required logical resource inventory in all three consumer projects before the platform jobs run.

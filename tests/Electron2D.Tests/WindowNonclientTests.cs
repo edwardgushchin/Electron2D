@@ -91,7 +91,7 @@ internal static class WindowNonclientTests
         try
         {
             var path = IOPath.Combine(folder, "scene.e2dscene"); ResourceSaver.SaveScene(root, path, SaverFlags.Compress | SaverFlags.SaveBigEndian);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(WindowNonclientTests).Assembly.Location);
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(WindowNonclientTests).Assembly.Location);
             start.Environment["ELECTRON2D_TEST_WINDOW_INPUT"] = "managed"; start.Environment["ELECTRON2D_TEST_NONCLIENT_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(entireProcessTree: true); throw new TimeoutException("Fresh nonclient fixture timed out."); }

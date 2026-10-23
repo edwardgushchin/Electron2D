@@ -104,7 +104,7 @@ internal static partial class PrimitiveMeshTests
         try
         {
             ResourceSaver.Save(disk, System.IO.Path.Combine(directory, "disk.e2dres")); ResourceSaver.Save(scene, System.IO.Path.Combine(directory, "disk.e2dscene")); Child(directory, false);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(PrimitiveMeshTests).Assembly.Location); start.ArgumentList.Add(directory); start.Environment["ELECTRON2D_TEST_PRIMITIVE_MESH"] = "child";
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(PrimitiveMeshTests).Assembly.Location); start.ArgumentList.Add(directory); start.Environment["ELECTRON2D_TEST_PRIMITIVE_MESH"] = "child";
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh primitive archive."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh primitive archives passed"), errors.GetAwaiter().GetResult());
         }

@@ -57,7 +57,7 @@ internal static partial class TilePatternTests
         try
         {
             ResourceSaver.Save(packed, path); using var loaded = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); using var local = (TileMapLayer)loaded.Instantiate(); Check(local.TileSet!.GetPattern(0).GetSize() == new Vector2i(4, 4) && local.TileSet.GetPattern(0).HasCell(new(0, 1)), "Local graph preserves explicit emptiness and margins");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(TilePatternTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_PATTERNS"); start.Environment.Remove("ELECTRON2D_TEST_TILE_PATTERNS_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_PATTERNS_FILE"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TilePatternTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILE_PATTERNS"); start.Environment.Remove("ELECTRON2D_TEST_TILE_PATTERNS_NATIVE"); start.Environment["ELECTRON2D_TEST_TILE_PATTERNS_FILE"] = path;
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Fresh pattern scene process."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh pattern scene passed"), errors.GetAwaiter().GetResult());

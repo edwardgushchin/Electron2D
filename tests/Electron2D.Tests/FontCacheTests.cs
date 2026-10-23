@@ -127,7 +127,7 @@ internal static class FontCacheTests
             var stored = System.IO.Path.Combine(directory, "stored.e2dres"); ResourceSaver.Save(font, stored);
             using var loaded = ResourceLoader.Load<FontFile>(stored, ResourceLoader.CacheMode.Ignore);
             Check(loaded.GetStringSize("AB", fontSize: 8).X == 10 && loaded.FixedSize == 8, "Archive restores bitmap state without the descriptor.");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(FontCacheTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_FONT_CACHE_CHILD"] = stored;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(FontCacheTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_FONT_CACHE_CHILD"] = stored;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh bitmap process timed out."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh bitmap cache restored."), "Fresh bitmap process: " + error.GetAwaiter().GetResult());
             File.WriteAllText(path, "info size=8\ncommon lineHeight=8 base=6 pages=1\npage id=0 file=\"missing.png\"\n");

@@ -65,7 +65,7 @@ internal static partial class ProceduralMeshTests
         try
         {
             ResourceSaver.Save(producer, path); ResourceSaver.Save(mesh, path + ".mesh.e2dres");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(ProceduralMeshTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_PROCEDURAL_MESH"); start.Environment["ELECTRON2D_TEST_PROCEDURAL_MESH_CHILD"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(ProceduralMeshTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_PROCEDURAL_MESH"); start.Environment["ELECTRON2D_TEST_PROCEDURAL_MESH_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh procedural archives."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh procedural archives passed"), errors.GetAwaiter().GetResult());
         }

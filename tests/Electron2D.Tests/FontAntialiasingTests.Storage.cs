@@ -14,8 +14,7 @@ internal static partial class FontAntialiasingTests
             var systemPath = System.IO.Path.Combine(directory, "system.e2dres"); ResourceSaver.Save(system, systemPath);
             using var loadedSystem = ResourceLoader.Load<SystemFont>(systemPath, ResourceLoader.CacheMode.Ignore);
             Check(loadedSystem.Antialiasing == FontAntialiasing.LCD && Glyph(loadedSystem).LCD, "System archive stores preferences and realizes fresh sources.");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            start.ArgumentList.Add(typeof(FontAntialiasingTests).Assembly.Location); start.ArgumentList.Add("--font-aa-archive"); start.ArgumentList.Add(path);
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(FontAntialiasingTests).Assembly.Location); start.ArgumentList.Add("--font-aa-archive"); start.ArgumentList.Add(path);
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Font archive child timed out."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh AA archive passed."), "Fresh AA resource load: " + error.GetAwaiter().GetResult());

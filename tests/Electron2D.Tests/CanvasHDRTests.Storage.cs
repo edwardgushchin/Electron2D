@@ -12,8 +12,7 @@ internal static partial class CanvasHDRTests
             ResourceSaver.Save(scene, System.IO.Path.Combine(folder, "viewport.e2dscene"));
             using (var settings = new ProjectSettingsRegistry(folder))
             { settings.Set(ProjectSettings.HDR2D, false); settings.SetFeatureOverride(ProjectSettings.HDR2D, "dotnet", true); settings.Save(); }
-            var info = new System.Diagnostics.ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            info.ArgumentList.Add(typeof(CanvasHDRTests).Assembly.Location); info.ArgumentList.Add("--hdr-storage"); info.ArgumentList.Add(folder);
+            var info = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(info.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) info.ArgumentList.Add(typeof(CanvasHDRTests).Assembly.Location); info.ArgumentList.Add("--hdr-storage"); info.ArgumentList.Add(folder);
             using var child = System.Diagnostics.Process.Start(info)!; var stdout = child.StandardOutput.ReadToEnd(); var stderr = child.StandardError.ReadToEnd();
             child.WaitForExit(); Check(child.ExitCode == 0, $"Fresh HDR scene/project reader: {stdout} {stderr}");
         }

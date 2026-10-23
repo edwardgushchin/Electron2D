@@ -84,7 +84,7 @@ internal static partial class MeshBoundsTests
         {
             ResourceSaver.Save(mesh, path); using var copy = ResourceLoader.Load<ArrayMesh>(path, ResourceLoader.CacheMode.Ignore);
             Check(copy.CustomAABB == mesh.CustomAABB && copy.GetAABB() == mesh.GetAABB(), "Typed archive restores independent visibility bounds.");
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(MeshBoundsTests).Assembly.Location);
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(MeshBoundsTests).Assembly.Location);
             start.Environment.Remove("ELECTRON2D_TEST_MESH_BOUNDS"); start.Environment["ELECTRON2D_TEST_MESH_BOUNDS_CHILD"] = path;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh mesh bounds archive."); }

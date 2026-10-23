@@ -85,8 +85,7 @@ internal static class DrawableTextureTests
                 using var duplicate = (Shader)shader.Duplicate(); Check(duplicate.GetMode() == Shader.Mode.TextureBlit, "Shader duplication preserves domain.");
                 Reject<NotSupportedException>(() => material.RequireCanvasState());
             }
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            start.ArgumentList.Add(typeof(DrawableTextureTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_DRAWABLE"] = "archive"; start.Environment["ELECTRON2D_DRAWABLE_ARCHIVE"] = directory;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(DrawableTextureTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_DRAWABLE"] = "archive"; start.Environment["ELECTRON2D_DRAWABLE_ARCHIVE"] = directory;
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd();
             Check(child.WaitForExit(30000) && child.ExitCode == 0, "Fresh archive process: " + output + error);
         }

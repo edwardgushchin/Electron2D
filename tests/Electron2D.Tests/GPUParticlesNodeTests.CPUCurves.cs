@@ -17,8 +17,7 @@ internal static partial class GPUParticlesNodeTests
             try
             {
                 ResourceSaver.Save(node.ProcessMaterial!, path);
-                var start = new System.Diagnostics.ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-                start.ArgumentList.Add(typeof(GPUParticlesNodeTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_PARTICLE_SERVER"] = "node-cpu-file"; start.Environment["ELECTRON2D_GPU_NODE_FILE"] = path;
+                var start = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(GPUParticlesNodeTests).Assembly.Location); start.Environment["ELECTRON2D_TEST_PARTICLE_SERVER"] = "node-cpu-file"; start.Environment["ELECTRON2D_GPU_NODE_FILE"] = path;
                 using var child = System.Diagnostics.Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
                 if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Converted CPU curves file child."); }
                 Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("CPU-to-GPU lifetime velocity", StringComparison.Ordinal), error.GetAwaiter().GetResult());

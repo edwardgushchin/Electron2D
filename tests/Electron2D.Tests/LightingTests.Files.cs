@@ -14,7 +14,7 @@ internal static partial class LightingTests
         try
         {
             ResourceSaver.Save(scene, path); RunFile(path);
-            var start = new System.Diagnostics.ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(LightingTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_LIGHTING"); start.Environment.Remove("ELECTRON2D_TEST_LIGHTING_NATIVE"); start.Environment["ELECTRON2D_TEST_LIGHTING_FILE"] = path;
+            var start = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(LightingTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_LIGHTING"); start.Environment.Remove("ELECTRON2D_TEST_LIGHTING_NATIVE"); start.Environment["ELECTRON2D_TEST_LIGHTING_FILE"] = path;
             using var child = System.Diagnostics.Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var errors = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh lighting archive."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh lighting graph passed"), errors.GetAwaiter().GetResult());
         }

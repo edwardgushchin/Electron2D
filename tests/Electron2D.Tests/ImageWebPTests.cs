@@ -77,8 +77,7 @@ internal static class ImageWebPTests
             }
             using var stored = ResourceLoader.Load<ImageTexture>("res://image.WEBP", ResourceLoader.CacheMode.Ignore);
             ResourceSaver.Save(stored, Path.Combine(root, "texture.e2dres"));
-            var process = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            process.ArgumentList.Add(typeof(ImageWebPTests).Assembly.Location); process.ArgumentList.Add("--image-webp-archive"); process.ArgumentList.Add(root); process.Environment.Remove("ELECTRON2D_TEST_IMAGE_WEBP");
+            var process = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(process.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) process.ArgumentList.Add(typeof(ImageWebPTests).Assembly.Location); process.ArgumentList.Add("--image-webp-archive"); process.ArgumentList.Add(root); process.Environment.Remove("ELECTRON2D_TEST_IMAGE_WEBP");
             using var child = Process.Start(process)!; var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd();
             Check(child.WaitForExit(30000) && child.ExitCode == 0, "Fresh WebP archive failed: " + output + error);
             var destination = Path.Combine(root, "image.WEBP"); var before = File.ReadAllBytes(destination);

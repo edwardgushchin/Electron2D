@@ -48,8 +48,7 @@ internal static class ShaderGlobalsOverrideTests
         try
         {
             var path = System.IO.Path.Combine(folder, "globals.e2dscene"); ResourceSaver.Save(packed, path);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-            start.ArgumentList.Add(typeof(ShaderGlobalsOverrideTests).Assembly.Location); start.ArgumentList.Add("--scene-globals-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_SCENE_GLOBALS");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(ShaderGlobalsOverrideTests).Assembly.Location); start.ArgumentList.Add("--scene-globals-archive"); start.ArgumentList.Add(path); start.Environment.Remove("ELECTRON2D_TEST_SCENE_GLOBALS");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
             if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Fresh scene-global load timed out."); }
             Check(child.ExitCode == 0, output.Result + error.Result);

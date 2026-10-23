@@ -61,8 +61,7 @@ internal static partial class ImageBCnTests
             var archive = System.IO.Path.Combine(directory, "texture.e2dres"); ResourceSaver.Save(texture, archive); using var stored = ResourceLoader.Load<ImageTexture>(archive, ResourceLoader.CacheMode.Ignore); using var storedImage = stored.GetImage()!;
             Check(storedImage.IsCompressed && storedImage.GetData().AsSpan().SequenceEqual(image.GetData()), "Compressed source archive.");
             using var array = new TextureArray(); array.CreateFromImages([image, image]); var layered = System.IO.Path.Combine(directory, "array.e2dres"); ResourceSaver.Save(array, layered);
-            var info = new System.Diagnostics.ProcessStartInfo("dotnet") { UseShellExecute = false };
-            foreach (var arg in new[] { typeof(ImageBCnTests).Assembly.Location, "--image-bcn-archive", directory }) info.ArgumentList.Add(arg);
+            var info = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(info.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) info.ArgumentList.Add(typeof(ImageBCnTests).Assembly.Location); foreach (var arg in new[] { "--image-bcn-archive", directory }) info.ArgumentList.Add(arg);
             using var child = System.Diagnostics.Process.Start(info)!; child.WaitForExit(); Check(child.ExitCode == 0, "Fresh process reads DDS and compressed image/array archives.");
             var before = File.ReadAllBytes(path); Reject<DirectoryNotFoundException>(() => image.SaveDDS(System.IO.Path.Combine(directory, "absent", "image.dds")));
             Check(File.ReadAllBytes(path).AsSpan().SequenceEqual(before), "Failed save preserves existing output.");

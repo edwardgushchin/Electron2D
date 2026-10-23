@@ -90,8 +90,7 @@ internal static partial class Type1FontTests
     private static void Fail(Resource resource) => throw new Marker();
     private static void FreshArchive(string path)
     {
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-        start.ArgumentList.Add(typeof(Type1FontTests).Assembly.Location); start.ArgumentList.Add("--font-type1-archive"); start.ArgumentList.Add(path);
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(Type1FontTests).Assembly.Location); start.ArgumentList.Add("--font-type1-archive"); start.ArgumentList.Add(path);
         start.Environment.Remove("ELECTRON2D_TEST_TYPE1"); using var process = Process.Start(start)!;
         var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync();
         if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Type 1 archive child timed out."); }

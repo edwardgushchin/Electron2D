@@ -89,8 +89,7 @@ internal static partial class TileMapLayerTests
         try
         {
             ResourceSaver.Save(packed, path);
-            var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true };
-            start.ArgumentList.Add(typeof(TileMapLayerTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILES"); start.Environment["ELECTRON2D_TEST_TILES_FILE"] = path;
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(TileMapLayerTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_TILES"); start.Environment["ELECTRON2D_TEST_TILES_FILE"] = path;
             using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
             if (!process.WaitForExit(30000)) { process.Kill(true); throw new TimeoutException("Tile scene child."); }
             Check(process.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh tile scene passed"), errors.GetAwaiter().GetResult());

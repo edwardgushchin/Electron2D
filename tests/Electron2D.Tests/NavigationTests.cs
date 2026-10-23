@@ -104,7 +104,7 @@ internal static class NavigationTests
         var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "e2d-navigation-" + Guid.NewGuid() + ".e2dscene");
         try
         {
-            ResourceSaver.Save(packed, path); RunChild(path); var start = new System.Diagnostics.ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(typeof(NavigationTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION"); start.Environment["ELECTRON2D_TEST_NAVIGATION_CHILD"] = path;
+            ResourceSaver.Save(packed, path); RunChild(path); var start = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(NavigationTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION"); start.Environment["ELECTRON2D_TEST_NAVIGATION_CHILD"] = path;
             using var child = System.Diagnostics.Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Navigation archive child."); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh navigation scene passed"), error.GetAwaiter().GetResult());
         }

@@ -8,7 +8,7 @@ internal static partial class Type1FontTests
         if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) return;
         var fonts = System.IO.Path.Combine(directory, "catalog"); Directory.CreateDirectory(fonts); Write(fonts, "pfb"); Write(fonts, "pfm");
         var config = System.IO.Path.Combine(directory, "fonts.conf"); System.IO.File.WriteAllText(config, "<?xml version=\"1.0\"?><fontconfig><dir>" + System.Security.SecurityElement.Escape(fonts) + "</dir><cachedir>" + System.Security.SecurityElement.Escape(System.IO.Path.Combine(directory, "cache")) + "</cachedir></fontconfig>");
-        var start = new ProcessStartInfo("dotnet") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; start.ArgumentList.Add(typeof(Type1FontTests).Assembly.Location);
+        var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(Type1FontTests).Assembly.Location);
         start.Environment["FONTCONFIG_FILE"] = config; start.Environment["ELECTRON2D_TEST_TYPE1"] = "catalog";
         using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
         if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Type 1 catalog child timed out."); }
