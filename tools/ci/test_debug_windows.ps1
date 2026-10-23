@@ -3,6 +3,8 @@ $errors = $null; $tokens = $null
 $path = Join-Path $PSScriptRoot 'debug_windows.ps1'
 $ast = [Management.Automation.Language.Parser]::ParseFile($path, [ref]$tokens, [ref]$errors)
 if ($errors.Count) { throw ($errors | Out-String) }
+$launch = $ast.Find({ param($node) $node -is [Management.Automation.Language.CommandAst] -and $node.GetCommandName() -eq 'Start-Process' -and $node.Extent.Text.Contains('$cdb') }, $true)
+if (!$launch -or !$launch.Extent.Text.Contains("'-hd'")) { throw 'CDB replay must retain the ordinary process heap.' }
 $mapping = $ast.Find({ param($node) $node -is [Management.Automation.Language.AssignmentStatementAst] -and $node.Left.VariablePath.UserPath -eq 'throwObject' }, $true)
 if (!$mapping) { throw 'Compiler exception argument mapping is missing.' }
 foreach ($case in @(@('arm64', '@x0'), @('x64', '@rcx'), @('x86', 'poi(@esp+4)'))) {

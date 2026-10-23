@@ -62,7 +62,7 @@ sxd -c2 ".ecxr; k; lm; q" sbo
 g
 '@ | Add-Content -Encoding ascii $commands
 $log = Join-Path $Output 'runtime-cdb.log'
-$debugger = Start-Process -FilePath $cdb -ArgumentList @('-G', '-cf', "`"$commands`"", '-logo', "`"$log`"", "`"$Executable`"") -PassThru -NoNewWindow
+$debugger = Start-Process -FilePath $cdb -ArgumentList @('-G', '-hd', '-cf', "`"$commands`"", '-logo', "`"$log`"", "`"$Executable`"") -PassThru -NoNewWindow
 $watch = [Diagnostics.Stopwatch]::StartNew()
 try {
     if (!$debugger.WaitForExit(360000)) {

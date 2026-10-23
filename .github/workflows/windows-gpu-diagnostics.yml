@@ -122,10 +122,17 @@ jobs:
         id: fixture
         continue-on-error: true
         timeout-minutes: 10
+        shell: pwsh
         run: |
-          set -o pipefail
-          bin/diagnostics/runner/Electron2D.Tests.exe 2>&1 | tee bin/diagnostics/compound.log
-          grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/compound.log
+          $executable = (Resolve-Path 'bin/diagnostics/runner/Electron2D.Tests.exe').Path
+          $log = 'bin/diagnostics/compound.log'
+          & $executable 2>&1 | Tee-Object -FilePath $log
+          $code = [int]$LASTEXITCODE
+          ('Runtime exit: {0} (0x{0:X8})' -f $code) | Tee-Object -FilePath $log -Append
+          if ($code -ne 0) { exit 1 }
+          if (!((Get-Content $log) -ccontains 'Compound GPU: transformed slots, gaps and disabled indices passed.')) {
+              throw 'The compound completion marker is missing.'
+          }
       - name: Capture native exception context
         if: steps.fixture.outcome == 'failure'
         continue-on-error: true

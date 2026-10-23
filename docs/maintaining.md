@@ -44,8 +44,14 @@ the current compiler retains production ownership and preserves the actual fixtu
 For a stalled CDB replay, the debugger interrupts only one exact executable child
 after six minutes and records every native thread stack at that breakpoint. The
 process is checked again through its opened handle before interruption, and the
-original eight-minute debugger budget still bounds cleanup. The PowerShell
-self-check rejects missing, ambiguous, foreign and reused process identities.
+original eight-minute debugger budget still bounds cleanup. The replay uses
+`CDB -hd` to retain the ordinary process heap: the preceding linear control stack
+spent its deadline in `RtlDebugAllocateHeap` and WARP `ReducibilityAnalysis`. The
+untraced fixture now runs directly under PowerShell and records the signed exit
+code and its full 32-bit hexadecimal representation before preserving failure;
+zero exit and an exact case-sensitive completion line are both required.
+See [CDB command-line options](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/cdb-command-line-options).
+The PowerShell self-check rejects missing, ambiguous, foreign and reused process identities.
 Compiler exceptions also record the first DWORD of the WARP exception object and
 its throwing stack; architecture-specific argument locations have executable
 PowerShell checks. No general heap dump is captured. The current temporary
