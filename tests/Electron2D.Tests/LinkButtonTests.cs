@@ -125,7 +125,6 @@ internal static class LinkButtonTests
                 Set("CFBundleURLTypes", new XElement("array", new XElement("dict", new XElement("key", "CFBundleTypeRole"), new XElement("string", "Editor"), new XElement("key", "CFBundleURLName"), new XElement("string", bundleID), new XElement("key", "CFBundleURLSchemes"), new XElement("array", new XElement("string", scheme)))));
                 Set("LSUIElement", new XElement("true")); document.DocumentType?.Remove(); document.Save(plist);
                 RunFixtureTool("/usr/bin/plutil", "-lint", plist);
-                RunFixtureTool("/usr/bin/lipo", "-info", System.IO.Path.Combine(app, "Contents", "MacOS", "applet"));
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
                 registered = true; BindMacURI(app, scheme, bundleID);
             }
@@ -239,6 +238,7 @@ internal static class LinkButtonTests
         using var font = new FontFile { Data = FontTestFixtures.OpenSans }; var link = new LinkButton("warm A") { Size = new(120, 35), ToggleMode = true }; link.AddThemeFontOverride("font", font);
         using var tree = new SceneTree(link); var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         for (var i = 0; i < 64; i++) { link.Text = (i & 1) == 0 ? "warm A" : "warm V"; link.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(link, vertices, batches); }
+        AllocationWarmupCheck.Collect();
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) { link.Text = (i & 1) == 0 ? "warm A" : "warm V"; link.ButtonPressed = (i & 1) == 0; tree.ProcessFrame(0); Record(link, vertices, batches); }
         var active = GC.GetAllocatedBytesForCurrentThread() - before; Check(active == 0, "Warm link layout/recording bytes=" + active);

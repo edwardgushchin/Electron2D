@@ -115,8 +115,7 @@ LinkButtonTests covers concrete defaults, all stored fields, supplementary/malfo
 The native rendering fixture checks real glyph/underline/state/RTL-ellipsis pixels and native pointer edges, with warmed frame allocation measured separately. See the component for completed backend evidence. Accessibility host integration, routed real desktop/browser acceptance, native allocator counts and other platforms retain their owning gates.
 
 The macOS fresh-process fixture owns a unique temporary app and URI scheme. It
-validates the native plist, records both applet architectures and signs/registers
-the app. Its [explicit scheme claims](https://developer.apple.com/documentation/coreservices/1443240-lscopyallhandlersforurlscheme)
+validates the native plist and signs/registers the app. Its [explicit scheme claims](https://developer.apple.com/documentation/coreservices/1443240-lscopyallhandlersforurlscheme)
 must contain exactly the owned bundle before assigning and reading back that
 scheme's default handler; a preferred-handler fallback alone is not treated as
 an explicit foreign claim. Cleanup unregisters the app and deletes its files.
@@ -125,3 +124,5 @@ runs still returned LSOpenCFURLRef -10814, and the first preferred-handler guard
 stopped run 39947670388. The revised claims check uses direct CoreFoundation/CoreServices calls with balanced CF/native library ownership. Native run 39950803043 reports zero registered claims after the CLI command, so the fixture now registers its actual file URL with LSRegisterURL before checking claims. Run 39949194585 rejected a JXA bridge value before native binding; that interpreter path has been removed. Target execution remains required.
 
 Run 39952942294 ARM64 reports zero registered claims even after a successful LSRegisterURL for the temporary-directory app. The owned fixture now lives beneath the user Applications directory during the check; cleanup deletes only its unique directory and removes the parent only if the fixture created it and it stays empty. This location control still needs native verification.
+
+The user-Applications location control 39953997252 completes the actual ARM64 fresh-scene/native URI handoff with exactly the stored URI, then rejects the later 6,664-byte layout/recording counter delta. WarmFrames now drains both finalization passes after 64 warm frames; its 64 active and idle frames and zero-byte assertions stay unchanged. The same run times out only its extra lipo inventory command on x64. That inventory log is removed; earlier runs already recorded both applet slices, and the actual URI capture remains mandatory. Whole untraced ARM64/x64 suite acceptance is still open.
