@@ -41,22 +41,25 @@ float queryDistance(Hull a,Hull b,vec2 sweepA,vec2 sweepB,out vec2 normal)
         for(uint i=1u;i<other.count;i++)minimum=min(minimum,dot2(line.xy,vertex(other,i)));
         normal=flip?-line.xy:line.xy;return max(0,minimum+min(0,dot2(line.xy,so))-line.z-max(0,dot2(line.xy,sp)));
     }
-    vec2 simplex[3];uint count=1u;vec3 weights=vec3(1,0,0);
-    simplex[0]=querySupport(a,b,sweepA,sweepB,vec2(1,0));
-    vec2 v=simplex[0];
+    // Explicit slots avoid dynamic private-array allocation in software DXIL compilers.
+    vec2 first=querySupport(a,b,sweepA,sweepB,vec2(1,0)),second=vec2(0),third=vec2(0);
+    uint count=1u;vec2 v=first;
     [[dont_unroll]] for(uint iteration=0u;iteration<64u;iteration++)
     {
         float squared=dot2(v,v);if(!finite2(vec2(squared))){fail();normal=vec2(0);return 0;}
         if(squared<=1e-12)break;
         vec2 next=querySupport(a,b,sweepA,sweepB,-v);
-        bool duplicate=false;for(uint i=0u;i<count;i++)if(next==simplex[i])duplicate=true;
+        bool duplicate=next==first||(count>1u&&next==second)||(count>2u&&next==third);
         if(duplicate||squared-dot2(v,next)<=max(1e-12,1e-7*squared))break;
         if(count==3u){failQuery(4u);break;}
-        simplex[count++]=next;
-        weights=count==2u?lineWeights(simplex[0],simplex[1]):triangleWeights(simplex[0],simplex[1],simplex[2]);
-        vec2 previous=v;v=vec2(0);uint kept=0u;vec3 reduced=vec3(0);
-        for(uint i=0u;i<count;i++)if(weights[i]>0){v+=weights[i]*simplex[i];simplex[kept]=simplex[i];reduced[kept++]=weights[i];}
-        count=kept;weights=reduced;
+        if(count==1u)second=next;else third=next;
+        count++;
+        vec3 weights=count==2u?lineWeights(first,second):triangleWeights(first,second,third);
+        vec2 previous=v;v=vec2(0);uint kept=0u;
+        if(weights.x>0){v+=weights.x*first;kept=1u;}
+        if(weights.y>0){v+=weights.y*second;if(kept==0u)first=second;kept++;}
+        if(weights.z>0){v+=weights.z*third;if(kept==0u)first=third;else if(kept==1u)second=third;kept++;}
+        count=kept;
         if(count==3u){normal=vec2(0);return 0;}
         if(dot2(v,v)>=squared){v=previous;break;}
         if(iteration==63u)failQuery(2u);

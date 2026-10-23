@@ -11,7 +11,7 @@ shared source. Vulkan retains the `-O` module and its measured cold-pipeline
 improvement; Metal and Direct3D 12 use a function-preserving portable module.
 The three additional modules pass `spirv-val` and native reflection reports the
 same nine resource and workgroup values as their optimized counterparts.
-Shape-query SPIR-V uses 1,310,952 optimized or 153,216 portable bytes;
+Shape-query SPIR-V uses 1,322,876 optimized or 153,616 portable bytes;
 generated backend source avoids the multi-megabyte
 expansion measured with the optimized module. Native ShaderCross compiled all 35
 physics modules to DXIL locally. The common compute boundary selects DXIL when
@@ -31,32 +31,36 @@ offscreen CCD run failed while creating a later device with no supported backend
 it did not complete. This host/environment difference remains separate from the
 unverified Metal/Direct3D profile execution and the complete Linux Mesa CI suite.
 
-The query distance simplex now retains only its three Minkowski difference
-vectors. Its former support-point pair fields were never consumed. The distance,
-duplicate detection, barycentric reduction, iteration limits and sweep brackets
-are unchanged; no device record or public result layout changes. This reduces
-the private array element from a three-vector struct to one vector before backend
-translation. It is a portability candidate for the Windows query failure, not
-confirmed Windows acceptance. Run `39869572938` still crashed during the first
-GPU shape intersection on Windows x64/x86; the ARM64 diagnostic located
-`d3d10warp!PixelJITProcessor::ExecuteJIT` and a return-address authentication
-failure. The exact faulty operation remains unisolated.
+The query distance simplex retains its three Minkowski difference vectors in
+explicit local slots. Duplicate checks and positive barycentric reduction use
+fixed fields; no dynamically indexed private array or reduced-weight array is
+needed. Distance arithmetic order, iteration limits, sweep brackets, device
+records and public results retain their existing contracts.
 
-The same run missed a compound CastRay impact on Linux x64. Isolated local
-Lavapipe 26.2.4 and the CI Mesa 26.0.8 library both passed the unchanged public
+Removing unused support-point fields alone did not fix Windows: run
+`39883094660` still failed during the first shape intersection on all three
+Windows architectures. The focused x64 diagnostic in run `39888772956` captured
+heap corruption while `d3d10warp!ShaderJIT::ParseAllocaDecl` parsed DXIL local
+allocations, before dispatch execution. This motivates explicit simplex slots;
+matching reflection, offline compilation and local Vulkan checks cannot establish
+Windows acceptance. The fresh public compound fixture and complete target suite
+remain required.
+
+The same full run missed a compound CastRay impact on Linux x64. Isolated local
+CI Mesa 26.0.8 with .NET 10.0.13 and offscreen video passed the unchanged public
 compound consumer, including CastRay/CastShape and 128 zero-allocation cycles.
-The compiled local and CI Linux runtime profile strings and query/CCD resource
-hashes match. Those controls do not explain or clear the CI failure.
+Explicit SSE2/128 and AVX2/256 controls also passed. All 35 embedded physics
+shader hashes match the actual CI assembly. These controls do not explain or
+clear the CI failure; complete Linux Mesa, Windows and Metal execution remains
+open.
 
-The reduced simplex and guarded spring product pass eight focused local profiles:
-CPU/GPU public compound checks, functional shape/motion queries, CPU/GPU shared
-CCD/joint policies, CPU scene physics and pipeline ownership/hash checks. The
-updated public compound and shared CCD/joint profiles also pass with the isolated
-CI Mesa 26.0.8 library. All 35 updated modules compile through native ShaderCross
-to DXIL, and each optimized/portable pair retains identical nine-value reflection.
-Three original modules change: shape queries, motion queries and joint preparation;
-the other 29 original module hashes match. These are local execution/compiler
-controls, not corrected Windows/Metal or complete target-suite acceptance.
+The explicit-slot candidate passes six local profiles on .NET 10.0.13: CPU/GPU
+public compound consumers, functional shape/motion queries, pipeline ownership
+and the public compound consumer with the isolated CI Mesa library. Compound
+controls retain 128 measured cycles at zero owner/all-thread managed bytes. All
+35 modules compile to DXIL, each optimized/portable pair retains the same nine
+reflection values, and the translated query HLSL has no three-element vector
+array. These local controls do not clear the foreign-platform release gate.
 
 ## Boundary and ownership
 

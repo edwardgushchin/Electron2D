@@ -1,7 +1,7 @@
 # GPUPhysicsBodyStore
 
 [Query distance scratch](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
-retains only the three consumed difference vectors. The
+retains three explicit difference-vector slots without dynamic private-array indexing. The
 [spring force kernel](../components/physics-joint-policies.md) explicitly skips
 its elastic product after complete axial decay. Device records, physical budgets
 and public results retain their existing layouts and limits.

@@ -3,7 +3,7 @@
 # Physics domain
 
 [Resident query scratch](../components/gpu-resident-shape-queries.md#backend-compiler-profiles)
-uses three consumed difference vectors, and the [spring kernel](../components/physics-joint-policies.md)
+uses three explicit difference-vector slots without dynamic private-array indexing, and the [spring kernel](../components/physics-joint-policies.md)
 guards complete axial decay before evaluating extreme elastic coefficients.
 Public signatures, physical budgets and zero-allocation thresholds are unchanged;
 foreign-platform execution remains a release gate.

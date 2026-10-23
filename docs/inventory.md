@@ -1,7 +1,7 @@
 # Engine inventory
 
-[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) reduces private query simplex
-scratch to consumed difference vectors and guards the spring elastic product
+[GPUPhysicsBodyStore](classes/GPUPhysicsBodyStore.md) retains the query simplex
+in three explicit vector slots without dynamic private-array indexing and guards the spring elastic product
 after complete axial decay. Existing types, device records and public API remain;
 the components distinguish local controls from pending target execution.
 
