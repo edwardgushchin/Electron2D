@@ -62,11 +62,11 @@ first vertex, then visits the remaining vertices in the original order. The only
 caller already excludes zero-vertex geometry. The ordinary Vulkan source keeps
 its original branch. This replaces the failed explicit descent/advance control;
 its default is false and it changes only the diagnostic checkout copy.
-The source-header probe uses the existing unused object-result words for the live
-geometry vertex count, geometry kind and policy flags. Diagnostic state bits mark
+The fraction probe uses the existing unused object-result words for the last
+pair-return and end-of-scan safe fractions. Diagnostic state bits retain
 query-bound entry/return and any BVH node/category read. Earlier receipts retain
-their incoming-fraction or root-predicate interpretation;
-the current receipt names its source-header layout explicitly.
+their incoming-fraction, source-header or root-predicate interpretation;
+the current receipt names its pair/scan fraction layout explicitly.
 
 Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu`
 for the aggregate's managed mixing mode and `1` for complete native output.

@@ -338,3 +338,12 @@ The local ordered compound and functional motion controls pass with this change.
 The ordinary Vulkan module keeps SHA-256
 `79fb6af39ee14df2d86e25cbc419dfc1596ad1275211eb97258c165cab41d87f`.
 Target execution and the complete platform gates remain required.
+
+With seeded bounds, optimized DXIL run 39990536686 at ec9ffbd21 records
+`0x7FC6CF02`: query-bound return, every traversal mark and pair entry/return are
+now present. A pair-return observation sees blocked state, but the translation
+exit and public result still miss. Unoptimized run 39990539157 still exits
+`0xC0000409` during the first motion pipeline creation. The candidate therefore
+does not close either target gate. The next receipt captures safe fractions
+immediately after a pair and at the end of the source scan, using existing result
+padding; no numerical result is replaced or accepted from these observations.
