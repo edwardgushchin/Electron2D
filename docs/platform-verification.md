@@ -121,6 +121,12 @@ use a Ryzen 5700X without AVX-512 and do not explain the hosted failure. The nex
 diagnostic compares 128/256-bit vector widths with the complete unchanged
 fixture, actual device identities, binary/source receipts and cold shader caches.
 CPU SIMD dependence remains a hypothesis; no ordinary driver policy is changed.
+Run `40030984267` at `426798799` passes the baseline on an EPYC 7763 with the same
+Mesa package version (artifact `12534059802`). Its conditional SIMD controls are
+skipped, so that pass does not explain the EPYC 9V45 failure. The diagnostic now
+executes both explicit-Lavapipe SIMD controls even after a passing baseline and
+preserves failure from either control. A separate local 256/512-bit comparison
+uses the isolated CI Mesa library without changing installed system packages.
 
 Final complete CI, public package restoration, rendered consumers and release
 publication remain pending. The current declaration register is not a substitute

@@ -183,7 +183,7 @@ class Checks(unittest.TestCase):
         self.assertIn('key: shader-tools-' + row['runner'] + '-', workflow)
         self.assertLess(workflow.index('Run the unchanged compound fixture'), workflow.index('Trace candidate and impact boundaries'))
         self.assertIn('cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json', workflow)
-        self.assertIn("if: steps.baseline.outcome == 'failure'\n        run: exit 1", workflow)
+        self.assertIn("if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure'\n        run: exit 1", workflow)
         step = workflow.partition('      - name: Trace candidate and impact boundaries')[2].split('\n      - ', 1)[0]
         inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
         code = '\n'.join(line[10:] for line in inline.splitlines())
@@ -226,10 +226,13 @@ class Checks(unittest.TestCase):
     def test_linux_simd_control_retains_raw_exits_driver_identity_and_both_workloads(self):
         workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()
         step = workflow.partition('      - name: Record cold device identity for SIMD controls')[2].split('\n      - ', 1)[0]
+        self.assertNotIn('        if:', step)
+        self.assertIn('python -B tools/ci/select_lavapipe.py > bin/diagnostics/simd-driver.json', step)
         inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
         code = '\n'.join(line[10:] for line in inline.splitlines())
         step = workflow.partition('      - name: Compare Lavapipe SIMD widths with the complete compound fixture')[2].split('\n      - ', 1)[0]
-        self.assertIn("if: steps.baseline.outcome == 'failure'", step)
+        self.assertNotIn('        if:', step)
+        self.assertIn('id: simd_control', step)
         inline = step.partition('        run: |\n')[2]
         command = '\n'.join(line[10:] for line in inline.splitlines())
         path = Path('src/Servers/Physics/GPUPhysicsDevice.cs')

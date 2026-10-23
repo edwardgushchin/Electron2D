@@ -160,13 +160,15 @@ Neither a traced replay nor a local pass replaces the failed untraced target gat
 A further control restores the exact original source bytes and repeats the
 unchanged fixture with only the installed Lavapipe ICD selected. The original
 baseline still determines the diagnostic job's failure status.
-After a failed baseline, the SIMD control logs the cold native device identity
+The SIMD control always logs the cold native device identity
 from a temporary source copy and repeats the complete fixture at vector widths
 128 and 256 using the same binary and separate empty shader caches. Each log must
 confirm the requested width, zero raw exit and the exact compound completion
 marker. These are diagnostic driver settings, documented by
 [Mesa](https://docs.mesa3d.org/drivers/llvmpipe.html#environment-variables);
-they do not change ordinary RID gates or replace the original failed workload.
+they do not change ordinary RID gates or replace the original workload. Hosted
+CPU models can differ between runs, so a successful baseline still executes both
+controls. Either an original failure or a failed SIMD control keeps the job red.
 
 The native `pthread_key_create`/`pthread_key_delete` interposer records process,
 key, result, live count and caller module/offset; a failed allocation includes a

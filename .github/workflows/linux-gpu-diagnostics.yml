@@ -135,8 +135,8 @@ jobs:
           bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/lavapipe.log
           grep -Fx 'Compound GPU: transformed slots, gaps and disabled indices passed.' bin/diagnostics/lavapipe.log
       - name: Record cold device identity for SIMD controls
-        if: steps.baseline.outcome == 'failure'
         run: |
+          python -B tools/ci/select_lavapipe.py > bin/diagnostics/simd-driver.json
           python - <<'PY'
           import hashlib, json, os
           from pathlib import Path
@@ -156,7 +156,7 @@ jobs:
           cmp obj/Release/net10.0/linux-x64/shaders/manifest.json bin/diagnostics/baseline-shaders.json
           sha256sum bin/diagnostics/runner/Electron2D.dll bin/diagnostics/runner/Electron2D.Tests.dll > bin/diagnostics/simd-binaries.txt
       - name: Compare Lavapipe SIMD widths with the complete compound fixture
-        if: steps.baseline.outcome == 'failure'
+        id: simd_control
         continue-on-error: true
         timeout-minutes: 10
         run: |
@@ -181,6 +181,6 @@ jobs:
             bin/diagnostics/*.json
             bin/diagnostics/*.txt
           if-no-files-found: error
-      - name: Preserve the unchanged fixture failure
-        if: steps.baseline.outcome == 'failure'
+      - name: Preserve original and SIMD fixture failures
+        if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure'
         run: exit 1
