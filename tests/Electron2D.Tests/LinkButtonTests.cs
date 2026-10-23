@@ -126,11 +126,12 @@ internal static class LinkButtonTests
                 RunFixtureTool("/usr/bin/codesign", "--force", "--sign", "-", app);
                 registered = true; RunFixtureTool(register, "-f", "-v", app);
                 var bind = "ObjC.import('CoreServices');\n" +
-                    $"var scheme=$('{scheme}'), bundle=$('{bundleID}');\n" +
-                    "var previous=ObjC.unwrap($.LSCopyDefaultHandlerForURLScheme(scheme));\n" +
-                    "if(previous && previous!==ObjC.unwrap(bundle)) throw new Error('The unique URI scheme already has a foreign handler.');\n" +
+                    $"var scheme=$('{scheme}'), identifier='{bundleID}', bundle=$(identifier);\n" +
+                    "var handlers=ObjC.deepUnwrap($.LSCopyAllHandlersForURLScheme(scheme))||[];\n" +
+                    "if(handlers.some(function(id){return id!==identifier;})) throw new Error('The unique URI scheme has foreign claims: '+JSON.stringify(handlers));\n" +
+                    "if(handlers.indexOf(identifier)<0) throw new Error('The owned URI app is not registered: '+JSON.stringify(handlers));\n" +
                     "var status=$.LSSetDefaultHandlerForURLScheme(scheme,bundle); if(status!==0) throw new Error('URI binding failed: '+status);\n" +
-                    "var current=ObjC.unwrap($.LSCopyDefaultHandlerForURLScheme(scheme)); if(current!==ObjC.unwrap(bundle)) throw new Error('URI binding readback differs.');\n" +
+                    "var current=ObjC.unwrap($.LSCopyDefaultHandlerForURLScheme(scheme)); if(current!==identifier) throw new Error('URI binding readback differs: '+current);\n" +
                     "current;";
                 RunFixtureTool("/usr/bin/osascript", "-l", "JavaScript", "-e", bind);
             }

@@ -114,6 +114,12 @@ LinkButtonTests covers concrete defaults, all stored fields, supplementary/malfo
 
 The native rendering fixture checks real glyph/underline/state/RTL-ellipsis pixels and native pointer edges, with warmed frame allocation measured separately. See the component for completed backend evidence. Accessibility host integration, routed real desktop/browser acceptance, native allocator counts and other platforms retain their owning gates.
 
-The macOS fresh-process fixture owns a unique temporary app and URI scheme. It now validates the native property list, records the applet architecture, declares the owned scheme as Editor and retains verbose registration diagnostics. Named-claim run 39939635339 still returned LSOpenCFURLRef -10814 on both RIDs; the revised native fixture remains a target gate.
-
-The revised macOS app has a valid native plist and an x86_64/arm64 executable, but run 39945830574 still rejects its launch. The fixture now binds its unique scheme through LSSetDefaultHandlerForURLScheme and checks LSCopyDefaultHandlerForURLScheme before launching the saved scene. It rejects a foreign pre-existing handler; cleanup unregisters the owned app. This binding and its native launch still require target verification.
+The macOS fresh-process fixture owns a unique temporary app and URI scheme. It
+validates the native plist, records both applet architectures and signs/registers
+the app. Its [explicit scheme claims](https://developer.apple.com/documentation/coreservices/1443240-lscopyallhandlersforurlscheme)
+must contain exactly the owned bundle before assigning and reading back that
+scheme's default handler; a preferred-handler fallback alone is not treated as
+an explicit foreign claim. Cleanup unregisters the app and deletes its files.
+Native launch remains an open target gate: earlier valid-plist/universal-app
+runs still returned LSOpenCFURLRef -10814, and the first preferred-handler guard
+stopped run 39947670388. The revised claims check requires target execution.
