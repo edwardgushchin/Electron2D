@@ -49,6 +49,8 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeVectorFunc", CreateVisualShaderNodeVectorFuncFileResource);
         RegisterResource("VisualShaderNodeVectorCompose", CreateVisualShaderNodeVectorComposeFileResource);
         RegisterResource("VisualShaderNodeVectorDecompose", CreateVisualShaderNodeVectorDecomposeFileResource);
+        RegisterResource("VisualShaderNodeFaceForward", CreateVisualShaderNodeFaceForwardFileResource);
+        RegisterResource("VisualShaderNodeRotationByAxis", CreateVisualShaderNodeRotationByAxisFileResource);
         RegisterResource("VisualShaderNodeRandomRange", CreateVisualShaderNodeRandomRangeFileResource);
         RegisterResource("VisualShaderNodeDotProduct", CreateVisualShaderNodeDotProductFileResource);
         RegisterResource("VisualShaderNodeVectorDistance", CreateVisualShaderNodeVectorDistanceFileResource);
@@ -97,6 +99,8 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeVectorFunc CreateVisualShaderNodeVectorFuncFileResource() => new();
     private static VisualShaderNodeVectorCompose CreateVisualShaderNodeVectorComposeFileResource() => new();
     private static VisualShaderNodeVectorDecompose CreateVisualShaderNodeVectorDecomposeFileResource() => new();
+    private static VisualShaderNodeFaceForward CreateVisualShaderNodeFaceForwardFileResource() => new();
+    private static VisualShaderNodeRotationByAxis CreateVisualShaderNodeRotationByAxisFileResource() => new();
     private static VisualShaderNodeRandomRange CreateVisualShaderNodeRandomRangeFileResource() => new();
     private static VisualShaderNodeDotProduct CreateVisualShaderNodeDotProductFileResource() => new();
     private static VisualShaderNodeVectorDistance CreateVisualShaderNodeVectorDistanceFileResource() => new();

@@ -4,7 +4,9 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "random-cpu") GraphChecks.RandomRangeCPU();
+    if (args.Length > 0 && args[0] == "orientation-cpu") GraphChecks.OrientationCPU();
+    else if (args.Length > 0 && args[0] == "orientation-author") GraphChecks.AuthorOrientation(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "random-cpu") GraphChecks.RandomRangeCPU();
     else if (args.Length > 0 && args[0] == "random-author") GraphChecks.AuthorRandomRange(System.IO.Path.GetFullPath(args[1]));
     else if (args.Length == 0 || args[0] == "cpu") GraphChecks.CPU();
     else if (args[0] == "domains-gpu") GraphChecks.RenderDomains(IOPath.GetFullPath(args[1]), args);

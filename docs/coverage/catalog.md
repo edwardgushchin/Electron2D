@@ -951,7 +951,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeDotProduct](classes/VisualShaderNodeDotProduct.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeExpression](classes/VisualShaderNodeExpression.md) | VisualShaderNodeGroupBase | Implemented | 1 |
-| [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md) | VisualShaderNodeVectorBase | Unimplemented | 0 |
+| [VisualShaderNodeFaceForward](classes/VisualShaderNodeFaceForward.md) | VisualShaderNodeVectorBase | Implemented | 0 |
 | [VisualShaderNodeFloatConstant](classes/VisualShaderNodeFloatConstant.md) | VisualShaderNodeConstant | Implemented | 1 |
 | [VisualShaderNodeFloatFunc](classes/VisualShaderNodeFloatFunc.md) | VisualShaderNode | Implemented | 35 |
 | [VisualShaderNodeFloatOp](classes/VisualShaderNodeFloatOp.md) | VisualShaderNode | Implemented | 13 |
@@ -990,7 +990,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeRemap](classes/VisualShaderNodeRemap.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md) | VisualShaderNode | Unimplemented | 1 |
 | [VisualShaderNodeResizableBase](classes/VisualShaderNodeResizableBase.md) | VisualShaderNode | Implemented | 1 |
-| [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md) | VisualShaderNode | Unimplemented | 0 |
+| [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSDFRaymarch](classes/VisualShaderNodeSDFRaymarch.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSDFToScreenUV](classes/VisualShaderNodeSDFToScreenUV.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSample3D](classes/VisualShaderNodeSample3D.md) | VisualShaderNode | Implemented | 5 |

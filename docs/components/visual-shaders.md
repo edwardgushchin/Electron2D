@@ -1,6 +1,6 @@
 # Visual shader graphs
 
-Last updated: 2026-10-22
+Last updated: 2026-10-24
 
 ## Scope and owned types
 
@@ -1261,3 +1261,57 @@ independent duplication and a compressed big-endian shared-definition archive.
 particle/blit fixtures use `domains-gpu` with existing domain controls. Receipts
 retain exact commands and source cohorts. Physical GPU, native heap, foreign
 hosts, editor and owner acceptance remain separate gates.
+
+## Numeric orientation
+
+[FaceForward](../classes/VisualShaderNodeFaceForward.md) returns its first vector
+when the incident/reference dot product is negative and negates it otherwise,
+including at zero. It does not normalize inputs and supports all three inherited
+numeric widths. [RotationByAxis](../classes/VisualShaderNodeRotationByAxis.md)
+accepts a Vector3 value, an angle in radians and a Vector3 axis, in that order.
+It normalizes the axis and exposes two independent outputs: the row-vector
+rotation result and the same numeric matrix extended to four components with a
+homogeneous identity row/column. The matrix output is not transposed to change
+multiplication direction. All defaults are zero. Zero-axis normalization retains
+native undefined value semantics; provide a nonzero axis for a defined result.
+Numeric vectors/matrices introduce no spatial scene types.
+
+Both operations use the existing typed default, copy, shared-definition archive,
+offline import and retained ShaderMaterial path. They execute in canvas
+vertex/fragment, all five particle lifecycle stages and writable textures. A
+required axis-rotation function is emitted once per stage/domain; the generated
+name is reserved against user GLSL. Source edits require reimport. Connected
+material parameters update the numeric inputs without rebuilding a graph.
+
+`VisualShader.Consumer orientation-cpu` checks defaults, invalid types/ports,
+nonfinite values, width conversions, independent copies, matrix/vector port roles
+and compressed big-endian shared archives. `orientation-author <folder>` writes
+eight arithmetic programs plus actual canvas-vertex and particle-matrix
+consumers. Each arithmetic program covers nine rotations (positive/negative,
+nonunit/oblique axes, zero/negative/full-turn angles and zero vectors), three
+FaceForward widths with negative/zero/positive dot products, and absent default
+connections. Expected rotations come from independent framework axis-angle and
+vector arithmetic; writable-texture readback checks every vector component and
+all sixteen matrix components in raw RGBAF targets with opaque alpha. Fixtures
+also contain a conflicting user helper name. Live inputs are changed and reset;
+a zero-axis diagnostic asserts no portable numeric value and verifies recovery
+when a valid axis is restored.
+
+CLR and strict full-trim NativeAOT passed all six software Vulkan profiles:
+canvas and particle/blit consumers on Wayland, X11 and HDR/MSAA. Three canvas
+and six particle programs produced expected pixels, including the rotated UV
+quad and nonsquare particle geometry; the raw writable-texture program verified
+all values before display conversion. Prepared consumers allocated zero owner
+and all-thread managed bytes over 64 active and 64 idle frames. Driver-map
+guards excluded hardware drivers. Physical GPUs, native heap, foreign hosts,
+editor and owner visual acceptance were not exercised.
+
+All 3,385 retained canvas source/interface hashes match a fresh build of current
+main at `8325bc092`; the complete public CPU consumer and managed particle
+shader checks also pass. The whole-runtime formatter still reports the existing
+unchanged TextLayout indentation; changed runtime files and the public consumer
+are checked separately.
+
+Verification receipts are retained under
+`bin/visual-shader-orientation/2026-10-24/`. Platform and native-allocation
+acceptance remain governed by [ADR 0021](../decisions/product.md#adr-0021).

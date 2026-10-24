@@ -1744,6 +1744,16 @@
       "godot": "class:VisualShaderNodeRandomRange",
       "electron2d": "T:Electron2D.VisualShaderNodeRandomRange",
       "reason": "ADRs 0001/0004/0013/0028: fixed Vector3 seed and scalar bounds execute the pinned row-vector hash and unclamped mix through existing canvas, particle and writable-texture graph import. Zero-seed extrapolation, equal/reversed bounds, connected/default inputs, shared aliases and typed archives are covered by the focused public consumer."
+    },
+    {
+      "godot": "class:VisualShaderNodeFaceForward",
+      "electron2d": "T:Electron2D.VisualShaderNodeFaceForward",
+      "reason": "ADRs 0001/0004/0013/0028: all two/three/four-component inputs execute strict negative incident/reference dot selection, including zero and non-normalized inputs, through canvas, five particle stages and writable textures. Inherited width/default/copy and exact typed archive factories are exercised by the public consumer."
+    },
+    {
+      "godot": "class:VisualShaderNodeRotationByAxis",
+      "electron2d": "T:Electron2D.VisualShaderNodeRotationByAxis",
+      "reason": "ADRs 0001/0004/0013/0028: fixed vector/radians/axis inputs execute normalized-axis row-vector rotation with an independent matching four-component numeric matrix output. All sixteen matrix components, signed/nonunit/oblique axes, real canvas vertex and particle transform consumers, shared aliases, live inputs and archives execute on the existing backends. Zero axis retains native undefined normalization semantics."
     }
   ],
   "statusGroups": [
@@ -2248,6 +2258,27 @@
         "class:VisualShaderNodeRandomRange"
       ],
       "reason": "ADRs 0001/0004/0013/0028: fixed Vector3 seed and scalar bounds execute the pinned row-vector hash and unclamped mix through existing canvas, particle and writable-texture graph import. Zero-seed extrapolation, equal/reversed bounds, connected/default inputs, shared aliases and typed archives are covered by the focused public consumer."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeFaceForward"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028: all two/three/four-component inputs execute strict negative incident/reference dot selection, including zero and non-normalized inputs, through canvas, five particle stages and writable textures. Inherited width/default/copy and exact typed archive factories are exercised by the public consumer."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeRotationByAxis"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028: fixed vector/radians/axis inputs execute normalized-axis row-vector rotation with an independent matching four-component numeric matrix output. All sixteen matrix components, signed/nonunit/oblique axes, real canvas vertex and particle transform consumers, shared aliases, live inputs and archives execute on the existing backends. Zero axis retains native undefined normalization semantics."
+    },
+    {
+      "state": "Unimplemented",
+      "godot": [
+        "class:VisualShaderNodeFresnel"
+      ],
+      "reason": "ADR 0028: the pinned generator uses implicit NORMAL for an unconnected canvas normal input (visual_shader_nodes.cpp, ed1daf0bf001b61586d9930840f2f1394092c079, lines 7320-7372). The current graph input translator has no implicit canvas-normal producer. Implement that producer and the default/connected normal-view-invert-power contract before an executing Fresnel slice; explicit inputs alone do not complete it."
     }
   ],
   "extras": [
@@ -2846,6 +2877,22 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeRandomRange.CreateDuplicateInstance()",
       "reason": "ADRs 0013/0028: concrete graph resource construction and duplicate factory over inherited typed defaults and compiled archive registration."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeFaceForward..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric graph Resource constructor and duplicate factory over inherited typed defaults, copies and archives."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeFaceForward.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric graph Resource constructor and duplicate factory over inherited typed defaults, copies and archives."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeRotationByAxis..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric graph Resource constructor and duplicate factory over inherited typed defaults, copies and archives."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeRotationByAxis.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled numeric graph Resource constructor and duplicate factory over inherited typed defaults, copies and archives."
     }
   ]
 }

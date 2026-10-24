@@ -126,6 +126,8 @@ public sealed partial class VisualShader
             extra.Append(VisualShaderNodeColorFunc.RGBToHSVDefinition(aliases["e2d_rgb_to_hsv"]));
         if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeRandomRange))
             extra.Append(VisualShaderNodeRandomRange.HashDefinition(aliases["e2d_random_range"]));
+        if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeRotationByAxis))
+            extra.Append(VisualShaderNodeRotationByAxis.RotationDefinition(aliases["e2d_axis_rotation"]));
         if (sdf) extra.Append(SDFDefinitions(reachable.Select(id => graph.Nodes[id].Node), aliases));
         extra.Append(CustomGlobals(custom, stage, aliases)).Append(GlobalExpressionHeader(stage, aliases));
         return header.Replace("void main() {", extra + "void main() {", StringComparison.Ordinal);

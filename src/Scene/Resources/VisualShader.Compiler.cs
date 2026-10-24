@@ -139,6 +139,7 @@ public sealed partial class VisualShader
                         VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.GenerateExpression(output, inputs), aliases),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
                         VisualShaderNodeColorFunc color => color.GenerateExpression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
+                        VisualShaderNodeRotationByAxis => node.GenerateExpression(output, inputs).Replace("e2d_axis_rotation(", aliases["e2d_axis_rotation"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeRandomRange => node.GenerateExpression(output, inputs).Replace("e2d_random_range(", aliases["e2d_random_range"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeTextureParameter => plan.Nodes[id],
                         VisualShaderNodeParameterRef when OutputTypes(node, stage)[output] == VisualShaderNode.PortType.Sampler => plan.Nodes[id],

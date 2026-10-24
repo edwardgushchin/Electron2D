@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-22
+Last updated: 2026-10-24
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -42,6 +42,8 @@ Concrete TwoBoneIK/CCDIK/FABRIK resources retain copied bounded joint configurat
 ## Skeletal graph resources
 
 [Modification stacks](../components/skeletal-animation.md) own copied slot storage and borrow modifications. Scene binding is exclusive and transient. PackedScene force-copies the complete stack graph per rig through existing alias-preserving sessions; typed built-in schemas persist concrete LookAt settings and copied Polygon bone records. Arbitrary custom extensions require explicit registration/copy contracts.
+
+[Numeric orientation graphs](../components/visual-shaders.md#numeric-orientation) expose FaceForward at all three vector widths and axis-angle rotation with independent vector/matrix outputs. Exact resource factories preserve typed defaults and shared aliases; their imported programs supply real canvas vertices, particle transforms and writable-texture values.
 
 ## Responsibility
 

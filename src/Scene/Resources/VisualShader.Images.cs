@@ -96,7 +96,7 @@ public sealed partial class VisualShader
     private static Dictionary<string, string> StageSymbols(IEnumerable<VisualShaderImage> images, IEnumerable<string> sourceNames)
     {
         var used = images.Select(i => i.Name).Concat(sourceNames).ToHashSet(StringComparer.Ordinal); var aliases = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var symbol in new[] { "VERTEX", "UV", "COLOR", "INSTANCE_CUSTOM", "e2d_values", "e2d_globals", "e2d_instance", "Frame", "RendererValues", "Globals", "Instance", "e2d_rgb_to_hsv", "e2d_random_range", "e2d_sdf", "e2d_sdf_normal", "e2d_sdf_raymarch", "e2d_graph", "e2d_frame", "result", "inPosition", "inColor", "inUV", "inCustom", "outColor", "outUV", "outCustom" })
+        foreach (var symbol in new[] { "VERTEX", "UV", "COLOR", "INSTANCE_CUSTOM", "e2d_values", "e2d_globals", "e2d_instance", "Frame", "RendererValues", "Globals", "Instance", "e2d_rgb_to_hsv", "e2d_random_range", "e2d_axis_rotation", "e2d_sdf", "e2d_sdf_normal", "e2d_sdf_raymarch", "e2d_graph", "e2d_frame", "result", "inPosition", "inColor", "inUV", "inCustom", "outColor", "outUV", "outCustom" })
         {
             var name = symbol;
             for (var suffix = 2; !used.Add(name); suffix++) name = symbol + "_" + suffix.ToString(CultureInfo.InvariantCulture);

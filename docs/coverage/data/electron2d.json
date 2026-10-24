@@ -14835,6 +14835,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeFaceForward",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeFaceForward",
+    "name": "VisualShaderNodeFaceForward",
+    "signature": "public sealed class Electron2D.VisualShaderNodeFaceForward",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVectorBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeFloatConstant",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -15671,6 +15686,21 @@
     "declaringType": "Electron2D.VisualShaderNodeResizableBase",
     "name": "VisualShaderNodeResizableBase",
     "signature": "public abstract class Electron2D.VisualShaderNodeResizableBase",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeRotationByAxis",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeRotationByAxis",
+    "name": "VisualShaderNodeRotationByAxis",
+    "signature": "public sealed class Electron2D.VisualShaderNodeRotationByAxis",
     "visibility": "public",
     "baseType": "Electron2D.VisualShaderNode",
     "interfaces": [
@@ -27886,6 +27916,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.VisualShaderNodeFaceForward..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeFaceForward",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeFaceForward()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.VisualShaderNodeFloatConstant..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -28425,6 +28468,19 @@
     "name": ".ctor",
     "signature": "protected VisualShaderNodeResizableBase()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeRotationByAxis..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeRotationByAxis",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeRotationByAxis()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -226142,6 +226198,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeFaceForward.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeFaceForward",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeFloatConstant.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeFloatConstant",
@@ -227478,6 +227547,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeRotationByAxis.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeRotationByAxis",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
     "value": null
   },
   {

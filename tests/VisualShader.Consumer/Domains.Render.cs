@@ -31,10 +31,11 @@ internal static partial class GraphChecks
             _particles = new GPUParticles { Amount = 1, Emitting = false, Lifetime = 1000, FixedFPS = 8, Interpolate = false, LocalCoords = true, SpeedScale = 0, ProcessMaterial = material, Texture = texture, UseFixedSeed = true, Seed = 123 };
             AddChild(_particles); _particles.EmitParticle(Transform.Identity, Vector2.Zero, Colors.White, Colors.White, 0); _particles.RequestParticlesProcess(.125f);
             PrepareRandomParticles(folder, texture);
+            PrepareOrientationParticles(folder, texture);
             RenderingServer.FramePostDraw += AfterDomainDraw;
         }
         protected override void OnProcess(double delta)
-        { if (_frame is >= 30 and < 94) { _particles.RequestParticlesProcess(.125f); foreach (var particle in _randomParticles) particle.RequestParticlesProcess(.125f); } }
+        { if (_frame is >= 30 and < 94) { _particles.RequestParticlesProcess(.125f); foreach (var particle in _randomParticles) particle.RequestParticlesProcess(.125f); foreach (var particle in _orientationParticles) particle.RequestParticlesProcess(.125f); } }
         private void AfterDomainDraw()
         {
             _frame++;
@@ -63,6 +64,7 @@ internal static partial class GraphChecks
                     finally { foreach (var target in targets) target?.Dispose(); }
                 }
                 CheckRandomParticles(pixels);
+                CheckOrientationParticles(pixels);
                 CheckDomainBlits(folder);
                 Console.WriteLine("Compiled domain graphs: actual particle pixels/bounds and one through four writable-texture targets passed.");
             }
