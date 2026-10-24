@@ -21,7 +21,8 @@ vec2 rotate(vec2 q,vec2 p){return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
 bool pointComponent(float value,int exponent,out precise float result)
 {
     result=0;if(value==0)return true;
-    int adjustment;precise float mantissa=frexp(value,adjustment);exponent+=adjustment;
+    // Preserve signed fractions when native shader targets split magnitude and exponent.
+    int adjustment;precise float mantissa=frexp(abs(value),adjustment)*sign(value);exponent+=adjustment;
     // Reject the range explicitly; an infinity sentinel must not enter field arithmetic.
     if(exponent>128)return false;
     // Keep the top finite exponent from lowering through an overflowing 2^128 intermediate.
@@ -31,7 +32,7 @@ bool pointComponent(float value,int exponent,out precise float result)
 float scaledComponent(float value,float mantissa,int exponent)
 {
     if(value==0)return 0;
-    int valueExponent;precise float valueMantissa=frexp(value,valueExponent);
+    int valueExponent;precise float valueMantissa=frexp(abs(value),valueExponent)*sign(value);
     return ldexp(valueMantissa/mantissa,valueExponent-exponent);
 }
 vec2 scaledVector(vec2 value,float mantissa,int exponent)
@@ -61,7 +62,7 @@ bool gravity(Field f,vec4 pose,vec2 position,out precise vec2 result)
     precise vec2 direction=scaled/distance;
     if(f.gravity.w<=0){result=direction*f.gravity.z;return finiteField(vec4(result,0,0));}
     int gravityExponent,unitExponent;
-    float gravityMantissa=frexp(f.gravity.z,gravityExponent);
+    float gravityMantissa=frexp(abs(f.gravity.z),gravityExponent)*sign(f.gravity.z);
     float unitMantissa=frexp(f.gravity.w,unitExponent);
     precise float ratio=unitMantissa/(scaleMantissa*distance);
     precise float strength=gravityMantissa*ratio*ratio;

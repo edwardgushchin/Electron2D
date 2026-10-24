@@ -207,7 +207,7 @@ The revised module now executes the numeric-range cases and terminal point-force
 overflow through a CPU Vulkan adapter; [software validation](physics-backends.md#software-vulkan-functional-checks)
 records the actual driver and profile. The hardware guard below now adds physical GPU numeric-range execution; broad GPU performance acceptance remains open.
 
-PhysicsPointGravityRangeTests runs nine independently specified cases through
+PhysicsPointGravityRangeTests runs ten independently specified cases through
 scene Areas, raw server Areas and default-space point fields, each with RigidBody,
 CharacterBody and raw body receivers. It checks full finite solver intervals,
 signed/constant/inverse-square/zero behavior and recoverable real overflow.
@@ -248,9 +248,15 @@ an output that should equal the largest finite float. Exponents above 128 still
 reject, and the existing final finite-field guard remains in force. Buffer layout,
 status readback, failure ownership and numerical work stay unchanged.
 
+The signed splits for output components, authored coordinates and gravity strength
+now apply `frexp` to the magnitude and restore the sign explicitly. This preserves
+negative fractions through native lowering that exposes a nonnegative mantissa.
+The range cohort includes a finite negative inverse-square field through all
+three source profiles and receiver roles, alongside signed axis maxima.
+
 `PhysicsPointGravityFailureTests` checks exact positive and negative maximum
 components on both axes, followed by its existing 18 genuine overflow and priority
-replacement cases. The full range cohort retains nine cases, three profiles and
+replacement cases. The full range cohort includes ten cases, three profiles and
 three receiver roles with strict 128-frame zero-byte limits. Local compiler and
 runtime checks qualify this candidate; corrected native Windows execution remains
 required. Windows diagnostics now run this complete point-field cohort before the
@@ -264,7 +270,7 @@ The resident point-field reducer preserves guarded float operation order with GL
 
 The [GLSL precise rules](https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.4.60.html) preserve the marked operation order through optimization; the compiled modules retain NoContraction decorations. Field finiteness examines IEEE bit ranges. The existing field result/cache ownership, publication, failure retirement and no-CPU-replay policies remain unchanged.
 
-PhysicsPointGravityFailureTests verifies 18 independent source/sign/axis combinations on CPU/GPU: scene Area, raw server Area and default-space fields; positive/negative strengths; X/Y/diagonal centers. It also checks exact maximum finite components on both axes/signs and an earlier overflowing contribution discarded by lower-priority Replace, then verifies that Combine retains the failure. CPU recovery, GPU terminal rejection, unchanged last fields, selected backend and resource retirement are asserted. PhysicsPointGravityRangeTests still exercises nine independent range cases × three profiles × three receiver roles, opposite finite 2e38 coordinates and 128 warmed full frames with zero owner/all-thread managed bytes. Serial and separate numerical scheduling passed the same device point-range/failure profile. The default harness now includes CPU/GPU point-range tests. Native allocation totals, other hardware/OS backends, collision accuracy at huge coordinates and general performance acceptance remain separate gates.
+PhysicsPointGravityFailureTests verifies 18 independent source/sign/axis combinations on CPU/GPU: scene Area, raw server Area and default-space fields; positive/negative strengths; X/Y/diagonal centers. It also checks exact maximum finite components on both axes/signs and an earlier overflowing contribution discarded by lower-priority Replace, then verifies that Combine retains the failure. CPU recovery, GPU terminal rejection, unchanged last fields, selected backend and resource retirement are asserted. The earlier nine-case range control covered three profiles and three receiver roles, opposite finite 2e38 coordinates and 128 warmed full frames with zero owner/all-thread managed bytes. Serial and separate numerical scheduling passed the same device point-range/failure profile. The default harness now includes CPU/GPU point-range tests. Native allocation totals, other hardware/OS backends, collision accuracy at huge coordinates and general performance acceptance remain separate gates.
 
 The executable candidate comparison selected this failure contract over KTX loading (ready container primitives and BC consumers, but additional format/container semantics remain) and GPU timestamps (no actual timestamp producer in the pinned SDL GPU API). The public field workflow was already claimed and its real hardware failure stopped the full runtime suite; correcting it restores that executable contract and its dependent tests.
 

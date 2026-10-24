@@ -7,7 +7,8 @@ correct the native failure and is removed. Temporary staged GPU readbacks locate
 the remaining boundary; corrected native execution is still required.
 
 [Maximum finite point-force reconstruction](../components/physics-areas.md#maximum-finite-point-force-reconstruction)
-scales exponent 128 in two finite steps while retaining real-overflow rejection.
+scales exponent 128 in two finite steps and explicitly retains signs when splitting
+components, authored coordinates and strength, while preserving real-overflow rejection.
 Both axes and signs execute through the complete point-field contract; corrected
 native Windows acceptance remains required.
 

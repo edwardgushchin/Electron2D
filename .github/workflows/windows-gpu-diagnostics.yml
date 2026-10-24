@@ -202,7 +202,7 @@ jobs:
           $lines = Get-Content $log
           foreach ($marker in @(
             'Point field failure contract GPU: 18 scene/server/world overflow cases, finite maxima on both axes/signs and priority replacement passed.',
-            'Point gravity range: backend=GPU, profiles=3, cases=9, receivers=3, warmFrames=128, ownerBytes=0, allBytes=0.',
+            'Point gravity range: backend=GPU, profiles=3, cases=10, receivers=3, warmFrames=128, ownerBytes=0, allBytes=0.',
             'GPU point-force overflow is terminal, preserves selection/publication and permits final resource retirement.'
           )) {
             if (!($lines -ccontains $marker)) { throw "Missing point-field contract marker: $marker" }

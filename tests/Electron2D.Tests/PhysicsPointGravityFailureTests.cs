@@ -50,7 +50,8 @@ internal static class PhysicsPointGravityFailureTests
         foreach (var direction in new[] { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) })
         {
             PhysicsServer.AreaSetGravityVector(world.Space, direction);
-            tree.PhysicsFrame(.001); Check(body.GetGravity() == direction * float.MaxValue, "Maximum finite point force is representable and retained on both axes and signs.");
+            tree.PhysicsFrame(.001); var actual = body.GetGravity(); var expected = direction * float.MaxValue;
+            if (actual != expected) throw new InvalidOperationException($"Maximum finite point force differs for direction {direction}: actual={actual}, expected={expected}.");
         }
     }
     private static void ReplacedOverflow(PhysicsServer.Backend backend)

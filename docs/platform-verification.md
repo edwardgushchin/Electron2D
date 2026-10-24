@@ -205,10 +205,21 @@ Run `40044866241` at `e5c8fbd4b` passes its complete compound and policy
 cohorts on EPYC 9V74, including SIMD128/256 and managed-intrinsics-disabled
 controls (artifact `12541151680`, ZIP SHA-256
 `4cef12828f1bc414672f35dfd5dcc11786641b52a9a9d3442b217dcd2d2d399e`).
-That runner invoked the new resident policy regression before the public compound
-path. This changes process warmup before the previously failing cold case; no
+Its CPU flags omit the AVX-512 capabilities present on the failing 9V74 host,
+despite the same model name and package versions. That runner also invoked the new
+resident policy regression before the public compound path. This changes process warmup before the previously failing cold case; no
 root-cause correction or cold acceptance is inferred. The compound selector now
 restores the original public-first order, with the flag regression afterwards.
+
+Cold public-first run `40046406798` at `527ea9826` fails on Xeon Platinum 8573C
+with AVX-512 (artifact `12541494004`, ZIP SHA-256
+`645a0317f435e68dec37433e1c6d7e5aec4cf99f8d3cc751f023ea92649a2153`).
+Its ten body-stage snapshots already show mover flags `90156` immediately after
+stage 0, despite active command `(1, 2, 1313924, 256)`. Stage 3 then shows `90124`
+and later motion/read stages retain it. The CCD bit is therefore missing after
+edit application, before the later CCD query; the added trace does not mask the
+failure. Baseline/traced/restored and both SIMD widths/managed-scalar controls all
+retain the same CastRay `x=60` failure. Corrected producer execution remains open.
 
 Windows x64 run `40036769271` at `78754df51` passes the focused compound,
 joint and motion cohorts, then its complete suite fails in
@@ -222,6 +233,16 @@ an `Exp` operation on exponent 128 before the mantissa multiply. The candidate
 reconstructs this top exponent as `ldexp(mantissa, 127) * 2`; exact limits on both
 axes/signs and the complete unchanged range/overflow cohort remain required.
 Corrected native Windows execution is still open.
+
+The three corrected-exponent Windows controls at `8241a9134` stop at exact
+axis/sign comparison rather than the previous nonfinite rejection: runs
+`40045649042` / `40045651766` / `40045654502`, artifacts `12541855547` /
+`12541741875` / `12541373027`, each retaining raw `0xE0434352` and no field
+completion marker. DXIL inspection also shows magnitude-only mantissas at signed
+`frexp` sites. The next correction splits component, coordinate and strength
+magnitudes and restores each original sign explicitly. A finite negative
+inverse-square range case joins the exact signed-axis maxima; corrected native
+execution remains required. These red runs do not establish complete-suite acceptance.
 
 The profiled macOS run `40035786188` also completes its full x64 suite at
 `d5c677614` (job `120694782183`, artifact `12539342858`, 7,009 lines, completion

@@ -66,6 +66,11 @@ edit application from later motion stages without changing production shaders,
 command layout or numerical work. Extra diagnostic copy passes and file writes
 are not performance or untraced acceptance evidence. Source receipts restore the
 exact original body store and CCD source and remove the helper before controls.
+Cold public-first run `40046406798` at `527ea9826` on AVX-512 Xeon 8573C retains
+ten staged snapshots. The first, immediately after edit stage 0, has mover flags
+`90156` with command `(1, 2, 1313924, 256)`; stage 3 has `90124`. Thus CCD policy is
+already absent after edit application, rather than first disappearing in the
+subsequent sweep. The staged trace still reproduces the original failure.
 Corrected execution on the failing native hosts remains required.
 
 ## Storage, transfers and waits

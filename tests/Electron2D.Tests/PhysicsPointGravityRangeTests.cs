@@ -35,6 +35,7 @@ internal static class PhysicsPointGravityRangeTests
                 (new(1e-25f, 0), 10, 1e-25f, new(10, 0)),
                 (new(1e20f, 0), 10, 1e20f, new(10, 0)),
                 (new(1e20f, 1e20f), 10, 1e20f, new(3.5355339f, 3.5355339f)),
+                (new(1e20f, 1e20f), -10, 1e20f, new(-3.5355339f, -3.5355339f)),
                 (new(float.MaxValue, float.MaxValue), 10, 0, new(7.0710678f, 7.0710678f)),
                 (new(1e-30f, 0), 1e-30f, 1e-10f, new(1e10f, 0)),
                 (new(1e-25f, 0), 0, float.MaxValue, Vector2.Zero),
