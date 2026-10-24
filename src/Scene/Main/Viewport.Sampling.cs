@@ -34,23 +34,6 @@ public abstract partial class Viewport
         Max = 4,
     }
 
-    /// <summary>Sets the maximum anisotropy for canvas filters that request it.</summary>
-    public enum AnisotropicFiltering
-    {
-        /// <summary>Disables anisotropy.</summary>
-        Disabled = 0,
-        /// <summary>At most two samples.</summary>
-        Anisotropy2X = 1,
-        /// <summary>At most four samples; the default.</summary>
-        Anisotropy4X = 2,
-        /// <summary>At most eight samples.</summary>
-        Anisotropy8X = 3,
-        /// <summary>At most sixteen samples.</summary>
-        Anisotropy16X = 4,
-        /// <summary>Sentinel; not a valid choice.</summary>
-        Max = 5,
-    }
-
     private DefaultCanvasItemTextureFilter _canvasFilter = DefaultCanvasItemTextureFilter.Linear;
     private DefaultCanvasItemTextureRepeat _canvasRepeat;
     private AnisotropicFiltering _anisotropy = (AnisotropicFiltering)ProjectSettings.GetWithOverride(ProjectSettings.AnisotropicFilteringLevel);
@@ -108,6 +91,7 @@ public abstract partial class Viewport
     /// <summary>Gets or sets the anisotropy limit used by anisotropic canvas filters.</summary>
     /// <value>Initialized from ProjectSettings.AnisotropicFilteringLevel (four samples by default).</value>
     /// <remarks>Only filters explicitly requesting anisotropy use this limit; Disabled retains ordinary mip filtering.
+    /// Valid assignments, including equal values, republish the matching renderer-only override.
     /// Changes affect the next submitted frame. Native precision depends on the GPU driver.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enum value is invalid or Max.</exception>
     /// <exception cref="InvalidOperationException">An attached viewport is mutated off-owner or during capture.</exception>
@@ -119,6 +103,7 @@ public abstract partial class Viewport
         {
             EnsureMutable();
             if ((uint)value >= (uint)AnisotropicFiltering.Max) throw new ArgumentOutOfRangeException(nameof(value));
+            RenderingOwner?.PublishViewportAnisotropy(this);
             _anisotropy = value;
         }
     }

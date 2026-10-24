@@ -13,6 +13,7 @@ public sealed partial class RenderingServer
         internal Transform? GlobalCanvasTransform;
         internal TextureFilter? CanvasFilter;
         internal TextureRepeat? CanvasRepeat;
+        internal AnisotropicFiltering? Anisotropy;
         internal Viewport.MSAA? MSAA;
         internal bool? HDR, Debanding;
         internal int? Screen;
@@ -50,6 +51,22 @@ public sealed partial class RenderingServer
     { if (filter <= TextureFilter.ParentNode || filter >= TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(filter)); ChangeViewport(rid, out _).CanvasFilter = filter; }
     private void ViewportSetDefaultCanvasItemTextureRepeatCore(RID rid, TextureRepeat repeat)
     { if (repeat <= TextureRepeat.ParentNode || repeat >= TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(repeat)); ChangeViewport(rid, out _).CanvasRepeat = repeat; }
+    internal AnisotropicFiltering ViewportAnisotropy(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.Anisotropy is { } mode ? mode : view.AnisotropicFilteringLevel;
+    internal void PublishViewportAnisotropy(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.Anisotropy = null; }
+    private void ViewportSetAnisotropicFilteringLevelCore(RID rid, AnisotropicFiltering level)
+    { if ((uint)level >= (uint)AnisotropicFiltering.Max) throw new ArgumentOutOfRangeException(nameof(level)); ChangeViewport(rid, out _).Anisotropy = level; }
+    /// <summary>Sets the maximum anisotropy for the next image of a live scene or caller-owned viewport.</summary>
+    /// <param name="viewport">The live viewport identity owned by the active rendering session.</param>
+    /// <param name="level">Disabled or a two-, four-, eight- or sixteen-sample limit.</param>
+    /// <remarks>Canvas filters and imported material image policies requesting anisotropy use this limit. Disabled retains ordinary mip filtering.
+    /// Explicit sampler states retain their independently authored maximum.
+    /// Renderer-only state preserves scene getters and packed values; valid scene AnisotropicFilteringLevel assignments,
+    /// including equal values, republish the authored setting. The compatibility renderer rejects anisotropic filters at submission.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The level is invalid or Max.</exception>
+    /// <exception cref="ArgumentException">The RID is invalid, expired or not a viewport.</exception>
+    /// <exception cref="InvalidOperationException">The renderer is unavailable, the viewport belongs to another session,
+    /// or owner-thread/capture/submission guards reject mutation.</exception>
+    public static void ViewportSetAnisotropicFilteringLevel(RID viewport, AnisotropicFiltering level) => RequireService().ViewportSetAnisotropicFilteringLevelCore(viewport, level);
     internal Viewport.MSAA ViewportMSAA(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.MSAA is { } mode ? mode : view.MSAA2D;
     internal void PublishViewportMSAA(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.MSAA = null; }
     private void ViewportSetMSAA2DCore(RID rid, Viewport.MSAA mode)

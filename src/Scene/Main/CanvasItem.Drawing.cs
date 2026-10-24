@@ -334,7 +334,7 @@ public abstract partial class CanvasItem
         var inheritedRepeat = RenderRepeat;
         if (inheritedRepeat == TextureRepeat.ParentNode) inheritedRepeat = viewport?.RenderingOwner?.CanvasRepeat(viewport) ?? viewport?.TextureRepeatInTree ?? TextureRepeat.Disabled;
         var anisotropy = filter >= TextureFilter.NearestWithMipmapsAnisotropic
-            ? 1 << (int)(viewport?.AnisotropicFilteringLevel ?? Viewport.AnisotropicFiltering.Anisotropy4X) : 1;
+            ? 1 << (int)(viewport?.RenderingOwner?.ViewportAnisotropy(viewport) ?? viewport?.AnisotropicFilteringLevel ?? AnisotropicFiltering.Anisotropy4X) : 1;
         MaterialState? material = null;
         var blend = BlendMode.Mix;
         var capturedMaterial = false;

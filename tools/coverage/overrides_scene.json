@@ -1909,39 +1909,39 @@
       "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
     },
     {
-      "electron2d": "T:Electron2D.Viewport.AnisotropicFiltering",
+      "electron2d": "T:Electron2D.AnisotropicFiltering",
       "godot": "Viewport::enum:AnisotropicFiltering",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
-      "electron2d": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy16X()",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy16X()",
       "godot": "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_16X",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
-      "electron2d": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy2X()",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy2X()",
       "godot": "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_2X",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
-      "electron2d": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy4X()",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy4X()",
       "godot": "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_4X",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
-      "electron2d": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy8X()",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy8X()",
       "godot": "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_8X",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
-      "electron2d": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Disabled()",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Disabled()",
       "godot": "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_DISABLED",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
-      "electron2d": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Max()",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Max()",
       "godot": "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_MAX",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
       "electron2d": "property:Electron2D.CanvasItem.TextureFilter()",
@@ -1966,7 +1966,7 @@
     {
       "electron2d": "property:Electron2D.Viewport.AnisotropicFilteringLevel()",
       "godot": "Viewport::property:anisotropic_filtering_level",
-      "reason": "Typed canvas sampling contract: exact enum values, defaults, direct-parent inheritance, neutral/TopLevel boundaries, detached caches, redraw/property notifications, validation, stored scene properties and active project overrides. CanvasSamplingTests and native CanvasSamplingRenderingTests verify filter/repeat changes, same-texture batch isolation, GPU mip interpolation/anisotropy, HLSL/GLSL and opacity addressing. ADR 0028 admits explicit backend capability failures: compatibility has no mip/anisotropic/mirror support; its software driver also rejects linear filtering. Native evidence is Linux Wayland GPU/compatibility and dummy/software under ADR 0021; nested viewport rendering remains separately blocked."
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     },
     {
       "electron2d": "property:Electron2D.ProjectSettings.UseNearestMIPMapFilter()",
@@ -10453,15 +10453,8 @@
         "CanvasItem::property:texture_repeat",
         "ProjectSettings::property:rendering/textures/default_filters/anisotropic_filtering_level",
         "ProjectSettings::property:rendering/textures/default_filters/use_nearest_mipmap_filter",
-        "Viewport::enum:AnisotropicFiltering",
         "Viewport::enum:DefaultCanvasItemTextureFilter",
         "Viewport::enum:DefaultCanvasItemTextureRepeat",
-        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_16X",
-        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_2X",
-        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_4X",
-        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_8X",
-        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_DISABLED",
-        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_MAX",
         "Viewport::enum_value:DefaultCanvasItemTextureFilter.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR",
         "Viewport::enum_value:DefaultCanvasItemTextureFilter.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS",
         "Viewport::enum_value:DefaultCanvasItemTextureFilter.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_MAX",
@@ -10473,7 +10466,6 @@
         "Viewport::enum_value:DefaultCanvasItemTextureRepeat.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_MAX",
         "Viewport::enum_value:DefaultCanvasItemTextureRepeat.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_MIRROR",
         "Viewport::enum_value:DefaultCanvasItemTextureRepeat.DEFAULT_CANVAS_ITEM_TEXTURE_REPEAT_PARENT_NODE",
-        "Viewport::property:anisotropic_filtering_level",
         "Viewport::property:canvas_item_default_texture_filter",
         "Viewport::property:canvas_item_default_texture_repeat"
       ]
@@ -12105,6 +12097,20 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0040: stored Rect2i custom decoration and typed NonclientWindowInput execute before exclusive-child normal-input rejection. Native source suppression and embedded forwarding preserve existing ownership; only mouse roles hit positive half-open integer client rectangles before final viewport transform. Internal events, signal blocking, callback mutation/failure, retirement, direct-input exclusion, handled-state reset, inherited dialogs and fresh archived execution are verified. Pinned viewport.cpp localizes embedded coordinates before window.cpp dispatch. Software Wayland/X11 GPU/Compatibility framebuffers and native failure cleanup remain separate from physical input, foreign platforms and native allocator acceptance."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates.",
+      "godot": [
+        "Viewport::enum:AnisotropicFiltering",
+        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_16X",
+        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_2X",
+        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_4X",
+        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_8X",
+        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_DISABLED",
+        "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_MAX",
+        "Viewport::property:anisotropic_filtering_level"
+      ]
     }
   ]
 }

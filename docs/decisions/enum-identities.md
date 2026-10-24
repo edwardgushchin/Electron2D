@@ -68,3 +68,5 @@ ParticlesDrawOrder is shared by GPUParticles and RenderingServer with the same I
 WebSocketPeer and WebRTCDataChannel share top-level `PacketWriteMode` (Text=0, Binary=1). Both select UTF-8 text versus arbitrary binary packet payloads with the same valid values. The former WebSocketWriteMode identity is removed across callers, XML and coverage; no alias is retained.
 
 Node.DuplicateFlags is its own nested hierarchy-copy domain: Signals1/Groups2/Scripts4/UseInstantiation8/InternalState16/Default15. Zero is valid without an extra named alias. It does not merge with Resource.DeepDuplicateMode, whose values select ordinary resource-edge traversal rather than node construction/state.
+
+AnisotropicFiltering is shared by Viewport.AnisotropicFilteringLevel and RenderingServer.ViewportSetAnisotropicFilteringLevel. Both domains select Disabled/2X/4X/8X/16X values 0 through 4 with nonselectable Max5. The former nested scene identity is removed across consumers, typed storage, XML and coverage without an alias. Files using that old schema require reauthoring.

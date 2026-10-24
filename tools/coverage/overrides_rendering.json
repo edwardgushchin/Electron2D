@@ -2700,12 +2700,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -5251,6 +5251,46 @@
       "godot": "RenderingServer::method:shader_get_parameter_default(RID:,StringName:)",
       "electron2d": "method:Electron2D.RenderingServer.ShaderGetMatrixParameterDefault(Electron2D.RID,System.String,System.Span<System.Single>)",
       "reason": "ADR 0028: typed scalar/vector/Transform, fixed-array and column-major mat3/mat4 queries expose validated compiled authored defaults through live owned/borrowed shader identities. HLSL cbuffer constants and version-one GLSL/external authoring input become strict typed OpString metadata; actual material/instance buffers, stage copies, reset, descriptors and saved graphs consume it. ShaderDefaults.Consumer and check_defaults.py verify nineteen roles, thirty-eight declarations, two-language canvas/particle/blit pixels, reload/copy/fresh-process archives, invalid metadata/import atomicity and zero managed bytes over 64 active/64 idle software-Vulkan frames. Sampled defaults retain their indexed API; renderer/global ownership is excluded. Hardware/native-allocation and foreign acceptance are separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportAnisotropicFiltering",
+      "electron2d": "T:Electron2D.AnisotropicFiltering",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_DISABLED",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Disabled()",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_2X",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy2X()",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_4X",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy4X()",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_8X",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy8X()",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_16X",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy16X()",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_MAX",
+      "electron2d": "enumValue:Electron2D.AnisotropicFiltering.Max()",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_anisotropic_filtering_level(RID:,int:RenderingServer.ViewportAnisotropicFiltering)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetAnisotropicFilteringLevel(Electron2D.RID,Electron2D.AnisotropicFiltering)",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
     }
   ],
   "statusGroups": [
@@ -6410,7 +6450,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -7299,6 +7339,20 @@
         "ProjectSettings::property:rendering/anti_aliasing/quality/use_debanding"
       ],
       "reason": "ADRs 0028/0095: stored viewport/root-project configuration and live renderer overrides execute stable zero-centered RGB dithering after HDR-to-SDR transfer and before byte quantization. Only the root HDR canvas screen output changes; alpha, SDR/offscreen/linear viewport images and movie capture retain their semantics. Compatibility rejects enabled debanding explicitly. Fresh scene/project storage, real Linux software-GPU pixels, scaling/clipping, MSAA, identity/owner/capture guards and prepared zero-owner-allocation presentation are exercised; physical GPUs, other platforms and human acceptance remain unverified."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates.",
+      "godot": [
+        "RenderingServer::enum:ViewportAnisotropicFiltering",
+        "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_DISABLED",
+        "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_2X",
+        "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_4X",
+        "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_8X",
+        "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_16X",
+        "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_MAX",
+        "RenderingServer::method:viewport_set_anisotropic_filtering_level(RID:,int:RenderingServer.ViewportAnisotropicFiltering)"
+      ]
     }
   ],
   "extras": [

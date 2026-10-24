@@ -1921,3 +1921,9 @@ The snippet requires a prepared MSDF `texture`; [the standalone consumer](../../
 Requires the active rendering service and its owner thread. Live owned and borrowed Shader identities permit reads. Wrong/stale identity, missing case-sensitive name, unsupported carrier, scalar/array mismatch or destination length throws ArgumentException before destination writes. Renderer/global parameters are excluded. Defaults come from immutable compiled metadata, or implicit numeric zero/matrix identity, independently of material overrides. Mat2 uses Transform with zero Origin; Color/Rect2 aliases and bool masks follow the material contract. Existing sampled-image default APIs remain indexed.
 
 An empty texture RID passed to MaterialSetParam clears any numeric/matrix/array/image override and restores its shader default; a nonempty image still follows sampled-shape validation. Mutations retain the owned-material requirement. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+## Viewport anisotropy
+
+`public static void ViewportSetAnisotropicFilteringLevel(RID viewport, AnisotropicFiltering level)`
+
+Sets an independent session-only limit on a live scene or caller-owned viewport. Uses the shared [AnisotropicFiltering](AnisotropicFiltering.md) enum. Scene getters and stored values remain authored; valid scene property assignments, including equal values, republish. Only anisotropic canvas filters and imported image policies use the limit; explicit RDSamplerState overrides retain their own maximum. RID, owner, capture and session validation apply; compatibility rejects anisotropic filters at submission. See [the sampling contract](../components/canvas-rendering.md#viewport-anisotropy-overrides).

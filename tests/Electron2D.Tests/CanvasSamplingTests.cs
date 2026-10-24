@@ -20,7 +20,7 @@ internal static class CanvasSamplingTests
         Check(child.TextureFilter == Filter.ParentNode && child.TextureRepeat == Repeat.ParentNode &&
             root.CanvasItemDefaultTextureFilter == Viewport.DefaultCanvasItemTextureFilter.Linear &&
             root.CanvasItemDefaultTextureRepeat == Viewport.DefaultCanvasItemTextureRepeat.Disabled &&
-            root.AnisotropicFilteringLevel == Viewport.AnisotropicFiltering.Anisotropy4X, "Sampling defaults.");
+            root.AnisotropicFilteringLevel == AnisotropicFiltering.Anisotropy4X, "Sampling defaults.");
         var events = 0; parent.PropertyListChanged += _ => events++;
         using (var tree = new SceneTree(root))
         {
@@ -51,17 +51,17 @@ internal static class CanvasSamplingTests
             root.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Enabled;
             Check(Batch(child).Repeat == Repeat.Enabled && Batch(top).Repeat == Repeat.Enabled, "Viewport repeat fallback.");
             explicitChild.TextureFilter = Filter.LinearWithMipmapsAnisotropic;
-            root.AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Anisotropy16X;
+            root.AnisotropicFilteringLevel = AnisotropicFiltering.Anisotropy16X;
             Check(Batch(explicitChild).MaxAnisotropy == 16, "Viewport anisotropy reaches batches.");
-            root.AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Disabled;
+            root.AnisotropicFilteringLevel = AnisotropicFiltering.Disabled;
             Check(Batch(explicitChild).MaxAnisotropy == 1, "Disabled anisotropy retains mip filtering with one sample.");
             Reject<ArgumentOutOfRangeException>(() => parent.TextureFilter = Filter.Max);
             Reject<ArgumentOutOfRangeException>(() => parent.TextureRepeat = (Repeat)(-1));
             Reject<ArgumentOutOfRangeException>(() => root.CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Max);
             Reject<ArgumentOutOfRangeException>(() => root.CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Max);
-            Reject<ArgumentOutOfRangeException>(() => root.AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Max);
+            Reject<ArgumentOutOfRangeException>(() => root.AnisotropicFilteringLevel = AnisotropicFiltering.Max);
             Reject<InvalidOperationException>(() => Task.Run(() => parent.TextureFilter = Filter.Linear).GetAwaiter().GetResult());
-            Reject<InvalidOperationException>(() => Task.Run(() => root.AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Disabled).GetAwaiter().GetResult());
+            Reject<InvalidOperationException>(() => Task.Run(() => root.AnisotropicFilteringLevel = AnisotropicFiltering.Disabled).GetAwaiter().GetResult());
             Action<ElectronObject> fail = _ => throw new ApplicationException("sampling property-list callback");
             parent.PropertyListChanged += fail;
             Reject<ApplicationException>(() => parent.TextureFilter = Filter.Linear);
@@ -111,7 +111,7 @@ internal static class CanvasSamplingTests
         {
             CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.NearestWithMipmaps,
             CanvasItemDefaultTextureRepeat = Viewport.DefaultCanvasItemTextureRepeat.Mirror,
-            AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Anisotropy8X,
+            AnisotropicFilteringLevel = AnisotropicFiltering.Anisotropy8X,
         };
         window.AddChild(new Sprite { Name = "sprite", TextureFilter = Filter.LinearWithMipmapsAnisotropic, TextureRepeat = Repeat.Enabled });
         window.Children[0].Owner = window;
@@ -126,7 +126,7 @@ internal static class CanvasSamplingTests
         {
             ProjectSettings.Set(ProjectSettings.AnisotropicFilteringLevel, 4);
             using var configured = new Window();
-            Check(configured.AnisotropicFilteringLevel == Viewport.AnisotropicFiltering.Anisotropy16X && window.AnisotropicFilteringLevel == Viewport.AnisotropicFiltering.Anisotropy8X, "Construction samples project anisotropy without mutating live viewports.");
+            Check(configured.AnisotropicFilteringLevel == AnisotropicFiltering.Anisotropy16X && window.AnisotropicFilteringLevel == AnisotropicFiltering.Anisotropy8X, "Construction samples project anisotropy without mutating live viewports.");
             Reject<ArgumentOutOfRangeException>(() => ProjectSettings.Set(ProjectSettings.AnisotropicFilteringLevel, 5));
         }
         finally { ProjectSettings.Set(ProjectSettings.AnisotropicFilteringLevel, original); }

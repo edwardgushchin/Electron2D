@@ -167,7 +167,7 @@ internal static partial class RenderingRuntimeTests
             for (var x = 0; x < 64; x++) image.SetPixel(x, y, x % 4 < 2 ? Colors.Red : Colors.Blue);
         image.GenerateMIPMaps();
         using var texture = ImageTexture.CreateFromImage(image);
-        var window = new Window { Size = new(96, 64), AnisotropicFilteringLevel = Viewport.AnisotropicFiltering.Disabled };
+        var window = new Window { Size = new(96, 64), AnisotropicFilteringLevel = AnisotropicFiltering.Disabled };
         var frames = 0; var initial = 0f; var final = 0f;
         window.AddChild(new CanvasNode
         {
@@ -180,7 +180,7 @@ internal static partial class RenderingRuntimeTests
                 for (var x = 8; x < 60; x++) contrast += System.MathF.Abs(frame.GetPixel(x, 5).R - frame.GetPixel(x, 5).B);
                 if (frames == 0) initial = contrast;
                 if (++frames == 5) { final = contrast; n.Tree!.Quit(); }
-                else window.AnisotropicFilteringLevel = (Viewport.AnisotropicFiltering)frames;
+                else window.AnisotropicFilteringLevel = (AnisotropicFiltering)frames;
             }
         });
         Engine.Run(window); Released(window);

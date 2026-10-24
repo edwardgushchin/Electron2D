@@ -995,6 +995,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AnisotropicFiltering",
+    "kind": "type",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "AnisotropicFiltering",
+    "signature": "public enum Electron2D.AnisotropicFiltering",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Area",
     "kind": "type",
     "declaringType": "Electron2D.Area",
@@ -14136,24 +14154,6 @@
     "baseType": "Electron2D.Node",
     "interfaces": [
       "System.IDisposable"
-    ],
-    "parameters": null,
-    "returnType": null,
-    "value": null
-  },
-  {
-    "id": "T:Electron2D.Viewport.AnisotropicFiltering",
-    "kind": "type",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "AnisotropicFiltering",
-    "signature": "public enum Electron2D.Viewport.AnisotropicFiltering",
-    "visibility": "public",
-    "baseType": "System.Enum",
-    "interfaces": [
-      "System.IComparable",
-      "System.IConvertible",
-      "System.IFormattable",
-      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -30202,6 +30202,84 @@
     "parameters": [],
     "returnType": "Electron2D.AnimationSyncMode",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy16X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "Anisotropy16X",
+    "signature": "public const Electron2D.AnisotropicFiltering Anisotropy16X = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnisotropicFiltering",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy2X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "Anisotropy2X",
+    "signature": "public const Electron2D.AnisotropicFiltering Anisotropy2X = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnisotropicFiltering",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy4X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "Anisotropy4X",
+    "signature": "public const Electron2D.AnisotropicFiltering Anisotropy4X = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnisotropicFiltering",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AnisotropicFiltering.Anisotropy8X()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "Anisotropy8X",
+    "signature": "public const Electron2D.AnisotropicFiltering Anisotropy8X = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnisotropicFiltering",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AnisotropicFiltering.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "Disabled",
+    "signature": "public const Electron2D.AnisotropicFiltering Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnisotropicFiltering",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AnisotropicFiltering.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AnisotropicFiltering",
+    "name": "Max",
+    "signature": "public const Electron2D.AnisotropicFiltering Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AnisotropicFiltering",
+    "value": "5"
   },
   {
     "id": "enumValue:Electron2D.Area.SpaceOverride.Combine()",
@@ -57736,84 +57814,6 @@
     "parameters": [],
     "returnType": "Electron2D.VerticalScrollHintMode",
     "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy16X()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "Anisotropy16X",
-    "signature": "public const Electron2D.Viewport.AnisotropicFiltering Anisotropy16X = 4",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
-    "value": "4"
-  },
-  {
-    "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy2X()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "Anisotropy2X",
-    "signature": "public const Electron2D.Viewport.AnisotropicFiltering Anisotropy2X = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
-    "value": "1"
-  },
-  {
-    "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy4X()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "Anisotropy4X",
-    "signature": "public const Electron2D.Viewport.AnisotropicFiltering Anisotropy4X = 2",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
-    "value": "2"
-  },
-  {
-    "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Anisotropy8X()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "Anisotropy8X",
-    "signature": "public const Electron2D.Viewport.AnisotropicFiltering Anisotropy8X = 3",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
-    "value": "3"
-  },
-  {
-    "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Disabled()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "Disabled",
-    "signature": "public const Electron2D.Viewport.AnisotropicFiltering Disabled = 0",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
-    "value": "0"
-  },
-  {
-    "id": "enumValue:Electron2D.Viewport.AnisotropicFiltering.Max()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.Viewport.AnisotropicFiltering",
-    "name": "Max",
-    "signature": "public const Electron2D.Viewport.AnisotropicFiltering Max = 5",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
-    "value": "5"
   },
   {
     "id": "enumValue:Electron2D.Viewport.DefaultCanvasItemTextureFilter.Linear()",
@@ -173768,6 +173768,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetAnisotropicFilteringLevel(Electron2D.RID,Electron2D.AnisotropicFiltering)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetAnisotropicFilteringLevel",
+    "signature": "public static System.Void ViewportSetAnisotropicFilteringLevel(Electron2D.RID viewport, Electron2D.AnisotropicFiltering level)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "level",
+        "type": "Electron2D.AnisotropicFiltering",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetCanvasCullMask(Electron2D.RID,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -275804,12 +275828,12 @@
     "kind": "property",
     "declaringType": "Electron2D.Viewport",
     "name": "AnisotropicFilteringLevel",
-    "signature": "public Electron2D.Viewport.AnisotropicFiltering AnisotropicFilteringLevel { get; set; }",
+    "signature": "public Electron2D.AnisotropicFiltering AnisotropicFilteringLevel { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
-    "returnType": "Electron2D.Viewport.AnisotropicFiltering",
+    "returnType": "Electron2D.AnisotropicFiltering",
     "value": null
   },
   {

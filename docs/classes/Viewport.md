@@ -197,7 +197,7 @@ Source: [Viewport.Sampling.cs](../../src/Scene/Main/Viewport.Sampling.cs).
 | `public DefaultCanvasItemTextureRepeat CanvasItemDefaultTextureRepeat { get; set; }` | Disabled | [Default addressing](#canvasitemdefaulttexturerepeat) |
 | `public AnisotropicFiltering AnisotropicFilteringLevel { get; set; }` | Project setting, normally Anisotropy4X | [Anisotropy](#anisotropicfilteringlevel) |
 
-Enums: [DefaultCanvasItemTextureFilter](Viewport.DefaultCanvasItemTextureFilter.md), [DefaultCanvasItemTextureRepeat](Viewport.DefaultCanvasItemTextureRepeat.md), [AnisotropicFiltering](Viewport.AnisotropicFiltering.md). Their pages list all numeric values, including sentinels.
+Enums: [DefaultCanvasItemTextureFilter](Viewport.DefaultCanvasItemTextureFilter.md), [DefaultCanvasItemTextureRepeat](Viewport.DefaultCanvasItemTextureRepeat.md), [AnisotropicFiltering](AnisotropicFiltering.md). Their pages list all numeric values, including sentinels.
 
 Example, during detached window construction:
 
@@ -225,7 +225,7 @@ Disabled by default. Enabled repeats, Mirror reflects alternate tiles; ParentNod
 
 `public AnisotropicFiltering AnisotropicFilteringLevel { get; set; }`
 
-Construction samples the active ProjectSettings.AnisotropicFilteringLevel override (normally 2 = Anisotropy4X). Later project changes do not mutate the viewport. Live changes affect the next submission. Only anisotropic CanvasItem filters use this limit; Disabled retains ordinary mip filtering. Supported limits are disabled, 2, 4, 8 and 16 samples. Precision depends on the GPU driver. Arbitrary material parameters retain their existing fixed sampler profile.
+Construction samples the active ProjectSettings.AnisotropicFilteringLevel override (normally 2 = Anisotropy4X). Later project changes do not mutate the viewport. Live changes affect the next submission. Every valid assignment, including an equal value, replaces its renderer-session override. Only anisotropic canvas and material image samplers use this limit; Disabled retains ordinary mip filtering. Supported limits are disabled, 2, 4, 8 and 16 samples. Precision depends on the GPU driver. Arbitrary material parameters retain their existing fixed sampler profile.
 
 All three properties are stored by PackedScene. Undefined/negative/Max enum writes throw ArgumentOutOfRangeException before mutation; scene capture and off-owner writes throw InvalidOperationException; disposed access throws ObjectDisposedException. They neither allocate GPU resources nor open a window until normal rendering consumes the state. Independent single-layer offscreen viewport activation and embedded containers execute; multiview and native subwindows retain separate prerequisites.
 
