@@ -76,6 +76,18 @@ jobs:
           test "$(arch -x86_64 /usr/bin/uname -m)" = x86_64
       - name: Publish the complete test runner
         run: dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r '${{ matrix.rid }}' --self-contained true -o bin/diagnostics/runner --nologo
+      - name: Check particle shader physical queue bounds
+        id: particle_bounds
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          ELECTRON2D_TEST_PARTICLE_SHADER=native bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-shader.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-particle-bounds-${{ matrix.rid }}
+          path: bin/diagnostics/particle-shader.log
+          if-no-files-found: error
       - name: Prepare calibrated allocation diagnostics
         if: inputs.allocation_trace
         run: |
@@ -199,5 +211,5 @@ jobs:
             bin/diagnostics/contact-policy-*.trace.*
           if-no-files-found: error
       - name: Preserve the full-suite failure
-        if: steps.fixture.outcome == 'failure' || steps.focused.outcome == 'failure' || steps.button_trace.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.focused.outcome == 'failure' || steps.button_trace.outcome == 'failure' || steps.particle_bounds.outcome == 'failure'
         run: exit 1

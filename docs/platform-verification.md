@@ -23,6 +23,14 @@ required; neither older setup timeout becomes a passing execution receipt.
 
 ### Runtime suite receipts
 
+The macOS diagnostic runs `ELECTRON2D_TEST_PARTICLE_SHADER=native` before its
+allocation cohorts and uploads each RID's raw `particle-shader.log` immediately.
+This executes the existing GLSL/HLSL physical queue bounds, overflow, headerless
+storage and warmed dispatch contracts. Failure remains part of the final job
+outcome even when later diagnostics continue. The additional native gate is
+pending; static array-length and Metal-source inspection alone does not establish
+the particle path's result.
+
 At `0536f7d54`, macOS allocation run `40083825257` records the same CPU-hosted
 GPU CCD scene failure on ARM64 (`120842594363`) and x64 (`120842594172`),
 with and without profiling. The failure is an ordered body-contact link mismatch,

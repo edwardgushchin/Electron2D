@@ -119,6 +119,11 @@ uniforms. Keep the compiled contact-shader check against `OpArrayLength`: its
 Metal translation needs an auxiliary size-table binding absent from these
 pipelines. Preserve negative-ID/generation/capacity validation and verify actual
 buffer capacities and uniform offsets; a local pass does not close native Metal.
+The macOS diagnostic also runs the existing native particle shader cohort before
+allocation profiling and preserves its raw log immediately. Retain both source
+languages, oversized/zero-capacity queues, UINT_MAX counters, physically headerless
+storage and the 32 prepared dispatches. Never replace actual buffer bounds with
+authored/header metadata alone. A continued diagnostic step does not erase failure.
 Contact-policy intervals use domain `9UL << 32` for the same 256 warmup/128
 edit-active full steps, with scene/server, CPU-hosted GPU-stage and resident roles.
 The macOS diagnostics repeat existing CPU/GPU contact-correction selectors both
