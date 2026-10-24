@@ -4,6 +4,23 @@ Last updated: 2026-10-24
 
 ## Current release checks
 
+At `780e574a5`, ordinary macOS x64 job `120808086157` in run `40070173409`
+fails the stationary CPU character-slide interval at 5,848 all-thread bytes
+(64 warmup/64 measured calls). Its raw exit is 134, with no complete-suite
+marker. The older interval had no owner counter or native physical bracket;
+its producer remains unattributed. The affected stationary and reusable-getter
+measurements now retain calibrated preparation and physical boundaries; see
+[character measurement preparation](components/physics-allocation-measurement.md#stationary-character-measurement-preparation-2026-10-24).
+The failed aggregate is retained and cannot be replaced by a passing focused
+control or a later preparation change.
+
+That revision's ordinary macOS ARM64 job `120808086113` completes its full suite
+at 07:42:27 UTC, trimmed execution at 07:42:52 and NativeAOT execution at 07:47:01.
+Linux ARM64 job `120808086183` likewise completes the full, trimmed and NativeAOT
+contracts. Both logs retain the original completion line and its subsequent
+exact-marker check, representing one full run each. These receipts certify
+`780e574a5` on those targets only, not the later character-preparation candidate.
+
 At `5135f740d`, ordinary Windows x64 job `120766027842` in run `40056127660`
 passes the complete headless suite, trimmed contract and NativeAOT contract.
 The complete suite ends at 05:26:33 UTC on 2026-10-24; the NativeAOT contract

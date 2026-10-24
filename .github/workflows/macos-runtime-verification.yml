@@ -109,6 +109,8 @@ jobs:
           set -o pipefail
           umask 077
           ELECTRON2D_TEST_BUTTONS=1 E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/buttons-allocation.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/buttons-trace.log
+          ELECTRON2D_TEST_CHARACTER_BODY=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/character-cpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/character-cpu-trace.log
+          ELECTRON2D_TEST_CHARACTER_BODY=gpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/character-gpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/character-gpu-trace.log
           ELECTRON2D_TEST_AREA_BACKEND=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/area-cpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-cpu-trace.log
           ELECTRON2D_TEST_AREA_BACKEND=gpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/area-gpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-gpu-trace.log
           ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/audio-compressed.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/audio-compressed-trace.log
@@ -145,6 +147,7 @@ jobs:
           path: |
             bin/diagnostics/*.log
             bin/diagnostics/buttons-allocation.trace.*
+            bin/diagnostics/character-*.trace.*
             bin/diagnostics/area-*.trace.*
             bin/diagnostics/audio-compressed.trace.*
             bin/diagnostics/joint-policy.trace.*
@@ -180,6 +183,7 @@ jobs:
           path: |
             bin/diagnostics/full-allocation.trace.*
             bin/diagnostics/buttons-allocation.trace.*
+            bin/diagnostics/character-*.trace.*
             bin/diagnostics/area-*.trace.*
             bin/diagnostics/audio-compressed.trace.*
             bin/diagnostics/joint-policy.trace.*

@@ -77,10 +77,20 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
         using var reusable = new KinematicCollision();
         character.GetSlideCollision(0, reusable);
         Check(reusable.GetColliderRID() == first.GetColliderRID() && reusable.GetPosition() == first.GetPosition(), "Reusable indexed slide matches the copied snapshot.");
+        using var trace = PhysicsAllocationTrace.Open(backend, 5UL << 32);
+        AllocationWarmupCheck.Collect();
         for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
-        var allocated = GC.GetTotalAllocatedBytes(true);
-        for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
-        Check(GC.GetTotalAllocatedBytes(true) == allocated, "Both warmed reusable slide getters allocate zero bytes.");
+        long owner, all; var tag = trace?.Tag(2) ?? 0;
+        trace?.Begin(tag);
+        try
+        {
+            owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        }
+        finally { trace?.End(); }
+        Console.WriteLine($"Character reusable slides ({backend}): 128 warmup/128 measured getter pairs, owner/all={owner}/{all} B; trace={tag}.");
+        Check(owner == 0 && all == 0, $"Both warmed reusable slide getters {backend} allocate zero owner/all-thread bytes: {owner}/{all}.");
         Reject<ArgumentNullException>(() => character.GetLastSlideCollision(null!));
         Reject<ArgumentOutOfRangeException>(() => character.GetSlideCollision(-1, reusable));
         local.Scale = new(2, 1);
@@ -167,12 +177,21 @@ internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
             "A zero floor-platform mask prevents platform carry while retaining contact classification.");
         Check(character.GetSlideCollisionCount() > 0,
             "The warmed stationary loop below retains an active floor contact.");
+        using var trace = PhysicsAllocationTrace.Open(backend, 5UL << 32);
+        AllocationWarmupCheck.Collect();
         for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        var allocatedBefore = GC.GetTotalAllocatedBytes(true);
-        for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        var allocated = GC.GetTotalAllocatedBytes(true) - allocatedBefore;
-        Check(allocated == 0,
-            $"Warmed stationary character slide calls allocate no managed bytes: {allocated}.");
+        long owner, all; var tag = trace?.Tag(3) ?? 0;
+        trace?.Begin(tag);
+        try
+        {
+            owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+            for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        }
+        finally { trace?.End(); }
+        Console.WriteLine($"Character stationary slides ({backend}): 64 warmup/64 measured calls, owner/all={owner}/{all} B; trace={tag}.");
+        Check(owner == 0 && all == 0,
+            $"Warmed stationary character slide calls {backend} allocate no owner/all-thread managed bytes: {owner}/{all}.");
     }
 
     private void VerifyValidationAndPacking()

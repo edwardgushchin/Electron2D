@@ -4,6 +4,45 @@ Last updated: 2026-10-24
 
 ## Scope and ownership
 
+### Stationary character measurement preparation (2026-10-24)
+
+Ordinary macOS x64 job `120808086157`, run `40070173409` at `780e574a5`,
+aborts in `CharacterBodyTests.VerifyFloorSnapAndPlatform` at 07:43:58 UTC.
+Its 64 stationary CPU `MoveAndSlide` calls report 5,848 all-thread managed
+bytes after the unchanged 64-call warmup. The original interval did not record
+owner bytes or native physical boundaries, so its allocation producer remains
+unattributed. The complete suite exits 134 without its completion marker.
+
+The stationary interval and its sibling reusable-collision getters now use the
+shared calibrated double collection/finalization preparation before their
+original warmups. Both retain their numerical/lifetime checks and strict zero
+limits. Getter work remains 128 warmup/128 measured pairs; stationary work
+remains 64 warmup/64 measured calls. Each interval records owner/all-thread
+counters and a native tag before asserting, closing the physical bracket in
+`finally`. Domain `5UL << 32` uses scenario 2 for getter pairs and 3 for stationary
+slides; the existing lifecycle-idle interval retains scenario 1 and its original
+preparation and workload.
+
+The existing complete CPU/GPU character selectors run in both ordinary and
+calibrated modes in the macOS diagnostics, retaining their logs and traces.
+Preparation and successful controls cannot explain the older unmarked delta;
+complete ordinary target execution remains required for release acceptance.
+
+Local Linux ordinary and calibrated CPU/GPU selectors pass the complete
+character cohorts. All six physical intervals retain 0/0 owner/all-thread bytes
+and no object events. The two traces have 978 balanced brackets, 768 positive
+controls, 192 empty controls, successful stacks and zero recursive callbacks.
+The first CPU positive control also records three objects on `.NET Finalizer`
+(112, 32 and 72 bytes) before measurement preparation: its 64 owner bytes and
+280 all-thread bytes reconcile with the aligned native objects. These events
+remain in the evidence; they occurred outside the physical character intervals
+and do not identify the producer of the older macOS failure.
+
+The complete ordinary Linux suite also passes in 584.3 seconds, with one final
+completion marker and all frozen payload hashes unchanged. Its test source
+matches the preparation change. This remains local evidence; complete ordinary
+macOS execution on the revised source is still required.
+
 ### Runtime lock initialization (2026-10-23)
 
 Profiled macOS ARM64 run `40031605911` at `426798799` fails the complete suite's
