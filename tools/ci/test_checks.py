@@ -436,6 +436,21 @@ class Checks(unittest.TestCase):
                                        check=True, stdout=subprocess.DEVNULL)
                         self.assertEqual((output / log).read_text(), marker + "\n")
 
+    def test_windows_point_fields_require_raw_exit_complete_markers_and_failure_propagation(self):
+        workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
+        step = workflow.partition('      - name: Run the complete point-field numerical contract\n')[2].split('\n      - ', 1)[0]
+        self.assertIn('ELECTRON2D_TEST_POINT_GRAVITY: gpu', step)
+        self.assertIn('if ($code -ne 0) { exit 1 }', step)
+        self.assertIn('ownerBytes=0, allBytes=0.', step)
+        self.assertIn('finite maxima on both axes/signs and priority replacement passed.', step)
+        self.assertIn('GPU point-force overflow is terminal, preserves selection/publication and permits final resource retirement.', step)
+        self.assertIn('if (!($lines -ccontains $marker))', step)
+        full = workflow.partition('      - name: Run the complete untraced runtime suite\n')[2].split('\n      - ', 1)[0]
+        self.assertIn("steps.point_fields.outcome == 'success'", full)
+        final = workflow.partition('      - name: Preserve the fixture failure\n')[2]
+        self.assertIn("steps.point_fields.outcome == 'failure'", final)
+        self.assertEqual(workflow.count('            bin/diagnostics/point-fields.log\n'), 2)
+
     def test_windows_host_tools_preserve_managed_rid_platform_inference(self):
         workflow = (rids.ROOT / ".github/workflows/rid.yml").read_text()
         marker = "      - name: Restore managed SDK platform inference\n"

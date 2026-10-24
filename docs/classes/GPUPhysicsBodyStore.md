@@ -6,6 +6,11 @@ and lanes, and strict warmed allocation limits. A scalar-edit candidate did not
 correct the native failure and is removed. Temporary staged GPU readbacks locate
 the remaining boundary; corrected native execution is still required.
 
+[Maximum finite point-force reconstruction](../components/physics-areas.md#maximum-finite-point-force-reconstruction)
+scales exponent 128 in two finite steps while retaining real-overflow rejection.
+Both axes and signs execute through the complete point-field contract; corrected
+native Windows acceptance remains required.
+
 [Portable body-motion traversal](../components/gpu-resident-motion-queries.md)
 shares the recovery, sweep and resting scan call site while preserving iteration
 bounds, result buffers and the optimized Vulkan bytecode. Local numerical checks

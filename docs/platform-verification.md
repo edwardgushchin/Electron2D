@@ -206,8 +206,11 @@ maximum finite point force. Artifact `12539963873` retains 11,608 lines and raw
 exit `-532462766` (`0xE0434352`), with no completion marker. The log SHA-256 is
 `c1c1a454e88101ba66ab0738c9db0ac7c4409016ac763ff85d6c596d7875f814`.
 This is a managed field-validation failure after continued pipeline progress,
-not another timeout; its numerical boundary and corrected target execution remain
-open.
+not another timeout. Offline HLSL/DXIL inspection shows `ldexp` lowering through
+an `Exp` operation on exponent 128 before the mantissa multiply. The candidate
+reconstructs this top exponent as `ldexp(mantissa, 127) * 2`; exact limits on both
+axes/signs and the complete unchanged range/overflow cohort remain required.
+Corrected native Windows execution is still open.
 
 The profiled macOS run `40035786188` also completes its full x64 suite at
 `d5c677614` (job `120694782183`, artifact `12539342858`, 7,009 lines, completion

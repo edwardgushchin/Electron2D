@@ -185,9 +185,31 @@ jobs:
             bin/diagnostics/joints.log
             bin/diagnostics/motion.log
           if-no-files-found: error
+      - name: Run the complete point-field numerical contract
+        id: point_fields
+        continue-on-error: true
+        timeout-minutes: 15
+        shell: pwsh
+        env:
+          ELECTRON2D_TEST_POINT_GRAVITY: gpu
+        run: |
+          $executable = (Resolve-Path 'bin/diagnostics/runner/Electron2D.Tests.exe').Path
+          $log = 'bin/diagnostics/point-fields.log'
+          & $executable 2>&1 | Tee-Object -FilePath $log
+          $code = [int]$LASTEXITCODE
+          ('Runtime exit: {0} (0x{0:X8})' -f $code) | Tee-Object -FilePath $log -Append
+          if ($code -ne 0) { exit 1 }
+          $lines = Get-Content $log
+          foreach ($marker in @(
+            'Point field failure contract GPU: 18 scene/server/world overflow cases, finite maxima on both axes/signs and priority replacement passed.',
+            'Point gravity range: backend=GPU, profiles=3, cases=9, receivers=3, warmFrames=128, ownerBytes=0, allBytes=0.',
+            'GPU point-force overflow is terminal, preserves selection/publication and permits final resource retirement.'
+          )) {
+            if (!($lines -ccontains $marker)) { throw "Missing point-field contract marker: $marker" }
+          }
       - name: Run the complete untraced runtime suite
         id: fixture
-        if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success'
+        if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success' && steps.point_fields.outcome == 'success'
         continue-on-error: true
         timeout-minutes: 150
         shell: pwsh
@@ -209,6 +231,7 @@ jobs:
             bin/diagnostics/compiler-source.json
             bin/diagnostics/warp-source.json
             bin/diagnostics/full-runtime.log
+            bin/diagnostics/point-fields.log
           if-no-files-found: error
       - name: Capture native exception context
         if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure'
@@ -224,8 +247,9 @@ jobs:
             bin/diagnostics/compiler-source.json
             bin/diagnostics/warp-source.json
             bin/diagnostics/full-runtime.log
+            bin/diagnostics/point-fields.log
             bin/diagnostics/cdb/
           if-no-files-found: error
       - name: Preserve the fixture failure
-        if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure' || steps.point_fields.outcome == 'failure'
         run: exit 1

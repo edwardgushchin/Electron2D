@@ -9,7 +9,7 @@ internal static class PhysicsPointGravityFailureTests
             foreach (var sign in new[] { 1f, -1f })
                 foreach (var center in new[] { new Vector2(2, 0), new Vector2(0, 2), new Vector2(2, 2) })
                     Failure(backend, role, sign, center);
-        Console.WriteLine($"Point field failure contract {backend}: 18 scene/server/world overflow cases, finite maximum and priority replacement passed.");
+        Console.WriteLine($"Point field failure contract {backend}: 18 scene/server/world overflow cases, finite maxima on both axes/signs and priority replacement passed.");
     }
     private static void Failure(PhysicsServer.Backend backend, string role, float sign, Vector2 center)
     {
@@ -46,8 +46,12 @@ internal static class PhysicsPointGravityFailureTests
     private static void FiniteLimit(PhysicsServer.Backend backend)
     {
         using var world = new World(backend); using var root = new SubViewport { World = world }; var body = new CharacterBody(); root.AddChild(body); using var tree = new SceneTree(root);
-        PhysicsServer.AreaSetGravityPoint(world.Space, true); PhysicsServer.AreaSetGravityVector(world.Space, new(1, 0)); PhysicsServer.AreaSetGravityPointUnitDistance(world.Space, 1); PhysicsServer.AreaSetGravity(world.Space, float.MaxValue);
-        tree.PhysicsFrame(.001); Check(body.GetGravity() == new Vector2(float.MaxValue, 0), "Maximum finite point force is representable and retained.");
+        PhysicsServer.AreaSetGravityPoint(world.Space, true); PhysicsServer.AreaSetGravityPointUnitDistance(world.Space, 1); PhysicsServer.AreaSetGravity(world.Space, float.MaxValue);
+        foreach (var direction in new[] { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) })
+        {
+            PhysicsServer.AreaSetGravityVector(world.Space, direction);
+            tree.PhysicsFrame(.001); Check(body.GetGravity() == direction * float.MaxValue, "Maximum finite point force is representable and retained on both axes and signs.");
+        }
     }
     private static void ReplacedOverflow(PhysicsServer.Backend backend)
     {

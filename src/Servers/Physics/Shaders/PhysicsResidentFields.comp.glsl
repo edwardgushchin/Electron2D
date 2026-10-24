@@ -24,7 +24,8 @@ bool pointComponent(float value,int exponent,out precise float result)
     int adjustment;precise float mantissa=frexp(value,adjustment);exponent+=adjustment;
     // Reject the range explicitly; an infinity sentinel must not enter field arithmetic.
     if(exponent>128)return false;
-    result=ldexp(mantissa,exponent);return finiteField(vec4(result,0,0,0));
+    // Keep the top finite exponent from lowering through an overflowing 2^128 intermediate.
+    result=exponent==128?ldexp(mantissa,127)*2:ldexp(mantissa,exponent);return finiteField(vec4(result,0,0,0));
 }
 // Keep division in the normal mantissa range even for extreme authored coordinates.
 float scaledComponent(float value,float mantissa,int exponent)
