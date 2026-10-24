@@ -221,12 +221,16 @@ edit application, before the later CCD query; the added trace does not mask the
 failure. Baseline/traced/restored and both SIMD widths/managed-scalar controls all
 retain the same CastRay `x=60` failure. Corrected producer execution remains open.
 
-The next body-edit candidate reads the policy word directly from the command
-buffer before constructing its local aggregate copy. The same word supplies
-reporting, CCD and sleep masks without changing destination update order or
-storage/dispatch contracts. A two-active-command/five-body case checks retained
-report/sleep bits together with a new CCD mode before the existing 128-cycle
-regression. Corrected execution on a failing AVX-512 host remains required.
+The direct-read body candidate `55f6dfd7e` fails in `40049159059` on the same
+AVX-512 Xeon 8573C (artifact `12542568696`, ZIP SHA-256
+`4d302a27d355fbf0852be442d47a36ee8c7beca8a955e420d465752fb83890f0`).
+Its baseline/trace/restored and all three explicit controls reproduce the prior
+CastRay failure; ten stage snapshots still show `90156` after stage 0 and `90124`
+after stage 3. Direct scalar policy reads are removed. The next candidate chooses
+zero or each existing policy mask and applies the corresponding flag merge
+unconditionally, preserving operation order and storage/dispatch contracts.
+The three mask choices compile to `OpSelect`; corrected native target execution
+remains required, including the unchanged cold public and retained-policy cases.
 
 Windows x64 run `40036769271` at `78754df51` passes the focused compound,
 joint and motion cohorts, then its complete suite fails in

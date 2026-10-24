@@ -71,15 +71,18 @@ ten staged snapshots. The first, immediately after edit stage 0, has mover flags
 `90156` with command `(1, 2, 1313924, 256)`; stage 3 has `90124`. Thus CCD policy is
 already absent after edit application, rather than first disappearing in the
 subsequent sweep. The staged trace still reproduces the original failure.
-The next candidate reads the scalar policy word directly from the command buffer
-before materializing the aggregate command. Reporting, CCD and sleep edits consume
-that same word with their existing masks and order; destination-flag updates stay
-unchanged. The policy regression adds the observed two-active-command/five-body
-shape while retaining existing reporting/sleep flags and untouched tail state.
-Command/body strides, bindings, buffers, submissions and readbacks do not change.
-The manual diagnostic uploads CPU capabilities and driver versions before runner
-publish, so AVX-512 coverage can be checked without waiting for the final logs.
-This is distinct from the rejected scalar destination-flag candidate above.
+Direct scalar policy reads at `55f6dfd7e` also reproduce the same first-stage
+failure on AVX-512 Xeon 8573C in `40049159059` (artifact `12542568696`). That
+candidate is removed. The next candidate selects zero or the existing reporting,
+CCD and sleep masks, then merges each policy unconditionally into the flag word.
+This preserves every bit operation and its order while avoiding a divergent
+component update for those three policies. The selected masks compile to
+`OpSelect`; this is a compiler-shape change, not corrected native proof.
+The two-active-command/five-body regression retains existing reporting/sleep
+flags and untouched tail state. Command/body strides, bindings, buffers,
+submissions and readbacks do not change. The manual diagnostic uploads CPU
+capabilities and driver versions before runner publish, so AVX-512 coverage can
+be checked before the final logs.
 Corrected execution on the failing native hosts remains required.
 
 ## Storage, transfers and waits

@@ -27,8 +27,6 @@ void main()
     if (i >= control.y) return;
     if (control.x == 0u)
     {
-        // Keep policy reads independent of the aggregate command copy.
-        uint policy=commands[i].header.w;
         Command c = commands[i];
         uint index = c.header.x, generation = c.header.y, mask = c.header.z;
         if (index >= control.z) { fail(1u); return; }
@@ -51,7 +49,9 @@ void main()
         if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u|4194304u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || velocityChanged || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
         if ((mask & 65536u) != 0u) b.surface.xyz=c.body.surface.xyz;
-        if ((mask & 8388608u) != 0u) b.flags.z=(b.flags.z&~128u)|(policy&128u);
+        // Merge policy bits without divergent writes to a packed vector component.
+        uint reportingMask=(mask&8388608u)!=0u?128u:0u;
+        b.flags.z=(b.flags.z&~reportingMask)|(c.header.w&reportingMask);
         if ((mask & 524288u) != 0u) b.surface.w=c.body.surface.w;
         if ((mask & 262144u) != 0u) b.flags.z&=~6144u;
         if ((mask & 131072u) != 0u) {targets[index]=c.target;b.flags.z|=2048u;}
@@ -72,8 +72,10 @@ void main()
         if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
         if ((mask & 1024u) != 0u) b.flags.z|=32u;
-        if ((mask & 2048u) != 0u) b.flags.z=(b.flags.z&~768u)|(policy&768u);
-        if ((mask & 512u) != 0u) b.flags.z=(b.flags.z&~8u)|(policy&8u);
+        uint continuousMask=(mask&2048u)!=0u?768u:0u;
+        b.flags.z=(b.flags.z&~continuousMask)|(c.header.w&continuousMask);
+        uint sleepMask=(mask&512u)!=0u?8u:0u;
+        b.flags.z=(b.flags.z&~sleepMask)|(c.header.w&sleepMask);
         if ((mask & 128u) != 0u) {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}
         if ((mask & 256u) != 0u) {b.flags.z=b.flags.z|80u;b.velocity=vec4(0);}
         if ((mask & 1u) != 0u && (b.flags.z&16u)!=0u) b.velocity=vec4(0);

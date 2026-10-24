@@ -1,4 +1,4 @@
-[Direct GPU command-policy access](../components/gpu-resident-bodies.md#scalar-body-edit-flags) reads the requested word independently of the aggregate command copy. A two-command/five-body case complements the unchanged cold public compound and warmed policy contracts; corrected AVX-512 native execution remains required.
+[Masked GPU command-policy updates](../components/gpu-resident-bodies.md#scalar-body-edit-flags) select zero or each existing policy mask and apply the same merge without conditional packed-component writes. The direct-read candidate failed and is removed; the cold public, two-command/five-body and warmed policy contracts remain, with corrected AVX-512 execution still required.
 
 [Maximum finite GPU point forces](../components/physics-areas.md#maximum-finite-point-force-reconstruction) reconstruct exponent 128 without an overflowing scale intermediate and retain signed coordinate/strength/component fractions across native lowering. Exact axis/sign limits and genuine overflow retain the full public field and zero-byte contracts; native Windows confirmation remains open.
 
