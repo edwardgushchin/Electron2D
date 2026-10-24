@@ -900,7 +900,9 @@ class Checks(unittest.TestCase):
                     with self.assertRaises(TimeoutError) as error:
                         run_apple.run(Path("fixture.app"), "iOS")
                 self.assertIn(phase, str(error.exception))
-                self.assertIn("300" if phase == "bootstatus" else "180", str(error.exception))
+                self.assertIn("660" if phase == "bootstatus" else "180", str(error.exception))
+                if phase == "bootstatus":
+                    self.assertFalse(any(call.args[0][2] in ("install", "launch") for call in process.call_args_list))
                 self.assertIn("Waiting on system app launch", str(error.exception))
                 self.assertIn("setup fixture blocked", str(error.exception))
                 self.assertIn("runtime", log.getvalue())

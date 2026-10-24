@@ -4,6 +4,25 @@ Last updated: 2026-10-24
 
 ## Current release checks
 
+### Apple simulator first-boot budget (2026-10-24)
+
+iOS x64 jobs `120766028067` and `120808086222` both exceeded the original
+300-second `simctl bootstatus` setup budget before application installation.
+The latter raw log shows completed data migration followed by status 4,
+`Waiting on System App`, through elapsed 04:13 when the command deadline
+interrupted setup. This is continuing first-boot work, not an application result.
+
+The driver now allows one bounded 660-second cold boot and reports its actual
+readiness time. The separate 180-second command and 120-second application
+result deadlines remain, with the same run-token PASS requirement, failure
+propagation and owned-simulator cleanup. A failed boot cannot install or launch
+the app, and no boot/app retry or readiness-state bypass is added. The budget
+follows [CI maintainer guidance for first-boot migration](https://github.com/invertase/react-native-firebase/blob/main/okf-bundle/ci-workflows/ios.md#simulator-reliability).
+Actual installation, launch and contract completion on the revised source remain
+required; neither older setup timeout becomes a passing execution receipt.
+
+### Runtime suite receipts
+
 At `780e574a5`, ordinary macOS x64 job `120808086157` in run `40070173409`
 fails the stationary CPU character-slide interval at 5,848 all-thread bytes
 (64 warmup/64 measured calls). Its raw exit is 134, with no complete-suite
@@ -536,7 +555,7 @@ In [run 37404576411](https://github.com/edwardgushchin/Electron2D/actions/runs/3
 
 Run `37407321875` passed ARMv7/ARM64/x86 native apps and retained Android x64 artifact `11388121386`. Its system log records `wm_relaunch_resume_activity` with configuration mask `80000000`, added system resource overlays, SDL Activity destruction/recreation and a zero-code VM exit while managed checks were still running. This establishes an `assetsPaths` Activity-recreation failure, not a font hang or native crash. Both test-only SDL hosts now declare `assetsPaths` in their native Android manifests and query their installed ActivityInfo before running. The C# attribute converter dropped `ConfigChanges.AssetsPaths`: a locally built APK still had mask `0x4f0`, so that candidate was rejected. Native manifest configuration preserves mask `0x800004f0` in the actual binary APK. The runtime check reads the existing sign bit on older Android too, without suppressing platform analysis or changing the minimum SDK. The [SDL Activity lifecycle](https://github.com/libsdl-org/SDL/blob/release-3.4.18/android-project/app/src/main/java/org/libsdl/app/SDLActivity.java) tears down native state on destruction and rejects recreation by default. No app retry, global configuration suppression or deadline change is used; current native execution remains required.
 
-The same run's iOS x64 simulator timed out in `simctl bootstatus` after 300 seconds, reporting first-boot LaunchServices data migration before application install/launch. The other three simulator jobs passed. This setup failure is not an app pass, and no longer boot/app deadline or app retry is used to accept it; current simulator execution remains required.
+The same run's iOS x64 simulator timed out in `simctl bootstatus` after 300 seconds, reporting first-boot LaunchServices data migration before application install/launch. The other three simulator jobs passed. That setup failure was not accepted with a longer boot/app deadline or an app retry; its source still required actual simulator execution.
 
 Run `37409993215` exposed a separate Android manifest-merge failure before app execution: the explicit Activity entry retained the lifecycle mask but shadowed the C# attribute's export and launcher metadata. Both native manifests now own the complete exported MAIN/LAUNCHER entry, while the C# attribute supplies only its matching component name. A source-manifest regression covers both hosts, independent binary APK inspection verifies export/launcher and the exact lifecycle mask, and the installed ActivityInfo/launch-intent guards retain those checks at execution. No launch-permission bypass or app retry is used; current native emulator execution remains required.
 
@@ -617,7 +636,7 @@ The Apple app explicitly sets `DynamicCodeSupport=false` and asserts that runtim
 
 The Apple driver selects from each runtime's `supportedDeviceTypes`, creates only its own temporary simulator and checks a per-run result file in the app's data container. Tokens reject missing/stale/FAIL completion; startup traces, launch stdout/stderr and bounded crash/log diagnostics identify early failures. The UIKit delegate queues contracts after launch returns. Console output alone is not accepted as completion, and every exit path attempts cleanup of the owned simulator. A shutdown timeout is reported and still attempts deletion; failed deletion remains a job failure. Run 37326323360 passed the iOS ARM64 simulator app contracts but failed during shutdown before deletion. Driver regression checks cover shutdown timeout after both PASS and FAIL, and reject a deletion failure; corrected target cleanup still requires CI execution.
 
-The iOS x64 simulator in run 37392360522 exceeded its existing 300-second bootstatus limit before application installation; the preceding run exceeded the 180-second install limit. Other current Apple simulator apps passed. The driver now prints the selected runtime/device and command phase, preserves bounded partial stdout/stderr from setup timeouts, and still deletes its own simulator. Regression checks preserve both original limits and require one attempt, failure propagation and cleanup. This adds missing diagnostic evidence, not a simulator-startup fix or accepted iOS x64 execution.
+The iOS x64 simulator in run 37392360522 exceeded its existing 300-second bootstatus limit before application installation; the preceding run exceeded the 180-second install limit. Other current Apple simulator apps passed. The driver now prints the selected runtime/device and command phase, preserves bounded partial stdout/stderr from setup timeouts, and still deletes its own simulator. At that revision, regression checks preserved both original limits and required one attempt, failure propagation and cleanup. Those diagnostics did not establish a simulator-startup fix or accepted iOS x64 execution; the current first-boot setup budget is documented above.
 
 Browser completion posts a bounded JSON result with a unique run token to the loopback test server; the driver waits up to120 real seconds and rejects stale/malformed/failure results. It does not treat an unfinished DOM snapshot as execution evidence. Chromium starts in an isolated process group that is stopped before profile cleanup, including child processes that outlive the launcher.
 

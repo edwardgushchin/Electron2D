@@ -45,8 +45,11 @@ def run(app, platform, timeout=120):
     print(f"{platform} simulator: runtime={runtime}, device={device}", flush=True)
     udid = command("create", "Electron2D contract tests", device, runtime).strip()
     try:
+        boot_started = time.monotonic()
         command("boot", udid)
-        command("bootstatus", udid, "-b", timeout=300)
+        # First-boot migration can exceed five minutes before any app is installed.
+        command("bootstatus", udid, "-b", timeout=660)
+        print(f"{platform} simulator ready after {time.monotonic() - boot_started:.1f} seconds.", flush=True)
         command("install", udid, str(app.resolve()))
         container = Path(command("get_app_container", udid, "org.electron2d.tests", "data").strip())
         token = uuid.uuid4().hex
