@@ -1,6 +1,6 @@
 # GPU physics implementation status
 
-Last updated: 2026-10-21
+Last updated: 2026-10-24
 
 [Initial-world preparation](physics-network-example.md#initial-world-preparation-2026-10-21)
 now finishes before the example opens ENet. Six fresh cold-cache public network
@@ -244,6 +244,11 @@ Resident contact links and body head/count records occupy 16 bytes each. The
 owner imports GPU next links/counts in original pair order, so custom material
 callbacks see the same intermediate adjacency as the CPU path. The complete
 result is checked against ordered scratch heads/counts before live publication.
+Parallel endpoints write scalar link elements and separate result fields rather
+than dynamically indexed components of shared vectors. The logical 16-byte
+contact rows, 80-byte creation results and all host offsets remain unchanged;
+creation, neighboring-edge edits and removal share the same scalar indexing.
+Mismatch failures retain body/key and actual/expected next/count values.
 An optional contact-link observer journals external CPU creation/removal and
 both neighboring edges; repeated changes coalesce by contact/body identity.
 Warm batches upload only final 32-byte dirty records, with no full adjacency
@@ -253,6 +258,7 @@ GPU adjacency while external authoring removal and graph/island mutation remain 
 ID-pool counter. `ValidateContactLinks` is an internal diagnostic that synchronizes
 pending changes and reads the complete GPU lists back for exact mirror comparison;
 it is exercised by tests, not the normal frame path.
+
 
 Disjoint contacts are removed in the existing collision command buffer, after
 manifold generation and before the same readback fence. The GPU marks selected
@@ -1451,3 +1457,24 @@ DXIL, compared with 23 before the change. This proves translation through the
 pinned compiler; Windows execution remains a separate CI check. The Linux vkd3d
 DXBC compiler still accepts only one module because its writable-buffer method
 support is incomplete; that result does not establish Windows FXC behavior.
+
+## Metal contact-link verification (2026-10-24)
+
+At `0536f7d54`, macOS jobs `120842594363` (ARM64) and `120842594172` (x64)
+in run `40083825257` both fail the CPU-hosted GPU CCD scene before its allocation
+interval, in ordinary and profiled selectors. All four logs retain the ordered
+body-adjacency mismatch. The scalar-store change targets the shared vector
+component accesses seen in the generated Metal source; it does not establish
+the old mismatch's exact producer without revised native execution. Local
+creation, removal, contact-update and complete host-CCD selectors pass, and
+SPIR-V reflection retains the 80-byte result, field offsets, bindings and 64-lane
+workgroup. Metal/HLSL translation and local passes remain distinct from the
+required ordinary macOS confirmation. The macOS diagnostic also runs both
+complete creation/removal contracts before its aggregate suite.
+The complete ordinary local suite passes in 598.345 seconds with one final
+completion marker and all 79 frozen payload files unchanged. A second software
+Vulkan profile passes both old and scalar host-CCD selectors, plus the revised
+creation/removal contracts, with identical native payloads. It does not reproduce
+or attribute the old Metal failure, and concurrent timings are not a performance
+comparison. Evidence is retained in ignored
+`bin/release-audit/contact-link-components/`.

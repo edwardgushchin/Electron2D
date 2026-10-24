@@ -162,7 +162,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             value = CaptureBodyLinks(world, body);
         }
         if (next != value.Head || count != value.Count + 1)
-            throw new InvalidOperationException("GPU contact links differ from ordered body adjacency.");
+            throw new InvalidOperationException($"GPU contact links differ from ordered body adjacency: body {body}, key {key}, next {next}/{value.Head}, count {count}/{value.Count + 1}.");
         value.Head = key; value.Count = count;
     }
 

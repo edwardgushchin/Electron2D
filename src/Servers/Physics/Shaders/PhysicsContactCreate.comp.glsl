@@ -5,7 +5,7 @@
 #include "PhysicsMaterial.inc.glsl"
 layout(local_size_x = 64) in;
 struct Request { ivec4 a; ivec4 b; vec4 material; uvec4 flags; };
-struct Created { ContactSlot slot; vec4 material; ivec4 identity; ivec4 links; };
+struct Created { ContactSlot slot; vec4 material; ivec4 identity; int nextA; int nextB; int countA; int countB; };
 struct LinkUpdate { ivec4 identity; ivec4 value; };
 struct CollisionPair { ivec4 ids; vec4 poseA; vec4 poseB; vec4 offset; };
 struct Removed { ivec4 identity; ivec4 a; ivec4 b; };
@@ -20,7 +20,8 @@ layout(std430, set = 1, binding = 1) buffer FreeIDs { int freeIDs[]; };
 layout(std430, set = 1, binding = 2) buffer Pool { ivec4 pool; ivec4 basePool; };
 layout(std430, set = 1, binding = 3) buffer Results { Created created[]; };
 layout(std430, set = 1, binding = 4) buffer Scan { int scan[]; };
-layout(std430, set = 1, binding = 5) buffer Links { ivec4 links[]; };
+// Parallel endpoints keep their writes in distinct scalar storage locations.
+layout(std430, set = 1, binding = 5) buffer Links { int links[]; };
 layout(std430, set = 1, binding = 6) buffer Bodies { BodyLinks bodies[]; };
 layout(std430, set = 1, binding = 7) buffer Removals { Removed removed[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { ivec4 settings; ivec4 level; };
@@ -30,6 +31,8 @@ ivec2 endpoint(int i) { return ivec2(scan[2*i],scan[2*i+1]); }
 void setEndpoint(int i, ivec2 value) { scan[2*i] = value.x; scan[2*i+1] = value.y; }
 bool greater(ivec2 a, ivec2 b) { return a.x > b.x || (a.x == b.x && a.y > b.y); }
 int edgeKey(int ordinal) { return 2*created[ordinal/2].identity.x + (ordinal&1); }
+int linkOffset(int key) { return 4*(key/2) + 2*(key&1); }
+void setContactLinks(int id, ivec4 value) { for (int i = 0; i < 4; i++) links[4*id+i] = value[i]; }
 int scanPrefix(int index)
 {
     int prefix = 0;
@@ -99,7 +102,7 @@ void main()
         scan[leaf + index] = 0;
         if (index >= count) return;
         Request r = requests[index];
-        Created result = Created(ContactSlot(ivec4(-1),uvec4(0)),vec4(0),ivec4(-1,0,0,0),ivec4(-1,-1,0,0));
+        Created result = Created(ContactSlot(ivec4(-1),uvec4(0)),vec4(0),ivec4(-1,0,0,0),-1,-1,0,0);
         int ta = rankType(r.a.z), tb = rankType(r.b.z);
         if (ta < 0 || ta > 5 || tb < 0 || tb > 5) { atomicMax(pool.z, 5); created[index] = result; return; }
         if (ta == 5 && tb == 5) { created[index] = result; return; }
@@ -137,7 +140,7 @@ void main()
     {
         if (index >= count) return;
         LinkUpdate update = linkUpdates[index]; int id = update.identity.x;
-        if (update.identity.y == 0) links[id] = update.value;
+        if (update.identity.y == 0) setContactLinks(id,update.value);
         else { bodies[id].head = update.value.x; bodies[id].count = update.value.y; }
         return;
     }
@@ -186,11 +189,11 @@ void main()
         { atomicMax(pool.z,9); return; }
         bool last = index+1 == count || endpoint(index+1).x != body;
         int prev = last ? -1 : edgeKey(endpoint(index+1).y);
-        links[id][2*side] = prev; links[id][2*side+1] = next;
-        if (index == low && next >= 0) links[next/2][2*(next&1)] = key;
+        links[linkOffset(key)] = prev; links[linkOffset(key)+1] = next;
+        if (index == low && next >= 0) links[linkOffset(next)] = key;
         int total = bodies[body].count + index-low+1;
-        created[ordinal/2].links[side] = next;
-        created[ordinal/2].links[2+side] = total;
+        if (side == 0) { created[ordinal/2].nextA = next; created[ordinal/2].countA = total; }
+        else { created[ordinal/2].nextB = next; created[ordinal/2].countB = total; }
         if (last) { bodies[body].nextHead = key; bodies[body].nextCount = total; }
         return;
     }
@@ -252,17 +255,17 @@ void main()
         {
             int ordinal = endpoint(cursor).y, request = ordinal/2, side = ordinal&1;
             int id = removed[request].identity.x, key = 2*id+side;
-            int prev = links[id][2*side], next = links[id][2*side+1];
-            if ((prev == -1 ? bodies[body].head != key : !ownsEdge(prev,body) || links[prev/2][2*(prev&1)+1] != key) ||
-                (next != -1 && (!ownsEdge(next,body) || links[next/2][2*(next&1)] != key)) || bodies[body].count <= 0)
+            int edge = linkOffset(key), prev = links[edge], next = links[edge+1];
+            if ((prev == -1 ? bodies[body].head != key : !ownsEdge(prev,body) || links[linkOffset(prev)+1] != key) ||
+                (next != -1 && (!ownsEdge(next,body) || links[linkOffset(next)] != key)) || bodies[body].count <= 0)
             { atomicMax(pool.z,13); return; }
             int head = bodies[body].head == key ? next : bodies[body].head;
             int remaining = bodies[body].count - 1;
             if (side == 0) removed[request].a = ivec4(prev,next,head,remaining);
             else removed[request].b = ivec4(prev,next,head,remaining);
-            if (prev >= 0) links[prev/2][2*(prev&1)+1] = next;
-            if (next >= 0) links[next/2][2*(next&1)] = prev;
-            links[id][2*side] = -1; links[id][2*side+1] = -1;
+            if (prev >= 0) links[linkOffset(prev)+1] = next;
+            if (next >= 0) links[linkOffset(next)] = prev;
+            links[edge] = -1; links[edge+1] = -1;
             bodies[body].head = head; bodies[body].count = remaining;
         }
         return;
@@ -273,7 +276,7 @@ void main()
         int id = removed[index].identity.x;
         freeIDs[basePool.y+index] = id;
         slots[id].shapeBody = ivec4(-1); slots[id].state.y &= 0x7fffffffu;
-        links[id] = ivec4(-1);
+        setContactLinks(id,ivec4(-1));
         return;
     }
     if (index >= count || atomicAdd(pool.z, 0) != 0 || scan[leaf + index] == 0) return;

@@ -23,6 +23,16 @@ required; neither older setup timeout becomes a passing execution receipt.
 
 ### Runtime suite receipts
 
+At `0536f7d54`, macOS allocation run `40083825257` records the same CPU-hosted
+GPU CCD scene failure on ARM64 (`120842594363`) and x64 (`120842594172`),
+with and without profiling. The failure is an ordered body-contact link mismatch,
+before the CCD allocation interval; it is separate from earlier byte-counter
+failures. Audio active/idle MP3/Ogg and serial CPU/GPU CCD intervals preceding it
+retain zero counters in both focused cohorts. The shader now writes link fields
+through scalar storage with unchanged host offsets; see
+[contact-link verification](components/gpu-physics.md#metal-contact-link-verification-2026-10-24).
+Revised native execution is required before claiming this failure resolved.
+
 At `b34181561`, ordinary macOS ARM64 job `120829192314` in run `40077474451`
 aborts in idle compressed Ogg mixing at 3,360 owner-thread bytes, exit 134,
 without a complete-suite marker. The preceding active MP3/Ogg and idle MP3

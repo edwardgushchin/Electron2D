@@ -138,6 +138,8 @@ jobs:
           ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/audio-compressed.log
           ELECTRON2D_TEST_GPU_CCD_CONTRACT=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/ccd-contract.log
           ELECTRON2D_TEST_CCD=1 ELECTRON2D_SANDBOX_GPU_SOLVER=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/ccd-host-gpu.log
+          ELECTRON2D_TEST_GPU_CONTACT_CREATION=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-creation.log
+          ELECTRON2D_TEST_GPU_CONTACT_REMOVAL=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-removal.log
           ELECTRON2D_TEST_PHYSICS_THREAD=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/joint-policy.log
           ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/shape-owner.log
           ELECTRON2D_TEST_CONTACT_CORRECTION=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-cpu.log

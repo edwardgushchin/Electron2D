@@ -110,6 +110,10 @@ before the shared preparation and 64 warm steps. Retain all 128 reset-active
 steps, owner/all-thread zero limits and serial, separate-thread and CPU-hosted
 GPU roles. Ordinary and calibrated macOS diagnostics run the existing complete
 continuous-contract and CPU-hosted GPU CCD selectors before the full suite.
+The ordinary diagnostic also retains the complete GPU contact-creation/removal
+contracts. Parallel contact endpoints use scalar shader fields with the same
+80-byte result and 16-byte logical link rows; verify both creation and removal,
+host-CCD scenes, generated resource bindings/offsets and revised Metal execution.
 Contact-policy intervals use domain `9UL << 32` for the same 256 warmup/128
 edit-active full steps, with scene/server, CPU-hosted GPU-stage and resident roles.
 The macOS diagnostics repeat existing CPU/GPU contact-correction selectors both

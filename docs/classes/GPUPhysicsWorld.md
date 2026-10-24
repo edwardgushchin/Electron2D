@@ -1,6 +1,6 @@
 # GPUPhysicsWorld
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 Device and offline pipeline ownership now use [GPUPhysicsDevice](GPUPhysicsDevice.md).
 The separate [GPUPhysicsBodyStore](GPUPhysicsBodyStore.md) develops resident body
@@ -78,6 +78,9 @@ Creation also sorts endpoints by body ID/pair ordinal on GPU and computes next/
 previous links, insertion-time counts and final heads. A separate pass commits
 body heads/counts. The owner validates and publishes the ordered prefix, preserving
 callback-visible adjacency. Contact links and body records use 16 bytes each;
+parallel endpoint writes use scalar storage elements and distinct result fields,
+preserving the existing 80-byte creation-result layout. Creation and removal
+share that indexing; mismatch errors include actual and expected link values.
 CPU-origin link changes coalesce to 32-byte contact/body updates, including both
 neighbors on deletion. Binding/observer/capacity changes snapshot both stores.
 `ContactLinkUploadBytes` counts those uploads. The internal diagnostic
