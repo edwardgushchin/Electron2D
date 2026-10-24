@@ -79,5 +79,5 @@
   <Import Project="../../tools/shaders/ComputeShaders.targets" />
   <ItemGroup><Electron2DDeviceShader Include="Shaders/MeshImporterGLSL.frag.glsl;Shaders/MeshImporterHLSL.frag.hlsl;Shaders/MeshCompressionGLSL.frag.glsl;Shaders/MeshCompressionHLSL.frag.hlsl;Shaders/MeshCustomGLSL.frag.glsl;Shaders/MeshCustomHLSL.frag.hlsl;Shaders/MeshFrameGLSL.frag.glsl;Shaders/MeshFrameHLSL.frag.hlsl;Shaders/MeshUV2GLSL.frag.glsl;Shaders/MeshUV2HLSL.frag.hlsl;Shaders/Device*.vert.glsl;Shaders/Device*.frag.glsl;Shaders/Device*.vert.hlsl;Shaders/Device*.frag.hlsl" /></ItemGroup>
   <Import Project="../../tools/shaders/DeviceShaders.targets" />
-  <ItemGroup><Electron2DComputeShader Include="../../examples/WaterPlayground/Water.comp.glsl" /></ItemGroup>
+  <ItemGroup><Electron2DComputeShader Include="../../examples/WaterPlayground/Water.comp.glsl;Shaders/LocalBufferLengths.comp.glsl" /></ItemGroup>
 </Project>

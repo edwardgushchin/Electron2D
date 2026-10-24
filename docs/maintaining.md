@@ -124,6 +124,13 @@ allocation profiling and preserves its raw log immediately. Retain both source
 languages, oversized/zero-capacity queues, UINT_MAX counters, physically headerless
 storage and the 32 prepared dispatches. Never replace actual buffer bounds with
 authored/header metadata alone. A continued diagnostic step does not erase failure.
+The revised Metal adapter retains original array-length queries and supplies real
+dispatch byte ranges through its private readonly size table. Run both particle
+shader profiles plus the server `gpu`, `subemitter`, `allocations`,
+`material-subemission` and `material-allocations` cohorts. Keep the eight-storage/
+four-uniform and same-submission rebinding regression, original module bytes,
+direct/indirect dispatch and program/variant/binary ownership. Source translation
+and local Vulkan success do not close revised Metal execution.
 Contact-policy intervals use domain `9UL << 32` for the same 256 warmup/128
 edit-active full steps, with scene/server, CPU-hosted GPU-stage and resident roles.
 The macOS diagnostics repeat existing CPU/GPU contact-correction selectors both

@@ -24,6 +24,8 @@ internal static unsafe partial class ShaderCompiler
 
     internal static nint CreateComputePipeline(nint device, byte[] code) => Run(() =>
     {
+        if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.MSL) != 0 && NeedsBufferSizes(code))
+            throw new NotSupportedException("This compute consumer must bind its physical buffer-size table.");
         fixed (byte* pointer = code)
         fixed (byte* entrypoint = "main\0"u8)
         {
@@ -32,10 +34,7 @@ internal static unsafe partial class ShaderCompiler
             try
             {
                 var metadata = Marshal.PtrToStructure<ShaderCross.ComputePipelineMetadata>(reflection);
-                if (metadata.NumReadOnlyStorageBuffers > 8 || metadata.NumReadWriteStorageBuffers > 8 ||
-                    metadata.NumReadOnlyStorageTextures > 8 || metadata.NumReadWriteStorageTextures > 8 ||
-                    metadata.NumSamplers > 16 || metadata.NumUniformBuffers > 4)
-                    throw new NotSupportedException("Compute resources exceed the native pipeline binding limits.");
+                ValidateComputeMetadata(in metadata);
                 var info = new ShaderCross.SPIRVInfo
                 {
                     ByteCode = (nint)pointer,

@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
-    private RenderHandle? _particleVertices;
+    private ComputePipeline? _particleVertices;
     private readonly List<ParticleStream> _particleStreams = [];
     private readonly HashSet<ParticleGeometry> _particleGeometries = [], _usedParticleGeometries = [];
     private readonly List<ParticleGeometry> _particleGeometryRetire = [];

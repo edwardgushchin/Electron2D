@@ -20,6 +20,12 @@ Visible commands request processing once per renderer frame. `ParticlesRequestPr
 
 ## Compute frame and routing
 
+Metal array-length queries receive the actual bound storage byte ranges through
+the pipeline's private readonly table. Step/intake, process/outgoing and routing
+source/target bindings each capture their own sizes before dispatch, including
+multiple dispatches within one command buffer. The [portable process ABI](particle-shaders.md)
+keeps physical queue bounds and its existing frame/record layout.
+
 The [portable process ABI](particle-shaders.md) remains the shader contract. The renderer initializes or restarts records, integrates existing velocity/age, sets newborn flags, runs the optional authored compute program, captures history and prepares draw ordering. A custom program owns its active flag and any custom lifetime policy; the default process deactivates records at nominal lifetime. `State.x` bits 1/2 indicate active/newborn; bits 8 through 12 retain the supplied-field emission mask during that newborn step, then clear on the next step. Built-in process initialization can preserve explicitly supplied position/basis/velocity/color/custom channels. The includes name this mask and shift. `State.y` is the birth cycle, `State.z` the seed and `State.w` the per-particle delta as float bits. Fractional delta supplies the newborn's fraction of the current step in this last lane.
 
 `EmissionX/Y` is identity in local coordinates and the authored emission pose in world coordinates. `PreviousEmissionX/Y` retains the previous simulation pose, or the current pose on reset.

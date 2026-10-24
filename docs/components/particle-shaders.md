@@ -1,6 +1,6 @@
 # Particle shaders
 
-Last updated: 2026-10-19
+Last updated: 2026-10-24
 
 ## Executable scope
 
@@ -36,6 +36,15 @@ var pipeline = device.ComputePipelineCreate(shader);
 The caller binds storage at set one and frame/user uniform buffers at set two through `RDUniform`/`UniformSetCreate`. Sampled images use set zero. Ordinary device submission, synchronization, thread affinity, lifetime and resource limits apply. Runtime loading consumes compiled bytes and does not invoke the source importer. Both bytecode getters return independent authored compute bytes. The Vertex/Fragment overloads reject this mode. `SetSPIRV(bytes, mode)` validates the replacement before publication; failure retains the prior program and values.
 
 ## Buffer ABI
+
+Runtime array lengths describe the actual bound storage range. On Metal the
+engine supplies those byte ranges through a private native readonly table for
+each dispatch; portable shader bytes, this ABI and caller uniform sets retain
+their existing format. This keeps zero/oversized queue headers and physically
+headerless storage bounded without trusting authored capacities. The direct
+RenderingDevice and retained renderer paths use the same
+[compute owner](../classes/ComputePipeline.md). Revised native Metal acceptance
+is tracked in [platform verification](../platform-verification.md).
 
 Each `Electron2D_Particle` is a 96-byte record, with six aligned 16-byte lanes:
 

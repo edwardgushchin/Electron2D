@@ -503,3 +503,5 @@ Canvas SDF graph operations now use the shared offline importer and renderer-own
 Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
 
 The explicit shader source-authoring bridge checks process-launch support before executing an import tool. Unsupported mobile Apple/TV and browser hosts retain per-stage diagnostics; compiled shader loading uses the existing rendering path.
+
+[Physical compute storage lengths](../components/local-compute.md#metal-storage-buffer-lengths) retain actual buffer ranges through dispatch rebinding. The Metal adapter owns a private readonly size table with each native pipeline; particle and direct RenderingDevice callers retain their existing portable ABI and logical resources. Revised native acceptance remains a separate platform gate.

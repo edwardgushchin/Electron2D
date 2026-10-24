@@ -1,6 +1,13 @@
 # RenderingDevice
 
-Last updated: 2026-10-21
+Last updated: 2026-10-24
+
+Compute storage-array lengths use each actual bound byte range, including
+different bindings across dispatches in one submission. The internal
+[ComputePipeline](ComputePipeline.md) supplies Metal's size table; the logical
+eight-storage/four-uniform interface and exported portable modules retain their
+existing roles. See [Metal storage-buffer lengths](../components/local-compute.md#metal-storage-buffer-lengths)
+for ownership and verification limits.
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Binary.cs](../../src/Servers/Rendering/Device/RenderingDevice.Binary.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs). **Component:** [Local compute](../components/local-compute.md).
 

@@ -978,6 +978,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [CanvasAnimationSlice](classes/CanvasAnimationSlice.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasCommand](classes/CanvasCommand.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasBatch](classes/CanvasBatch.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [ComputePipeline](classes/ComputePipeline.md), `ComputePipeline.BufferLayout` | [ComputePipeline.cs](../src/Servers/Rendering/ComputePipeline.cs) | [local-compute](components/local-compute.md#metal-storage-buffer-lengths) |
 | [CanvasGeometry](classes/CanvasGeometry.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasPresentation](classes/CanvasPresentation.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasBackend](classes/CanvasBackend.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |

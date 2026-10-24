@@ -82,6 +82,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal string Name = "";
         internal ShaderStage Stage = ShaderStage.Compute;
         internal RenderHandle? FragmentHandle;
+        internal ComputePipeline? Compute;
         internal uint Set;
         internal Binding[] Layout = [];
         internal SamplerLink[] Samplers = [];
@@ -265,13 +266,17 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (outputSlots is not null) modules[1] = RemapFragmentOutputs(modules[1], outputSlots, entry.Outputs);
         try
         {
-            if (modules.Length == 1) entry.Handle = new(ShaderCompiler.CreateComputePipeline(Device, modules[0]), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
+            if (modules.Length == 1) { entry.Compute = new(_context.Handle, modules[0]); entry.Handle = entry.Compute.Handle; }
             else { entry.Handle = new(ShaderCompiler.CreateShader(Device, modules[0], false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); entry.FragmentHandle = new(ShaderCompiler.CreateShader(Device, modules[1], true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); }
             return entry;
         }
         catch { ReleaseProgram(entry); throw; }
     }
-    private static void ReleaseProgram(Entry? program) { program?.FragmentHandle?.Dispose(); program?.Handle?.Dispose(); }
+    private static void ReleaseProgram(Entry? program)
+    {
+        program?.FragmentHandle?.Dispose();
+        if (program?.Compute is { } compute) compute.Dispose(); else program?.Handle?.Dispose();
+    }
     private Entry PipelineProgram(Entry pipeline) { var source = Get(pipeline.Shader, Kind.Shader); return pipeline.Variant ?? source; }
     private Entry? PipelineVariant(Entry source, ReadOnlySpan<RDPipelineSpecializationConstant> constants, int[]? outputSlots = null)
     {
@@ -358,6 +363,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="xGroups">Positive X group count, at most 65535.</param>
     /// <param name="yGroups">Positive Y group count, at most 65535.</param>
     /// <param name="zGroups">Positive Z group count, at most 65535.</param>
+    /// <remarks>Runtime storage-buffer lengths reflect each resource bound for this dispatch, including rebinding within one submission.</remarks>
     public void ComputeListDispatch(long computeList, uint xGroups, uint yGroups, uint zGroups)
     {
         List(computeList);
@@ -369,6 +375,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (_pipeline is null) throw new InvalidOperationException("Bind a compute pipeline first.");
         RequirePush(_pipeline);
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
+        Span<uint> bufferSizes = stackalloc uint[8];
         var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
         var samplers = stackalloc SDL.GPUTextureSamplerBinding[16]; var samplerCount = 0;
         foreach (var descriptor in _pipeline.Layout)
@@ -378,14 +385,16 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[ResourceID(descriptor, BufferID(descriptor.Type))]);
             if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.NativeHandle }; imageCount++; }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[ResourceID(descriptor, 1)]).NativeHandle }; samplerCount++; }
-            else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
+            else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; bufferSizes[descriptor.Native] = buffer.Size; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }
         foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }
         PushUniforms(_pipeline);
+        _pipeline.Compute?.PrepareBufferSizes(_command, ReadOnlySpan<uint>.Empty, bufferSizes[..count]);
         var pass = SDL.BeginGPUComputePass(_command, (nint)images, (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
+        _pipeline.Compute?.BindBufferSizes(pass);
         if (samplerCount != 0) SDL.BindGPUComputeSamplers(pass, 0, (nint)samplers, (uint)samplerCount);
         if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
         else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
@@ -447,7 +456,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
-        _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseProgram(entry.Variant); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
+        _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -462,7 +471,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines();
-            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseProgram(e.Variant); e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
+            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }
         base.Dispose(disposing);

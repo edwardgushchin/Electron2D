@@ -1,6 +1,12 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-22
+Last updated: 2026-10-24
+
+Retained particle kernels and imported process programs own
+[ComputePipeline](ComputePipeline.md) resources. Metal array-length queries bind
+actual step/intake, process/outgoing and subemission source/target byte ranges
+through the private size table before each dispatch. State stays on device;
+pipeline retirement and renderer teardown release their tables together.
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)

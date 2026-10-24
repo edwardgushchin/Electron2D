@@ -13,6 +13,7 @@ internal static class ParticleShaderTests
     }
     internal static void RunManaged()
     {
+        VerifyMetalBufferLayouts();
         Check(!RenderingServer.IsAvailable, "Particle resources require no active renderer.");
         Check(Marshal.SizeOf<ParticleStateLayout>() == 96 && Marshal.SizeOf<ParticleFrameLayout>() == 192, "Particle ABI record sizes.");
         foreach (var language in new[] { "GLSL", "HLSL" })
@@ -86,7 +87,9 @@ internal static class ParticleShaderTests
     }
     internal static void RunNative()
     {
+        VerifyMetalBufferLayouts();
         using var device = RenderingServer.CreateLocalRenderingDevice();
+        VerifyPhysicalBufferLengths(device);
         foreach (var language in new[] { "GLSL", "HLSL" })
         {
             using var process = Shader.CreateFromSPIRV(Fixture(language), Shader.Mode.Particles);
@@ -150,5 +153,72 @@ internal static class ParticleShaderTests
             foreach (var rid in new[] { storageSet, uniformSet, pipeline, shader, state, frameBuffer }) device.FreeRID(rid);
         }
         Console.WriteLine("Particle HLSL/GLSL public Shader -> RenderingDevice execution, retained GPU state, tail bounds and bounded subemission and 32 warmed steps/language=0 managed B passed on " + device.GetDeviceName());
+    }
+
+    private static byte[] BufferLengthsFixture()
+    {
+        using var input = typeof(ParticleShaderTests).Assembly.GetManifestResourceStream("Electron2D.Compute.LocalBufferLengths.comp.spv")!;
+        using var memory = new MemoryStream(); input.CopyTo(memory); return memory.ToArray();
+    }
+
+    private static void VerifyMetalBufferLayouts()
+    {
+        using var queue = typeof(PhysicsServer).Assembly.GetManifestResourceStream("Electron2D.Shaders.ParticleQueue.comp.spv")!;
+        using var memory = new MemoryStream(); queue.CopyTo(memory);
+        var modules = new[] { Fixture("GLSL"), Fixture("HLSL"), BufferLengthsFixture(), memory.ToArray() };
+        foreach (var code in modules)
+        {
+            var original = (byte[])code.Clone(); var translated = ShaderCompiler.PrepareComputeMSL(code); var layout = translated.Layout;
+            var slots = System.Text.RegularExpressions.Regex.Matches(translated.Source, @"\[\[buffer\((\d+)\)\]\]")
+                .Select(m => int.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture)).Order().ToArray();
+            Check(layout.Enabled && translated.Metadata.NumReadOnlyStorageBuffers == layout.ReadOnly + 1 && translated.Metadata.NumReadWriteStorageBuffers == layout.ReadWrite,
+                "Metal buffer lengths add one private readonly binding while preserving writable resources.");
+            Check(slots.SequenceEqual(Enumerable.Range(0, slots.Length)) && !translated.Source.Contains("[[buffer(25)]]", StringComparison.Ordinal),
+                "Metal constant and storage bindings remain unique and contiguous after the size-table remap.");
+            Check(code.AsSpan().SequenceEqual(original), "Metal translation preserves the original portable module.");
+        }
+        var maximum = ShaderCompiler.PrepareComputeMSL(modules[2]);
+        Check(maximum.Layout.Uniforms == 4 && maximum.Layout.ReadWrite == 8 && maximum.Metadata.NumReadOnlyStorageBuffers == 1,
+            "The private size table preserves all eight writable buffers and four caller uniform bindings.");
+        var readonlyQueue = ShaderCompiler.PrepareComputeMSL(modules[3]);
+        Check(readonlyQueue.Layout.ReadOnly == 1 && readonlyQueue.Metadata.NumReadOnlyStorageBuffers == 2,
+            "The private size table follows the existing readonly source buffer.");
+    }
+
+    private static void VerifyPhysicalBufferLengths(RenderingDevice device)
+    {
+        using var module = new RDShaderSPIRV { BytecodeCompute = BufferLengthsFixture() };
+        var shader = device.ShaderCreateFromSPIRV(module); var pipeline = device.ComputePipelineCreate(shader);
+        uint[] lengths = [32, 3, 5, 7, 11, 13, 17, 19]; var resources = new List<RID>();
+        var storage = new RDUniform[8]; var uniforms = new RDUniform[4];
+        try
+        {
+            for (var i = 0; i < storage.Length; i++)
+            {
+                var buffer = device.StorageBufferCreate(lengths[i] * 4); resources.Add(buffer);
+                storage[i] = new() { Binding = i, UniformType = RenderingDevice.UniformType.StorageBuffer }; storage[i].AddID(buffer);
+            }
+            for (var i = 0; i < uniforms.Length; i++)
+            {
+                uint[] values = [(uint)i + 1, 0, 0, 0]; var buffer = device.UniformBufferCreate(16, MemoryMarshal.AsBytes(values.AsSpan())); resources.Add(buffer);
+                uniforms[i] = new() { Binding = i, UniformType = RenderingDevice.UniformType.UniformBuffer }; uniforms[i].AddID(buffer);
+            }
+            var firstStorage = device.UniformSetCreate(storage, shader, 1); var firstUniforms = device.UniformSetCreate(uniforms, shader, 2); resources.Add(firstStorage); resources.Add(firstUniforms);
+            var replacement = device.StorageBufferCreate(23 * 4); resources.Add(replacement); storage[7].ClearIDs(); storage[7].AddID(replacement);
+            uint[] shifted = [1, 9, 0, 0]; var shiftedFrame = device.UniformBufferCreate(16, MemoryMarshal.AsBytes(shifted.AsSpan())); resources.Add(shiftedFrame); uniforms[0].ClearIDs(); uniforms[0].AddID(shiftedFrame);
+            var secondStorage = device.UniformSetCreate(storage, shader, 1); var secondUniforms = device.UniformSetCreate(uniforms, shader, 2); resources.Add(secondStorage); resources.Add(secondUniforms);
+            var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline);
+            device.ComputeListBindUniformSet(list, firstStorage, 1); device.ComputeListBindUniformSet(list, firstUniforms, 2); device.ComputeListDispatch(list, 1, 1, 1);
+            device.ComputeListBindUniformSet(list, secondStorage, 1); device.ComputeListBindUniformSet(list, secondUniforms, 2); device.ComputeListDispatch(list, 1, 1, 1);
+            device.ComputeListEnd(); device.Submit(); device.Sync();
+            var actual = new uint[18]; device.BufferGetData(resources[0], MemoryMarshal.AsBytes(actual.AsSpan()));
+            uint[] expected = [32, 3, 5, 7, 11, 13, 17, 19, 10, 32, 3, 5, 7, 11, 13, 17, 23, 10];
+            Check(actual.AsSpan().SequenceEqual(expected), "Eight physical buffer lengths and four uniforms survive rebinding in one completed submission.");
+        }
+        finally
+        {
+            foreach (var binding in storage) binding?.Dispose(); foreach (var binding in uniforms) binding?.Dispose();
+            for (var i = resources.Count - 1; i >= 0; i--) device.FreeRID(resources[i]); device.FreeRID(pipeline); device.FreeRID(shader);
+        }
     }
 }

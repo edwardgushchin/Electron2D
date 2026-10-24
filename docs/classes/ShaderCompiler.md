@@ -1,9 +1,10 @@
 # ShaderCompiler
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
+- Compute array lengths: [ShaderCompiler.BufferSizes.cs](../../src/Servers/Rendering/ShaderCompiler.BufferSizes.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
 
@@ -12,6 +13,15 @@ Last updated: 2026-10-23
 The common runtime SPIR-V validation and SDL_shadercross GPU creation boundary. It does not compile HLSL/GLSL source. Bytecode loading copies an owned payload, checks structure/capabilities, invokes SpirvReflection for resources and shadercross for stage interfaces. A process-wide gate serializes shadercross Init/Quit around each cold native operation. This is loading/pipeline creation work, not per-frame compilation.
 
 ## Internal usage
+
+Metal compute array-length translation uses
+[ComputePipeline](ComputePipeline.md) to bind a private physical byte-size table.
+`PrepareComputeMSL` retains the cleansed native entry point, preserves uniform
+and original readonly slots, inserts the table before writable slots and retains
+original table indices. It validates resource limits and rejects unexpected or
+duplicate native buffer bindings. Portable input bytes and logical descriptors
+are unchanged. The bare internal factory rejects a required table because its
+caller has no matching dispatch binding path.
 
 This fragment belongs inside the runtime and requires the surrounding owner state.
 

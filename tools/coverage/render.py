@@ -712,6 +712,8 @@ def render():
             updated = "2026-10-20"
         if name.startswith("VisualShader"):
             updated = "2026-10-21"
+        if name == "RenderingDevice":
+            updated = "2026-10-24"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

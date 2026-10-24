@@ -1494,5 +1494,9 @@ buffers at slots 0 through 12. Collision's `shapes.length()` has the same
 implicit dependency. The revised shader receives both capacities from existing
 uniform padding, retaining the bounds checks, dispatches and resource counts.
 A compiled-bytecode regression rejects `OpArrayLength` in both contact shaders.
-New ordinary native execution remains required to attribute and close the CCD
-failure; neither generated source nor a profiled aggregate pass establishes it.
+Run `40089111391` at `1b41c7fb2` subsequently passes both ordinary/profiled
+host-CCD and ordinary full creation/removal cohorts on ARM64 and x64. Independent
+focused trace review finds 25 empty physical intervals per RID, with all 2,882
+object events confined to positive/frame controls and 3,589 balanced intervals.
+Both full profiled jobs also finish successfully. These native focused results
+close the repeated CCD failure; physical GPU throughput remains a separate gate.

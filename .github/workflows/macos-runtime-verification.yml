@@ -82,11 +82,16 @@ jobs:
         run: |
           set -o pipefail
           ELECTRON2D_TEST_PARTICLE_SHADER=native bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-shader.log
+          ELECTRON2D_TEST_PARTICLE_SERVER=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-server.log
+          ELECTRON2D_TEST_PARTICLE_SERVER=subemitter bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-subemitter.log
+          ELECTRON2D_TEST_PARTICLE_SERVER=allocations bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-allocations.log
+          ELECTRON2D_TEST_PARTICLE_SERVER=material-subemission bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-material-subemission.log
+          ELECTRON2D_TEST_PARTICLE_SERVER=material-allocations bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/particle-material-allocations.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: macos-particle-bounds-${{ matrix.rid }}
-          path: bin/diagnostics/particle-shader.log
+          path: bin/diagnostics/particle-*.log
           if-no-files-found: error
       - name: Prepare calibrated allocation diagnostics
         if: inputs.allocation_trace

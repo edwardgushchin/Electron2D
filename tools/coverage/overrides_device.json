@@ -190,7 +190,7 @@
       "godot": "RenderingDevice::method:compute_list_dispatch(int:,int:,int:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.ComputeListDispatch(System.Int64,System.UInt32,System.UInt32,System.UInt32)",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute, while revised Metal acceptance remains open."
     },
     {
       "godot": "RenderingDevice::method:compute_list_end()",
@@ -310,7 +310,7 @@
       "godot": "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.ComputeListDispatchIndirect(System.Int64,Electron2D.RID,System.UInt32)",
       "state": "Implemented",
-      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute, while revised Metal acceptance remains open."
     },
     {
       "godot": "RenderingDevice::enum:StorageBufferUsage",
@@ -4006,7 +4006,6 @@
         "RenderingDevice::method:compute_list_begin()",
         "RenderingDevice::method:compute_list_bind_compute_pipeline(int:,RID:)",
         "RenderingDevice::method:compute_list_bind_uniform_set(int:,RID:,int:)",
-        "RenderingDevice::method:compute_list_dispatch(int:,int:,int:,int:)",
         "RenderingDevice::method:compute_list_end()",
         "RenderingDevice::method:compute_pipeline_is_valid(RID:)",
         "RenderingDevice::method:free_rid(RID:)",
@@ -4025,7 +4024,6 @@
       "godot": [
         "RenderingDevice::method:buffer_copy(RID:,RID:,int:,int:,int:)",
         "RenderingDevice::method:buffer_clear(RID:,int:,int:)",
-        "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)",
         "RenderingDevice::enum:StorageBufferUsage",
         "RenderingDevice::enum_value:StorageBufferUsage.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT"
       ]
@@ -5021,6 +5019,20 @@
         "RenderingDevice::method:shader_create_placeholder()"
       ],
       "reason": "ADR 0028: a real owned uninitialized shader RID can be reserved, passed around, populated once after complete successful bytecode loading, or freed/disposed. Pipeline/set/interface consumers reject it while uninitialized. Failed parse/native validation leaves it retryable; foreign, freed, wrong-kind and already initialized identities reject. Owner/list and ordinary borrower lifetime guards execute in the connected binary program tests."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute, while revised Metal acceptance remains open.",
+      "godot": [
+        "RenderingDevice::method:compute_list_dispatch(int:,int:,int:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified. Metal runtime storage-array lengths now receive actual dispatch byte ranges through a private readonly table, preserving logical descriptors and eight-storage/four-uniform capacity; local translated layouts and same-submission rebinding execute, while revised Metal acceptance remains open.",
+      "godot": [
+        "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)"
+      ]
     }
   ]
 }

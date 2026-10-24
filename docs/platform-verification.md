@@ -27,9 +27,15 @@ The macOS diagnostic runs `ELECTRON2D_TEST_PARTICLE_SHADER=native` before its
 allocation cohorts and uploads each RID's raw `particle-shader.log` immediately.
 This executes the existing GLSL/HLSL physical queue bounds, overflow, headerless
 storage and warmed dispatch contracts. Failure remains part of the final job
-outcome even when later diagnostics continue. The additional native gate is
-pending; static array-length and Metal-source inspection alone does not establish
-the particle path's result.
+outcome even when later diagnostics continue. At `560169cad`, run `40090454953`
+fails the bounded atomic queue assertion on both ARM64 (`120861874605`) and x64
+(`120861874454`), each with exit 134. Both focused logs have SHA-256
+`68dba134f0f2581f94155b4bfbe56ccf7618f11881a89db0cbcad2ff35527939`.
+The revised compute owner supplies Metal's actual bound byte sizes through a
+private readonly table, preserving the original shader ABI and physical guards.
+The early gate also runs retained server, subemitter and both prepared allocation
+roles. Revised native results remain required; source translation and local
+Vulkan success do not establish the particle path's Metal acceptance.
 
 At `0536f7d54`, macOS allocation run `40083825257` records the same CPU-hosted
 GPU CCD scene failure on ARM64 (`120842594363`) and x64 (`120842594172`),
@@ -44,7 +50,12 @@ the failure. Contact creation/removal and collision now receive explicit allocat
 buffer capacities in their existing uniforms, replacing array-length queries
 whose Metal translation requires an unbound size table; see
 [contact-link verification](components/gpu-physics.md#metal-contact-link-verification-2026-10-24).
-Revised native execution is required before claiming this failure resolved.
+Run `40089111391` at `1b41c7fb2` then passes ordinary/profiled host-CCD and
+ordinary creation/removal on both RIDs. Independent review of twelve focused
+traces per RID finds 25 physical intervals with no objects, 3,589 balanced
+intervals and 2,882 object events confined to controls. These focused Metal
+contracts close the repeated CCD failure; aggregate and performance acceptance
+remain separate.
 
 At `b34181561`, ordinary macOS ARM64 job `120829192314` in run `40077474451`
 aborts in idle compressed Ogg mixing at 3,360 owner-thread bytes, exit 134,

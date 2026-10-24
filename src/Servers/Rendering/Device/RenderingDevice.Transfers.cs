@@ -74,7 +74,8 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="offset">Four-byte-aligned offset of three consecutive unsigned 32-bit X, Y and Z counts.</param>
     /// <remarks>Prior GPU writes to the counts complete before this dispatch. A zero count skips work.
     /// The producer must keep counts within device limits (at most 65535 per axis); counts stay on the GPU
-    /// and are not validated by a synchronous readback. Every dispatch closes its native pass.</remarks>
+    /// and are not validated by a synchronous readback. Runtime storage-buffer lengths reflect the resources
+    /// bound for this dispatch. Every dispatch closes its native pass.</remarks>
     /// <exception cref="ArgumentException">The list or buffer is invalid, or the indirect role is missing.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The offset is unaligned or twelve bytes do not fit.</exception>
     /// <exception cref="InvalidOperationException">The pipeline or one of its resource sets is not bound.</exception>

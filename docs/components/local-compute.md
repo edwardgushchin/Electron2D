@@ -1,6 +1,6 @@
 # Local compute
 
-Last updated: 2026-10-22
+Last updated: 2026-10-24
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -347,3 +347,28 @@ RDSamplerState creation shares its validated native projection with [high-level 
 Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
 
 Invoking the source-authoring executable requires host process-launch support. iOS, tvOS, MacCatalyst and browser profiles report an unsupported-host stage diagnostic when a configured tool reaches execution. Games load compiled shader modules through the existing pipeline.
+
+## Metal storage-buffer lengths
+
+Compute pipelines with runtime storage-array length queries own a private
+readonly byte-size table on Metal. Native translation inserts it after original
+readonly buffers and shifts writable buffer attributes by one; original size
+indices and all caller uniform slots remain intact. The table contains actual
+bound resource byte ranges, with a separate cycled upload for each dispatch.
+Direct, indirect, specialized and binary/placeholder pipelines share the same
+owner and binding path. Ordinary Vulkan/DXIL programs and compute programs without
+these queries allocate no size-table resources.
+
+Retained particle steps, custom/built-in process programs and routed subemission
+use this same mechanism. Headerless storage and oversized queue headers retain
+their physical bounds checks. The adapter does not replace those checks with
+authored frame/header capacities or copy numerical state to the CPU. Native
+resource counts include the private readonly slot and reject capacity overflow
+before creation. [ComputePipeline](../classes/ComputePipeline.md) owns both
+transfers and pipeline/device lifetime.
+
+The regression covers eight writable buffers and four caller uniforms, distinct
+bindings across two dispatches in one submission, both particle source languages,
+queue overflow, a physically headerless buffer and prepared dispatch allocation.
+Local execution and translated Metal source remain separate from revised native
+Metal and other platform acceptance.
