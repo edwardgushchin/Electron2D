@@ -178,7 +178,7 @@ void main()
         if (index >= count || atomicAdd(pool.z,0) != 0) return;
         ivec2 e = endpoint(index); int body = e.x;
         if (body == 2147483647) return;
-        if (body < 0 || body >= bodies.length()) { atomicMax(pool.z,8); return; }
+        if (body < 0 || body >= level.w) { atomicMax(pool.z,8); return; }
         // Each body segment preserves pair order. Binary search finds its rank
         // without atomics whose order would depend on GPU scheduling.
         int low = 0, high = index;
@@ -248,7 +248,7 @@ void main()
         if (index >= count || atomicAdd(pool.z,0) != 0) return;
         int body = endpoint(index).x;
         if (body == 2147483647 || (index > 0 && endpoint(index-1).x == body)) return;
-        if (body < 0 || body >= bodies.length()) { atomicMax(pool.z,12); return; }
+        if (body < 0 || body >= level.w) { atomicMax(pool.z,12); return; }
         // ponytail: removals within one body run serially to preserve every
         // publication prefix; parallelize high-degree bodies if this dominates.
         for (int cursor = index; cursor < count && endpoint(cursor).x == body; cursor++)

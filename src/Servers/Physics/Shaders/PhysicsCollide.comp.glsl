@@ -20,7 +20,7 @@ layout(std430, set = 0, binding = 0) readonly buffer Solved { Contact solved[]; 
 layout(std430, set = 0, binding = 1) readonly buffer UploadedHistory { ContactHistory uploadedHistory[]; };
 layout(std430, set = 0, binding = 2) readonly buffer GeometryUpdates { Geometry geometryUpdates[]; };
 layout(std430, set = 0, binding = 3) readonly buffer ContactSlots { ContactSlot contactSlots[]; };
-layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; vec4 persistence; };
+layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; vec2 persistence; uvec2 limits; };
 const float epsilon = 1.1920928955078125e-7;
 const float speculative = 0.02;
 const float slop = 0.005;
@@ -212,7 +212,7 @@ void main()
         }
         ContactSlot slot = contactSlots[pair.ids.x];
         shapeIDs = slot.shapeBody.xy;
-        if (slot.state.x != uint(pair.ids.y) || any(lessThan(shapeIDs,ivec2(0))) || any(greaterThanEqual(shapeIDs,ivec2(shapes.length()))))
+        if (slot.state.x != uint(pair.ids.y) || any(lessThan(shapeIDs,ivec2(0))) || any(greaterThanEqual(uvec2(shapeIDs),uvec2(limits.x))))
         {
             r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0)); materials[index] = vec4(0); return;
         }

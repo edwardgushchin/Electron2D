@@ -21,7 +21,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
     [StructLayout(LayoutKind.Sequential)]
     private struct ContactHistory { internal Float4 Impulses, Features, Anchors1, Anchors2, Normal; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct CollisionStep { internal uint Count, Operation, Options, ContactLimit; internal Float4 Persistence; }
+    private struct CollisionStep
+    {
+        internal uint Count, Operation, Options, ContactLimit;
+        internal float RecycleRadius, MaxSeparation;
+        internal uint ShapeCapacity, Padding;
+    }
 
     private readonly Storage<Geometry> _geometryStorage, _geometryUpdateStorage;
     private readonly Action<int> _geometryChanged;
@@ -305,7 +310,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         SDL.BindGPUComputePipeline(compute, _collide.DangerousGetHandle());
         var inputs = stackalloc nint[4] { _contactStorage.Handle, _historyStorage.Handle, _geometryUpdateStorage.Handle, _contactSlotStorage.Handle };
         SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
-        var uniform = new CollisionStep { Count = (uint)count, Operation = operation, Options = options, ContactLimit = contactLimit, Persistence = new(world.contactRecycleRadius, world.contactMaxSeparation, 0, 0) };
+        var uniform = new CollisionStep { Count = (uint)count, Operation = operation, Options = options, ContactLimit = contactLimit, RecycleRadius = world.contactRecycleRadius, MaxSeparation = world.contactMaxSeparation, ShapeCapacity = (uint)_geometryStorage.Data.Length };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&uniform), (uint)sizeof(CollisionStep));
         SDL.DispatchGPUCompute(compute, checked((uint)(count + 63) / 64), 1, 1);
         SDL.EndGPUComputePass(compute);

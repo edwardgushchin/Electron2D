@@ -12,10 +12,29 @@ internal static partial class GPUPhysicsTests
 {
     internal static void VerifyContactCreation()
     {
+        VerifyContactShaderBounds();
         using var gpu = new GPUPhysicsWorld();
         foreach (var count in new[] { 0, 1, 2, 63, 64, 65, 257 })
             VerifyContactCreation(gpu, count, count == 65);
         Console.WriteLine("GPU contact creation and resident adjacency match CPU identities, generations, callback-visible links, topology edits, sleeping sets, mixed pool edits and warmed allocation.");
+    }
+
+    private static void VerifyContactShaderBounds()
+    {
+        foreach (var name in new[] { "PhysicsContactCreate", "PhysicsCollide" })
+        {
+            using var input = typeof(PhysicsServer).Assembly.GetManifestResourceStream($"Electron2D.PhysicsShaders.{name}.comp.spv")!;
+            using var memory = new MemoryStream(); input.CopyTo(memory);
+            var words = System.Runtime.InteropServices.MemoryMarshal.Cast<byte, uint>(memory.GetBuffer().AsSpan(0, (int)memory.Length));
+            for (var offset = 5; offset < words.Length;)
+            {
+                var length = (int)(words[offset] >> 16);
+                if (length == 0 || offset + length > words.Length) throw new Exception("Malformed contact shader instruction.");
+                // OpArrayLength needs an auxiliary Metal binding outside this pipeline's resource layout.
+                if ((words[offset] & 65535) == 68) throw new Exception($"{name} must receive storage bounds through its uniform.");
+                offset += length;
+            }
+        }
     }
 
     private static void VerifyContactCreation(GPUPhysicsWorld gpu, int count, bool custom)

@@ -52,7 +52,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private struct ContactCreationStep
     {
         internal int Operation, Count, Capacity, LeafBase;
-        internal int Offset, Width, Options, Padding;
+        internal int Offset, Width, Options, BodyCapacity;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -546,7 +546,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         SDL.BindGPUComputePipeline(compute, _contactCreationPipeline.DangerousGetHandle());
         var inputs = stackalloc nint[4] { _contactRequestStorage.Handle, _contactChangeStorage.Handle, _linkUpdateStorage.Handle, _pairStorage.Handle };
         SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
-        var step = new ContactCreationStep { Operation = operation, Count = count, Capacity = _contactSlotStorage.Data.Length, LeafBase = _contactLeafBase, Offset = offset, Width = width, Options = options };
+        var step = new ContactCreationStep { Operation = operation, Count = count, Capacity = _contactSlotStorage.Data.Length, LeafBase = _contactLeafBase, Offset = offset, Width = width, Options = options, BodyCapacity = _bodyLinkStorage.Data.Length };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&step), (uint)sizeof(ContactCreationStep));
         SDL.DispatchGPUCompute(compute, checked((uint)((dispatch == 0 ? count : dispatch) + 63) / 64), 1, 1);
         SDL.EndGPUComputePass(compute); DispatchCount++;

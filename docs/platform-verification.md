@@ -29,7 +29,12 @@ with and without profiling. The failure is an ordered body-contact link mismatch
 before the CCD allocation interval; it is separate from earlier byte-counter
 failures. Audio active/idle MP3/Ogg and serial CPU/GPU CCD intervals preceding it
 retain zero counters in both focused cohorts. The shader now writes link fields
-through scalar storage with unchanged host offsets; see
+through scalar storage with unchanged host offsets. Run `40087328575` at
+`5ec815669` still fails the ordinary and profiled ARM64 host-CCD selectors: the
+first body has next `-1/-1` but insertion count `0/1`. That change did not close
+the failure. Contact creation/removal and collision now receive explicit allocated
+buffer capacities in their existing uniforms, replacing array-length queries
+whose Metal translation requires an unbound size table; see
 [contact-link verification](components/gpu-physics.md#metal-contact-link-verification-2026-10-24).
 Revised native execution is required before claiming this failure resolved.
 

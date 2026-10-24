@@ -81,6 +81,11 @@ callback-visible adjacency. Contact links and body records use 16 bytes each;
 parallel endpoint writes use scalar storage elements and distinct result fields,
 preserving the existing 80-byte creation-result layout. Creation and removal
 share that indexing; mismatch errors include actual and expected link values.
+Creation/removal receive body-buffer capacity in the last word of their existing
+32-byte uniform. Collision receives shape-buffer capacity at byte 24 of its
+32-byte uniform, retaining the two persistence floats at bytes 16/20. Bounds
+checks use those exact allocated capacities, avoiding an implicit Metal size-table
+binding from runtime array-length queries.
 CPU-origin link changes coalesce to 32-byte contact/body updates, including both
 neighbors on deletion. Binding/observer/capacity changes snapshot both stores.
 `ContactLinkUploadBytes` counts those uploads. The internal diagnostic

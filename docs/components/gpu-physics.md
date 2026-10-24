@@ -248,6 +248,12 @@ Parallel endpoints write scalar link elements and separate result fields rather
 than dynamically indexed components of shared vectors. The logical 16-byte
 contact rows, 80-byte creation results and all host offsets remain unchanged;
 creation, neighboring-edge edits and removal share the same scalar indexing.
+Body-capacity checks use the final word of the existing 32-byte creation/removal
+uniform. Collision shape-capacity checks use an unsigned word at offset 24 of
+its 32-byte uniform, after the unchanged persistence floats. Each capacity comes
+from the corresponding allocated storage, with negative IDs and generations still
+checked before access. Runtime array-length queries would add a Metal size-table
+binding outside these pipelines' declared resources.
 Mismatch failures retain body/key and actual/expected next/count values.
 An optional contact-link observer journals external CPU creation/removal and
 both neighboring edges; repeated changes coalesce by contact/body identity.
@@ -1478,3 +1484,15 @@ creation/removal contracts, with identical native payloads. It does not reproduc
 or attribute the old Metal failure, and concurrent timings are not a performance
 comparison. Evidence is retained in ignored
 `bin/release-audit/contact-link-components/`.
+
+Run `40087328575` at `5ec815669` repeats the ARM64 failure in ordinary and
+profiled host-CCD selectors: body 1, key 0, next `-1/-1`, count `0/1`. The
+scalar-store hypothesis therefore did not resolve this scene. Generated Metal
+for the two `bodies.length()` checks references `spvBufferSizeConstants[11]`
+at buffer 25; the pipeline binds only its uniform and four read/eight write
+buffers at slots 0 through 12. Collision's `shapes.length()` has the same
+implicit dependency. The revised shader receives both capacities from existing
+uniform padding, retaining the bounds checks, dispatches and resource counts.
+A compiled-bytecode regression rejects `OpArrayLength` in both contact shaders.
+New ordinary native execution remains required to attribute and close the CCD
+failure; neither generated source nor a profiled aggregate pass establishes it.
