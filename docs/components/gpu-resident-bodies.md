@@ -55,8 +55,9 @@ changing the edit expression alone does not close this native defect.
 before and after integration for all three CCD modes, opposing reporting/sleep
 policies, mixed sparse commands, unrelated rotation locks and untouched lanes.
 It retains 128 warm and 128 measured cycles with strict zero owner/all-thread
-bytes and unchanged buffer accounting. The compound selector checks these flags
-before its existing complete physical workload; both must pass.
+bytes and unchanged buffer accounting. The compound selector starts with its existing complete public physical workload
+in a cold process, then checks these flags; both must pass. Resident-store warmup
+must not precede the cold public contract while investigating first-use failures.
 
 The failure-only temporary trace now appends body/active-command readbacks after
 each body dispatch to its existing command buffer and maps them after its existing

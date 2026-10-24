@@ -196,8 +196,19 @@ after individual body dispatches now distinguish edit application from subsequen
 motion stages. They add copy passes within the existing submission/fence, are
 capped at 24 per small CCD world, and do not establish untraced acceptance. Exact
 source restoration is checked before controls. The policy regression now reads
-flags both before and after integration ahead of the original compound workload.
+flags both before and after integration after the original cold public compound
+workload. The public path remains first so the new store regression cannot warm
+the process before that first-use contract.
 See [the flag investigation](components/gpu-resident-bodies.md#scalar-body-edit-flags).
+
+Run `40044866241` at `e5c8fbd4b` passes its complete compound and policy
+cohorts on EPYC 9V74, including SIMD128/256 and managed-intrinsics-disabled
+controls (artifact `12541151680`, ZIP SHA-256
+`4cef12828f1bc414672f35dfd5dcc11786641b52a9a9d3442b217dcd2d2d399e`).
+That runner invoked the new resident policy regression before the public compound
+path. This changes process warmup before the previously failing cold case; no
+root-cause correction or cold acceptance is inferred. The compound selector now
+restores the original public-first order, with the flag regression afterwards.
 
 Windows x64 run `40036769271` at `78754df51` passes the focused compound,
 joint and motion cohorts, then its complete suite fails in
