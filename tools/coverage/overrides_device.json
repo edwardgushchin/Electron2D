@@ -3631,6 +3631,31 @@
       "electron2d": "method:Electron2D.RenderingDevice.ShaderCreatePlaceholder()",
       "state": "Implemented",
       "reason": "ADR 0028: a real owned uninitialized shader RID can be reserved, passed around, populated once after complete successful bytecode loading, or freed/disposed. Pipeline/set/interface consumers reject it while uninitialized. Failed parse/native validation leaves it retryable; foreign, freed, wrong-kind and already initialized identities reject. Owner/list and ordinary borrower lifetime guards execute in the connected binary program tests."
+    },
+    {
+      "godot": "RenderingDevice::constant:INVALID_ID",
+      "electron2d": "constant:Electron2D.RenderingDevice.InvalidID()",
+      "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_begin_for_screen(int:,Color:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBeginForScreen(System.Int32,System.Nullable<Electron2D.Color>)",
+      "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::method:screen_get_framebuffer_format(int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ScreenGetFramebufferFormat(System.Int32)",
+      "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::method:screen_get_width(int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ScreenGetWidth(System.Int32)",
+      "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::method:screen_get_height(int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ScreenGetHeight(System.Int32)",
+      "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
     }
   ],
   "extras": [
@@ -4438,13 +4463,6 @@
       "reason": "ADR 0004: pinned deprecated=\"Use [method get_driver_resource] with [constant DRIVER_RESOURCE_TEXTURE] instead.\"; no public mirror or implementation trigger."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "RenderingDevice::method:draw_list_begin_for_screen(int:,Color:)"
-      ],
-      "reason": "Trigger: first renderer-owned swapchain acquisition, screen framebuffer formats and presentation ownership slice (ADR 0028)."
-    },
-    {
       "state": "Implemented",
       "godot": [
         "RenderingDevice::method:draw_list_switch_to_next_pass()"
@@ -4458,13 +4476,6 @@
         "RenderingDevice::method:framebuffer_format_create_empty(int:RenderingDevice.TextureSamples)"
       ],
       "reason": "Trigger: first native attachmentless render-pass and raster-discard support slice (ADR 0028)."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RenderingDevice::method:screen_get_framebuffer_format(int:)"
-      ],
-      "reason": "Trigger: first renderer-owned swapchain screen layout and presentation ownership slice (ADR 0028)."
     },
     {
       "state": "Partial",
@@ -5033,6 +5044,17 @@
       "godot": [
         "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::constant:INVALID_ID",
+        "RenderingDevice::method:draw_list_begin_for_screen(int:,Color:)",
+        "RenderingDevice::method:screen_get_framebuffer_format(int:)",
+        "RenderingDevice::method:screen_get_height(int:)",
+        "RenderingDevice::method:screen_get_width(int:)"
+      ],
+      "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
     }
   ]
 }

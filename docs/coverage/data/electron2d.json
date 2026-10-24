@@ -18532,6 +18532,19 @@
     "value": "-1"
   },
   {
+    "id": "constant:Electron2D.RenderingDevice.InvalidID()",
+    "kind": "constant",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "InvalidID",
+    "signature": "public const System.Int32 InvalidID = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
     "id": "constant:Electron2D.RenderingServer.ArrayCustomCount()",
     "kind": "constant",
     "declaringType": "Electron2D.RenderingServer",
@@ -165031,6 +165044,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.DrawListBeginForScreen(System.Int32,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBeginForScreen",
+    "signature": "public System.Int64 DrawListBeginForScreen(System.Int32 screen = 0, System.Nullable\u003CElectron2D.Color\u003E clearColor = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "clearColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.DrawListBindIndexArray(System.Int64,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -165753,6 +165790,63 @@
       }
     ],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.ScreenGetFramebufferFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ScreenGetFramebufferFormat",
+    "signature": "public System.Int32 ScreenGetFramebufferFormat(System.Int32 screen = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.ScreenGetHeight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ScreenGetHeight",
+    "signature": "public System.Int32 ScreenGetHeight(System.Int32 screen = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.ScreenGetWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ScreenGetWidth",
+    "signature": "public System.Int32 ScreenGetWidth(System.Int32 screen = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "screen",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {

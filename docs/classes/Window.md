@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -929,3 +929,7 @@ window.NonclientWindowInput += input =>
 This focused snippet assumes an attached window, its visible exclusive dialog and application-drawn decoration.
 
 WindowNonclientTests checks ownership, edges, disabled rectangles, internal mouse versus nonmouse roles, ordering, borrowed lifetime, signal blocking, pause, callback failure/mutation/retirement, wrong owner, handled-state reset, derived popup/dialog storage and fresh-process archived execution. Actual native queue input changes completed framebuffer pixels beside embedded and independent modal children on software Vulkan/OpenGL Wayland and X11; failure paths retire both native windows and services. A prepared helper interval of 1024 hits plus 1024 misses uses zero owner-thread managed bytes. Whole-input allocation totals, native allocator, physical desktop input, other platforms and editor acceptance remain separate.
+
+## Device screen lifetime
+
+A live native GetWindowID() selects its [RenderingDevice screen](RenderingDevice.md#native-window-drawing). Width/height use native graphics pixels; its private screen image is independent of the scene viewport texture. Native child hide/detach/disposal reject an active command list using retained screen resources before changing window, parent or disposal state. End the list first. Tree rollback and renderer shutdown cancel unfinished work and release the images. Hiding a child retires its native ID; reopening uses a fresh ID.

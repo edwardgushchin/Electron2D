@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
@@ -1927,3 +1927,7 @@ An empty texture RID passed to MaterialSetParam clears any numeric/matrix/array/
 `public static void ViewportSetAnisotropicFilteringLevel(RID viewport, AnisotropicFiltering level)`
 
 Sets an independent session-only limit on a live scene or caller-owned viewport. Uses the shared [AnisotropicFiltering](AnisotropicFiltering.md) enum. Scene getters and stored values remain authored; valid scene property assignments, including equal values, republish. Only anisotropic canvas filters and imported image policies use the limit; explicit RDSamplerState overrides retain their own maximum. RID, owner, capture and session validation apply; compatibility rejects anisotropic filters at submission. See [the sampling contract](../components/canvas-rendering.md#viewport-anisotropy-overrides).
+
+## Low-level screen output
+
+The retained device from GetRenderingDevice records [native screen lists](RenderingDevice.md#native-window-drawing) for main and child windows. Completed lists replace one final window presentation without changing viewport texture output. ForceSync and ForceDraw(false) preserve pending presentation; FramePostDraw authoring appears in the following frame. Native retirement and hierarchy changes validate active lists before changing window state; tree rollback and renderer shutdown retain responsibility for unfinished lists.

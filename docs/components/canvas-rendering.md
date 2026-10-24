@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -833,3 +833,5 @@ Mesh, CPU/native instances, GPU-authored instance storage and particle templates
 `ViewportSampling.Consumer` passed eight CLR and eight strict full-trim, reflection-disabled NativeAOT profiles: managed enums, save, fresh-process load, software Vulkan Wayland/X11/HDR output, Wayland compatibility rejection and dummy/software rejection. Each GPU profile repeats a complete renderer lifecycle. All five limits produce independent root/SubViewport/owned-viewport images; Disabled-to-16X stripe contrast is 0 to 52 (HDR within 0.01). A moderate-compression witness distinguishes the new owned viewport project default from Disabled. Typed scene packing preserves authored values, equal and changed assignments republish, and freed identities fail. Each session measures 64 active and 64 idle frames at 0/0 managed owner bytes after warmup; retained scene commands remain reusable.
 
 `ELECTRON2D_TEST_TOP_LEVEL_RELATED=1` also passed the existing sampling, transform-notification and canvas-lifecycle cohorts. `/proc` driver guards exclude NVIDIA and record pinned lavapipe execution. These results establish Linux software-rendered pixels and managed allocation behavior; physical GPU performance, native heap, other platforms and owner visual acceptance remain unverified. Receipts: `bin/viewport-anisotropy/2026-10-24/`.
+
+[Device screen lists](local-compute.md#native-screen-drawing) can replace one final native main/child window presentation through the shared GPU queue. Canvas viewport images remain independently rendered, and ordinary canvas presentation resumes when no screen list is pending.

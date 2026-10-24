@@ -51,10 +51,10 @@ internal sealed unsafe partial class GPUCanvasBackend
         catch { presentation.Dispose(); throw; }
     }
 
-    internal void Present(ChildPresentation child, ReadOnlySpan<CanvasPresentation> viewports)
+    internal bool Present(ChildPresentation child, ReadOnlySpan<CanvasPresentation> viewports, nint screen = 0, Vector2i screenSize = default)
     {
         Check(SDL.GetWindowSizeInPixels(child.Window, out var width, out var height), "query child presentation size");
         var target = PreparePresentation(new(width, height), ref child.Target);
-        PresentToWindow(child.Window, target, viewports, root: false);
+        return PresentToWindow(child.Window, target, viewports, root: false, screen, screenSize);
     }
 }

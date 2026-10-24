@@ -54,7 +54,7 @@ AndroidGameActivity/AndroidWindowHost now produce actual framework system back r
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 [Failed initial collider preparation](components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now discards partial numerical readback while retaining common body authoring. Ordinary retirement still captures accepted motion; no production type or public declaration is added.
 

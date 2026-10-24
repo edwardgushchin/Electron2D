@@ -5,6 +5,8 @@ namespace Electron2D;
 public sealed partial class RenderingServer
 {
     private readonly List<CanvasPresentation> _presentations = [];
+    private readonly HashSet<int> _presentedWindows = [];
+    internal bool WasNativeWindowPresented(int windowID) => _presentedWindows.Contains(windowID);
     private readonly List<CanvasFrame> _presentationFrames = [], _presentationQueue = [];
 
     private bool ScreenAttachment(Viewport view, out Rect2 rect, out int windowID)
@@ -49,6 +51,7 @@ public sealed partial class RenderingServer
 
     private void PresentViewports()
     {
+        _presentedWindows.Clear();
         if (!_swapBuffers) return;
         _presentationFrames.Clear();
         _presentationFrames.AddRange(_activeFrames);
@@ -73,13 +76,17 @@ public sealed partial class RenderingServer
         var clearEmptyWindow = (!_serverViewports.TryGetValue(window, out var state) || state.Screen is null)
             && ViewportActive(window) && UpdateMode(window) != ViewportUpdateMode.Disabled
             && (window.ContentLayout.TargetSize.X == 0 || window.ContentLayout.TargetSize.Y == 0);
-        if (_presentations.Count != 0 || clearEmptyWindow)
+        var screen = _renderingDevice?.ScreenPresentation(windowID) ?? default;
+        if (_presentations.Count != 0 || clearEmptyWindow || screen.Texture != 0)
         {
             _submittingTextures = true;
             try
             {
-                if (presentation is not null) ((GPUCanvasBackend)_backend).Present(presentation, CollectionsMarshal.AsSpan(_presentations));
+                var presented = true;
+                if (presentation is not null) presented = ((GPUCanvasBackend)_backend).Present(presentation, CollectionsMarshal.AsSpan(_presentations), screen.Texture, screen.Size);
+                else if (backend is GPUCanvasBackend gpu) presented = gpu.Present(CollectionsMarshal.AsSpan(_presentations), screen.Texture, screen.Size);
                 else backend.Present(CollectionsMarshal.AsSpan(_presentations));
+                if (presented) { _presentedWindows.Add(windowID); _renderingDevice?.ScreenPresented(windowID); }
             }
             finally { _submittingTextures = false; }
         }

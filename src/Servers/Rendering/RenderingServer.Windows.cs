@@ -17,7 +17,8 @@ public sealed partial class RenderingServer
     private readonly Dictionary<int, NativeWindowSurface> _nativeWindows = [];
     private readonly List<CanvasFrame> _submittedFrames = [];
     private bool _nativeFrameStarted;
-    internal bool NativeWindowMutationBlocked => _submittingTextures || _nativeFrameStarted;
+    internal bool NativeWindowMutationBlocked => _submittingTextures || _nativeFrameStarted
+        || !_closing && _window.Tree is { IsClosing: false } && _renderingDevice?.ScreenMutationBlocked == true;
 
     internal void RegisterNativeWindow(Window window, DisplayServer display)
     {
@@ -53,6 +54,7 @@ public sealed partial class RenderingServer
     internal void UnregisterNativeWindow(DisplayServer display)
     {
         EnsureNativeWindowMutation();
+        if (!_closing && _window.Tree?.IsClosing != true) _renderingDevice?.ReleaseScreen(display.WindowID);
         if (!_nativeWindows.Remove(display.WindowID, out var surface)) return;
         try
         {
@@ -66,8 +68,8 @@ public sealed partial class RenderingServer
     internal void EnsureNativeWindowMutation()
     {
         EnsureOwner();
-        if (_submittingTextures || _nativeFrameStarted)
-            throw new InvalidOperationException("Native windows cannot change during native frame submission.");
+        if (NativeWindowMutationBlocked)
+            throw new InvalidOperationException("Native windows cannot change during native submission or while device screen resources are in an active command list.");
     }
 
     private void BeginNativeFrames()

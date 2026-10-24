@@ -5,8 +5,10 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUCanvasBackend
 {
     internal override void Present(ReadOnlySpan<CanvasPresentation> viewports)
-        => PresentToWindow(_window, PreparePresentation(), viewports, root: true);
-    private void PresentToWindow(nint window, CanvasRenderTarget presentation, ReadOnlySpan<CanvasPresentation> viewports, bool root)
+        => Present(viewports, 0, default);
+    internal bool Present(ReadOnlySpan<CanvasPresentation> viewports, nint screen, Vector2i screenSize)
+        => PresentToWindow(_window, PreparePresentation(), viewports, root: true, screen, screenSize);
+    private bool PresentToWindow(nint window, CanvasRenderTarget presentation, ReadOnlySpan<CanvasPresentation> viewports, bool root, nint screen = 0, Vector2i screenSize = default)
     {
         _presentationPipeline ??= CreatePipeline(BuiltInShaders.ColorFragment, BlendMode.Mix, overwrite: true);
         _ = Sampler(TextureFilter.NearestWithMipmaps, TextureRepeat.Disabled);
@@ -46,6 +48,12 @@ internal sealed unsafe partial class GPUCanvasBackend
                 if (PresentationRegion(viewports[i].Rect, presentation.Size, out _, out _))
                     BindColorCopy(command, pass, _presentationPipeline, viewports[i].Target.Current.DangerousGetHandle(), new(0, 0, viewports[i].Target.HDR ? 1 : 0, viewports[i].Target.HDR && viewports[i].Debanding ? 1 : 0), 0, i * 6);
             SDL.EndGPURenderPass(pass); pass = 0;
+            if (screen != 0)
+            {
+                var output = new SDL.GPUBlitInfo { Source = new() { Texture = screen, W = (uint)screenSize.X, H = (uint)screenSize.Y },
+                    Destination = new() { Texture = presentation.Next.DangerousGetHandle(), W = (uint)presentation.Size.X, H = (uint)presentation.Size.Y }, LoadOp = SDL.GPULoadOp.DontCare, Filter = SDL.GPUFilter.Nearest };
+                SDL.BlitGPUTexture(command, in output);
+            }
             Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, window, out var swapchain, out var width, out var height), "acquire swapchain texture");
             if (swapchain != 0)
             {
@@ -55,7 +63,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                 SDL.BlitGPUTexture(command, in blit);
             }
             var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit presentation");
-            presentation.Commit();
+            presentation.Commit(); return acquired;
         }
         finally
         {

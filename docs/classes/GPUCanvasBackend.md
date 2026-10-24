@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 Retained particle kernels and imported process programs own
 [ComputePipeline](ComputePipeline.md) resources. Metal array-length queries bind
@@ -144,3 +144,7 @@ A private ShaderSamplerCache prepares explicit per-image state before render/com
 Glyph program tracking now retains the previous frame use set. Alternating plain/MSDF modes reuse transformed bytecode and native pipelines instead of repeatedly composing a dropped program. The public retained-mode consumer measures 64 active and 64 idle complete frames after warmup. See [retained distance-field mode](../components/canvas-rendering.md#retained-distance-field-mode).
 
 Graph image policy resolves render-only ordinary/array fallback images and shader-domain sampling. Current canvas normal/specular channels use the existing producers, including missing-channel fallbacks. GPU color views refresh every used native array layer/mip before HDR sampling; prepared sampler/image caches share session retirement. Device clears and cold pixel checkpoints are verified separately from measured complete frames.
+
+## Device screen presentation
+
+Renderer-owned device screen images use the native swapchain color format and pixel dimensions, then copy on GPU into the same final presentation image. Main and child windows retain one presentation owner each. ReadbackScreen observes that exact submitted image; canvas targets keep their own pixels. Main hide retains the last known native format before releasing its claim, while the existing Wayland remap restriction remains explicit. See [native screen drawing](../components/local-compute.md#native-screen-drawing).

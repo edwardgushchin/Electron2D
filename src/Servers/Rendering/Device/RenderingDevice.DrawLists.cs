@@ -377,5 +377,6 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListEnd()
     {
         DrawList(_activeList); while (_drawSubpass + 1 < FramebufferLayouts(_drawTarget!.Format).Passes.Length) DrawListSwitchToNextPass(); FinishDrawViews(); SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush();
+        if (_screenDraw is { } screen) { screen.Pending = true; _screenDraw = null; }
     }
 }

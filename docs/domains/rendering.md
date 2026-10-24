@@ -30,7 +30,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 [Integer material graphs](../components/visual-shaders.md#integer-arithmetic-and-bit-patterns) now execute exact signed/unsigned arithmetic, functions and bit masks through the existing archive/import/material path. Byte-encoded and UV-driven consumers observe precision before float conversion.
 
@@ -507,3 +507,5 @@ The explicit shader source-authoring bridge checks process-launch support before
 [Physical compute storage lengths](../components/local-compute.md#metal-storage-buffer-lengths) retain actual buffer ranges through dispatch rebinding. The Metal adapter owns a private readonly size table with each native pipeline; particle and direct RenderingDevice callers retain their existing portable ABI and logical resources. Six focused particle cohorts pass on native Metal for ARM64 and x64; full-suite and other dispatch-variant acceptance retain their separate platform gates.
 
 [Viewport anisotropy overrides](../components/canvas-rendering.md#viewport-anisotropy-overrides) connect shared scene/server sampling choices to independent per-viewport GPU sampler limits, including caller-owned viewports and shared CanvasTexture images. Renderer-session overrides preserve authored state and retire with their owner. Compatibility filtering remains an explicit capability boundary.
+
+[Native device screens](../components/local-compute.md#native-screen-drawing) connect renderer-owned low-level graphics lists to the same main/child presentation path as canvases, using actual native formats and pixel sizes. Private screen attachments, resize and native-window retirement share the existing GPU resource ownership; viewport images retain canvas output.

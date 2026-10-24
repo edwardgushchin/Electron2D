@@ -21,7 +21,7 @@ public sealed partial class RenderingServer
         server.Render(tree, frameStep, force: true, swapBuffers);
     }
 
-    /// <summary>Submits pending renderer compute work and waits for prior GPU operations to complete.</summary>
+    /// <summary>Submits pending renderer device work and waits for prior GPU operations to complete.</summary>
     /// <remarks>First drains queued render-thread actions. The synchronization itself does not draw, present or consume
     /// completed-frame requests; user actions retain their ordinary operations. This cold blocking operation has a
     /// synchronization cost. Use the native owner outside capture/submission, or after a frame has completed.

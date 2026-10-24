@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -179,3 +179,7 @@ BootImageTests verifies real main-window alpha pixels, the native transparency f
 ## Custom decoration input
 
 Window.NonclientArea and NonclientWindowInput preserve mouse reception while an exclusive child blocks ordinary input. The shared window-reception path runs this signal before native suppression or embedded WindowInput. The final blocked viewport cannot consume client input, including direct injection, and clears stale handled state. Stored rectangles, typed inheritance, synchronous borrowed events, failure continuation and retirement share ordinary Window/scene ownership. See [the complete contract and verification](../classes/Window.md#custom-decoration-input).
+
+## Native device screens
+
+Live main/child native identities select renderer-owned [device screen graphics](local-compute.md#native-screen-drawing). Private screen attachments share GPU device ownership with canvas presentation. The existing native-window mutation guard also protects screen resources during an active command list, including early child hierarchy/disposal validation; failed child retirement preserves the live scene/window state. Tree rollback and renderer shutdown defer incomplete screen attachment cleanup to device teardown. Child hide retires the identity and its private attachments.

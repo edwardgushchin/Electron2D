@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 Compute storage-array lengths use each actual bound byte range, including
 different bindings across dispatches in one submission. The internal
@@ -9,7 +9,7 @@ eight-storage/four-uniform interface and exported portable modules retain their
 existing roles. See [Metal storage-buffer lengths](../components/local-compute.md#metal-storage-buffer-lengths)
 for ownership and verification limits.
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Binary.cs](../../src/Servers/Rendering/Device/RenderingDevice.Binary.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs). **Component:** [Local compute](../components/local-compute.md).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Binary.cs](../../src/Servers/Rendering/Device/RenderingDevice.Binary.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs), [RenderingDevice.TexelBuffers.cs](../../src/Servers/Rendering/Device/RenderingDevice.TexelBuffers.cs), [RenderingDevice.Screens.cs](../../src/Servers/Rendering/Device/RenderingDevice.Screens.cs). **Component:** [Local compute](../components/local-compute.md).
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
@@ -1336,3 +1336,60 @@ Reserves a real owned uninitialized RID, usable only for later bytecode initiali
 For an executable storage/load and rendered consumer example, see [RenderingDeviceBinaryTests](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.cs) and [its graphics consumer](../../tests/Electron2D.Tests/RenderingDeviceBinaryTests.Graphics.cs).
 
 Local device samplers and high-level drawable Shader image bindings share SamplerConfiguration validation. SamplerCreate still creates an independently owned RID/native resource. High-level drawable bindings use a private value cache; renderer-owned devices advance at root frame preparation, local devices after submission. Effective anisotropy is disabled at a maximum of one. See [explicit image sampler state](../components/shader-materials.md#explicit-image-sampler-state).
+
+## Native window drawing
+
+| Member | Contract |
+| --- | --- |
+| [`public const int InvalidID = -1`](#invalidid) | No screen on a local device. |
+| [`public int ScreenGetWidth(int screen = 0)`](#screengetwidth) | Current native client pixel width. |
+| [`public int ScreenGetHeight(int screen = 0)`](#screengetheight) | Current native client pixel height. |
+| [`public int ScreenGetFramebufferFormat(int screen = 0)`](#screengetframebufferformat) | Cached device-local color-only, single-sample layout matching the actual swapchain format. |
+| [`public long DrawListBeginForScreen(int screen = 0, Color? clearColor = null)`](#drawlistbeginforscreen) | Begins a cleared screen graphics list; null clears to opaque black. |
+
+Screen IDs are native window identities: main is zero, positive values identify live native children. All four methods return InvalidID on a local device. Global queries reject missing/retired IDs and wrong-thread/disposed access. Begin also validates the finite color and the shared active-list guard. Use the returned layout with RenderPipelineCreate and finish with DrawListEnd before rendering.
+
+Completed screen work replaces that window's next presentation once. Viewport texture content remains the independently rendered canvas. Graphics uses a private attachment with the exact native format, the existing device submission and a GPU copy into the final presentation image; no CPU frame copy or extra presentation is introduced. FramePostDraw recording reaches the next frame. ForceDraw(false) and an unavailable/minimized swapchain keep pending screen work for a later native presentation; later ordinary frames resume canvas composition. Resize samples the client pixels again, preserving compatible pipeline layouts. Child retirement releases its private attachments before the native window; active-list rejection occurs before window state changes. Session shutdown cancels interrupted lists and releases remaining screen resources.
+
+See [the full screen contract](../components/local-compute.md#native-screen-drawing), including the existing Wayland main-window remap boundary. Native verification results are separate from hardware and platform acceptance.
+
+### InvalidID
+
+`public const int InvalidID = -1`
+
+Identifies an unavailable screen/list result on a local device. It does not identify a RID resource.
+
+### ScreenGetWidth
+
+`public int ScreenGetWidth(int screen = 0)`
+
+Returns the current client width in graphics pixels. The default selects the main window; a positive identity comes from a live native Window.GetWindowID(). Local devices return InvalidID. Missing/retired global IDs raise ArgumentOutOfRangeException; owner-thread and disposed-device guards apply.
+
+### ScreenGetHeight
+
+`public int ScreenGetHeight(int screen = 0)`
+
+Returns the matching native client pixel height, with the same selection, ownership and error rules as ScreenGetWidth. Neither query reports monitor size or logical layout units.
+
+### ScreenGetFramebufferFormat
+
+`public int ScreenGetFramebufferFormat(int screen = 0)`
+
+Returns the current native color format as a cached device-local framebuffer layout with one color attachment, one view and one sample. Repeated calls and windows with the same format reuse its identity; changing pixel dimensions alone does not invalidate a matching pipeline. Local devices return InvalidID. Queries remain valid during an active list; invalid IDs and owner/disposal violations fail as above.
+
+### DrawListBeginForScreen
+
+`public long DrawListBeginForScreen(int screen = 0, Color? clearColor = null)`
+
+Begins the selected window's color list. Null selects opaque black; an explicit transparent Color remains transparent. Nonfinite colors fail before recording; competing compute/graphics lists and wrong-thread or native-submission access fail without beginning a list. A local device returns InvalidID. Bind a pipeline matching ScreenGetFramebufferFormat, use the ordinary list operations, then call DrawListEnd. Renderer submission and the next presentation own execution; direct Submit/Sync and public disposal remain local-only.
+
+This partial snippet requires an active GPU renderer and its owner thread before rendering:
+
+```csharp
+var device = RenderingServer.GetRenderingDevice()
+    ?? throw new InvalidOperationException("A GPU renderer is required.");
+var list = device.DrawListBeginForScreen(clearColor: Colors.Blue);
+device.DrawListEnd();
+```
+
+The clear appears once in the native main window. Later canvas output resumes unless another screen list is recorded. See the shared screen section for size changes, ForceDraw(false), window retirement and the backend visibility boundary.

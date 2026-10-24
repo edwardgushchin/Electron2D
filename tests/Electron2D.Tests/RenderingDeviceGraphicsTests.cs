@@ -16,6 +16,7 @@ internal static class RenderingDeviceGraphicsTests
     }
     internal static void Run()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SCREEN") == "1") { RenderingDeviceScreenTests.Run(); return; }
         using (var device = RenderingServer.CreateLocalRenderingDevice())
         {
             foreach (var language in new[] { "DeviceGLSL", "DeviceHLSL" }) Draw(device, language);

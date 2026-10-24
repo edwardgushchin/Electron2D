@@ -228,7 +228,7 @@ public sealed partial class RenderingServer : ElectronObject
             PublishRenderInfo();
             _frameSubmitted = true;
             _submittedRevision = capturedRevision;
-            _needsPresentation = !swapBuffers;
+            _needsPresentation = !swapBuffers || _renderingDevice?.HasPendingScreens == true;
             Engine.Service.RecordDrawnFrame();
             CaptureCanvasVisibilityChanges();
             CaptureFrameCallbacks();
@@ -629,7 +629,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
-                _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
+                _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; _presentedWindows.Clear(); FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();
                 _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;

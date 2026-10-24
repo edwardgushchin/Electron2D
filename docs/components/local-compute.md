@@ -1,6 +1,6 @@
 # Local compute
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -375,3 +375,19 @@ including this direct-dispatch maximum-resource and rebinding regression; see
 [platform receipts](../platform-verification.md#runtime-suite-receipts). Full native
 suites, indirect/specialized/binary variants and physical performance retain
 separate acceptance gates.
+
+## Native screen drawing
+
+The retained RenderingDevice shares native GPU presentation with RenderingServer. ScreenGetWidth/Height query native client pixels, rather than monitor dimensions or logical window units. ScreenGetFramebufferFormat returns a reusable format for the actual native color encoding, with one color and one sample. DrawListBeginForScreen defaults to opaque black, accepts explicit transparent clears and reuses all applicable existing graphics-list operations. InvalidID (-1) is returned by all four methods on local devices. Borrowed renderer devices retain their usual owner-thread and disposal rules.
+
+Screen lists finish before rendering, submit in device order before native canvas drawing, and replace the selected window's final presentation through a GPU-only copy. They neither change canvas viewport images nor publish a second swapchain frame. Multiple completed screen lists target the latest image for that window; recording after FramePostDraw remains pending for the following frame. ForceDraw(false) executes device and canvas work without consuming that pending presentation. An unavailable or minimized swapchain retains the pending screen image and rendering invalidation until a native image is acquired and submitted. A later frame with no screen list returns to ordinary canvas output. A pending screen can present even when that window's canvas viewport update is disabled.
+
+Per-window attachments use native pixel dimensions and format. Resize rebuilds only incompatible private attachments; format IDs and matching pipelines remain reusable. Native child retirement frees its attachments, expires the window ID and rejects active-list mutation before any window state changes. A reopened child gets a fresh ID. Renderer shutdown cancels incomplete passes and owns all remaining allocations. Main-window hide retains the last known native format and pending screen image; the existing Wayland Vulkan restriction on remapping a previously presented root surface remains explicit. Child hide retires its native identity.
+
+The internal RenderingDeviceScreenTests probe reads the exact final GPU presentation image used for the swapchain and separately reads the unchanged viewport canvas. Compilation alone does not establish screen execution. Software-driver pixel, lifecycle, allocation and platform evidence is recorded with the completed verification below.
+
+### Screen verification on 2026-10-25
+
+RenderingDeviceScreenTests passed software Vulkan Wayland, X11 and HDR-canvas profiles. The probe reads the final presentation GPU image and independently checks unchanged viewport pixels. It exercises black/transparent clears, procedural graphics and alpha, scissor, per-window isolation, latest-list selection, FramePostDraw scheduling, actual compatible resize, stale/reopened native IDs, guarded hide/detach/disposal with unchanged state, screen-only presentation with canvas updates disabled, ForceSync/ForceDraw(false), ordinary presentation recovery and interrupted activation rollback with its original error preserved. Each profile measures 64 active and 64 idle frames after warmup with zero managed owner bytes.
+
+The public-only DeviceScreen.Consumer passed CLR and strict full-trim, reflection-disabled NativeAOT on Wayland/X11/HDR, using the existing offline device-shader build target and embedded modules. Its successful pipeline execution and unchanged public viewport image complement the internal final-presentation pixel probe. The previous GLSL/HLSL graphics, buffer/image/index/instance, scissor, retained-canvas and interrupted-pass cohort also passed on software Wayland. Native map guards exclude NVIDIA; these are software-driver checks. Physical GPUs, native heap, throughput and other platforms remain unverified. Receipts: `bin/device-screen-draw/2026-10-24/` (the slice began before midnight).

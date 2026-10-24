@@ -581,7 +581,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             throw new NotSupportedException("This Wayland Vulkan profile cannot safely remap a previously presented surface; native presentation-completion/unmap acknowledgement is required.");
         Check(SDL.WaitForGPUIdle(Device), "synchronize window visibility");
         if (!visible && _hasPresented && Driver == "vulkan" && SDL.GetCurrentVideoDriver() == "wayland") _waylandRemapBlocked = true;
-        if (_windowClaimed) { SDL.ReleaseWindowFromGPUDevice(Device, _window); _windowClaimed = false; }
+        if (_windowClaimed) { _ = ScreenInfo(null); SDL.ReleaseWindowFromGPUDevice(Device, _window); _windowClaimed = false; }
         display.SetWindowVisible(visible);
         if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; SetVSync(_vSync); }
     }
