@@ -337,7 +337,17 @@ The fixture used only a leading-dot filename; the accepted directory contract
 uses the Hidden filesystem attribute on Windows. The fixture now sets that
 attribute while retaining all list-count and hidden-toggle assertions. A complete
 file-dialog selector runs before the diagnostic's long full suite and preserves
-raw failures. Corrected native Windows execution remains required.
+raw failures. Run `40054793267` at `ee0fc5b4e` passes the filtered-list check,
+then fails its existing-file path assertion: the browser joins a scoped path with
+`/`, while `System.IO.Path.Combine` uses a backslash on Windows. Artifact `12545385952`
+retains raw `3762504530` and the failed assertion; ZIP SHA-256
+`451c6e3fab4a56d8c2cfca394dc29674b2ddc88dc303ae16d6da03fdf9366405`.
+The four filesystem selection assertions now canonicalize actual paths with
+`System.IO.Path.GetFullPath` before comparing exact expected destinations and
+multi-selection order. Current-directory, virtual-root and trailing-separator
+assertions remain unchanged. The same ARM64 run completes compound, joints,
+motion and point fields at raw exit 0; the full suite is correctly skipped.
+Corrected native Windows file-dialog execution remains required.
 
 The profiled macOS run `40035786188` also completes its full x64 suite at
 `d5c677614` (job `120694782183`, artifact `12539342858`, 7,009 lines, completion

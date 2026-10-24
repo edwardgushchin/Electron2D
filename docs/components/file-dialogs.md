@@ -15,7 +15,9 @@ host: a leading-dot name on Unix and the Hidden filesystem attribute on Windows.
 Its strict filtered-count, hidden-toggle, multi-selection and root guards remain
 unchanged. The Windows diagnostic runs the complete existing file-dialog selector
 before the long full-runtime suite, requiring raw exit 0 and its completion marker.
-This fixture correction does not change file-dialog runtime behavior.
+Selection assertions compare canonical filesystem paths so Windows accepts both
+separator spellings while retaining exact destinations, order and hide checks.
+These fixture corrections do not change file-dialog runtime behavior.
 
 The filename-filter toggle controls its input; turning it off clears filtering. Changed programmatic filter values show the input and emit the committed string. Required listing refresh continues after a failed observer. This corrects the pinned comparison source's erroneous filter-control event payload to the documented string. Icon callbacks may change filters during refresh; bounded retries settle against the final state or fail explicitly. Filtering, enumeration, option reconstruction and native OS actions are cold blocking operations; they are not zero-allocation real-time operations.
 
