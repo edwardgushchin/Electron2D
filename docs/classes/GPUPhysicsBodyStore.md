@@ -1,5 +1,11 @@
 # GPUPhysicsBodyStore
 
+[Scalar body edit flags](../components/gpu-resident-bodies.md#scalar-body-edit-flags)
+carry the complete policy word through ordered edits before publishing the body
+record. Mixed sparse-command checks inspect CCD/report/sleep bits and preserve
+rotation locks, unrelated lanes and strict warmed allocation limits. Corrected
+native execution on the failing software-driver hosts remains required.
+
 [Portable body-motion traversal](../components/gpu-resident-motion-queries.md)
 shares the recovery, sweep and resting scan call site while preserving iteration
 bounds, result buffers and the optimized Vulkan bytecode. Local numerical checks

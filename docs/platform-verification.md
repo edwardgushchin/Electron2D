@@ -181,6 +181,17 @@ capabilities. This distinguishes managed staging from native command execution.
 Its raw exit and full completion marker remain required, and its failure also
 keeps the diagnostic red. This setting never applies to ordinary CI or production.
 
+Body-command run `40040622719` at `972a17963` reproduces the failure on EPYC 9V45
+(artifact `12539590909`). For the first three substeps its complete 880-byte
+resident command prefix is byte-identical to the successful local control, with
+SHA-256 `408406d155e78c6a6e8e29d8256b4a5c2fafee6497bd6b62c97b452e56799e7d`.
+The mover command includes CCD bit 256 while the resulting body flags omit it;
+the managed-intrinsics-disabled process also fails. The body-edit candidate now
+reads header policy and body flags as scalar words before the ordered updates
+and publishes the completed flag word once. Local compound, explicit policy-bit,
+resident integration, parameter, kinematic/state and sleep checks pass; corrected
+target execution remains required. See [the edit-stage contract](components/gpu-resident-bodies.md#scalar-body-edit-flags).
+
 The earlier profiled macOS x64 job `120680942051` in `40031605911` completes the
 full suite at `426798799` (artifact `12538297123`, 7,009 lines and final completion
 marker). Its idle-Ogg interval and owner/separate-thread joint policy intervals

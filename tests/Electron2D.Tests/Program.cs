@@ -828,7 +828,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTINUOUS_PHYSICS") is 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPOUND_PHYSICS") is { } compoundBackend)
 {
     var backend = compoundBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for compound physics.") };
-    BackendChecks.RunCompound(backend); return;
+    BackendChecks.RunCompound(backend);
+    if (backend == PhysicsServer.Backend.GPU) GPUPhysicsBodyStoreTests.VerifyPolicyEdits();
+    return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_PHYSICS") is { } sceneBackend)
 {

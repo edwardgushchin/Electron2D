@@ -6,9 +6,48 @@ internal static class GPUPhysicsBodyStoreTests
     internal static void Run()
     {
         GPUPhysicsMemoryTests.Run();
+        VerifyPolicyEdits();
         VerifyMotionAndEdits();
         VerifyFailure();
         VerifyResidencyAndAllocation();
+    }
+
+    internal static void VerifyPolicyEdits()
+    {
+        using var store = new GPUPhysicsBodyStore();
+        var untouched = store.Add(new(PhysicsServer.BodyMode.Static, new(70, 80), 0, Vector2.Zero, 0));
+        var mover = store.Add(new(PhysicsServer.BodyMode.RigidLinear, Vector2.Zero, 0, Vector2.Zero, 0));
+        var sibling = store.Add(new(PhysicsServer.BodyMode.Rigid, new(100, 0), 0, Vector2.Zero, 0));
+        var editedStatic = store.Add(new(PhysicsServer.BodyMode.Static, new(30, 0), 0, Vector2.Zero, 0));
+        GPUPhysicsBodyStore.BodyHandle[] handles = [untouched, mover, sibling, editedStatic];
+        var state = new GPUPhysicsBodyStore.Snapshot[handles.Length];
+        store.Read(handles, state);
+        for (var i = 0; i < 128; i++) Cycle(i);
+        AllocationWarmupCheck.Collect();
+        var memory = store.BufferMemory;
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) Cycle(i);
+        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        Check(owner == 0 && all == 0 && store.BufferMemory == memory, "Warmed resident policy edits retain zero managed bytes and stable buffers.");
+        Console.WriteLine($"Resident policy edits: mixed commands, CCD/report/sleep bits, 128 cycles {owner}/{all} B passed.");
+
+        void Cycle(int i)
+        {
+            var mode = (CCDMode)(i % 3); var otherMode = (CCDMode)((i + 1) % 3); var reports = (i & 1) == 0;
+            store.SetPose(editedStatic, new(30, 0), 0);
+            store.SetPose(mover, Vector2.Zero, 0); store.SetSolverLinearVelocity(mover, new(1200, 0));
+            store.SetContactReporting(mover, reports); store.SetCCDMode(mover, mode); store.SetCanSleep(mover, !reports);
+            store.SetContactReporting(sibling, !reports); store.SetCCDMode(sibling, otherMode); store.SetCanSleep(sibling, reports);
+            store.Read(handles, state);
+            const uint mask = 8 | 128 | 768;
+            var expected = ((uint)mode << 8) | (reports ? 8u | 128u : 0u);
+            var otherExpected = ((uint)otherMode << 8) | (reports ? 0u : 8u | 128u);
+            if ((state[1].SleepFlags & mask) != expected || (state[2].SleepFlags & mask) != otherExpected)
+                throw new InvalidOperationException($"Resident policy bits differ: {state[1].SleepFlags & mask}/{expected}, {state[2].SleepFlags & mask}/{otherExpected}.");
+            Check((state[1].SleepFlags & 4) != 0 && (state[0].SleepFlags & mask) == 0 &&
+                state[0].Position == new Vector2(70, 80) && state[1].ContinuousMode == store.GetCCDMode(mover) &&
+                state[2].ContinuousMode == store.GetCCDMode(sibling), "Policy edits preserve unrelated flags, untouched lanes and authored CCD modes.");
+        }
     }
 
     private static void VerifyMotionAndEdits()
