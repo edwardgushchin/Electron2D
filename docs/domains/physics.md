@@ -1,3 +1,5 @@
+[Direct GPU command-policy access](../components/gpu-resident-bodies.md#scalar-body-edit-flags) reads the requested word independently of the aggregate command copy. A two-command/five-body case complements the unchanged cold public compound and warmed policy contracts; corrected AVX-512 native execution remains required.
+
 [Maximum finite GPU point forces](../components/physics-areas.md#maximum-finite-point-force-reconstruction) reconstruct exponent 128 without an overflowing scale intermediate and retain signed coordinate/strength/component fractions across native lowering. Exact axis/sign limits and genuine overflow retain the full public field and zero-byte contracts; native Windows confirmation remains open.
 
 [GPU body policy flag diagnostics](../components/gpu-resident-bodies.md#scalar-body-edit-flags) check actual CCD/report/sleep bits before and after integration, unrelated locks/lanes and 128 measured cycles at the existing zero-byte limit. The scalar-edit candidate failed on native EPYC 9V74 and is removed; temporary body-stage readbacks narrow the remaining defect. Corrected native acceptance remains open.

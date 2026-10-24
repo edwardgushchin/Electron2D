@@ -64,6 +64,13 @@ jobs:
           mkdir -p bin/diagnostics
           lscpu > bin/diagnostics/cpu.txt
           dpkg-query -W libvulkan1 mesa-vulkan-drivers > bin/diagnostics/driver.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64-gpu-prerequisites
+          path: |
+            bin/diagnostics/cpu.txt
+            bin/diagnostics/driver.txt
+          if-no-files-found: error
       - name: Publish the unchanged test runner
         run: |
           dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo

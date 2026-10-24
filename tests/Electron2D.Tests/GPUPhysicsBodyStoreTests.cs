@@ -19,9 +19,16 @@ internal static class GPUPhysicsBodyStoreTests
         var mover = store.Add(new(PhysicsServer.BodyMode.RigidLinear, Vector2.Zero, 0, Vector2.Zero, 0));
         var sibling = store.Add(new(PhysicsServer.BodyMode.Rigid, new(100, 0), 0, Vector2.Zero, 0));
         var editedStatic = store.Add(new(PhysicsServer.BodyMode.Static, new(30, 0), 0, Vector2.Zero, 0));
-        GPUPhysicsBodyStore.BodyHandle[] handles = [untouched, mover, sibling, editedStatic];
+        var untouchedTail = store.Add(new(PhysicsServer.BodyMode.Static, new(90, 95), 0, Vector2.Zero, 0));
+        GPUPhysicsBodyStore.BodyHandle[] handles = [untouched, mover, sibling, editedStatic, untouchedTail];
         var state = new GPUPhysicsBodyStore.Snapshot[handles.Length];
+        store.SetContactReporting(mover, true); store.SetCanSleep(mover, false);
         store.Read(handles, state);
+        store.SetPose(editedStatic, new(30, 0), 0);
+        store.SetPose(mover, Vector2.Zero, 0); store.SetSolverLinearVelocity(mover, new(1200, 0));
+        store.SetCCDMode(mover, CCDMode.CastRay);
+        store.Read(handles, state);
+        Check((state[1].SleepFlags & (8 | 128 | 768)) == (8 | 128 | 256), "Two sparse edits retain the requested CCD mode and existing report/sleep policy.");
         for (var i = 0; i < 128; i++) Cycle(i);
         AllocationWarmupCheck.Collect();
         var memory = store.BufferMemory;
@@ -48,7 +55,8 @@ internal static class GPUPhysicsBodyStoreTests
                 if ((state[1].SleepFlags & mask) != expected || (state[2].SleepFlags & mask) != otherExpected)
                     throw new InvalidOperationException($"Resident policy bits differ: {state[1].SleepFlags & mask}/{expected}, {state[2].SleepFlags & mask}/{otherExpected}.");
                 Check((state[1].SleepFlags & 4) != 0 && (state[0].SleepFlags & mask) == 0 &&
-                    state[0].Position == new Vector2(70, 80) && state[1].ContinuousMode == store.GetCCDMode(mover) &&
+                    state[0].Position == new Vector2(70, 80) && state[4].Position == new Vector2(90, 95) &&
+                    (state[4].SleepFlags & mask) == 0 && state[1].ContinuousMode == store.GetCCDMode(mover) &&
                     state[2].ContinuousMode == store.GetCCDMode(sibling), "Policy edits preserve unrelated flags, untouched lanes and authored CCD modes.");
             }
         }

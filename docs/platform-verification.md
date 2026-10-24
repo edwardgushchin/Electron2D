@@ -221,6 +221,13 @@ edit application, before the later CCD query; the added trace does not mask the
 failure. Baseline/traced/restored and both SIMD widths/managed-scalar controls all
 retain the same CastRay `x=60` failure. Corrected producer execution remains open.
 
+The next body-edit candidate reads the policy word directly from the command
+buffer before constructing its local aggregate copy. The same word supplies
+reporting, CCD and sleep masks without changing destination update order or
+storage/dispatch contracts. A two-active-command/five-body case checks retained
+report/sleep bits together with a new CCD mode before the existing 128-cycle
+regression. Corrected execution on a failing AVX-512 host remains required.
+
 Windows x64 run `40036769271` at `78754df51` passes the focused compound,
 joint and motion cohorts, then its complete suite fails in
 `PhysicsPointGravityFailureTests.FiniteLimit(GPU)`: field reduction rejects the
@@ -243,6 +250,14 @@ completion marker. DXIL inspection also shows magnitude-only mantissas at signed
 magnitudes and restores each original sign explicitly. A finite negative
 inverse-square range case joins the exact signed-axis maxima; corrected native
 execution remains required. These red runs do not establish complete-suite acceptance.
+
+Signed-field source `c314ac4f9` reaches the complete untraced Windows runtime
+step on all three RIDs: `40047682511` (x64) at 01:10:24 UTC,
+`40047685538` (x86) at 01:10:49 UTC and `40047688860` (ARM64) at 01:10:15 UTC.
+That step requires successful compound/joint/motion and point-field outcomes;
+the latter checks raw exit 0 plus the ten-case/128-frame zero-byte, signed maxima,
+overflow and terminal-publication markers. The jobs were still running when
+recorded; their raw point/full logs and complete-suite acceptance remain pending.
 
 The profiled macOS run `40035786188` also completes its full x64 suite at
 `d5c677614` (job `120694782183`, artifact `12539342858`, 7,009 lines, completion

@@ -6,6 +6,11 @@ and lanes, and strict warmed allocation limits. A scalar-edit candidate did not
 correct the native failure and is removed. Temporary staged GPU readbacks locate
 the remaining boundary; corrected native execution is still required.
 
+[Direct command-policy access](../components/gpu-resident-bodies.md#scalar-body-edit-flags)
+reads the scalar policy word before the aggregate command copy. The two-command,
+five-body regression retains existing report/sleep state and requested CCD mode;
+corrected AVX-512 target execution remains required.
+
 [Maximum finite point-force reconstruction](../components/physics-areas.md#maximum-finite-point-force-reconstruction)
 scales exponent 128 in two finite steps and explicitly retains signs when splitting
 components, authored coordinates and strength, while preserving real-overflow rejection.
