@@ -1,4 +1,4 @@
-[Masked GPU command-policy updates](../components/gpu-resident-bodies.md#scalar-body-edit-flags) select zero or each existing policy mask and apply the same merge without conditional packed-component writes. The direct-read candidate failed and is removed; the cold public, two-command/five-body and warmed policy contracts remain, with corrected AVX-512 execution still required.
+[Masked GPU command-policy updates](../components/gpu-resident-bodies.md#scalar-body-edit-flags) preserve policy bits in the cold public, two-command/five-body and warmed cases on AVX-512 at the default/256-bit width and without managed SIMD. Forced 128-bit execution reaches a later contact-validation failure; temporary status tracing restores exact sources and preserves the red result.
 
 [Maximum finite GPU point forces](../components/physics-areas.md#maximum-finite-point-force-reconstruction) reconstruct exponent 128 without an overflowing scale intermediate and retain signed coordinate/strength/component fractions across native lowering. Exact axis/sign limits and genuine overflow retain the full public field and zero-byte contracts; native Windows confirmation remains open.
 

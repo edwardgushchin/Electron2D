@@ -229,8 +229,32 @@ CastRay failure; ten stage snapshots still show `90156` after stage 0 and `90124
 after stage 3. Direct scalar policy reads are removed. The next candidate chooses
 zero or each existing policy mask and applies the corresponding flag merge
 unconditionally, preserving operation order and storage/dispatch contracts.
-The three mask choices compile to `OpSelect`; corrected native target execution
-remains required, including the unchanged cold public and retained-policy cases.
+The three mask choices compile to `OpSelect`. At `ee40d9228`, run `40050806556`
+passes the unchanged cold public and retained-policy cases on AVX-512 EPYC 9V74
+in its default, explicit 256-bit and managed-scalar processes. Both explicit
+passing controls retain raw exit 0. The CPU feature set matches the earlier
+failing `30e9568` EPYC profile. The body module SHA-256 is
+`dd88c6f7c9d70ccd31660773f15e6a51fcc30d1a60353a48cdbfedb81f03563d`.
+
+That diagnostic remains red: its forced 128-bit process reaches a later
+`CompoundResponse` contact-validation failure with raw exit 134. Artifact
+`12543556767` has ZIP SHA-256
+`3dfcf33f4978ec3255d3fa54febdb303afa08aab07103b5fb864a960613dcd22`;
+the failing log SHA-256 is
+`dfe9fb99e8e5cf53ac6d779ccc504b8ec0c7b5120f2987d2dd87264596306c52`.
+The manual workflow now diagnoses distinct temporary contact status bits,
+restores the shader and host bytes even after build failure, verifies the
+complete original shader manifest and reruns the original 128-bit process.
+This follow-up does not turn the original failure green or qualify its contact
+boundary. Local Mesa 128-bit execution passes in 71.184 seconds on a non-AVX-512
+Ryzen 5700X; it does not close that native failure.
+
+The complete untraced local Linux x64 Wayland/NVIDIA suite at `ee40d9228` passes
+with exit 0 and `Electron2D checks passed.` in 593.874 seconds (2,116 log lines).
+Its eight selected native libraries match the audited CI closure
+`aa3d78a0e804eb8a08dd6ec09d2fd90ed4905d539ce32fab28b8adc5614f9935`.
+This is local native execution, separate from the complete RID matrix and public
+NuGet/package/render acceptance.
 
 Windows x64 run `40036769271` at `78754df51` passes the focused compound,
 joint and motion cohorts, then its complete suite fails in

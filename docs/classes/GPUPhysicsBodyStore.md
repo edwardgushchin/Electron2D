@@ -9,8 +9,10 @@ the remaining boundary; corrected native execution is still required.
 [Masked command-policy updates](../components/gpu-resident-bodies.md#scalar-body-edit-flags)
 select zero or the existing reporting/CCD/sleep masks and merge them without
 conditional packed-component writes. Direct scalar reads alone reproduced the
-native failure and are removed. The two-command/five-body regression and corrected
-AVX-512 execution remain required.
+native failure and are removed. Cold public and retained-policy cases now pass
+on AVX-512 at the default/256-bit width and without managed SIMD. Forced
+128-bit execution reaches a later contact-validation failure, which retains a
+red diagnostic and temporary status tracing with exact source restoration.
 
 [Maximum finite point-force reconstruction](../components/physics-areas.md#maximum-finite-point-force-reconstruction)
 scales exponent 128 in two finite steps and explicitly retains signs when splitting

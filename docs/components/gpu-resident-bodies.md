@@ -77,13 +77,23 @@ candidate is removed. The next candidate selects zero or the existing reporting,
 CCD and sleep masks, then merges each policy unconditionally into the flag word.
 This preserves every bit operation and its order while avoiding a divergent
 component update for those three policies. The selected masks compile to
-`OpSelect`; this is a compiler-shape change, not corrected native proof.
+`OpSelect`. At `ee40d9228`, the unchanged cold public compound and retained-policy
+cases pass on AVX-512 EPYC 9V74 in `40050806556`, including the default, explicit
+256-bit and managed-scalar processes. Their complete 128-cycle gates retain
+`0/0 B`. The forced 128-bit process reaches a later contact-validation failure;
+the overall diagnostic remains red (artifact `12543556767`).
 The two-active-command/five-body regression retains existing reporting/sleep
 flags and untouched tail state. Command/body strides, bindings, buffers,
 submissions and readbacks do not change. The manual diagnostic uploads CPU
 capabilities and driver versions before runner publish, so AVX-512 coverage can
 be checked before the final logs.
-Corrected execution on the failing native hosts remains required.
+The manual workflow diagnoses that later failure with temporary distinct contact
+status bits, then restores both source files, verifies the complete original
+shader manifest and reruns the unchanged 128-bit fixture. Original failures stay
+red. This contact boundary and complete release-matrix acceptance remain open.
+Local Wayland/NVIDIA full execution at `ee40d9228` passes in 593.874 seconds
+with exit 0; local Mesa 128-bit compound/policy execution also passes. Neither
+local result closes the AVX-512 narrow-vector boundary.
 
 ## Storage, transfers and waits
 
