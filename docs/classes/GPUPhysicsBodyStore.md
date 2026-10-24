@@ -1,10 +1,10 @@
 # GPUPhysicsBodyStore
 
-[Scalar body edit flags](../components/gpu-resident-bodies.md#scalar-body-edit-flags)
-carry the complete policy word through ordered edits before publishing the body
-record. Mixed sparse-command checks inspect CCD/report/sleep bits and preserve
-rotation locks, unrelated lanes and strict warmed allocation limits. Corrected
-native execution on the failing software-driver hosts remains required.
+[Resident policy flag diagnostics](../components/gpu-resident-bodies.md#scalar-body-edit-flags)
+check actual CCD/report/sleep bits before and after integration, unrelated locks
+and lanes, and strict warmed allocation limits. A scalar-edit candidate did not
+correct the native failure and is removed. Temporary staged GPU readbacks locate
+the remaining boundary; corrected native execution is still required.
 
 [Portable body-motion traversal](../components/gpu-resident-motion-queries.md)
 shares the recovery, sweep and resting scan call site while preserving iteration

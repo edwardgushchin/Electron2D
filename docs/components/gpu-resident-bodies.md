@@ -40,33 +40,32 @@ the independent GPU objective is satisfied.
 
 ## Scalar body edit flags
 
-The edit stage reads the requested header policy and current body flags into
-scalar words before its existing ordered operations, then stores the resulting
-flags with the complete body record. CCD, contact
-reporting, sleep/wake, kinematic and integration-policy edits retain their masks
-and ordering. Command/body sizes, bindings, buffers, submissions and readbacks
-are unchanged; there is no host simulation mirror or CPU replay.
-
 The Linux diagnostic found the same resident command bytes on a passing local
 host and a failing EPYC 9V45: the mover header is `(1, 2, 1313924, 256)`, but its
-body flags lose CCD bit 256 and reporting bit 128 on the failing host. Disabling
-managed SIMD does not correct that result. The scalar edit stage is a candidate
-for this native boundary; complete corrected target execution remains required.
+body flags lose CCD bit 256 and reporting bit 128 before the CCD shader. Disabling
+managed SIMD does not correct that result.
+
+A scalar header-policy/current-flags candidate passed local NVIDIA and CI-version
+Lavapipe compound, resident, parameter, kinematic/state and sleep controls. Native
+run `40043371390` at `30e956813` still reproduces the identical CastRay failure and
+`90124` flags on EPYC 9V74 (artifact `12541025364`). The candidate is removed;
+changing the edit expression alone does not close this native defect.
 
 `GPUPhysicsBodyStoreTests.VerifyPolicyEdits` checks actual device flag readback
-for all three CCD modes, opposing reporting/sleep policies, mixed sparse commands,
-unrelated rotation locks and untouched lanes. It retains 128 warm and 128 measured
-cycles with strict zero owner/all-thread bytes and unchanged buffer accounting.
-The complete compound selector runs its existing physical workload before this
-additional flag check.
+before and after integration for all three CCD modes, opposing reporting/sleep
+policies, mixed sparse commands, unrelated rotation locks and untouched lanes.
+It retains 128 warm and 128 measured cycles with strict zero owner/all-thread
+bytes and unchanged buffer accounting. The compound selector checks these flags
+before its existing complete physical workload; both must pass.
 
-Local NVIDIA and CI-version Lavapipe compound runs pass the complete original
-physical cohort and the new flag regression at `0/0 B`. Resident integration,
-live parameters, kinematic/state/surface and connected sleep checks also pass on
-the RTX 3090 Ti. Native reflection remains three readonly buffers, seven writable
-buffers, one uniform and `64x1x1`; HLSL/MSL transpilation and DXIL compilation pass.
-Only the body-edit module changes; other physics module hashes remain identical.
-These controls do not replace execution on the failing AVX-512 hosts.
+The failure-only temporary trace now appends body/active-command readbacks after
+each body dispatch to its existing command buffer and maps them after its existing
+fence. Each small CCD world retains at most 24 stage snapshots. This separates
+edit application from later motion stages without changing production shaders,
+command layout or numerical work. Extra diagnostic copy passes and file writes
+are not performance or untraced acceptance evidence. Source receipts restore the
+exact original body store and CCD source and remove the helper before controls.
+Corrected execution on the failing native hosts remains required.
 
 ## Storage, transfers and waits
 

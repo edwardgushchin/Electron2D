@@ -38,8 +38,6 @@ void main()
             b = bodies[index];
             if (b.flags.x != generation || b.flags.w == 0u) { fail(1u); return; }
         }
-        // Coalesce independent policy bits as scalar words before storing the body record.
-        uint flags=b.flags.z, policy=c.header.w;
         vec4 pending=(mask&1u)!=0u?vec4(0):transientForces[index];
         if((mask&32768u)!=0u)pending.xyz+=c.transientForce.xyz;
         if(!finite4(pending)){fail(2u);return;}
@@ -51,19 +49,19 @@ void main()
         if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u|4194304u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || velocityChanged || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
         if ((mask & 65536u) != 0u) b.surface.xyz=c.body.surface.xyz;
-        if ((mask & 8388608u) != 0u) flags=(flags&~128u)|(policy&128u);
+        if ((mask & 8388608u) != 0u) b.flags.z=(b.flags.z&~128u)|(c.header.w&128u);
         if ((mask & 524288u) != 0u) b.surface.w=c.body.surface.w;
-        if ((mask & 262144u) != 0u) flags&=~6144u;
-        if ((mask & 131072u) != 0u) {targets[index]=c.target;flags|=2048u;}
+        if ((mask & 262144u) != 0u) b.flags.z&=~6144u;
+        if ((mask & 131072u) != 0u) {targets[index]=c.target;b.flags.z|=2048u;}
         if ((mask & 8192u) != 0u)
         {
             b.force.w=c.body.force.w;b.properties.zw=c.body.properties.zw;
-            flags=(flags&~115716u)|(c.body.flags.z&115716u);
+            b.flags.z=(b.flags.z&~115716u)|(c.body.flags.z&115716u);
         }
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 16777216u) != 0u)
         {
-            if(b.velocity.xyz!=vec3(0))flags=(flags&~80u)|32u;
+            if(b.velocity.xyz!=vec3(0))b.flags.z=(b.flags.z&~80u)|32u;
             b.velocity.xyz=vec3(0);
         }
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
@@ -71,27 +69,26 @@ void main()
         if ((mask & 2097152u) != 0u) b.velocity.z = c.body.velocity.z;
         if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
-        if ((mask & 1024u) != 0u) flags|=32u;
-        if ((mask & 2048u) != 0u) flags=(flags&~768u)|(policy&768u);
-        if ((mask & 512u) != 0u) flags=(flags&~8u)|(policy&8u);
-        if ((mask & 128u) != 0u) {flags=(flags&~80u)|32u;b.velocity.w=0;}
-        if ((mask & 256u) != 0u) {flags=flags|80u;b.velocity=vec4(0);}
-        if ((mask & 1u) != 0u && (flags&16u)!=0u) b.velocity=vec4(0);
+        if ((mask & 1024u) != 0u) b.flags.z|=32u;
+        if ((mask & 2048u) != 0u) b.flags.z=(b.flags.z&~768u)|(c.header.w&768u);
+        if ((mask & 512u) != 0u) b.flags.z=(b.flags.z&~8u)|(c.header.w&8u);
+        if ((mask & 128u) != 0u) {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}
+        if ((mask & 256u) != 0u) {b.flags.z=b.flags.z|80u;b.velocity=vec4(0);}
+        if ((mask & 1u) != 0u && (b.flags.z&16u)!=0u) b.velocity=vec4(0);
         if ((mask & 4194304u) != 0u)
         {
             b.velocity.w=c.body.velocity.w;
-            flags=(flags&~(8u|16u|32u|64u|6144u|8192u))|c.body.flags.z;
+            b.flags.z=(b.flags.z&~(8u|16u|32u|64u|6144u|8192u))|c.body.flags.z;
             pending=vec4(0); targets[index]=vec4(0); fields[index]=c.center;
         }
         if ((mask & 16384u) != 0u) b.velocity.z=0;
         if ((mask & 16u) != 0u && b.flags.y >= 2u)
         {
             b.velocity.xy += c.impulse.xy;
-            if ((flags & 4u) == 0u) b.velocity.z += c.impulse.z;
+            if ((b.flags.z & 4u) == 0u) b.velocity.z += c.impulse.z;
         }
-        if ((flags & 4u) != 0u) b.velocity.z = 0;
+        if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (!finite4(b.pose) || !finite4(b.velocity) || !finite4(vec4(b.velocity.xyz+b.surface.xyz,b.surface.w))) { fail(2u); return; }
-        b.flags.z=flags;
         bodies[index] = b; transientForces[index]=pending;
     }
     else if (control.x == 1u || control.x == 3u || control.x == 4u)

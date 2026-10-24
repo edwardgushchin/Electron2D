@@ -1,4 +1,4 @@
-[Scalar GPU body edit flags](../components/gpu-resident-bodies.md#scalar-body-edit-flags) now retain one policy word through the existing ordered command operations. A new mixed-command regression checks actual CCD/report/sleep bits for every CCD mode, unrelated locks/lanes and 128 measured cycles at the existing zero-byte limit. Corrected native target acceptance remains open.
+[GPU body policy flag diagnostics](../components/gpu-resident-bodies.md#scalar-body-edit-flags) check actual CCD/report/sleep bits before and after integration, unrelated locks/lanes and 128 measured cycles at the existing zero-byte limit. The scalar-edit candidate failed on native EPYC 9V74 and is removed; temporary body-stage readbacks narrow the remaining defect. Corrected native acceptance remains open.
 
 [Indexed GPU contact observations](../components/physics-space-checkpoints.md#indexed-gpu-contact-projection) now retain sparse body-slot ranges through publication and local checkpoints, including empty-history restoration and new-body slot reuse. Declaration counts remain unchanged; this completes the previously uncommitted projection draft.
 

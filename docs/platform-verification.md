@@ -186,11 +186,35 @@ Body-command run `40040622719` at `972a17963` reproduces the failure on EPYC 9V4
 resident command prefix is byte-identical to the successful local control, with
 SHA-256 `408406d155e78c6a6e8e29d8256b4a5c2fafee6497bd6b62c97b452e56799e7d`.
 The mover command includes CCD bit 256 while the resulting body flags omit it;
-the managed-intrinsics-disabled process also fails. The body-edit candidate now
-reads header policy and body flags as scalar words before the ordered updates
-and publishes the completed flag word once. Local compound, explicit policy-bit,
-resident integration, parameter, kinematic/state and sleep checks pass; corrected
-target execution remains required. See [the edit-stage contract](components/gpu-resident-bodies.md#scalar-body-edit-flags).
+the managed-intrinsics-disabled process also fails. Scalar header-policy/current-flag
+edits at `30e956813` pass the local controls but run `40043371390` still returns
+CastRay `x=60`, velocity `(1200, 0)` and flags `90124` on EPYC 9V74 (artifact
+`12541025364`, ZIP SHA-256 `47bbf66314e1f607e2590f809b33bf315e38b288149c419bd07fc12cbc320af1`).
+Baseline, traced, restored and managed-scalar logs reproduce the prior failure;
+the scalar edit candidate is removed. Failure-only body/active-command snapshots
+after individual body dispatches now distinguish edit application from subsequent
+motion stages. They add copy passes within the existing submission/fence, are
+capped at 24 per small CCD world, and do not establish untraced acceptance. Exact
+source restoration is checked before controls. The policy regression now reads
+flags both before and after integration ahead of the original compound workload.
+See [the flag investigation](components/gpu-resident-bodies.md#scalar-body-edit-flags).
+
+Windows x64 run `40036769271` at `78754df51` passes the focused compound,
+joint and motion cohorts, then its complete suite fails in
+`PhysicsPointGravityFailureTests.FiniteLimit(GPU)`: field reduction rejects the
+maximum finite point force. Artifact `12539963873` retains 11,608 lines and raw
+exit `-532462766` (`0xE0434352`), with no completion marker. The log SHA-256 is
+`c1c1a454e88101ba66ab0738c9db0ac7c4409016ac763ff85d6c596d7875f814`.
+This is a managed field-validation failure after continued pipeline progress,
+not another timeout; its numerical boundary and corrected target execution remain
+open.
+
+The profiled macOS run `40035786188` also completes its full x64 suite at
+`d5c677614` (job `120694782183`, artifact `12539342858`, 7,009 lines, completion
+marker and raw exit 0). The full-runtime log SHA-256 is
+`f123b3f9d7ebc9b15c70f956b311c2ff2cc8c0674fb4261c8b660085a98d3968`.
+Active/idle Ogg intervals report zero owner bytes. This complements the ARM64
+diagnostic result; final-source untraced platform acceptance remains separate.
 
 The earlier profiled macOS x64 job `120680942051` in `40031605911` completes the
 full suite at `426798799` (artifact `12538297123`, 7,009 lines and final completion

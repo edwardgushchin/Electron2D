@@ -105,6 +105,21 @@ jobs:
                      'originalSHA256': hashlib.sha256(original).hexdigest(),
                      'actualSHA256': hashlib.sha256(path.read_bytes()).hexdigest(),
                      'helperSHA256': hashlib.sha256(helper.read_bytes()).hexdigest()}
+          store = Path('src/Servers/Physics/GPUPhysicsBodyStore.cs')
+          store_original = store.read_bytes()
+          Path('bin/diagnostics/body-store-original.cs').write_bytes(store_original)
+          store_source = store_original.decode()
+          store_newline = '\r\n' if b'\r\n' in store_original else '\n'
+          for marker, trace in {
+              'SDL.EndGPUComputePass(compute);': 'TraceBodyStage(command, settings);',
+              'WaitMS += Stopwatch.GetElapsedTime(start).TotalMilliseconds; SubmissionCount++;': 'CompleteBodyStageTrace();'
+          }.items():
+              assert store_source.count(marker) == 1
+              store_source = store_source.replace(marker, marker + store_newline + '        ' + trace, 1)
+          store.write_bytes(store_source.encode())
+          receipt['bodyStore'] = {'source': str(store),
+              'originalSHA256': hashlib.sha256(store_original).hexdigest(),
+              'actualSHA256': hashlib.sha256(store.read_bytes()).hexdigest()}
           Path('bin/diagnostics/trace-source.json').write_text(json.dumps(receipt, indent=2) + '\n')
           PY
           dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
@@ -131,7 +146,14 @@ jobs:
           assert str(path) == receipt['source']
           helper = Path('src/Servers/Physics/GPUPhysicsBodyStore.CCDDiagnostic.cs')
           assert hashlib.sha256(helper.read_bytes()).hexdigest() == receipt['helperSHA256']
+          store_receipt = receipt['bodyStore']
+          store = Path('src/Servers/Physics/GPUPhysicsBodyStore.cs')
+          store_original = Path('bin/diagnostics/body-store-original.cs').read_bytes()
+          assert str(store) == store_receipt['source']
+          assert hashlib.sha256(store_original).hexdigest() == store_receipt['originalSHA256']
+          assert hashlib.sha256(store.read_bytes()).hexdigest() == store_receipt['actualSHA256']
           path.write_bytes(original)
+          store.write_bytes(store_original)
           helper.unlink()
           PY
           dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o bin/diagnostics/runner --nologo
@@ -204,6 +226,7 @@ jobs:
             bin/diagnostics/*.json
             bin/diagnostics/*.txt
             bin/diagnostics/ccd-*.bin
+            bin/diagnostics/body-stage-*.bin
           if-no-files-found: error
       - name: Preserve original and SIMD fixture failures
         if: steps.baseline.outcome == 'failure' || steps.simd_control.outcome == 'failure' || steps.managed_scalar.outcome == 'failure'

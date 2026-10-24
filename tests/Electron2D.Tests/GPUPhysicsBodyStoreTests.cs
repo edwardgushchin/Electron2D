@@ -29,7 +29,7 @@ internal static class GPUPhysicsBodyStoreTests
         for (var i = 0; i < 128; i++) Cycle(i);
         owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
         Check(owner == 0 && all == 0 && store.BufferMemory == memory, "Warmed resident policy edits retain zero managed bytes and stable buffers.");
-        Console.WriteLine($"Resident policy edits: mixed commands, CCD/report/sleep bits, 128 cycles {owner}/{all} B passed.");
+        Console.WriteLine($"Resident policy edits: mixed commands and integration, CCD/report/sleep bits, 128 cycles {owner}/{all} B passed.");
 
         void Cycle(int i)
         {
@@ -38,15 +38,19 @@ internal static class GPUPhysicsBodyStoreTests
             store.SetPose(mover, Vector2.Zero, 0); store.SetSolverLinearVelocity(mover, new(1200, 0));
             store.SetContactReporting(mover, reports); store.SetCCDMode(mover, mode); store.SetCanSleep(mover, !reports);
             store.SetContactReporting(sibling, !reports); store.SetCCDMode(sibling, otherMode); store.SetCanSleep(sibling, reports);
-            store.Read(handles, state);
-            const uint mask = 8 | 128 | 768;
-            var expected = ((uint)mode << 8) | (reports ? 8u | 128u : 0u);
-            var otherExpected = ((uint)otherMode << 8) | (reports ? 0u : 8u | 128u);
-            if ((state[1].SleepFlags & mask) != expected || (state[2].SleepFlags & mask) != otherExpected)
-                throw new InvalidOperationException($"Resident policy bits differ: {state[1].SleepFlags & mask}/{expected}, {state[2].SleepFlags & mask}/{otherExpected}.");
-            Check((state[1].SleepFlags & 4) != 0 && (state[0].SleepFlags & mask) == 0 &&
-                state[0].Position == new Vector2(70, 80) && state[1].ContinuousMode == store.GetCCDMode(mover) &&
-                state[2].ContinuousMode == store.GetCCDMode(sibling), "Policy edits preserve unrelated flags, untouched lanes and authored CCD modes.");
+            for (var stage = 0; stage < 2; stage++)
+            {
+                if (stage != 0) store.Step(1f / 120, Vector2.Zero);
+                store.Read(handles, state);
+                const uint mask = 8 | 128 | 768;
+                var expected = ((uint)mode << 8) | (reports ? 8u | 128u : 0u);
+                var otherExpected = ((uint)otherMode << 8) | (reports ? 0u : 8u | 128u);
+                if ((state[1].SleepFlags & mask) != expected || (state[2].SleepFlags & mask) != otherExpected)
+                    throw new InvalidOperationException($"Resident policy bits differ: {state[1].SleepFlags & mask}/{expected}, {state[2].SleepFlags & mask}/{otherExpected}.");
+                Check((state[1].SleepFlags & 4) != 0 && (state[0].SleepFlags & mask) == 0 &&
+                    state[0].Position == new Vector2(70, 80) && state[1].ContinuousMode == store.GetCCDMode(mover) &&
+                    state[2].ContinuousMode == store.GetCCDMode(sibling), "Policy edits preserve unrelated flags, untouched lanes and authored CCD modes.");
+            }
         }
     }
 
