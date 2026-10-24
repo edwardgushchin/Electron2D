@@ -1754,6 +1754,16 @@
       "godot": "class:VisualShaderNodeRotationByAxis",
       "electron2d": "T:Electron2D.VisualShaderNodeRotationByAxis",
       "reason": "ADRs 0001/0004/0013/0028: fixed vector/radians/axis inputs execute normalized-axis row-vector rotation with an independent matching four-component numeric matrix output. All sixteen matrix components, signed/nonunit/oblique axes, real canvas vertex and particle transform consumers, shared aliases, live inputs and archives execute on the existing backends. Zero axis retains native undefined normalization semantics."
+    },
+    {
+      "godot": "class:VisualShaderNodeReroute",
+      "electron2d": "T:Electron2D.VisualShaderNodeReroute",
+      "reason": "ADRs 0001/0004/0013/0028: typed branch/chain inference and atomic rejection, dangling-source adaptation, all nine port roles, retained defaults/absence and portable shared archives. Imported canvas, five particle lifecycle and writable-texture programs preserve numeric values and ordinary/array sampler symbols."
+    },
+    {
+      "godot": "VisualShaderNodeReroute::method:get_port_type()",
+      "electron2d": "method:Electron2D.VisualShaderNodeReroute.GetPortType()",
+      "reason": "ADRs 0001/0004/0013/0028: typed branch/chain inference and atomic rejection, dangling-source adaptation, all nine port roles, retained defaults/absence and portable shared archives. Imported canvas, five particle lifecycle and writable-texture programs preserve numeric values and ordinary/array sampler symbols."
     }
   ],
   "statusGroups": [
@@ -2279,6 +2289,14 @@
         "class:VisualShaderNodeFresnel"
       ],
       "reason": "ADR 0028: the pinned generator uses implicit NORMAL for an unconnected canvas normal input (visual_shader_nodes.cpp, ed1daf0bf001b61586d9930840f2f1394092c079, lines 7320-7372). The current graph input translator has no implicit canvas-normal producer. Implement that producer and the default/connected normal-view-invert-power contract before an executing Fresnel slice; explicit inputs alone do not complete it."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeReroute",
+        "VisualShaderNodeReroute::method:get_port_type()"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028: typed branch/chain inference and atomic rejection, dangling-source adaptation, all nine port roles, retained defaults/absence and portable shared archives. Imported canvas, five particle lifecycle and writable-texture programs preserve numeric values and ordinary/array sampler symbols."
     }
   ],
   "extras": [
@@ -2893,6 +2911,18 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeRotationByAxis.CreateDuplicateInstance()",
       "reason": "ADRs 0001/0013/0028: compiled numeric graph Resource constructor and duplicate factory over inherited typed defaults, copies and archives."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeReroute..ctor()",
+      "reason": "ADRs 0001/0013/0028: compiled typed reroute construction, duplication and role-before-default archive descriptors."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeReroute.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: compiled typed reroute construction, duplication and role-before-default archive descriptors."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeReroute.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: compiled typed reroute construction, duplication and role-before-default archive descriptors."
     }
   ]
 }

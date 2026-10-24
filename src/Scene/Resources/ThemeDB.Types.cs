@@ -521,6 +521,7 @@ public sealed partial class ThemeDB
         ["VisualShaderNodeParticleSphereEmitter"] = ["VisualShaderNodeParticleSphereEmitter", "VisualShaderNodeParticleEmitter", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeRandomRange"] = ["VisualShaderNodeRandomRange", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeRemap"] = ["VisualShaderNodeRemap", "VisualShaderNode", "Resource", "ElectronObject"],
+        ["VisualShaderNodeReroute"] = ["VisualShaderNodeReroute", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeResizableBase"] = ["VisualShaderNodeResizableBase", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeRotationByAxis"] = ["VisualShaderNodeRotationByAxis", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeSDFRaymarch"] = ["VisualShaderNodeSDFRaymarch", "VisualShaderNode", "Resource", "ElectronObject"],

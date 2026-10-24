@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -322,3 +322,5 @@ ResourceLoader owns localized file selection and weak live-resource refresh, usi
 Shader resource storage now includes a bounded typed sampler-state table. [Sampler metadata](../components/shader-materials.md#explicit-image-sampler-state) copies with the resource, survives compatible program replacement and real fresh-process file loading, and rejects malformed tables before publication. The built-in Shader persists by a versioned identity rather than its renderer-private module interface.
 
 Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
+
+Typed visual graph routing uses [VisualShaderNodeReroute](../classes/VisualShaderNodeReroute.md) for numeric, matrix and ordinary/array sampler chains. Role inference, typed portable storage and offline/native execution use the existing [visual shader pipeline](../components/visual-shaders.md#typed-reroute-chains).

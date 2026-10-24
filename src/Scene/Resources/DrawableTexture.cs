@@ -103,6 +103,8 @@ public sealed class DrawableTexture : Texture
     }
 
     /// <summary>Executes one fragment pass writing this texture and up to three extra targets.</summary>
+    /// <remarks>Missing imported graph material images preserve their declared ordinary/array shape and
+    /// render-only image fallback policy. This does not change the white policy for absent source slots.</remarks>
     /// <param name="rect">Destination rectangle in the selected mip level.</param>
     /// <param name="sources">Up to four borrowed sources; missing sources use opaque white. Atlas sources use opaque white.</param>
     /// <param name="extraTargets">Up to three distinct targets with equal actual dimensions, format and mip allocation.</param>

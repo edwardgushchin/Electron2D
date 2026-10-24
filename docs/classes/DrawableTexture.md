@@ -1,6 +1,6 @@
 # DrawableTexture
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 - Declaration: `public sealed class DrawableTexture : Texture`
 - Source: [DrawableTexture.cs](../../src/Scene/Resources/DrawableTexture.cs)
@@ -11,7 +11,7 @@ Last updated: 2026-10-18
 
 Owns a writable sampled GPU image. `Setup` authors dimensions, color format, clear color and optional complete mip chain before or during a renderer session. First GPU use allocates and clears the image. The resource has a stable logical RID across setup; each native allocation has an independent lifetime. Shutdown retires native storage while borrowed resource objects retain setup for another session.
 
-`BlitRect` scales the complete source into a destination rectangle on one mip level. Clipping preserves the original UV mapping; a negative size flips that axis. `BlitRectMulti` writes this target and up to three distinct equal-sized, equal-format targets. Sources and materials remain borrowed. Null, absent and atlas sources use opaque white. No sampled input, including material parameters and native/logical aliases, may share a target allocation. Configuration, disposal and recursive blit preparation reject during source callbacks.
+`BlitRect` scales the complete source into a destination rectangle on one mip level. Clipping preserves the original UV mapping; a negative size flips that axis. `BlitRectMulti` writes this target and up to three distinct equal-sized, equal-format targets. Sources and materials remain borrowed. Null, absent and atlas source slots use opaque white. Missing imported graph material images instead preserve their declared ordinary/array shape and white, black, transparent, normal or anisotropy fallback policy. No sampled input, including material parameters and native/logical aliases, may share a target allocation. Configuration, disposal and recursive blit preparation reject during source callbacks.
 
 ## API
 

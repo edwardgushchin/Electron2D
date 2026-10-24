@@ -1,6 +1,6 @@
 # VisualShader
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 Source: [VisualShader.cs](../../src/Scene/Resources/VisualShader.cs).
 
@@ -480,3 +480,7 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
 - [Typed resources](../decisions/resources.md#adr-0013)
+
+## Reroute inference
+
+Validated connections select VisualShaderNodeReroute roles across downstream chains/branches after checking every terminal. An unconnected source may adopt its terminal role. Feasibility checks and rejected edits do not mutate definitions. Forced edges preserve authored roles; imports validate their actual compatibility. See [typed reroute chains](../components/visual-shaders.md#typed-reroute-chains) for defaults, aliases, sampler symbols, atomic notifications and execution checks.

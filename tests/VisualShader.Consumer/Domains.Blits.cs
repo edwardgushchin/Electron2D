@@ -30,6 +30,14 @@ internal static partial class GraphChecks
                 { 0 => new(.25f, .25f, .25f, 1), 1 => new(7f / 16, 7f / 16, 7f / 16, 1), 2 => new(11f / 16, 11f / 16, 11f / 16, 1), 3 => new(.125f, .625f, .25f, 1), 4 => new(.125f, .5f, .875f, 1), 5 => new(.125f, .625f, .875f, 1), 6 => new(.75f, .75f, .75f, 1), _ => new(.2f, .3f, .4f, 1) };
             }
             Check(MathF.Abs(actual.R - expected.R) < .005f && MathF.Abs(actual.G - expected.G) < .005f && MathF.Abs(actual.B - expected.B) < .005f && MathF.Abs(actual.A - expected.A) < .005f, $"{name} pixel {actual}, expected {expected}.");
+            if (name.StartsWith("blit-reroute", StringComparison.Ordinal))
+            {
+                for (var i = 0; i < 64; i++) target.BlitRectMulti(new(0, 0, 8, 8), [], [], material: material);
+                var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 64; i++) target.BlitRectMulti(new(0, 0, 8, 8), [], [], material: material);
+                var ownerDelta = GC.GetAllocatedBytesForCurrentThread() - owner; var allDelta = GC.GetTotalAllocatedBytes(true) - all;
+                Check(ownerDelta == 0 && allDelta == 0, $"{name}: 64 prepared blits owner={ownerDelta}, all={allDelta} managed bytes.");
+            }
         }
         Console.WriteLine($"{files.Length} writable-texture graphs: defaults, parameters, compiled providers, images/arrays, globals and source bindings passed.");
     }

@@ -149,7 +149,10 @@ public sealed partial class RenderingServer
                 for (var i = 0; i < sampleCount; i++)
                 {
                     var descriptor = state.Program.Textures[i];
-                    samples[i] = descriptor.BlitSource ? sources[descriptor.Name[^1] - '0'] : ExportDrawableSource(_drawableSamples[i], suppliedSource: false);
+                    var resource = _drawableSamples[i];
+                    if (!descriptor.BlitSource && resource is null && descriptor.ImagePolicy is { } policy)
+                        resource = ((GPUCanvasBackend)_backend).ImageFallback(descriptor.IsArray, policy.Fallback);
+                    samples[i] = descriptor.BlitSource ? sources[descriptor.Name[^1] - '0'] : ExportDrawableSource(resource, suppliedSource: false);
                 }
                 if (material!.IsDisposed || state.Shader?.IsDisposed == true || !ReferenceEquals(state.Shader?.GetProgram(), state.Program)) throw new InvalidOperationException("The blit material changed during preparation.");
             }

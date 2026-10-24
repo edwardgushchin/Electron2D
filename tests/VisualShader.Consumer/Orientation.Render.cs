@@ -63,7 +63,7 @@ internal static partial class GraphChecks
         private GPUParticles[] _orientationParticles = [];
         private void PrepareOrientationParticles(string folder, Texture texture)
         {
-            var files = Directory.GetFiles(folder, "particle-orientation-*.e2dres").Order(StringComparer.Ordinal).ToArray(); _orientationParticles = new GPUParticles[files.Length];
+            var files = Directory.GetFiles(folder, "particle-*.e2dres").Where(f => IOPath.GetFileName(f).StartsWith("particle-orientation-", StringComparison.Ordinal) || IOPath.GetFileName(f).StartsWith("particle-reroute-", StringComparison.Ordinal)).Order(StringComparer.Ordinal).ToArray(); _orientationParticles = new GPUParticles[files.Length];
             if (files.Length == 0) return;
             var contour = OwnDomain(new OccluderPolygon { Polygon = [new(16, 32), new(112, 32), new(112, 112), new(16, 112)] }); AddChild(new LightOccluder { Occluder = contour });
             using var image = Image.CreateEmpty(4, 2, false, Image.Format.Rgba8); image.Fill(Colors.White); var rectangle = OwnDomain(ImageTexture.CreateFromImage(image));
@@ -88,7 +88,7 @@ internal static partial class GraphChecks
                     Check(bounds.GetCenter().DistanceTo(Vector2.Zero) < .001f, "The rotation matrix retains a zero translation in native particle bounds.");
                 }
             }
-            if (_orientationParticles.Length != 0) Console.WriteLine($"{_orientationParticles.Length} orientation particle programs produced actual pixels and rotated geometry.");
+            if (_orientationParticles.Length != 0) Console.WriteLine($"{_orientationParticles.Length} typed graph particle programs produced actual pixels and checked geometry.");
         }
     }
 }

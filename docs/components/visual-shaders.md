@@ -1,6 +1,6 @@
 # Visual shader graphs
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 ## Scope and owned types
 
@@ -1315,3 +1315,15 @@ are checked separately.
 Verification receipts are retained under
 `bin/visual-shader-orientation/2026-10-24/`. Platform and native-allocation
 acceptance remain governed by [ADR 0021](../decisions/product.md#adr-0021).
+
+## Typed reroute chains
+
+VisualShaderNodeReroute forwards all nine port roles in all eight graph stages. ConnectNodes checks every terminal in the downstream branch and existing incoming edges before changing its reroutes; CanConnectNodes is observational, including on forced cyclic subgraphs. Numeric roles can convert at ordinary graph edges, while matrix and sampled-image roles require their exact role family. An unconnected source can adopt a terminal's role. Role changes replace defaults with typed zero/identity or sampler absence; unchanged roles and disconnections retain authored defaults. Forced edges record the stored roles without inference.
+
+The entire edit commits before notifications. Archives store the role before the typed default descriptors, retaining omitted defaults and shared aliases. Other graphs borrowing the same definition observe its role change and require fresh validation. Sampled images preserve their graph-local symbol, ordinary/array shape and policy through chains and branches; source generation emits no sampler local.
+
+The public-only VisualShader.Consumer supports `reroute-cpu` and `reroute-author DIRECTORY`. The author command creates canvas/domain source folders for fresh-process import. Its eight programs exercise all numeric roles (including sixteen distinct matrix components), three-node chains, duplicate terminal branches and graph-local ordinary/array image-parameter references. Use the existing `gpu` and `domains-gpu` commands on the corresponding imported folders. CPU checks cover atomic rejection, disconnection, missing defaults, aliases, copies, malformed roles, disposed nodes, forced cycles and failing observers. Native execution and allocation results must be recorded for the actual tested backend; compilation alone establishes no foreign-platform or physical-GPU acceptance.
+
+Writable-texture sampler checks also cover both absent port sources and all supported ordinary/array fallback policies. The blit material path shares the canvas image fallback cache, including array shape, without creating a second fallback owner. Invalid reachable reroute cycles, forced matrix/scalar edges and ordinary/array sampler mismatches reject import before artifact replacement.
+
+The 2026-10-25 reroute checks passed CLR and strict trimmed Linux x64 NativeAOT pixels in Wayland, X11 and HDR/MSAA software Vulkan profiles. Each includes canvas, five particle stages, writable-texture sampler fallbacks/absence and 64 prepared blits per reroute case. Existing source/interface hashes remained identical for 3385 graph archives. One initial AOT canvas interval reported 24 owner/all-thread managed bytes; an unchanged-binary repeat passed all six profiles at zero. The first sample remains retained and unattributed; these bounded passes do not establish uninterrupted allocation-free behavior, native-heap behavior or physical/foreign GPU acceptance.

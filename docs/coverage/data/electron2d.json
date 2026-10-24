@@ -15681,6 +15681,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeReroute",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeReroute",
+    "name": "VisualShaderNodeReroute",
+    "signature": "public sealed class Electron2D.VisualShaderNodeReroute",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeResizableBase",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeResizableBase",
@@ -28467,6 +28482,19 @@
     "declaringType": "Electron2D.VisualShaderNodeRemap",
     "name": ".ctor",
     "signature": "public VisualShaderNodeRemap()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeReroute..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeReroute",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeReroute()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -227645,6 +227673,45 @@
     "id": "method:Electron2D.VisualShaderNodeRemap.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeRemap",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeReroute.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeReroute",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeReroute.GetPortType()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeReroute",
+    "name": "GetPortType",
+    "signature": "public Electron2D.VisualShaderNode.PortType GetPortType()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderNode.PortType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeReroute.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeReroute",
     "name": "GetPropertyDescriptors",
     "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
     "visibility": "protected",

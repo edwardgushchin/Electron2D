@@ -988,7 +988,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) | VisualShaderNode | Unimplemented | 0 |
 | [VisualShaderNodeRandomRange](classes/VisualShaderNodeRandomRange.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeRemap](classes/VisualShaderNodeRemap.md) | VisualShaderNode | Implemented | 10 |
-| [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md) | VisualShaderNode | Unimplemented | 1 |
+| [VisualShaderNodeReroute](classes/VisualShaderNodeReroute.md) | VisualShaderNode | Implemented | 1 |
 | [VisualShaderNodeResizableBase](classes/VisualShaderNodeResizableBase.md) | VisualShaderNode | Implemented | 1 |
 | [VisualShaderNodeRotationByAxis](classes/VisualShaderNodeRotationByAxis.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeSDFRaymarch](classes/VisualShaderNodeSDFRaymarch.md) | VisualShaderNode | Implemented | 0 |

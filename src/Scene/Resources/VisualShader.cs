@@ -187,13 +187,14 @@ public sealed partial class VisualShader : Shader
     /// <param name="fromPort">The source output.</param>
     /// <param name="toNode">The destination ID.</param>
     /// <param name="toPort">The destination input.</param>
-    /// <returns>False for absent/disposed nodes, invalid ports, duplicates, self edges or cycles.</returns>
+    /// <returns>False for absent/disposed nodes, invalid ports, duplicates, self edges, cycles or incompatible
+    /// reroute terminals. This query never changes port roles or defaults.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The stage is undefined.</exception>
     /// <exception cref="ObjectDisposedException">This graph is disposed.</exception>
     public bool CanConnectNodes(Type type, int fromNode, int fromPort, int toNode, int toPort)
     {
         var graph = GetGraph(type); var edge = new VisualShaderConnection(fromNode, fromPort, toNode, toPort);
-        if (!PortsExist(graph, edge) || !PortsCompatible(graph, edge) || fromNode == toNode || graph.Connections.Contains(edge)) return false;
+        if (!PortsExist(graph, edge) || fromNode == toNode || graph.Connections.Contains(edge) || !CanConnectReroutes(graph, edge, out _)) return false;
         var pending = new Stack<int>(); var visited = new HashSet<int>(); pending.Push(toNode);
         while (pending.TryPop(out var current))
         {
@@ -203,20 +204,24 @@ public sealed partial class VisualShader : Shader
         }
         return true;
     }
-    /// <summary>Adds a validated numeric connection.</summary>
+    /// <summary>Adds a validated typed connection, inferring downstream reroute roles.</summary>
     /// <param name="type">The source stage.</param>
     /// <param name="fromNode">The source ID.</param>
     /// <param name="fromPort">The source output.</param>
     /// <param name="toNode">The destination ID.</param>
     /// <param name="toPort">The destination input.</param>
-    /// <remarks>Several edges may target an input; the last authored edge supplies its value at import.</remarks>
+    /// <remarks>Several edges may target an input; the last authored edge supplies its value at import.
+    /// Reroutes adopt the source role across their downstream branches after terminal compatibility checks.
+    /// An unconnected source reroute may adopt its destination role. Changed roles reset defaults to typed
+    /// zero/identity or sampler absence. The complete edit commits before change notifications.</remarks>
     /// <exception cref="ArgumentException">The connection is invalid, duplicated or cyclic.</exception>
+    /// <exception cref="AggregateException">Reroute observers failed after the complete edit committed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The stage is undefined.</exception>
     /// <exception cref="ObjectDisposedException">This graph is disposed.</exception>
     public void ConnectNodes(Type type, int fromNode, int fromPort, int toNode, int toPort)
     {
         if (!CanConnectNodes(type, fromNode, fromPort, toNode, toPort)) throw new ArgumentException("Invalid visual shader connection.");
-        ConnectNodesForced(type, fromNode, fromPort, toNode, toPort);
+        ConnectWithReroutes(GetGraph(type), new(fromNode, fromPort, toNode, toPort));
     }
     /// <summary>Records an edge between existing ports without rejecting graph cycles.</summary>
     /// <param name="type">The source stage.</param>
@@ -271,8 +276,7 @@ public sealed partial class VisualShader : Shader
         graph.Nodes.TryGetValue(c.FromNode, out var from) && graph.Nodes.TryGetValue(c.ToNode, out var to) && !from.Node.IsDisposed && !to.Node.IsDisposed &&
         (uint)c.FromPort < (uint)OutputTypes(from.Node, graph.Stage).Length && (uint)c.ToPort < (uint)to.Node.Inputs.Length;
     private bool PortsCompatible(Graph graph, VisualShaderConnection c) =>
-        (OutputTypes(graph.Nodes[c.FromNode].Node, graph.Stage)[c.FromPort] == VisualShaderNode.PortType.Matrix) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Matrix) &&
-        (OutputTypes(graph.Nodes[c.FromNode].Node, graph.Stage)[c.FromPort] == VisualShaderNode.PortType.Sampler) == (graph.Nodes[c.ToNode].Node.Inputs[c.ToPort] == VisualShaderNode.PortType.Sampler);
+        CompatiblePorts(OutputTypes(graph.Nodes[c.FromNode].Node, graph.Stage)[c.FromPort], graph.Nodes[c.ToNode].Node.Inputs[c.ToPort]);
     private void Watch(VisualShaderNode node)
     { if (_watched.TryGetValue(node, out var count)) _watched[node] = count + 1; else { _watched.Add(node, 1); node.Changed += _childChanged; } }
     private void Unwatch(VisualShaderNode node)

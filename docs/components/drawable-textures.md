@@ -1,6 +1,6 @@
 # Writable textures
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 [DrawableTexture](../classes/DrawableTexture.md) supplies sampled color attachments written by ordered GPU graphics passes. [BlitMaterial](../classes/BlitMaterial.md) supplies five built-in blend operations. [Shader](../classes/Shader.md) selects `Mode.TextureBlit` for custom HLSL/GLSL fragments; the existing [ShaderMaterial](../classes/ShaderMaterial.md) supplies typed values, defaults and registered globals.
 
@@ -27,3 +27,5 @@ TextureGetRDTexture exports a borrowed native allocation wrapper. Freeing the wr
 ## Verification
 
 DrawableTextureTests passes managed authoring, typed archives with fresh-process load, graph/local copies, all four native formats including unclamped HDR and encoded sRGB readback, default one/two/three/four-target passes, authored GLSL/HLSL MRT, mip writes/generation/readback, five blends, clipping/flips, aliases, native export ownership, source callbacks, copied/reset storage, failed callback cleanup, lazy first canvas use and a later renderer session. Linux Wayland software Vulkan verifies actual offscreen and canvas/RID pixels, with 64 active and 64 retained frames at zero managed bytes. Compatibility rejection and related mesh, matrix and owned-canvas regressions pass. Native allocations, hardware throughput, foreign platforms and visual owner acceptance remain unverified.
+
+Missing imported graph material images use the same renderer-owned fallback cache as canvas draws, preserving ordinary/array shape and white, opaque black, transparent, flat-normal or anisotropy policy. Unconnected sampler ports retain the graph sampler-node absence policy. These images remain internal render inputs; public material queries preserve absence.

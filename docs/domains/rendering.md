@@ -509,3 +509,5 @@ The explicit shader source-authoring bridge checks process-launch support before
 [Viewport anisotropy overrides](../components/canvas-rendering.md#viewport-anisotropy-overrides) connect shared scene/server sampling choices to independent per-viewport GPU sampler limits, including caller-owned viewports and shared CanvasTexture images. Renderer-session overrides preserve authored state and retire with their owner. Compatibility filtering remains an explicit capability boundary.
 
 [Native device screens](../components/local-compute.md#native-screen-drawing) connect renderer-owned low-level graphics lists to the same main/child presentation path as canvases, using actual native formats and pixel sizes. Private screen attachments, resize and native-window retirement share the existing GPU resource ownership; viewport images retain canvas output.
+
+Imported [typed reroute chains](../components/visual-shaders.md#typed-reroute-chains) preserve numeric values and original sampled-image symbols across all supported graph stages; the renderer consumes their ordinary immutable shader programs.

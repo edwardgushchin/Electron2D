@@ -4,7 +4,9 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "orientation-cpu") GraphChecks.OrientationCPU();
+    if (args.Length > 0 && args[0] == "reroute-cpu") GraphChecks.RerouteCPU();
+    else if (args.Length > 0 && args[0] == "reroute-author") GraphChecks.AuthorReroutes(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "orientation-cpu") GraphChecks.OrientationCPU();
     else if (args.Length > 0 && args[0] == "orientation-author") GraphChecks.AuthorOrientation(IOPath.GetFullPath(args[1]));
     else if (args.Length > 0 && args[0] == "random-cpu") GraphChecks.RandomRangeCPU();
     else if (args.Length > 0 && args[0] == "random-author") GraphChecks.AuthorRandomRange(System.IO.Path.GetFullPath(args[1]));
@@ -47,6 +49,7 @@ internal static partial class GraphChecks
     { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     internal static void CPU()
     {
+        RerouteCPU();
         UnaryCPU();
         DataflowCPU();
         RangesCPU();

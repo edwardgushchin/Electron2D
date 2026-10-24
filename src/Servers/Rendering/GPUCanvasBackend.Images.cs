@@ -6,7 +6,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 {
     private readonly Resource?[,] _imageFallbacks = new Resource?[2, 5];
 
-    private Resource ImageFallback(bool array, int kind)
+    internal Resource ImageFallback(bool array, int kind)
     {
         var shape = array ? 1 : 0;
         if (_imageFallbacks[shape, kind] is { } retained) return retained;
