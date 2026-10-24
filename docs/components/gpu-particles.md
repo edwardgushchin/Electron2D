@@ -1,6 +1,6 @@
 # GPU particles
 
-Last updated: 2026-10-22
+Last updated: 2026-10-24
 
 ## Executable scope
 

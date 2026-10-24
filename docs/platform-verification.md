@@ -33,9 +33,20 @@ fails the bounded atomic queue assertion on both ARM64 (`120861874605`) and x64
 `68dba134f0f2581f94155b4bfbe56ccf7618f11881a89db0cbcad2ff35527939`.
 The revised compute owner supplies Metal's actual bound byte sizes through a
 private readonly table, preserving the original shader ABI and physical guards.
-The early gate also runs retained server, subemitter and both prepared allocation
-roles. Revised native results remain required; source translation and local
-Vulkan success do not establish the particle path's Metal acceptance.
+Run [40097639786](https://github.com/edwardgushchin/Electron2D/actions/runs/40097639786)
+at `025f1514f` subsequently passes all six early particle cohorts on both ARM64
+(`120883131910`, artifact `12561279125`) and x64 (`120883131812`, artifact
+`12561965949`). Independent review of all twelve raw logs confirms GLSL/HLSL
+physical queue bounds, eight storage/four uniform bindings, same-submission
+rebinding, retained server behavior, routed subemission and both prepared
+allocation roles. Shader dispatches retain 32 warmed steps per language at zero
+managed bytes; both rendering allocation roles retain 32 frames at zero bytes.
+Both shader logs have SHA-256
+`780e3befe8605e67b2772258412f383f1da619d1869714cccdb5333295259b1a`.
+This is native Metal execution on the hosted Apple Paravirtual device, without
+a physical GPU throughput claim. The complete local Linux x64 suite also passes
+in 587.09 seconds with nine additional focused profiles. Full revised native
+jobs and the complete main CI remain independent release gates.
 
 At `0536f7d54`, macOS allocation run `40083825257` records the same CPU-hosted
 GPU CCD scene failure on ARM64 (`120842594363`) and x64 (`120842594172`),

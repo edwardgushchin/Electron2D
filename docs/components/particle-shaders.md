@@ -43,8 +43,9 @@ each dispatch; portable shader bytes, this ABI and caller uniform sets retain
 their existing format. This keeps zero/oversized queue headers and physically
 headerless storage bounded without trusting authored capacities. The direct
 RenderingDevice and retained renderer paths use the same
-[compute owner](../classes/ComputePipeline.md). Revised native Metal acceptance
-is tracked in [platform verification](../platform-verification.md).
+[compute owner](../classes/ComputePipeline.md). Six focused native Metal cohorts
+pass on both ARM64 and x64; complete-suite and platform acceptance remain tracked
+in [platform verification](../platform-verification.md#runtime-suite-receipts).
 
 Each `Electron2D_Particle` is a 96-byte record, with six aligned 16-byte lanes:
 

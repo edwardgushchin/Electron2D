@@ -370,5 +370,8 @@ transfers and pipeline/device lifetime.
 The regression covers eight writable buffers and four caller uniforms, distinct
 bindings across two dispatches in one submission, both particle source languages,
 queue overflow, a physically headerless buffer and prepared dispatch allocation.
-Local execution and translated Metal source remain separate from revised native
-Metal and other platform acceptance.
+Six native Metal particle cohorts per RID pass on ARM64 and x64 at `025f1514f`,
+including this direct-dispatch maximum-resource and rebinding regression; see
+[platform receipts](../platform-verification.md#runtime-suite-receipts). Full native
+suites, indirect/specialized/binary variants and physical performance retain
+separate acceptance gates.

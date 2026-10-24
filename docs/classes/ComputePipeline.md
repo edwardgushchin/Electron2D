@@ -25,5 +25,7 @@ subemission, ordering and vertex pipelines use the same owner. Physics and
 instance-pack kernels retain the internal factory that requires no implicit
 size-table binding.
 
-Source translation and local tests do not establish revised native Metal
-acceptance; the platform receipts retain that separate gate.
+The six focused particle cohorts pass on native Metal for ARM64 and x64 at
+`025f1514f`; see [platform receipts](../platform-verification.md#runtime-suite-receipts).
+Complete platform suites, other dispatch variants and physical performance
+retain their separate acceptance gates.
