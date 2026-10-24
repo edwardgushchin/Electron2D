@@ -12,7 +12,7 @@ public sealed partial class RenderingServer
     private ShaderUniform DefaultUniform<T>(RID shader, string name, bool array) where T : unmanaged
     {
         var uniform = DefaultUniform(shader, name);
-        if (!uniform.Accepts<T>() || uniform.MatrixWidth > 2 || (uniform.ArrayLength != 0) != array)
+        if (!uniform.Accepts<T>() || uniform.MatrixColumns != 0 || (uniform.ArrayLength != 0) != array)
             throw new ArgumentException("Shader default has a different logical type or scalar/array shape.", nameof(name));
         return uniform;
     }
@@ -32,7 +32,7 @@ public sealed partial class RenderingServer
     private ShaderUniform DefaultMatrixUniform(RID shader, string name)
     {
         var uniform = DefaultUniform(shader, name);
-        if (uniform.MatrixWidth is not (3 or 4)) throw new ArgumentException("Shader default requires a numeric mat3/mat4 declaration.", nameof(name));
+        if (uniform.MatrixColumns == 0) throw new ArgumentException("Shader default requires a numeric float matrix other than mat2 declaration.", nameof(name));
         return uniform;
     }
     internal float[] ShaderGetMatrixParameterDefaultCore(RID shader, string name)

@@ -7,6 +7,9 @@ internal static partial class DefaultChecks
 {
     internal static void Run(string[] args)
     {
+        if (args.Length != 0 && args[0] == "rectangular-cpu") { RectangularCPU(args[1]); return; }
+        if (args.Length != 0 && args[0] == "rectangular-read") { using var rectMaterial = ResourceLoader.Load<ShaderMaterial>(args[1], ResourceLoader.CacheMode.IgnoreDeep); using var rectShader = rectMaterial.Shader!; RectangularValues(rectMaterial, true); return; }
+        if (args.Length != 0 && args[0] == "rectangular-gpu") { RectangularRender(args); return; }
         if (args.Length != 0 && args[0] == "gpu") { Render(args); return; }
         if (args.Length != 0 && args[0] == "read") { ReadArchive(args[1]); return; }
         if (args.Length != 0 && args[0] == "read-instance") { using var scene = ResourceLoader.Load<PackedScene>(args[1], ResourceLoader.CacheMode.IgnoreDeep); using var item = (Entity)scene.Instantiate(); InstanceArchive(item); return; }

@@ -35,19 +35,19 @@ public sealed partial class RenderingServer
     /// <exception cref="ObjectDisposedException">The shader is disposed during the query.</exception>
     public static void ShaderGetParameterDefault<T>(RID shader, string name, Span<T> destination) where T : unmanaged => RequireService().ShaderGetParameterDefaultCore(shader, name, destination);
 
-    /// <summary>Returns copied column-major defaults for a numeric mat3/mat4 declaration or its fixed array.</summary>
+    /// <summary>Returns copied column-major defaults for a numeric float matrix other than mat2 declaration or its fixed array.</summary>
     /// <param name="shader">A live owned or borrowed shader identity.</param>
     /// <param name="name">The exact case-sensitive matrix parameter name.</param>
-    /// <returns>Nine/sixteen components per matrix, concatenated for arrays.</returns>
+    /// <returns>Columns times rows components per matrix, concatenated for arrays.</returns>
     /// <exception cref="ArgumentException">The identity, name or matrix role is invalid.</exception>
     /// <exception cref="InvalidOperationException">The rendering service is unavailable or the caller is not its owner.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed during the query.</exception>
     public static float[] ShaderGetMatrixParameterDefault(RID shader, string name) => RequireService().ShaderGetMatrixParameterDefaultCore(shader, name);
 
-    /// <summary>Copies column-major mat3/mat4 defaults into caller storage.</summary>
+    /// <summary>Copies column-major numeric matrix defaults other than mat2 into caller storage.</summary>
     /// <param name="shader">A live owned or borrowed shader identity.</param>
     /// <param name="name">The exact case-sensitive matrix parameter name.</param>
-    /// <param name="destination">Exactly nine/sixteen components per matrix, including every array element.</param>
+    /// <param name="destination">Exactly columns times rows components per matrix, including every array element.</param>
     /// <remarks>Validation precedes writes; prepared copies allocate no managed memory.</remarks>
     /// <exception cref="ArgumentException">The identity, name, matrix role or destination length is invalid.</exception>
     /// <exception cref="InvalidOperationException">The rendering service is unavailable or the caller is not its owner.</exception>

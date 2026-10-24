@@ -140,7 +140,7 @@ internal static unsafe partial class ShaderSourceTypes
                     var uniform = declaration.Uniform;
                     var expression = declaration.Expression + (uniform.ArrayLength == 0 ? "" : $"[{element}]");
                     // DXC represents each HLSL row as a SPIR-V matrix column.
-                    if (uniform.DefaultMatrixWidth != 0) expression += $"[{component / uniform.DefaultMatrixWidth}][{component % uniform.DefaultMatrixWidth}]";
+                    if (uniform.DefaultMatrixColumns != 0) expression += $"[{component / uniform.DefaultMatrixRows}][{component % uniform.DefaultMatrixRows}]";
                     else if (uniform.DefaultWordWidth > 1) expression += $"[{component}]";
                     expression = uniform.BooleanWidth != 0 ? "uint(" + expression + ")" : uniform.Unsigned ? expression : "asuint(" + expression + ")";
                     kernel.Append(output).Append('[').Append(count++).Append("] = ").Append(expression).Append(";\n");

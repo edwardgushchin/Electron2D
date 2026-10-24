@@ -90,7 +90,8 @@ internal static unsafe partial class SpirvReflection
                 var field = GetType(compiler, GetMemberType(type, member));
                 var width = GetVectorSize(field);
                 var dimensions = GetArrayDimensions(field);
-                var matrix = GetBaseType(field) == 13 && GetColumns(field) == width && width is >= 2 and <= 4;
+                var columns = GetColumns(field);
+                var matrix = GetBaseType(field) == 13 && columns is >= 2 and <= 4 && width is >= 2 and <= 4;
                 if (name == "TIME" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 1 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a stage uniform buffer.");
                 if (name == "SCREEN_PIXEL_SIZE" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
@@ -99,13 +100,13 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
                 if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
                 if (GetBitWidth(field) != 32 || GetColumns(field) != 1 && !matrix || dimensions > 1)
-                    throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, square float matrix of width two through four or a fixed one-dimensional array; nonsquare matrices and nested structs are not supported.");
+                    throw new NotSupportedException($"Uniform '{name}' requires a supported 32-bit scalar/vector, float matrix with two through four columns/rows or a fixed one-dimensional array; nested structs are not supported.");
                 booleans.Remove(name, out var logical);
                 if (sourceTypes is not null && !sourceTypes.TryGetValue(((int)binding, name), out logical))
                     throw new NotSupportedException($"Source reflection did not retain uniform '{name}'.");
                 if (logical.Width != 0 && (GetBaseType(field) != 8 || GetColumns(field) != 1 || width != logical.Width))
                     throw new ArgumentException($"Boolean metadata for '{name}' does not match its unsigned 32-bit storage.", nameof(code));
-                var valueType = logical.Width != 0 ? (logical.Width == 1 ? typeof(bool) : typeof(int)) : matrix ? (width == 2 ? typeof(Transform) : typeof(float[])) : (GetBaseType(field), width) switch
+                var valueType = logical.Width != 0 ? (logical.Width == 1 ? typeof(bool) : typeof(int)) : matrix ? (width == 2 && columns == 2 ? typeof(Transform) : typeof(float[])) : (GetBaseType(field), width) switch
                 {
                     (13, 1) => typeof(float),
                     (13, 2) => typeof(Vector2),
@@ -135,7 +136,7 @@ internal static unsafe partial class SpirvReflection
                         throw new NotSupportedException($"Matrix '{name}' must use std140 matrix stride within the buffer limit.");
                     matrixStride = (int)reflectedStride;
                 }
-                var elementSize = matrix ? ((int)width - 1) * matrixStride + (int)width * 4 : (int)width * 4;
+                var elementSize = matrix ? ((int)(rowMajor ? width : columns) - 1) * matrixStride + (int)(rowMajor ? columns : width) * 4 : (int)width * 4;
                 var length = 0;
                 uint stride = (uint)elementSize;
                 if (dimensions == 1)
@@ -161,7 +162,7 @@ internal static unsafe partial class SpirvReflection
                     if (occupied[i]) throw new ArgumentException($"Uniform '{name}' overlaps another member.", nameof(code));
                     occupied[i] = true;
                 }
-                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor, logical.Width, matrix && width > 2 ? (int)width : 0));
+                uniforms.Add(name, new(name, valueType, (int)binding, (int)offset, elementSize, length, (int)stride, GetBaseType(field) == 8, matrixStride, rowMajor, logical.Width, matrix && valueType != typeof(Transform) ? (int)columns : 0, matrix && valueType != typeof(Transform) ? (int)width : 0));
             }
         }
         Check(GetResources(resources, 7, out var combinedPointer, out var combinedCount));

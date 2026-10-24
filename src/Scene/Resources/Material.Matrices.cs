@@ -2,9 +2,9 @@ namespace Electron2D;
 
 public sealed partial class ShaderMaterial
 {
-    /// <summary>Replaces a numeric mat3/mat4 uniform or its entire fixed array.</summary>
+    /// <summary>Replaces a numeric float matrix other than mat2 uniform or its entire fixed array.</summary>
     /// <param name="name">The exact, case-sensitive material member name.</param>
-    /// <param name="values">Copied column-major elements: nine for mat3, sixteen for mat4, concatenated for arrays.</param>
+    /// <param name="values">Copied column-major elements: columns times rows per matrix, concatenated for arrays. Square mat2 uses Transform access.</param>
     /// <remarks>Every component must be finite. Shape and all values are validated before mutation; successful writes emit Changed.
     /// Values start at the authored shader default, or identity when absent. Explicit values migrate across compatible shader layouts.
     /// Prepared updates allocate no managed memory.</remarks>
@@ -16,7 +16,7 @@ public sealed partial class ShaderMaterial
         lock (_gate)
         {
             var state = RequireState(); var uniform = FindMatrix(state, name);
-            var size = uniform.MatrixWidth * uniform.MatrixWidth;
+            var size = uniform.MatrixComponents;
             if (values.Length != size * uniform.Count) throw new ArgumentException("Component count must match the entire reflected matrix parameter.", nameof(values));
             foreach (var value in values) if (!float.IsFinite(value)) throw new ArgumentException("Matrix components must be finite.", nameof(values));
             state.UniformOverrides.Add(name);
@@ -26,10 +26,10 @@ public sealed partial class ShaderMaterial
         EmitChanged();
     }
 
-    /// <summary>Returns an independent column-major copy of a numeric mat3/mat4 uniform or fixed array.</summary>
+    /// <summary>Returns an independent column-major copy of a numeric float matrix other than mat2 uniform or fixed array.</summary>
     /// <param name="name">The exact, case-sensitive material member name.</param>
-    /// <returns>Nine/sixteen components per matrix, concatenated for arrays; initially the shader default or implicit identity.</returns>
-    /// <exception cref="ArgumentException">The name does not identify a numeric mat3/mat4 material parameter.</exception>
+    /// <returns>Columns times rows components per matrix, concatenated for arrays; initially the shader default or implicit identity.</returns>
+    /// <exception cref="ArgumentException">The name does not identify a numeric float matrix other than mat2 material parameter.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
     public float[] GetShaderMatrixParameter(string name)
@@ -37,15 +37,15 @@ public sealed partial class ShaderMaterial
         lock (_gate)
         {
             var uniform = FindMatrix(RequireState(), name);
-            var values = new float[uniform.Count * uniform.MatrixWidth * uniform.MatrixWidth];
+            var values = new float[uniform.Count * uniform.MatrixComponents];
             CopyShaderMatrixParameter(name, values);
             return values;
         }
     }
 
-    /// <summary>Copies a numeric mat3/mat4 uniform or fixed array into an exact-size destination without allocation after preparation.</summary>
+    /// <summary>Copies a numeric float matrix other than mat2 uniform or fixed array into an exact-size destination without allocation after preparation.</summary>
     /// <param name="name">The exact, case-sensitive material member name.</param>
-    /// <param name="destination">Receives column-major values: nine/sixteen per matrix, concatenated for arrays.</param>
+    /// <param name="destination">Receives column-major values: columns times rows per matrix, concatenated for arrays.</param>
     /// <exception cref="ArgumentException">The name, matrix role or destination length is invalid; the destination is unchanged.</exception>
     /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
@@ -54,7 +54,7 @@ public sealed partial class ShaderMaterial
         lock (_gate)
         {
             var state = RequireState(); var uniform = FindMatrix(state, name);
-            var size = uniform.MatrixWidth * uniform.MatrixWidth;
+            var size = uniform.MatrixComponents;
             if (destination.Length != size * uniform.Count) throw new ArgumentException("Destination length must match the entire reflected matrix parameter.", nameof(destination));
             for (var i = 0; i < uniform.Count; i++)
                 uniform.ReadMatrix(state.Buffers[uniform.Buffer].AsSpan(uniform.Offset + i * uniform.Stride, uniform.ElementSize), destination.Slice(i * size, size));
@@ -64,8 +64,8 @@ public sealed partial class ShaderMaterial
     private static ShaderUniform FindMatrix(MaterialState state, string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        if (!state.Program.Uniforms.TryGetValue(name, out var uniform) || uniform.MatrixWidth < 3)
-            throw new ArgumentException($"Uniform '{name}' is not a numeric mat3/mat4 parameter.", nameof(name));
+        if (!state.Program.Uniforms.TryGetValue(name, out var uniform) || uniform.MatrixColumns == 0)
+            throw new ArgumentException($"Uniform '{name}' is not a numeric float matrix other than mat2 parameter.", nameof(name));
         return uniform;
     }
 }

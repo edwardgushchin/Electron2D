@@ -6,11 +6,13 @@ namespace Electron2D;
 internal sealed partial record ShaderUniform
 {
     internal uint[]? DefaultWords { get; init; }
-    internal int DefaultMatrixWidth => Type == typeof(Transform) ? 2 : MatrixWidth;
-    internal int DefaultWordWidth => DefaultMatrixWidth != 0 ? DefaultMatrixWidth * DefaultMatrixWidth : ElementSize / 4;
-    internal string DefaultTypeCode => (DefaultMatrixWidth != 0 ? "m" : BooleanWidth != 0 ? "b" :
-        Type == typeof(float) || Type == typeof(Vector2) || Type == typeof(Vector3) || Type == typeof(Vector4) ? "f" : Unsigned ? "u" : "i") +
-        (DefaultMatrixWidth != 0 ? DefaultMatrixWidth : BooleanWidth != 0 ? BooleanWidth : DefaultWordWidth).ToString(CultureInfo.InvariantCulture);
+    internal int DefaultMatrixColumns => Type == typeof(Transform) ? 2 : MatrixColumns;
+    internal int DefaultMatrixRows => Type == typeof(Transform) ? 2 : MatrixRows;
+    internal int DefaultWordWidth => DefaultMatrixColumns != 0 ? DefaultMatrixColumns * DefaultMatrixRows : ElementSize / 4;
+    internal string DefaultTypeCode => DefaultMatrixColumns != 0
+        ? "m" + DefaultMatrixColumns.ToString(CultureInfo.InvariantCulture) + (DefaultMatrixColumns == DefaultMatrixRows ? "" : "x" + DefaultMatrixRows.ToString(CultureInfo.InvariantCulture))
+        : (BooleanWidth != 0 ? "b" : Type == typeof(float) || Type == typeof(Vector2) || Type == typeof(Vector3) || Type == typeof(Vector4) ? "f" : Unsigned ? "u" : "i") +
+            (BooleanWidth != 0 ? BooleanWidth : DefaultWordWidth).ToString(CultureInfo.InvariantCulture);
     internal bool HasSameDefault(ReadOnlySpan<uint> other)
     {
         if (DefaultWords is not { } first || first.Length != other.Length) return false;
@@ -31,7 +33,7 @@ internal sealed partial record ShaderUniform
         if (DefaultWords is { } words)
         {
             var element = words.AsSpan(index * DefaultWordWidth, DefaultWordWidth);
-            if (DefaultMatrixWidth > 2) WriteMatrix(target, MemoryMarshal.Cast<uint, float>(element));
+            if (MatrixColumns != 0) WriteMatrix(target, MemoryMarshal.Cast<uint, float>(element));
             else if (Type == typeof(Transform))
             {
                 var values = MemoryMarshal.Cast<uint, float>(element);
@@ -40,10 +42,10 @@ internal sealed partial record ShaderUniform
             else MemoryMarshal.AsBytes(element).CopyTo(target);
         }
         else if (Type == typeof(Transform)) Write(target, Transform.Identity);
-        else if (MatrixWidth > 2)
+        else if (MatrixColumns != 0)
         {
             Span<float> identity = stackalloc float[16]; identity.Clear();
-            for (var axis = 0; axis < MatrixWidth; axis++) identity[axis * (MatrixWidth + 1)] = 1;
+            for (var axis = 0; axis < Math.Min(MatrixColumns, MatrixRows); axis++) identity[axis * (MatrixRows + 1)] = 1;
             WriteMatrix(target, identity);
         }
     }

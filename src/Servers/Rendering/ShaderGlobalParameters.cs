@@ -169,8 +169,8 @@ internal sealed partial class ShaderGlobalParameters
             Kind.Vec3 => u.Type == typeof(Vector3),
             Kind.Vec4 or Kind.Color or Kind.Rect2 => u.Type == typeof(Vector4),
             Kind.Mat2 => u.Type == typeof(Transform),
-            Kind.Mat3 or Kind.Transform2D => u.MatrixWidth == 3,
-            Kind.Mat4 => u.MatrixWidth == 4,
+            Kind.Mat3 or Kind.Transform2D => u.MatrixColumns == 3 && u.MatrixRows == 3,
+            Kind.Mat4 => u.MatrixColumns == 4 && u.MatrixRows == 4,
             _ => false
         };
     }

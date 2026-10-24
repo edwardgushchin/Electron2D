@@ -104,13 +104,14 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }
 
-internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth, int MatrixWidth = 0)
+internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer, int Offset, int ElementSize, int ArrayLength, int Stride, bool Unsigned, int MatrixStride, bool RowMajor, int BooleanWidth, int MatrixColumns = 0, int MatrixRows = 0)
 {
+    internal int MatrixComponents => MatrixColumns * MatrixRows;
     internal int Count => Math.Max(1, ArrayLength);
     internal bool Accepts<T>() where T : unmanaged => typeof(T) == Type || Type == typeof(Vector3) && typeof(T) == typeof(Color) || Type == typeof(Vector4) && (typeof(T) == typeof(Color) || typeof(T) == typeof(Rect2));
-    internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth && MatrixWidth == other.MatrixWidth;
+    internal bool SameType(ShaderUniform other) => Type == other.Type && Unsigned == other.Unsigned && ArrayLength == other.ArrayLength && BooleanWidth == other.BooleanWidth && MatrixColumns == other.MatrixColumns && MatrixRows == other.MatrixRows;
 
-    internal PropertyDescriptor Describe(string propertyName) => MatrixWidth > 2 ? new PropertyDescriptor<ShaderMaterial, float[]>(propertyName,
+    internal PropertyDescriptor Describe(string propertyName) => MatrixColumns != 0 ? new PropertyDescriptor<ShaderMaterial, float[]>(propertyName,
         m => m.GetShaderMatrixParameter(Name), (m, v) => { ArgumentNullException.ThrowIfNull(v); m.SetShaderMatrixParameter(Name, v); }, _ => MatrixDefaults(), stored: true)
     { Hint = Hint, HintString = HintString, StoreCondition = m => m.HasStoredUniform(Name) } : SourceColor ? Describe<Color>(propertyName) : Type == typeof(float) ? Describe<float>(propertyName) :
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
@@ -140,29 +141,29 @@ internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer,
 
     internal void WriteMatrix(Span<byte> target, ReadOnlySpan<float> values)
     {
-        var width = MatrixWidth;
+        var rows = MatrixRows;
         var stored = MemoryMarshal.Cast<byte, float>(target);
-        for (var column = 0; column < width; column++)
-            for (var row = 0; row < width; row++)
-                stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)] = values[column * width + row];
+        for (var column = 0; column < MatrixColumns; column++)
+            for (var row = 0; row < rows; row++)
+                stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)] = values[column * rows + row];
     }
 
     internal void ReadMatrix(ReadOnlySpan<byte> source, Span<float> values)
     {
         var stored = MemoryMarshal.Cast<byte, float>(source);
-        for (var column = 0; column < MatrixWidth; column++)
-            for (var row = 0; row < MatrixWidth; row++)
-                values[column * MatrixWidth + row] = stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)];
+        for (var column = 0; column < MatrixColumns; column++)
+            for (var row = 0; row < MatrixRows; row++)
+                values[column * MatrixRows + row] = stored[(RowMajor ? row : column) * MatrixStride / 4 + (RowMajor ? column : row)];
     }
 
     private float[] MatrixDefaults()
     {
-        var values = new float[Count * MatrixWidth * MatrixWidth];
+        var values = new float[Count * MatrixComponents];
         Span<byte> storage = stackalloc byte[ElementSize];
         for (var i = 0; i < Count; i++)
         {
             storage.Clear(); WriteDefaultElement(storage, i);
-            ReadMatrix(storage, values.AsSpan(i * MatrixWidth * MatrixWidth, MatrixWidth * MatrixWidth));
+            ReadMatrix(storage, values.AsSpan(i * MatrixComponents, MatrixComponents));
         }
         return values;
     }
@@ -170,7 +171,7 @@ internal sealed partial record ShaderUniform(string Name, Type Type, int Buffer,
     internal void CopyValue(ReadOnlySpan<byte> source, ShaderUniform destination, Span<byte> target)
     {
         if (Type == typeof(Transform)) destination.Write(target, Read<Transform>(source));
-        else if (MatrixWidth > 2)
+        else if (MatrixColumns != 0)
         {
             Span<float> values = stackalloc float[16];
             ReadMatrix(source, values);

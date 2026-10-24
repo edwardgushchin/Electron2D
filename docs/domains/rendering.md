@@ -22,7 +22,7 @@
 
 [Particle shaders](../components/particle-shaders.md) now execute a validated HLSL/GLSL compute profile through public RenderingDevice, with typed material/archive state and portable bounded-subemission includes. [Retained GPU particles](../components/gpu-particles.md) now execute server-owned simulation, mesh canvas output, trails and subemitters. [ParticleProcessMaterial](../classes/ParticleProcessMaterial.md) now authors the native built-in process. [GPUParticles](../classes/GPUParticles.md) now executes scene emission and CPU conversion.
 
-[Numeric material matrices](../components/shader-materials.md#numeric-material-matrices) support copied mat3/mat4 values and fixed arrays through resources and static server identities, with typed storage, identity defaults and layout-aware paired-stage reload.
+[Numeric material matrices](../components/shader-materials.md#numeric-material-matrices) support copied square and rectangular numeric values (two through four columns/rows, with square mat2 retaining Transform) and fixed arrays through resources and static server identities, with typed storage, identity defaults and layout-aware paired-stage reload.
 
 [Original mesh vertex IDs](../components/shader-materials.md#authored-vertex-stages) now reach authored GLSL/HLSL vertex programs across indexed/expanded geometry, LODs, deformation and native instances. The verified profile is Linux Wayland software Vulkan; procedural position-free storage and generated-position transforms now execute.
 

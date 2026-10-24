@@ -278,10 +278,11 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
         ('hlsl', 'cbuffer Values : register(b0, space3) { float2x3 invalid; }; float4 main() : SV_Target0 { return float4(invalid[0].xy, 0, 1); }'),
         ('glsl', '#version 450\nlayout(location = 0) out vec4 outputColor; layout(set = 3, binding = 0, std140) uniform Values { mat2x3 invalid; }; void main() { outputColor = vec4(invalid[0], 1); }'),
     ]:
-        invalid = directory / f'unsupported-matrix.{language}'
-        invalid.write_text(source)
-        assert 'square float matrix' in invoke(invalid, output, success=False)
-        assert output.read_bytes() == previous
+        rectangular = directory / f'rectangular-matrix.{language}'
+        rectangular.write_text(source)
+        invoke(rectangular, output)
+        assert output.stat().st_size > 20
+    previous = output.read_bytes()
     # Source type reflection must preserve bool without relabeling neighboring uint.
     def boolean_records(code):
         words = struct.unpack('<' + 'I' * (len(code) // 4), code)

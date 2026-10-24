@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-22
+Last updated: 2026-10-24
 
 [Visual shader graphs](visual-shaders.md) author typed numeric canvas programs and compile them through the same SPIR-V import/material pipeline. Resource archives carry both editable graphs and the last imported program; editing requires reimport.
 
@@ -44,7 +44,7 @@ verification. The shader generation/delivery checks pass independently.
 
 ## Scope and implementation state
 
-The rendering integration contains executable canvas vertex/fragment shaders, material uniform buffers and sampled image textures. This is partial shader support under [ADR 0028](../decisions/rendering.md#adr-0028): nonsquare matrices and nested structs remain unfinished. The native verification covers Linux Wayland/Vulkan; other GPU backends and platforms are unverified.
+The rendering integration contains executable canvas vertex/fragment shaders, material uniform buffers and sampled image textures. This is partial shader support under [ADR 0028](../decisions/rendering.md#adr-0028): nested structs and further numeric mappings remain unfinished. The native verification covers Linux Wayland/Vulkan; other GPU backends and platforms are unverified.
 
 Public resources are [Shader](../classes/Shader.md), [Shader.Mode](../classes/Shader.Mode.md), [Material](../classes/Material.md), [ShaderMaterial](../classes/ShaderMaterial.md), [CanvasItemMaterial](../classes/CanvasItemMaterial.md), [Texture](../classes/Texture.md), [ImageTexture](../classes/ImageTexture.md) and [AtlasTexture](../classes/AtlasTexture.md). CanvasItemMaterial's fixed blending is documented in [canvas rendering](canvas-rendering.md#fixed-canvas-blending). Their managed state belongs to the Resources domain. The rendering backend owns GPU devices and pipelines; resources contain no native handles.
 
@@ -59,7 +59,7 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 3. `Shader.CreateFromSPIRV` and `SetSPIRV` copy the bytes and perform the same structural, capability, resource-layout and interface checks for every input origin. These checks do not duplicate the import tool's instruction-level validator. Runtime source compilation is absent.
 4. An immutable `ShaderProgram` publishes code, buffer sizes, member layouts and typed descriptors together. SPIRV-Cross reflects active resources and members; SDL_shadercross reflects stage interfaces and translates programs for the active GPU backend. The SPIRV-Cross C library is already shipped in `SDL3-CS.Linux.Shadercross`; member reflection introduces no additional package.
 5. `ShaderMaterial` owns mutable uniform buffers. Before a draw, the renderer obtains the current program/state and pushes each buffer through the matching SDL3-CS vertex or fragment uniform upload. Resource mutation and upload serialize through the material gate. No callback runs under that gate.
-6. Reloading a shader rebuilds material buffers on their next access. Matching names, shader element types (including integer signedness and logical boolean width) and array lengths retain values even if bindings and offsets change. New or incompatible members start at their typed defaults: identity for square matrices and zero for other stored components. GPU pipelines are cached by program payload and blend mode and discarded when unused.
+6. Reloading a shader rebuilds material buffers on their next access. Matching names, shader element types (including integer signedness and logical boolean width) and array lengths retain values even if bindings and offsets change. New or incompatible members start at their typed defaults: diagonal identity for matrices through the smaller dimension and zero for other stored components. GPU pipelines are cached by program payload and blend mode and discarded when unused.
 
 ## Current shader interface
 
@@ -67,9 +67,9 @@ Imported fixtures use SPIR-V 1.0 and baseline `Shader` capability. Import valida
 - SPIR-V input is little-endian, word-aligned, bounded to 16 MiB and the baseline `Shader` capability. The import command additionally runs `spirv-val`. Runtime resource loading checks the documented payload and interface contract for all origins; it is not a full SPIR-V specification verifier. Native translation/program-creation errors propagate before a successful draw is reported.
 - At most four uniform buffers, descriptor set 3, unique contiguous bindings starting at zero. Each buffer is at most 16 KiB. Std140 alignment and array strides are checked, and uploads include final 16-byte block padding.
 - Uniform member names are nonblank, ordinal/case-sensitive and unique across buffers. Compilers must retain names. Reflection rejects overlapping members and members outside their buffer.
-- Types currently mapped to C#: `bool`, `float`, `int`, `uint`, `Vector2`, `Vector3` for float3, `Transform` for float2x2, copied `float[]` for mat3/mat4, `Vector4`, `Vector2i`, `Vector3i`, `Vector4i`. `Color` aliases float3 and float4; `Rect2` aliases float4; integer vectors carry either signed or unsigned shader components. Boolean vectors use int component masks; see [boolean type information](#boolean-type-information). See [vector value mappings](#vector-value-mappings). A fixed one-dimensional array uses the same element mapping and 1–1024 elements within the buffer size limit.
+- Types currently mapped to C#: `bool`, `float`, `int`, `uint`, `Vector2`, `Vector3` for float3, `Transform` for float2x2, copied `float[]` for all float matrix shapes with two through four columns/rows except square mat2, `Vector4`, `Vector2i`, `Vector3i`, `Vector4i`. `Color` aliases float3 and float4; `Rect2` aliases float4; integer vectors carry either signed or unsigned shader components. Boolean vectors use int component masks; see [boolean type information](#boolean-type-information). See [vector value mappings](#vector-value-mappings). A fixed one-dimensional array uses the same element mapping and 1–1024 elements within the buffer size limit.
 - Floating-point material values must be finite. Setters validate the complete input before writing. Compiled authored defaults initialize each logical value and array element; absent numeric defaults use zero or matrix identity (float3 Color reads reconstruct alpha one). See [authored uniform defaults](#authored-uniform-defaults).
-- Storage resources, push constants, nested structures and nonsquare matrices fail explicitly until their executable integration is present. Other numeric mappings remain unimplemented. These restrictions are implementation gaps, not a claim that either language is fully supported.
+- Storage resources, push constants, nested structures fail explicitly until their executable integration is present. Other numeric mappings remain unimplemented. These restrictions are implementation gaps, not a claim that either language is fully supported.
 
 ## Vector value mappings
 
@@ -173,11 +173,11 @@ Delivery passed with `dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csp
 
 ## Numeric material matrices
 
-Square GLSL `mat3`/`mat4` and HLSL `float3x3`/`float4x4` use copied column-major `float` values under ADR 0028. They represent ordinary numeric data. `SetShaderMatrixParameter`, `GetShaderMatrixParameter` and `CopyShaderMatrixParameter` address either one matrix or a complete fixed array; arrays concatenate nine/sixteen components per element. The copy destination must have exactly the reflected component count. Generic scalar/vector access remains separate, and the existing `Transform` mat2 mapping keeps its basis-only contract.
+All float matrix shapes with two through four columns/rows, except square mat2, use copied column-major `float` values under ADR 0028. They represent ordinary numeric data. `SetShaderMatrixParameter`, `GetShaderMatrixParameter` and `CopyShaderMatrixParameter` address either one matrix or a complete fixed array; arrays concatenate columns times rows components per element. The copy destination must have exactly the reflected component count. Generic scalar/vector access remains separate, and the existing `Transform` mat2 mapping keeps its basis-only contract.
 
-All components must be finite, and complete validation precedes mutation. Each matrix initially contains its compiled default, or identity when absent; explicit zero remains zero. A successful update emits Changed after releasing the material gate, including when an observer subsequently throws. Getters and descriptor revert values return independent arrays. Stored `PropertyDescriptor<ShaderMaterial, float[]>` values use the existing graph/scene/archive codecs. Migration matches matrix width and scalar/array length, then repacks logical columns through each reflected row/column order, offset, matrix stride and array stride. Shared vertex/fragment names retain one value with independent physical layouts. Instance uniforms continue to accept only scalar/vector values.
+All components must be finite, and complete validation precedes mutation. Each matrix initially contains its compiled default, or identity when absent; explicit zero remains zero. A successful update emits Changed after releasing the material gate, including when an observer subsequently throws. Getters and descriptor revert values return independent arrays. Stored `PropertyDescriptor<ShaderMaterial, float[]>` values use the existing graph/scene/archive codecs. Migration matches both matrix dimensions and scalar/array length, then repacks logical columns through each reflected row/column order, offset, matrix stride and array stride. Shared vertex/fragment names retain one value with independent physical layouts. Instance uniforms continue to accept only scalar/vector values.
 
-`RenderingServer.MaterialSetMatrixParam` and the copied-array/exact-span `MaterialGetMatrixParam` overloads project the same contract through owned/borrowed material identities. Mutations require server ownership; borrowed resource identities permit reads. Prepared writes, copies and shared-stage packing allocate no managed memory. Nonsquare/nested shapes and other platform/backend acceptance remain separate dependencies. Authored defaults use the shared [typed artifact contract](#authored-uniform-defaults); explicit sampler configuration uses the existing image metadata.
+`RenderingServer.MaterialSetMatrixParam` and the copied-array/exact-span `MaterialGetMatrixParam` overloads project the same contract through owned/borrowed material identities. Mutations require server ownership; borrowed resource identities permit reads. Prepared writes, copies and shared-stage packing allocate no managed memory. Nested structures and other platform/backend acceptance remain separate dependencies. Authored defaults use the shared [typed artifact contract](#authored-uniform-defaults); explicit sampler configuration uses the existing image metadata.
 
 [NumericMatrixTests](../../tests/Electron2D.Tests/NumericMatrixTests.cs) verifies both source languages, nonsymmetric multiplication, row/column layouts, widened matrix/array strides, old descriptors after reload, width/length resets and length-one arrays, complete finite rejection, copied values/graphs and fresh-process resource archives. Four Linux Wayland software-Vulkan profiles execute resource and owned-RID pixels, live numeric edits and paired-stage reload; each measures zero managed bytes from ProcessFrameStarted through FramePostDraw over 64 active and 64 idle frames after warmup, without geometry rerecording. Eight imported modules and two widened modules pass independent `spirv-val`. The mat2 native regression now compares draw counts after startup warmup; GLSL/HLSL pixels and zero prepared allocations pass. Global matrix and combined sampler/stage/light/glyph/group/HDR/MSAA regressions also pass. Hardware performance, native allocator counts, other platforms and owner acceptance remain unverified.
 
@@ -441,7 +441,7 @@ Electron2D:default:1:<type>:<array-length>:<base64-UTF8-name>:<base64-little-end
 
 Type is `f1..f4`, `i1..i4`, `u1..u4`, `b1..b4`, or `m2..m4`. Length zero denotes a single value; positive length denotes the exact fixed array. Boolean words are zero/one; matrices contain canonical columns and arrays concatenate logical elements. Names and the entire component payload must match an active reflected material/Instance declaration. Strict UTF-8/base64, schema/type/length/component validation precedes immutable program publication. Unknown versions, duplicates and invalid values reject atomically. Existing boolean metadata continues to identify logical bool/mask roles over physical uint storage. External producers may emit this same contract; debug-string stripping removes the authored defaults.
 
-`RenderingServer.ShaderGetParameterDefault<T>(RID, string)` reads scalar/vector/float2x2 defaults. `ShaderGetParameterDefaultArray<T>` returns an independent fixed-array copy; `ShaderGetParameterDefault<T>(RID, string, Span<T>)` copies to an exact-length destination. `ShaderGetMatrixParameterDefault` returns or copies concatenated numeric mat3/mat4 components. These static owner-thread queries accept live owned or borrowed Shader RIDs, ignore material overrides, and exclude renderer/global parameters. Sampled-image defaults keep the separate indexed Shader/GetDefaultTextureParameter APIs.
+`RenderingServer.ShaderGetParameterDefault<T>(RID, string)` reads scalar/vector/float2x2 defaults. `ShaderGetParameterDefaultArray<T>` returns an independent fixed-array copy; `ShaderGetParameterDefault<T>(RID, string, Span<T>)` copies to an exact-length destination. `ShaderGetMatrixParameterDefault` returns or copies concatenated numeric matrix components (columns times rows per element, excluding square mat2). These static owner-thread queries accept live owned or borrowed Shader RIDs, ignore material overrides, and exclude renderer/global parameters. Sampled-image defaults keep the separate indexed Shader/GetDefaultTextureParameter APIs.
 
 Material state records explicit writes independently of their value. Thus explicitly writing zero or the current default survives a compatible reload; an unset field receives the new program default. Setting a named parameter to null through the existing nullable-image boundary, or passing an empty texture RID to MaterialSetParam, clears numeric/matrix/array/image ownership and restores its current default. Image-array reset clears every element. A successful reset emits Changed after mutation. Array setters and default-copy APIs validate the whole shape/value before writing. Resource duplication, CopyFromResource, material archives and packed scene resources preserve explicit ownership; absent file fields retain unset semantics. Old descriptor snapshots retain the old default without mutating a new program.
 
@@ -491,3 +491,85 @@ Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse op
 [Compiled custom graph nodes](visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.
 
 Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
+
+## Rectangular matrix uniforms
+
+Material uniforms now support all six nonsquare float shapes with two through
+four columns/rows, in addition to square mat3/mat4. Use the existing
+`SetShaderMatrixParameter`, copied `GetShaderMatrixParameter`, exact-size
+`CopyShaderMatrixParameter` and static material/default RID operations. One
+matrix contributes columns times rows values; a fixed array concatenates its
+matrices. A scalar and a one-element array retain distinct shapes. Square mat2
+keeps its existing basis-only `Transform` projection. Global Mat3/Mat4 registry
+roles stay square, and instance parameters keep their scalar/vector boundary.
+
+The public order follows SPIR-V columns, then rows within each column. GLSL
+`mat3x2` therefore receives six values and can express a planar affine mapping:
+
+```csharp
+material.SetShaderMatrixParameter("affine", [1, 0, 0, 1, 4, 0]);
+```
+
+In GLSL, `affine * vec3(position, 1)` shifts X by four. DXC represents each HLSL
+row as a SPIR-V column, so the equivalent source is `float3x2 affine` used as
+`mul(float3(position, 1), affine)`. Both languages share the same public six
+values. Physical row/column-major storage, matrix stride, array stride and
+member offsets remain private reflected layout. All values must be finite;
+complete validation precedes mutation. Absent authored defaults put ones along
+the smaller diagonal and zero elsewhere. Explicit zero remains an override.
+
+Both dimensions participate in stage matching and reload compatibility. A 2x3
+value cannot survive replacement by 3x2 merely because both have six components;
+that parameter resets to its new default while compatible siblings keep their
+values. Copied descriptors, duplicate graphs and compressed big-endian archives
+retain logical values and ownership. Version-one default metadata retains the
+existing `m2`/`m3`/`m4` tokens and uses `m<columns>x<rows>` for rectangular data.
+External default input remains the same strict version-one JSON schema.
+
+The public [fixture author](../../tests/ShaderDefaults.Consumer/prepare_rectangular.py)
+creates eighteen HLSL/GLSL imports under a caller-selected output directory.
+Eighteen matrix fields represent 24 scalar/array matrix values and 208 signed,
+unclamped components per arithmetic program. It covers both physical storage
+orders, distinct array elements, authored defaults, reordered/widened layouts
+length-one array resets and an equal-size transposed replacement. Prepare and exercise it with:
+
+```bash
+python3 -B tests/ShaderDefaults.Consumer/prepare_rectangular.py bin/rectangular-fixtures tools/shaders/bin/Release/net10.0/Electron2D.ShaderImport.dll
+dotnet run --project tests/ShaderDefaults.Consumer -c Release -- rectangular-cpu bin/rectangular-fixtures
+dotnet run --project tests/ShaderDefaults.Consumer -c Release -- rectangular-gpu bin/rectangular-fixtures
+```
+
+The CPU consumer checks every finite/type/length guard, copied descriptors,
+shorter-diagonal defaults, two-dimension reload and compressed big-endian
+fresh-process archives, plus 2,000 prepared updates/copies with zero managed
+bytes. Native consumers exercise resource and owned-RID canvas materials,
+paired vertex/fragment layouts, actual affine vertex movement, particle compute
+and every raw RGBAF component before display conversion. Live overrides and
+null/empty-RID reset follow authored defaults. Square global registrations
+reject rectangular consumers before submission.
+
+CLR and strict full-trim NativeAOT passed the public CPU/archive checks and
+native Linux software Vulkan Wayland, X11 and HDR/MSAA profiles. The prepared
+canvas, owned RID, particle and writable-blit paths allocate zero owner and
+all-thread managed bytes over 64 active and 64 idle frames. The previous square
+matrix managed/four native profiles and the complete importer regression pass;
+old supported fixture bytecode stays unchanged. The full public defaults CPU
+consumer also passes on CLR and NativeAOT.
+
+Receipts are under `bin/rectangular-uniforms/2026-10-24/`. Physical GPUs, native
+heap measurements, foreign platforms and owner visual acceptance remain open.
+The applicable declaration count does not change: broad Shader/ShaderMaterial
+rows retain their other recorded dependencies.
+
+
+The initial 208-case HLSL raw selector used an early return per component. It
+produced 129 incorrect or missing pixels on the pinned software Vulkan profile.
+An independent selector without uniforms or matrices reproduced the same count
+on the pre-change main at `73809bd02`; GLSL and a single-exit HLSL selector
+passed. A `spirv-val`-valid common-exit wrapper retained the failure. The final
+matrix fixture uses one result assignment and still reads all 208 values.
+`control-results.json` and `baseline-control-results.json` retain the independent
+repro. This is an open broader native control-flow profile: deep-selection
+lowering or a verified compiler/driver correction must close it. The current
+evidence does not identify a particular driver defect or establish arbitrary
+HLSL control-flow acceptance.

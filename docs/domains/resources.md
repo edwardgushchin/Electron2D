@@ -45,6 +45,8 @@ Concrete TwoBoneIK/CCDIK/FABRIK resources retain copied bounded joint configurat
 
 [Numeric orientation graphs](../components/visual-shaders.md#numeric-orientation) expose FaceForward at all three vector widths and axis-angle rotation with independent vector/matrix outputs. Exact resource factories preserve typed defaults and shared aliases; their imported programs supply real canvas vertices, particle transforms and writable-texture values.
 
+[Rectangular matrix uniforms](../components/shader-materials.md#rectangular-matrix-uniforms) now retain both dimensions in copied material values, descriptor defaults, compressed archives and layout-aware reload. Square mat2 keeps its Transform projection; graph Matrix4x4 and global/instance roles retain their existing boundaries.
+
 ## Responsibility
 
 Ordinary [texture placeholders](../components/texture-placeholders.md) execute explicit pixel stripping through `Texture.CreatePlaceholder`, typed dimension archives and scene-local instances. They retain layout size and use diagnostic GPU/Compatibility pixels. Version-4 tolerant archives preserve unknown texture fields and missing dependency metadata, retaining missing-payload provenance across saves.
