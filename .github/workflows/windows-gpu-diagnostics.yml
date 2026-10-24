@@ -135,6 +135,24 @@ jobs:
       - name: Install the pinned app-local test WARP
         shell: pwsh
         run: ./tools/ci/install_test_warp.ps1 bin/diagnostics/runner bin/diagnostics ($env:CI_RID.Substring(4))
+      - name: Check the complete file-dialog contract
+        id: file_dialog
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          python - <<'PY'
+          import os, subprocess
+          from pathlib import Path
+          executable = Path('bin/diagnostics/runner/Electron2D.Tests.exe').resolve(strict=True)
+          log = Path('bin/diagnostics/file-dialog.log')
+          environment = dict(os.environ, ELECTRON2D_TEST_FILE_DIALOG='1')
+          with log.open('w') as output:
+              result = subprocess.run([str(executable)], env=environment, stdout=output, stderr=subprocess.STDOUT)
+              output.write('Runtime exit: ' + str(result.returncode) + '\n')
+          marker = 'FileDialog browser, filters, open/save validation, options, roots and scene reconstruction passed.'
+          if result.returncode != 0 or marker not in log.read_text(encoding='utf-8', errors='replace').splitlines():
+              raise SystemExit(1)
+          PY
       - name: Check the complete public GPU compound cohort
         id: compound
         continue-on-error: true
@@ -209,7 +227,7 @@ jobs:
           }
       - name: Run the complete untraced runtime suite
         id: fixture
-        if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success' && steps.point_fields.outcome == 'success'
+        if: steps.compound.outcome == 'success' && steps.joints.outcome == 'success' && steps.motion.outcome == 'success' && steps.point_fields.outcome == 'success' && steps.file_dialog.outcome == 'success'
         continue-on-error: true
         timeout-minutes: 150
         shell: pwsh
@@ -232,6 +250,7 @@ jobs:
             bin/diagnostics/warp-source.json
             bin/diagnostics/full-runtime.log
             bin/diagnostics/point-fields.log
+            bin/diagnostics/file-dialog.log
           if-no-files-found: error
       - name: Capture native exception context
         if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure'
@@ -248,8 +267,9 @@ jobs:
             bin/diagnostics/warp-source.json
             bin/diagnostics/full-runtime.log
             bin/diagnostics/point-fields.log
+            bin/diagnostics/file-dialog.log
             bin/diagnostics/cdb/
           if-no-files-found: error
       - name: Preserve the fixture failure
-        if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure' || steps.point_fields.outcome == 'failure'
+        if: steps.fixture.outcome == 'failure' || steps.compound.outcome == 'failure' || steps.joints.outcome == 'failure' || steps.motion.outcome == 'failure' || steps.point_fields.outcome == 'failure' || steps.file_dialog.outcome == 'failure'
         run: exit 1

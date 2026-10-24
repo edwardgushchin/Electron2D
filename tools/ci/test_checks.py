@@ -30,6 +30,37 @@ import windows_recovery_trace
 
 
 class Checks(unittest.TestCase):
+    def test_windows_file_dialog_gate_requires_raw_success_and_complete_marker(self):
+        workflow = (rids.ROOT / '.github/workflows/windows-gpu-diagnostics.yml').read_text()
+        step = workflow.partition('      - name: Check the complete file-dialog contract')[2].split('\n      - ', 1)[0]
+        inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
+        code = '\n'.join(line[10:] for line in inline.splitlines())
+        marker = 'FileDialog browser, filters, open/save validation, options, roots and scene reconstruction passed.'
+        self.assertIn("steps.file_dialog.outcome == 'success'", workflow)
+        self.assertIn("steps.file_dialog.outcome == 'failure'", workflow)
+        previous = Path.cwd()
+        try:
+            with tempfile.TemporaryDirectory(prefix='e2d file dialog gate ') as directory:
+                os.chdir(directory)
+                runner = Path('bin/diagnostics/runner/Electron2D.Tests.exe')
+                runner.parent.mkdir(parents=True)
+                runner.write_text('#!/usr/bin/env python3\nimport os\n'
+                    'assert os.environ["ELECTRON2D_TEST_FILE_DIALOG"] == "1"\n'
+                    'os.write(1,b"prefix\\xff\\n")\n'
+                    'print(os.environ["FAKE_MARKER"])\nraise SystemExit(int(os.environ["FAKE_EXIT"]))\n')
+                runner.chmod(0o755)
+                for exit_code, text, expected in ((0, marker, 0), (7, marker, 1), (0, 'Missing completion', 1)):
+                    with patch.dict(os.environ, FAKE_EXIT=str(exit_code), FAKE_MARKER=text, ELECTRON2D_TEST_FILE_DIALOG='unchanged'):
+                        if expected:
+                            with self.assertRaises(SystemExit) as error: exec(compile(code, 'file-dialog-workflow', 'exec'), {})
+                            self.assertEqual(error.exception.code, expected)
+                        else:
+                            exec(compile(code, 'file-dialog-workflow', 'exec'), {})
+                        self.assertEqual(os.environ['ELECTRON2D_TEST_FILE_DIALOG'], 'unchanged')
+                    self.assertIn(f'Runtime exit: {exit_code}', Path('bin/diagnostics/file-dialog.log').read_text(errors='replace'))
+        finally:
+            os.chdir(previous)
+
     def test_macos_runtime_samples_its_silent_child_and_keeps_exit_and_marker_gates(self):
         with tempfile.TemporaryDirectory(prefix='e2d macOS sample ') as directory:
             root = Path(directory)

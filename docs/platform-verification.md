@@ -273,6 +273,20 @@ workgroups. HLSL/MSL translation and pinned DXIL compilation pass; those compile
 checks do not replace Windows or Metal execution. Local Mesa 128-bit execution passes in 71.184 seconds on a non-AVX-512
 Ryzen 5700X; it does not close that native failure.
 
+The ordinary production module at `ffe50ba80` passes every process in
+`40053466374` on AVX-512 EPYC 9V74: baseline, explicit 128/256-bit and
+managed-scalar controls. Artifact `12544781214` has ZIP SHA-256
+`5ee30e727eb71d113b3496b630e6d412ce6411558e0bab5b812b82c6873772f7`.
+All three explicit controls retain raw exit 0 and both complete public/policy
+markers. The CPU flags exactly match the earlier failing EPYC profile; no
+temporary contact trace or source swap is present. The 128-bit log SHA-256 is
+`da85774618e03f910141c28ec6c3d66bc182f2eff36226b79ed198bb0903dd74`.
+The full local Wayland/NVIDIA suite at that source also passes with exit 0 and
+the final marker in 610.077 seconds (2,116 lines; log SHA-256
+`681bf1308981b67a6c2eac2fef40eedfb6824086fde5dc421a303c092aa4dea0`).
+These receipts qualify the corrected contact module, separate from complete RID
+matrix and public package acceptance.
+
 The complete untraced local Linux x64 Wayland/NVIDIA suite at `ee40d9228` passes
 with exit 0 and `Electron2D checks passed.` in 593.874 seconds (2,116 log lines).
 Its eight selected native libraries match the audited CI closure
@@ -310,6 +324,20 @@ That step requires successful compound/joint/motion and point-field outcomes;
 the latter checks raw exit 0 plus the ten-case/128-frame zero-byte, signed maxima,
 overflow and terminal-publication markers. The jobs were still running when
 recorded; their raw point/full logs and complete-suite acceptance remain pending.
+
+Its ARM64 artifact `12543954978` in run `40047688860` confirms the complete
+point-field gate at raw exit 0 (log SHA-256
+`fd1d28c7be3d96a4579170fdfe124d2201a06c2f41b2e96cd6a0beb0d1e63005`).
+The full run continues through physics and the GUI cohorts, then stops at the
+first file-dialog filtered-list assertion: raw `0xE0434352`, 15,473 log lines,
+SHA-256 `51def355c03c96a215e9b084f3235d2aecd4f43fa76a9a6030a4c440f6ccd98c`.
+The ZIP SHA-256 is
+`bc6e8f5ffa005532c3f89aeaa18808432a23d1c2e332d8b5d20b177f88e7d99e`.
+The fixture used only a leading-dot filename; the accepted directory contract
+uses the Hidden filesystem attribute on Windows. The fixture now sets that
+attribute while retaining all list-count and hidden-toggle assertions. A complete
+file-dialog selector runs before the diagnostic's long full suite and preserves
+raw failures. Corrected native Windows execution remains required.
 
 The profiled macOS run `40035786188` also completes its full x64 suite at
 `d5c677614` (job `120694782183`, artifact `12539342858`, 7,009 lines, completion

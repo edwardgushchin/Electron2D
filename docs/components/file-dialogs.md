@@ -10,6 +10,13 @@ Resources, UserData and FileSystem select a real directory owner. Access changes
 
 The list places directories first, applies case-insensitive glob file-type patterns and filename substring filtering, and supports natural name/type or modified-time ordering in both directions. Hidden-file listing uses DirAccess.IncludeHidden. Thumbnail/list arrangements use the exact FileDialog theme icon/color/size keys and shared path-to-borrowed-texture providers. Favorites and recents are copied shared scoped lists, with normalized trailing separators and toggle/reorder/activation and a 20-entry recent history per access scope, preserving other scopes; stale matching directories are pruned. Shared configuration reads/writes belong to the first authoring thread; tree-attached operations also require the scene owner.
 
+The cross-platform file-dialog regression creates an actual hidden entry for the
+host: a leading-dot name on Unix and the Hidden filesystem attribute on Windows.
+Its strict filtered-count, hidden-toggle, multi-selection and root guards remain
+unchanged. The Windows diagnostic runs the complete existing file-dialog selector
+before the long full-runtime suite, requiring raw exit 0 and its completion marker.
+This fixture correction does not change file-dialog runtime behavior.
+
 The filename-filter toggle controls its input; turning it off clears filtering. Changed programmatic filter values show the input and emit the committed string. Required listing refresh continues after a failed observer. This corrects the pinned comparison source's erroneous filter-control event payload to the documented string. Icon callbacks may change filters during refresh; bounded retries settle against the final state or fail explicitly. Filtering, enumeration, option reconstruction and native OS actions are cold blocking operations; they are not zero-allocation real-time operations.
 
 OpenFile/OpenFiles return existing scoped files; OpenDirectory returns the selected directory or the current directory; OpenAny accepts either kind. SaveFile validates the parent and selected extension, and optionally opens the owned overwrite confirmation. Acceptance emits a destination and never writes/replaces its contents. Cancellation of overwrite retains the browser and original file. Folder creation accepts one leaf name, creates it through DirAccess, then navigates into it. Context and independently rebindable shortcuts support refresh, parent navigation, hidden files, filter/path focus and trash. Context copy uses DisplayServer's clipboard; show-in-file-manager uses OS.
