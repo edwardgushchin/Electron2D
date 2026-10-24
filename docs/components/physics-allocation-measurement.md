@@ -4,6 +4,72 @@ Last updated: 2026-10-24
 
 ## Scope and ownership
 
+### Compressed audio measurement preparation (2026-10-24)
+
+Ordinary macOS ARM64 job `120829192314`, run `40077474451` at `b34181561`,
+aborts at 09:18:37 UTC in the idle Ogg interval with 3,360 owner-thread bytes,
+raw exit 134 and no suite completion marker. The preceding active MP3/Ogg and
+idle MP3 intervals report zero. This physical interval had no native recorder;
+its producer remains unattributed. The separate profiled ARM64 aggregate passes
+on the same revision, which does not supersede the ordinary failure.
+
+Both compressed formats now prepare their existing buffers, format and trace
+tags, then call the shared calibrated collection/finalization helper before
+their original warmups. Active playback retains 50 warm blocks and idle playback
+20; each still measures 64 blocks of 512 frames with its strict owner-only
+zero-byte assertion and existing domain-7 native boundaries. There is no
+collection inside either warmup or measurement. Decoder, playback, native-output
+and corruption/lifetime checks remain unchanged. This preparation does not
+attribute the older counter delta; complete ordinary native execution on the
+revised source remains required.
+
+The revised local Linux .NET 10.0.13 selector passes both CPU-only and complete
+native-output modes, each with and without profiling. Eight marked active/idle
+intervals retain zero owner bytes and no object events. Both traces close all
+166 boundaries, validate their positive/empty controls and report successful
+stacks with zero recursion. Their first positive controls also retain three
+finalizer-thread objects of raw sizes 112/32/72; those are outside the measured
+audio intervals and do not explain the older macOS failure. Evidence is retained
+in ignored `bin/release-audit/ccd-audio-preparation-local/`.
+The complete ordinary local suite with both revised audio and CCD fixtures exits
+zero in 594.272 seconds with one final completion marker; all 79 frozen payload
+files and both fixture source hashes remain unchanged. This is a local source
+cohort receipt, not complete ordinary macOS or public NuGet acceptance.
+
+### CCD measurement preparation (2026-10-24)
+
+Profiled macOS x64 job `120823957535`, run `40077503227` at `b34181561`,
+aborts in the separate CPU cohort's `PhysicsCCDTests.VerifyAllocation` at
+09:17:37 UTC. Its unchanged 64 warmup/128 reset-active steps report 0/9,024
+owner/all-thread bytes. The physical interval was unmarked; its producer remains
+unattributed. The parent trace retains 6,738 balanced brackets and successful
+stacks, without a shutdown record. Both complete CPU/GPU character families
+preceding this failure have six marked zero-byte/object intervals. The ARM64
+profiled aggregate passes its whole suite on the same revision.
+
+The CCD fixture formerly allocated its 128-element timing array after warmup and
+immediately before its counter baseline. Timing storage and role/tag preparation
+now precede the shared calibrated collection/finalization helper and the original
+64 warmup steps. The same 128 measured steps still reset transform and velocity,
+execute the full 0.02-second step and retain their timing samples and zero limits.
+Native domain `11UL << 32` closes in `finally`; backend, CPU-hosted GPU stage,
+separate-thread selection, tag and counters are printed before the assertion.
+Sorting and reporting remain outside the physical interval.
+
+The existing complete serial CPU/GPU continuous-contract and CPU-hosted GPU CCD
+selectors are retained in ordinary and calibrated macOS diagnostics. The existing
+whole separate-CPU selector also records its CCD interval. These controls do not
+attribute the older unmarked 9,024-byte delta or replace complete ordinary target
+execution on the revised source.
+
+Local Linux .NET 10.0.13 checks pass all four complete selectors with and without
+profiling: serial and separate-thread CPU/GPU continuous contracts, CPU-hosted
+GPU CCD and the whole separate-CPU family. All six marked CCD intervals retain
+0/0 bytes and no object events. Their four traces have 1,141 balanced intervals,
+896 positive and 224 empty controls, successful stacks and zero recursion.
+The independently calibrated recorder and raw evidence are retained in ignored
+`bin/release-audit/ccd-preparation-local/`; these controls are not macOS receipts.
+
 ### Stationary character measurement preparation (2026-10-24)
 
 Ordinary macOS x64 job `120808086157`, run `40070173409` at `780e574a5`,

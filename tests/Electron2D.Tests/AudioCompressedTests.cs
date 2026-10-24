@@ -13,9 +13,11 @@ internal static class AudioCompressedTests
         foreach (var stream in new AudioStream[] { mp3, ogg })
         {
             using var playback = stream.InstantiatePlayback(); playback.Start(.1); var frames = playback.MixAudio(1, 512); Check(frames.Any(v => MathF.Abs(v.X) > .03f), "Actual compressed PCM playback.");
-            playback.LoopingOverride = true; playback.Start(); var target = new Vector2[512]; for (var i = 0; i < 50; i++) playback.MixInto(target, 1); Check(playback.GetLoopCount() > 0, "Compressed EOF looping.");
+            playback.LoopingOverride = true; playback.Start(); var target = new Vector2[512];
             var format = stream is AudioStreamMP3 ? "MP3" : "Ogg";
             var tag = trace?.Tag(stream is AudioStreamMP3 ? 1UL : 2UL) ?? 0;
+            AllocationWarmupCheck.Collect();
+            for (var i = 0; i < 50; i++) playback.MixInto(target, 1); Check(playback.GetLoopCount() > 0, "Compressed EOF looping.");
             long allocated;
             trace?.Begin(tag);
             try
@@ -25,7 +27,7 @@ internal static class AudioCompressedTests
                 allocated = GC.GetAllocatedBytesForCurrentThread() - before;
             }
             finally { trace?.End(); }
-            Console.WriteLine($"Compressed active {format}: 64 measured blocks, owner={allocated} B, trace={tag}.");
+            Console.WriteLine($"Compressed active {format}: 50 warm/64 measured blocks, owner={allocated} B, trace={tag}.");
             Check(allocated == 0, $"Warmed compressed {format} mixing allocated {allocated} owner-thread B, trace={tag}.");
         }
         VerifyMetadataAndCorruption(mp3, ogg);
@@ -56,9 +58,11 @@ internal static class AudioCompressedTests
             playback.Start(source.GetLength()); Check(playback.GetPlaybackPosition() < .01, "Seek at EOF restarts from zero with bounded prefetch.");
             playback.MixAudio(1, 40000); Check(!playback.IsPlaying(), "Natural completion.");
             playback.Start(); Check(playback.MixAudio(1, 512).Length == 512, "Restart resets the first-silence marker.");
-            playback.Stop(); var target = new Vector2[512]; for (var i = 0; i < 20; i++) playback.MixInto(target, 1);
+            playback.Stop(); var target = new Vector2[512];
             var format = source is AudioStreamMP3 ? "MP3" : "Ogg";
             var tag = trace?.Tag(source is AudioStreamMP3 ? 3UL : 4UL) ?? 0;
+            AllocationWarmupCheck.Collect();
+            for (var i = 0; i < 20; i++) playback.MixInto(target, 1);
             long allocated;
             trace?.Begin(tag);
             try

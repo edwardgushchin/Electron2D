@@ -268,19 +268,30 @@ internal sealed class PhysicsCCDTests(bool gpu, PhysicsServer.Backend backend)
     {
         using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 200) };
         using var f = new Fixture(gpu, backend); var a = f.Add(circle, velocity: new(3000, 0), ccd: CCDMode.CastShape); f.Add(wall, new(20, 0), mode: Mode.Static);
+        var times = new double[128];
+        using var trace = PhysicsAllocationTrace.Open(backend, 11UL << 32);
+        var separate = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
+        var tag = trace?.Tag((gpu ? 4UL : 0UL) + (separate ? 2UL : 1UL)) ?? 0;
+        AllocationWarmupCheck.Collect();
         for (var i = 0; i < 64; i++) { PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0)); f.Step(); }
-        var times = new double[128]; _ = GC.GetTotalAllocatedBytes(true);
-        var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var bytes = GC.GetTotalAllocatedBytes(true);
-        for (var i = 0; i < times.Length; i++)
+        long ownerBytes, bytes;
+        trace?.Begin(tag);
+        try
         {
-            var watch = Stopwatch.GetTimestamp();
-            PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0)); f.Step();
-            times[i] = Stopwatch.GetElapsedTime(watch).TotalMilliseconds;
+            var ownerBefore = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < times.Length; i++)
+            {
+                var watch = Stopwatch.GetTimestamp();
+                PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0)); f.Step();
+                times[i] = Stopwatch.GetElapsedTime(watch).TotalMilliseconds;
+            }
+            ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore;
+            bytes = GC.GetTotalAllocatedBytes(true) - allBefore;
         }
-        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBefore;
-        bytes = GC.GetTotalAllocatedBytes(true) - bytes; Array.Sort(times);
-        Check(ownerBytes == 0 && bytes == 0, $"Warmed CCD steps allocated {ownerBytes}/{bytes} owner/all-thread managed bytes");
-        Console.WriteLine($"Public CCD: 64 warmup/128 reset-active steps, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms/step, {ownerBytes}/{bytes} owner/all-thread managed B.");
+        finally { trace?.End(); }
+        Array.Sort(times);
+        Console.WriteLine($"Public CCD {backend}, hostGPU={gpu}, separate={separate}: 64 warmup/128 reset-active steps, p50/p95/p99={times[64]:F4}/{times[121]:F4}/{times[126]:F4} ms/step, {ownerBytes}/{bytes} owner/all-thread managed B, trace={tag}.");
+        Check(ownerBytes == 0 && bytes == 0, $"Warmed CCD steps {backend}, hostGPU={gpu}, separate={separate} allocated {ownerBytes}/{bytes} owner/all-thread managed bytes");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException($"Expected {typeof(T).Name}"); }

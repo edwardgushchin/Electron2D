@@ -23,6 +23,27 @@ required; neither older setup timeout becomes a passing execution receipt.
 
 ### Runtime suite receipts
 
+At `b34181561`, ordinary macOS ARM64 job `120829192314` in run `40077474451`
+aborts in idle compressed Ogg mixing at 3,360 owner-thread bytes, exit 134,
+without a complete-suite marker. The preceding active MP3/Ogg and idle MP3
+intervals are zero. The interval has no native physical trace and its producer
+remains unattributed. The fixture now prepares both formats through the shared
+calibrated collection/finalization helper before their unchanged warmups; see
+[compressed audio measurement preparation](components/physics-allocation-measurement.md#compressed-audio-measurement-preparation-2026-10-24).
+Later preparation and a passing profiled run cannot replace the failed ordinary
+execution; a complete ordinary run on the revised source remains required.
+
+At `b34181561`, macOS allocation run `40077503227` passes its complete ARM64
+profiled aggregate, with raw exit 0 and one final completion marker. Its x64
+aggregate instead aborts in the separate-CPU CCD allocation interval at 0/9,024
+owner/all-thread bytes and raw exit -6. That interval lacked a physical marker;
+its producer remains unattributed. All six preceding character intervals are
+marked and retain zero counters and object events on each architecture. The CCD
+fixture now prepares timing storage before warmup and retains calibrated setup
+and physical boundaries; see [CCD measurement preparation](components/physics-allocation-measurement.md#ccd-measurement-preparation-2026-10-24).
+Neither successful focused profiles nor the ARM64 aggregate supersede the failed
+x64 aggregate or establish ordinary acceptance of the later preparation change.
+
 At `780e574a5`, ordinary macOS x64 job `120808086157` in run `40070173409`
 fails the stationary CPU character-slide interval at 5,848 all-thread bytes
 (64 warmup/64 measured calls). Its raw exit is 134, with no complete-suite

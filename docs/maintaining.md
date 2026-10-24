@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -90,6 +90,9 @@ Compressed-audio allocation diagnostics use `ELECTRON2D_TEST_AUDIO_COMPRESSED=cp
 for the aggregate's managed mixing mode and `1` for complete native output.
 Optional calibrated native markers retain all four MP3/Ogg active/idle intervals,
 their exact owner-byte deltas and the original warmup/workload/zero threshold.
+Prepare buffers and tags, then drain the shared collection/finalization helper
+before the unchanged 50 active or 20 idle warm blocks; each measurement retains
+64 blocks of 512 frames and the owner-only zero-byte gate.
 The macOS allocation workflow saves these standalone traces and the complete
 aggregate trace; one successful profile does not attribute another failed one.
 Its complete runner saves a one-second native thread sample after five minutes
@@ -102,6 +105,11 @@ in the log. The existing `ELECTRON2D_TEST_PHYSICS_THREAD=1` selector repeats the
 complete CPU separate-thread cohort before the full macOS suite, both ordinarily
 and with calibrated object markers. Original warmups, counters and zero limits
 remain unchanged; a passing isolated cohort does not explain a failed aggregate.
+CCD measurement uses domain `11UL << 32`, with timing storage and role/tag setup
+before the shared preparation and 64 warm steps. Retain all 128 reset-active
+steps, owner/all-thread zero limits and serial, separate-thread and CPU-hosted
+GPU roles. Ordinary and calibrated macOS diagnostics run the existing complete
+continuous-contract and CPU-hosted GPU CCD selectors before the full suite.
 Contact-policy intervals use domain `9UL << 32` for the same 256 warmup/128
 edit-active full steps, with scene/server, CPU-hosted GPU-stage and resident roles.
 The macOS diagnostics repeat existing CPU/GPU contact-correction selectors both

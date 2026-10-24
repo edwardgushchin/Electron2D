@@ -114,6 +114,8 @@ jobs:
           ELECTRON2D_TEST_AREA_BACKEND=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/area-cpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-cpu-trace.log
           ELECTRON2D_TEST_AREA_BACKEND=gpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/area-gpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-gpu-trace.log
           ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/audio-compressed.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/audio-compressed-trace.log
+          ELECTRON2D_TEST_GPU_CCD_CONTRACT=1 E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/ccd-contract.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/ccd-contract-trace.log
+          ELECTRON2D_TEST_CCD=1 ELECTRON2D_SANDBOX_GPU_SOLVER=1 E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/ccd-host-gpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/ccd-host-gpu-trace.log
           ELECTRON2D_TEST_PHYSICS_THREAD=1 E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/joint-policy.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/joint-policy-trace.log
           ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT=gpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/shape-owner.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/shape-owner-trace.log
           ELECTRON2D_TEST_CONTACT_CORRECTION=cpu E2D_ALLOCATION_TRACE="$PWD/bin/diagnostics/contact-policy-cpu.trace" bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-cpu-trace.log
@@ -134,6 +136,8 @@ jobs:
           ELECTRON2D_TEST_AREA_BACKEND=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-cpu.log
           ELECTRON2D_TEST_AREA_BACKEND=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/area-gpu.log
           ELECTRON2D_TEST_AUDIO_COMPRESSED=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/audio-compressed.log
+          ELECTRON2D_TEST_GPU_CCD_CONTRACT=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/ccd-contract.log
+          ELECTRON2D_TEST_CCD=1 ELECTRON2D_SANDBOX_GPU_SOLVER=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/ccd-host-gpu.log
           ELECTRON2D_TEST_PHYSICS_THREAD=1 bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/joint-policy.log
           ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT=gpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/shape-owner.log
           ELECTRON2D_TEST_CONTACT_CORRECTION=cpu bin/diagnostics/runner/Electron2D.Tests 2>&1 | tee bin/diagnostics/contact-policy-cpu.log
@@ -150,6 +154,7 @@ jobs:
             bin/diagnostics/character-*.trace.*
             bin/diagnostics/area-*.trace.*
             bin/diagnostics/audio-compressed.trace.*
+            bin/diagnostics/ccd-*.trace.*
             bin/diagnostics/joint-policy.trace.*
             bin/diagnostics/shape-owner.trace.*
             bin/diagnostics/contact-policy-*.trace.*
@@ -186,6 +191,7 @@ jobs:
             bin/diagnostics/character-*.trace.*
             bin/diagnostics/area-*.trace.*
             bin/diagnostics/audio-compressed.trace.*
+            bin/diagnostics/ccd-*.trace.*
             bin/diagnostics/joint-policy.trace.*
             bin/diagnostics/shape-owner.trace.*
             bin/diagnostics/contact-policy-*.trace.*
