@@ -87,10 +87,13 @@ flags and untouched tail state. Command/body strides, bindings, buffers,
 submissions and readbacks do not change. The manual diagnostic uploads CPU
 capabilities and driver versions before runner publish, so AVX-512 coverage can
 be checked before the final logs.
-The manual workflow diagnoses that later failure with temporary distinct contact
-status bits, then restores both source files, verifies the complete original
-shader manifest and reruns the unchanged 128-bit fixture. Original failures stay
-red. This contact boundary and complete release-matrix acceptance remain open.
+The paired temporary status trace at `a94697c0f` passes the complete 128-bit
+fixture on AVX-512 EPYC 9V45, while its exactly restored original fails again.
+Only the contact module changes. [Coded contact validation](gpu-contact-solver.md#contact-validation-causes)
+retains those guard outcomes in the existing summary word, without extra
+readbacks or waits; ordinary untraced target qualification and the complete
+release matrix remain required. The temporary source-swap workflow is removed;
+its unchanged baseline/SIMD/managed-scalar failure gates remain.
 Local Wayland/NVIDIA full execution at `ee40d9228` passes in 593.874 seconds
 with exit 0; local Mesa 128-bit compound/policy execution also passes. Neither
 local result closes the AVX-512 narrow-vector boundary.

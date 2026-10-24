@@ -15,7 +15,8 @@ internal static class GPUPhysicsContactStoreTests
         VerifyPrimitivesAndEdits();
         VerifyFamilies();
         VerifyConcaveAndRays();
-        VerifyFailure();
+        VerifyFailure(false);
+        VerifyFailure(true);
         VerifyResidency(64);
         VerifyResidency(256);
     }
@@ -194,13 +195,25 @@ internal static class GPUPhysicsContactStoreTests
         Console.WriteLine("Resident contacts: hollow concave terrain, complete piece output and directed ray slope/nearest-hit semantics passed.");
     }
 
-    private static void VerifyFailure()
+    private static void VerifyFailure(bool separate)
     {
-        using var store = new GPUPhysicsBodyStore();
+        using var store = new GPUPhysicsBodyStore { SeparateContactSubmissions = separate };
         using var capsule = new CapsuleShape { Radius = 1, Height = 1e20f };
         // Sensors avoid mass contribution; local native-unit extents remain finite, while device contact arithmetic overflows.
         store.AddShape(Add(store), capsule, sensor: true); store.AddShape(Add(store), capsule, sensor: true);
-        Reject<InvalidOperationException>(() => store.FindContacts());
+        try
+        {
+            store.FindContacts();
+            throw new Exception("Nonfinite device contact arithmetic must fail.");
+        }
+        catch (InvalidOperationException exception)
+        {
+            const string prefix = "GPU resident contacts returned invalid geometry or contact state (status=0x";
+            Check(exception.Message.StartsWith(prefix, StringComparison.Ordinal) && exception.Message.EndsWith(").", StringComparison.Ordinal) &&
+                uint.TryParse(exception.Message.AsSpan(prefix.Length, exception.Message.Length - prefix.Length - 2),
+                    System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out var status) && status != 0,
+                "A failed contact completion retains its nonzero device validation cause.");
+        }
         Reject<InvalidOperationException>(() => store.Step(0.01f, Vector2.Zero));
         store.Dispose(); GPUPhysicsMemoryTests.Empty(store);
         Console.WriteLine("Nonfinite contact intermediates fail closed without CPU replay.");

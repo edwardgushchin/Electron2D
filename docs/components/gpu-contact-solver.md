@@ -1,6 +1,35 @@
 # Resident GPU contact response
 
-Last updated: 2026-10-20
+Last updated: 2026-10-24
+
+## Contact validation causes
+
+Contact generation retains distinct causes in the existing summary status word.
+Shared geometry helper failures retain bit 1. The host rejects any nonzero word
+and includes its hexadecimal value in the existing exception. Emitted contacts,
+finite/unit-normal guards, history limits and identity checks keep their original
+conditions and thresholds. Error classification adds no buffer, readback, fence
+or successful-frame allocation.
+
+| Bit | Validation cause |
+| --- | --- |
+| 2 | Invalid emitted point or unit normal |
+| 4 | One-way record counter overflow |
+| 8 | Contact counter overflow |
+| 16 | One-way history table exhausted |
+| 32 | Pair slot outside the shape range |
+| 64 | Shape identity, enabled state or body range |
+| 128 | Body generation/liveness or geometry revision |
+| 256 / 512 | Nonfinite local A / local B anchor |
+| 1024 / 2048 | Nonfinite normal / separation |
+| 4096 | Nonunit normal |
+
+A paired native 128-bit AVX-512 run passes this status-coded module while the
+exactly restored original fails. This is a compiler-shape mitigation candidate;
+the failed original does not supply a specific cause. Ordinary untraced native
+qualification and the full release matrix remain separate. The existing
+nonfinite-contact regression checks nonzero cause reporting and terminal store
+state for both shared and separate pair/contact completions.
 
 ## Saturated angular friction, 2026-10-20
 

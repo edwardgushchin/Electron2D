@@ -349,63 +349,6 @@ class Checks(unittest.TestCase):
         finally:
             os.chdir(previous)
 
-    def test_linux_contact_trace_restores_sources_and_shader_identity_even_after_build_failure(self):
-        workflow = (rids.ROOT / '.github/workflows/linux-gpu-diagnostics.yml').read_text()
-        step = workflow.partition('      - name: Locate narrow-vector contact validation failures and restore the runner')[2].split('\n      - ', 1)[0]
-        self.assertIn("if: steps.simd_control.outcome == 'failure'", step)
-        inline = step.partition("          python - <<'PY'\n")[2].split('\n          PY', 1)[0]
-        code = '\n'.join(line[10:] for line in inline.splitlines())
-        paths = [Path('src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl'),
-                 Path('src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs')]
-        inputs = {path: (rids.ROOT / path).read_bytes().replace(b'\r\n', b'\n') for path in paths}
-        previous = Path.cwd()
-        try:
-            with tempfile.TemporaryDirectory(prefix='e2d contact trace ') as directory:
-                os.chdir(directory)
-                output = Path('bin/diagnostics'); output.mkdir(parents=True)
-                manifest = Path('obj/Release/net10.0/linux-x64/shaders/manifest.json')
-                manifest.parent.mkdir(parents=True)
-                (output / 'baseline-shaders.json').write_bytes(b'baseline')
-                for newline in (b'\n', b'\r\n'):
-                    for build_failure in (False, True):
-                        originals = {path: data.replace(b'\n', newline) for path, data in inputs.items()}
-                        for path, data in originals.items():
-                            path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(data)
-                        calls = []
-                        def command(arguments, **kwargs):
-                            traced = any(path.read_bytes() != data for path, data in originals.items())
-                            calls.append((arguments[0], traced))
-                            if arguments[0] == 'dotnet':
-                                self.assertIn('linux-x64', arguments)
-                                self.assertTrue(kwargs['check'])
-                                if traced:
-                                    shader = paths[0].read_text()
-                                    for bit in (2, 4, 8, 16, 32, 64, 128): self.assertIn(f'failCode({bit}u);return;', shader)
-                                    self.assertIn('diagnostic bits {values[0]}', paths[1].read_text())
-                                    if build_failure: raise subprocess.CalledProcessError(9, arguments)
-                                manifest.write_bytes(b'traced' if traced else b'baseline')
-                                return subprocess.CompletedProcess(arguments, 0)
-                            self.assertEqual(arguments, ['bin/diagnostics/runner/Electron2D.Tests'])
-                            self.assertEqual(kwargs['env']['LP_NATIVE_VECTOR_WIDTH'], '128')
-                            kwargs['stdout'].write('original failure retained\n')
-                            return subprocess.CompletedProcess(arguments, 134)
-                        with patch.dict(os.environ, GITHUB_SHA='self-check'), patch.object(subprocess, 'run', side_effect=command):
-                            if build_failure:
-                                with self.assertRaises(subprocess.CalledProcessError): exec(compile(code, 'linux-contact-trace', 'exec'), {})
-                            else:
-                                exec(compile(code, 'linux-contact-trace', 'exec'), {})
-                        self.assertTrue(all(path.read_bytes() == data for path, data in originals.items()))
-                        self.assertEqual(manifest.read_bytes(), b'baseline')
-                        receipt = json.loads((output / 'contact-trace-source.json').read_text())
-                        self.assertTrue(receipt['restored'])
-                        self.assertEqual(calls[-1], ('dotnet', False) if build_failure else ('bin/diagnostics/runner/Electron2D.Tests', False))
-                        if not build_failure:
-                            self.assertEqual(receipt['tracedExit'], 134)
-                            self.assertEqual(receipt['restoredExit'], 134)
-                            self.assertIn('Runtime exit: 134', (output / 'contact-restored.log').read_text())
-        finally:
-            os.chdir(previous)
-
     def test_tls_diagnostic_uses_the_registered_arm64_host_and_prerequisites(self):
         workflow = (rids.ROOT / '.github/workflows/linux-tls-diagnostics.yml').read_text()
         row = next(row for row in rids.matrix() if row['rid'] == 'linux-arm64')

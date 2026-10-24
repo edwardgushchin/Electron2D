@@ -200,7 +200,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private (int Contacts, int OneWay) AcceptContactStatus(nint mapped, uint offset)
     {
         var values = (uint*)((byte*)mapped + offset);
-        if (values[0] != 0) throw new InvalidOperationException("GPU resident contacts returned invalid geometry or contact state.");
+        if (values[0] != 0) throw new InvalidOperationException($"GPU resident contacts returned invalid geometry or contact state (status=0x{values[0]:X}).");
         var count = values[1]; var oneWayCount = _oneWayShapeCount > 0 ? values[2] : 0;
         if (count > int.MaxValue || oneWayCount > int.MaxValue) throw new InvalidOperationException("GPU contact count exceeds addressable storage.");
         return ((int)count, (int)oneWayCount);

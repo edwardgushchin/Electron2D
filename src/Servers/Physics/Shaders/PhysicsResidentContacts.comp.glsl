@@ -20,6 +20,7 @@ ResidentBody bodyA,bodyB;
 float contactLimit;
 bool sensor;
 void fail() { atomicOr(summary.x,1u); }
+void failCode(uint value) { atomicOr(summary.x,value); }
 #include "PhysicsResidentCollision.inc.glsl"
 #define ONE_WAY_STATE_BINDING 5
 #define ONE_WAY_TABLE_BINDING 6
@@ -39,7 +40,7 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
     vec2 localA=inverseRotate(bodyA.pose.zw,a);
     vec2 localB=inverseRotate(bodyB.pose.zw,b-(bodyB.pose.xy-bodyA.pose.xy));
     if(!finite2(localA)||!finite2(localB)||!finite2(normal)||!finite2(vec2(separation))||abs(dot2(normal,normal)-1)>0.001)
-    {fail();return;}
+    {failCode((!finite2(localA)?256u:0u)|(!finite2(localB)?512u:0u)|(!finite2(normal)?1024u:0u)|(!finite2(vec2(separation))?2048u:0u)|(abs(dot2(normal,normal)-1)>0.001?4096u:0u));failCode(2u);return;}
     if(oneWay)
     {
         if(checkedPieces!=features.zw)
@@ -48,13 +49,13 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
             pieceDecision=previousOneWay(activePair,checkedPieces,oneWayRevisions);
             if(pieceDecision==0u)pieceDecision=facesOneWay(shapeA,shapeB,bodyA,bodyB,normal)?2u:1u;
             uint record=atomicAdd(oneWaySummary.x,1u);
-            if(record==0xffffffffu){fail();return;}
+            if(record==0xffffffffu){failCode(4u);return;}
             if(record<history.w)oneWayNext[record]=OneWayState(activePair,uvec4(checkedPieces,pieceDecision,0),oneWayRevisions);
         }
         if(pieceDecision==1u)return;
     }
     uint at=atomicAdd(summary.y,1u);
-    if(at==0xffffffffu){fail();return;}
+    if(at==0xffffffffu){failCode(8u);return;}
     if(at<counts.y)contacts[at]=ContactPoint(activePair,features,vec4(normal,separation,sensor?1:0),vec4(localA,localB));
 }
 #include "PhysicsResidentManifold.inc.glsl"
@@ -90,18 +91,18 @@ void main()
             if(atomicCompSwap(oneWayNextTable[at],0xffffffffu,index)==0xffffffffu)return;
             at=(at+1u)&(historyOutput.x-1u);
         }
-        fail();return;
+        failCode(16u);return;
     }
     uint pairCount=historyOutput.y!=0u?min(counts.x,pairSummary.y):counts.x;
     if(index>=pairCount||(historyOutput.y!=0u&&pairSummary.x!=0u))return;
     oneWayInfo=history.yz;
     activePair=pairs[index];
-    if(activePair.x>=counts.z||activePair.y>=counts.z){fail();return;}
+    if(activePair.x>=counts.z||activePair.y>=counts.z){failCode(32u);return;}
     Shape sa=shapes[activePair.x],sb=shapes[activePair.y];
-    if(sa.policy.x!=activePair.z||sb.policy.x!=activePair.w||(sa.policy.w&1u)==0u||(sb.policy.w&1u)==0u||sa.owner.x>=counts.w||sb.owner.x>=counts.w){fail();return;}
+    if(sa.policy.x!=activePair.z||sb.policy.x!=activePair.w||(sa.policy.w&1u)==0u||(sb.policy.w&1u)==0u||sa.owner.x>=counts.w||sb.owner.x>=counts.w){failCode(64u);return;}
     bodyA=bodies[sa.owner.x];bodyB=bodies[sb.owner.x];
     Geometry ga=geometries[sa.owner.z],gb=geometries[sb.owner.z];
-    if(bodyA.flags.x!=sa.owner.y||bodyB.flags.x!=sb.owner.y||bodyA.flags.w==0u||bodyB.flags.w==0u||ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}
+    if(bodyA.flags.x!=sa.owner.y||bodyB.flags.x!=sb.owner.y||bodyA.flags.w==0u||bodyB.flags.w==0u||ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){failCode(128u);return;}
     if(ga.data.y==0u||gb.data.y==0u)return;
     sensor=((sa.policy.w|sb.policy.w)&2u)!=0u;contactLimit=sensor?tolerances.w:tolerances.x;
     shapeA=sa;shapeB=sb;oneWay=!sensor&&hasOneWay(sa,sb);

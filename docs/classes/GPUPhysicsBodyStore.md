@@ -11,8 +11,11 @@ select zero or the existing reporting/CCD/sleep masks and merge them without
 conditional packed-component writes. Direct scalar reads alone reproduced the
 native failure and are removed. Cold public and retained-policy cases now pass
 on AVX-512 at the default/256-bit width and without managed SIMD. Forced
-128-bit execution reaches a later contact-validation failure, which retains a
-red diagnostic and temporary status tracing with exact source restoration.
+128-bit execution reaches a later contact-validation failure. Its paired
+status-coded contact module passes where the restored original fails.
+[Contact validation causes](../components/gpu-contact-solver.md#contact-validation-causes)
+now use the existing device summary word; ordinary untraced target qualification
+remains required.
 
 [Maximum finite point-force reconstruction](../components/physics-areas.md#maximum-finite-point-force-reconstruction)
 scales exponent 128 in two finite steps and explicitly retains signs when splitting

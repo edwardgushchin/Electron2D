@@ -242,11 +242,35 @@ That diagnostic remains red: its forced 128-bit process reaches a later
 `3dfcf33f4978ec3255d3fa54febdb303afa08aab07103b5fb864a960613dcd22`;
 the failing log SHA-256 is
 `dfe9fb99e8e5cf53ac6d779ccc504b8ec0c7b5120f2987d2dd87264596306c52`.
-The manual workflow now diagnoses distinct temporary contact status bits,
-restores the shader and host bytes even after build failure, verifies the
-complete original shader manifest and reruns the original 128-bit process.
-This follow-up does not turn the original failure green or qualify its contact
-boundary. Local Mesa 128-bit execution passes in 71.184 seconds on a non-AVX-512
+The temporary status-coded contact module at `a94697c0f` passes on the same
+AVX-512 EPYC 9V45 where the original 128-bit module fails. Run `40051954918`,
+artifact `12543469289`, ZIP SHA-256
+`1e0e97e32f10ca0d9411f6241c9bf4d42b546598274956f59854a5402ed13d9e`
+retains original raw 134, traced raw 0 and exactly restored raw -6 (SIGABRT).
+The trace log SHA-256 is
+`aee413f5434906b85424f77912a2f6250b05dbf94521a4e7a71d35579145435d`;
+the restored log SHA-256 is
+`04e3cb448d80630066d8c652d8a4880c2099e60f45718636eaca62104eba2758`.
+The restore receipt verifies both original source byte hashes and the complete
+shader manifest. Only the contact module differs: baseline
+`1ebec70e564cf43244f02083d82d97e94daaeba159551ebff7ffdc8261f334ef`,
+status-coded `e15b917126728b0c17b3204564c56008f5036cbefb22e91cd1c23fca14f1f63d`.
+Thus the temporary trace masks the original failure; it does not reveal which
+original guard failed. This is paired compiler-shape evidence, not original-run
+acceptance. Existing validation now uses those distinct causes in its ordinary
+summary word, with no source substitution, additional readback or host wait.
+The temporary source-swap step is removed; all original failure gates remain.
+Ordinary untraced target qualification of the resulting module is still required.
+Local NVIDIA compound/policy execution and both Mesa widths pass with the
+status-coded module. The resident contact cohort rejects genuine nonfinite
+arithmetic with a nonzero cause in both shared and separate completions, then
+retains 521,220 points for 65,536 bodies over 384 warmup/256 sampled ticks at
+zero managed bytes per tick. These integration/broad/narrow measurements exclude
+contact response. The contact SPIR-V is the exact paired-trace module above;
+body and signed-field modules remain unchanged. Native ShaderCross reflection
+retains eight readonly buffers, five writable buffers, one uniform and 64x1x1
+workgroups. HLSL/MSL translation and pinned DXIL compilation pass; those compiler
+checks do not replace Windows or Metal execution. Local Mesa 128-bit execution passes in 71.184 seconds on a non-AVX-512
 Ryzen 5700X; it does not close that native failure.
 
 The complete untraced local Linux x64 Wayland/NVIDIA suite at `ee40d9228` passes
