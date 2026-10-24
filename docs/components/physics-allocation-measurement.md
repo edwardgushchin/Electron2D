@@ -1,6 +1,6 @@
 # Physics allocation measurement
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 ## Scope and ownership
 
@@ -774,3 +774,32 @@ tag domain and closes on exceptions. Standalone CPU/GPU entry points let the
 macOS workflow exercise the complete character suite before the full aggregate.
 This preparation does not attribute the old failure; ordinary target acceptance
 and any matching failing trace remain required.
+
+## Shape-owner and joint-policy measurement preparation (2026-10-24)
+
+The ordinary macOS x64 job `120766028047`, run `40056127660` at `5135f740d`,
+fails its separate-thread CPU joint-policy interval at owner/all-thread
+`2,256/18,808 B`. It retains 128 warmup and 128 edit-active measured frames.
+The calibrated macOS ARM64 run `40063421412` instead aborts earlier in the CPU
+`ShapeOwnerTests.VerifyLifetimeAndAllocation` interval at `5,816/13,216 B`.
+That interval contains 64 complete measured frames after 120 settling frames
+and 64 warmup frames. It had no native physical marker, so the process-wide
+profile cannot attribute those particular bytes. Neither failure is accepted
+or explained by a successful focused control.
+
+Both fixtures now call the existing calibrated `AllocationWarmupCheck.Collect`
+before their unchanged warmup loops. Both blocking collection/finalization
+passes finish outside warmup and measurement. This isolates the counters from
+the documented background context-retirement and pending-finalizer effects;
+it does not identify the producers in either older failed interval. The same
+physical work, numerical checks and strict zero owner/all-thread byte assertions
+remain. GC stays enabled; no bytes are subtracted and no interval is retried.
+
+The complete CPU/GPU shape-owner suite now opens the existing native recorder
+in domain `10UL << 32`. Its 64-frame physical bracket closes on exceptions and
+prints its backend, counters and tag before the assertion. The existing
+owner/disable-contract selector exercises the complete CPU and GPU families;
+the macOS diagnostic workflow retains both its profiled and ordinary logs and
+the dedicated trace. Positive/empty controls still precede physical tracing.
+These diagnostics do not replace complete ordinary target CI or attribute an
+older interval that has no matching object/context evidence.

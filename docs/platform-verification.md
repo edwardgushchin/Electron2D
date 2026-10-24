@@ -1,8 +1,34 @@
 # Platform verification matrix
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 ## Current release checks
+
+At `5135f740d`, ordinary Windows x64 job `120766027842` in run `40056127660`
+passes the complete headless suite, trimmed contract and NativeAOT contract.
+The complete suite ends at 05:26:33 UTC on 2026-10-24; the NativeAOT contract
+executes at 05:29:56 UTC. Its two completion lines are the original output and
+the subsequent exact-marker check, not two complete runs.
+
+Windows diagnostic runs `40056139563`, `40056141672` and `40056143706` pass
+their complete ARM64/x64/x86 executables on that same revision. Each retains a
+zero raw exit, the final marker, the full FileDialog contract and CPU/GPU
+point-field summaries at 0/0 managed bytes. Their temporary cold-pipeline and
+app-local WARP observations remain diagnostic instrumentation; they do not
+replace ordinary RID jobs or establish physical GPU/rendering performance.
+
+The same revision's ordinary macOS x64 job fails late CPU joint-policy edits
+at 2,256/18,808 owner/all-thread bytes. Its calibrated ARM64 diagnostic instead
+fails earlier CPU shape-owner frames at 5,816/13,216 bytes. The latter physical
+interval was unmarked. An API step conclusion of success under
+`continue-on-error` does not supersede its raw abort or the failed final job.
+The affected fixtures now use the shared double collection/finalization
+preparation, and shape-owner frames have native physical markers; see
+[measurement preparation](components/physics-allocation-measurement.md#shape-owner-and-joint-policy-measurement-preparation-2026-10-24).
+These bounded receipts do not attribute either older failure or certify later
+source revisions; release acceptance uses their own complete ordinary CI logs.
+
+### Earlier release investigations
 
 The complete ordinary Linux x64 suite at `1401a95ff` passes in 617.6 seconds
 with the audited native closure. The complete ordinary macOS ARM64 suite at

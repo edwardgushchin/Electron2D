@@ -173,6 +173,7 @@ internal sealed class PhysicsJointPolicyTests(bool gpu, PhysicsServer.Backend ba
         PhysicsServer.JointClear(r.Joint); Check(PhysicsServer.JointGetMaxForce(r.Joint) == 10 && PhysicsServer.JointGetMaxBias(r.Joint) == 5, "Clear preserves general settings.");
         r.Pin(); Check(PhysicsServer.PinJointGetSoftness(r.Joint) == 0 && PhysicsServer.JointGetBias(r.Joint) == 0.3f, "Concrete replacement resets only pin-specific softness.");
         PhysicsServer.BodySetCanSleep(r.B, false);
+        AllocationWarmupCheck.Collect();
         for (var i = 0; i < 128; i++) { PhysicsServer.JointSetMaxForce(r.Joint, 10 + i % 2); PhysicsServer.BodySetLinearVelocity(r.B, new(6, 8)); r.Step(); }
         _ = GC.GetTotalAllocatedBytes(true);
         var separate = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);

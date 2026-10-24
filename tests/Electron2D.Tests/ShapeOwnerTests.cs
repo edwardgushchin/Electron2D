@@ -4,12 +4,13 @@ internal static class ShapeOwnerTests
 {
     internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
+        using var trace = PhysicsAllocationTrace.Open(backend, 10UL << 32);
         VerifyRegistry();
         VerifyManualFixturesAndMotion(backend);
         VerifyChildBridgeAndPacking(backend);
         VerifyChildSlotOverrideReentry(backend);
         VerifyAreaAndOneWay(backend);
-        VerifyLifetimeAndAllocation(backend);
+        VerifyLifetimeAndAllocation(backend, trace);
         Console.WriteLine($"Collision owner groups ({backend}), logical indices, manual fixtures and allocation checks passed.");
     }
 
@@ -181,7 +182,7 @@ internal static class ShapeOwnerTests
         Check(!area.OverlapsBody(body), "Disabled owner geometry is removed from overlap snapshots.");
     }
 
-    private static void VerifyLifetimeAndAllocation(PhysicsServer.Backend backend)
+    private static void VerifyLifetimeAndAllocation(PhysicsServer.Backend backend, PhysicsAllocationTrace? trace)
     {
         using var world = new World(backend);
         using var circle = new CircleShape();
@@ -194,15 +195,23 @@ internal static class ShapeOwnerTests
         Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scene uses the explicitly selected physics backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GlobalPosition.Y is > 75 and < 85, "Manual owner fixtures provide ordinary rigid-body solver response.");
+        AllocationWarmupCheck.Collect();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         _ = GC.GetTotalAllocatedBytes(true);
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        var allBefore = GC.GetTotalAllocatedBytes(true);
-        for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
-        var allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        var tag = trace?.Tag(1) ?? 0;
+        long ownerBytes, allBytes;
+        trace?.Begin(tag);
+        try
+        {
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            var allBefore = GC.GetTotalAllocatedBytes(true);
+            for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
+            ownerBytes = GC.GetAllocatedBytesForCurrentThread() - before;
+            allBytes = GC.GetTotalAllocatedBytes(true) - allBefore;
+        }
+        finally { trace?.End(); }
+        Console.WriteLine($"Owner-fixture warm frames ({backend}): owner={ownerBytes}, all={allBytes} bytes, trace={tag}.");
         Check(ownerBytes == 0 && allBytes == 0, $"Warmed owner fixtures and solver frames allocate no managed bytes: owner={ownerBytes}, all={allBytes}.");
-        Console.WriteLine($"Owner-fixture warm frames ({backend}): owner={ownerBytes}, all={allBytes} bytes.");
         Check(Task.Run(() => Capture(() => body.ShapeOwnerGetShapeCount(bodyOwner))).GetAwaiter().GetResult() is InvalidOperationException,
             "Attached owner registry access rejects a foreign thread.");
         circle.Dispose(); tree.PhysicsFrame(1d / 60);
