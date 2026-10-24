@@ -256,6 +256,7 @@ public sealed partial class Input : ElectronObject
         @event.EnsureUsable();
         var mainLoop = Engine.MainLoop;
         mainLoop?.ValidateInputEventDispatch();
+        var windowSources = DisplayServer.CaptureWindowInputSources();
 
         lock (_parseGate)
         {
@@ -274,7 +275,7 @@ public sealed partial class Input : ElectronObject
                     {
                         if (emulated is InputEventMouse)
                             CommitEvent(emulated);
-                        mainLoop?.DispatchInputEvent(emulated);
+                        DispatchParsedEvent(mainLoop, windowSources, emulated);
                     }
                     catch (Exception error)
                     {
@@ -284,7 +285,7 @@ public sealed partial class Input : ElectronObject
 
                 try
                 {
-                    mainLoop?.DispatchInputEvent(@event);
+                    DispatchParsedEvent(mainLoop, windowSources, @event);
                 }
                 catch (Exception error) when (emulationFailure is not null)
                 {
@@ -300,6 +301,15 @@ public sealed partial class Input : ElectronObject
                 _isParsing = false;
             }
         }
+    }
+
+    private static void DispatchParsedEvent(MainLoop? mainLoop, DisplayWindowEvents[] sources, InputEvent value)
+    {
+        Exception? failure = null;
+        try { DisplayServer.EmitWindowInput(sources, value); } catch (Exception error) { failure = error; }
+        try { if (ReferenceEquals(Engine.MainLoop, mainLoop) && mainLoop is { IsDisposed: false }) mainLoop.DispatchInputEvent(value); }
+        catch (Exception error) { if (failure is not null) throw new AggregateException(failure, error); throw; }
+        if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
 
     private void CommitEvent(InputEvent @event)

@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-10-19
+Last updated: 2026-10-25
 
 [Manual device sensor values](device-sensors.md) retain four independent Vector3 snapshots under the Input lock. Their setters are callable from any thread and their values feed headless scene execution; hardware acquisition remains absent.
 
@@ -104,6 +104,10 @@ For native SDL key events, the display adapter records the event's logical key, 
 Native rumble and LED calls use device capabilities. Weak/strong magnitudes are retained after a timed effect expires, while active-state queries count down from the requested duration capped to about 65 seconds. The project setting supplies the startup unfocused policy; changing Input's property while unfocused releases pressed state and stops rumble. The host asks SDL to deliver controller events in the background, then applies this policy itself. Physical controllers and native driver allocations remain unverified. A warmed Linux/.NET 8 probe measured 28,672 managed bytes for 128 active virtual-button events (224 per event) and zero bytes for 128 idle event pumps on both dummy and Wayland; the temporary typed event ownership path remains an ADR 0014 allocation gap.
 
 [InputGamepadNativeTests](../../tests/Electron2D.Tests/InputGamepadNativeTests.cs) uses SDL virtual gamepad and raw joystick devices on dummy and Linux Wayland. It verifies initial and later connection callbacks, failure continuation, mapping transitions, raw/standardized button and axis values, device isolation, action and SceneTree delivery, rumble/LED callbacks, ignored vendor/product IDs, focus suppression and Engine.Run project settings.
+
+## Native window observation
+
+[DisplayWindowEvents.Input](../classes/DisplayWindowEvents.md) adds a native-window observation phase to the existing parser. It sees committed raw/action state before scene dispatch for native, manually parsed and emulated events. Tagged events select their ID; untagged events broadcast to the captured live cohort. Active native-window observers require the display owner thread before mutation. A failing observer cannot suppress other publishers or scene delivery; stopping the loop skips stale scene input. Source disposal and registration affect subsequent recipient snapshots. Prepared success-path dispatch retains zero managed allocation; native SDL event construction remains a separate allocation gap.
 
 ## Verification
 

@@ -20,7 +20,7 @@ public sealed partial class DisplayServer
         long count;
         lock (InstanceGate) { count = _pendingSystemGoBack; _pendingSystemGoBack = 0; }
         for (long i = 0; i < count; i++)
-            try { BeginEventEmission(GoBackRequestedCore)?.Invoke(); }
+            try { PublishWindow(BeginEventEmission(GoBackRequestedCore), _windowEvents?.BackHandlers); }
             catch (Exception error) { (failures ??= []).Add(error); }
     }
 }

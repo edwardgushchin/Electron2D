@@ -2,7 +2,7 @@
 
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.
 
@@ -19,6 +19,8 @@ Own the native display connection, borrowed operating-system display/window and 
 | [Display server](../components/display-server.md) | SDL video lifetime, main window, borrowed desktop display/window identities, display, system-theme and pointer queries, event translation | Partial native host; coverage and limits documented |
 
 ## Public surface
+
+[DisplayWindowEvents](../classes/DisplayWindowEvents.md), obtained by static `DisplayServer.GetWindowEvents`, owns typed per-native-window subscriptions and retirement. Its parsed-input phase precedes scene delivery; native notifications follow existing window callbacks. See [the connected component](../components/display-server.md#per-window-typed-events).
 
 [`DisplayServer`](../classes/DisplayServer.md) provides process singleton access, main-window and display queries, native light/dark-theme queries, [borrowed native display/window identities](../classes/DisplayServer.HandleType.md) through `WindowGetNativeHandle`, typed native notifications including `SystemThemeChanged`, `WindowDpiChanged`, and complete client-rectangle changes through `WindowRectChanged`, clipboard and IME state, pointer control, basic native dialogs, and deterministic disposal. The handle query is implemented in [`DisplayServer.Windows.cs`](../../src/Servers/Display/DisplayServer.Windows.cs) over SDL window properties. See the complete public member reference and [coverage inventory](../coverage/classes/DisplayServer.md).
 

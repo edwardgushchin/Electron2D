@@ -2,7 +2,7 @@
 
 The production Android host's [system back producer](window-runtime.md#system-back-navigation) posts to the active display's retained owner queue. `DisplayServer.GoBackRequested` delivers after buffered native input, before frame callbacks, including in `ForceProcessAndDropEvents`. Request capture, callback failure and retirement follow [ADR 0040](../decisions/display.md#adr-0040).
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 ## Scope
 
@@ -21,6 +21,16 @@ This component owns the native SDL video connection, one main window, display an
 4. The host completes and pumps pending native file dialogs, then disposes the server after stopping its loop. Cursor, window, and video ownership are released, then the process singleton is cleared.
 
 The scene Window now consumes the existing `TextInput` and `TextEditing` events during Engine.Run. DisplayServer commits preedit/selection state before its text callbacks and clears it before a committed string callback; the root SceneTree then notifies live nodes and the focused Control in that order. DisplayServer itself retains only native event/IME ownership. A committed string can contain multiple Unicode scalars and is not assigned to a preceding key event. [TextDeliveryNativeTests](../../tests/Electron2D.Tests/TextDeliveryNativeTests.cs) verifies this bridge on Linux Wayland GPU and compatibility; a real input-method popup remains unverified.
+
+## Per-window typed events
+
+`DisplayServer.GetWindowEvents(windowID)` supplies the stable borrowed [DisplayWindowEvents](../classes/DisplayWindowEvents.md) publisher for each active native identity. Static events remain main-window notifications. The family covers input, committed/composing text, ordinary/forced-popup close, back, focus, pointer/content-scale, effective rectangle and owned file-drop batches. Explicit publisher disposal only clears subscriptions; native retirement disposes it, and scene child reopening creates a new native ID. Owner-thread registration/disposal, callback replacement and failure-safe retirement follow [ADR 0044](../decisions/display.md#adr-0044).
+
+Parsed input captures live recipients before state mutation, commits raw/action state, then selects the tagged native window or broadcasts untagged events before ordinary scene dispatch. Disposed recipients are skipped; new recipients begin next parse. Callback failures preserve other windows and scene delivery. Native notification handlers follow the existing window/scene callback and use the captured publisher; a replacement never receives an in-flight old event. Forced popup callbacks run before automatic hide and cannot cancel it by throwing.
+
+On 2026-10-25 the native publisher cohort passed dummy/Wayland/X11 and four popup GPU/compatibility profiles. Thirteen regression groups cover main-loop/input, native child contexts/rendering, virtual gamepad input, text delivery and system back. The public consumer passed CLR and strict full-trim NativeAOT on Wayland/X11 with both software rendering backends, including actual child pixels, effective resize, hide/reopen and 64 prepared dispatches at zero owner/all-thread managed bytes. The initial menu fixture lacked a native focus acknowledgement; it now waits before injecting navigation. The full gamepad selector cannot render on SDL dummy and was verified on Wayland; its retained failed dummy run is a prerequisite limit, not a passing render result.
+
+The low-level native test cohort and public consumer execute this contract. Requested resize values may be rounded or constrained; callbacks report the effective native client rectangle. The retained software-renderer receipts are API/lifetime/pixel evidence, with physical input, real IME/data-offer, remaining specialized event producers and foreign platforms still separate.
 
 ## Dependencies and interactions
 

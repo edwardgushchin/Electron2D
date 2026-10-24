@@ -33,11 +33,11 @@
   ],
   "statusGroups": [
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "DisplayServer::method:window_set_input_text_callback(Callable:,int:)"
       ],
-      "reason": "ADR 0038: native SDL committed text remains one complete string and composition remains a separate text/codepoint-selection update; the root SceneTree sends the former to the focused Control and the latter through the scene IME notification plus focused typed hooks/events. TextDeliveryTests and Linux Wayland GPU/compatibility TextDeliveryNativeTests check focus, phase ordering, callbacks and multi-scalar commits. No SDL text event is falsely attributed to an InputEventKey. Main-window delivery executes; the source window-ID callback family still needs native multiwindow ownership and routing."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers. Committed strings and composition selection remain separate; actual input-method UI acceptance remains independent of callback registration."
     },
     {
       "state": "Implemented",

@@ -268,14 +268,14 @@ public sealed partial class DisplayServer
                 if (!_mouseHovering)
                 {
                     _mouseHovering = true;
-                    BeginEventEmission(WindowMouseEnteredCore)?.Invoke();
+                    PublishWindow(BeginEventEmission(WindowMouseEnteredCore), _windowEvents?.EnterHandlers);
                 }
                 break;
             case SDL.EventType.WindowMouseLeave:
                 if (_mouseHovering)
                 {
                     _mouseHovering = false;
-                    BeginEventEmission(WindowMouseExitedCore)?.Invoke();
+                    PublishWindow(BeginEventEmission(WindowMouseExitedCore), _windowEvents?.ExitHandlers);
                 }
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
@@ -285,12 +285,12 @@ public sealed partial class DisplayServer
                     ReapplyWaylandWindowLimits();
                     RefreshBlankWindowSurface();
                 }
-                BeginEventEmission(WindowDpiChangedCore)?.Invoke();
+                PublishWindow(BeginEventEmission(WindowDpiChangedCore), _windowEvents?.DPIHandlers);
                 break;
             case SDL.EventType.WindowCloseRequested:
                 _pendingDroppedFiles = null;
-                if (IsNativePopup && SceneWindow is { } popup) popup.Hide();
-                else BeginEventEmission(CloseRequestedCore)?.Invoke();
+                if (IsNativePopup) ForceClosePopup();
+                else PublishWindow(BeginEventEmission(CloseRequestedCore), _windowEvents?.CloseHandlers);
                 break;
             case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
             case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
@@ -302,7 +302,7 @@ public sealed partial class DisplayServer
                 if (resizedRect != _windowRect)
                 {
                     _windowRect = resizedRect;
-                    BeginEventEmission(WindowRectChangedCore)?.Invoke(resizedRect);
+                    PublishWindow(BeginEventEmission(WindowRectChangedCore), _windowEvents?.RectHandlers, resizedRect);
                 }
                 break;
             case SDL.EventType.WindowMoved:
@@ -315,7 +315,7 @@ public sealed partial class DisplayServer
                 if (movedRect != _windowRect)
                 {
                     _windowRect = movedRect;
-                    BeginEventEmission(WindowRectChangedCore)?.Invoke(movedRect);
+                    PublishWindow(BeginEventEmission(WindowRectChangedCore), _windowEvents?.RectHandlers, movedRect);
                 }
                 break;
             case SDL.EventType.WindowFocusGained:
@@ -338,14 +338,14 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.TextInput:
                 ClearWindowComposition();
-                BeginEventEmission(TextInputCore)?.Invoke(Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
+                PublishWindow(BeginEventEmission(TextInputCore), _windowEvents?.TextHandlers, Marshal.PtrToStringUTF8(nativeEvent.Text.Text) ?? string.Empty);
                 break;
             case SDL.EventType.TextEditing:
                 (_rootDisplay ?? this)._compositionWindow = this;
                 _imeText = Marshal.PtrToStringUTF8(nativeEvent.Edit.Text) ?? string.Empty;
                 _imeSelection = new Vector2i(Math.Max(0, nativeEvent.Edit.Start),
                     Math.Max(0, nativeEvent.Edit.Length));
-                BeginEventEmission(TextEditingCore)?.Invoke(_imeText, _imeSelection);
+                PublishWindow(BeginEventEmission(TextEditingCore), _windowEvents?.EditingHandlers, _imeText, _imeSelection);
                 break;
             case SDL.EventType.MouseMotion when nativeEvent.Motion.Which != SDL.TouchMouseID:
                 DispatchMouseMotion(nativeEvent.Motion);
@@ -367,7 +367,7 @@ public sealed partial class DisplayServer
         {
             try
             {
-                BeginEventEmission(WindowFocusChangedCore)?.Invoke(focused);
+                PublishWindow(BeginEventEmission(WindowFocusChangedCore), _windowEvents?.FocusHandlers, focused);
             }
             catch (Exception exception)
             {
@@ -417,14 +417,14 @@ public sealed partial class DisplayServer
                 if (_pendingDroppedFiles is { } pending)
                     pending.Add(path ?? string.Empty);
                 else
-                    BeginEventEmission(FilesDroppedCore)?.Invoke(new[] { path ?? string.Empty });
+                    PublishWindow(BeginEventEmission(FilesDroppedCore), _windowEvents?.DropHandlers, (IReadOnlyList<string>)new[] { path ?? string.Empty });
                 break;
             case SDL.EventType.DropComplete:
                 {
                     var completed = _pendingDroppedFiles;
                     _pendingDroppedFiles = null;
                     if (completed is { Count: > 0 })
-                        BeginEventEmission(FilesDroppedCore)?.Invoke(completed.ToArray());
+                        PublishWindow(BeginEventEmission(FilesDroppedCore), _windowEvents?.DropHandlers, (IReadOnlyList<string>)completed.ToArray());
                     break;
                 }
         }

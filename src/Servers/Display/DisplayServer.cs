@@ -576,6 +576,7 @@ public sealed partial class DisplayServer : ElectronObject
         lock (InstanceGate)
         {
             retirementFailure = !_retiringNativeWindow ? PrepareNativeWindowRetirement() : null;
+            if (RetireWindowEvents() is { } eventFailure) retirementFailure = retirementFailure is null ? eventFailure : new AggregateException(retirementFailure, eventFailure);
             if (_rootDisplay is { } root)
             {
                 if (ReferenceEquals(root.FocusedWindow(), this) || ReferenceEquals(root._pressedInputWindow, this))
@@ -592,7 +593,9 @@ public sealed partial class DisplayServer : ElectronObject
                 if (retirementFailure is not null) throw retirementFailure;
                 return;
             }
-            foreach (var child in _childWindows.Values.ToArray()) child.Dispose();
+            foreach (var child in _childWindows.Values.ToArray())
+                try { child.Dispose(); }
+                catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
             SceneWindow = null;
             _pendingDroppedFiles = null;
             DisposeDialogs();

@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 [Device sensor values](../components/device-sensors.md) add eight typed operations for manual acceleration, gravity, gyroscope and magnetic-field simulation. Four raw values feed ordinary scene callbacks; automatic mobile acquisition remains a separate missing producer.
 
@@ -21,6 +21,8 @@ Input owns typed input-event values, the process-wide action map, raw and mapped
 Production types are [`Input`](../classes/Input.md), [`InputMap`](../classes/InputMap.md), [`JoypadInfo`](../classes/JoypadInfo.md), [`InputActionSettings`](../classes/InputActionSettings.md), [`InputBindingSettings`](../classes/InputBindingSettings.md), [`InputBindingKind`](../classes/InputBindingKind.md), [`DragPayload`](../classes/DragPayload.md) and [`DragPayload<T>`](../classes/DragPayload.Generic.md), the [`InputEvent`](../classes/InputEvent.md) hierarchy, and the seven input enums listed in the inventory.
 
 ## Public surface
+
+The display-owned [per-window observation phase](../components/input-runtime.md#native-window-observation) observes committed input before scene dispatch, including manual parsing and emulation, with native ID selection, untagged broadcast and failure/lifetime isolation.
 
 - `Input`: raw key/mouse/controller queries, named action queries and injection, axes/vectors, event parsing, pointer accumulation and flush, mouse/touch emulation policy, native mouse mode/cursor controls and warp, connected controller metadata, mapping, vibration/LED requests, focus policy, and release-all.
 - `InputMap`: case-sensitive action registration, default `ui_*` focus navigation bindings, typed project-action loading and its loaded event, validated deadzones, immutable collection snapshots of borrowed binding references, binding management, matching, and descriptions.

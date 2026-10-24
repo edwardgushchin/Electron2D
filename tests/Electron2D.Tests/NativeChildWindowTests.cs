@@ -9,6 +9,7 @@ internal static partial class NativeChildWindowTests
 
     internal static void Display()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_EVENTS") == "1") { DisplayWindowEventsTests.Run(); return; }
         using var display = DisplayServer.Open("Main", new(80, 80), hidden: true);
         using var first = display.CreateChildWindow("First", new(96, 80));
         using var second = display.CreateChildWindow("Second", new(112, 80));

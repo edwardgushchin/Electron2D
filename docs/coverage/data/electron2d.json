@@ -3946,6 +3946,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DisplayWindowEvents",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "DisplayWindowEvents",
+    "signature": "public sealed class Electron2D.DisplayWindowEvents",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DomainWarpFractalType",
     "kind": "type",
     "declaringType": "Electron2D.DomainWarpFractalType",
@@ -64032,6 +64047,162 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.DisplayWindowEvents.CloseRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "CloseRequested",
+    "signature": "public event System.Action CloseRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.DPIChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "DPIChanged",
+    "signature": "public event System.Action DPIChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.FilesDropped()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "FilesDropped",
+    "signature": "public event System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E FilesDropped",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.FocusChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "FocusChanged",
+    "signature": "public event System.Action\u003CSystem.Boolean\u003E FocusChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.ForceCloseRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "ForceCloseRequested",
+    "signature": "public event System.Action ForceCloseRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.GoBackRequested()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "GoBackRequested",
+    "signature": "public event System.Action GoBackRequested",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.Input()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "Input",
+    "signature": "public event System.Action\u003CElectron2D.InputEvent\u003E Input",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.MouseEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "MouseEntered",
+    "signature": "public event System.Action MouseEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.MouseExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "MouseExited",
+    "signature": "public event System.Action MouseExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.RectChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "RectChanged",
+    "signature": "public event System.Action\u003CElectron2D.Rect2i\u003E RectChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Rect2i\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.TextEditing()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "TextEditing",
+    "signature": "public event System.Action\u003CSystem.String, Electron2D.Vector2i\u003E TextEditing",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String, Electron2D.Vector2i\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.DisplayWindowEvents.TextInput()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "TextInput",
+    "signature": "public event System.Action\u003CSystem.String\u003E TextInput",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.ElectronObject.Disposed()",
     "kind": "event",
     "declaringType": "Electron2D.ElectronObject",
@@ -100749,6 +100920,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.GetWindowEvents(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "GetWindowEvents",
+    "signature": "public static Electron2D.DisplayWindowEvents GetWindowEvents(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.DisplayWindowEvents",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.GetWindowList()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -101943,6 +102133,51 @@
         "default": "0"
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayWindowEvents.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayWindowEvents.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayWindowEvents.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -249319,6 +249554,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.DisplayWindowEvents.WindowID()",
+    "kind": "property",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "WindowID",
+    "signature": "public System.Int32 WindowID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

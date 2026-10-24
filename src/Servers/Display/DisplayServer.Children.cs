@@ -122,7 +122,7 @@ public sealed partial class DisplayServer
             List<Exception>? errors = null;
             foreach (var child in root._childWindows.Values.ToArray())
                 if (ReferenceEquals(child.NativePopupParent, this))
-                    try { if (child.SceneWindow is { } scene) scene.Hide(); else child.Dispose(); }
+                    try { child.ForceClosePopup(); }
                     catch (Exception error) { (errors ??= []).Add(error); }
             if (errors is not null)
             {

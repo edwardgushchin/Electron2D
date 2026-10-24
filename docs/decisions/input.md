@@ -1,6 +1,6 @@
 # Input decisions
 
-Last updated: 2026-10-19
+Last updated: 2026-10-25
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -12,7 +12,7 @@ This log owns durable decisions for input events, action mapping, process-wide i
 
 - Status: Accepted; the native display/event-pump integration, including pointer emulation, is recorded in [ADR 0040](display.md#adr-0040)
 - Date: 2026-09-21
-- Last updated: 2026-10-18
+- Last updated: 2026-10-25
 
 ### Context
 
@@ -48,6 +48,8 @@ An earlier statement that a missing feature was merely "deferred" was not suffic
 - The SDL host now owns joystick/gamepad subsystem lifetime and native handles. Input owns typed identity and capability snapshots, mapping overrides, per-device pressed state, vibration requests and the unfocused policy; controller events follow ordinary InputMap and SceneTree delivery. The built-in typed project setting supplies the Engine.Run startup policy. Virtual devices passed initial/hotplug, mapped/raw input, remapping, rumble/LED, ignored vendor/product IDs, per-device isolation and scene/action delivery on Linux Wayland and dummy. The exact SDL2 mapping grammar, Steam/XInput info fields, deferred connection-signal timing and physical hardware behavior remain Partial in coverage. A warmed virtual-button probe measured 28,672 managed bytes for 128 active native events and zero for 128 idle event pumps on dummy and Wayland; active native event construction remains an ADR 0014 allocation gap. The graph authoring SDL motion producer also measures 145408 managed bytes over 64 prepared native input/frame intervals, while the actual 64 graph handler and render intervals measure zero. Native event construction and GUI transformed-event ownership require their own complete scoped borrowed-event preparation/lifetime layer; the graph control implementation does not close that shared producer gap.
 
 Manual device sensor values use four independent retained Vector3 fields under ADR 0033. Static getters and setters serialize each complete value through the Input lock on any thread, including during Engine execution. Values initially contain zero and copy every floating-point component unchanged, without normalization, calibration, input events or native startup. This supports device-free debugging; values survive Engine stop/restart until explicitly replaced. These operations are separate from per-controller motion state. Manual setters execute completely; getter coverage remains Partial until the owning mobile adapter supplies automatic device acquisition. The native acquisition row below refers to that missing host producer.
+
+DisplayWindowEvents input subscriptions add the per-native-window observation phase owned by ADR 0044. Caller-owned Input.ParseInputEvent and native/emulated events share it after state commit and before scene routing. With active native-window input subscribers, off-owner parsing rejects before state mutation; without that native observation phase the existing input ownership rules remain unchanged. This phase preserves source-window selection, untagged broadcast, recipient snapshots, retirement and independent failure delivery.
 
 ### Deferred coverage and exact implementation triggers
 

@@ -374,13 +374,15 @@ public sealed partial class Input
     /// Mapping and state changes are committed before callbacks. Optional pointer emulation delivers its synthetic
     /// event before the source event, with device ID <see cref="InputEvent.DeviceIdEmulation"/>. Re-entry is rejected.
     /// Both events remain delivered if either callback fails; committed state is not rolled back. An active loop
-    /// validates owner-thread and lifecycle eligibility before any state changes.
+    /// validates owner-thread and lifecycle eligibility before any state changes. Active DisplayWindowEvents.Input
+    /// subscriptions also require the display owner thread. Their captured native-window publishers observe
+    /// committed state before scene routing; untagged events broadcast, while tagged events select their window ID.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="event"/> is <see langword="null"/>.</exception>
     /// <exception cref="InvalidOperationException">Parsing is re-entered, an active loop is called off its owner thread or during another callback, or a direct action event cannot obtain a valid source index.</exception>
     /// <exception cref="KeyNotFoundException">An <see cref="InputEventAction"/> names an unregistered action.</exception>
     /// <exception cref="ObjectDisposedException"><paramref name="event"/> or a matched binding is disposing or disposed.</exception>
-    /// <exception cref="AggregateException">One or more scene input callbacks throw after state is committed.</exception>
+    /// <exception cref="AggregateException">One or more window or scene input callbacks throw after state is committed.</exception>
     public static void ParseInputEvent(InputEvent @event) => Service.ParseInputEventCore(@event);
 
     /// <summary>Releases every tracked key, mouse button, controller button, axis, and action source.</summary>

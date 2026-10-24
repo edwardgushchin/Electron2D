@@ -16,7 +16,7 @@ internal static partial class NativePopupWindowTests
         var panel = new PopupPanel { Name = "Panel", Size = new(96, 64) }; panel.AddThemeStyleBoxOverride("panel", style);
         var text = new TextEdit { Text = "Native context menu", Position = new(24, 210), Size = new(260, 64) };
         root.AddChild(button); root.AddChild(option); root.AddChild(panel); root.AddChild(text);
-        var phase = -30; var frames = 0; long before = 0, allocated = 0;
+        var phase = -30; var frames = 0; var focusWait = 0; long before = 0, allocated = 0;
         root.Ready += _ =>
         {
             root.Tree!.ProcessFrameStarted += _ =>
@@ -50,6 +50,13 @@ internal static partial class NativePopupWindowTests
                     Console.WriteLine($"Native popup {backend}: 64 prepared {(phase == 9 ? "active focus/render" : "idle render")} frames, {allocated} managed owner bytes.");
                     if (phase == 9) { phase++; frames = 0; allocated = 0; } else root.Tree!.Quit();
                     return;
+                }
+                if (SDL.GetCurrentVideoDriver() == "wayland" && phase is 0 or 1 or 2)
+                {
+                    var pendingFocus = phase == 1 ? submenu : menu;
+                    if (pendingFocus.Visible && !pendingFocus.HasFocus())
+                    { Check(++focusWait <= 120, "The compositor must acknowledge the current native menu grab before injected navigation."); return; }
+                    focusWait = 0;
                 }
                 switch (phase++)
                 {

@@ -14,6 +14,7 @@ internal static partial class NativePopupWindowTests
         root.AddChild(popup); popup.AddChild(nested);
         var independent = new Window { Title = "Independent", Visible = false, Size = new(80, 60) }; root.AddChild(independent);
         var forcedCloseSignals = 0; nested.CloseRequested += () => forcedCloseSignals++;
+        var scopedForced = 0; DisplayWindowEvents? nestedEvents = null;
         var firstOpening = true;
         popup.AboutToPopup += () => { if (firstOpening) { firstOpening = false; popup.Position = new(900, 900); } };
         var focusWait = 0; var frames = 0; var oldID = -1; var hides = 0; popup.PopupHide += () => hides++;
@@ -48,11 +49,14 @@ internal static partial class NativePopupWindowTests
                     {
                         Check(nested.GetWindowID() > oldID && nested.NativeDisplay!.NativePopupParent == popup.NativeDisplay, "Nested native popup parenting preserves one shared renderer.");
                         Pixel(nested, Colors.Green);
+                        nestedEvents = DisplayServer.GetWindowEvents(nested.GetWindowID());
+                        nestedEvents.ForceCloseRequested += () => { Check(nested.Visible, "The forced native request precedes automatic hiding."); scopedForced++; };
                         var close = new SDL.Event { Window = new SDL.WindowEvent { Type = SDL.EventType.WindowCloseRequested, WindowID = SDL.GetWindowID(Native(nested)) } };
                         Check(SDL.PushEvent(ref close), "The native queue accepts popup dismissal.");
                     }
                     else if (frames == 3)
                     {
+                        Check(scopedForced == 1 && nestedEvents!.IsDisposed, "Native popup dismissal publishes one scoped forced request, then retires its publisher.");
                         Check(!nested.Visible && nested.GetWindowID() == -1 && popup.Visible && forcedCloseSignals == 0, $"Native popup-done force-hides its lifetime without a user close request: nested={nested.Visible}/{nested.GetWindowID()}, parent={popup.Visible}/{popup.GetWindowID()}, closeRequests={forcedCloseSignals}.");
                         popup.Hide(); Check(hides == 1, "PopupHide follows native retirement."); popup.PopupOnParent(new(12, 16, 96, 64));
                     }
@@ -70,6 +74,8 @@ internal static partial class NativePopupWindowTests
                         Check(DisplayServer.WindowGetFlag(WindowFlag.NoFocus, popup.GetWindowID()) && !popup.HasFocus(), "An unfocusable native popup retains its real no-focus role.");
                         Contracts(popup);
                         nested.PopupOnParent(new(8, 8, 48, 32)); independent.Show();
+                        nestedEvents = DisplayServer.GetWindowEvents(nested.GetWindowID());
+                        nestedEvents.ForceCloseRequested += () => { scopedForced++; throw new InvalidOperationException("scoped forced popup observer"); };
                     }
                     else
                     {
@@ -77,6 +83,7 @@ internal static partial class NativePopupWindowTests
                         Reject<AggregateException>(() => root.Hide());
                         Check(!root.Visible && !popup.Visible && !nested.Visible && independent.Visible && independent.GetWindowID() > 0, "Parent hide retires every popup despite observer failure and preserves independent native children.");
                         Check(DisplayServer.WindowGetActivePopup() == -1, "The popup stack retires after parent hide.");
+                        Check(scopedForced == 2 && nestedEvents!.IsDisposed, "Parent retirement delivers and retires scoped publishers despite forced-request callback failure.");
                         root.Tree!.Quit();
                     }
                 };

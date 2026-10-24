@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -20,7 +20,7 @@ Public operations and events use static access to the retained object under [ADR
 
 Public static operations use the active native service. `IsAvailable` reports whether it is published; operations and event subscription changes throw `InvalidOperationException` when absent. Event subscriptions belong to that session and do not transfer to later sessions.
 
-`Open` creates the sole process display server and a resizable high-density main window with a 64×64 minimum size in client pixels on Wayland or native window units on other desktop backends. Android, iOS, tvOS and browsers use the native surface size and do not set a minimum. Browser startup fills its document. A visible Wayland window presents a neutral blank surface so the compositor maps it before scene rendering exists. The caller owns it and must dispose it on the opening SDL main thread. Screen indexes are a live snapshot and may change after hotplug; negative selector constants choose the main-window, primary, keyboard-focus, or mouse-focus screen. Wayland keyboard-focus screen queries resolve to the primary screen because the protocol does not expose process-wide keyboard focus. Invalid screen queries return documented fallback values. Only window ID 0 is owned. Window and screen positions use SDL's platform-native desktop coordinates; macOS may use logical points. Wayland, Android, iOS, tvOS and browser client sizes and pointer coordinates use physical pixels, while the implementation converts size requests to SDL's logical units. Wayland has no reliable global top-level window placement, so position and hit-testing methods reject that driver. Window-manager requests may be asynchronous or denied. Native failures throw `InvalidOperationException`; invalid IDs and values normally throw argument exceptions, except `WindowGetCurrentScreen` returns `InvalidScreen` for an unknown ID. Defined but unavailable window flags throw `NotSupportedException`. Exclusive fullscreen selects a native display mode where supported and can fail when no suitable mode is available; Wayland requests ordinary compositor fullscreen instead. `HasFeature` reports only capabilities integrated for the active driver.
+`Open` creates the sole process display server and a resizable high-density main window with a 64×64 minimum size in client pixels on Wayland or native window units on other desktop backends. Android, iOS, tvOS and browsers use the native surface size and do not set a minimum. Browser startup fills its document. A visible Wayland window presents a neutral blank surface so the compositor maps it before scene rendering exists. The caller owns it and must dispose it on the opening SDL main thread. Screen indexes are a live snapshot and may change after hotplug; negative selector constants choose the main-window, primary, keyboard-focus, or mouse-focus screen. Wayland keyboard-focus screen queries resolve to the primary screen because the protocol does not expose process-wide keyboard focus. Invalid screen queries return documented fallback values. Window ID 0 is the main window; active native scene children have independent session IDs. Window and screen positions use SDL's platform-native desktop coordinates; macOS may use logical points. Wayland, Android, iOS, tvOS and browser client sizes and pointer coordinates use physical pixels, while the implementation converts size requests to SDL's logical units. Wayland has no reliable global top-level window placement, so position and hit-testing methods reject that driver. Window-manager requests may be asynchronous or denied. Native failures throw `InvalidOperationException`; invalid IDs and values normally throw argument exceptions, except `WindowGetCurrentScreen` returns `InvalidScreen` for an unknown ID. Defined but unavailable window flags throw `NotSupportedException`. Exclusive fullscreen selects a native display mode where supported and can fail when no suitable mode is available; Wayland requests ordinary compositor fullscreen instead. `HasFeature` reports only capabilities integrated for the active driver.
 
 HasFeature retains the native driver identity for each opened display lifetime, while mouse/touch availability, rendering attachment and discovered icon support remain live. This avoids repeatedly marshaling a driver-name string during passive physics picking. See [native window allocation verification](../components/physics-window-allocations.md).
 
@@ -37,6 +37,8 @@ Native key events carry independent logical, physical, and unmodified layout-lab
 Native message dialogs block the owner thread and return a typed button index through a callback. Native file choosers return asynchronously, possibly from an SDL worker thread; `ProcessEvents` delivers copied paths to game callbacks on the owner thread. A server with a pending chooser or an undelivered chooser result cannot be disposed; keep pumping until its callback runs. A dropped group of files produces one ordered `FilesDropped` list when SDL reports completion; interrupted groups are discarded. Wayland does not expose a reliable global desktop pointer position, so `MouseGetPosition` reads the last window-relative SDL pointer state; the mouse-focus screen selector uses index zero.
 
 The active server is a process singleton, not an `Engine` owned object. `ElectronObject` supplies identity, disposal state, numeric notifications, translation, and typed property discovery; see its [complete inherited reference](ElectronObject.md). Native SDL handles are private and released deterministically. Other threads may read `IsAvailable`; native operations, event pumping, and disposal require the opening thread. Opening a server does not start a loop or renderer; the user-facing host example supplies a loop and Linux native packaging.
+
+`GetWindowEvents(windowID)` returns a borrowed [DisplayWindowEvents](DisplayWindowEvents.md) publisher for a live native main/child window. Existing static events keep their main-window scope. The publisher retains its ID after disposal; explicit disposal only clears subscriptions, while native hide/retirement disposes the publisher and reopening creates a new native identity. Registration and disposal require the display owner thread. See the publisher page for input ordering, failure and replacement semantics.
 
 ## Examples
 
@@ -94,6 +96,8 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | --- | --- |
 
 ### Methods
+
+| `public static DisplayWindowEvents GetWindowEvents(int windowID = 0)` | Gets the stable borrowed event publisher for one live native window. |
 
 | Signature | Contract |
 | --- | --- |
@@ -210,6 +214,11 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 ### Property Descriptions
 
 ### Method Descriptions
+
+<a id="method-getwindowevents"></a>
+#### `public static DisplayWindowEvents GetWindowEvents(int windowID = 0)`
+
+Zero selects the main native window; a positive ID selects an active native child. Returns the same live publisher until explicit disposal or native retirement. A later query after explicit disposal creates a new publisher without closing the native window. Absent IDs throw `ArgumentOutOfRangeException`; unavailable/retiring services and off-owner access throw `InvalidOperationException`.
 
 <a id="method-dialogshow"></a>
 #### `public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`

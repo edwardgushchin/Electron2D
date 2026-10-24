@@ -154,6 +154,7 @@ public sealed partial class ThemeDB
         ["DirAccess"] = ["DirAccess", "ElectronObject"],
         ["DirectionalLight"] = ["DirectionalLight", "Light", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["DisplayServer"] = ["DisplayServer", "ElectronObject"],
+        ["DisplayWindowEvents"] = ["DisplayWindowEvents", "ElectronObject"],
         ["DrawableTexture"] = ["DrawableTexture", "Texture", "Resource", "ElectronObject"],
         ["ENetConnection"] = ["ENetConnection", "ElectronObject"],
         ["ENetMultiplayerPeer"] = ["ENetMultiplayerPeer", "MultiplayerPeer", "PacketPeer", "ElectronObject"],
