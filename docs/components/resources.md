@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-10-16
+Last updated: 2026-10-25
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
@@ -72,7 +72,7 @@ real windows and target-hardware performance remain open.
 
 ## Dependencies
 
-The component depends on Core object lifetime and typed property descriptors plus .NET collections, weak references, locking, and cryptographic random generation. `Resource.GetLocalScene()` introduces one narrow dependency on Scene's [`Node`](../classes/Node.md), while the [Packed scenes](packed-scenes.md) component consumes Resource duplication. ADR 0023 records this intentional in-assembly cycle.
+The component depends on Core object lifetime and typed property descriptors plus .NET collections, weak references, locking, and cryptographic random generation. `Resource.GetLocalScene()` introduces one narrow dependency on Scene's [`Node`](../classes/Node.md), while the [Packed scenes](packed-scenes.md) component consumes Resource duplication. ADR 0023 records this intentional in-assembly cycle. The base references `Script` to preserve ordinary script edges during duplication; concrete typed hooks still own their payload copying.
 
 The managed [Images](images.md) component derives from this base and implements concrete CPU buffer duplication without changing base lifetime. The [Resource loading](resource-loading.md) component now reads registered paths from this base cache and loads `ImageTexture` files without adding a Resource-to-loader dependency. Future asset serialization, rendering handles, and editor/import metadata may consume this component. The base still has no dependency on `PackedScene`, `SceneTree`, or file formats.
 
@@ -94,7 +94,44 @@ Base state supports concurrent access, and copy batches on one target serialize 
 
 ## Current implementation status
 
-The typed base operations, deep policies and packed-scene lifecycle execute. The coverage register still keeps full derived stored-state copying and wider renderer RID families open; per-referrer path IDs now execute through their public authoring contract; passing base/physical consumers does not certify those wider families.
+The typed base operations, deep policies and packed-scene lifecycle execute. The generic copy/duplicate family is audited below; each concrete resource owns copying its stored fields through the explicit hooks in ADR 0013. Full inherited live-script binding and whole-class acceptance remain open on their declaring rows.
+
+## Copy and duplicate contract
+
+The three base operations `CopyFromResource`, `Duplicate` and `DuplicateDeep`
+implement ADR 0013's typed adaptation. The pinned [copy loop](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/io/resource.cpp#L218-L243),
+[edge and construction rules](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/io/resource.cpp#L260-L405)
+and [entry points](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/io/resource.cpp#L486-L525)
+define the reference behavior. Explicit factories and custom-state hooks replace
+runtime property discovery; typed exceptions replace error codes. This audit
+changes no runtime API or architectural decision.
+
+| Contract | Executable evidence |
+| --- | --- |
+| Fresh exact-type root, inherited stored metadata, preserved target identity and silent self-copy | `VerifyResources` and `ResourceStoredState`: base, nine production shapes, an application Shape, PhysicsMaterial and World; 130 mode/translation combinations per host |
+| Shallow containers; deep None/Internal/All; forced/never edges; aliases and cycles selected per edge | `ResourceEdgePolicy`: 390 mode/path/order cases and 30 root cycles; `ScriptGraphs` preserves ordinary Script references and compiled registrations |
+| Local-scene selection, independent sessions and correct ownership | `ResourceEdgeScenes`, packed/replacement/isolated-authoring suites and actual fresh-process resource-identity scene loads |
+| Rejected borrowed, wrong-type, reused or malformed factory targets | `ResourceFactoryOwnership`, `FactoryConstructionChecks` and base negative cases; caller-owned sources remain live |
+| Preflight before reset/metadata/events; accepted partial failures and recovery | `RunShapeGeometry`, `RunWorldCopies`, `ResourceCopyFailures`; real selected frames and queries retain accepted body/shape/space identities |
+| Coalesced, nested and reentrant changes; all rollback disposers attempted in reverse order | `VerifyResources` and `ResourceCopyFailures`; original, observer and cleanup exceptions retain their identities/order |
+
+Each derived type must supply its complete stored-field copy and appropriate
+container handling. An unsupported application type fails explicitly. A missing
+field in a concrete implementation belongs to that type's audit; arbitrary caller
+hooks cannot become an unbounded prerequisite for the base session. The base
+class still inherits the open Object script-binding/initialization requirements.
+
+Current qualification is retained in
+`bin/physics-resource-contract/2026-10-25/qualification.json`: 38 profiles pass
+(20 CLR and 18 NativeAOT). The existing
+`--resource-identity`, `--shape-geometry` and `--world-copies` consumers execute
+CPU, registered and NVIDIA Vulkan GPU worlds in owner/separate-thread modes,
+both CLR and strict NativeAOT. Related managed base and local-scene suites cover
+the generic graph contract. Resource-identity hosts include real child-process
+scene loads and 128 warm/128 measured active frames with queries at strict 0/0
+owner/all-thread managed bytes; all 36 physical frame brackets pass at 0/0.
+These are functional/allocation results; the
+concurrent ordinary suite and GPU timings are separate evidence.
 
 ## Exclusions and deferred integration
 

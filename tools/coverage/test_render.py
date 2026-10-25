@@ -60,6 +60,12 @@ def check_physics_report(pages):
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "scene-thread-messages.md" in rows[0]
         assert not any(key.startswith("Node::method:" + method + "(") for key in expected)
     assert expected["class:Node"] == expected["class:RigidBody2D"] == "Partial", "Invocation completion must retain receiver gaps"
+    resource_page = pages[CLASS_PAGES / "Resource.md"]
+    for method in ("copy_from_resource", "duplicate", "duplicate_deep"):
+        rows = [row for row in resource_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "resources.md#copy-and-duplicate-contract" in rows[0]
+        assert not any(key.startswith("Resource::method:" + method + "(") for key in expected)
+    assert expected["class:Resource"] == "Partial", "Copy completion must retain inherited live-script gaps"
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" not in expected

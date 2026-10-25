@@ -457,8 +457,10 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 - Deep duplication delegates typed-container copying to the derived class and applies `DeepDuplicateMode` to nested resources.
 - A typed field may force graph-preserving duplication under any mode or retain its original reference under every mode.
 - Repeated references to a duplicated resource point to one duplicate.
-- A cycle back to an already duplicated resource points to its duplicate even when that original resource has an external path.
+- A cycle remaps to an acquired duplicate only when that edge selects duplication. Shallow/None edges and external edges under Internal retain the original resource.
 - A failed duplication exposes no live partial result and disposes all created resources in reverse creation order.
+
+The [copy and duplicate contract audit](../components/resources.md#copy-and-duplicate-contract) covers the generic session, typed hooks, physical resource families and failure boundaries. Each derived type owns copying its stored fields; inherited live-script binding retains its separate acceptance requirements.
 
 ## Scene-local lifecycle and ownership
 
@@ -529,7 +531,7 @@ No placeholder members are exposed for deferred domains.
 
 ## Dependencies and interactions
 
-`Resource` depends on `ElectronObject`, `PropertyDescriptor`, `DeepDuplicateMode`, Scene's `Node` type for local-scene association, cryptographic random generation, weak references, and standard collections. Scene's packed-scene component reciprocally consumes Resource duplication; ADR 0023 records this narrow in-assembly cycle. [`Image`](Image.md) derives from `Resource` and supplies its own managed pixel-state synchronization and duplication. `Resource` has no dependency on `PackedScene`, `SceneTree`, SDL, renderer, native handle, physics, file serializer, editor, or scripting.
+`Resource` depends on `ElectronObject`, `PropertyDescriptor`, `DeepDuplicateMode`, Scene's `Node` type for local-scene association, cryptographic random generation, weak references, and standard collections. Scene's packed-scene component reciprocally consumes Resource duplication; ADR 0023 records this narrow in-assembly cycle. [`Image`](Image.md) derives from `Resource` and supplies its own managed pixel-state synchronization and duplication. `Resource` references `Script` for ordinary duplication-edge selection and internal file-graph leases for retained payload ownership. Concrete file codecs and numerical/rendering backends supply their own resource behavior.
 
 Pure managed `Resource` instances are reclaimed by the runtime. `Dispose` performs deterministic logical teardown; future derived resources that own native handles must release them deterministically through safe-handle wrappers. No allocation-free or hard real-time guarantee is claimed for arbitrary resource construction, copying, or user callbacks.
 
