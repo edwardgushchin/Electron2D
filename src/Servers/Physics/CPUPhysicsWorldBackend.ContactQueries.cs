@@ -19,7 +19,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         contacts.Clear();
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return contacts;
         var world = b2GetWorldFromId(space.WorldID);
-        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
+        var motion = _queryRequestedMotion;
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
@@ -54,7 +54,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         var space = PrepareShapeQuery(parameters);
         var world = b2GetWorldFromId(space.WorldID);
-        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
+        var motion = _queryRequestedMotion;
         PhysicsRestInfo? best = null;
         var bestDepth = float.NegativeInfinity;
         foreach (var candidate in _shapeCandidates)

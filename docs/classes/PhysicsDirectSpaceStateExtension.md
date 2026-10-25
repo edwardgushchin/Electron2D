@@ -2,7 +2,7 @@
 
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
-Last updated: 2026-10-14
+Last updated: 2026-10-25
 
 **Declaration:** `public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSpaceState` · **Inherits:** [PhysicsDirectSpaceState](PhysicsDirectSpaceState.md) · **Component:** [Space-query extensions](../components/physics-space-extensions.md)
 
@@ -104,3 +104,5 @@ The separate consumer exercises CPU/GPU and no-device CPU queries, every inherit
 
 
 [Query-shape borrowing](../components/physics-space-extensions.md#query-shape-borrowing-2026-10-14) retains resource/owned RID geometry through preparation, hooks and validated publication, with nested/error continuation and zero warmed full-frame allocations. Existing declarations and coverage states remain unchanged; full numerical/foreign/hardware acceptance stays open.
+
+[The complete direct-space audit](../components/physics-space-query-contract.md) maps every declared query and exclusion operation, parameter/result adaptation, procedural input sampling and verification boundary.

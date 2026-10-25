@@ -20,8 +20,9 @@ internal sealed partial class GPUPhysicsWorldBackend
 
     internal override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters)
     {
+        var hits = Space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Intersect, GPUStore.ShapeCount);
         _shapeHits.Clear();
-        foreach (ref readonly var hit in Space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Intersect, GPUStore.ShapeCount))
+        foreach (ref readonly var hit in hits)
         {
             var owner = Space.GPUQueryOwner(hit.Collider);
             _shapeHits.Add(new(owner.RID, owner.SceneOwner, owner.ObjectIdentity, hit.LogicalShape));
@@ -37,8 +38,9 @@ internal sealed partial class GPUPhysicsWorldBackend
 
     internal override List<ShapeContactPair> CollectShapeContacts(PhysicsShapeQueryParameters parameters, int limit)
     {
+        var hits = Space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Contacts, limit);
         _contactPairs.Clear();
-        foreach (ref readonly var hit in Space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Contacts, limit))
+        foreach (ref readonly var hit in hits)
             _contactPairs.Add(new(Space.GPUQueryOwner(hit.Collider).RID, hit.LogicalShape, (int)hit.Piece, hit.QueryPoint, hit.ColliderPoint));
         return _contactPairs;
     }

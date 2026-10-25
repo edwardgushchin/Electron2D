@@ -6,7 +6,7 @@
 
 [Unrounded polygon containment](../components/physics-point-containment.md) now excludes an exterior CPU point through fixture half-planes and applies the same decision to ordinary/directed ray origins. Logical seams, inside-start policy, filters and result identity retain their existing contract; float boundary rounding remains bounded separately.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 ## Space creation and initialization
 
@@ -122,3 +122,5 @@ operations, current initial contacts and finite boundary endpoints. CPU collinea
 circle/core contacts retain a unit normal and corresponding surface points.
 
 [Oblique long circle motion](../components/physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.
+
+[The complete direct-space audit](../components/physics-space-query-contract.md) maps every declared query and exclusion operation, parameter/result adaptation, procedural input sampling and verification boundary.

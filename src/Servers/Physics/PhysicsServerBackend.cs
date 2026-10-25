@@ -4,7 +4,10 @@ namespace Electron2D;
 /// <remarks>Numerical hooks borrow their selected world. Body authoring through the server facade or direct-body
 /// views rejects before mutation during those hooks. Joint clear, connection replacement, paths, geometry and parameters use the same guard,
 /// including initial attachment. Guarded reads remain available. Caller-created body-state
-/// extensions may forward an ordinary requested state write to their inner view outside a numerical hook.</remarks>
+/// extensions may forward an ordinary requested state write to their inner view outside a numerical hook.
+/// Shape-query implementations sample their shape identity, pose, motion, margin and filters before resolving procedural geometry.
+/// A geometry supplier may edit caller-owned query parameters for a subsequent invocation.
+/// Nested queries must not contribute their results to the current query's output scratch.</remarks>
 public abstract class PhysicsServerBackend : ElectronObject
 {
     private int _claimed;

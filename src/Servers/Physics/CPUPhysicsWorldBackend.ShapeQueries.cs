@@ -16,6 +16,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     private bool? _queryRaySlide;
     private bool _queryCompoundConvex;
     private float _queryMargin;
+    private B2Vec2 _queryRequestedMotion;
     private PhysicsShapeGeometry.ShapeKind _queryKind;
 
     private readonly record struct ShapeCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag);
@@ -27,7 +28,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         hits.Clear();
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return hits;
         var world = b2GetWorldFromId(space.WorldID);
-        var requested = PhysicsShapeBackend.ToBackend(parameters.Motion);
+        var requested = _queryRequestedMotion;
         foreach (var candidate in _shapeCandidates)
         {
             var motion = QueryMotion(candidate.Tag, requested);
@@ -75,7 +76,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
-        var requested = PhysicsShapeBackend.ToBackend(parameters.Motion);
+        var requested = _queryRequestedMotion;
         if ((requested.X == 0 && requested.Y == 0) || _queryProxies.Count == 0 || _shapeCandidates.Count == 0)
             return (1, 1);
         var world = b2GetWorldFromId(space.WorldID);
@@ -208,6 +209,9 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         var space = Space;
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
+        var transform = parameters.Transform; var motion = parameters.Motion; var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;
+        var excluded = parameters.ExclusionsArray; var mask = parameters.CollisionMask;
+        var bodies = parameters.CollideWithBodies; var areas = parameters.CollideWithAreas;
         _ = PhysicsShapeBackend.ReadQueryGeometry(space, shape);
         var geometry = shape.GetGeometry();
         _queryKind = geometry.Kind;
@@ -216,10 +220,8 @@ internal sealed partial class CPUPhysicsWorldBackend
         PhysicsShapeBackend.AppendQueryProxies(shape, _queryProxies);
         if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay && geometry.B.Y == 0) _queryProxies.Clear();
         _queryCompoundConvex = geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && _queryProxies.Count > 1;
-        var transform = parameters.Transform;
         var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), PhysicsShapeBackend.RotationToBackend(transform.Rotation));
-        var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;
-        _queryMargin = margin;
+        _queryMargin = margin; _queryRequestedMotion = PhysicsShapeBackend.ToBackend(motion);
         for (var index = 0; index < _queryProxies.Count; index++)
         {
             var proxy = _queryProxies[index];
@@ -236,18 +238,16 @@ internal sealed partial class CPUPhysicsWorldBackend
             _queryProxies[index] = proxy;
         }
         _shapeCandidates.Clear();
-        var excluded = parameters.ExclusionsArray;
-        var mask = parameters.CollisionMask;
-        if (parameters.CollideWithBodies)
+        if (bodies)
             for (var index = 0; index < space.Bodies.Count; index++)
                 AddCandidates(NativeCollider(space.Bodies[index].Backend).Shapes, mask, excluded);
-        if (parameters.CollideWithAreas)
+        if (areas)
             for (var index = 0; index < space.Areas.Count; index++)
                 AddCandidates(NativeCollider(space.Areas[index].Backend).Shapes, mask, excluded);
         for (var index = 0; index < space.ServerColliders.Count; index++)
         {
             var collider = space.ServerColliders[index];
-            if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
+            if (collider.IsArea ? areas : bodies)
                 AddCandidates(NativeCollider(collider.Backend).Shapes, mask, excluded);
         }
         RemoveContainedRaySlots();

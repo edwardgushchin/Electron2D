@@ -45,6 +45,9 @@ internal sealed partial class PhysicsSpace
         GPUPhysicsBodyStore.ShapeQueryMode mode, int limit)
     {
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
+        var transform = parameters.Transform; var motion = parameters.Motion; var margin = parameters.Margin;
+        var mask = parameters.CollisionMask; var bodies = parameters.CollideWithBodies; var areas = parameters.CollideWithAreas;
+        var excluded = parameters.ExclusionsArray;
         _ = PhysicsShapeBackend.ReadQueryGeometry(this, shape);
         if (!ReferenceEquals(_gpuQueryShape, shape))
         {
@@ -53,10 +56,10 @@ internal sealed partial class PhysicsSpace
             _gpuQueryShape = shape;
         }
         if (_gpuShapeHits.Length < limit) Array.Resize(ref _gpuShapeHits, Math.Max(8, limit * 2));
-        _gpuShapeQuery[0] = new(_gpuQueryGeometry!, parameters.Transform, parameters.Motion, parameters.Margin, mode,
-            parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, limit, ExclusionCount: parameters.ExclusionsArray.Length);
+        _gpuShapeQuery[0] = new(_gpuQueryGeometry!, transform, motion, margin, mode,
+            mask, bodies, areas, limit, ExclusionCount: excluded.Length);
         Span<int> count = stackalloc int[1];
-        GPUStore!.QueryShapes(_gpuShapeQuery, GPUExclusions(parameters.ExclusionsArray), count, _gpuShapeHits);
+        GPUStore!.QueryShapes(_gpuShapeQuery, GPUExclusions(excluded), count, _gpuShapeHits);
         return _gpuShapeHits.AsSpan(0, count[0]);
     }
     internal PhysicsColliderBackend GPUQueryOwner(ulong id) => _gpuRIDColliders[id];

@@ -61,7 +61,14 @@ public static partial class BackendChecks
                 if (body.Parts[i].Index == index && ContainsPart(body.Parts[i], body.Pose, point)) return true;
             return false;
         }
-        private bool InitiallyOverlapping(Body body, int index, PhysicsShapeQueryParameters parameters, ShapeGeometry geometry)
+        private readonly record struct ShapeQueryInput(RID ShapeRID, Transform Transform, Vector2 Motion, float Margin,
+            uint CollisionMask, bool CollideWithBodies, bool CollideWithAreas)
+        {
+            internal ShapeQueryInput(PhysicsShapeQueryParameters parameters) : this(parameters.ShapeRID, parameters.Transform,
+                parameters.Motion, parameters.Margin, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas)
+            { }
+        }
+        private bool InitiallyOverlapping(Body body, int index, ShapeQueryInput parameters, ShapeGeometry geometry)
         {
             for (var i = 0; i < body.Shapes; i++)
             {
@@ -88,7 +95,7 @@ public static partial class BackendChecks
             }
             _pointHits.Sort(static (a, b) => a.ColliderRID == b.ColliderRID ? a.ShapeIndex.CompareTo(b.ShapeIndex) : a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _pointHits;
         }
-        private Part QueryPart(PhysicsShapeQueryParameters parameters, ShapeGeometry geometry, int element)
+        private Part QueryPart(ShapeQueryInput parameters, ShapeGeometry geometry, int element)
         {
             var part = GeometryPart(geometry, parameters.Transform, 0, element);
             return ExpandPart(part, parameters.Margin);
@@ -109,15 +116,16 @@ public static partial class BackendChecks
         }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            var input = new ShapeQueryInput(parameters);
             SpaceQueryHook?.Invoke(2);
-            _shapeHits.Clear(); var geometry = GetShapeGeometry(parameters.ShapeRID);
+            var geometry = GetShapeGeometry(input.ShapeRID); _shapeHits.Clear();
             foreach (var b in Bodies.Values)
             {
-                if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
+                if (!Eligible(b, input.CollisionMask, input.CollideWithBodies, input.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++) for (var piece = 0; piece < GeometryCount(geometry); piece++)
                     {
-                        var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
-                        if (QuerySweep(query, parameters.Motion, p, b.Pose, out _)) _shapeHits.Add(new(b.RID, p.Index));
+                        var p = b.Parts[i]; var query = QueryPart(input, geometry, piece);
+                        if (QuerySweep(query, input.Motion, p, b.Pose, out _)) _shapeHits.Add(new(b.RID, p.Index));
                     }
             }
             _shapeHits.Sort(static (a, b) => a.ColliderRID == b.ColliderRID ? a.ShapeIndex.CompareTo(b.ShapeIndex) : a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID()));
@@ -132,21 +140,22 @@ public static partial class BackendChecks
         }
         protected override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            var input = new ShapeQueryInput(parameters);
             SpaceQueryHook?.Invoke(3);
-            var fraction = 1f; var safeFraction = 1f; var geometry = GetShapeGeometry(parameters.ShapeRID);
+            var fraction = 1f; var safeFraction = 1f; var geometry = GetShapeGeometry(input.ShapeRID);
             foreach (var b in Bodies.Values)
             {
-                if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
+                if (!Eligible(b, input.CollisionMask, input.CollideWithBodies, input.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++) for (var piece = 0; piece < GeometryCount(geometry); piece++)
                     {
-                        var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
-                        if (InitiallyOverlapping(b, p.Index, parameters, geometry)) continue;
+                        var p = b.Parts[i]; var query = QueryPart(input, geometry, piece);
+                        if (InitiallyOverlapping(b, p.Index, input, geometry)) continue;
                         if (query.Directed || p.Directed)
                         {
-                            if (DirectedSweepRange(query, Transform.Identity, QueryMotion(query, p, parameters.Motion), p, b.Pose, out var low, out var high) && high <= fraction)
+                            if (DirectedSweepRange(query, Transform.Identity, QueryMotion(query, p, input.Motion), p, b.Pose, out var low, out var high) && high <= fraction)
                             { safeFraction = low; fraction = high; }
                         }
-                        else if (QuerySweep(query, parameters.Motion, p, b.Pose, out var f) && f <= fraction) { safeFraction = fraction = f; }
+                        else if (QuerySweep(query, input.Motion, p, b.Pose, out var f) && f <= fraction) { safeFraction = fraction = f; }
                     }
             }
             return (safeFraction, fraction);
@@ -156,17 +165,21 @@ public static partial class BackendChecks
         private void ClearQueryResults() { _pointHits.Clear(); _shapeHits.Clear(); _shapeContacts.Clear(); _queryContacts.Clear(); }
         protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
         {
+            return CollectShapeContacts(new ShapeQueryInput(parameters), excluded, limit);
+        }
+        private List<PhysicsBackendShapeContact> CollectShapeContacts(ShapeQueryInput input, ReadOnlySpan<RID> excluded, int limit)
+        {
             SpaceQueryHook?.Invoke(4);
-            _shapeContacts.Clear(); _queryContacts.Clear(); var geometry = GetShapeGeometry(parameters.ShapeRID);
+            var geometry = GetShapeGeometry(input.ShapeRID); _shapeContacts.Clear(); _queryContacts.Clear();
             foreach (var b in Bodies.Values)
             {
-                if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded)) continue;
+                if (!Eligible(b, input.CollisionMask, input.CollideWithBodies, input.CollideWithAreas, excluded)) continue;
                 for (var i = 0; i < b.Shapes; i++)
                     for (var piece = 0; piece < GeometryCount(geometry); piece++)
                     {
-                        var p = b.Parts[i]; var query = QueryPart(parameters, geometry, piece);
-                        if (!QuerySweep(query, parameters.Motion, p, b.Pose, out var f)) continue;
-                        var motion = QueryMotion(query, p, parameters.Motion);
+                        var p = b.Parts[i]; var query = QueryPart(input, geometry, piece);
+                        if (!QuerySweep(query, input.Motion, p, b.Pose, out var f)) continue;
+                        var motion = QueryMotion(query, p, input.Motion);
                         Vector2 firstPoint, secondPoint;
                         if (query.Directed || p.Directed)
                         {
@@ -197,8 +210,9 @@ public static partial class BackendChecks
         }
         protected override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
+            var input = new ShapeQueryInput(parameters);
             SpaceQueryHook?.Invoke(5);
-            var hits = CollectShapeContacts(parameters, excluded, int.MaxValue); if (hits.Count == 0) return null;
+            var hits = CollectShapeContacts(input, excluded, int.MaxValue); if (hits.Count == 0) return null;
             PhysicsRestInfo? result = null; var deepest = float.NegativeInfinity;
             for (var i = 0; i < hits.Count; i++)
             {
@@ -207,13 +221,13 @@ public static partial class BackendChecks
                 if (normal == Vector2.Zero) normal = Vector2.Right;
                 if (query.Directed || part.Directed)
                 {
-                    DirectedContact(query, Transform.Identity, QueryMotion(query, part, parameters.Motion), part, body.Pose, Vector2.Zero,
+                    DirectedContact(query, Transform.Identity, QueryMotion(query, part, input.Motion), part, body.Pose, Vector2.Zero,
                         out var toward, out _, out _, out depth); normal = -toward;
                 }
                 else if (query.Boundary || part.Boundary || query.Contour || part.Contour || query.Inner > 0 || part.Inner > 0)
                 {
-                    QuerySweep(query, parameters.Motion, part, body.Pose, out var fraction);
-                    var pose = Transform.Identity; pose.Origin = QueryMotion(query, part, parameters.Motion) * (query.Boundary || part.Boundary ? 1 : fraction);
+                    QuerySweep(query, input.Motion, part, body.Pose, out var fraction);
+                    var pose = Transform.Identity; pose.Origin = QueryMotion(query, part, input.Motion) * (query.Boundary || part.Boundary ? 1 : fraction);
                     depth = -PartGap(query, pose, part, body.Pose, out var inward, out _, out _); normal = -inward;
                 }
                 if (depth > deepest)

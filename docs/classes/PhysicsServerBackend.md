@@ -437,3 +437,5 @@ remains open.
 
 
 [Complete body motion operation](../components/physics-motion-operation.md) records the actual selected query, geometry, recovery, timing, result/lifetime and failure contract. The operation row is Implemented; broader numerical family and overall-goal acceptance remain separate.
+
+Shape-query implementations must sample shape identity, pose, motion, margin and filters before resolving procedural query geometry. Nested queries cannot contribute their hits or contact pairs to the current output. Caller-owned parameter objects retain their identity and authored edits. See the [complete direct-space contract audit](../components/physics-space-query-contract.md).

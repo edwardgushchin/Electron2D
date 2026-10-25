@@ -1904,3 +1904,5 @@ budget, retained-impulse convergence and broader allocation/native/network/
 platform/hardware performance gates remain open.
 
 [Processing-group motion](../components/physics-group-motion.md) adds current-group scene velocity/sleep/surface authoring and character desired velocity with original-owner numerical publication. Qualification and remaining inherited API limits are recorded with that component.
+
+[Direct-space contract audit](../components/physics-space-query-contract.md) covers both query types, their complete declared operations and procedural-input sampling, with explicit qualification and remaining full-goal boundaries.

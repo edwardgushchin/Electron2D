@@ -726,3 +726,5 @@ mappings, successful telemetry and no new Xid/fallen-off event; this functional
 regression is separate from new mass-performance or hardware reliability acceptance.
 Evidence: bin/physics-degenerate-shapes/2026-10-20/validation.json.
 The declaration census remains 1303/1369 Implemented (95.18%), with 66 open.
+
+[The complete direct-space audit](physics-space-query-contract.md) records declared base/extension operations and input sampling before procedural query geometry. Current parameter edits remain authored for later invocations while the active query retains its sampled values.

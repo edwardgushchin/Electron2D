@@ -54,3 +54,5 @@ thread managed bytes; a moving raw body travels 256 units over 256 ticks within
 .02 units. Query geometry/fractions retain .0001 tolerances. Separate lanes are
 observed in process state. CPU has no display/GPU; GPU uses CPU-only Vulkan.
 Hardware/native/platform/full numerical-extension and performance gates stay open.
+
+[The complete direct-space audit](physics-space-query-contract.md) reconciles all six inherited query methods and seven extension operations, input sampling, nonempty nested results, selected factories and current verification limits.
