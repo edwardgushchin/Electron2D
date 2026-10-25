@@ -21,6 +21,27 @@ import plan
 
 
 class Pipeline(unittest.TestCase):
+    def test_explicit_qualification_survives_new_development_revisions(self):
+        workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/ci.yml').read_text()
+        concurrency = workflow.split('concurrency:\n', 1)[1].split('\njobs:', 1)[0]
+        group = concurrency.split('group: ci-${{ ', 1)[1].split(' }}', 1)[0]
+        self.assertIn('cancel-in-progress: true', concurrency)
+        def key(event, profile='', run=1, ref='refs/heads/main'):
+            return eval(group.replace('&&', ' and ').replace('||', ' or '), {'__builtins__': {}},
+                        {'github': SimpleNamespace(event_name=event, run_id=run, ref=ref),
+                         'inputs': SimpleNamespace(profile=profile)})
+        development = key('push')
+        self.assertEqual(development, key('push', run=2))
+        self.assertEqual(development, key('workflow_dispatch', 'fast', run=3))
+        for event, profile in [('workflow_dispatch', 'full'), ('workflow_dispatch', 'clean'), ('schedule', '')]:
+            with self.subTest(event=event, profile=profile):
+                self.assertNotEqual(development, key(event, profile, run=4))
+                self.assertNotEqual(key(event, profile, run=4), key(event, profile, run=5))
+        self.assertEqual(key('pull_request', ref='refs/pull/7/merge'),
+                         key('pull_request', run=6, ref='refs/pull/7/merge'))
+        self.assertNotEqual(key('pull_request', ref='refs/pull/7/merge'),
+                            key('pull_request', ref='refs/pull/8/merge'))
+
     def test_android_package_selects_one_resolved_sdl_aar_before_native_filtering(self):
         root = Path(__file__).resolve().parents[2]
         with tempfile.TemporaryDirectory(prefix='e2d android & aar ') as directory:

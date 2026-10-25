@@ -145,8 +145,11 @@ hosted execution is required after pushing this implementation.
 | Public delivery | Reconciled partial NuGet pushes, indexing/payload/signature checks, fresh public-only graph restore and CI-hosted GitHub draft/assets/checksums. | A published package requires actual successful execution; source/local tests alone do not establish availability. |
 | Merge policy | Stable `Development` summary reflects planned scope. | Remote main was unprotected at inspection; server policy activation and latest ready-PR qualification must be verified separately. |
 
-For a release whose final SHA has only documentation changes, explicitly run CI
-with `profile=full`. A fast-only run cannot qualify a release. Supply that full
+For every release candidate, explicitly run CI on `main` with `profile=full`
+and record that run's exact `head_sha` and run ID. This manual qualification has
+its own concurrency group, so later development pushes cannot cancel it. This
+also covers a final SHA containing only documentation changes. A fast-only run
+cannot qualify a release. Supply that full
 run ID as `qualification_run` to **Publish Electron2D packages**, along with the
 owner's NuGet profile name. The workflow checks out the qualified revision,
 reconciles public package bytes before retrying and publishes the GitHub draft

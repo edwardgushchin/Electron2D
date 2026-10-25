@@ -27,10 +27,13 @@ workflow changes and unknown paths retain complete qualification. Draft PRs
 receive fast feedback while implementation is in progress; do not use a draft
 result as evidence that platform execution passed.
 
-A new revision cancels superseded CI work for the same ref. Ready-for-review and
-converted-to-draft events refresh the plan. There is no new full-matrix local
-pre-commit requirement. Measure runner queues and cached/cold durations before
-claiming a speedup.
+A new revision cancels superseded automatic CI work for the same ref. Explicit
+manual `full`/`clean` and scheduled clean runs have a concurrency group unique to
+their run ID: development pushes cannot cancel a selected release candidate or
+the weekly clean audit. Manual `fast` shares the ordinary development group.
+Starting qualification does not block fast feedback for newer revisions; runner
+capacity is still shared. Ready-for-review and converted-to-draft events refresh
+the plan. There is no new full-matrix local pre-commit requirement.
 
 ## Fast development loop
 
@@ -81,6 +84,21 @@ planned scope; `Build` and `Tests` are skipped on fast-only runs and cannot be
 presented as a complete matrix success.
 
 ## Main branch and publication
+
+For a release candidate, explicitly dispatch CI on `main` with `profile=full`
+and record the resulting run ID and full `head_sha`. Use this protected run for
+qualification while development continues. Its packages describe that exact
+revision; a newer push is a different candidate. An automatic push run may still
+be superseded and is not a reliable way to finish a release during active work.
+
+Fast feedback duration does not measure release latency. On 2026-10-25, run
+[`40184048994`](https://github.com/edwardgushchin/Electron2D/actions/runs/40184048994)
+was cancelled by a newer push after 2 h 32 min, with only Windows ARM64 runtime
+testing unfinished. Its successful Windows x64 full runtime step alone took
+81 min. Validated native caches and quick managed checks do not shorten that
+test execution. Profile individual cohorts and runner queues before changing
+test scheduling; preserve all cases and allocation/error gates. Protecting a
+candidate prevents lost progress but does not establish a faster full suite.
 
 On 2026-10-25 the remote `main` had no branch protection or repository rulesets.
 Remote CI sees only pushed revisions. A local merge does not establish hosted
