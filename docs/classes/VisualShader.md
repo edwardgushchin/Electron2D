@@ -484,3 +484,5 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 ## Reroute inference
 
 Validated connections select VisualShaderNodeReroute roles across downstream chains/branches after checking every terminal. An unconnected source may adopt its terminal role. Feasibility checks and rejected edits do not mutate definitions. Forced edges preserve authored roles; imports validate their actual compatibility. See [typed reroute chains](../components/visual-shaders.md#typed-reroute-chains) for defaults, aliases, sampler symbols, atomic notifications and execution checks.
+
+[Fresnel and implicit canvas normals](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals) join the existing typed graph/resource/import lifecycle. Only an unconnected and unauthored fragment normal requests the command normal image. Ordinary graph source/interfaces remain unchanged when that producer is unused.

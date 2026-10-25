@@ -1,6 +1,6 @@
 # CanvasBatch
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 - Declaration: `internal readonly record struct CanvasBatch`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -56,3 +56,5 @@ ShaderCode exposes Material.Program.NativeCode to native submission. Original Sh
 Particle batches additionally retain ParticleGPUDraw metadata for native state/geometry conversion and indirect draw selection; ordinary batches retain their existing path. See [GPU particles](../components/gpu-particles.md).
 
 ObjectCount retains generated drawing-record cardinality before compatible batch merging. Merging adds the scalar counts; this is distinct from vertex/instance count. Both native backends consume it only when they issue canvas geometry, and completed frame publication is owned by [canvas counters](../components/canvas-counters.md).
+
+NormalMapFlags retains rectangle flip/transpose state only for programs that consume an implicit canvas normal. It participates in both ordinary and mesh coalescing keys; this record still owns no native resources. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).

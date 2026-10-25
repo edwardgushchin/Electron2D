@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 **Inherits:** [Node](Node.md)
 
@@ -1387,3 +1387,5 @@ ResolveCanvasGlyph projects the retained item MSDF flag only onto ordinary image
 ## Compiled instance defaults
 
 Unset/cleared instance parameters read their compiled authored scalar/vector default, with zero only when metadata is absent. Explicit values survive compatible reload. Prepared parameter names retain their typed value/descriptor for allocation-free set/clear cycles, while cleared values stay out of active stored descriptors. Rendered ordinary/surface/mesh/instance consumers use per-item defaults. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+Canvas normal-consuming graphs preserve each texture rectangle's flip/transpose independently across retained batches. Mesh/attribute draws retain their separate local-normal convention. See [Fresnel normals](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).

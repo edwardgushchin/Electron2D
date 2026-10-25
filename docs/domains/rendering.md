@@ -511,3 +511,5 @@ The explicit shader source-authoring bridge checks process-launch support before
 [Native device screens](../components/local-compute.md#native-screen-drawing) connect renderer-owned low-level graphics lists to the same main/child presentation path as canvases, using actual native formats and pixel sizes. Private screen attachments, resize and native-window retirement share the existing GPU resource ownership; viewport images retain canvas output.
 
 Imported [typed reroute chains](../components/visual-shaders.md#typed-reroute-chains) preserve numeric values and original sampled-image symbols across all supported graph stages; the renderer consumes their ordinary immutable shader programs.
+
+[Fresnel graphs](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals) now execute a scalar falloff across eight stages and consume actual local canvas normals when the normal input is absent. Rectangle orientation survives batching and mesh transitions through private per-draw state; no public backend handle or compatibility shader fallback is added.

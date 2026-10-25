@@ -1,6 +1,6 @@
 # SpirvReflection
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 - Declaration: `internal static unsafe partial class SpirvReflection`
 - Sources: [SpirvReflection.cs](../../src/Servers/Rendering/SpirvReflection.cs), [SpirvReflection.Booleans.cs](../../src/Servers/Rendering/SpirvReflection.Booleans.cs)
@@ -58,3 +58,5 @@ Vertex resources now share the same typed scalar/vector/matrix/array and Instanc
 Read expands active fixed one-dimensional sampled descriptor arrays into per-element ShaderTexture metadata while preserving logical Binding, ArrayLength and Name. Literal lengths and total physical slots are bounded to sixteen; paired HLSL declarations require the same shape. Renderer/global descriptors remain scalar. Array pairing is validated by the managed adapter, avoiding the native combined-sampler helper that cannot represent arrays. Load/query-only images receive private native samplers. Reflection returns original Code and derived NativeCode without replacing source identity. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
 
 The image record reader checks version, canonical native/public/global names, scalar/array shape, floating type, active ownership, stage/domain, policy bounds, padding and duplicates before publication. Canvas normal/specular sampler names require ordinary floating fragment images. The shared boolean metadata dispatcher routes image records to this reader; unknown metadata remains rejected.
+
+NORMAL_MAP_FLAGS is a reserved float32-vector4 canvas-fragment renderer field. Wrong shapes, noncanvas stages and global/instance/image declarations reject before program publication; the field is removed from public material descriptors. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).

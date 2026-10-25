@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 [Visual shader graphs](visual-shaders.md) author typed numeric canvas programs and compile them through the same SPIR-V import/material pipeline. Resource archives carry both editable graphs and the last imported program; editing requires reimport.
 
@@ -573,3 +573,7 @@ repro. This is an open broader native control-flow profile: deep-selection
 lowering or a verified compiler/driver correction must close it. The current
 evidence does not identify a particular driver defect or establish arbitrary
 HLSL control-flow acceptance.
+
+## Per-command graph normals
+
+The [implicit Fresnel normal producer](visual-shaders.md#fresnel-and-implicit-canvas-normals) borrows the normal channel already associated with the canvas command. Its private float4 rectangle flags are validated and removed from material/global/instance parameter discovery, copied through the paired program and pushed for each draw. Ordinary and mesh batch keys preserve independent orientations; parameter edits retain the existing command stream. It adds no configurable material switch or runtime compiler.

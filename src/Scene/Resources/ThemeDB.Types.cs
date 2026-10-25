@@ -485,6 +485,7 @@ public sealed partial class ThemeDB
         ["VisualShaderNodeFloatFunc"] = ["VisualShaderNodeFloatFunc", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeFloatOp"] = ["VisualShaderNodeFloatOp", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeFloatParameter"] = ["VisualShaderNodeFloatParameter", "VisualShaderNodeParameter", "VisualShaderNode", "Resource", "ElectronObject"],
+        ["VisualShaderNodeFresnel"] = ["VisualShaderNodeFresnel", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeGlobalExpression"] = ["VisualShaderNodeGlobalExpression", "VisualShaderNodeExpression", "VisualShaderNodeGroupBase", "VisualShaderNodeResizableBase", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeGroupBase"] = ["VisualShaderNodeGroupBase", "VisualShaderNodeResizableBase", "VisualShaderNode", "Resource", "ElectronObject"],
         ["VisualShaderNodeIf"] = ["VisualShaderNodeIf", "VisualShaderNode", "Resource", "ElectronObject"],

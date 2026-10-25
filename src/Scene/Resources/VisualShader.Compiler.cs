@@ -46,6 +46,7 @@ public sealed partial class VisualShader
         var header = domain is null ? ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom) : domain.StageHeader(stage);
         var source = new StringBuilder(header);
         EmitCustomFunctions(custom, stage, aliases, source);
+        if (NeedsCanvasNormal(stage, reachable)) EmitCanvasNormal(source, aliases);
         var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;
         string Input(int id, int port)
@@ -54,6 +55,9 @@ public sealed partial class VisualShader
             if (!incoming.TryGetValue((id, port), out var edge))
             {
                 if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
+                if (node is VisualShaderNodeFresnel fresnel && port == 0 && !fresnel.GetInputPortDefaultValue<Vector3>(0).HasValue)
+                    return domain is not null ? "vec3(0.0)" : stage == Type.Fragment ? aliases["e2d_normal"] :
+                        throw new NotSupportedException("An implicit canvas normal requires the fragment graph stage; connect or author a vertex normal explicitly.");
                 if (domain is not null && DomainInputDefault(node, port) is { } implicitValue && !node.GetDefaultInputValues().Any(v => v.Port == port))
                     return RewriteExpression(implicitValue, aliases);
                 if (node is VisualShaderNodeScreenUVToSDF) return StageExpression("(gl_FragCoord.xy * e2d_values.SCREEN_PIXEL_SIZE)", aliases);

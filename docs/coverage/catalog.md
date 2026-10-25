@@ -957,7 +957,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeFloatOp](classes/VisualShaderNodeFloatOp.md) | VisualShaderNode | Implemented | 13 |
 | [VisualShaderNodeFloatParameter](classes/VisualShaderNodeFloatParameter.md) | VisualShaderNodeParameter | Implemented | 11 |
 | [VisualShaderNodeFrame](classes/VisualShaderNodeFrame.md) | VisualShaderNodeResizableBase | Blocked | 7 |
-| [VisualShaderNodeFresnel](classes/VisualShaderNodeFresnel.md) | VisualShaderNode | Unimplemented | 0 |
+| [VisualShaderNodeFresnel](classes/VisualShaderNodeFresnel.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeGlobalExpression](classes/VisualShaderNodeGlobalExpression.md) | VisualShaderNodeExpression | Implemented | 0 |
 | [VisualShaderNodeGroupBase](classes/VisualShaderNodeGroupBase.md) | VisualShaderNodeResizableBase | Implemented | 21 |
 | [VisualShaderNodeIf](classes/VisualShaderNodeIf.md) | VisualShaderNode | Implemented | 0 |

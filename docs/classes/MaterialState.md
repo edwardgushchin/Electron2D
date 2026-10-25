@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -109,3 +109,5 @@ SamplerConfiguration?[] Samplers aligns with the immutable program image slots. 
 CopyTextures preserves authored/default/global absence for validated graph image policies, leaving render-only fallback selection to the GPU backend. Legacy unassigned images without such policy continue to reject. Renderer-owned channel/screen images do not acquire material ownership.
 
 Image value migration requires material ownership in both program versions. A screen-owned replacement drops the prior material resource instead of retaining a hidden override for a later reload. Caller-owned resources remain live.
+
+PushUniforms writes the current batch's private normal-map flags into the renderer-owned field before native draw submission. Shared materials therefore retain independent rectangle orientation without changing authored parameter state. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).

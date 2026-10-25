@@ -96,6 +96,8 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("The built-in TIME requires a non-array float32 scalar in a stage uniform buffer.");
                 if (name == "SCREEN_PIXEL_SIZE" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 2 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("The built-in SCREEN_PIXEL_SIZE requires a non-array float32 vector of width two in a stage uniform buffer.");
+                if (name == "NORMAL_MAP_FLAGS" && (!fragment || blit || particles || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || columns != 1 || dimensions != 0))
+                    throw new NotSupportedException("NORMAL_MAP_FLAGS requires a canvas-fragment non-array float32 vector of width four.");
                 if (name == "SDF_COORDS" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
                 if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
@@ -191,7 +193,7 @@ internal static unsafe partial class SpirvReflection
         {
             var slot = TextureBinding(resource);
             var name = Marshal.PtrToStringUTF8(resource.Name);
-            if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
+            if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
             if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in its stage descriptor set.");
             if (string.IsNullOrWhiteSpace(name) || uniforms.ContainsKey(name) || textures.Any(t => t is not null && t.Name == name) || textures[slot] is not null)
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
@@ -240,6 +242,7 @@ internal static unsafe partial class SpirvReflection
         uniforms.Remove("TIME", out var timeUniform);
         uniforms.Remove("SCREEN_PIXEL_SIZE", out var screenPixelSizeUniform);
         uniforms.Remove("SDF_COORDS", out var sdfCoordsUniform);
+        uniforms.Remove("NORMAL_MAP_FLAGS", out var normalMapFlagsUniform);
         var instances = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
         foreach (var pair in uniforms.ToArray()) if (instanceBuffers.Contains(pair.Value.Buffer))
             {
@@ -247,7 +250,7 @@ internal static unsafe partial class SpirvReflection
                 instances.Add(pair.Key, pair.Value); uniforms.Remove(pair.Key);
             }
         if (instances.Count > 16) throw new NotSupportedException("A shader supports at most sixteen instance parameters.");
-        if (instanceBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b))
+        if (instanceBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b || normalMapFlagsUniform?.Buffer == b))
             throw new NotSupportedException("Renderer-owned uniforms cannot be declared in the Instance block.");
         var globals = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
         foreach (var pair in uniforms.ToArray()) if (globalBuffers.Contains(pair.Value.Buffer))
@@ -256,7 +259,7 @@ internal static unsafe partial class SpirvReflection
                 ShaderGlobalParameters.ValidateName(pair.Key);
                 globals.Add(pair.Key, pair.Value); uniforms.Remove(pair.Key);
             }
-        if (globalBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b))
+        if (globalBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b || normalMapFlagsUniform?.Buffer == b))
             throw new NotSupportedException("Renderer-owned uniforms cannot be declared in Globals.");
         foreach (var texture in textures) if (texture.IsGlobal)
             {
@@ -269,7 +272,7 @@ internal static unsafe partial class SpirvReflection
         ReadDefaults(code, uniforms, instances);
         ReadHints(code, uniforms, instances, fragment);
         return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals)
-        { NativeCode = CanvasSamplerArrays.Lower(code, textures, needsSampler) };
+        { NativeCode = CanvasSamplerArrays.Lower(code, textures, needsSampler), NormalMapFlagsUniform = normalMapFlagsUniform };
     }
 
     [StructLayout(LayoutKind.Sequential)]

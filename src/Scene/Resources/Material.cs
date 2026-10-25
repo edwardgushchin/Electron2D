@@ -378,7 +378,7 @@ internal sealed class MaterialState
         }
     }
 
-    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false, Vector4 normalMapFlags = default)
     {
         lock (_gate)
         {
@@ -388,6 +388,8 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[pixels.Buffer].AsSpan(pixels.Offset, sizeof(float) * 2), in screenPixelSize);
             if (Program.SDFCoordsUniform is { } sdf)
                 MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
+            if (Program.NormalMapFlagsUniform is { } normal)
+                MemoryMarshal.Write(Buffers[normal.Buffer].AsSpan(normal.Offset, sizeof(float) * 4), in normalMapFlags);
             RenderingServer.ActiveGlobalParameters?.Write(Program, Buffers);
             var instanceBuffer = Program.HasInstanceUniforms ? instance?.InstanceUniforms.Prepare(Program) : null;
             SynchronizeSharedUniforms(instanceBuffer);
