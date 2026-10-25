@@ -3,7 +3,10 @@ namespace Electron2D;
 /// <summary>Reads a named typed input in an imported visual shader stage.</summary>
 /// <remarks>Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type
 /// independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged
-/// reports the named semantic role. Known inputs in their applicable context require a real renderer producer.</remarks>
+/// reports the named semantic role. Canvas texture_pixel_size reads the inverse logical dimensions of the
+/// current command's resolved diffuse texture in vertex and fragment stages, or one for a missing image.
+/// Atlas regions retain the backing image size; material image overrides do not change this input.
+/// Known inputs in their applicable context require a real renderer producer.</remarks>
 public sealed class VisualShaderNodeInput : VisualShaderNode
 {
     private string _inputName = "[None]";
@@ -97,7 +100,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         "fragcoord" when stage == VisualShader.Type.Fragment => "gl_FragCoord",
         "screen_pixel_size" when stage == VisualShader.Type.Fragment => "SCREEN_PIXEL_SIZE",
         "screen_uv" when stage == VisualShader.Type.Fragment => "(gl_FragCoord.xy * SCREEN_PIXEL_SIZE)",
-        "texture_pixel_size" => throw new NotSupportedException("Graph texture-pixel size requires the renderer's logical command-texture size producer."),
+        "texture_pixel_size" when stage is VisualShader.Type.Vertex or VisualShader.Type.Fragment => "TEXTURE_PIXEL_SIZE",
         "vertex_id" when stage == VisualShader.Type.Vertex => "gl_VertexIndex",
         _ when !IsKnownInStage(stage) => "0.0",
         _ => throw new NotSupportedException($"Canvas input '{_inputName}' has no executing producer in this graph stage.")

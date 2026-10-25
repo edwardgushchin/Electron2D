@@ -67,6 +67,7 @@ public sealed partial class VisualShader
             foreach (var role in global ? Array.Empty<string>() : DomainBuiltins) if (aliases.TryGetValue(role, out var symbol)) result[role] = symbol;
             return result;
         }
+        result["TEXTURE_PIXEL_SIZE"] = aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE";
         if (stage == Type.Fragment) result["SCREEN_PIXEL_SIZE"] = aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE";
         if (!global)
         {

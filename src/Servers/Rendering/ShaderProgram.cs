@@ -22,6 +22,7 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal readonly ShaderUniform? ScreenPixelSizeUniform = screenPixelSizeUniform;
     internal readonly ShaderUniform? SDFCoordsUniform = sdfCoordsUniform;
     internal ShaderUniform? NormalMapFlagsUniform { get; init; }
+    internal ShaderUniform? TexturePixelSizeUniform { get; init; }
     internal readonly bool UsesSDFTexture = (textures ?? []).Any(t => t.IsSDFTexture);
     internal readonly bool UsesScreenTexture = (textures ?? []).Any(t => t.IsScreenTexture);
     internal readonly IReadOnlyList<PropertyDescriptor> Descriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe(u.Name))

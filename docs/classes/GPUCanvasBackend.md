@@ -148,3 +148,5 @@ Graph image policy resolves render-only ordinary/array fallback images and shade
 ## Device screen presentation
 
 Renderer-owned device screen images use the native swapchain color format and pixel dimensions, then copy on GPU into the same final presentation image. Main and child windows retain one presentation owner each. ReadbackScreen observes that exact submitted image; canvas targets keep their own pixels. Main hide retains the last known native format before releasing its claim, while the existing Wayland remap restriction remains explicit. See [native screen drawing](../components/local-compute.md#native-screen-drawing).
+
+Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.

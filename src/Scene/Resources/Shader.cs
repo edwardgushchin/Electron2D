@@ -8,6 +8,10 @@ namespace Electron2D;
 /// This interface accepts optional float4 color at location zero,
 /// float2 UV at location one, raw float4 instance data at location two, float2 secondary UV at location four, mesh-local float3 normal at five and float4 tangent at six, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
+/// A canvas non-array float2 TEXTURE_PIXEL_SIZE uniform receives the inverse logical dimensions of the
+/// resolved command diffuse image in either stage, or one for an absent/empty image. Atlas regions retain the
+/// backing image dimensions. This renderer-owned value is independent of material samplers and cannot be
+/// declared in instance/global blocks or noncanvas programs.
 /// SCREEN_TEXTURE at any contiguous sampled binding consumes the current viewport screen snapshot;
 /// an optional float2 SCREEN_PIXEL_SIZE uniform supplies inverse native target dimensions. Both are renderer-owned
 /// and excluded from material/default parameter access. The first ordinary screen-reading draw snapshots the canvas

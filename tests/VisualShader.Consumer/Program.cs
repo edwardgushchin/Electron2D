@@ -4,7 +4,10 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "fresnel-cpu") GraphChecks.FresnelCPU();
+    if (args.Length > 0 && args[0] == "size-cpu") GraphChecks.TextureSizeCPU();
+    else if (args.Length > 0 && args[0] == "size-author") GraphChecks.AuthorTextureSize(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "size-gpu") GraphChecks.RenderTextureSize(IOPath.GetFullPath(args[1]), args);
+    else if (args.Length > 0 && args[0] == "fresnel-cpu") GraphChecks.FresnelCPU();
     else if (args.Length > 0 && args[0] == "fresnel-gpu") GraphChecks.RenderFresnel(IOPath.GetFullPath(args[1]), args);
     else if (args.Length > 0 && args[0] == "fresnel-author") GraphChecks.AuthorFresnel(IOPath.GetFullPath(args[1]));
     else if (args.Length > 0 && args[0] == "reroute-cpu") GraphChecks.RerouteCPU();

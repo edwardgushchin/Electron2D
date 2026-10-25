@@ -577,3 +577,7 @@ HLSL control-flow acceptance.
 ## Per-command graph normals
 
 The [implicit Fresnel normal producer](visual-shaders.md#fresnel-and-implicit-canvas-normals) borrows the normal channel already associated with the canvas command. Its private float4 rectangle flags are validated and removed from material/global/instance parameter discovery, copied through the paired program and pushed for each draw. Ordinary and mesh batch keys preserve independent orientations; parameter edits retain the existing command stream. It adds no configurable material switch or runtime compiler.
+
+## Command texture dimensions
+
+Canvas HLSL/GLSL may declare the case-sensitive non-array float2 uniform `TEXTURE_PIXEL_SIZE` in a supported renderer buffer (set one after Frame for vertex; set three for fragment). It contains inverse logical dimensions of the command's resolved diffuse image, with `(1,1)` for an absent/empty image. It does not require a TEXTURE sampler declaration. Atlas regions retain backing-image size; material samplers are independent. Shared vertex/fragment layouts receive the same value. Wrong types, arrays, image bindings, global/instance blocks and noncanvas programs reject import. This field cannot be authored through material/global parameters or shader default metadata. See [command texture pixel size](visual-shaders.md#command-texture-pixel-size).

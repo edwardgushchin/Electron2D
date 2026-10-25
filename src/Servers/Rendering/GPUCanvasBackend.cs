@@ -347,7 +347,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 SDL.BindGPUGraphicsPipeline(pass, pipeline.DangerousGetHandle());
                 if (batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader)
                 { var tint = (output.HDR ? LinearColor(batch.GlyphModulation) : batch.GlyphModulation) * canvasColor; SDL.SetGPUBlendConstants(pass, new() { R = tint.R, G = tint.G, B = tint.B, A = tint.A }); }
-                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner, normalMapFlags: batch.NormalMapFlags);
+                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner, normalMapFlags: batch.NormalMapFlags, texturePixelSize: batch.Material.Program.TexturePixelSizeUniform is null ? default : CanvasTexturePixelSize(batch));
                 if (batch.Material is { Textures.Length: > 0 } textured)
                 {
                     var samplers = _textureBindings[textured];
@@ -474,6 +474,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private static bool UsesCanvasTexture(CanvasBatch batch) => batch.Material is null ||
         batch.Material.Program.Textures.Any(t => t.IsCanvasTexture);
+
+    private static Vector2 CanvasTexturePixelSize(CanvasBatch batch)
+    {
+        var size = (ShaderTexture.Source(batch.Texture) as Texture)?.GetSize() ?? Vector2.One;
+        return new(1f / Math.Max(1, size.X), 1f / Math.Max(1, size.Y));
+    }
 
     private SDL.GPUTextureSamplerBinding CanvasBinding(CanvasBatch batch, bool color = true)
     {

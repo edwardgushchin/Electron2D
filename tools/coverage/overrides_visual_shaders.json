@@ -1949,7 +1949,7 @@
       "godot": [
         "class:VisualShaderNodeInput"
       ],
-      "reason": "Numeric color/UV/vertex/time/custom input projections execute through the current compiled canvas ABI. Matrix/sampled-image, logical command texture-size, point/custom-channel/instance-ID and separate light input producers retain exact graph integrations."
+      "reason": "Numeric color/UV/vertex/time/custom and logical command texture_pixel_size projections execute through the compiled canvas ABI. Texture size is renderer-owned in both canvas stages, follows resolved diffuse metadata and changes independently of material samplers. Matrix, point/custom-channel/instance-ID and separate light producers retain exact graph integrations."
     },
     {
       "state": "Partial",

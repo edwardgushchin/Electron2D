@@ -1,6 +1,6 @@
 # VisualShaderNodeInput
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 Source: [VisualShaderNodeInput.cs](../../src/Scene/Resources/VisualShaderNodeInput.cs).
 
@@ -127,3 +127,5 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
 - [Typed resources](../decisions/resources.md#adr-0013)
+
+Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.

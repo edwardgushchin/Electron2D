@@ -11,3 +11,5 @@ Scene-authored global shader values now use [ShaderGlobalsOverride](ShaderGlobal
 Project preparation captures registered typed definitions under the registry lock, then validates values and loads isolated image resources before service publication. Normalized path aliases share one owned image. Failed preparation retires staged images; renderer shutdown retires all configured images while collecting disposal failures. Existing add/set references remain borrowed.
 
 NORMAL_MAP_FLAGS is reserved for per-command canvas state and cannot be registered as a global. The public typed global parameter contract otherwise stays unchanged. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
+
+Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.

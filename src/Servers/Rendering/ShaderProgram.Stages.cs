@@ -23,7 +23,7 @@ internal sealed partial class ShaderProgram
     {
         var frame = Uniforms.Values.Where(u => u.Buffer == 0).ToArray();
         if (BufferSizes.Length == 0 || BufferSizes[0] != 16 || frame.Length != 1 || frame[0].Type != typeof(Vector2) || frame[0].Offset != 0 || frame[0].ArrayLength != 0 || frame[0].DefaultWords is not null ||
-            InstanceUniforms.Values.Any(u => u.Buffer == 0) || TimeUniform?.Buffer == 0 || ScreenPixelSizeUniform?.Buffer == 0 || SDFCoordsUniform?.Buffer == 0 || NormalMapFlagsUniform?.Buffer == 0)
+            InstanceUniforms.Values.Any(u => u.Buffer == 0) || TimeUniform?.Buffer == 0 || ScreenPixelSizeUniform?.Buffer == 0 || SDFCoordsUniform?.Buffer == 0 || NormalMapFlagsUniform?.Buffer == 0 || TexturePixelSizeUniform?.Buffer == 0)
             throw new NotSupportedException("The vertex Frame block at binding zero contains only a float2 client size at offset zero.");
     }
 
@@ -88,6 +88,7 @@ internal sealed partial class ShaderProgram
         {
             NativeCode = fragment.NativeCode,
             NormalMapFlagsUniform = fragment.NormalMapFlagsUniform,
+            TexturePixelSizeUniform = Builtin(fragment.TexturePixelSizeUniform, vertex.TexturePixelSizeUniform),
             Vertex = vertex,
             Fragment = fragment,
             FragmentBufferCount = fragment.BufferSizes.Length,

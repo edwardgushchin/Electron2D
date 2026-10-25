@@ -111,3 +111,5 @@ CopyTextures preserves authored/default/global absence for validated graph image
 Image value migration requires material ownership in both program versions. A screen-owned replacement drops the prior material resource instead of retaining a hidden override for a later reload. Caller-owned resources remain live.
 
 PushUniforms writes the current batch's private normal-map flags into the renderer-owned field before native draw submission. Shared materials therefore retain independent rectangle orientation without changing authored parameter state. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
+
+Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.

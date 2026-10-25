@@ -513,3 +513,5 @@ The explicit shader source-authoring bridge checks process-launch support before
 Imported [typed reroute chains](../components/visual-shaders.md#typed-reroute-chains) preserve numeric values and original sampled-image symbols across all supported graph stages; the renderer consumes their ordinary immutable shader programs.
 
 [Fresnel graphs](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals) now execute a scalar falloff across eight stages and consume actual local canvas normals when the normal input is absent. Rectangle orientation survives batching and mesh transitions through private per-draw state; no public backend handle or compatibility shader fallback is added.
+
+Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) producer in vertex and fragment stages, including shared paired layouts and live diffuse metadata. This does not complete the remaining matrix, point/custom-channel, instance-ID or light graph producers.
