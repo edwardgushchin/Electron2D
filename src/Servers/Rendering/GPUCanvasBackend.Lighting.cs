@@ -45,6 +45,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
         return (texture is AtlasTexture atlas ? atlas.RenderingTexture : texture) as CanvasTexture;
     }
+    private static Vector4 SurfaceNormalMapFlags(CanvasBatch batch) => batch.Material?.Program.Surface is null ? batch.NormalMapFlags :
+        new(batch.NormalMapFlags.X, batch.NormalMapFlags.Y, batch.NormalMapFlags.Z, Channels(batch.Texture)?.NormalTexture is null ? 0 : 1);
     private void PrepareLightingChannels(CanvasBatch batch)
     {
         var channels = Channels(batch.Texture);

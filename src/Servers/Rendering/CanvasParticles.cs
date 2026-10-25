@@ -13,7 +13,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
         {
             while (_meshes.Count < source.DrawPasses.Length) _meshes.Add(null!);
             var canvas = source.LocalCoordinates ? transform : transform * source.Emission.AffineInverse();
-            if (!source.LocalCoordinates) matrices = matrices?.Local(source.Emission.AffineInverse());
+            if (!source.LocalCoordinates) matrices = matrices?.Instance(source.Emission.AffineInverse());
             var visibility = transform * source.CustomAABB;
             source.CanvasBasis = canvas;
             var sheet = owner.CanvasMaterial is CanvasItemMaterial fixedMaterial && fixedMaterial.ParticlesAnimation ? new Vector4(fixedMaterial.ParticlesAnimHFrames, fixedMaterial.ParticlesAnimVFrames, fixedMaterial.ParticlesAnimLoop ? 1 : 0, 1) : default;

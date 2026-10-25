@@ -36,7 +36,7 @@ internal static partial class GraphChecks
     private static void AuthorInvalidLightGraphs(string folder)
     {
         Directory.CreateDirectory(folder);
-        foreach (var failure in new[] { "missing", "role", "vertex-read", "light-write", "cycle", "point", "surface", "fragment-light" })
+        foreach (var failure in new[] { "missing", "role", "vertex-read", "light-write", "cycle", "point", "fragment-light" })
         {
             using var graph = new V();
             using var getter = new VisualShaderNodeVaryingGetter { VaryingName = failure == "missing" ? "absent" : "value", VaryingType = failure == "role" ? T.Int : T.Float };
@@ -55,7 +55,6 @@ internal static partial class GraphChecks
             {
                 graph.AddNode(V.Type.Light, input, default, 2); graph.ConnectNodesForced(V.Type.Light, 2, 0, 0, 0);
             }
-            else if (failure == "surface") graph.GetNode(V.Type.Fragment, 0).SetInputPortDefaultValue(2, Vector3.One);
             else if (failure == "fragment-light")
             {
                 expression.AddOutputPort(0, P.Vector3, "rgb"); expression.Expression = "rgb=LIGHT_COLOR.rgb;";

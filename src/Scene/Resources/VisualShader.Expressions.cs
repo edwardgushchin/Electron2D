@@ -76,6 +76,9 @@ public sealed partial class VisualShader
         }
         if (stage == Type.Light || global)
             foreach (var (name, _) in CanvasLightFields) if (aliases.TryGetValue(name, out var symbol)) result[name] = symbol;
+        if (stage == Type.Fragment || global)
+            foreach (var (name, _) in SurfaceFields)
+                if (name != "NORMAL_USED" && aliases.ContainsKey("e2d_surface") && aliases.TryGetValue(name, out var symbol)) result[name] = symbol;
         if (stage == Type.Vertex)
         {
             result["CUSTOM0"] = aliases["inMeshCustom0"]; result["CUSTOM1"] = aliases["inMeshCustom1"];

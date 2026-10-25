@@ -515,3 +515,5 @@ These operations throw ObjectDisposedException on a disposed graph. Shallow and 
 ## Authored canvas lights
 
 See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.
+
+[Canvas fragment surfaces](../components/canvas-surfaces.md) execute fragment normal/map/depth and independent light/shadow positions through the existing retained material and scene-light path. Renderer-owned original model/canvas normal bases are excluded from material properties. Point-size/coordinate producers retain their separate dependencies.

@@ -5,7 +5,7 @@ namespace Electron2D;
 
 public sealed partial class VisualShader
 {
-    internal (string Vertex, string Fragment, IReadOnlyList<VisualShaderImage> Images, IReadOnlyList<VisualShaderBlockName> Blocks, CanvasLightSource? Light) GenerateSources()
+    internal (string Vertex, string Fragment, IReadOnlyList<VisualShaderImage> Images, IReadOnlyList<VisualShaderBlockName> Blocks, CanvasStageSource? Light, CanvasStageSource? Surface) GenerateSources()
     {
         ThrowIfDisposed(); ValidateFileState();
         if (GetMode() != Mode.CanvasItem) throw new NotSupportedException("This visual graph importer requires the canvas shader domain.");
@@ -13,12 +13,14 @@ public sealed partial class VisualShader
         var images = new List<VisualShaderImage>(); var blocks = new List<VisualShaderBlockName>();
         var vertex = GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom, varyings: varyings);
         var lightPlan = PlanStage(Type.Light);
-        if (lightPlan.Order.Count > 1 || GetNode(Type.Light, 0).GetDefaultInputValues().Count != 0 || custom?.Functions[Type.Light].Any(s => s.Length != 0) == true)
+        var lightActive = lightPlan.Order.Count > 1 || GetNode(Type.Light, 0).GetDefaultInputValues().Count != 0 || custom?.Functions[Type.Light].Any(s => s.Length != 0) == true;
+        var surface = PrepareSurface(custom);
+        if (lightActive || surface is not null)
         {
-            var light = GenerateCanvasLight(parameters, slots, images, blocks, custom, varyings, lightPlan);
-            return (vertex, light.Source, images, blocks, light.Metadata);
+            var module = GenerateCanvasModule(parameters, slots, images, blocks, custom, varyings, lightActive ? lightPlan : null, surface);
+            return (vertex, module.Source, images, blocks, module.Light, module.Surface);
         }
-        return (vertex, GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom, varyings: varyings), images, blocks, null);
+        return (vertex, GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom, varyings: varyings), images, blocks, null, null);
     }
 
     private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom, DomainCompilation? domain = null, Dictionary<string, VaryingWire>? varyings = null)
@@ -54,8 +56,9 @@ public sealed partial class VisualShader
         var header = domain is null ? ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom) : domain.StageHeader(stage);
         if (varyings is not null) header = VaryingHeader(stage, varyings, header);
         var source = new StringBuilder(header);
+        if (stage == Type.Fragment && domain?.Surface is { } surface) EmitSurfaceStart(source, aliases, surface);
         EmitCustomFunctions(custom, stage, aliases, source);
-        if (NeedsCanvasNormal(stage, reachable)) EmitCanvasNormal(source, aliases);
+        if (domain?.Surface is null && NeedsCanvasNormal(stage, reachable)) EmitCanvasNormal(source, aliases);
         var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
         if (varyings is not null) names.UnionWith(varyings.Values.SelectMany(v => v.Names));
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;

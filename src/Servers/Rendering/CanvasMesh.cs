@@ -214,7 +214,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
             instances.Presentation(index, fraction, out var pose, out var color, out var custom);
             var first = output.Count;
             AppendSurface(output, MeshLOD.Select(data, lods, transform * pose), primitive, transform * pose, modulation * (linear ? CanvasGeometry.LinearColor(color) : color), snap, custom, palette, toPalette, fromPalette, linear, (uint)index);
-            if (splitBatches is not null) AddBatch(output, splitBatches, template with { First = first, Count = output.Count - first, Matrices = template.Matrices?.Local(pose) });
+            if (splitBatches is not null) AddBatch(output, splitBatches, template with { First = first, Count = output.Count - first, Matrices = template.Matrices?.Instance(pose) });
         }
     }
     private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, uint instanceID = uint.MaxValue)

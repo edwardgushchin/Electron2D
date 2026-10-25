@@ -88,8 +88,11 @@ internal sealed partial class ShaderProgram
         {
             NativeCode = fragment.NativeCode,
             AuthoredLight = fragment.AuthoredLight,
+            Surface = fragment.Surface,
             ValidationCode = fragment.ValidationCode,
             NormalMapFlagsUniform = fragment.NormalMapFlagsUniform,
+            NormalModelBasisUniform = fragment.NormalModelBasisUniform,
+            NormalCanvasBasisUniform = fragment.NormalCanvasBasisUniform,
             TexturePixelSizeUniform = Builtin(fragment.TexturePixelSizeUniform, vertex.TexturePixelSizeUniform),
             ModelMatrixUniform = Builtin(null, vertex.ModelMatrixUniform),
             CanvasMatrixUniform = Builtin(null, vertex.CanvasMatrixUniform),
