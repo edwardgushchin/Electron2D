@@ -48,6 +48,7 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly nint _gtkTitlebarProvider;
     private readonly string? _previousGamepadBackgroundHint;
     private Rect2i _windowRect;
+    internal Vector2i ObservedWindowPosition => _windowRect.Position;
     private Vector2i _waylandMinimumSize = new(64, 64);
     private Vector2i _waylandMaximumSize;
 

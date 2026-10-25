@@ -773,13 +773,19 @@ AutoAcceptQuit in its finally path; embedded close leaves host quit to the calle
 
 Public embedded focus/close and actual native/embedded pointer routes use the bridge.
 Repeated pointer entry/exit is silent. Position emits on observed native rectangle
-changes, not placement requests. SDL display-scale changes supply the DPI identity;
-they do not measure physical DPI. Go-back and output-linear/HDR notification sources
-remain absent. WindowNotificationTests checks physical descendants, nested boundaries,
+changes, not placement requests. Native requests retain a separate last-observed
+position, so an acknowledgement equal to the requested coordinates still emits
+once. A new native lifetime samples its initial observed position. SDL display-scale changes supply the DPI identity;
+they do not measure physical DPI. Physical DPI and output-linear/HDR notification
+sources retain their separate platform prerequisites. WindowNotificationTests checks physical descendants, nested boundaries,
 mutation/thread errors, committed rectangles, all eight injected SDL dummy events,
 later delegates/events after failure and teardown. Its 1024 warmed notification/event
 operations require zero owner/all-thread managed bytes. Real compositor, GPU and
-foreign-platform acceptance are not established by this check.
+foreign-platform acceptance are not established by this check. The separate
+[public native position qualification](../components/window-runtime.md#native-position-acknowledgement)
+passes 32 frozen CoreCLR/NativeAOT root/child movement and Wayland-control profiles
+across selected physics, renderer and threading modes; it records its earlier
+GPU shutdown failure separately.
 
 PackedScene captures Position only after an authored position request. An untouched root Window restores automatic native placement instead of silently requesting `(0,0)`; explicit zero remains stored and retains the platform coordinate gate. This permits saved default root windows to start on Wayland. CanvasModulateTests checks both forms, and its published scene consumer executes actual native output.
 

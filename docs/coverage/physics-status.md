@@ -74,13 +74,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 112 | 3 | 0 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 16 | 2 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 203 | 3 | 6 | 1 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 204 | 2 | 6 | 1 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 37 | 4 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 426 | 14 | 11 | 3 | 37 |
+| **Total** | | 427 | 13 | 11 | 3 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -94,9 +94,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`class:Node`](classes/Node.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_INVALIDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
-| [`Node::constant:NOTIFICATION_WM_DPI_CHANGE`](classes/Node.md) | Partial | WindowNotificationTests verifies actual propagation, committed native-rectangle observation and all eight dummy queue identities. SDL content-scale reporting does not measure physical DPI under ADR 0044; native compositor/X11 event coverage and foreign platforms remain open. Wayland has no global-position event source. |
+| [`Node::constant:NOTIFICATION_WM_DPI_CHANGE`](classes/Node.md) | Partial | WindowNotificationTests verifies propagation, numeric identity, owner/parent-first physical descendants, nested boundaries and callback failure/lifetime/mutation behavior. SDL content-scale reporting does not measure physical DPI under ADR 0044; the native physical-DPI bridge and foreign-platform acceptance remain open. |
 | [`Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED`](classes/Node.md) | Unimplemented | Exact prerequisite: complete per-window native HDR output request/support/enabled and luminance policy, executing HDR presentation/transfer, active maximum-linear-value observation and ordered Window/Node change delivery. Current half-float canvases still use SDR presentation; native swapchain-format availability does not prove active HDR output. See docs/components/hdr-canvas.md#native-output-prerequisite and bin/physics-output-capability/2026-10-25/. No inert identity is exposed. |
-| [`Node::constant:NOTIFICATION_WM_POSITION_CHANGED`](classes/Node.md) | Partial | WindowNotificationTests verifies actual propagation, committed native-rectangle observation and all eight dummy queue identities. SDL content-scale reporting does not measure physical DPI under ADR 0044; native compositor/X11 event coverage and foreign platforms remain open. Wayland has no global-position event source. |
 | [`Node::method:_get_accessibility_configuration_warnings()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:_get_focused_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::method:get_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |

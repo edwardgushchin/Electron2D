@@ -76,13 +76,66 @@ AutoAcceptQuit in its finally path; embedded close leaves host quit to the calle
 
 Public embedded focus/close and actual native/embedded pointer routes use the bridge.
 Repeated pointer entry/exit is silent. Position emits on observed native rectangle
-changes, not placement requests. SDL display-scale changes supply the DPI identity;
-they do not measure physical DPI. Go-back and output-linear/HDR notification sources
-remain absent. WindowNotificationTests checks physical descendants, nested boundaries,
+changes, not placement requests. Native requests retain a separate last-observed
+position, so an acknowledgement equal to the requested coordinates still emits
+once. A new native lifetime samples its initial observed position. SDL display-scale changes supply the DPI identity;
+they do not measure physical DPI. Physical DPI and output-linear/HDR notification
+sources retain their separate platform prerequisites. WindowNotificationTests checks physical descendants, nested boundaries,
 mutation/thread errors, committed rectangles, all eight injected SDL dummy events,
 later delegates/events after failure and teardown. Its 1024 warmed notification/event
 operations require zero owner/all-thread managed bytes. Real compositor, GPU and
 foreign-platform acceptance are not established by this check.
+
+### Native position acknowledgement
+
+`Window.Position` stores a request independently of the last observed native
+position. A later move acknowledgement compares against that observation, commits
+it before delivery and emits `Node.NotificationWmPositionChanged` once even when
+the native coordinates exactly match the request. Initial native state supplies
+the comparison baseline on each root/child native lifetime. Equal observations
+and requests are silent. Desktop movement preserves scene transforms, physical
+poses, RID identity and viewport projection. Wayland keeps its explicit global
+coordinate rejection under ADR 0040 and does not fabricate move notifications.
+
+The public-only `BackendChecks.RunNativeWindowPosition` consumer exercises real
+X11/XWayland movement through both `Window.Position` and static
+`DisplayServer.WindowSetPosition`, for the root and an independent native child.
+It verifies owner delivery, parent-first physical receivers and nested-window
+boundaries, equal-request silence, selected physical motion/query identity and
+actual rendered body pixels. It never injects a native move event. The matching
+Wayland control verifies unsupported queries/requests, silence and the same
+physical/rendered output. Run the consumer with `--native-window-position`,
+`--cpu` or `--gpu`, optional `--threaded` and `--compatibility`; use
+`--unavailable` for Wayland. The qualification runner bounds each complete cold case at 90 seconds;
+each actual move must be acknowledged within five seconds. These bounds are test
+failure deadlines, not performance measurements.
+
+The frozen 2026-10-26 Linux qualification passed 16 CoreCLR and 16 strict
+NativeAOT profiles: X11/XWayland and native Wayland, CPU/GPU physics, GPU and
+compatibility rendering, and owner/separate physics threads. Every native profile
+loaded NVIDIA without a software driver or physics fallback. Two additional
+CPU/dummy checks passed notification/error/lifecycle behavior and placement
+storage; the warmed notification and pointer paths retained zero owner/all-thread
+managed bytes. Receipts, process maps, payload manifests and the 6,116-input
+source manifest are under `bin/native-window-position/2026-10-26/`, with
+`qualification.json` indexing the accepted runs. Source manifest SHA-256:
+`21545f84fa8d2102723bcf114a4241544c8683adca97610e74e7a0f618e168fc`.
+The runtime SHA-256 is
+`7327f3b69d0f9ac08fb9f86ed336a959ef0aebf76ecbd41a9d0d0c310d7a0c75`;
+the NativeAOT consumer is
+`6349ef51623d4f34dfe89b932ca68b881dad29ff9683e9e62d93a03078e128ac`.
+Coverage advances only the inherited position-notification row, to 1,336/1,369
+applicable physics declarations (97.59%); physical DPI remains Partial.
+
+The initial regression reproduced a real move with no containing notification.
+Earlier fixture failures and one renderer shutdown `VK_ERROR_DEVICE_LOST` are
+preserved alongside the accepted runs. That shutdown followed all four successful
+moves; the kernel receipt has no new Xid, and its immediate reproduction and the
+final matrix exited cleanly. Its cause remains unresolved, so this evidence does
+not establish broad GPU renderer stability. Full ordinary/numerical/network/mass
+performance checks, native allocator totals, foreign targets and human visual
+acceptance were not repeated by this slice. Intermediate payloads were retired
+after their manifests were saved; accepted payloads and failure evidence remain.
 
 Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.
 

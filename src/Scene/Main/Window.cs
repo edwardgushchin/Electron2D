@@ -34,6 +34,7 @@ public partial class Window : Viewport
     private Vector2i _minSize;
     private Vector2i _maxSize;
     private Vector2i? _screenPosition;
+    private Vector2i _observedNativePosition;
     internal bool HasAuthoredPosition => _screenPosition is not null;
     private bool _mouseInWindow, _mouseInContent;
 
@@ -128,7 +129,8 @@ public partial class Window : Viewport
     /// <value>The configured position before startup, or zero if no position was requested.</value>
     /// <remarks>Leaving it unset lets the system place
     /// the window. PackedScene preserves this unset policy; an explicit zero position remains an authored request.
-    /// A preconfigured native root position is applied at startup and can fail on an unsupported platform. Embedded children use their containing viewport coordinates.</remarks>
+    /// A preconfigured native root position is applied at startup and can fail on an unsupported platform. Embedded children use their containing viewport coordinates.
+    /// A native request does not emit a position notification; a subsequent observed move commits its position before notifying the containing subtree.</remarks>
     /// <exception cref="NotSupportedException">The active compositor does not expose or accept global window positions, including Wayland.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
     /// <exception cref="ObjectDisposedException">The window is disposed.</exception>
@@ -312,6 +314,7 @@ public partial class Window : Viewport
     {
         if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         var display = _display ?? throw new InvalidOperationException("The native window is absent.");
+        _observedNativePosition = display.ObservedWindowPosition;
         if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
         {
             if (_minSize.X != 0 || _minSize.Y != 0 || _maxSize.X != 0 || _maxSize.Y != 0)
@@ -427,7 +430,9 @@ public partial class Window : Viewport
     private void HandleRect(Rect2i rect)
     {
         List<Exception>? errors = null;
-        if ((_screenPosition ?? Vector2i.Zero) != rect.Position)
+        var previousPosition = _display is null ? _screenPosition ?? Vector2i.Zero : _observedNativePosition;
+        _observedNativePosition = rect.Position;
+        if (previousPosition != rect.Position)
         {
             _screenPosition = rect.Position;
             try { PropagateWindowNotification(NotificationWmPositionChanged); } catch (Exception error) { CollectException(ref errors, error); }

@@ -136,8 +136,8 @@
     {
       "godot": "Node::constant:NOTIFICATION_WM_POSITION_CHANGED",
       "electron2d": "constant:Electron2D.Node.NotificationWmPositionChanged()",
-      "state": "Partial",
-      "reason": "WindowNotificationTests verifies pinned numeric identity, parent-first physical descendants, nested Window boundaries, signal order, failure continuation, embedded/public routes and the SDL dummy queue. Size reaches Window only. 1024 warmed notification/event operations allocate 0/0 managed bytes; GPU, real compositor and foreign-platform acceptance remain separate. Only observed native rectangle changes emit; programmatic placement requests remain silent. Native X11/compositor event coverage remains open; Wayland exposes no global position."
+      "state": "Implemented",
+      "reason": "ADRs 0008/0040/0044: native Window keeps the last observed client position separately from placement requests, so acknowledgements equal to the request emit once after commit. Public-only native root/independent-child consumers exercise real X11/XWayland moves through Window.Position and DisplayServer.WindowSetPosition, owner/parent-first physical receivers, nested boundaries, equal silence, selected CPU/GPU motion/query identity and actual GPU/compatibility pixels in owner/separate profiles. Wayland rejects unavailable global coordinates without fabricated notifications. Existing WindowNotificationTests retain callback failure/lifetime/mutation guards and 1024 warmed operations at zero owner/all-thread managed bytes. See docs/components/window-runtime.md#native-position-acknowledgement; native cold allocation, one recorded GPU shutdown device-loss failure, foreign targets, full numerical/network/stability/performance and owner visual acceptance remain separate."
     },
     {
       "godot": "Node::method:set_process_internal(bool:)",
@@ -8604,11 +8604,17 @@
     },
     {
       "godot": [
-        "Node::constant:NOTIFICATION_WM_DPI_CHANGE",
-        "Node::constant:NOTIFICATION_WM_POSITION_CHANGED"
+        "Node::constant:NOTIFICATION_WM_DPI_CHANGE"
       ],
       "state": "Partial",
-      "reason": "WindowNotificationTests verifies actual propagation, committed native-rectangle observation and all eight dummy queue identities. SDL content-scale reporting does not measure physical DPI under ADR 0044; native compositor/X11 event coverage and foreign platforms remain open. Wayland has no global-position event source."
+      "reason": "WindowNotificationTests verifies propagation, numeric identity, owner/parent-first physical descendants, nested boundaries and callback failure/lifetime/mutation behavior. SDL content-scale reporting does not measure physical DPI under ADR 0044; the native physical-DPI bridge and foreign-platform acceptance remain open."
+    },
+    {
+      "godot": [
+        "Node::constant:NOTIFICATION_WM_POSITION_CHANGED"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0040/0044: native Window keeps the last observed client position separately from placement requests, so acknowledgements equal to the request emit once after commit. Public-only native root/independent-child consumers exercise real X11/XWayland moves through Window.Position and DisplayServer.WindowSetPosition, owner/parent-first physical receivers, nested boundaries, equal silence, selected CPU/GPU motion/query identity and actual GPU/compatibility pixels in owner/separate profiles. Wayland rejects unavailable global coordinates without fabricated notifications. Existing WindowNotificationTests retain callback failure/lifetime/mutation guards and 1024 warmed operations at zero owner/all-thread managed bytes. See docs/components/window-runtime.md#native-position-acknowledgement; native cold allocation, one recorded GPU shutdown device-loss failure, foreign targets, full numerical/network/stability/performance and owner visual acceptance remain separate."
     },
     {
       "godot": [

@@ -1830,7 +1830,7 @@ delivery; manual DispatchNotification does not create a native event.
 
 ### NotificationWmPositionChanged
 
-`public const int NotificationWmPositionChanged = 1012`. An observed native rectangle changes the containing window client position. Placement requests do not emit; Wayland does not expose global positioning.
+`public const int NotificationWmPositionChanged = 1012`. An observed native rectangle changes the containing window client position. Placement requests do not emit; Wayland does not expose global positioning. Acknowledging a requested position still emits once when it changes the last observed native position; the requested value cannot suppress that acknowledgement. Parent-first delivery stops at nested Window scopes and leaves physical poses and RID identities unchanged.
 
 Non-size automatic delivery is owner-thread and parent-first; nested windows own
 their independent event scopes. Callback errors preserve remaining receivers and

@@ -1629,8 +1629,11 @@ RenderingServer.CanvasGroupMode is the four-value retained compositor selector. 
 Containing-window notifications now reach physical Node descendants in parent-first
 order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
-dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
-missing go-back/HDR sources remain open; see [window runtime](components/window-runtime.md#containing-window-notifications).
+dummy routes plus 1024 zero-byte warmed operations. Native position acknowledgement
+now retains the last observed position independently of requests; the public native
+consumer exercises root/child physical receivers and rendered output. Physical DPI,
+HDR output and foreign-platform acceptance retain their separate gates; see
+[window runtime](components/window-runtime.md#native-position-acknowledgement).
 
 ## Linear HDR canvas output
 
