@@ -1,6 +1,6 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 73 ELF classification and all 101 source, license and notice byte comparisons remain strict.
 
@@ -107,6 +107,8 @@ Apple executables explicitly select `Electron2D.iOS` or `Electron2D.tvOS`. Its s
 Web uses the Emscripten toolchain supplied by the selected .NET WebAssembly SDK. It builds nineteen real wasm32 archives, including SDL3 from its pinned 3.4.18 source archive and SDL_image 3.4.6 with the pinned libwebp/sharpyuv closure, and rejects archives containing foreign objects or missing exports. A linked native FreeType executable decodes and rasterizes the bundled WOFF2 and rejects corrupt data under Node. `Electron2D.Web` supplies all selected archives as NativeFileReference and notices as `wwwroot/licence/*`; the browser driver compares the notice bytes before execution. The reflection-disabled test app exercises native fonts/ICU dictionary boundaries, all six public image decoders, PNG/JPEG saving and finite nonzero FAudio PCM/output over two balanced lifecycles. The nonthreaded host yields between owner frames. Strict warmed allocation checks use a fixed Mono interpreter test profile; no production runtime setting is changed. Browser canvas presentation, WebGPU, input/storage, raw-socket TLS/ENet and a complete production host remain separate work.
 
 ## Public publication
+
+Follow [the release runbook](releasing.md) for candidate preparation, package qualification, promotion, public verification and recovery after partial publication. The workflow below still rebuilds its own artifacts; the runbook's automation status records the required transition to publishing the exact qualified files without a second build. Until then, verify the publisher's actual package set separately and retain its source/run/artifact identities.
 
 The NuGet trusted publishing policy `Electron2D packages` uses repository owner `edwardgushchin`, repository `Electron2D`, workflow file `publish-native.yml`, and exactly eight package identities: `Electron2D`, `Electron2D.Windows`, `Electron2D.Linux`, `Electron2D.MacOS`, `Electron2D.Web`, `Electron2D.Android`, `Electron2D.iOS` and `Electron2D.tvOS`. The legacy `Electron2D.Native*` permission is removed. The policy permits new packages and package versions, not unlist/relist; the optional environment is empty. Manually run **Publish Electron2D packages** on `main`, supplying the owner's NuGet profile name. The workflow packs the managed runtime and all seven platform packages. The workflow collects all `private-native-package*` artifacts from the native producer and publishes their audited platform packages without a stored API key. It rejects duplicate-version publication instead of silently accepting a different payload under an existing version. A publishing policy does not supply missing target binaries or establish their runtime acceptance.
 
