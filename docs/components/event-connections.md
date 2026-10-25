@@ -118,9 +118,22 @@ source/payload manifests and failures are retained under
 `bin/event-publisher-membership/2026-10-26/`.
 
 Six strict NativeAOT public CPU/GPU/registered owner/separate profiles also pass
-without CoreCLR mappings. The broad ordinary suite is running on the immutable
-CoreCLR candidate. Its result remains pending; the implementation is qualified separately by the
-focused profiles. The coverage row
-remains Partial until this current family is reconciled. This functional evidence
-does not establish foreign-platform execution, native allocations, hardware
-throughput or complete physics acceptance.
+without observed CoreCLR mappings. A syntax/routing audit verifies all 350 runtime
+event declarations: 310 ordinary stores, 19 prepared buffers and 21 forwards.
+Every add/remove pair selects the same store or target; every facade resolves to
+an observed ordinary publisher.
+
+The complete ordinary CoreCLR suite completed in 3,866.24 seconds with exit 0
+and its exact final marker on the same immutable candidate. Process receipts
+observe 47 processes, including three NVIDIA users, no software Vulkan mappings,
+unchanged payload and no Xid/fallen-off records. Source closure pins 6,115 inputs
+at integrated revision 0513b15cd plus the publisher implementation committed as
+ab04d5dd1. Only noncompiled coverage metadata differs after that build.
+`bin/event-publisher-membership/2026-10-26/full-qualification.json` retains the
+full receipt and hashes. This runtime suite does not qualify the separate editor
+session tests introduced by the integrated revision.
+
+The owned connection row closes: 1,335/1,369 (97.52%), 34 open and 92 Excluded.
+The Object aggregate and other inherited capabilities retain their own gaps.
+This functional evidence does not establish foreign-platform execution, native
+allocations, hardware throughput or complete physics acceptance.
