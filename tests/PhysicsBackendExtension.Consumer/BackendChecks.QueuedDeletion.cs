@@ -79,7 +79,7 @@ public static partial class BackendChecks
 
     private static void DeletionFamily(World world)
     {
-        using var root = new SubViewport { World = world }; using var destination = new SubViewport { World = world };
+        using var root = new SubViewport { World = world }; using var destination = new Node();
         using var tree = new SceneTree(root);
         Node[] family = [new Node(), new Entity(), new Control(), new StaticBody(), new AnimatableBody(), new RigidBody(), new CharacterBody(), new PhysicalBone(), new Area(), new CollisionShape()];
         foreach (var node in family)

@@ -94,20 +94,20 @@ public static partial class BackendChecks
 
     private static void ObserveDeletionQueues(World world)
     {
-        using var root = new SubViewport { World = world }; using var otherRoot = new SubViewport { World = world };
+        using var root = new SubViewport { World = world }; using var otherRoot = new Node();
         using var tree = new SceneTree(root); var other = new SceneTree(otherRoot);
         var shared = new ObservedDeletionObject(); tree.QueueDelete(shared); other.QueueDelete(shared); other.Dispose();
         Check(!shared.IsDisposed && shared.IsQueuedForDeletion, "Discarding one tree releases only its own accepted request");
         tree.FlushDeferred(); Check(shared.IsDisposed && shared.Cleanups == 1 && !shared.IsQueuedForDeletion, "The other tree retains its independent request");
         var discarded = new ObservedDeletionObject();
-        using (var discardRoot = new SubViewport { World = world })
+        using (var discardRoot = new Node())
         using (var discardTree = new SceneTree(discardRoot)) { discardTree.QueueDelete(discarded); discardTree.QueueDelete(discarded); }
         Check(!discarded.IsDisposed && !discarded.IsQueuedForDeletion, "Finalization discards duplicate requests without disposing an unowned target or stranding its observation"); discarded.Dispose();
         var first = new ObservedDeletionObject(); var later = new ObservedDeletionObject(); first.Disposed += _ => tree.QueueDelete(later);
         tree.QueueDelete(first); tree.FlushDeferred();
         Check(first.IsDisposed && later.IsQueuedForDeletion && !later.IsDisposed, "A callback-published request waits for the next captured deletion batch");
         tree.FlushDeferred(); Check(later.IsDisposed && !later.IsQueuedForDeletion, "The next captured batch releases its request");
-        var moved = new Node(); using var destinationRoot = new SubViewport { World = world }; using var destination = new SceneTree(destinationRoot);
+        var moved = new Node(); using var destinationRoot = new Node(); using var destination = new SceneTree(destinationRoot);
         root.AddChild(moved); tree.QueueDelete(moved); root.RemoveChild(moved); destinationRoot.AddChild(moved);
         var rejected = ObserveRejectedDeletion(tree);
         Check(rejected && !moved.IsDisposed && !moved.IsQueuedForDeletion, "An explicit request rejected after owner transfer releases its observation");
@@ -130,7 +130,7 @@ public static partial class BackendChecks
         var failing = new ObservedDeletionObject { Fail = true }; var survivor = new ObservedDeletionObject();
         tree.QueueDelete(failing); tree.QueueDelete(survivor); failed = ObserveRejectedDeletion(tree);
         Check(failed && failing.PreDeleteQueued && failing.CleanupQueued && failing.IsDisposed && survivor.IsDisposed && !failing.IsQueuedForDeletion, "Callback failure retains observation during cleanup and does not skip a sibling or strand a request");
-        var closed = new SceneTree(new SubViewport { World = world }); closed.Dispose(); var untouched = new ObservedDeletionObject();
+        var closed = new SceneTree(new Node()); closed.Dispose(); var untouched = new ObservedDeletionObject();
         failed = false; try { closed.QueueDelete(untouched); } catch (ObjectDisposedException) { failed = true; }
         Check(failed && !untouched.IsQueuedForDeletion, "A closed tree cannot publish a pending mark"); untouched.Dispose();
     }
