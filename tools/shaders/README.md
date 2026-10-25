@@ -131,8 +131,8 @@ python3 -B tools/shaders/check.py
 ```
 
 Arguments are input path, `vertex` or `fragment`, and output path. Vertex import
-validates the canvas program interface; public Shader resources currently
-accept the canvas fragment interface. Compiler diagnostics include source and
+validates the canvas program interface; public Shader resources accept matching
+vertex/fragment pairs or a fragment using the built-in vertex channels. Compiler diagnostics include source and
 stage, with source locations where supplied by the compiler. Relative includes
 resolve through the source compiler's normal file rules.
 
@@ -316,3 +316,5 @@ Run python3 -B tools/shaders/check_custom.py with --host, --stock-tool, --consum
 and optional --receipt for registered custom import, argument/concurrency/reentry
 checks, source/ABI rejection and SDK build/publish/Clean. These Linux fixtures do
 not establish editor UI, physical GPU, foreign-platform or owner acceptance.
+
+Typed visual graph varyings lower through the existing paired canvas interface. Custom float32/int32/uint32 scalar/vector values occupy matching locations 12 through 15; location 11 remains private glyph transport. Graph matrices use four column vectors and Boolean data uses a private flat uint. Module import can validate stages independently; the paired runtime factory checks their producer/consumer agreement, and single-module factories/setters reject custom inputs without an authored vertex stage. See [typed varying transport](../../docs/components/visual-shaders.md#typed-varying-transport) for author/import/runtime commands, capacity and verified profiles.

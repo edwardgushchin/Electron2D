@@ -52,6 +52,8 @@ public static partial class ResourceFileTypes
         RegisterResource("VisualShaderNodeFaceForward", CreateVisualShaderNodeFaceForwardFileResource);
         RegisterResource("VisualShaderNodeFresnel", CreateVisualShaderNodeFresnelFileResource);
         RegisterResource("VisualShaderNodeReroute", CreateVisualShaderNodeRerouteFileResource);
+        RegisterResource("VisualShaderNodeVaryingGetter", CreateVisualShaderNodeVaryingGetterFileResource);
+        RegisterResource("VisualShaderNodeVaryingSetter", CreateVisualShaderNodeVaryingSetterFileResource);
         RegisterResource("VisualShaderNodeRotationByAxis", CreateVisualShaderNodeRotationByAxisFileResource);
         RegisterResource("VisualShaderNodeRandomRange", CreateVisualShaderNodeRandomRangeFileResource);
         RegisterResource("VisualShaderNodeDotProduct", CreateVisualShaderNodeDotProductFileResource);
@@ -104,6 +106,8 @@ public static partial class ResourceFileTypes
     private static VisualShaderNodeFaceForward CreateVisualShaderNodeFaceForwardFileResource() => new();
     private static VisualShaderNodeFresnel CreateVisualShaderNodeFresnelFileResource() => new();
     private static VisualShaderNodeReroute CreateVisualShaderNodeRerouteFileResource() => new();
+    private static VisualShaderNodeVaryingGetter CreateVisualShaderNodeVaryingGetterFileResource() => new();
+    private static VisualShaderNodeVaryingSetter CreateVisualShaderNodeVaryingSetterFileResource() => new();
     private static VisualShaderNodeRotationByAxis CreateVisualShaderNodeRotationByAxisFileResource() => new();
     private static VisualShaderNodeRandomRange CreateVisualShaderNodeRandomRangeFileResource() => new();
     private static VisualShaderNodeDotProduct CreateVisualShaderNodeDotProductFileResource() => new();

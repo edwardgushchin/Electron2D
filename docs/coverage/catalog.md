@@ -1022,9 +1022,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeUIntParameter](classes/VisualShaderNodeUIntParameter.md) | VisualShaderNodeParameter | Implemented | 2 |
 | [VisualShaderNodeUVFunc](classes/VisualShaderNodeUVFunc.md) | VisualShaderNode | Implemented | 5 |
 | [VisualShaderNodeUVPolarCoord](classes/VisualShaderNodeUVPolarCoord.md) | VisualShaderNode | Implemented | 0 |
-| [VisualShaderNodeVarying](classes/VisualShaderNodeVarying.md) | VisualShaderNode | Blocked | 2 |
-| [VisualShaderNodeVaryingGetter](classes/VisualShaderNodeVaryingGetter.md) | VisualShaderNodeVarying | Blocked | 0 |
-| [VisualShaderNodeVaryingSetter](classes/VisualShaderNodeVaryingSetter.md) | VisualShaderNodeVarying | Blocked | 0 |
+| [VisualShaderNodeVarying](classes/VisualShaderNodeVarying.md) | VisualShaderNode | Implemented | 2 |
+| [VisualShaderNodeVaryingGetter](classes/VisualShaderNodeVaryingGetter.md) | VisualShaderNodeVarying | Implemented | 0 |
+| [VisualShaderNodeVaryingSetter](classes/VisualShaderNodeVaryingSetter.md) | VisualShaderNodeVarying | Implemented | 0 |
 | [VisualShaderNodeVec2Constant](classes/VisualShaderNodeVec2Constant.md) | VisualShaderNodeConstant | Implemented | 1 |
 | [VisualShaderNodeVec2Parameter](classes/VisualShaderNodeVec2Parameter.md) | VisualShaderNodeParameter | Implemented | 2 |
 | [VisualShaderNodeVec3Constant](classes/VisualShaderNodeVec3Constant.md) | VisualShaderNodeConstant | Implemented | 1 |

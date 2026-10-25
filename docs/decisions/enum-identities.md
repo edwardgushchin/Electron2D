@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 ### Status
 
@@ -70,3 +70,5 @@ WebSocketPeer and WebRTCDataChannel share top-level `PacketWriteMode` (Text=0, B
 Node.DuplicateFlags is its own nested hierarchy-copy domain: Signals1/Groups2/Scripts4/UseInstantiation8/InternalState16/Default15. Zero is valid without an extra named alias. It does not merge with Resource.DeepDuplicateMode, whose values select ordinary resource-edge traversal rather than node construction/state.
 
 AnisotropicFiltering is shared by Viewport.AnisotropicFilteringLevel and RenderingServer.ViewportSetAnisotropicFilteringLevel. Both domains select Disabled/2X/4X/8X/16X values 0 through 4 with nonselectable Max5. The former nested scene identity is removed across consumers, typed storage, XML and coverage without an alias. Files using that old schema require reauthoring.
+
+VisualShaderVaryingType is shared by graph declarations and VisualShaderNodeVarying accesses. Its eight numeric roles exclude sampled images, while VisualShaderNode.PortType also carries Sampler; their selectable sets differ and remain distinct. VisualShader.VaryingMode belongs only to graph declaration transport. Its fragment-to-light selector remains absent until that authored stage executes.

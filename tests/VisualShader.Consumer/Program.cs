@@ -4,7 +4,11 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "size-cpu") GraphChecks.TextureSizeCPU();
+    if (args.Length > 0 && args[0] == "varyings-cpu") GraphChecks.VaryingsCPU();
+    else if (args.Length > 0 && args[0] == "varyings-author") GraphChecks.AuthorVaryings(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "varyings-metadata") GraphChecks.VaryingsMetadata(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "varyings-gpu") GraphChecks.RenderVaryings(IOPath.GetFullPath(args[1]), args);
+    else if (args.Length > 0 && args[0] == "size-cpu") GraphChecks.TextureSizeCPU();
     else if (args.Length > 0 && args[0] == "size-author") GraphChecks.AuthorTextureSize(IOPath.GetFullPath(args[1]));
     else if (args.Length > 0 && args[0] == "size-gpu") GraphChecks.RenderTextureSize(IOPath.GetFullPath(args[1]), args);
     else if (args.Length > 0 && args[0] == "fresnel-cpu") GraphChecks.FresnelCPU();
@@ -55,6 +59,7 @@ internal static partial class GraphChecks
     { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     internal static void CPU()
     {
+        VaryingsCPU();
         RerouteCPU();
         UnaryCPU();
         DataflowCPU();

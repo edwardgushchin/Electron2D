@@ -14430,6 +14430,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShader.VaryingMode",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShader.VaryingMode",
+    "name": "VaryingMode",
+    "signature": "public enum Electron2D.VisualShader.VaryingMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderConnection",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderConnection",
@@ -16188,6 +16206,51 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeVarying",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVarying",
+    "name": "VisualShaderNodeVarying",
+    "signature": "public abstract class Electron2D.VisualShaderNodeVarying",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNode",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeVaryingGetter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVaryingGetter",
+    "name": "VisualShaderNodeVaryingGetter",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVaryingGetter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVarying",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeVaryingSetter",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeVaryingSetter",
+    "name": "VisualShaderNodeVaryingSetter",
+    "signature": "public sealed class Electron2D.VisualShaderNodeVaryingSetter",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeVarying",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeVec2Constant",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeVec2Constant",
@@ -16501,6 +16564,24 @@
     "declaringType": "Electron2D.VisualShaderValueType",
     "name": "VisualShaderValueType",
     "signature": "public enum Electron2D.VisualShaderValueType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderVaryingType",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "VisualShaderVaryingType",
+    "signature": "public enum Electron2D.VisualShaderVaryingType",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -28798,6 +28879,45 @@
     "declaringType": "Electron2D.VisualShaderNodeUVPolarCoord",
     "name": ".ctor",
     "signature": "public VisualShaderNodeUVPolarCoord()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeVarying..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVarying",
+    "name": ".ctor",
+    "signature": "protected VisualShaderNodeVarying()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeVaryingGetter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVaryingGetter",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVaryingGetter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeVaryingSetter..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeVaryingSetter",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeVaryingSetter()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -58485,6 +58605,32 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.VisualShader.VaryingMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.VaryingMode",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShader.VaryingMode Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.VaryingMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.VaryingMode.VertexToFragmentLight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.VaryingMode",
+    "name": "VertexToFragmentLight",
+    "signature": "public const Electron2D.VisualShader.VaryingMode VertexToFragmentLight = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.VaryingMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.VisualShaderFloatOpType.Max()",
     "kind": "enumValue",
     "declaringType": "Electron2D.VisualShaderFloatOpType",
@@ -61979,6 +62125,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.VisualShaderValueType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Boolean()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Boolean",
+    "signature": "public const Electron2D.VisualShaderVaryingType Boolean = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Float()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Float",
+    "signature": "public const Electron2D.VisualShaderVaryingType Float = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Int()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Int",
+    "signature": "public const Electron2D.VisualShaderVaryingType Int = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Max",
+    "signature": "public const Electron2D.VisualShaderVaryingType Max = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Transform()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Transform",
+    "signature": "public const Electron2D.VisualShaderVaryingType Transform = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.UInt()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "UInt",
+    "signature": "public const Electron2D.VisualShaderVaryingType UInt = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Vector2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Vector2",
+    "signature": "public const Electron2D.VisualShaderVaryingType Vector2 = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Vector3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Vector3",
+    "signature": "public const Electron2D.VisualShaderVaryingType Vector3 = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShaderVaryingType.Vector4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShaderVaryingType",
+    "name": "Vector4",
+    "signature": "public const Electron2D.VisualShaderVaryingType Vector4 = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
     "value": "5"
   },
   {
@@ -225041,6 +225304,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShader.AddVarying(System.String,Electron2D.VisualShader.VaryingMode,Electron2D.VisualShaderVaryingType)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShader",
+    "name": "AddVarying",
+    "signature": "public System.Void AddVarying(System.String name, Electron2D.VisualShader.VaryingMode mode, Electron2D.VisualShaderVaryingType type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.VisualShader.VaryingMode",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.VisualShaderVaryingType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShader.CanConnectNodes(Electron2D.VisualShader.Type,System.Int32,System.Int32,System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.VisualShader",
@@ -225399,6 +225691,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShader.HasVarying(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShader",
+    "name": "HasVarying",
+    "signature": "public System.Boolean HasVarying(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShader.IsNodeConnection(Electron2D.VisualShader.Type,System.Int32,System.Int32,System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.VisualShader",
@@ -225474,6 +225785,25 @@
       {
         "name": "id",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShader.RemoveVarying(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShader",
+    "name": "RemoveVarying",
+    "signature": "public System.Void RemoveVarying(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -228456,6 +228786,45 @@
     "id": "method:Electron2D.VisualShaderNodeUVPolarCoord.CreateDuplicateInstance()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeUVPolarCoord",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeVarying.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVarying",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeVaryingGetter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVaryingGetter",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeVaryingSetter.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeVaryingSetter",
     "name": "CreateDuplicateInstance",
     "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
     "visibility": "protected",
@@ -277909,6 +278278,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.VisualShaderNodeUVFunc.FunctionEnum",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeVarying.VaryingName()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeVarying",
+    "name": "VaryingName",
+    "signature": "public System.String VaryingName { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeVarying.VaryingType()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeVarying",
+    "name": "VaryingType",
+    "signature": "public Electron2D.VisualShaderVaryingType VaryingType { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShaderVaryingType",
     "value": null
   },
   {

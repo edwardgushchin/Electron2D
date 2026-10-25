@@ -93,7 +93,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021). | 3 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
-| Trigger: typed custom graph varying declaration and native vertex/fragment/light transport beyond the fixed canvas/mesh ABI under ADR 0028; this family enters that first transport slice. | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: graph sampled-image/screen/SDF expression roles and required fragment derivative/renderer producers in the shared offline importer under ADR 0028; this family enters its operation-specific graph integration. | 2 |
 | Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |

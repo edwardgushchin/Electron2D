@@ -61,7 +61,8 @@ public partial class Shader : Resource
     /// <summary>Creates a canvas fragment shader from a copied SPIR-V module.</summary>
     /// <param name="bytecode">A little-endian SPIR-V module, at most 16 MiB, with one fragment entry point named main.</param>
     /// <returns>A shader owning an immutable copy of the validated bytecode.</returns>
-    /// <remarks>No active renderer is required. The selected platform package supplies native reflection and shader toolchain libraries.</remarks>
+    /// <remarks>No active renderer is required. The selected platform package supplies native reflection and shader toolchain libraries.
+    /// Custom varying inputs require the paired vertex/fragment overload; the built-in vertex stage supplies only renderer-owned channels.</remarks>
     /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
     /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
     public static Shader CreateFromSPIRV(ReadOnlySpan<byte> bytecode)
@@ -74,7 +75,8 @@ public partial class Shader : Resource
     /// <param name="bytecode">Compiled SPIR-V with the supported canvas fragment interface.</param>
     /// <remarks>A failure preserves the prior program. Success selects the built-in vertex stage and emits Changed. Native pipelines
     /// are rebuilt by the renderer on demand; the resource itself owns no device handles. Native reflection
-    /// resolves the selected platform package independently of renderer startup.</remarks>
+    /// resolves the selected platform package independently of renderer startup. Custom varying inputs require
+    /// the paired overload and reject before replacing the previous program.</remarks>
     /// <exception cref="ArgumentException">The bytecode is malformed or reflection fails.</exception>
     /// <exception cref="NotSupportedException">The module uses unsupported stages, capabilities or interfaces.</exception>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

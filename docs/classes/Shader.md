@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 - Declaration: `public class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -259,3 +259,7 @@ Compiled numeric defaults survive SPIR-V export, reload, duplication and graph a
 VisualShader overrides GetMode to report its authored source domain. A mode edit retains the last compiled program until successful reimport; bytecode and execution continue to use that retained program.
 
 A canvas-stage non-array float2 `TEXTURE_PIXEL_SIZE` renderer uniform supplies inverse logical command diffuse dimensions, independently of material sampler overrides. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for layout, fallback, stage and validation rules.
+
+## Custom canvas varyings
+
+Paired programs may exchange float32/int32/uint32 scalar/vector values at locations 12 through 15, with matching roles and widths. Location 11 is private glyph transport. Floating data interpolates smoothly; integer inputs require flat interpolation in their source modules. The single-module factory/setter selects the built-in vertex program and rejects custom varying inputs before publication. A mismatched paired replacement preserves both old stages. [Typed graph varyings](../components/visual-shaders.md#typed-varying-transport) lower their eight roles through this same interface, including four separate columns for a numeric matrix and private uint transport for Boolean data.

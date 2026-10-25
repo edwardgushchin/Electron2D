@@ -49,6 +49,10 @@ See the executable authoring and runtime workflow in [particle and writable-text
 | [`public System.Void ReplaceNode(Electron2D.VisualShader.Type type, System.Int32 id, System.String newClass)`](#member-c7a10e092377) | Replaces an operation using an explicitly registered compiled resource factory. |
 | [`public System.Void SetMode(Electron2D.Shader.Mode mode)`](#member-ebc2b739c95e) | Selects the source domain and removes input/output boundary connections. |
 | [`public System.Void SetNodePosition(Electron2D.VisualShader.Type type, System.Int32 id, Electron2D.Vector2 position)`](#member-a985cea8c0e1) | Changes a node's finite authoring position without changing compiled code. |
+| [`public void AddVarying(string name, VisualShader.VaryingMode mode, VisualShaderVaryingType type)`](#addvarying) | Adds a named typed stage value. |
+| [`public bool HasVarying(string name)`](#hasvarying) | Tests a case-sensitive declaration name. |
+| [`public void RemoveVarying(string name)`](#removevarying) | Removes a declaration and retains authored accesses. |
+| [VisualShader.VaryingMode](VisualShader.VaryingMode.md) | Selects executable canvas stage transport. |
 
 <a id="member-5b40f778f238"></a>
 ### `VisualShader`
@@ -486,3 +490,24 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 Validated connections select VisualShaderNodeReroute roles across downstream chains/branches after checking every terminal. An unconnected source may adopt its terminal role. Feasibility checks and rejected edits do not mutate definitions. Forced edges preserve authored roles; imports validate their actual compatibility. See [typed reroute chains](../components/visual-shaders.md#typed-reroute-chains) for defaults, aliases, sampler symbols, atomic notifications and execution checks.
 
 [Fresnel and implicit canvas normals](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals) join the existing typed graph/resource/import lifecycle. Only an unconnected and unauthored fragment normal requests the command normal image. Ordinary graph source/interfaces remain unchanged when that producer is unused.
+
+## Varying declarations
+
+<a id="addvarying"></a>
+### AddVarying
+
+`public void AddVarying(string name, VisualShader.VaryingMode mode, VisualShaderVaryingType type)` adds one unique ASCII identifier, including a leading underscore. The name is case-sensitive. Null throws ArgumentNullException; invalid/duplicate names and the 4096-declaration capacity throw ArgumentException. Invalid or nonselectable mode/type values throw ArgumentOutOfRangeException. It emits Changed after commitment; observer failure does not roll back the declaration. The graph owns this table independently of borrowed nodes and compiled programs.
+
+Only reachable accesses consume native transport: four custom scalar/vector locations or one four-column numeric matrix. Unused declarations have no native cost. The native limit is checked at import before publication; source authoring can retain a larger unused declaration set. See [VisualShaderVaryingType](VisualShaderVaryingType.md) and [VisualShader.VaryingMode](VisualShader.VaryingMode.md).
+
+<a id="hasvarying"></a>
+### HasVarying
+
+`public bool HasVarying(string name)` reports the exact current declaration independently of node accesses or imported code. Null throws ArgumentNullException; an unknown name returns false.
+
+<a id="removevarying"></a>
+### RemoveVarying
+
+`public void RemoveVarying(string name)` removes an existing declaration and emits Changed after commitment. Null throws ArgumentNullException; a missing name throws ArgumentException. Node references remain authored; reachable dangling accesses reject the next import without replacing the old program.
+
+These operations throw ObjectDisposedException on a disposed graph. Shallow and deep duplication each copy the declaration table. Portable archives preserve its names/types independently of node state. See the executable [write/read example](VisualShaderNodeVarying.md#example) and [connected contract](../components/visual-shaders.md#typed-varying-transport).

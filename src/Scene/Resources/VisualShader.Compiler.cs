@@ -9,12 +9,12 @@ public sealed partial class VisualShader
     {
         ThrowIfDisposed(); ValidateFileState();
         if (GetMode() != Mode.CanvasItem) throw new NotSupportedException("This visual graph importer requires the canvas shader domain.");
-        var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters); var custom = PrepareCustomCode();
+        var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters); var custom = PrepareCustomCode(); var varyings = PrepareVaryings(parameters, custom);
         var images = new List<VisualShaderImage>(); var blocks = new List<VisualShaderBlockName>();
-        return (GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom), GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom), images, blocks);
+        return (GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom, varyings: varyings), GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom, varyings: varyings), images, blocks);
     }
 
-    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom, DomainCompilation? domain = null)
+    private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom, DomainCompilation? domain = null, Dictionary<string, VaryingWire>? varyings = null)
     {
         var graph = GetGraph(stage);
         var stagePlan = domain?.Plans[stage] ?? PlanStage(stage);
@@ -33,7 +33,8 @@ public sealed partial class VisualShader
         foreach (var id in reachable)
             for (var port = 0; port < graph.Nodes[id].Node.Inputs.Length; port++)
                 if (incoming.TryGetValue((id, port), out var edge)) { remaining[id]++; dependents[edge.FromNode].Add(id); }
-        var ranks = domain is null ? null : stagePlan.Order.Select((id, rank) => (id, rank)).ToDictionary(p => p.id, p => p.rank);
+        var ranks = domain is not null || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeVaryingSetter)
+            ? stagePlan.Order.Select((id, rank) => (id, rank)).ToDictionary(p => p.id, p => p.rank) : null;
         int Priority(int id) => ranks?.GetValueOrDefault(id) ?? id;
         var ready = new PriorityQueue<int, int>();
         foreach (var pair in remaining) if (pair.Value == 0) ready.Enqueue(pair.Key, Priority(pair.Key));
@@ -44,10 +45,12 @@ public sealed partial class VisualShader
         foreach (var role in domain is null ? new[] { "Frame", "RendererValues", "Globals", "Instance" } : Array.Empty<string>())
             if (aliases[role] != role) allBlocks.Add(new(stage, aliases[role], role));
         var header = domain is null ? ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom) : domain.StageHeader(stage);
+        if (varyings is not null) header = VaryingHeader(stage, varyings, header);
         var source = new StringBuilder(header);
         EmitCustomFunctions(custom, stage, aliases, source);
         if (NeedsCanvasNormal(stage, reachable)) EmitCanvasNormal(source, aliases);
         var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
+        if (varyings is not null) names.UnionWith(varyings.Values.SelectMany(v => v.Names));
         var values = new Dictionary<(int Node, int Port), string>(); var completed = 0;
         string Input(int id, int port)
         {
@@ -98,6 +101,12 @@ public sealed partial class VisualShader
             else
             {
                 var inputs = Enumerable.Range(0, node.Inputs.Length).Select(port => Input(id, port)).ToArray();
+                if (node is VisualShaderNodeVaryingSetter setter)
+                {
+                    VaryingWrite(setter, stage, inputs[0], varyings, source);
+                    foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
+                    continue;
+                }
                 if (domain is not null && EmitDomainNode(domain, stage, node, id, inputs, incoming, names, values, source))
                 {
                     foreach (var next in dependents[id]) if (--remaining[next] == 0) ready.Enqueue(next, Priority(next));
@@ -136,6 +145,7 @@ public sealed partial class VisualShader
                     }
                     var expression = node switch
                     {
+                        VisualShaderNodeVaryingGetter getter => VaryingRead(getter, stage, varyings),
                         VisualShaderNodeInput input when domain is not null => RewriteExpression(input.GenerateExpression(stage), ExpressionBuiltins(stage, aliases)),
                         VisualShaderNodeInput input => StageExpression(input.GenerateExpression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal).Replace("TEXTURE_PIXEL_SIZE", aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE", StringComparison.Ordinal),
                         VisualShaderNodeDerivativeFunc when stage is not (Type.Fragment or Type.TextureBlit) => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),

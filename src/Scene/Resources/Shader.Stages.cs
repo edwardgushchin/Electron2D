@@ -15,7 +15,8 @@ public partial class Shader
     /// Position-free mesh input is zero; authored local pixel positions use Frame size for clip conversion,
     /// then the renderer applies homogeneous canvas, command, instance and skin transforms and optional pixel snapping.
     /// Supplied-position geometry keeps framebuffer-pixel input. Vertex deformation does not update retained CPU bounds.
-    /// No active renderer is required.</remarks>
+    /// Custom float32/int32/uint32 scalar or vector varyings use locations twelve through fifteen with matching
+    /// types in both stages; renderer-owned glyph transport reserves location eleven. No active renderer is required.</remarks>
     /// <exception cref="ArgumentException">A module or cross-stage parameter/interface is invalid.</exception>
     /// <exception cref="NotSupportedException">A module uses an unsupported canvas interface.</exception>
     public static Shader CreateFromSPIRV(ReadOnlySpan<byte> vertexBytecode, ReadOnlySpan<byte> fragmentBytecode)

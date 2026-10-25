@@ -490,7 +490,7 @@ Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse op
 
 [Compiled custom graph nodes](visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.
 
-Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
+Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; authored light/editor transport retains its own gate. Vertex-to-fragment varying transport now executes through the shared paired canvas path.
 
 ## Rectangular matrix uniforms
 
@@ -581,3 +581,7 @@ The [implicit Fresnel normal producer](visual-shaders.md#fresnel-and-implicit-ca
 ## Command texture dimensions
 
 Canvas HLSL/GLSL may declare the case-sensitive non-array float2 uniform `TEXTURE_PIXEL_SIZE` in a supported renderer buffer (set one after Frame for vertex; set three for fragment). It contains inverse logical dimensions of the command's resolved diffuse image, with `(1,1)` for an absent/empty image. It does not require a TEXTURE sampler declaration. Atlas regions retain backing-image size; material samplers are independent. Shared vertex/fragment layouts receive the same value. Wrong types, arrays, image bindings, global/instance blocks and noncanvas programs reject import. This field cannot be authored through material/global parameters or shader default metadata. See [command texture pixel size](visual-shaders.md#command-texture-pixel-size).
+
+## Custom varying interface
+
+Paired canvas stages preserve four user varying locations, 12 through 15, independently of fixed color/UV/instance/mesh fields and private glyph location 11. Each float32/int32/uint32 scalar/vector interface requires a matching vertex output and fragment input. Floating values use smooth interpolation; integer source inputs use flat interpolation. Numeric matrices split into four column vectors, and graph Boolean data uses a private flat uint. Single-module factories/setters cannot supply these custom inputs through the built-in vertex stage and reject them before replacing a program; raw import can validate each module before the paired factory checks its producer. [The graph transport contract](visual-shaders.md#typed-varying-transport) records declarations, archives, root ordering, limits and actual CLR/NativeAOT software profiles, including GLSL/HLSL and MSDF/LCD composition.

@@ -258,7 +258,12 @@ def main():
     custom_rows = [row for row in pages[CLASS_PAGES / "VisualShaderNodeCustom.md"].splitlines() if row.startswith("| [`")]
     assert len(custom_rows) == 23 and all(" | Implemented | " in row for row in custom_rows)
     assert "VisualShaderPortDefault" in pages[CLASS_PAGES / "VisualShaderNodeCustom.md"]
-    assert "native vertex/fragment/light transport" in pages[CLASS_PAGES / "VisualShaderNodeVarying.md"]
+    for varying_name in ("VisualShaderNodeVarying", "VisualShaderNodeVaryingGetter", "VisualShaderNodeVaryingSetter"):
+        varying_rows = [row for row in pages[CLASS_PAGES / (varying_name + ".md")].splitlines() if row.startswith("| [`")]
+        assert varying_rows and all(" | Implemented | " in row for row in varying_rows)
+    assert "VisualShaderVaryingType" in pages[CLASS_PAGES / "VisualShaderNodeVarying.md"]
+    light_varying = next(row for row in pages[CLASS_PAGES / "VisualShader.md"].splitlines() if "VARYING_MODE_FRAG_TO_LIGHT" in row)
+    assert " | Blocked | " in light_varying and "light-graph" in light_varying
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}

@@ -13,7 +13,7 @@ public sealed partial class VisualShader
             incoming[(edge.ToNode, edge.ToPort)] = edge;
         }
         var order = new List<int>(); var visited = new HashSet<int>(); var visiting = new HashSet<int>();
-        var roots = new[] { 0 }.Concat(IsParticleStage(stage) ? graph.Nodes.Where(p => p.Value.Node is VisualShaderNodeParticleEmit).Select(p => p.Key) : []);
+        var roots = new[] { 0 }.Concat(graph.Nodes.Where(p => p.Value.Node is VisualShaderNodeVaryingSetter || IsParticleStage(stage) && p.Value.Node is VisualShaderNodeParticleEmit).Select(p => p.Key));
         foreach (var root in roots)
         {
             var stack = new Stack<(int ID, bool Exit)>(); stack.Push((root, false));

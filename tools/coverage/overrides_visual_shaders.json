@@ -1769,6 +1769,111 @@
       "godot": "class:VisualShaderNodeFresnel",
       "electron2d": "T:Electron2D.VisualShaderNodeFresnel",
       "reason": "ADR 0028: complete typed Fresnel normal/view/invert/power operation, constructor defaults and portable Resource factory. All eight current graph stages execute; an absent canvas-fragment normal now reads the actual normal channel with per-command flip/transpose and local Z reconstruction. Public native tests cover default/connected/stored values, clamped dot without normalization, scalar powers, live values/reset, raw RGBAF, batch/mesh isolation and zero prepared managed allocation. Physical/native-heap/foreign-platform acceptance stays separate."
+    },
+    {
+      "godot": "VisualShader::enum:VaryingMode",
+      "electron2d": "T:Electron2D.VisualShader.VaryingMode",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum:VaryingType",
+      "electron2d": "T:Electron2D.VisualShaderVaryingType",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingMode.VARYING_MODE_VERTEX_TO_FRAG_LIGHT",
+      "electron2d": "enumValue:Electron2D.VisualShader.VaryingMode.VertexToFragmentLight()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingMode.VARYING_MODE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShader.VaryingMode.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::method:add_varying(String:,int:VisualShader.VaryingMode,int:VisualShader.VaryingType)",
+      "electron2d": "method:Electron2D.VisualShader.AddVarying(System.String,Electron2D.VisualShader.VaryingMode,Electron2D.VisualShaderVaryingType)",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::method:has_varying(String:)",
+      "electron2d": "method:Electron2D.VisualShader.HasVarying(System.String)",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::method:remove_varying(String:)",
+      "electron2d": "method:Electron2D.VisualShader.RemoveVarying(System.String)",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShaderNodeVarying::property:varying_name",
+      "electron2d": "property:Electron2D.VisualShaderNodeVarying.VaryingName()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShaderNodeVarying::property:varying_type",
+      "electron2d": "property:Electron2D.VisualShaderNodeVarying.VaryingType()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "class:VisualShaderNodeVarying",
+      "electron2d": "T:Electron2D.VisualShaderNodeVarying",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "class:VisualShaderNodeVaryingGetter",
+      "electron2d": "T:Electron2D.VisualShaderNodeVaryingGetter",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "class:VisualShaderNodeVaryingSetter",
+      "electron2d": "T:Electron2D.VisualShaderNodeVaryingSetter",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_FLOAT",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Float()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_INT",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Int()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_UINT",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.UInt()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_2D",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Vector2()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_3D",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Vector3()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_4D",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Vector4()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_BOOLEAN",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Boolean()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_TRANSFORM",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Transform()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_MAX",
+      "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Max()",
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
     }
   ],
   "statusGroups": [
@@ -1879,25 +1984,9 @@
     {
       "state": "Blocked",
       "godot": [
-        "VisualShader::enum:VaryingMode",
-        "VisualShader::enum:VaryingType",
-        "VisualShader::enum_value:VaryingMode.VARYING_MODE_FRAG_TO_LIGHT",
-        "VisualShader::enum_value:VaryingMode.VARYING_MODE_MAX",
-        "VisualShader::enum_value:VaryingMode.VARYING_MODE_VERTEX_TO_FRAG_LIGHT",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_BOOLEAN",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_FLOAT",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_INT",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_MAX",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_TRANSFORM",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_UINT",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_2D",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_3D",
-        "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_4D",
-        "VisualShader::method:add_varying(String:,int:VisualShader.VaryingMode,int:VisualShader.VaryingType)",
-        "VisualShader::method:has_varying(String:)",
-        "VisualShader::method:remove_varying(String:)"
+        "VisualShader::enum_value:VaryingMode.VARYING_MODE_FRAG_TO_LIGHT"
       ],
-      "reason": "Trigger: typed custom graph varyings with validated vertex/fragment/light ABI transport; the current canvas varying locations have fixed renderer/mesh roles (ADR 0028)."
+      "reason": "Trigger: executable authored light-graph stage with fragment-to-light variable ownership, invocation and output transport under ADR 0028. Vertex-to-fragment declarations and private native varying transport now execute; this selector enters that first light-graph producer slice."
     },
     {
       "state": "Blocked",
@@ -2302,6 +2391,33 @@
         "VisualShaderNodeReroute::method:get_port_type()"
       ],
       "reason": "ADRs 0001/0004/0013/0028: typed branch/chain inference and atomic rejection, dangling-source adaptation, all nine port roles, retained defaults/absence and portable shared archives. Imported canvas, five particle lifecycle and writable-texture programs preserve numeric values and ordinary/array sampler symbols."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "VisualShader::enum:VaryingMode",
+        "VisualShader::enum:VaryingType",
+        "VisualShader::enum_value:VaryingMode.VARYING_MODE_VERTEX_TO_FRAG_LIGHT",
+        "VisualShader::enum_value:VaryingMode.VARYING_MODE_MAX",
+        "VisualShader::method:add_varying(String:,int:VisualShader.VaryingMode,int:VisualShader.VaryingType)",
+        "VisualShader::method:has_varying(String:)",
+        "VisualShader::method:remove_varying(String:)",
+        "VisualShaderNodeVarying::property:varying_name",
+        "VisualShaderNodeVarying::property:varying_type",
+        "class:VisualShaderNodeVarying",
+        "class:VisualShaderNodeVaryingGetter",
+        "class:VisualShaderNodeVaryingSetter",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_FLOAT",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_INT",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_UINT",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_2D",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_3D",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_VECTOR_4D",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_BOOLEAN",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_TRANSFORM",
+        "VisualShader::enum_value:VaryingType.VARYING_TYPE_MAX"
+      ],
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
     }
   ],
   "extras": [
@@ -2936,6 +3052,30 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeFresnel.CreateDuplicateInstance()",
       "reason": "ADRs 0001/0013/0028: typed graph Resource constructor and independent duplicate factory; inherited defaults, aliases and archives retain the executable Fresnel definition."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVarying..ctor()",
+      "reason": "ADRs 0001/0013/0028: typed graph Resource construction, duplicate factory and role-before-default archive descriptors for the executable varying family."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVarying.GetPropertyDescriptors()",
+      "reason": "ADRs 0001/0013/0028: typed graph Resource construction, duplicate factory and role-before-default archive descriptors for the executable varying family."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVaryingGetter..ctor()",
+      "reason": "ADRs 0001/0013/0028: typed graph Resource construction, duplicate factory and role-before-default archive descriptors for the executable varying family."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVaryingGetter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: typed graph Resource construction, duplicate factory and role-before-default archive descriptors for the executable varying family."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeVaryingSetter..ctor()",
+      "reason": "ADRs 0001/0013/0028: typed graph Resource construction, duplicate factory and role-before-default archive descriptors for the executable varying family."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeVaryingSetter.CreateDuplicateInstance()",
+      "reason": "ADRs 0001/0013/0028: typed graph Resource construction, duplicate factory and role-before-default archive descriptors for the executable varying family."
     }
   ]
 }

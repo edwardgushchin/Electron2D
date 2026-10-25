@@ -634,8 +634,8 @@ command-texture-size producer.
 Point-size, normal/normal-map/depth, light-vertex and shadow-vertex output ports
 retain their documented port indices, but selecting them rejects import until
 their actual graph-to-canvas ABI integration exists. The class coverage remains
-Partial. Light graphs, custom varying transport and editor
-frame/preview consumers remain explicit prerequisites.
+Partial. Authored light graphs, fragment-to-light variable production and editor
+frame/preview consumers remain explicit prerequisites. Vertex-to-fragment transport is described below.
 Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 
 ## Verification and limits
@@ -1345,3 +1345,31 @@ The public Fresnel consumer authors nine resources: eight stage programs and one
 The same `TEXTURE_PIXEL_SIZE` name is available to canvas expression/global/custom functions and manually imported HLSL/GLSL as a non-array float2 renderer uniform. It stays outside material, instance and global parameter descriptors. Paired stages share one captured value through the existing uniform-copy layout. Particle and writable-texture programs have their separate image roles and cannot declare this canvas uniform. Graph source edits still require offline reimport.
 
 The public consumer [TextureSize.Author.cs](../../tests/VisualShader.Consumer/TextureSize.Author.cs) saves five graphs, including shared definitions and expression identifier collisions. [TextureSize.Render.cs](../../tests/VisualShader.Consumer/TextureSize.Render.cs) exercises both stages, paired layouts, both source languages, logical size overrides, atlas/channel fallbacks, device/viewport images, live metadata/reallocation, region/transpose, polygons, meshes, instancing and nine-patches. Native execution and allocation results are bounded to the checked Linux software Vulkan profiles; hardware and other platforms remain separate gates.
+
+## Typed varying transport
+
+`VisualShader.AddVarying` declares a named numeric value. `VisualShaderNodeVaryingGetter` and `VisualShaderNodeVaryingSetter` borrow that declaration by name and use the shared `VisualShaderVaryingType`. The eight roles are Float, Int, UInt, Vector2/3/4, Boolean and numeric Transform (System.Numerics.Matrix4x4). Graph declarations are copied independently by shallow/deep duplication; node aliases and numeric defaults retain the ordinary resource rules. Portable storage restores each node's role before its typed input defaults. Removing a declaration keeps authored references so a later import can report their exact missing dependency.
+
+The canvas vertex stage executes setter nodes as side-effect roots even without output connections. Evaluate the reserved output first, then setters in ascending node ID with each root's selected dependencies before its write. This keeps writes ordered when an earlier setter needs extra input evaluation. A name alone does not create a graph dependency. Single-module shader factories/setters reject custom fragment inputs without an authored vertex producer; failed single or paired replacement preserves the previous stages. Fragment getters receive interpolated data; vertex getters read the value at their evaluation point. `[None]` getters return typed zero or matrix identity and `[None]` setters write nothing. Named accesses require a matching declaration and numeric role. Named setters in fragment, particle or writable-texture stages reject before publication. Fragment-to-light mode remains absent until its authored light-graph producer executes.
+
+The existing paired offline importer owns both stages. Private generated symbols avoid material, image and expression identifiers across the pair. Four native custom locations, 12 through 15, follow the fixed canvas/mesh roles and private glyph location 11. Each scalar/vector consumes one location; a numeric matrix uses four explicit column vectors. Unused declarations consume none. Unwritten values initialize to typed zero or matrix identity before graph code. Floating components interpolate smoothly; Int/UInt and privately uint-encoded Boolean values use flat primitive interpolation. Direct GLSL/HLSL paired modules share this validated interface. Location 11 remains renderer-owned, and a used location beyond 15 rejects.
+
+No runtime source compiler, per-frame data copy, extra uniform block or public native handle is introduced. Existing material/global/instance storage, vertex variants, ordinary/mesh/instanced/nine-patch streams and automatic scene lighting retain the independent outputs. Source edits preserve the prior imported immutable program. An invalid declaration, mismatched access, cycle, unsupported stage or excessive used location budget rejects the offline import before replacing that program. Graphs without varying accesses retain their previous generated source/interface hashes.
+
+The candidate comparison selected varying transport over canvas matrix producers (which need original transform bases across every geometry stream) and shared format/subresource views (which need native view ownership and lifetime). It adds three connected node types, declaration operations and eight numeric transport roles, enabling per-vertex graph results to feed actual fragments on the existing backend. An initial native pixel regression exposed the reserved glyph location; a separate multiple-write regression exposed missing side-effect root ordering. Both remain exercised by the corpus.
+
+### Verification
+
+The public consumer uses only engine API. Author in one process, import into a separate output folder with the existing tool, then run a fresh process against the imported resources:
+
+```bash
+dotnet run --project tests/VisualShader.Consumer -c Release -- varyings-cpu
+dotnet run --project tests/VisualShader.Consumer -c Release -- varyings-author /absolute/source
+dotnet run --project tools/shaders/ShaderImport.csproj -c Release -- /absolute/source/varying-7.e2dres canvas /absolute/imported/varying-7.e2dres --visual-shader
+dotnet run --project tests/VisualShader.Consumer -c Release -- varyings-metadata /absolute/imported
+dotnet run --project tests/VisualShader.Consumer -c Release -- varyings-gpu /absolute/imported
+```
+
+Import all 26 graph resources and the two GLSL/HLSL vertex/fragment pairs before the GPU corpus. The CPU fixture covers atomic declaration/storage rejection, copied tables, node role/default changes, notifications and disposal. Seven malformed graph fixtures cover missing/wrong roles, unsupported stages, excess capacity and reachable cycles; two raw vertex interfaces reject renderer-owned/out-of-range locations. Metadata exports original modules and verifies retained programs after source edits. The runtime checks 224 interior pixels across 28 programs and four geometry streams at unlit, lit and restored phases, then live shared-stage values. Sixteen MSDF/LCD pairs compare numeric, matrix and raw-source variants against an independent unselected-getter control. Prepared 64-frame active and idle intervals retain authored geometry and require zero owner/all-thread managed bytes.
+
+CLR and strict full-trim NativeAOT passed the exercised Linux software Vulkan Wayland, X11 and canvas HDR/4xMSAA profiles. These are functional pixels and managed-allocation evidence. Physical GPU, native allocator, foreign-platform, editor and human acceptance remain separate gates. Authored light graphs and fragment-to-light production retain their exact prerequisite. The current four-location capacity is a native canvas interface bound, not a declaration-count limit.

@@ -502,7 +502,7 @@ Canvas SDF graph operations now use the shared offline importer and renderer-own
 
 [Compiled custom graph nodes](../components/visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.
 
-Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
+Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; authored light/editor transport retains its own gate. Vertex-to-fragment varying transport now executes through the shared paired canvas path.
 
 The explicit shader source-authoring bridge checks process-launch support before executing an import tool. Unsupported mobile Apple/TV and browser hosts retain per-stage diagnostics; compiled shader loading uses the existing rendering path.
 
@@ -517,3 +517,5 @@ Imported [typed reroute chains](../components/visual-shaders.md#typed-reroute-ch
 [Fresnel graphs](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals) now execute a scalar falloff across eight stages and consume actual local canvas normals when the normal input is absent. Rectangle orientation survives batching and mesh transitions through private per-draw state; no public backend handle or compatibility shader fallback is added.
 
 Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) producer in vertex and fragment stages, including shared paired layouts and live diffuse metadata. This does not complete the remaining matrix, point/custom-channel, instance-ID or light graph producers.
+
+[Typed varying transport](../components/visual-shaders.md#typed-varying-transport) connects graph declarations and numeric getter/setter resources to ordinary, mesh, instanced and nine-patch canvas geometry and automatic scene lighting. Native custom locations remain independent of renderer-owned mesh/glyph fields; the authored light-graph stage retains its separate dependency.

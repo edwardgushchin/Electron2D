@@ -1,6 +1,6 @@
 # ShaderMaterial
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 - Declaration: `public sealed partial class ShaderMaterial : Material`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs), [Material.Textures.cs](../../src/Scene/Resources/Material.Textures.cs), [Material.Matrices.cs](../../src/Scene/Resources/Material.Matrices.cs)
@@ -222,3 +222,5 @@ The retained item distance-field mode uses the existing glyph composition contra
 The [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults) contract initializes real buffers, descriptors and each array element. Explicit writes remain explicit even when equal to the current default. Nullable-image null resets numeric/matrix/array/image fields; image arrays clear every override. Invalid names or values preserve state/events. Resource copying and archives preserve this ownership distinction; only explicit numeric fields are stored. Prepared writes, reset and exact-span copies reuse storage.
 
 [Rectangular matrix uniforms](../components/shader-materials.md#rectangular-matrix-uniforms) extend these same matrix methods to all six nonsquare shapes with two through four columns/rows. Values use columns times rows components, with both dimensions in reload matching and default metadata. HLSL source rows map to SPIR-V columns; GLSL names columns first. The public rectangular consumer checks defaults, finite guards, both storage orders, scalar/fixed arrays, fresh archives, equal-size shape resets and real canvas/particle/blit consumers.
+
+[Typed graph varyings](../components/visual-shaders.md#typed-varying-transport) share the existing vertex/fragment parameter namespace and physical buffer copies. Live gain updates reach the vertex producer and fragment checks without rebuilding recorded geometry. Numeric matrix/flat integer/Boolean transport and glyph/light composition retain the material lifetime, reload and allocation contracts.

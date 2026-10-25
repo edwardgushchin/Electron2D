@@ -11,6 +11,7 @@ public sealed partial class VisualShader
     {
         foreach (var descriptor in base.GetPropertyDescriptors()) yield return descriptor;
         yield return new PropertyDescriptor<VisualShader, Mode>("SourceMode", n => n.GetMode(), (n, v) => n.SetMode(v), stored: true);
+        yield return new PropertyDescriptor<VisualShader, string[]>("Varyings", n => n.FileVaryings(), (n, v) => n.RestoreVaryings(v), stored: true);
         yield return new PropertyDescriptor<VisualShader, string[]>("GraphNodes", n => n.FileKeys(), (n, v) => n.RestoreKeys(v), stored: true);
         foreach (var stage in GraphStages)
         {
@@ -107,6 +108,7 @@ public sealed partial class VisualShader
     {
         base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         var copy = (VisualShader)target; copy._mode = _mode;
+        copy._varyings.Clear(); foreach (var pair in _varyings) copy._varyings.Add(pair.Key, pair.Value);
         var ownedCopies = new Dictionary<VisualShaderNode, VisualShaderNode>(ReferenceEqualityComparer.Instance);
         foreach (var stage in GraphStages.Select(s => (int)s))
         {

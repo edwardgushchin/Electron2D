@@ -149,10 +149,10 @@ internal static unsafe partial class ShaderCompiler
         return (v.Inputs, f.Outputs);
     });
 
-    internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode) => ValidateInterface(bytecode, fragment: true);
+    internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode) => ValidateInterface(bytecode, fragment: true, customVaryings: false);
 
     internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment,
-        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, Shader.Mode mode = Shader.Mode.CanvasItem)
+        IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, Shader.Mode mode = Shader.Mode.CanvasItem, bool customVaryings = true)
     {
         if (mode == Shader.Mode.Particles) return ValidateParticleInterface(bytecode, sourceTypes);
         if (mode is not (Shader.Mode.CanvasItem or Shader.Mode.TextureBlit)) throw new ArgumentOutOfRangeException(nameof(mode));
@@ -198,7 +198,7 @@ internal static unsafe partial class ShaderCompiler
                     }
                     else if (metadata.NumInputs > (fragment ? 10 : 14) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 10))
                         throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two, secondary UV at four, normal/tangent at five/six, mesh custom float4 at seven through ten and one fragment color output.");
-                    if (fragment && mode == Shader.Mode.CanvasItem) ValidateVaryings(metadata.Inputs, metadata.NumInputs);
+                    if (fragment && mode == Shader.Mode.CanvasItem) ValidateVaryings(metadata.Inputs, metadata.NumInputs, customVaryings: customVaryings);
                     if (!fragment)
                     {
                         if (metadata.NumInputs is < 3 or > 14) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
@@ -234,22 +234,28 @@ internal static unsafe partial class ShaderCompiler
     {
         ValidateBytecodeLength(vertexBytecode); ValidateBytecodeLength(fragmentBytecode);
         var vertex = ValidateInterface(vertexBytecode, fragment: false);
-        var fragment = ValidateFragmentInterface(fragmentBytecode);
+        var fragment = ValidateInterface(fragmentBytecode, fragment: true);
         var graphics = ValidateDeviceGraphics(vertex.NativeCode, fragment.NativeCode);
         if (graphics.Inputs.Any(input => input.Location is >= 4 and <= 6))
             throw new NotSupportedException("Canvas programs receive raw instance custom data at location three; hardware instance transforms and colors belong to the renderer.");
         var program = ShaderProgram.WithVertex(fragment, vertex); program.PrepareVertexVariants(); return program;
     }
 
-    private static void ValidateVaryings(nint pointer, uint count, bool requireBase = false)
+    private static void ValidateVaryings(nint pointer, uint count, bool requireBase = false, bool customVaryings = true)
     {
         var locations = 0;
         for (var i = 0; i < count; i++)
         {
             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(pointer + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location is not (0 or 1 or 2 or 4 or 5 or 6 or 7 or 8 or 9 or 10) || field.VectorSize != (field.Location == 5 ? 3 : field.Location is 1 or 4 ? 2 : 4) ||
-                (locations & (1 << (int)field.Location)) != 0)
-                throw new NotSupportedException("Canvas varyings require float4 color at zero, float2 UV at one and optional float4 instance data at two float2 secondary UV at four, float3 normal at five and float4 tangent at six, plus mesh custom float4 at seven through ten.");
+            if (!customVaryings && field.Location is >= 12 and < 16) throw new NotSupportedException("Custom varying inputs require a matching authored vertex module.");
+            var valid = field.Location switch
+            {
+                >= 12 and < 16 => field.VectorType is ShaderCross.IOVarType.Float32 or ShaderCross.IOVarType.Int32 or ShaderCross.IOVarType.UInt32 && field.VectorSize is >= 1 and <= 4,
+                0 or 1 or 2 or 4 or 5 or 6 or 7 or 8 or 9 or 10 => field.VectorType == ShaderCross.IOVarType.Float32 && field.VectorSize == (field.Location == 5 ? 3 : field.Location is 1 or 4 ? 2 : 4),
+                _ => false
+            };
+            if (!valid || (locations & (1 << (int)field.Location)) != 0)
+                throw new NotSupportedException("Canvas varyings require their fixed color/UV/instance/mesh roles at locations zero through ten; custom float32/int32/uint32 scalars or vectors use twelve through fifteen. Location eleven belongs to glyph transport.");
             locations |= 1 << (int)field.Location;
         }
         if (requireBase && (locations & 3) != 3) throw new NotSupportedException("Canvas vertex outputs require color and UV.");
