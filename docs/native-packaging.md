@@ -45,6 +45,14 @@ explicit RID. The `browser-wasm` profile retains that implementation. A fast
 NuGet/MSBuild regression checks selection and both layout targets; full package
 consumers retain their independent foreign-runtime checks.
 
+Android package consumers select the Java/JNI AAR from the same resolved SDL
+dependency as the native core, before duplicate native assets are filtered.
+The archive uses `Bind=false`: the managed bindings already belong to
+`Electron2D.dll`. Repository package-mode consumers retain the platform package's
+ordinary dependency selection; the source-only SDL exclusion applies only to
+ProjectReference builds. Fast MSBuild checks cover all four Android RIDs,
+selected-version paths, archive deduplication and missing-file failure.
+
 ## Version and minimum engine
 
 The `0.2.0-alpha` release uses matching managed and platform versions. Ubuntu 22.04 producers install pinned CMake 3.31.10. Windows WebRTC production supplies the selected private OpenSSL build directory to CMake import-library discovery, avoiding host-library selection. KTX uses exact-preimage project/library x86 build adapters and the Android API-21 32-bit stdio profile; ARMv7 keeps precise arithmetic with unsupported floating-point exceptions ignored. The complete target CI remains the execution gate. Its native build requires OpenSSL development headers on Linux, Windows-safe source filenames, exact private mesh/KTX bridge exports and the KTX DFD headers for static targets. The WebP bridge requires both encode/decode entry points and the Apple static demux closure; loading preserves the first reconstructed animation canvas without relying on the platform SDL_image WebP build. Publication and fresh public restore must pass for the complete eight-package bundle.

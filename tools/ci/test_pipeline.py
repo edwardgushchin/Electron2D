@@ -21,6 +21,47 @@ import plan
 
 
 class Pipeline(unittest.TestCase):
+    def test_android_package_selects_one_resolved_sdl_aar_before_native_filtering(self):
+        root = Path(__file__).resolve().parents[2]
+        with tempfile.TemporaryDirectory(prefix='e2d android & aar ') as directory:
+            work = Path(directory); selected = work/'sdl3-cs.android/3.4.18'
+            archive = selected/'lib/net10.0-android36.0/SDL3-CS.Android.aar'
+            archive.parent.mkdir(parents=True); archive.write_bytes(b'selected Java archive')
+            old = work/'sdl3-cs.android/3.4.16/lib/net10.0-android36.0/SDL3-CS.Android.aar'
+            old.parent.mkdir(parents=True); old.write_bytes(b'wrong version')
+            for platform, rid in [('android',r) for r in ('android-arm','android-arm64','android-x86','android-x64')] + [('linux','linux-x64')]:
+                rows = ''.join(f'<NativeCopyLocalItems Include="{packages.escape(str(selected/f"runtimes/{r}/native/libSDL3.so"))}">'
+                    '<NuGetPackageId>SDL3-CS.Android</NuGetPackageId></NativeCopyLocalItems>' for r in (rid,'android-x86'))
+                probe = work/'Probe.proj'
+                probe.write_text('<Project><PropertyGroup><TargetPlatformIdentifier>'+platform+'</TargetPlatformIdentifier>'
+                    '<RuntimeIdentifier>'+rid+'</RuntimeIdentifier></PropertyGroup><ItemGroup>'+rows+
+                    '<NativeCopyLocalItems Include="other.so"><NuGetPackageId>Other</NuGetPackageId></NativeCopyLocalItems></ItemGroup>'
+                    f'<Import Project="{packages.escape(str(root/"tools/managed-runtime.targets"))}" />'
+                    f'<Import Project="{packages.escape(str(root/"tools/native/Electron2D.targets"))}" />'
+                    '<Target Name="Probe" DependsOnTargets="Electron2DAndroidSDLLayout" /></Project>')
+                output = subprocess.check_output(['dotnet','msbuild',str(probe),'-nologo','-t:Probe',
+                    '-getItem:AndroidLibrary,NativeCopyLocalItems'],text=True)
+                items = json.loads(output)['Items']; libraries = items['AndroidLibrary']
+                if platform=='android' and rid=='android-arm64': android_probe = probe.read_text()
+                self.assertEqual([Path(p['FullPath']) for p in libraries],[archive] if platform=='android' else [])
+                if platform=='android':
+                    self.assertEqual(libraries[0]['Bind'],'false')
+                    self.assertEqual(libraries[0]['Pack'],'false')
+                    self.assertEqual([p['Identity'] for p in items['NativeCopyLocalItems']],['other.so'])
+            probe.write_text(android_probe); archive.unlink()
+            failed = subprocess.run(['dotnet','msbuild',str(probe),'-nologo','-t:Probe'],capture_output=True,text=True)
+            self.assertNotEqual(failed.returncode,0)
+            self.assertIn('selected SDL Android archive is missing',failed.stdout+failed.stderr)
+            for mode in ('true','false'):
+                probe.write_text('<Project><PropertyGroup><TargetFramework>net10.0-android</TargetFramework>'
+                    '<RuntimeIdentifier>android-arm64</RuntimeIdentifier><Electron2DUsePackage>'+mode+
+                    '</Electron2DUsePackage></PropertyGroup>'
+                    f'<Import Project="{packages.escape(str(root/"tools/native-consumer.props"))}" /></Project>')
+                output = subprocess.check_output(['dotnet','msbuild',str(probe),'-nologo','-getItem:PackageReference'],text=True)
+                identities = {p['Identity'] for p in json.loads(output)['Items']['PackageReference']}
+                self.assertEqual(identities,{'Electron2D.Android','Electron2D'} if mode=='true'
+                                 else {'Electron2D.Android','SDL3-CS.Android'})
+
     def test_managed_browser_assets_stay_out_of_desktop_outputs(self):
         root = Path(__file__).resolve().parents[2]
         targets = root / 'tools/managed-runtime.targets'
