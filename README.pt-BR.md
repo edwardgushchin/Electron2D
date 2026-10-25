@@ -46,18 +46,24 @@ Crie mundos e mecânicas de jogo com as ferramentas habituais do .NET. Codex, Cl
 
 Este é um resumo dos principais recursos já implementados no motor. As APIs dos subsistemas continuam evoluindo; os links descrevem o que funciona e suas limitações.
 
-- [Gráficos](docs/domains/rendering.md). Sprites e atlas, câmeras, paralaxe, desenho de formas e texto. Materiais HLSL e GLSL, grafos visuais de shaders, partículas CPU/GPU e malhas 2D.
-- [Cenas e animação](docs/domains/scene.md). Hierarquias de objetos do jogo, salvamento e carregamento de cenas, animação por quadros, animação de propriedades e temporizadores.
-- [Física](docs/domains/physics.md). Corpos rígidos, colisões, áreas, consultas de interseção, articulações e molas.
-- [Interface de jogo](docs/domains/scene.md). Botões, campos de texto, rolagem, contêineres de layout, fontes e temas.
-- [Áudio](docs/domains/audio.md). WAV, MP3 e Ogg Vorbis, áudio posicional, mixagem, efeitos e gravação.
-- [Controles](docs/domains/input.md). Teclado, mouse, toque e controles de jogo. Associação de entradas a ações do jogo.
-- [Busca de caminhos](docs/domains/navigation.md). Rotas em uma grade ou entre pontos definidos, considerando obstáculos e custos de deslocamento.
-- [Recursos](docs/domains/resources.md). Carregamento de imagens, fontes e áudio. Gradientes, curvas e texturas procedurais.
-- [Localização](docs/domains/localization.md). Traduções, seleção de idioma e formas de plural com regras definidas pelo aplicativo.
-- [Rede](docs/domains/networking.md). TCP, UDP e sockets locais, conexões seguras com TLS e DTLS, HTTP/HTTPS, WebSocket e conexões multijogador.
+- [Gráficos](docs/domains/rendering.md). Sprites e atlas, câmeras e paralaxe, formas e texto, recorte, viewports fora da tela, iluminação, sombras e HDR. Materiais HLSL/GLSL, grafos visuais de shaders e partículas CPU/GPU.
+- [Cenas](docs/domains/scene.md). Hierarquias de nós, cenas reutilizáveis e vinculadas, grupos, eventos, chamadas adiadas e temporizadores. Crie cenas em C#, salve-as com seus recursos e instancie-as novamente.
+- [Animação](docs/components/scene-animation.md). Trilhas de quadros e propriedades, curvas Bézier, tweens, grafos de mistura e máquinas de estados. [Esqueletos e IK](docs/components/skeletal-animation.md) animam ossos e deformam polígonos e malhas com pesos.
+- [Malhas](docs/components/meshes.md) e [mapas de tiles](docs/components/tiles.md). Geometria indexada e procedural, instâncias de malhas, atlas animados, conexões de terreno e grades quadradas, isométricas ou hexagonais com camadas de colisão e navegação.
+- [Física](docs/domains/physics.md). Backends de CPU e GPU independente, corpos rígidos e personagens, áreas, forças, articulações e molas. Consultas de raios e formas, detecção contínua de colisões e [pontos de restauração do estado](docs/components/physics-space-checkpoints.md).
+- [Interface de jogo](docs/domains/scene.md) e [texto](docs/components/text.md). Botões, menus, listas, árvores, contêineres, rolagem, editores de texto e código e texto formatado. Temas, composição Unicode, texto bidirecional e fontes alternativas.
+- [Áudio](docs/domains/audio.md). WAV, MP3 e Ogg Vorbis, fluxos procedurais, microfone e reprodução posicional. Barramentos de áudio, mixagem, efeitos e gravação.
+- [Reprodução de vídeo](docs/components/video-playback.md) e [gravação de filmes](docs/components/movie-writing.md). Vídeo Ogg Theora com áudio; captura sem tempo real de quadros renderizados e áudio mixado em PNG/WAV, AVI ou OGV.
+- [Controles](docs/domains/input.md). Teclado, mouse, toque, controles de jogo, mapeamento de ações, atalhos e entrada de texto com composição IME.
+- [Janelas e telas](docs/domains/display.md). Modos de janela e tela cheia, vários viewports, janelas pop-up integradas e nativas, consultas de tela, escala e controles de apresentação.
+- [Navegação](docs/domains/navigation.md). Busca A-star em grafos e grades, regiões poligonais, ligações, geração de navegação a partir da geometria, agentes que seguem caminhos e desvio recíproco de obstáculos.
+- [Recursos](docs/domains/resources.md). Carga e salvamento tipados, carregamento em segundo plano, imagens, fontes, áudio, gradientes, curvas e texturas de ruído. [Pacotes PCK/ZIP](docs/components/resource-packs.md) montam arquivos no sistema de recursos.
+- [Serviços básicos e arquivos](docs/domains/core.md). Configurações do projeto, JSON/XML e arquivos de configuração, diretórios, compressão, criptografia e arquivos ZIP. Matemática, números aleatórios, tarefas em segundo plano e diagnóstico de execução.
+- [Localização](docs/domains/localization.md). Domínios e contextos de tradução, catálogos PO/MO, idiomas de fallback, regras inteiras de plural, pseudolocalização e seleção de recursos localizados.
+- [Rede](docs/domains/networking.md). TCP/UDP e sockets locais, TLS/DTLS, HTTP/HTTPS, WebSocket e ENet. [Canais de dados WebRTC](docs/components/webrtc.md), RPC tipadas, autoridade, criação de objetos em rede e [replicação de propriedades](docs/components/scene-replication.md).
+- [Automação de projetos](tools/Batch/README.md). Crie e compile projetos C#, salve/carregue cenas, execute cenários sem gráficos e capture quadros renderizados com relatórios estruturados. A captura exige uma janela nativa e um renderizador.
 
-Materiais com shaders exigem o renderizador GPU. O renderizador de compatibilidade oferece gráficos 2D básicos. Consulte os links acima para ver os detalhes e as limitações.
+Materiais com shaders, partículas GPU, iluminação com sombras e HDR exigem o renderizador GPU; o renderizador de compatibilidade oferece o perfil 2D descrito na documentação. O backend de física é escolhido independentemente do renderizador. Consulte os documentos vinculados e o [relatório de plataformas](docs/platform-verification.md) para ver o suporte e os limites das verificações.
 
 <a id="quick-start"></a>
 
@@ -218,6 +224,7 @@ Você pode criar cenas em código, salvá-las com `PackedScene` e carregá-las n
 | Entender um subsistema | [Índice da documentação](docs/README.md) |
 | Preparar shaders | [Ferramenta de importação de HLSL e GLSL](tools/shaders/README.md) |
 | Automatizar compilações, cenários e capturas | [Execução de projetos em lote](tools/Batch/README.md) |
+| Preparar uma versão | [Procedimento de lançamento](docs/releasing.md) |
 
 <a id="examples"></a>
 

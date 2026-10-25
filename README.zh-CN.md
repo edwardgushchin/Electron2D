@@ -46,18 +46,24 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 这里概述引擎已经实现的主要功能。各子系统的 API 仍在开发中，具体范围和限制见对应文档。
 
-- [图形](docs/domains/rendering.md)。精灵、纹理图集、摄像机、视差，以及图形和文字绘制。支持 HLSL 和 GLSL 材质、可视化着色器图、CPU/GPU 粒子和 2D 网格。
-- [场景与动画](docs/domains/scene.md)。游戏对象层级、场景保存与加载、逐帧动画、属性动画和计时器。
-- [物理](docs/domains/physics.md)。刚体、碰撞、区域、相交查询、铰链和弹簧。
-- [游戏界面](docs/domains/scene.md)。按钮、输入框、滚动、布局容器、字体和主题。
-- [音频](docs/domains/audio.md)。WAV、MP3 和 Ogg Vorbis、位置音效、混音、效果和录音。
-- [输入](docs/domains/input.md)。键盘、鼠标、触控和控制器。将输入映射到游戏操作。
-- [寻路](docs/domains/navigation.md)。在网格或指定点之间寻找路径，并考虑障碍物与移动代价。
-- [资源](docs/domains/resources.md)。加载图像、字体和音频。支持渐变、曲线和程序化纹理。
-- [本地化](docs/domains/localization.md)。翻译、语言选择，以及按应用提供的规则选择复数形式。
-- [网络](docs/domains/networking.md)。TCP、UDP 和本地套接字、TLS 与 DTLS 安全连接、HTTP/HTTPS、WebSocket，以及多人连接。
+- [图形](docs/domains/rendering.md)。精灵和纹理图集、摄像机与视差、图形和文字、裁剪、离屏视口、光照、阴影及 HDR。支持 HLSL/GLSL 材质、可视化着色器图和 CPU/GPU 粒子。
+- [场景](docs/domains/scene.md)。节点层级、可复用和链接场景、分组、事件、延迟调用及计时器。通过 C# 创建场景，连同资源一起保存，并再次实例化。
+- [动画](docs/components/scene-animation.md)。逐帧和属性轨道、贝塞尔曲线、补间、混合图及状态机。[骨骼与 IK](docs/components/skeletal-animation.md) 驱动骨骼，按顶点权重变形多边形和网格。
+- [网格](docs/components/meshes.md)与[瓦片地图](docs/components/tiles.md)。索引和程序化几何、网格实例化、动画图集、地形连接，以及带碰撞和导航层的方形、等距和六边形网格。
+- [物理](docs/domains/physics.md)。CPU 和独立 GPU 后端、刚体和角色运动、区域、力、关节及弹簧。射线和形状查询、连续碰撞检测及[状态检查点](docs/components/physics-space-checkpoints.md)。
+- [游戏界面](docs/domains/scene.md)与[文本](docs/components/text.md)。按钮、菜单、列表、树、布局容器、滚动、文本和代码编辑器及富文本。支持主题、Unicode 字形整形、双向排版和后备字体。
+- [音频](docs/domains/audio.md)。WAV、MP3 和 Ogg Vorbis、程序化音频流、麦克风输入及位置音效。支持音频总线、混音、效果和录音。
+- [视频播放](docs/components/video-playback.md)与[影片录制](docs/components/movie-writing.md)。播放带音频的 Ogg Theora 视频；以非实时方式将实际渲染帧和混合音频录制为 PNG/WAV、AVI 或 OGV。
+- [输入](docs/domains/input.md)。键盘、鼠标、触控、控制器、操作映射、快捷键，以及带 IME 组合输入的文本输入。
+- [窗口与显示](docs/domains/display.md)。窗口和全屏模式、多视口、嵌入式及原生弹出窗口、显示信息查询、缩放和画面呈现控制。
+- [导航](docs/domains/navigation.md)。点图和网格 A-star 寻路、多边形区域、导航链接、从几何数据烘焙导航、代理沿路径移动及相互避障。
+- [资源](docs/domains/resources.md)。类型化加载与保存、后台加载、图像、字体、音频、渐变、曲线及噪声纹理。[PCK/ZIP 资源包](docs/components/resource-packs.md)将文件挂载到资源文件系统。
+- [核心服务与文件](docs/domains/core.md)。项目设置、JSON/XML 和配置文件、目录操作、压缩、加密及 ZIP 归档。数学、随机数、后台任务和运行时诊断。
+- [本地化](docs/domains/localization.md)。翻译域与上下文、PO/MO 目录、语言回退、整数复数规则、伪本地化及本地化资源选择。
+- [网络](docs/domains/networking.md)。TCP/UDP 和本地套接字、TLS/DTLS、HTTP/HTTPS、WebSocket 及 ENet。[WebRTC 数据通道](docs/components/webrtc.md)、类型化 RPC、权限控制、联网对象生成及[属性复制](docs/components/scene-replication.md)。
+- [项目自动化](tools/Batch/README.md)。创建和构建 C# 项目、保存与加载场景、运行无图形场景，以及捕获实际渲染帧并生成结构化报告。渲染捕获需要原生窗口和渲染器。
 
-着色器材质需要 GPU 渲染器。兼容渲染器支持基础 2D 图形。详细说明和限制请参阅上方链接中的文档。
+着色器材质、GPU 粒子、光照与阴影及 HDR 需要 GPU 渲染器；兼容渲染器提供其文档所述的 2D 功能。物理后端与渲染器分别选择。具体支持范围和验证限制见各子系统文档及[平台报告](docs/platform-verification.md)。
 
 <a id="quick-start"></a>
 
@@ -218,6 +224,7 @@ Electron2D 处于 alpha 阶段。公共 API 仍在开发中，可能随版本变
 | 了解子系统 | [文档目录](docs/README.md) |
 | 准备着色器 | [HLSL 和 GLSL 导入工具](tools/shaders/README.md) |
 | 自动构建项目、运行场景和捕获画面 | [项目批处理工具](tools/Batch/README.md) |
+| 准备发布 | [发布流程](docs/releasing.md) |
 
 <a id="examples"></a>
 

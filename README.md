@@ -46,18 +46,24 @@ Create game worlds and mechanics with familiar .NET tools. Codex, Claude Code an
 
 This is an overview of the main features already implemented in the engine. Individual subsystem APIs are still evolving; the linked documentation describes their scope and limitations.
 
-- [Graphics](docs/domains/rendering.md). Sprites and atlases, cameras, parallax, shape and text drawing. HLSL and GLSL materials, visual shader graphs, CPU/GPU particles and 2D meshes.
-- [Scenes and animation](docs/domains/scene.md). Game object hierarchies, scene saving and loading, frame animation, property animation and timers.
-- [Physics](docs/domains/physics.md). Rigid bodies, collisions, areas, intersection queries, hinges and springs.
-- [Game UI](docs/domains/scene.md). Buttons, text fields, scrolling, layout containers, fonts and themes.
-- [Audio](docs/domains/audio.md). WAV, MP3 and Ogg Vorbis, positional audio, mixing, effects and recording.
-- [Input](docs/domains/input.md). Keyboard, mouse, touch and controllers. Map input to game actions.
-- [Pathfinding](docs/domains/navigation.md). Routes on a grid or between specified points, accounting for obstacles and movement costs.
-- [Resources](docs/domains/resources.md). Image, font and audio loading. Gradients, curves and procedural textures.
-- [Localization](docs/domains/localization.md). Translations, language selection and plural forms with caller-supplied rules.
-- [Networking](docs/domains/networking.md). TCP, UDP and local sockets, secure TLS and DTLS connections, HTTP/HTTPS, WebSocket and multiplayer connections.
+- [Graphics](docs/domains/rendering.md). Sprites and atlases, cameras and parallax, shapes and text, clipping, offscreen viewports, lighting, shadows and HDR. HLSL/GLSL materials, visual shader graphs and CPU/GPU particles.
+- [Scenes](docs/domains/scene.md). Node hierarchies, reusable and linked scenes, groups, events, deferred calls and timers. Create scenes in C#, save them with their resources and instantiate them again.
+- [Animation](docs/components/scene-animation.md). Frame and property tracks, Bézier curves, tweens, blending graphs and state machines. [Skeletons and IK](docs/components/skeletal-animation.md) animate bones and deform weighted polygons and meshes.
+- [Meshes](docs/components/meshes.md) and [tile maps](docs/components/tiles.md). Indexed and procedural geometry, instanced meshes, animated tile atlases, terrain connections and square, isometric or hexagonal grids with collision and navigation layers.
+- [Physics](docs/domains/physics.md). CPU and independent GPU backends, rigid and character bodies, areas, forces, joints and springs. Ray/shape queries, continuous collision detection and [state checkpoints](docs/components/physics-space-checkpoints.md).
+- [Game UI](docs/domains/scene.md) and [text](docs/components/text.md). Buttons, menus, lists, trees, layout containers, scrolling, text/code editors and rich text. Themes, Unicode shaping, bidirectional layout and font fallbacks.
+- [Audio](docs/domains/audio.md). WAV, MP3 and Ogg Vorbis, procedural streams, microphone input and positional playback. Audio buses, mixing, effects and recording.
+- [Video playback](docs/components/video-playback.md) and [movie recording](docs/components/movie-writing.md). Ogg Theora video with audio; offline capture of rendered frames and mixed audio to PNG/WAV, AVI or OGV.
+- [Input](docs/domains/input.md). Keyboard, mouse, touch, controllers, action mappings, shortcuts and text input with IME composition.
+- [Windows and displays](docs/domains/display.md). Window and fullscreen modes, multiple viewports, embedded and native popup windows, display queries, scaling and presentation controls.
+- [Navigation](docs/domains/navigation.md). A-star point/grid searches, polygon regions, links, navigation baking, agent path following and reciprocal obstacle avoidance.
+- [Resources](docs/domains/resources.md). Typed loading/saving, background loading, images, fonts, audio, gradients, curves and noise textures. [PCK/ZIP packs](docs/components/resource-packs.md) mount assets into the resource filesystem.
+- [Core services and files](docs/domains/core.md). Project settings, JSON/XML and configuration files, directory operations, compression, encryption and ZIP archives. Math, random generation, worker tasks and runtime diagnostics.
+- [Localization](docs/domains/localization.md). Translation domains and contexts, PO/MO catalogs, locale fallback, integer plural rules, pseudolocalization and localized resource selection.
+- [Networking](docs/domains/networking.md). TCP/UDP/local sockets, TLS/DTLS, HTTP/HTTPS, WebSocket and ENet. [WebRTC data channels](docs/components/webrtc.md), typed RPC, authority, scene spawning and [property replication](docs/components/scene-replication.md).
+- [Project automation](tools/Batch/README.md). Create and build C# projects, save/load scenes, run headless scenarios and capture actual rendered frames with structured reports. Rendered capture requires a native window and renderer.
 
-Shader materials require the GPU renderer. The compatibility renderer supports basic 2D graphics. See the documentation linked above for details and limitations.
+Shader materials, GPU particles, lighting/shadows and HDR require the GPU renderer; the compatibility renderer supports its documented 2D profile. Physics backend selection is independent of renderer selection. See the linked subsystem documents and [platform report](docs/platform-verification.md) for exact support and verification limits.
 
 <a id="quick-start"></a>
 
@@ -224,6 +230,7 @@ Create scenes in code, save them with `PackedScene` and reload them from [resour
 | Understand a subsystem | [Documentation index](docs/README.md) |
 | Prepare shaders | [HLSL and GLSL import tool](tools/shaders/README.md) |
 | Automate project builds, scenarios and captures | [Project batch runner](tools/Batch/README.md) |
+| Prepare a release | [Release runbook](docs/releasing.md) |
 
 <a id="examples"></a>
 
