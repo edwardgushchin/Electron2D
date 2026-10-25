@@ -2,7 +2,7 @@
 
 `QuitOnGoBack` defaults to true independently of `AutoAcceptQuit`. Root system back notifications precede this policy, and public `Window.GoBackRequested` subscribers follow it. Blocking root signals suppresses both policy and signal; child-window requests do not quit. The [system back runtime](window-runtime.md#system-back-navigation) owns native production and verification.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 ## Selected authoring context
 
@@ -245,6 +245,12 @@ The frame retains its group comparison delegate: default sorting allocated 48 by
 The scene owner or active group may set ProcessThreadGroupOrder and ProcessThreadMessages on its members, including inherited neutral, spatial, UI and physical nodes. Signed order is captured once per frame; an update affects the next frame. A changed mask controls later message-only stage eligibility without stopping an active FIFO drain. Same-value writes still reject capture, closed lifetime, foreign groups and derived validation failures. ProcessThreadGroup role changes/rebinding remain scene-owner operations. Synchronously helped nested pool work keeps the physical worker's active scene group; its immediate safe calls and deferred FIFO operations retain distinct timing. Completion and failure restore pool caller identity, and ordinary work after group exit has no scene permission.
 
 [The public metadata consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupContext.cs) exercises these permissions, later frame ordering, both message-only lanes, inherited stored descriptors, invalid masks, derived vetoes, disposal, nested regular/indexed failures, callback delivery order, actual physical motion/queries and strict warmed owner/all-thread managed allocation. Evidence and its execution profiles are recorded in `bin/physics-group-context/2026-10-18/validation.json`; this does not complete general worker scene/backend access or hardware performance acceptance.
+
+### Committed group-role metadata
+
+Changing an attached Node's `ProcessThreadGroup` completes inherited membership rebinding before its synchronous `PropertyListChanged` event. A handler can enqueue to the new group; explicit nested boundaries keep their execution owner. Exceptions leave the selected role and membership committed, while a nested role assignment determines the final state. Equal and detached writes remain silent, and ordinary signal blocking suppresses only delivery. The setter retains its owner, lifetime, capture and physical-borrow preflight.
+
+The [public role regression](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ProcessGroupRoles.cs), included in `--process-groups`, checks eight Node branches, all three roles, message delivery after the event, nested boundaries, invalid/foreign/disposed writes, observer errors, reentry and blocked signals alongside actual selected physical steps and point queries. `bin/physics-group-roles/2026-10-25/` retains the failing former implementation and current receipts. All twelve CLR/strict full-trim NativeAOT CPU/no-device, NVIDIA GPU and registered ordinary/separate profiles pass, including 1536 measured prepared full frames at strict 0/0 owner/all-thread managed bytes. Runtime role changes may allocate replacement groups; the existing prepared full-frame allocation bracket measures steady processing after configuration. Broader worker operations remain open on their owning methods.
 
 ## Process policy and physics pause
 
