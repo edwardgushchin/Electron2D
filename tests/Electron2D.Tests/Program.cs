@@ -15,7 +15,9 @@ System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
 
 if (args.Length == 3 && args[0] == "--canvas-light-variants") { CanvasLightGraphTests.Export(args[1], args[2]); return; }
 if (args.Length == 2 && args[0] == "--canvas-light-metadata") { CanvasLightGraphTests.Metadata(args[1]); return; }
+if (args.Length == 2 && args[0] == "--canvas-surface-metadata") { CanvasLightGraphTests.Metadata(args[1], surface: true); return; }
 if (args.Length == 3 && args[0] == "--canvas-light-modern-sources") { CanvasLightGraphTests.ModernSources(args[1], args[2]); return; }
+if (args.Length == 3 && args[0] == "--canvas-surface-modern-sources") { CanvasLightGraphTests.ModernSources(args[1], args[2], surface: true); return; }
 if (args.Length == 3 && args[0] == "--canvas-light-modern-install") { CanvasLightGraphTests.InstallModern(args[1], args[2]); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_SWIZZLES") is { } swizzleFolder) { TextureSwizzleLoweringTests.Run(swizzleFolder); TextureSwizzleRuntimeChecks.Run(swizzleFolder); return; }

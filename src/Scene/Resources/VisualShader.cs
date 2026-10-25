@@ -4,6 +4,7 @@ namespace Electron2D;
 /// <remarks>Graph edits are source authoring. Save the resource and run ShaderImport with --visual-shader to
 /// produce a new compiled resource. Existing materials keep the previous immutable program until reloaded.
 /// Added nodes are borrowed; reserved outputs and factory-created replacements belong to the graph.
+/// Canvas fragment surface outputs feed retained automatic and authored scene lighting.
 /// Authoring is single-threaded cold work.</remarks>
 public sealed partial class VisualShader : Shader
 {

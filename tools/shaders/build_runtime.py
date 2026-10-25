@@ -116,11 +116,11 @@ def generate(output, source_root=ROOT):
                     current[name] = {'source': fingerprint, 'binary': hashlib.sha256(relocation).hexdigest()}
             if domain == 'Rendering' and (directory / 'Lighting.frag.hlsl').exists():
                 lighting = (directory / 'Lighting.frag.hlsl').read_text()
-                for normal, specular, masks, authored in itertools.product(range(-1, 3), range(-1, 3), (False, True), (False, True)):
+                for normal, specular, masks, authored, surface in itertools.product(range(-1, 3), range(-1, 3), (False, True), (False, True), (False, True)):
                     key = ((normal + 1) * 4 + specular + 1) * 2 + int(masks)
-                    shader = material_lighting.source(lighting, normal, specular, masks, authored)
+                    shader = material_lighting.source(lighting, normal, specular, masks, authored, surface)
                     fingerprint = hashlib.sha256(recipe + shader.encode()).hexdigest()
-                    name = f'Rendering/Light{"Graph" if authored else ""}Compose{key}.frag.spv'
+                    name = f'Rendering/Light{"Surface" if surface else ""}{"Graph" if authored else ""}Compose{key}.frag.spv'
                     reloc_name = name.removesuffix('.spv') + '.reloc'
                     target, reloc_target = output / name, output / reloc_name
                     names = (name, reloc_name)

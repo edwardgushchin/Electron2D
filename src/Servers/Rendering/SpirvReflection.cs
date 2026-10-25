@@ -32,7 +32,8 @@ internal static unsafe partial class SpirvReflection
         IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, bool blit = false, bool particles = false)
     {
         var light = CanvasLightProgram.Read(code);
-        if (light is not null && (!fragment || blit || particles)) throw new NotSupportedException("Authored lights belong to the canvas fragment domain.");
+        var surface = CanvasSurfaceProgram.Read(code);
+        if ((light is not null || surface is not null) && (!fragment || blit || particles)) throw new NotSupportedException("Authored surface/light functions belong to the canvas fragment domain.");
         var booleans = ReadBooleans(code);
         if (sourceTypes is not null && booleans.Count != 0)
             throw new ArgumentException("Source compilation must not supply existing shader type metadata.", nameof(code));
@@ -105,6 +106,8 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("TEXTURE_PIXEL_SIZE requires a canvas-stage non-array float32 vector of width two.");
                 if (name == "NORMAL_MAP_FLAGS" && (!fragment || blit || particles || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || columns != 1 || dimensions != 0))
                     throw new NotSupportedException("NORMAL_MAP_FLAGS requires a canvas-fragment non-array float32 vector of width four.");
+                if (name is "NORMAL_MODEL_BASIS" or "NORMAL_CANVAS_BASIS" && (!fragment || blit || particles || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || columns != 1 || dimensions != 0 || instanceBuffers.Contains((int)binding) || globalBuffers.Contains((int)binding)))
+                    throw new NotSupportedException("Normal bases require renderer-owned canvas-fragment non-array float32 vectors of width four.");
                 if (name == "SDF_COORDS" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
                 if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
@@ -200,7 +203,7 @@ internal static unsafe partial class SpirvReflection
         {
             var slot = TextureBinding(resource);
             var name = Marshal.PtrToStringUTF8(resource.Name);
-            if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
+            if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "NORMAL_MODEL_BASIS" or "NORMAL_CANVAS_BASIS" or "TEXTURE_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
             if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in its stage descriptor set.");
             if (string.IsNullOrWhiteSpace(name) || uniforms.ContainsKey(name) || textures.Any(t => t is not null && t.Name == name) || textures[slot] is not null)
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
@@ -250,6 +253,8 @@ internal static unsafe partial class SpirvReflection
         uniforms.Remove("SCREEN_PIXEL_SIZE", out var screenPixelSizeUniform);
         uniforms.Remove("SDF_COORDS", out var sdfCoordsUniform);
         uniforms.Remove("NORMAL_MAP_FLAGS", out var normalMapFlagsUniform);
+        uniforms.Remove("NORMAL_MODEL_BASIS", out var normalModelBasisUniform);
+        uniforms.Remove("NORMAL_CANVAS_BASIS", out var normalCanvasBasisUniform);
         uniforms.Remove("TEXTURE_PIXEL_SIZE", out var texturePixelSizeUniform);
         uniforms.Remove("MODEL_MATRIX", out var modelMatrixUniform);
         uniforms.Remove("CANVAS_MATRIX", out var canvasMatrixUniform);
@@ -284,7 +289,19 @@ internal static unsafe partial class SpirvReflection
         ReadHints(code, uniforms, instances, fragment);
         var lowered = CanvasSamplerArrays.Lower(code, textures, needsSampler);
         return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals)
-        { NativeCode = CanvasLightProgram.RemoveMarker(lowered, light), ValidationCode = light is null ? null : lowered, AuthoredLight = light, NormalMapFlagsUniform = normalMapFlagsUniform, TexturePixelSizeUniform = texturePixelSizeUniform, ModelMatrixUniform = modelMatrixUniform, CanvasMatrixUniform = canvasMatrixUniform, ScreenMatrixUniform = screenMatrixUniform };
+        {
+            NativeCode = CanvasSurfaceProgram.RemoveMarker(CanvasLightProgram.RemoveMarker(lowered, light), surface),
+            ValidationCode = light is null && surface is null ? null : lowered,
+            AuthoredLight = light,
+            Surface = surface,
+            NormalMapFlagsUniform = normalMapFlagsUniform,
+            NormalModelBasisUniform = normalModelBasisUniform,
+            NormalCanvasBasisUniform = normalCanvasBasisUniform,
+            TexturePixelSizeUniform = texturePixelSizeUniform,
+            ModelMatrixUniform = modelMatrixUniform,
+            CanvasMatrixUniform = canvasMatrixUniform,
+            ScreenMatrixUniform = screenMatrixUniform
+        };
     }
 
     [StructLayout(LayoutKind.Sequential)]

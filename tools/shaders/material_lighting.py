@@ -5,7 +5,7 @@ import struct
 import subprocess
 
 
-def source(lighting, normal, specular, masks, authored=False):
+def source(lighting, normal, specular, masks, authored=False, surface=False):
     text = lighting[lighting.index('float cross2'):]
     main = text.index('float4 main(')
     body = text[main:]
@@ -24,6 +24,17 @@ def source(lighting, normal, specular, masks, authored=False):
         float3 lit = contribution.rgb;
         float weight = contribution.a;
 ''' + body[end:]
+    if surface:
+        body = body.replace('    float3 result =', '''    bool normalUsed = counts.z != 0;
+    float3 lightVertex = float3(position.xy, 0); float2 shadowVertex = position.xy;
+    e2d_surface_hook(normal, normalUsed, lightVertex, shadowVertex);
+    float3 result =''', 1)
+        body = body.replace('dot(x.xy, position.xy)', 'dot(x.xy, lightVertex.xy)').replace('dot(y.xy, position.xy)', 'dot(y.xy, lightVertex.xy)')
+        body = body.replace('float3(endpoint - position.xy, y.w)', 'float3(endpoint - lightVertex.xy, y.w - lightVertex.z)')
+        body = body.replace('endpoint = position.xy -', 'endpoint = shadowVertex -')
+        body = body.replace('float2 delta = endpoint - position.xy;', 'float2 delta = endpoint - shadowVertex;')
+        body = body.replace('shadow(position.xy +', 'shadow(shadowVertex +')
+        body = body.replace('float3(position.xy, 0),', 'lightVertex,').replace(', counts.z != 0);', ', normalUsed);')
     text = text[:main] + 'void main() {\n' + '''
 vec4 position = gl_FragCoord;
 ambient = lighting[e2d_item]; specular = lighting[e2d_item+1];
@@ -52,6 +63,8 @@ item = floatBitsToUint(lighting[e2d_item+2]); counts = floatBitsToUint(lighting[
     if authored:
         header += '''vec4 e2d_authored_light_hook(vec3 normal, vec4 color, float energy, vec3 direction, bool directional,
             vec3 light_position, vec3 vertex, vec4 specular_value, inout vec4 shadow_color) { return vec4(0.0); }\n'''
+    if surface:
+        header += 'void e2d_surface_hook(inout vec3 normal, inout bool used, inout vec3 vertex, inout vec2 shadow_vertex) {}\n'
     for hlsl, glsl in [('float4','vec4'), ('float3','vec3'), ('float2','vec2'), ('lerp','mix'), ('ddx','dFdx'), ('ddy','dFdy')]:
         text = re.sub(rf'\b{hlsl}\b', glsl, text)
     return header + text

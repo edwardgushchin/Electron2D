@@ -4,7 +4,9 @@ namespace Electron2D;
 /// <remarks>Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their
 /// renderer roles. Light accepts RGB, alpha and RGB shadow modulation at indices zero through two,
 /// replacing the current light's automatic contribution. TextureBlit accepts four numeric RGBA outputs.
-/// Particle roots use VisualShaderNodeParticleOutput. Unsupported surface and point outputs reject during import.</remarks>
+/// Fragment ports two through six author the normal, normal map, map depth, light position and shadow position.
+/// The normal map overrides the direct normal and blends from the flat normal by its unclamped depth.
+/// Particle roots use VisualShaderNodeParticleOutput. Unsupported point outputs reject during import.</remarks>
 public class VisualShaderNodeOutput : VisualShaderNode
 {
     internal VisualShader.Type Stage;

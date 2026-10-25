@@ -52,7 +52,7 @@ internal static class MaterialLightingProgram
         var extraSamplers = (normal >= 0 ? 1 : 0) + (specular >= 0 ? 1 : 0) + (masks ? 1 : 0);
         if (program.Textures.Length + extraSamplers > 16) throw new NotSupportedException("Material textures and scene-light channels exceed the native sixteen-sampler stage limit.");
         var key = ((normal + 1) * 4 + specular + 1) * 2 + (masks ? 1 : 0);
-        return ComposeLibrary(program, $"Light{(program.AuthoredLight is not null ? "Graph" : "")}Compose{key}");
+        return ComposeLibrary(program, $"Light{(program.Surface is not null ? "Surface" : "")}{(program.AuthoredLight is not null ? "Graph" : "")}Compose{key}");
     }
 
     internal static byte[] ComposeGlyph(ShaderProgram program, bool lcd) => ComposeLibrary(program.Fragment ?? program, lcd ? "GlyphLCD" : "GlyphDecode", glyph: true, inputs: !lcd);
@@ -253,6 +253,22 @@ internal static class MaterialLightingProgram
         var light = glyph ? null : program.AuthoredLight;
         var lightHook = light is null ? 0 : library.Instructions.Single(i => Op(i) == 5 &&
             MemoryMarshal.AsBytes(i.AsSpan(2)).StartsWith("e2d_authored_light_hook("u8))[1];
+        var surface = glyph ? null : program.Surface;
+        var surfaceHook = surface is null ? 0 : library.Instructions.Single(i => Op(i) == 5 &&
+            MemoryMarshal.AsBytes(i.AsSpan(2)).StartsWith("e2d_surface_hook("u8))[1];
+        void SurfaceCall(uint[] call)
+        {
+            var state = types[surface!.StateType]; var function = original.Instructions.Single(i => Op(i) == 54 && i[2] == surface.Function);
+            if (call.Length != 8) throw new InvalidOperationException("The native surface hook has an invalid parameter contract.");
+            libraryFunctions.Add(Instruction(57, function[1], call[2], surface.Function));
+            int[] fields = [0, 3, 4, 5];
+            for (var argument = 0; argument < fields.Length; argument++)
+            {
+                var field = fields[argument]; var type = state[field + 2]; var pointer = next++; var value = next++;
+                libraryFunctions.Add(Instruction(65, Pointer(6, type), pointer, surface.State, Constant((uint)field)));
+                libraryFunctions.Add(Instruction(61, type, value, pointer)); libraryFunctions.Add(Instruction(62, call[argument + 4], value));
+            }
+        }
         void AuthoredLightCall(uint[] call)
         {
             var definition = library.Instructions.Single(i => Op(i) == 54 && i[2] == lightHook);
@@ -290,6 +306,7 @@ internal static class MaterialLightingProgram
         foreach (var instruction in library.Instructions.SkipWhile(i => Op(i) != 54))
         {
             var opcode = Op(instruction);
+            if (surfaceHook != 0 && opcode == 57 && instruction[3] == surfaceHook) { SurfaceCall(instruction); continue; }
             if (lightHook != 0 && opcode == 57 && instruction[3] == lightHook) { AuthoredLightCall(instruction); continue; }
             if (opcode == 54)
             {

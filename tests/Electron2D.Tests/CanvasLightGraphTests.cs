@@ -4,18 +4,25 @@ using System.Text;
 using System.Text.Json;
 using static Electron2D.MaterialLightingProgram;
 
-internal static class CanvasLightGraphTests
+internal static partial class CanvasLightGraphTests
 {
-    internal static void ModernSources(string folder, string output)
+    internal static void ModernSources(string folder, string output, bool surface = false)
     {
         Directory.CreateDirectory(output);
-        foreach (var name in new[] { "light-builtins", "light-context", "light-vertex-matrix" })
+        foreach (var name in surface ? ["surface-normal", "surface-matrix", "surface-light-vertex"] : new[] { "light-builtins", "light-context", "light-vertex-matrix" })
         {
             var file = System.IO.Path.Combine(folder, name + ".e2dres");
             using var graph = ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep); var sources = graph.GenerateSources();
             File.WriteAllText(System.IO.Path.Combine(output, name + ".vert.glsl"), sources.Vertex);
             File.WriteAllText(System.IO.Path.Combine(output, name + ".frag.glsl"), sources.Fragment);
-            File.WriteAllText(System.IO.Path.Combine(output, name + ".light.json"), JsonSerializer.Serialize(new { source = file, function = sources.Light!.Function, state = sources.Light.State }));
+            File.WriteAllText(System.IO.Path.Combine(output, name + ".light.json"), JsonSerializer.Serialize(new
+            {
+                source = file,
+                function = sources.Light?.Function,
+                state = sources.Light?.State,
+                surfaceFunction = sources.Surface?.Function,
+                surfaceState = sources.Surface?.State
+            }));
         }
     }
 
@@ -28,28 +35,32 @@ internal static class CanvasLightGraphTests
             var name = System.IO.Path.GetFileName(file)[..^11];
             using var graph = ResourceLoader.Load<VisualShader>(fields.GetProperty("source").GetString()!, ResourceLoader.CacheMode.IgnoreDeep);
             var fragment = File.ReadAllBytes(System.IO.Path.Combine(folder, name + ".frag.spv"));
-            fragment = CanvasLightProgram.Annotate(fragment, new(fields.GetProperty("function").GetString()!, fields.GetProperty("state").GetString()!));
+            if (fields.GetProperty("function").GetString() is { } function)
+                fragment = CanvasLightProgram.Annotate(fragment, new(function, fields.GetProperty("state").GetString()!));
+            if (fields.TryGetProperty("surfaceFunction", out var surface) && surface.GetString() is { } surfaceFunction)
+                fragment = CanvasSurfaceProgram.Annotate(fragment, new(surfaceFunction, fields.GetProperty("surfaceState").GetString()!));
             graph.SetSPIRV(File.ReadAllBytes(System.IO.Path.Combine(folder, name + ".vert.spv")), fragment);
             ResourceSaver.Save(graph, System.IO.Path.Combine(output, name + ".e2dres"), SaverFlags.BundleResources | SaverFlags.Compress);
         }
     }
 
-    internal static void Metadata(string folder)
+    internal static void Metadata(string folder, bool surface = false)
     {
-        using var graph = ResourceLoader.Load<VisualShader>(System.IO.Path.Combine(folder, "light-constant.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);
-        var original = graph.GetSPIRV(); var vertex = graph.GetSPIRV(RenderingDevice.ShaderStage.Vertex); var light = graph.GetProgram().AuthoredLight!;
+        using var graph = ResourceLoader.Load<VisualShader>(System.IO.Path.Combine(folder, surface ? "surface-normal.e2dres" : "light-constant.e2dres"), ResourceLoader.CacheMode.IgnoreDeep);
+        var original = graph.GetSPIRV(); var vertex = graph.GetSPIRV(RenderingDevice.ShaderStage.Vertex); var light = surface ? graph.GetProgram().Surface! : graph.GetProgram().AuthoredLight!;
         var changed = 0; graph.Changed += _ => changed++;
-        bool Tag(uint[] instruction) => Op(instruction) == 7 && MemoryMarshal.AsBytes(instruction.AsSpan(2)).StartsWith("Electron2D:canvas_light:"u8);
+        var role = surface ? "Electron2D:canvas_surface:" : "Electron2D:canvas_light:"; var tag = Encoding.UTF8.GetBytes(role);
+        bool Tag(uint[] instruction) => Op(instruction) == 7 && MemoryMarshal.AsBytes(instruction.AsSpan(2)).StartsWith(tag);
         void ReplaceTag(Module module, string value)
         {
             var old = module.Instructions.Single(Tag); var bytes = Encoding.UTF8.GetBytes(value); var padded = new byte[(bytes.Length + 4) & ~3]; bytes.CopyTo(padded, 0);
             module.Instructions[module.Instructions.IndexOf(old)] = Instruction(7, [old[1], .. MemoryMarshal.Cast<byte, uint>(padded).ToArray()]);
         }
-        var prefix = "Electron2D:canvas_light:1:";
+        var prefix = role + "1:";
         var failures = new Dictionary<string, Action<Module>>
         {
             ["duplicate"] = m => { var copy = (uint[])m.Instructions.Single(Tag).Clone(); copy[1] = m.Header[3]++; m.Instructions.Insert(m.Instructions.FindIndex(Tag), copy); },
-            ["version"] = m => ReplaceTag(m, "Electron2D:canvas_light:2:" + light.Function + ":" + light.State),
+            ["version"] = m => ReplaceTag(m, role + "2:" + light.Function + ":" + light.State),
             ["noncanonical"] = m => ReplaceTag(m, prefix + "0" + light.Function + ":" + light.State),
             ["missing-function"] = m => ReplaceTag(m, prefix + light.State + ":" + light.State),
             ["state-role"] = m => m.Instructions.Single(i => Op(i) == 59 && i[2] == light.State)[3] = 7,
@@ -68,9 +79,10 @@ internal static class CanvasLightGraphTests
         }
         var stripped = new Module(original); stripped.Instructions.RemoveAll(i => Op(i) == 5 && (i[1] == light.Function || i[1] == light.State));
         using var independent = Shader.CreateFromSPIRV(vertex, stripped.Write());
-        if (independent.GetProgram().AuthoredLight is null) throw new Exception("Light identity incorrectly depends on debug names.");
+        if ((surface ? independent.GetProgram().Surface : independent.GetProgram().AuthoredLight) is null) throw new Exception("Stage identity incorrectly depends on debug names.");
         _ = MaterialLightingProgram.Compose(independent.GetProgram(), -1, -1, false);
-        Console.WriteLine($"Canvas light metadata: {failures.Count} atomic rejections and debug-name-independent external modules passed.");
+        Console.WriteLine($"Canvas {(surface ? "surface" : "light")} metadata: {failures.Count} atomic rejections and debug-name-independent external modules passed.");
+        if (surface) SurfaceContract(graph);
     }
 
     internal static void Export(string folder, string output)
@@ -81,7 +93,7 @@ internal static class CanvasLightGraphTests
         {
             using var graph = ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep);
             var program = graph.GetProgram();
-            if (program.AuthoredLight is null) throw new Exception("The imported program lost its authored light entry.");
+            if (program.AuthoredLight is null && program.Surface is null) throw new Exception("The imported program lost its authored surface/light entry.");
             var name = System.IO.Path.GetFileNameWithoutExtension(file);
             File.WriteAllBytes(System.IO.Path.Combine(output, name + "-unlit.spv"), program.NativeCode); count++;
             for (var normal = -1; normal < 3; normal++)
@@ -92,6 +104,6 @@ internal static class CanvasLightGraphTests
                         File.WriteAllBytes(System.IO.Path.Combine(output, name + "-" + normal + "-" + specular + "-" + masks + ".spv"), code); count++;
                     }
         }
-        Console.WriteLine($"Exported {count} authored-light native modules for independent validation.");
+        Console.WriteLine($"Exported {count} canvas surface/light native modules for independent validation.");
     }
 }

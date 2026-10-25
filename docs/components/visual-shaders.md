@@ -630,7 +630,7 @@ stages. Unknown names retain the scalar-zero role. Matrix, image, logical comman
 Point-size, normal/normal-map/depth, light-vertex and shadow-vertex output ports
 retain their documented port indices, but selecting them rejects import until
 their actual graph-to-canvas ABI integration exists. The class coverage remains
-Partial for the named surface/point producers. Authored light graphs and both varying roles now execute; see [canvas light graphs](canvas-light-graphs.md). Editor frame/preview consumers remain explicit prerequisites. Vertex transport is described below.
+Partial for the native point producer. Fragment surface outputs now execute; see [canvas fragment surfaces](canvas-surfaces.md). Authored light graphs and both varying roles now execute; see [canvas light graphs](canvas-light-graphs.md). Editor frame/preview consumers remain explicit prerequisites. Vertex transport is described below.
 Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 
 ## Verification and limits
@@ -1418,3 +1418,7 @@ Raw GLSL/HLSL canvas vertex sources declare these names as nonarray float32 four
 The public `MatrixInputs` consumer checks all sixteen components of all three roles through ordinary polygons, mesh-local transforms, CPU/GPU MultiMesh and GPU particles. GPU-written instance poses differ from the unchanged authored CPU snapshot. It exercises nodes, expressions and both source languages, sorted particles, singular/restored canvas, CPU expansion with snapping, position-free instancing and automatic light composition. `tools/shaders/check_canvas_matrices.py` runs authoring/import, 24 rejected interfaces with unchanged output hashes, and optional real rendering. The 112 exported native vertex variants, including SPIR-V 1.0/1.3/1.5 and an implicit instance-index producer, pass independent SPIR-V validation. The Linux software Vulkan component run checks 15,120 component observations across the root and two independent viewport snapshots; the additional modern-module run checks 8,208. Each measures 64 active/64 idle frames with zero owner/all-thread managed bytes. These receipts establish local execution; physical GPU, native heap, foreign platforms and owner acceptance remain separate.
 
 Selection compared this producer family with inherited scene packing and Material placeholder creation. Matrices unlock three executing semantics across four geometry families on the current backend; inherited packing needs a complete scene reconstruction/edit-state slice, and a standalone placeholder operation has less immediate runtime value. Point builtins/outputs and authored-light translation remain separate dependencies, alongside particle `attractor_force` and numeric `region_rect`/`specular_shininess` command metadata, so the input class remains Partial.
+
+## Canvas fragment surfaces
+
+See [canvas fragment surfaces](canvas-surfaces.md) for normal/map/depth and independent light/shadow outputs, basis order, retained ownership, executable probes and limits. The point-size producer remains open.
