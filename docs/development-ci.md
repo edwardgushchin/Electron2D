@@ -36,7 +36,8 @@ claiming a speedup.
 
 `Fast feedback` starts independently of native production. It checks pipeline
 failure boundaries, existing CI contracts, the Release runtime, shared public contracts for typed data/settings/theme and
-headless CPU physics without a platform package, compiled public API/coverage and Wiki generation. Existing shader tool caches avoid rebuilding
+headless CPU physics without a platform package, the shared canvas vertex layout,
+compiled public API/coverage and Wiki generation. Existing shader tool caches avoid rebuilding
 host compilers on every run. It does not certify native behavior or platforms.
 
 For a local change, use the relevant existing feature selectors first, with

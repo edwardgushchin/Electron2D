@@ -1,1 +1,2 @@
 ContractChecks.Run();
+CanvasVertexLayoutTests.Run();

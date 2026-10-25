@@ -25,7 +25,7 @@ internal static class MeshCustomTests
         for (var index = 0; index < 3; index++) { multi.SetInstanceTransform2D(index, new(0, new Vector2(index * 20, 0))); multi.SetInstanceCustomData(index, new(index, 1, .875f, 1)); }
         var vertices = new List<CanvasVertex>(); var batches = new List<CanvasBatch>();
         new CanvasMesh(mesh, Transform.Identity, Colors.White).Append(vertices, batches, null, Transform.Identity, Colors.White, null, BlendMode.Mix, TextureFilter.Nearest, TextureRepeat.Disabled, 1, null, true, instances: multi);
-        Check(System.Runtime.InteropServices.Marshal.SizeOf<CanvasVertex>() == 172 && System.Runtime.InteropServices.Marshal.OffsetOf<CanvasVertex>("<VertexID>k__BackingField").ToInt32() == 164 && System.Runtime.InteropServices.Marshal.OffsetOf<CanvasVertex>("<InstanceID>k__BackingField").ToInt32() == 168, "Private mesh identities form an exact uint2 after unchanged glyph fields.");
+        CanvasVertexLayoutTests.Run();
         Check(vertices.Count == 18 && batches.Count == 1, "Expanded instances retain one merged triangle batch.");
         for (var index = 0; index < vertices.Count; index++) Check(vertices[index].InstanceID == index / 6 && vertices[index].InstanceCustom.R == index / 6 && vertices[index].Glyph == default, "CPU expansion preserves exact source IDs and independent custom/glyph fields.");
     }

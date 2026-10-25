@@ -10,5 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
+    <Compile Include="../Electron2D.Tests/CanvasVertexLayoutTests.cs" Link="CanvasVertexLayoutTests.cs" />
   </ItemGroup>
 </Project>
