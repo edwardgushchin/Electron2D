@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
@@ -9,7 +9,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Product architecture | [product.md](product.md) | 0001, 0002, 0004, 0012, 0017, 0021, 0027, 0030, 0045 |
 | Public enum identities | [enum-identities.md](enum-identities.md) | 0051 |
 | Product versioning | [versioning.md](versioning.md) | 0096 |
-| Agent-native development | [agent-native.md](agent-native.md) | 0090 |
+| Agent-native development and live project sessions | [agent-native.md](agent-native.md) | 0090 |
 | C# scripting | [scripting.md](scripting.md) | 0091 |
 | Core object and runtime | [core-object-runtime.md](core-object-runtime.md) | 0003, 0005, 0009, 0010, 0015, 0016, 0050 |
 | Process-wide service API | [singleton-services.md](singleton-services.md) | 0095 |

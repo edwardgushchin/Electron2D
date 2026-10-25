@@ -1,10 +1,12 @@
 # Compiled project batch execution
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 ## Responsibility and boundary
 
-`tools/Batch/Batch.csproj` builds `Electron2D.Batch`, a separate development tool and compiled-scenario SDK. It consumes only public runtime capabilities. The runtime never depends on this tool or a game assembly. The controller owns project files, build processes, deadlines, bounded logs and reports; [BatchHost](../classes/BatchHost.md) owns a single child scenario. The CLI is the common operation boundary available to future visual frontends; the current editor startup screen does not implement these operations itself.
+`tools/Batch/Batch.csproj` builds `Electron2D.Batch`, a separate development tool and compiled-scenario SDK. It consumes only public runtime capabilities. The runtime never depends on this tool or a game assembly. The controller owns project files, build processes, deadlines, bounded logs and reports; [BatchHost](../classes/BatchHost.md) owns a single child scenario. The current editor startup screen does not expose these operations, and the controller has no live editor session or unsaved-document integration.
+
+[ADR 0090](../decisions/agent-native.md#adr-0090), revised on 2026-10-25, selects a shared live project session and snapshot jobs as the target operation authority. The commands, scenario SDK and version-one formats documented below describe existing behavior, not a compatibility obligation. The first session/job slice replaces/removes this tool and its affected consumers/docs without compatibility aliases or a parallel legacy path. Existing runtime lifecycle/input/capture capabilities and useful checks can be reused under their owning contracts. This documentation change does not remove or migrate the tool; live session authoring and its job layer remain unimplemented.
 
 This first SDK uses a local source SDK directory and ordinary .NET 10 executable projects. Source builds require a native closure matching the current runtime. The controller forwards ordinary build environment properties such as `Electron2DAudioNativeLibrary`, `Electron2DTextNativeLibrary` and `Electron2DENetNativeLibrary` to owned builds; rendered recording requires the offline-audio exports introduced by its runtime slice. A stale packaged native payload fails with a runtime diagnostic and cannot establish rendered acceptance. This development tool does not silently rebuild or replace installed native packages. Distribution as an installed SDK, project import/export, a visual project editor, mobile/browser controller hosts and provider-specific adapters remain absent. A compiled scenario is trusted user code with normal process permissions; this tool is not a security sandbox.
 

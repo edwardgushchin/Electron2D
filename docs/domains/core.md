@@ -4,11 +4,11 @@
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
 
-[Compiled project batch execution](../components/project-batch.md) now joins project operations, detached authoring, headless stepping and actual native capture through public runtime APIs. Four documented tooling SDK types remain in a separate development-tool assembly; the runtime adds six typed host-input overloads without changing existing signatures.
+[Compiled project batch execution](../components/project-batch.md) currently joins disk-based project operations, detached authoring, headless stepping and native capture through public runtime APIs. Its four tooling SDK types remain outside the runtime. ADR 0090 now selects a live project session and snapshot jobs as the target workflow; the existing tool's commands/SDK/formats are replaceable, while runtime entry points retain their owning contracts.
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -42,7 +42,7 @@ Core owns behavior shared by engine objects independently of scene, rendering, a
 
 The domain is part of the 2D-only runtime for Windows, macOS, Linux (X11/Wayland), Android, iOS, Android TV, tvOS, and Web and is compiled into the single production assembly `Electron2D.dll`.
 
-[ADR 0090](../decisions/agent-native.md#adr-0090) makes programmatic authoring, batch execution and observable verification an accepted product requirement. Core supplies the existing typed object/property, lifecycle, scheduling and I/O foundations; shared editor/CLI operations remain outside the runtime. Manual scheduling does not by itself implement a headless project runner, persistent scene format or public rendered capture. Those missing capabilities remain explicit implementation work.
+[ADR 0090](../decisions/agent-native.md#adr-0090) requires shared human/agent authoring, in-editor agent control and observable snapshot jobs. Core supplies public typed object/property, history, lifecycle, scheduling and I/O foundations; the live session and its operation/agent adapters remain editor/tooling responsibilities outside the runtime. The existing archive and batch/capture implementations do not establish unsaved document integration, revision/conflict handling, snapshot jobs or a live agent connection. Those gaps follow the [delivery stages](../coverage/roadmap.md#live-project-and-agent-delivery).
 
 Its production sources are grouped by upstream module under `src/Core/`: `Config`, `IO`, `Math`, `Object`, `OS`, and `String`. These directories do not alter the flat public `Electron2D` namespace.
 

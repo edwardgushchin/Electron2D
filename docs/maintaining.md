@@ -8,6 +8,8 @@ For release preparation and publication, follow [Releasing Electron2D](releasing
 
 For project/scene authoring, editor automation, batch execution and capture work, apply the accepted [agent-native contract](decisions/agent-native.md#adr-0090). Verify the supported programmatic path through public runtime capabilities, including error/cleanup cases and machine-readable results. File authoring requires fresh-process load verification; capture requires the actual renderer and its stated backend limits. Keep headless simulation, rendered batch, native/platform verification and human acceptance separate. Record missing prerequisites in coverage and current-state documentation; do not add commands or report end-to-end agent support before they execute.
 
+For the live-session rollout, bind editor and agent mutations to the same operation authority before adding private UI document state. Verify unsaved human/agent edits, revision conflicts, grouped/overlapping undo, external changes, failure recovery and snapshot job identity/staleness. Exercise one real editor/agent connection and process cancellation before claiming co-development; fake adapters remain test fixtures. The existing Batch controller/SDK/formats carry no compatibility obligation: replace/remove affected consumers and docs with the session/job slice instead of retaining a second authoring path. See [delivery stages](decisions/agent-native.md#delivery-and-acceptance).
+
 For expiry tests using `Environment.TickCount64`, wait for the observed counter
 to advance with a bounded deadline. A short `Thread.Sleep` does not establish an
 elapsed tick on Windows/.NET 10, whose counter updates every 10–16 ms. Keep the

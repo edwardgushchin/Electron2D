@@ -1,6 +1,6 @@
 # Electron2D product architecture decisions
 
-Last updated: 2026-10-16
+Last updated: 2026-10-25
 
 This bounded document owns the current product architecture decisions. Use [the decision index](index.md) to route other work; read only the affected documents and explicitly linked dependencies.
 
@@ -94,7 +94,7 @@ A shorter-lived subscriber must unsubscribe from a longer-lived publisher as par
 <a id="adr-0004"></a>
 ## ADR 0004: Build a 2D-only scene-oriented engine in one assembly
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 - Status: Accepted; managed-dependency packaging specified by [0012](product.md#adr-0012), runtime target matrix defined by [0021](product.md#adr-0021), editor/game product boundary amended by [0027](product.md#adr-0027), and rendering backend strategy defined by [0028](rendering.md#adr-0028)
 - Scope: Entire product architecture and packaging
@@ -112,7 +112,7 @@ Electron2D is intended to provide a familiar high-level API modeled on Godot's 2
 - Electron2D supports only two-dimensional games.
 - Deprecated reference classes and declarations are outside the public and protected Electron2D API. Check the pinned official `deprecated` metadata and owning class before copying types, methods, properties, events, callbacks, constants or enum values; a deprecated type also excludes its own declared API. Do not ship deprecated aliases, compatibility shims, no-op setters, constant-result placeholders or public `[Obsolete]` mirrors. Expose the applicable current replacement instead; when none exists, omit the obsolete declaration. Existing deprecated public API is not grandfathered and must be removed with its consumers, storage/schema, XML and documentation in the affected slice. Keep reference rows in the coverage census as `Excluded` with the pinned deprecation evidence and no implementation trigger. Experimental status or an old-looking name alone is not deprecation.
 - Electron2D-owned public and protected type names omit redundant dimensional markers (`1D`, `2D`, `3D`), including markers before a role suffix such as `2DArray`. This default applies to every new class, struct, interface, delegate and enum, including query parameters, result values and supporting sibling types; the specific mappings below illustrate the rule rather than limit it. An exception requires an explicitly accepted ADR identifying a distinct data role. The current exceptions are `Curve2D` (spatial versus scalar curves under ADR 0013) and `AnimationNodeBlendSpace1D`/`AnimationNodeBlendSpace2D` (different blend-parameter domains under [ADR 0093](scene-animation.md#adr-0093)). Member names retain their owning semantic contract; the world accessor is `CanvasItem.GetWorld()` under [ADR 0063](physics.md#adr-0063). Internal native identifiers and pinned comparison identities retain their own spelling. The coverage validator checks actual exported type names before aliases or declaration pairing; agreeing snapshots and mappings do not override this policy.
-- Electron2D is agent-native: programmatic project/scene authoring, batch execution and observable verification are product requirements under [ADR 0090](agent-native.md#adr-0090). That decision preserves this complete applicable typed API and packaging boundary; its missing tooling remains implementation work.
+- Electron2D is agent-native: human and agent authoring share a live project session, with in-editor agent control and observable snapshot jobs under [ADR 0090](agent-native.md#adr-0090). The same operations run without editor UI. That decision preserves this complete applicable typed API and packaging boundary; its missing tooling remains implementation work, and the existing batch tool interface is not a compatibility requirement.
 - Three-dimensional rendering, physics, transforms, cameras, assets, nodes, compatibility aliases, and speculative shared 2D/3D abstractions are outside scope. Ordinary numeric matrix shader data remains applicable under [ADR 0028](rendering.md#adr-0028); it does not introduce a three-dimensional scene transform API.
 - Three-component numeric values are allowed for ordinary data and shader uniforms under ADR 0033; their component count does not add a three-dimensional scene domain.
 - The public image-texture resource is `Texture`; `ImageTexture` derives directly from it. All image textures are two-dimensional by product definition, so there is no `Texture2D` suffix or empty dimension-neutral parent. The reference `Texture` and `Texture2D` contracts share one `Texture.md` coverage page. Coverage names for `Texture2DArray`, `Texture2DArrayRD`, and `Texture2DRD` are `TextureArray`, `TextureArrayRD`, and `TextureRD`. Source identities and declarations remain intact inside the comparison; these names do not authorize new runtime types or change implementation states. Shader-language intrinsic names and internal backend identifiers retain their native spelling. `TextureLayered` retains a separate `Resource` branch for independently sampled image arrays under ADR 0028; it does not inherit the merged ordinary texture drawing API. `Resource.GetRID` projects the shared backend identity, preserving the applicable reference texture-base role without an empty dimension-neutral public parent.
@@ -348,17 +348,13 @@ CharacterMovement now has one shared scene and RID-selected desktop, Android/And
 <a id="adr-0027"></a>
 ## ADR 0027: Self-hosted editor and game project boundary
 
-Last updated: 2026-10-05
+Last updated: 2026-10-25
 
-### Status
-
-Accepted. This decision amends ADR 0004 by limiting its one-assembly rule to the Electron2D runtime engine, and amends ADR 0017 by placing editor application source outside the runtime `src/` tree. The platform matrix is set by [ADR 0021](#adr-0021).
+- Status: Accepted. This decision amends ADR 0004 by limiting its one-assembly rule to the Electron2D runtime engine, and amends ADR 0017 by placing editor application source outside the runtime `src/` tree. The platform matrix is set by [ADR 0021](#adr-0021).
 
 ### Context
 
-Electron2D is both a reusable 2D runtime and the foundation on which its own editor and games are built. The editor must exercise the same engine-facing scene, rendering, input, resource, UI, and application lifecycle capabilities available to games instead of becoming a parallel application framework with privileged private behavior.
-
-The current repository contains one runtime project, an executable test project, a first user-facing window/input example, and a minimal branded editor startup screen. The runtime compiles only `src/**/*.cs` into `Electron2D.dll`. Mixing editor classes into that project would ship editor-only code to every game and mobile runtime, while compiling the editor from the same `src/` tree into another project would blur ownership and risk duplicate type definitions.
+Electron2D is both a reusable 2D runtime and the foundation on which its own editor and games are built. The editor must exercise the same engine-facing scene, rendering, input, resource, UI, and application lifecycle capabilities available to games instead of becoming a parallel application framework with privileged private behavior. The current repository contains one runtime project, an executable test project, a first user-facing window/input example, and a minimal branded editor startup screen. The runtime compiles only `src/**/*.cs` into `Electron2D.dll`. Mixing editor classes into that project would ship editor-only code to every game and mobile runtime, while compiling the editor from the same `src/` tree into another project would blur ownership and risk duplicate type definitions.
 
 ### Decision
 
@@ -372,15 +368,11 @@ Examples teach a user how to build with the public engine API. They may cover in
 
 The editor and every first-party game must be built with Electron2D's public runtime API. Their scenes, UI, rendering, input, resources, and lifecycle must use Electron2D facilities as those domains become implemented. A minimal .NET entry point, platform launcher, and packaging metadata are allowed, but they must only start/host Electron2D through its public API; they must not become an alternative game or editor UI framework.
 
-Under [ADR 0090](agent-native.md#adr-0090), the editor's CLI/batch and visual frontends share project/scene authoring operations, validation and persistence. Project operations must execute without creating editor UI. Headless simulation and rendered batch are separate runtime capability profiles; reusable prerequisites still enter their owning runtime slices through the public API. No CLI, scene format or capture implementation is implied by this requirement.
+Under [ADR 0090](agent-native.md#adr-0090), the editor and operation clients share one live project session, unsaved documents, revision/conflict handling, history, validation and persistence. Its executable core has no editor-UI dependency and can be hosted without a window; it belongs to editor/tooling, not `Electron2D.dll`. The first functional editor project workflow consumes this core instead of creating a private document model. Agent task input, conversation, activity and control belong in the editor; the replaceable executor and its credentials/dependencies stay outside the runtime. Agent-control adapters and MCP operation adapters are separate boundaries over the same session. Exact tooling assembly layout is established by the first executable slice, not by adding speculative runtime types or a new assembly for every responsibility.
 
-Dependency direction is strict:
+Snapshot jobs share the session's operations and verify the chosen unsaved input without implicitly saving it. Headless simulation and actual rendered execution remain separate runtime capability profiles; reusable prerequisites enter their owning runtime domains through the public API. The old Batch controller, scenario SDK and version-one formats may be replaced/removed without compatibility shims. This decision records architecture only; it does not implement the session, agent panel, transport or replacement jobs.
 
-```text
-Electron2D.Editor executable ─┐
-                             ├──> Electron2D.dll ──> approved runtime dependencies
-Game/example executable ─────┘
-```
+Dependency direction is strict: editor and game/example executables depend on `Electron2D.dll`, which depends only on approved runtime dependencies.
 
 `Electron2D.dll` must never reference the editor or any game/example assembly. The editor must not receive blanket friend-assembly access, use reflection to bypass runtime encapsulation, or link runtime source directly. When editor work exposes a missing reusable capability, that capability must be designed and implemented in its owning runtime domain through the normal production-ready process. Truly editor-only behavior remains in the editor project.
 

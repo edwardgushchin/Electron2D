@@ -2,7 +2,7 @@
 
 The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
@@ -16,7 +16,7 @@ Process-wide service operations and events use static access to retained objects
 
 This Core component coordinates one process-wide engine runtime: project-backed timing settings, fixed-step synchronization, time scaling, `MainLoop` attachment/finalization, frame metrics, architecture/version reporting, and a typed named-singleton registry. Engine.Run(Window) owns the ordinary windowed clock, event pump, frame limit, and cleanup on the calling main thread. Engine.RunAsync shares that owned lifecycle while yielding to the browser or UIKit event loop; Android queues the same lifecycle to its internal native video entry thread. Manual embedding can still supply elapsed time.
 
-The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses this lifecycle/scheduling foundation for future batch execution. A batch host must preserve ordinary activation/Ready, input, process/physics, failure and teardown semantics while supplying its explicit clock and execution budget. Manual entry points and the first [compiled project batch runner](project-batch.md) now execute distinct authoring, headless and rendered profiles. Public windowed capture uses the existing movie lifecycle; headless Window activation and a windowless renderer remain absent. The callback-first overload family supplies native host input after readiness and pumping, before every pending scheduler iteration. Authoring without UI, no-render simulation and rendered batch remain separate capability profiles.
+The accepted [agent-native contract](../decisions/agent-native.md#adr-0090) uses this lifecycle/scheduling foundation for snapshot jobs owned by a shared project session. Such jobs preserve ordinary activation/Ready, input, process/physics, failure and teardown semantics while supplying an explicit clock and execution budget. Manual entry points and the existing [compiled project batch runner](project-batch.md) execute distinct authoring, headless and rendered profiles; that tool's controller/SDK/formats are replaceable and do not define runtime compatibility. Shared unsaved-session authoring and snapshot jobs remain unimplemented. Public windowed capture uses the existing movie lifecycle; headless Window activation and a windowless renderer remain absent. The callback-first overload family supplies native host input after readiness and pumping, before every pending scheduler iteration. Authoring without UI, no-render simulation and rendered batch remain separate capability profiles.
 
 ## Owned types
 
