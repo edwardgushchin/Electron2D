@@ -8,7 +8,10 @@ namespace Electron2D;
 /// Atlas regions retain the backing image size; material image overrides do not change this input.
 /// Canvas vertex custom0/custom1 read the first two decoded mesh channels, independently of instance_custom.
 /// Canvas vertex instance_id reads the logical instance or particle slot, or zero for ordinary geometry.
-/// These three names have the scalar-zero role outside the canvas vertex stage.
+/// Canvas vertex model_matrix includes the item, draw command, mesh and current instance pose.
+/// Canvas_matrix maps canvas coordinates to framebuffer pixels; screen_matrix maps those pixels to clip
+/// coordinates with X from -1 to 1 and Y from 1 to -1. All are numeric four-by-four matrices.
+/// The mesh/instance and matrix names have the scalar-zero role outside the canvas vertex stage.
 /// Known inputs in their applicable context require a real renderer producer.</remarks>
 public sealed class VisualShaderNodeInput : VisualShaderNode
 {
@@ -28,8 +31,6 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         {
             ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value);
             if (value.Length > 128 || value.Any(char.IsControl)) throw new ArgumentException("Invalid graph input name.", nameof(value));
-            if (value is "canvas_matrix" or "model_matrix" or "screen_matrix")
-                throw new NotSupportedException("This matrix graph input requires the renderer's canvas matrix ABI producer.");
             if (value is "attractor_force" or "region_rect" or "specular_shininess" or "light" or "light_color" or "light_direction" or "light_energy" or "light_is_directional")
                 throw new NotSupportedException("This graph input requires its typed matrix, sampled-image or lighting integration.");
             var previous = InputKind; _inputName = value;
@@ -48,7 +49,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
     public string GetInputRealName()
     { ThrowIfDisposed(); return IsKnown ? _inputName.ToUpperInvariant() : ""; }
 
-    private bool IsKnown => _inputName is "active" or "custom" or "delta" or "emission_transform" or "index" or "lifetime" or "number" or "random_seed" or "restart" or "transform" or "velocity" or "collision_depth" or "collision_normal" or "modulate" or "source_texture0" or "source_texture1" or "source_texture2" or "source_texture3" or "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "custom0" or "custom1" or
+    private bool IsKnown => _inputName is "model_matrix" or "canvas_matrix" or "screen_matrix" or "active" or "custom" or "delta" or "emission_transform" or "index" or "lifetime" or "number" or "random_seed" or "restart" or "transform" or "velocity" or "collision_depth" or "collision_normal" or "modulate" or "source_texture0" or "source_texture1" or "source_texture2" or "source_texture3" or "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "custom0" or "custom1" or
         "vertex_id" or "instance_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture";
     private bool IsKnownInStage(VisualShader.Type stage) => stage switch
     {
@@ -57,7 +58,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
             _inputName == "restart" && stage is VisualShader.Type.Process or VisualShader.Type.ProcessCustom or VisualShader.Type.Collide ||
             _inputName is "collision_depth" or "collision_normal" && stage == VisualShader.Type.Collide,
         _ => _inputName is "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "vertex_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture" ||
-            stage == VisualShader.Type.Vertex && _inputName is "custom0" or "custom1" or "instance_id"
+            stage == VisualShader.Type.Vertex && _inputName is "custom0" or "custom1" or "instance_id" or "model_matrix" or "canvas_matrix" or "screen_matrix"
     };
     internal PortType[] OutputsFor(VisualShader.Type stage) => [IsKnownInStage(stage) ? InputKind : PortType.Scalar];
     private PortType InputKind => _inputName switch
@@ -66,7 +67,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         "color" or "modulate" or "custom" or "fragcoord" or "instance_custom" or "custom0" or "custom1" => PortType.Vector4,
         "uv" or "vertex" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" => PortType.Vector2,
         "velocity" or "collision_normal" => PortType.Vector2,
-        "transform" or "emission_transform" => PortType.Matrix,
+        "transform" or "emission_transform" or "model_matrix" or "canvas_matrix" or "screen_matrix" => PortType.Matrix,
         "index" or "number" or "random_seed" => PortType.ScalarUInt,
         "vertex_id" or "instance_id" => PortType.ScalarInt,
         "active" or "restart" or "at_light_pass" => PortType.Boolean,
@@ -100,6 +101,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         "uv" => "UV",
         "vertex" => stage == VisualShader.Type.Vertex ? "VERTEX" : "gl_FragCoord.xy",
         "time" => "TIME",
+        "model_matrix" or "canvas_matrix" or "screen_matrix" when stage == VisualShader.Type.Vertex => GetInputRealName(),
         "instance_custom" => "INSTANCE_CUSTOM",
         "fragcoord" when stage == VisualShader.Type.Fragment => "gl_FragCoord",
         "screen_pixel_size" when stage == VisualShader.Type.Fragment => "SCREEN_PIXEL_SIZE",

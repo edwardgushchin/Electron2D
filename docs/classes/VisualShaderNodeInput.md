@@ -14,7 +14,7 @@ Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 Reads a named typed input in an imported visual shader stage.
 
-Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged reports the named semantic role. Known inputs in their applicable context require a real renderer producer.
+Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged reports the named semantic role. Known inputs in their applicable context require a real renderer producer. Canvas vertex `model_matrix`, `canvas_matrix` and `screen_matrix` expose numeric four-by-four item/instance, canvas/framebuffer and framebuffer/clip transforms; see [canvas matrix inputs](../components/visual-shaders.md#canvas-matrix-inputs) for coordinates, ownership and verification.
 
 ## Example
 
@@ -42,7 +42,7 @@ public sealed class Electron2D.VisualShaderNodeInput
 
 Reads a named typed input in an imported visual shader stage.
 
-Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged reports the named semantic role. Known inputs in their applicable context require a real renderer producer.
+Unknown or out-of-context names retain the scalar-zero role. A borrowing graph resolves the port type independently for its stage; changing one borrower does not bind this definition to it. InputTypeChanged reports the named semantic role. Known inputs in their applicable context require a real renderer producer. Canvas vertex `model_matrix`, `canvas_matrix` and `screen_matrix` expose numeric four-by-four item/instance, canvas/framebuffer and framebuffer/clip transforms; see [canvas matrix inputs](../components/visual-shaders.md#canvas-matrix-inputs) for coordinates, ownership and verification.
 
 <a id="member-df6a594a559d"></a>
 ### `.ctor`

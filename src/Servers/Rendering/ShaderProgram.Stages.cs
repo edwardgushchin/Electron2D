@@ -3,12 +3,12 @@ namespace Electron2D;
 internal sealed partial class ShaderProgram
 {
     private byte[][]? _vertexVariants;
-    internal byte[]? VertexCode(bool instanced, bool lighting, bool procedural = false) => _vertexVariants?[(instanced ? 1 : 0) | (lighting ? 2 : 0) | (procedural ? 4 : 0)];
+    internal byte[]? VertexCode(bool instanced, bool lighting, bool procedural = false, bool particles = false) => _vertexVariants?[(instanced ? 1 : 0) | (lighting ? 2 : 0) | (procedural ? 4 : 0) | (particles && ModelMatrixUniform is not null ? 8 : 0)];
     internal void PrepareVertexVariants()
     {
         var vertex = Vertex ?? throw new InvalidOperationException("No authored vertex stage.");
-        var variants = new byte[8][];
-        for (var i = 0; i < variants.Length; i++) variants[i] = CanvasVertexProgram.Compose(vertex.NativeCode, (i & 1) != 0, (i & 2) != 0, (i & 4) != 0);
+        var variants = new byte[ModelMatrixUniform is null ? 8 : 16][];
+        for (var i = 0; i < variants.Length; i++) variants[i] = CanvasVertexProgram.Compose(vertex.NativeCode, (i & 1) != 0, (i & 2) != 0, (i & 4) != 0, vertex.ModelMatrixUniform, (i & 8) != 0, vertex.Textures.Length);
         _vertexVariants = variants;
     }
 
@@ -23,7 +23,7 @@ internal sealed partial class ShaderProgram
     {
         var frame = Uniforms.Values.Where(u => u.Buffer == 0).ToArray();
         if (BufferSizes.Length == 0 || BufferSizes[0] != 16 || frame.Length != 1 || frame[0].Type != typeof(Vector2) || frame[0].Offset != 0 || frame[0].ArrayLength != 0 || frame[0].DefaultWords is not null ||
-            InstanceUniforms.Values.Any(u => u.Buffer == 0) || TimeUniform?.Buffer == 0 || ScreenPixelSizeUniform?.Buffer == 0 || SDFCoordsUniform?.Buffer == 0 || NormalMapFlagsUniform?.Buffer == 0 || TexturePixelSizeUniform?.Buffer == 0)
+            InstanceUniforms.Values.Any(u => u.Buffer == 0) || TimeUniform?.Buffer == 0 || ScreenPixelSizeUniform?.Buffer == 0 || SDFCoordsUniform?.Buffer == 0 || NormalMapFlagsUniform?.Buffer == 0 || TexturePixelSizeUniform?.Buffer == 0 || ModelMatrixUniform?.Buffer == 0 || CanvasMatrixUniform?.Buffer == 0 || ScreenMatrixUniform?.Buffer == 0)
             throw new NotSupportedException("The vertex Frame block at binding zero contains only a float2 client size at offset zero.");
     }
 
@@ -89,6 +89,9 @@ internal sealed partial class ShaderProgram
             NativeCode = fragment.NativeCode,
             NormalMapFlagsUniform = fragment.NormalMapFlagsUniform,
             TexturePixelSizeUniform = Builtin(fragment.TexturePixelSizeUniform, vertex.TexturePixelSizeUniform),
+            ModelMatrixUniform = Builtin(null, vertex.ModelMatrixUniform),
+            CanvasMatrixUniform = Builtin(null, vertex.CanvasMatrixUniform),
+            ScreenMatrixUniform = Builtin(null, vertex.ScreenMatrixUniform),
             Vertex = vertex,
             Fragment = fragment,
             FragmentBufferCount = fragment.BufferSizes.Length,

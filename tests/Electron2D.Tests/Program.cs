@@ -581,6 +581,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES_NATIV
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INDEXED_PROPERTIES") == "1") { IndexedPropertyTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING_NATIVE") == "1") { SubtreeResourceAuthoringTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SUBTREE_AUTHORING") == "1") { SubtreeResourceAuthoringTests.Run(); return; }
+if (args.Length == 3 && args[0] == "--canvas-matrix-variants") { CanvasMatrixTests.WriteVariants(args[1], args[2]); return; }
 if (args.Length == 2 && args[0] == "--canvas-vertex-archive") { CanvasVertexProgramTests.RunArchive(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BUILTIN_INCLUDES") == "managed") { ShaderIncludeDBTests.RunManaged(); return; }
 if (args.Length == 2 && args[0] == "--builtin-include-render") { ShaderIncludeDBTests.RunNative(args[1]); return; }

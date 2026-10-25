@@ -9,12 +9,13 @@ internal readonly record struct CanvasInstance(Vector4 Basis, Vector4 Translatio
 public sealed partial class RenderingServer
 {
     private List<CanvasInstance> _instances = [];
+    private List<CanvasModelPose> _modelPoses = [];
     private Rect2? _appendedInstanceBounds;
 
     internal bool CanInstance(CanvasItem? owner) => _rendering && _backend is GPUCanvasBackend &&
         owner is not null && owner is not VisibleOnScreenNotifier && !IsCompositor(owner) && ParentGroup(owner) is null or CanvasGroup;
 
-    internal bool TryAppendInstances(MultiMesh resource, Transform canvas, Color modulation, Rect2 bounds, float fraction, out int first, bool linear = false, bool recordBounds = true)
+    internal bool TryAppendInstances(MultiMesh resource, Transform canvas, Color modulation, Rect2 bounds, float fraction, out int first, bool linear = false, bool recordBounds = true, bool models = false)
     {
         first = _instances.Count;
         Rect2? combined = null;
@@ -22,6 +23,11 @@ public sealed partial class RenderingServer
         for (var i = 0; i < resource.DrawCount; i++)
         {
             resource.Presentation(i, fraction, out var pose, out var color, out var custom);
+            if (models)
+            {
+                while (_modelPoses.Count <= first + i) _modelPoses.Add(default);
+                _modelPoses[first + i] = new(pose);
+            }
             pose = canvas * pose; color = (linear ? CanvasGeometry.LinearColor(color) : color) * modulation;
             var transformedBounds = pose * bounds;
             if (!pose.IsFinite() || !color.IsFinite() || !transformedBounds.IsFinite() || !transformedBounds.End.IsFinite())

@@ -3,9 +3,9 @@ using static Electron2D.MaterialLightingProgram;
 
 namespace Electron2D;
 
-internal static class CanvasVertexProgram
+internal static partial class CanvasVertexProgram
 {
-    internal static byte[] Compose(byte[] code, bool instanced, bool lighting, bool procedural = false)
+    internal static byte[] Compose(byte[] code, bool instanced, bool lighting, bool procedural = false, ShaderUniform? model = null, bool particles = false, int textureCount = 0)
     {
         var module = new Module(code); var instructions = module.Instructions;
         var declarations = instructions.Where(i => Op(i) is >= 19 and <= 33).ToDictionary(i => i[1]);
@@ -39,7 +39,8 @@ internal static class CanvasVertexProgram
         }
         var frame = variables.Values.Single(v => v[3] == 2 && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 34 && i[3] == 1) && instructions.Any(i => Op(i) == 71 && i[1] == v[2] && i[2] == 33 && i[3] == 0));
         var frameType = declarations[declarations[frame[1]][3]]; var frameId = frameType[1]; var frameIndex = instructions.IndexOf(frameType);
-        instructions[frameIndex] = Instruction(30, frameId, float2, uintType, uintType, float4);
+        instructions[frameIndex] = model is not null && (instanced || particles) ? Instruction(30, frameId, float2, uintType, uintType, float4, uintType) : Instruction(30, frameId, float2, uintType, uintType, float4);
+        if (model is not null && (instanced || particles)) annotations.Add(Instruction(72, frameId, 4, 35, 32));
         annotations.Add(Instruction(72, frameId, 1, 35, 8)); annotations.Add(Instruction(72, frameId, 2, 35, 12)); annotations.Add(Instruction(72, frameId, 3, 35, 16));
         var entry = instructions.Single(i => Op(i) == 15); var originalMain = entry[2]; var wrapper = ID();
         var privateVariables = new HashSet<uint>(); var newInputs = new List<uint>(); var newOutputs = new List<uint>();
@@ -249,6 +250,7 @@ internal static class CanvasVertexProgram
         module.Header[3] = next;
         var words = new uint[5 + all.Sum(i => i.Length)]; module.Header.CopyTo(words, 0); var offset = 5;
         foreach (var instruction in all) { instruction.CopyTo(words, offset); offset += instruction.Length; }
-        return MemoryMarshal.AsBytes(words.AsSpan()).ToArray();
+        var result = MemoryMarshal.AsBytes(words.AsSpan()).ToArray();
+        return model is not null && (instanced || particles) ? ComposeModel(result, model, textureCount) : result;
     }
 }

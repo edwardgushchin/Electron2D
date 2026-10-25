@@ -4,7 +4,7 @@ public sealed partial class RenderingServer
 {
     private readonly List<(VisibleOnScreenNotifier Node, ulong Generation)> _screenChanges = [];
 
-    private void AppendScreenCanvas(CanvasItem node, Transform transform, Rect2i? clip, Vector2i pixels, bool unshaded = false)
+    private void AppendScreenCanvas(CanvasItem node, Transform transform, Rect2i? clip, Vector2i pixels, bool unshaded = false, CanvasMatrices? matrices = null)
     {
         var first = _vertices.Count;
         var batchStart = _batches.Count;
@@ -15,7 +15,7 @@ public sealed partial class RenderingServer
         // A command boundary prevents items with different masks from merging into one lighting batch.
         var boundary = illumination || _batches.Count != 0 && (_batches[^1].Lighting is not null || _batches[^1].CanvasModulation != canvasModulation);
         if (boundary) _batches.Add(new(0, 0, null, Operation: CanvasOperation.MaskFinish));
-        node.AppendCanvas(_vertices, _batches, transform, CanvasTime, clip, pixels, _viewport, illumination);
+        node.AppendCanvas(_vertices, _batches, transform, CanvasTime, clip, pixels, _viewport, illumination, matrices);
         if (boundary) _batches.RemoveAt(batchStart);
         for (var i = batchStart; i < _batches.Count; i++)
         {

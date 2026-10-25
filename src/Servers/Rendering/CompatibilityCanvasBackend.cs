@@ -122,7 +122,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default)
     {
         ResetRenderInfo();
         foreach (var batch in batches)

@@ -8,6 +8,8 @@ Last updated: 2026-10-25
 - Inherited by: [VisualShader](VisualShader.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
+Canvas vertex `MODEL_MATRIX`, `CANVAS_MATRIX` and `SCREEN_MATRIX` use renderer-owned four-by-four uniform fields after Frame, excluded from material/default descriptors. See [canvas matrix uniforms](../components/shader-materials.md#canvas-matrix-uniforms) for coordinates, ownership and verification.
+
 ## Description
 
 A managed canvas program loaded from copied fragment SPIR-V, with an optional authored vertex module. HLSL and GLSL source compilation belongs to import/build tooling. Code and reflected layout are published as one immutable version; failed replacement preserves the previous version. GPU pipelines belong to the renderer and are created on demand. Resource duplication shares immutable program data safely. Disposal prevents further resource access and does not dispose materials that borrow the shader.

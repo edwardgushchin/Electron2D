@@ -5,7 +5,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
     private readonly List<CanvasMesh> _meshes = [];
     internal Rect2 Bounds() => source.Released ? default : source.CustomAABB;
     internal void Append(List<CanvasVertex> vertices, List<CanvasBatch> batches, Texture? texture, Transform transform, Color color,
-        MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, bool linear, CanvasItem owner, Texture? textureSource = null)
+        MaterialState? material, BlendMode blend, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, bool snap, bool linear, CanvasItem owner, Texture? textureSource = null, CanvasMatrices? matrices = null)
     {
         if (source.Released || source.Amount == 0) return;
         source.Owner.RequestParticleCanvas(source); var revision = source.Revision; source.Owner.BeginParticleScenePreparation(); source.Preparing = true;
@@ -13,6 +13,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
         {
             while (_meshes.Count < source.DrawPasses.Length) _meshes.Add(null!);
             var canvas = source.LocalCoordinates ? transform : transform * source.Emission.AffineInverse();
+            if (!source.LocalCoordinates) matrices = matrices?.Local(source.Emission.AffineInverse());
             var visibility = transform * source.CustomAABB;
             source.CanvasBasis = canvas;
             var sheet = owner.CanvasMaterial is CanvasItemMaterial fixedMaterial && fixedMaterial.ParticlesAnimation ? new Vector4(fixedMaterial.ParticlesAnimHFrames, fixedMaterial.ParticlesAnimVFrames, fixedMaterial.ParticlesAnimLoop ? 1 : 0, 1) : default;
@@ -21,7 +22,7 @@ internal sealed class CanvasParticles(RenderingParticleState source)
             {
                 var mesh = source.DrawPasses[pass]; if (mesh is null) continue; ObjectDisposedException.ThrowIf(mesh.IsDisposed, mesh);
                 _meshes[pass] ??= new(mesh, Transform.Identity, Colors.White); _meshes[pass].Set(mesh, Transform.Identity, Colors.White);
-                _meshes[pass].AppendParticles(vertices, batches, source, texture, canvas, visibility, color, material, blend, filter, repeat, anisotropy, clip, snap, linear, sheet, owner, textureSource);
+                _meshes[pass].AppendParticles(vertices, batches, source, texture, canvas, visibility, color, material, blend, filter, repeat, anisotropy, clip, snap, linear, sheet, owner, textureSource, matrices);
                 if (source.Released || source.Revision != revision) throw new InvalidOperationException("Mesh callbacks changed particle geometry ownership.");
             }
         }

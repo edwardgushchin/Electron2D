@@ -52,7 +52,7 @@ internal sealed unsafe partial class GPUCanvasBackend
     }
     private byte[]? SwizzledVertex(CanvasBatch batch)
     {
-        var code = (batch.GroupShader || batch.MaskShader) && !batch.Procedural ? null : batch.Material?.Program.VertexCode(batch.InstanceCount > 0, batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader, batch.Procedural);
+        var code = (batch.GroupShader || batch.MaskShader) && !batch.Procedural ? null : batch.Material?.Program.VertexCode(batch.InstanceCount > 0, batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader, batch.Procedural, batch.Particles is not null);
         if (code is null || batch.Material is not { } material) return code;
         Span<uint> maps = stackalloc uint[16]; maps.Clear(); var used = false;
         var indices = material.Program.VertexTextureIndices;

@@ -56,6 +56,8 @@ def generate(output, source_root=ROOT):
                                 programs.append((source, f'PhysicsResidentMotionQueries{phase}.comp.portable', [f'-DE2D_MOTION_STAGE={phase}']))
                         else:
                             programs.append((source, stem + '.portable', defines))
+                if source.name in ('InstancePack.comp.glsl', 'ParticleVertices.comp.glsl'):
+                    programs.append((source, source.stem.replace('.comp', 'Models.comp'), ['-DE2D_MODEL_MATRICES=1']))
                 if source.name in ('Canvas.vert.hlsl', 'CanvasInstanced.vert.hlsl'):
                     programs.append((source, source.stem.replace('Canvas', 'CanvasLighting'), ['-DE2D_LIGHTING=1']))
                 if source.name == 'Lighting.frag.hlsl':

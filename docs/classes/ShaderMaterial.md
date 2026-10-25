@@ -11,6 +11,8 @@ Last updated: 2026-10-25
 
 Pairs a borrowed Shader with independently owned parameter values and borrowed texture overrides. Multiple materials may share one Shader and hold different values; nodes sharing one material see the same updates. Null Shader selects ordinary canvas color drawing. Any assigned Shader requires GPU rendering. Material disposal clears its own state and never disposes the borrowed Shader or textures.
 
+Reserved canvas vertex `MODEL_MATRIX`, `CANVAS_MATRIX` and `SCREEN_MATRIX` are renderer-owned numeric matrices; see [their layout and coordinates](../components/shader-materials.md#canvas-matrix-uniforms). They are excluded from material properties, defaults and value migration.
+
 Reserved TIME is not a user parameter: getters, setters, property discovery, duplication and value migration exclude it. The renderer fills its reflected float32 location immediately before each buffer upload without emitting Changed.
 
 State operations are serialized per material. Native uniform upload uses the same gate. Notifications run after mutation outside the gate. Successful scalar/vector/matrix or span updates reuse initialized storage. Numeric values initialize from compiled authored defaults, with zero/matrix identity only when absent. Float3 Color readers reconstruct alpha one; float2x2 Transform readers reconstruct zero Origin. Explicit ownership is independent of value equality. Shader replacement migrates explicitly written matching names, shader element types (including integer signedness and logical boolean width) and array lengths to new offsets/bindings on the next parameter access or draw. Incompatible or newly introduced members start at their typed defaults; assigning null discards values.

@@ -318,3 +318,11 @@ checks, source/ABI rejection and SDK build/publish/Clean. These Linux fixtures d
 not establish editor UI, physical GPU, foreign-platform or owner acceptance.
 
 Typed visual graph varyings lower through the existing paired canvas interface. Custom float32/int32/uint32 scalar/vector values occupy matching locations 12 through 15; location 11 remains private glyph transport. Graph matrices use four column vectors and Boolean data uses a private flat uint. Module import can validate stages independently; the paired runtime factory checks their producer/consumer agreement, and single-module factories/setters reject custom inputs without an authored vertex stage. See [typed varying transport](../../docs/components/visual-shaders.md#typed-varying-transport) for author/import/runtime commands, capacity and verified profiles.
+
+Canvas matrix producer checks use the public consumer and existing importer:
+
+```bash
+python3 -B tools/shaders/check_canvas_matrices.py --tool /path/to/Electron2D.ShaderImport --consumer /path/to/VisualShader.Consumer --output bin/matrix-checks --render
+```
+
+The runner preserves logs and hashes, verifies 24 rejected ownership/shape/stage interfaces without replacing a valid module, and optionally reads real matrix component pixels. `--render` requires a configured GPU display session. The consumer covers original model, canvas and screen transforms, CPU/GPU instances, sorted particles, singular canvas, snapping and warmed active/idle allocation intervals.

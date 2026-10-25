@@ -91,7 +91,7 @@ public sealed partial class RenderingServer
                 foreach (var frame in _submittedFrames)
                     surface.Backend.Draw(surface.Backend.FindTarget(frame.Viewport)!,
                         CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches),
-                        frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting);
+                        frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses));
     }
 
     private void EndNativeFrames()

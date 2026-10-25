@@ -5,7 +5,7 @@ internal sealed partial class CanvasMesh
     private readonly List<ParticleGeometry> _particleGeometry = [];
     internal void AppendParticles(List<CanvasVertex> vertices, List<CanvasBatch> batches, RenderingParticleState source, Texture? texture,
         Transform canvas, Rect2 visibility, Color modulation, MaterialState? inheritedMaterial, BlendMode inheritedBlend, TextureFilter filter, TextureRepeat repeat,
-        int anisotropy, Rect2i? clip, bool snap, bool linear, Vector4 sheet, CanvasItem owner, Texture? textureSource = null)
+        int anisotropy, Rect2i? clip, bool snap, bool linear, Vector4 sheet, CanvasItem owner, Texture? textureSource = null, CanvasMatrices? matrices = null)
     {
         ObjectDisposedException.ThrowIf(Mesh.IsDisposed, Mesh);
         var arrays = Mesh as ArrayMesh ?? (Mesh as ImmediateMesh)?.Surfaces;
@@ -39,7 +39,7 @@ internal sealed partial class CanvasMesh
             else for (var i = 0; i < count; i++) Add(i);
             if (vertices.Count == first) return;
             var batch = Batch(first, vertices.Count - first, material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, owner,
-                linear: linear, visibility: visibility, procedural: data.IsProcedural, primitive: primitive, snap: snap, textureSource: textureSource);
+                linear: linear, visibility: visibility, procedural: data.IsProcedural, primitive: primitive, snap: snap, textureSource: textureSource, matrices: matrices);
             ApplyGlyph(vertices, batch);
             batches.Add(batch with { Particles = new(source, geometry, canvas, modulation, sheet), SnapGeneratedVertices = snap });
             void Add(int index)

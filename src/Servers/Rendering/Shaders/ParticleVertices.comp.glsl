@@ -10,6 +10,9 @@ layout(std430, set = 0, binding = 5) readonly buffer Bones { uint bones[]; };
 layout(std430, set = 0, binding = 6) readonly buffer Ordering { uvec2 ordering[]; };
 layout(std430, set = 1, binding = 0) writeonly buffer Vertices { uint vertices[]; };
 layout(std430, set = 1, binding = 1) writeonly buffer Draws { uint draws[]; };
+#ifdef E2D_MODEL_MATRICES
+layout(std430, set = 1, binding = 2) writeonly buffer Models { vec4 models[]; };
+#endif
 layout(std140, set = 2, binding = 0) uniform Parameters {
     vec4 canvasX; vec4 canvasY; vec4 modulation;
     uvec4 counts; // amount, vertices per mesh, source word offset, HDR/procedural/skin/group flags
@@ -52,6 +55,9 @@ void main()
         color = mix(previous[particleIndex].color, color, timing.x); custom = mix(previous[particleIndex].custom, custom, timing.x);
     }
     orient(x, y, particle);
+#ifdef E2D_MODEL_MATRICES
+    if (vertex == 0) { models[instance*2]=vec4(x.x,y.x,x.y,y.y); models[instance*2+1]=vec4(x.w,y.w,0,0); }
+#endif
     vec2 position = vec2(uintBitsToFloat(geometry[source]), uintBitsToFloat(geometry[source + 1]));
     vec2 transformed = applyPose(x, y, position);
     vec2 basisX = vec2(x.x, y.x), basisY = vec2(x.y, y.y);

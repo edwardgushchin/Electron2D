@@ -378,7 +378,7 @@ internal sealed class MaterialState
         }
     }
 
-    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false, Vector4 normalMapFlags = default, Vector2 texturePixelSize = default)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false, Vector4 normalMapFlags = default, Vector2 texturePixelSize = default, CanvasMatrices? matrices = null)
     {
         lock (_gate)
         {
@@ -392,6 +392,10 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[normal.Buffer].AsSpan(normal.Offset, sizeof(float) * 4), in normalMapFlags);
             if (Program.TexturePixelSizeUniform is { } texturePixels)
                 MemoryMarshal.Write(Buffers[texturePixels.Buffer].AsSpan(texturePixels.Offset, sizeof(float) * 2), in texturePixelSize);
+            if (Program.ModelMatrixUniform is { } model) CanvasMatrices.Write(model, Buffers, matrices?.Model ?? Transform.Identity);
+            if (Program.CanvasMatrixUniform is { } canvas) CanvasMatrices.Write(canvas, Buffers, matrices?.Canvas ?? Transform.Identity);
+            if (Program.ScreenMatrixUniform is { } screen) CanvasMatrices.Write(screen, Buffers,
+                new(new(2 * screenPixelSize.X, 0), new(0, -2 * screenPixelSize.Y), new(-1, 1)));
             RenderingServer.ActiveGlobalParameters?.Write(Program, Buffers);
             var instanceBuffer = Program.HasInstanceUniforms ? instance?.InstanceUniforms.Prepare(Program) : null;
             SynchronizeSharedUniforms(instanceBuffer);

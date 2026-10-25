@@ -114,7 +114,7 @@ internal sealed partial class ShaderGlobalParameters
     internal static void ValidateName(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" || name.StartsWith("GLOBAL_", StringComparison.Ordinal))
+        if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE" || name.StartsWith("GLOBAL_", StringComparison.Ordinal))
             throw new ArgumentException("The name is reserved by the canvas shader interface.", nameof(name));
     }
     private static void Validate<T>(Kind kind) where T : unmanaged

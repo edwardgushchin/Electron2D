@@ -31,7 +31,7 @@ internal static unsafe partial class SpirvReflection
                 }
                 var name = Name(3); var publicName = Name(4); var global = Name(5);
                 if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(publicName) || !names.Add(name) || uniforms.ContainsKey(publicName) ||
-                    publicName is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
+                    publicName is "TIME" or "SCREEN_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX" or "SDF_COORDS" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
                     throw new ArgumentException("Shader image metadata requires unique nonreserved names.", nameof(code));
                 if (global.Length != 0)
                 {

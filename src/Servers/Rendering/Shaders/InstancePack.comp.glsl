@@ -6,6 +6,9 @@ layout(set=0,binding=2,std430) readonly buffer Commands { uint commands[]; };
 layout(set=0,binding=3,std430) readonly buffer LODs { uvec4 lods[]; };
 layout(set=1,binding=0,std430) writeonly buffer Instances { vec4 instances[]; };
 layout(set=1,binding=1,std430) writeonly buffer Draw { uint draw[]; };
+#ifdef E2D_MODEL_MATRICES
+layout(set=1,binding=2,std430) writeonly buffer Models { vec4 models[]; };
+#endif
 layout(set=2,binding=0,std140) uniform Parameters {
     vec4 canvas;
     vec4 origin;
@@ -68,6 +71,9 @@ void main() {
             b.xy=vec2(sin(rotation)*scale.x,cos(rotation+skew)*scale.y);
         }
     }
+#ifdef E2D_MODEL_MATRICES
+    models[i*2]=vec4(a.x,b.x,a.y,b.y); models[i*2+1]=vec4(a.w,b.w,0,0);
+#endif
     vec2 x=canvas.xy*a.x+canvas.zw*b.x,y=canvas.xy*a.y+canvas.zw*b.y;
     vec2 translation=canvas.xy*a.w+canvas.zw*b.w+origin.xy;
     if(levels.y!=0 && count==geometry.w && start==0 && offset==0) {

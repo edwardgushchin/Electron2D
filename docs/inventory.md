@@ -2243,4 +2243,4 @@ ShaderProgram/ShaderTexture retain validated immutable image policy under [the s
 | [Rendering](domains/rendering.md) | [Visual shader graphs](components/visual-shaders.md#typed-varying-transport) | [VisualShader.VaryingMode](classes/VisualShader.VaryingMode.md) | [VisualShader.Varyings.cs](../src/Scene/Resources/VisualShader.Varyings.cs) | Current | Canvas stage transport selector and nonselectable bound |
 
 
-The existing VisualShaderNodeInput canvas family executes the renderer-owned command texture_pixel_size producer through ShaderProgram, MaterialState, SpirvReflection and GPUCanvasBackend; see [the executable contract](components/visual-shaders.md#command-texture-pixel-size).
+The existing VisualShaderNodeInput canvas family also executes original model/canvas/screen matrix producers across ordinary, mesh, MultiMesh and GPU-particle streams; see [canvas matrix inputs](components/visual-shaders.md#canvas-matrix-inputs). It executes the renderer-owned command texture_pixel_size producer through ShaderProgram, MaterialState, SpirvReflection and GPUCanvasBackend; see [the executable contract](components/visual-shaders.md#command-texture-pixel-size).
