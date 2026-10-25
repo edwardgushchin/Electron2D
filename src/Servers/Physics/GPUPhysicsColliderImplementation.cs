@@ -13,7 +13,8 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     private GPUPhysicsBodyStore GPU => store;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
     /// <summary>Estimates motion from the last observation solely to choose a readback strategy; it never establishes current state.</summary>
-    internal bool GPUChangeLikely => _gpuState.Mode != PhysicsServer.BodyMode.Static && !_gpuState.Sleeping;
+    internal bool GPUChangeLikely => _gpuState.Mode != PhysicsServer.BodyMode.Static && !_gpuState.Sleeping &&
+        (_gpuState.Velocity.X != 0 || _gpuState.Velocity.Y != 0 || _gpuState.Velocity.Z != 0);
     private System.Numerics.Vector4 _gpuPose;
     private bool _gpuPoseValid;
     private long _gpuPoseEpoch;

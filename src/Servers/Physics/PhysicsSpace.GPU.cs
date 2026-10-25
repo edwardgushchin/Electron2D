@@ -130,7 +130,7 @@ internal sealed partial class PhysicsSpace
 
     private void PublishGPUCompletion(GPUPhysicsBodyStore.ContactRead reports)
     {
-        if (_serverColliders.Count == 0) { PublishGPU(); GPUStore!.ReadContactReports(reports); return; }
+        if (_serverColliders.Count == 0 && _bodies.Count == 0) { PublishGPU(); GPUStore!.ReadContactReports(reports); return; }
         var observed = _bodies.Count;
         var likelyChanges = _serverColliders.Count + _areas.Count;
         foreach (var body in _bodies) if (GPUCollider(body.Backend).GPUChangeLikely) likelyChanges++;

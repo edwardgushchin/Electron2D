@@ -8,6 +8,8 @@
 
 # Physics domain
 
+[Pure scene completion](../components/gpu-resident-reports.md#pure-scene-completion-policy-2026-10-22) now chooses the existing selected body/contact path for dense moving observers and retains incremental history for stationary/sleeping observers. Every path still publishes validated current state; no solver or public API is replaced.
+
 [Portable body motion](../components/gpu-resident-motion-queries.md) initializes
 translation fractions after recovery instead of carrying unused fractions through
 recovery passes. Existing iteration/transfer limits and public declarations stay

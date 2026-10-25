@@ -1,6 +1,6 @@
 # Resident GPU contact publication
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 ## Boundary
 
@@ -389,6 +389,27 @@ velocities. The public CPU solver produced (-207.46976, -396.24414) impulse whil
 the independent solver produced (-240, -360), each matching its own body's momentum
 change. That ungrounded cross-solver equality was replaced by the required shared
 momentum and impulse-sign invariant; no production code changed for that assertion.
+
+## Pure scene completion policy (2026-10-22)
+
+Nonempty scene-only worlds now use the existing mixed-world cost comparison instead of always publishing changed state and reading contact reports separately. Dense moving observers can receive selected snapshots and contacts in one completion. Last observed nonzero linear/angular velocity, mode and sleep are cost hints; either path obtains validated current device state. Stationary awake and sleeping observers retain incremental history. Empty/Area-only scene handling is unchanged. No numerical kernel, contact field, event order or public identity changes.
+
+[PhysicsGPUDensePublicationTests](../../tests/Electron2D.Tests/PhysicsGPUDensePublicationTests.cs) uses 512 circles and one floor, zero friction/bounce, eight-unit spacing outside the two-unit speculative contact margin, and 1/60-second full scene frames. Moving bodies retain velocity (1,0), contacts, cap 2 and monitoring. After 128 warm frames, 64 measured moving frames compare against a frozen pre-change runtime. The control fails the new completion-policy assertion; both paths retain strict 0/0 owner/all-thread managed bytes. Owner/separate candidates also verify stationary awake and sleeping frames, current fields after a zero-motion prediction, an authored pose, actual floor identities, private/portable correction and wake.
+
+| Completion case | Upload / readback B per full frame | Completions per frame | Change publications over 64 frames |
+| --- | ---: | ---: | ---: |
+| Previous moving scene | 6,424 / 127,856 | 15 | 64 |
+| Selected moving scene | 14,632 / 119,648 | 14 | 0 |
+| Stationary awake scene | 6,424 / 86,816 | 15 | 64 |
+| Sleeping scene | 6,168 / 86,040 | 3 | 64 |
+
+The moving case shifts 8,208 bytes of receiver identity from download to request upload, preserving the 134,280-byte combined total while removing one completion. A first trial used only awake status as the dense hint: stationary awake bodies then unnecessarily read all snapshots. Nonzero observed motion restores their prior incremental traffic without treating that prediction as authority. The selected path reuses existing receiver scratch; its state/handle/backend arrays hold observation results for actual public scene consumers, with capacity growth confined to cold setup. Cold first-positive-frame allocation is reported separately from warmed intervals. Native/driver allocation totals are not measured.
+
+The initial four-unit spacing was on the speculative contact boundary and admitted neighbor reports; the final fixture retains strict floor identity at eight-unit spacing. Historical logs, source proofs and full-scene diagnostic receipts are in `bin/physics-current-mass/2026-10-22/`. On resumption, the frozen runtime DLL/PDB/XML were absent, so the original complete diagnostic payload could not be revalidated. Its interrupted CPU case remains incomplete; these receipts establish no current performance acceptance.
+
+Verification on 2026-10-25 uses a fresh source build and separate frozen payloads in `bin/physics-scene-completion/2026-10-25/`. A committed-source runtime control, with the same test binary and all 201 embedded resources unchanged, fails exactly the dense completion-policy assertion: 15 completions and 64 change publications. The candidate retains the table's 14 completions and zero change publications; both moving intervals allocate 0/0 owner/all-thread managed bytes. Owner/separate candidates also retain the stationary and sleeping traffic above. Cold first-positive-frame owner allocation is 1,632,056/1,521,832 bytes respectively; it is outside the warmed claim.
+
+Thirteen current functional profiles pass: dense owner/separate, common publication, mixed owner/separate, space checkpoint, replication reconfiguration, combined completion, public contact projection on GPU owner/separate and CPU without a device, and real Wayland GPU/compatibility windows with separate GPU physics. Render checks cover pixel, motion and allocation assertions; they do not measure massive-window FPS or establish human acceptance. PDB hashes bind 2,584 runtime, 957 root-test and 270 public-consumer authored inputs. Whole-step speedup, repeated real-window FPS, NativeAOT for this slice and full-goal acceptance remain open; declaration coverage remains 1306/1369 (95.40%), with 63 open rows.
 
 ## Measured publication cost
 

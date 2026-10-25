@@ -1,5 +1,7 @@
 # Engine inventory
 
+Existing PhysicsSpace and GPUPhysicsColliderImplementation now share [pure scene completion cost selection](components/gpu-resident-reports.md#pure-scene-completion-policy-2026-10-22), without a new production type or public declaration.
+
 Existing [TextLayout](classes/TextLayout.md), [FontData](classes/FontData.md) and
 [FontSupportPolicy](classes/FontSupportPolicy.md) select fallback faces with a
 stack-backed regional language key and ordinal span lookup. This removes repeated

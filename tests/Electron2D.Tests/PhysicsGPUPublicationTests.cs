@@ -6,7 +6,7 @@ internal static class PhysicsGPUPublicationTests
     internal static void Run(bool includeGPU = true)
     {
         Verify(PhysicsServer.Backend.CPU); Scene(PhysicsServer.Backend.CPU); ConnectedWake(PhysicsServer.Backend.CPU); ContactReceivers(PhysicsServer.Backend.CPU); LateReceiver(PhysicsServer.Backend.CPU);
-        if (includeGPU) { Verify(PhysicsServer.Backend.GPU); Scene(PhysicsServer.Backend.GPU); ConnectedWake(PhysicsServer.Backend.GPU); ContactReceivers(PhysicsServer.Backend.GPU); LateReceiver(PhysicsServer.Backend.GPU); }
+        if (includeGPU) { Verify(PhysicsServer.Backend.GPU); Scene(PhysicsServer.Backend.GPU); ConnectedWake(PhysicsServer.Backend.GPU); ContactReceivers(PhysicsServer.Backend.GPU); LateReceiver(PhysicsServer.Backend.GPU); PhysicsGPUDensePublicationTests.Run(); }
     }
     private static RID CreateBody(RID space)
     {
