@@ -8615,7 +8615,7 @@
         "Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED"
       ],
       "state": "Unimplemented",
-      "reason": "Exact prerequisite: observed per-window output linear/HDR capability, change events and a typed Window value/signal bridge. No inert identity is exposed before that integration."
+      "reason": "Exact prerequisite: complete per-window native HDR output request/support/enabled and luminance policy, executing HDR presentation/transfer, active maximum-linear-value observation and ordered Window/Node change delivery. Current half-float canvases still use SDR presentation; native swapchain-format availability does not prove active HDR output. See docs/components/hdr-canvas.md#native-output-prerequisite and bin/physics-output-capability/2026-10-25/. No inert identity is exposed."
     },
     {
       "godot": [

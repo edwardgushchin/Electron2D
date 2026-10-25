@@ -1352,7 +1352,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "The first HDR renderer/output slice must expose the observed maximum linear output value and a matching display-change notification.",
+      "reason": "The complete native HDR output family must execute per-window request/support/enabled states, luminance policy, HDR presentation/transfer and observed value-before-notification/signal delivery. SDL format support and headroom metadata alone do not provide that workflow. See docs/components/hdr-canvas.md#native-output-prerequisite; the native probe retains this event as open.",
       "godot": [
         "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED"
       ]

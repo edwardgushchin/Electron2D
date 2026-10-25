@@ -51,3 +51,40 @@ Linear viewport textures, offscreen HDR canvases, child-window viewports, ordina
 `CanvasDebandingTests` checks fresh scene/project files, real screen versus linear/offscreen pixels, an independent per-channel quantization oracle, negative/above-one clipping, alpha preservation, stationary frames, live overrides/equal republishing, SDR inactivity, scaled/clipped presentation with 4x MSAA, native storage identity, invalid/stale/foreign/owner/capture guards and failure-safe Compatibility teardown. Its GPU profile measures 24 warmup submissions followed by 64 changing and 64 unchanged ForceDraw submissions with zero owner-thread managed bytes. Cold setup/readback and native/device/compositor allocation are outside that measurement. The HDR movie test enables debanding while retaining its existing exact transfer/PCM checks. Linux software Vulkan/GL profiles establish only their exercised backend behavior; physical GPUs, other platforms and human visual acceptance remain separate.
 
 Focused commands use `ELECTRON2D_TEST_DEBANDING=managed|gpu|compatibility` with the Release test runner; optional `ELECTRON2D_DEBANDING_OUTPUT` saves disabled/enabled/scaled PNGs. Movie regression uses `ELECTRON2D_TEST_HDR=movie`.
+
+## Native output prerequisite
+
+The inherited Node output-limit notification requires an executing native output
+family. It cannot be completed by reading a monitor property while continuing to
+present every window through the current SDR swapchain policy.
+
+The pinned 4.7.2 family contains 17 nondeprecated declarations across
+DisplayServer, Window and Node: the HDR feature and output-change event; requested,
+supported and enabled queries; a request operation; four authored/current
+reference/max-luminance reads and two luminance writes; native/window maximum
+linear-value reads; Window's stored request and value-change signal; and the Node
+notification. The maximum linear value must describe the active output, including
+the current luminance policy. Requested mode, available formats and enabled
+output are distinct observations.
+
+The existing half-float canvas target and SDR transfer remain implemented.
+Native output still needs per-window mode selection, HDR presentation/transfer,
+luminance policy, capability changes, and value-before-notification/signal delivery.
+Embedded windows must follow their containing output; native children retain
+independent output ownership. Failure, teardown, blocked signals and unchanged
+values need the same observable lifecycle rules as other window events. Coverage
+keeps this family open until that complete workflow executes.
+
+A bounded native probe on 2026-10-25 loaded the retained SDL 3.4.18 library and
+created a hidden Wayland/Vulkan window on NVIDIA. SDR, SDRLinear and HDR10ST2084
+compositions were accepted; HDRExtendedLinear was unavailable. The tested window
+reported HDR disabled, SDR white level 1 and headroom 1 throughout. This proves
+format availability separately from active HDR metadata. It presents no frame
+and does not qualify an HDR display, color transfer or window FPS.
+
+`bin/physics-output-capability/2026-10-25/` retains the probe source/binary,
+native maps, command/environment, exact declaration family and report. The
+[SDL window-property contract](https://wiki.libsdl.org/SDL3/SDL_GetWindowProperties)
+defines headroom relative to SDR white and its HDR-state change event; it does
+not supply the missing engine presentation/ownership workflow. No runtime
+declaration or coverage state is promoted by this probe.
