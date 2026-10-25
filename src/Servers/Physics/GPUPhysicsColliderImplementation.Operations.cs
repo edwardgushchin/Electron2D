@@ -80,8 +80,8 @@ internal sealed partial class GPUPhysicsColliderImplementation
         ref readonly var snapshot = ref GPUState;
         return (new Vector2(snapshot.Velocity.X, snapshot.Velocity.Y) - _gpuSurfaceLinear, snapshot.Velocity.Z - _gpuSurfaceAngular, !IsAwake);
     }
-    internal override Vector2 LinearVelocity => new(GPUState.Velocity.X, GPUState.Velocity.Y);
-    internal override float AngularVelocity => GPUState.Velocity.Z;
+    internal override Vector2 LinearVelocity { get { PrepareGPUVelocity(); return new(_gpuState.Velocity.X, _gpuState.Velocity.Y); } }
+    internal override float AngularVelocity { get { PrepareGPUVelocity(); return _gpuState.Velocity.Z; } }
     internal override bool IsAwake => !HasMotionMode(PhysicsServer.BodyMode.Static) &&
         (_gpuActivityValid && _gpuActivityEpoch == Space.GPUStateEpoch ? _gpuActive : !GPUState.Sleeping);
     internal override void SavePose() => _gpuSavedPose = GetPose();
@@ -92,13 +92,13 @@ internal sealed partial class GPUPhysicsColliderImplementation
         if (GPUSensor) AcceptGPUPose(new(position.X, position.Y, MathF.Cos(rotation), MathF.Sin(rotation)));
     }
     internal override void SetTargetPose(Transform pose, double delta) => GPU.SetKinematicTarget(GPUHandle, pose.Origin, pose.Rotation);
-    internal override void SetLinearVelocity(Vector2 velocity) { GPU.SetSolverLinearVelocity(GPUHandle, velocity); Space.InvalidateGPUStates(); }
-    internal override void SetAngularVelocity(float velocity) { GPU.SetSolverAngularVelocity(GPUHandle, velocity); Space.InvalidateGPUStates(); }
+    internal override void SetLinearVelocity(Vector2 velocity) { GPU.SetSolverLinearVelocity(GPUHandle, velocity); GPUStateValid = false; Space.InvalidateGPUStates(velocities: false); }
+    internal override void SetAngularVelocity(float velocity) { GPU.SetSolverAngularVelocity(GPUHandle, velocity); GPUStateValid = false; Space.InvalidateGPUStates(velocities: false); }
     internal override void ClearVelocity()
     {
         if (HasMotionMode(PhysicsServer.BodyMode.Kinematic)) GPU.ClearKinematicVelocity(GPUHandle);
         else GPU.SetSolverVelocity(GPUHandle, default, 0);
-        Space.InvalidateGPUStates();
+        GPUStateValid = false; Space.InvalidateGPUStates(velocities: false);
     }
     internal override void SetAwake(bool awake)
     {
@@ -109,7 +109,8 @@ internal sealed partial class GPUPhysicsColliderImplementation
             Space.FlushGPUWakes();
         }
         GPU.SetSleeping(GPUHandle, !awake);
-        if (awake) Space.InvalidateGPUStates(); else GPUStateValid = false;
+        // Waking changes activity and quiet clocks, but does not change any body's velocity.
+        if (awake) Space.InvalidateGPUStates(velocities: false); else GPUStateValid = false;
     }
     internal override void SetCanSleep(bool canSleep) { GPU.SetCanSleep(GPUHandle, canSleep); Space.InvalidateGPUStates(); }
     internal override void SetRotationLocked(bool locked)
@@ -139,7 +140,7 @@ internal sealed partial class GPUPhysicsColliderImplementation
         var value = LinearVelocity + new Vector2(-arm.Y, arm.X) * AngularVelocity;
         PhysicsBodyRuntime.Finite(value); return value;
     }
-    internal override void ApplyImpulse(Vector2 impulse, float moment) { GPU.ApplyImpulse(GPUHandle, impulse, moment); Space.InvalidateGPUStates(); }
+    internal override void ApplyImpulse(Vector2 impulse, float moment) { GPU.ApplyImpulse(GPUHandle, impulse, moment); GPUStateValid = false; Space.InvalidateGPUStates(velocities: false); }
     internal override void SetSurfaceVelocity(Vector2 linear, float angular)
     {
         if (_gpuSurfaceLinear == linear && _gpuSurfaceAngular == angular) return;

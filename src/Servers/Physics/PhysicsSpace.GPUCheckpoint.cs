@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
-    /// <summary>Retains resident solver history and implementation-local slot-indexed contact observations for one GPU world.</summary>
+    /// <summary>Retains resident solver history, slot-indexed contact observations and full/velocity cache qualification for one GPU world.</summary>
     internal sealed class GPUCheckpoint : PhysicsBackendCheckpoint
     {
         private readonly PhysicsSpace _space;
@@ -11,7 +11,7 @@ internal sealed partial class PhysicsSpace
         private readonly Dictionary<PhysicsColliderBackend, GPUPhysicsColliderImplementation.ReplayState> _colliders = [];
         private GPUPhysicsBodyStore.ContactReport[] _reports = [];
         private (int Offset, int Count)[] _ranges = [];
-        private long _epoch, _publication;
+        private long _epoch, _publication, _velocityEpoch;
         private bool _wake, _disposed;
 
         internal GPUCheckpoint(PhysicsSpace space, GPUPhysicsBodyStore store)
@@ -28,7 +28,7 @@ internal sealed partial class PhysicsSpace
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports);
             PhysicsReplayCopy.Buffer<(int Offset, int Count)>(s._gpuReportRanges, ref _ranges);
             _ranges.AsSpan(s._gpuReportRanges.Length).Clear();
-            _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _wake = s._gpuWakePending;
+            _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _velocityEpoch = s.GPUVelocityEpoch; _wake = s._gpuWakePending;
             _colliders.Clear(); _colliders.EnsureCapacity(s._bodies.Count + s._areas.Count + s._serverColliders.Count);
             foreach (var body in s._bodies) CaptureCollider(body.Backend);
             foreach (var area in s._areas) CaptureCollider(area.Backend);
@@ -43,7 +43,7 @@ internal sealed partial class PhysicsSpace
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports);
             PhysicsReplayCopy.Buffer<(int Offset, int Count)>(_ranges, ref s._gpuReportRanges);
             s._gpuReportRanges.AsSpan(_ranges.Length).Clear();
-            s.GPUStateEpoch = _epoch; s.GPUStatePublicationEpoch = _publication; s._gpuWakePending = _wake;
+            s.GPUStateEpoch = _epoch; s.GPUStatePublicationEpoch = _publication; s.GPUVelocityEpoch = _velocityEpoch; s._gpuWakePending = _wake;
             foreach (var pair in _colliders) _store.NativeCollider(pair.Key).RestoreReplay(pair.Value);
         }
         public override void Dispose()

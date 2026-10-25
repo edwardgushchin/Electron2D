@@ -1,6 +1,6 @@
 # GPU publication for current consumers
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 [The 2026-10-11 paired trial](physics-current-performance.md) verifies complete
 headless and real-window paths on one main revision with freshly built assemblies.
@@ -17,13 +17,79 @@ server body stays on the device; an explicit pose/velocity/state getter selects 
 body once and reuses the snapshot within the same epoch. Detachment captures its
 latest device state before ending the attachment.
 
-Pure scene worlds retain the device comparison/history stream and download only
-changed bodies. Scene transforms, velocities, fields and sleep notifications are
-real completion consumers. When a world mixes scene and raw objects, one selected
-batch includes scene colliders plus raw kinematic bodies, configured contact
+Scene-only and mixed worlds select the existing changed-state or selected-snapshot
+path by estimated receiver cost. Scene transforms, velocities, fields and sleep
+notifications are real completion consumers. A selected batch includes scene
+colliders plus raw kinematic bodies, configured contact
 receivers and retained live body views. Its reusable staging arrays grow with the
 consumer count. Raw bodies without those consumers do not acquire a current host
 mirror. Disposed views leave the completion set on the next interval.
+
+### Scalar velocity observations (2026-10-25)
+
+Linear/angular velocity uses a separate qualifier for the existing observed snapshot;
+no second velocity value array or device buffer is introduced. Numerical intervals
+and structural/shared invalidations retire that qualifier. A targeted velocity edit,
+clear or impulse invalidates its collider; queued waking preserves velocity while
+retiring complete state/activity. Sleep clocks, fields, combined solver-motion reads
+and wake propagation keep their full current-state path. A complete validated
+publication also qualifies its velocity subset, including device-confirmed unchanged
+states. Private checkpoints retain both space/collider qualifiers; portable motion
+invalidates each affected observation. The added retained metadata is one 64-bit
+qualifier per space/collider and corresponding private checkpoint copy.
+
+[PhysicsGPUVelocityObservationTests](../../tests/Electron2D.Tests/PhysicsGPUVelocityObservationTests.cs)
+exercises scene/raw/direct-view observations after force/torque authoring, numerical
+advancement, independent and immediate velocity edits, explicit sleep/wake, unchanged
+publication and private/portable correction. Its moving force check uses 32 rounds
+over three receivers after 128 warm frames: the committed control completes 288
+submissions and reads 8,448 bytes while allocating 0/0 owner/all managed bytes.
+The final candidate completes the same measured interval with zero submissions,
+zero readback and 0/0 managed bytes with either owner-thread or separate-thread
+numerical execution; scalar access remains on the world owner.
+The subsequent numerical, targeted-edit, sleep/wake, stationary-publication and
+correction assertions also pass. Raw receipts and source-qualified assemblies are
+retained in `bin/physics-network-cost/2026-10-25/`; full performance acceptance
+remains separate from these operation-count checks.
+
+The ordinary three-process example also passes the original `--check` assertions
+at 600 paced and 900 unpaced ticks with a CPU authority, GPU prediction and late
+CPU joining. All three roles retain 39 final actors and zero owner/all-thread
+managed bytes in warmed live/replay intervals. The GPU client performs respectively
+177/130 corrections and 2,160/1,544 replay ticks; its cold replay cost remains
+2,336 managed bytes. CPU participants verify graphics unavailability; process maps
+identify one NVIDIA client, with no software fallback or new kernel Xid entry.
+The GPU numerical-thread probe still reports no direct lane observation; the
+separate-thread fixture supplies its own bounded checks.
+
+An ignored test-only implementation of the example's existing profiling hooks
+records stage counters without changing the runtime or its numerical shaders.
+The control uses `8462e96e`; the candidate includes main `6c9c98f1` and the five
+physics implementation changes above. PDB source digests qualify both cohorts;
+all 201 embedded runtime resources are identical. The separate final diagnostic
+retains 184 corrections and 2,268 replay ticks. Live delivery differs between runs,
+so these are operation counts per actual stage invocation, not a paired latency
+or whole-step speed claim:
+
+| Stage | Control/candidate calls | Control/candidate submissions per call | Control/candidate readback bytes per call |
+| --- | ---: | ---: | ---: |
+| Input/authoring | 2,277 / 2,446 | 10.033 / 4.204 | 379.327 / 165.972 |
+| Complete physical frame | 2,277 / 2,446 | 38.818 / 38.035 | 5,908.834 / 5,866.971 |
+| Authoritative map apply | 172 / 184 | 8.035 / 8.033 | 4,217.116 / 4,215.652 |
+
+The complete physical frame remains the larger submission cost. External CPU/GPU
+activity was observed throughout this functional investigation; the raw timing
+samples are diagnostics, with no new isolated mass-scene or real-window FPS result.
+`network-stage-comparison.json`, `final-network-validation.json`, manifests and
+source proofs in the evidence directory retain the exact counts and identities.
+
+The final ordinary cohort passes ten functional profiles: velocity observations
+with both numerical-thread settings, publication, checkpoints, transient forces,
+fields, scene physics, separate-thread operation, reconfiguration and the complete
+16-family shared suite. The first shared-suite attempt reached its 600-second
+limit and remains partial. A separate 1,200-second bounded attempt completed in
+1,029.665 seconds with the shader-cache flag requested; this is functional
+verification, with no startup or throughput speed claim.
 
 Force/integration and synchronization callbacks capture one 32-bit active flag
 per resident slot before the step, after policy edits and queued wakes. This
@@ -39,8 +105,8 @@ bodies with actual force/integration/sync receivers. Callback descriptors retain
 the complete existing order, so registration during delivery still reaches later
 bodies. A newly enabled receiver resolves its fields and selected device state
 immediately before delivery. Explicit getters of other bodies remain independent
-selected consumers. Pure scene worlds retain changed-state completion because
-all their body poses have scene consumers. No full raw-body mirror is required by
+selected consumers. Pure scene worlds use the same receiver-cost selection;
+stationary/sleeping history can retain cheaper changed-state completion. No full raw-body mirror is required by
 one callback. Absence of force/callback/contact demand still skips activity capture.
 
 Acquiring a GPU direct-body view refreshes that body's resolved field cache. Live

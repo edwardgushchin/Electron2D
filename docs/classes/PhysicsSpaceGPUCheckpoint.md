@@ -1,6 +1,10 @@
 # PhysicsSpace.GPUCheckpoint
 
-Last updated: 2026-10-22
+Local capture/restore retains the space and per-collider velocity qualifiers together
+with complete-state publication epochs. Restored future observations cannot qualify
+the captured motion. Portable snapshots retain their separate validation/apply path.
+
+Last updated: 2026-10-25
 
 **Declaration:** `internal sealed class PhysicsSpace.GPUCheckpoint : PhysicsBackendCheckpoint` · **Source:** [PhysicsSpace.GPUCheckpoint.cs](../../src/Servers/Physics/PhysicsSpace.GPUCheckpoint.cs) · **Component:** [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 

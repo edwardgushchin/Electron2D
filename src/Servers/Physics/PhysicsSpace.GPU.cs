@@ -9,11 +9,16 @@ internal sealed partial class PhysicsSpace
     internal bool ForceGPUParameterRefresh, DecodeGPUTransforms, ForceGPUStatePublication;
     private bool _gpuWakePending;
     internal long GPUStateEpoch { get; private set; }
+    internal long GPUVelocityEpoch { get; private set; }
     internal long GPUStatePublicationEpoch { get; private set; } = -1;
-    internal void InvalidateGPUStates(bool wake = true)
+    /// <summary>Retires complete observations and optionally the shared velocity qualification.</summary>
+    /// <param name="wake">Whether queued wake propagation must be published before observing activity.</param>
+    /// <param name="velocities">Whether velocity observations beyond a separately invalidated collider must be retired.</param>
+    internal void InvalidateGPUStates(bool wake = true, bool velocities = true)
     {
         _gpuWakePending |= wake;
         GPUStateEpoch++;
+        if (velocities) GPUVelocityEpoch++;
     }
     internal void FlushGPUWakes()
     {

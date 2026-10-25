@@ -1160,6 +1160,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERING_DEVICE") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_SCENES") == "1") { PhysicsGPUSpaceTests.RunMotionScenes(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_BENCHMARK") == "1") { PhysicsGPUPublicationPerformance.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_MASS") is { } massMode) { PhysicsMassPerformance.Run(massMode == "window"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_VELOCITY_OBSERVATION") == "1") { PhysicsGPUVelocityObservationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_DENSE") == "1") { PhysicsGPUDensePublicationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_MIXED") == "1") { PhysicsGPUMixedPublicationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION") == "1") { PhysicsGPUPublicationTests.Run(); PhysicsGPUDemandPublicationTests.Run(); return; }

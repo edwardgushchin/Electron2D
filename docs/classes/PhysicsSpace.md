@@ -1,5 +1,10 @@
 # PhysicsSpace
 
+The [velocity observation qualifier](../components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25)
+advances with numerical/shared motion changes independently from complete-state
+invalidation. Targeted writes invalidate their collider; current wake/activity,
+fields and full solver observations still publish native results.
+
 [Shared state/contact completion](../components/gpu-resident-reports.md#shared-completion-for-body-state-and-contacts)
 records contact selection with selected body-state publication, sharing one
 fence. Changed-body publication retains its separate report read and bounded
@@ -8,7 +13,7 @@ store handling retain their existing contracts. Nonempty pure scene worlds now u
 
 Cold world-query geometry now uses the [shared using-world borrow](../components/physics-queries.md#cold-query-geometry) before user suppliers run. Numerical writes, collider retirement/transfer and final world release reject; original supplier failures can retry. Existing pure input reads and nested query behavior are retained.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 The [pre-step body-view pass](../components/physics-backends.md#cold-body-view-preparation) prepares an owner before a missing or replacement view factory. Current generation-qualified views reuse their cache; the ordinary body-preparation pass still finishes every owner's pending work before solving. Factory errors remain pre-solve failures without tick advancement.
 

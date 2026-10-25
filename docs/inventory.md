@@ -2,6 +2,8 @@
 
 # Engine inventory
 
+Existing PhysicsSpace/GPUPhysicsColliderImplementation cache metadata now qualifies [scalar velocity observations](components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25) separately from full state and activity; private replay retains the qualifiers without a new production type or public declaration.
+
 Existing PhysicsSpace and GPUPhysicsColliderImplementation now share [pure scene completion cost selection](components/gpu-resident-reports.md#pure-scene-completion-policy-2026-10-22), without a new production type or public declaration.
 
 Existing [TextLayout](classes/TextLayout.md), [FontData](classes/FontData.md) and

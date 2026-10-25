@@ -1,7 +1,8 @@
 namespace Electron2D;
 
 /// <summary>Owns one collider's resident handles, shape leases and publication caches in its retained GPU store.</summary>
-/// <remarks>Sensor poses reuse the authored pose cache between numerical epochs. Compact activity has a separate epoch and never marks full state current.</remarks>
+/// <remarks>Sensor poses reuse the authored pose cache between numerical epochs. Compact activity never marks full state current.
+/// Scalar velocity observations retain separate validity across queued waking and unrelated velocity edits; sleep clocks and fields still require complete current state.</remarks>
 internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space, GPUPhysicsBodyStore store) : PhysicsColliderImplementation(owner, space)
 {
     internal bool GPUSensor;
@@ -44,11 +45,16 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         _gpuActive = active; _gpuActivityValid = true; _gpuActivityEpoch = Space.GPUStateEpoch;
     }
     private bool _gpuParametersPrepared, _gpuResolveStaticFields;
-    private long _gpuStateEpoch;
+    private long _gpuStateEpoch, _gpuVelocityEpoch;
     internal bool GPUStateValid
     {
         get => _gpuStateValid && _gpuStateEpoch == Space!.GPUStateEpoch;
-        set { _gpuStateValid = value; if (value) _gpuStateEpoch = Space!.GPUStateEpoch; else _gpuActivityValid = false; }
+        set
+        {
+            _gpuStateValid = value;
+            if (value) { _gpuStateEpoch = Space.GPUStateEpoch; _gpuVelocityEpoch = Space.GPUVelocityEpoch; }
+            else _gpuActivityValid = false;
+        }
     }
     private Vector2 _gpuSurfaceLinear, _gpuConstantForce;
     private float _gpuSurfaceAngular, _gpuConstantTorque;
@@ -77,6 +83,13 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         _gpuStateMatchesPublication = published || Space!.GPUStatePublicationEpoch == Space.GPUStateEpoch;
     }
     internal void CompleteGPUStatePublication() => GPUStateValid = _gpuStateMatchesPublication;
+    /// <summary>Qualifies only linear/angular velocity in the retained snapshot, without treating its other fields as current.</summary>
+    private void PrepareGPUVelocity()
+    {
+        if (_gpuStateValid && _gpuVelocityEpoch == Space.GPUVelocityEpoch) return;
+        _ = GPUState;
+        _gpuVelocityEpoch = Space.GPUVelocityEpoch;
+    }
     internal override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
     {
         var space = Space;
