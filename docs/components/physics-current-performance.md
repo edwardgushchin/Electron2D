@@ -2,9 +2,39 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 ## Current comparison admission
+
+The new comparison at `6c47d64b18ae3b9746d553a93e461b1bceca2141` also stopped
+before its first physical case. Across 601.523 seconds, all 275 observations
+exceeded both original quiet limits: background CPU was .396–10.166 cores
+(median .566), and total GPU utilization was 6–46% (median 26%). Zero of the
+required 30 consecutive two-second quiet samples accumulated. A separate
+reference-runtime GPU context appeared in 46 observations. No user application
+was stopped, threshold changed or case retried.
+
+This attempt reused the complete 16,384-body workload and eight-case order below.
+Source closure verified all 6,115 manifest inputs against the selected commit;
+only noncompiled coverage metadata differs from the accepted build source. The
+runtime retains revision 0513b15cd metadata plus the publisher implementation;
+the same immutable cohort passed the complete ordinary suite and 19 focused
+profiles. Runtime/root SHA-256 are
+`2b9384670460384a6e94cc8ce1f0ba0293143e6cfcde3fc7208abfc2ff53c478` and
+`aa999e8e0ffaaba7c9ca281980ab708e67a0197bc090de8327b1c0d269942789`.
+Eighty existing files were hardlinked with no new binary storage for admission.
+The redundant links are retired after the terminal admission failure; the
+qualified origin remains under `bin/event-publisher-membership/2026-10-26/`.
+
+Evidence is under `bin/physics-full-comparison/2026-10-26-6c47d64b1/`:
+`current-method.json`, `committed-source-proof.json`, `admission-summary.json`
+and the complete isolation history. History SHA-256:
+`fc3e6e2580e38e68dd0435571b416ea794308470117da4654e4b0e3abddce2e8`.
+There are zero started/completed physical cases and no new latency, speed ratio,
+window FPS or numerical results. Declaration coverage remains 1,335/1,369
+(97.52%), with 34 open; complete performance acceptance remains open.
+
+### Earlier admission at a8df21d9
 
 The complete comparison prepared for `a8df21d9033ec655e7f65425fc629e27c154b613`
 did not start a physical case. Its initial quiet-window admission expired after
