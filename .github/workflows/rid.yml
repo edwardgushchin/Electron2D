@@ -149,6 +149,19 @@ jobs:
         if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'win-')
         shell: pwsh
         run: ./tools/ci/install_test_warp.ps1 "bin/ci-tests/$env:CI_RID" "bin/ci/$env:CI_RID/warp" ($env:CI_RID.Substring(4))
+      - name: Run ItemList input before slow runtime checks
+        if: inputs.tests && inputs.suite == 'full'
+        env:
+          DOTNET_TieredCompilation: '0'
+          ELECTRON2D_TEST_ITEMLIST_INPUT: managed
+        run: |
+          executable="$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/Electron2D.Tests"
+          if [[ "$CI_RID" == win-* ]]; then executable="$executable.exe"; fi
+          if [[ "$CI_RID" == linux-* ]]; then
+            export SDL_VIDEO_DRIVER=offscreen SDL_VIDEODRIVER=offscreen
+          fi
+          "$executable" | tee "bin/ci/$CI_RID/itemlist-input.log"
+          grep -Fx 'ItemList input: navigation/search, pointer/range signal order, wheel/pan, mutation/failure/lifetime and 1024 zero-owner-byte active/idle intervals passed.' "bin/ci/$CI_RID/itemlist-input.log"
       - name: Run GPU compound control in a fresh process
         id: compound_control
         if: inputs.tests && inputs.suite == 'full'

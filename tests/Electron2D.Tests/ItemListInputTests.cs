@@ -254,7 +254,10 @@ internal static class ItemListInputTests
             {
                 s.List.Clear(); s.List.AddItem("Alpha"); s.List.AddItem("a long prefix beyond sixteen characters"); s.List.AddItem("Beta"); s.List.Current = 0;
                 s.Commit("a long prefix beyond sixteen characters"); Check(s.List.Current == 1, "Long Unicode prefixes grow retained capacity without losing the selected match.");
-                ProjectSettings.Set(ProjectSettings.IncrementalSearchMaxIntervalMsec, 0); Thread.Sleep(4); s.Commit("B");
+                ProjectSettings.Set(ProjectSettings.IncrementalSearchMaxIntervalMsec, 0);
+                var tick = Environment.TickCount64;
+                Check(SpinWait.SpinUntil(() => Environment.TickCount64 > tick, TimeSpan.FromSeconds(2)), "The search clock advances before checking expiry.");
+                s.Commit("B");
                 Check(s.List.Current == 2, "An expired interval clears the complete previous prefix before the next commit.");
                 s.Key(Key.Up); Check(s.List.Current == 1, "An expired directional prefix returns to ordinary column navigation.");
             }

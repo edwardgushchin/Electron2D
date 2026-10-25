@@ -8,6 +8,12 @@ For release preparation and publication, follow [Releasing Electron2D](releasing
 
 For project/scene authoring, editor automation, batch execution and capture work, apply the accepted [agent-native contract](decisions/agent-native.md#adr-0090). Verify the supported programmatic path through public runtime capabilities, including error/cleanup cases and machine-readable results. File authoring requires fresh-process load verification; capture requires the actual renderer and its stated backend limits. Keep headless simulation, rendered batch, native/platform verification and human acceptance separate. Record missing prerequisites in coverage and current-state documentation; do not add commands or report end-to-end agent support before they execute.
 
+For expiry tests using `Environment.TickCount64`, wait for the observed counter
+to advance with a bounded deadline. A short `Thread.Sleep` does not establish an
+elapsed tick on Windows/.NET 10, whose counter updates every 10–16 ms. Keep the
+behavior assertion after the clock precondition; do not relax expiry or
+allocation expectations. See the [clock contract](https://learn.microsoft.com/en-us/dotnet/api/system.environment.tickcount64?view=net-10.0).
+
 ## Release license audit
 
 The [MIT license](../licence/Electron2D-LICENSE.txt) covers Electron2D-authored code. Keep each vendor's original license text and the [third-party notices](../licence/THIRD_PARTY_NOTICES.md) in `licence/`. The pinned comparison-data [license](../licence/ReferenceData-LICENSE.txt) stays in the source repository but is excluded from game publishes. The separate [CanvasStyleGeometry license](../licence/CanvasStyleGeometry-LICENSE.txt) accompanies the adapted runtime style geometry, popup menu/search algorithms and default theme icons and is included in publishes. Before publishing a Linux application, build a fresh self-contained output for every claimed RID and run `python3 -B tools/licenses/check_publish.py /path/to/publish`. The current check compares 73 ELF files, pinned NuGet/runtime versions and 101 source, license and notice files for `linux-x64`, including the private block-codec, buffer-tool and KTX/Basis source closure. Update the inventory and notices together when that closure changes. The packaged Vkd3d corresponding source and binary receipts live in `licence/`; the checker validates the delivered source archive. Its Linux x64 inventory does not audit other platforms or every final-game distribution obligation.

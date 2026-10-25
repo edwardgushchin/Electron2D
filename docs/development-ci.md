@@ -72,6 +72,10 @@ repacking it. The full RID Build matrix retains source compilation and analyzers
 The Tests matrix uses `Electron2DUsePackage=true` through the shared consumer
 props, including indirect test consumers, and executes the same existing suites,
 trimming/AOT and Android/Apple/browser profiles against the package set.
+Desktop full profiles first run the existing ItemList input contract in a fresh
+process before the GPU control and long runtime suite. This catches UI input,
+search timing, callback lifetime and prepared input allocation failures early
+without adding native dependencies to `Fast feedback`.
 
 Candidate package source mapping and an isolated cache prevent a public package
 with the same version from replacing the CI candidate. The complete managed
