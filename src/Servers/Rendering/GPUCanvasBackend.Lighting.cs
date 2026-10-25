@@ -47,6 +47,12 @@ internal sealed unsafe partial class GPUCanvasBackend
     }
     private static Vector4 SurfaceNormalMapFlags(CanvasBatch batch) => batch.Material?.Program.Surface is null ? batch.NormalMapFlags :
         new(batch.NormalMapFlags.X, batch.NormalMapFlags.Y, batch.NormalMapFlags.Z, Channels(batch.Texture)?.NormalTexture is null ? 0 : 1);
+    private Vector4 CanvasSpecular(CanvasBatch batch)
+    {
+        var channels = Channels(batch.Texture); var color = channels?.SpecularColor ?? Colors.White;
+        if (_currentHDR) color = LinearColor(color);
+        return new(color.R, color.G, color.B, channels?.SpecularShininess ?? 1);
+    }
     private void PrepareLightingChannels(CanvasBatch batch)
     {
         var channels = Channels(batch.Texture);
@@ -151,11 +157,11 @@ internal sealed unsafe partial class GPUCanvasBackend
         {
             _lightingOffsets[index] = 0;
             var batch = batches[index]; if (batch.Lighting is not { } item || batch.Material is null || batch.MaskShader || batch.GroupShader) continue;
-            var channels = Channels(batch.Texture); var specular = channels?.SpecularColor ?? Colors.White;
-            var ambient = _currentHDR ? LinearColor(item.Ambient) : item.Ambient; if (_currentHDR) specular = LinearColor(specular);
+            var channels = Channels(batch.Texture);
+            var ambient = _currentHDR ? LinearColor(item.Ambient) : item.Ambient;
             _lightingOffsets[index] = frame.Data.Count;
             frame.Data.Add(new(ambient.R, ambient.G, ambient.B, ambient.A));
-            frame.Data.Add(new(specular.R, specular.G, specular.B, channels?.SpecularShininess ?? 1));
+            frame.Data.Add(CanvasSpecular(batch));
             frame.Data.Add(new(BitConverter.UInt32BitsToSingle(item.Mask), BitConverter.Int32BitsToSingle(item.Z), BitConverter.Int32BitsToSingle(item.Layer), BitConverter.Int32BitsToSingle((int)item.Mode)));
             frame.Data.Add(new(BitConverter.Int32BitsToSingle(frame.LightCount), BitConverter.Int32BitsToSingle(frame.SegmentCount), BitConverter.Int32BitsToSingle(channels?.NormalTexture is null ? 0 : 1), BitConverter.Int32BitsToSingle(channels?.SpecularTexture is null ? 0 : 1)));
             frame.Data.Add(new(1f / frame.AtlasSize.X, 1f / frame.AtlasSize.Y, 0, 0));
@@ -178,10 +184,9 @@ internal sealed unsafe partial class GPUCanvasBackend
     private void BindLighting(nint command, nint pass, CanvasBatch batch, CanvasLightingFrame frame)
     {
         var item = batch.Lighting!.Value; var channels = Channels(batch.Texture);
-        var specular = channels?.SpecularColor ?? Colors.White;
-        var ambient = _currentHDR ? LinearColor(item.Ambient) : item.Ambient; if (_currentHDR) specular = LinearColor(specular);
+        var ambient = _currentHDR ? LinearColor(item.Ambient) : item.Ambient;
         var uniform = new LightingUniforms(new(ambient.R, ambient.G, ambient.B, ambient.A),
-            new(specular.R, specular.G, specular.B, channels?.SpecularShininess ?? 1),
+            CanvasSpecular(batch),
             new(unchecked((int)item.Mask), item.Z, item.Layer, (int)item.Mode),
             new(frame.LightCount, frame.SegmentCount, channels?.NormalTexture is null ? 0 : 1, channels?.SpecularTexture is null ? 0 : 1), new(1f / _lightAtlasSize.X, 1f / _lightAtlasSize.Y, 0, 0));
         SDL.PushGPUFragmentUniformData(command, 0, (nint)(&uniform), (uint)sizeof(LightingUniforms));

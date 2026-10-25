@@ -79,6 +79,11 @@ public sealed partial class VisualShader
         if (stage == Type.Fragment || global)
             foreach (var (name, _) in SurfaceFields)
                 if (name != "NORMAL_USED" && aliases.ContainsKey("e2d_surface") && aliases.TryGetValue(name, out var symbol)) result[name] = symbol;
+        if (stage == Type.Fragment)
+        {
+            result["REGION_RECT"] = aliases["e2d_values"] + ".REGION_RECT";
+            result["SPECULAR_SHININESS"] = aliases["e2d_specular_value"] + "()";
+        }
         if (stage == Type.Vertex)
         {
             result["CUSTOM0"] = aliases["inMeshCustom0"]; result["CUSTOM1"] = aliases["inMeshCustom1"];

@@ -1,6 +1,6 @@
 # VisualShaderNodeGlobalExpression
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 Source: [VisualShaderNodeGlobalExpression.cs](../../src/Scene/Resources/VisualShaderNodeGlobalExpression.cs).
 
@@ -76,3 +76,5 @@ The public VisualShader.Consumer exercises typed defaults, copies, factories, ty
 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
 - [Typed resources](../decisions/resources.md#adr-0013)
+
+[Canvas command metadata](../components/canvas-command-metadata.md) supplies read-only fragment regions and initial-UV specular values through the same retained program. See its geometry conventions, ownership, typed sampler boundary and verification limits.

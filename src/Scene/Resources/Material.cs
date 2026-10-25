@@ -378,7 +378,7 @@ internal sealed class MaterialState
         }
     }
 
-    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false, Vector4 normalMapFlags = default, Vector2 texturePixelSize = default, CanvasMatrices? matrices = null)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null, bool compute = false, Vector4 normalMapFlags = default, Vector2 texturePixelSize = default, CanvasMatrices? matrices = null, Vector4 regionRect = default, Vector4 canvasSpecular = default)
     {
         lock (_gate)
         {
@@ -390,6 +390,10 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
             if (Program.NormalMapFlagsUniform is { } normal)
                 MemoryMarshal.Write(Buffers[normal.Buffer].AsSpan(normal.Offset, sizeof(float) * 4), in normalMapFlags);
+            if (Program.RegionRectUniform is { } region)
+                MemoryMarshal.Write(Buffers[region.Buffer].AsSpan(region.Offset, sizeof(float) * 4), in regionRect);
+            if (Program.CanvasSpecularUniform is { } specular)
+                MemoryMarshal.Write(Buffers[specular.Buffer].AsSpan(specular.Offset, sizeof(float) * 4), in canvasSpecular);
             if (Program.NormalModelBasisUniform is { } normalModel)
             {
                 var basis = CanvasMatrices.NormalBasis(matrices?.NormalModel ?? Transform.Identity);

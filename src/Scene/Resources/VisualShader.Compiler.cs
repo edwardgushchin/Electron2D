@@ -57,6 +57,7 @@ public sealed partial class VisualShader
         if (varyings is not null) header = VaryingHeader(stage, varyings, header);
         var source = new StringBuilder(header);
         if (stage == Type.Fragment && domain?.Surface is { } surface) EmitSurfaceStart(source, aliases, surface);
+        if (NeedsCommandInput(stage, reachable, custom, "SPECULAR_SHININESS")) EmitSpecularStart(source, aliases);
         EmitCustomFunctions(custom, stage, aliases, source);
         if (domain?.Surface is null && NeedsCanvasNormal(stage, reachable)) EmitCanvasNormal(source, aliases);
         var names = parameters.Keys.Concat(plan.Images.Select(i => i.Name)).Concat(expressionNames).ToHashSet(StringComparer.Ordinal);
@@ -157,7 +158,7 @@ public sealed partial class VisualShader
                     var expression = node switch
                     {
                         VisualShaderNodeVaryingGetter getter => VaryingRead(getter, stage, varyings),
-                        VisualShaderNodeInput input when domain is not null => RewriteExpression(input.GenerateExpression(stage), ExpressionBuiltins(stage, aliases)),
+                        VisualShaderNodeInput input when domain is not null || input.InputName is "region_rect" or "specular_shininess" => RewriteExpression(input.GenerateExpression(stage), ExpressionBuiltins(stage, aliases)),
                         VisualShaderNodeInput input => StageExpression(input.GenerateExpression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal).Replace("TEXTURE_PIXEL_SIZE", aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE", StringComparison.Ordinal)
                             .Replace("MODEL_MATRIX", aliases["e2d_values"] + ".MODEL_MATRIX", StringComparison.Ordinal).Replace("CANVAS_MATRIX", aliases["e2d_values"] + ".CANVAS_MATRIX", StringComparison.Ordinal).Replace("SCREEN_MATRIX", aliases["e2d_values"] + ".SCREEN_MATRIX", StringComparison.Ordinal),
                         VisualShaderNodeDerivativeFunc when stage is not (Type.Fragment or Type.Light or Type.TextureBlit) => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),

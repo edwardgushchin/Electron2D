@@ -28,6 +28,8 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal ShaderUniform? NormalModelBasisUniform { get; init; }
     internal ShaderUniform? NormalCanvasBasisUniform { get; init; }
     internal ShaderUniform? TexturePixelSizeUniform { get; init; }
+    internal ShaderUniform? RegionRectUniform { get; init; }
+    internal ShaderUniform? CanvasSpecularUniform { get; init; }
     internal ShaderUniform? ModelMatrixUniform { get; init; }
     internal ShaderUniform? CanvasMatrixUniform { get; init; }
     internal ShaderUniform? ScreenMatrixUniform { get; init; }

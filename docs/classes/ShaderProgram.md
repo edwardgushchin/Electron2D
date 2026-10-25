@@ -129,3 +129,5 @@ The private NormalMapFlagsUniform records the validated canvas-fragment renderer
 Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.
 
 Authored light programs retain validated function/state IDs, full validation code and declared native uniform slot extents. Light records retain raw color and separate energy without widening their eight-vector frame layout. The compositor invokes the private function per actual light and keeps the unlit entry separate. See [canvas light graphs](../components/canvas-light-graphs.md) for the exact integration and measured limits.
+
+Immutable fragment programs retain optional RegionRectUniform and CanvasSpecularUniform layouts across vertex pairing and atomic reload. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.

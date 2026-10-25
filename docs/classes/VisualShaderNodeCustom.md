@@ -480,3 +480,5 @@ Nonempty GetFuncCode particle-stage setup activates that stage, including SDF co
 ## Authored canvas lights
 
 See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.
+
+[Canvas command metadata](../components/canvas-command-metadata.md) supplies read-only fragment regions and initial-UV specular values through the same retained program. See its geometry conventions, ownership, typed sampler boundary and verification limits.

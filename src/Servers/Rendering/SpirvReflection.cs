@@ -106,8 +106,8 @@ internal static unsafe partial class SpirvReflection
                     throw new NotSupportedException("TEXTURE_PIXEL_SIZE requires a canvas-stage non-array float32 vector of width two.");
                 if (name == "NORMAL_MAP_FLAGS" && (!fragment || blit || particles || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || columns != 1 || dimensions != 0))
                     throw new NotSupportedException("NORMAL_MAP_FLAGS requires a canvas-fragment non-array float32 vector of width four.");
-                if (name is "NORMAL_MODEL_BASIS" or "NORMAL_CANVAS_BASIS" && (!fragment || blit || particles || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || columns != 1 || dimensions != 0 || instanceBuffers.Contains((int)binding) || globalBuffers.Contains((int)binding)))
-                    throw new NotSupportedException("Normal bases require renderer-owned canvas-fragment non-array float32 vectors of width four.");
+                if (name is "NORMAL_MODEL_BASIS" or "NORMAL_CANVAS_BASIS" or "REGION_RECT" or "CANVAS_SPECULAR" && (!fragment || blit || particles || GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || columns != 1 || dimensions != 0 || instanceBuffers.Contains((int)binding) || globalBuffers.Contains((int)binding)))
+                    throw new NotSupportedException("Renderer-owned canvas fragment vectors require non-array float32 vectors of width four in ordinary renderer buffers.");
                 if (name == "SDF_COORDS" && (GetBaseType(field) != 13 || GetBitWidth(field) != 32 || width != 4 || GetColumns(field) != 1 || dimensions != 0))
                     throw new NotSupportedException("SDF_COORDS requires a non-array float32 vector of width four in a stage uniform buffer.");
                 if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE") throw new NotSupportedException("Renderer-owned texture names require sampled texture bindings.");
@@ -203,7 +203,7 @@ internal static unsafe partial class SpirvReflection
         {
             var slot = TextureBinding(resource);
             var name = Marshal.PtrToStringUTF8(resource.Name);
-            if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "NORMAL_MODEL_BASIS" or "NORMAL_CANVAS_BASIS" or "TEXTURE_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
+            if (name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "NORMAL_MODEL_BASIS" or "NORMAL_CANVAS_BASIS" or "REGION_RECT" or "CANVAS_SPECULAR" or "TEXTURE_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX") throw new NotSupportedException($"The built-in {name} requires a renderer-owned uniform, not a texture parameter.");
             if (name == "TEXTURE" && slot != 0) throw new NotSupportedException("The built-in TEXTURE requires binding zero in its stage descriptor set.");
             if (string.IsNullOrWhiteSpace(name) || uniforms.ContainsKey(name) || textures.Any(t => t is not null && t.Name == name) || textures[slot] is not null)
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
@@ -253,6 +253,8 @@ internal static unsafe partial class SpirvReflection
         uniforms.Remove("SCREEN_PIXEL_SIZE", out var screenPixelSizeUniform);
         uniforms.Remove("SDF_COORDS", out var sdfCoordsUniform);
         uniforms.Remove("NORMAL_MAP_FLAGS", out var normalMapFlagsUniform);
+        uniforms.Remove("REGION_RECT", out var regionRectUniform);
+        uniforms.Remove("CANVAS_SPECULAR", out var canvasSpecularUniform);
         uniforms.Remove("NORMAL_MODEL_BASIS", out var normalModelBasisUniform);
         uniforms.Remove("NORMAL_CANVAS_BASIS", out var normalCanvasBasisUniform);
         uniforms.Remove("TEXTURE_PIXEL_SIZE", out var texturePixelSizeUniform);
@@ -298,6 +300,8 @@ internal static unsafe partial class SpirvReflection
             NormalModelBasisUniform = normalModelBasisUniform,
             NormalCanvasBasisUniform = normalCanvasBasisUniform,
             TexturePixelSizeUniform = texturePixelSizeUniform,
+            RegionRectUniform = regionRectUniform,
+            CanvasSpecularUniform = canvasSpecularUniform,
             ModelMatrixUniform = modelMatrixUniform,
             CanvasMatrixUniform = canvasMatrixUniform,
             ScreenMatrixUniform = screenMatrixUniform

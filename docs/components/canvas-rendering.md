@@ -966,3 +966,7 @@ unchanged. The failed older full aggregate and full performance/platform/owner
 acceptance remain separate; this matrix does not certify them.
 
 Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.
+
+## Fragment command metadata
+
+Consuming retained batches capture the complete rectangle/nine-patch source region before geometry expansion. Region identity participates in both canvas and mesh coalescing; attribute geometry instead receives full logical image pixel extents. [Canvas command metadata](canvas-command-metadata.md) documents the initial-UV specular cache, ordinary shader fields, typed channel boundary and executable verification.

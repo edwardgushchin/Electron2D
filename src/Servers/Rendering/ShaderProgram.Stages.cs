@@ -94,6 +94,8 @@ internal sealed partial class ShaderProgram
             NormalModelBasisUniform = fragment.NormalModelBasisUniform,
             NormalCanvasBasisUniform = fragment.NormalCanvasBasisUniform,
             TexturePixelSizeUniform = Builtin(fragment.TexturePixelSizeUniform, vertex.TexturePixelSizeUniform),
+            RegionRectUniform = fragment.RegionRectUniform,
+            CanvasSpecularUniform = fragment.CanvasSpecularUniform,
             ModelMatrixUniform = Builtin(null, vertex.ModelMatrixUniform),
             CanvasMatrixUniform = Builtin(null, vertex.CanvasMatrixUniform),
             ScreenMatrixUniform = Builtin(null, vertex.ScreenMatrixUniform),

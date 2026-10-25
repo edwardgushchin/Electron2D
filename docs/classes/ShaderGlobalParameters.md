@@ -13,3 +13,5 @@ Project preparation captures registered typed definitions under the registry loc
 NORMAL_MAP_FLAGS is reserved for per-command canvas state and cannot be registered as a global. The public typed global parameter contract otherwise stays unchanged. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
 
 Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.
+
+REGION_RECT and CANVAS_SPECULAR are reserved renderer fields; global registration rejects them before changing the registry. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.

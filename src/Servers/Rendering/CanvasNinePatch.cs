@@ -3,7 +3,7 @@ namespace Electron2D;
 internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, AxisStretchMode Horizontal,
     AxisStretchMode Vertical, bool DrawCenter)
 {
-    internal void Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snap)
+    internal Rect2? Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snap)
     {
         var texture = command.Texture!;
         var destination = new Rect2(command.A, command.B.Abs());
@@ -16,12 +16,12 @@ internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, Axis
         while (texture is AtlasTexture atlas)
         {
             var underlying = atlas.ResolveDrawRegion(ref destination, ref source);
-            if (underlying is null) return;
+            if (underlying is null) return null;
             texture = underlying;
         }
         var textureSize = texture.DrawingSize;
         if (source.Size == Vector2.Zero) source.Size = textureSize;
-        if (textureSize.X <= 0 || textureSize.Y <= 0 || source.Size.X == 0 || source.Size.Y == 0 || destination.Size.X <= 0 || destination.Size.Y <= 0) return;
+        if (textureSize.X <= 0 || textureSize.Y <= 0 || source.Size.X == 0 || source.Size.Y == 0 || destination.Size.X <= 0 || destination.Size.Y <= 0) return null;
         if (!textureSize.IsFinite() || !source.IsFinite() || !destination.IsFinite()) throw new InvalidOperationException("Nine-patch geometry must remain finite.");
         command = command with { A = destination.Position, B = destination.Size, Texture = texture };
         var x = new Axis(command.B.X, MathF.Abs(source.Size.X), Begin.X, End.X, Horizontal);
@@ -47,6 +47,7 @@ internal readonly record struct CanvasNinePatch(Vector2 Begin, Vector2 End, Axis
                 CanvasGeometry.Append(output, part, transform, modulation, snap);
             }
         }
+        return new(source.Position / textureSize, source.Size / textureSize);
     }
 
     private readonly record struct Segment(float From, float To, float SourceFrom, float SourceTo, bool Center);
