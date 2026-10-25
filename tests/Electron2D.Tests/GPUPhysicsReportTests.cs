@@ -8,7 +8,7 @@ internal static class GPUPhysicsReportTests
     internal static void Run()
     {
         foreach (var steps in new[] { 1, 4, 8 }) { Momentum(steps); Transient(steps); }
-        WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); PackedSelection(); Completion(); Measure();
+        WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); PackedSelection(); Completion(); Measure(); GPUPhysicsReportBatchTests.Run();
         Console.WriteLine("Resident contact reports: complete impulses, transient/CCD contacts, caps, snapshots, sleep, lifecycle and warmed allocation passed.");
     }
     private static Store.Snapshot State(Store s, Store.BodyHandle body)

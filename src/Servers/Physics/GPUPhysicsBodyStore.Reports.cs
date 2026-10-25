@@ -33,6 +33,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int[] _reportRequestEpochs = [], _reportRequestMultiplicities = [];
     private int _reportRequestEpoch;
     private bool _captureReports, _reportOpen, _reportInitialize, _reportReady;
+    // Diagnostic control for identical report freezing with a separate completion.
+    internal bool SeparateReportSubmissions;
+    private bool ShareFinalContactReports => _captureReports && _reportOpen && !SeparateReportSubmissions;
     internal bool CaptureContactReports
     {
         get { EnsureAccess(); return _captureReports; }
@@ -76,7 +79,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle() }, new() { Buffer = _reportSummary!.DangerousGetHandle(), Size = 8 }, false);
         SDL.EndGPUCopyPass(copy); UploadBytes += 8;
     }
-    private void RecordContactReports(nint command)
+    private void RecordContactReports(nint command, bool download = true)
     {
         if (!_captureReports || !_reportOpen) return;
         ResetReportStatus(command);
@@ -84,7 +87,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ReportPass(command, 1, _reportCount);
         ReportPass(command, 2, ContactPointCount);
         ReportPass(command, 3, ContactPointCount);
-        DownloadReportStatus(command);
+        if (download) DownloadReportStatus(command);
+    }
+    /// <summary>Freezes final point velocities after the last numerical stage, using its current device record count.</summary>
+    private void RecordFinalContactReports(nint command, bool resetStatus)
+    {
+        if (resetStatus) ResetReportStatus(command);
+        ReportPass(command, 4, _highWater); DownloadReportStatus(command);
     }
     private void DownloadReportStatus(nint command)
     {
@@ -109,7 +118,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private void EndContactReports(bool idle = false)
     {
-        if (!_captureReports) return;
+        if (!_captureReports || !idle && !_reportOpen) return;
         if (_reportCount > 0)
         {
             var command = SDL.AcquireGPUCommandBuffer(Device);
@@ -122,8 +131,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             }
             finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
         }
-        _reportOpen = false; _reportReady = true; _publishedReportBodies = _highWater; ReportPublicationCount++;
+        CompleteContactReports();
     }
+
+    private void CompleteContactReports()
+    { _reportOpen = false; _reportReady = true; _publishedReportBodies = _highWater; ReportPublicationCount++; }
 
     /// <summary>Caller spans for one synchronous report read, optionally sharing a state-publication submission.</summary>
     internal readonly ref struct ContactRead(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactReport> results)

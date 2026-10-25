@@ -8,6 +8,8 @@
 
 # Physics domain
 
+[GPU contact finalization](../components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) shares the last solver/position completion while retaining frozen snapshots, complete impulses and idle publication.
+
 [Fresh GPU swept-pair and CCD discovery](../components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25) shares completion, keeps candidate counts resident and retries bounded output growth without repeating physical time or forces.
 
 [Scalar GPU velocity observations](../components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25) retain qualified values through non-velocity authoring; numerical steps, targeted motion edits, full state/activity and replay keep their respective invalidation rules.

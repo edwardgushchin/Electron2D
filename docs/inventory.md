@@ -2,6 +2,8 @@
 
 # Engine inventory
 
+Existing GPUPhysicsBodyStore now shares [final contact publication](components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) with its last numerical command, without a new production type, buffer or public declaration.
+
 Existing GPUPhysicsBodyStore now shares [swept-pair/CCD completion](components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25), reusing the spatial summary without a new production type, buffer or public declaration.
 
 Existing PhysicsSpace/GPUPhysicsColliderImplementation cache metadata now qualifies [scalar velocity observations](components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25) separately from full state and activity; private replay retains the qualifiers without a new production type or public declaration.

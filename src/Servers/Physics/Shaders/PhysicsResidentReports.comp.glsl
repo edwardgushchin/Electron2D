@@ -88,11 +88,13 @@ void main()
     }
     if(stage==4u)
     {
+        if(summary.x!=0u)return;
+        uint completedCount=summary.y;if(completedCount>capacity){fail();return;}
         uint at=bodyHeads[i],previous=none;
         // Reverse the prepend list once, preserving first-encounter selection across intervals.
         for(uint visited=0u;at!=none;visited++)
         {
-            if(at>=recordCount||visited>=recordCount){fail();return;}
+            if(at>=completedCount||visited>=completedCount){fail();return;}
             FrameContact r=records[at];bool second=r.owners.y==i;
             if(!second&&r.owners.x!=i){fail();return;}
             uint next=second?r.links.y:r.links.x;ResidentBody b=bodies[i];

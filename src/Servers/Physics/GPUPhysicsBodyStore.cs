@@ -424,6 +424,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             var outputCount = activityOnly ? activity.Length : requests.Length;
             var outputBytes = checked((uint)(outputCount * (activityOnly ? sizeof(uint) : poseOnly ? sizeof(Float4) : sizeof(Snapshot))));
             var publishStatistics = motionStage == 4 && (sleepDelta ?? delta) > 0 && endTick;
+            var finalReports = motionStage == 4 && endTick && _reportCount > 0 && ShareFinalContactReports;
             var headerBytes = publishStatistics ? 16u : 8u;
             var mapped = SDL.MapGPUTransferBuffer(Device, _upload!.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident edits");
@@ -444,6 +445,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             Dispatch(command, ref settings, 0, _pendingCount);
             if (delta > 0 || endTick) Dispatch(command, ref settings, motionStage, _highWater);
             if (motionStage == 4 && (sleepDelta ?? delta) > 0) FinishSleep(command, sleepDelta ?? delta);
+            if (finalReports) RecordFinalContactReports(command, resetStatus: true);
             Dispatch(command, ref settings, activityOnly ? 6u : poseOnly ? 5u : 2u, outputCount);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident results");
@@ -483,11 +485,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
             AcceptContactRead(reports, reportCount);
+            if (finalReports) AcceptContactReports();
             var spatialEdit = delta > 0;
             for (var i = 0; i < _pendingCount && !spatialEdit; i++) spatialEdit = (_pending[i].Mask & ~CollisionPriorityEdit) != 0;
             if (spatialEdit) _bodyVersion++;
             for (var i = 0; i < _pendingCount; i++) _slots[_pending[i].Index].Command = -1;
             Array.Clear(_pending, 0, _pendingCount); _pendingCount = 0;
+            if (finalReports) CompleteContactReports();
             _failed = false;
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }

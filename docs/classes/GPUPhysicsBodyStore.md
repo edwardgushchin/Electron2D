@@ -1,5 +1,7 @@
 # GPUPhysicsBodyStore
 
+[Final contact publication](../components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) now shares the last numerical completion, using the current device record count before publishing validated frozen point velocities. Idle and explicit separate controls retain their existing contract.
+
 [Shared swept-pair/CCD completion](../components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25)
 keeps fresh candidate counts on device until the bounded sweep completes. The
 existing spatial summary retains independent pair and CCD results; capacity

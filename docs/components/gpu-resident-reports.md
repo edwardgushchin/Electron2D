@@ -16,6 +16,66 @@ adapter resolves them to retained common identities and logical shape indices,
 applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
 
+## Final publication in the numerical command (2026-10-25)
+
+Completed contact records now freeze their final point velocities and reverse
+receiver incidence lists in the last numerical command. This runs after the final
+position/sleep stages, or after a solve-only interval. No host report count is
+needed between the last accumulation pass and finalization: the existing device
+summary supplies the actual count, validated against retained record capacity.
+Both numerical and report status must succeed before the snapshot becomes ready.
+The existing six readonly/eight writable report bindings, buffers and fields stay
+unchanged; solver constraints, iteration counts and impulse accumulation remain
+unchanged.
+
+A final solver shares its already-recorded report status, removing a second reset
+and download. A final position command appends the existing report reset/scan/read
+and shares its completion. Idle sleeping publication retains its separate path
+that clears old impulses. Zero-time calls still preserve the completed snapshot.
+Internal `SeparateReportSubmissions` keeps the same finalization as a control.
+An empty final solver batch still records the body-head scan; fewer completions
+do not by themselves establish a complete-step throughput improvement.
+
+[GPUPhysicsReportBatchTests](../../tests/Electron2D.Tests/GPUPhysicsReportBatchTests.cs)
+warms each control for 128 cycles, then measures 64 complete author/solve/state/
+contact-read cycles. All rows retain strict zero owner/all-thread managed bytes:
+
+| Numerical path | Shared/separate submissions | Shared/separate upload bytes | Shared/separate readback bytes |
+| --- | ---: | ---: | ---: |
+| Fused integration | 320 / 384 | 18,688 / 19,200 | 29,184 / 29,696 |
+| Separate integration | 1,344 / 1,408 | 30,976 / 30,976 | 66,048 / 66,048 |
+| CCD | 1,408 / 1,472 | 35,584 / 35,584 | 70,656 / 70,656 |
+| Solve-only | 320 / 384 | 17,664 / 18,176 | 27,648 / 28,160 |
+
+The first frame also verifies newly generated final-interval records before a
+previous host count exists. Every measured cycle checks contact identities, final
+point velocities within .001 scene units/second and full normal/friction impulse
+against momentum change within .02 scene momentum units. These tolerances allow
+float integration/accumulation error without accepting missing impulse channels.
+The source-qualified RED has identical 384-completion controls and fails the new
+shared-completion assertion after its physical/zero-byte checks pass. Raw
+manifests, source/resource maps and receipts remain in
+`bin/physics-report-completion/2026-10-25/`. API coverage states are unchanged.
+
+The fresh Linux x64/NVIDIA cohort passes the complete resident/public report
+suite, combined state/contact reads and common world checkpoints. Four public
+CLR and four strict full-trim NativeAOT `--contact-frames` profiles cover CPU/GPU
+with owner/separate numerical threads. Each retains 128 contact cycles and 768
+cap/depth frames at zero owner/all-thread managed bytes. Native process maps have
+no CoreCLR, GPU maps select NVIDIA without software Vulkan, and the exact report
+module is present in the native executable. Both builds match 2,592 runtime and
+270 consumer authored inputs and all 201 embedded resources. Pinned SPIR-V and
+runtime shader/interface checks pass.
+
+Separate-process network checks pass 600 paced and 900 unpaced ticks with CPU
+authority, GPU prediction and a late CPU client. CPU participants verify denied
+GPU startup; all participants finish with 39 matching object identities and zero
+warmed step/replay allocations. Cold GPU replay remains 2,336 managed bytes before
+warm qualification. Packet impairment, correction/replay, ownership and event
+confirmation remain active. These functional/source checks do not establish
+isolated complete CPU/GPU throughput, massive-window FPS, native allocator cost,
+foreign-platform execution or human acceptance.
+
 ## Shared completion for body state and contacts
 
 The world completion records configured contact selection in the same command as
