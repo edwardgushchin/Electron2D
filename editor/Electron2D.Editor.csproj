@@ -13,6 +13,7 @@
     <ApplicationIcon>Assets/Electron2D.ico</ApplicationIcon>
     <EditorMacBundle Condition="($([MSBuild]::IsOSPlatform('OSX')) and '$(RuntimeIdentifier)' == '') or $([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-'))">true</EditorMacBundle>
   </PropertyGroup>
+  <ItemGroup><Compile Remove="Session/**/*.cs" /></ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Electron2D.csproj" />
     <Content Include="../docs/design/assets/sprite/sparkle.svg" Link="Assets/sparkle.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />

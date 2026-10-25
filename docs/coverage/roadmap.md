@@ -1,6 +1,6 @@
 # Coverage roadmap
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
@@ -10,9 +10,9 @@ Choose each next executable vertical slice by user API value, dependent work unl
 
 ## Live project and agent delivery
 
-[ADR 0090](../decisions/agent-native.md#delivery-and-acceptance) owns the complete live-session decision and acceptance gates. These stages are unimplemented; this roadmap update changes no declaration states or totals.
+[ADR 0090](../decisions/agent-native.md#delivery-and-acceptance) owns the complete live-session decision and acceptance gates. The [bounded no-UI session](../components/project-session.md) implements stage 1 for one typed scene and C# buffer; later stages remain unimplemented. This tooling slice changes no runtime declaration states or totals.
 
-1. **Next project-authoring slice, before a functional editor project workflow:** build the no-UI session core with one owner, typed operations, stable identities, unsaved documents, revisions/conflicts, events, persistence/recovery and grouped history. Exit on two-client edits, stale/failing mutations, safe undo and fresh-process persistence. Existing public runtime foundations allow this work now; full API coverage and unrelated renderer work are not entry gates.
+1. **Implemented bounded session foundation:** one existing typed scene and C# buffer, an exclusive owner lease, two local clients, typed operations, stable identities, unsaved documents, revisions/conflicts, events, persistence/recovery and guarded grouped history. Independent-process exclusion/crash recovery, failing mutations/saves, selective undo and fresh-process persistence execute in `tests/ProjectSession`. General project/resource operations and transport attach remain separate extensions.
 2. **First functional editor project workflow:** bind minimal scene/inspector/code/preview views to that session and execute snapshot-backed build/run/capture jobs including unsaved inputs. Verify visible updates, stale results, real process/render output and cancellation/cleanup. Replace/remove the old Batch commands, SDK, formats and affected consumers/docs without a compatibility bridge.
 3. **First agent-enabled editor milestone, before UI polish:** connect one real executor through actual local operations transport and an in-editor task/conversation panel; prefer ACP where supported. Exercise human/agent unsaved edits, stale conflicts, safe undo, snapshot jobs and actual artifacts. A manifest, fake executor or panel image is not this gate.
 4. **After the first co-development slice:** expand semantic operations and scoped discovery, benchmark real tasks, then qualify installed delivery and additional executors/platforms. Concurrent agents and hot reload require their own justified and verified slices.

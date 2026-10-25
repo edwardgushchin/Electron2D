@@ -1,6 +1,6 @@
 # Agent-native development decisions
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 This bounded document owns the product's agent-native development contract. Use [the decision index](index.md) for other architectural domains; implemented behavior remains documented in class, component and domain pages.
 
@@ -127,7 +127,7 @@ The minimal [editor startup screen](../components/editor-startup.md) supplies a 
 
 Typed archives, ResourceSaver.SaveScene, public history/property descriptors, MainLoop/Engine scheduling and typed Input are runtime foundations. Public Viewport.GetTexture/ViewportTexture.GetImage, independent offscreen targets, RenderingServer.ForceDraw and the movie-writer lifecycle provide native output. Callback-first Engine overloads commit input before the first native step. [Low-processor rendering](../components/low-processor-rendering.md) preserves input/processing while skipping unchanged output; its RGB probe remains distinct from agent acceptance.
 
-The live project session, shared editor views, revision/conflict integration, snapshot-backed session jobs, MCP operations transport, ACP/executor adapter and in-editor conversation/control are not implemented by this decision. Installed distribution, import/export, general scene text authoring, foreign-platform qualification and measured agent/human acceptance remain separate work. The archived predecessor's workspace models, in-process MCP adapter and panel harness inform the design; they are not imported code or proof of a current live integration.
+The [bounded no-UI project session](../components/project-session.md) now implements stage 1 for one existing typed scene and one C# buffer: an exclusive OS owner lease, stable identities, two local clients, typed groups, monotonic revisions/conflicts, events, guarded history and persistence/recovery. Independent-process exclusion, crash recovery, failed apply/save and fresh-process persistence execute in its public consumer. Shared editor views, snapshot-backed session jobs, MCP operations transport/authentication, ACP/executor adapter and in-editor conversation/control remain absent. Installed distribution, import/export, general scene text authoring, foreign-platform qualification and measured agent/human acceptance remain separate work. The archived predecessor's workspace models, in-process MCP adapter and panel harness inform the design; they are not imported code or proof of a current live integration.
 
 Missing capabilities remain gaps with exact triggers in [coverage](../coverage/index.md). Platform claims follow ADR 0021; zero-allocation claims follow ADR 0014. The project-batch integration checks exercise create/open, a focused compiled edit, build, fresh-process authoring/simulation and actual rendered artifacts. Documentation/link/decision checks verify this record only; neither establishes improved agent performance or human visual acceptance.
 
