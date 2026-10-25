@@ -10,7 +10,8 @@ public sealed partial class NavigationAgent
     /// <summary>Occurs after the current step publishes all avoidance outputs, before physics simulation.</summary>
     /// <remarks>Handlers may submit next-step velocity and move the parent. Every handler is attempted;
     /// exceptions aggregate after delivery. Disposal during this event rejects.</remarks>
-    public event Action<Vector2>? VelocityComputed;
+    public event Action<Vector2>? VelocityComputed { add => _publisherVelocityComputed.Add(value); remove => _publisherVelocityComputed.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherVelocityComputed;
     /// <summary>Gets or changes whether reciprocal avoidance participates.</summary>
     /// <value>False initially; enabling registers typed velocity delivery.</value>
     /// <exception cref="ObjectDisposedException">The agent is disposed.</exception>
@@ -112,7 +113,7 @@ public sealed partial class NavigationAgent
     internal void DeliverVelocity(Vector2 velocity)
     {
         Read(); _deliveringVelocity = true; List<Exception>? errors = null;
-        try { if (BeginEventEmission(VelocityComputed) is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(velocity); } catch (Exception e) { (errors ??= []).Add(e); } }
+        try { if (BeginEventEmission(_publisherVelocityComputed.Handlers) is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(velocity); } catch (Exception e) { (errors ??= []).Add(e); } }
         finally { _deliveringVelocity = false; }
         if (errors is not null) throw new AggregateException("Velocity delivery completed with observer failures.", errors);
     }

@@ -44,10 +44,12 @@ public class VisibleOnScreenNotifier : Entity
     /// <summary>Occurs after this rectangle first participates in a submitted canvas frame.</summary>
     /// <remarks>State is committed before delivery. Runs on the scene owner thread before FramePostDraw;
     /// later queued notifiers are attempted after a handler fails.</remarks>
-    public event Action? ScreenEntered;
+    public event Action? ScreenEntered { add => _publisherScreenEntered.Add(value); remove => _publisherScreenEntered.Remove(value); }
+    private EventPublisher<Action> _publisherScreenEntered;
     /// <summary>Occurs when a rendered frame no longer contains any visible part of this rectangle.</summary>
     /// <remarks>Tree exit clears state without this event. Hidden or stopped render loops retain the last sample.</remarks>
-    public event Action? ScreenExited;
+    public event Action? ScreenExited { add => _publisherScreenExited.Add(value); remove => _publisherScreenExited.Remove(value); }
+    private EventPublisher<Action> _publisherScreenExited;
 
     internal bool CommitScreenState()
     {
@@ -59,7 +61,7 @@ public class VisibleOnScreenNotifier : Entity
     internal void RaiseScreenChange()
     {
         List<Exception>? errors = null;
-        try { if (_onScreen) BeginEventEmission(ScreenEntered)?.Invoke(); else BeginEventEmission(ScreenExited)?.Invoke(); }
+        try { if (_onScreen) BeginEventEmission(_publisherScreenEntered.Handlers)?.Invoke(); else BeginEventEmission(_publisherScreenExited.Handlers)?.Invoke(); }
         catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed && IsInsideTree) ApplyScreenState(); }
         catch (Exception error) { CollectException(ref errors, error); }
@@ -84,6 +86,6 @@ public class VisibleOnScreenNotifier : Entity
     protected override void Dispose(bool disposing)
     {
         try { base.Dispose(disposing); }
-        finally { ScreenEntered = null; ScreenExited = null; }
+        finally { _publisherScreenEntered.Handlers = null; _publisherScreenExited.Handlers = null; }
     }
 }

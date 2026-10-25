@@ -1,6 +1,6 @@
 # NavigationAgent
 
-Last updated: 2026-10-18
+Last updated: 2026-10-26
 
 - Source: [NavigationAgent.cs](../../src/Navigation/2D/NavigationAgent.cs), [NavigationAgent.Debug.cs](../../src/Navigation/2D/NavigationAgent.Debug.cs)
 - Component: [Navigation maps and agents](../components/navigation-maps.md#agent-path-following)
@@ -846,3 +846,5 @@ Four initially. Finite negative values clamp to zero; nonfinite values raise Arg
 All debug access follows agent lifetime and scene owner-thread guards. Mutation rejects during scene capture or navigation delivery. Failed helper creation preserves attachment/cleanup errors, removes the helper and permits a later retry. Agent disposal exits the tree before retiring its server identity and owned result/helper, attempts every cleanup stage and aggregates observer failures. RID inspection on the disposing thread remains valid through exit; foreign disposal access and access after retirement reject.
 
 NavigationDebugTests covers properties/defaults, finite inputs, world geometry, result replacement, visibility, capture/thread guards, fresh-process scene/project restoration and all four scene navigation identity teardown paths. Native GPU/Compatibility profiles verify actual line/waypoint/visibility/canvas pixels and 64 active plus 64 idle full owner frames with zero managed bytes. Local Linux software-driver evidence does not establish target hardware, foreign platforms, native allocations or game-owner acceptance. Global region/link/avoidance diagnostics remain a separate producer.
+
+Owned path, waypoint, link, target, completion and velocity event stores clear after scene exit during disposal, including when an exit observer fails. Retained [EventConnection](EventConnection.md) tokens then report actual detachment. Accepted immutable emissions retain their ordinary delivery rules.

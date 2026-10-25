@@ -49,7 +49,7 @@ public sealed partial class TileData
     private TileSet CustomSet() => TerrainSource?.OwnerSet ?? throw new InvalidOperationException("Named custom data requires an attached tile set.");
     private int CustomIndex(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); var index = CustomSet().GetCustomDataLayerByName(name); if (index < 0) throw new KeyNotFoundException("No custom layer with this name."); return index; }
     private void CustomLayer(int index) { ThrowIfDisposed(); if ((uint)index >= (uint)CustomValues.Count) throw new ArgumentOutOfRangeException(nameof(index)); }
-    internal void CustomChanged() { try { NotifyPropertyListChanged(); } finally { BeginEventEmission(Changed)?.Invoke(); } }
+    internal void CustomChanged() { try { NotifyPropertyListChanged(); } finally { BeginEventEmission(_publisherChanged.Handlers)?.Invoke(); } }
     internal List<TileCustomDataValue?> PrepareCustomSchema(TileSet? set)
     {
         if (set is null) return CustomValues;

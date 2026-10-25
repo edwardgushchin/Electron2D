@@ -44,15 +44,20 @@ public partial class AnimationMixer : Node
     /// <summary>Gets or sets the internal update phase, initially idle.</summary>
     public AnimationCallbackModeProcess CallbackModeProcess { get { ThrowIfDisposed(); return _callbackModeProcess; } set { EnsureAnimationMutable(); Animation.Valid(value); _callbackModeProcess = value; InvalidateBindings(); UpdateScheduling(); } }
     /// <summary>Occurs after library membership changes.</summary>
-    public event Action? AnimationLibrariesUpdated;
+    public event Action? AnimationLibrariesUpdated { add => _publisherAnimationLibrariesUpdated.Add(value); remove => _publisherAnimationLibrariesUpdated.Remove(value); }
+    private EventPublisher<Action> _publisherAnimationLibrariesUpdated;
     /// <summary>Occurs after a library's named animation collection changes.</summary>
-    public event Action? AnimationListChanged;
+    public event Action? AnimationListChanged { add => _publisherAnimationListChanged.Add(value); remove => _publisherAnimationListChanged.Remove(value); }
+    private EventPublisher<Action> _publisherAnimationListChanged;
     /// <summary>Occurs when playback starts.</summary>
-    public event Action<string>? AnimationStarted;
+    public event Action<string>? AnimationStarted { add => _publisherAnimationStarted.Add(value); remove => _publisherAnimationStarted.Remove(value); }
+    private EventPublisher<Action<string>> _publisherAnimationStarted;
     /// <summary>Occurs after non-looping playback reaches its endpoint.</summary>
-    public event Action<string>? AnimationFinished;
+    public event Action<string>? AnimationFinished { add => _publisherAnimationFinished.Add(value); remove => _publisherAnimationFinished.Remove(value); }
+    private EventPublisher<Action<string>> _publisherAnimationFinished;
     /// <summary>Occurs after explicit cache clearing.</summary>
-    public event Action? CachesCleared;
+    public event Action? CachesCleared { add => _publisherCachesCleared.Add(value); remove => _publisherCachesCleared.Remove(value); }
+    private EventPublisher<Action> _publisherCachesCleared;
     /// <summary>Gets or sets whether save preparation applies the RESET property pose; defaults to true.</summary>
     /// <value>The authoring save policy used by PackedScene.PackForSave.</value>
     /// <remarks>Ordinary Pack and runtime playback do not apply this policy. Save preparation evaluates a detached
@@ -67,8 +72,8 @@ public partial class AnimationMixer : Node
     {
         EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(library); ObjectDisposedException.ThrowIf(library.IsDisposed, library); if (!AnimationLibrary.ValidName(name, true) || _libraries.ContainsKey(name)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(name));
         foreach (var item in _libraries.Values) if (ReferenceEquals(item.Library, library)) throw new ArgumentException("The library is already registered.", nameof(library));
-        Action<Resource> changed = _ => { _animationIndexDirty = true; InvalidateBindings(); if (!IsDisposed) BeginEventEmission(AnimationListChanged)?.Invoke(); };
-        _libraries.Add(name, (library, changed)); library.Changed += changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(AnimationListChanged)?.Invoke(); if (!IsDisposed) BeginEventEmission(AnimationLibrariesUpdated)?.Invoke();
+        Action<Resource> changed = _ => { _animationIndexDirty = true; InvalidateBindings(); if (!IsDisposed) BeginEventEmission(_publisherAnimationListChanged.Handlers)?.Invoke(); };
+        _libraries.Add(name, (library, changed)); library.Changed += changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(_publisherAnimationListChanged.Handlers)?.Invoke(); if (!IsDisposed) BeginEventEmission(_publisherAnimationLibrariesUpdated.Handlers)?.Invoke();
     }
     /// <summary>Returns a borrowed library by exact namespace.</summary>
     /// <param name="name">The exact ordinal name.</param>
@@ -80,12 +85,12 @@ public partial class AnimationMixer : Node
     public string[] GetAnimationLibraryList() { ThrowIfDisposed(); return _libraries.Keys.Order(StringComparer.Ordinal).ToArray(); }
     /// <summary>Removes a library without disposing it.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
-    public void RemoveAnimationLibrary(string name) { EnsureAnimationMutable(); var item = _libraries[name]; _libraries.Remove(name); item.Library.Changed -= item.Changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(AnimationListChanged)?.Invoke(); if (!IsDisposed) BeginEventEmission(AnimationLibrariesUpdated)?.Invoke(); }
+    public void RemoveAnimationLibrary(string name) { EnsureAnimationMutable(); var item = _libraries[name]; _libraries.Remove(name); item.Library.Changed -= item.Changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(_publisherAnimationListChanged.Handlers)?.Invoke(); if (!IsDisposed) BeginEventEmission(_publisherAnimationLibrariesUpdated.Handlers)?.Invoke(); }
     /// <summary>Renames a library namespace without changing its resources.</summary>
     /// <param name="newName">An unoccupied valid replacement name.</param>
     /// <param name="name">The exact ordinal name.</param>
     public void RenameAnimationLibrary(string name, string newName)
-    { EnsureAnimationMutable(); if (!AnimationLibrary.ValidName(newName, true) || _libraries.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(newName)); var item = _libraries[name]; _libraries.Remove(name); _libraries.Add(newName, item); _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(AnimationListChanged)?.Invoke(); if (!IsDisposed) BeginEventEmission(AnimationLibrariesUpdated)?.Invoke(); }
+    { EnsureAnimationMutable(); if (!AnimationLibrary.ValidName(newName, true) || _libraries.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(newName)); var item = _libraries[name]; _libraries.Remove(name); _libraries.Add(newName, item); _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); BeginEventEmission(_publisherAnimationListChanged.Handlers)?.Invoke(); if (!IsDisposed) BeginEventEmission(_publisherAnimationLibrariesUpdated.Handlers)?.Invoke(); }
     /// <summary>Tests a qualified library/name or an unqualified default-library animation.</summary>
     /// <param name="name">The exact ordinal name.</param>
     public bool HasAnimation(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); EnsureAnimationIndex(); return _animationIndex.TryGetValue(name, out var item) && !item.Library.IsDisposed; }
@@ -111,7 +116,7 @@ public partial class AnimationMixer : Node
     /// <param name="delta">Finite signed elapsed seconds; automatic updates use the inherited scaled delta.</param>
     public void Advance(double delta) { EnsureAnimationMutable(); Animation.Finite(delta); if (_advancing) throw new InvalidOperationException("Animation advancement cannot reenter."); if (!_active) return; _advancing = true; try { AdvanceAnimation(delta); } finally { _advancing = false; } }
     /// <summary>Clears cached typed bindings and stops still-controlled child players while preserving their values.</summary>
-    public void ClearCaches() { EnsureAnimationMutable(); InvalidateBindings(); BeginEventEmission(CachesCleared)?.Invoke(); }
+    public void ClearCaches() { EnsureAnimationMutable(); InvalidateBindings(); BeginEventEmission(_publisherCachesCleared.Handlers)?.Invoke(); }
     /// <summary>Evaluates a controller update. The base mixer has no playback source.</summary>
     internal virtual void AdvanceAnimation(double delta) { if (NeedsBlending) ApplyBlend([], delta); }
     private int _evaluationDepth;
@@ -149,8 +154,8 @@ public partial class AnimationMixer : Node
     internal bool IsBindingCurrent(Animation animation, long generation) => !IsDisposed && _active && _bindingGeneration == generation && (ReferenceEquals(_cachedAnimation, animation) || (!_blendDirty && _blendCaches.ContainsKey(animation)));
     internal void EnsureAnimationMutable() => EnsureMutable();
     internal void InvalidateBindings(bool rebuild = true) { InvalidateEvaluation(); if (rebuild) _blendDirty = true; ClearCapture(); StopNestedPlayback(); StopAudioPlayback(); if (rebuild) { _legacyCaches.Clear(); _nestedBindings.Clear(); ClearAudioBindings(); } }
-    internal void Started(string name) => BeginEventEmission(AnimationStarted)?.Invoke(name);
-    internal void Finished(string name) => BeginEventEmission(AnimationFinished)?.Invoke(name);
+    internal void Started(string name) => BeginEventEmission(_publisherAnimationStarted.Handlers)?.Invoke(name);
+    internal void Finished(string name) => BeginEventEmission(_publisherAnimationFinished.Handlers)?.Invoke(name);
     private void TreeMutated(SceneTree tree) => InvalidateBindings();
     private void UpdateScheduling() => SetInternalProcessing(_active && _callbackModeProcess == AnimationCallbackModeProcess.Idle, _active && _callbackModeProcess == AnimationCallbackModeProcess.Physics);
     /// <summary>Initializes internal idle animation scheduling.</summary>
@@ -177,7 +182,7 @@ public partial class AnimationMixer : Node
             _nestedBindings.Clear(); _legacyCaches.Clear();
             _libraries.Clear(); _animationIndex.Clear(); _blendCaches.Clear(); _blendProperties.Clear(); _blendOrder.Clear(); _blendPropertySnapshot = []; _nestedBindingSnapshot = [];
             try { InvalidateBindings(); } catch (Exception error) { CollectException(ref errors, error); }
-            AnimationLibrariesUpdated = null; AnimationListChanged = null; AnimationStarted = null; AnimationFinished = null; CachesCleared = null;
+            _publisherAnimationLibrariesUpdated.Handlers = null; _publisherAnimationListChanged.Handlers = null; _publisherAnimationStarted.Handlers = null; _publisherAnimationFinished.Handlers = null; _publisherCachesCleared.Handlers = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Animation mixer cleanup failed.", errors);

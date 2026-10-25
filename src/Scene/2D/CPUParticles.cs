@@ -80,7 +80,8 @@ public partial class CPUParticles : Entity
     private static void Borrow(Resource? value) { if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); }
     /// <summary>Occurs once when an active emission drains, after committing the idle state.</summary>
     /// <remarks>Handler failure propagates without replay. A handler may restart or dispose the emitter.</remarks>
-    public event Action? Finished;
+    public event Action? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action> _publisherFinished;
     /// <summary>Gets or changes capacity; assignment clears all live particles.</summary>
     /// <value>Eight initially; valid range is 1..65536.</value>
     /// <exception cref="ArgumentOutOfRangeException">Capacity is outside the bounded range.</exception>

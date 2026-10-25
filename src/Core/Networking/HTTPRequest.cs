@@ -20,7 +20,8 @@ public class HTTPRequest : Node
     /// <summary>Creates an idle request node with gzip enabled and eight allowed redirects.</summary>
     public HTTPRequest() { }
     /// <summary>Occurs after state/resources are released; handlers may start another request.</summary>
-    public event Action<HTTPRequestResult, HTTPResponseCode, string[], byte[]>? RequestCompleted;
+    public event Action<HTTPRequestResult, HTTPResponseCode, string[], byte[]>? RequestCompleted { add => _publisherRequestCompleted.Add(value); remove => _publisherRequestCompleted.Remove(value); }
+    private EventPublisher<Action<HTTPRequestResult, HTTPResponseCode, string[], byte[]>> _publisherRequestCompleted;
     private void Idle() { EnsureMutable(); if (_operation is not null) throw new InvalidOperationException("Cancel or complete the active request before changing this setting."); }
     /// <summary>Gets or sets dedicated-worker execution.</summary><value>False initially; configurable while idle.</value>
     public bool UseThreads { get { ThrowIfDisposed(); return _threads; } set { Idle(); _threads = value; } }
@@ -86,10 +87,10 @@ public class HTTPRequest : Node
         if (what == NotificationExitTree) { CancelRequest(); return; }
         if (what != NotificationInternalProcess || _operation is null) return;
         var operation = _operation; _elapsed += ProcessDeltaTime;
-        if (_activeTimeout > 0 && _elapsed >= _activeTimeout) { CancelRequest(); BeginEventEmission(RequestCompleted)?.Invoke(HTTPRequestResult.Timeout, 0, [], []); return; }
+        if (_activeTimeout > 0 && _elapsed >= _activeTimeout) { CancelRequest(); BeginEventEmission(_publisherRequestCompleted.Handlers)?.Invoke(HTTPRequestResult.Timeout, 0, [], []); return; }
         if (!_threads) operation.Step();
         if (!operation.IsDone || _threads && Volatile.Read(ref operation.WorkerStopped) == 0) return;
-        var result = operation.Result; var code = operation.Code; var headers = operation.ResponseHeaders; var data = operation.ResponseBody; CancelRequest(); BeginEventEmission(RequestCompleted)?.Invoke(result, code, headers, data);
+        var result = operation.Result; var code = operation.Code; var headers = operation.ResponseHeaders; var data = operation.ResponseBody; CancelRequest(); BeginEventEmission(_publisherRequestCompleted.Handlers)?.Invoke(result, code, headers, data);
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(HTTPRequest) ? CreateRequestNode : base.CreateSceneInstanceFactory();
@@ -107,7 +108,7 @@ public class HTTPRequest : Node
         yield return new PropertyDescriptor<HTTPRequest, double>(nameof(Timeout), n => n.Timeout, (n, v) => n.Timeout = v, _ => 0, stored: true);
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { CancelCore(false); RequestCompleted = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { CancelCore(false); _publisherRequestCompleted.Handlers = null; } base.Dispose(disposing); }
 }
 
 internal sealed record HTTPProxySettings(string HTTPHost, int HTTPPort, string HTTPSHost, int HTTPSPort);

@@ -32,7 +32,8 @@ public sealed partial class SceneTree
 
     /// <summary>Occurs after a pending scene has entered the tree successfully.</summary>
     /// <remarks>The argument is this tree. The selected scene is available through <see cref="CurrentScene"/>.</remarks>
-    public event Action<SceneTree>? SceneChanged;
+    public event Action<SceneTree>? SceneChanged { add => _publisherSceneChanged.Add(value); remove => _publisherSceneChanged.Remove(value); }
+    private EventPublisher<Action<SceneTree>> _publisherSceneChanged;
 
     /// <summary>Loads a typed file scene and replaces the current scene at its ordinary deferred safe point.</summary><param name="path">Scene path or UID.</param><remarks>Existing caller-owned cached templates remain borrowed. A newly loaded template and its graph are retained internally by created scenes until their final lease ends.</remarks>
     public void ChangeSceneToFile(string path)
@@ -176,7 +177,7 @@ public sealed partial class SceneTree
 
         if (pending is not null && ReferenceEquals(_currentScene, pending) && ReferenceEquals(pending.Tree, this) && pending.IsNodeReady)
         {
-            try { BeginEventEmission(SceneChanged)?.Invoke(this); }
+            try { BeginEventEmission(_publisherSceneChanged.Handlers)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("One or more scene-change callbacks failed.", errors);

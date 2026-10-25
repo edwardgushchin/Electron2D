@@ -100,15 +100,15 @@ public partial class Tree : Control
             for (var other = _root; other != null; other = other.WalkNext(false, true))
                 for (var c = 0; c < other.Cells.Count; c++)
                     if (other == item && c == column) { other.Cells[c].Selected = true; if (notify || cursorChanged) changes.Add((other, c)); }
-                    else if (other.Cells[c].Selected) { other.Cells[c].Selected = false; if (MultiSelected != null) changes.Add((other, c)); }
+                    else if (other.Cells[c].Selected) { other.Cells[c].Selected = false; if (_publisherMultiSelected.Handlers != null) changes.Add((other, c)); }
             _selected = item; _selectedColumn = column; QueueRedraw(); List<Exception>? errors = null;
             foreach (var change in changes)
             {
                 if (IsDisposed || change.Item.IsDisposed || change.Item.Owner != this) continue;
                 var target = change.Item == item && change.Column == column;
-                if (target) try { BeginEventEmission(CellSelected)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+                if (target) try { BeginEventEmission(_publisherCellSelected.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
                 if ((!target || notify) && !IsDisposed && !change.Item.IsDisposed && change.Item.Owner == this)
-                    try { BeginEventEmission(MultiSelected)?.Invoke(change.Item, change.Column, target); } catch (Exception error) { CollectException(ref errors, error); }
+                    try { BeginEventEmission(_publisherMultiSelected.Handlers)?.Invoke(change.Item, change.Column, target); } catch (Exception error) { CollectException(ref errors, error); }
             }
             ThrowCollected("Tree selection callbacks failed.", errors);
         }
@@ -124,53 +124,68 @@ public partial class Tree : Control
     public void DeselectAll() { EnsureTreeMutable(); for (var item = _root; item != null; item = item.WalkNext(false, true)) foreach (var cell in item.Cells) cell.Selected = false; _selected = null; _selectedColumn = -1; QueueRedraw(); }
     internal void SelectItemCell(TreeItem item, int column, bool selected, bool cursor, bool notifyMulti = true)
     {
-        EnsureTreeMutable(); RequireItem(item); var cell = item.At(column); if (selected && !cell.Selectable) return; var changed = cell.Selected != selected; if (!changed && !_allowReselect) { if (selected && cursor && (_selected != item || _selectedColumn != column)) { _selected = item; _selectedColumn = column; QueueRedraw(); if (_selectMode == SelectMode.Multi && notifyMulti) BeginEventEmission(CellSelected)?.Invoke(); } return; }
+        EnsureTreeMutable(); RequireItem(item); var cell = item.At(column); if (selected && !cell.Selectable) return; var changed = cell.Selected != selected; if (!changed && !_allowReselect) { if (selected && cursor && (_selected != item || _selectedColumn != column)) { _selected = item; _selectedColumn = column; QueueRedraw(); if (_selectMode == SelectMode.Multi && notifyMulti) BeginEventEmission(_publisherCellSelected.Handlers)?.Invoke(); } return; }
         if (selected && _selectMode != SelectMode.Multi) DeselectAll(); if (_selectMode == SelectMode.Row) foreach (var c in item.Cells) c.Selected = selected && c.Selectable; else cell.Selected = selected;
         if (cursor && selected) { _selected = item; _selectedColumn = column; } else if (!selected) { if (_selectMode != SelectMode.Multi && _selected == item && (_selectMode == SelectMode.Row || _selectedColumn == column)) { _selected = null; _selectedColumn = -1; } }
         QueueRedraw(); List<Exception>? errors = null;
-        try { if (cursor && selected && _selectMode != SelectMode.Row && (_selectMode != SelectMode.Multi || notifyMulti)) BeginEventEmission(CellSelected)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) { if (_selectMode == SelectMode.Multi) { if (notifyMulti) BeginEventEmission(MultiSelected)?.Invoke(item, column, selected); } else if (selected) BeginEventEmission(ItemSelected)?.Invoke(); } } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (cursor && selected && _selectMode != SelectMode.Row && (_selectMode != SelectMode.Multi || notifyMulti)) BeginEventEmission(_publisherCellSelected.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) { if (_selectMode == SelectMode.Multi) { if (notifyMulti) BeginEventEmission(_publisherMultiSelected.Handlers)?.Invoke(item, column, selected); } else if (selected) BeginEventEmission(_publisherItemSelected.Handlers)?.Invoke(); } } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Tree selection callbacks failed.", errors);
     }
-    internal void PublishCollapsed(TreeItem item) { if (!IsDisposed) BeginEventEmission(ItemCollapsed)?.Invoke(item); }
-    internal void PublishCheck(TreeItem item, int column) { if (!IsDisposed) BeginEventEmission(CheckPropagatedToItem)?.Invoke(item, column); }
+    internal void PublishCollapsed(TreeItem item) { if (!IsDisposed) BeginEventEmission(_publisherItemCollapsed.Handlers)?.Invoke(item); }
+    internal void PublishCheck(TreeItem item, int column) { if (!IsDisposed) BeginEventEmission(_publisherCheckPropagatedToItem.Handlers)?.Invoke(item, column); }
     /// <summary>Occurs when a selection cursor cell changes.</summary>
-    public event Action? CellSelected;
+    public event Action? CellSelected { add => _publisherCellSelected.Add(value); remove => _publisherCellSelected.Remove(value); }
+    private EventPublisher<Action> _publisherCellSelected;
     /// <summary>Occurs after a single selection.</summary>
-    public event Action? ItemSelected;
+    public event Action? ItemSelected { add => _publisherItemSelected.Add(value); remove => _publisherItemSelected.Remove(value); }
+    private EventPublisher<Action> _publisherItemSelected;
     /// <summary>Reports a committed multiple cell selection change.</summary>
-    public event Action<TreeItem, int, bool>? MultiSelected;
+    public event Action<TreeItem, int, bool>? MultiSelected { add => _publisherMultiSelected.Add(value); remove => _publisherMultiSelected.Remove(value); }
+    private EventPublisher<Action<TreeItem, int, bool>> _publisherMultiSelected;
     /// <summary>Reports a changed folded branch.</summary>
-    public event Action<TreeItem>? ItemCollapsed;
+    public event Action<TreeItem>? ItemCollapsed { add => _publisherItemCollapsed.Add(value); remove => _publisherItemCollapsed.Remove(value); }
+    private EventPublisher<Action<TreeItem>> _publisherItemCollapsed;
     /// <summary>Reports committed checkbox propagation.</summary>
-    public event Action<TreeItem, int>? CheckPropagatedToItem;
+    public event Action<TreeItem, int>? CheckPropagatedToItem { add => _publisherCheckPropagatedToItem.Add(value); remove => _publisherCheckPropagatedToItem.Remove(value); }
+    private EventPublisher<Action<TreeItem, int>> _publisherCheckPropagatedToItem;
     /// <summary>Occurs after user cell editing; GetEdited identifies its target.</summary>
-    public event Action? ItemEdited;
+    public event Action? ItemEdited { add => _publisherItemEdited.Add(value); remove => _publisherItemEdited.Remove(value); }
+    private EventPublisher<Action> _publisherItemEdited;
     /// <summary>Occurs on item activation.</summary>
-    public event Action? ItemActivated;
+    public event Action? ItemActivated { add => _publisherItemActivated.Add(value); remove => _publisherItemActivated.Remove(value); }
+    private EventPublisher<Action> _publisherItemActivated;
     /// <summary>Occurs on a double-clicked cell icon.</summary>
-    public event Action? ItemIconDoubleClicked;
+    public event Action? ItemIconDoubleClicked { add => _publisherItemIconDoubleClicked.Add(value); remove => _publisherItemIconDoubleClicked.Remove(value); }
+    private EventPublisher<Action> _publisherItemIconDoubleClicked;
     /// <summary>Reports pointer selection.</summary>
-    public event Action<Vector2, MouseButton>? ItemMouseSelected;
+    public event Action<Vector2, MouseButton>? ItemMouseSelected { add => _publisherItemMouseSelected.Add(value); remove => _publisherItemMouseSelected.Remove(value); }
+    private EventPublisher<Action<Vector2, MouseButton>> _publisherItemMouseSelected;
     /// <summary>Reports an activated cell button.</summary>
-    public event Action<TreeItem, int, int, MouseButton>? ButtonClicked;
+    public event Action<TreeItem, int, int, MouseButton>? ButtonClicked { add => _publisherButtonClicked.Add(value); remove => _publisherButtonClicked.Remove(value); }
+    private EventPublisher<Action<TreeItem, int, int, MouseButton>> _publisherButtonClicked;
     /// <summary>Reports a clicked title.</summary>
-    public event Action<int, MouseButton>? ColumnTitleClicked;
+    public event Action<int, MouseButton>? ColumnTitleClicked { add => _publisherColumnTitleClicked.Add(value); remove => _publisherColumnTitleClicked.Remove(value); }
+    private EventPublisher<Action<int, MouseButton>> _publisherColumnTitleClicked;
     /// <summary>Reports an empty-content click.</summary>
-    public event Action<Vector2, MouseButton>? EmptyClicked;
+    public event Action<Vector2, MouseButton>? EmptyClicked { add => _publisherEmptyClicked.Add(value); remove => _publisherEmptyClicked.Remove(value); }
+    private EventPublisher<Action<Vector2, MouseButton>> _publisherEmptyClicked;
     /// <summary>Occurs after clicking empty content in single/row mode.</summary>
-    public event Action? NothingSelected;
+    public event Action? NothingSelected { add => _publisherNothingSelected.Add(value); remove => _publisherNothingSelected.Remove(value); }
+    private EventPublisher<Action> _publisherNothingSelected;
     /// <summary>Reports custom-cell activation.</summary>
-    public event Action<MouseButton>? CustomItemClicked;
+    public event Action<MouseButton>? CustomItemClicked { add => _publisherCustomItemClicked.Add(value); remove => _publisherCustomItemClicked.Remove(value); }
+    private EventPublisher<Action<MouseButton>> _publisherCustomItemClicked;
     /// <summary>Requests the application's custom editor at GetCustomPopupRect.</summary>
-    public event Action<bool>? CustomPopupEdited;
+    public event Action<bool>? CustomPopupEdited { add => _publisherCustomPopupEdited.Add(value); remove => _publisherCustomPopupEdited.Remove(value); }
+    private EventPublisher<Action<bool>> _publisherCustomPopupEdited;
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Tree) ? CreateTree : base.CreateSceneInstanceFactory();
     private static Node CreateTree() => new Tree();
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        List<Exception>? errors = null; if (disposing) { _disposing = true; try { CancelEditor(); } catch (Exception error) { CollectException(ref errors, error); } try { _root?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); } _root = null; ReleaseResources(); _rows.Clear(); _all.Clear(); CellSelected = ItemSelected = ItemEdited = ItemActivated = ItemIconDoubleClicked = NothingSelected = null; MultiSelected = null; ItemCollapsed = null; CheckPropagatedToItem = null; ItemMouseSelected = null; ButtonClicked = null; ColumnTitleClicked = null; EmptyClicked = null; CustomItemClicked = null; CustomPopupEdited = null; }
+        List<Exception>? errors = null; if (disposing) { _disposing = true; try { CancelEditor(); } catch (Exception error) { CollectException(ref errors, error); } try { _root?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); } _root = null; ReleaseResources(); _rows.Clear(); _all.Clear(); _publisherCellSelected.Handlers = _publisherItemSelected.Handlers = _publisherItemEdited.Handlers = _publisherItemActivated.Handlers = _publisherItemIconDoubleClicked.Handlers = _publisherNothingSelected.Handlers = null; _publisherMultiSelected.Handlers = null; _publisherItemCollapsed.Handlers = null; _publisherCheckPropagatedToItem.Handlers = null; _publisherItemMouseSelected.Handlers = null; _publisherButtonClicked.Handlers = null; _publisherColumnTitleClicked.Handlers = null; _publisherEmptyClicked.Handlers = null; _publisherCustomItemClicked.Handlers = null; _publisherCustomPopupEdited.Handlers = null; }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Tree cleanup failed.", errors);
     }

@@ -14,7 +14,8 @@ public partial class Window
     /// <summary>Occurs during a theme refresh, before the previous lookup cache is cleared.</summary>
     /// <remarks>Resource changes are deferred to the scene owner. Local overrides refresh synchronously unless
     /// bulk editing is active. Required invalidation continues after a subscriber fails.</remarks>
-    public event Action? ThemeChanged;
+    public event Action? ThemeChanged { add => _publisherThemeChanged.Add(value); remove => _publisherThemeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherThemeChanged;
     /// <summary>Gets or sets the borrowed theme supplying this branch's typed appearance values.</summary>
     /// <value>Null initially; lookup continues through consecutive Control/Window ancestors and built-in defaults.</value>
     /// <exception cref="ObjectDisposedException">The node or assigned theme is disposed.</exception>
@@ -236,7 +237,7 @@ public partial class Window
     private void ProcessThemeNotification()
     {
         List<Exception>? errors = null;
-        try { BeginEventEmission(ThemeChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(_publisherThemeChanged.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThemeOwner.Invalidate();
         try { UpdateEmbeddedContents(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Theme notification callbacks failed.", errors);
@@ -255,8 +256,8 @@ public partial class Window
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
-        if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(BeginEventEmission(MouseEntered)); }
-        else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(BeginEventEmission(MouseExited)); }
+        if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(BeginEventEmission(_publisherMouseEntered.Handlers)); }
+        else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(BeginEventEmission(_publisherMouseExited.Handlers)); }
         else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();

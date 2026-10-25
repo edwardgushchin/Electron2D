@@ -48,25 +48,30 @@ public abstract class MultiplayerAPI : ElectronObject
     /// <summary>Removes a synchronized root/configuration pair.</summary><param name="node">Root node.</param><param name="synchronizer">Matching component.</param>
     public abstract void ObjectConfigurationRemove(Node node, MultiplayerSynchronizer synchronizer);
     /// <summary>Occurs when a client is admitted by the server.</summary>
-    public event Action? ConnectedToServer;
+    public event Action? ConnectedToServer { add => _publisherConnectedToServer.Add(value); remove => _publisherConnectedToServer.Remove(value); }
+    private EventPublisher<Action> _publisherConnectedToServer;
     /// <summary>Occurs when transport connection establishment fails.</summary>
-    public event Action? ConnectionFailed;
+    public event Action? ConnectionFailed { add => _publisherConnectionFailed.Add(value); remove => _publisherConnectionFailed.Remove(value); }
+    private EventPublisher<Action> _publisherConnectionFailed;
     /// <summary>Occurs when an admitted peer is committed.</summary>
-    public event Action<int>? PeerConnected;
+    public event Action<int>? PeerConnected { add => _publisherPeerConnected.Add(value); remove => _publisherPeerConnected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherPeerConnected;
     /// <summary>Occurs after an admitted peer is removed.</summary>
-    public event Action<int>? PeerDisconnected;
+    public event Action<int>? PeerDisconnected { add => _publisherPeerDisconnected.Add(value); remove => _publisherPeerDisconnected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherPeerDisconnected;
     /// <summary>Occurs when an established client loses its server.</summary>
-    public event Action? ServerDisconnected;
+    public event Action? ServerDisconnected { add => _publisherServerDisconnected.Add(value); remove => _publisherServerDisconnected.Remove(value); }
+    private EventPublisher<Action> _publisherServerDisconnected;
     /// <summary>Delivers all client admission subscribers; failures aggregate.</summary>
-    protected void EmitConnectedToServer() { CheckMultiplayer(); Emit(BeginEventEmission(ConnectedToServer)); }
+    protected void EmitConnectedToServer() { CheckMultiplayer(); Emit(BeginEventEmission(_publisherConnectedToServer.Handlers)); }
     /// <summary>Delivers all establishment failure subscribers; failures aggregate.</summary>
-    protected void EmitConnectionFailed() { CheckMultiplayer(); Emit(BeginEventEmission(ConnectionFailed)); }
+    protected void EmitConnectionFailed() { CheckMultiplayer(); Emit(BeginEventEmission(_publisherConnectionFailed.Handlers)); }
     /// <summary>Delivers all admitted-peer subscribers.</summary><param name="id">Committed identity.</param>
-    protected void EmitPeerConnected(int id) { CheckMultiplayer(); Emit(BeginEventEmission(PeerConnected), id); }
+    protected void EmitPeerConnected(int id) { CheckMultiplayer(); Emit(BeginEventEmission(_publisherPeerConnected.Handlers), id); }
     /// <summary>Delivers all removed-peer subscribers.</summary><param name="id">Removed identity.</param>
-    protected void EmitPeerDisconnected(int id) { CheckMultiplayer(); Emit(BeginEventEmission(PeerDisconnected), id); }
+    protected void EmitPeerDisconnected(int id) { CheckMultiplayer(); Emit(BeginEventEmission(_publisherPeerDisconnected.Handlers), id); }
     /// <summary>Delivers all server loss subscribers.</summary>
-    protected void EmitServerDisconnected() { CheckMultiplayer(); Emit(BeginEventEmission(ServerDisconnected)); }
+    protected void EmitServerDisconnected() { CheckMultiplayer(); Emit(BeginEventEmission(_publisherServerDisconnected.Handlers)); }
     private static void Emit(Action? callbacks) { List<Exception>? errors = null; foreach (var call in Delegate.EnumerateInvocationList(callbacks)) try { call(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     internal static void Emit(Action<int>? callbacks, int id) { List<Exception>? errors = null; foreach (var call in Delegate.EnumerateInvocationList(callbacks)) try { call(id); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     internal SceneTree? AttachedTree => _tree;
@@ -79,5 +84,5 @@ public abstract class MultiplayerAPI : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); CheckMultiplayer(); if (_tree is not null) throw new InvalidOperationException("Detach the assigned multiplayer interface before disposal."); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { ConnectedToServer = null; ConnectionFailed = null; PeerConnected = null; PeerDisconnected = null; ServerDisconnected = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _publisherConnectedToServer.Handlers = null; _publisherConnectionFailed.Handlers = null; _publisherPeerConnected.Handlers = null; _publisherPeerDisconnected.Handlers = null; _publisherServerDisconnected.Handlers = null; } base.Dispose(disposing); }
 }

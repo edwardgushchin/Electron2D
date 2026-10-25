@@ -42,7 +42,8 @@ public partial class GPUParticles : Entity
     { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); return Math.Clamp(value, 0, 1); }
     /// <summary>Occurs once when an uncancelled one-shot emission reaches its scene-process completion time.</summary>
     /// <remarks>State commits before handlers run. Handlers may restart or dispose the emitter; exceptions do not replay the event.</remarks>
-    public event Action? Finished;
+    public event Action? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action> _publisherFinished;
     /// <summary>Gets or sets emission, restarting one-shot completion tracking for an idle emitter.</summary>
     /// <value>True initially. Stopping emission allows existing particles to drain.</value>
     public bool Emitting

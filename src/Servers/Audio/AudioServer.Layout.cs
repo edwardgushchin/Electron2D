@@ -67,7 +67,7 @@ public sealed partial class AudioServer
             try { RebuildGraph(); } catch (Exception error) { Node.CollectException(ref errors, error); }
             foreach (var bus in old) try { ReleaseEffects(bus.RuntimeEffects); } catch (Exception error) { Node.CollectException(ref errors, error); }
             try { ReleaseLayoutOwnership(oldOwnership); } catch (Exception error) { Node.CollectException(ref errors, error); }
-            try { BeginEventEmission(BusLayoutChangedCore)?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherBusLayoutChangedCore.Handlers)?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
             Node.ThrowCollected("Audio layout application failed.", errors);
         }
     }

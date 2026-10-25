@@ -31,10 +31,11 @@ public partial class MeshInstance : Entity
     public Texture? Texture
     {
         get { ThrowIfDisposed(); return _texture; }
-        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_texture, value)) return; _texture = value; InvalidateCanvas(); BeginEventEmission(TextureChanged)?.Invoke(); }
+        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_texture, value)) return; _texture = value; InvalidateCanvas(); BeginEventEmission(_publisherTextureChanged.Handlers)?.Invoke(); }
     }
     /// <summary>Occurs after replacing the borrowed texture and scheduling redraw.</summary>
-    public event Action? TextureChanged;
+    public event Action? TextureChanged { add => _publisherTextureChanged.Add(value); remove => _publisherTextureChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTextureChanged;
     private void MeshChanged(Resource _) { if (!IsDisposed) InvalidateCanvas(); }
     /// <summary>Reports a missing mesh along with inherited scene warnings.</summary>
     /// <returns>Independent warning strings; an empty mesh still counts as an assigned resource.</returns>
@@ -59,7 +60,7 @@ public partial class MeshInstance : Entity
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { EnsureMorphMutable(); _morph?.Dispose(); _morph = null; _blendShapeValues = []; if (_mesh is not null) _mesh.Changed -= MeshChanged; _mesh = null; _texture = null; TextureChanged = null; }
+        if (disposing) { EnsureMorphMutable(); _morph?.Dispose(); _morph = null; _blendShapeValues = []; if (_mesh is not null) _mesh.Changed -= MeshChanged; _mesh = null; _texture = null; _publisherTextureChanged.Handlers = null; }
         base.Dispose(disposing);
     }
 }

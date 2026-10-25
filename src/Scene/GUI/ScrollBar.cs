@@ -49,7 +49,8 @@ public abstract class ScrollBar : Range
     /// <summary>Occurs after a scrolling operation changes the final value by more than the approximate-equality tolerance.</summary>
     /// <remarks>Inherited ValueChanged runs first. Programmatic Value assignment does not emit Scrolling.
     /// Callback errors do not suppress the remaining current phases; they are aggregated after committed state.</remarks>
-    public event Action? Scrolling;
+    public event Action? Scrolling { add => _publisherScrolling.Add(value); remove => _publisherScrolling.Remove(value); }
+    private EventPublisher<Action> _publisherScrolling;
     private void CheckScroll() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private bool Current(ulong generation, SceneTree? tree) => !IsDisposed && generation == _interaction && ReferenceEquals(Tree, tree);
     internal void Scroll(double amount) => ScrollTo(Value + amount);
@@ -63,7 +64,7 @@ public abstract class ScrollBar : Range
         var previous = Value;
         try { if (ratio) Ratio = position; else Value = position; } catch (Exception e) { CollectException(ref errors, e); }
         if (Current(generation, tree) && !Mathf.IsEqualApprox(previous, Value))
-            try { BeginEventEmission(Scrolling)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+            try { BeginEventEmission(_publisherScrolling.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private double ButtonStep => _customStep >= 0 ? _customStep : Step;
     private double Axis(Vector2 value) => _vertical ? value.Y : value.X;
@@ -260,7 +261,7 @@ public abstract class ScrollBar : Range
     protected override void Dispose(bool disposing)
     {
         _attached = false; CancelInteraction(); ReleaseResidency(); _states.Clear(); _nextStates.Clear();
-        try { base.Dispose(disposing); } finally { Scrolling = null; }
+        try { base.Dispose(disposing); } finally { _publisherScrolling.Handlers = null; }
     }
 }
 

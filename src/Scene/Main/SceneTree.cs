@@ -383,7 +383,8 @@ public sealed partial class SceneTree : MainLoop
     /// <remarks>Arguments are this tree and the requesting node. Delivery is synchronous on the requesting node's owner/current group,
     /// without automatic warning evaluation or deduplication. A throwing subscriber stops later subscribers.
     /// A consumer queries Node.GetConfigurationWarnings; no scene dock or editor UI is created.</remarks>
-    public event Action<SceneTree, Node>? NodeConfigurationWarningChanged;
+    public event Action<SceneTree, Node>? NodeConfigurationWarningChanged { add => _publisherNodeConfigurationWarningChanged.Add(value); remove => _publisherNodeConfigurationWarningChanged.Remove(value); }
+    private EventPublisher<Action<SceneTree, Node>> _publisherNodeConfigurationWarningChanged;
 
     /// <summary>Occurs after a node enters this tree.</summary>
     /// <remarks>
@@ -391,7 +392,8 @@ public sealed partial class SceneTree : MainLoop
     /// own enter event, before the parent's child-entered event and before descendant entry. A throwing subscriber stops later subscribers of this event
     /// invocation, but the failure is aggregated after remaining lifecycle work.
     /// </remarks>
-    public event Action<SceneTree, Node>? NodeAdded;
+    public event Action<SceneTree, Node>? NodeAdded { add => _publisherNodeAdded.Add(value); remove => _publisherNodeAdded.Remove(value); }
+    private EventPublisher<Action<SceneTree, Node>> _publisherNodeAdded;
 
     /// <summary>Occurs after exit callbacks and engine membership release, before the node clears its tree association.</summary>
     /// <remarks>
@@ -399,7 +401,8 @@ public sealed partial class SceneTree : MainLoop
     /// Siblings exit in reverse order, children before parents. A throwing subscriber stops later subscribers of
     /// this event invocation, but the failure is aggregated after remaining exit work.
     /// </remarks>
-    public event Action<SceneTree, Node>? NodeRemoved;
+    public event Action<SceneTree, Node>? NodeRemoved { add => _publisherNodeRemoved.Add(value); remove => _publisherNodeRemoved.Remove(value); }
+    private EventPublisher<Action<SceneTree, Node>> _publisherNodeRemoved;
 
     /// <summary>Occurs after an active node accepts a name assignment, including an unchanged name.</summary>
     /// <remarks>
@@ -407,19 +410,23 @@ public sealed partial class SceneTree : MainLoop
     /// attempted when this event invocation fails, and both failures are aggregated. A throwing subscriber prevents
     /// later subscribers of this event invocation from running.
     /// </remarks>
-    public event Action<SceneTree, Node>? NodeRenamed;
+    public event Action<SceneTree, Node>? NodeRenamed { add => _publisherNodeRenamed.Add(value); remove => _publisherNodeRenamed.Remove(value); }
+    private EventPublisher<Action<SceneTree, Node>> _publisherNodeRenamed;
 
     /// <summary>Occurs before the idle transform-delivery phase and eligible node process callbacks.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
-    public event Action<SceneTree>? ProcessFrameStarted;
+    public event Action<SceneTree>? ProcessFrameStarted { add => _publisherProcessFrameStarted.Add(value); remove => _publisherProcessFrameStarted.Remove(value); }
+    private EventPublisher<Action<SceneTree>> _publisherProcessFrameStarted;
 
     /// <summary>Occurs after pending transform delivery and before eligible node physics-process callbacks.</summary>
     /// <remarks>A throwing subscriber stops later subscribers of this invocation; node callbacks, timers, tweens, and the deferred safe point are still attempted.</remarks>
-    public event Action<SceneTree>? PhysicsFrameStarted;
+    public event Action<SceneTree>? PhysicsFrameStarted { add => _publisherPhysicsFrameStarted.Add(value); remove => _publisherPhysicsFrameStarted.Remove(value); }
+    private EventPublisher<Action<SceneTree>> _publisherPhysicsFrameStarted;
 
     /// <summary>Occurs after the active hierarchy is structurally changed or an active node is renamed.</summary>
     /// <remarks>Delivery is synchronous after the corresponding state change. A throwing subscriber prevents later subscribers of that invocation; the state change is not rolled back.</remarks>
-    public event Action<SceneTree>? TreeChanged;
+    public event Action<SceneTree>? TreeChanged { add => _publisherTreeChanged.Add(value); remove => _publisherTreeChanged.Remove(value); }
+    private EventPublisher<Action<SceneTree>> _publisherTreeChanged;
 
     /// <summary>Thread-safely queues an action for a future deferred flush while the tree remains live.</summary>
     /// <param name="action">The action to invoke.</param>
@@ -1301,20 +1308,20 @@ public sealed partial class SceneTree : MainLoop
         tween.InvalidateFromTree();
     }
 
-    internal void NotifyNodeAdded(Node node) => BeginEventEmission(NodeAdded)?.Invoke(this, node);
+    internal void NotifyNodeAdded(Node node) => BeginEventEmission(_publisherNodeAdded.Handlers)?.Invoke(this, node);
 
     internal void NotifyNodeRemoved(Node node)
     {
         if (ReferenceEquals(_editedSceneRoot, node)) _editedSceneRoot = null;
         if (ReferenceEquals(_currentScene, node)) _currentScene = null;
-        BeginEventEmission(NodeRemoved)?.Invoke(this, node);
+        BeginEventEmission(_publisherNodeRemoved.Handlers)?.Invoke(this, node);
     }
 
     internal void NotifyConfigurationWarningsChanged(Node node)
     {
         if (_editedSceneRoot is { } root && ReferenceEquals(root.Tree, this) &&
             (ReferenceEquals(root, node) || root.IsAncestorOf(node)))
-            BeginEventEmission(NodeConfigurationWarningChanged)?.Invoke(this, node);
+            BeginEventEmission(_publisherNodeConfigurationWarningChanged.Handlers)?.Invoke(this, node);
     }
 
     internal ulong PathRevision { get; private set; }
@@ -1326,7 +1333,7 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
-            BeginEventEmission(NodeRenamed)?.Invoke(this, node);
+            BeginEventEmission(_publisherNodeRenamed.Handlers)?.Invoke(this, node);
         }
         catch (Exception error)
         {
@@ -1335,7 +1342,7 @@ public sealed partial class SceneTree : MainLoop
 
         try
         {
-            BeginEventEmission(TreeChanged)?.Invoke(this);
+            BeginEventEmission(_publisherTreeChanged.Handlers)?.Invoke(this);
         }
         catch (Exception error)
         {
@@ -1350,7 +1357,7 @@ public sealed partial class SceneTree : MainLoop
         PathRevision++; InvalidateMultiplayerPaths();
         List<Exception>? errors = null;
         try { ReconcileShaderGlobals(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { BeginEventEmission(TreeChanged)?.Invoke(this); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(_publisherTreeChanged.Handlers)?.Invoke(this); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Tree change callbacks failed.", errors);
     }
 
@@ -1381,9 +1388,9 @@ public sealed partial class SceneTree : MainLoop
             try
             {
                 if (physics)
-                    BeginEventEmission(PhysicsFrameStarted)?.Invoke(this);
+                    BeginEventEmission(_publisherPhysicsFrameStarted.Handlers)?.Invoke(this);
                 else
-                    BeginEventEmission(ProcessFrameStarted)?.Invoke(this);
+                    BeginEventEmission(_publisherProcessFrameStarted.Handlers)?.Invoke(this);
             }
             catch (Exception error)
             {
@@ -2108,15 +2115,15 @@ public sealed partial class SceneTree : MainLoop
 
     private void ClearEventSubscribers()
     {
-        NodeAdded = null;
-        NodeRemoved = null;
-        NodeRenamed = null;
-        NodeConfigurationWarningChanged = null;
+        _publisherNodeAdded.Handlers = null;
+        _publisherNodeRemoved.Handlers = null;
+        _publisherNodeRenamed.Handlers = null;
+        _publisherNodeConfigurationWarningChanged.Handlers = null;
         _editedSceneRoot = null;
-        ProcessFrameStarted = null;
-        PhysicsFrameStarted = null;
-        TreeChanged = null;
-        SceneChanged = null;
+        _publisherProcessFrameStarted.Handlers = null;
+        _publisherPhysicsFrameStarted.Handlers = null;
+        _publisherTreeChanged.Handlers = null;
+        _publisherSceneChanged.Handlers = null;
         _currentScene = null;
     }
 

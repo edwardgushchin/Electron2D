@@ -5,7 +5,7 @@ internal static class EventConnectionMembershipTests
 {
     internal static void Run()
     {
-        Membership(); PairMembership(); CapturedDelivery(); ConcurrentQueries(); RetiredReferences();
+        Membership(); PairMembership(); CapturedDelivery(); ConcurrentQueries(); RetiredReferences(); OrdinaryPublishers(); OrdinaryConcurrentQueries();
         Console.WriteLine("Event membership: live removal/clear/re-add, duplicates/fan-out, captured/deferred delivery, concurrency, retained references and zero warmed query bytes passed.");
     }
 
@@ -93,6 +93,57 @@ internal static class EventConnectionMembershipTests
     {
         var (disposed, first) = Retire(false); Collect(); Check(!first.IsAlive, "A retained disposed token releases observed publishers and unrelated handlers"); GC.KeepAlive(disposed);
         var (consumed, second) = Retire(true); Collect(); Check(!second.IsAlive, "A retained consumed token releases observed publishers and unrelated handlers"); GC.KeepAlive(consumed);
+    }
+
+    private static void OrdinaryPublishers()
+    {
+        EventPublisher<Action<int, int>> source = default; Action<int, int> wrapper = null!;
+        var calls = 0;
+        using var connection = EventConnection.Subscribe<int, int>(h => { wrapper = h; source.Add(h); source.Add(h); }, h => source.Remove(h),
+            (a, b) => { Check(a == 3 && b == 4, "Ordinary publisher payload is retained"); calls++; });
+        source.Remove(wrapper); Check(connection.IsConnected, "The last ordinary duplicate retains membership");
+        var captured = source.Handlers; source.Handlers = null;
+        Check(!connection.IsConnected, "Clearing an ordinary publisher changes membership");
+        captured!(3, 4); Check(calls == 1, "Captured multicast delivery survives publisher clearing");
+        source.Add(wrapper); Check(connection.IsConnected, "Ordinary re-add restores active membership");
+        for (var i = 0; i < 128; i++) _ = connection.IsConnected;
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 1024; i++) Check(connection.IsConnected, "Ordinary membership remains connected");
+        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        Check(owner == 0 && all == 0, "Ordinary membership queries allocate zero owner/all-thread bytes");
+        using var node = new Node(); Action<Node> owned = null!;
+        using var renamed = EventConnection.Subscribe<Node>(h => { owned = h; node.Renamed += h; }, h => node.Renamed -= h, static _ => { });
+        node.Renamed -= owned; Check(!renamed.IsConnected, "Actual Node publisher removal is observable");
+        node.Renamed += owned; Check(renamed.IsConnected, "Actual Node publisher re-add is observable");
+        using var property = EventConnection.Subscribe<ElectronObject>(h => node.PropertyListChanged += h, h => node.PropertyListChanged -= h, static _ => { });
+        using var disposed = EventConnection.Subscribe<ElectronObject>(h => node.Disposed += h, h => node.Disposed -= h,
+            _ => Check(!property.IsConnected && !renamed.IsConnected, "Publisher retirement precedes the retained disposal callback"));
+        node.Dispose(); Check(!disposed.IsConnected && !renamed.IsConnected && !property.IsConnected, "Root and inherited ordinary stores retire together");
+        using var agent = new NavigationAgent();
+        using var path = EventConnection.Subscribe(h => agent.PathChanged += h, h => agent.PathChanged -= h, static () => { });
+        using var velocity = EventConnection.Subscribe<Vector2>(h => agent.VelocityComputed += h, h => agent.VelocityComputed -= h, static _ => { });
+        agent.Dispose(); Check(!path.IsConnected && !velocity.IsConnected, "Navigation publisher disposal retires path and avoidance membership");
+        EventPublisher<Action> deferredSource = default; var queue = new Queue<Action>(); var deferredCalls = 0;
+        using var deferred = EventConnection.Subscribe(h => deferredSource.Add(h), h => deferredSource.Remove(h), () => deferredCalls++, defer: queue.Enqueue);
+        deferredSource.Handlers!(); deferredSource.Handlers = null;
+        Check(!deferred.IsConnected && queue.Count == 1, "Ordinary clearing preserves accepted deferred work");
+        queue.Dequeue()(); Check(deferredCalls == 1, "Accepted ordinary deferred delivery runs after publisher retirement");
+    }
+
+    private static void OrdinaryConcurrentQueries()
+    {
+        EventPublisher<Action> source = default; Action wrapper = null!;
+        using var connection = EventConnection.Subscribe(h => { wrapper = h; source.Add(h); }, h => source.Remove(h), static () => { });
+        Exception? error = null; using var start = new ManualResetEventSlim();
+        var writer = new Thread(() =>
+        {
+            try { start.Wait(); for (var i = 0; i < 4096; i++) { source.Handlers = null; source.Add(wrapper); } }
+            catch (Exception failure) { error = failure; }
+        });
+        writer.Start(); start.Set();
+        for (var i = 0; i < 4096; i++) _ = connection.IsConnected;
+        Check(writer.Join(TimeSpan.FromSeconds(10)) && error is null, "Ordinary concurrent publisher mutation and queries retain lock ordering");
+        source.Handlers = null; Check(!connection.IsConnected, "The final ordinary publisher clear is observed");
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

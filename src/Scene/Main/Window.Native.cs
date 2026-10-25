@@ -192,21 +192,25 @@ public partial class Window
 
     /// <summary>Occurs on an effective window pointer entry before subsequent frame callbacks.</summary>
     /// <remarks>Delivered on the owner thread for native or embedded content entry after containing-window entry. Decoration and viewport entry remain separate; repeated observations are silent.</remarks>
-    public event Action? MouseEntered;
+    public event Action? MouseEntered { add => _publisherMouseEntered.Add(value); remove => _publisherMouseEntered.Remove(value); }
+    private EventPublisher<Action> _publisherMouseEntered;
 
     /// <summary>Occurs on an effective window pointer exit before subsequent frame callbacks.</summary>
     /// <remarks>Delivered on the owner thread for native or embedded content exit before containing-window exit. Decoration and viewport exit remain separate; repeated observations are silent.</remarks>
-    public event Action? MouseExited;
+    public event Action? MouseExited { add => _publisherMouseExited.Add(value); remove => _publisherMouseExited.Remove(value); }
+    private EventPublisher<Action> _publisherMouseExited;
 
     /// <summary>Occurs when the native window's display content scale changes.</summary>
     /// <remarks>Delivered after containing-window notifications in native order on the owner thread; this is not a physical-DPI measurement.</remarks>
-    public event Action? DpiChanged;
+    public event Action? DpiChanged { add => _publisherDpiChanged.Add(value); remove => _publisherDpiChanged.Remove(value); }
+    private EventPublisher<Action> _publisherDpiChanged;
 
     /// <summary>Occurs when a native file drop completes, with paths in arrival order.</summary>
     /// <remarks>The managed snapshot remains valid after delivery. Subscribers run on the owner thread before
     /// subsequent frame callbacks. Failing subscribers do not prevent later queued native events; Run reports
     /// callback failures and releases its resources after the queue drains.</remarks>
-    public event Action<IReadOnlyList<string>>? FilesDropped;
+    public event Action<IReadOnlyList<string>>? FilesDropped { add => _publisherFilesDropped.Add(value); remove => _publisherFilesDropped.Remove(value); }
+    private EventPublisher<Action<IReadOnlyList<string>>> _publisherFilesDropped;
 
     private void ValidateFlag(WindowFlag flag)
     {

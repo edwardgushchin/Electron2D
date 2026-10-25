@@ -105,7 +105,7 @@ public abstract partial class CanvasItem : Node
     {
         EnsureMutable();
         if (sizeChanged) QueueRedraw();
-        BeginEventEmission(ItemRectChanged)?.Invoke(this);
+        BeginEventEmission(_publisherItemRectChanged.Handlers)?.Invoke(this);
     }
 
     /// <summary>Invalidates global transforms and delivers an enabled local-transform notification.</summary>
@@ -159,9 +159,9 @@ public abstract partial class CanvasItem : Node
         if (what is NotificationVisibilityChanged or NotificationLocalTransformChanged or NotificationTransformChanged)
         {
             base.OnNotification(what);
-            if (what == NotificationVisibilityChanged) BeginEventEmission(VisibilityChanged)?.Invoke(this);
-            else if (what == NotificationLocalTransformChanged) BeginEventEmission(LocalTransformChanged)?.Invoke(this);
-            else BeginEventEmission(TransformChanged)?.Invoke(this);
+            if (what == NotificationVisibilityChanged) BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(this);
+            else if (what == NotificationLocalTransformChanged) BeginEventEmission(_publisherLocalTransformChanged.Handlers)?.Invoke(this);
+            else BeginEventEmission(_publisherTransformChanged.Handlers)?.Invoke(this);
             return;
         }
         if (what is not (NotificationParented or NotificationUnparented))
@@ -248,7 +248,7 @@ public abstract partial class CanvasItem : Node
                 lock (_canvasItemGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
                 ServerState?.VisibilityNotifier?.Cancel(); ServerState?.Commands?.Dispose(); ServerState = null;
                 _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null; _instanceUniforms = null;
-                VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;
+                _publisherVisibilityChanged.Handlers = null; _publisherHidden.Handlers = null; _publisherDraw.Handlers = null; _publisherItemRectChanged.Handlers = null; _publisherLocalTransformChanged.Handlers = null; _publisherTransformChanged.Handlers = null;
             }
         }
     }
@@ -566,24 +566,29 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Occurs after local or inherited logical visibility is propagated to this node.</summary>
     /// <remarks>The base notification handler raises this event, including manual visibility notifications. Effective changes propagate through locally visible direct canvas descendants; visible tree entry also delivers it.</remarks>
-    public event Action<CanvasItem>? VisibilityChanged;
+    public event Action<CanvasItem>? VisibilityChanged { add => _publisherVisibilityChanged.Add(value); remove => _publisherVisibilityChanged.Remove(value); }
+    private EventPublisher<Action<CanvasItem>> _publisherVisibilityChanged;
 
     /// <summary>Occurs after visibility delivery when this item becomes hidden in its tree.</summary>
     /// <remarks>Explicit changes below a hidden parent and tree exit do not raise this event. Delivery is synchronous.</remarks>
-    public event Action<CanvasItem>? Hidden;
+    public event Action<CanvasItem>? Hidden { add => _publisherHidden.Add(value); remove => _publisherHidden.Remove(value); }
+    private EventPublisher<Action<CanvasItem>> _publisherHidden;
 
     /// <summary>Occurs when an operation may change this item's local drawing bounds.</summary>
     /// <remarks>Derived geometry setters report this independently of transform notifications. Delivery is synchronous
     /// on the mutating thread, restricted to the scene owner while attached, including while hidden.</remarks>
-    public event Action<CanvasItem>? ItemRectChanged;
+    public event Action<CanvasItem>? ItemRectChanged { add => _publisherItemRectChanged.Add(value); remove => _publisherItemRectChanged.Remove(value); }
+    private EventPublisher<Action<CanvasItem>> _publisherItemRectChanged;
 
     /// <summary>Projects the local-transform notification with this item as sender.</summary>
     /// <remarks>Automatic delivery is synchronous, attached-only and controlled by NotifyLocalTransformChanges. Manual notifications also deliver it.</remarks>
-    public event Action<CanvasItem>? LocalTransformChanged;
+    public event Action<CanvasItem>? LocalTransformChanged { add => _publisherLocalTransformChanged.Add(value); remove => _publisherLocalTransformChanged.Remove(value); }
+    private EventPublisher<Action<CanvasItem>> _publisherLocalTransformChanged;
 
     /// <summary>Projects the global-transform notification with this item as sender.</summary>
     /// <remarks>Automatic delivery uses the scene queue or ForceUpdateTransform. It follows the numeric notification, including initial entry and manual notifications.</remarks>
-    public event Action<CanvasItem>? TransformChanged;
+    public event Action<CanvasItem>? TransformChanged { add => _publisherTransformChanged.Add(value); remove => _publisherTransformChanged.Remove(value); }
+    private EventPublisher<Action<CanvasItem>> _publisherTransformChanged;
 
     /// <summary>Moves this node to the last position among its siblings.</summary>
     /// <remarks>A detached or hierarchy-root node is left unchanged.</remarks>
@@ -666,7 +671,7 @@ public abstract partial class CanvasItem : Node
             if (IsVisibleInTree) InvalidateCanvas();
             else if (!visible)
             {
-                try { BeginEventEmission(Hidden)?.Invoke(this); }
+                try { BeginEventEmission(_publisherHidden.Handlers)?.Invoke(this); }
                 catch (Exception error) { CollectException(ref errors, error); }
             }
             foreach (var child in AllChildren.ToArray())

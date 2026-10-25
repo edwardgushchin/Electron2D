@@ -20,7 +20,7 @@ public sealed class AudioStreamEmitter : Entity
     {
         _globalPanningStrength = ProjectSettings.GetWithOverride(ProjectSettings.AudioGeneral2DPanningStrength);
         _player.Name = "SpatialPlayback";
-        _player.Finished += () => BeginEventEmission(Finished)?.Invoke();
+        _player.Finished += () => BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
         AddChild(_player, InternalMode.Back);
     }
 
@@ -84,7 +84,8 @@ public sealed class AudioStreamEmitter : Entity
     public uint AreaMask { get { Check(); return _areaMask; } set { EnsureMutable(); _areaMask = value; } }
 
     /// <summary>Occurs when one or more voices finish naturally on a scene-owner frame.</summary>
-    public event Action? Finished;
+    public event Action? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action> _publisherFinished;
 
     /// <summary>Starts a fresh playback at finite stream time.</summary>
     /// <remarks>The streamed path has 64 silent lookahead frames and retains full attack; samples submit a complete native buffer.
@@ -224,7 +225,7 @@ public sealed class AudioStreamEmitter : Entity
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) Finished = null;
+        if (disposing) _publisherFinished.Handlers = null;
         base.Dispose(disposing);
     }
 }

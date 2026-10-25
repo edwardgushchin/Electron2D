@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1309,7 +1309,7 @@ Checks owner thread and rejects disposal while `ProcessEvents` is delivering. Th
 <a id="protected-dispose"></a>
 #### `protected override void Dispose(bool disposing)`
 
-When `disposing` is true, restores the default pointer, releases cursors and the window, quits the video subsystem, clears the process singleton, then calls the base implementation. This hook is reached only from owner-thread disposal.
+When `disposing` is true, restores the default pointer, releases cursors and the window, quits the video subsystem, clears the process singleton, then calls the base implementation. This hook is reached only from owner-thread disposal. Session-owned facade event stores retire after native-window retirement even when a callback fails, so retained EventConnection tokens observe detachment. Native-window publishers retain their separate retirement lifecycle.
 
 ## Lifecycle and invariants
 

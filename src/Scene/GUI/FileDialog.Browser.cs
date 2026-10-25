@@ -40,7 +40,7 @@ public partial class FileDialog
     {
         if (_filenameFilterText == text) return; if (text.Length != 0 && !_filterVisible) { _filterVisible = true; ApplyFeatures(); }
         _filenameFilterText = text; _filenameFilter.Text = text; List<Exception>? errors = null;
-        try { BeginEventEmission(FilenameFilterChanged)?.Invoke(text); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(_publisherFilenameFilterChanged.Handlers)?.Invoke(text); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) Invalidate(); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("File filter callbacks failed.", errors);
     }
@@ -191,9 +191,9 @@ public partial class FileDialog
         if (_root.Length != 0 && !WithinRoot(path)) throw new UnauthorizedAccessException("Selection cannot leave RootSubfolder.");
     }
     private void FinishPendingSave() { var path = _pendingSave; _pendingSave = ""; if (path.Length != 0) TryOperation(() => { ValidateSelectionScope(path); FinishFile(path); }); }
-    private void FinishFile(string path) { SaveRecent(); HideAndNotify(() => BeginEventEmission(FileSelected)?.Invoke(path)); }
-    private void FinishFiles(string[] paths) { SaveRecent(); HideAndNotify(() => BeginEventEmission(FilesSelected)?.Invoke(Array.AsReadOnly(paths))); }
-    private void FinishDirectory(string path) { SaveRecent(); HideAndNotify(() => BeginEventEmission(DirSelected)?.Invoke(path)); }
+    private void FinishFile(string path) { SaveRecent(); HideAndNotify(() => BeginEventEmission(_publisherFileSelected.Handlers)?.Invoke(path)); }
+    private void FinishFiles(string[] paths) { SaveRecent(); HideAndNotify(() => BeginEventEmission(_publisherFilesSelected.Handlers)?.Invoke(Array.AsReadOnly(paths))); }
+    private void FinishDirectory(string path) { SaveRecent(); HideAndNotify(() => BeginEventEmission(_publisherDirSelected.Handlers)?.Invoke(path)); }
     private void HideAndNotify(Action notify)
     { List<Exception>? errors = null; try { Hide(); } catch (Exception e) { CollectException(ref errors, e); } try { if (!IsDisposed) notify(); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("File selection callbacks failed.", errors); }
     private void TryOperation(Action action) { try { action(); } catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException) { if (!IsDisposed) ShowError(e.Message); } }
@@ -225,5 +225,5 @@ public partial class FileDialog
     /// <inheritdoc />
     protected override void ValidateDisposal() { if (_nativePending) throw new InvalidOperationException("A native chooser is still pending; wait for its result."); base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _directory?.Dispose(); FileSelected = null; FilesSelected = null; DirSelected = null; FilenameFilterChanged = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _directory?.Dispose(); _publisherFileSelected.Handlers = null; _publisherFilesSelected.Handlers = null; _publisherDirSelected.Handlers = null; _publisherFilenameFilterChanged.Handlers = null; } base.Dispose(disposing); }
 }

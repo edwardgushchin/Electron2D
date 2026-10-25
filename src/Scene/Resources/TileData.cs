@@ -33,7 +33,8 @@ public sealed partial class TileData : ElectronObject
     internal TileData(bool allowTransform) => _allowTransform = allowTransform;
 
     /// <summary>Occurs after authored data changes.</summary>
-    public event Action? Changed;
+    public event Action? Changed { add => _publisherChanged.Add(value); remove => _publisherChanged.Remove(value); }
+    private EventPublisher<Action> _publisherChanged;
     /// <summary>Gets or sets horizontal reflection; base alternatives cannot be reflected in their data.</summary>
     public bool FlipH { get { ThrowIfDisposed(); return _flipH; } set { TransformAllowed(value); if (_flipH == value) return; _flipH = value; Change(); } }
     /// <summary>Gets or sets vertical reflection; base alternatives cannot be reflected in their data.</summary>
@@ -133,7 +134,7 @@ public sealed partial class TileData : ElectronObject
     private PhysicsLayer Layer(int index) { ThrowIfDisposed(); return Layers[index]; }
     private static void Finite(float value) { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
     private void TransformAllowed(bool value) { ThrowIfDisposed(); if (value && !_allowTransform) throw new InvalidOperationException("Transform flags belong to alternative tiles or cells."); }
-    private void Change() { NotifyPropertyListChanged(); BeginEventEmission(Changed)?.Invoke(); }
+    private void Change() { NotifyPropertyListChanged(); BeginEventEmission(_publisherChanged.Handlers)?.Invoke(); }
     internal void ResizeLayers(int count)
     {
         ThrowIfDisposed(); if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
@@ -169,7 +170,7 @@ public sealed partial class TileData : ElectronObject
         base.ValidateDisposal();
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; TerrainSource = null; CustomValues.Clear(); _material = null; Layers.Clear(); ResizeNavigationLayers(0); ResizeOcclusionLayers(0); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _publisherChanged.Handlers = null; TerrainSource = null; CustomValues.Clear(); _material = null; Layers.Clear(); ResizeNavigationLayers(0); ResizeOcclusionLayers(0); } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(StoredProperties<TileData>("", static p => p));
 

@@ -51,10 +51,12 @@ public abstract class Slider : Range
     }
     /// <summary>Occurs before a pointer press changes the value and activates its drag.</summary>
     /// <remarks>Callback failures still attempt the value/notification phases unless a callback invalidates this interaction.</remarks>
-    public event Action? DragStarted;
+    public event Action? DragStarted { add => _publisherDragStarted.Add(value); remove => _publisherDragStarted.Remove(value); }
+    private EventPublisher<Action> _publisherDragStarted;
     /// <summary>Occurs for an editable left-button release with whether the current ratio differs approximately from the press ratio.</summary>
     /// <remarks>A release can notify without an active grab. Lifecycle cancellation does not emit this event.</remarks>
-    public event Action<bool>? DragEnded;
+    public event Action<bool>? DragEnded { add => _publisherDragEnded.Add(value); remove => _publisherDragEnded.Remove(value); }
+    private EventPublisher<Action<bool>> _publisherDragEnded;
     private void CheckSlider() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
 
     /// <summary>Gets or sets whether input can change the range.</summary>
@@ -180,7 +182,7 @@ public abstract class Slider : Range
         var grabber = RequiredIcon(_mouseInside || HasFocus(true) ? "grabber_highlight" : "grabber");
         var pixel = Pixel(_vertical ? position.Y : position.X); var tree = Tree; var generation = ++_interactionGeneration;
         _grabPosition = pixel; _ratioBeforeDrag = Ratio; _grabActive = false; List<Exception>? errors = null;
-        try { BeginEventEmission(DragStarted)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(_publisherDragStarted.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         if (InteractionCurrent(generation, tree))
         {
             var ratioReady = false;
@@ -206,7 +208,7 @@ public abstract class Slider : Range
     private void EndDrag()
     {
         _grabActive = false; _interactionGeneration++; List<Exception>? errors = null;
-        try { BeginEventEmission(DragEnded)?.Invoke(!Mathf.IsEqualApprox(_ratioBeforeDrag, Ratio)); } catch (Exception error) { CollectException(ref errors, error); }
+        try { BeginEventEmission(_publisherDragEnded.Handlers)?.Invoke(!Mathf.IsEqualApprox(_ratioBeforeDrag, Ratio)); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Slider release callbacks failed.", errors);
     }
     private void Wheel(bool increase)
@@ -332,7 +334,7 @@ public abstract class Slider : Range
     {
         _interactionGeneration++; _grabActive = false; _repeatEnabled = false;
         try { base.Dispose(disposing); }
-        finally { DragStarted = null; DragEnded = null; }
+        finally { _publisherDragStarted.Handlers = null; _publisherDragEnded.Handlers = null; }
     }
 }
 

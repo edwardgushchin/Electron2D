@@ -16,22 +16,27 @@ public partial class ItemList
     /// <summary>Occurs after GUI input selects the current item in Single mode.</summary>
     /// <remarks>Programmatic selection is silent. A pointer selection precedes ItemClicked and double-click activation.
     /// Handler exceptions stop the emission; model mutation or disposal stops the remaining input operation.</remarks>
-    public event Action<int>? ItemSelected;
+    public event Action<int>? ItemSelected { add => _publisherItemSelected.Add(value); remove => _publisherItemSelected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherItemSelected;
     /// <summary>Occurs for one item in an input-driven Multi or Toggle selection transition.</summary>
     /// <remarks>Range notifications run in index order. Programmatic selection is silent. A handler may change the model;
     /// the remaining operation then stops before using an old index. Keyboard ranges report requested selection even
     /// when an ineligible item retains its flag. Exceptions stop the ordinary multicast emission.</remarks>
-    public event Action<int, bool>? MultiSelected;
+    public event Action<int, bool>? MultiSelected { add => _publisherMultiSelected.Add(value); remove => _publisherMultiSelected.Remove(value); }
+    private EventPublisher<Action<int, bool>> _publisherMultiSelected;
     /// <summary>Occurs when a pointer button is pressed over an enabled item, or the menu action requests its context menu.</summary>
     /// <remarks>The position is local to the list. Pointer selection is delivered first; left double-click activation is last.
     /// A selected Multi item defers exclusive selection until release, without a click notification.</remarks>
-    public event Action<int, Vector2, MouseButton>? ItemClicked;
+    public event Action<int, Vector2, MouseButton>? ItemClicked { add => _publisherItemClicked.Add(value); remove => _publisherItemClicked.Remove(value); }
+    private EventPublisher<Action<int, Vector2, MouseButton>> _publisherItemClicked;
     /// <summary>Occurs when an enabled item is activated by left double-click or the accept action.</summary>
     /// <remarks>Selectable state does not prevent activation. A double-click follows selection and ItemClicked.</remarks>
-    public event Action<int>? ItemActivated;
+    public event Action<int>? ItemActivated { add => _publisherItemActivated.Add(value); remove => _publisherItemActivated.Remove(value); }
+    private EventPublisher<Action<int>> _publisherItemActivated;
     /// <summary>Occurs when a pointer button is pressed outside every item, including a wheel press before scrolling.</summary>
     /// <remarks>The position is local to the list. Subscribers may implement their own empty-space selection policy.</remarks>
-    public event Action<Vector2, MouseButton>? EmptyClicked;
+    public event Action<Vector2, MouseButton>? EmptyClicked { add => _publisherEmptyClicked.Add(value); remove => _publisherEmptyClicked.Remove(value); }
+    private EventPublisher<Action<Vector2, MouseButton>> _publisherEmptyClicked;
 
     /// <summary>Gets or sets whether clicking an already selected item repeats selection notification.</summary>
     /// <value>False initially.</value>
@@ -106,7 +111,7 @@ public partial class ItemList
             else
             {
                 var revision = _inputRevision; var tree = Tree;
-                BeginEventEmission(EmptyClicked)?.Invoke(button.Position, button.ButtonIndex);
+                BeginEventEmission(_publisherEmptyClicked.Handlers)?.Invoke(button.Position, button.ButtonIndex);
                 if (IsDisposed || revision != _inputRevision || !ReferenceEquals(tree, Tree)) return;
             }
             if (button.ButtonIndex is >= MouseButton.WheelUp and <= MouseButton.WheelRight)
@@ -165,7 +170,7 @@ public partial class ItemList
         else if (inputEvent.IsAction("ui_accept", true))
         {
             _searchLength = 0;
-            if ((uint)_current < (uint)_items.Count && !_items[_current].Disabled) BeginEventEmission(ItemActivated)?.Invoke(_current);
+            if ((uint)_current < (uint)_items.Count && !_items[_current].Disabled) BeginEventEmission(_publisherItemActivated.Handlers)?.Invoke(_current);
         }
         else if (_allowSearch && inputEvent is InputEventKey { Unicode: > 0 } key) Search(new Rune(key.Unicode));
     }
@@ -210,7 +215,7 @@ public partial class ItemList
                 if (_selectMode == SelectMode.Single ? !EmitItemSelected(index) : !EmitMultiSelected(index, true)) return;
             }
             if (!EmitItemClicked(index, button.Position, button.ButtonIndex)) return;
-            if (button.ButtonIndex == MouseButton.Left && button.DoubleClick) BeginEventEmission(ItemActivated)?.Invoke(index);
+            if (button.ButtonIndex == MouseButton.Left && button.DoubleClick) BeginEventEmission(_publisherItemActivated.Handlers)?.Invoke(index);
             return;
         }
         EmitItemClicked(index, button.Position, button.ButtonIndex);
@@ -317,19 +322,19 @@ public partial class ItemList
     private bool EmitItemSelected(int index)
     {
         var revision = _inputRevision; var tree = Tree;
-        BeginEventEmission(ItemSelected)?.Invoke(index);
+        BeginEventEmission(_publisherItemSelected.Handlers)?.Invoke(index);
         return !IsDisposed && revision == _inputRevision && ReferenceEquals(tree, Tree);
     }
     private bool EmitMultiSelected(int index, bool selected)
     {
         var revision = _inputRevision; var tree = Tree;
-        BeginEventEmission(MultiSelected)?.Invoke(index, selected);
+        BeginEventEmission(_publisherMultiSelected.Handlers)?.Invoke(index, selected);
         return !IsDisposed && revision == _inputRevision && ReferenceEquals(tree, Tree);
     }
     private bool EmitItemClicked(int index, Vector2 point, MouseButton button)
     {
         var revision = _inputRevision; var tree = Tree;
-        BeginEventEmission(ItemClicked)?.Invoke(index, point, button);
+        BeginEventEmission(_publisherItemClicked.Handlers)?.Invoke(index, point, button);
         return !IsDisposed && revision == _inputRevision && ReferenceEquals(tree, Tree);
     }
 }

@@ -577,6 +577,10 @@ public sealed partial class DisplayServer : ElectronObject
         {
             retirementFailure = !_retiringNativeWindow ? PrepareNativeWindowRetirement() : null;
             if (RetireWindowEvents() is { } eventFailure) retirementFailure = retirementFailure is null ? eventFailure : new AggregateException(retirementFailure, eventFailure);
+            _publisherQuitRequestedCore.Handlers = _publisherSystemThemeChangedCore.Handlers = _publisherCloseRequestedCore.Handlers = null;
+            _publisherWindowMouseEnteredCore.Handlers = _publisherWindowMouseExitedCore.Handlers = _publisherWindowDpiChangedCore.Handlers = _publisherGoBackRequestedCore.Handlers = null;
+            _publisherWindowRectChangedCore.Handlers = null; _publisherWindowFocusChangedCore.Handlers = null;
+            _publisherTextInputCore.Handlers = null; _publisherTextEditingCore.Handlers = null; _publisherFilesDroppedCore.Handlers = null;
             if (_rootDisplay is { } root)
             {
                 if (ReferenceEquals(root.FocusedWindow(), this) || ReferenceEquals(root._pressedInputWindow, this))

@@ -150,7 +150,8 @@ public partial class AudioStreamPlayer : Node
     public bool Playing { get => IsPlaying(); set { if (value) Play(); else Stop(); } }
     /// <summary>Occurs when one or more voices complete naturally during an owner-thread frame.</summary>
     /// <remarks>Explicit Stop and stream replacement do not emit Finished.</remarks>
-    public event Action? Finished;
+    public event Action? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action> _publisherFinished;
     internal bool DeferOutputPreparation;
     internal void ResetVideoHistory()
     {
@@ -364,7 +365,7 @@ public partial class AudioStreamPlayer : Node
                             try { if (voice.Finished) { StopVoice(voice); ended = true; } }
                             catch (Exception error) { try { StopVoice(voice); } catch (Exception cleanup) { CollectException(ref errors, cleanup); } CollectException(ref errors, error); }
                         }
-                    if (ended) BeginEventEmission(Finished)?.Invoke();
+                    if (ended) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
                 }
             }
             catch (Exception error) { CollectException(ref errors, error); }
@@ -410,7 +411,7 @@ public partial class AudioStreamPlayer : Node
         {
             try { ReleaseVoices(); } catch (Exception error) { CollectException(ref errors, error); }
             if (_registered) { _registered = false; try { AudioServer.Service.Detach(this); } catch (Exception error) { CollectException(ref errors, error); } }
-            _parameters.Clear(); _stream = null; Finished = null;
+            _parameters.Clear(); _stream = null; _publisherFinished.Handlers = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Audio player teardown failed.", errors);

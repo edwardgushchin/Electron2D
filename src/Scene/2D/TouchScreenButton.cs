@@ -84,9 +84,11 @@ public partial class TouchScreenButton : Entity
         }
     }
     /// <summary>Occurs after a contact and its action contribution are committed.</summary>
-    public event Action? Pressed;
+    public event Action? Pressed { add => _publisherPressed.Add(value); remove => _publisherPressed.Remove(value); }
+    private EventPublisher<Action> _publisherPressed;
     /// <summary>Occurs after a live contact is released, including lifecycle cancellation.</summary>
-    public event Action? Released;
+    public event Action? Released { add => _publisherReleased.Add(value); remove => _publisherReleased.Remove(value); }
+    private EventPublisher<Action> _publisherReleased;
     /// <summary>Tests whether this button currently owns a touch contact.</summary>
     /// <returns>True while one signed contact index is active.</returns>
     public bool IsPressed() { CheckTouch(); return _finger is not null; }
@@ -106,7 +108,7 @@ public partial class TouchScreenButton : Entity
     {
         if (_finger is not null || !InputEnabled || GetViewport()?.GUIDisableInput == true || IsEdited || !IsInsideTree || !IsVisibleInTree || !DeviceVisible) return; _finger = finger; SetInternalProcessing(true, false); _revision++; _binding.Set(_action, 1); List<Exception>? errors = null;
         try { if (_binding.Action.Length != 0) Tree?.QueueVirtualAction(this, _binding.Action, true); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && _finger == finger) BeginEventEmission(Pressed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && _finger == finger) BeginEventEmission(_publisherPressed.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Touch press callbacks failed.", errors);
     }
@@ -115,7 +117,7 @@ public partial class TouchScreenButton : Entity
         if (_finger is null) { _binding.Release(); return; }
         _finger = null; SetInternalProcessing(false, false); _revision++; var action = _binding.Action; _binding.Release(); List<Exception>? errors = null;
         try { if (!exiting && action.Length != 0) Tree?.QueueVirtualAction(this, action, false); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!exiting && !IsDisposed) BeginEventEmission(Released)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!exiting && !IsDisposed) BeginEventEmission(_publisherReleased.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!exiting && !IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Touch release callbacks failed.", errors);
     }
@@ -163,6 +165,6 @@ public partial class TouchScreenButton : Entity
     protected override void Dispose(bool disposing)
     {
         _binding.Release(); _finger = null; ReleaseTextures(); if (_normal is not null) _normal.Changed -= ResourceChanged; if (_pressedTexture is not null) _pressedTexture.Changed -= ResourceChanged; if (_shape is not null) _shape.Changed -= ResourceChanged;
-        try { base.Dispose(disposing); } finally { _pixel.Dispose(); Pressed = null; Released = null; _normal = _pressedTexture = null; _shape = null; _bitmask = null; }
+        try { base.Dispose(disposing); } finally { _pixel.Dispose(); _publisherPressed.Handlers = null; _publisherReleased.Handlers = null; _normal = _pressedTexture = null; _shape = null; _bitmask = null; }
     }
 }

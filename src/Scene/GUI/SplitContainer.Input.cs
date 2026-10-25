@@ -52,7 +52,7 @@ public partial class SplitContainer
             if (!Dragging) return; Dragging = false; List<Exception>? errors = null;
             if (!IsDisposed) QueueRedraw();
             if (_multi && !Splitter.IsDisposed) try { Splitter.ShowGrabber(-1); } catch (Exception error) { CollectException(ref errors, error); }
-            try { Splitter.BeginEventEmission(Splitter.DragEnded)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { Splitter.BeginEventEmission(Splitter._publisherDragEnded.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
             for (var i = 0; !IsDisposed && i < GetChildCount(includeInternal: true); i++) if (GetChild(i, includeInternal: true) is Dragger { _multi: true } child)
                     try { child.Stop(); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Split release callbacks failed.", errors);
@@ -76,7 +76,7 @@ public partial class SplitContainer
                 {
                     Splitter.ClampSplitOffset(); Dragging = true; QueueRedraw(); if (_multi) Splitter.ShowGrabber(Index);
                     List<Exception>? errors = null;
-                    try { Splitter.BeginEventEmission(Splitter.DragStarted)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+                    try { Splitter.BeginEventEmission(Splitter._publisherDragStarted.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
                     if (Dragging && Available && Index < Splitter._offsets.Count) { _start = Splitter.Offset(Index); _from = Splitter.Axis(GetTransform() * button.Position); }
                     ThrowCollected("Split start callbacks failed.", errors);
                 }
@@ -87,7 +87,7 @@ public partial class SplitContainer
             {
                 var current = Splitter.Axis(GetTransform() * motion.Position); var delta = checked(current - _from);
                 Splitter.SetOffset(Index, checked(_start + (!Splitter._vertical && IsLayoutRTL() ? -delta : delta))); Splitter.ClampSplitOffset(Index);
-                Splitter.BeginEventEmission(Splitter.Dragged)?.Invoke(Splitter.Offset(Index));
+                Splitter.BeginEventEmission(Splitter._publisherDragged.Handlers)?.Invoke(Splitter.Offset(Index));
             }
         }
         protected override void OnNotification(int what)

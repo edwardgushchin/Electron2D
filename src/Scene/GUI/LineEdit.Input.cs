@@ -66,17 +66,17 @@ public partial class LineEdit
         if (inputEvent is not InputEventKey { Pressed: true } key) return;
         if (!_editing)
         {
-            if (_editable && Action(key, "ui_text_submit")) { Edit(); BeginEventEmission(EditingToggled)?.Invoke(_editing); AcceptEvent(); }
+            if (_editable && Action(key, "ui_text_submit")) { Edit(); BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); AcceptEvent(); }
             return;
         }
         if (Action(key, "ui_text_submit"))
         {
             AcceptEvent(); List<Exception>? errors = null;
-            try { BeginEventEmission(TextSubmitted)?.Invoke(_text); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (!IsDisposed && _editing && !_keepEditingOnTextSubmit) { Unedit(); BeginEventEmission(EditingToggled)?.Invoke(false); } } catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherTextSubmitted.Handlers)?.Invoke(_text); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (!IsDisposed && _editing && !_keepEditingOnTextSubmit) { Unedit(); BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(false); } } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("LineEdit submission callbacks failed.", errors); return;
         }
-        if (Action(key, "ui_cancel")) { AcceptEvent(); Unedit(); BeginEventEmission(EditingToggled)?.Invoke(false); return; }
+        if (Action(key, "ui_cancel")) { AcceptEvent(); Unedit(); BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(false); return; }
         if (_shortcutKeysEnabled)
         {
             if (Action(key, "ui_text_select_all")) { SelectAll(); AcceptEvent(); return; }

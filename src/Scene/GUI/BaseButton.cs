@@ -57,13 +57,17 @@ public abstract class BaseButton : Control
     /// <summary>Initializes a momentary button activated on release, with left-button input and full focus.</summary>
     protected BaseButton() { _groupReference = new(this); FocusMode = FocusMode.All; }
     /// <summary>Occurs when the configured edge activates the button, after the pressed hook.</summary>
-    public event Action? Pressed;
+    public event Action? Pressed { add => _publisherPressed.Add(value); remove => _publisherPressed.Remove(value); }
+    private EventPublisher<Action> _publisherPressed;
     /// <summary>Occurs when an eligible input first begins holding the button.</summary>
-    public event Action? ButtonDown;
+    public event Action? ButtonDown { add => _publisherButtonDown.Add(value); remove => _publisherButtonDown.Remove(value); }
+    private EventPublisher<Action> _publisherButtonDown;
     /// <summary>Occurs when holding ends, including disable and focus cancellation.</summary>
-    public event Action? ButtonUp;
+    public event Action? ButtonUp { add => _publisherButtonUp.Add(value); remove => _publisherButtonUp.Remove(value); }
+    private EventPublisher<Action> _publisherButtonUp;
     /// <summary>Occurs after a signalled toggle and its hook; the argument is the committed toggle state.</summary>
-    public event Action<bool>? Toggled;
+    public event Action<bool>? Toggled { add => _publisherToggled.Add(value); remove => _publisherToggled.Remove(value); }
+    private EventPublisher<Action<bool>> _publisherToggled;
     /// <summary>Handles activation before <see cref="Pressed"/>.</summary>
     protected virtual void OnPressed() { }
     /// <summary>Handles a signalled toggle before <see cref="Toggled"/>.</summary>
@@ -242,7 +246,7 @@ public abstract class BaseButton : Control
         if (pressed && (accept || _hovered || input is InputEventScreenTouch && _inside))
         {
             _attempt = true; _inside = true;
-            if (!_down) { _down = true; try { BeginEventEmission(ButtonDown)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); } }
+            if (!_down) { _down = true; try { BeginEventEmission(_publisherButtonDown.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); } }
         }
         if (Current(generation, tree) && _attempt && _inside &&
             (pressed && _actionMode == ButtonActionMode.ButtonPress || input.IsReleased() && _actionMode == ButtonActionMode.ButtonRelease))
@@ -274,18 +278,18 @@ public abstract class BaseButton : Control
     {
         var pressed = _pressed;
         try { OnToggled(pressed); } catch (Exception e) { CollectException(ref errors, e); }
-        if (Current(generation, tree)) try { BeginEventEmission(Toggled)?.Invoke(pressed); } catch (Exception e) { CollectException(ref errors, e); }
+        if (Current(generation, tree)) try { BeginEventEmission(_publisherToggled.Handlers)?.Invoke(pressed); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void NotifyPressed(ulong generation, SceneTree? tree, ref List<Exception>? errors)
     {
         try { OnPressed(); } catch (Exception e) { CollectException(ref errors, e); }
-        if (Current(generation, tree)) try { BeginEventEmission(Pressed)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        if (Current(generation, tree)) try { BeginEventEmission(_publisherPressed.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void ClearAttempt() { _attempt = false; _inside = false; _touch = -1; }
     private void ReleaseHeld(ref List<Exception>? errors)
     {
         if (!_down) return; _down = false;
-        try { BeginEventEmission(ButtonUp)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(_publisherButtonUp.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     /// <inheritdoc />
     /// <exception cref="ArgumentNullException">The input event is null.</exception>
@@ -388,6 +392,6 @@ public abstract class BaseButton : Control
     {
         _interaction++; _groupGeneration++; _group?.Remove(_groupReference); _group = null; _shortcut = null;
         ClearAttempt(); _down = false; _feedback = false;
-        try { base.Dispose(disposing); } finally { Pressed = null; Toggled = null; ButtonDown = null; ButtonUp = null; }
+        try { base.Dispose(disposing); } finally { _publisherPressed.Handlers = null; _publisherToggled.Handlers = null; _publisherButtonDown.Handlers = null; _publisherButtonUp.Handlers = null; }
     }
 }

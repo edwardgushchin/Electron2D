@@ -31,9 +31,11 @@ public sealed class AnimationNodeStateMachinePlayback : Resource
     /// <summary>Creates an unattached controller; attached instances are supplied through the tree's Playback key.</summary>
     public AnimationNodeStateMachinePlayback() { ResourceLocalToScene = true; }
     /// <summary>Occurs after a state becomes current; grouped leaf names also reach ancestor controllers.</summary>
-    public event Action<string>? StateStarted;
+    public event Action<string>? StateStarted { add => _publisherStateStarted.Add(value); remove => _publisherStateStarted.Remove(value); }
+    private EventPublisher<Action<string>> _publisherStateStarted;
     /// <summary>Occurs when an outgoing state finishes fading, or is replaced without a fade.</summary>
-    public event Action<string>? StateFinished;
+    public event Action<string>? StateFinished { add => _publisherStateFinished.Add(value); remove => _publisherStateFinished.Remove(value); }
+    private EventPublisher<Action<string>> _publisherStateFinished;
     private void Command()
     {
         ThrowIfDisposed(); _instance?.Context.Tree.EnsureAnimationMutable(); if (_machine?.IsDisposed == true) throw new ObjectDisposedException(nameof(AnimationNodeStateMachine));
@@ -155,8 +157,8 @@ public sealed class AnimationNodeStateMachinePlayback : Resource
     {
         if (_test || state.Length == 0) return;
         if (_machine!.States.TryGetValue(state, out var entry) && entry.Node is AnimationNodeStateMachine { StateMachineType: AnimationStateMachineType.Grouped }) return;
-        if (state is not "Start" and not "End" && _signals.TryGetValue(state, out var signals)) foreach (var signal in signals) { if (signal.Owner.IsDisposed) continue; if (start) signal.Owner.BeginEventEmission(signal.Owner.StateStarted)?.Invoke(signal.Name); else signal.Owner.BeginEventEmission(signal.Owner.StateFinished)?.Invoke(signal.Name); }
-        if (!IsDisposed) { if (start) BeginEventEmission(StateStarted)?.Invoke(state); else BeginEventEmission(StateFinished)?.Invoke(state); }
+        if (state is not "Start" and not "End" && _signals.TryGetValue(state, out var signals)) foreach (var signal in signals) { if (signal.Owner.IsDisposed) continue; if (start) signal.Owner.BeginEventEmission(signal.Owner._publisherStateStarted.Handlers)?.Invoke(signal.Name); else signal.Owner.BeginEventEmission(signal.Owner._publisherStateFinished.Handlers)?.Invoke(signal.Name); }
+        if (!IsDisposed) { if (start) BeginEventEmission(_publisherStateStarted.Handlers)?.Invoke(state); else BeginEventEmission(_publisherStateFinished.Handlers)?.Invoke(state); }
     }
     private void SetCurrent(string name)
     { _current = name; _currentState = _machine!.States[name]; Signal(name, true); }
@@ -335,7 +337,7 @@ public sealed class AnimationNodeStateMachinePlayback : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { _testing?.Dispose(); _testing = null; _instance = null; _machine = null; _path.Clear(); _pathStates.Clear(); _indices.Clear(); _signals.Clear(); _requests.Clear(); _validated.Clear(); _currentState = _fadingState = null; _curve = null; GroupStart = GroupEnd = null; _names = []; _cost = []; _previous = []; _closed = _chain = []; StateStarted = StateFinished = null; }
+        if (disposing) { _testing?.Dispose(); _testing = null; _instance = null; _machine = null; _path.Clear(); _pathStates.Clear(); _indices.Clear(); _signals.Clear(); _requests.Clear(); _validated.Clear(); _currentState = _fadingState = null; _curve = null; GroupStart = GroupEnd = null; _names = []; _cost = []; _previous = []; _closed = _chain = []; _publisherStateStarted.Handlers = _publisherStateFinished.Handlers = null; }
         base.Dispose(disposing);
     }
 }

@@ -115,9 +115,11 @@ public partial class ScrollContainer : Container
     }
 
     /// <summary>Occurs when a touch drag first exceeds the configured deadzone.</summary>
-    public event Action? ScrollStarted;
+    public event Action? ScrollStarted { add => _publisherScrollStarted.Add(value); remove => _publisherScrollStarted.Remove(value); }
+    private EventPublisher<Action> _publisherScrollStarted;
     /// <summary>Occurs when a begun touch drag and its inertia finish or are cancelled.</summary>
-    public event Action? ScrollEnded;
+    public event Action? ScrollEnded { add => _publisherScrollEnded.Add(value); remove => _publisherScrollEnded.Remove(value); }
+    private EventPublisher<Action> _publisherScrollEnded;
 
     /// <summary>Gets the owned horizontal scroll bar.</summary>
     /// <returns>The live internal bar; callers may customize its range theme.</returns>
@@ -444,6 +446,6 @@ public partial class ScrollContainer : Container
         if (_focusViewport is not null) _focusViewport.GUIFocusChanged -= FocusChanged;
         _focusViewport = null;
         try { base.Dispose(disposing); }
-        finally { ScrollStarted = null; ScrollEnded = null; }
+        finally { _publisherScrollStarted.Handlers = null; _publisherScrollEnded.Handlers = null; }
     }
 }

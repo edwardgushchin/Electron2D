@@ -44,17 +44,18 @@ public sealed partial class NavigationRegion : Entity
     public NavigationPolygon? NavigationPolygon
     {
         get { ThrowIfDisposed(); return _polygon; }
-        set { EnsureMutable(); NavigationServer.RegionSetNavigationPolygon(_rid, value); _polygon = value; BeginEventEmission(NavigationPolygonChanged)?.Invoke(); }
+        set { EnsureMutable(); NavigationServer.RegionSetNavigationPolygon(_rid, value); _polygon = value; BeginEventEmission(_publisherNavigationPolygonChanged.Handlers)?.Invoke(); }
     }
     /// <summary>Occurs after polygon replacement or an authored resource edit stages server geometry.</summary>
     /// <remarks>Attached resource edits from another thread deliver this signal through the scene owner queue.</remarks>
-    public event Action? NavigationPolygonChanged;
+    public event Action? NavigationPolygonChanged { add => _publisherNavigationPolygonChanged.Add(value); remove => _publisherNavigationPolygonChanged.Remove(value); }
+    private EventPublisher<Action> _publisherNavigationPolygonChanged;
     internal void NotifyPolygonChanged()
     {
         if (IsDisposed) return;
         if (Tree is { } tree && !tree.IsOwnerThread)
-        { if (!tree.IsClosing) tree.Defer(() => { if (!IsDisposed && Tree == tree) BeginEventEmission(NavigationPolygonChanged)?.Invoke(); }); }
-        else BeginEventEmission(NavigationPolygonChanged)?.Invoke();
+        { if (!tree.IsClosing) tree.Defer(() => { if (!IsDisposed && Tree == tree) BeginEventEmission(_publisherNavigationPolygonChanged.Handlers)?.Invoke(); }); }
+        else BeginEventEmission(_publisherNavigationPolygonChanged.Handlers)?.Invoke();
     }
     /// <summary>Returns the explicit map override or the selected World's map while attached.</summary>
     /// <returns>Returns the explicit map override or the selected World's map while attached.</returns>
@@ -102,7 +103,7 @@ public sealed partial class NavigationRegion : Entity
         if (disposing)
         {
             try { NavigationServer.Service.ReleaseSceneRegion(_rid); } catch (Exception error) { CollectException(ref errors, error); }
-            NavigationPolygonChanged = null; BakeFinished = null; _polygon = null;
+            _publisherNavigationPolygonChanged.Handlers = null; _publisherBakeFinished.Handlers = null; _polygon = null;
         }
         ThrowCollected("Navigation region teardown failed.", errors);
     }

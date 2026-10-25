@@ -23,7 +23,7 @@ public partial class TabBar
         _buttonHover = index >= 0 && _tabs[index].ButtonRect.HasPoint(point) ? index : -1;
         _closeHover = index >= 0 && !_tabs[index].Disabled && _tabs[index].CloseRect.HasPoint(point) ? index : -1;
         _arrowHover = _buttonsVisible ? _backRect.HasPoint(point) ? -1 : _nextRect.HasPoint(point) ? 1 : 0 : 0;
-        if (changed) { _dirty = true; QueueRedraw(); if (index >= 0) BeginEventEmission(TabHovered)?.Invoke(index); } else QueueRedraw();
+        if (changed) { _dirty = true; QueueRedraw(); if (index >= 0) BeginEventEmission(_publisherTabHovered.Handlers)?.Invoke(index); } else QueueRedraw();
     }
     /// <inheritdoc />
     protected override void OnGUIInput(InputEvent inputEvent)
@@ -49,12 +49,12 @@ public partial class TabBar
                 if (button.ButtonIndex != MouseButton.Left) return;
                 var pressed = _pressedTab; var close = _pressedClose; _pressedTab = null; QueueRedraw();
                 var index = close ? _closeHover : _buttonHover;
-                if (index >= 0 && ReferenceEquals(_tabs[index], pressed)) { if (close) BeginEventEmission(TabClosePressed)?.Invoke(index); else BeginEventEmission(TabButtonPressed)?.Invoke(index); }
+                if (index >= 0 && ReferenceEquals(_tabs[index], pressed)) { if (close) BeginEventEmission(_publisherTabClosePressed.Handlers)?.Invoke(index); else BeginEventEmission(_publisherTabButtonPressed.Handlers)?.Invoke(index); }
                 return;
             }
             if (button.ButtonIndex == MouseButton.Middle)
             {
-                if (_closeWithMiddleMouse && _hover >= 0) BeginEventEmission(TabClosePressed)?.Invoke(_hover); return;
+                if (_closeWithMiddleMouse && _hover >= 0) BeginEventEmission(_publisherTabClosePressed.Handlers)?.Invoke(_hover); return;
             }
             var selecting = button.ButtonIndex == MouseButton.Left || button.ButtonIndex == MouseButton.Right && _selectWithRMB;
             if (selecting && _buttonsVisible && _arrowHover != 0) { ScrollPage(_arrowHover); return; }
@@ -65,9 +65,9 @@ public partial class TabBar
             if (selecting && !tab.Disabled)
             {
                 CurrentTab = _deselectEnabled && found == _current ? -1 : found;
-                if (IsDisposed || !_tabs.Contains(tab)) return; revision = _selectionRevision; BeginEventEmission(TabClicked)?.Invoke(_tabs.IndexOf(tab));
+                if (IsDisposed || !_tabs.Contains(tab)) return; revision = _selectionRevision; BeginEventEmission(_publisherTabClicked.Handlers)?.Invoke(_tabs.IndexOf(tab));
             }
-            if (!IsDisposed && revision == _selectionRevision && button.ButtonIndex == MouseButton.Right && _tabs.Contains(tab)) BeginEventEmission(TabRMBClicked)?.Invoke(_tabs.IndexOf(tab));
+            if (!IsDisposed && revision == _selectionRevision && button.ButtonIndex == MouseButton.Right && _tabs.Contains(tab)) BeginEventEmission(_publisherTabRMBClicked.Handlers)?.Invoke(_tabs.IndexOf(tab));
             return;
         }
         if (inputEvent.IsActionPressed("ui_left", allowEcho: true, exactMatch: true) || inputEvent.IsActionPressed("ui_right", allowEcho: true, exactMatch: true))
@@ -143,7 +143,7 @@ public partial class TabBar
             if (destination > sourceIndex) destination--; destination = Math.Clamp(destination, 0, _tabs.Count - 1);
             if (sourceIndex == destination) return; MoveTab(sourceIndex, destination);
             if (IsDisposed || !_tabs.Contains(data.Item) || data.Item.Disabled) return; destination = _tabs.IndexOf(data.Item); List<Exception>? errors = null;
-            try { BeginEventEmission(ActiveTabRearranged)?.Invoke(destination); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherActiveTabRearranged.Handlers)?.Invoke(destination); } catch (Exception error) { Node.CollectException(ref errors, error); }
             if (!IsDisposed && _tabs.Contains(data.Item)) try { CurrentTab = _tabs.IndexOf(data.Item); } catch (Exception error) { Node.CollectException(ref errors, error); }
             Node.ThrowCollected("Tab reorder observers failed.", errors);
         }
@@ -165,7 +165,7 @@ public partial class TabBar
             if (!IsDisposed) try { ResetInteraction(); InvalidateTabs(); } catch (Exception error) { Node.CollectException(ref errors, error); }
             try { if (!data.Source.IsDisposed) data.Source.NotifyPropertyListChanged(); } catch (Exception error) { Node.CollectException(ref errors, error); }
             try { if (!IsDisposed) NotifyPropertyListChanged(); } catch (Exception error) { Node.CollectException(ref errors, error); }
-            if (sourceSelected && !data.Source.IsDisposed && data.Source.Tree is not null) try { data.Source.BeginEventEmission(data.Source.TabChanged)?.Invoke(data.Source._current); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            if (sourceSelected && !data.Source.IsDisposed && data.Source.Tree is not null) try { data.Source.BeginEventEmission(data.Source._publisherTabChanged.Handlers)?.Invoke(data.Source._current); } catch (Exception error) { Node.CollectException(ref errors, error); }
             if (!IsDisposed && _tabs.Contains(data.Item) && !data.Item.Disabled) try { CurrentTab = _tabs.IndexOf(data.Item); } catch (Exception error) { Node.CollectException(ref errors, error); }
             Node.ThrowCollected("Tab transfer observers failed.", errors);
         }

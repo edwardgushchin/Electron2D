@@ -221,7 +221,8 @@ public class Timer : Node
     /// reload first. At most one timeout is emitted per matching frame. Handler exceptions propagate through the frame
     /// after the remaining callback phases are attempted.
     /// </remarks>
-    public event Action<Timer>? Timeout;
+    public event Action<Timer>? Timeout { add => _publisherTimeout.Add(value); remove => _publisherTimeout.Remove(value); }
+    private EventPublisher<Action<Timer>> _publisherTimeout;
 
     /// <summary>Gets whether the timer is stopped or has not started.</summary>
     /// <returns><see langword="true"/> when no positive remaining time is observable; otherwise <see langword="false"/>.</returns>
@@ -332,7 +333,7 @@ public class Timer : Node
         if (disposing)
         {
             _processing = false;
-            Timeout = null;
+            _publisherTimeout.Handlers = null;
         }
 
         base.Dispose(disposing);
@@ -384,6 +385,6 @@ public class Timer : Node
         else
             _timeLeft += _waitTime;
 
-        BeginEventEmission(Timeout)?.Invoke(this);
+        BeginEventEmission(_publisherTimeout.Handlers)?.Invoke(this);
     }
 }

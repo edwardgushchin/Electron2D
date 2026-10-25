@@ -22,10 +22,10 @@ public partial class Tree
                     if (!cell.Selectable || cell.Selected) continue; cell.Selected = true; changes.Add((item, c));
                 }
             _selected = target; _selectedColumn = column; QueueRedraw(); List<Exception>? errors = null;
-            try { BeginEventEmission(CellSelected)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherCellSelected.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
             foreach (var change in changes)
                 if (!IsDisposed && !change.Item.IsDisposed && change.Item.Owner == this)
-                    try { BeginEventEmission(MultiSelected)?.Invoke(change.Item, change.Column, true); } catch (Exception error) { CollectException(ref errors, error); }
+                    try { BeginEventEmission(_publisherMultiSelected.Handlers)?.Invoke(change.Item, change.Column, true); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Tree range-selection callbacks failed.", errors);
         }
         finally { changes.Clear(); _selectionDepth--; }
@@ -45,29 +45,29 @@ public partial class Tree
                     if (_pressedItem is { IsDisposed: false } pressed && pressed.Owner == this && _pressedButton != -1)
                     {
                         var column = GetColumnAtPosition(_mouse); var id = GetButtonIDAtPosition(_mouse);
-                        if (GetItemAtPosition(_mouse) == pressed && column == _pressedColumn && id == _pressedButtonID && ButtonIndexAt(pressed, column, _mouse) == _pressedButton) BeginEventEmission(ButtonClicked)?.Invoke(pressed, column, id, mouse.ButtonIndex);
+                        if (GetItemAtPosition(_mouse) == pressed && column == _pressedColumn && id == _pressedButtonID && ButtonIndexAt(pressed, column, _mouse) == _pressedButton) BeginEventEmission(_publisherButtonClicked.Handlers)?.Invoke(pressed, column, id, mouse.ButtonIndex);
                     }
                 }
                 finally { _pressedItem = null; _pressedButton = -1; if (!IsDisposed) QueueRedraw(); }
                 return;
             }
-            var header = HeaderAt(_mouse); if (header >= 0) { _pressedHeader = header; QueueRedraw(); BeginEventEmission(ColumnTitleClicked)?.Invoke(header, mouse.ButtonIndex); if (!IsDisposed) AcceptEvent(); return; }
-            var item = GetItemAtPosition(_mouse); var col = GetColumnAtPosition(_mouse); if (item == null || col < 0) { if (mouse.ButtonIndex == MouseButton.Left) { DeselectAll(); _selected = null; BeginEventEmission(NothingSelected)?.Invoke(); } if (!IsDisposed) BeginEventEmission(EmptyClicked)?.Invoke(_mouse, mouse.ButtonIndex); AcceptEvent(); return; }
-            if (mouse.ButtonIndex != MouseButton.Left && !(mouse.ButtonIndex == MouseButton.Right && _allowRMBSelect)) { if (item.Cells[col].Mode == TreeItem.TreeCellMode.Custom && item.Cells[col].CustomButton) BeginEventEmission(CustomItemClicked)?.Invoke(mouse.ButtonIndex); return; }
+            var header = HeaderAt(_mouse); if (header >= 0) { _pressedHeader = header; QueueRedraw(); BeginEventEmission(_publisherColumnTitleClicked.Handlers)?.Invoke(header, mouse.ButtonIndex); if (!IsDisposed) AcceptEvent(); return; }
+            var item = GetItemAtPosition(_mouse); var col = GetColumnAtPosition(_mouse); if (item == null || col < 0) { if (mouse.ButtonIndex == MouseButton.Left) { DeselectAll(); _selected = null; BeginEventEmission(_publisherNothingSelected.Handlers)?.Invoke(); } if (!IsDisposed) BeginEventEmission(_publisherEmptyClicked.Handlers)?.Invoke(_mouse, mouse.ButtonIndex); AcceptEvent(); return; }
+            if (mouse.ButtonIndex != MouseButton.Left && !(mouse.ButtonIndex == MouseButton.Right && _allowRMBSelect)) { if (item.Cells[col].Mode == TreeItem.TreeCellMode.Custom && item.Cells[col].CustomButton) BeginEventEmission(_publisherCustomItemClicked.Handlers)?.Invoke(mouse.ButtonIndex); return; }
             var button = GetButtonIDAtPosition(_mouse); if (button != -1) { var at = ButtonIndexAt(item, col, _mouse); if (!item.IsButtonDisabled(col, at)) { _pressedItem = item; _pressedColumn = col; _pressedButton = at; _pressedButtonID = button; QueueRedraw(); } AcceptEvent(); return; }
             var rowIndex = RowAt(_mouse); var row = _rows[rowIndex]; if (col == 0 && !_hideFolding && !item.DisableFolding && item.Children.Count > 0 && FoldRect(row).HasPoint(_mouse)) { if (_recursiveFold && (mouse.ShiftPressed || mouse.ControlPressed || mouse.MetaPressed)) item.SetCollapsedRecursive(!item.Collapsed); else item.Collapsed = !item.Collapsed; if (!IsDisposed) AcceptEvent(); return; }
             if (_selectMode == SelectMode.Multi && mouse.ShiftPressed) SelectRange(item, col);
             else if (_selectMode == SelectMode.Multi && (mouse.ControlPressed || mouse.MetaPressed)) SelectItemCell(item, col, !item.IsSelected(col), true);
             else { SetSelected(item, col); _selectionAnchor = item; }
-            if (IsDisposed || item.IsDisposed || item.Owner != this || col >= item.Cells.Count) return; BeginEventEmission(ItemMouseSelected)?.Invoke(_mouse, mouse.ButtonIndex);
+            if (IsDisposed || item.IsDisposed || item.Owner != this || col >= item.Cells.Count) return; BeginEventEmission(_publisherItemMouseSelected.Handlers)?.Invoke(_mouse, mouse.ButtonIndex);
             if (IsDisposed || item.IsDisposed || item.Owner != this || col >= item.Cells.Count) return;
-            if (mouse.DoubleClick) { if (LocalRect(item.Cells[col].IconRect).HasPoint(_mouse)) BeginEventEmission(ItemIconDoubleClicked)?.Invoke(); if (!IsDisposed) BeginEventEmission(ItemActivated)?.Invoke(); if (!IsDisposed && item.Cells[col].Editable) EditSelected(); }
-            else if (item.Cells[col].Editable && item.Cells[col].Mode is TreeItem.TreeCellMode.Check or TreeItem.TreeCellMode.Custom) { if (item.Cells[col].Mode == TreeItem.TreeCellMode.Custom) { if (item.Cells[col].CustomButton) { _pressedItem = item; _pressedColumn = col; _pressedButton = -1; QueueRedraw(); } BeginEventEmission(CustomItemClicked)?.Invoke(mouse.ButtonIndex); } if (!IsDisposed && !item.IsDisposed && item.Owner == this) EditSelected(); }
+            if (mouse.DoubleClick) { if (LocalRect(item.Cells[col].IconRect).HasPoint(_mouse)) BeginEventEmission(_publisherItemIconDoubleClicked.Handlers)?.Invoke(); if (!IsDisposed) BeginEventEmission(_publisherItemActivated.Handlers)?.Invoke(); if (!IsDisposed && item.Cells[col].Editable) EditSelected(); }
+            else if (item.Cells[col].Editable && item.Cells[col].Mode is TreeItem.TreeCellMode.Check or TreeItem.TreeCellMode.Custom) { if (item.Cells[col].Mode == TreeItem.TreeCellMode.Custom) { if (item.Cells[col].CustomButton) { _pressedItem = item; _pressedColumn = col; _pressedButton = -1; QueueRedraw(); } BeginEventEmission(_publisherCustomItemClicked.Handlers)?.Invoke(mouse.ButtonIndex); } if (!IsDisposed && !item.IsDisposed && item.Owner == this) EditSelected(); }
             if (!IsDisposed) { EnsureCursorIsVisible(); AcceptEvent(); }
             return;
         }
         if (inputEvent is not InputEventKey { Pressed: true } key) return; EnsureTreeLayout();
-        if (Action(key, "ui_accept")) { if (_selected != null) { if (!EditSelected()) BeginEventEmission(ItemActivated)?.Invoke(); if (!IsDisposed) AcceptEvent(); } return; }
+        if (Action(key, "ui_accept")) { if (_selected != null) { if (!EditSelected()) BeginEventEmission(_publisherItemActivated.Handlers)?.Invoke(); if (!IsDisposed) AcceptEvent(); } return; }
         if (Action(key, "ui_cancel")) { CancelEditor(); AcceptEvent(); return; }
         if (_selected == null && _rows.Count > 0) { var first = _rows[0].Item; SelectItemCell(first, 0, true, true); if (IsDisposed) return; }
         if (_selected != null)

@@ -48,7 +48,7 @@ public sealed partial class ThemeDB
         List<Exception>? errors = null;
         try { _defaultTheme.DefaultFont = defaultFont; } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { FallbackFontCore = fallbackFont; } catch (Exception error) { Node.CollectException(ref errors, error); }
-        try { ContextChanged?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { _publisherContextChanged.Handlers?.Invoke(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { oldTheme?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         try { oldFont?.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Project theme publication callbacks failed.", errors);

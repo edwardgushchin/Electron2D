@@ -53,7 +53,7 @@ public class Sprite : Entity
             _texture = value;
             if (_texture is not null) _texture.Changed += TextureContentChanged;
             InvalidateCanvas();
-            BeginEventEmission(TextureChanged)?.Invoke();
+            BeginEventEmission(_publisherTextureChanged.Handlers)?.Invoke();
             if (!IsDisposed) NotifyItemRectChanged();
         }
     }
@@ -194,7 +194,7 @@ public class Sprite : Entity
             if ((uint)value >= (uint)(_hframes * _vframes)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_frame == value) return;
             _frame = value; InvalidateCanvas(); NotifyItemRectChanged();
-            if (!IsDisposed) BeginEventEmission(FrameChanged)?.Invoke();
+            if (!IsDisposed) BeginEventEmission(_publisherFrameChanged.Handlers)?.Invoke();
         }
     }
 
@@ -218,12 +218,14 @@ public class Sprite : Entity
 
     /// <summary>Occurs after an explicit Frame or FrameCoords assignment changes the frame index.</summary>
     /// <remarks>Delivery follows ItemRectChanged. A throwing subscriber stops later subscribers; state and redraw remain committed.</remarks>
-    public event Action? FrameChanged;
+    public event Action? FrameChanged { add => _publisherFrameChanged.Add(value); remove => _publisherFrameChanged.Remove(value); }
+    private EventPublisher<Action> _publisherFrameChanged;
 
     /// <summary>Occurs after the texture reference changes, including assignment to null.</summary>
     /// <remarks>Delivery precedes ItemRectChanged. A throwing subscriber stops later subscribers and the rectangle event.
     /// Resource content changes do not emit either event.</remarks>
-    public event Action? TextureChanged;
+    public event Action? TextureChanged { add => _publisherTextureChanged.Add(value); remove => _publisherTextureChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTextureChanged;
 
     /// <summary>Returns the frame's local bounds with integer-truncated dimensions.</summary>
     /// <returns>A one-by-one rectangle at zero without a texture. Otherwise the frame size and centered/offset origin;
@@ -304,7 +306,7 @@ public class Sprite : Entity
         {
             if (_texture is not null) _texture.Changed -= TextureContentChanged;
             _texture = null;
-            FrameChanged = TextureChanged = null;
+            _publisherFrameChanged.Handlers = _publisherTextureChanged.Handlers = null;
         }
         base.Dispose(disposing);
     }

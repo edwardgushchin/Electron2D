@@ -36,7 +36,8 @@ public partial class MenuButton : Button
         }
     }
     /// <summary>Occurs before popup geometry and visibility change; handlers may populate the owned menu.</summary>
-    public event Action? AboutToPopup;
+    public event Action? AboutToPopup { add => _publisherAboutToPopup.Add(value); remove => _publisherAboutToPopup.Remove(value); }
+    private EventPublisher<Action> _publisherAboutToPopup;
     /// <summary>Returns the stable borrowed internal popup; preserve its ownership and lifetime.</summary>
     /// <returns>The command menu.</returns>
     public PopupMenu GetPopup() { CheckMenuButton(); return _popup; }
@@ -57,7 +58,7 @@ public partial class MenuButton : Button
         _opening = true; List<Exception>? errors = null;
         try
         {
-            BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree || _popup.IsDisposed) return;
+            BeginEventEmission(_publisherAboutToPopup.Handlers)?.Invoke(); if (IsDisposed || !IsInsideTree || _popup.IsDisposed) return;
             var transform = GetGlobalTransformWithCanvas(); var rect = new Rect2(transform.Origin, transform.Scale * Size); var at = rect.Position + new Vector2(0, rect.Size.Y);
             _popup.LayoutDirection = LayoutDirection;
             var area = _popup.Embedder?.GetVisibleRect() ?? viewport.GetVisibleRect(); var available = Math.Max(0, (int)MathF.Floor(area.End.Y - at.Y));
@@ -113,5 +114,5 @@ public partial class MenuButton : Button
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(MenuButton) ? CreateMenuButton : base.CreateSceneInstanceFactory();
     private static Node CreateMenuButton() => new MenuButton();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { AboutToPopup = null; _popup.VisibilityChanged -= SyncPopupState; _popup.PopupHide -= SyncPopupState; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _publisherAboutToPopup.Handlers = null; _popup.VisibilityChanged -= SyncPopupState; _popup.PopupHide -= SyncPopupState; } base.Dispose(disposing); }
 }

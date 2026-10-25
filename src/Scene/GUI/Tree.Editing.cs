@@ -28,7 +28,7 @@ public partial class Tree
         {
             _customPopupRect = new(GetGlobalTransformWithCanvas() * rect.Position, rect.Size); _edited = item; _editedColumn = _selectedColumn; _editingItem = null;
             List<Exception>? errors = null;
-            try { BeginEventEmission(CustomPopupEdited)?.Invoke(false); } catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherCustomPopupEdited.Handlers)?.Invoke(false); } catch (Exception error) { CollectException(ref errors, error); }
             if (!IsDisposed && !item.IsDisposed && item.Owner == this) try { PublishEdited(item, _editedColumn); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Tree custom editor callbacks failed.", errors); return true;
         }
@@ -56,7 +56,7 @@ public partial class Tree
         try { PublishEdited(item, column); } finally { if (!_editorPopup.IsDisposed) _editorPopup.Hide(); if (IsInsideTree && !IsDisposed) GrabFocus(); }
     }
     private void CancelEditor() { _editingItem = null; if (_editorPopup is { IsDisposed: false, Visible: true }) _editorPopup.Hide(); if (_choicePopup is { IsDisposed: false, Visible: true }) _choicePopup.Hide(); }
-    private void PublishEdited(TreeItem item, int column) { _edited = item; _editedColumn = column; BeginEventEmission(ItemEdited)?.Invoke(); }
+    private void PublishEdited(TreeItem item, int column) { _edited = item; _editedColumn = column; BeginEventEmission(_publisherItemEdited.Handlers)?.Invoke(); }
     private sealed class OwnedPopup(Tree owner) : PopupPanel
     {
         internal bool Canceled;

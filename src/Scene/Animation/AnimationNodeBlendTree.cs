@@ -37,7 +37,8 @@ public sealed partial class AnimationNodeBlendTree : AnimationRootNode
     /// <exception cref="ArgumentOutOfRangeException">A numeric value is nonfinite or outside the stated domain.</exception>
     public Vector2 GraphOffset { get { ThrowIfDisposed(); return _graphOffset; } set { ThrowIfDisposed(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _graphOffset = value; } }
     /// <summary>Occurs when a named child's content or input definition changes.</summary>
-    public event Action<string>? NodeChanged;
+    public event Action<string>? NodeChanged { add => _publisherNodeChanged.Add(value); remove => _publisherNodeChanged.Remove(value); }
+    private EventPublisher<Action<string>> _publisherNodeChanged;
     /// <summary>Adds a borrowed graph resource.</summary>
     /// <param name="name">A nonempty unique local name without slash; output is reserved.</param>
     /// <param name="node">A live resource other than this graph.</param>
@@ -61,7 +62,7 @@ public sealed partial class AnimationNodeBlendTree : AnimationRootNode
     {
         if (IsDisposed || !_nodes.TryGetValue(name, out var entry)) return;
         var count = entry.Node.GetInputCount(); if (entry.Inputs.Length != count) Array.Resize(ref entry.Inputs, count);
-        EmitGraphChanged(); BeginEventEmission(NodeChanged)?.Invoke(name);
+        EmitGraphChanged(); BeginEventEmission(_publisherNodeChanged.Handlers)?.Invoke(name);
     }
     /// <summary>Returns a borrowed named resource, including the owned output resource.</summary>
     /// <param name="name">The exact local name.</param>
@@ -156,7 +157,7 @@ public sealed partial class AnimationNodeBlendTree : AnimationRootNode
         copy._graphOffset = _graphOffset;
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { List<Exception>? errors = null; if (disposing) { foreach (var (name, entry) in _nodes) { try { if (name == "output") entry.Node.Dispose(); else Detach(entry); } catch (Exception error) { CollectException(ref errors, error); } } _nodes.Clear(); NodeChanged = null; } try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph cleanup failed.", errors); }
+    protected override void Dispose(bool disposing) { List<Exception>? errors = null; if (disposing) { foreach (var (name, entry) in _nodes) { try { if (name == "output") entry.Node.Dispose(); else Detach(entry); } catch (Exception error) { CollectException(ref errors, error); } } _nodes.Clear(); _publisherNodeChanged.Handlers = null; } try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph cleanup failed.", errors); }
 }
 /// <summary>The owned output pass-through of an AnimationNodeBlendTree.</summary>
 public sealed class AnimationNodeOutput : AnimationNode

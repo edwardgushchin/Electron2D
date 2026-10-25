@@ -64,11 +64,14 @@ public class MultiplayerSynchronizer : Node
     /// <summary>Gets or sets the phase for automatic visibility filter refresh.</summary><value>Idle initially; processing is enabled only when filters and a valid root exist.</value>
     public VisibilityUpdateMode VisibilityUpdateMode { get { Check(); return _visibilityMode; } set { Mutate(); if ((uint)value > 2) throw new ArgumentOutOfRangeException(nameof(value)); _visibilityMode = value; UpdateProcessing(); } }
     /// <summary>Occurs after an Always state has been applied on a receiving peer.</summary>
-    public event Action? Synchronized;
+    public event Action? Synchronized { add => _publisherSynchronized.Add(value); remove => _publisherSynchronized.Remove(value); }
+    private EventPublisher<Action> _publisherSynchronized;
     /// <summary>Occurs after changed property state has been applied on a receiving peer.</summary>
-    public event Action? DeltaSynchronized;
+    public event Action? DeltaSynchronized { add => _publisherDeltaSynchronized.Add(value); remove => _publisherDeltaSynchronized.Remove(value); }
+    private EventPublisher<Action> _publisherDeltaSynchronized;
     /// <summary>Occurs after explicit or automatic visibility reevaluation.</summary>
-    public event Action<int>? VisibilityChanged;
+    public event Action<int>? VisibilityChanged { add => _publisherVisibilityChanged.Add(value); remove => _publisherVisibilityChanged.Remove(value); }
+    private EventPublisher<Action<int>> _publisherVisibilityChanged;
     /// <summary>Adds a unique conjunctive peer predicate.</summary><param name="filter">Direct peer-ID predicate, called on the owner thread.</param>
     public void AddVisibilityFilter(Func<int, bool> filter) { Mutate(); ArgumentNullException.ThrowIfNull(filter); if (!_filters.Contains(filter)) { _filters.Add(filter); _filterSnapshot = _filters.ToArray(); UpdateProcessing(); } }
     /// <summary>Removes a visibility predicate if present.</summary><param name="filter">Previously added predicate.</param>
@@ -78,7 +81,7 @@ public class MultiplayerSynchronizer : Node
     /// <summary>Changes explicit peer/public membership and reevaluates visibility.</summary><param name="peer">Zero means public.</param><param name="visible">New explicit membership.</param>
     public void SetVisibilityFor(int peer, bool visible) { Mutate(); if (peer < 0) throw new ArgumentOutOfRangeException(nameof(peer)); if (visible ? !_visible.Add(peer) : !_visible.Remove(peer)) return; UpdateVisibility(peer); }
     /// <summary>Reevaluates one or all peers and delivers the visibility event.</summary><param name="forPeer">Zero reevaluates all admitted peers.</param>
-    public void UpdateVisibility(int forPeer = 0) { Check(); if (forPeer < 0) throw new ArgumentOutOfRangeException(nameof(forPeer)); if (API is SceneMultiplayer api) api.UpdateReplicationVisibility(this, forPeer); MultiplayerAPI.Emit(BeginEventEmission(VisibilityChanged), forPeer); }
+    public void UpdateVisibility(int forPeer = 0) { Check(); if (forPeer < 0) throw new ArgumentOutOfRangeException(nameof(forPeer)); if (API is SceneMultiplayer api) api.UpdateReplicationVisibility(this, forPeer); MultiplayerAPI.Emit(BeginEventEmission(_publisherVisibilityChanged.Handlers), forPeer); }
     internal bool IsVisibleTo(int peer) { var snapshot = _filterSnapshot; foreach (var filter in snapshot) if (!filter(peer)) return false; return _visible.Contains(0) || _visible.Contains(peer); }
     private void UpdateProcessing() { SetInternalProcessing(RootNode is not null && _filters.Count > 0 && _visibilityMode == VisibilityUpdateMode.Idle, RootNode is not null && _filters.Count > 0 && _visibilityMode == VisibilityUpdateMode.Physics); }
     internal void Rebind() => Rebind(_rootPath);
@@ -119,7 +122,7 @@ public class MultiplayerSynchronizer : Node
     internal void CaptureFrame(long now) { Prepare(); AlwaysDue = now - _lastAlways >= _interval * System.Diagnostics.Stopwatch.Frequency; if (AlwaysDue) _lastAlways = now; foreach (var binding in Bindings) { if (binding.Mode == ReplicationMode.OnChange) binding.Watch(); else if (binding.Mode == ReplicationMode.Always && AlwaysDue) binding.Capture(); } }
     internal ReplicationPeerState PeerState(int peer) { if (!Peers.TryGetValue(peer, out var state)) { state = new ReplicationPeerState(Bindings.Length); Peers.Add(peer, state); } return state; }
     internal bool DeltaDue(ReplicationPeerState peer, long now) => now - peer.LastDelta >= _deltaInterval * System.Diagnostics.Stopwatch.Frequency;
-    internal void EmitState(bool delta) { List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(BeginEventEmission(delta ? DeltaSynchronized : Synchronized))) try { subscriber(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
+    internal void EmitState(bool delta) { List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(BeginEventEmission(delta ? _publisherDeltaSynchronized.Handlers : _publisherSynchronized.Handlers))) try { subscriber(); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     /// <inheritdoc />
     /// <remarks>Nonpositive IDs reject before unregistering active synchronization.</remarks>
     public override void SetMultiplayerAuthority(int id, bool recursive = true) { Mutate(); ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id); Stop(); base.SetMultiplayerAuthority(id, recursive); Rebind(); }
@@ -146,6 +149,6 @@ public class MultiplayerSynchronizer : Node
         yield return new PropertyDescriptor<MultiplayerSynchronizer, VisibilityUpdateMode>(nameof(VisibilityUpdateMode), n => n.VisibilityUpdateMode, (n, v) => n.VisibilityUpdateMode = v, _ => VisibilityUpdateMode.Idle, stored: true);
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { Stop(); _filterSnapshot = []; _filters.Clear(); _visible.Clear(); Synchronized = null; DeltaSynchronized = null; VisibilityChanged = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { Stop(); _filterSnapshot = []; _filters.Clear(); _visible.Clear(); _publisherSynchronized.Handlers = null; _publisherDeltaSynchronized.Handlers = null; _publisherVisibilityChanged.Handlers = null; } base.Dispose(disposing); }
 }
 internal sealed class ReplicationPeerState(int count) { internal readonly uint[] Sent = new uint[count]; internal long LastDelta; internal uint LastSequence; internal bool HasSequence; }

@@ -36,7 +36,8 @@ public abstract partial class Viewport
     private void ReleaseViewportRID() { lock (ViewportRIDGate) { ViewportRIDs.Remove(_viewportRID); _viewportRID = default; } }
     private ViewportTexture? _texture;
     internal RenderingServer? RenderingOwner;
-    internal event Action? TextureSizeUpdated;
+    internal event Action? TextureSizeUpdated { add => _publisherTextureSizeUpdated.Add(value); remove => _publisherTextureSizeUpdated.Remove(value); }
+    private EventPublisher<Action> _publisherTextureSizeUpdated;
     private bool _transparent;
     internal virtual Transform StretchTransform => Transform.Identity;
     internal virtual Transform WindowTransform => Transform.Identity;
@@ -59,7 +60,7 @@ public abstract partial class Viewport
     internal void TextureSizeChanged()
     {
         List<Exception>? errors = null;
-        if (TextureSizeUpdated is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (_publisherTextureSizeUpdated.Handlers is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("Viewport texture notification failed.", errors);
     }
     internal void InvalidateViewportRecording() { SyncDPIScale(); if (RenderingOwner is { } renderer) renderer.InvalidateViewportRecordings(this); else InvalidateRecording(this); }

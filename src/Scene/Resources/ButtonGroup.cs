@@ -18,7 +18,8 @@ public class ButtonGroup : Resource
     /// <summary>Creates a scene-local group which disallows toggling off its last active radio button.</summary>
     public ButtonGroup() { ResourceLocalToScene = true; }
     /// <summary>Occurs after peer buttons are unpressed and before the activating button's Toggled event.</summary>
-    public event Action<BaseButton>? Pressed;
+    public event Action<BaseButton>? Pressed { add => _publisherPressed.Add(value); remove => _publisherPressed.Remove(value); }
+    private EventPublisher<Action<BaseButton>> _publisherPressed;
     /// <summary>Gets or sets whether an activation can leave every group member unpressed.</summary>
     /// <value>False initially. Assignment is silent and does not alter current button states.</value>
     /// <exception cref="ObjectDisposedException">The group is disposed.</exception>
@@ -83,7 +84,7 @@ public class ButtonGroup : Resource
         finally { ReturnSnapshot(snapshot); }
         Node.ThrowCollected("Button group callbacks failed.", errors);
     }
-    internal void NotifyPressed(BaseButton button) { ThrowIfDisposed(); BeginEventEmission(Pressed)?.Invoke(button); }
+    internal void NotifyPressed(BaseButton button) { ThrowIfDisposed(); BeginEventEmission(_publisherPressed.Handlers)?.Invoke(button); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(ButtonGroup) ? new ButtonGroup() : base.CreateDuplicateInstance();
     /// <inheritdoc />
@@ -96,7 +97,7 @@ public class ButtonGroup : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        lock (_gate) { _buttons.Clear(); _snapshots.Clear(); Pressed = null; }
+        lock (_gate) { _buttons.Clear(); _snapshots.Clear(); _publisherPressed.Handlers = null; }
         base.Dispose(disposing);
     }
 }

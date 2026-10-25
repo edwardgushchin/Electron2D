@@ -27,9 +27,11 @@ public class MultiplayerSpawner : Node
     /// <summary>Gets or sets immutable borrowed custom factory/codec configuration.</summary><value>Null initially.</value>
     public SpawnFactory? SpawnFunction { get { Check(); return _factory; } set { Mutate(); if (_creating) throw new InvalidOperationException("Cannot replace a factory during spawn construction."); _factory = value; } }
     /// <summary>Occurs after a remote node has entered and readied.</summary>
-    public event Action<Node>? Spawned;
+    public event Action<Node>? Spawned { add => _publisherSpawned.Add(value); remove => _publisherSpawned.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherSpawned;
     /// <summary>Occurs when a remote instance is removed by its authority.</summary>
-    public event Action<Node>? Despawned;
+    public event Action<Node>? Despawned { add => _publisherDespawned.Add(value); remove => _publisherDespawned.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherDespawned;
     /// <summary>Loads and registers a file-backed typed PackedScene for automatic replication.</summary><param name="path">Resource scene path or UID.</param><remarks>Cached templates remain borrowed. This spawner owns newly loaded templates until clear/disposal; live instances retain their file graph leases.</remarks>
     public void AddSpawnableScene(string path)
     {
@@ -78,8 +80,8 @@ public class MultiplayerSpawner : Node
     internal SpawnedNodeRecord TrackRemote(Node node, int source, uint id, int scene, uint factory, byte[] arguments)
     { var record = new SpawnedNodeRecord(this, node, scene, factory, arguments) { RemoteSource = source, ID = id }; _tracked.Add(node, record); record.Exit = _ => _tracked.Remove(node); node.TreeExiting += record.Exit; return record; }
     internal Node SpawnParent => _parent ?? throw new InvalidOperationException("SpawnPath does not select a valid parent.");
-    internal void EmitSpawned(Node node) => Emit(BeginEventEmission(Spawned), node);
-    internal void EmitDespawned(Node node) => Emit(BeginEventEmission(Despawned), node);
+    internal void EmitSpawned(Node node) => Emit(BeginEventEmission(_publisherSpawned.Handlers), node);
+    internal void EmitDespawned(Node node) => Emit(BeginEventEmission(_publisherDespawned.Handlers), node);
     private static void Emit(Action<Node>? handlers, Node node) { List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(handlers)) try { callback(node); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
     internal void Rebind()
     {
@@ -105,7 +107,7 @@ public class MultiplayerSpawner : Node
         yield return new PropertyDescriptor<MultiplayerSpawner, SpawnFactory?>(nameof(SpawnFunction), n => n.SpawnFunction, (n, v) => n.SpawnFunction = v, _ => null);
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _scenes.Clear(); _scenePaths.Clear(); ReleaseFileScenes(); Spawned = null; Despawned = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _scenes.Clear(); _scenePaths.Clear(); ReleaseFileScenes(); _publisherSpawned.Handlers = null; _publisherDespawned.Handlers = null; } base.Dispose(disposing); }
 }
 internal sealed class SpawnedNodeRecord(MultiplayerSpawner spawner, Node node, int scene, uint factory, byte[] arguments)
 {

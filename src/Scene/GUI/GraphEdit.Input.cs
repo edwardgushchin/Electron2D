@@ -10,7 +10,7 @@ public partial class GraphEdit
     private void DeleteSelected()
     {
         var count = 0; foreach (var e in _elements) if (e.Selected) { _requestNames[count] = e.Name; _requestElements[count++] = e; }
-        try { for (var i = 0; i < count; i++) if (_requestElements[i] is { IsDisposed: false } e && e.Parent == this) e.RequestGraphDelete(); if (!IsDisposed) BeginEventEmission(DeleteNodesRequest)?.Invoke(_requestNames.AsMemory(0, count)); } finally { Array.Clear(_requestElements, 0, count); Array.Clear(_requestNames, 0, count); }
+        try { for (var i = 0; i < count; i++) if (_requestElements[i] is { IsDisposed: false } e && e.Parent == this) e.RequestGraphDelete(); if (!IsDisposed) BeginEventEmission(_publisherDeleteNodesRequest.Handlers)?.Invoke(_requestNames.AsMemory(0, count)); } finally { Array.Clear(_requestElements, 0, count); Array.Clear(_requestNames, 0, count); }
     }
     private readonly HashSet<GraphElement> _previousSelection = [];
     private Vector2 _pressPosition, _pointer, _panScroll;
@@ -25,7 +25,7 @@ public partial class GraphEdit
     {
         var point = node.Position + (output ? node.GetOutputPortPosition(port) : node.GetInputPortPosition(port)) * _zoom;
         if (_connectionNode == null) { _pointer = point; PressPort(node, port, output); _keyboardConnecting = true; return; }
-        try { if (output != _connectionOutput) { var from = output ? node : _connectionNode; var to = output ? _connectionNode : node; var fp = output ? port : _connectionPort; var tp = output ? _connectionPort : port; var a = from.GetOutputPortType(fp); var b = to.GetInputPortType(tp); if ((a == b || _validTypes.Contains((a, b)) || node.IgnoreInvalidConnectionType) && OnIsNodeHoverValid(from.Name, fp, to.Name, tp)) BeginEventEmission(ConnectionRequest)?.Invoke(from.Name, fp, to.Name, tp); } } finally { ForceConnectionDragEnd(); }
+        try { if (output != _connectionOutput) { var from = output ? node : _connectionNode; var to = output ? _connectionNode : node; var fp = output ? port : _connectionPort; var tp = output ? _connectionPort : port; var a = from.GetOutputPortType(fp); var b = to.GetInputPortType(tp); if ((a == b || _validTypes.Contains((a, b)) || node.IgnoreInvalidConnectionType) && OnIsNodeHoverValid(from.Name, fp, to.Name, tp)) BeginEventEmission(_publisherConnectionRequest.Handlers)?.Invoke(from.Name, fp, to.Name, tp); } } finally { ForceConnectionDragEnd(); }
     }
     /// <summary>Tests a graph-local pointer against an input port's theme-sized hit region.</summary><param name="node">Direct graph node.</param><param name="port">Compressed input port.</param><param name="mousePosition">Graph-local pixels.</param><returns>Whether it hits.</returns>
     protected virtual bool OnIsInInputHotzone(GraphNode node, int port, Vector2 mousePosition) => PortHotzone(node, port, mousePosition, true);
@@ -67,10 +67,10 @@ public partial class GraphEdit
     private bool OverlayHit(Vector2 point) => _connectionNode != null || _moving || _boxSelecting || _minimapDragging || _minimap && MinimapRect.HasPoint(point) || HitPort(point, out _, out _, out _);
     private void BeginConnection(GraphNode node, int port, bool output)
     {
-        _connectionNode = node; _connectionPort = port; _connectionOutput = output; BeginEventEmission(ConnectionDragStarted)?.Invoke(node.Name, port, output); _overlay.QueueRedraw();
+        _connectionNode = node; _connectionPort = port; _connectionOutput = output; BeginEventEmission(_publisherConnectionDragStarted.Handlers)?.Invoke(node.Name, port, output); _overlay.QueueRedraw();
     }
     /// <summary>Cancels a current connection drag and emits its end event once.</summary>
-    public void ForceConnectionDragEnd() { MutableEdit(); if (_connectionNode is null) return; _connectionNode = null; _keyboardConnecting = false; _overlay.QueueRedraw(); BeginEventEmission(ConnectionDragEnded)?.Invoke(); }
+    public void ForceConnectionDragEnd() { MutableEdit(); if (_connectionNode is null) return; _connectionNode = null; _keyboardConnecting = false; _overlay.QueueRedraw(); BeginEventEmission(_publisherConnectionDragEnded.Handlers)?.Invoke(); }
     private void ReleaseConnection(Vector2 position)
     {
         var node = _connectionNode; if (node is null) return;
@@ -78,8 +78,8 @@ public partial class GraphEdit
         {
             if (!node.IsDisposed && node.Parent == this)
             {
-                if (ConnectionTarget(position, out var target, out var port)) { if (_connectionOutput) BeginEventEmission(ConnectionRequest)?.Invoke(node.Name, _connectionPort, target.Name, port); else BeginEventEmission(ConnectionRequest)?.Invoke(target.Name, port, node.Name, _connectionPort); }
-                else if (_connectionOutput) BeginEventEmission(ConnectionToEmpty)?.Invoke(node.Name, _connectionPort, position); else BeginEventEmission(ConnectionFromEmpty)?.Invoke(node.Name, _connectionPort, position);
+                if (ConnectionTarget(position, out var target, out var port)) { if (_connectionOutput) BeginEventEmission(_publisherConnectionRequest.Handlers)?.Invoke(node.Name, _connectionPort, target.Name, port); else BeginEventEmission(_publisherConnectionRequest.Handlers)?.Invoke(target.Name, port, node.Name, _connectionPort); }
+                else if (_connectionOutput) BeginEventEmission(_publisherConnectionToEmpty.Handlers)?.Invoke(node.Name, _connectionPort, position); else BeginEventEmission(_publisherConnectionFromEmpty.Handlers)?.Invoke(node.Name, _connectionPort, position);
             }
         }
         finally { ForceConnectionDragEnd(); }
@@ -94,7 +94,7 @@ public partial class GraphEdit
             {
                 var v = c.Value; if (output ? v.FromNode != node.Name || v.FromPort != port : v.ToNode != node.Name || v.ToPort != port) continue;
                 var other = Element(output ? v.ToNode : v.FromNode) as GraphNode; var otherPort = output ? v.ToPort : v.FromPort;
-                BeginEventEmission(DisconnectionRequest)?.Invoke(v.FromNode, v.FromPort, v.ToNode, v.ToPort);
+                BeginEventEmission(_publisherDisconnectionRequest.Handlers)?.Invoke(v.FromNode, v.FromPort, v.ToNode, v.ToPort);
                 if (other is { IsDisposed: false } && otherPort < (output ? other.GetInputPortCount() : other.GetOutputPortCount())) BeginConnection(other, otherPort, !output);
                 return;
             }
@@ -122,7 +122,7 @@ public partial class GraphEdit
                 AcceptEvent();
             }
             else if (!button.Pressed && button.ButtonIndex == MouseButton.Left) { _pointer = position; FinishPointer(); AcceptEvent(); }
-            else if (button.Pressed && button.ButtonIndex == MouseButton.Right) { BeginEventEmission(PopupRequest)?.Invoke(position); AcceptEvent(); }
+            else if (button.Pressed && button.ButtonIndex == MouseButton.Right) { BeginEventEmission(_publisherPopupRequest.Handlers)?.Invoke(position); AcceptEvent(); }
         }
         else if (inputEvent is InputEventMouseMotion motion) { PointerMotion(element.Position + motion.Position * _zoom); if (_elementPressed || _connectionNode != null) AcceptEvent(); }
     }
@@ -136,7 +136,7 @@ public partial class GraphEdit
         {
             var delta = (position - _pressPosition) / _zoom;
             if (!_moving && delta.LengthSquared() < 4) return;
-            if (!_moving) { _moving = true; BeginEventEmission(BeginNodeMove)?.Invoke(); }
+            if (!_moving) { _moving = true; BeginEventEmission(_publisherBeginNodeMove.Handlers)?.Invoke(); }
             _updatingFrames = true;
             try { foreach (var move in _dragged) if (!move.Element.IsDisposed && move.Element.Parent == this) { var target = move.From + delta; if (_snapping) target = target.Snapped((float)_snapDistance); move.Element.PositionOffset = target; } }
             finally { _updatingFrames = false; }
@@ -158,10 +158,10 @@ public partial class GraphEdit
         if (moved)
         {
             try { foreach (var move in _dragged) if (!move.Element.IsDisposed && move.Element.Parent == this) move.Element.EndGraphDrag(); }
-            finally { BeginEventEmission(EndNodeMove)?.Invoke(); }
-            if (GraphElementsLinkedToFrameRequest != null)
+            finally { BeginEventEmission(_publisherEndNodeMove.Handlers)?.Invoke(); }
+            if (_publisherGraphElementsLinkedToFrameRequest.Handlers != null)
                 for (var i = GetChildCount() - 1; i >= 0; i--) if (GetChild(i) is GraphFrame frame && !frame.Selected && frame.GetRect().HasPoint(_pointer))
-                    { var count = 0; foreach (var move in _dragged) if (!move.Element.IsDisposed && move.Element is not GraphFrame && !_parents.ContainsKey(move.Element.Name)) _requestNames[count++] = move.Element.Name; try { if (count > 0) BeginEventEmission(GraphElementsLinkedToFrameRequest)?.Invoke(_requestNames.AsMemory(0, count), frame.Name); } finally { Array.Clear(_requestNames, 0, count); } break; }
+                    { var count = 0; foreach (var move in _dragged) if (!move.Element.IsDisposed && move.Element is not GraphFrame && !_parents.ContainsKey(move.Element.Name)) _requestNames[count++] = move.Element.Name; try { if (count > 0) BeginEventEmission(_publisherGraphElementsLinkedToFrameRequest.Handlers)?.Invoke(_requestNames.AsMemory(0, count), frame.Name); } finally { Array.Clear(_requestNames, 0, count); } break; }
         }
         _dragged.Clear(); _previousSelection.Clear(); _overlay.QueueRedraw();
     }
@@ -187,16 +187,16 @@ public partial class GraphEdit
             if (!key.Pressed || key.Echo) return;
             if (key.IsActionPressed("ui_cancel", true, true)) { CancelInteraction(); AcceptEvent(); return; }
             if (key.IsActionPressed("ui_graph_delete", true, true)) { DeleteSelected(); AcceptEvent(); return; }
-            if (key.IsActionPressed("ui_copy", true, true)) { BeginEventEmission(CopyNodesRequest)?.Invoke(); AcceptEvent(); return; }
-            if (key.IsActionPressed("ui_cut", true, true)) { BeginEventEmission(CutNodesRequest)?.Invoke(); AcceptEvent(); return; }
-            if (key.IsActionPressed("ui_paste", true, true)) { BeginEventEmission(PasteNodesRequest)?.Invoke(); AcceptEvent(); return; }
-            if (key.IsActionPressed("ui_graph_duplicate", true, true)) { BeginEventEmission(DuplicateNodesRequest)?.Invoke(); AcceptEvent(); return; }
+            if (key.IsActionPressed("ui_copy", true, true)) { BeginEventEmission(_publisherCopyNodesRequest.Handlers)?.Invoke(); AcceptEvent(); return; }
+            if (key.IsActionPressed("ui_cut", true, true)) { BeginEventEmission(_publisherCutNodesRequest.Handlers)?.Invoke(); AcceptEvent(); return; }
+            if (key.IsActionPressed("ui_paste", true, true)) { BeginEventEmission(_publisherPasteNodesRequest.Handlers)?.Invoke(); AcceptEvent(); return; }
+            if (key.IsActionPressed("ui_graph_duplicate", true, true)) { BeginEventEmission(_publisherDuplicateNodesRequest.Handlers)?.Invoke(); AcceptEvent(); return; }
             if (key.IsActionPressed("ui_text_select_all", true, true)) { for (var i = 0; i < _elements.Count; i++) _elements[i].Selected = true; AcceptEvent(); return; }
             if (key.Keycode is Key.Left or Key.Right or Key.Up or Key.Down)
             {
                 var delta = key.Keycode switch { Key.Left => new Vector2(-1, 0), Key.Right => new Vector2(1, 0), Key.Up => new Vector2(0, -1), _ => new Vector2(0, 1) }; delta *= _snapping ? _snapDistance : key.ShiftPressed ? 10 : 1;
                 _dragged.Clear(); foreach (var e in _elements) if (e.Selected && e.Draggable || SelectedFrameAncestor(e)) { _dragged.Add(new(e, e.PositionOffset)); e.StartGraphDrag(); }
-                if (_dragged.Count > 0) { BeginEventEmission(BeginNodeMove)?.Invoke(); _updatingFrames = true; try { foreach (var move in _dragged) if (!move.Element.IsDisposed && move.Element.Parent == this) move.Element.PositionOffset = move.From + delta; } finally { _updatingFrames = false; UpdateFrames(); } try { foreach (var move in _dragged) if (!move.Element.IsDisposed) move.Element.EndGraphDrag(); } finally { _dragged.Clear(); BeginEventEmission(EndNodeMove)?.Invoke(); } }
+                if (_dragged.Count > 0) { BeginEventEmission(_publisherBeginNodeMove.Handlers)?.Invoke(); _updatingFrames = true; try { foreach (var move in _dragged) if (!move.Element.IsDisposed && move.Element.Parent == this) move.Element.PositionOffset = move.From + delta; } finally { _updatingFrames = false; UpdateFrames(); } try { foreach (var move in _dragged) if (!move.Element.IsDisposed) move.Element.EndGraphDrag(); } finally { _dragged.Clear(); BeginEventEmission(_publisherEndNodeMove.Handlers)?.Invoke(); } }
                 AcceptEvent();
             }
             return;
@@ -210,7 +210,7 @@ public partial class GraphEdit
             WheelAt(button, button.Position);
             AcceptEvent(); return;
         }
-        if (button.ButtonIndex == MouseButton.Right) { BeginEventEmission(PopupRequest)?.Invoke(button.Position); AcceptEvent(); return; }
+        if (button.ButtonIndex == MouseButton.Right) { BeginEventEmission(_publisherPopupRequest.Handlers)?.Invoke(button.Position); AcceptEvent(); return; }
         if (FocusMode == FocusMode.All) GrabFocus();
         _pressPosition = button.Position;
         if (button.ButtonIndex == MouseButton.Middle || button.ButtonIndex == MouseButton.Left && _panKey) { _panning = true; _panScroll = _scroll; AcceptEvent(); return; }

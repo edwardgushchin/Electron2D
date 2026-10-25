@@ -101,8 +101,8 @@ public partial class TabBar : Control
             _previous = _current; _current = value; var revision = ++_selectionRevision;
             var changed = _previous != _current; if (changed) InvalidateTabs();
             List<Exception>? errors = null;
-            try { BeginEventEmission(TabSelected)?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
-            if (changed && !IsDisposed && revision == _selectionRevision) try { BeginEventEmission(TabChanged)?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherTabSelected.Handlers)?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
+            if (changed && !IsDisposed && revision == _selectionRevision) try { BeginEventEmission(_publisherTabChanged.Handlers)?.Invoke(value); } catch (Exception error) { Node.CollectException(ref errors, error); }
             Node.ThrowCollected("Tab selection observers failed.", errors);
         }
     }
@@ -147,21 +147,29 @@ public partial class TabBar : Control
     /// <exception cref="ArgumentOutOfRangeException">The value is Max or undefined.</exception>
     public CloseButtonDisplayPolicy TabCloseDisplayPolicy { get { ThrowIfDisposed(); return _closePolicy; } set { EnsureMutable(); if (value is < CloseButtonDisplayPolicy.ShowNever or >= CloseButtonDisplayPolicy.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_closePolicy == value) return; _closePolicy = value; InvalidateTabs(); } }
     /// <summary>Occurs after a same-strip drop reorders an available tab, before its selection.</summary>
-    public event Action<int>? ActiveTabRearranged;
+    public event Action<int>? ActiveTabRearranged { add => _publisherActiveTabRearranged.Add(value); remove => _publisherActiveTabRearranged.Remove(value); }
+    private EventPublisher<Action<int>> _publisherActiveTabRearranged;
     /// <summary>Occurs when the auxiliary icon receives a completed left-button click.</summary>
-    public event Action<int>? TabButtonPressed;
+    public event Action<int>? TabButtonPressed { add => _publisherTabButtonPressed.Add(value); remove => _publisherTabButtonPressed.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabButtonPressed;
     /// <summary>Occurs after the selected index changes; removal of the selected attached tab also reports its replacement.</summary>
-    public event Action<int>? TabChanged;
+    public event Action<int>? TabChanged { add => _publisherTabChanged.Add(value); remove => _publisherTabChanged.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabChanged;
     /// <summary>Occurs after a left or enabled right-button tab selection.</summary>
-    public event Action<int>? TabClicked;
+    public event Action<int>? TabClicked { add => _publisherTabClicked.Add(value); remove => _publisherTabClicked.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabClicked;
     /// <summary>Requests closing a tab after its close button or a middle-button press.</summary>
-    public event Action<int>? TabClosePressed;
+    public event Action<int>? TabClosePressed { add => _publisherTabClosePressed.Add(value); remove => _publisherTabClosePressed.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabClosePressed;
     /// <summary>Occurs when pointer motion enters a different visible tab; exit emits no index.</summary>
-    public event Action<int>? TabHovered;
+    public event Action<int>? TabHovered { add => _publisherTabHovered.Add(value); remove => _publisherTabHovered.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabHovered;
     /// <summary>Occurs when a right-button press hits a tab, independently of right-button selection.</summary>
-    public event Action<int>? TabRMBClicked;
+    public event Action<int>? TabRMBClicked { add => _publisherTabRMBClicked.Add(value); remove => _publisherTabRMBClicked.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabRMBClicked;
     /// <summary>Occurs for every valid CurrentTab assignment, including equal assignments.</summary>
-    public event Action<int>? TabSelected;
+    public event Action<int>? TabSelected { add => _publisherTabSelected.Add(value); remove => _publisherTabSelected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabSelected;
     internal Tab BorrowTabRecord(int index) => Item(index);
     internal void ReplaceTabRecord(int index, Tab record)
     {
@@ -201,7 +209,7 @@ public partial class TabBar : Control
             _offset = Math.Min(_offset, _tabs.Count - 1);
         }
         _selectionRevision++; ResetInteraction(); InvalidateTabs(); NotifyPropertyListChanged();
-        if (selected && Tree is not null && !IsDisposed) BeginEventEmission(TabChanged)?.Invoke(_current); return selected;
+        if (selected && Tree is not null && !IsDisposed) BeginEventEmission(_publisherTabChanged.Handlers)?.Invoke(_current); return selected;
     }
     /// <summary>Moves a tab to another existing index while preserving selected and previous tab identities.</summary>
     /// <param name="from">Source index.</param><param name="to">Destination index after removal/reinsertion.</param>
@@ -330,7 +338,7 @@ public partial class TabBar : Control
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { foreach (var tab in _tabs) ReleaseTab(tab); _tabs.Clear(); ActiveTabRearranged = TabButtonPressed = TabChanged = TabClicked = TabClosePressed = TabHovered = TabRMBClicked = TabSelected = null; }
+        if (disposing) { foreach (var tab in _tabs) ReleaseTab(tab); _tabs.Clear(); _publisherActiveTabRearranged.Handlers = _publisherTabButtonPressed.Handlers = _publisherTabChanged.Handlers = _publisherTabClicked.Handlers = _publisherTabClosePressed.Handlers = _publisherTabHovered.Handlers = _publisherTabRMBClicked.Handlers = _publisherTabSelected.Handlers = null; }
         base.Dispose(disposing);
     }
 }

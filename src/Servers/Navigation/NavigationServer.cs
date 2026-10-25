@@ -15,13 +15,13 @@ public sealed partial class NavigationServer : ElectronObject
     private bool _synchronizing, _stepping;
     private readonly Dictionary<RID, NavigationObstacleState> _obstacles = [];
     private readonly List<NavigationAgentState> _stepAgents = [];
-    private Action<RID>? _mapChanged;
+    private EventPublisher<Action<RID>> _mapChanged;
     private NavigationServer() { }
     internal static NavigationServer Service => Shared;
     /// <summary>Occurs after a complete dirty map iteration is published.</summary>
     /// <remarks>Callbacks run on the synchronizing thread, outside the service gate. Recursive synchronization rejects;
     /// callback edits stage the next iteration. Subscriber failures are aggregated after all deliveries.</remarks>
-    public static event Action<RID> MapChanged { add { lock (Shared._gate) Shared._mapChanged += value; } remove { lock (Shared._gate) Shared._mapChanged -= value; } }
+    public static event Action<RID> MapChanged { add { lock (Shared._gate) Shared._mapChanged.Add(value); } remove { lock (Shared._gate) Shared._mapChanged.Remove(value); } }
     private NavigationMapState Map(RID rid) => _maps.TryGetValue(rid, out var map) ? map : throw new ArgumentException("The RID does not identify a live navigation map.", nameof(rid));
     private NavigationRegionState Region(RID rid) => _regions.TryGetValue(rid, out var region) && (region.Scene is null || region.Scene.TryGetTarget(out var node) && SceneIdentityAvailable(node)) ? region : throw new ArgumentException("The RID does not identify a live navigation region.", nameof(rid));
     private static bool SceneIdentityAvailable(ElectronObject node)
@@ -101,7 +101,7 @@ public sealed partial class NavigationServer : ElectronObject
                         }
                     foreach (var link in _links.Values) if (link.Dirty && link.Map.IsValid()) { link.IterationID = link.IterationID == uint.MaxValue ? 1 : link.IterationID + 1; link.Dirty = false; }
                 }
-                handlers = _mapChanged;
+                handlers = _mapChanged.Handlers;
             }
             catch { _synchronizing = false; throw; }
         }

@@ -40,8 +40,10 @@ public abstract class InputEvent : Resource
 
     private int _device;
 
-    internal event Action<InputEvent>? BindingChanged;
-    internal event Action<InputEvent>? BindingDisposed;
+    internal event Action<InputEvent>? BindingChanged { add => _publisherBindingChanged.Add(value); remove => _publisherBindingChanged.Remove(value); }
+    private EventPublisher<Action<InputEvent>> _publisherBindingChanged;
+    internal event Action<InputEvent>? BindingDisposed { add => _publisherBindingDisposed.Add(value); remove => _publisherBindingDisposed.Remove(value); }
+    private EventPublisher<Action<InputEvent>> _publisherBindingDisposed;
 
     /// <summary>Gets or sets the source device identifier.</summary>
     /// <value>A host-defined identifier. Negative values are reserved for synthesized or internal events.</value>
@@ -340,7 +342,7 @@ public abstract class InputEvent : Resource
     protected void EmitInputChanged(bool propertyListChanged = false)
     {
         ThrowIfDisposed();
-        BindingChanged?.Invoke(this);
+        _publisherBindingChanged.Handlers?.Invoke(this);
         if (propertyListChanged)
             NotifyPropertyListChanged();
         EmitChanged();
@@ -365,7 +367,7 @@ public abstract class InputEvent : Resource
         CopyEventStateTo(inputEvent);
         if (deep && this is InputEventShortcut shortcut)
             shortcut.CopyShortcutResourceTo((InputEventShortcut)inputEvent, duplicateSubresource);
-        inputEvent.BindingChanged?.Invoke(inputEvent);
+        inputEvent._publisherBindingChanged.Handlers?.Invoke(inputEvent);
     }
 
     /// <inheritdoc />
@@ -376,12 +378,12 @@ public abstract class InputEvent : Resource
         {
             try
             {
-                BindingDisposed?.Invoke(this);
+                _publisherBindingDisposed.Handlers?.Invoke(this);
             }
             finally
             {
-                BindingChanged = null;
-                BindingDisposed = null;
+                _publisherBindingChanged.Handlers = null;
+                _publisherBindingDisposed.Handlers = null;
                 base.Dispose(disposing);
             }
 

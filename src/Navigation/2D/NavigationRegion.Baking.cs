@@ -3,7 +3,8 @@ namespace Electron2D;
 public sealed partial class NavigationRegion
 {
     /// <summary>Occurs after successful geometry publication for a requested region bake.</summary>
-    public event Action? BakeFinished;
+    public event Action? BakeFinished { add => _publisherBakeFinished.Add(value); remove => _publisherBakeFinished.Remove(value); }
+    private EventPublisher<Action> _publisherBakeFinished;
     /// <summary>Reports whether this region's current resource is still preparing or awaiting publication.</summary><returns>False when no resource/bake is present.</returns>
     public bool IsBaking() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _polygon is not null && NavigationServer.IsBakingNavigationPolygon(_polygon); }
     /// <summary>Parses this region's source selection and bakes its navigation resource.</summary>
@@ -16,7 +17,7 @@ public sealed partial class NavigationRegion
         if (NavigationServer.IsBakingNavigationPolygon(polygon)) throw new InvalidOperationException("This region resource already has an active bake.");
         var map = GetNavigationMap(); if (map.IsValid()) polygon.CellSize = NavigationServer.MapGetCellSize(map);
         using var source = new NavigationMeshSourceGeometryData(); NavigationServer.ParseSourceGeometryData(polygon, source, this);
-        void Complete() { if (!IsDisposed) BeginEventEmission(BakeFinished)?.Invoke(); }
+        void Complete() { if (!IsDisposed) BeginEventEmission(_publisherBakeFinished.Handlers)?.Invoke(); }
         if (onThread) NavigationServer.BakeFromSourceGeometryDataAsync(polygon, source, Complete, Tree); else NavigationServer.BakeFromSourceGeometryData(polygon, source, Complete);
     }
 }

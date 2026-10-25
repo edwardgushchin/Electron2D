@@ -29,7 +29,8 @@ public partial class TileMapLayer : Entity
     /// <summary>Creates an empty enabled tile layer.</summary>
     public TileMapLayer() { NotifyTransformChanges = true; _deferredUpdate = DeferredUpdate; }
     /// <summary>Occurs after cell, resource or layer settings change; multiple changes may precede one rebuild.</summary>
-    public event Action? Changed;
+    public event Action? Changed { add => _publisherChanged.Add(value); remove => _publisherChanged.Remove(value); }
+    private EventPublisher<Action> _publisherChanged;
     /// <summary>Gets or sets the borrowed tile set used for rendering and collision.</summary>
     public TileSet? TileSet
     {
@@ -188,8 +189,8 @@ public partial class TileMapLayer : Entity
     {
         ThrowIfDisposed(); return _cells.TryGetValue(coords, out var c) && (c.Alternative & bit) != 0;
     }
-    private void MarkCell(Vector2i coords) { _drawingDirty = true; _dirtyCells.Add(coords); Schedule(); BeginEventEmission(Changed)?.Invoke(); }
-    private void MarkAll(bool scenes = true) { _sceneAllDirty |= scenes; _drawingDirty = true; _allDirty = true; Schedule(); BeginEventEmission(Changed)?.Invoke(); }
+    private void MarkCell(Vector2i coords) { _drawingDirty = true; _dirtyCells.Add(coords); Schedule(); BeginEventEmission(_publisherChanged.Handlers)?.Invoke(); }
+    private void MarkAll(bool scenes = true) { _sceneAllDirty |= scenes; _drawingDirty = true; _allDirty = true; Schedule(); BeginEventEmission(_publisherChanged.Handlers)?.Invoke(); }
     private void Schedule() { QueueRedraw(); if (_queued || !IsInsideTree) return; _queued = true; Tree!.Defer(_deferredUpdate); }
     private void DeferredUpdate() { _queued = false; if (!IsDisposed && IsInsideTree) UpdateInternals(); }
     private void SetChanged(Resource _) => MarkAll();
@@ -229,7 +230,7 @@ public partial class TileMapLayer : Entity
         List<Exception>? errors = null;
         if (disposing) PhysicsSpace.Cleanup(DetachSet, ref errors);
         PhysicsSpace.Cleanup(() => base.Dispose(disposing), ref errors);
-        if (disposing) { _sceneCells.Clear(); ReleaseConsumers(ref errors); Changed = null; }
+        if (disposing) { _sceneCells.Clear(); ReleaseConsumers(ref errors); _publisherChanged.Handlers = null; }
         PhysicsSpace.FinishCleanup(errors);
     }
     private void ReleaseConsumers(ref List<Exception>? errors)

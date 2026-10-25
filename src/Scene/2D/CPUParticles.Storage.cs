@@ -83,7 +83,7 @@ public partial class CPUParticles
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { if (_texture is not null) _texture.Changed -= TextureChanged; _texture = null; _ramp = _initialRamp = null; _scaleX = _scaleY = null; Array.Clear(_curves); Finished = null; _particles = _scratch = []; _points = _normals = []; _colors = []; _order = []; _rng.Dispose(); }
+        if (disposing) { if (_texture is not null) _texture.Changed -= TextureChanged; _texture = null; _ramp = _initialRamp = null; _scaleX = _scaleY = null; Array.Clear(_curves); _publisherFinished.Handlers = null; _particles = _scratch = []; _points = _normals = []; _colors = []; _order = []; _rng.Dispose(); }
         base.Dispose(disposing);
     }
 }

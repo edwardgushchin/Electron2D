@@ -240,7 +240,8 @@ public sealed class VideoStreamPlayer : Control
     }
     /// <summary>Occurs once on natural nonlooping completion, on the scene owner.</summary>
     /// <remarks>State has stopped before callbacks. A callback may assign another source or restart playback.</remarks>
-    public event Action? Finished;
+    public event Action? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action> _publisherFinished;
     private static readonly PropertyDescriptor[] VideoProperties =
     [
         new PropertyDescriptor<VideoStreamPlayer, VideoStream?>(nameof(Stream), p => p.Stream, (p, v) => p.Stream = v, _ => null, stored: true),
@@ -332,7 +333,7 @@ public sealed class VideoStreamPlayer : Control
             }
         }
         ThrowCollected("Video notification callbacks failed.", errors);
-        if (finished) BeginEventEmission(Finished)?.Invoke();
+        if (finished) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
     }
     /// <inheritdoc />
     protected override void ValidateMutation() { base.ValidateMutation(); if (_operating && !_ownMutation) throw new InvalidOperationException("Video decoder callbacks cannot mutate their player."); }
@@ -341,7 +342,7 @@ public sealed class VideoStreamPlayer : Control
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        List<Exception>? errors = null; Finished = null;
+        List<Exception>? errors = null; _publisherFinished.Handlers = null;
         if (_stream is not null) _stream.Changed -= SourceChanged;
         if (_trackedTexture is not null) _trackedTexture.Changed -= _textureChanged;
         _trackedTexture = null;

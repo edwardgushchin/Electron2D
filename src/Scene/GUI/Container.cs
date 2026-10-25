@@ -27,9 +27,11 @@ public class Container : Control
         MaximumSizeChanged += QueueSort;
     }
     /// <summary>Occurs after the pre-sort notification and before arrangement.</summary>
-    public event Action? PreSortChildren;
+    public event Action? PreSortChildren { add => _publisherPreSortChildren.Add(value); remove => _publisherPreSortChildren.Remove(value); }
+    private EventPublisher<Action> _publisherPreSortChildren;
     /// <summary>Occurs after the sort notification and concrete arrangement.</summary>
-    public event Action? SortChildren;
+    public event Action? SortChildren { add => _publisherSortChildren.Add(value); remove => _publisherSortChildren.Remove(value); }
+    private EventPublisher<Action> _publisherSortChildren;
     /// <summary>Queues one deferred child arrangement while attached.</summary>
     /// <remarks>Repeated requests coalesce. Requests during the current sort queue a later deferred pass without
     /// recursion. Detached requests do nothing.</remarks>
@@ -50,9 +52,9 @@ public class Container : Control
         try
         {
             try { DispatchNotification(NotificationPreSortChildren); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (Current()) BeginEventEmission(PreSortChildren)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (Current()) BeginEventEmission(_publisherPreSortChildren.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
             try { if (Current()) DispatchNotification(NotificationSortChildren); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (Current()) BeginEventEmission(SortChildren)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (Current()) BeginEventEmission(_publisherSortChildren.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         finally
         {
@@ -159,6 +161,6 @@ public class Container : Control
         for (var index = 0; index < GetChildCount(includeInternal: true); index++) if (GetChild(index, includeInternal: true) is Control child)
             { child.SizeFlagsChanged -= ChildSizeChanged; child.MinimumSizeChanged -= ChildSizeChanged; child.MaximumSizeChanged -= ChildSizeChanged; child.VisibilityChanged -= ChildVisibility; child.ContainerMaximum = null; }
         try { base.Dispose(disposing); }
-        finally { PreSortChildren = null; SortChildren = null; }
+        finally { _publisherPreSortChildren.Handlers = null; _publisherSortChildren.Handlers = null; }
     }
 }

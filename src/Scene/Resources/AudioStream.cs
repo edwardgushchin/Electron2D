@@ -110,17 +110,18 @@ public abstract class AudioStream : Resource
     /// <returns>A caller-owned array, empty by default.</returns>
     protected virtual PropertyDescriptor[] OnGetParameterList() => [];
     /// <summary>Occurs when the available parameter descriptors change.</summary>
-    public event Action? ParameterListChanged;
+    public event Action? ParameterListChanged { add => _publisherParameterListChanged.Add(value); remove => _publisherParameterListChanged.Remove(value); }
+    private EventPublisher<Action> _publisherParameterListChanged;
     /// <summary>Reports an actual custom parameter-list change.</summary>
     /// <exception cref="ObjectDisposedException">The stream is disposed.</exception>
-    protected void NotifyParameterListChanged() { ThrowIfDisposed(); BeginEventEmission(ParameterListChanged)?.Invoke(); }
+    protected void NotifyParameterListChanged() { ThrowIfDisposed(); BeginEventEmission(_publisherParameterListChanged.Handlers)?.Invoke(); }
     internal virtual void ReloadFrom(AudioStream source)
     {
         ThrowIfDisposed(); if (source.GetType() != GetType()) throw new InvalidOperationException("Audio reload types differ.");
         source.CopyCustomStateTo(this, false, DeepDuplicateMode.Internal, static r => r, static r => r); EmitChanged();
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { ParameterListChanged = null; base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { _publisherParameterListChanged.Handlers = null; base.Dispose(disposing); }
 }
 
 /// <summary>Owns independent time, loop and mixing state for an audio stream.</summary>

@@ -65,11 +65,14 @@ public class WebRTCPeerConnection : ElectronObject
     /// <summary>Checks lifetime, owner thread and configuration callback reentry.</summary>
     protected void CheckPeerAccess() { ThrowIfDisposed(); if (Environment.CurrentManagedThreadId != _owner) throw new InvalidOperationException("WebRTC peer access requires its constructing thread."); if (_preparing) throw new InvalidOperationException("WebRTC configuration callbacks cannot change their peer."); }
     /// <summary>Occurs on Poll when an in-band remote channel is ready to be delivered.</summary>
-    public event Action<WebRTCDataChannel>? DataChannelReceived;
+    public event Action<WebRTCDataChannel>? DataChannelReceived { add => _publisherDataChannelReceived.Add(value); remove => _publisherDataChannelReceived.Remove(value); }
+    private EventPublisher<Action<WebRTCDataChannel>> _publisherDataChannelReceived;
     /// <summary>Occurs on Poll with a media identity, index and local candidate.</summary>
-    public event Action<string, int, string>? ICECandidateCreated;
+    public event Action<string, int, string>? ICECandidateCreated { add => _publisherICECandidateCreated.Add(value); remove => _publisherICECandidateCreated.Remove(value); }
+    private EventPublisher<Action<string, int, string>> _publisherICECandidateCreated;
     /// <summary>Occurs on Poll with an offer/answer to commit and send to the remote peer.</summary>
-    public event Action<string, string>? SessionDescriptionCreated;
+    public event Action<string, string>? SessionDescriptionCreated { add => _publisherSessionDescriptionCreated.Add(value); remove => _publisherSessionDescriptionCreated.Remove(value); }
+    private EventPublisher<Action<string, string>> _publisherSessionDescriptionCreated;
     internal static void Text(string value, string name, int max = 1048576)
     { ArgumentNullException.ThrowIfNull(value, name); if (value.Contains('\0') || UTF8.GetByteCount(value) > max) throw new ArgumentException("Invalid or oversized UTF-8 text.", name); }
     private WebRTCPeerHandle Native() { if (_closed) throw new InvalidOperationException("The peer connection is closed."); if (_peer is null) Initialize(); return _peer!; }
@@ -153,15 +156,15 @@ public class WebRTCPeerConnection : ElectronObject
         Node.ThrowCollected("WebRTC event callbacks failed.", errors);
     }
     /// <summary>Publishes a typed incoming-channel event on the owner thread.</summary><param name="channel">Caller-owned channel.</param>
-    protected void EmitDataChannelReceived(WebRTCDataChannel channel) { CheckPeerAccess(); ArgumentNullException.ThrowIfNull(channel); var handlers = BeginEventEmission(DataChannelReceived); List<Exception>? errors = null; if (handlers is not null) foreach (Action<WebRTCDataChannel> handler in handlers.GetInvocationList()) try { handler(channel); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Channel callbacks failed.", errors); }
+    protected void EmitDataChannelReceived(WebRTCDataChannel channel) { CheckPeerAccess(); ArgumentNullException.ThrowIfNull(channel); var handlers = BeginEventEmission(_publisherDataChannelReceived.Handlers); List<Exception>? errors = null; if (handlers is not null) foreach (Action<WebRTCDataChannel> handler in handlers.GetInvocationList()) try { handler(channel); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Channel callbacks failed.", errors); }
     /// <summary>Publishes a typed candidate event on the owner thread.</summary><param name="media">Media identity.</param><param name="index">Media index.</param><param name="name">Candidate text.</param>
-    protected void EmitICECandidateCreated(string media, int index, string name) { CheckPeerAccess(); var handlers = BeginEventEmission(ICECandidateCreated); List<Exception>? errors = null; if (handlers is not null) foreach (Action<string, int, string> handler in handlers.GetInvocationList()) try { handler(media, index, name); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Candidate callbacks failed.", errors); }
+    protected void EmitICECandidateCreated(string media, int index, string name) { CheckPeerAccess(); var handlers = BeginEventEmission(_publisherICECandidateCreated.Handlers); List<Exception>? errors = null; if (handlers is not null) foreach (Action<string, int, string> handler in handlers.GetInvocationList()) try { handler(media, index, name); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Candidate callbacks failed.", errors); }
     /// <summary>Publishes a typed offer/answer event on the owner thread.</summary><param name="type">Proposal type.</param><param name="sdp">Proposal text.</param>
-    protected void EmitSessionDescriptionCreated(string type, string sdp) { CheckPeerAccess(); var handlers = BeginEventEmission(SessionDescriptionCreated); List<Exception>? errors = null; if (handlers is not null) foreach (Action<string, string> handler in handlers.GetInvocationList()) try { handler(type, sdp); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Description callbacks failed.", errors); }
+    protected void EmitSessionDescriptionCreated(string type, string sdp) { CheckPeerAccess(); var handlers = BeginEventEmission(_publisherSessionDescriptionCreated.Handlers); List<Exception>? errors = null; if (handlers is not null) foreach (Action<string, string> handler in handlers.GetInvocationList()) try { handler(type, sdp); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Description callbacks failed.", errors); }
     /// <summary>Closes native transport and pending observations without disposing channel wrappers.</summary>
     public virtual void Close() { CheckPeerAccess(); if (_peer is not null) WebRTCNative.Check(WebRTCNative.Close(_peer)); _closed = true; _channels.Clear(); }
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); CheckPeerAccess(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _peer?.Dispose(); _peer = null; _channels.Clear(); DataChannelReceived = null; ICECandidateCreated = null; SessionDescriptionCreated = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _peer?.Dispose(); _peer = null; _channels.Clear(); _publisherDataChannelReceived.Handlers = null; _publisherICECandidateCreated.Handlers = null; _publisherSessionDescriptionCreated.Handlers = null; } base.Dispose(disposing); }
 }

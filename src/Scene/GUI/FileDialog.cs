@@ -94,13 +94,17 @@ public partial class FileDialog : ConfirmationDialog
     }
     private Button Tool(string caption, Action action) { var button = new Button(caption) { Name = caption.Replace(" ", "") }; _toolbar.AddChild(button); button.Pressed += action; return button; }
     /// <summary>Occurs after a valid file is accepted, with the path in the selected access scope.</summary>
-    public event Action<string>? FileSelected;
+    public event Action<string>? FileSelected { add => _publisherFileSelected.Add(value); remove => _publisherFileSelected.Remove(value); }
+    private EventPublisher<Action<string>> _publisherFileSelected;
     /// <summary>Occurs after a directory is accepted, with the scoped path.</summary>
-    public event Action<string>? DirSelected;
+    public event Action<string>? DirSelected { add => _publisherDirSelected.Add(value); remove => _publisherDirSelected.Remove(value); }
+    private EventPublisher<Action<string>> _publisherDirSelected;
     /// <summary>Occurs after multiple files are accepted, preserving current selected index order.</summary>
-    public event Action<IReadOnlyList<string>>? FilesSelected;
+    public event Action<IReadOnlyList<string>>? FilesSelected { add => _publisherFilesSelected.Add(value); remove => _publisherFilesSelected.Remove(value); }
+    private EventPublisher<Action<IReadOnlyList<string>>> _publisherFilesSelected;
     /// <summary>Occurs after the filename substring filter changes, with the committed new text.</summary>
-    public event Action<string>? FilenameFilterChanged;
+    public event Action<string>? FilenameFilterChanged { add => _publisherFilenameFilterChanged.Add(value); remove => _publisherFilenameFilterChanged.Remove(value); }
+    private EventPublisher<Action<string>> _publisherFilenameFilterChanged;
     /// <summary>Gets or sets the directory access scope, resetting to the virtual root or filesystem working directory.</summary>
     /// <value>Resources initially.</value>
     public FileDialogAccess Access { get { CheckFileDialog(); return _access; } set { EnsureMutable(); if (value is < FileDialogAccess.Resources or > FileDialogAccess.FileSystem) throw new ArgumentOutOfRangeException(nameof(value)); if (_access == value) return; var next = DirAccess.Open(value == FileDialogAccess.Resources ? "res://" : value == FileDialogAccess.UserData ? "user://" : IOPath.GetFullPath(".")); _directory.Dispose(); _directory = next; _access = value; _root = ""; _rootSubfolderText = ""; _history.Clear(); _historyIndex = -1; CurrentFile = ""; PushHistory(); Invalidate(); } }

@@ -40,14 +40,16 @@ public partial class GraphNode : GraphElement
     /// <summary>Gets or sets Click, All or Accessibility focus for graph rows.</summary>
     public FocusMode SlotsFocusMode { get { CheckGraph(); return _slotsFocus; } set { MutableGraph(); if (value is < FocusMode.Click or > FocusMode.Accessibility) throw new ArgumentOutOfRangeException(nameof(value)); _slotsFocus = value; if (value == FocusMode.Click) _selectedSlot = -1; QueueRedraw(); } }
     /// <summary>Reports changed row geometry after layout.</summary>
-    public event Action? SlotSizesChanged;
+    public event Action? SlotSizesChanged { add => _publisherSlotSizesChanged.Add(value); remove => _publisherSlotSizesChanged.Remove(value); }
+    private EventPublisher<Action> _publisherSlotSizesChanged;
     /// <summary>Reports a changed slot configuration.</summary>
-    public event Action<int>? SlotUpdated;
+    public event Action<int>? SlotUpdated { add => _publisherSlotUpdated.Add(value); remove => _publisherSlotUpdated.Remove(value); }
+    private EventPublisher<Action<int>> _publisherSlotUpdated;
     /// <summary>Returns the borrowed titlebar; additional buttons may be added as normal children.</summary><returns>The owned horizontal container.</returns>
     public HBoxContainer GetTitlebarHBox() { CheckGraph(); return _titlebar; }
     private Slot? ReadSlot(int index) { CheckGraph(); if (index < 0 || index > 65535) throw new ArgumentOutOfRangeException(nameof(index)); return _slots.GetValueOrDefault(index); }
     private Slot WriteSlot(int index) { MutableGraph(); var slot = ReadSlot(index); if (slot != null) return slot; slot = new(); _slots.Add(index, slot); _storedSlots = Math.Max(_storedSlots, index + 1); NotifyPropertyListChanged(); return slot; }
-    private void ChangedSlot(int index) { PruneIcons(); UpdateMinimumSize(); QueueSort(); QueueRedraw(); BeginEventEmission(SlotUpdated)?.Invoke(index); }
+    private void ChangedSlot(int index) { PruneIcons(); UpdateMinimumSize(); QueueSort(); QueueRedraw(); BeginEventEmission(_publisherSlotUpdated.Handlers)?.Invoke(index); }
     /// <summary>Replaces port configuration for one slot, retaining its metadata.</summary><param name="slotIndex">Zero through 65535.</param><param name="enableLeftPort">Input enabled.</param><param name="typeLeft">Input type identifier.</param><param name="colorLeft">Input tint.</param><param name="enableRightPort">Output enabled.</param><param name="typeRight">Output type identifier.</param><param name="colorRight">Output tint.</param><param name="customIconLeft">Borrowed input icon or theme fallback.</param><param name="customIconRight">Borrowed output icon or theme fallback.</param><param name="drawStylebox">Whether row decoration contributes margins.</param>
     public void SetSlot(int slotIndex, bool enableLeftPort, int typeLeft, Color colorLeft, bool enableRightPort, int typeRight, Color colorRight, Texture? customIconLeft = null, Texture? customIconRight = null, bool drawStylebox = true)
     {
@@ -187,7 +189,7 @@ public partial class GraphNode : GraphElement
                 FitChildInRect(row.Child, new(new(offset.X + rowOffset.X, y + rowOffset.Y), new(Math.Max(0, Size.X - margins.X - rowMargins.X), Math.Max(0, row.Height - rowMargins.Y))));
                 y += row.Height + GetThemeConstant("separation");
             }
-            BeginEventEmission(SlotSizesChanged)?.Invoke(); QueueRedraw();
+            BeginEventEmission(_publisherSlotSizesChanged.Handlers)?.Invoke(); QueueRedraw();
         }
         finally { _rows.Clear(); _arranging = false; }
     }
@@ -250,5 +252,5 @@ public partial class GraphNode : GraphElement
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(GraphNode) ? CreateGraphNode : base.CreateSceneInstanceFactory();
     private static Node CreateGraphNode() => new GraphNode();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { SlotUpdated = null; SlotSizesChanged = null; UnwatchIcons(); _slots.Clear(); _rows.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _publisherSlotUpdated.Handlers = null; _publisherSlotSizesChanged.Handlers = null; UnwatchIcons(); _slots.Clear(); _rows.Clear(); } base.Dispose(disposing); }
 }

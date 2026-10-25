@@ -3,7 +3,8 @@ namespace Electron2D;
 public sealed partial class DisplayServer
 {
     private long _pendingSystemGoBack;
-    internal event Action? GoBackRequestedCore;
+    internal event Action? GoBackRequestedCore { add => _publisherGoBackRequestedCore.Add(value); remove => _publisherGoBackRequestedCore.Remove(value); }
+    private EventPublisher<Action> _publisherGoBackRequestedCore;
 
     internal static bool TryQueueSystemGoBack()
     {
@@ -20,7 +21,7 @@ public sealed partial class DisplayServer
         long count;
         lock (InstanceGate) { count = _pendingSystemGoBack; _pendingSystemGoBack = 0; }
         for (long i = 0; i < count; i++)
-            try { PublishWindow(BeginEventEmission(GoBackRequestedCore), _windowEvents?.BackHandlers); }
+            try { PublishWindow(BeginEventEmission(_publisherGoBackRequestedCore.Handlers), _windowEvents?.BackHandlers); }
             catch (Exception error) { (failures ??= []).Add(error); }
     }
 }

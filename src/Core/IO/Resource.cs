@@ -315,7 +315,8 @@ public class Resource : ElectronObject
     /// Delivery is synchronous on the calling thread. Custom resource setters should call <see cref="EmitChanged"/>
     /// after committing a meaningful change. A throwing handler stops later handlers and propagates to the caller.
     /// </remarks>
-    public event Action<Resource>? Changed;
+    public event Action<Resource>? Changed { add => _publisherChanged.Add(value); remove => _publisherChanged.Remove(value); }
+    private EventPublisher<Action<Resource>> _publisherChanged;
 
 
     /// <summary>Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID.</summary>
@@ -442,7 +443,7 @@ public class Resource : ElectronObject
                 return;
             }
 
-            handlers = BeginEventEmission(Changed);
+            handlers = BeginEventEmission(_publisherChanged.Handlers);
         }
 
         handlers?.Invoke(this);
@@ -631,7 +632,7 @@ public class Resource : ElectronObject
                 lock (_stateGate)
                 {
                     _localScene = default;
-                    Changed = null;
+                    _publisherChanged.Handlers = null;
                     _changeBlockDepth = 0;
                     _changeBlockOwnerThreadId = 0;
                     _changePending = false;
@@ -861,7 +862,7 @@ public class Resource : ElectronObject
             if (_changeBlockDepth == 0)
             {
                 if (emitAtEnd && _changePending)
-                    handlers = BeginEventEmission(Changed);
+                    handlers = BeginEventEmission(_publisherChanged.Handlers);
 
                 _changePending = false;
                 _changeBlockOwnerThreadId = 0;

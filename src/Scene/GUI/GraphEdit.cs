@@ -143,41 +143,60 @@ public partial class GraphEdit : Control
     /// <summary>Tests an explicitly registered directed pair; equal types are accepted automatically by interactive wiring.</summary><param name="fromType">Output type.</param><param name="toType">Input type.</param><returns>Whether explicitly registered.</returns>
     public bool IsValidConnectionType(int fromType, int toType) { CheckEdit(); return _validTypes.Contains((fromType, toType)); }
     /// <summary>Reports the BeginNodeMove graph interaction.</summary>
-    public event Action? BeginNodeMove;
+    public event Action? BeginNodeMove { add => _publisherBeginNodeMove.Add(value); remove => _publisherBeginNodeMove.Remove(value); }
+    private EventPublisher<Action> _publisherBeginNodeMove;
     /// <summary>Reports the EndNodeMove graph interaction.</summary>
-    public event Action? EndNodeMove;
+    public event Action? EndNodeMove { add => _publisherEndNodeMove.Add(value); remove => _publisherEndNodeMove.Remove(value); }
+    private EventPublisher<Action> _publisherEndNodeMove;
     /// <summary>Reports the ConnectionDragStarted graph interaction.</summary>
-    public event Action<string, int, bool>? ConnectionDragStarted;
+    public event Action<string, int, bool>? ConnectionDragStarted { add => _publisherConnectionDragStarted.Add(value); remove => _publisherConnectionDragStarted.Remove(value); }
+    private EventPublisher<Action<string, int, bool>> _publisherConnectionDragStarted;
     /// <summary>Reports the ConnectionDragEnded graph interaction.</summary>
-    public event Action? ConnectionDragEnded;
+    public event Action? ConnectionDragEnded { add => _publisherConnectionDragEnded.Add(value); remove => _publisherConnectionDragEnded.Remove(value); }
+    private EventPublisher<Action> _publisherConnectionDragEnded;
     /// <summary>Reports the ConnectionFromEmpty graph interaction.</summary>
-    public event Action<string, int, Vector2>? ConnectionFromEmpty;
+    public event Action<string, int, Vector2>? ConnectionFromEmpty { add => _publisherConnectionFromEmpty.Add(value); remove => _publisherConnectionFromEmpty.Remove(value); }
+    private EventPublisher<Action<string, int, Vector2>> _publisherConnectionFromEmpty;
     /// <summary>Reports the ConnectionToEmpty graph interaction.</summary>
-    public event Action<string, int, Vector2>? ConnectionToEmpty;
+    public event Action<string, int, Vector2>? ConnectionToEmpty { add => _publisherConnectionToEmpty.Add(value); remove => _publisherConnectionToEmpty.Remove(value); }
+    private EventPublisher<Action<string, int, Vector2>> _publisherConnectionToEmpty;
     /// <summary>Reports the ConnectionRequest graph interaction.</summary>
-    public event Action<string, int, string, int>? ConnectionRequest;
+    public event Action<string, int, string, int>? ConnectionRequest { add => _publisherConnectionRequest.Add(value); remove => _publisherConnectionRequest.Remove(value); }
+    private EventPublisher<Action<string, int, string, int>> _publisherConnectionRequest;
     /// <summary>Reports the DisconnectionRequest graph interaction.</summary>
-    public event Action<string, int, string, int>? DisconnectionRequest;
+    public event Action<string, int, string, int>? DisconnectionRequest { add => _publisherDisconnectionRequest.Add(value); remove => _publisherDisconnectionRequest.Remove(value); }
+    private EventPublisher<Action<string, int, string, int>> _publisherDisconnectionRequest;
     /// <summary>Reports the CopyNodesRequest graph interaction.</summary>
-    public event Action? CopyNodesRequest;
+    public event Action? CopyNodesRequest { add => _publisherCopyNodesRequest.Add(value); remove => _publisherCopyNodesRequest.Remove(value); }
+    private EventPublisher<Action> _publisherCopyNodesRequest;
     /// <summary>Reports the CutNodesRequest graph interaction.</summary>
-    public event Action? CutNodesRequest;
+    public event Action? CutNodesRequest { add => _publisherCutNodesRequest.Add(value); remove => _publisherCutNodesRequest.Remove(value); }
+    private EventPublisher<Action> _publisherCutNodesRequest;
     /// <summary>Reports the PasteNodesRequest graph interaction.</summary>
-    public event Action? PasteNodesRequest;
+    public event Action? PasteNodesRequest { add => _publisherPasteNodesRequest.Add(value); remove => _publisherPasteNodesRequest.Remove(value); }
+    private EventPublisher<Action> _publisherPasteNodesRequest;
     /// <summary>Reports the DuplicateNodesRequest graph interaction.</summary>
-    public event Action? DuplicateNodesRequest;
+    public event Action? DuplicateNodesRequest { add => _publisherDuplicateNodesRequest.Add(value); remove => _publisherDuplicateNodesRequest.Remove(value); }
+    private EventPublisher<Action> _publisherDuplicateNodesRequest;
     /// <summary>Reports the DeleteNodesRequest graph interaction.</summary>
-    public event Action<ReadOnlyMemory<string>>? DeleteNodesRequest;
+    public event Action<ReadOnlyMemory<string>>? DeleteNodesRequest { add => _publisherDeleteNodesRequest.Add(value); remove => _publisherDeleteNodesRequest.Remove(value); }
+    private EventPublisher<Action<ReadOnlyMemory<string>>> _publisherDeleteNodesRequest;
     /// <summary>Reports the FrameRectChanged graph interaction.</summary>
-    public event Action<GraphFrame, Rect2>? FrameRectChanged;
+    public event Action<GraphFrame, Rect2>? FrameRectChanged { add => _publisherFrameRectChanged.Add(value); remove => _publisherFrameRectChanged.Remove(value); }
+    private EventPublisher<Action<GraphFrame, Rect2>> _publisherFrameRectChanged;
     /// <summary>Reports the GraphElementsLinkedToFrameRequest graph interaction.</summary>
-    public event Action<ReadOnlyMemory<string>, string>? GraphElementsLinkedToFrameRequest;
+    public event Action<ReadOnlyMemory<string>, string>? GraphElementsLinkedToFrameRequest { add => _publisherGraphElementsLinkedToFrameRequest.Add(value); remove => _publisherGraphElementsLinkedToFrameRequest.Remove(value); }
+    private EventPublisher<Action<ReadOnlyMemory<string>, string>> _publisherGraphElementsLinkedToFrameRequest;
     /// <summary>Reports the NodeSelected graph interaction.</summary>
-    public event Action<Node>? NodeSelected;
+    public event Action<Node>? NodeSelected { add => _publisherNodeSelected.Add(value); remove => _publisherNodeSelected.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherNodeSelected;
     /// <summary>Reports the NodeDeselected graph interaction.</summary>
-    public event Action<Node>? NodeDeselected;
+    public event Action<Node>? NodeDeselected { add => _publisherNodeDeselected.Add(value); remove => _publisherNodeDeselected.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherNodeDeselected;
     /// <summary>Reports the PopupRequest graph interaction.</summary>
-    public event Action<Vector2>? PopupRequest;
+    public event Action<Vector2>? PopupRequest { add => _publisherPopupRequest.Add(value); remove => _publisherPopupRequest.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherPopupRequest;
     /// <summary>Reports the ScrollOffsetChanged graph interaction.</summary>
-    public event Action<Vector2>? ScrollOffsetChanged;
+    public event Action<Vector2>? ScrollOffsetChanged { add => _publisherScrollOffsetChanged.Add(value); remove => _publisherScrollOffsetChanged.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherScrollOffsetChanged;
 }

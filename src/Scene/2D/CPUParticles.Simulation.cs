@@ -112,7 +112,7 @@ public partial class CPUParticles
         // Commit lifecycle before callbacks; failures are not replayed by another process frame.
         Exception? callbackError = null;
         if (stopped) try { NotifyPropertyListChanged(); } catch (Exception error) { callbackError = error; }
-        if (finished && !IsDisposed) try { BeginEventEmission(Finished)?.Invoke(); } catch (Exception error) { if (callbackError is not null) throw new AggregateException("Particle completion callbacks failed.", callbackError, error); throw; }
+        if (finished && !IsDisposed) try { BeginEventEmission(_publisherFinished.Handlers)?.Invoke(); } catch (Exception error) { if (callbackError is not null) throw new AggregateException("Particle completion callbacks failed.", callbackError, error); throw; }
         if (callbackError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(callbackError).Throw();
     }
     private void AdvanceInterval(double seconds, ref bool finished, ref bool stopped)

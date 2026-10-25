@@ -59,6 +59,6 @@ public partial class TileMapLayer
         if (changes.Count == 0) return;
         _cells.EnsureCapacity(checked(_cells.Count + changes.Count)); _dirtyCells.EnsureCapacity(checked(_dirtyCells.Count + changes.Count));
         foreach (var change in changes) { if (change.Cell is { } cell) _cells[change.Coords] = cell; else _cells.Remove(change.Coords); _dirtyCells.Add(change.Coords); }
-        Schedule(); BeginEventEmission(Changed)?.Invoke();
+        Schedule(); BeginEventEmission(_publisherChanged.Handlers)?.Invoke();
     }
 }

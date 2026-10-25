@@ -47,14 +47,15 @@ public class NinePatchRect : Control
             if (_texture is { } next) { next.Changed += TextureUpdated; next.Disposed += TextureDisposed; }
             List<Exception>? errors = null;
             try { QueueRedraw(); UpdateMinimumSize(); } catch (Exception error) { CollectException(ref errors, error); }
-            try { BeginEventEmission(TextureChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherTextureChanged.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Nine-patch texture notifications failed.", errors);
         }
     }
 
     /// <summary>Occurs after an actual texture assignment or disposal clears the borrowed texture.</summary>
     /// <remarks>Content updates do not emit this event. Binding is already committed if a subscriber throws.</remarks>
-    public event Action? TextureChanged;
+    public event Action? TextureChanged { add => _publisherTextureChanged.Add(value); remove => _publisherTextureChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTextureChanged;
     /// <summary>Gets or sets the finite logical source rectangle; an all-zero size selects the whole texture.</summary>
     /// <value>default initially.</value>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
@@ -186,6 +187,6 @@ public class NinePatchRect : Control
     {
         if (_texture is { } texture) { texture.Changed -= TextureUpdated; texture.Disposed -= TextureDisposed; }
         try { base.Dispose(disposing); }
-        finally { _texture = null; TextureChanged = null; }
+        finally { _texture = null; _publisherTextureChanged.Handlers = null; }
     }
 }

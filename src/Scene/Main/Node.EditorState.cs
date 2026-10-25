@@ -27,7 +27,7 @@ public partial class Node
             EnsureMutable(); EnsureEditorAuthoringCommit(); ArgumentNullException.ThrowIfNull(value);
             if (string.Equals(_editorDescription, value, StringComparison.Ordinal)) return;
             _editorDescription = value;
-            BeginEventEmission(EditorDescriptionChanged)?.Invoke(this);
+            BeginEventEmission(_publisherEditorDescriptionChanged.Handlers)?.Invoke(this);
         }
     }
 
@@ -56,14 +56,16 @@ public partial class Node
 
     /// <summary>Occurs after a different EditorDescription value has been committed.</summary>
     /// <remarks>The argument is this node. Signal blocking suppresses ordinary delivery; the description still changes.</remarks>
-    public event Action<Node>? EditorDescriptionChanged;
+    public event Action<Node>? EditorDescriptionChanged { add => _publisherEditorDescriptionChanged.Add(value); remove => _publisherEditorDescriptionChanged.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherEditorDescriptionChanged;
 
     /// <summary>Occurs after an authoring-relevant state change in the selected edited-scene subtree.</summary>
     /// <remarks>The argument is this node. Relevant changes include process mode, owner, unique name,
     /// persistent groups, source path, editable-instance policy and authored connections. Selection changes,
     /// folding and ordinary CLR subscriptions do not emit this event. Delivery is synchronous on the mutating
     /// thread and respects signal blocking. A callback may observe already committed state.</remarks>
-    public event Action<Node>? EditorStateChanged;
+    public event Action<Node>? EditorStateChanged { add => _publisherEditorStateChanged.Add(value); remove => _publisherEditorStateChanged.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherEditorStateChanged;
 
     /// <summary>Changes whether a strict descendant's owned children are available to scene-authoring tools.</summary>
     /// <param name="node">A live strict descendant whose instance flag is changed.</param>
@@ -113,7 +115,7 @@ public partial class Node
     private void EmitEditorStateChanged()
     {
         if (!IsDisposed && Tree?.IsEditedSceneMember(this) == true)
-            BeginEventEmission(EditorStateChanged)?.Invoke(this);
+            BeginEventEmission(_publisherEditorStateChanged.Handlers)?.Invoke(this);
     }
 
     internal bool OwnsEditableCapture(Node node)

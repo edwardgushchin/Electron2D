@@ -40,9 +40,11 @@ public abstract class MultiplayerPeer : PacketPeer
     protected MultiplayerPeer() { }
     /// <summary>Occurs after a remote peer and its identity have been committed.</summary>
     /// <remarks>All subscribers run on the owner thread; failures aggregate after remaining subscribers.</remarks>
-    public event Action<int>? PeerConnected;
+    public event Action<int>? PeerConnected { add => _publisherPeerConnected.Add(value); remove => _publisherPeerConnected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherPeerConnected;
     /// <summary>Occurs after a remote peer has been detached; Close and forced local disconnect suppress it.</summary>
-    public event Action<int>? PeerDisconnected;
+    public event Action<int>? PeerDisconnected { add => _publisherPeerDisconnected.Add(value); remove => _publisherPeerDisconnected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherPeerDisconnected;
     /// <summary>Gets or sets the requested outgoing transport channel.</summary><value>Zero initially; nonnegative. A transport may provide only channel zero.</value>
     /// <exception cref="ArgumentOutOfRangeException">The requested channel is negative.</exception>
     public virtual int TransferChannel { get { CheckPacketPeer(); return _channel; } set { CheckPacketPeer(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); _channel = value; } }
@@ -77,10 +79,10 @@ public abstract class MultiplayerPeer : PacketPeer
     public abstract void DisconnectPeer(int peer, bool force = false);
     /// <summary>Delivers a committed connection event on the owner thread.</summary><param name="id">Remote peer identity.</param>
     /// <exception cref="AggregateException">Subscribers failed after every subscriber was attempted.</exception>
-    protected void EmitPeerConnected(int id) { CheckPacketPeer(); Emit(BeginEventEmission(PeerConnected), id); }
+    protected void EmitPeerConnected(int id) { CheckPacketPeer(); Emit(BeginEventEmission(_publisherPeerConnected.Handlers), id); }
     /// <summary>Delivers a committed disconnection event on the owner thread.</summary><param name="id">Detached peer identity.</param>
     /// <exception cref="AggregateException">Subscribers failed after every subscriber was attempted.</exception>
-    protected void EmitPeerDisconnected(int id) { CheckPacketPeer(); Emit(BeginEventEmission(PeerDisconnected), id); }
+    protected void EmitPeerDisconnected(int id) { CheckPacketPeer(); Emit(BeginEventEmission(_publisherPeerDisconnected.Handlers), id); }
     private static void Emit(Action<int>? subscribers, int id)
     {
         List<Exception>? errors = null; foreach (var subscriber in Delegate.EnumerateInvocationList(subscribers)) { try { subscriber(id); } catch (Exception error) { (errors ??= []).Add(error); } }
@@ -95,7 +97,7 @@ public abstract class MultiplayerPeer : PacketPeer
         yield return new PropertyDescriptor<MultiplayerPeer, bool>(nameof(RefuseNewConnections), p => p.RefuseNewConnections, (p, v) => p.RefuseNewConnections = v, _ => false, stored: true);
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { PeerConnected = null; PeerDisconnected = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _publisherPeerConnected.Handlers = null; _publisherPeerDisconnected.Handlers = null; } base.Dispose(disposing); }
 }
 
 /// <summary>Models a permanently connected local server without remote endpoints.</summary>

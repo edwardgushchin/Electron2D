@@ -117,11 +117,16 @@ internal static class WindowNotificationTests
         var window = new ProbeWindow(log, "native") { World = world, Visible = false };
         var body = new ProbeBody(log, "body"); window.AddChild(body);
         var afterFailure = false; var positionSupported = false;
+        EventConnection? session = null, nativeInput = null;
         window.FocusEntered += () => throw new InvalidOperationException("native event observer");
         window.FocusEntered += () => afterFailure = true;
         window.CloseRequested += () => log.Add("signal-close");
         body.Ready += _ =>
         {
+            session = EventConnection.Subscribe(h => DisplayServer.CloseRequested += h, h => { if (DisplayServer.IsAvailable) DisplayServer.CloseRequested -= h; }, static () => { });
+            var events = DisplayServer.GetWindowEvents();
+            nativeInput = EventConnection.Subscribe<InputEvent>(h => events.Input += h, h => events.Input -= h, static _ => { });
+            Check(session.IsConnected && nativeInput.IsConnected, "Facade and native-window publishers expose actual membership");
             window.Show();
             log.Clear();
             var windows = SDL.GetWindows(out var count); Check(count == 1, "Native host owns one window.");
@@ -135,6 +140,8 @@ internal static class WindowNotificationTests
             }
         };
         Reject<AggregateException>(() => Engine.Run(window));
+        Check(session is { IsConnected: false } && nativeInput is { IsConnected: false }, "Failed native host shutdown retires both publisher families");
+        session!.Dispose(); nativeInput!.Dispose();
         foreach (var what in new[] { 1002, 1003, 1004, 1005, 1006, 1009 })
         {
             var owner = log.IndexOf("native:" + what); var receiver = log.IndexOf("body:" + what);

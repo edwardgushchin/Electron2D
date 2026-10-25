@@ -17,7 +17,7 @@ public class GraphElement : Container
     /// <summary>Gets or sets whether pointer movement may move this element.</summary>
     public bool Draggable { get { CheckGraph(); return _draggable; } set { MutableGraph(); _draggable = value; } }
     /// <summary>Gets or sets finite placement in unscaled graph coordinates.</summary>
-    public Vector2 PositionOffset { get { CheckGraph(); return _offset; } set { MutableGraph(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); if (_offset == value) return; _offset = value; BeginEventEmission(PositionOffsetChanged)?.Invoke(); QueueRedraw(); } }
+    public Vector2 PositionOffset { get { CheckGraph(); return _offset; } set { MutableGraph(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); if (_offset == value) return; _offset = value; BeginEventEmission(_publisherPositionOffsetChanged.Handlers)?.Invoke(); QueueRedraw(); } }
     /// <summary>Gets or sets whether a resize handle issues resize requests.</summary>
     public bool Resizable { get { CheckGraph(); return _resizable; } set { MutableGraph(); if (_resizable == value) return; _resizable = value; _resizing = false; QueueRedraw(); } }
     /// <summary>Gets or sets whether descendant popup menus follow graph zoom.</summary>
@@ -25,26 +25,34 @@ public class GraphElement : Container
     /// <summary>Gets or sets selection eligibility; disabling it clears selection.</summary>
     public bool Selectable { get { CheckGraph(); return _selectable; } set { MutableGraph(); if (!value) Selected = false; _selectable = value; } }
     /// <summary>Gets or sets selection, ignored while Selectable is false.</summary>
-    public bool Selected { get { CheckGraph(); return _selected; } set { MutableGraph(); if (!_selectable || _selected == value) return; _selected = value; QueueRedraw(); if (value) BeginEventEmission(NodeSelected)?.Invoke(); else BeginEventEmission(NodeDeselected)?.Invoke(); } }
+    public bool Selected { get { CheckGraph(); return _selected; } set { MutableGraph(); if (!_selectable || _selected == value) return; _selected = value; QueueRedraw(); if (value) BeginEventEmission(_publisherNodeSelected.Handlers)?.Invoke(); else BeginEventEmission(_publisherNodeDeselected.Handlers)?.Invoke(); } }
     /// <summary>Requests deletion by the owning application.</summary>
-    public event Action? DeleteRequest;
+    public event Action? DeleteRequest { add => _publisherDeleteRequest.Add(value); remove => _publisherDeleteRequest.Remove(value); }
+    private EventPublisher<Action> _publisherDeleteRequest;
     /// <summary>Reports graph placement before and after a completed drag.</summary>
-    public event Action<Vector2, Vector2>? Dragged;
+    public event Action<Vector2, Vector2>? Dragged { add => _publisherDragged.Add(value); remove => _publisherDragged.Remove(value); }
+    private EventPublisher<Action<Vector2, Vector2>> _publisherDragged;
     /// <summary>Reports deselection.</summary>
-    public event Action? NodeDeselected;
+    public event Action? NodeDeselected { add => _publisherNodeDeselected.Add(value); remove => _publisherNodeDeselected.Remove(value); }
+    private EventPublisher<Action> _publisherNodeDeselected;
     /// <summary>Reports selection.</summary>
-    public event Action? NodeSelected;
+    public event Action? NodeSelected { add => _publisherNodeSelected.Add(value); remove => _publisherNodeSelected.Remove(value); }
+    private EventPublisher<Action> _publisherNodeSelected;
     /// <summary>Reports a changed graph position.</summary>
-    public event Action? PositionOffsetChanged;
+    public event Action? PositionOffsetChanged { add => _publisherPositionOffsetChanged.Add(value); remove => _publisherPositionOffsetChanged.Remove(value); }
+    private EventPublisher<Action> _publisherPositionOffsetChanged;
     /// <summary>Requests raising this element in the graph's stacking order.</summary>
-    public event Action? RaiseRequest;
+    public event Action? RaiseRequest { add => _publisherRaiseRequest.Add(value); remove => _publisherRaiseRequest.Remove(value); }
+    private EventPublisher<Action> _publisherRaiseRequest;
     /// <summary>Reports the actual size when resizing ends.</summary>
-    public event Action<Vector2>? ResizeEnd;
+    public event Action<Vector2>? ResizeEnd { add => _publisherResizeEnd.Add(value); remove => _publisherResizeEnd.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherResizeEnd;
     /// <summary>Requests a finite new size during pointer resizing.</summary>
-    public event Action<Vector2>? ResizeRequest;
+    public event Action<Vector2>? ResizeRequest { add => _publisherResizeRequest.Add(value); remove => _publisherResizeRequest.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherResizeRequest;
     internal void StartGraphDrag() => _dragFrom = PositionOffset;
-    internal void EndGraphDrag() => BeginEventEmission(Dragged)?.Invoke(_dragFrom, PositionOffset);
-    internal void RequestGraphDelete() => BeginEventEmission(DeleteRequest)?.Invoke();
+    internal void EndGraphDrag() => BeginEventEmission(_publisherDragged.Handlers)?.Invoke(_dragFrom, PositionOffset);
+    internal void RequestGraphDelete() => BeginEventEmission(_publisherDeleteRequest.Handlers)?.Invoke();
     internal virtual bool CanResize => Resizable;
     internal void RefreshGraphMenus()
     { var scale = ScalingMenus && Parent is GraphEdit graph ? graph.Zoom : 1; ApplyMenus(this, scale); }
@@ -60,10 +68,10 @@ public class GraphElement : Container
         if (inputEvent is InputEventMouseButton { ButtonIndex: MouseButton.Left } button)
         {
             if (button.Pressed && IsResizePoint(button.Position)) { _resizing = true; _resizeFrom = button.Position; _resizeSize = Size; AcceptEvent(); return; }
-            if (!button.Pressed && _resizing) { _resizing = false; BeginEventEmission(ResizeEnd)?.Invoke(Size); AcceptEvent(); return; }
-            if (button.Pressed) BeginEventEmission(RaiseRequest)?.Invoke();
+            if (!button.Pressed && _resizing) { _resizing = false; BeginEventEmission(_publisherResizeEnd.Handlers)?.Invoke(Size); AcceptEvent(); return; }
+            if (button.Pressed) BeginEventEmission(_publisherRaiseRequest.Handlers)?.Invoke();
         }
-        else if (inputEvent is InputEventMouseMotion motion && _resizing) { BeginEventEmission(ResizeRequest)?.Invoke((_resizeSize + motion.Position - _resizeFrom).Max(Vector2.Zero)); AcceptEvent(); return; }
+        else if (inputEvent is InputEventMouseMotion motion && _resizing) { BeginEventEmission(_publisherResizeRequest.Handlers)?.Invoke((_resizeSize + motion.Position - _resizeFrom).Max(Vector2.Zero)); AcceptEvent(); return; }
         if (Parent is GraphEdit graph) graph.ElementInput(this, inputEvent);
     }
     /// <inheritdoc />
@@ -102,7 +110,7 @@ public class GraphElement : Container
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { Releasing = true; DeleteRequest = null; Dragged = null; NodeSelected = null; NodeDeselected = null; PositionOffsetChanged = null; RaiseRequest = null; ResizeEnd = null; ResizeRequest = null; }
+        if (disposing) { Releasing = true; _publisherDeleteRequest.Handlers = null; _publisherDragged.Handlers = null; _publisherNodeSelected.Handlers = null; _publisherNodeDeselected.Handlers = null; _publisherPositionOffsetChanged.Handlers = null; _publisherRaiseRequest.Handlers = null; _publisherResizeEnd.Handlers = null; _publisherResizeRequest.Handlers = null; }
         base.Dispose(disposing);
     }
 }

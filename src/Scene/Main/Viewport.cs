@@ -25,12 +25,14 @@ public abstract partial class Viewport : Node
 
     /// <summary>Occurs after the client size changes, before subsequent frame callbacks.</summary>
     /// <remarks>Subscribers run synchronously on the scene owner thread. Desktop movement does not notify.</remarks>
-    public event Action? SizeChanged;
+    public event Action? SizeChanged { add => _publisherSizeChanged.Add(value); remove => _publisherSizeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherSizeChanged;
 
     /// <summary>Occurs when this viewport gives keyboard focus to a control.</summary>
     /// <remarks>Delivered after the previous control loses focus and before the new control's focus notification.
     /// Releasing focus does not raise this event.</remarks>
-    public event Action<Control>? GUIFocusChanged;
+    public event Action<Control>? GUIFocusChanged { add => _publisherGUIFocusChanged.Add(value); remove => _publisherGUIFocusChanged.Remove(value); }
+    private EventPublisher<Action<Control>> _publisherGUIFocusChanged;
 
     /// <summary>Returns the control with keyboard focus in this viewport, or null.</summary>
     /// <returns>The borrowed focused control, or null when no control is focused or the viewport is detached.</returns>
@@ -123,10 +125,10 @@ public abstract partial class Viewport : Node
     {
         List<Exception>? errors = null;
         try { TextureSizeChanged(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
-        if (BeginEventEmission(SizeChanged) is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (BeginEventEmission(_publisherSizeChanged.Handlers) is { } handlers) foreach (var handler in Delegate.EnumerateInvocationList(handlers)) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("Viewport size notification failed.", errors);
     }
-    internal void NotifyGUIFocusChanged(Control control) => BeginEventEmission(GUIFocusChanged)?.Invoke(control);
+    internal void NotifyGUIFocusChanged(Control control) => BeginEventEmission(_publisherGUIFocusChanged.Handlers)?.Invoke(control);
 
     private SceneTree GetInputTree()
     {
@@ -149,10 +151,10 @@ public abstract partial class Viewport : Node
             CanvasRasterScale.ChangeReference(_dpiScaleKey, 64); _dpiScaleKey = 64;
             ReleaseViewportRID();
             ReleaseViewportWorld();
-            TextureSizeUpdated = null;
+            _publisherTextureSizeUpdated.Handlers = null;
             _texture = null;
-            SizeChanged = null;
-            GUIFocusChanged = null;
+            _publisherSizeChanged.Handlers = null;
+            _publisherGUIFocusChanged.Handlers = null;
             _audioListener = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }

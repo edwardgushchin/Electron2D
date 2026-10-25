@@ -34,7 +34,7 @@ public partial class ColorPicker
             {
                 _point = motion.Position; var uv = _point / _control.Size; var pixel = new Vector2i(Math.Clamp((int)(uv.X * _image.Width), 0, _image.Width - 1), Math.Clamp((int)(uv.Y * _image.Height), 0, _image.Height - 1)); _selected = _image.GetPixel(pixel.X, pixel.Y); _control.QueueRedraw();
             }
-            if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) { var color = _selected; Hide(); _owner.SetColor(color, true); _owner.AddRecentPreset(color); _owner.BeginEventEmission(_owner.ColorChanged)?.Invoke(color); }
+            if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) { var color = _selected; Hide(); _owner.SetColor(color, true); _owner.AddRecentPreset(color); _owner.BeginEventEmission(_owner._publisherColorChanged.Handlers)?.Invoke(color); }
             else if (input is InputEventMouseButton { ButtonIndex: MouseButton.Right, Pressed: true }) Hide();
         }
         private sealed class SamplerControl(SamplerPopup popup) : Control

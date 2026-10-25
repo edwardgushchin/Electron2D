@@ -51,11 +51,14 @@ public partial class AcceptDialog : Window
     /// <exception cref="ArgumentNullException">The caption is null.</exception>
     public string OKButtonText { get { CheckDialog(); return _okText; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); _okText = value; _ok.Text = value.Length == 0 ? _defaultOKText : value; } }
     /// <summary>Occurs after cancellation is scheduled, before the cancellation hook and deferred hiding.</summary>
-    public event Action? Canceled;
+    public event Action? Canceled { add => _publisherCanceled.Add(value); remove => _publisherCanceled.Remove(value); }
+    private EventPublisher<Action> _publisherCanceled;
     /// <summary>Occurs after optional hiding and the confirmation hook.</summary>
-    public event Action? Confirmed;
+    public event Action? Confirmed { add => _publisherConfirmed.Add(value); remove => _publisherConfirmed.Remove(value); }
+    private EventPublisher<Action> _publisherConfirmed;
     /// <summary>Occurs before the custom action hook; custom actions do not automatically hide.</summary>
-    public event Action<string>? CustomAction;
+    public event Action<string>? CustomAction { add => _publisherCustomAction.Add(value); remove => _publisherCustomAction.Remove(value); }
+    private EventPublisher<Action<string>> _publisherCustomAction;
     /// <summary>Returns the borrowed, required message label; hide it instead of removing or disposing it.</summary>
     /// <returns>The stable internal message label.</returns>
     public Label GetLabel() { CheckDialog(); return _label; }
@@ -155,7 +158,7 @@ public partial class AcceptDialog : Window
         if (_disposing || IsDisposed) return; List<Exception>? errors = null;
         try { if (_hideOnOK) Hide(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnOKPressed(); } catch (Exception e) { CollectException(ref errors, e); }
-        try { if (!IsDisposed) BeginEventEmission(Confirmed)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { if (!IsDisposed) BeginEventEmission(_publisherConfirmed.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
         HandleInput(); ThrowCollected("Dialog confirmation callbacks failed.", errors);
     }
     private void Cancel()
@@ -163,7 +166,7 @@ public partial class AcceptDialog : Window
         if (_disposing || IsDisposed || _cancelPending) return; _cancelPending = true; UnwatchParent(); var version = _visibilityVersion; var tree = Tree;
         if (tree != null) tree.Defer(() => { if (!IsDisposed && _cancelPending && version == _visibilityVersion) { _cancelPending = false; Hide(); } });
         List<Exception>? errors = null;
-        try { BeginEventEmission(Canceled)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(_publisherCanceled.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnCancelPressed(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (tree == null && !IsDisposed && version == _visibilityVersion) { _cancelPending = false; Hide(); } } catch (Exception e) { CollectException(ref errors, e); }
         HandleInput(); ThrowCollected("Dialog cancellation callbacks failed.", errors);
@@ -171,13 +174,13 @@ public partial class AcceptDialog : Window
     internal void RaiseNativeCanceled()
     {
         List<Exception>? errors = null;
-        try { BeginEventEmission(Canceled)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { BeginEventEmission(_publisherCanceled.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnCancelPressed(); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Native dialog cancellation callbacks failed.", errors);
     }
     private void InvokeCustom(string action)
     {
-        List<Exception>? errors = null; try { BeginEventEmission(CustomAction)?.Invoke(action); } catch (Exception e) { CollectException(ref errors, e); }
+        List<Exception>? errors = null; try { BeginEventEmission(_publisherCustomAction.Handlers)?.Invoke(action); } catch (Exception e) { CollectException(ref errors, e); }
         try { if (!IsDisposed) OnCustomAction(action); } catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Dialog custom action callbacks failed.", errors);
     }
@@ -203,7 +206,7 @@ public partial class AcceptDialog : Window
             _textEntries.Clear();
             foreach (var entry in _bindings) { entry.Key.Pressed -= entry.Value.Press; entry.Key.VisibilityChanged -= ButtonVisibility; entry.Key.Disposed -= ButtonDisposed; entry.Key.MinimumSizeChanged -= Arrange; }
             _bindings.Clear();
-            Canceled = null; Confirmed = null; CustomAction = null;
+            _publisherCanceled.Handlers = null; _publisherConfirmed.Handlers = null; _publisherCustomAction.Handlers = null;
         }
         base.Dispose(disposing);
     }

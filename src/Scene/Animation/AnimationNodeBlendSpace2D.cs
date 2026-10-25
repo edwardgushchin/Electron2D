@@ -13,7 +13,8 @@ public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
     private string _x = "x", _y = "y"; private bool _auto = true, _trianglesDirty = true;
     private readonly List<(int A, int B, int C)> _triangles = [];
     /// <summary>Occurs synchronously after an automatic triangle rebuild or a point reorder commits.</summary>
-    public event Action? TrianglesUpdated;
+    public event Action? TrianglesUpdated { add => _publisherTrianglesUpdated.Add(value); remove => _publisherTrianglesUpdated.Remove(value); }
+    private EventPublisher<Action> _publisherTrianglesUpdated;
     private static readonly PropertyDescriptor[] SpaceProperties =
     [
         new PropertyDescriptor<AnimationNodeBlendSpace2D, AnimationBlendMode>(nameof(BlendMode), n => n.BlendMode, (n, v) => n.BlendMode = v, _ => AnimationBlendMode.Interpolated, stored: true),
@@ -135,7 +136,7 @@ public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
     /// <param name="toIndex">An existing destination index.</param>
     /// <exception cref="ObjectDisposedException">This resource has been disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">An index or numeric value is outside its documented domain.</exception>
-    public void ReorderBlendPoint(int fromIndex, int toIndex) { ThrowIfDisposed(); var a = _points.Items[fromIndex]; var b = _points.Items[toIndex]; if (fromIndex == toIndex) return; (_points.Items[fromIndex], _points.Items[toIndex]) = (b, a); int Swap(int i) => i == fromIndex ? toIndex : i == toIndex ? fromIndex : i; for (var i = 0; i < _triangles.Count; i++) { var t = _triangles[i]; _triangles[i] = Canonical(Swap(t.A), Swap(t.B), Swap(t.C)); } _trianglesDirty = true; try { EmitGraphChanged(); } finally { BeginEventEmission(TrianglesUpdated)?.Invoke(); } }
+    public void ReorderBlendPoint(int fromIndex, int toIndex) { ThrowIfDisposed(); var a = _points.Items[fromIndex]; var b = _points.Items[toIndex]; if (fromIndex == toIndex) return; (_points.Items[fromIndex], _points.Items[toIndex]) = (b, a); int Swap(int i) => i == fromIndex ? toIndex : i == toIndex ? fromIndex : i; for (var i = 0; i < _triangles.Count; i++) { var t = _triangles[i]; _triangles[i] = Canonical(Swap(t.A), Swap(t.B), Swap(t.C)); } _trianglesDirty = true; try { EmitGraphChanged(); } finally { BeginEventEmission(_publisherTrianglesUpdated.Handlers)?.Invoke(); } }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SpaceProperties);
     /// <inheritdoc />
@@ -152,7 +153,7 @@ public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     { var copy = (AnimationNodeBlendSpace2D)target; CopyNodeState(copy); _points.CopyTo(copy._points, deep, duplicate); copy._mode = _mode; copy._sync = _sync; copy._cycle = _cycle; copy._min = _min; copy._max = _max; copy._snap = _snap; copy._x = _x; copy._y = _y; copy._auto = _auto; copy._triangles.Clear(); copy._triangles.AddRange(_triangles); copy._trianglesDirty = _trianglesDirty; }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _points.Dispose(); _triangles.Clear(); TrianglesUpdated = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _points.Dispose(); _triangles.Clear(); _publisherTrianglesUpdated.Handlers = null; } base.Dispose(disposing); }
     /// <summary>Adds a canonical triangle of three distinct point indices; geometric degeneracy is permitted.</summary>
     /// <param name="x">The first point index.</param>
     /// <param name="y">The second point index.</param>
@@ -200,7 +201,7 @@ public sealed partial class AnimationNodeBlendSpace2D : AnimationRootNode
         }
         var indices = Geometry.TriangulateDelaunay(positions); var prepared = new List<(int A, int B, int C)>(indices.Length / 3);
         for (var i = 0; i < indices.Length; i += 3) { var t = Canonical(indices[i], indices[i + 1], indices[i + 2]); if (!prepared.Contains(t)) prepared.Add(t); }
-        _triangles.Clear(); _triangles.AddRange(prepared); _trianglesDirty = false; BeginEventEmission(TrianglesUpdated)?.Invoke();
+        _triangles.Clear(); _triangles.AddRange(prepared); _trianglesDirty = false; BeginEventEmission(_publisherTrianglesUpdated.Handlers)?.Invoke();
     }
     /// <inheritdoc />
     internal override double ProcessGraph(double time, bool seek, bool isExternalSeeking, bool testOnly)

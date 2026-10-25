@@ -15,7 +15,8 @@ public abstract class Tweener : ElectronObject
 
     /// <summary>Occurs immediately after this tweener completes or its target becomes unavailable.</summary>
     /// <remarks>The source tweener is passed as the sole argument. A killed tween does not complete unfinished tweeners.</remarks>
-    public event Action<Tweener>? Finished;
+    public event Action<Tweener>? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action<Tweener>> _publisherFinished;
 
     internal Tween? Owner { get; private set; }
 
@@ -49,7 +50,7 @@ public abstract class Tweener : ElectronObject
         if (_finished)
             return;
         _finished = true;
-        BeginEventEmission(Finished)?.Invoke(this);
+        BeginEventEmission(_publisherFinished.Handlers)?.Invoke(this);
     }
 
     internal abstract bool OnAdvance(ref double remaining);
@@ -70,7 +71,7 @@ public abstract class Tweener : ElectronObject
         if (disposing)
         {
             Cancel();
-            Finished = null;
+            _publisherFinished.Handlers = null;
             Owner = null;
         }
         base.Dispose(disposing);

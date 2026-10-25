@@ -72,7 +72,8 @@ public partial class Window
     /// <exception cref="NotSupportedException">Native alpha would change after creation or the backend cannot present it.</exception>
     public bool Transparent { get => GetFlag(WindowFlag.Transparent); set => SetFlag(WindowFlag.Transparent, value); }
     /// <summary>Occurs before popup positioning, sizing and visibility changes.</summary>
-    public event Action? AboutToPopup;
+    public event Action? AboutToPopup { add => _publisherAboutToPopup.Add(value); remove => _publisherAboutToPopup.Remove(value); }
+    private EventPublisher<Action> _publisherAboutToPopup;
     /// <summary>Reports whether this window uses an attached viewport's embedded host.</summary>
     /// <returns>True only while attached to an embedding viewport.</returns>
     public bool IsEmbedded() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return Embedder is not null; }
@@ -101,7 +102,7 @@ public partial class Window
     }
     private void PopupAt(Rect2i rect, bool centered, bool nativeRelative = false)
     {
-        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); var placementRoot = _popupPlacementRoot; BeginEventEmission(AboutToPopup)?.Invoke(); if (IsDisposed || !IsInsideTree) return; if (nativeRelative) _popupPlacementRoot = placementRoot;
+        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); var placementRoot = _popupPlacementRoot; BeginEventEmission(_publisherAboutToPopup.Handlers)?.Invoke(); if (IsDisposed || !IsInsideTree) return; if (nativeRelative) _popupPlacementRoot = placementRoot;
         if (rect != default) { Size = rect.Size; if (nativeRelative) PopupPosition = rect.Position; else Position = rect.Position; }
         PreparePopup();
         UpdateEmbeddedContents(); if (centered) { var area = GetPopupCenterRect(); Position = area.Position + (area.Size - Size) / 2; }

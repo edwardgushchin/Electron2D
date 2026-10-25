@@ -74,7 +74,8 @@ public sealed class SceneTreeTimer : ElectronObject
     /// disposed after the event invocation returns or throws. A handler failure propagates through the owning frame as part of an
     /// <see cref="AggregateException"/>.
     /// </remarks>
-    public event Action<SceneTreeTimer>? Timeout;
+    public event Action<SceneTreeTimer>? Timeout { add => _publisherTimeout.Add(value); remove => _publisherTimeout.Remove(value); }
+    private EventPublisher<Action<SceneTreeTimer>> _publisherTimeout;
 
     /// <inheritdoc />
     /// <remarks>Appends this class's remaining-time and processing-policy descriptors.</remarks>
@@ -99,7 +100,7 @@ public sealed class SceneTreeTimer : ElectronObject
             var tree = _tree;
             _tree = null;
             tree?.RemoveTimer(this);
-            Timeout = null;
+            _publisherTimeout.Handlers = null;
         }
 
         base.Dispose(disposing);
@@ -121,7 +122,7 @@ public sealed class SceneTreeTimer : ElectronObject
 
         try
         {
-            BeginEventEmission(Timeout)?.Invoke(this);
+            BeginEventEmission(_publisherTimeout.Handlers)?.Invoke(this);
         }
         catch (Exception error)
         {

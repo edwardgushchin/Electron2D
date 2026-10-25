@@ -27,7 +27,8 @@ public class Skeleton : Entity
     public Skeleton() { SetInternalProcessing(true, true); }
     /// <summary>Occurs after committing a changed bone/rest layout and indices.</summary>
     /// <remarks>Reads during a handler observe the committed setup. Handler failure does not replay the transition.</remarks>
-    public event Action? BoneSetupChanged;
+    public event Action? BoneSetupChanged { add => _publisherBoneSetupChanged.Add(value); remove => _publisherBoneSetupChanged.Remove(value); }
+    private EventPublisher<Action> _publisherBoneSetupChanged;
     internal ulong SetupGeneration { get { EnsureSetup(); lock (_bones) return _generation; } }
     internal void InvalidateSetup() { lock (_bones) _dirty = true; }
     internal void EnsureSetup()
@@ -52,7 +53,7 @@ public class Skeleton : Entity
             }
             finally { _settingUp = false; }
         }
-        BeginEventEmission(BoneSetupChanged)?.Invoke();
+        BeginEventEmission(_publisherBoneSetupChanged.Handlers)?.Invoke();
     }
     private void Collect(Node parent)
     {
@@ -161,5 +162,5 @@ public class Skeleton : Entity
     private static Skeleton CreateSkeleton() => new();
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { if (_stack is { IsDisposed: false }) _stack.Bind(null); _stack = null; RenderingSkeletonRegistry.Remove(_rid); BoneSetupChanged = null; _bones.Clear(); _build.Clear(); } base.Dispose(disposing); }
+    { if (disposing) { if (_stack is { IsDisposed: false }) _stack.Bind(null); _stack = null; RenderingSkeletonRegistry.Remove(_rid); _publisherBoneSetupChanged.Handlers = null; _bones.Clear(); _build.Clear(); } base.Dispose(disposing); }
 }

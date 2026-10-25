@@ -50,13 +50,16 @@ public partial class Control : CanvasItem
     public const int NotificationLayoutDirectionChanged = 49;
 
     /// <summary>Occurs after a size change while attached to the scene tree.</summary>
-    public event Action? Resized;
+    public event Action? Resized { add => _publisherResized.Add(value); remove => _publisherResized.Remove(value); }
+    private EventPublisher<Action> _publisherResized;
 
     /// <summary>Occurs after a changed minimum size has been applied in the scene tree.</summary>
-    public event Action? MinimumSizeChanged;
+    public event Action? MinimumSizeChanged { add => _publisherMinimumSizeChanged.Add(value); remove => _publisherMinimumSizeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherMinimumSizeChanged;
 
     /// <summary>Occurs after a changed maximum size has been applied in the scene tree.</summary>
-    public event Action? MaximumSizeChanged;
+    public event Action? MaximumSizeChanged { add => _publisherMaximumSizeChanged.Add(value); remove => _publisherMaximumSizeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherMaximumSizeChanged;
 
     /// <summary>Gets or sets using the locale's numeral system for generated numeric control text.</summary>
     /// <value>True initially. Ordinary caller-authored text is not converted.</value>
@@ -739,7 +742,7 @@ public partial class Control : CanvasItem
         else if (what == NotificationExitCanvas) DisconnectLayoutSource();
         else if (what == NotificationVisibilityChanged && IsVisibleInTree) { UpdateMinimumSize(); UpdateMaximumSize(); }
         else if (what is NotificationLayoutDirectionChanged or NotificationTranslationChanged) Reflow();
-        else if (what == NotificationResized) BeginEventEmission(Resized)?.Invoke();
+        else if (what == NotificationResized) BeginEventEmission(_publisherResized.Handlers)?.Invoke();
     }
 
     /// <inheritdoc />
@@ -751,7 +754,7 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { _themeOwner?.Dispose(); ThemeChanged = null; DisconnectLayoutSource(); Resized = null; MinimumSizeChanged = null; MaximumSizeChanged = null; GUIInput = null; TextInput = null; IMECompositionChanged = null; SizeFlagsChanged = null; FocusEntered = null; FocusExited = null; MouseEntered = null; MouseExited = null; _forwardGetDragData = null; _forwardCanDropData = null; _forwardDropData = null; }
+        if (disposing) { _themeOwner?.Dispose(); _publisherThemeChanged.Handlers = null; DisconnectLayoutSource(); _publisherResized.Handlers = null; _publisherMinimumSizeChanged.Handlers = null; _publisherMaximumSizeChanged.Handlers = null; _publisherGUIInput.Handlers = null; _publisherTextInput.Handlers = null; _publisherIMECompositionChanged.Handlers = null; _publisherSizeFlagsChanged.Handlers = null; _publisherFocusEntered.Handlers = null; _publisherFocusExited.Handlers = null; _publisherMouseEntered.Handlers = null; _publisherMouseExited.Handlers = null; _forwardGetDragData = null; _forwardCanDropData = null; _forwardDropData = null; }
         base.Dispose(disposing);
     }
 
@@ -773,7 +776,7 @@ public partial class Control : CanvasItem
         if (minimum == _lastMinimumSize) return;
         _lastMinimumSize = minimum;
         Reflow();
-        BeginEventEmission(MinimumSizeChanged)?.Invoke();
+        BeginEventEmission(_publisherMinimumSizeChanged.Handlers)?.Invoke();
     }
 
     private void ApplyMaximumSizeUpdate()
@@ -784,7 +787,7 @@ public partial class Control : CanvasItem
         if (maximum == _lastMaximumSize) return;
         _lastMaximumSize = maximum;
         Reflow();
-        BeginEventEmission(MaximumSizeChanged)?.Invoke();
+        BeginEventEmission(_publisherMaximumSizeChanged.Handlers)?.Invoke();
     }
 
     private void Reflow()

@@ -65,7 +65,7 @@ public class AnimatedSprite : Entity
             Stop(); if (IsDisposed) return;
             NotifyPropertyListChanged(); if (IsDisposed) return;
             InvalidateCanvas(); UpdateConfigurationWarnings(); if (IsDisposed) return;
-            BeginEventEmission(SpriteFramesChanged)?.Invoke();
+            BeginEventEmission(_publisherSpriteFramesChanged.Handlers)?.Invoke();
         }
     }
 
@@ -95,7 +95,7 @@ public class AnimatedSprite : Entity
         {
             EnsureMutable(); ArgumentNullException.ThrowIfNull(value);
             if (_animation == value) return;
-            _animation = value; BeginEventEmission(AnimationChanged)?.Invoke(); if (IsDisposed) return;
+            _animation = value; BeginEventEmission(_publisherAnimationChanged.Handlers)?.Invoke(); if (IsDisposed) return;
             if (_frames is null) { _animation = ""; Stop(); throw new InvalidOperationException("No frame library is assigned."); }
             if (_animation == "") { Stop(); return; }
             if (!_frames.TryRead(_animation, _frame, out var count, out _, out _, out _, out _))
@@ -177,16 +177,21 @@ public class AnimatedSprite : Entity
     public bool FlipV { get { ThrowIfDisposed(); return _flipV; } set { EnsureMutable(); if (_flipV == value) return; _flipV = value; InvalidateCanvas(); } }
 
     /// <summary>Occurs when the selected animation name changes.</summary>
-    public event Action? AnimationChanged;
+    public event Action? AnimationChanged { add => _publisherAnimationChanged.Add(value); remove => _publisherAnimationChanged.Remove(value); }
+    private EventPublisher<Action> _publisherAnimationChanged;
     /// <summary>Occurs after non-looping playback pauses at an endpoint.</summary>
-    public event Action? AnimationFinished;
+    public event Action? AnimationFinished { add => _publisherAnimationFinished.Add(value); remove => _publisherAnimationFinished.Remove(value); }
+    private EventPublisher<Action> _publisherAnimationFinished;
     /// <summary>Occurs at a wrap or direction reversal, before the following FrameChanged event.</summary>
-    public event Action? AnimationLooped;
+    public event Action? AnimationLooped { add => _publisherAnimationLooped.Add(value); remove => _publisherAnimationLooped.Remove(value); }
+    private EventPublisher<Action> _publisherAnimationLooped;
     /// <summary>Occurs on a frame transition or an explicit requested index different from the prior index.</summary>
     /// <remarks>A clamped assignment may emit even if the resulting index stays equal. Automatic transitions do not emit ItemRectChanged.</remarks>
-    public event Action? FrameChanged;
+    public event Action? FrameChanged { add => _publisherFrameChanged.Add(value); remove => _publisherFrameChanged.Remove(value); }
+    private EventPublisher<Action> _publisherFrameChanged;
     /// <summary>Occurs after library replacement and its stop/property-list/redraw stages.</summary>
-    public event Action? SpriteFramesChanged;
+    public event Action? SpriteFramesChanged { add => _publisherSpriteFramesChanged.Add(value); remove => _publisherSpriteFramesChanged.Remove(value); }
+    private EventPublisher<Action> _publisherSpriteFramesChanged;
 
     /// <summary>Tests whether playback is enabled, including when its speed is zero or the node is detached.</summary>
     /// <returns>The playback flag.</returns>
@@ -226,7 +231,7 @@ public class AnimatedSprite : Entity
             if (name != _animation)
             {
                 _animation = name; SetFrameAndProgress(fromEnd ? count - 1 : 0, fromEnd ? 1 : 0); if (IsDisposed) return;
-                BeginEventEmission(AnimationChanged)?.Invoke(); if (IsDisposed) return;
+                BeginEventEmission(_publisherAnimationChanged.Handlers)?.Invoke(); if (IsDisposed) return;
             }
             else
             {
@@ -276,7 +281,7 @@ public class AnimatedSprite : Entity
         var changed = _frame != frame;
         _frame = Math.Max(0, has ? Math.Min(frame, Math.Max(0, count - 1)) : frame);
         CalculateFrameSpeed(); _frameProgress = progress;
-        if (changed) { InvalidateCanvas(); BeginEventEmission(FrameChanged)?.Invoke(); }
+        if (changed) { InvalidateCanvas(); BeginEventEmission(_publisherFrameChanged.Handlers)?.Invoke(); }
     }
 
     private void StopInternal(bool reset)
@@ -336,14 +341,14 @@ public class AnimatedSprite : Entity
                 if (backwards ? _frame <= 0 : _frame >= count - 1)
                 {
                     _frame = backwards ? 0 : count - 1;
-                    if (loop == SpriteFrames.LoopMode.None) { Pause(); if (!IsDisposed) BeginEventEmission(AnimationFinished)?.Invoke(); return; }
+                    if (loop == SpriteFrames.LoopMode.None) { Pause(); if (!IsDisposed) BeginEventEmission(_publisherAnimationFinished.Handlers)?.Invoke(); return; }
                     if (loop == SpriteFrames.LoopMode.PingPong) _customSpeed = -_customSpeed;
                     else _frame = backwards ? count - 1 : 0;
-                    BeginEventEmission(AnimationLooped)?.Invoke(); if (IsDisposed || _frames is null) return;
+                    BeginEventEmission(_publisherAnimationLooped.Handlers)?.Invoke(); if (IsDisposed || _frames is null) return;
                 }
                 else _frame += backwards ? -1 : 1;
                 CalculateFrameSpeed(); _frameProgress = backwards ? 1 : 0;
-                InvalidateCanvas(); BeginEventEmission(FrameChanged)?.Invoke(); if (IsDisposed || _frames is null) return;
+                InvalidateCanvas(); BeginEventEmission(_publisherFrameChanged.Handlers)?.Invoke(); if (IsDisposed || _frames is null) return;
             }
             var consumed = Math.Min((backwards ? _frameProgress : 1d - _frameProgress) / absoluteSpeed, remaining);
             _frameProgress = (float)(_frameProgress + consumed * absoluteSpeed * (backwards ? -1 : 1));
@@ -383,7 +388,7 @@ public class AnimatedSprite : Entity
         {
             if (_frames is not null) _frames.Changed -= FramesChanged;
             _frames = null; _playing = false;
-            AnimationChanged = AnimationFinished = AnimationLooped = FrameChanged = SpriteFramesChanged = null;
+            _publisherAnimationChanged.Handlers = _publisherAnimationFinished.Handlers = _publisherAnimationLooped.Handlers = _publisherFrameChanged.Handlers = _publisherSpriteFramesChanged.Handlers = null;
         }
         base.Dispose(disposing);
     }

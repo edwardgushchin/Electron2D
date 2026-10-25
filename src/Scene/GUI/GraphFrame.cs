@@ -15,9 +15,9 @@ public class GraphFrame : GraphElement
     /// <summary>Gets or sets the displayed title.</summary>
     public string Title { get { CheckGraph(); return _titlebar.Label.Text; } set { MutableGraph(); ArgumentNullException.ThrowIfNull(value); _titlebar.Label.Text = value; UpdateMinimumSize(); QueueSort(); QueueRedraw(); } }
     /// <summary>Gets or sets automatic bounds around attached elements.</summary>
-    public bool AutoshrinkEnabled { get { CheckGraph(); return _autoshrink; } set { MutableGraph(); if (_autoshrink == value) return; _autoshrink = value; QueueRedraw(); BeginEventEmission(AutoshrinkChanged)?.Invoke(); } }
+    public bool AutoshrinkEnabled { get { CheckGraph(); return _autoshrink; } set { MutableGraph(); if (_autoshrink == value) return; _autoshrink = value; QueueRedraw(); BeginEventEmission(_publisherAutoshrinkChanged.Handlers)?.Invoke(); } }
     /// <summary>Gets or sets nonnegative padding around automatic attachment bounds.</summary>
-    public int AutoshrinkMargin { get { CheckGraph(); return _margin; } set { MutableGraph(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_margin == value) return; _margin = value; BeginEventEmission(AutoshrinkChanged)?.Invoke(); } }
+    public int AutoshrinkMargin { get { CheckGraph(); return _margin; } set { MutableGraph(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_margin == value) return; _margin = value; BeginEventEmission(_publisherAutoshrinkChanged.Handlers)?.Invoke(); } }
     /// <summary>Gets or sets the nonnegative draggable edge width.</summary>
     public int DragMargin { get { CheckGraph(); return _dragMargin; } set { MutableGraph(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); _dragMargin = value; } }
     /// <summary>Gets or sets optional panel tint.</summary>
@@ -25,7 +25,8 @@ public class GraphFrame : GraphElement
     /// <summary>Gets or sets whether panel tint overrides the themed panel colors.</summary>
     public bool TintColorEnabled { get { CheckGraph(); return _tintEnabled; } set { MutableGraph(); _tintEnabled = value; RefreshTint(); QueueRedraw(); } }
     /// <summary>Reports changed automatic sizing configuration.</summary>
-    public event Action? AutoshrinkChanged;
+    public event Action? AutoshrinkChanged { add => _publisherAutoshrinkChanged.Add(value); remove => _publisherAutoshrinkChanged.Remove(value); }
+    private EventPublisher<Action> _publisherAutoshrinkChanged;
     /// <summary>Returns the borrowed owned titlebar for additional application controls.</summary><returns>The horizontal titlebar.</returns>
     public HBoxContainer GetTitlebarHBox() { CheckGraph(); return _titlebar; }
     internal override bool CanResize => Resizable && !AutoshrinkEnabled;
@@ -100,5 +101,5 @@ public class GraphFrame : GraphElement
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(GraphFrame) ? CreateGraphFrame : base.CreateSceneInstanceFactory();
     private static Node CreateGraphFrame() => new GraphFrame();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { AutoshrinkChanged = null; _tintedPanel?.Dispose(); _tintedSelected?.Dispose(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _publisherAutoshrinkChanged.Handlers = null; _tintedPanel?.Dispose(); _tintedSelected?.Dispose(); } base.Dispose(disposing); }
 }

@@ -54,11 +54,14 @@ public partial class SceneMultiplayer : MultiplayerAPI
     /// <summary>Gets or sets admission policy on the configured transport.</summary><value>False without a peer; setting without a peer fails.</value>
     public bool RefuseNewConnections { get { CheckMultiplayer(); return _peer?.RefuseNewConnections ?? false; } set { CheckMultiplayer(); RequirePeer().RefuseNewConnections = value; } }
     /// <summary>Occurs before admission when a direct peer begins authentication.</summary>
-    public event Action<int>? PeerAuthenticating;
+    public event Action<int>? PeerAuthenticating { add => _publisherPeerAuthenticating.Add(value); remove => _publisherPeerAuthenticating.Remove(value); }
+    private EventPublisher<Action<int>> _publisherPeerAuthenticating;
     /// <summary>Occurs after a pending peer fails/disconnects/expires.</summary>
-    public event Action<int>? PeerAuthenticationFailed;
+    public event Action<int>? PeerAuthenticationFailed { add => _publisherPeerAuthenticationFailed.Add(value); remove => _publisherPeerAuthenticationFailed.Remove(value); }
+    private EventPublisher<Action<int>> _publisherPeerAuthenticationFailed;
     /// <summary>Delivers custom bytes with original sender identity; storage is borrowed only during the callback.</summary>
-    public event MultiplayerPacketHandler? PeerPacket;
+    public event MultiplayerPacketHandler? PeerPacket { add => _publisherPeerPacket.Add(value); remove => _publisherPeerPacket.Remove(value); }
+    private EventPublisher<MultiplayerPacketHandler> _publisherPeerPacket;
     private MultiplayerPeer RequirePeer() => _peer is { } peer && peer.GetConnectionStatus() == MultiplayerConnectionStatus.Connected ? peer : throw new InvalidOperationException("A connected multiplayer transport is required.");
     private bool RelaySupported => _serverRelay && (_peer?.IsServerRelaySupported() ?? false);
     private void Subscribe() { if (_peer is not null) { _peer.PeerConnected += _onConnected; _peer.PeerDisconnected += _onDisconnected; } }
@@ -85,7 +88,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
     {
         if (id <= 0 || id == GetUniqueID() || _connected.Contains(id) || _pending.ContainsKey(id)) throw new InvalidDataException("Invalid or duplicate transport peer identity.");
         _sendPeers.EnsureCapacity(_connected.Count + _pending.Count + 1); _expired.EnsureCapacity(_connected.Count + _pending.Count + 1);
-        if (_auth is not null) { _pending.Add(id, new PendingMultiplayerPeer(Environment.TickCount64, _auth)); Emit(BeginEventEmission(PeerAuthenticating), id); }
+        if (_auth is not null) { _pending.Add(id, new PendingMultiplayerPeer(Environment.TickCount64, _auth)); Emit(BeginEventEmission(_publisherPeerAuthenticating.Handlers), id); }
         else Admit(id);
     }
     private void SnapshotSendPeers() { _sendPeers.Clear(); foreach (var id in _connected) _sendPeers.Add(id); }
@@ -110,7 +113,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
     private void RemovePeer(int id) => RemovePeer(id, true);
     private void RemovePeer(int id, bool notify)
     {
-        if (_pending.Remove(id)) { if (notify) Emit(BeginEventEmission(PeerAuthenticationFailed), id); return; }
+        if (_pending.Remove(id)) { if (notify) Emit(BeginEventEmission(_publisherPeerAuthenticationFailed.Handlers), id); return; }
         if (!_connected.Remove(id)) return;
         InvalidatePaths(); List<Exception>? errors = null; try { ReplicationPeerRemoved(id); } catch (Exception error) { (errors ??= []).Add(error); }
         if (RelaySupported && IsServer())
@@ -193,7 +196,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
             if (generation == _generation && _timeout > 0)
             {
                 _expired.Clear(); var now = Environment.TickCount64; foreach (var entry in _pending) if (now - entry.Value.Start >= _timeout * 1000) _expired.Add(entry.Key);
-                for (var i = 0; i < _expired.Count && generation == _generation; i++) { var id = _expired[i]; if (!_pending.Remove(id)) continue; try { peer.DisconnectPeer(id, true); } catch (Exception e) { (errors ??= []).Add(e); } try { Emit(BeginEventEmission(PeerAuthenticationFailed), id); } catch (Exception e) { (errors ??= []).Add(e); } }
+                for (var i = 0; i < _expired.Count && generation == _generation; i++) { var id = _expired[i]; if (!_pending.Remove(id)) continue; try { peer.DisconnectPeer(id, true); } catch (Exception e) { (errors ??= []).Add(e); } try { Emit(BeginEventEmission(_publisherPeerAuthenticationFailed.Handlers), id); } catch (Exception e) { (errors ??= []).Add(e); } }
             }
             if (generation == _generation) { ReplicationFrame(); UpdateStatus(); }
         }
@@ -206,7 +209,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
         var previous = _sender; _sender = sender;
         try
         {
-            if (packet[0] == 3) { if (packet.Length < 2) throw new InvalidDataException("Empty custom packet."); List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(BeginEventEmission(PeerPacket))) try { callback(sender, packet[1..]); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
+            if (packet[0] == 3) { if (packet.Length < 2) throw new InvalidDataException("Empty custom packet."); List<Exception>? errors = null; foreach (var callback in Delegate.EnumerateInvocationList(BeginEventEmission(_publisherPeerPacket.Handlers))) try { callback(sender, packet[1..]); } catch (Exception e) { (errors ??= []).Add(e); } if (errors is not null) throw new AggregateException(errors); }
             else if (packet[0] == 0) ReceiveRPC(sender, packet);
             else if (packet[0] is 4 or 5 or 6 or 22) ReceiveReplication(sender, packet);
             else throw new InvalidDataException("Unknown or unavailable scene command.");
@@ -283,7 +286,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); if (_polling || _sending) throw new InvalidOperationException("Multiplayer cannot dispose during message dispatch."); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { try { if (disposing) { Unsubscribe(); try { if (_ownsOffline) _peer?.Dispose(); } finally { _peer = null; try { ClearCore(); } finally { _localSpawns.Clear(); _synchronizers.Clear(); _spawnSnapshot.Clear(); _syncSnapshot.Clear(); _receiptGroups.Clear(); PeerAuthenticating = null; PeerAuthenticationFailed = null; PeerPacket = null; _send = _receive = _relay = []; } } } } finally { base.Dispose(disposing); } }
+    protected override void Dispose(bool disposing) { try { if (disposing) { Unsubscribe(); try { if (_ownsOffline) _peer?.Dispose(); } finally { _peer = null; try { ClearCore(); } finally { _localSpawns.Clear(); _synchronizers.Clear(); _spawnSnapshot.Clear(); _syncSnapshot.Clear(); _receiptGroups.Clear(); _publisherPeerAuthenticating.Handlers = null; _publisherPeerAuthenticationFailed.Handlers = null; _publisherPeerPacket.Handlers = null; _send = _receive = _relay = []; } } } } finally { base.Dispose(disposing); } }
 }
 internal struct PendingMultiplayerPeer(long start, MultiplayerPacketHandler callback) { internal readonly long Start = start; internal readonly MultiplayerPacketHandler Callback = callback; internal bool Local, Remote; }
 internal sealed record MultiplayerPathCache(Node Node, byte[] Path);

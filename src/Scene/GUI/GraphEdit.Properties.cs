@@ -53,7 +53,7 @@ public partial class GraphEdit
     public Dictionary<int, string> TypeNames { get { CheckEdit(); return new(_typeNames); } set { MutableEdit(); ArgumentNullException.ThrowIfNull(value); if (value.Values.Any(v => v is null)) throw new ArgumentException("Type names cannot be null.", nameof(value)); _typeNames = new(value); } }
     private void ZoomAt(float value, Vector2 center)
     { value = Math.Clamp(value, _zoomMin, _zoomMax); if (value == _zoom) return; var scroll = (_scroll + center) * (value / _zoom) - center; if (!scroll.IsFinite()) throw new InvalidOperationException("Graph zoom exceeded finite geometry."); _scroll = scroll; _zoom = value; RefreshMenu(); ChangedGraph(); }
-    private void UserScroll(Vector2 value) { ScrollOffset = value; BeginEventEmission(ScrollOffsetChanged)?.Invoke(_scroll); }
+    private void UserScroll(Vector2 value) { ScrollOffset = value; BeginEventEmission(_publisherScrollOffsetChanged.Handlers)?.Invoke(_scroll); }
     private void RefreshMenu()
     {
         if (_menu is null || _arrangeButton is null) return;

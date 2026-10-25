@@ -14,7 +14,7 @@ public static partial class BackendChecks
     {
         foreach (var source in new CollisionObject[] { new StaticBody(), new AnimatableBody(), new CharacterBody(), new RigidBody(), new PhysicalBone(), new Area() })
         {
-            var pointers = PointerMembership(source);
+            var pointers = PointerMembership(source).Concat(OrdinaryMembership(source)).ToArray();
             Check(pointers.All(x => x.IsConnected), "Every body/Area sibling exposes attached pointer wrappers");
             source.Dispose(); Check(pointers.All(x => !x.IsConnected), "Every body/Area sibling clears pointer membership on disposal");
             foreach (var token in pointers) token.Dispose();
@@ -44,7 +44,8 @@ public static partial class BackendChecks
             EventConnection.Subscribe<RID, Node, int, int>(h => body.BodyShapeEntered += h, h => body.BodyShapeEntered -= h, static (_, _, _, _) => { }),
             EventConnection.Subscribe<RID, Node, int, int>(h => body.BodyShapeExited += h, h => body.BodyShapeExited -= h, static (_, _, _, _) => { }),
             EventConnection.Subscribe<RigidBody>(h => body.SleepingStateChanged += h, h => body.SleepingStateChanged -= h, static _ => { }),
-            .. PointerMembership(body)
+            .. PointerMembership(body),
+            .. OrdinaryMembership(body)
         ];
         for (var i = 0; i < 256; i++) Frame(i);
         var beforeEntered = entered; var beforeExited = exited; var beforeShapes = shapes; var beforeContacts = bodyContacts;
@@ -65,7 +66,7 @@ public static partial class BackendChecks
         body.Dispose(); Check(tokens.All(x => !x.IsConnected), "Body teardown clears contact/sleep and inherited pointer wrappers");
         foreach (var token in tokens) token.Dispose();
         tree.PhysicsFrame(1d / 144);
-        Console.WriteLine($"Event membership on {backend?.ToString() ?? "registered"}: 18 live physical accessors, six pointer-owner siblings, failed teardown, captured deferred delivery and 128 full frames {own}/{all} B passed.");
+        Console.WriteLine($"Event membership on {backend?.ToString() ?? "registered"}: 40 physical/inherited accessors, six pointer-owner siblings, failed teardown, captured deferred delivery and 128 full frames {own}/{all} B passed.");
         void OnOwner() => Check(Environment.CurrentManagedThreadId == ownerThread, "Physical event callbacks remain on the owner");
         void Frame(int i)
         {
@@ -85,4 +86,30 @@ public static partial class BackendChecks
         EventConnection.Subscribe<int>(h => source.MouseShapeEntered += h, h => source.MouseShapeEntered -= h, static _ => { }),
         EventConnection.Subscribe<int>(h => source.MouseShapeExited += h, h => source.MouseShapeExited -= h, static _ => { })
     ];
+    private static EventConnection[] OrdinaryMembership(CollisionObject source) =>
+    [
+        EventConnection.Subscribe<ElectronObject>(h => source.Disposed += h, h => source.Disposed -= h, static _ => { }),
+        EventConnection.Subscribe<ElectronObject>(h => source.PropertyListChanged += h, h => source.PropertyListChanged -= h, static _ => { }),
+        EventConnection.Subscribe<ElectronObject>(h => source.ScriptChanged += h, h => source.ScriptChanged -= h, static _ => { }),
+        EventConnection.Subscribe<CanvasItem>(h => source.VisibilityChanged += h, h => source.VisibilityChanged -= h, static _ => { }),
+        EventConnection.Subscribe<CanvasItem>(h => source.Hidden += h, h => source.Hidden -= h, static _ => { }),
+        EventConnection.Subscribe<CanvasItem>(h => source.ItemRectChanged += h, h => source.ItemRectChanged -= h, static _ => { }),
+        EventConnection.Subscribe<CanvasItem>(h => source.LocalTransformChanged += h, h => source.LocalTransformChanged -= h, static _ => { }),
+        EventConnection.Subscribe<CanvasItem>(h => source.TransformChanged += h, h => source.TransformChanged -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.EditorDescriptionChanged += h, h => source.EditorDescriptionChanged -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.EditorStateChanged += h, h => source.EditorStateChanged -= h, static _ => { }),
+        EventConnection.Subscribe<Node, Node>(h => source.ChildAdded += h, h => source.ChildAdded -= h, static (_, _) => { }),
+        EventConnection.Subscribe<Node, Node>(h => source.ChildRemoved += h, h => source.ChildRemoved -= h, static (_, _) => { }),
+        EventConnection.Subscribe<Node, Node>(h => source.ChildEnteredTree += h, h => source.ChildEnteredTree -= h, static (_, _) => { }),
+        EventConnection.Subscribe<Node, Node>(h => source.ChildExitingTree += h, h => source.ChildExitingTree -= h, static (_, _) => { }),
+        EventConnection.Subscribe<Node>(h => source.ChildOrderChanged += h, h => source.ChildOrderChanged -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.Renamed += h, h => source.Renamed -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.TreeEntered += h, h => source.TreeEntered -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.TreeExiting += h, h => source.TreeExiting -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.TreeExited += h, h => source.TreeExited -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.Ready += h, h => source.Ready -= h, static _ => { }),
+        EventConnection.Subscribe<Node>(h => source.ReplacingBy += h, h => source.ReplacingBy -= h, static _ => { }),
+        EventConnection.Subscribe<CanvasItem>(h => source.Draw += h, h => source.Draw -= h, static _ => { })
+    ];
+
 }

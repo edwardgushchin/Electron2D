@@ -54,21 +54,26 @@ public partial class Control
     /// <summary>Receives a temporary control-local input event after <see cref="OnGUIInput"/>.</summary>
     /// <remarks>The event is borrowed for the duration of the callback. Pointer input targets one hit control,
     /// then may bubble to parent controls; keyboard input targets only the focused control.</remarks>
-    public event Action<InputEvent>? GUIInput;
+    public event Action<InputEvent>? GUIInput { add => _publisherGUIInput.Add(value); remove => _publisherGUIInput.Remove(value); }
+    private EventPublisher<Action<InputEvent>> _publisherGUIInput;
 
     /// <summary>Occurs after <see cref="NotificationFocusEnter"/> when this control becomes the keyboard input target.</summary>
-    public event Action? FocusEntered;
+    public event Action? FocusEntered { add => _publisherFocusEntered.Add(value); remove => _publisherFocusEntered.Remove(value); }
+    private EventPublisher<Action> _publisherFocusEntered;
 
     /// <summary>Occurs after <see cref="NotificationFocusExit"/> when this control loses keyboard focus.</summary>
-    public event Action? FocusExited;
+    public event Action? FocusExited { add => _publisherFocusExited.Add(value); remove => _publisherFocusExited.Remove(value); }
+    private EventPublisher<Action> _publisherFocusExited;
 
     /// <summary>Occurs when the pointer enters this control or its reachable child area.</summary>
     /// <remarks>Raised after <see cref="NotificationMouseEnter"/> on the scene owner thread. Ancestors enter before descendants.</remarks>
-    public event Action? MouseEntered;
+    public event Action? MouseEntered { add => _publisherMouseEntered.Add(value); remove => _publisherMouseEntered.Remove(value); }
+    private EventPublisher<Action> _publisherMouseEntered;
 
     /// <summary>Occurs when the pointer leaves this control and its reachable child area.</summary>
     /// <remarks>Raised after <see cref="NotificationMouseExit"/> on the scene owner thread. Descendants exit before ancestors.</remarks>
-    public event Action? MouseExited;
+    public event Action? MouseExited { add => _publisherMouseExited.Add(value); remove => _publisherMouseExited.Remove(value); }
+    private EventPublisher<Action> _publisherMouseExited;
 
     /// <summary>Gets or sets how pointer input reaches this control.</summary>
     /// <value><see cref="MouseFilter.Stop"/> by default.</value>
@@ -246,12 +251,12 @@ public partial class Control
     internal void DispatchGUIInput(InputEvent inputEvent)
     {
         OnGUIInput(inputEvent);
-        BeginEventEmission(GUIInput)?.Invoke(inputEvent);
+        BeginEventEmission(_publisherGUIInput.Handlers)?.Invoke(inputEvent);
     }
     internal void NotifyFocusEntered() => NotifyFocusChange(NotificationFocusEnter);
     internal void NotifyFocusExited() => NotifyFocusChange(NotificationFocusExit);
-    internal void NotifyMouseEntered() => BeginEventEmission(MouseEntered)?.Invoke();
-    internal void NotifyMouseExited() => BeginEventEmission(MouseExited)?.Invoke();
+    internal void NotifyMouseEntered() => BeginEventEmission(_publisherMouseEntered.Handlers)?.Invoke();
+    internal void NotifyMouseExited() => BeginEventEmission(_publisherMouseExited.Handlers)?.Invoke();
 
     private void NotifyFocusChange(int notification)
     {
@@ -261,9 +266,9 @@ public partial class Control
         {
             if (notification == NotificationFocusEnter)
             {
-                if (Tree?.HasGUIFocus(this, ignoreHiddenFocus: false) == true) BeginEventEmission(FocusEntered)?.Invoke();
+                if (Tree?.HasGUIFocus(this, ignoreHiddenFocus: false) == true) BeginEventEmission(_publisherFocusEntered.Handlers)?.Invoke();
             }
-            else BeginEventEmission(FocusExited)?.Invoke();
+            else BeginEventEmission(_publisherFocusExited.Handlers)?.Invoke();
         }
         catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }

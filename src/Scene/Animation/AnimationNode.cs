@@ -39,19 +39,24 @@ public partial class AnimationNode : Resource
     private readonly HashSet<string> _filters = new(StringComparer.Ordinal);
     private bool _filterEnabled;
     internal AnimationGraphContext? Context;
-    internal event Action<int>? InputRemoved;
+    internal event Action<int>? InputRemoved { add => _publisherInputRemoved.Add(value); remove => _publisherInputRemoved.Remove(value); }
+    private EventPublisher<Action<int>> _publisherInputRemoved;
     /// <summary>Gets or sets whether supported child blends use this node's path filter.</summary>
     /// <value>The typed value described in the summary.</value>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
     public bool FilterEnabled { get { ThrowIfDisposed(); return _filterEnabled; } set { ThrowIfDisposed(); _filterEnabled = value; EmitGraphChanged(); } }
     /// <summary>Occurs after graph structure or parameter definitions change.</summary>
-    public event Action? TreeChanged;
+    public event Action? TreeChanged { add => _publisherTreeChanged.Add(value); remove => _publisherTreeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTreeChanged;
     /// <summary>Occurs after a named graph node is removed.</summary>
-    public event Action<ulong, string>? AnimationNodeRemoved;
+    public event Action<ulong, string>? AnimationNodeRemoved { add => _publisherAnimationNodeRemoved.Add(value); remove => _publisherAnimationNodeRemoved.Remove(value); }
+    private EventPublisher<Action<ulong, string>> _publisherAnimationNodeRemoved;
     /// <summary>Occurs after a named graph node is renamed.</summary>
-    public event Action<ulong, string, string>? AnimationNodeRenamed;
+    public event Action<ulong, string, string>? AnimationNodeRenamed { add => _publisherAnimationNodeRenamed.Add(value); remove => _publisherAnimationNodeRenamed.Remove(value); }
+    private EventPublisher<Action<ulong, string, string>> _publisherAnimationNodeRenamed;
     /// <summary>Occurs after input definitions or a named child connection changes.</summary>
-    public event Action<ulong>? NodeUpdated;
+    public event Action<ulong>? NodeUpdated { add => _publisherNodeUpdated.Add(value); remove => _publisherNodeUpdated.Remove(value); }
+    private EventPublisher<Action<ulong>> _publisherNodeUpdated;
     /// <summary>Adds an input; root resources and names with slash/dot are rejected.</summary>
     /// <param name="name">The non-null input caption; duplicates and empty captions are accepted.</param>
     /// <returns>Whether the input was added.</returns>
@@ -62,7 +67,7 @@ public partial class AnimationNode : Resource
     /// <param name="index">The zero-based input index.</param>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
     /// <remarks>Overrides remove associated policy storage before invoking this committed input removal.</remarks>
-    public virtual void RemoveInput(int index) { ThrowIfDisposed(); _inputs.RemoveAt(index); InputRemoved?.Invoke(index); EmitGraphChanged(); Updated(InstanceID); }
+    public virtual void RemoveInput(int index) { ThrowIfDisposed(); _inputs.RemoveAt(index); _publisherInputRemoved.Handlers?.Invoke(index); EmitGraphChanged(); Updated(InstanceID); }
     /// <summary>Renames an input, rejecting slash/dot captions.</summary>
     /// <param name="input">The existing zero-based input index.</param>
     /// <param name="name">The non-null caption.</param>
@@ -208,16 +213,16 @@ public partial class AnimationNode : Resource
     {
         List<Exception>? errors = null;
         try { EmitChanged(); } catch (Exception error) { CollectException(ref errors, error); }
-        if (BeginEventEmission(TreeChanged) is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
+        if (BeginEventEmission(_publisherTreeChanged.Handlers) is { } handlers) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) try { NotifyPropertyListChanged(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Animation graph notification failed.", errors);
     }
     internal void Removed(ulong id, string name)
-    { List<Exception>? errors = null; if (BeginEventEmission(AnimationNodeRemoved) is { } handlers) foreach (Action<ulong, string> handler in handlers.GetInvocationList()) try { handler(id, name); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph removal notification failed.", errors); }
+    { List<Exception>? errors = null; if (BeginEventEmission(_publisherAnimationNodeRemoved.Handlers) is { } handlers) foreach (Action<ulong, string> handler in handlers.GetInvocationList()) try { handler(id, name); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph removal notification failed.", errors); }
     internal void Renamed(ulong id, string oldName, string newName)
-    { List<Exception>? errors = null; if (BeginEventEmission(AnimationNodeRenamed) is { } handlers) foreach (Action<ulong, string, string> handler in handlers.GetInvocationList()) try { handler(id, oldName, newName); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph rename notification failed.", errors); }
+    { List<Exception>? errors = null; if (BeginEventEmission(_publisherAnimationNodeRenamed.Handlers) is { } handlers) foreach (Action<ulong, string, string> handler in handlers.GetInvocationList()) try { handler(id, oldName, newName); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph rename notification failed.", errors); }
     internal void Updated(ulong id)
-    { List<Exception>? errors = null; if (BeginEventEmission(NodeUpdated) is { } handlers) foreach (Action<ulong> handler in handlers.GetInvocationList()) try { handler(id); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph input notification failed.", errors); }
+    { List<Exception>? errors = null; if (BeginEventEmission(_publisherNodeUpdated.Handlers) is { } handlers) foreach (Action<ulong> handler in handlers.GetInvocationList()) try { handler(id); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Animation graph input notification failed.", errors); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new AnimationNode();
     /// <inheritdoc />
@@ -225,7 +230,7 @@ public partial class AnimationNode : Resource
     { var copy = (AnimationNode)target; CopyNodeState(copy); }
     internal void CopyNodeState(AnimationNode copy) { copy._inputs.Clear(); copy._inputs.AddRange(_inputs); copy._filters.Clear(); foreach (var path in _filters) copy._filters.Add(path); copy._filterEnabled = _filterEnabled; }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _inputs.Clear(); _filters.Clear(); TreeChanged = null; InputRemoved = null; AnimationNodeRemoved = null; AnimationNodeRenamed = null; NodeUpdated = null; Context = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _inputs.Clear(); _filters.Clear(); _publisherTreeChanged.Handlers = null; _publisherInputRemoved.Handlers = null; _publisherAnimationNodeRemoved.Handlers = null; _publisherAnimationNodeRenamed.Handlers = null; _publisherNodeUpdated.Handlers = null; Context = null; } base.Dispose(disposing); }
 }
 /// <summary>Marks a resource that can serve as the root of an AnimationTree or named blend subtree.</summary>
 public class AnimationRootNode : AnimationNode

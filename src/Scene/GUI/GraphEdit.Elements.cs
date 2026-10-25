@@ -9,7 +9,7 @@ public partial class GraphEdit
         var binding = new Binding { Element = e, Name = e.Name, Z = e.ZIndex, OffsetValue = e.PositionOffset };
         binding.Offset = () => { if (!IsDisposed && e.Parent == this) { var delta = e.PositionOffset - binding.OffsetValue; binding.OffsetValue = e.PositionOffset; if (e is GraphFrame && !_updatingFrames) { _updatingFrames = true; try { for (var i = 0; i < _elements.Count; i++) if (IsAttachedTo(_elements[i], e)) _elements[i].PositionOffset += delta; } finally { _updatingFrames = false; } } ProjectElement(e); UpdateFrames(); _lines.QueueRedraw(); _overlay.QueueRedraw(); } };
         binding.Resize = () => { if (!IsDisposed && e.Parent == this) { UpdateFrames(); _lines.QueueRedraw(); _overlay.QueueRedraw(); } };
-        binding.Select = () => BeginEventEmission(NodeSelected)?.Invoke(e); binding.Deselect = () => BeginEventEmission(NodeDeselected)?.Invoke(e);
+        binding.Select = () => BeginEventEmission(_publisherNodeSelected.Handlers)?.Invoke(e); binding.Deselect = () => BeginEventEmission(_publisherNodeDeselected.Handlers)?.Invoke(e);
         binding.Raise = () => { if (!IsDisposed && e.Parent == this) MoveChild(e, GetChildCount() - 1); };
         binding.Shrink = UpdateFrames;
         binding.Rename = _ => RenameElement(binding);
@@ -81,7 +81,7 @@ public partial class GraphEdit
                         var old = new Rect2(frame.PositionOffset, frame.Size);
                         if (!frame.AutoshrinkEnabled) bounds = bounds.Merge(old);
                         if (bounds == old) continue;
-                        frame.PositionOffset = bounds.Position; frame.Size = bounds.Size; ProjectElement(frame); BeginEventEmission(FrameRectChanged)?.Invoke(frame, frame.GetRect());
+                        frame.PositionOffset = bounds.Position; frame.Size = bounds.Size; ProjectElement(frame); BeginEventEmission(_publisherFrameRectChanged.Handlers)?.Invoke(frame, frame.GetRect());
                     }
         }
         finally { _updatingFrames = false; }
@@ -98,9 +98,9 @@ public partial class GraphEdit
         var widths = new float[nodes.Length]; var heights = new float[nodes.Length]; var x = new float[nodes.Length]; var origin = nodes[0].PositionOffset;
         for (var i = 0; i < nodes.Length; i++) { widths[levels[i]] = Math.Max(widths[levels[i]], nodes[i].Size.X); origin = origin.Min(nodes[i].PositionOffset); }
         for (var i = 1; i < x.Length; i++) x[i] = x[i - 1] + widths[i - 1] + 80;
-        BeginEventEmission(BeginNodeMove)?.Invoke();
+        BeginEventEmission(_publisherBeginNodeMove.Handlers)?.Invoke();
         try { for (var i = 0; i < nodes.Length; i++) { var n = nodes[i]; n.StartGraphDrag(); n.PositionOffset = origin + new Vector2(x[levels[i]], heights[levels[i]]); heights[levels[i]] += n.Size.Y + 40; n.EndGraphDrag(); } UpdateFrames(); }
-        finally { BeginEventEmission(EndNodeMove)?.Invoke(); }
+        finally { BeginEventEmission(_publisherEndNodeMove.Handlers)?.Invoke(); }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(GraphEdit) ? CreateGraphEdit : base.CreateSceneInstanceFactory();
@@ -113,7 +113,7 @@ public partial class GraphEdit
             _releasing = true; ChildAdded -= ElementAdded;
             while (_elements.Count > 0) ElementRemoved(this, _elements[^1]);
             ChildRemoved -= ElementRemoved; _connections.Clear(); _parents.Clear();
-            BeginNodeMove = null; EndNodeMove = null; ConnectionDragStarted = null; ConnectionDragEnded = null; ConnectionFromEmpty = null; ConnectionToEmpty = null; ConnectionRequest = null; DisconnectionRequest = null; CopyNodesRequest = null; CutNodesRequest = null; PasteNodesRequest = null; DuplicateNodesRequest = null; DeleteNodesRequest = null; FrameRectChanged = null; GraphElementsLinkedToFrameRequest = null; NodeSelected = null; NodeDeselected = null; PopupRequest = null; ScrollOffsetChanged = null;
+            _publisherBeginNodeMove.Handlers = null; _publisherEndNodeMove.Handlers = null; _publisherConnectionDragStarted.Handlers = null; _publisherConnectionDragEnded.Handlers = null; _publisherConnectionFromEmpty.Handlers = null; _publisherConnectionToEmpty.Handlers = null; _publisherConnectionRequest.Handlers = null; _publisherDisconnectionRequest.Handlers = null; _publisherCopyNodesRequest.Handlers = null; _publisherCutNodesRequest.Handlers = null; _publisherPasteNodesRequest.Handlers = null; _publisherDuplicateNodesRequest.Handlers = null; _publisherDeleteNodesRequest.Handlers = null; _publisherFrameRectChanged.Handlers = null; _publisherGraphElementsLinkedToFrameRequest.Handlers = null; _publisherNodeSelected.Handlers = null; _publisherNodeDeselected.Handlers = null; _publisherPopupRequest.Handlers = null; _publisherScrollOffsetChanged.Handlers = null;
         }
         base.Dispose(disposing);
     }

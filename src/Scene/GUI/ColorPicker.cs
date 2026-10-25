@@ -139,11 +139,14 @@ public partial class ColorPicker : VBoxContainer
     /// <summary>Gets or sets user addition/removal of swatches.</summary><value>True initially; programmatic preset methods remain available.</value>
     public bool CanAddSwatches { get { CheckPicker(); return _canAdd; } set { EnsureMutable(); _canAdd = value; Refresh(); } }
     /// <summary>Occurs after a user color edit has committed and refreshed the editor.</summary>
-    public event Action<Color>? ColorChanged;
+    public event Action<Color>? ColorChanged { add => _publisherColorChanged.Add(value); remove => _publisherColorChanged.Remove(value); }
+    private EventPublisher<Action<Color>> _publisherColorChanged;
     /// <summary>Occurs after the user adds the current color to local swatches.</summary>
-    public event Action<Color>? PresetAdded;
+    public event Action<Color>? PresetAdded { add => _publisherPresetAdded.Add(value); remove => _publisherPresetAdded.Remove(value); }
+    private EventPublisher<Action<Color>> _publisherPresetAdded;
     /// <summary>Occurs after the user removes a local swatch.</summary>
-    public event Action<Color>? PresetRemoved;
+    public event Action<Color>? PresetRemoved { add => _publisherPresetRemoved.Add(value); remove => _publisherPresetRemoved.Remove(value); }
+    private EventPublisher<Action<Color>> _publisherPresetRemoved;
     private void CheckPicker() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private static void ValidateColor(Color color) { if (!color.IsFinite()) throw new ArgumentException("Color channels must be finite.", nameof(color)); }
     private void SetColor(Color color, bool normalize)
@@ -171,13 +174,13 @@ public partial class ColorPicker : VBoxContainer
         _intensity = intensity; var color = ApplyIntensity(normalized);
         if (!normalized.IsFinite() || !color.IsFinite()) { _intensity = previousIntensity; Refresh(); throw new ArgumentOutOfRangeException(nameof(channel), "Exposure exceeds the finite color range."); }
         _normalized = normalized;
-        if (channel == 4) { SetColor(color, false); if (!_deferred || !_dragging) BeginEventEmission(ColorChanged)?.Invoke(_color); return; }
+        if (channel == 4) { SetColor(color, false); if (!_deferred || !_dragging) BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(_color); return; }
         if (_mode == ColorModeType.HSV) { _h = x / 360; _s = y / 100; _v = z / 100; } else { _h = _normalized.H; _s = _normalized.S; _v = _normalized.V; }
         if (_mode == ColorModeType.OKHSL) { _oh = x / 360; _os = y / 100; _ol = z / 100; } else { _oh = _normalized.OKHSLH; _os = _normalized.OKHSLS; _ol = _normalized.OKHSLL; }
         SetColor(color, _editIntensity && (_normalized.R > 1 || _normalized.G > 1 || _normalized.B > 1));
-        if (!_deferred || !_dragging) BeginEventEmission(ColorChanged)?.Invoke(_color);
+        if (!_deferred || !_dragging) BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(_color);
     }
-    private void EndChannelDrag() { _dragging = false; if (_deferred && !IsDisposed) BeginEventEmission(ColorChanged)?.Invoke(_color); }
+    private void EndChannelDrag() { _dragging = false; if (_deferred && !IsDisposed) BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(_color); }
     private void RememberOnRelease(InputEvent input) { if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false }) AddRecentPreset(_color); }
     internal void SurfaceColor(bool perceptual, bool finished)
     {
@@ -185,7 +188,7 @@ public partial class ColorPicker : VBoxContainer
         if (perceptual) { _h = _normalized.H; _s = _normalized.S; _v = _normalized.V; } else { _oh = _normalized.OKHSLH; _os = _normalized.OKHSLS; _ol = _normalized.OKHSLL; }
         SetColor(ApplyIntensity(_normalized), false);
         List<Exception>? errors = null;
-        try { if (!_deferred || finished) BeginEventEmission(ColorChanged)?.Invoke(_color); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!_deferred || finished) BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(_color); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (finished && !IsDisposed) AddRecentPreset(_color); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Color surface callbacks failed.", errors);
     }
@@ -197,7 +200,7 @@ public partial class ColorPicker : VBoxContainer
         if (Color.HTMLIsValid(text)) value = Color.FromHTML(text);
         else if (Colors.TryGetNamed(text, out value)) { }
         else if (!TryConstructor(text, out value)) { RefreshText(); return; }
-        if (!_editAlpha) value.A = _color.A; ValidateColor(value); SetColor(value, true); AddRecentPreset(_color); BeginEventEmission(ColorChanged)?.Invoke(_color);
+        if (!_editAlpha) value.A = _color.A; ValidateColor(value); SetColor(value, true); AddRecentPreset(_color); BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(_color);
     }
     private static bool TryConstructor(string text, out Color color)
     {
@@ -265,5 +268,5 @@ public partial class ColorPicker : VBoxContainer
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(ColorPicker) ? CreateColorPicker : base.CreateSceneInstanceFactory();
     private static Node CreateColorPicker() => new ColorPicker();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _sampler?.ReleaseCapture(); ColorChanged = PresetAdded = PresetRemoved = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _sampler?.ReleaseCapture(); _publisherColorChanged.Handlers = _publisherPresetAdded.Handlers = _publisherPresetRemoved.Handlers = null; } base.Dispose(disposing); }
 }

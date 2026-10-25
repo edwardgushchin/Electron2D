@@ -34,7 +34,8 @@ public sealed partial class InputMap : ElectronObject
 
     internal static InputMap Service => SharedInstance;
 
-    internal event Action? ProjectSettingsLoadedCore;
+    internal event Action? ProjectSettingsLoadedCore { add => _publisherProjectSettingsLoadedCore.Add(value); remove => _publisherProjectSettingsLoadedCore.Remove(value); }
+    private EventPublisher<Action> _publisherProjectSettingsLoadedCore;
 
     internal void LoadFromProjectSettingsCore() => LoadFromProjectSettings(ProjectSettings.Service);
 
@@ -64,7 +65,7 @@ public sealed partial class InputMap : ElectronObject
 
         foreach (var action in previousActions.Concat(candidates.Select(static item => item.Name)).Distinct(StringComparer.Ordinal))
             Input.Service.OnActionMapChanged(action, removed: false);
-        BeginEventEmission(ProjectSettingsLoadedCore)?.Invoke();
+        BeginEventEmission(_publisherProjectSettingsLoadedCore.Handlers)?.Invoke();
     }
 
     private static List<(string Name, ActionDefinition Definition)> BuildProjectActions(ProjectSettingsRegistry settings)

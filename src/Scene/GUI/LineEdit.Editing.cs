@@ -33,7 +33,7 @@ public partial class LineEdit
     /// <summary>Returns whether editing is active.</summary><returns>True while this field is editing.</returns>
     public bool IsEditing() { CheckLineEdit(); return _editing; }
     /// <summary>Removes text, selection, composition and history; emits TextChanged only for a nonempty previous text.</summary>
-    public void Clear() { EnsureMutable(); var changed = _text.Length > 0; AssignText(""); if (changed) BeginEventEmission(TextChanged)?.Invoke(_text); }
+    public void Clear() { EnsureMutable(); var changed = _text.Length > 0; AssignText(""); if (changed) BeginEventEmission(_publisherTextChanged.Handlers)?.Invoke(_text); }
     /// <summary>Inserts text at the scalar caret without deleting selection or emitting TextChanged.</summary>
     /// <param name="text">The text to insert.</param>
     /// <remarks>MaxLength rejection is reported after committing the accepted prefix, so observers see consistent state.</remarks>
@@ -44,7 +44,7 @@ public partial class LineEdit
         var prefix = ScalarSlice(text, 0, accepted); var rejected = ScalarSlice(text, accepted, count);
         var index = UTF16Index(_text, _caret); _text = _text.Insert(index, prefix); var start = _caret; _caret += accepted;
         Invalidate(); EnsureLayout(); var direction = _sourceLayout.DominantDirection(start, _caret); if (direction != TextDirection.Auto) _inputDirection = direction;
-        FitCaret(); ResetBlink(); if (rejected.Length > 0) BeginEventEmission(TextChangeRejected)?.Invoke(rejected);
+        FitCaret(); ResetBlink(); if (rejected.Length > 0) BeginEventEmission(_publisherTextChangeRejected.Handlers)?.Invoke(rejected);
     }
     /// <summary>Deletes the scalar interval and adjusts the caret; equal endpoints are accepted.</summary>
     /// <param name="fromColumn">Inclusive scalar start.</param><param name="toColumn">Exclusive scalar end.</param>
@@ -112,12 +112,12 @@ public partial class LineEdit
         if (_history.Count > 0 && _history[_historyPosition].Text == _text) return;
         _history.Add(new(_text, _caret, _scroll)); _historyPosition = _history.Count - 1;
     }
-    private void ChangedByUser() { if (_deletionPending) { _deletionPending = false; _deletionVersion++; } Remember(); BeginEventEmission(TextChanged)?.Invoke(_text); }
+    private void ChangedByUser() { if (_deletionPending) { _deletionPending = false; _deletionVersion++; } Remember(); BeginEventEmission(_publisherTextChanged.Handlers)?.Invoke(_text); }
     private void RestoreHistory(int step)
     {
         if (!_editable) return; var position = _historyPosition + step; if (position < 0 || position >= _history.Count) return;
         _historyPosition = position; var state = _history[position]; _text = state.Text; _caret = state.Caret; _scroll = state.Scroll;
-        Deselect(); Invalidate(); ResetBlink(); BeginEventEmission(TextChanged)?.Invoke(_text);
+        Deselect(); Invalidate(); ResetBlink(); BeginEventEmission(_publisherTextChanged.Handlers)?.Invoke(_text);
     }
     /// <summary>Returns whether uncommitted IME text is present.</summary><returns>True for a nonempty composition.</returns>
     public bool HasIMEText() { CheckLineEdit(); return _ime.Length > 0; }

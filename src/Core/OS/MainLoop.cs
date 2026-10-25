@@ -56,7 +56,8 @@ public abstract class MainLoop : ElectronObject
     /// it was granted. Delivery is synchronous on the owner thread. A throwing subscriber stops later subscribers and
     /// propagates its exception to the platform integration that published the result.
     /// </remarks>
-    public event Action<MainLoop, string, bool>? OnRequestPermissionsResult;
+    public event Action<MainLoop, string, bool>? OnRequestPermissionsResult { add => _publisherOnRequestPermissionsResult.Add(value); remove => _publisherOnRequestPermissionsResult.Remove(value); }
+    private EventPublisher<Action<MainLoop, string, bool>> _publisherOnRequestPermissionsResult;
 
     /// <summary>Initializes this loop and invokes <see cref="OnInitialize"/> exactly once.</summary>
     /// <remarks>
@@ -193,7 +194,7 @@ public abstract class MainLoop : ElectronObject
         if (_state is not (LoopState.Running or LoopState.Processing))
             throw new InvalidOperationException("Permission results can only be published while the MainLoop is running.");
 
-        BeginEventEmission(OnRequestPermissionsResult)?.Invoke(this, permission, granted);
+        BeginEventEmission(_publisherOnRequestPermissionsResult.Handlers)?.Invoke(this, permission, granted);
     }
 
     /// <summary>Publishes terminal state for a derived instance whose construction cannot complete.</summary>
@@ -204,7 +205,7 @@ public abstract class MainLoop : ElectronObject
     private protected void CompleteFailedLoopConstruction()
     {
         _state = LoopState.Finalized;
-        OnRequestPermissionsResult = null;
+        _publisherOnRequestPermissionsResult.Handlers = null;
         CompleteFailedConstruction();
     }
 
@@ -259,7 +260,7 @@ public abstract class MainLoop : ElectronObject
             else
             {
                 _state = LoopState.Finalized;
-                OnRequestPermissionsResult = null;
+                _publisherOnRequestPermissionsResult.Handlers = null;
             }
         }
 
@@ -331,7 +332,7 @@ public abstract class MainLoop : ElectronObject
         }
         finally
         {
-            OnRequestPermissionsResult = null;
+            _publisherOnRequestPermissionsResult.Handlers = null;
             _state = LoopState.Finalized;
         }
     }

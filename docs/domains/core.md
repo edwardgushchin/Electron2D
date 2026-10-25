@@ -8,7 +8,7 @@
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -351,3 +351,5 @@ OS now exposes actual host platform/distribution/version, native logical CPU cou
 Typed property discovery also carries immutable [advisory hints](../components/editor-properties.md#advisory-hints), consumed by imported numeric shader descriptors without a universal value accessor or runtime clamping.
 
 Standard-handle and managed process-termination helpers reject unsupported Apple mobile/TV and browser operations before reaching platform-specific BCL calls. The headless Linux CI profile supplies configured XDG desktop directory roles; standard-handle tests exercise unavailable-adapter errors on other hosts.
+
+[Ordinary engine publisher membership](../components/event-connections.md#ordinary-engine-publisher-qualification-2026-10-26) uses lazy typed delegate stores alongside the existing prepared physical buffers. Tokens observe actual engine attachment without reflected invocation or emission captures; arbitrary opaque custom accessors retain logical token observations.

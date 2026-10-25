@@ -1,6 +1,6 @@
 # EventConnection
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
 
 **Inherits:** —
 
@@ -66,9 +66,9 @@ using EventConnection connection = EventConnection.Subscribe<Resource>(
 
 Gets whether this token is active and its observed publisher still retains its wrapper.
 
-**Value:** True while active and retained by at least one observed prepared publisher. With no observed prepared publisher, custom accessors retain the logical lifecycle query. A pending one-shot is already false.
+**Value:** True while active and retained by at least one observed engine publisher. With no observed engine publisher, custom accessors retain the logical lifecycle query. A pending one-shot is already false.
 
-**Remarks:** Prepared engine stores expose current membership without invoking handlers. Removing the last matching wrapper or clearing a store changes the query; duplicate entries and another observed store keep it true. Re-adding an active wrapper restores membership. Disposed/consumed tokens remain false. A captured immutable emission and already accepted deferred work retain their delivery rules; only explicit token disposal cancels pending work. Opaque field-like attachment identity remains outside this observation.
+**Remarks:** Engine stores expose current membership without invoking handlers. Removing the last matching wrapper or clearing a store changes the query; duplicate entries and another observed store keep it true. Re-adding an active wrapper restores membership. Disposed/consumed tokens remain false. A captured immutable emission and already accepted deferred work retain their delivery rules; only explicit token disposal cancels pending work. Opaque custom attachment identity remains outside this observation. Ordinary engine multicast stores and prepared physical buffers both expose actual membership; see the [current family qualification](../components/event-connections.md#ordinary-engine-publisher-qualification-2026-10-26).
 
 ## Method Descriptions
 

@@ -20,7 +20,8 @@ public class FoldableGroup : Resource
     /// <summary>Creates a scene-local group which disallows folding its last expanded panel.</summary>
     public FoldableGroup() { ResourceLocalToScene = true; }
     /// <summary>Occurs after other members fold, before the requesting member commits expansion.</summary>
-    public event Action<FoldableContainer>? Expanded;
+    public event Action<FoldableContainer>? Expanded { add => _publisherExpanded.Add(value); remove => _publisherExpanded.Remove(value); }
+    private EventPublisher<Action<FoldableContainer>> _publisherExpanded;
     /// <summary>Gets or sets whether every group member may be folded.</summary>
     /// <value>False initially. Turning this off expands a member if all members are folded.</value>
     /// <exception cref="ObjectDisposedException">The group is disposed.</exception>
@@ -99,7 +100,7 @@ public class FoldableGroup : Resource
         finally { ReturnSnapshot(snapshot); }
         Node.ThrowCollected("Container group callbacks failed.", errors);
     }
-    internal void NotifyExpanded(FoldableContainer container) { ThrowIfDisposed(); BeginEventEmission(Expanded)?.Invoke(container); }
+    internal void NotifyExpanded(FoldableContainer container) { ThrowIfDisposed(); BeginEventEmission(_publisherExpanded.Handlers)?.Invoke(container); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => GetType() == typeof(FoldableGroup) ? new FoldableGroup() : base.CreateDuplicateInstance();
     /// <inheritdoc />
@@ -112,7 +113,7 @@ public class FoldableGroup : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        lock (_gate) { _containers.Clear(); _snapshots.Clear(); Expanded = null; }
+        lock (_gate) { _containers.Clear(); _snapshots.Clear(); _publisherExpanded.Handlers = null; }
         base.Dispose(disposing);
     }
 }

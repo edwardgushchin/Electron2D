@@ -185,12 +185,15 @@ public partial class SplitContainer : Container
     /// <exception cref="ObjectDisposedException">The split or required area is disposed.</exception>
     public Control[] GetDragAreaControls() { Check(); ValidateDraggers(); return [.. _draggers]; }
     /// <summary>Occurs after pointer dragging starts; offsets are clamped to visual positions first.</summary>
-    public event Action? DragStarted;
+    public event Action? DragStarted { add => _publisherDragStarted.Add(value); remove => _publisherDragStarted.Remove(value); }
+    private EventPublisher<Action> _publisherDragStarted;
     /// <summary>Occurs after pointer motion commits and clamps the active offset.</summary>
     /// <remarks>The argument is the relative offset of the dragger that moved, not its index.</remarks>
-    public event Action<int>? Dragged;
+    public event Action<int>? Dragged { add => _publisherDragged.Add(value); remove => _publisherDragged.Remove(value); }
+    private EventPublisher<Action<int>> _publisherDragged;
     /// <summary>Occurs once when a started pointer drag ends or is cancelled.</summary>
-    public event Action? DragEnded;
+    public event Action? DragEnded { add => _publisherDragEnded.Add(value); remove => _publisherDragEnded.Remove(value); }
+    private EventPublisher<Action> _publisherDragEnded;
     private void StopDrags()
     {
         List<Exception>? errors = null;
@@ -281,7 +284,7 @@ public partial class SplitContainer : Container
         foreach (var child in _children) child.VisibilityChanged -= ChildVisibility;
         try { base.Dispose(disposing); }
         catch (Exception error) { CollectException(ref errors, error); }
-        finally { _children.Clear(); _nextChildren.Clear(); _draggers.Clear(); _slots.Clear(); _intersections.Clear(); _wanted.Clear(); DragStarted = null; Dragged = null; DragEnded = null; ReleaseResidency(); }
+        finally { _children.Clear(); _nextChildren.Clear(); _draggers.Clear(); _slots.Clear(); _intersections.Clear(); _wanted.Clear(); _publisherDragStarted.Handlers = null; _publisherDragged.Handlers = null; _publisherDragEnded.Handlers = null; ReleaseResidency(); }
         ThrowCollected("Split disposal callbacks failed.", errors);
     }
 }

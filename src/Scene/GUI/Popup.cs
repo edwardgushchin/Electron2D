@@ -15,8 +15,9 @@ public class Popup : Window
         VisibilityChanged += ChangedVisibility;
     }
     /// <summary>Occurs after this popup becomes hidden, before canvas visibility propagation completes.</summary>
-    public event Action? PopupHide;
-    private void ChangedVisibility() { _closePending = false; if (!Visible) BeginEventEmission(PopupHide)?.Invoke(); }
+    public event Action? PopupHide { add => _publisherPopupHide.Add(value); remove => _publisherPopupHide.Remove(value); }
+    private EventPublisher<Action> _publisherPopupHide;
+    private void ChangedVisibility() { _closePending = false; if (!Visible) BeginEventEmission(_publisherPopupHide.Handlers)?.Invoke(); }
     private void ClosePopup()
     {
         if (_closePending || !Visible) return;
@@ -41,7 +42,7 @@ public class Popup : Window
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Popup) ? CreatePopup : base.CreateSceneInstanceFactory();
     private static Node CreatePopup() => new Popup();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) PopupHide = null; base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) _publisherPopupHide.Handlers = null; base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {

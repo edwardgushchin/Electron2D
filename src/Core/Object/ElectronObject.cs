@@ -163,18 +163,21 @@ public abstract partial class ElectronObject : IDisposable
     /// The event is not raised when the pre-delete notification or derived cleanup throws. The object is already in
     /// its final disposed state when handlers run, and handler exceptions propagate to the disposing caller.
     /// </remarks>
-    public event Action<ElectronObject>? Disposed;
+    public event Action<ElectronObject>? Disposed { add => _publisherDisposed.Add(value); remove => _publisherDisposed.Remove(value); }
+    private EventPublisher<Action<ElectronObject>> _publisherDisposed;
 
     /// <summary>Occurs when <see cref="NotifyPropertyListChanged"/> reports that the tooling property list changed.</summary>
     /// <remarks>Delivery is synchronous on the notifying thread.</remarks>
-    public event Action<ElectronObject>? PropertyListChanged;
+    public event Action<ElectronObject>? PropertyListChanged { add => _publisherPropertyListChanged.Add(value); remove => _publisherPropertyListChanged.Remove(value); }
+    private EventPublisher<Action<ElectronObject>> _publisherPropertyListChanged;
 
     /// <summary>Occurs when a derived scripting component reports that this object's script attachment changed.</summary>
     /// <remarks>
     /// Electron2D does not yet provide a script attachment. The event reserves the typed notification contract for a
     /// future live script-assignment workflow and is currently raised only through <see cref="NotifyScriptChanged"/>.
     /// </remarks>
-    public event Action<ElectronObject>? ScriptChanged;
+    public event Action<ElectronObject>? ScriptChanged { add => _publisherScriptChanged.Add(value); remove => _publisherScriptChanged.Remove(value); }
+    private EventPublisher<Action<ElectronObject>> _publisherScriptChanged;
 
     /// <summary>Synchronously delivers a numeric engine notification to this object.</summary>
     /// <param name="what">The notification identifier.</param>
@@ -372,10 +375,10 @@ public abstract partial class ElectronObject : IDisposable
             else
             {
                 Volatile.Write(ref _disposeState, DisposedState);
-                disposed = Disposed;
-                Disposed = null;
-                PropertyListChanged = null;
-                ScriptChanged = null;
+                disposed = _publisherDisposed.Handlers;
+                _publisherDisposed.Handlers = null;
+                _publisherPropertyListChanged.Handlers = null;
+                _publisherScriptChanged.Handlers = null;
                 GC.SuppressFinalize(this);
             }
         }
@@ -429,7 +432,7 @@ public abstract partial class ElectronObject : IDisposable
     public void NotifyPropertyListChanged()
     {
         ThrowIfDisposed();
-        BeginEventEmission(PropertyListChanged)?.Invoke(this);
+        BeginEventEmission(_publisherPropertyListChanged.Handlers)?.Invoke(this);
     }
 
     /// <summary>Synchronously raises <see cref="ScriptChanged"/>.</summary>
@@ -439,7 +442,7 @@ public abstract partial class ElectronObject : IDisposable
     protected void NotifyScriptChanged()
     {
         ThrowIfDisposed();
-        BeginEventEmission(ScriptChanged)?.Invoke(this);
+        BeginEventEmission(_publisherScriptChanged.Handlers)?.Invoke(this);
     }
 
     /// <summary>Releases resources owned by a derived class.</summary>
@@ -470,9 +473,9 @@ public abstract partial class ElectronObject : IDisposable
             return;
 
         Volatile.Write(ref _disposingThreadId, 0);
-        Disposed = null;
-        PropertyListChanged = null;
-        ScriptChanged = null;
+        _publisherDisposed.Handlers = null;
+        _publisherPropertyListChanged.Handlers = null;
+        _publisherScriptChanged.Handlers = null;
         GC.SuppressFinalize(this);
     }
 

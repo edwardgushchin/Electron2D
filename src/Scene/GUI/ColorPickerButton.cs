@@ -20,11 +20,14 @@ public partial class ColorPickerButton : Button
     /// <summary>Gets or sets intensity editing in the owned picker.</summary><value>True initially.</value>
     public bool EditIntensity { get { CheckColorButton(); return _editIntensity; } set { EnsureMutable(); _editIntensity = value; if (_picker != null) _picker.EditIntensity = value; } }
     /// <summary>Occurs after an editor color change or Escape restoration.</summary>
-    public event Action<Color>? ColorChanged;
+    public event Action<Color>? ColorChanged { add => _publisherColorChanged.Add(value); remove => _publisherColorChanged.Remove(value); }
+    private EventPublisher<Action<Color>> _publisherColorChanged;
     /// <summary>Occurs once after the required picker and popup have been created.</summary>
-    public event Action? PickerCreated;
+    public event Action? PickerCreated { add => _publisherPickerCreated.Add(value); remove => _publisherPickerCreated.Remove(value); }
+    private EventPublisher<Action> _publisherPickerCreated;
     /// <summary>Occurs after an opened picker popup closes.</summary>
-    public event Action? PopupClosed;
+    public event Action? PopupClosed { add => _publisherPopupClosed.Add(value); remove => _publisherPopupClosed.Remove(value); }
+    private EventPublisher<Action> _publisherPopupClosed;
     /// <summary>Creates if necessary and returns the stable required borrowed color editor.</summary><returns>The button-owned picker.</returns>
     public ColorPicker GetPicker() { EnsureMutable(); CreatePicker(); return _picker!; }
     /// <summary>Creates if necessary and returns the stable required borrowed popup.</summary><returns>The button-owned popup.</returns>
@@ -33,17 +36,17 @@ public partial class ColorPickerButton : Button
     private void CreatePicker()
     {
         if (_picker != null) return; if (_creating) throw new InvalidOperationException("Color editor creation cannot reenter."); _creating = true;
-        try { _popup = new OwnedPopup(this) { Name = "_color_popup" }; AddChild(_popup, InternalMode.Front); _picker = new OwnedPicker(this) { Name = "Picker", Color = _color, EditAlpha = _editAlpha, EditIntensity = _editIntensity }; _popup.AddChild(_picker); _picker.SetOpeningColor(_color); _picker.ColorChanged += PickerChanged; _popup.AboutToPopup += BeforePopup; _popup.PopupHide += Closed; BeginEventEmission(PickerCreated)?.Invoke(); }
+        try { _popup = new OwnedPopup(this) { Name = "_color_popup" }; AddChild(_popup, InternalMode.Front); _picker = new OwnedPicker(this) { Name = "Picker", Color = _color, EditAlpha = _editAlpha, EditIntensity = _editIntensity }; _popup.AddChild(_picker); _picker.SetOpeningColor(_color); _picker.ColorChanged += PickerChanged; _popup.AboutToPopup += BeforePopup; _popup.PopupHide += Closed; BeginEventEmission(_publisherPickerCreated.Handlers)?.Invoke(); }
         finally { _creating = false; }
     }
-    private void PickerChanged(Color color) { _color = color; QueueRedraw(); BeginEventEmission(ColorChanged)?.Invoke(color); }
+    private void PickerChanged(Color color) { _color = color; QueueRedraw(); BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(color); }
     private void BeforePopup() { _openingColor = _color; _picker!.SetOpeningColor(_color); _opened = true; SetPressedNoSignal(true); }
     private void Closed()
     {
         if (!_opened || _disposing) return; _opened = false; List<Exception>? errors = null;
-        try { if (_popup!.Canceled) { Color = _openingColor; BeginEventEmission(ColorChanged)?.Invoke(_color); } } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (_popup!.Canceled) { Color = _openingColor; BeginEventEmission(_publisherColorChanged.Handlers)?.Invoke(_color); } } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed) SetPressedNoSignal(false); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) BeginEventEmission(PopupClosed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) BeginEventEmission(_publisherPopupClosed.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Color popup closing callbacks failed.", errors);
     }
     /// <inheritdoc />
@@ -78,7 +81,7 @@ public partial class ColorPickerButton : Button
         yield return new PropertyDescriptor<ColorPickerButton, bool>(nameof(EditIntensity), p => p.EditIntensity, (p, v) => p.EditIntensity = v, _ => true, stored: true);
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; ColorChanged = null; PickerCreated = PopupClosed = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _publisherColorChanged.Handlers = null; _publisherPickerCreated.Handlers = _publisherPopupClosed.Handlers = null; } base.Dispose(disposing); }
     private sealed class OwnedPicker(ColorPickerButton owner) : ColorPicker
     { protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._disposing) throw new InvalidOperationException("The required color editor belongs to its button."); base.ValidateDisposal(); } }
     private sealed class OwnedPopup(ColorPickerButton owner) : PopupPanel

@@ -85,9 +85,11 @@ public sealed partial class RenderingServer : ElectronObject
         _clearColor = color; MarkChanged();
     }
 
-    internal event Action? FramePreDrawCore;
+    internal event Action? FramePreDrawCore { add => _publisherFramePreDrawCore.Add(value); remove => _publisherFramePreDrawCore.Remove(value); }
+    private EventPublisher<Action> _publisherFramePreDrawCore;
 
-    internal event Action? FramePostDrawCore;
+    internal event Action? FramePostDrawCore { add => _publisherFramePostDrawCore.Add(value); remove => _publisherFramePostDrawCore.Remove(value); }
+    private EventPublisher<Action> _publisherFramePostDrawCore;
 
     internal static RenderingServer Open(Window window, System.Runtime.InteropServices.SafeHandle nativeWindow)
     {
@@ -201,7 +203,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             capturedRevision = Volatile.Read(ref _changeRevision);
             _continuousCanvas = false;
-            BeginEventEmission(FramePreDrawCore)?.Invoke();
+            BeginEventEmission(_publisherFramePreDrawCore.Handlers)?.Invoke();
             _globalParameters.BindScene(tree.SelectedShaderGlobals?.Parameters);
             UpdatePhysicsContacts(tree);
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
@@ -238,7 +240,7 @@ public sealed partial class RenderingServer : ElectronObject
             foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); try { DispatchScreenVisibility(tree); } catch (Exception error) { AddCanvasVisibilityError(ref frameError, error); } }
             DeliverCanvasVisibilityChanges(ref frameError);
             _renderingDevice?.CompleteRendererReadbacks();
-            BeginEventEmission(FramePostDrawCore)?.Invoke();
+            BeginEventEmission(_publisherFramePostDrawCore.Handlers)?.Invoke();
         }
         catch (Exception error)
         {
@@ -635,7 +637,7 @@ public sealed partial class RenderingServer : ElectronObject
             }
             finally
             {
-                _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; _presentedWindows.Clear(); FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
+                _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; _presentedWindows.Clear(); _publisherFramePreDrawCore.Handlers = _publisherFramePostDrawCore.Handlers = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
                 _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _modelPoses.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();
                 _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;

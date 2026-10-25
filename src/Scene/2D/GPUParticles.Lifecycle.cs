@@ -33,7 +33,7 @@ public partial class GPUParticles
             var finished = _time > _activeTime && _active && !_signalCanceled;
             if (_time > _activeTime) _active = false;
             if (!_emitting && !_active) SetInternalProcessing(false, true);
-            if (finished) BeginEventEmission(Finished)?.Invoke();
+            if (finished) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
         }
     }
     /// <summary>Reports invalid child routing and missing particle process configuration.</summary>
@@ -52,7 +52,7 @@ public partial class GPUParticles
         {
             if (NativeLive) RenderingServer.FreeRID(_particles);
             _particles = default; _server = null; if (_texture is not null) _texture.Changed -= TextureChanged;
-            _texture = null; _processMaterial = null; Finished = null; _mesh.Dispose(); _random.Dispose();
+            _texture = null; _processMaterial = null; _publisherFinished.Handlers = null; _mesh.Dispose(); _random.Dispose();
         }
         base.Dispose(disposing);
     }

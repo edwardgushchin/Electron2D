@@ -149,11 +149,15 @@ public partial class RichTextLabel : Control
     private sealed class OwnedScroll(RichTextLabel owner) : VScrollBar { protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._disposingRich) throw new InvalidOperationException("Scrollbar belongs to RichTextLabel."); base.ValidateDisposal(); } }
     private sealed class OwnedMenu(RichTextLabel owner) : PopupMenu { protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._disposingRich) throw new InvalidOperationException("Menu belongs to RichTextLabel."); base.ValidateDisposal(); } }
     /// <summary>Reports that the current document has completed layout.</summary>
-    public event Action? Finished;
+    public event Action? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action> _publisherFinished;
     /// <summary>Reports the borrowed typed metadata of a clicked span.</summary>
-    public event Action<RichTextMetadata>? MetaClicked;
+    public event Action<RichTextMetadata>? MetaClicked { add => _publisherMetaClicked.Add(value); remove => _publisherMetaClicked.Remove(value); }
+    private EventPublisher<Action<RichTextMetadata>> _publisherMetaClicked;
     /// <summary>Reports entry into a metadata span.</summary>
-    public event Action<RichTextMetadata>? MetaHoverStarted;
+    public event Action<RichTextMetadata>? MetaHoverStarted { add => _publisherMetaHoverStarted.Add(value); remove => _publisherMetaHoverStarted.Remove(value); }
+    private EventPublisher<Action<RichTextMetadata>> _publisherMetaHoverStarted;
     /// <summary>Reports departure from a metadata span.</summary>
-    public event Action<RichTextMetadata>? MetaHoverEnded;
+    public event Action<RichTextMetadata>? MetaHoverEnded { add => _publisherMetaHoverEnded.Add(value); remove => _publisherMetaHoverEnded.Remove(value); }
+    private EventPublisher<Action<RichTextMetadata>> _publisherMetaHoverEnded;
 }

@@ -144,8 +144,8 @@ public partial class LineEdit
                     case NotificationEnterTree: SetInternalProcessing(true, false); Invalidate(); break;
                     case NotificationDragEnd: FinishTextDrag(); break;
                     case NotificationExitTree: ReleaseIconResidency(); _selectAllOnRelease = false; _editing = false; _pointerSelecting = false; _ime = ""; SetInternalProcessing(false, false); break;
-                    case NotificationFocusEnter: var was = _editing; Edit(); if (was != _editing) BeginEventEmission(EditingToggled)?.Invoke(_editing); break;
-                    case NotificationFocusExit: var editing = _editing; Unedit(); _pointerSelecting = false; if (editing != _editing) BeginEventEmission(EditingToggled)?.Invoke(_editing); break;
+                    case NotificationFocusEnter: var was = _editing; Edit(); if (was != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); break;
+                    case NotificationFocusExit: var editing = _editing; Unedit(); _pointerSelecting = false; if (editing != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); break;
                     case NotificationResized: _dirty = true; FitCaret(); break;
                     case NotificationThemeChanged:
                     case NotificationTranslationChanged:

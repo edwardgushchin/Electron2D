@@ -1,6 +1,6 @@
 # Typed event connections component
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
 
 ## Scope
 
@@ -69,7 +69,7 @@ Prepared `EventHandlers<T>` stores register a token's exact owned emission wrapp
 
 Registration takes the token lock before storage mutation; queries take token then publisher locks. No path takes those locks in the opposite order. Queries invoke no user code and allocate no managed memory after preparation. Dispose and one-shot acceptance release wrapper and publisher references. Already captured immutable emissions and accepted deferred work retain their existing delivery; removing/clearing a publisher does not act as token disposal. One-shot pending/completed and explicitly disposed tokens cannot be revived.
 
-Only prepared stores can expose these observations. Arbitrary opaque field-like accessors retain the logical query when no store is observed; the helper cannot infer their independent attachment state or mixed opaque attachments. This is no dynamic signal registry or arbitrary publisher/handler query. The inherited mapping remains Partial until the other applicable publisher identities have actual support.
+Ordinary engine events now retain the same multicast delegates in lazy [EventPublisher<T>](../classes/EventPublisher.Generic.md) slots. The publisher registers only an exact token emission wrapper, and queries use the same token-then-store lock order. Add/remove keep native delegate duplicate/subsequence semantics; taking a delegate snapshot remains allocation-free, and an accepted snapshot survives later changes. Unobserved custom accessors retain the logical query; independent opaque or mixed opaque attachments cannot be inferred. This remains an owned-token projection without dynamic publisher/handler lookup.
 
 `EventConnectionMembershipTests` covers duplicate/fan-out removal, clear/re-add, captured and deferred delivery, consumed tokens, unrelated method targets, concurrent source mutation/query, retained-token reference release and 1,024 strict zero-byte warm queries. The public consumer `--event-membership [--cpu|--gpu] [--threaded]` checks all 18 prepared physical accessors and pointer ownership on StaticBody, AnimatableBody, CharacterBody, RigidBody, PhysicalBone and Area. Actual Area/body/shape contacts run for 256 warmup and 128 measured complete frames, including membership reads before/after each frame; callbacks remain on the owner and every measured profile requires 0/0 owner/all-thread managed bytes. A throwing TreeExiting callback still retires publisher membership while accepted deferred work remains deliverable. Omitting backend flags selects the independent registered provider.
 
@@ -90,3 +90,37 @@ Public-only registered resource checks inject combined collider-detachment and T
 The inherited [ElectronObject delivery policy](../classes/ElectronObject.md#ordinary-event-delivery) applies at publication, including direct C# subscribers and EventConnection tokens. A blocked publisher drops new ordinary emissions without removing listeners, consuming one-shot tokens or submitting deferred calls. Existing accepted deferred work retains its usual cancellation rules. Each emission selects once; changing the flag inside a handler affects the next emission. Unblocking does not replay suppressed transitions.
 
 Numeric notifications, virtual callbacks, operation callbacks, committed state and resource revisions remain active. Deterministic Disposed cleanup remains independent. Physical handler buffers select an empty snapshot while blocked, preserving existing payloads, per-handler eligibility, exception policy and subscription capacity. Resource geometry/material polling still observes committed edits. Static facades use their retained service object's policy.
+
+## Ordinary engine publisher qualification, 2026-10-26
+
+The current family inventories 297 former field-like event stores across Core,
+Scene and retained service facades, plus the native-window and navigation-map
+custom accessors. Public signatures, source/payload types, signal blocking,
+callback order and immutable multicast delivery are preserved. Empty slots
+allocate no publisher. First subscription prepares its private store; ordinary
+multicast add/remove retains its existing allocation policy. Prepared physical
+EventHandlers buffers keep their separate mutation budget.
+
+The preceding frozen runtime reproduces Node.Renamed removal leaving
+IsConnected=true. Current tests cover actual remove/re-add and disposal, duplicate
+wrappers, captured/deferred delivery, concurrent clear/query, and strict zero
+warmed query bytes. Display session and NavigationAgent cleanup also retire their
+own event stores. WindowNotificationTests covers facade/native-window membership
+through injected callback failure and native host shutdown.
+
+Six public-only CPU/GPU/registered owner/separate profiles now observe all 40
+physical and inherited publisher accessors before/after 128 measured full frames
+each, preserving actual contacts and strict 0/0 managed bytes. The existing full
+event/queue/one-shot corpus passes CPU/GPU owner/separate profiles; dummy and
+Wayland/NVIDIA window notification cases pass. These are 13 completed focused
+CoreCLR profiles including the root membership corpus. Commands, immutable
+source/payload manifests and failures are retained under
+`bin/event-publisher-membership/2026-10-26/`.
+
+Six strict NativeAOT public CPU/GPU/registered owner/separate profiles also pass
+without CoreCLR mappings. The broad ordinary suite is running on the immutable
+CoreCLR candidate. Its result remains pending; the implementation is qualified separately by the
+focused profiles. The coverage row
+remains Partial until this current family is reconciled. This functional evidence
+does not establish foreign-platform execution, native allocations, hardware
+throughput or complete physics acceptance.

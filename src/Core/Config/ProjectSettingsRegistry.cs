@@ -272,7 +272,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         }
     }
 
-    internal event Action<ProjectSettingsRegistry>? SettingsChangedCore;
+    internal event Action<ProjectSettingsRegistry>? SettingsChangedCore { add => _publisherSettingsChangedCore.Add(value); remove => _publisherSettingsChangedCore.Remove(value); }
+    private EventPublisher<Action<ProjectSettingsRegistry>> _publisherSettingsChangedCore;
 
     internal void ConfigurePathsCore(string projectRoot, string userDataRoot)
     {
@@ -687,7 +688,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
             _changeNotificationPending = false;
             _deliveringChanges = new HashSet<string>(_changedSettings, StringComparer.Ordinal);
             _changedSettings.Clear();
-            handler = BeginEventEmission(SettingsChangedCore);
+            handler = BeginEventEmission(_publisherSettingsChangedCore.Handlers);
         }
 
         try
@@ -816,7 +817,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
                 _changedSettings.Clear();
                 _dirtySettings.Clear();
                 _customFeatures.Clear();
-                SettingsChangedCore = null;
+                _publisherSettingsChangedCore.Handlers = null;
             }
         }
 

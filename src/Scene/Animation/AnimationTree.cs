@@ -51,9 +51,10 @@ public partial class AnimationTree : AnimationMixer
     /// <summary>Gets or sets the relative scene path to an optional AnimationPlayer library provider.</summary>
     /// <value>The typed value described in the summary.</value>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public string AnimPlayer { get { ThrowIfDisposed(); return _animPlayer; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _animPlayer = value; _playerDirty = true; GraphChanged(); ReconcilePlayer(); BeginEventEmission(AnimationPlayerChanged)?.Invoke(); } }
+    public string AnimPlayer { get { ThrowIfDisposed(); return _animPlayer; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _animPlayer = value; _playerDirty = true; GraphChanged(); ReconcilePlayer(); BeginEventEmission(_publisherAnimationPlayerChanged.Handlers)?.Invoke(); } }
     /// <summary>Occurs after assigning the animation-player path.</summary>
-    public event Action? AnimationPlayerChanged;
+    public event Action? AnimationPlayerChanged { add => _publisherAnimationPlayerChanged.Add(value); remove => _publisherAnimationPlayerChanged.Remove(value); }
+    private EventPublisher<Action> _publisherAnimationPlayerChanged;
     /// <summary>Reads a declared typed parameter at a graph-node path.</summary>
     /// <typeparam name="TValue">The exact parameter type.</typeparam>
     /// <param name="nodePath">The relative graph path, empty for the root.</param>
@@ -216,7 +217,7 @@ public partial class AnimationTree : AnimationMixer
     { if (what == NotificationEnterTree) { _graphTree = Tree; if (_graphTree is not null) _graphTree.TreeChanged += SceneChanged; } else if (what == NotificationExitTree) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; } if (what is NotificationEnterTree or NotificationReady) { _playerDirty = true; ReconcilePlayer(); } base.OnNotification(what); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; _fileParameterValues.Clear(); _fileParameterSchemas = null; DetachPlayer(); foreach (var playback in _playbacks) playback.Dispose(); _playbacks.Clear(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); AnimationPlayerChanged = null; } base.Dispose(disposing); }
+    { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; _fileParameterValues.Clear(); _fileParameterSchemas = null; DetachPlayer(); foreach (var playback in _playbacks) playback.Dispose(); _playbacks.Clear(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); _publisherAnimationPlayerChanged.Handlers = null; } base.Dispose(disposing); }
 }
 internal readonly record struct AnimationGraphTime(double Length, double Position, double Delta, SpriteFrames.LoopMode Loop, bool WillEnd = false, bool Infinite = false)
 { internal double Remaining => GetRemaining(false); internal double GetRemaining(bool breakLoop) => Infinite || Loop != SpriteFrames.LoopMode.None && !breakLoop ? 31540000 : Loop != SpriteFrames.LoopMode.None && WillEnd ? 0 : Mathf.IsZeroApprox(Length - Position) ? 0 : Length - Position; }

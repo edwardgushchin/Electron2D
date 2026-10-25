@@ -18,12 +18,14 @@ public partial class OptionButton : Button
     {
         ToggleMode = true; Alignment = HorizontalAlignment.Left; ActionMode = ButtonActionMode.ButtonPress; ShortcutInputEnabled = true;
         _popup = new PopupMenu { Name = "_option_popup", ShrinkWidth = false }; AddChild(_popup, InternalMode.Front);
-        _popup.IndexPressed += SelectedByUser; _popup.IDFocused += id => BeginEventEmission(ItemFocused)?.Invoke(_popup.GetItemIndex(id)); _popup.PopupHide += PopupHidden; _popup.MenuChanged += MenuChanged;
+        _popup.IndexPressed += SelectedByUser; _popup.IDFocused += id => BeginEventEmission(_publisherItemFocused.Handlers)?.Invoke(_popup.GetItemIndex(id)); _popup.PopupHide += PopupHidden; _popup.MenuChanged += MenuChanged;
     }
     /// <summary>Occurs after a user activation commits the selected index and caption.</summary>
-    public event Action<int>? ItemSelected;
+    public event Action<int>? ItemSelected { add => _publisherItemSelected.Add(value); remove => _publisherItemSelected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherItemSelected;
     /// <summary>Occurs after keyboard/controller navigation focuses a menu item, carrying its first matching ID index.</summary>
-    public event Action<int>? ItemFocused;
+    public event Action<int>? ItemFocused { add => _publisherItemFocused.Add(value); remove => _publisherItemFocused.Remove(value); }
+    private EventPublisher<Action<int>> _publisherItemFocused;
     private void CheckOption() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     /// <summary>Gets or sets whether activating the current item reports selection again.</summary><value>False initially.</value>
     public bool AllowReselect { get { CheckOption(); return _allowReselect; } set { EnsureMutable(); _allowReselect = value; } }
@@ -69,7 +71,7 @@ public partial class OptionButton : Button
         if (item == _selectedItem && index == _selected && !_allowReselect) return; _selected = index; _selectedItem = item; var revision = ++_selectionRevision; List<Exception>? errors = null; _changing++;
         try { for (var i = 0; i < _popup.ItemCount; i++) { try { _popup.SetItemChecked(i, _popup.BorrowMenuItem(i) == item); } catch (Exception e) { CollectException(ref errors, e); } if (revision != _selectionRevision || IsDisposed) break; } }
         finally { _changing--; }
-        if (!IsDisposed && revision == _selectionRevision) { try { Reconcile(); } catch (Exception e) { CollectException(ref errors, e); } if (emit && IsInsideTree && revision == _selectionRevision) try { BeginEventEmission(ItemSelected)?.Invoke(_selected); } catch (Exception e) { CollectException(ref errors, e); } }
+        if (!IsDisposed && revision == _selectionRevision) { try { Reconcile(); } catch (Exception e) { CollectException(ref errors, e); } if (emit && IsInsideTree && revision == _selectionRevision) try { BeginEventEmission(_publisherItemSelected.Handlers)?.Invoke(_selected); } catch (Exception e) { CollectException(ref errors, e); } }
         ThrowCollected("Option selection callbacks failed.", errors);
     }
     private void MutateItems(Action mutation, Action? complete = null)
@@ -153,5 +155,5 @@ public partial class OptionButton : Button
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(OptionButton) ? CreateOptionButton : base.CreateSceneInstanceFactory();
     private static Node CreateOptionButton() => new OptionButton();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; ItemSelected = null; ItemFocused = null; _selectedItem = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _publisherItemSelected.Handlers = null; _publisherItemFocused.Handlers = null; _selectedItem = null; } base.Dispose(disposing); }
 }

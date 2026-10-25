@@ -77,7 +77,7 @@ public partial class CodeEdit : TextEdit
         LayoutDirection = LayoutDirection.LTR; TextDirection = TextDirection.LTR;
         AddStringDelimiter("\"", "\""); AddStringDelimiter("'", "'");
         AddCodeGutter("main_gutter", DrawMainGutter, true); AddCodeGutter("line_numbers", DrawLineNumber, false); AddCodeGutter("fold_gutter", DrawFoldGutter, false); RefreshGutterIndices();
-        _symbolTimer = new(this) { Name = "_symbol_tooltip", WaitTime = .5, OneShot = true }; _symbolTimer.Timeout += _ => { if (_symbolTooltip && _hoverWord.Length > 0) BeginEventEmission(SymbolHovered)?.Invoke(_hoverWord, _hoverPosition.Y, _hoverPosition.X); }; AddChild(_symbolTimer, InternalMode.Front);
+        _symbolTimer = new(this) { Name = "_symbol_tooltip", WaitTime = .5, OneShot = true }; _symbolTimer.Timeout += _ => { if (_symbolTooltip && _hoverWord.Length > 0) BeginEventEmission(_publisherSymbolHovered.Handlers)?.Invoke(_hoverWord, _hoverPosition.Y, _hoverPosition.X); }; AddChild(_symbolTimer, InternalMode.Front);
         GutterAdded += RefreshGutterIndices; GutterRemoved += RefreshGutterIndices; GutterClicked += GutterClick; TextChanged += CodeTextChanged; TextSet += CodeTextSet; CaretChanged += CodeCaretChanged;
     }
     private void CheckCode() => CheckTextEdit();
@@ -94,21 +94,26 @@ public partial class CodeEdit : TextEdit
     private void CodeTextChanged() { _parsedVersion = -1; _codeDirty = true; List<Exception>? errors = null; try { RefreshBreakpoints(); _folded.Clear(); foreach (var line in MarkedLines(Marker.Folded)) _folded.Add(line); if (_folded.Count > 0) RebuildHidden(); } catch (Exception error) { CollectException(ref errors, error); } try { if (_completionActive) FilterCompletion(); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("CodeEdit text observers failed.", errors); }
     private void CodeCaretChanged() { QueueRedraw(); if (_completionActive) FilterCompletion(); }
     /// <summary>Occurs when a breakpoint is set, cleared or shifted to another line.</summary>
-    public event Action<int>? BreakpointToggled;
+    public event Action<int>? BreakpointToggled { add => _publisherBreakpointToggled.Add(value); remove => _publisherBreakpointToggled.Remove(value); }
+    private EventPublisher<Action<int>> _publisherBreakpointToggled;
     /// <summary>Requests that the application submit completion candidates.</summary>
-    public event Action? CodeCompletionRequested;
+    public event Action? CodeCompletionRequested { add => _publisherCodeCompletionRequested.Add(value); remove => _publisherCodeCompletionRequested.Remove(value); }
+    private EventPublisher<Action> _publisherCodeCompletionRequested;
     /// <summary>Reports a symbol after the configured hover delay.</summary>
-    public event Action<string, int, int>? SymbolHovered;
+    public event Action<string, int, int>? SymbolHovered { add => _publisherSymbolHovered.Add(value); remove => _publisherSymbolHovered.Remove(value); }
+    private EventPublisher<Action<string, int, int>> _publisherSymbolHovered;
     /// <summary>Requests application lookup of a symbol at a logical line/scalar column.</summary>
-    public event Action<string, int, int>? SymbolLookup;
+    public event Action<string, int, int>? SymbolLookup { add => _publisherSymbolLookup.Add(value); remove => _publisherSymbolLookup.Remove(value); }
+    private EventPublisher<Action<string, int, int>> _publisherSymbolLookup;
     /// <summary>Requests validation of the symbol under the pointer.</summary>
-    public event Action<string>? SymbolValidate;
+    public event Action<string>? SymbolValidate { add => _publisherSymbolValidate.Add(value); remove => _publisherSymbolValidate.Remove(value); }
+    private EventPublisher<Action<string>> _publisherSymbolValidate;
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(CodeEdit) ? CreateCodeEdit : base.CreateSceneInstanceFactory();
     private static Node CreateCodeEdit() => new CodeEdit();
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { _codeDisposing = true; BreakpointToggled = null; CodeCompletionRequested = null; SymbolHovered = SymbolLookup = null; SymbolValidate = null; _regions.Clear(); _folded.Clear(); _numberLayouts.Clear(); _submitted.Clear(); _options.Clear(); } base.Dispose(disposing); }
+    { if (disposing) { _codeDisposing = true; _publisherBreakpointToggled.Handlers = null; _publisherCodeCompletionRequested.Handlers = null; _publisherSymbolHovered.Handlers = _publisherSymbolLookup.Handlers = null; _publisherSymbolValidate.Handlers = null; _regions.Clear(); _folded.Clear(); _numberLayouts.Clear(); _submitted.Clear(); _options.Clear(); } base.Dispose(disposing); }
     private sealed class OwnedSymbolTimer(CodeEdit owner) : Timer
     { protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._codeDisposing) throw new InvalidOperationException("The hover timer belongs to CodeEdit."); base.ValidateDisposal(); } }
 }

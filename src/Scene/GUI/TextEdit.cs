@@ -147,19 +147,26 @@ public partial class TextEdit : Control
         }
     }
     /// <summary>Occurs after a coalesced change to document content.</summary>
-    public event Action? TextChanged;
+    public event Action? TextChanged { add => _publisherTextChanged.Add(value); remove => _publisherTextChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTextChanged;
     /// <summary>Occurs synchronously after replacing the complete document through Text or Clear, including equal assignments.</summary>
-    public event Action? TextSet;
+    public event Action? TextSet { add => _publisherTextSet.Add(value); remove => _publisherTextSet.Remove(value); }
+    private EventPublisher<Action> _publisherTextSet;
     /// <summary>Occurs after caret/selection positions change.</summary>
-    public event Action? CaretChanged;
+    public event Action? CaretChanged { add => _publisherCaretChanged.Add(value); remove => _publisherCaretChanged.Remove(value); }
+    private EventPublisher<Action> _publisherCaretChanged;
     /// <summary>Reports an inclusive affected logical line range.</summary>
-    public event Action<int, int>? LinesEditedFrom;
+    public event Action<int, int>? LinesEditedFrom { add => _publisherLinesEditedFrom.Add(value); remove => _publisherLinesEditedFrom.Remove(value); }
+    private EventPublisher<Action<int, int>> _publisherLinesEditedFrom;
     /// <summary>Occurs after a gutter is added.</summary>
-    public event Action? GutterAdded;
+    public event Action? GutterAdded { add => _publisherGutterAdded.Add(value); remove => _publisherGutterAdded.Remove(value); }
+    private EventPublisher<Action> _publisherGutterAdded;
     /// <summary>Occurs after a gutter is removed.</summary>
-    public event Action? GutterRemoved;
+    public event Action? GutterRemoved { add => _publisherGutterRemoved.Add(value); remove => _publisherGutterRemoved.Remove(value); }
+    private EventPublisher<Action> _publisherGutterRemoved;
     /// <summary>Reports a clicked logical line and gutter index.</summary>
-    public event Action<int, int>? GutterClicked;
+    public event Action<int, int>? GutterClicked { add => _publisherGutterClicked.Add(value); remove => _publisherGutterClicked.Remove(value); }
+    private EventPublisher<Action<int, int>> _publisherGutterClicked;
     internal void EnsureTextMutable() { EnsureMutable(); if (_drawing || _building || _codeOverlayDrawing) throw new InvalidOperationException("An active text editor cannot mutate its document or layout."); }
     internal void CheckTextEdit() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     internal void InvalidateTextLayout() { if (IsDisposed || _disposing) return; _layoutDirty = true; QueueRedraw(); if (_scrollFitContentHeight || _scrollFitContentWidth) UpdateMinimumSize(); }
@@ -172,9 +179,9 @@ public partial class TextEdit : Control
     {
         _changeQueued = false; if (IsDisposed || _disposing) return; var changed = _pendingTextChanged; var caret = _pendingCaret; var from = _pendingFrom; var to = _pendingTo;
         _pendingTextChanged = _pendingCaret = false; _pendingFrom = int.MaxValue; _pendingTo = -1; List<Exception>? errors = null;
-        try { if (from != int.MaxValue) BeginEventEmission(LinesEditedFrom)?.Invoke(from, to); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && changed) BeginEventEmission(TextChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed && caret) BeginEventEmission(CaretChanged)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (from != int.MaxValue) BeginEventEmission(_publisherLinesEditedFrom.Handlers)?.Invoke(from, to); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && changed) BeginEventEmission(_publisherTextChanged.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed && caret) BeginEventEmission(_publisherCaretChanged.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("TextEdit change callbacks failed.", errors);
     }
     private static string Normalize(string text) => text.Replace("\r", "");
@@ -201,7 +208,7 @@ public partial class TextEdit : Control
             if (_highlighter != null) { _highlighter.Disposed -= _resourceDisposed; if (!_highlighter.IsDisposed) try { _highlighter.Bind(null); } catch (Exception error) { CollectException(ref errors, error); } }
             try { _storedHighlighter?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
             _storedHighlighter = null;
-            _lines.Clear(); _carets.Clear(); _history.Clear(); _visual.Clear(); TextChanged = TextSet = CaretChanged = GutterAdded = GutterRemoved = null; LinesEditedFrom = GutterClicked = null;
+            _lines.Clear(); _carets.Clear(); _history.Clear(); _visual.Clear(); _publisherTextChanged.Handlers = _publisherTextSet.Handlers = _publisherCaretChanged.Handlers = _publisherGutterAdded.Handlers = _publisherGutterRemoved.Handlers = null; _publisherLinesEditedFrom.Handlers = _publisherGutterClicked.Handlers = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("TextEdit disposal callbacks failed.", errors);

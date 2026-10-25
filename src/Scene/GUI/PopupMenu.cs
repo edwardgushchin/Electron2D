@@ -57,13 +57,17 @@ public partial class PopupMenu : Popup
         SizeChanged += Arrange; VisibilityChanged += VisibilityUpdated;
     }
     /// <summary>Occurs after an eligible item's popup-hide policy completes, carrying its ID.</summary>
-    public event Action<int>? IDPressed;
+    public event Action<int>? IDPressed { add => _publisherIDPressed.Add(value); remove => _publisherIDPressed.Remove(value); }
+    private EventPublisher<Action<int>> _publisherIDPressed;
     /// <summary>Occurs after IDPressed, carrying the activated zero-based item index.</summary>
-    public event Action<int>? IndexPressed;
+    public event Action<int>? IndexPressed { add => _publisherIndexPressed.Add(value); remove => _publisherIndexPressed.Remove(value); }
+    private EventPublisher<Action<int>> _publisherIndexPressed;
     /// <summary>Occurs when keyboard or controller navigation focuses an eligible item.</summary>
-    public event Action<int>? IDFocused;
+    public event Action<int>? IDFocused { add => _publisherIDFocused.Add(value); remove => _publisherIDFocused.Remove(value); }
+    private EventPublisher<Action<int>> _publisherIDFocused;
     /// <summary>Occurs after an item mutation commits.</summary>
-    public event Action? MenuChanged;
+    public event Action? MenuChanged { add => _publisherMenuChanged.Add(value); remove => _publisherMenuChanged.Remove(value); }
+    private EventPublisher<Action> _publisherMenuChanged;
     /// <summary>Gets or sets the item count, preserving retained records and assigning new IDs from indices.</summary>
     /// <value>Zero initially; between zero and 65536.</value>
     /// <exception cref="ArgumentOutOfRangeException">The count is outside the supported range.</exception>
@@ -78,7 +82,7 @@ public partial class PopupMenu : Popup
     internal int FindMenuItem(Item item) { CheckMenu(); return _items.IndexOf(item); }
     private Item Get(int index, bool negative = false) { CheckMenu(); return _items[Index(index, negative)]; }
     private static void Text(string text) { ArgumentNullException.ThrowIfNull(text); }
-    private void Changed() { _dirty = true; _view?.QueueRedraw(); if (IsInsideTree) Arrange(); BeginEventEmission(MenuChanged)?.Invoke(); }
+    private void Changed() { _dirty = true; _view?.QueueRedraw(); if (IsInsideTree) Arrange(); BeginEventEmission(_publisherMenuChanged.Handlers)?.Invoke(); }
     private void ChangedStructure(List<Exception>? errors = null) { try { Changed(); } catch (Exception error) { CollectException(ref errors, error); } try { NotifyPropertyListChanged(); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Menu structure callbacks failed.", errors); }
     private void Watch(Resource? resource)
     {
@@ -300,5 +304,5 @@ public partial class PopupMenu : Popup
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(PopupMenu) ? CreateMenu : base.CreateSceneInstanceFactory();
     private static Node CreateMenu() => new PopupMenu();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { foreach (var resource in _resources.Keys) { resource.Changed -= ResourceChanged; resource.Disposed -= ResourceDisposed; } _resources.Clear(); IDPressed = null; IndexPressed = null; IDFocused = null; MenuChanged = null; _items.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { foreach (var resource in _resources.Keys) { resource.Changed -= ResourceChanged; resource.Disposed -= ResourceDisposed; } _resources.Clear(); _publisherIDPressed.Handlers = null; _publisherIndexPressed.Handlers = null; _publisherIDFocused.Handlers = null; _publisherMenuChanged.Handlers = null; _items.Clear(); } base.Dispose(disposing); }
 }

@@ -272,7 +272,8 @@ public abstract partial class CanvasItem
     /// <summary>Occurs during recording, after NotificationDraw and before OnDraw.</summary>
     /// <remarks>Handlers run synchronously on the scene owner thread and may issue drawing commands for this item.
     /// Deferred handlers run outside the recording scope and cannot draw. A handler failure aborts recording.</remarks>
-    public event Action<CanvasItem>? Draw;
+    public event Action<CanvasItem>? Draw { add => _publisherDraw.Add(value); remove => _publisherDraw.Remove(value); }
+    private EventPublisher<Action<CanvasItem>> _publisherDraw;
 
     /// <summary>Records this node's retained canvas commands before its first visible frame and after QueueRedraw.</summary>
     /// <remarks>Runs on the scene owner thread during rendering. Geometry, texture and drawing-transform calls
@@ -300,7 +301,7 @@ public abstract partial class CanvasItem
         {
             DispatchNotification(NotificationDraw);
             if (IsDisposed) return;
-            BeginEventEmission(Draw)?.Invoke(this);
+            BeginEventEmission(_publisherDraw.Handlers)?.Invoke(this);
             if (!IsDisposed) OnDraw();
         }
         catch

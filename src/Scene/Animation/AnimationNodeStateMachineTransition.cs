@@ -74,17 +74,19 @@ public sealed partial class AnimationNodeStateMachineTransition : Resource
     /// <exception cref="ObjectDisposedException">This resource or a supplied curve is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite, negative or an undefined enumeration.</exception>
     public int Priority { get { ThrowIfDisposed(); return _priority; } set { ThrowIfDisposed(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); _priority = value; Notify(); } }
-    internal event Action? PolicyUpdated;
+    internal event Action? PolicyUpdated { add => _publisherPolicyUpdated.Add(value); remove => _publisherPolicyUpdated.Remove(value); }
+    private EventPublisher<Action> _publisherPolicyUpdated;
     private void Notify(bool condition = false)
     {
-        var handlers = PolicyUpdated; List<Exception>? errors = null;
+        var handlers = _publisherPolicyUpdated.Handlers; List<Exception>? errors = null;
         try { EmitChanged(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         if (handlers is not null) foreach (Action handler in handlers.GetInvocationList()) try { handler(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
-        if (condition && !IsDisposed) try { BeginEventEmission(AdvanceConditionChanged)?.Invoke(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        if (condition && !IsDisposed) try { BeginEventEmission(_publisherAdvanceConditionChanged.Handlers)?.Invoke(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         AnimationNode.ThrowCollected("State transition notification failed.", errors);
     }
     /// <summary>Occurs after assigning the typed condition key, including an equal assignment.</summary>
-    public event Action? AdvanceConditionChanged;
+    public event Action? AdvanceConditionChanged { add => _publisherAdvanceConditionChanged.Add(value); remove => _publisherAdvanceConditionChanged.Remove(value); }
+    private EventPublisher<Action> _publisherAdvanceConditionChanged;
     /// <summary>Creates an enabled immediate edge with zero fade, reset enabled and priority one.</summary>
     public AnimationNodeStateMachineTransition() { }
     private static readonly PropertyDescriptor[] Properties =
@@ -118,5 +120,5 @@ public sealed partial class AnimationNodeStateMachineTransition : Resource
         copy._priority = _priority;
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _condition = null; _expression = null; _curve = null; AdvanceConditionChanged = null; PolicyUpdated = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _condition = null; _expression = null; _curve = null; _publisherAdvanceConditionChanged.Handlers = null; _publisherPolicyUpdated.Handlers = null; } base.Dispose(disposing); }
 }

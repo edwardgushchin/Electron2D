@@ -80,12 +80,12 @@ public sealed class EventConnection : IDisposable
 
     /// <summary>Gets whether this token is active and its observed publisher still retains its wrapper.</summary>
     /// <value>
-    /// <see langword="true"/> while active and attached to at least one observed prepared publisher.
+    /// <see langword="true"/> while active and attached to at least one observed engine publisher.
     /// With unobserved custom accessors, the query reports the token's logical active state.
     /// A deferred one-shot callback can still be pending when this property is <see langword="false"/>.
     /// </value>
     /// <remarks>
-    /// Prepared engine publishers expose current membership without invoking handlers. Removal and clearing affect
+    /// Engine publishers expose current membership without invoking handlers. Removal and clearing affect
     /// this query without cancelling an already captured snapshot or accepted deferred callback. An active wrapper
     /// re-added by a custom accessor can become connected again; disposed or consumed tokens cannot.
     /// Ordinary unobserved accessors cannot report independent invocation-list changes.

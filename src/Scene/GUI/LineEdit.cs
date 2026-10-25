@@ -38,13 +38,17 @@ public partial class LineEdit : Control
     /// <summary>Creates an empty editable field with keyboard focus and an I-beam cursor.</summary>
     public LineEdit() { _resourceChanged = ResourceChanged; _resourceDisposed = ResourceDisposed; FocusMode = FocusMode.All; MouseDefaultCursorShape = CursorShape.IBeam; _history.Add(new("", 0, 0)); }
     /// <summary>Occurs when user editing starts or ends through focus, submission or Editable changes.</summary>
-    public event Action<bool>? EditingToggled;
+    public event Action<bool>? EditingToggled { add => _publisherEditingToggled.Add(value); remove => _publisherEditingToggled.Remove(value); }
+    private EventPublisher<Action<bool>> _publisherEditingToggled;
     /// <summary>Occurs after a user edit, deletion or clear has committed its new value.</summary>
-    public event Action<string>? TextChanged;
+    public event Action<string>? TextChanged { add => _publisherTextChanged.Add(value); remove => _publisherTextChanged.Remove(value); }
+    private EventPublisher<Action<string>> _publisherTextChanged;
     /// <summary>Occurs when submission is requested while editing.</summary>
-    public event Action<string>? TextSubmitted;
+    public event Action<string>? TextSubmitted { add => _publisherTextSubmitted.Add(value); remove => _publisherTextSubmitted.Remove(value); }
+    private EventPublisher<Action<string>> _publisherTextSubmitted;
     /// <summary>Occurs when MaxLength rejects a suffix of an insertion.</summary>
-    public event Action<string>? TextChangeRejected;
+    public event Action<string>? TextChangeRejected { add => _publisherTextChangeRejected.Add(value); remove => _publisherTextChangeRejected.Remove(value); }
+    private EventPublisher<Action<string>> _publisherTextChangeRejected;
     /// <summary>Gets or replaces the text, resetting selection, scroll, caret and history without TextChanged.</summary>
     /// <value>Empty initially. MaxLength limits Unicode scalars; zero means unlimited.</value>
     public string Text { get { CheckLineEdit(); return _text; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); AssignText(value); } }
@@ -57,7 +61,7 @@ public partial class LineEdit : Control
     public int MaxLength { get { CheckLineEdit(); return _maxLength; } set { EnsureMutable(); ArgumentOutOfRangeException.ThrowIfNegative(value); _maxLength = value; AssignText(_text); } }
     /// <summary>Gets or sets whether native edits are allowed. Programmatic assignments remain available.</summary>
     /// <value>True initially.</value>
-    public bool Editable { get { CheckLineEdit(); return _editable; } set { EnsureMutable(); if (_editable == value) return; _editable = value; var was = _editing; if (!value) Unedit(); else if (IsInsideTree && HasFocus()) Edit(); Invalidate(); if (was != _editing) BeginEventEmission(EditingToggled)?.Invoke(_editing); } }
+    public bool Editable { get { CheckLineEdit(); return _editable; } set { EnsureMutable(); if (_editable == value) return; _editable = value; var was = _editing; if (!value) Unedit(); else if (IsInsideTree && HasFocus()) Edit(); Invalidate(); if (was != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); } }
     private bool _editable = true;
     /// <summary>Gets or sets whether pointer and keyboard selection are allowed.</summary>
     /// <value>True initially. Disabling clears an existing selection.</value>
@@ -177,7 +181,7 @@ public partial class LineEdit : Control
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(LineEdit) ? CreateLineEdit : base.CreateSceneInstanceFactory();
     private static Node CreateLineEdit() => new LineEdit();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { ReleaseIconResidency(); if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; } if (_rightIcon is not null) { _rightIcon.Changed -= _resourceChanged; _rightIcon.Disposed -= _resourceDisposed; } EditingToggled = null; TextChanged = null; TextSubmitted = null; TextChangeRejected = null; _history.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { ReleaseIconResidency(); if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; } if (_rightIcon is not null) { _rightIcon.Changed -= _resourceChanged; _rightIcon.Disposed -= _resourceDisposed; } _publisherEditingToggled.Handlers = null; _publisherTextChanged.Handlers = null; _publisherTextSubmitted.Handlers = null; _publisherTextChangeRejected.Handlers = null; _history.Clear(); } base.Dispose(disposing); }
 }
 
 /// <summary>Controls how a LineEdit trailing icon fits its available height.</summary>

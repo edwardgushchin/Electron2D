@@ -32,10 +32,11 @@ public class MultiMeshInstance : Entity
     public Texture? Texture
     {
         get { ThrowIfDisposed(); return _texture; }
-        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_texture, value)) return; _texture = value; InvalidateCanvas(); BeginEventEmission(TextureChanged)?.Invoke(); }
+        set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_texture, value)) return; _texture = value; InvalidateCanvas(); BeginEventEmission(_publisherTextureChanged.Handlers)?.Invoke(); }
     }
     /// <summary>Occurs after replacing the borrowed texture and scheduling redraw.</summary>
-    public event Action? TextureChanged;
+    public event Action? TextureChanged { add => _publisherTextureChanged.Add(value); remove => _publisherTextureChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTextureChanged;
     private void MultiMeshChanged(Resource _) { if (!IsDisposed) InvalidateCanvas(); }
     internal void RefreshInterpolation() { if (IsInsideTree && _multiMesh is { IsDisposed: false }) _multiMesh.SetInterpolationEnabled(IsPhysicsInterpolatedAndEnabled()); }
     /// <inheritdoc />
@@ -66,7 +67,7 @@ public class MultiMeshInstance : Entity
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { if (_multiMesh is not null) _multiMesh.Changed -= MultiMeshChanged; _multiMesh = null; _texture = null; TextureChanged = null; }
+        if (disposing) { if (_multiMesh is not null) _multiMesh.Changed -= MultiMeshChanged; _multiMesh = null; _texture = null; _publisherTextureChanged.Handlers = null; }
         base.Dispose(disposing);
     }
 }

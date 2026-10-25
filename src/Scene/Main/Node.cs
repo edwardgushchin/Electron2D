@@ -331,7 +331,7 @@ public partial class Node : ElectronObject
             {
                 try
                 {
-                    BeginEventEmission(Renamed)?.Invoke(this);
+                    BeginEventEmission(_publisherRenamed.Handlers)?.Invoke(this);
                 }
                 catch (Exception error)
                 {
@@ -974,58 +974,69 @@ public partial class Node : ElectronObject
     /// The first argument is the publishing parent and the second is the child. Delivery is synchronous and precedes
     /// active-tree attachment of the child's subtree.
     /// </remarks>
-    public event Action<Node, Node>? ChildAdded;
+    public event Action<Node, Node>? ChildAdded { add => _publisherChildAdded.Add(value); remove => _publisherChildAdded.Remove(value); }
+    private EventPublisher<Action<Node, Node>> _publisherChildAdded;
 
     /// <summary>Occurs on the former parent after a direct child is detached and child order is reported.</summary>
     /// <remarks>
     /// The first argument is the publishing former parent and the second is the removed child. Delivery is synchronous,
     /// and structural changes are not rolled back if a handler throws.
     /// </remarks>
-    public event Action<Node, Node>? ChildRemoved;
+    public event Action<Node, Node>? ChildRemoved { add => _publisherChildRemoved.Add(value); remove => _publisherChildRemoved.Remove(value); }
+    private EventPublisher<Action<Node, Node>> _publisherChildRemoved;
 
     /// <summary>Occurs on the direct parent when a child enters the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the entering child. Delivery follows that child's
     /// enter notification, callback, event and SceneTree node-added event.
     /// </remarks>
-    public event Action<Node, Node>? ChildEnteredTree;
+    public event Action<Node, Node>? ChildEnteredTree { add => _publisherChildEnteredTree.Add(value); remove => _publisherChildEnteredTree.Remove(value); }
+    private EventPublisher<Action<Node, Node>> _publisherChildEnteredTree;
 
     /// <summary>Occurs on the direct parent while a child is exiting the active tree.</summary>
     /// <remarks>
     /// The first argument is the publishing parent and the second is the exiting child. Descendants have already exited,
     /// and the child's <see cref="Tree"/> is still set. Delivery follows its exit notification, physical release and SceneTree node-removed event.
     /// </remarks>
-    public event Action<Node, Node>? ChildExitingTree;
+    public event Action<Node, Node>? ChildExitingTree { add => _publisherChildExitingTree.Add(value); remove => _publisherChildExitingTree.Remove(value); }
+    private EventPublisher<Action<Node, Node>> _publisherChildExitingTree;
 
     /// <summary>Occurs after the order or membership of direct children changes.</summary>
     /// <remarks>The argument is this parent node. Delivery follows complete NotificationChildOrderChanged dispatch.
     /// Drawing-order publication, notification and signal are each attempted after earlier failures; errors aggregate
     /// after the committed mutation. Unchanged moves and absent removals are silent. Normal C# subscriber ordering applies.</remarks>
-    public event Action<Node>? ChildOrderChanged;
+    public event Action<Node>? ChildOrderChanged { add => _publisherChildOrderChanged.Add(value); remove => _publisherChildOrderChanged.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherChildOrderChanged;
 
     /// <summary>Occurs after an active node accepts a name assignment and path notifications propagate.</summary>
     /// <remarks>The argument is this node. Unchanged names also raise the event; detached assignments only propagate path notifications.</remarks>
-    public event Action<Node>? Renamed;
+    public event Action<Node>? Renamed { add => _publisherRenamed.Add(value); remove => _publisherRenamed.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherRenamed;
 
     /// <summary>Occurs when this node enters an active scene tree.</summary>
     /// <remarks>Delivery follows <see cref="NotificationEnterTree"/> and <see cref="OnEnterTree"/>, and precedes descendant entry.</remarks>
-    public event Action<Node>? TreeEntered;
+    public event Action<Node>? TreeEntered { add => _publisherTreeEntered.Add(value); remove => _publisherTreeEntered.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherTreeEntered;
 
     /// <summary>Occurs while this node is exiting its active scene tree.</summary>
     /// <remarks>Descendants have exited and <see cref="OnExitTree"/> has run. Delivery precedes <see cref="NotificationExitTree"/> and engine membership release; <see cref="Tree"/> remains available.</remarks>
-    public event Action<Node>? TreeExiting;
+    public event Action<Node>? TreeExiting { add => _publisherTreeExiting.Add(value); remove => _publisherTreeExiting.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherTreeExiting;
 
     /// <summary>Occurs after this node has left its scene tree.</summary>
     /// <remarks>The complete departing subtree has no <see cref="Tree"/> association. Structural removal has cleared its root parent and invalid owners. Delivery visits siblings in reverse order, children before parents; lifecycle reentry remains rejected.</remarks>
-    public event Action<Node>? TreeExited;
+    public event Action<Node>? TreeExited { add => _publisherTreeExited.Add(value); remove => _publisherTreeExited.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherTreeExited;
 
     /// <summary>Occurs after child-first ready notification delivery.</summary>
     /// <remarks>SceneTree-managed delivery occurs once until <see cref="RequestReady"/> resets the ready state.</remarks>
-    public event Action<Node>? Ready;
+    public event Action<Node>? Ready { add => _publisherReady.Add(value); remove => _publisherReady.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherReady;
 
     /// <summary>Occurs after a replacement enters the former parent and before this node's children move to it.</summary>
     /// <remarks>The argument is the live replacement. This node has already left its parent. A callback failure is collected while replacement continues.</remarks>
-    public event Action<Node>? ReplacingBy;
+    public event Action<Node>? ReplacingBy { add => _publisherReplacingBy.Add(value); remove => _publisherReplacingBy.Remove(value); }
+    private EventPublisher<Action<Node>> _publisherReplacingBy;
 
     /// <summary>Appends a detached node as the last direct child.</summary>
     /// <param name="child">The live node to adopt.</param>
@@ -2107,20 +2118,20 @@ public partial class Node : ElectronObject
             _rpcMethods = null; _removedRPCMethods = null;
             try { AdoptSceneFileLease(null); } catch (Exception error) { CollectException(ref errors, error); }
 
-            ChildAdded = null;
-            ChildRemoved = null;
-            ChildEnteredTree = null;
-            ChildExitingTree = null;
-            ChildOrderChanged = null;
-            Renamed = null;
-            TreeEntered = null;
-            TreeExiting = null;
+            _publisherChildAdded.Handlers = null;
+            _publisherChildRemoved.Handlers = null;
+            _publisherChildEnteredTree.Handlers = null;
+            _publisherChildExitingTree.Handlers = null;
+            _publisherChildOrderChanged.Handlers = null;
+            _publisherRenamed.Handlers = null;
+            _publisherTreeEntered.Handlers = null;
+            _publisherTreeExiting.Handlers = null;
             _physicsObjectBindings?.Clear(); _physicsObjectBindings = null;
-            TreeExited = null;
-            Ready = null;
-            ReplacingBy = null;
-            EditorDescriptionChanged = null;
-            EditorStateChanged = null;
+            _publisherTreeExited.Handlers = null;
+            _publisherReady.Handlers = null;
+            _publisherReplacingBy.Handlers = null;
+            _publisherEditorDescriptionChanged.Handlers = null;
+            _publisherEditorStateChanged.Handlers = null;
         }
 
         try
@@ -2440,7 +2451,7 @@ public partial class Node : ElectronObject
 
         try
         {
-            BeginEventEmission(TreeEntered)?.Invoke(this);
+            BeginEventEmission(_publisherTreeEntered.Handlers)?.Invoke(this);
         }
         catch (Exception error)
         {
@@ -2454,7 +2465,7 @@ public partial class Node : ElectronObject
         catch (Exception error) { CollectException(ref errors, error); }
 
         var parent = Parent;
-        try { parent?.BeginEventEmission(parent.ChildEnteredTree)?.Invoke(parent, this); }
+        try { parent?.BeginEventEmission(parent._publisherChildEnteredTree.Handlers)?.Invoke(parent, this); }
         catch (Exception error) { CollectException(ref errors, error); }
 
         if (!ReferenceEquals(Tree, tree))
@@ -2563,7 +2574,7 @@ public partial class Node : ElectronObject
 
             try
             {
-                BeginEventEmission(Ready)?.Invoke(this);
+                BeginEventEmission(_publisherReady.Handlers)?.Invoke(this);
             }
             catch (Exception error)
             {
@@ -2593,7 +2604,7 @@ public partial class Node : ElectronObject
 
             try { OnExitTree(); }
             catch (Exception error) { CollectException(ref errors, error); }
-            try { BeginEventEmission(TreeExiting)?.Invoke(this); }
+            try { BeginEventEmission(_publisherTreeExiting.Handlers)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             try { DispatchNotification(NotificationExitTree); }
             catch (Exception error) { CollectException(ref errors, error); }
@@ -2604,7 +2615,7 @@ public partial class Node : ElectronObject
             try { tree.NotifyNodeRemoved(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             var parent = Parent;
-            try { parent?.BeginEventEmission(parent.ChildExitingTree)?.Invoke(parent, this); }
+            try { parent?.BeginEventEmission(parent._publisherChildExitingTree.Handlers)?.Invoke(parent, this); }
             catch (Exception error) { CollectException(ref errors, error); }
 
             tree.UnbindProcessingGroup(this);
@@ -2643,7 +2654,7 @@ public partial class Node : ElectronObject
             for (var i = children.Length - 1; i >= 0; i--)
                 try { children[i].CompleteExitTree(); }
                 catch (Exception error) { CollectException(ref errors, error); }
-            try { BeginEventEmission(TreeExited)?.Invoke(this); }
+            try { BeginEventEmission(_publisherTreeExited.Handlers)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
         }
         finally { _hasPendingTreeExit = false; _isExitingTree = wasExiting; }
@@ -2792,7 +2803,7 @@ public partial class Node : ElectronObject
 
         try
         {
-            BeginEventEmission(ChildAdded)?.Invoke(this, child);
+            BeginEventEmission(_publisherChildAdded.Handlers)?.Invoke(this, child);
         }
         catch (Exception error)
         {
@@ -2927,7 +2938,7 @@ public partial class Node : ElectronObject
 
                 try
                 {
-                    BeginEventEmission(ChildRemoved)?.Invoke(this, child);
+                    BeginEventEmission(_publisherChildRemoved.Handlers)?.Invoke(this, child);
                 }
                 catch (Exception error)
                 {
@@ -2965,7 +2976,7 @@ public partial class Node : ElectronObject
         catch (Exception error) { CollectException(ref errors, error); }
         try { DispatchNotification(NotificationChildOrderChanged); }
         catch (Exception error) { CollectException(ref errors, error); }
-        try { BeginEventEmission(ChildOrderChanged)?.Invoke(this); }
+        try { BeginEventEmission(_publisherChildOrderChanged.Handlers)?.Invoke(this); }
         catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("One or more child-order callbacks failed.", errors);
     }

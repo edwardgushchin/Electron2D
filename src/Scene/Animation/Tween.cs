@@ -113,15 +113,18 @@ public sealed class Tween : ElectronObject
 
     /// <summary>Occurs after every tweener in the final loop finishes.</summary>
     /// <remarks>The tween is stopped but remains valid through delivery and until its next matching step. A subscriber may stop and restart it. Killed tweens do not raise this event.</remarks>
-    public event Action<Tween>? Finished;
+    public event Action<Tween>? Finished { add => _publisherFinished.Add(value); remove => _publisherFinished.Remove(value); }
+    private EventPublisher<Action<Tween>> _publisherFinished;
 
     /// <summary>Occurs after a non-final loop completes.</summary>
     /// <remarks>The first argument is this tween and the second is the one-based completed-loop count.</remarks>
-    public event Action<Tween, int>? LoopFinished;
+    public event Action<Tween, int>? LoopFinished { add => _publisherLoopFinished.Add(value); remove => _publisherLoopFinished.Remove(value); }
+    private EventPublisher<Action<Tween, int>> _publisherLoopFinished;
 
     /// <summary>Occurs when one sequential step or parallel step group completes.</summary>
     /// <remarks>The first argument is this tween and the second is the zero-based step index.</remarks>
-    public event Action<Tween, int>? StepFinished;
+    public event Action<Tween, int>? StepFinished { add => _publisherStepFinished.Add(value); remove => _publisherStepFinished.Remove(value); }
+    private EventPublisher<Action<Tween, int>> _publisherStepFinished;
 
     /// <summary>Binds processing and lifetime to a node.</summary>
     /// <param name="node">The live node whose tree membership, process policy, and lifetime control this tween.</param>
@@ -681,9 +684,9 @@ public sealed class Tween : ElectronObject
             }
 
             _steps.Clear();
-            Finished = null;
-            LoopFinished = null;
-            StepFinished = null;
+            _publisherFinished.Handlers = null;
+            _publisherLoopFinished.Handlers = null;
+            _publisherStepFinished.Handlers = null;
             _boundNode = null;
         }
 
@@ -785,7 +788,7 @@ public sealed class Tween : ElectronObject
                 if (active)
                     continue;
 
-                BeginEventEmission(StepFinished)?.Invoke(this, _currentStep);
+                BeginEventEmission(_publisherStepFinished.Handlers)?.Invoke(this, _currentStep);
                 if (!_valid || !_started)
                     return _valid;
 
@@ -801,11 +804,11 @@ public sealed class Tween : ElectronObject
                 {
                     _running = false;
                     _dead = true;
-                    BeginEventEmission(Finished)?.Invoke(this);
+                    BeginEventEmission(_publisherFinished.Handlers)?.Invoke(this);
                     return true;
                 }
 
-                BeginEventEmission(LoopFinished)?.Invoke(this, _loopsDone);
+                BeginEventEmission(_publisherLoopFinished.Handlers)?.Invoke(this, _loopsDone);
                 if (!_valid || !_started)
                     return _valid;
                 _currentStep = 0;

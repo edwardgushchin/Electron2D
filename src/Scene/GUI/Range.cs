@@ -59,10 +59,12 @@ public abstract class Range : Control
     /// <summary>Initializes a detached range with min zero, max 100, step 0.01 and vertical ShrinkBegin.</summary>
     protected Range() { _owner = new(this); _shared.Owners.Add(_owner); SizeFlagsVertical = SizeFlags.ShrinkBegin; }
     /// <summary>Occurs after min/max/page/step configuration changes, following any value clamp notification.</summary>
-    public event Action? Changed;
+    public event Action? Changed { add => _publisherChanged.Add(value); remove => _publisherChanged.Remove(value); }
+    private EventPublisher<Action> _publisherChanged;
     /// <summary>Occurs after a changed shared value, following the typed value hook.</summary>
     /// <remarks>Explicit sharing and interaction notifications can also emit when the stored value is unchanged.</remarks>
-    public event Action<double>? ValueChanged;
+    public event Action<double>? ValueChanged { add => _publisherValueChanged.Add(value); remove => _publisherValueChanged.Remove(value); }
+    private EventPublisher<Action<double>> _publisherValueChanged;
     /// <summary>Handles a changed value, including SetValueNoSignal redraw notifications.</summary>
     /// <param name="newValue">The current shared value at delivery time.</param>
     /// <remarks>Override for a concrete value consumer; the state has committed before this hook.</remarks>
@@ -265,9 +267,9 @@ public abstract class Range : Control
         if (value)
         {
             try { OnValueChanged(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
-            try { if (signal && _localSignalSuppressionDepth == 0) BeginEventEmission(ValueChanged)?.Invoke(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (signal && _localSignalSuppressionDepth == 0) BeginEventEmission(_publisherValueChanged.Handlers)?.Invoke(_shared.Value); } catch (Exception error) { CollectException(ref errors, error); }
         }
-        else try { if (_localSignalSuppressionDepth == 0) BeginEventEmission(Changed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        else try { if (_localSignalSuppressionDepth == 0) BeginEventEmission(_publisherChanged.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) QueueRedraw();
         ThrowCollected("Range notifications failed.", errors);
     }
@@ -298,6 +300,6 @@ public abstract class Range : Control
     {
         _shared.Owners.Remove(_owner); _generation++;
         try { base.Dispose(disposing); }
-        finally { Changed = null; ValueChanged = null; }
+        finally { _publisherChanged.Handlers = null; _publisherValueChanged.Handlers = null; }
     }
 }

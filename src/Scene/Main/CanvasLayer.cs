@@ -39,7 +39,7 @@ public partial class CanvasLayer : Node
         {
             EnsureMutable(); if (_visible == value) return; _visible = value;
             List<Exception>? errors = null;
-            try { BeginEventEmission(VisibilityChanged)?.Invoke(this); }
+            try { BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             if (!IsDisposed)
                 foreach (var child in AllChildren.ToArray())
@@ -173,7 +173,8 @@ public partial class CanvasLayer : Node
     /// <summary>Occurs after the visibility value changes and before child visibility propagation.</summary>
     /// <remarks>Synchronous on the scene owner while attached; equal assignments do not emit. Handler failure
     /// stops later handlers but does not prevent child state from being reconciled.</remarks>
-    public event Action<CanvasLayer>? VisibilityChanged;
+    public event Action<CanvasLayer>? VisibilityChanged { add => _publisherVisibilityChanged.Add(value); remove => _publisherVisibilityChanged.Remove(value); }
+    private EventPublisher<Action<CanvasLayer>> _publisherVisibilityChanged;
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(LayerProperties);
@@ -190,7 +191,7 @@ public partial class CanvasLayer : Node
             {
                 RenderingCanvasRuntime? canvas; lock (_canvasGate) { canvas = _canvasRuntime; _canvasRuntime = null; }
                 if (canvas is not null) RenderingCanvasRegistry.Remove(canvas.RID);
-                VisibilityChanged = null; _viewport = _customViewport = null;
+                _publisherVisibilityChanged.Handlers = null; _viewport = _customViewport = null;
             }
         }
     }

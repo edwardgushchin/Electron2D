@@ -109,9 +109,11 @@ public sealed partial class Curve : Resource
     public float MaxValue { get { lock (_gate) { ThrowIfDisposed(); return _maxValue; } } set => SetLimit(value, false, false); }
 
     /// <summary>Occurs after a domain setter's Changed event, including equal assignments.</summary>
-    public event Action? DomainChanged;
+    public event Action? DomainChanged { add => _publisherDomainChanged.Add(value); remove => _publisherDomainChanged.Remove(value); }
+    private EventPublisher<Action> _publisherDomainChanged;
     /// <summary>Occurs after a value-limit setter; that setter does not emit Changed.</summary>
-    public event Action? RangeChanged;
+    public event Action? RangeChanged { add => _publisherRangeChanged.Add(value); remove => _publisherRangeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherRangeChanged;
 
     /// <summary>Returns MaxDomain minus MinDomain.</summary>
     /// <returns>The positive finite horizontal range.</returns>
@@ -315,8 +317,8 @@ public sealed partial class Curve : Resource
             if (domain) { if (minimum) _minDomain = value; else _maxDomain = value; _dirty = true; }
             else if (minimum) _minValue = value; else _maxValue = value;
         }
-        if (domain) { EmitChanged(); if (!IsDisposed) BeginEventEmission(DomainChanged)?.Invoke(); }
-        else BeginEventEmission(RangeChanged)?.Invoke();
+        if (domain) { EmitChanged(); if (!IsDisposed) BeginEventEmission(_publisherDomainChanged.Handlers)?.Invoke(); }
+        else BeginEventEmission(_publisherRangeChanged.Handlers)?.Invoke();
     }
 
     private ref CurvePoint Point(int index) { ThrowIfDisposed(); if ((uint)index >= (uint)_points.Count) throw new ArgumentOutOfRangeException(nameof(index)); return ref CollectionsMarshal.AsSpan(_points)[index]; }
@@ -420,7 +422,7 @@ public sealed partial class Curve : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) lock (_gate) { _points.Clear(); _baked = []; DomainChanged = RangeChanged = null; }
+        if (disposing) lock (_gate) { _points.Clear(); _baked = []; _publisherDomainChanged.Handlers = _publisherRangeChanged.Handlers = null; }
         base.Dispose(disposing);
     }
 }

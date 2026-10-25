@@ -29,7 +29,8 @@ public partial class FoldableContainer : Container
     public FoldableContainer(string title) : this() { Title = title; }
     /// <summary>Occurs after Fold, Expand or user activation, including an unchanged or group-refused request.</summary>
     /// <remarks>Property assignments are silent. The event supplies the actual folded state.</remarks>
-    public event Action<bool>? FoldingChanged;
+    public event Action<bool>? FoldingChanged { add => _publisherFoldingChanged.Add(value); remove => _publisherFoldingChanged.Remove(value); }
+    private EventPublisher<Action<bool>> _publisherFoldingChanged;
     /// <summary>Gets or sets whether the content is folded; a group can refuse closing its last expanded member.</summary>
     /// <value>False initially. Assignments do not emit FoldingChanged.</value>
     public bool Folded { get { CheckFoldable(); return _folded; } set { EnsureMutable(); SetFoldedCore(value); } }
@@ -81,7 +82,7 @@ public partial class FoldableContainer : Container
     {
         EnsureMutable(); List<Exception>? errors = null;
         try { SetFoldedCore(value); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (!IsDisposed) BeginEventEmission(FoldingChanged)?.Invoke(_folded); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!IsDisposed) BeginEventEmission(_publisherFoldingChanged.Handlers)?.Invoke(_folded); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Folding callbacks failed.", errors);
     }
     internal void SetFoldedCore(bool value, bool forced = false)
@@ -137,6 +138,6 @@ public partial class FoldableContainer : Container
     protected override void Dispose(bool disposing)
     {
         _group?.Remove(_groupReference); _membership++; _foldRevision++; _group = null; ReleaseIcons();
-        try { base.Dispose(disposing); } finally { FoldingChanged = null; _titleControls.Clear(); }
+        try { base.Dispose(disposing); } finally { _publisherFoldingChanged.Handlers = null; _titleControls.Clear(); }
     }
 }

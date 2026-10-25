@@ -24,13 +24,14 @@ public partial class Window
     /// Native blocked reception stops after this signal; embedded hosts can still forward to their child windows.
     /// Internal mouse events are included. Direct PushInput bypasses this reception signal. Pause and input disabling
     /// do not suppress a window reception that has already reached this window. Signal blocking and lifetime rules apply.</remarks>
-    public event Action<InputEvent>? NonclientWindowInput;
+    public event Action<InputEvent>? NonclientWindowInput { add => _publisherNonclientWindowInput.Add(value); remove => _publisherNonclientWindowInput.Remove(value); }
+    private EventPublisher<Action<InputEvent>> _publisherNonclientWindowInput;
 
     internal bool HasExclusiveInputChild => ExclusiveChild is { IsDisposed: false, Visible: true } child && ReferenceEquals(child.Tree, Tree);
     internal void EmitNonclientWindowInput(InputEvent input)
     {
         if (!IsInsideTree || !_nonclientArea.HasArea() || input is not InputEventMouse mouse ||
-            !_nonclientArea.HasPoint((Vector2i)mouse.Position) || BeginEventEmission(NonclientWindowInput) is not { } handlers) return;
+            !_nonclientArea.HasPoint((Vector2i)mouse.Position) || BeginEventEmission(_publisherNonclientWindowInput.Handlers) is not { } handlers) return;
         handlers(input);
     }
 
@@ -40,11 +41,12 @@ public partial class Window
     /// coordinates. Direct PushInput on this window bypasses this event; forwarding to an embedded child does not.
     /// The signal runs independently of process pause and GUI input disabling. Use Node input callbacks or Control GUI
     /// input to consume events. Handler failures are collected while ordinary input delivery continues.</remarks>
-    public event Action<InputEvent>? WindowInput;
+    public event Action<InputEvent>? WindowInput { add => _publisherWindowInput.Add(value); remove => _publisherWindowInput.Remove(value); }
+    private EventPublisher<Action<InputEvent>> _publisherWindowInput;
 
     internal void EmitWindowInput(InputEvent input)
     {
-        if (input.Device == InputEvent.DeviceIdInternal || !IsInsideTree || BeginEventEmission(WindowInput) is not { } handlers) return;
+        if (input.Device == InputEvent.DeviceIdInternal || !IsInsideTree || BeginEventEmission(_publisherWindowInput.Handlers) is not { } handlers) return;
         handlers(input);
     }
 }

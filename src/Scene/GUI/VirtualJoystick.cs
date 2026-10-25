@@ -57,15 +57,20 @@ public partial class VirtualJoystick : Control
     private void SetAction(int index, string action)
     { EnsureMutable(); ArgumentNullException.ThrowIfNull(action); if (_actions[index] == action) return; _bindings[index].Release(); _actions[index] = action; if (_finger is not null) PublishActions(); }
     /// <summary>Occurs after a touch contact, geometry and directional action state are committed.</summary>
-    public event Action? Pressed;
+    public event Action? Pressed { add => _publisherPressed.Add(value); remove => _publisherPressed.Remove(value); }
+    private EventPublisher<Action> _publisherPressed;
     /// <summary>Occurs after the active contact and its action contributions are released.</summary>
-    public event Action<Vector2>? Released;
+    public event Action<Vector2>? Released { add => _publisherReleased.Add(value); remove => _publisherReleased.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherReleased;
     /// <summary>Occurs for a released contact that never moved and was not canceled.</summary>
-    public event Action? Tapped;
+    public event Action? Tapped { add => _publisherTapped.Add(value); remove => _publisherTapped.Remove(value); }
+    private EventPublisher<Action> _publisherTapped;
     /// <summary>Occurs on a moved contact released with nonzero directional input.</summary>
-    public event Action<Vector2>? Flicked;
+    public event Action<Vector2>? Flicked { add => _publisherFlicked.Add(value); remove => _publisherFlicked.Remove(value); }
+    private EventPublisher<Action<Vector2>> _publisherFlicked;
     /// <summary>Occurs when an active directional movement returns to the dead zone.</summary>
-    public event Action? FlickCanceled;
+    public event Action? FlickCanceled { add => _publisherFlickCanceled.Add(value); remove => _publisherFlickCanceled.Remove(value); }
+    private EventPublisher<Action> _publisherFlickCanceled;
     private void PublishActions()
     {
         _bindings[0].Set(_actions[0], Math.Max(0, -_inputVector.X)); _bindings[1].Set(_actions[1], Math.Max(0, _inputVector.X));
@@ -77,7 +82,7 @@ public partial class VirtualJoystick : Control
         foreach (var binding in _bindings) binding.Release(); _basePosition = Size * _initial; _tipPosition = _basePosition;
         List<Exception>? errors = null;
         try { if (!IsDisposed) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
-        try { if (notify && active && !IsDisposed) BeginEventEmission(Released)?.Invoke(vector); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (notify && active && !IsDisposed) BeginEventEmission(_publisherReleased.Handlers)?.Invoke(vector); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Joystick reset callbacks failed.", errors);
     }
     private void UpdateJoystick(Vector2 position)
@@ -95,7 +100,7 @@ public partial class VirtualJoystick : Control
         var canceled = !_flickCanceled && wasInput && !_hasInput;
         if (canceled) _flickCanceled = true; else if (_flickCanceled && !wasInput && _hasInput) _flickCanceled = false;
         PublishActions(); var revision = _revision; List<Exception>? errors = null;
-        try { if (canceled) BeginEventEmission(FlickCanceled)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (canceled) BeginEventEmission(_publisherFlickCanceled.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         try { if (!IsDisposed && revision == _revision) QueueRedraw(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Joystick motion callbacks failed.", errors);
     }
@@ -111,14 +116,14 @@ public partial class VirtualJoystick : Control
                 if (_mode is VirtualJoystickMode.Dynamic or VirtualJoystickMode.Following) _basePosition = touch.Position;
                 _finger = touch.Index; SetInternalProcessing(true, false); _revision++; var revision = _revision; List<Exception>? errors = null;
                 try { UpdateJoystick(touch.Position); } catch (Exception error) { CollectException(ref errors, error); }
-                try { if (!IsDisposed && revision == _revision && _finger == touch.Index) BeginEventEmission(Pressed)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+                try { if (!IsDisposed && revision == _revision && _finger == touch.Index) BeginEventEmission(_publisherPressed.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
                 ThrowCollected("Joystick press callbacks failed.", errors);
             }
             else if ((!touch.Pressed || touch.Canceled) && _finger == touch.Index)
             {
                 var vector = _inputVector; var tap = !_flickCanceled && !_moved && !touch.Canceled; var flick = _hasInput && _moved && !touch.Canceled;
                 var revision = _revision + 1; List<Exception>? errors = null; try { Reset(notify: true); } catch (Exception error) { CollectException(ref errors, error); }
-                try { if (!IsDisposed && _finger is null && revision == _revision) { if (tap) BeginEventEmission(Tapped)?.Invoke(); else if (flick) BeginEventEmission(Flicked)?.Invoke(vector); } } catch (Exception error) { CollectException(ref errors, error); }
+                try { if (!IsDisposed && _finger is null && revision == _revision) { if (tap) BeginEventEmission(_publisherTapped.Handlers)?.Invoke(); else if (flick) BeginEventEmission(_publisherFlicked.Handlers)?.Invoke(vector); } } catch (Exception error) { CollectException(ref errors, error); }
                 ThrowCollected("Joystick release callbacks failed.", errors);
             }
         }
@@ -148,5 +153,5 @@ public partial class VirtualJoystick : Control
     { var warnings = new List<string>(base.GetConfigurationWarnings()); foreach (var action in _actions) if (action.Length != 0 && !InputMap.HasAction(action)) warnings.Add("A virtual-joystick action is not registered: " + action); return [.. warnings]; }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { foreach (var binding in _bindings) binding.Release(); _finger = null; _revision++; try { base.Dispose(disposing); } finally { Pressed = Tapped = FlickCanceled = null; Released = Flicked = null; } }
+    { foreach (var binding in _bindings) binding.Release(); _finger = null; _revision++; try { base.Dispose(disposing); } finally { _publisherPressed.Handlers = _publisherTapped.Handlers = _publisherFlickCanceled.Handlers = null; _publisherReleased.Handlers = _publisherFlicked.Handlers = null; } }
 }

@@ -23,7 +23,7 @@ public partial class TextEdit
         if (!IsDisposed)
         {
             if (clearHistory) ClearUndoHistory();
-            try { BeginEventEmission(TextSet)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+            try { BeginEventEmission(_publisherTextSet.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         }
         ThrowCollected("TextEdit replacement callbacks failed.", errors);
     }

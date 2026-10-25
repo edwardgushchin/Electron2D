@@ -30,7 +30,7 @@ public partial class AnimationPlayer : AnimationMixer
     private readonly Queue<string> _queue = new();
     private readonly Dictionary<string, string> _next = new(StringComparer.Ordinal);
     /// <summary>Gets or sets the selected animation; stopped assignment rewinds without playing, while an active assignment switches clips.</summary>
-    public string AssignedAnimation { get { ThrowIfDisposed(); return _assigned; } set { EnsureAnimationMutable(); RequireAnimation(value); if (_playing) { var speed = _customSpeed * _pingDirection; Play(value, customSpeed: speed, fromEnd: speed < 0); return; } _hasPlayback = true; _assigned = value; _position = 0; _start = _end = -1; _playRevision++; InvalidateEvaluation(); BeginEventEmission(CurrentAnimationChanged)?.Invoke(value); } }
+    public string AssignedAnimation { get { ThrowIfDisposed(); return _assigned; } set { EnsureAnimationMutable(); RequireAnimation(value); if (_playing) { var speed = _customSpeed * _pingDirection; Play(value, customSpeed: speed, fromEnd: speed < 0); return; } _hasPlayback = true; _assigned = value; _position = 0; _start = _end = -1; _playRevision++; InvalidateEvaluation(); BeginEventEmission(_publisherCurrentAnimationChanged.Handlers)?.Invoke(value); } }
     /// <summary>Gets the playing animation name, or assigns a name to start it; empty or the stop sentinel defers stopping while attached.</summary>
     public string CurrentAnimation
     {
@@ -55,9 +55,11 @@ public partial class AnimationPlayer : AnimationMixer
     /// <summary>Gets or sets the finite signed playback multiplier; zero keeps playback enabled.</summary>
     public double SpeedScale { get { ThrowIfDisposed(); return _speedScale; } set { EnsureAnimationMutable(); Animation.Finite(value); Animation.Finite(value * _customSpeed); _speedScale = value; _playRevision++; InvalidateEvaluation(); } }
     /// <summary>Occurs when queued or configured-next playback changes the selected animation.</summary>
-    public event Action<string, string>? AnimationChanged;
+    public event Action<string, string>? AnimationChanged { add => _publisherAnimationChanged.Add(value); remove => _publisherAnimationChanged.Remove(value); }
+    private EventPublisher<Action<string, string>> _publisherAnimationChanged;
     /// <summary>Occurs when the current animation selection changes.</summary>
-    public event Action<string>? CurrentAnimationChanged;
+    public event Action<string>? CurrentAnimationChanged { add => _publisherCurrentAnimationChanged.Add(value); remove => _publisherCurrentAnimationChanged.Remove(value); }
+    private EventPublisher<Action<string>> _publisherCurrentAnimationChanged;
     /// <summary>Returns whether animation evaluation is active.</summary>
     public bool IsAnimationActive() => Active;
     /// <summary>Returns whether playback is enabled, including with zero speed.</summary>
@@ -92,7 +94,7 @@ public partial class AnimationPlayer : AnimationMixer
         if (changed || _position < start || _position > end || (fromEnd && customSpeed < 0 && _position <= start) || (!fromEnd && customSpeed > 0 && _position >= end)) _position = fromEnd ? end : start;
         _methodSeekPending = changed || !wasPlaying || _position == (fromEnd ? end : start); _methodSeekExternal = false;
         _assigned = name; _customSpeed = customSpeed; _pingDirection = 1; _start = startTime; _end = endTime; _playing = true; _queue.Clear(); _playRevision++; InvalidateEvaluation();
-        var revision = _playRevision; if (changed) BeginEventEmission(CurrentAnimationChanged)?.Invoke(name);
+        var revision = _playRevision; if (changed) BeginEventEmission(_publisherCurrentAnimationChanged.Handlers)?.Invoke(name);
         if (!IsDisposed && revision == _playRevision && (changed || !wasPlaying)) Started(name);
     }
     /// <summary>Plays a bounded section backwards.</summary>
@@ -225,7 +227,7 @@ public partial class AnimationPlayer : AnimationMixer
         var next = _queue.Count > 0 ? _queue.Dequeue() : _next.GetValueOrDefault(name, "");
         if (next.Length == 0 || !HasAnimation(next)) return;
         var queuedNames = _queue.ToArray(); Play(next); foreach (var queued in queuedNames) _queue.Enqueue(queued);
-        if (!IsDisposed) BeginEventEmission(AnimationChanged)?.Invoke(name, next);
+        if (!IsDisposed) BeginEventEmission(_publisherAnimationChanged.Handlers)?.Invoke(name, next);
     }
     private sealed class BlendClip(string name, double position, double speed, int direction, double start, double end, double duration, double left)
     { internal readonly string Name = name; internal double Position = position, Left = left; internal readonly double Speed = speed, Start = start, End = end, Duration = duration; internal int Direction = direction; }
@@ -236,7 +238,7 @@ public partial class AnimationPlayer : AnimationMixer
     /// <inheritdoc />
     protected override void OnNotification(int what) { base.OnNotification(what); if (!IsDisposed && what == NotificationReady && _autoplay.Length != 0 && HasAnimation(_autoplay)) Play(_autoplay); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _queue.Clear(); _next.Clear(); _blendClips.Clear(); _mixFrames.Clear(); _blendTimes.Clear(); AnimationChanged = null; CurrentAnimationChanged = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _queue.Clear(); _next.Clear(); _blendClips.Clear(); _mixFrames.Clear(); _blendTimes.Clear(); _publisherAnimationChanged.Handlers = null; _publisherCurrentAnimationChanged.Handlers = null; } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(GetFileTransitionProperties());
 

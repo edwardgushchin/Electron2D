@@ -49,13 +49,14 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
             var previous = InputKind; _inputName = value;
             Exception? changedError = null;
             try { EmitChanged(); } catch (Exception error) { changedError = error; }
-            try { if (previous != InputKind) InputTypeChanged?.Invoke(); }
+            try { if (previous != InputKind) _publisherInputTypeChanged.Handlers?.Invoke(); }
             catch (Exception error) { if (changedError is not null) throw new AggregateException(changedError, error); throw; }
             if (changedError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(changedError).Throw();
         }
     }
     /// <summary>Occurs after a name edit changes the output's value role.</summary>
-    public event Action? InputTypeChanged;
+    public event Action? InputTypeChanged { add => _publisherInputTypeChanged.Add(value); remove => _publisherInputTypeChanged.Remove(value); }
+    private EventPublisher<Action> _publisherInputTypeChanged;
     /// <summary>Returns the source symbol corresponding to the selected input.</summary>
     /// <returns>The uppercase named symbol, or an empty string for an unknown input; this query has no borrowing-stage context.</returns>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -141,7 +142,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
     protected override Resource CreateDuplicateInstance() => new VisualShaderNodeInput();
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) InputTypeChanged = null; base.Dispose(disposing); }
+    { if (disposing) _publisherInputTypeChanged.Handlers = null; base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [new PropertyDescriptor<VisualShaderNodeInput, string>(nameof(InputName), n => n.InputName, (n, v) => n.InputName = v, stored: true)]);

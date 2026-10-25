@@ -36,7 +36,7 @@ public partial class Control
     public SizeFlags SizeFlagsHorizontal
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _sizeFlagsHorizontal; }
-        set { EnsureMutable(); if (_sizeFlagsHorizontal == value) return; _sizeFlagsHorizontal = value; BeginEventEmission(SizeFlagsChanged)?.Invoke(); }
+        set { EnsureMutable(); if (_sizeFlagsHorizontal == value) return; _sizeFlagsHorizontal = value; BeginEventEmission(_publisherSizeFlagsChanged.Handlers)?.Invoke(); }
     }
     /// <summary>Gets or sets the vertical container sizing/alignment bits.</summary>
     /// <value>Fill initially; Range supplies ShrinkBegin, texture progress supplies Fill.</value>
@@ -45,7 +45,7 @@ public partial class Control
     public SizeFlags SizeFlagsVertical
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _sizeFlagsVertical; }
-        set { EnsureMutable(); if (_sizeFlagsVertical == value) return; _sizeFlagsVertical = value; BeginEventEmission(SizeFlagsChanged)?.Invoke(); }
+        set { EnsureMutable(); if (_sizeFlagsVertical == value) return; _sizeFlagsVertical = value; BeginEventEmission(_publisherSizeFlagsChanged.Handlers)?.Invoke(); }
     }
     /// <summary>Gets or sets the finite weighted expansion ratio.</summary>
     /// <value>One initially. Zero/negative ratios are retained; positive total weights govern allocation.</value>
@@ -55,9 +55,10 @@ public partial class Control
     public float SizeFlagsStretchRatio
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _sizeFlagsStretchRatio; }
-        set { EnsureMutable(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_sizeFlagsStretchRatio == value) return; _sizeFlagsStretchRatio = value; BeginEventEmission(SizeFlagsChanged)?.Invoke(); }
+        set { EnsureMutable(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_sizeFlagsStretchRatio == value) return; _sizeFlagsStretchRatio = value; BeginEventEmission(_publisherSizeFlagsChanged.Handlers)?.Invoke(); }
     }
     /// <summary>Occurs after an actual size flag or stretch ratio change.</summary>
     /// <remarks>Container listeners coalesce the next layout pass. State is committed when a subscriber throws.</remarks>
-    public event Action? SizeFlagsChanged;
+    public event Action? SizeFlagsChanged { add => _publisherSizeFlagsChanged.Add(value); remove => _publisherSizeFlagsChanged.Remove(value); }
+    private EventPublisher<Action> _publisherSizeFlagsChanged;
 }

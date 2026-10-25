@@ -13,19 +13,19 @@ namespace Electron2D;
 public sealed class DisplayWindowEvents : ElectronObject
 {
     private DisplayServer? _owner;
-    private Action<InputEvent>? _input;
-    private Action<string>? _textInput;
-    private Action<string, Vector2i>? _textEditing;
-    private Action? _closeRequested, _forceCloseRequested, _goBackRequested, _mouseEntered, _mouseExited, _dpiChanged;
-    private Action<bool>? _focusChanged;
-    private Action<Rect2i>? _rectChanged;
-    private Action<IReadOnlyList<string>>? _filesDropped;
+    private EventPublisher<Action<InputEvent>> _input;
+    private EventPublisher<Action<string>> _textInput;
+    private EventPublisher<Action<string, Vector2i>> _textEditing;
+    private EventPublisher<Action> _closeRequested, _forceCloseRequested, _goBackRequested, _mouseEntered, _mouseExited, _dpiChanged;
+    private EventPublisher<Action<bool>> _focusChanged;
+    private EventPublisher<Action<Rect2i>> _rectChanged;
+    private EventPublisher<Action<IReadOnlyList<string>>> _filesDropped;
     internal DisplayWindowEvents(DisplayServer owner, int windowID) { _owner = owner; WindowID = windowID; }
     /// <summary>Gets the native session's logical window ID, retained after publisher disposal.</summary>
     /// <value>Zero identifies the main window; child IDs are not reused within the session.</value>
     public int WindowID { get; }
     internal bool Available => _owner is { WindowEventsAvailable: true };
-    internal bool HasInput => _input is not null && Available;
+    internal bool HasInput => _input.Handlers is not null && Available;
 
     /// <summary>Occurs after raw/action state commits and before ordinary scene input delivery.</summary>
     /// <remarks>The event is borrowed for this synchronous callback. Window-tagged events select this ID;
@@ -65,26 +65,26 @@ public sealed class DisplayWindowEvents : ElectronObject
     /// <remarks>The paths remain valid after delivery. Interrupted native drops are discarded.</remarks>
     public event Action<IReadOnlyList<string>>? FilesDropped { add => Add(ref _filesDropped, value); remove => Remove(ref _filesDropped, value); }
 
-    private void Add<T>(ref T? field, T? value) where T : Delegate
-    { ThrowIfDisposed(); (_owner ?? throw new ObjectDisposedException(nameof(DisplayWindowEvents))).ValidateWindowEventAccess(); field = (T?)Delegate.Combine(field, value); }
-    private bool Remove<T>(ref T? field, T? value) where T : Delegate
+    private void Add<T>(ref EventPublisher<T> field, T? value) where T : Delegate
+    { ThrowIfDisposed(); (_owner ?? throw new ObjectDisposedException(nameof(DisplayWindowEvents))).ValidateWindowEventAccess(); field.Add(value); }
+    private bool Remove<T>(ref EventPublisher<T> field, T? value) where T : Delegate
     {
         if (_owner is null) return false;
-        _owner.ValidateWindowEventOwner(); field = (T?)Delegate.Remove(field, value); return true;
+        _owner.ValidateWindowEventOwner(); field.Remove(value); return true;
     }
 
-    internal Action? CloseHandlers => Available ? BeginEventEmission(_closeRequested) : null;
-    internal Action? BackHandlers => Available ? BeginEventEmission(_goBackRequested) : null;
-    internal Action? EnterHandlers => Available ? BeginEventEmission(_mouseEntered) : null;
-    internal Action? ExitHandlers => Available ? BeginEventEmission(_mouseExited) : null;
-    internal Action? DPIHandlers => Available ? BeginEventEmission(_dpiChanged) : null;
-    internal Action<bool>? FocusHandlers => Available ? BeginEventEmission(_focusChanged) : null;
-    internal Action<Rect2i>? RectHandlers => Available ? BeginEventEmission(_rectChanged) : null;
-    internal Action<string>? TextHandlers => Available ? BeginEventEmission(_textInput) : null;
-    internal Action<string, Vector2i>? EditingHandlers => Available ? BeginEventEmission(_textEditing) : null;
-    internal Action<IReadOnlyList<string>>? DropHandlers => Available ? BeginEventEmission(_filesDropped) : null;
-    internal void EmitInput(InputEvent value) { if (Available) BeginEventEmission(_input)?.Invoke(value); }
-    internal void EmitForceClose() { if (_owner is not null) BeginEventEmission(_forceCloseRequested)?.Invoke(); }
+    internal Action? CloseHandlers => Available ? BeginEventEmission(_closeRequested.Handlers) : null;
+    internal Action? BackHandlers => Available ? BeginEventEmission(_goBackRequested.Handlers) : null;
+    internal Action? EnterHandlers => Available ? BeginEventEmission(_mouseEntered.Handlers) : null;
+    internal Action? ExitHandlers => Available ? BeginEventEmission(_mouseExited.Handlers) : null;
+    internal Action? DPIHandlers => Available ? BeginEventEmission(_dpiChanged.Handlers) : null;
+    internal Action<bool>? FocusHandlers => Available ? BeginEventEmission(_focusChanged.Handlers) : null;
+    internal Action<Rect2i>? RectHandlers => Available ? BeginEventEmission(_rectChanged.Handlers) : null;
+    internal Action<string>? TextHandlers => Available ? BeginEventEmission(_textInput.Handlers) : null;
+    internal Action<string, Vector2i>? EditingHandlers => Available ? BeginEventEmission(_textEditing.Handlers) : null;
+    internal Action<IReadOnlyList<string>>? DropHandlers => Available ? BeginEventEmission(_filesDropped.Handlers) : null;
+    internal void EmitInput(InputEvent value) { if (Available) BeginEventEmission(_input.Handlers)?.Invoke(value); }
+    internal void EmitForceClose() { if (_owner is not null) BeginEventEmission(_forceCloseRequested.Handlers)?.Invoke(); }
 
     /// <inheritdoc />
     protected override void ValidateDisposal() => _owner?.ValidateWindowEventOwner();
@@ -94,8 +94,8 @@ public sealed class DisplayWindowEvents : ElectronObject
         if (disposing)
         {
             var owner = _owner; _owner = null;
-            _input = null; _textInput = null; _textEditing = null; _focusChanged = null; _rectChanged = null; _filesDropped = null;
-            _closeRequested = _forceCloseRequested = _goBackRequested = _mouseEntered = _mouseExited = _dpiChanged = null;
+            _input.Handlers = null; _textInput.Handlers = null; _textEditing.Handlers = null; _focusChanged.Handlers = null; _rectChanged.Handlers = null; _filesDropped.Handlers = null;
+            _closeRequested.Handlers = _forceCloseRequested.Handlers = _goBackRequested.Handlers = _mouseEntered.Handlers = _mouseExited.Handlers = _dpiChanged.Handlers = null;
             owner?.RefreshWindowInputSources();
         }
         base.Dispose(disposing);

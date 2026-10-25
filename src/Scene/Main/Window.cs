@@ -70,7 +70,7 @@ public partial class Window : Viewport
             UpdateEmbeddedContents();
             QueueEmbeddedRedraw();
             UpdateConfigurationWarnings();
-            BeginEventEmission(TitleChanged)?.Invoke();
+            BeginEventEmission(_publisherTitleChanged.Handlers)?.Invoke();
         }
     }
 
@@ -176,7 +176,7 @@ public partial class Window : Viewport
             try { EmbeddedVisibilityChanged(); } catch (Exception error) { CollectException(ref errors, error); }
             try { Notify(NotificationVisibilityChanged); } catch (Exception error) { CollectException(ref errors, error); }
             if (IsDisposed) { ThrowCollected("Window visibility callbacks failed.", errors); return; }
-            try { BeginEventEmission(VisibilityChanged)?.Invoke(); }
+            try { BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(); }
             catch (Exception error) { CollectException(ref errors, error); }
             foreach (var node in EnumerateDepthFirst())
             {
@@ -204,29 +204,35 @@ public partial class Window : Viewport
 
     /// <summary>Occurs synchronously after this window's visibility changes.</summary>
     /// <remarks>Runs on the owner thread before canvas visibility propagation. Callback failures are aggregated after canvas roots are attempted.</remarks>
-    public event Action? VisibilityChanged;
+    public event Action? VisibilityChanged { add => _publisherVisibilityChanged.Add(value); remove => _publisherVisibilityChanged.Remove(value); }
+    private EventPublisher<Action> _publisherVisibilityChanged;
 
     /// <summary>Occurs when the native system or embedded host requests window closure.</summary>
     /// <remarks>Handlers may disable SceneTree.AutoAcceptQuit to keep running, or call SceneTree.Quit with an exit code.
     /// Containing-window notifications precede all signal delegates; failures are aggregated after remaining receivers.
     /// The root default quit decision follows delivery even on failure; a child request does not imply application quit. Handler failures terminate Engine.Run with cleanup.</remarks>
-    public event Action? CloseRequested;
+    public event Action? CloseRequested { add => _publisherCloseRequested.Add(value); remove => _publisherCloseRequested.Remove(value); }
+    private EventPublisher<Action> _publisherCloseRequested;
 
     /// <summary>Occurs when the Android system requests back navigation for this window.</summary>
     /// <remarks>Containing-window notifications run first, stopping at nested windows. For the root window,
     /// SceneTree.QuitOnGoBack is evaluated next, before public subscribers. Notifications and later subscribers
     /// are attempted despite earlier callback errors. Blocking this window's signals suppresses subscribers and
     /// automatic quit, while notifications still run. Manual node notification does not emit this event.</remarks>
-    public event Action? GoBackRequested;
+    public event Action? GoBackRequested { add => _publisherGoBackRequested.Add(value); remove => _publisherGoBackRequested.Remove(value); }
+    private EventPublisher<Action> _publisherGoBackRequested;
 
     /// <summary>Occurs after Title commits a different value.</summary>
-    public event Action? TitleChanged;
+    public event Action? TitleChanged { add => _publisherTitleChanged.Add(value); remove => _publisherTitleChanged.Remove(value); }
+    private EventPublisher<Action> _publisherTitleChanged;
 
     /// <summary>Occurs when the window gains keyboard focus, after containing-window notifications.</summary>
-    public event Action? FocusEntered;
+    public event Action? FocusEntered { add => _publisherFocusEntered.Add(value); remove => _publisherFocusEntered.Remove(value); }
+    private EventPublisher<Action> _publisherFocusEntered;
 
     /// <summary>Occurs when the window loses keyboard focus, after containing-window notifications and before pressed input is released.</summary>
-    public event Action? FocusExited;
+    public event Action? FocusExited { add => _publisherFocusExited.Add(value); remove => _publisherFocusExited.Remove(value); }
+    private EventPublisher<Action> _publisherFocusExited;
 
     /// <summary>Gets the native window identity while running.</summary>
     /// <returns>Zero for the active native root, a positive identity for an active native child, and minus one while detached, embedded or a native child is hidden.</returns>
@@ -272,20 +278,20 @@ public partial class Window : Viewport
         if (disposing)
         {
             if (ReferenceEquals(_focusedWindow, this)) _focusedWindow = null;
-            _themeOwner?.Dispose(); ThemeChanged = null;
-            AboutToPopup = null;
-            CloseRequested = null;
-            GoBackRequested = null;
-            VisibilityChanged = null;
-            WindowInput = null;
-            NonclientWindowInput = null;
-            TitleChanged = null;
-            FocusEntered = null;
-            FocusExited = null;
-            MouseEntered = null;
-            MouseExited = null;
-            DpiChanged = null;
-            FilesDropped = null;
+            _themeOwner?.Dispose(); _publisherThemeChanged.Handlers = null;
+            _publisherAboutToPopup.Handlers = null;
+            _publisherCloseRequested.Handlers = null;
+            _publisherGoBackRequested.Handlers = null;
+            _publisherVisibilityChanged.Handlers = null;
+            _publisherWindowInput.Handlers = null;
+            _publisherNonclientWindowInput.Handlers = null;
+            _publisherTitleChanged.Handlers = null;
+            _publisherFocusEntered.Handlers = null;
+            _publisherFocusExited.Handlers = null;
+            _publisherMouseEntered.Handlers = null;
+            _publisherMouseExited.Handlers = null;
+            _publisherDpiChanged.Handlers = null;
+            _publisherFilesDropped.Handlers = null;
         }
         base.Dispose(disposing);
     }
@@ -476,11 +482,11 @@ public partial class Window : Viewport
             catch (Exception error) { CollectException(ref errors, error); }
         var handlers = what switch
         {
-            NotificationWmWindowFocusIn => FocusEntered,
-            NotificationWmWindowFocusOut => FocusExited,
-            NotificationWmCloseRequest => CloseRequested,
-            NotificationWmGoBackRequest => GoBackRequested,
-            NotificationWmDpiChange => DpiChanged,
+            NotificationWmWindowFocusIn => _publisherFocusEntered.Handlers,
+            NotificationWmWindowFocusOut => _publisherFocusExited.Handlers,
+            NotificationWmCloseRequest => _publisherCloseRequested.Handlers,
+            NotificationWmGoBackRequest => _publisherGoBackRequested.Handlers,
+            NotificationWmDpiChange => _publisherDpiChanged.Handlers,
             _ => null
         };
         try { EmitWindowSignal(BeginEventEmission(handlers)); } catch (Exception error) { CollectException(ref errors, error); }
@@ -498,7 +504,7 @@ public partial class Window : Viewport
     { if (_display?.HasExclusiveNativeChild() != true) Tree?.DispatchCommittedText(Tree.GetEmbeddedTextWindow(this), text); }
     private void HandleTextEditing(string text, Vector2i selection)
     { if (text.Length == 0 || _display?.HasExclusiveNativeChild() != true) Tree?.DispatchIMEComposition(Tree.GetEmbeddedTextWindow(this), text, selection); }
-    private void HandleFilesDropped(IReadOnlyList<string> paths) => BeginEventEmission(FilesDropped)?.Invoke(paths);
+    private void HandleFilesDropped(IReadOnlyList<string> paths) => BeginEventEmission(_publisherFilesDropped.Handlers)?.Invoke(paths);
 
     private void CommitSize(Vector2i size)
     {

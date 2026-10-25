@@ -24,7 +24,7 @@ public partial class TabContainer : Container
         _bar = new(this) { Name = "_tabs", CloseWithMiddleMouse = false, UseParentMaterial = true };
         _popupButton = new Button { Name = "_popup", Visible = false, Flat = true, ActionMode = ButtonActionMode.ButtonPress, UseParentMaterial = true };
         AddChild(_bar, InternalMode.Front); AddChild(_popupButton, InternalMode.Front);
-        _bar.TabSelected += Selected; _bar.TabChanged += Changed; _bar.TabClicked += i => BeginEventEmission(TabClicked)?.Invoke(i); _bar.TabHovered += i => BeginEventEmission(TabHovered)?.Invoke(i); _bar.TabButtonPressed += i => BeginEventEmission(TabButtonPressed)?.Invoke(i);
+        _bar.TabSelected += Selected; _bar.TabChanged += Changed; _bar.TabClicked += i => BeginEventEmission(_publisherTabClicked.Handlers)?.Invoke(i); _bar.TabHovered += i => BeginEventEmission(_publisherTabHovered.Handlers)?.Invoke(i); _bar.TabButtonPressed += i => BeginEventEmission(_publisherTabButtonPressed.Handlers)?.Invoke(i);
         _bar.MinimumSizeChanged += LayoutChanged; _popupButton.Pressed += OpenPopup; _popupButton.MouseEntered += () => PopupHover(true); _popupButton.MouseExited += () => PopupHover(false);
         ChildAdded += ChildEntered; ChildRemoved += ChildLeft; ChildOrderChanged += OrderChanged; Resized += LayoutChanged;
     }
@@ -55,19 +55,26 @@ public partial class TabContainer : Container
     /// <summary>Gets or sets the internal strip TabFocusMode policy.</summary><value>All initially.</value>
     public FocusMode TabFocusMode { get { CheckTabs(); return _bar.FocusMode; } set { EnsureMutable(); _bar.FocusMode = value; LayoutChanged(); } }
     /// <summary>Occurs when a same-container drop rearranges its selected page.</summary>
-    public event Action<int>? ActiveTabRearranged;
+    public event Action<int>? ActiveTabRearranged { add => _publisherActiveTabRearranged.Add(value); remove => _publisherActiveTabRearranged.Remove(value); }
+    private EventPublisher<Action<int>> _publisherActiveTabRearranged;
     /// <summary>Occurs when a tab auxiliary button is activated.</summary>
-    public event Action<int>? TabButtonPressed;
+    public event Action<int>? TabButtonPressed { add => _publisherTabButtonPressed.Add(value); remove => _publisherTabButtonPressed.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabButtonPressed;
     /// <summary>Occurs when selection changes after page visibility commits.</summary>
-    public event Action<int>? TabChanged;
+    public event Action<int>? TabChanged { add => _publisherTabChanged.Add(value); remove => _publisherTabChanged.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabChanged;
     /// <summary>Occurs when a tab is clicked.</summary>
-    public event Action<int>? TabClicked;
+    public event Action<int>? TabClicked { add => _publisherTabClicked.Add(value); remove => _publisherTabClicked.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabClicked;
     /// <summary>Occurs when pointer enters a tab.</summary>
-    public event Action<int>? TabHovered;
+    public event Action<int>? TabHovered { add => _publisherTabHovered.Add(value); remove => _publisherTabHovered.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabHovered;
     /// <summary>Occurs when a valid assignment selects a tab, including an equal assignment.</summary>
-    public event Action<int>? TabSelected;
+    public event Action<int>? TabSelected { add => _publisherTabSelected.Add(value); remove => _publisherTabSelected.Remove(value); }
+    private EventPublisher<Action<int>> _publisherTabSelected;
     /// <summary>Occurs immediately before the configured popup opens.</summary>
-    public event Action? PrePopupPressed;
+    public event Action? PrePopupPressed { add => _publisherPrePopupPressed.Add(value); remove => _publisherPrePopupPressed.Remove(value); }
+    private EventPublisher<Action> _publisherPrePopupPressed;
     /// <summary>Gets the borrowed internal tab strip. Page count and ordering are owned by this container.</summary><returns>The stable internal strip.</returns>
     public TabBar GetTabBar() { CheckTabs(); return _bar; }
     /// <summary>Gets the number of ordinary non-top-level child pages.</summary><returns>The page count.</returns>
@@ -159,8 +166,8 @@ public partial class TabContainer : Container
         }
         ThrowCollected("Tab page synchronization failed.", errors);
     }
-    private void Selected(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { BeginEventEmission(TabSelected)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab selection callbacks failed.", errors); }
-    private void Changed(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { BeginEventEmission(TabChanged)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab change callbacks failed.", errors); }
+    private void Selected(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { BeginEventEmission(_publisherTabSelected.Handlers)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab selection callbacks failed.", errors); }
+    private void Changed(int index) { List<Exception>? errors = null; try { Paint(); } catch (Exception e) { CollectException(ref errors, e); } try { BeginEventEmission(_publisherTabChanged.Handlers)?.Invoke(index); } catch (Exception e) { CollectException(ref errors, e); } ThrowCollected("Tab change callbacks failed.", errors); }
     private void PageVisibility(CanvasItem item)
     {
         if (_visibility || _disposing || item is not Control control) return; var index = FindPage(control); if (index < 0) return; _visibility = true;
@@ -173,5 +180,5 @@ public partial class TabContainer : Container
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(TabContainer) ? CreateTabContainer : base.CreateSceneInstanceFactory();
     private static Node CreateTabContainer() => new TabContainer();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; foreach (var page in _pages) { page.Control.Renamed -= RenamedPage; page.Control.VisibilityChanged -= PageVisibility; } if (GetPopup() is { } popup) popup.Disposed -= PopupDisposed; _pages.Clear(); _pending.Clear(); ActiveTabRearranged = null; TabChanged = null; TabSelected = null; TabClicked = null; TabHovered = null; TabButtonPressed = null; PrePopupPressed = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; foreach (var page in _pages) { page.Control.Renamed -= RenamedPage; page.Control.VisibilityChanged -= PageVisibility; } if (GetPopup() is { } popup) popup.Disposed -= PopupDisposed; _pages.Clear(); _pending.Clear(); _publisherActiveTabRearranged.Handlers = null; _publisherTabChanged.Handlers = null; _publisherTabSelected.Handlers = null; _publisherTabClicked.Handlers = null; _publisherTabHovered.Handlers = null; _publisherTabButtonPressed.Handlers = null; _publisherPrePopupPressed.Handlers = null; } base.Dispose(disposing); }
 }

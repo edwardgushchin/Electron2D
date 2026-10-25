@@ -103,15 +103,17 @@ public sealed partial class ThemeDB : ElectronObject
     }
     internal static ThemeDB Service => ServiceHolder.Singleton.Value;
     internal Theme GetDefaultThemeCore() { ThrowIfDisposed(); if (_defaultTheme.IsDisposed) throw new ObjectDisposedException(nameof(Theme)); return _defaultTheme; }
-    internal event Action? FallbackChangedCore;
-    internal event Action? ContextChanged;
-    private void DefaultChanged(Resource _) => ContextChanged?.Invoke();
-    private void DefaultDisposed(ElectronObject _) => ContextChanged?.Invoke();
+    internal event Action? FallbackChangedCore { add => _publisherFallbackChangedCore.Add(value); remove => _publisherFallbackChangedCore.Remove(value); }
+    private EventPublisher<Action> _publisherFallbackChangedCore;
+    internal event Action? ContextChanged { add => _publisherContextChanged.Add(value); remove => _publisherContextChanged.Remove(value); }
+    private EventPublisher<Action> _publisherContextChanged;
+    private void DefaultChanged(Resource _) => _publisherContextChanged.Handlers?.Invoke();
+    private void DefaultDisposed(ElectronObject _) => _publisherContextChanged.Handlers?.Invoke();
     private void NotifyFallback()
     {
         Exception? contextError = null, fallbackError = null;
-        try { ContextChanged?.Invoke(); } catch (Exception error) { contextError = error; }
-        try { BeginEventEmission(FallbackChangedCore)?.Invoke(); } catch (Exception error) { fallbackError = error; }
+        try { _publisherContextChanged.Handlers?.Invoke(); } catch (Exception error) { contextError = error; }
+        try { BeginEventEmission(_publisherFallbackChangedCore.Handlers)?.Invoke(); } catch (Exception error) { fallbackError = error; }
         Resource.ThrowCombined(contextError, fallbackError);
     }
     internal float FallbackBaseScaleCore
@@ -163,7 +165,7 @@ public sealed partial class ThemeDB : ElectronObject
     {
         if (disposing)
         {
-            ContextChanged = null; FallbackChangedCore = null;
+            _publisherContextChanged.Handlers = null; _publisherFallbackChangedCore.Handlers = null;
             _defaultTheme.Changed -= DefaultChanged; _defaultTheme.Disposed -= DefaultDisposed;
             DisposeProjectTheme(); _defaultTheme.Dispose(); foreach (var owned in _owned) owned.Dispose(); _owned.Clear();
         }

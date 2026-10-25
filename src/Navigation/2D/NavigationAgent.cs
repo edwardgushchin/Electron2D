@@ -18,15 +18,20 @@ public sealed partial class NavigationAgent : Node
     /// <summary>Creates a detached agent with default path thresholds and all waypoint metadata enabled.</summary>
     public NavigationAgent() { _result = new(this); _rid = NavigationServer.Service.CreateAgent(this); }
     /// <summary>Occurs after a new path is published, including an empty path.</summary>
-    public event Action? PathChanged;
+    public event Action? PathChanged { add => _publisherPathChanged.Add(value); remove => _publisherPathChanged.Remove(value); }
+    private EventPublisher<Action> _publisherPathChanged;
     /// <summary>Occurs once for each reached waypoint, before LinkReached for a link.</summary>
-    public event Action<NavigationWaypoint>? WaypointReached;
+    public event Action<NavigationWaypoint>? WaypointReached { add => _publisherWaypointReached.Add(value); remove => _publisherWaypointReached.Remove(value); }
+    private EventPublisher<Action<NavigationWaypoint>> _publisherWaypointReached;
     /// <summary>Occurs after WaypointReached for a waypoint whose selected type metadata identifies a link.</summary>
-    public event Action<NavigationWaypoint>? LinkReached;
+    public event Action<NavigationWaypoint>? LinkReached { add => _publisherLinkReached.Add(value); remove => _publisherLinkReached.Remove(value); }
+    private EventPublisher<Action<NavigationWaypoint>> _publisherLinkReached;
     /// <summary>Occurs when the parent is strictly within TargetDesiredDistance of the requested target.</summary>
-    public event Action? TargetReached;
+    public event Action? TargetReached { add => _publisherTargetReached.Add(value); remove => _publisherTargetReached.Remove(value); }
+    private EventPublisher<Action> _publisherTargetReached;
     /// <summary>Occurs after reaching the target or the final waypoint of an unreachable target.</summary>
-    public event Action? NavigationFinished;
+    public event Action? NavigationFinished { add => _publisherNavigationFinished.Add(value); remove => _publisherNavigationFinished.Remove(value); }
+    private EventPublisher<Action> _publisherNavigationFinished;
     /// <summary>Gets or submits a finite world-space target; even equal assignments request a new path.</summary>
     /// <value>Zero initially; assignment resets completion, result and index.</value>
     /// <exception cref="ArgumentOutOfRangeException">The point is nonfinite.</exception>
@@ -213,20 +218,20 @@ public sealed partial class NavigationAgent : Node
             {
                 var map = GetNavigationMap(); _query.Map = map; _query.StartPosition = origin; _query.TargetPosition = _target;
                 if (map.IsValid()) NavigationServer.QueryPath(_query, _result); else _result.Reset();
-                _path = _result.Snapshot(); _finished = _lastReached = false; _index = 0; Deliver(BeginEventEmission(PathChanged), ref errors); if (_invalidated) return;
+                _path = _result.Snapshot(); _finished = _lastReached = false; _index = 0; Deliver(BeginEventEmission(_publisherPathChanged.Handlers), ref errors); if (_invalidated) return;
             }
             if (_path.Path.Length == 0 || _finished) return;
             if (!_lastReached)
                 while (Distance(origin, _path.Path[_index]) < _pathDesiredDistance)
                 {
                     var waypoint = Details(_index); if (_index == _path.Path.Length - 1) _lastReached = true; else _index++;
-                    Deliver(BeginEventEmission(WaypointReached), waypoint, ref errors); if (waypoint.Type == NavigationPathQueryResult.PathSegmentType.Link) Deliver(BeginEventEmission(LinkReached), waypoint, ref errors);
+                    Deliver(BeginEventEmission(_publisherWaypointReached.Handlers), waypoint, ref errors); if (waypoint.Type == NavigationPathQueryResult.PathSegmentType.Link) Deliver(BeginEventEmission(_publisherLinkReached.Handlers), waypoint, ref errors);
                     if (_invalidated) return;
                     if (_lastReached) break;
                 }
             if (Distance(origin, _target) < _targetDesiredDistance)
-            { _targetReached = true; Deliver(BeginEventEmission(TargetReached), ref errors); if (_invalidated) return; _finished = true; _submitted = false; StopAvoidance(); Deliver(BeginEventEmission(NavigationFinished), ref errors); }
-            else if (_lastReached && !Reachable()) { _finished = true; _submitted = false; StopAvoidance(); Deliver(BeginEventEmission(NavigationFinished), ref errors); }
+            { _targetReached = true; Deliver(BeginEventEmission(_publisherTargetReached.Handlers), ref errors); if (_invalidated) return; _finished = true; _submitted = false; StopAvoidance(); Deliver(BeginEventEmission(_publisherNavigationFinished.Handlers), ref errors); }
+            else if (_lastReached && !Reachable()) { _finished = true; _submitted = false; StopAvoidance(); Deliver(BeginEventEmission(_publisherNavigationFinished.Handlers), ref errors); }
         }
         finally { _updating = false; if (_invalidated) { _invalidated = false; Repath(); } if (errors is not null) throw new AggregateException("Navigation transitions completed with observer failures.", errors); }
     }
@@ -266,6 +271,8 @@ public sealed partial class NavigationAgent : Node
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         if (disposing)
         {
+            _publisherPathChanged.Handlers = _publisherTargetReached.Handlers = _publisherNavigationFinished.Handlers = null;
+            _publisherWaypointReached.Handlers = _publisherLinkReached.Handlers = null; _publisherVelocityComputed.Handlers = null;
             try { NavigationServer.Service.ReleaseSceneAgent(_rid); } catch (Exception error) { CollectException(ref errors, error); }
             try { _query.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
             try { _result.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
