@@ -5,6 +5,7 @@ namespace Electron2D;
 /// produce a new compiled resource. Existing materials keep the previous immutable program until reloaded.
 /// Added nodes are borrowed; reserved outputs and factory-created replacements belong to the graph.
 /// Canvas fragment surface outputs feed retained automatic and authored scene lighting.
+/// Fragment command inputs expose read-only source regions and specular values sampled before custom setup.
 /// Authoring is single-threaded cold work.</remarks>
 public sealed partial class VisualShader : Shader
 {

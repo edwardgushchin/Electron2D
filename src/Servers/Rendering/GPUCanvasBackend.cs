@@ -355,7 +355,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 }
                 if (batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader)
                 { var tint = (output.HDR ? LinearColor(batch.GlyphModulation) : batch.GlyphModulation) * canvasColor; SDL.SetGPUBlendConstants(pass, new() { R = tint.R, G = tint.G, B = tint.B, A = tint.A }); }
-                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner, normalMapFlags: SurfaceNormalMapFlags(batch), texturePixelSize: batch.Material.Program.TexturePixelSizeUniform is null ? default : CanvasTexturePixelSize(batch), matrices: batch.Matrices);
+                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner, normalMapFlags: SurfaceNormalMapFlags(batch), texturePixelSize: batch.Material.Program.TexturePixelSizeUniform is null ? default : CanvasTexturePixelSize(batch), matrices: batch.Matrices,
+                    regionRect: batch.Material.Program.RegionRectUniform is null ? default : CanvasRegionRect(batch), canvasSpecular: batch.Material.Program.CanvasSpecularUniform is null ? default : CanvasSpecular(batch));
                 if (batch.Material is { Textures.Length: > 0 } textured)
                 {
                     var samplers = _textureBindings[textured];
@@ -487,6 +488,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     {
         var size = (ShaderTexture.Source(batch.Texture) as Texture)?.GetSize() ?? Vector2.One;
         return new(1f / Math.Max(1, size.X), 1f / Math.Max(1, size.Y));
+    }
+    private static Vector4 CanvasRegionRect(CanvasBatch batch)
+    {
+        if (batch.TextureRegion is { } region) return new(region.Position.X, region.Position.Y, region.Size.X, region.Size.Y);
+        var size = (ShaderTexture.Source(batch.Texture) as Texture)?.GetSize() ?? Vector2.One;
+        return new(0, 0, Math.Max(1, size.X), Math.Max(1, size.Y));
     }
 
     private SDL.GPUTextureSamplerBinding CanvasBinding(CanvasBatch batch, bool color = true)

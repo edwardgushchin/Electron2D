@@ -27,18 +27,22 @@ internal static class CanvasGeometry
         return linear;
     }
 
-    internal static (int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
+    internal static (int Count, Mesh.PrimitiveType Primitive, Rect2? TextureRegion) Append(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color modulation, bool snapVertices = false, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)
     {
-        if (command.NinePatch is { } ninePatch) { ninePatch.Append(output, command, transform, modulation, snapVertices); return default; }
-        if (command.Stroke is { } stroke) return (stroke.Append(output, transform, modulation, snapVertices), stroke.Primitive);
-        if (command.Polygon is { } polygon) return polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear, blend);
+        if (command.NinePatch is { } ninePatch) return (0, Mesh.PrimitiveType.Triangles, ninePatch.Append(output, command, transform, modulation, snapVertices));
+        if (command.Stroke is { } stroke) return (stroke.Append(output, transform, modulation, snapVertices), stroke.Primitive, null);
+        if (command.Polygon is { } polygon) { var result = polygon.Append(output, transform, modulation, snapVertices, skinOwner, linear, blend); return (result.Count, result.Primitive, null); }
         var color = command.Color * modulation;
         if (!color.IsFinite()) throw new InvalidOperationException("Canvas modulation overflowed finite colors.");
-        if (command.Texture is not null) { AppendTexture(output, command, transform, color, snapVertices); return default; }
+        if (command.Texture is not null)
+        {
+            AppendTexture(output, command, transform, color, snapVertices);
+            return (0, Mesh.PrimitiveType.Triangles, new(command.Source.Position, command.Source.Size * new Vector2(command.B.X < 0 ? -1 : 1, command.B.Y < 0 ? -1 : 1)));
+        }
         if (command.Line)
         {
             var count = CanvasStroke.AppendLine(output, command.A, command.B, color, command.Width, command.Antialiased, transform, snapVertices);
-            return (count, Mesh.PrimitiveType.Lines);
+            return (count, Mesh.PrimitiveType.Lines, null);
         }
         throw new InvalidOperationException("The canvas command has no geometry.");
     }

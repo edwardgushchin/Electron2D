@@ -14,6 +14,9 @@ System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
 if (args.Length == 3 && args[0] == "--canvas-light-variants") { CanvasLightGraphTests.Export(args[1], args[2]); return; }
+if (args.Length == 3 && args[0] == "--canvas-command-variants") { CanvasLightGraphTests.Export(args[1], args[2], requireStage: false); return; }
+if (args.Length == 2 && args[0] == "--canvas-command-contract") { CanvasCommandMetadataTests.Run(args[1]); return; }
+if (args.Length == 3 && args[0] == "--canvas-command-modern-sources") { CanvasLightGraphTests.ModernSources(args[1], args[2], ["metadata-region-node", "metadata-global", "metadata-light"]); return; }
 if (args.Length == 2 && args[0] == "--canvas-light-metadata") { CanvasLightGraphTests.Metadata(args[1]); return; }
 if (args.Length == 2 && args[0] == "--canvas-surface-metadata") { CanvasLightGraphTests.Metadata(args[1], surface: true); return; }
 if (args.Length == 3 && args[0] == "--canvas-light-modern-sources") { CanvasLightGraphTests.ModernSources(args[1], args[2]); return; }

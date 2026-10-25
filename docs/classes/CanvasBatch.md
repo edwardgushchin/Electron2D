@@ -58,3 +58,5 @@ Particle batches additionally retain ParticleGPUDraw metadata for native state/g
 ObjectCount retains generated drawing-record cardinality before compatible batch merging. Merging adds the scalar counts; this is distinct from vertex/instance count. Both native backends consume it only when they issue canvas geometry, and completed frame publication is owned by [canvas counters](../components/canvas-counters.md).
 
 NormalMapFlags retains rectangle flip/transpose state only for programs that consume an implicit canvas normal. It participates in both ordinary and mesh coalescing keys; this record still owns no native resources. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
+
+Consuming region programs retain the original command source rectangle in TextureRegion. Attribute geometry uses a null value for full-image pixel extents; nonconsuming programs leave this key null. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.

@@ -1,3 +1,5 @@
+[Canvas command metadata](../components/canvas-command-metadata.md) supplies retained region and initial-UV specular values to offline graphs and ordinary fragment materials across geometry families.
+
 [Canvas fragment surfaces](../components/canvas-surfaces.md) execute normal/map/depth and independent light/shadow positions across retained geometry, mesh instances and particle streams using original draw/canvas normal bases.
 
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) now expose decoded custom0/custom1 and logical instance IDs to vertex authoring, including existing MultiMesh/particle ordering and named varying transport.

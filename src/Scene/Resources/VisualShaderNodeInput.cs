@@ -17,7 +17,11 @@ namespace Electron2D;
 /// and shadow modulation at one for every light invocation. Directional position is zero. UV and color
 /// start from the completed fragment for each invocation; changes do not leak to another light.
 /// Light-only names have the scalar-zero role outside that stage. Known inputs in their applicable
-/// context require a real renderer producer.</remarks>
+/// context require a real renderer producer. Canvas fragment region_rect exposes the normalized signed
+/// source rectangle for rectangle/nine-patch commands and full logical image pixel extents for attribute
+/// geometry. Canvas fragment specular_shininess caches the float-sampled channel times the command's
+/// color/shininess factor at initial UV, before custom setup or later UV edits. Both are read-only Vector4
+/// values; specular_shininess also retains its per-light role.</remarks>
 public sealed class VisualShaderNodeInput : VisualShaderNode
 {
     private string _inputName = "[None]";
@@ -28,6 +32,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
     /// <remarks>Changed is emitted after commitment. InputTypeChanged then reports a changed value role.</remarks>
     /// <exception cref="ArgumentException">The name exceeds 128 characters or contains a control character.</exception>
     /// <exception cref="ArgumentNullException">The name is null.</exception>
+    /// <exception cref="NotSupportedException">The name requires an unavailable particle force producer.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public string InputName
     {
@@ -36,8 +41,8 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         {
             ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value);
             if (value.Length > 128 || value.Any(char.IsControl)) throw new ArgumentException("Invalid graph input name.", nameof(value));
-            if (value is "attractor_force" or "region_rect")
-                throw new NotSupportedException("This graph input requires its particle force or command region producer.");
+            if (value == "attractor_force")
+                throw new NotSupportedException("This graph input requires its particle force producer.");
             var previous = InputKind; _inputName = value;
             Exception? changedError = null;
             try { EmitChanged(); } catch (Exception error) { changedError = error; }
@@ -55,7 +60,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
     { ThrowIfDisposed(); return _inputName == "shadow" ? "SHADOW_MODULATE" : IsKnown ? _inputName.ToUpperInvariant() : ""; }
 
     private bool IsLightInput => _inputName is "light" or "light_color" or "light_direction" or "light_energy" or "light_is_directional" or "light_position" or "light_vertex" or "normal" or "shadow" or "specular_shininess";
-    private bool IsKnown => IsLightInput || _inputName is "model_matrix" or "canvas_matrix" or "screen_matrix" or "active" or "custom" or "delta" or "emission_transform" or "index" or "lifetime" or "number" or "random_seed" or "restart" or "transform" or "velocity" or "collision_depth" or "collision_normal" or "modulate" or "source_texture0" or "source_texture1" or "source_texture2" or "source_texture3" or "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "custom0" or "custom1" or
+    private bool IsKnown => IsLightInput || _inputName is "region_rect" or "model_matrix" or "canvas_matrix" or "screen_matrix" or "active" or "custom" or "delta" or "emission_transform" or "index" or "lifetime" or "number" or "random_seed" or "restart" or "transform" or "velocity" or "collision_depth" or "collision_normal" or "modulate" or "source_texture0" or "source_texture1" or "source_texture2" or "source_texture3" or "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "custom0" or "custom1" or
         "vertex_id" or "instance_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture";
     private bool IsKnownInStage(VisualShader.Type stage) => stage switch
     {
@@ -65,13 +70,14 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
             _inputName == "restart" && stage is VisualShader.Type.Process or VisualShader.Type.ProcessCustom or VisualShader.Type.Collide ||
             _inputName is "collision_depth" or "collision_normal" && stage == VisualShader.Type.Collide,
         _ => _inputName is "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "vertex_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture" ||
+            stage == VisualShader.Type.Fragment && _inputName is "region_rect" or "specular_shininess" ||
             stage == VisualShader.Type.Vertex && _inputName is "custom0" or "custom1" or "instance_id" or "model_matrix" or "canvas_matrix" or "screen_matrix"
     };
     internal PortType[] OutputsFor(VisualShader.Type stage) => [IsKnownInStage(stage) ? InputKind : PortType.Scalar];
     private PortType InputKind => _inputName switch
     {
         "source_texture0" or "source_texture1" or "source_texture2" or "source_texture3" or "texture" or "normal_texture" or "specular_shininess_texture" => PortType.Sampler,
-        "light" or "light_color" or "shadow" or "specular_shininess" or "color" or "modulate" or "custom" or "fragcoord" or "instance_custom" or "custom0" or "custom1" => PortType.Vector4,
+        "light" or "light_color" or "shadow" or "region_rect" or "specular_shininess" or "color" or "modulate" or "custom" or "fragcoord" or "instance_custom" or "custom0" or "custom1" => PortType.Vector4,
         "light_direction" or "light_position" or "light_vertex" or "normal" => PortType.Vector3,
         "uv" or "vertex" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" => PortType.Vector2,
         "velocity" or "collision_normal" => PortType.Vector2,
@@ -105,6 +111,7 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
     } : _inputName switch
     {
         _ when stage == VisualShader.Type.Light && IsLightInput => GetInputRealName(),
+        "region_rect" or "specular_shininess" when stage == VisualShader.Type.Fragment => GetInputRealName(),
         "texture" when stage == VisualShader.Type.Light => "TEXTURE",
         "texture" or "normal_texture" or "specular_shininess_texture" when stage == VisualShader.Type.Fragment => GetInputRealName(),
         "color" => "COLOR",

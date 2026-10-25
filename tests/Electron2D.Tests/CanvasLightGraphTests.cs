@@ -6,10 +6,12 @@ using static Electron2D.MaterialLightingProgram;
 
 internal static partial class CanvasLightGraphTests
 {
-    internal static void ModernSources(string folder, string output, bool surface = false)
+    internal static void ModernSources(string folder, string output, bool surface = false) => ModernSources(folder, output,
+        surface ? ["surface-normal", "surface-matrix", "surface-light-vertex"] : ["light-builtins", "light-context", "light-vertex-matrix"]);
+    internal static void ModernSources(string folder, string output, string[] names)
     {
         Directory.CreateDirectory(output);
-        foreach (var name in surface ? ["surface-normal", "surface-matrix", "surface-light-vertex"] : new[] { "light-builtins", "light-context", "light-vertex-matrix" })
+        foreach (var name in names)
         {
             var file = System.IO.Path.Combine(folder, name + ".e2dres");
             using var graph = ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep); var sources = graph.GenerateSources();
@@ -85,15 +87,17 @@ internal static partial class CanvasLightGraphTests
         if (surface) SurfaceContract(graph);
     }
 
-    internal static void Export(string folder, string output)
+    internal static void Export(string folder, string output, bool requireStage = true)
     {
         CustomNodes.Register();
         Directory.CreateDirectory(output); var count = 0;
-        foreach (var file in Directory.GetFiles(folder, "*.e2dres").Order(StringComparer.Ordinal))
+        var files = Directory.GetFiles(folder, "*.e2dres").AsEnumerable();
+        if (!requireStage) files = files.Concat(Directory.GetFiles(folder, "*.spv"));
+        foreach (var file in files.Order(StringComparer.Ordinal))
         {
-            using var graph = ResourceLoader.Load<VisualShader>(file, ResourceLoader.CacheMode.IgnoreDeep);
+            using var graph = System.IO.Path.GetExtension(file) == ".spv" ? Shader.CreateFromSPIRV(File.ReadAllBytes(file)) : ResourceLoader.Load<Shader>(file, ResourceLoader.CacheMode.IgnoreDeep);
             var program = graph.GetProgram();
-            if (program.AuthoredLight is null && program.Surface is null) throw new Exception("The imported program lost its authored surface/light entry.");
+            if (requireStage && program.AuthoredLight is null && program.Surface is null) throw new Exception("The imported program lost its authored surface/light entry.");
             var name = System.IO.Path.GetFileNameWithoutExtension(file);
             File.WriteAllBytes(System.IO.Path.Combine(output, name + "-unlit.spv"), program.NativeCode); count++;
             for (var normal = -1; normal < 3; normal++)

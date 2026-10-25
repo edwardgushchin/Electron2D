@@ -113,3 +113,5 @@ Image value migration requires material ownership in both program versions. A sc
 PushUniforms writes the current batch's private normal-map flags into the renderer-owned field before native draw submission. Shared materials therefore retain independent rectangle orientation without changing authored parameter state. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
 
 Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.
+
+Optional REGION_RECT and CANVAS_SPECULAR vectors are written into existing renderer uniform buffers; user parameter access and copies exclude these transient values. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.

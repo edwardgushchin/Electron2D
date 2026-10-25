@@ -50,3 +50,5 @@ Batch creation resolves the item glyph policy. ApplyGlyph stamps complete parame
 Mesh batches require the same private normal-map flags before merging with an adjacent range. Attribute/mesh drawing itself uses zero rectangle flags, preserving its local-normal sampling convention. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
 
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) retain decoded custom channels and exact logical instance IDs across hardware streams, CPU-expanded snapping and sorted GPU particles. The private CanvasVertex record is 172 bytes, with uint2 identities at byte 164/input location 15; glyph fields retain their existing offsets. Native and allocation verification is scoped by that contract.
+
+Batch coalescing compares TextureRegion so a preceding textured rectangle cannot supply its source region to attribute geometry using the same material and image. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.

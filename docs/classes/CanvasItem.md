@@ -1397,3 +1397,5 @@ Canvas normal-consuming graphs preserve each texture rectangle's flip/transpose 
 `GetCanvas()` permits coordinated reads by the owner or any active processing group. Layers retain their independent RID; viewport-free scenes return the fallback World canvas. Detached items return an empty RID. The lookup starts no native renderer and grants no native/physical mutation permission. See [grouped canvas diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
 
 [Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) cover inherited physical/GUI roles and cold Window layout publication.
+
+Consuming fragment materials retain original rectangle/nine-patch source metadata in each batch. Different regions cannot coalesce through either retained geometry path. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.

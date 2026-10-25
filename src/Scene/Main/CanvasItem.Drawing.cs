@@ -426,6 +426,7 @@ public abstract partial class CanvasItem
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
             var batch = new CanvasBatch(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture, Matrices: matrices?.Local(drawingTransform).For(material));
+            if (material?.Program.RegionRectUniform is not null) batch = batch with { TextureRegion = native.TextureRegion };
             if (material?.Program.NormalMapFlagsUniform is not null && replay.Texture is not null && replay.Polygon is null && replay.Stroke is null)
                 batch = batch with
                 {
@@ -445,7 +446,7 @@ public abstract partial class CanvasItem
     private static void AddCanvasBatch(List<CanvasBatch> batches, CanvasBatch batch)
     {
         if (batch.Count == 0) return;
-        if (batch.Primitive != Mesh.PrimitiveType.LineStrip && batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == batch.Material && last.Matrices == batch.Matrices && last.NormalMapFlags == batch.NormalMapFlags && last.InstanceOwner == batch.InstanceOwner && last.Texture == batch.Texture && last.TextureSource == batch.TextureSource &&
+        if (batch.Primitive != Mesh.PrimitiveType.LineStrip && batches.Count != 0 && batches[^1] is var last && !last.Procedural && last.VisibilityBounds is null && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == batch.Material && last.Matrices == batch.Matrices && last.NormalMapFlags == batch.NormalMapFlags && last.TextureRegion == batch.TextureRegion && last.InstanceOwner == batch.InstanceOwner && last.Texture == batch.Texture && last.TextureSource == batch.TextureSource &&
             last.Filter == batch.Filter && last.Repeat == batch.Repeat && last.MaxAnisotropy == batch.MaxAnisotropy && last.Blend == batch.Blend && last.Clip == batch.Clip && last.Glyph == batch.Glyph && last.GlyphModulation == batch.GlyphModulation && last.LinearColors == batch.LinearColors && last.Primitive == batch.Primitive && last.SnapNativeLines == batch.SnapNativeLines)
             batches[^1] = last with { Count = last.Count + batch.Count, ObjectCount = checked(last.ObjectCount + batch.ObjectCount) };
         else batches.Add(batch);

@@ -14,6 +14,11 @@ namespace Electron2D;
 /// Existing vertex positions retain their framebuffer-coordinate convention.
 /// Canvas-fragment NORMAL_MODEL_BASIS and NORMAL_CANVAS_BASIS are renderer-owned float4 columns of
 /// independently normalized draw and canvas bases, excluded from material parameters.
+/// Canvas-fragment REGION_RECT and CANVAS_SPECULAR are renderer-owned non-array float32 vec4 fields.
+/// REGION_RECT carries the normalized signed source rectangle for rectangle/nine-patch commands, or
+/// full logical image pixel extents for attribute geometry. CANVAS_SPECULAR carries RGB color and alpha
+/// shininess factors for the float-sampled specular channel, following the active HDR color policy.
+/// Both are excluded from material, global, instance and sampled-image ownership.
 /// A canvas non-array float2 TEXTURE_PIXEL_SIZE uniform receives the inverse logical dimensions of the
 /// resolved command diffuse image in either stage, or one for an absent/empty image. Atlas regions retain the
 /// backing image dimensions. This renderer-owned value is independent of material samplers and cannot be
