@@ -1,4 +1,15 @@
 <Project>
+  <!-- The selected SDL platform dependency supplies Java/JNI without another managed binding. -->
+  <Target Name="Electron2DAndroidSDLArchive" BeforeTargets="Electron2DAndroidSDLLayout" Condition="'$(TargetPlatformIdentifier)' == 'android'">
+    <ItemGroup>
+      <_Electron2DAndroidSDLNative Include="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.NuGetPackageId)' == 'SDL3-CS.Android'" />
+      <_Electron2DAndroidSDLArchive Include="@(_Electron2DAndroidSDLNative->'%(RootDir)%(Directory)../../../lib/net10.0-android36.0/SDL3-CS.Android.aar')" />
+    </ItemGroup>
+    <Error Condition="!Exists('%(_Electron2DAndroidSDLArchive.FullPath)')" Text="The selected SDL Android archive is missing: %(_Electron2DAndroidSDLArchive.FullPath)" />
+    <ItemGroup>
+      <AndroidLibrary Include="@(_Electron2DAndroidSDLArchive->Metadata('FullPath')->Distinct())" Bind="false" Pack="false" />
+    </ItemGroup>
+  </Target>
   <!-- RID-less desktop output must not deploy the browser-specific managed implementation. -->
   <Target Name="Electron2DManagedBuildLayout" AfterTargets="ResolvePackageAssets" Condition="'$(RuntimeIdentifier)' != 'browser-wasm'">
     <ItemGroup>
