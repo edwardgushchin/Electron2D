@@ -33,7 +33,8 @@ def check_private_webp(rid: str, library: Path) -> None:
     assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libElectron2DWebP.so"], "WebP SONAME mismatch"
     assert not re.search(r"\((RPATH|RUNPATH)\)", dynamic), "WebP retains a build-machine search path"
     dependencies = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
-    assert dependencies <= {"libm.so.6", "libc.so.6"}, f"Unreviewed WebP dependencies: {dependencies}"
+    allowed = {"libm.so.6", "libc.so.6", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}
+    assert dependencies <= allowed, f"Unreviewed WebP dependencies: {dependencies}"
     symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(library)], text=True)
     assert WEBP_EXPORTS <= {line.split()[-1] for line in symbols.splitlines()}, "WebP encoder/decoder bridge exports are missing"
 

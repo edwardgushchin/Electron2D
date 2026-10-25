@@ -21,6 +21,25 @@ import plan
 
 
 class Pipeline(unittest.TestCase):
+    def test_webp_elf_dependencies_accept_only_the_matching_system_loader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            library = Path(directory) / 'libElectron2DWebP.so'
+            for rid, machine, loader, foreign in (
+                    ('linux-x64', 62, 'ld-linux-x86-64.so.2', 'ld-linux-aarch64.so.1'),
+                    ('linux-arm64', 183, 'ld-linux-aarch64.so.1', 'ld-linux-x86-64.so.2')):
+                header = bytearray(20); header[:6] = b'\x7fELF\x02\x01'
+                header[18:20] = machine.to_bytes(2, 'little'); library.write_bytes(header)
+                for extra in ('', loader, foreign, 'libwebp.so.7'):
+                    with self.subTest(rid=rid, extra=extra):
+                        dynamic = '(SONAME) [libElectron2DWebP.so]\n(NEEDED) [libc.so.6]\n(NEEDED) [libm.so.6]\n'
+                        if extra: dynamic += '(NEEDED) [' + extra + ']\n'
+                        with patch.object(packages.native.subprocess, 'check_output', side_effect=[dynamic,
+                                '0 T e2d_webp_encode\n0 T e2d_webp_decode\n']):
+                            if extra in ('', loader): packages.native.check_private_webp(rid, library)
+                            else:
+                                with self.assertRaisesRegex(AssertionError, 'Unreviewed WebP dependencies'):
+                                    packages.native.check_private_webp(rid, library)
+
     def test_explicit_qualification_survives_new_development_revisions(self):
         workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/ci.yml').read_text()
         concurrency = workflow.split('concurrency:\n', 1)[1].split('\njobs:', 1)[0]

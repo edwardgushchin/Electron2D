@@ -95,6 +95,12 @@ The native qualification workflow packs managed `net10.0`, Android, iOS and tvOS
 
 ## CI and package contents
 
+The Linux WebP ELF audit allows only libc, libm and the loader matching the
+selected architecture: `ld-linux-x86-64.so.2` or `ld-linux-aarch64.so.1`.
+A foreign loader, external WebP codec, build-machine search path, wrong CPU or
+missing encoder/decoder export still fails. The fast pipeline tests both loader
+profiles without requiring an ARM64 host; native production audits the real ELF.
+
 The reusable [native workflow](../.github/workflows/native.yml) builds Linux x64 and ARM64 on their corresponding runners, using Ubuntu 22.04 build containers. It fetches the pinned SDL 3.4.18 archive, verifies SHA-256 `9c75cf16330322c217dedd2e0609f1124f1b54b8633e763467b4684d0f4334a3`, and uses only its public headers. FAudio links against the selected RID's library from SDL3-CS.Linux; SDL is not rebuilt. Runtime compatibility also depends on the selected SDL and other native packages, not just the private build container.
 
 Each RID contributes exactly these files:

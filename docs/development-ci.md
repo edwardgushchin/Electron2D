@@ -40,6 +40,7 @@ the plan. There is no new full-matrix local pre-commit requirement.
 `Fast feedback` starts independently of native production. It checks pipeline
 failure boundaries, existing CI contracts, the Release runtime, shared public contracts for typed data/settings/theme and
 headless CPU physics without a platform package, the shared canvas vertex layout,
+and WebP ELF dependency rules for both Linux architectures,
 compiled public API/coverage and Wiki generation. Existing shader tool caches avoid rebuilding
 host compilers on every run. It does not certify native behavior or platforms.
 
