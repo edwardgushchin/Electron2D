@@ -1,3 +1,5 @@
+[Authored canvas light graphs](components/canvas-light-graphs.md) extend VisualShader.Type/VisualShader.VaryingMode and the existing input/output/varying/custom resources through offline import and retained scene-light composition. Private [CanvasLightSource](classes/CanvasLightSource.md), [CanvasLightEntry](classes/CanvasLightEntry.md) and [CanvasLightProgram](classes/CanvasLightProgram.md) carry validated function/state identities; no backend identity is public.
+
 [Sampled component views](components/local-compute.md#sampled-component-views) connect copied RDTextureView channel maps to bound-image shader variants across local device, canvas, lighting/glyph, particle and writable-texture paths. Raw storage remains independent; alternate format and shared-subresource views keep their native ownership prerequisites.
 
 # Engine inventory

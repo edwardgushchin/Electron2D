@@ -263,7 +263,9 @@ def main():
         assert varying_rows and all(" | Implemented | " in row for row in varying_rows)
     assert "VisualShaderVaryingType" in pages[CLASS_PAGES / "VisualShaderNodeVarying.md"]
     light_varying = next(row for row in pages[CLASS_PAGES / "VisualShader.md"].splitlines() if "VARYING_MODE_FRAG_TO_LIGHT" in row)
-    assert " | Blocked | " in light_varying and "light-graph" in light_varying
+    assert " | Implemented | " in light_varying and "FragmentToLight" in light_varying
+    light_stage = next(row for row in pages[CLASS_PAGES / "VisualShader.md"].splitlines() if "TYPE_LIGHT [" in row)
+    assert " | Implemented | " in light_stage and "Type Light = 2" in light_stage
     assert "OperatorEnum" in pages[CLASS_PAGES / "VisualShaderNodeFloatOp.md"]
     assert "OpTypeEnum" in pages[CLASS_PAGES / "VisualShaderNodeVectorBase.md"]
     engine_ids = {item["id"] for item in json.loads((DATA / "electron2d.json").read_text())}

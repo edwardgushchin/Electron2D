@@ -964,3 +964,5 @@ Release/compiled coverage/wiki gates and owned runtime/test/consumer format chec
 pass. Declaration coverage stays 1306/1369 (95.40%), with the 63 open declarations
 unchanged. The failed older full aggregate and full performance/platform/owner
 acceptance remain separate; this matrix does not certify them.
+
+Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.

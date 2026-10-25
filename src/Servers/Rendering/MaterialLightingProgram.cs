@@ -52,7 +52,7 @@ internal static class MaterialLightingProgram
         var extraSamplers = (normal >= 0 ? 1 : 0) + (specular >= 0 ? 1 : 0) + (masks ? 1 : 0);
         if (program.Textures.Length + extraSamplers > 16) throw new NotSupportedException("Material textures and scene-light channels exceed the native sixteen-sampler stage limit.");
         var key = ((normal + 1) * 4 + specular + 1) * 2 + (masks ? 1 : 0);
-        return ComposeLibrary(program, $"LightCompose{key}");
+        return ComposeLibrary(program, $"Light{(program.AuthoredLight is not null ? "Graph" : "")}Compose{key}");
     }
 
     internal static byte[] ComposeGlyph(ShaderProgram program, bool lcd) => ComposeLibrary(program.Fragment ?? program, lcd ? "GlyphLCD" : "GlyphDecode", glyph: true, inputs: !lcd);
@@ -250,9 +250,47 @@ internal static class MaterialLightingProgram
         var libraryFunctions = new List<uint[]>(); var inHelper = false; uint returnValue = 0;
         var inputComponents = new Dictionary<uint, (uint Argument, uint[] Indices)>();
         var libraryLiterals = library.Instructions.Where(i => Op(i) == 43).ToDictionary(i => i[2], i => i[3]);
+        var light = glyph ? null : program.AuthoredLight;
+        var lightHook = light is null ? 0 : library.Instructions.Single(i => Op(i) == 5 &&
+            MemoryMarshal.AsBytes(i.AsSpan(2)).StartsWith("e2d_authored_light_hook("u8))[1];
+        void AuthoredLightCall(uint[] call)
+        {
+            var definition = library.Instructions.Single(i => Op(i) == 54 && i[2] == lightHook);
+            var signature = types[definition[4]]; var state = types[light!.StateType];
+            int[] fields = [7, 1, 3, 2, 4, 5, 6, 9];
+            if (call.Length != 13 || signature.Length != 12) throw new InvalidOperationException("The native light hook has an invalid parameter contract.");
+            uint Field(int index)
+            {
+                var pointer = next++;
+                libraryFunctions.Add(Instruction(65, Pointer(6, state[index + 2]), pointer, light.State, Constant((uint)index)));
+                return pointer;
+            }
+            for (var argument = 0; argument < fields.Length; argument++)
+            {
+                var field = fields[argument]; var type = types[signature[argument + 3]][3];
+                if (type != state[field + 2]) throw new InvalidOperationException("The native light hook field types differ from the authored state.");
+                var value = next++; libraryFunctions.Add(Instruction(61, type, value, call[argument + 4]));
+                libraryFunctions.Add(Instruction(62, Field(field), value));
+            }
+            var function = original.Instructions.Single(i => Op(i) == 54 && i[2] == light.Function);
+            libraryFunctions.Add(Instruction(57, function[1], next++, light.Function));
+            if (call[1] != state[2]) throw new InvalidOperationException("An authored light must produce the native RGBA result.");
+            libraryFunctions.Add(Instruction(61, call[1], call[2], Field(0)));
+            var shadowType = state[10]; var shadow = next++; var modulation = next++;
+            libraryFunctions.Add(Instruction(61, shadowType, shadow, call[^1]));
+            libraryFunctions.Add(Instruction(61, shadowType, modulation, Field(8)));
+            var scalar = types[shadowType][2];
+            var one = original.Instructions.Concat(library.Instructions).FirstOrDefault(i => Op(i) == 43 && i[1] == scalar && i[3] == 0x3f800000)?[2] ?? 0;
+            if (one == 0) { one = next++; globals.Add(Instruction(43, scalar, one, 0x3f800000)); }
+            var rgb = next++; var modulated = next++;
+            libraryFunctions.Add(Instruction(82, shadowType, rgb, one, modulation, 3));
+            libraryFunctions.Add(Instruction(133, shadowType, modulated, shadow, rgb));
+            libraryFunctions.Add(Instruction(62, call[^1], modulated));
+        }
         foreach (var instruction in library.Instructions.SkipWhile(i => Op(i) != 54))
         {
             var opcode = Op(instruction);
+            if (lightHook != 0 && opcode == 57 && instruction[3] == lightHook) { AuthoredLightCall(instruction); continue; }
             if (opcode == 54)
             {
                 inHelper = instruction[2] == libEntry;

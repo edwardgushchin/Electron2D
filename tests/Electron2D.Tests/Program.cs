@@ -13,6 +13,11 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (args.Length == 3 && args[0] == "--canvas-light-variants") { CanvasLightGraphTests.Export(args[1], args[2]); return; }
+if (args.Length == 2 && args[0] == "--canvas-light-metadata") { CanvasLightGraphTests.Metadata(args[1]); return; }
+if (args.Length == 3 && args[0] == "--canvas-light-modern-sources") { CanvasLightGraphTests.ModernSources(args[1], args[2]); return; }
+if (args.Length == 3 && args[0] == "--canvas-light-modern-install") { CanvasLightGraphTests.InstallModern(args[1], args[2]); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_SWIZZLES") is { } swizzleFolder) { TextureSwizzleLoweringTests.Run(swizzleFolder); TextureSwizzleRuntimeChecks.Run(swizzleFolder); return; }
 
 if (args.Length == 3 && args[0] == "--visual-shader-source-hashes") { VisualShaderSourceRegressionTests.Write(args[1], args[2]); return; }

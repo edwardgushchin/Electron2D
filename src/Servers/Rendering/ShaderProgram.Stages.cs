@@ -87,6 +87,8 @@ internal sealed partial class ShaderProgram
         return new(fragment.Code, [.. fragment.BufferSizes, .. vertex.BufferSizes.Skip(1)], uniforms, samplers.ToArray(), time, pixels, sdf, instances, globals)
         {
             NativeCode = fragment.NativeCode,
+            AuthoredLight = fragment.AuthoredLight,
+            ValidationCode = fragment.ValidationCode,
             NormalMapFlagsUniform = fragment.NormalMapFlagsUniform,
             TexturePixelSizeUniform = Builtin(fragment.TexturePixelSizeUniform, vertex.TexturePixelSizeUniform),
             ModelMatrixUniform = Builtin(null, vertex.ModelMatrixUniform),

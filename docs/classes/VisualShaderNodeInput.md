@@ -85,7 +85,7 @@ public System.String GetInputRealName()
 
 Returns the source symbol corresponding to the selected input.
 
-The uppercase named symbol, or an empty string for an unknown input; this query has no borrowing-stage context.
+The uppercase named symbol (shadow resolves to SHADOW_MODULATE), or an empty string for an unknown input; this query has no borrowing-stage context.
 
 Exceptions:
 
@@ -131,3 +131,7 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.
 
 Canvas vertex `custom0`/`custom1` consume the first two decoded mesh channels. `instance_id` consumes logical MultiMesh/particle identity, preserving identity across renderer ordering, and zero for ordinary geometry. These three names produce scalar zero in other graph stages. Named inputs, expressions and global functions share the same prepared native producers; see [mesh channels and logical instance inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs).
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

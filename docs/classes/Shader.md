@@ -265,3 +265,7 @@ A canvas-stage non-array float2 `TEXTURE_PIXEL_SIZE` renderer uniform supplies i
 ## Custom canvas varyings
 
 Paired programs may exchange float32/int32/uint32 scalar/vector values at locations 12 through 15, with matching roles and widths. Location 11 is private glyph transport. Floating data interpolates smoothly; integer inputs require flat interpolation in their source modules. The single-module factory/setter selects the built-in vertex program and rejects custom varying inputs before publication. A mismatched paired replacement preserves both old stages. [Typed graph varyings](../components/visual-shaders.md#typed-varying-transport) lower their eight roles through this same interface, including four separate columns for a numeric matrix and private uint transport for Boolean data.
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

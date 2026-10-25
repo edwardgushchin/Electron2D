@@ -1,6 +1,6 @@
 # VisualShaderNodeOutput
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 Source: [VisualShaderNodeOutput.cs](../../src/Scene/Resources/VisualShaderNodeOutput.cs).
 
@@ -14,7 +14,7 @@ Inherits: [VisualShaderNode](VisualShaderNode.md).
 
 The reserved canvas or writable-texture output operation owned by a visual shader stage.
 
-Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their renderer roles; TextureBlit accepts four numeric RGBA outputs. Particle roots use VisualShaderNodeParticleOutput.
+Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their renderer roles. Light accepts RGB, alpha and RGB shadow modulation at ports zero through two; TextureBlit accepts four numeric RGBA outputs. Particle roots use VisualShaderNodeParticleOutput.
 
 ## Example
 
@@ -38,7 +38,7 @@ public class Electron2D.VisualShaderNodeOutput
 
 The reserved canvas or writable-texture output operation owned by a visual shader stage.
 
-Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their renderer roles; TextureBlit accepts four numeric RGBA outputs. Particle roots use VisualShaderNodeParticleOutput.
+Retrieve it as node zero. Its input indices follow the containing stage. Canvas vertex and fragment roots retain their renderer roles. Light accepts RGB, alpha and RGB shadow modulation at ports zero through two; TextureBlit accepts four numeric RGBA outputs. Particle roots use VisualShaderNodeParticleOutput.
 
 <a id="member-4df3df9d230f"></a>
 ### `.ctor`
@@ -73,3 +73,7 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 
 - [Typed graph import](../decisions/rendering.md#adr-0028)
 - [Typed resources](../decisions/resources.md#adr-0013)
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

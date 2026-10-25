@@ -62,7 +62,7 @@ public sealed partial class VisualShader
             {
                 var array = texture is VisualShaderNodeTextureArrayParameter;
                 var screen = texture.TextureSource == TP.TextureSourceEnum.Screen;
-                if (screen && (array || stage != Type.Fragment || texture.TextureType is TP.TextureTypeEnum.NormalMap or TP.TextureTypeEnum.Anisotropy || texture.ColorDefault != TP.ColorDefaultEnum.White))
+                if (screen && (array || stage is not (Type.Fragment or Type.Light) || texture.TextureType is TP.TextureTypeEnum.NormalMap or TP.TextureTypeEnum.Anisotropy || texture.ColorDefault != TP.ColorDefaultEnum.White))
                     throw new NotSupportedException("Screen image parameters require a fragment ordinary sampler with a data/color interpretation and white default.");
                 var fallback = texture.TextureType switch { TP.TextureTypeEnum.NormalMap => array ? 0 : 3, TP.TextureTypeEnum.Anisotropy => array ? 0 : 4, _ => (int)texture.ColorDefault };
                 Add(id, new(stage, nativeNames[texture.ParameterName], array,
@@ -75,11 +75,11 @@ public sealed partial class VisualShader
                 {
                     case T.SourceEnum.Texture:
                         Add(id, new(stage, Anonymous(id), false, new(ordinary.TextureType == T.TextureTypeEnum.Color, ordinary.TextureType == T.TextureTypeEnum.NormalMap ? 3 : 0, 0, 0, false), ordinary.Texture)); break;
-                    case T.SourceEnum.Screen when stage == Type.Fragment:
+                    case T.SourceEnum.Screen when stage is Type.Fragment or Type.Light:
                         Add(id, new(stage, Anonymous(id), false, new(false, 0, 0, 0, true))); break;
-                    case T.SourceEnum.Canvas when stage == Type.Fragment:
+                    case T.SourceEnum.Canvas when stage is Type.Fragment or Type.Light:
                         Add(id, new(stage, "TEXTURE", false)); break;
-                    case T.SourceEnum.CanvasNormal when stage == Type.Fragment:
+                    case T.SourceEnum.CanvasNormal when stage is Type.Fragment or Type.Light:
                         Add(id, new(stage, "NORMAL_TEXTURE", false)); break;
                 }
             }

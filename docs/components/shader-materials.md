@@ -490,7 +490,7 @@ Canvas and blit fragment SPIR-V may declare DerivativeControl for fine/coarse op
 
 [Compiled custom graph nodes](visual-shaders.md#compiled-custom-nodes) provide typed C# metadata/default/source callbacks through registered resources and the shared offline import host. Program execution consumes imported bytecode.
 
-Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; authored light/editor transport retains its own gate. Vertex-to-fragment varying transport now executes through the shared paired canvas path.
+Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; [authored light graphs](canvas-light-graphs.md) and both varying producer roles execute through the shared canvas path; editor tooling retains its own gate.
 
 ## Rectangular matrix uniforms
 

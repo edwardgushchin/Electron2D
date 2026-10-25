@@ -33,7 +33,7 @@ internal static partial class GraphChecks
         using var graph = new V(); var changes = 0; graph.Changed += _ => changes++;
         foreach (var name in new[] { "", "0bad", "a/b", "bad name", "имя" }) Reject<ArgumentException>(() => graph.AddVarying(name, V.VaryingMode.VertexToFragmentLight, T.Float));
         Reject<ArgumentNullException>(() => graph.AddVarying(null!, default, T.Float));
-        Reject<ArgumentOutOfRangeException>(() => graph.AddVarying("bad", (V.VaryingMode)1, T.Float));
+        Reject<ArgumentOutOfRangeException>(() => graph.AddVarying("bad", (V.VaryingMode)(-1), T.Float));
         Reject<ArgumentOutOfRangeException>(() => graph.AddVarying("bad", V.VaryingMode.Max, T.Float));
         Reject<ArgumentOutOfRangeException>(() => graph.AddVarying("bad", default, T.Max));
         Reject<ArgumentOutOfRangeException>(() => graph.AddVarying("bad", default, (T)(-1)));
@@ -53,7 +53,7 @@ internal static partial class GraphChecks
         Reject<ArgumentOutOfRangeException>(() => getter.VaryingType = T.Max); Reject<ArgumentNullException>(() => getter.VaryingName = null!);
         var table = (PropertyDescriptor<V, string[]>)graph.GetPropertyList().Single(p => p.Name == "Varyings");
         graph.AddVarying("kept", default, T.UInt);
-        foreach (var entries in new[] { new[] { "0/2/duplicate", "0/2/duplicate" }, new[] { "1/0/unsupported" }, new[] { "0/8/sentinel" }, new[] { "0/00/noncanonical" }, new[] { "0/0/bad/name" }, new string[] { null! }, new string[4097] })
+        foreach (var entries in new[] { new[] { "0/2/duplicate", "0/2/duplicate" }, new[] { "2/0/unsupported" }, new[] { "0/8/sentinel" }, new[] { "0/00/noncanonical" }, new[] { "0/0/bad/name" }, new string[] { null! }, new string[4097] })
         { Reject<InvalidDataException>(() => table.SetValue(graph, entries)); Check(graph.HasVarying("kept") && !graph.HasVarying("duplicate"), "Malformed stored varying tables preserve the old declarations."); }
         var snapshot = table.GetValue(graph); snapshot[0] = "0/0/changed"; Check(graph.HasVarying("kept") && !graph.HasVarying("changed"), "Stored varying getters return independent arrays.");
         using (var observed = new V())

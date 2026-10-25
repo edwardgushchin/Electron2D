@@ -5,13 +5,20 @@ namespace Electron2D;
 
 public sealed partial class VisualShader
 {
-    internal (string Vertex, string Fragment, IReadOnlyList<VisualShaderImage> Images, IReadOnlyList<VisualShaderBlockName> Blocks) GenerateSources()
+    internal (string Vertex, string Fragment, IReadOnlyList<VisualShaderImage> Images, IReadOnlyList<VisualShaderBlockName> Blocks, CanvasLightSource? Light) GenerateSources()
     {
         ThrowIfDisposed(); ValidateFileState();
         if (GetMode() != Mode.CanvasItem) throw new NotSupportedException("This visual graph importer requires the canvas shader domain.");
         var parameters = ParameterSymbols(); var slots = InstanceSlots(parameters); var custom = PrepareCustomCode(); var varyings = PrepareVaryings(parameters, custom);
         var images = new List<VisualShaderImage>(); var blocks = new List<VisualShaderBlockName>();
-        return (GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom, varyings: varyings), GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom, varyings: varyings), images, blocks);
+        var vertex = GenerateStage(Type.Vertex, parameters, slots, images, blocks, custom, varyings: varyings);
+        var lightPlan = PlanStage(Type.Light);
+        if (lightPlan.Order.Count > 1 || GetNode(Type.Light, 0).GetDefaultInputValues().Count != 0 || custom?.Functions[Type.Light].Any(s => s.Length != 0) == true)
+        {
+            var light = GenerateCanvasLight(parameters, slots, images, blocks, custom, varyings, lightPlan);
+            return (vertex, light.Source, images, blocks, light.Metadata);
+        }
+        return (vertex, GenerateStage(Type.Fragment, parameters, slots, images, blocks, custom, varyings: varyings), images, blocks, null);
     }
 
     private string GenerateStage(Type stage, Dictionary<string, VisualShaderNodeParameter> parameters, Dictionary<string, int> slots, List<VisualShaderImage> allImages, List<VisualShaderBlockName> allBlocks, CustomPlan? custom, DomainCompilation? domain = null, Dictionary<string, VaryingWire>? varyings = null)
@@ -26,7 +33,7 @@ public sealed partial class VisualShader
                 throw new NotSupportedException($"Canvas {stage} output {port} requires its separate graph output integration.");
 
         var reachable = stagePlan.Order.ToHashSet();
-        if (stage != Type.Fragment && reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)))
+        if (stage is not (Type.Fragment or Type.Light) && reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)))
             throw new NotSupportedException("Canvas SDF nodes require the fragment graph stage.");
         var remaining = reachable.ToDictionary(id => id, _ => 0);
         var dependents = reachable.ToDictionary(id => id, _ => new List<int>());
@@ -60,7 +67,7 @@ public sealed partial class VisualShader
                 if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
                 if (node is VisualShaderNodeCurveTexture or VisualShaderNodeCurveXYZTexture && !node.GetDefaultInputValues().Any(v => v.Port == port)) return "";
                 if (node is VisualShaderNodeFresnel fresnel && port == 0 && !fresnel.GetInputPortDefaultValue<Vector3>(0).HasValue)
-                    return domain is not null ? "vec3(0.0)" : stage == Type.Fragment ? aliases["e2d_normal"] :
+                    return stage == Type.Light ? aliases["NORMAL"] : domain is { Canvas: false } ? "vec3(0.0)" : stage == Type.Fragment ? aliases["e2d_normal"] :
                         throw new NotSupportedException("An implicit canvas normal requires the fragment graph stage; connect or author a vertex normal explicitly.");
                 if (domain is not null && DomainInputDefault(node, port) is { } implicitValue && !node.GetDefaultInputValues().Any(v => v.Port == port))
                     return RewriteExpression(implicitValue, aliases);
@@ -71,7 +78,7 @@ public sealed partial class VisualShader
                 if (node is VisualShaderNodeTexture or VisualShaderNodeLayeredSample)
                 {
                     if (port == 0) return StageExpression(node is VisualShaderNodeLayeredSample ? "vec3(UV, 0.0)" :
-                        node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Screen } && stage == Type.Fragment ? "(gl_FragCoord.xy * e2d_values.SCREEN_PIXEL_SIZE)" : "UV", aliases);
+                        node is VisualShaderNodeTexture { Source: VisualShaderNodeTexture.SourceEnum.Screen } && stage is Type.Fragment or Type.Light ? "(gl_FragCoord.xy * e2d_values.SCREEN_PIXEL_SIZE)" : "UV", aliases);
                     if (port == 1) return "";
                 }
                 return node.InputDefaultExpression(port);
@@ -150,7 +157,7 @@ public sealed partial class VisualShader
                         VisualShaderNodeInput input when domain is not null => RewriteExpression(input.GenerateExpression(stage), ExpressionBuiltins(stage, aliases)),
                         VisualShaderNodeInput input => StageExpression(input.GenerateExpression(stage), aliases).Replace("TIME", aliases["e2d_values"] + ".TIME", StringComparison.Ordinal).Replace("SCREEN_PIXEL_SIZE", aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE", StringComparison.Ordinal).Replace("TEXTURE_PIXEL_SIZE", aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE", StringComparison.Ordinal)
                             .Replace("MODEL_MATRIX", aliases["e2d_values"] + ".MODEL_MATRIX", StringComparison.Ordinal).Replace("CANVAS_MATRIX", aliases["e2d_values"] + ".CANVAS_MATRIX", StringComparison.Ordinal).Replace("SCREEN_MATRIX", aliases["e2d_values"] + ".SCREEN_MATRIX", StringComparison.Ordinal),
-                        VisualShaderNodeDerivativeFunc when stage is not (Type.Fragment or Type.TextureBlit) => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
+                        VisualShaderNodeDerivativeFunc when stage is not (Type.Fragment or Type.Light or Type.TextureBlit) => throw new NotSupportedException("Screen-space derivative nodes require the fragment graph stage."),
                         VisualShaderNodeSDFRaymarch => raymarch + (output == 0 ? ".x" : output == 1 ? ".y != 0.0" : ".zw"),
                         VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.GenerateExpression(output, inputs), aliases),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),

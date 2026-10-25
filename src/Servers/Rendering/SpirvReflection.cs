@@ -31,6 +31,8 @@ internal static unsafe partial class SpirvReflection
     internal static ShaderProgram Read(byte[] code, bool fragment,
         IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null, bool blit = false, bool particles = false)
     {
+        var light = CanvasLightProgram.Read(code);
+        if (light is not null && (!fragment || blit || particles)) throw new NotSupportedException("Authored lights belong to the canvas fragment domain.");
         var booleans = ReadBooleans(code);
         if (sourceTypes is not null && booleans.Count != 0)
             throw new ArgumentException("Source compilation must not supply existing shader type metadata.", nameof(code));
@@ -280,8 +282,9 @@ internal static unsafe partial class SpirvReflection
             throw new NotSupportedException("Particle programs require their renderer-owned frame and have no canvas command, screen or instance bindings.");
         ReadDefaults(code, uniforms, instances);
         ReadHints(code, uniforms, instances, fragment);
+        var lowered = CanvasSamplerArrays.Lower(code, textures, needsSampler);
         return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances, globals)
-        { NativeCode = CanvasSamplerArrays.Lower(code, textures, needsSampler), NormalMapFlagsUniform = normalMapFlagsUniform, TexturePixelSizeUniform = texturePixelSizeUniform, ModelMatrixUniform = modelMatrixUniform, CanvasMatrixUniform = canvasMatrixUniform, ScreenMatrixUniform = screenMatrixUniform };
+        { NativeCode = CanvasLightProgram.RemoveMarker(lowered, light), ValidationCode = light is null ? null : lowered, AuthoredLight = light, NormalMapFlagsUniform = normalMapFlagsUniform, TexturePixelSizeUniform = texturePixelSizeUniform, ModelMatrixUniform = modelMatrixUniform, CanvasMatrixUniform = canvasMatrixUniform, ScreenMatrixUniform = screenMatrixUniform };
     }
 
     [StructLayout(LayoutKind.Sequential)]

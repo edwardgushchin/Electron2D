@@ -113,7 +113,7 @@ float4 main(float4 position : SV_Position, float4 color : TEXCOORD0, float2 uv :
             }
             visible /= samples;
         }
-        float3 lit = reflection(normal, lightVector, lightColor.rgb * mask.rgb * (x.w == 0 ? lightColor.a : 1), base.rgb, specularColor, specular.a * (counts.w != 0 ? map.a : 1), counts.z != 0);
+        float3 lit = reflection(normal, lightVector, (lightColor.rgb * range.z) * mask.rgb * (x.w == 0 ? lightColor.a : 1), base.rgb, specularColor, specular.a * (counts.w != 0 ? map.a : 1), counts.z != 0);
         float weight = mask.a * (x.w == 0 ? 1 : lightColor.a);
         lit = lerp(shadowColor.rgb, lit, visible);
         weight *= lerp(shadowColor.a, 1, visible);
