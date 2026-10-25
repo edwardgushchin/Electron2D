@@ -247,6 +247,7 @@ internal static partial class NativeStrokeTests
             {
                 var point = pose * definition.Points[i]; if (snap) point = (point + new Vector2(.5f, .5f)).Floor();
                 var tint = definition.Colors[definition.VertexColors ? i < definition.Colors.Length ? i : 0 : Math.Min(definition.Colors.Length - 1, definition.Connected ? i : i / 2)];
+                if (hdr) tint = tint.SRGBToLinear();
                 data[i * 8] = point.X; data[i * 8 + 1] = point.Y;
                 if (definition.UVs is { } uvs) { data[i * 8 + 6] = uvs[i].X; data[i * 8 + 7] = uvs[i].Y; }
                 data[i * 8 + 2] = tint.R; data[i * 8 + 3] = tint.G; data[i * 8 + 4] = tint.B; data[i * 8 + 5] = tint.A;

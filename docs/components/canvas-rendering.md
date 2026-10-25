@@ -152,7 +152,7 @@ Polylines accept empty/white, uniform or per-vertex colors. Multilines additiona
 
 [RenderingPrimitiveTests](../../tests/Electron2D.Tests/RenderingPrimitiveTests.cs) exercises copied prefixes, invalid-input rollback/recovery, independent/default skin channels, first UNORM16 quantum, freed palettes, clip resurrection, multiline endpoint colors and 128 warmed indexed/gradient clear/record/replay intervals with zero managed bytes. Its public native host verifies all seventeen producers/state methods, skin, transform/interval, signed order, masks, source republishing and cleanup on Linux Wayland GPU/compatibility with fallback disabled. Existing 31-case ordering tests pass on both backends. These captures establish actual rendered behavior rather than authoring/compilation alone; whole-loop/native allocations, physical/foreign targets and owner acceptance are unverified.
 
-The line/polyline/multiline rows use native GPU line lists/strips but retain Partial for exact line/end coverage on the SDL_Renderer triangle fallback. Low-level point/two-vertex primitive rows retain their separate one-pixel triangle coverage gap. Their new low-level recording path is executable. MSDF/LCD commands need their signed-distance/subpixel shader and sampler contract; particle commands need real GPU emitter storage; direct material RID binding now executes through the shared [shader/material identity layer](shader-materials.md#shader-and-material-identities). None is presented as an inert flag or implemented by compiling a signature.
+The uniform line route uses native GPU and SDL line primitives and is [qualified separately](#uniform-stroke-contract-2026-10-25). Low-level polyline/multiline rows retain Partial for nonuniform per-vertex/endpoint colors on the SDL triangle fallback. Textured or interpolated-color point/two-vertex primitives retain their separate coverage gap. Their recording paths are executable. MSDF/LCD commands need their signed-distance/subpixel shader and sampler contract; particle commands need real GPU emitter storage; direct material RID binding now executes through the shared [shader/material identity layer](shader-materials.md#shader-and-material-identities). None is presented as an inert flag or implemented by compiling a signature.
 
 ## Caller-owned canvases and items
 
@@ -469,13 +469,63 @@ CanvasItem records DrawPolyline/Colors, DrawMultiline/Colors, DrawDashedLine, Dr
 
 The pinned [CanvasItem methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp) and [renderer stroke/ellipse code](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_canvas_cull.cpp) define segment counts, color fallback, three-half-width miter clamp, local 1.25-unit feathers, core compensation and ellipse rings. Typed exceptions, finite checks and array-count bounds follow ADR 0004. The source license is retained in [coverage](../../licence/ReferenceData-LICENSE.txt).
 
-Thin polyline/multiline paths ignore antialiasing. Direct DrawLine, also used by the short-dash fallback, can add local feathers even around a negative-width core. GPU thin cores use native Lines/LineStrip topology and retain one-framebuffer-pixel width. GPU upload snaps raw endpoints before the vertex program; independent strips never merge and local single-line AA feathers follow in a separate triangle batch. SDL_Renderer uses native untextured uniform-color segments/strips with endpoint snapping. Textured or interpolated-color ranges retain the six-vertex triangle footprint and corner snapping. Their subpixel gap and exact cross-renderer/reference equality remain open, so thin-width methods stay Partial in coverage. DrawRect now reuses closed stroke geometry for outlines and local compensated geometry for fills; its remaining thin-line coverage limit is shared with other strokes. Group fitting and texture-redraw visibility grow native endpoint bounds by half a framebuffer pixel, or one pixel when endpoint snapping can move them by another half pixel. This preserves horizontal/vertical thin strokes inside groups whose FitMargin and ClearMargin are both zero; bounds round outward to whole pixels for fitted composition, avoiding an extra fractional MSAA edge while leaving native endpoints unchanged.
+Thin polyline/multiline paths ignore antialiasing. Direct DrawLine, also used by the short-dash fallback, can add local feathers even around a negative-width core. GPU thin cores use native Lines/LineStrip topology and retain one-framebuffer-pixel width. GPU upload snaps raw endpoints before the vertex program; independent strips never merge and local single-line AA feathers follow in a separate triangle batch. SDL_Renderer uses native untextured uniform-color segments/strips with endpoint snapping. Textured or interpolated-color ranges retain the six-vertex triangle footprint and corner snapping. Their subpixel gap keeps DrawPolylineColors, DrawPrimitive and the attribute-bearing low-level methods Partial. Uniform/segment-color methods have their own [completed contract](#uniform-stroke-contract-2026-10-25); native rasterizers need not produce identical pixels across different devices or backends. DrawRect now reuses closed stroke geometry for outlines and local compensated geometry for fills; its remaining thin-line coverage limit is shared with other strokes. Group fitting and texture-redraw visibility grow native endpoint bounds by half a framebuffer pixel, or one pixel when endpoint snapping can move them by another half pixel. This preserves horizontal/vertical thin strokes inside groups whose FitMargin and ClearMargin are both zero; bounds round outward to whole pixels for fitted composition, avoiding an extra fractional MSAA edge while leaving native endpoints unchanged.
 
 CanvasStrokeTests checks geometry/counts, miter limits, closed/repeated points, color fallback, snapshots, AA widths/local scaling, thin width, aligned/unaligned dashes, arc clamp, ellipse tessellation, wide outlines, invalid data, rollback, owner/disposal guards and zero allocation over 1,000 warmed redraw/replay iterations. CanvasPixelSnapTests guards final primitive/positive-stroke rounding; NativeStrokeTests separately guards GPU/native SDL endpoint snapping and retained attribute-bearing compatibility pixels. CanvasStrokeRenderingTests checks joins without translucent overlap, segment colors/gaps, thin scaling, dash ends, arcs, filled/outlined/wide shapes, feathers and three-frame reuse/redraw/modulation. These checks pass on Linux Wayland compatibility/GPU with both HLSL/GLSL materials and on dummy/software. Other platforms, exact hardware line coverage and owner visual acceptance remain unverified.
 
 The software driver truncates fractional triangle positions before rasterization. The circle feather check therefore samples the adjacent inner pixel on software and explicitly checks its excluded outer pixel; hardware checks the fractional outer ring. This preserves the documented [fallback precision limit](canvas-rendering.md#pixel-snapping), without claiming identical edge coverage.
 
 Delivery verification: `dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o /tmp/electron2d-stroke-publish` passed. From that directory, `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin ELECTRON2D_TEST_RENDER=1 SDL_VIDEODRIVER=wayland ./Electron2D.Tests` passed the full renderer suite. After refining the software boundary assertion, the final publish passed `env -u LD_LIBRARY_PATH PATH=/usr/bin:/bin ELECTRON2D_TEST_RENDER=1 ELECTRON2D_TEST_STROKES=1 SDL_VIDEODRIVER=wayland ./Electron2D.Tests` and the same command with `SDL_VIDEODRIVER=dummy`. GTK locale warnings remain a nonfatal existing host condition. This establishes native delivery for the tested Linux paths, not other platforms or owner visual acceptance.
+
+### Uniform stroke contract, 2026-10-25
+
+The completed scene family is DrawLine, DrawPolyline, DrawMultiline,
+DrawMultilineColors, DrawDashedLine, DrawArc, DrawEllipseArc, DrawCircle,
+DrawEllipse and DrawRect. The pinned CanvasItem XML and canvas_item/cull sources
+confirm their defaults, segment colors, joins/caps, curve sampling, width and
+antialias behavior; none is deprecated. Typed finite/count failures retain ADR
+0004. Their negative-width cores carry a uniform color per strip or independent
+segment and no texture. Both native backends execute that contract. The shared
+Partial trigger for interpolated colors no longer applies to these ten methods.
+RenderingServer.CanvasItemAddLine enters the same guarded DrawLine path.
+
+DrawPolylineColors remains Partial: a thin nonuniform strip still uses the SDL
+triangle fallback. The low-level multiline API additionally accepts separate
+endpoint colors, so it retains that gap alongside low-level polyline and
+textured/interpolated DrawPrimitive. No class, texture or attribute-bearing row
+is closed by the uniform-family evidence.
+
+Twenty-two current-source checks pass on Linux Wayland/NVIDIA and dummy/software.
+Fourteen 160-frame native profiles cover 72 clipped affine cases each, endpoint
+snapping, repeated/translucent joins, collapsing segments, GLSL/HLSL vertex and
+fragment materials, linear HDR and 4x MSAA. Independent RenderingDevice/SDL
+texture-target oracles compare 3,883,008 pixels. The existing .012 component
+threshold is unchanged; geometry/raster coverage and color/alpha must all pass.
+SDR byte quantization, half-float storage and native rounding remain bounded by
+that threshold. Attribute-bearing SDL cases retain only their existing
+nonempty-render assertion and are not promoted by it.
+
+The HDR oracle now converts authored sRGB colors to linear RGB before native
+blending, preserving alpha. Its former upload produced .1 red where a .2-red,
+half-alpha input over black must produce about .01655 in the linear target.
+The original test fails; the corrected test passes without changing renderer
+code, shader work, input colors, compared regions or tolerances. The nonbinary
+translucent cases expose this distinction.
+
+The native profiles also move selected CPU/GPU physical receivers, including
+separate numerical execution. Their 1,792 active/idle process-frame brackets and
+971 physics-start-to-state-sync brackets require strict 0/0 owner/all-thread
+managed bytes. These intervals exclude later physics-frame work, cold
+setup/readback and native/foreign allocations. Managed geometry/rollback/replay,
+stroke/timing pixels and both public server hosts pass separate checks.
+
+Commands, source/payload hashes, captures, original RED and corrected receipts
+are under `bin/physics-uniform-stroke-contract/2026-10-25/qualification.json`.
+The census closes ten inherited declarations: 1,331/1,369 (97.22%), 38 open and
+92 Excluded. The separately running full suite retains its frozen managed
+payload and previous test-source identity; this cohort changes only its HDR
+test oracle, not runtime source. Neither that pending run, owner visual
+acceptance, other platforms nor final physical performance is inferred here.
 
 ### Native thin-stroke verification (2026-10-20–21)
 
@@ -513,7 +563,7 @@ The completed draw-transform audit checks default scale/rotation, translated and
 
 Engine.Run forwards its captured scaled process step through Window/SceneTree. RenderingServer starts its clock at zero, advances after FramePreDraw, and wraps by the active ProjectSettings.RenderingTimeRolloverSeconds value, default 3600. Scene pause leaves this clock advancing; TimeScale zero freezes it. RenderLoopEnabled false or an invisible root window skips submission and advancement. Project base/feature changes apply on the next submitted frame. No catch-up for skipped render frames is added. The GPU backend also supplies this clock to the optional fragment [TIME built-in](shader-materials.md#render-time), using reflected buffer offsets.
 
-DrawRect now uses reusable CanvasStroke storage. Ordinary outlines are the existing closed polyline path. An outline at least as wide as either dimension becomes an expanded fill; this also covers zero-area original rectangles. Filled AA rectangles shrink their core by 0.3125 local units, preserve resulting signed dimensions, then add separate local side/corner feathers of width 1.25, reduced for small positive cores. Final snapping happens after transforms. The obsolete framebuffer outline/feather tessellator was removed. Thin native line parity remains Partial and software fractional-coordinate truncation remains the documented fallback precision limit.
+DrawRect now uses reusable CanvasStroke storage. Ordinary outlines are the existing closed polyline path. An outline at least as wide as either dimension becomes an expanded fill; this also covers zero-area original rectangles. Filled AA rectangles shrink their core by 0.3125 local units, preserve resulting signed dimensions, then add separate local side/corner feathers of width 1.25, reduced for small positive cores. Final snapping happens after transforms. The obsolete framebuffer outline/feather tessellator was removed. The uniform thin outline is covered by the [native stroke qualification](#uniform-stroke-contract-2026-10-25). Software fractional-coordinate truncation remains the documented fallback precision limit.
 
 ### Source audit and checks
 

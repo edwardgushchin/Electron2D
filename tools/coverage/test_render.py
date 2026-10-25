@@ -70,6 +70,15 @@ def check_physics_report(pages):
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "resources.md#copy-and-duplicate-contract" in rows[0]
         assert not any(key.startswith("Resource::method:" + method + "(") for key in expected)
     assert expected["class:Resource"] == "Partial", "Copy completion must retain inherited live-script gaps"
+    canvas_page = pages[CLASS_PAGES / "CanvasItem.md"]
+    for method in ("draw_arc", "draw_circle", "draw_dashed_line", "draw_ellipse", "draw_ellipse_arc",
+                   "draw_line", "draw_multiline", "draw_multiline_colors", "draw_polyline", "draw_rect"):
+        rows = [row for row in canvas_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "uniform-stroke-contract-2026-10-25" in rows[0]
+        assert not any(key.startswith("CanvasItem::method:" + method + "(") for key in expected)
+    for method in ("draw_polyline_colors", "draw_primitive"):
+        assert any(key.startswith("CanvasItem::method:" + method + "(") and state == "Partial" for key, state in expected.items()), "Uniform strokes must not hide attribute-bearing raster gaps"
+    assert expected["class:CanvasItem"] == "Partial"
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" not in expected

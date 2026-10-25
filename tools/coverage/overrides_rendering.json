@@ -5965,8 +5965,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Retained copied stroke geometry is executable: joined/closed/repeated polylines, segment/vertex colors, aligned dashes, clamped circular/elliptical arcs, 64-segment filled/outlined/wide ellipses, local compensated antialias feathers and live transforms/modulation. Pinned canvas_item.cpp and renderer_canvas_cull.cpp audit; typed spans, exceptions and finite/count bounds follow ADR 0004. CanvasStrokeTests verifies geometry, guards, rollback and zero warmed allocation; CanvasStrokeRenderingTests verifies Linux Wayland GPU/compatibility HLSL/GLSL and dummy/software pixels. NativeStrokeTests independently compares GPU line-list/line-strip pixels with direct RenderingDevice topology across clipped affine cases, endpoint snapping, HDR, MSAA and HLSL/GLSL materials. SDL compatibility now uses native untextured uniform-color segments/strips with endpoint snapping; independent SDL texture-target pixel oracles cover affine clipping, repeated translucent joins and snap collapse. Textured or interpolated-color ranges retain triangle footprints and their native subpixel gap; broad platform and visual acceptance remain open. Other platforms unverified. See docs/components/canvas-rendering.md#stroke-commands.",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028: pinned nondeprecated uniform/segment-color stroke family audited through CanvasItem, CanvasStroke and both native backends. Widths, joins/caps, dashes, signed/clamped circular and elliptical curves, copied inputs, local antialiasing, transforms/modulation and failure/lifetime guards execute. Thin cores use native GPU and SDL untextured uniform-color line lists/strips; DrawMultilineColors has one constant color per segment. CanvasStrokeTests, CanvasTimingTests, native renderer regressions and independent RenderingDevice/SDL pixel oracles cover clipped affine/snap/HDR/MSAA/material cases plus moving CPU/GPU physical receivers at strict zero warmed measured bytes. See docs/components/canvas-rendering.md#uniform-stroke-contract-2026-10-25. Interpolated-color methods, other platforms and owner visual acceptance retain separate gates.",
       "godot": [
         "CanvasItem::method:draw_arc(Vector2:,float:,float:,float:,int:,Color:,float:,bool:)",
         "CanvasItem::method:draw_circle(Vector2:,float:,Color:,bool:,float:,bool:)",
@@ -5976,8 +5976,14 @@
         "CanvasItem::method:draw_multiline(PackedVector2Array:,Color:,float:,bool:)",
         "CanvasItem::method:draw_multiline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
         "CanvasItem::method:draw_polyline(PackedVector2Array:,Color:,float:,bool:)",
-        "CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)",
         "CanvasItem::method:draw_line(Vector2:,Vector2:,Color:,float:,bool:)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "DrawPolylineColors records copied interpolated vertex colors with the shared join/width/feather contract. Native GPU lines and independent device pixels execute; the SDL compatibility path still expands nonuniform-color thin strips to triangles, retaining its exact subpixel line/end coverage gap. Uniform/segment-color sibling methods are qualified separately in docs/components/canvas-rendering.md#uniform-stroke-contract-2026-10-25; their evidence does not close this attribute-bearing path.",
+      "godot": [
+        "CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)"
       ]
     },
     {
@@ -6009,8 +6015,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Audited normalized rectangles, wide/degenerate expanded fills, joined closed outlines and compensated local AA geometry against CanvasItem and renderer_canvas_cull. CanvasTimingTests checks vertices, scaling, rollback and zero warm allocations; native GPU/compatibility, HLSL/GLSL and dummy pixels pass. GPU negative-width outlines now use native LineStrip topology with independent direct-device pixel checks. Partial remains for exact native coverage on the triangle-based SDL_Renderer fallback and broader platform/visual acceptance.",
+      "state": "Implemented",
+      "reason": "Audited normalized rectangles, wide/degenerate expanded fills, joined closed outlines and compensated local AA geometry against the pinned CanvasItem and renderer_canvas_cull. CanvasTimingTests checks vertices, scaling, rollback and zero warm allocations; GPU/compatibility HLSL/GLSL and dummy pixels pass. Thin uniform outlines use native GPU LineStrip and SDL RenderLines with independent clipped affine/snap pixel checks. The former shared triangle-fallback trigger no longer applies to this uniform-color API. See docs/components/canvas-rendering.md#uniform-stroke-contract-2026-10-25. Other platforms and owner visual acceptance remain separate.",
       "godot": [
         "CanvasItem::method:draw_rect(Rect2:,Color:,bool:,float:,bool:)"
       ]
@@ -6707,13 +6713,19 @@
       "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit."
     },
     {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:canvas_item_add_line(RID:,Vector2:,Vector2:,Color:,float:,bool:)"
+      ],
+      "reason": "ADRs 0004/0028/0095: owned/borrowed RID command routing enters the same guarded DrawLine/CanvasStroke native line and local-AA path. RenderingPrimitiveTests verifies copied commands, owner/lifetime/error handling and actual GPU/compatibility pixels. Independent RenderingDevice/SDL oracles qualify clipped affine/snap/HDR/MSAA uniform strokes and moving CPU/GPU receivers; no interpolated-color or textured line is accepted by this declaration. See docs/components/canvas-rendering.md#uniform-stroke-contract-2026-10-25. Other-platform and owner visual acceptance remain separate."
+    },
+    {
       "state": "Partial",
       "godot": [
-        "RenderingServer::method:canvas_item_add_line(RID:,Vector2:,Vector2:,Color:,float:,bool:)",
         "RenderingServer::method:canvas_item_add_multiline(RID:,PackedVector2Array:,PackedColorArray:,float:,bool:)",
         "RenderingServer::method:canvas_item_add_polyline(RID:,PackedVector2Array:,PackedColorArray:,float:,bool:)"
       ],
-      "reason": "ADRs 0004/0028/0092/0095: executable copied low-level retained primitives on owned/borrowed canvas items. Existing shape/texture kernels, indexed triangle prefix and independent four-slot uint16/UNORM16 skin channels feed the same palette and native triangle pipeline. Command-local transform/animation/clip-ignore, stable draw-index ordering and destination visibility masks preserve authored source getters; structural/mask edits republish matching source fields. RenderingPrimitiveTests validates copied storage, guards/recovery, prepared zero allocation and GPU/compatibility pixels, including skin and clip resurrection. Current native/platform/hardware-raster limits remain explicit. Remaining exact shared stroke dependency: negative widths still expand to framebuffer triangles; hardware subpixel line/end coverage remains unverified under the existing stroke contract. The new owned command producer does not close that inherited raster gap."
+      "reason": "ADRs 0004/0028/0092/0095: copied low-level polyline/multiline commands execute on owned/borrowed items with shared guards, state and retained geometry. Native GPU topology and SDL uniform-color ranges are verified. Nonuniform per-vertex polyline colors and the accepted multiline endpoint-color extension still use compatibility triangle footprints for thin lines; exact attribute-bearing subpixel line/end coverage remains open. See docs/components/canvas-rendering.md#uniform-stroke-contract-2026-10-25."
     },
     {
       "state": "Partial",
