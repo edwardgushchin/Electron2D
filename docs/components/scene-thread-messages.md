@@ -31,4 +31,42 @@ Current qualification also exposed a stale regression: GroupContext still requir
 
 Evidence is under `bin/physics-thread-message-contract/2026-10-25/`: verified pinned source hashes, exact commands, source/payload manifests, negative receipt, CLR/strict NativeAOT summaries and `qualification.json`. GPU receipts require NVIDIA mappings and reject software ICDs; CPU processes use dummy video and unavailable ICDs. NativeAOT receipts reject CoreCLR mappings. All 48 profiles passed: 24 CLR and 24 strict NativeAOT, covering all four consumers on CPU/GPU/registered implementations with owner/separate numerical policies. Printed small-scene timings are functional observations, not performance qualification.
 
-Only the six invocation rows close. Node itself, reserved PropagateNotification receivers, general worker scene/GUI/physical authoring, full-suite qualification, cross-process networking, native allocation, foreign platforms, mass-scene advantage and real-window FPS keep their separate open gates. The physical motion component documents the currently supported worker mutation boundary.
+These six invocation rows are complete; generic notification propagation is qualified separately below. Node itself, reserved PropagateNotification receivers, general worker scene/GUI/physical authoring, full-suite qualification, cross-process networking, native allocation, foreign platforms, mass-scene advantage and real-window FPS keep their separate open gates. The physical motion component documents the currently supported worker mutation boundary.
+
+## Notification propagation contract
+
+`Node.PropagateNotification(int)` is separately audited against the pinned
+[node.cpp traversal](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/node.cpp#L2577-L2587).
+The receiver is called immediately before its children, in tree order, including
+internal/unowned children. Traversed child topology stays blocked until unwinding.
+ADR 0008's typed error adaptation attempts later descendants and siblings before
+reporting collected exceptions; traversal depth balances after failures.
+
+Owner/current-group validation precedes entry to each branch. An inaccessible
+explicit-group branch rejects before its callback or descendants, while later
+accessible siblings continue. Reentrant traversal is synchronous; custom delivery
+during capture retains ordinary mutation guards. These rules do not alter the
+permissions of a callback, its receiver or its selected numerical implementation.
+Manual delivery does not synthesize a lifecycle transition or another physics tick.
+
+The existing public `--group-propagation` consumer checks 18 ordinary/canvas/
+physical roles, concurrent groups, inaccessible branches, direct and pooled scene
+owners, separate numerical execution, callback failure continuation, capture,
+reentry, disposal/topology guards and retained body/shape/query identities.
+Related snapshot tests verify immediate logical interpolation/reset observations.
+Tree diagnostics check deterministic traversal and recovery; live scene saving
+verifies parent-first pre/post delivery to an unsaved internal child and a physical
+body, including failed authoring cleanup and real fresh-process reconstruction.
+
+Current receipts are retained in
+`bin/physics-propagation-contract/2026-10-25/qualification.json`: all 31 profiles
+pass (18 CLR and 13 strict NativeAOT), including 28 zero-byte group-frame brackets.
+They use the same unchanged runtime/test source content, selected CPU,
+registered and NVIDIA Vulkan GPU worlds, owner/separate numerical policies and
+strict zero owner/all-thread managed-byte frame brackets. Software ICDs are
+rejected; native consumers reject CoreCLR mappings. These functional/allocation
+checks run alongside the ordinary suite and provide no performance comparison.
+
+The generic propagation row closes under the existing ADR. Node, inherited
+Object notification reversal/initialization and receiver-specific reserved GUI,
+rendering or numerical publication requirements remain open on their own rows.

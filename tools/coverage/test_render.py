@@ -60,6 +60,10 @@ def check_physics_report(pages):
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "scene-thread-messages.md" in rows[0]
         assert not any(key.startswith("Node::method:" + method + "(") for key in expected)
     assert expected["class:Node"] == expected["class:RigidBody2D"] == "Partial", "Invocation completion must retain receiver gaps"
+    propagation = [row for row in node_page.splitlines() if row.startswith("| [`method propagate_notification(")]
+    assert len(propagation) == 1 and " | Implemented | " in propagation[0] and "notification-propagation-contract" in propagation[0]
+    assert "Node::method:propagate_notification(int:)" not in expected
+    assert expected["Object::method:notification(int:,bool:)"] == "Partial", "Tree traversal must not hide per-class notification ordering gaps"
     resource_page = pages[CLASS_PAGES / "Resource.md"]
     for method in ("copy_from_resource", "duplicate", "duplicate_deep"):
         rows = [row for row in resource_page.splitlines() if row.startswith("| [`method " + method + "(")]
