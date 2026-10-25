@@ -195,6 +195,8 @@ The manual Linux GPU diagnostic first runs the unchanged public compound fixture
 on the registered x64 host. A failed baseline is replayed with candidate-count and
 impact-fraction logging in a temporary source copy; the shader manifest must stay
 byte-identical. CPU/driver identities, both logs and source hashes are retained.
+The trace covers separate and shared swept-pair completion, reads the status at
+the mapped CCD offset and captures the shared batch inputs after completion.
 Neither a traced replay nor a local pass replaces the failed untraced target gate.
 A further control restores the exact original source bytes and repeats the
 unchanged fixture with only the installed Lavapipe ICD selected. The original

@@ -96,7 +96,8 @@ jobs:
           newline = '\r\n' if b'\r\n' in original else '\n'
           markers = {
               'var pairs = FindPairs(CCDTolerance, delta, _hasPositionCorrections);': 'Console.WriteLine($"CCD candidates delta={delta:R}, pairs={pairs}, enabled={_ccdBodyCount}, corrections={_hasPositionCorrections}");',
-              'result = ((float*)mapped)[1];': 'Console.WriteLine($"CCD result status={*(uint*)mapped}, fraction={result:R}");'
+              'PairCount = result.Pairs; CommitGeometry();': 'Console.WriteLine($"CCD candidates delta={delta:R}, pairs={result.Pairs}, enabled={_ccdBodyCount}, corrections={_hasPositionCorrections}"); TraceCCDInputs(result.Pairs, delta);',
+              'var values = (uint*)((byte*)mapped + offset); var result = *(float*)values;': 'Console.WriteLine($"CCD result status={values[1]}, fraction={result:R}");'
           }
           for marker, trace in markers.items():
               assert source.count(marker) == 1
