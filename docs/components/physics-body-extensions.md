@@ -2,7 +2,9 @@
 
 [Body view acquisition](physics-registered-adapter.md#body-view-acquisition-after-mode-failure) completes pending mode preparation before resolved-field publication or selected factory invocation. Cached acquisition and caller-created construction share that boundary; repeated failure creates no view and advances no tick.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
+
+The [complete direct-body type audit](physics-body-state-contract.md) records all declared state/force/contact members, selected factory dispatch and changing full-frame qualification on CPU/GPU/registered numerical owners.
 
 ## Responsibility and types
 
@@ -40,7 +42,7 @@ An engine-only qualified publication scope lets PhysicsBodyContact validate curr
 
 [Contact publication checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ContactPublication.cs) cover doubled actual reported impulses without double application, scene monitor suppression/departure/reentry, raw callback delivery, immutable associations, invalid count/value/throw/stale attachment recovery and owner-thread hooks with real CPU and independent GPU host-report worker capture. The fixture prepares contact snapshots for 301 scene rigid bodies plus one raw body (and a static floor), 64 warmup/64 measured full 1/60-second frames plus cached contact reads, asserting zero owner/all-thread managed allocation on CPU/GPU. The existing ownership no-device child includes it. Dedicated cold probes are outside the measured hook path; their earlier capturing lambdas allocated 128 bytes per receiver/frame even with the probe disabled, and were moved to a separate probe method without changing the measured operation or budget.
 
-Public named server factories/full operation bridge and custom algorithms remain open under ADR 0103. These internal selected factory tests do not claim public third-party solver acceptance, native allocation, foreign-platform or final GPU/window performance acceptance.
+Public named factory dispatch and the selected bridge also execute in the separate backend consumer. General third-party solver acceptance, native allocation, foreign platforms and final GPU/window performance retain their own gates under ADR 0103.
 
 
 [Contact reporting depth](physics-registered-adapter.md#contact-reporting-depth) adds an explicit signed scene-unit PhysicsBodyContact.Depth sample to numerical and factory projection. Cached projection filters its own sampled depths before committing; physical solving and completed-snapshot lifetime remain unchanged.

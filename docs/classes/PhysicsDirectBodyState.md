@@ -2,7 +2,9 @@
 
 [Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
+
+[Complete type audit](../components/physics-body-state-contract.md) accounts for all 42 declared base members and the complete extension projection, with selected CPU/GPU/registered qualification and explicit inherited/full-goal limits.
 
 ## View lifetime guards
 
@@ -73,10 +75,7 @@ slots before replacing packet bytes. In-slot replacement and disabled history st
 valid; portable apply remaps private slot lifetimes to destination authoring.
 
 [Angular compound verification](../components/physics-registered-adapter.md#angular-compound-motion)
-checks global-axis mass-center offsets and origin-relative point velocity on CPU
-and the independent registered factory while an asymmetric body translates and
-rotates. CPU/provider serial and separate numerical modes pass; GPU is unverified
-for this new fixture.
+checks global-axis mass-center offsets and origin-relative point velocity while an asymmetric body translates and rotates. Current CPU/GPU/registered qualification is recorded in the [type audit](../components/physics-body-state-contract.md).
 
 **Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** [PhysicsDirectBodyStateExtension](PhysicsDirectBodyStateExtension.md)
 
@@ -92,13 +91,12 @@ An owner-thread view of one backend attachment of a scene or server body. Obtain
 
 Acquiring a view synchronizes its requested body's pending pose/geometry without scanning other bodies. Direct-space queries synchronize their world independently. Scene runtime ownership retains the existing weak registration and never extends a body's lifetime. Server runtimes retain their registered collider owner and mark it released when its RID is freed, avoiding registry lookups on each live field read while retaining release and attachment guards. Frequently polled getters retain a validated attachment adapter; its backend body/world references remain private. The common view validates the adapter version before reading current solver state.
 
-Fields read the live native body. A zero-contact view does not itself require a per-step contact snapshot; reducing the contact cap to zero clears the prior snapshot on the next solved step. Contact methods read an immutable value snapshot from the last solved step, capped by MaxContactsReported independently of object ContactMonitor. The word local identifies this body; contact positions, normals and velocities use global coordinates. Collision layer/mask changes and direct-space queries may rebuild fixtures without invalidating those stored contact values.
+Fields read the live native body. A zero-contact view does not itself require a per-step contact snapshot; assigning a contact cap clears the prior count immediately, including an equal assignment. Contact methods read an immutable value snapshot from the last solved step, capped by MaxContactsReported independently of object ContactMonitor. The word local identifies this body; contact positions, normals and velocities use global coordinates. Collision layer/mask changes and direct-space queries may rebuild fixtures without invalidating those stored contact values.
 
 The selected world owner creates the cached view before solver/worker borrowing;
 its identity and attachment generation are checked before publication. The internal
 [factory route](../components/physics-backends.md#selected-direct-state-construction)
-also supplies executing extensions to scene/server callbacks. Public named backend
-registration and complete server-operation dispatch remain open.
+also supplies executing extensions to scene/server callbacks. Public named registration and selected callback dispatch execute through the public-only backend consumer; broader solver acceptance retains its separate gates.
 
 ## Example
 

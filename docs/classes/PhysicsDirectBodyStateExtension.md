@@ -1,6 +1,8 @@
 # PhysicsDirectBodyStateExtension
 
-Last updated: 2026-10-17
+Last updated: 2026-10-25
+
+[Complete type audit](../components/physics-body-state-contract.md) accounts for all 48 extension operations and inherited live-body dispatch, including changed full-frame and strict NativeAOT qualification.
 
 ## Prepared body view acquisition
 
@@ -14,8 +16,7 @@ valid; portable apply remaps private slot lifetimes to destination authoring.
 [Angular compound verification](../components/physics-registered-adapter.md#angular-compound-motion)
 now exercises the independent factory's rotated mass offset and origin-relative
 point velocity with real translating/rotating bodies. Numerical circle-slot CCD,
-full frame impulses and 0/0 warm frames pass in serial/separate modes on CPU and
-the registered consumer; GPU and broader geometry acceptance stay open.
+full frame impulses and 0/0 warm frames have current CPU/GPU/registered qualification in the [type audit](../components/physics-body-state-contract.md); broader geometry acceptance retains its own gates.
 
 **Declaration:** `public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBodyState` · **Inherits:** [PhysicsDirectBodyState](PhysicsDirectBodyState.md) · **Component:** [Body-state extensions](../components/physics-body-extensions.md)
 

@@ -1,7 +1,10 @@
 using Electron2D;
 using System.Diagnostics;
 
+var threaded = args.Contains("--threaded");
+ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
 var backend = args.FirstOrDefault() == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+BodyFrameChecks.Run(backend, threaded);
 using var world = new World(backend); using var other = new World(backend);
 using var circle = new CircleShape { Radius = 5 }; using var box = new RectangleShape { Size = new(100, 2) };
 using var root = new SubViewport { World = world };
@@ -85,7 +88,7 @@ try
     Reject<ArgumentOutOfRangeException>(() => new PhysicsBodyContact(body, 2, scene.GetRID(), 0, default, default, default, default, default, default));
     Reject<ArgumentOutOfRangeException>(() => new PhysicsBodyContact(body, 0, scene.GetRID(), 0, new(float.NaN, 0), default, default, default, default, default));
     view.SetConstantForce(Vector2.Zero); view.SetConstantTorque(0); view.LinearVelocity = Vector2.Zero; view.AngularVelocity = 0;
-    GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+    AllocationWarmupCheck.Collect();
     var warm = Stopwatch.StartNew(); var warmCycles = 0;
     do { for (var i = 0; i < 64; i++) Evaluate(); warmCycles += 64; } while (warm.Elapsed.TotalSeconds < 1);
     _ = GC.GetTotalAllocatedBytes(true); _ = GC.GetAllocatedBytesForCurrentThread();
@@ -125,7 +128,7 @@ try
     }
     finally { PhysicsServer.FreeRID(ownedBody); PhysicsServer.FreeRID(ownedSpace); }
     PhysicsServer.FreeRID(body); body = default; Reject<ObjectDisposedException>(() => _ = reopened.LinearVelocity);
-    Console.WriteLine($"{backend}: separate public-only full body-state hooks, real scene/raw forces/contact/motion, validated results, nesting/borrowed lifetime, transfer/reentry and {warmCycles} warm/64 measured cycles: {owner}/{all} B passed.");
+    Console.WriteLine($"{backend}/{(threaded ? "separate" : "owner")}: public-only full body-state hooks, real scene/raw forces/contact/motion, validated results, nesting/borrowed lifetime, transfer/reentry and {warmCycles} warm/64 measured cycles: {owner}/{all} B passed.");
 
     void Poll()
     {
