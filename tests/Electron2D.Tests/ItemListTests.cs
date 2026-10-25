@@ -4,6 +4,7 @@ internal static class ItemListTests
 {
     internal static void Run()
     {
+        ItemListLayoutTests.Run();
         using var list = new ItemList();
         Check(list.ChildCount == 0 && list.GetChildCount(includeInternal: true) == 2 &&
               list.GetVScrollBar().Parent == list && list.GetHScrollBar().Parent == list &&
@@ -60,7 +61,7 @@ internal static class ItemListTests
 
     private static void VerifyVisibleRows()
     {
-        var viewport = new TestViewport();
+        var viewport = new SubViewport { Size = new(320, 240) };
         var list = new ItemList { Size = new(120, 60) };
         for (var i = 0; i < 8; i++) list.AddItem($"Entry {i}");
         viewport.AddChild(list);
@@ -115,7 +116,7 @@ internal static class ItemListTests
     private static void VerifyPointerAndKeyboard()
     {
         InputMap.LoadFromProjectSettings();
-        var viewport = new TestViewport();
+        var viewport = new SubViewport { Size = new(320, 240) };
         var list = new ItemList { Position = new(10, 10), Size = new(120, 70) };
         for (var i = 0; i < 8; i++) list.AddItem($"Entry {i}");
         viewport.AddChild(list);
@@ -145,7 +146,7 @@ internal static class ItemListTests
 
     private static void VerifyColumns()
     {
-        var viewport = new TestViewport();
+        var viewport = new SubViewport { Size = new(320, 240) };
         var list = new ItemList { Size = new(120, 80), FixedColumnWidth = 30, MaxColumns = 3 };
         for (var i = 0; i < 9; i++) list.AddItem("A");
         viewport.AddChild(list);
@@ -203,7 +204,7 @@ internal static class ItemListTests
 
     private static void VerifyIncrementalSearch()
     {
-        var viewport = new TestViewport();
+        var viewport = new SubViewport { Size = new(320, 240) };
         var list = new ItemList { Size = new(130, 90) };
         list.AddItem("Apple");
         list.AddItem("Banana");
@@ -224,7 +225,7 @@ internal static class ItemListTests
 
     private static void VerifyMultiSelection()
     {
-        var viewport = new TestViewport();
+        var viewport = new SubViewport { Size = new(320, 240) };
         var list = new ItemList { Position = new(10, 10), Size = new(130, 130), SelectionMode = ItemList.SelectMode.Multi };
         for (var i = 0; i < 5; i++) list.AddItem($"Choice {i}");
         viewport.AddChild(list);
@@ -273,11 +274,6 @@ internal static class ItemListTests
               theme.GetColor("guide_color", "ItemList") == new Color(.7f, .7f, .7f, .25f) &&
               ReferenceEquals(theme.GetIcon("scroll_hint", "ItemList"), theme.GetIcon("scroll_hint_vertical", "ScrollContainer")),
             "The list theme uses the pinned panel, focus, selection text, spacing and shared scroll-hint defaults.");
-    }
-
-    private sealed class TestViewport : Viewport
-    {
-        public override Rect2 GetVisibleRect() => new(0, 0, 320, 240);
     }
 
     private static void Check(bool condition, string message)

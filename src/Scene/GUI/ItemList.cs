@@ -37,7 +37,8 @@ public partial class ItemList : Control
         internal bool IconTransposed;
         internal Rect2 IconRegion;
         internal Color IconModulate = Colors.White, CustomFG, CustomBG;
-        internal readonly TextLayout Layout = new();
+        internal readonly TextLayout Layout = new(), Measurement = new();
+        internal Vector2 MinimumSize;
         internal Rect2 Rect;
         internal object? Metadata;
     }

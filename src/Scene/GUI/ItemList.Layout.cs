@@ -5,6 +5,8 @@ public partial class ItemList
     internal override Rect2? CanvasClipRect => ClipContents ? new Rect2(Vector2.Zero, Size) : null;
     private Vector2 _contentSize;
     private int _lastWidth = -1;
+    private bool _rebuildingLayout;
+    private int _layoutGeneration;
     private bool _ensureCurrentVisible;
     private int _fixedColumnWidth, _maxTextLines = 1, _maxColumns = 1, _currentColumns = 1;
     private bool _sameColumnWidth, _autoWidth, _autoHeight, _wraparoundItems = true;
@@ -13,7 +15,8 @@ public partial class ItemList
     private VerticalScrollHintMode _hintMode;
     private bool _tileScrollHint;
 
-    /// <summary>Gets or sets a fixed item-column width, with zero selecting measured widths.</summary>
+    /// <summary>Gets or sets a fixed content-column width, with zero selecting measured widths.</summary>
+    /// <remarks>The outer horizontal separation is added to the content width.</remarks>
     /// <value>Zero initially.</value>
     public int FixedColumnWidth
     {
@@ -30,6 +33,7 @@ public partial class ItemList
     }
 
     /// <summary>Gets or sets the maximum shaped lines per top-icon item.</summary>
+    /// <remarks>A positive fixed column width enables wrapping; every configured line reserves the theme line separation.</remarks>
     /// <value>One initially; must remain positive.</value>
     public int MaxTextLines
     {
@@ -45,7 +49,7 @@ public partial class ItemList
         set { EnsureMutable(); if (value < 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_maxColumns == value) return; _maxColumns = value; InvalidateListLayout(); }
     }
 
-    /// <summary>Gets or sets whether the measured content width contributes an intrinsic minimum.</summary>
+    /// <summary>Gets or sets whether naturally measured content width contributes an intrinsic minimum before visible text trimming.</summary>
     /// <value>False initially.</value>
     public bool AutoWidth { get { ThrowIfDisposed(); return _autoWidth; } set { EnsureMutable(); if (_autoWidth == value) return; _autoWidth = value; InvalidateListLayout(); } }
 
@@ -86,136 +90,113 @@ public partial class ItemList
 
     private void InvalidateListLayout()
     {
-        _layoutDirty = true;
+        _layoutDirty = true; _layoutGeneration++;
         QueueRedraw();
         UpdateMinimumSize();
     }
 
     private void RebuildListLayout()
     {
+        Tree?.EnsureOwnerThread();
+        if (_rebuildingLayout) throw new InvalidOperationException("An active item layout cannot query itself.");
+        FlushIconUpdates();
         var width = Math.Max(0, (int)Size.X);
         if (!_layoutDirty && _lastWidth == width) return;
-        _layoutDirty = false;
-        _lastWidth = width;
+        _layoutDirty = false; _rebuildingLayout = true; _lastWidth = width;
+        try { RebuildListLayoutCore(); }
+        catch { _layoutDirty = true; throw; }
+        finally { _rebuildingLayout = false; }
+    }
+
+    private void RebuildListLayoutCore()
+    {
+        // Adapted sizing attribution is retained in licence/CanvasStyleGeometry-LICENSE.txt.
+        var generation = _layoutGeneration;
         var panel = GetThemeStyleBox("panel") ?? throw new InvalidOperationException("ItemList requires its panel style.");
         var font = GetThemeFont("font") ?? ThemeDB.FallbackFont ?? throw new InvalidOperationException("ItemList requires a font.");
         var fontSize = GetThemeFontSize("font_size");
-        var margin = panel.GetMinimumSize();
-        var offset = panel.GetOffset();
-        var availableWidth = Math.Max(0, Size.X - margin.X);
-        var availableHeight = Math.Max(0, Size.Y - margin.Y);
-        var hSeparation = Math.Max(0, GetThemeConstant("h_separation"));
-        var vSeparation = Math.Max(0, GetThemeConstant("v_separation"));
-        var iconMargin = GetThemeConstant("icon_margin");
-        var barWidth = _vBar.GetBoundMinimumSize().X;
-        var fitWidth = availableWidth;
+        var margin = panel.GetMinimumSize(); var offset = panel.GetOffset();
+        var availableWidth = Math.Max(0, Size.X - margin.X); var availableHeight = Math.Max(0, Size.Y - margin.Y);
+        var hSeparation = Math.Max(0, GetThemeConstant("h_separation")); var vSeparation = Math.Max(0, GetThemeConstant("v_separation"));
+        var iconMargin = GetThemeConstant("icon_margin"); var lineSeparation = GetThemeConstant("line_separation");
+        var barWidth = _vBar.GetBoundMinimumSize().X; var barHeight = _hBar.GetBoundMinimumSize().Y;
+        var widestItem = (float)hSeparation;
+        foreach (var item in _items)
+        {
+            var icon = IconSize(item); var text = Vector2.Zero;
+            if (item.Text.Length != 0)
+            {
+                var displayed = item.AutoTranslate switch { NodeAutoTranslateMode.Always => Tr(item.Text), NodeAutoTranslateMode.Disabled => item.Text, _ => Atr(item.Text) };
+                var direction = item.Direction == TextDirection.Inherited ? IsLayoutRTL() ? TextDirection.RTL : TextDirection.LTR : item.Direction;
+                var breaks = _iconMode == IconMode.Top ? TextLineBreakFlags.Mandatory | TextLineBreakFlags.WordBound | TextLineBreakFlags.GraphemeBound |
+                    TextLineBreakFlags.TrimStartEdgeSpaces | TextLineBreakFlags.TrimEndEdgeSpaces : TextLineBreakFlags.None;
+                var key = new TextLayoutKey(displayed, fontSize, _fixedColumnWidth > 0 ? _fixedColumnWidth : -1, HorizontalAlignment.Left,
+                    _iconMode == IconMode.Top ? _maxTextLines : 1, breaks, TextJustificationFlags.None, direction, TextOrientation.Horizontal, _iconMode == IconMode.Top);
+                item.Measurement.Build(font, key, new TextLayoutOptions(Language: item.Language, Overrun: (int)_textOverrunBehavior));
+                text = item.Measurement.Size;
+                if (_iconMode == IconMode.Top) text.Y += lineSeparation * (float)_maxTextLines;
+            }
+            var between = item.Icon is not null && item.Text.Length != 0 ? iconMargin : 0;
+            var size = item.Text.Length == 0 ? icon : _iconMode == IconMode.Top ? new Vector2(Math.Max(icon.X, text.X), icon.Y + between + text.Y) : new(icon.X + between + text.X, Math.Max(icon.Y, text.Y));
+            if (_fixedColumnWidth > 0) size.X = _fixedColumnWidth;
+            size += new Vector2(hSeparation, vSeparation);
+            if (!size.IsFinite()) throw new InvalidOperationException("Item measurement exceeds finite geometry.");
+            item.MinimumSize = size; widestItem = Math.Max(widestItem, size.X);
+        }
         var columns = _maxColumns == 0 ? Math.Max(1, _items.Count) : Math.Min(_maxColumns, Math.Max(1, _items.Count));
+        var fitWidth = availableWidth;
         for (var pass = 0; pass < 2; pass++)
         {
             for (; columns >= 1; columns--)
             {
-                var widestItem = 0f;
-                foreach (var item in _items)
-                {
-                    var iconSize = IconSize(item);
-                    var cellWidth = _fixedColumnWidth > 0 ? _fixedColumnWidth : _wraparoundItems ? fitWidth / columns : -1;
-                    var textWidth = cellWidth < 0 ? -1 : _iconMode == IconMode.Top ? Math.Max(0, cellWidth - hSeparation) :
-                        Math.Max(0, cellWidth - iconSize.X - (iconSize.X > 0 ? iconMargin : 0) - hSeparation);
-                    if (item.Text.Length != 0)
-                    {
-                        var displayed = item.AutoTranslate switch
-                        {
-                            NodeAutoTranslateMode.Always => Tr(item.Text),
-                            NodeAutoTranslateMode.Disabled => item.Text,
-                            _ => Atr(item.Text)
-                        };
-                        var direction = item.Direction == TextDirection.Inherited
-                            ? IsLayoutRTL() ? TextDirection.RTL : TextDirection.LTR
-                            : item.Direction;
-                        var breaks = _iconMode == IconMode.Top
-                            ? TextLineBreakFlags.Mandatory | TextLineBreakFlags.WordBound | TextLineBreakFlags.GraphemeBound |
-                              TextLineBreakFlags.TrimStartEdgeSpaces | TextLineBreakFlags.TrimEndEdgeSpaces
-                            : TextLineBreakFlags.None;
-                        var key = new TextLayoutKey(displayed, fontSize, textWidth, HorizontalAlignment.Left,
-                            _iconMode == IconMode.Top ? _maxTextLines : 1, breaks, TextJustificationFlags.None,
-                            direction, TextOrientation.Horizontal, _iconMode == IconMode.Top);
-                        item.Layout.Build(font, key, new TextLayoutOptions(LineSpacing: GetThemeConstant("line_separation"),
-                            Language: item.Language, Overrun: (int)_textOverrunBehavior));
-                    }
-                    var textSize = item.Text.Length == 0 ? Vector2.Zero : item.Layout.Size;
-                    var between = iconSize.X > 0 && textSize.X > 0 ? iconMargin : 0;
-                    var itemWidth = _iconMode == IconMode.Top ? Math.Max(iconSize.X, textSize.X) + hSeparation :
-                        iconSize.X + between + textSize.X + hSeparation;
-                    var itemHeight = (_iconMode == IconMode.Top ? iconSize.Y + between + textSize.Y : Math.Max(iconSize.Y, textSize.Y)) + vSeparation;
-                    item.Rect = new(0, 0, _fixedColumnWidth > 0 ? _fixedColumnWidth : itemWidth, itemHeight);
-                    widestItem = Math.Max(widestItem, item.Rect.Size.X);
-                }
-
-                if (_sameColumnWidth)
-                    foreach (var item in _items) item.Rect.Size = new(widestItem, item.Rect.Size.Y);
-
-                var allFit = true;
-                var y = 0f;
-                var widestRow = 0f;
+                var allFit = true; var y = 0f; var widestRow = 0f;
                 for (var rowStart = 0; rowStart < _items.Count; rowStart += columns)
                 {
-                    var rowEnd = Math.Min(_items.Count, rowStart + columns);
-                    var rowHeight = 0f;
-                    var rowWidth = 0f;
-                    for (var index = rowStart; index < rowEnd; index++)
-                    {
-                        rowHeight = Math.Max(rowHeight, _items[index].Rect.Size.Y);
-                        rowWidth += _items[index].Rect.Size.X;
-                    }
-                    if (columns > 1 && _wraparoundItems && !_autoWidth && rowWidth > fitWidth)
-                    { allFit = false; break; }
+                    var rowEnd = Math.Min(_items.Count, rowStart + columns); var rowHeight = 0f; var rowWidth = 0f;
+                    for (var i = rowStart; i < rowEnd; i++) { rowHeight = Math.Max(rowHeight, _items[i].MinimumSize.Y); rowWidth += _sameColumnWidth ? widestItem : _items[i].MinimumSize.X; }
+                    if (columns > 1 && _wraparoundItems && !_autoWidth && rowWidth > fitWidth) { allFit = false; break; }
                     var x = 0f;
-                    for (var index = rowStart; index < rowEnd; index++)
-                    {
-                        var item = _items[index];
-                        item.Rect = new(x, y, item.Rect.Size.X, rowHeight);
-                        x += item.Rect.Size.X;
-                    }
-                    widestRow = Math.Max(widestRow, rowWidth);
-                    y += rowHeight;
+                    for (var i = rowStart; i < rowEnd; i++) { var w = _sameColumnWidth ? widestItem : _items[i].MinimumSize.X; _items[i].Rect = new(x, y, w, rowHeight); x += w; }
+                    widestRow = Math.Max(widestRow, rowWidth); y += rowHeight;
                 }
                 if (!allFit) continue;
                 _contentSize = new(widestRow, y);
                 _currentColumns = columns;
                 break;
             }
-            if (pass == 0 && _wraparoundItems && _contentSize.Y > availableHeight && fitWidth == availableWidth)
-            { fitWidth = Math.Max(0, availableWidth - barWidth); continue; }
+            if (pass == 0 && _wraparoundItems && _contentSize.Y > availableHeight) { fitWidth = Math.Max(0, availableWidth - barWidth); continue; }
             break;
         }
-        var verticalVisible = _contentSize.Y > availableHeight;
-        var visibleBarWidth = verticalVisible ? barWidth : 0;
-        var horizontalPage = Math.Max(0, availableWidth - visibleBarWidth);
-        var horizontalVisible = !_wraparoundItems && _contentSize.X > horizontalPage;
-        var horizontalHeight = horizontalVisible ? _hBar.GetBoundMinimumSize().Y : 0;
-        var verticalPage = Math.Max(0, availableHeight - horizontalHeight);
-        verticalVisible = _contentSize.Y > verticalPage;
-        visibleBarWidth = verticalVisible ? barWidth : 0;
-        horizontalPage = Math.Max(0, availableWidth - visibleBarWidth);
-        _vBar.MaxValue = Math.Max(_contentSize.Y, verticalPage);
-        _vBar.Page = verticalPage;
-        _vBar.Visible = verticalVisible;
+        if (!_contentSize.IsFinite()) throw new InvalidOperationException("Item layout exceeds finite geometry.");
+        var verticalVisible = false; var horizontalVisible = false;
+        for (var pass = 0; pass < 3; pass++)
+        {
+            horizontalVisible = !_wraparoundItems && _contentSize.X > Math.Max(0, availableWidth - (verticalVisible ? barWidth : 0));
+            verticalVisible = _contentSize.Y > Math.Max(0, availableHeight - (horizontalVisible ? barHeight : 0));
+        }
+        var visibleBarWidth = verticalVisible ? barWidth : 0; var horizontalHeight = horizontalVisible ? barHeight : 0;
+        var horizontalPage = Math.Max(0, availableWidth - visibleBarWidth); var verticalPage = Math.Max(0, availableHeight - horizontalHeight);
+        foreach (var item in _items)
+        {
+            if (item.Text.Length == 0) continue;
+            var cellWidth = _wraparoundItems ? Math.Min(item.Rect.Size.X, horizontalPage) : item.Rect.Size.X;
+            var icon = IconSize(item); var inset = hSeparation + (_iconMode == IconMode.Left && item.Icon is not null ? icon.X + iconMargin : 0);
+            // A zero text allocation must trim rather than select the text service's unconstrained-width role.
+            var key = item.Measurement.Key with { Width = Math.Max(.001f, cellWidth - inset), Alignment = IsLayoutRTL() && _iconMode == IconMode.Left ? HorizontalAlignment.Right : HorizontalAlignment.Left };
+            item.Layout.Build(font, key, new TextLayoutOptions(Language: item.Language, Overrun: (int)_textOverrunBehavior));
+        }
+        if (generation != _layoutGeneration || Volatile.Read(ref _iconUpdatesPending) != 0) throw new InvalidOperationException("Item layout changed while measuring its content.");
+        _rebuildingLayout = false;
+        _vBar.MaxValue = Math.Max(_contentSize.Y, verticalPage); _vBar.Page = verticalPage; _vBar.Visible = verticalVisible;
         _hBar.MinValue = IsLayoutRTL() && !_wraparoundItems ? -Math.Max(0, _contentSize.X - horizontalPage) : 0;
         _hBar.MaxValue = IsLayoutRTL() && !_wraparoundItems ? horizontalPage : Math.Max(_contentSize.X, horizontalPage);
-        _hBar.Page = horizontalPage;
-        _hBar.Visible = horizontalVisible;
-        _vBar.SetContainerRect(new(IsLayoutRTL() ? offset.X : Size.X - offset.X - visibleBarWidth, offset.Y,
-            visibleBarWidth, verticalPage));
-        _hBar.SetContainerRect(new(offset.X, Size.Y - offset.Y - horizontalHeight,
-            horizontalPage, horizontalHeight));
-        var nextWidth = _contentSize.X + margin.X + visibleBarWidth;
-        var nextHeight = _contentSize.Y + margin.Y + horizontalHeight;
+        _hBar.Page = horizontalPage; _hBar.Visible = horizontalVisible;
+        _vBar.SetContainerRect(new(IsLayoutRTL() ? offset.X : Size.X - panel.GetMargin(Side.Right) - visibleBarWidth, offset.Y, visibleBarWidth, verticalPage));
+        _hBar.SetContainerRect(new(offset.X + (IsLayoutRTL() ? visibleBarWidth : 0), Size.Y - panel.GetMargin(Side.Bottom) - horizontalHeight, horizontalPage, horizontalHeight));
+        var nextWidth = _contentSize.X + margin.X + visibleBarWidth; var nextHeight = _contentSize.Y + margin.Y + horizontalHeight;
+        if (!float.IsFinite(nextWidth) || !float.IsFinite(nextHeight)) throw new InvalidOperationException("Item minimum size exceeds finite geometry.");
         if (_autoWidth && _autoWidthValue != nextWidth || _autoHeight && _autoHeightValue != nextHeight)
-        {
-            _autoWidthValue = nextWidth;
-            _autoHeightValue = nextHeight;
-            UpdateMinimumSize();
-        }
+        { _autoWidthValue = nextWidth; _autoHeightValue = nextHeight; UpdateMinimumSize(); }
     }
 
     /// <summary>Gets the layout rectangle for an item in control-local coordinates.</summary>
@@ -227,8 +208,8 @@ public partial class ItemList
         ThrowIfDisposed(); RebuildListLayout();
         var panel = GetThemeStyleBox("panel")!;
         var rect = GetItem(index).Rect;
-        if (expand && index % _currentColumns == _currentColumns - 1)
-            rect.Size = new(Math.Max(rect.Size.X, Size.X - panel.GetMinimumSize().X -
+        if (expand && index % _currentColumns == _currentColumns - 1 && (_currentColumns < _items.Count || _maxColumns == _currentColumns))
+            rect.Size = new(Math.Max(0, Size.X - panel.GetMinimumSize().X -
                 (_vBar.Visible ? _vBar.GetBoundMinimumSize().X : 0) - rect.Position.X), rect.Size.Y);
         rect.Position += panel.GetOffset();
         return rect;
@@ -273,13 +254,13 @@ public partial class ItemList
         return position.Y - GetThemeStyleBox("panel")!.GetOffset().Y + _vBar.Value > _items[^1].Rect.End.Y;
     }
 
-    /// <summary>Queues a scroll adjustment that reveals the current item on the next layout/draw pass.</summary>
+    /// <summary>Queues a scroll adjustment that reveals the current item on both axes at the next draw pass.</summary>
     public void EnsureCurrentIsVisible()
     {
         EnsureMutable(); _ensureCurrentVisible = true; QueueRedraw();
     }
 
-    /// <summary>Centers the current item along one or both active scroll axes.</summary>
+    /// <summary>Centers the current item along one or both active scroll axes, including signed RTL horizontal scrolling.</summary>
     /// <param name="centerVertically">Center its vertical span.</param>
     /// <param name="centerHorizontally">Center its horizontal span.</param>
     /// <exception cref="ArgumentException">Both axis choices are false for an existing current item.</exception>
@@ -289,7 +270,7 @@ public partial class ItemList
         if (!centerVertically && !centerHorizontally) throw new ArgumentException("At least one centering axis is required.");
         RebuildListLayout(); var rect = _items[_current].Rect;
         if (centerVertically) _vBar.Value = rect.Position.Y + rect.Size.Y * .5f - _vBar.Page * .5f;
-        if (centerHorizontally) _hBar.Value = rect.Position.X + rect.Size.X * .5f - _hBar.Page * .5f;
+        if (centerHorizontally) _hBar.Value = (IsLayoutRTL() ? -1 : 1) * (rect.Position.X + rect.Size.X * .5f - _hBar.Page * .5f);
     }
 
     /// <summary>Synchronously refreshes item rectangles, measured minima and both scroll ranges.</summary>
@@ -317,6 +298,10 @@ public partial class ItemList
             var rect = _items[_current].Rect;
             if (rect.Position.Y < _vBar.Value) _vBar.Value = rect.Position.Y;
             else if (rect.End.Y > _vBar.Value + _vBar.Page) _vBar.Value = rect.End.Y - _vBar.Page;
+            var horizontal = IsLayoutRTL() ? -_hBar.Value : _hBar.Value;
+            if (rect.Position.X < horizontal) horizontal = rect.Position.X;
+            else if (rect.End.X > horizontal + _hBar.Page) horizontal = rect.End.X - _hBar.Page;
+            _hBar.Value = IsLayoutRTL() ? -horizontal : horizontal;
         }
         _ensureCurrentVisible = false;
         var panel = GetThemeStyleBox("panel") ?? throw new InvalidOperationException("ItemList requires its panel style.");
@@ -347,6 +332,8 @@ public partial class ItemList
         for (var index = 0; index < _items.Count; index++)
         {
             var item = _items[index];
+            var contentRect = item.Rect with { Position = item.Rect.Position + offset };
+            if (_wraparoundItems) contentRect.Size = new(Math.Min(contentRect.Size.X, (float)_hBar.Page), contentRect.Size.Y);
             var rect = GetItemRect(index);
             rect.Position += new Vector2(rtl ? (float)_hBar.Value : -(float)_hBar.Value, -(float)_vBar.Value);
             if (rect.End.Y < 0 || rect.Position.Y > Size.Y) continue;
@@ -358,15 +345,16 @@ public partial class ItemList
             if (item.Icon is { } icon)
             {
                 var iconPosition = _iconMode == IconMode.Top
-                    ? rect.Position + new Vector2(MathF.Floor((rect.Size.X - iconSize.X) * .5f), vSeparation * .5f)
-                    : rect.Position + new Vector2(hSeparation * .5f, MathF.Floor((rect.Size.Y - iconSize.Y) * .5f));
+                    ? contentRect.Position + new Vector2(MathF.Floor((contentRect.Size.X - iconSize.X) * .5f), vSeparation * .5f)
+                    : contentRect.Position + new Vector2(hSeparation * .5f, MathF.Floor((contentRect.Size.Y - iconSize.Y) * .5f));
                 var region = item.IconRegion.Size.X == 0 || item.IconRegion.Size.Y == 0
                     ? new Rect2(Vector2.Zero, icon.GetSize()) : item.IconRegion;
                 var modulate = item.IconModulate;
                 if (item.Disabled) modulate.A *= .5f;
                 var fittedSize = FittedIconSize(item, iconSize);
                 iconPosition += (iconSize - fittedSize) * .5f;
-                if (fittedSize.X > 0 && fittedSize.Y > 0)
+                if (rtl) iconPosition.X = Size.X - iconPosition.X - fittedSize.X + panel.GetMargin(Side.Left) - panel.GetMargin(Side.Right);
+                if (fittedSize.X != 0 && fittedSize.Y != 0)
                     DrawTextureRectRegion(icon, new(iconPosition, fittedSize), region, modulate, item.IconTransposed);
             }
             if (item.Text.Length == 0) continue;
@@ -375,10 +363,11 @@ public partial class ItemList
                 index == _hovered ? hoveredTextColor : textColor;
             if (item.Disabled) color.A *= .5f;
             var baseline = _iconMode == IconMode.Top
-                ? rect.Position + new Vector2(MathF.Floor((rect.Size.X - item.Layout.Size.X) * .5f),
-                    iconSize.Y + (iconSize.Y > 0 ? iconMargin : 0) + vSeparation * .5f + item.Layout.FirstAscent)
-                : rect.Position + new Vector2(hSeparation * .5f + (iconSize.X > 0 ? iconSize.X + iconMargin : 0),
-                    (rect.Size.Y - item.Layout.Size.Y) * .5f + item.Layout.FirstAscent);
+                ? contentRect.Position + new Vector2(MathF.Floor((contentRect.Size.X - item.Layout.Size.X) * .5f),
+                    iconSize.Y + (item.Icon is not null ? iconMargin : 0) + vSeparation * .5f + item.Layout.FirstAscent)
+                : contentRect.Position + new Vector2(hSeparation * .5f + (item.Icon is not null ? iconSize.X + iconMargin : 0),
+                    (contentRect.Size.Y - item.Layout.Size.Y) * .5f + item.Layout.FirstAscent);
+            if (rtl) baseline.X = Size.X - baseline.X - (_iconMode == IconMode.Top ? item.Layout.Size.X : item.Layout.Key.Width) + panel.GetMargin(Side.Left) - panel.GetMargin(Side.Right);
             if (outlineSize > 0 && outlineColor.A > 0) item.Layout.Draw(this, baseline, outlineColor, outlineSize, outlinePass: true);
             item.Layout.Draw(this, baseline, color);
         }
@@ -388,7 +377,7 @@ public partial class ItemList
             if (cursor is not null)
             {
                 var rect = _items[_current].Rect with { Position = _items[_current].Rect.Position + offset };
-                if (rtl) rect.Position = new(Size.X - rect.Position.X - rect.Size.X, rect.Position.Y);
+                if (rtl) rect.Position = new(Size.X - rect.Position.X - rect.Size.X + panel.GetMargin(Side.Left) - panel.GetMargin(Side.Right), rect.Position.Y);
                 DrawStyleBox(cursor, rect);
             }
         }

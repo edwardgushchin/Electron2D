@@ -368,6 +368,17 @@
       "state": "Partial",
       "godot": [
         "class:ItemList",
+        "ItemList::signal:empty_clicked(Vector2:,int:)",
+        "ItemList::signal:item_activated(int:)",
+        "ItemList::signal:item_clicked(int:,Vector2:,int:)",
+        "ItemList::signal:item_selected(int:)",
+        "ItemList::signal:multi_selected(int:,bool:)"
+      ],
+      "reason": "ADRs 0008/0038/0083: natural item layout, automatic minima, fixed/equal-width and capped text geometry, two-axis pages, RTL placement/current visibility, hint drawing, owner-side resource invalidation and portable scene storage now execute through the public consumer. The class and five input signals remain Partial: complete keyboard/signal ordering and mutating selection callback reentry still require their connected input slice. Native heap totals, physical GPU/performance, foreign platforms and owner acceptance retain separate gates; see docs/components/item-list-layout.md."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
         "ItemList::method:center_on_current(bool:,bool:)",
         "ItemList::method:ensure_current_is_visible()",
         "ItemList::property:auto_height",
@@ -381,14 +392,9 @@
         "ItemList::property:scroll_hint_mode",
         "ItemList::property:text_overrun_behavior",
         "ItemList::property:tile_scroll_hint",
-        "ItemList::property:wraparound_items",
-        "ItemList::signal:empty_clicked(Vector2:,int:)",
-        "ItemList::signal:item_activated(int:)",
-        "ItemList::signal:item_clicked(int:,Vector2:,int:)",
-        "ItemList::signal:item_selected(int:)",
-        "ItemList::signal:multi_selected(int:,bool:)"
+        "ItemList::property:wraparound_items"
       ],
-      "reason": "ADRs 0008/0038/0083: ItemList executes typed item storage, shaped text, theme rendering, internal scrolling, selection and scene capture. ItemListTests and Linux Wayland GPU/compatibility ItemListRenderingTests verify the implemented paths; native allocation, other platforms and owner acceptance remain unverified. Mixed auto-size/scroll/layout extremes and complete keyboard, callback reentry and signal ordering still require executable verification."
+      "reason": "ADRs 0008/0038/0083: separate retained natural and visible text/icon layouts execute automatic minima before trimming, fixed/equal content widths plus separation, capped top captions, stable grid fitting and mutually consumed scrollbar pages. RTL content, signed centering/both-axis queued visibility, tiled/stretched hints, finite/reentrant failure recovery and owner-side worker-resource invalidation are connected. Pinned item_list.cpp/XML contract; 960 public icon-grid cases, font-measured regression32 versus220 pixels, text/overflow/RTL/lifetime/reentry tests, separate-process typed file author/read, existing public model/input/theme regression and Linux Wayland/X11 GPU/OpenGL compatibility pixels qualify the family. CLR/strict NativeAOT each measure64 complete active text/icon layout/render frames with zero owner managed bytes. Range clamp observers can read prepared geometry; general mutating input signals remain separately Partial. This is API behavior evidence, not native-heap, physical-GPU, other-platform or owner acceptance. See docs/components/item-list-layout.md."
     }
   ]
 }

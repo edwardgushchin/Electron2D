@@ -18,17 +18,19 @@ public partial class ItemList
         _watchedIcons.Remove(icon); icon.Changed -= IconChanged; icon.Disposed -= IconDisposed;
     }
 
-    private void IconChanged(Resource _) { if (!IsDisposed) InvalidateListLayout(); }
-
-    private void IconDisposed(ElectronObject resource)
+    private int _iconUpdatesPending;
+    private void IconChanged(Resource _)
     {
         if (IsDisposed) return;
+        Interlocked.Exchange(ref _iconUpdatesPending, 1); InvalidateCanvas();
+    }
+    private void IconDisposed(ElectronObject resource) => IconChanged((Resource)resource);
+    private void FlushIconUpdates()
+    {
+        if (Interlocked.Exchange(ref _iconUpdatesPending, 0) == 0) return;
         foreach (var item in _items)
-            if (ReferenceEquals(item.Icon, resource)) item.Icon = null;
-        var icon = (Texture)resource;
-        icon.Changed -= IconChanged; icon.Disposed -= IconDisposed;
-        _watchedIcons.Remove(icon);
-        InvalidateListLayout();
+            if (item.Icon is { IsDisposed: true } icon) { item.Icon = null; UnwatchIcon(icon); }
+        _layoutDirty = true; _layoutGeneration++; UpdateMinimumSize();
     }
 
     /// <inheritdoc />
@@ -67,7 +69,7 @@ public partial class ItemList
     /// <summary>Gets the borrowed icon of one item.</summary>
     /// <param name="index">A valid zero-based item index.</param>
     /// <returns>The icon, or null.</returns>
-    public Texture? GetItemIcon(int index) { ThrowIfDisposed(); return GetItem(index).Icon; }
+    public Texture? GetItemIcon(int index) { ThrowIfDisposed(); return GetItem(index).Icon is { IsDisposed: false } icon ? icon : null; }
 
     /// <summary>Changes one item's borrowed icon.</summary>
     /// <param name="index">An index; negative values count from the end.</param>
@@ -166,7 +168,8 @@ public partial class ItemList
         var source = item.IconRegion.Size.X == 0 || item.IconRegion.Size.Y == 0
             ? item.Icon!.GetSize() : item.IconRegion.Size.Abs();
         if (item.IconTransposed) source = new(source.Y, source.X);
-        if (source.X <= 0 || source.Y <= 0 || allocation.X <= 0 || allocation.Y <= 0) return Vector2.Zero;
-        return source * Math.Min(allocation.X / source.X, allocation.Y / source.Y);
+        if (source.X <= 0 || source.Y <= 0) return Vector2.Zero;
+        return source * Math.Min(Math.Abs(allocation.X) / source.X, Math.Abs(allocation.Y) / source.Y) *
+            new Vector2(Math.Sign(allocation.X), Math.Sign(allocation.Y));
     }
 }

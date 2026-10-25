@@ -1,6 +1,6 @@
 # ItemList
 
-Last updated: 2026-10-13
+Last updated: 2026-10-25
 
 **Inherits:** [Control](Control.md), CanvasItem, [Node](Node.md), ElectronObject · **Component:** [Scrolling](../components/scrolling.md)
 
@@ -21,8 +21,10 @@ list.ItemSelected += index => Console.WriteLine(list.GetItemText(index));
 
 `MaxColumns`, `FixedColumnWidth`, `SameColumnWidth`, `MaxTextLines`, `AutoWidth`, `AutoHeight`, `WraparoundItems`, `TextOverrunBehavior`, `IconDisplayMode`, `IconScale`, `HintMode` and `TileScrollHint` configure measured rows and drawing. `GetItemRect` returns panel-offset content coordinates independent of scrolling; `GetItemAtPosition` uses the displayed, scrolled and RTL-mirrored position. `ForceUpdateListSize` synchronously refreshes measurement and scroll ranges. `EnsureCurrentIsVisible` queues an adjustment; `CenterOnCurrent` centers selected axes immediately.
 
-PackedScene captures count, indexed text/icon/selectable/disabled fields and list configuration, then recreates the two internal bars. Selection and typed metadata remain runtime state. [ItemListTests](../../tests/Electron2D.Tests/ItemListTests.cs) covers model, resources, themes, RTL hit testing, input, search and packing. [ItemListRenderingTests](../../tests/Electron2D.Tests/ItemListRenderingTests.cs) verifies pixels and clipping on Linux Wayland GPU and compatibility. Mixed automatic sizing and two-axis overflow, full keyboard/signal ordering, callback reentry, native allocations, other platforms and owner visual acceptance remain unverified; see [coverage](../coverage/classes/ItemList.md).
+PackedScene captures count, indexed text/icon/selectable/disabled fields and list configuration, then recreates the two internal bars. Selection and typed metadata remain runtime state. [ItemListTests](../../tests/Electron2D.Tests/ItemListTests.cs) covers model, resources, themes, RTL hit testing, input, search and packing. [ItemListRenderingTests](../../tests/Electron2D.Tests/ItemListRenderingTests.cs) verifies pixels and clipping on Linux Wayland GPU and compatibility. [Prepared natural measurement and scrolling](../components/item-list-layout.md) separate intrinsic text/icon measurement from visible shaping. Automatic minima, mixed overflow, RTL content and signed centering execute through the public consumer. Full keyboard/signal ordering and mutating signal reentry, native allocator totals, other platforms and owner visual acceptance retain separate limits; see [coverage](../coverage/classes/ItemList.md).
 
 Vertical hints share [VerticalScrollHintMode](VerticalScrollHintMode.md) with Tree under ADR 0051.
 
 Inherited-policy item labels use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation. Always item policy uses explicit `Tr` and keeps its explicit context; Disabled preserves the source.
+
+Column width excludes the outer horizontal separation. Top-icon captions wrap only at a positive FixedColumnWidth during measurement; MaxTextLines caps visible lines and reserves line_separation for every configured line. Final columns of complete rows may expand their hit/background rectangle; incomplete and unlimited final rows retain their measured width. Text and icons keep their content placement independently of that expansion. Both bars consume the other axis's page, and enlarging the list resets stale scroll values. EnsureCurrentIsVisible applies at draw time to both axes; CenterOnCurrent uses the signed RTL horizontal range. Failed or recursively queried measurement stays dirty for retry.
