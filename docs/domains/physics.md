@@ -1908,3 +1908,5 @@ platform/hardware performance gates remain open.
 [Direct-space contract audit](../components/physics-space-query-contract.md) covers both query types, their complete declared operations and procedural-input sampling, with explicit qualification and remaining full-goal boundaries.
 
 [Direct-body contract audit](../components/physics-body-state-contract.md) accounts for both body-state type families, changed full-frame extension dispatch, selected factories and explicit inherited/full-goal limits.
+
+[Inherited group invocation](../components/scene-thread-messages.md) accounts for the six typed safe/deferred Node methods and real physical receivers without granting arbitrary worker numerical mutation.

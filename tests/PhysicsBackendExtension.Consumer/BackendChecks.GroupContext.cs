@@ -155,7 +155,12 @@ public static partial class BackendChecks
             Reject<InvalidOperationException>(() => gather.ProcessThreadGroupOrder = 8);
             Reject<InvalidOperationException>(() => gather.ProcessThreadMessages = Node.ProcessThreadMessageFlags.All);
             Reject<InvalidOperationException>(() => probe.ProcessThreadGroup = Node.ProcessThreadGroupMode.MainThread);
-            Reject<InvalidOperationException>(() => body.LinearVelocity = new(1, 0));
+            var velocity = body.LinearVelocity;
+            body.CallThreadSafe<RigidBody>(static node => node.LinearVelocity = new(1, 0));
+            Check(body.LinearVelocity == new Vector2(1, 0), "Own-group calls expose accepted physical motion immediately");
+            body.SetThreadSafe<RigidBody, Vector2>(static (node, value) => node.LinearVelocity = value, velocity);
+            Check(body.LinearVelocity == velocity, "Own-group setters preserve immediate logical state and ordered owner publication");
+            Reject<InvalidOperationException>(() => body.ApplyCentralForce(new(1, 0)));
             body.Position = body.Position;
             probe.RejectMetadata = true;
             Reject<InvalidOperationException>(() => probe.ProcessThreadGroupOrder = probe.ProcessThreadGroupOrder);

@@ -503,3 +503,5 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
 
 [Committed processing-group roles](../components/scene-tree.md#committed-group-role-metadata) now publish Node property-list changes after inherited membership rebinding. Detached/equal writes are silent; observer errors and nested role changes preserve committed execution ownership across ordinary and physical nodes. General worker scene/backend access remains tracked separately.
+
+[Typed group invocation](../components/scene-thread-messages.md) has a complete six-member dispatch audit with current selected physics, real worker/nested execution and separate receiver-permission limits.

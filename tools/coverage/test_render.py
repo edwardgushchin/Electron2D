@@ -53,6 +53,13 @@ def check_physics_report(pages):
         assert not any(key.startswith("Object::method:" + method + "(") for key in expected), "Verified iteration must not remain open"
     assert expected["Object::method:_init()"] == "Unimplemented", "The enumeration projection must not hide script initialization"
     assert expected["Object::method:get_script()"] == "Blocked", "Enumeration must not close live script binding"
+    node_page = pages[CLASS_PAGES / "Node.md"]
+    for method in ("call_thread_safe", "set_thread_safe", "notify_thread_safe",
+                   "call_deferred_thread_group", "set_deferred_thread_group", "notify_deferred_thread_group"):
+        rows = [row for row in node_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "scene-thread-messages.md" in rows[0]
+        assert not any(key.startswith("Node::method:" + method + "(") for key in expected)
+    assert expected["class:Node"] == expected["class:RigidBody2D"] == "Partial", "Invocation completion must retain receiver gaps"
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" not in expected

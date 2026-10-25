@@ -343,3 +343,5 @@ complete physics/network acceptance.
 Configuration-warning requests and queries permit the owner/current processing group, including physical descendants. The synchronous edited-root event is metadata; it grants no numerical/native access. See [grouped canvas diagnostics](canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
 
 [Physical motion inputs](physics-group-motion.md) now retain accepted current-group scalar requests and publish them after the worker barrier, before later main collectors and stepping. Failed publication retains the ordered tail. This does not widen unrelated hierarchy, numerical or renderer operations.
+
+[The complete six-operation invocation audit](scene-thread-messages.md) verifies FIFO/masks, immediate current-group access, nested pool context, lifetime/transfer/error delivery and real physical/query consumers. Receiver permissions and remaining inherited gaps keep their own contracts.
