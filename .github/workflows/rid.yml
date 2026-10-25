@@ -38,11 +38,12 @@ jobs:
       CI_RID: ${{ inputs.rid }}
       CI_WORKLOAD: ${{ inputs.workload }}
       CI_SUITE: ${{ inputs.suite }}
+      Electron2DUsePackage: ${{ inputs.tests && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: ${{ (inputs.workload == 'ios' || inputs.workload == 'tvos') && '10.0.302' || '10.0.x' }}
+          dotnet-version: 10.0.302
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -69,12 +70,21 @@ jobs:
           pattern: private-native-package*
           merge-multiple: true
           path: bin/native-feed/
+      - uses: actions/download-artifact@v4
+        if: inputs.tests
+        with:
+          name: managed-engine-package
+          path: bin/native-feed/
+      - name: Isolate qualified package restore
+        if: inputs.tests
+        run: |
+          python -B tools/ci/packages.py config bin/native-feed
+          echo "RestoreConfigFile=$GITHUB_WORKSPACE/bin/native-feed/nuget.config" >> "$GITHUB_ENV"
+          echo "NUGET_PACKAGES=$RUNNER_TEMP/qualified-packages" >> "$GITHUB_ENV"
       - name: Install target workload
         if: inputs.workload != ''
         run: |
-          if [[ "$CI_WORKLOAD" == ios || "$CI_WORKLOAD" == tvos ]]; then
-            python -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
-          fi
+          python -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
           dotnet workload install "$CI_WORKLOAD"
       - name: Check Apple toolchain
         if: inputs.workload == 'ios' || inputs.workload == 'tvos'
@@ -254,9 +264,6 @@ jobs:
       - name: Execute browser WebAssembly contract app
         if: inputs.tests && inputs.suite == 'browser'
         run: python -B tools/ci/run_browser.py bin/ci-contracts/browser-wasm/wwwroot
-      - name: Pack the managed browser runtime asset
-        if: inputs.tests && inputs.suite == 'browser'
-        run: dotnet pack Electron2D.csproj -c Release -p:BrowserManagedAssetDirectory="${{ github.workspace }}/bin/ci/browser-wasm" -o bin/native-feed --nologo
       - name: Execute a fresh browser native package consumer
         if: inputs.tests && inputs.suite == 'browser'
         run: |

@@ -16,6 +16,8 @@ import xml.etree.ElementTree as ET
 import package as native_package
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'tools/ci'))
+from packages import feed_config
 PROGRAM = '''using Electron2D;
 using var webpSource = Image.CreateFromData(2, 1, false, Image.Format.Rgba8, [17, 91, 203, 0, 255, 6, 118, 127]);
 using var webpDecoded = new Image();
@@ -198,7 +200,7 @@ def read_manifests(feed):
     return manifests
 
 
-def check(feed, rid):
+def check(feed, rid, managed=False):
     manifests = read_manifests(feed)
     if rid not in manifests:
         raise RuntimeError("The feed does not contain the current native consumer RID")
@@ -241,18 +243,26 @@ def check(feed, rid):
         engine_feed.mkdir()
         for package in feed.glob("*.nupkg"):
             shutil.copy2(package, engine_feed)
-        run([dotnet, "pack", "Electron2D.csproj", "-c", "Release", "--no-build",
-             "-p:PackageVersion=" + version, "-o", str(engine_feed)], engine, environment)
+        if not managed:
+            run([dotnet, "pack", "Electron2D.csproj", "-c", "Release", "--no-build",
+                 "-p:PackageVersion=" + version, "-o", str(engine_feed)], engine, environment)
+        elif not (engine_feed / f"Electron2D.{version}.nupkg").is_file():
+            raise RuntimeError("The qualified managed package is missing")
         # A managed package contains neither native payloads nor implicit platform dependencies.
         with ZipFile(engine_feed / f"Electron2D.{version}.nupkg") as archive:
-            if any(name.startswith("runtimes/") for name in archive.namelist()):
-                raise RuntimeError("Managed engine package contains native files")
+            allowed = {'runtimes/browser-wasm/lib/net10.0/Electron2D.dll',
+                       'runtimes/browser-wasm/lib/net10.0/Electron2D.xml'} if managed else set()
+            if {name for name in archive.namelist() if name.startswith('runtimes/')} != allowed:
+                raise RuntimeError("Managed engine package contains wrong runtime assets")
             if any(name.startswith('tools/') or Path(name).suffix in ('.py', '.glsl', '.hlsl', '.spv')
                    for name in archive.namelist()):
                 raise RuntimeError("Managed engine package leaked shader build inputs/tools")
             nuspec = ET.fromstring(archive.read("Electron2D.nuspec"))
             if any(element.tag.endswith("dependency") for element in nuspec.iter()):
                 raise RuntimeError("Managed engine package selects native dependencies")
+        config = work / 'nuget.config'
+        feed_config(engine_feed, config)
+        environment['RestoreConfigFile'] = str(config)
         environment["RestoreAdditionalProjectSources"] = str(engine_feed)
         # NuGet must refuse an explicitly pinned older managed engine.
         older = "0.0.0"
@@ -318,4 +328,4 @@ def check(feed, rid):
 
 
 if __name__ == "__main__":
-    check(Path(sys.argv[1]).resolve(), sys.argv[2])
+    check(Path(sys.argv[1]).resolve(), sys.argv[2], managed='--managed' in sys.argv[3:])

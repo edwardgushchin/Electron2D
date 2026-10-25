@@ -11,8 +11,10 @@ the order and reuse of release work, not those acceptance boundaries.
 
 The required pipeline is: prepare the complete candidate, build its packages,
 qualify those packages, promote the same files, verify public delivery. The
-artifact-promotion and CI publication steps below still need workflow changes;
-the [automation status](#automation-status-and-transition) records the current gap.
+source implements artifact promotion and CI publication;
+the [automation status](#automation-status-and-transition) distinguishes local
+verification from the still-required first hosted run. See [development CI](development-ci.md)
+for the fast loop and complete qualification triggers.
 
 ## Prepare before freezing the candidate
 
@@ -130,26 +132,30 @@ whether a same-SHA retry is justified, and keep failed attempts visible.
 
 ## Automation status and transition
 
-As of 2026-10-25, this document establishes the release procedure; it does not
-claim that artifact promotion or CI-hosted GitHub publication is implemented.
+As of 2026-10-25, the workflow source implements the following pipeline. Local
+regressions and a hosted GitHub run establish different evidence; the first
+hosted execution is required after pushing this implementation.
 
-| Area | Current implementation | Required next change |
+| Area | Implemented workflow source | Verification/remaining boundary |
 | --- | --- | --- |
-| Qualification | `ci.yml` shares native packages between Build/Tests; desktop source and browser package checks have distinct scopes. | Build the complete final release package set and connect all applicable package consumers to its exact hashes. |
-| Caches | `native.yml` validates cached native receipts; shader tooling has its own cache. | Preserve those checks and reuse validated outputs without an unconditional second build. |
-| NuGet publication | `publish-native.yml` runs only from `main`, forces `rebuild: true`, packs managed assets separately and pushes its own run artifacts. | Accept and validate a successful qualification run/artifact set; publish its unchanged files. |
-| GitHub assets and public verification | The publisher has no GitHub Release asset upload or public-index/payload verification steps. | Move those steps and their resumable receipts into CI. |
+| Development feedback | Independent fast build/API/Wiki/shared public contracts; documentation-only and draft changes avoid the native matrix. | No native or platform claim from a fast result. Unknown changes default to full qualification. |
+| Qualification | Complete managed/platform production and configured Build/Tests matrices; test consumers select exact candidate packages with isolated restore. | Native, rendered, device and hardware scope remains as documented per profile. |
+| Caches | Existing native receipts/checks remain; managed production reuses the pinned shader tool cache. | Manual `clean` and weekly clean qualification bypass native binary caches. |
+| Promotion | Explicit successful trusted main CI run, one artifact ID, candidate SHA, source receipts and package hashes; no rebuild/repack. | Only full successful runs produce `release-qualified`; expired artifacts require qualification again. |
+| Public delivery | Reconciled partial NuGet pushes, indexing/payload/signature checks, fresh public-only graph restore and CI-hosted GitHub draft/assets/checksums. | A published package requires actual successful execution; source/local tests alone do not establish availability. |
+| Merge policy | Stable `Development` summary reflects planned scope. | Remote main was unprotected at inspection; server policy activation and latest ready-PR qualification must be verified separately. |
 
-Until those workflow changes are implemented and verified, the existing
-publisher's rebuilt files are a new artifact set. Record its actual candidate
-SHA and artifacts, and complete the package audits and fresh consumer checks
-on those files before its push step. The current publisher does not enforce
-that complete qualification handoff; add the missing gate before the next
-release. Post-publication checks cannot replace pre-publication qualification.
-Complete public verification separately.
-Do not report the earlier CI's binaries as the published payload or claim that
-the faster pipeline has run. Keep this status table synchronized with workflow
-changes; an unexecuted step remains an explicit release gap.
+For a release whose final SHA has only documentation changes, explicitly run CI
+with `profile=full`. A fast-only run cannot qualify a release. Supply that full
+run ID as `qualification_run` to **Publish Electron2D packages**, along with the
+owner's NuGet profile name. The workflow checks out the qualified revision,
+reconciles public package bytes before retrying and publishes the GitHub draft
+only after verification. It never replaces an immutable mismatched package or
+asset. Complete release notes and verify Wiki publication separately.
+
+Keep this status synchronized with workflow changes and retain the hosted run
+URLs and actual outcomes. Do not describe local validation as a completed
+cross-platform run, remote merge-policy enforcement or a published release.
 
 Record UTC start/end times for qualification, packaging, publication, indexing
 and asset transfer, including retries. The target for a ready candidate is one

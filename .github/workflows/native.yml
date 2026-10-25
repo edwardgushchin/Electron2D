@@ -17,12 +17,45 @@ permissions:
   contents: read
 
 jobs:
+  managed:
+    runs-on: macos-26
+    steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.302
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Install managed target workloads
+        run: |
+          python3 -c 'import json; from pathlib import Path; Path("global.json").write_text(json.dumps({"sdk": {"version": "10.0.302", "rollForward": "disable", "workloadVersion": "10.0.302.0"}}))'
+          dotnet workload install android ios tvos wasm-tools
+      - uses: actions/cache@v4
+        with:
+          path: tools/shaders/obj/toolchain/
+          key: shader-tools-macos-26-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
+      - name: Build the browser managed runtime asset
+        run: dotnet build Electron2D.csproj -c Release -r browser-wasm -o bin/browser-managed-runtime
+      - name: Pack the managed runtime for desktop, Android, Apple and Web
+        run: dotnet pack Electron2D.csproj -c Release -o bin/managed-feed '-p:TargetFrameworks="net10.0;net10.0-android;net10.0-ios;net10.0-tvos"' -p:BrowserManagedAssetDirectory="${{ github.workspace }}/bin/browser-managed-runtime"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: managed-engine-package
+          path: bin/managed-feed/*.nupkg
+          if-no-files-found: error
+          retention-days: 14
   cross_matrix:
     runs-on: ubuntu-24.04
     outputs:
       rids: ${{ steps.matrix.outputs.rids }}
       packages: ${{ steps.matrix.outputs.packages }}
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - id: matrix
         run: |
@@ -56,10 +89,12 @@ jobs:
           apt-get update
           apt-get install -y git python3 python3-pip ca-certificates curl build-essential ninja-build pkg-config zlib1g-dev libzstd-dev libicu70 libssl-dev
           python3 -m pip install --disable-pip-version-check cmake==3.31.10
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - name: Restore the pinned native SDL package
         run: dotnet restore Electron2D.csproj -r "${{ matrix.rid }}" -p:Electron2DBuildNativeFromSource=true
       - id: recipe
@@ -88,10 +123,12 @@ jobs:
     needs: native
     runs-on: ubuntu-24.04
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/download-artifact@v4
         with:
           pattern: private-native-linux-*
@@ -118,10 +155,12 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -153,10 +192,12 @@ jobs:
     needs: native_macos
     runs-on: macos-26
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/download-artifact@v4
         with:
           pattern: private-native-MacOS-*
@@ -189,10 +230,12 @@ jobs:
       run:
         shell: pwsh
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -231,10 +274,12 @@ jobs:
     needs: native_windows
     runs-on: windows-2025
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -252,7 +297,7 @@ jobs:
           path: bin/native-feed/*.nupkg
           if-no-files-found: error
   consumer:
-    needs: [package, package_macos, package_windows]
+    needs: [package, package_macos, package_windows, managed]
     strategy:
       fail-fast: false
       matrix:
@@ -265,19 +310,25 @@ jobs:
           - {runner: windows-11-arm, rid: win-arm64}
     runs-on: ${{ matrix.runner }}
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
+      - uses: actions/cache@v4
+        with:
+          path: tools/shaders/obj/toolchain/
+          key: shader-tools-${{ matrix.runner }}-${{ runner.arch }}-${{ hashFiles('tools/shaders/toolchain.lock.json', 'tools/shaders/build_toolchain.py') }}
       - uses: actions/download-artifact@v4
         with:
-          pattern: private-native-package*
+          pattern: "*-package*"
           merge-multiple: true
           path: bin/native-feed/
       - name: Verify public native consumers with native tools blocked
         run: |
           python -B tools/native/test_audio_delivery.py
-          python -B tools/native/test_consumer.py bin/native-feed '${{ matrix.rid }}'
+          python -B tools/native/test_consumer.py bin/native-feed '${{ matrix.rid }}' --managed
   native_cross:
     needs: cross_matrix
     strategy:
@@ -289,10 +340,12 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
@@ -349,10 +402,12 @@ jobs:
       matrix: ${{ fromJSON(needs.cross_matrix.outputs.packages) }}
     runs-on: ${{ matrix.runner }}
     steps:
+      - name: Preserve source bytes across producer platforms
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 10.0.302
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'

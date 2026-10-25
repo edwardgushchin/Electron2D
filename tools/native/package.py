@@ -165,7 +165,7 @@ def source_hash():
     files.add(ROOT / ".github/workflows/native.yml")
     files.add(ROOT / "tools/check_native_publish.py")
     digest = hashlib.sha256()
-    for path in sorted(files):
+    for path in sorted(files, key=lambda item: item.relative_to(ROOT).as_posix()):
         digest.update(path.relative_to(ROOT).as_posix().encode() + b"\0")
         digest.update(path.read_bytes())
     return digest.hexdigest()

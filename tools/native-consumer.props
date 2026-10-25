@@ -18,6 +18,10 @@
     <PackageReference Include="Electron2D.$(Electron2DConsumerPlatform)" Version="[$(Electron2DNativePackageVersion)]" />
     <PackageReference Include="SDL3-CS.Android" Version="$(Electron2DSDLVersion)" ExcludeAssets="compile;runtime;native" Condition="'$(Electron2DConsumerPlatform)' == 'Android'" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Electron2DUsePackage)' == 'true'">
+    <ProjectReference Remove="$(MSBuildThisFileDirectory)../Electron2D.csproj" />
+    <PackageReference Include="Electron2D" Version="[$(Electron2DVersion)]" />
+  </ItemGroup>
   <Target Name="CopyElectron2DConsumerAudioOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DAudioNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
     <PropertyGroup>
       <_Electron2DConsumerAudioName>libFAudio.so.0</_Electron2DConsumerAudioName>
