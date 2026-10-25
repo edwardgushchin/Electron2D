@@ -40,7 +40,7 @@ internal static class CanvasViewportCoordinateTests
             {
                 using var tree = new SceneTree(root);
                 PopupScreenQueries(root, world, rootControl, body, control, popup);
-                OffscreenMouseQueries(root, world, tree);
+                OffscreenMouseQueries(root, world, tree, create);
                 Verify(nested, outer, inner, body);
                 root.PushInput(click); tree.PhysicsFrame(.01);
                 Check(body.Clicks == 1 && body.LastInput is { IsDisposed: true }, "Container and both embedded windows deliver one owned physical click");
@@ -110,7 +110,7 @@ internal static class CanvasViewportCoordinateTests
         protected override void OnDraw() => DrawRect(new(Vector2.Zero, Size), Colors.Blue);
     }
 
-    private static void OffscreenMouseQueries(Viewport root, World world, SceneTree tree)
+    private static void OffscreenMouseQueries(Viewport root, World world, SceneTree tree, Func<World> create)
     {
         using var view = new SubViewport
         {
@@ -185,10 +185,13 @@ internal static class CanvasViewportCoordinateTests
         view.RemoveChild(child); Reject<InvalidOperationException>(() => child.GetMousePosition()); view.AddChild(child);
         Check(child.GetMousePosition().IsEqualApprox(new(1.5f, 2)), "Mouse state survives detached/reattached viewport membership");
         view.RemoveChild(child);
-        using (var secondRoot = new SubViewport { World = world })
+        using (var secondWorld = create())
+        using (var secondRoot = new SubViewport { World = secondWorld })
         {
+            child.World = secondWorld;
             secondRoot.AddChild(child); using var secondTree = new SceneTree(secondRoot);
-            Check(child.GetMousePosition().IsEqualApprox(new(1.5f, 2)), "A retained viewport point follows the object into another scene tree"); secondRoot.RemoveChild(child);
+            Check(ReferenceEquals(child.World, secondWorld) && child.GetMousePosition().IsEqualApprox(new(1.5f, 2)), "A retained viewport point follows the object into another scene tree with its independently owned world"); secondRoot.RemoveChild(child);
+            child.World = world;
         }
         view.AddChild(child);
         Reject<InvalidOperationException>(() => Task.Run(() => view.GetMousePosition()).GetAwaiter().GetResult());

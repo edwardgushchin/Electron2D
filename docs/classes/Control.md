@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-19
+Last updated: 2026-10-25
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -459,13 +459,13 @@ Layout-direction and translation notifications reflow geometry and invalidate te
 
 ## Pointer capture transfer and coordinates
 
-Control.GrabClickFocus requests the last target in its viewport at the deferred boundary. Without a current mouse capture it does nothing. Held left/right/middle buttons produce temporary internal releases on the old control and internal presses on the new control in the next deferred batch. These events reach the target directly, preserve global Input button state and keyboard focus, and do not bubble. Real motion/releases then follow the new capture until all held buttons release.
+Control.GrabClickFocus requests the last target in its viewport at the deferred boundary. Without a current mouse capture it does nothing. Held left/right/middle buttons produce temporary internal releases on the old control and internal presses on the new control in the next deferred batch. Both batches drain within the same flush; subsequent real releases follow the new capture. These events reach the target directly, preserve global Input button state and keyboard focus, and do not bubble. Real motion/releases then follow the new capture until all held buttons release.
 
 Pending targets are weak and cancel after removal/disposal or viewport teardown. All releases are attempted after callback failure; a successful capture handoff still schedules its presses before reporting errors. Newer capture or physical release cancels stale press delivery. Runtime capture requests are not scene properties. Actual synthetic event delivery allocates temporary owned input objects; coalesced requests reuse their cached queue actions. Singular transforms reject transfer before releasing the previous capture.
 
-GetScreenPosition returns GetScreenTransform().Origin in the popup host's coordinate space. Embedding viewports stop the chain before their own final transform; only a chain reaching a native Window needs desktop placement. Embedded and standalone offscreen queries therefore work on Wayland when no desktop lookup is required. WarpMouse accepts finite local coordinates and composes current canvas/viewport transforms into the containing native window. Embedded viewports include their container transform and stretch scale. Invalid native ranges and missing/unsupported host capabilities fail explicitly.
+GetScreenPosition returns GetScreenTransform().Origin in the popup host's coordinate space. Logical projection permits the owner or active processing groups with caller coordination; required native desktop lookup retains its separate owner guard. Embedding viewports stop the chain before their own final transform; only a chain reaching a native Window needs desktop placement. Embedded and standalone offscreen queries therefore work on Wayland when no desktop lookup is required. WarpMouse accepts finite local coordinates and composes current canvas/viewport transforms into the containing native window. Embedded viewports include their container transform and stretch scale. Invalid native ranges and missing/unsupported host capabilities fail explicitly.
 
-ControlPointerTests checks coalescing, two deferred batches, primary buttons, transformed coordinates, keyboard-focus isolation, disposal/viewport removal, singular transforms, exceptions, physical-release cancellation and 64 warmed same-target requests with zero managed bytes. Native Wayland GPU/compatibility tests verify actual capture-driven pixels and explicit unavailable warp/desktop-position boundaries. Dummy compatibility uses nearest sampling for executable embedded warp coordinates. Other platform/hardware verification remains separate.
+ControlPointerTests checks coalescing, two deferred batches, primary buttons, transformed coordinates, keyboard-focus isolation, disposal/viewport removal, singular transforms, exceptions, real releases after the completed transfer and 64 warmed same-target requests with zero managed bytes. Native Wayland GPU/compatibility tests verify actual capture-driven pixels and explicit unavailable warp/desktop-position boundaries. Dummy compatibility uses nearest sampling for executable embedded warp coordinates. Other platform/hardware verification remains separate.
 
 ## Automatic translation context
 

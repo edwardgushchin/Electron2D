@@ -19,7 +19,9 @@ public partial class Control
     /// <summary>Returns this control's local origin in its popup host's screen coordinate space.</summary>
     /// <returns>The origin of GetScreenTransform, stopping at an embedding viewport or including native desktop placement when needed.</returns>
     /// <exception cref="NotSupportedException">Required native desktop window placement is unavailable.</exception>
-    /// <exception cref="InvalidOperationException">There is no active viewport or the caller is off-owner.</exception>
+    /// <remarks>Logical projection permits the owner or active processing groups with caller coordination.
+    /// Required native desktop lookup retains its separate owner guard.</remarks>
+    /// <exception cref="InvalidOperationException">There is no active viewport, the logical read scope is unavailable, or required native lookup is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
     public Vector2 GetScreenPosition() => GetScreenTransform().Origin;
 

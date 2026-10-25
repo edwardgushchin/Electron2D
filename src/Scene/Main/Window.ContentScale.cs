@@ -41,7 +41,8 @@ public partial class Window
     private ContentScaleStretch _contentScaleStretch;
     private float _contentScaleFactor = 1;
     private WindowContentLayout _contentLayout;
-    private bool _contentLayoutValid;
+    private volatile bool _contentLayoutValid;
+    private readonly object _contentLayoutGate = new();
 
     /// <summary>Gets or sets the desired content resolution before aspect fitting and scale factor.</summary>
     /// <value>Zero initially. Either zero axis disables resolution fitting; negative axes are invalid.</value>
@@ -109,7 +110,16 @@ public partial class Window
     }
     internal WindowContentLayout ContentLayout
     {
-        get { ThrowIfDisposed(); if (!_contentLayoutValid) { _contentLayout = CalculateContentLayout(); _contentLayoutValid = true; } return _contentLayout; }
+        get
+        {
+            ThrowIfDisposed();
+            if (_contentLayoutValid) return _contentLayout;
+            lock (_contentLayoutGate)
+            {
+                if (!_contentLayoutValid) { _contentLayout = CalculateContentLayout(); _contentLayoutValid = true; }
+                return _contentLayout;
+            }
+        }
     }
     internal float RenderDensity
     {

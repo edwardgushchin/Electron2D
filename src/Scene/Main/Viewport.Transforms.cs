@@ -22,13 +22,13 @@ public abstract partial class Viewport
     /// <remarks>Applies before GlobalCanvasTransform. Changes affect retained drawing on the next submission,
     /// without changing node transforms or emitting their notifications. A current physics-interpolated camera may
     /// present a historical canvas transform while this property retains the latest logical value. Runtime state is
-    /// not stored by PackedScene.</remarks>
+    /// not stored by PackedScene. Reads permit the owner or active processing groups with caller coordination.</remarks>
     /// <exception cref="ArgumentException">The transform is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached viewport is accessed off-owner, or changed during capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or mutation is off-owner/during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Transform CanvasTransform
     {
-        get { CheckTransformQuery(); return _canvasTransform; }
+        get { CheckCoordinateRead(); return _canvasTransform; }
         set
         {
             EnsureMutable();
@@ -41,31 +41,32 @@ public abstract partial class Viewport
     /// <summary>Gets or sets the outer transform from viewport coordinates to the window's client coordinates.</summary>
     /// <value>Identity initially. Finite singular transforms are allowed.</value>
     /// <remarks>Applies after CanvasTransform and is removed from incoming window coordinates before input callbacks.
-    /// Rendering changes need no redraw; logical node state remains unchanged. Assignments republish any renderer-only global transform. Runtime state is not stored by PackedScene.</remarks>
+    /// Rendering changes need no redraw; logical node state remains unchanged. Assignments republish any renderer-only global transform.
+    /// Runtime state is not stored by PackedScene. Reads permit the owner or active processing groups with caller coordination.</remarks>
     /// <exception cref="ArgumentException">The transform is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached viewport is accessed off-owner, or changed during capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or mutation is off-owner/during capture.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Transform GlobalCanvasTransform
     {
-        get { CheckTransformQuery(); return _globalCanvasTransform; }
+        get { CheckCoordinateRead(); return _globalCanvasTransform; }
         set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Global canvas transform must be finite.", nameof(value)); _globalCanvasTransform = value; RenderingOwner?.PublishGlobalCanvasTransform(this); }
     }
 
     /// <summary>Returns the transform from viewport coordinates to the containing client area.</summary>
     /// <returns>Window presentation followed by content stretch and GlobalCanvasTransform.</returns>
     /// <remarks>Does not include CanvasTransform, native desktop placement or framebuffer pixel density.</remarks>
-    /// <exception cref="InvalidOperationException">An attached viewport is queried off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached viewport is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
-    public Transform GetFinalTransform() { CheckTransformQuery(); return WindowTransform * RenderFinalTransform; }
+    public Transform GetFinalTransform() { CheckCoordinateRead(); return WindowTransform * RenderFinalTransform; }
 
     /// <summary>Returns the transform from viewport coordinates to its containing window.</summary>
     /// <returns>GetFinalTransform for a root/standalone viewport, or the complete embedded container chain to the containing client area.</returns>
     /// <remarks>The native root's desktop position is not part of this query. A standalone offscreen viewport returns its final transform without a native desktop position; embedded transforms include container placement and StretchShrink.</remarks>
-    /// <exception cref="InvalidOperationException">An attached viewport is queried off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached viewport is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public Transform GetScreenTransform()
     {
-        CheckTransformQuery();
+        CheckCoordinateRead();
         if (this is Window { Embedder: { } embedder } embeddedWindow) return embedder.GetScreenTransform() * new Transform(0, embeddedWindow.Position) * GetFinalTransform();
         return Parent is SubViewportContainer container && container.GetViewport() is { } parent
             ? parent.GetScreenTransform() * container.GetGlobalTransformWithCanvas() * container.ViewportScale * GetFinalTransform()
@@ -74,8 +75,8 @@ public abstract partial class Viewport
 
     internal Transform GetPopupBaseTransform()
     {
-        CheckTransformQuery();
-        if (GUIEmbedSubwindows) return Transform.Identity;
+        CheckCoordinateRead();
+        if (_embedSubwindows) return Transform.Identity;
         if (this is Window window)
         {
             var transform = new Transform(0, window.Position) * GetFinalTransform();
@@ -145,5 +146,6 @@ public abstract partial class Viewport
         catch { if (!ReferenceEquals(result, inputEvent)) result.Dispose(); throw; }
     }
 
+    private void CheckCoordinateRead() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); }
     private void CheckTransformQuery() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
 }

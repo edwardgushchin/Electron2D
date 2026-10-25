@@ -897,3 +897,68 @@ compiled coverage, wiki tests, generation and regeneration check pass. The decla
 census remains 1306/1369 (95.40%); remaining Partial/Blocked/Unimplemented entries and
 full performance/network/platform acceptance are unchanged. See the local
 `bin/physics-group-modulation/2026-10-25/validation.json` and raw per-profile receipts.
+
+## Coordinate observation from processing groups
+
+Logical coordinate observations permit the scene owner or any active processing
+group, including coordinated reads of physical and GUI descendants in other groups.
+The contract covers CanvasItem viewport rectangles, canvas/global/viewport matrices,
+point and input-event localization, pure popup-screen transforms and Control screen
+origins; CanvasLayer final transforms; Viewport CanvasTransform/GlobalCanvasTransform,
+final/client-screen matrices; and Window/SubViewport visible rectangles. Configuration
+and lifetime changes remain caller-coordinated; separate reads are not an atomic
+scene snapshot. Existing finite, singular-inverse, detached and disposal behavior stays.
+
+Window content layout publishes one cold result under a gate and volatile validity
+flag. The calculation uses managed authored/observed dimensions, invokes no user
+callback and starts no native service. Warm queries read its cached layout. Container
+screen projection reads the authored shrink policy directly, and popup projection
+reads its authored embedding boundary; neither requires unrelated GUI operations.
+Virtual item transforms retain the existing unlocked calculation/publication contract.
+
+Required native desktop position lookup retains the native owner guard and platform
+capability boundary. Pointer polling/warping, renderer queries and configuration writes
+retain their separate guards. A pure viewport client-screen transform needs no desktop
+position. Positional MakeInputLocal returns a caller-owned event copy; nonpositional
+input returns the borrowed identity. Allocating copies are outside warmed claims.
+
+The public --group-coordinates fixture exercises two overlapping workers, inherited
+body/shape/Control observations, layer follow transforms, nested viewport/container/
+embedded-window projection, cold Window layout, event ownership, capture/disposal and
+ordinary-worker rejection. Prepared intervals retain 128 complete physics/process/query
+frames with strict owner/all-thread zero-byte assertions. Movement is six units/s at
+.01-second ticks with .002-unit bounds; coordinate inversion allows .002 units.
+
+The native fixture --native-group-coordinates changes content dimensions and canvas
+translation, then verifies actual body/layer pixels and native-versus-pure screen
+boundaries. Its separate 64 process/render-frame bracket retains strict 0/0 bytes;
+captures and explicit queries run outside it. RGB tolerance is .012 per component.
+Receipts belong under bin/physics-group-coordinates/2026-10-25/. General GUI publication,
+other reserved notification consumers, full hardware throughput/FPS, native allocator,
+foreign platforms and owner visual acceptance remain separate acceptance work.
+
+Ancestor embedding-policy edits leave windows below a nearer embedding viewport in place. An attached window whose owner would change still rejects the edit, including a hidden native-role child. The coordinate regression uses independent runtime worlds when moving its retained pointer fixture between two live scene trees; the single-tree World ownership guard remains enforced.
+
+The click-capture regression follows ADR 0006: a flush drains both release and press batches. It checks ordering inside release callbacks, failure continuation without replay, and real releases following the completed transfer. Public input dispatch cannot reenter a flush. The previous one-batch-per-flush fixture also failed on the unchanged earlier runtime.
+
+
+The 2026-10-25 qualification passed 59 fresh-process profiles: 33 CLR and 26 strict
+NativeAOT. Twenty-six new full physics/process/query intervals measured 128 frames
+at 0/0 owner/all-thread bytes; 16 new real-window intervals measured 64 process/render
+frames at 0/0. All 32 content-change captures passed their pixel assertions; inspected
+CPU/GPU and CLR/NativeAOT samples retain the independent red body and blue layer.
+The 2595 authored runtime files and 201 resources agree across those builds and live
+main. The frozen consumer inputs agree internally; later main changes to two unrelated
+deletion-fixture methods are recorded explicitly rather than relabelling old binaries.
+Six fresh current-main CLR profiles pass the three physical implementations, both
+root backend entries and the complete coordinate/input regression. Their five new
+physical intervals retain the same strict 128-frame zero-byte limits.
+
+A separate three-process CPU network check completes 900 ticks with a late client,
+separate numerical threads and impaired delivery: 871 warmed ordinary and 2486 replay
+steps retain strict 0/0 bytes. The source-bound receipts, payload/source/resource
+identities and later harness changes are under bin/physics-group-coordinates/2026-10-25/.
+Release/compiled coverage/wiki gates and owned runtime/test/consumer format checks
+pass. Declaration coverage stays 1306/1369 (95.40%), with the 63 open declarations
+unchanged. The failed older full aggregate and full performance/platform/owner
+acceptance remain separate; this matrix does not certify them.

@@ -68,3 +68,14 @@ Native pixels use `--native-group-modulation --cpu|--gpu`, optional `--threaded`
 and `ELECTRON2D_GROUP_MODULATION_RENDERER=gpu|compatibility`; use the corresponding
 `ELECTRON2D_TEST_NATIVE_GROUP_MODULATION` root selector. See
 [grouped canvas diagnostics](../../docs/components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
+
+### Grouped coordinate observations
+
+`--group-coordinates [--cpu|--gpu] [--threaded] [--pool-owner]` checks logical
+canvas/viewport/window coordinate families with actual selected physical frames and
+queries. Omitting the backend selects the registered provider. The root selector is
+`ELECTRON2D_TEST_GROUP_COORDINATES=cpu|gpu|registered[-threaded][-pool-owner]`.
+`--native-group-coordinates --cpu|--gpu [--threaded]` runs actual window pixels;
+`ELECTRON2D_GROUP_COORDINATES_RENDERER=gpu|compatibility` selects rendering independently.
+The root native selector is `ELECTRON2D_TEST_NATIVE_GROUP_COORDINATES=cpu|gpu[-threaded]`.
+See [the coordinate contract](../../docs/components/canvas-rendering.md#coordinate-observation-from-processing-groups).

@@ -322,6 +322,10 @@ Returns the client rectangle in viewport coordinates.
 
 **Returns:** A zero-origin rectangle in client units, independent of desktop and node position.
 
+**Remarks:** The owner or active processing groups may read logical bounds with caller-coordinated configuration/lifetime changes. Cold content layout publishes once under a gate and volatile validity flag; warmed bounds/final-transform queries use the cached layout.
+
+**InvalidOperationException:** The attached window is queried outside that read scope.
+
 **ObjectDisposedException:** The viewport is disposed.
 
 <a id="getwindowid"></a>

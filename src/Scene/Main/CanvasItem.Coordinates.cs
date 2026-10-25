@@ -4,14 +4,15 @@ public abstract partial class CanvasItem
 {
     /// <summary>Returns the containing viewport's visible rectangle.</summary>
     /// <returns>A rectangle in viewport coordinates, independent of canvas and node transforms.</returns>
-    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
+    /// <remarks>Logical coordinate queries permit the owner or active processing groups with caller-coordinated configuration and lifetime changes.</remarks>
+    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Rect2 GetViewportRect() => RequireCanvasViewport().GetVisibleRect();
 
     /// <summary>Returns the transform from this item's canvas to viewport coordinates.</summary>
     /// <returns>The associated CanvasLayer.GetFinalTransform, or the containing viewport's CanvasTransform.</returns>
     /// <remarks>Requires tree membership. Neutral nodes and TopLevel preserve the enclosing canvas layer.</remarks>
-    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetCanvasTransform() { var viewport = RequireCanvasViewport(); return _canvasLayer?.GetFinalTransform() ?? viewport.CanvasTransform; }
 
@@ -26,18 +27,18 @@ public abstract partial class CanvasItem
     /// <summary>Returns this item's local-to-viewport transform, including its canvas.</summary>
     /// <returns>CanvasTransform times GetGlobalTransform while attached; otherwise the logical global transform.</returns>
     /// <remarks>GlobalCanvasTransform and pixel snapping are not included. Neutral parents and TopLevel still break only the node-transform chain.</remarks>
-    /// <exception cref="InvalidOperationException">An attached item is queried off-owner or has no viewport.</exception>
+    /// <exception cref="InvalidOperationException">An attached item is queried outside the owner/active processing groups or has no viewport.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetGlobalTransformWithCanvas()
     {
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess();
         return IsInsideTree ? GetCanvasTransform() * GetGlobalTransform() : GetGlobalTransform();
     }
 
     /// <summary>Returns the transform from this item's canvas to its owning viewport's output coordinates.</summary>
     /// <returns>The viewport final transform times this item's canvas transform.</returns>
     /// <remarks>Does not include this item's own transform, ancestor viewport/container placement, native desktop placement or framebuffer pixel density.</remarks>
-    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetViewportTransform() { var viewport = RequireCanvasViewport(); return viewport.GetFinalTransform() * GetCanvasTransform(); }
 
@@ -46,10 +47,10 @@ public abstract partial class CanvasItem
     /// <remarks>A viewport that embeds windows stops the popup-base chain before its own final transform. Other windows
     /// include their position and final transform through the embedder; offscreen containers include their item, shrink
     /// and child final transforms. Native desktop placement is included only when the chain reaches a native window
-    /// without an embedding boundary. Wayland rejects that desktop lookup explicitly. Viewport.GetScreenTransform
+    /// without an embedding boundary. Required native desktop lookup retains its owner-thread guard; Wayland rejects it explicitly. Viewport.GetScreenTransform
     /// instead projects through the complete containing-client chain.</remarks>
     /// <exception cref="NotSupportedException">Required native desktop placement is unavailable.</exception>
-    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried off-owner.</exception>
+    /// <exception cref="InvalidOperationException">The item has no active viewport or is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Transform GetScreenTransform()
     {
@@ -61,7 +62,7 @@ public abstract partial class CanvasItem
     /// <returns>The inverse canvas-and-node transform applied to the point.</returns>
     /// <remarks>Incoming coordinates must already exclude the viewport final transform. Snapping does not change logical queries.</remarks>
     /// <exception cref="ArgumentException">The supplied point is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">The item has no active viewport, is queried off-owner or the composed transform is singular.</exception>
+    /// <exception cref="InvalidOperationException">The item has no active viewport, is queried outside the owner/active processing groups or the composed transform is singular.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public Vector2 MakeCanvasPositionLocal(Vector2 viewportPoint)
     {
@@ -77,7 +78,7 @@ public abstract partial class CanvasItem
     /// only if it differs from the input; the item does not take ownership of either event.</remarks>
     /// <exception cref="ArgumentNullException">The event is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Transformed event coordinates overflow finite values.</exception>
-    /// <exception cref="InvalidOperationException">The item has no active viewport, is queried off-owner or its transform is singular.</exception>
+    /// <exception cref="InvalidOperationException">The item has no active viewport, is queried outside the owner/active processing groups or its transform is singular.</exception>
     /// <exception cref="ObjectDisposedException">The item or event is disposed.</exception>
     public InputEvent MakeInputLocal(InputEvent inputEvent)
     {
@@ -101,7 +102,7 @@ public abstract partial class CanvasItem
 
     private Viewport RequireCanvasViewport()
     {
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess();
         return IsInsideTree && GetViewport() is { } viewport ? viewport : throw new InvalidOperationException("Canvas coordinates require an active viewport.");
     }
 }

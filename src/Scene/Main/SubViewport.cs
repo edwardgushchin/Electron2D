@@ -77,7 +77,7 @@ public sealed class SubViewport : Viewport
         try { NotifySizeChanged(); } finally { if (Parent is SubViewportContainer container) { container.UpdateMinimumSize(); container.QueueRedraw(); } }
     }
     /// <inheritdoc />
-    public override Rect2 GetVisibleRect() { ThrowIfDisposed(); return new(Vector2.Zero, _override == Vector2i.Zero ? _size : _override); }
+    public override Rect2 GetVisibleRect() { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return new(Vector2.Zero, _override == Vector2i.Zero ? _size : _override); }
     private static readonly PropertyDescriptor[] Properties =
     [
         new PropertyDescriptor<SubViewport, Vector2i>(nameof(Size), n => n.Size, (n, v) => n.Size = v, _ => new(512, 512), stored: true),

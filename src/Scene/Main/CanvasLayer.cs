@@ -144,12 +144,13 @@ public partial class CanvasLayer : Node
     /// <summary>Returns the logical transform from layer to viewport coordinates.</summary>
     /// <returns>The layer transform when not following; otherwise viewport CanvasTransform times follow scale times layer transform.
     /// A detached layer uses identity in place of the viewport transform.</returns>
-    /// <remarks>Excludes GlobalCanvasTransform, pixel snapping and the renderer's center-based follow scaling.</remarks>
-    /// <exception cref="InvalidOperationException">The query is off-owner or composition overflows finite coordinates.</exception>
+    /// <remarks>Excludes GlobalCanvasTransform, pixel snapping and the renderer's center-based follow scaling.
+    /// The owner or active processing groups may read with caller-coordinated configuration and lifetime changes.</remarks>
+    /// <exception cref="InvalidOperationException">The query is outside the owner/active processing groups or composition overflows finite coordinates.</exception>
     /// <exception cref="ObjectDisposedException">The layer is disposed.</exception>
     public Transform GetFinalTransform()
     {
-        CheckQuery();
+        ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess();
         var result = _followViewportEnabled
             ? (_viewport?.CanvasTransform ?? Transform.Identity) * new Transform(0, Vector2.One * _followViewportScale, 0, Vector2.Zero) * _transform
             : _transform;

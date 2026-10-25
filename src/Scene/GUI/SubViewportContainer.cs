@@ -44,7 +44,7 @@ public class SubViewportContainer : Container
     /// <remarks>Called once before coordinate scaling. Overrides must not dispose the borrowed event.</remarks>
     protected virtual bool PropagateInputEvent(InputEvent inputEvent) => true;
     internal Vector2 ViewportPoint(Vector2 local) => Stretch ? local / StretchShrink : local;
-    internal Transform ViewportScale => Stretch ? Transform.Identity.Scaled(new(StretchShrink, StretchShrink)) : Transform.Identity;
+    internal Transform ViewportScale => _stretch ? Transform.Identity.Scaled(new(_shrink, _shrink)) : Transform.Identity;
     private static bool Positional(InputEvent input) => input is InputEventMouse or InputEventScreenTouch or InputEventScreenDrag or InputEventGesture;
     private void Forward(InputEvent input)
     {

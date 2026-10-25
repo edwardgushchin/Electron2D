@@ -5932,6 +5932,13 @@
     },
     {
       "state": "Implemented",
+      "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md. ADR 0008: coordinated active groups now read the complete logical canvas/viewport coordinate family, including Window/SubViewport bounds, layer follow transforms, inverse/event projection and Control screen origins. Cold Window layout publishes under a gate; native desktop/pointer/render operations and writes retain separate guards. See docs/components/canvas-rendering.md#coordinate-observation-from-processing-groups. General GUI/reserved handlers and full numerical/platform/performance acceptance remain open.",
+      "godot": [
+        "CanvasLayer::method:get_final_transform()"
+      ]
+    },
+    {
+      "state": "Implemented",
       "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md.",
       "godot": [
         "CanvasLayer::property:layer",
@@ -5942,7 +5949,6 @@
         "CanvasLayer::property:scale",
         "CanvasLayer::property:follow_viewport_enabled",
         "CanvasLayer::property:follow_viewport_scale",
-        "CanvasLayer::method:get_final_transform()",
         "CanvasLayer::method:show()",
         "CanvasLayer::method:hide()",
         "CanvasLayer::signal:visibility_changed()",

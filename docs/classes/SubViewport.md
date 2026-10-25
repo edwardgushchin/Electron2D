@@ -1,6 +1,6 @@
 # SubViewport
 
-Last updated: 2026-10-19
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.SubViewport` · **Source:** [SubViewport.cs](../../src/Scene/Main/SubViewport.cs).
 
@@ -177,6 +177,8 @@ Remarks: Overrides append or replace descriptors; they must not yield null entri
 Returns the client rectangle in viewport coordinates.
 
 Returns: A zero-origin rectangle in client units, independent of desktop and node position.
+
+Remarks: Logical bounds permit the owner or active processing groups with caller-coordinated configuration/lifetime changes. Attached reads outside that scope throw InvalidOperationException.
 
 System.ObjectDisposedException: The viewport is disposed.
 

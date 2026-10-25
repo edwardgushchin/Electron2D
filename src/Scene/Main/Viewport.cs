@@ -18,6 +18,8 @@ public abstract partial class Viewport : Node
 
     /// <summary>Returns the client rectangle in viewport coordinates.</summary>
     /// <returns>A zero-origin rectangle in client units, independent of desktop and node position.</returns>
+    /// <remarks>The owner or active processing groups may observe logical bounds with caller-coordinated configuration and lifetime changes.</remarks>
+    /// <exception cref="InvalidOperationException">The attached viewport is queried outside the owner/active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The viewport is disposed.</exception>
     public abstract Rect2 GetVisibleRect();
 

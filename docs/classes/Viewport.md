@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 **Inherits:** [Node](Node.md)
 
@@ -123,13 +123,13 @@ When a current camera uses physics interpolation, this property still returns it
 
 `public Transform GlobalCanvasTransform { get; set; }`
 
-Identity by default. Maps viewport coordinates into the native client area after CanvasTransform. Its inverse localizes incoming window input; use CanvasItem.MakeInputLocal separately for canvas/node conversion. Both transform properties accept finite singular values for rendering. They are typed runtime descriptors, not stored by PackedScene; reconstructed windows start at identity. Nonfinite assignment throws ArgumentException; mutation during capture or off the attached owner thread throws InvalidOperationException. Queries enforce the attached owner; disposed access throws ObjectDisposedException.
+Identity by default. Maps viewport coordinates into the native client area after CanvasTransform. Its inverse localizes incoming window input; use CanvasItem.MakeInputLocal separately for canvas/node conversion. Both transform properties accept finite singular values for rendering. They are typed runtime descriptors, not stored by PackedScene; reconstructed windows start at identity. Nonfinite assignment throws ArgumentException; mutation during capture or off the attached owner thread throws InvalidOperationException. Logical transform queries permit the owner or active processing groups with caller coordination; disposed access throws ObjectDisposedException.
 
 ### GetFinalTransform
 
 `public Transform GetFinalTransform()`
 
-Returns window presentation, then StretchTransform and GlobalCanvasTransform. Window presentation includes content fitting margins/image enlargement; CanvasTransform, desktop position and framebuffer density are excluded. Attached off-owner access throws InvalidOperationException; disposed access throws ObjectDisposedException.
+Returns window presentation, then StretchTransform and GlobalCanvasTransform. Window presentation includes content fitting margins/image enlargement; CanvasTransform, desktop position and framebuffer density are excluded. Attached reads outside the owner/active processing groups throw InvalidOperationException; disposed access throws ObjectDisposedException.
 
 ### GetScreenTransform
 
@@ -293,6 +293,10 @@ Clears this class's subscribers, then disposes inherited state. Overrides must c
 Returns the client rectangle in viewport coordinates.
 
 **Returns:** A zero-origin rectangle in client units, independent of desktop and node position.
+
+**Remarks:** Logical bounds permit the owner or active processing groups with caller-coordinated configuration/lifetime changes.
+
+**InvalidOperationException:** The attached viewport is queried outside that read scope.
 
 **ObjectDisposedException:** The viewport is disposed.
 
@@ -663,3 +667,7 @@ Automatic physics picking ignores a canvas whose determinant is zero/nonfinite o
 [Canvas counters](../components/canvas-counters.md) now publish successful per-viewport/global drawing records, topology/instance budgets and native geometry calls. Empty completed frames reset; skipped or failed frames retain prior values. GPU-authored activity uses explicit capacity/base-geometry budgets without readback. Owner/lifetime, backend granularity and exact verification limits are defined in that component.
 
 `public long GetRenderInfo(ViewportRenderInfoType type, ViewportRenderInfo info)` reads this viewport's last completed Canvas count; zero before the first completion. Attached access requires the scene owner; disposed and unsupported selectors reject. Detachment retains the completed values. The three independent observations are not an atomic snapshot.
+
+[Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) preserve logical transforms and bounds while pointer/native operations retain their separate guards.
+
+Embedding-policy edits reject attached windows whose embedding owner would change. A nearer embedding viewport shields its windows from ancestor edits, preserving their identities and popup-coordinate boundary.

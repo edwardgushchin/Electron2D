@@ -254,7 +254,7 @@ public partial class Window : Viewport
     /// <inheritdoc />
     public override Rect2 GetVisibleRect()
     {
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return new Rect2(Vector2.Zero, ContentLayout.VisibleSize);
+        ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return new Rect2(Vector2.Zero, ContentLayout.VisibleSize);
     }
 
     /// <inheritdoc />

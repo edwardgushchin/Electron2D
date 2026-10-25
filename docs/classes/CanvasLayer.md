@@ -240,9 +240,9 @@ Returns the logical transform from layer to viewport coordinates.
 
 **Returns:** The layer transform when not following; otherwise viewport CanvasTransform times follow scale times layer transform. A detached layer uses identity in place of the viewport transform.
 
-**Remarks:** Excludes GlobalCanvasTransform, pixel snapping and the renderer's center-based follow scaling.
+**Remarks:** Excludes GlobalCanvasTransform, pixel snapping and the renderer's center-based follow scaling. Logical reads permit the owner or active processing groups with caller-coordinated configuration and lifetime changes.
 
-**InvalidOperationException:** The query is off-owner or composition overflows finite coordinates.
+**InvalidOperationException:** The read scope is unavailable or composition overflows finite coordinates.
 
 **ObjectDisposedException:** The layer is disposed.
 

@@ -908,3 +908,29 @@ the macOS diagnostic workflow retains both its profiled and ordinary logs and
 the dedicated trace. Positive/empty controls still precede physical tracing.
 These diagnostics do not replace complete ordinary target CI or attribute an
 older interval that has no matching object/context evidence.
+
+
+## Frozen ordinary aggregate at 7eb4e4da6 (2026-10-25)
+
+The unmodified default CLR executable on its retained 79-file payload reached
+CompressedTextureTests.RunManaged, then failed after 3847.927 seconds with
+EntryPointNotFoundException for e2d_webp_decode. The loaded native WebP bridge
+exports e2d_webp_encode only. Its exact file digest, invocation, failure stack and
+fresh kernel interval are retained in
+bin/physics-ordinary-qualification/2026-10-25/ordinary-cached-failure.json and
+ordinary-cached/{check.json,runner.log}. All payload digests stayed unchanged.
+The repository bridge source already declares the decoder; the selected native
+package remains a separate artifact prerequisite before another complete attempt.
+
+The earlier attempt on those binaries stopped at its external 2400-second limit,
+without a test assertion or completion marker. Both attempts remain rejected as
+complete-suite evidence. The later run passed the earlier physical/script-factory
+and network stages before the native entry-point failure, but does not establish
+the cause of historical allocation failures. No allocation limit was relaxed.
+NVIDIA execution and explicitly selected software-consumer processes remain
+separate observations; the fresh readable kernel interval contains no Xid event.
+This is not hardware reliability or performance acceptance.
+
+This payload belongs to 7eb4e4da6. Later main changes, including grouped coordinate
+reads, have their own source proofs and focused matrices; this aggregate does not
+qualify them. There is no complete success marker and no full-goal acceptance.

@@ -1,3 +1,5 @@
+[Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) extend inherited physical/GUI logical query access without changing numerical or native permissions.
+
 [Masked GPU command-policy updates](../components/gpu-resident-bodies.md#scalar-body-edit-flags) preserve policy bits in the cold public, two-command/five-body and warmed cases on AVX-512 at the default/256-bit width and without managed SIMD. A later forced-128-bit contact failure is isolated by a passing status-coded module and failing restored original. [Coded contact validation](../components/gpu-contact-solver.md#contact-validation-causes) retains the same validation in the existing summary word; ordinary untraced target qualification remains required.
 
 [Maximum finite GPU point forces](../components/physics-areas.md#maximum-finite-point-force-reconstruction) reconstruct exponent 128 without an overflowing scale intermediate and retain signed coordinate/strength/component fractions across native lowering. Exact axis/sign limits and genuine overflow retain the full public field and zero-byte contracts; native Windows confirmation remains open.
