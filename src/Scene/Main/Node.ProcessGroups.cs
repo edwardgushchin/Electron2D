@@ -31,11 +31,15 @@ public partial class Node
 
     /// <summary>Gets or sets this node's explicit processing group role.</summary>
     /// <value>Inherit initially; an explicit MainThread or SubThread establishes a boundary for inherited descendants.</value>
-    /// <remarks>Configuration requires the scene owner. New group membership starts at a later captured frame.
+    /// <remarks>Configuration requires the scene owner. An attached role change rebinds inherited members before synchronously
+    /// raising <see cref="ElectronObject.PropertyListChanged"/>. Detached and equal writes do not raise that event.
+    /// Observer failures leave the new role committed; a nested change determines the final role.
+    /// New group membership starts at a later captured frame.
     /// Worker callbacks retain ordinary backend/render/hierarchy guards; publish those changes to a main group.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is not defined.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off the owner thread or scene capture is active.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    /// <exception cref="Exception">A property-list observer throws after the role and group membership have changed.</exception>
     public ProcessThreadGroupMode ProcessThreadGroup
     {
         get { ThrowIfDisposed(); return _processThreadGroup; }
@@ -43,7 +47,12 @@ public partial class Node
         {
             EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_processThreadGroup == value) return;
-            _processThreadGroup = value; Tree?.RebindProcessingGroups(this);
+            _processThreadGroup = value;
+            if (Tree is { } tree)
+            {
+                tree.RebindProcessingGroups(this);
+                NotifyPropertyListChanged();
+            }
         }
     }
     /// <summary>Gets or sets the ascending order of this node's explicit processing group.</summary>

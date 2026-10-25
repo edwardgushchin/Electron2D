@@ -186,3 +186,5 @@ owner/all-thread managed bytes. A public-only standalone consumer supports the
 same compiled test in ordinary and NativeAOT hosts. Evidence and exact limits are
 retained under bin/physics-auto-callbacks/2026-10-14; full inherited, native/foreign
 and hardware/window/performance acceptance remains open.
+
+[Processing-group motion](../components/physics-group-motion.md) permits current-group velocity/state authoring with ordered owner publication, prepared activity observations and retained failure/retry state. Numerical operations and other authoring families retain their individual access rules.

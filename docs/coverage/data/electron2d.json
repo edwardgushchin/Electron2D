@@ -58570,6 +58570,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.VisualShader.Type.Light()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.Type",
+    "name": "Light",
+    "signature": "public const Electron2D.VisualShader.Type Light = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.Type",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.VisualShader.Type.Max()",
     "kind": "enumValue",
     "declaringType": "Electron2D.VisualShader.Type",
@@ -58659,6 +58672,19 @@
     "parameters": [],
     "returnType": "Electron2D.VisualShader.Type",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.VisualShader.VaryingMode.FragmentToLight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.VisualShader.VaryingMode",
+    "name": "FragmentToLight",
+    "signature": "public const Electron2D.VisualShader.VaryingMode FragmentToLight = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VisualShader.VaryingMode",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.VisualShader.VaryingMode.Max()",

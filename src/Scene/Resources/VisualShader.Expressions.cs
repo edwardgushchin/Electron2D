@@ -58,7 +58,7 @@ public sealed partial class VisualShader
     private static void CheckExpressionBudget(StringBuilder source)
     { if (source.Length > ShaderInclude.MaximumSourceBytes) throw new InvalidDataException("Generated expression source exceeds the import budget."); }
     private static bool ReadsRendererValues(IEnumerable<string> sources) => sources.Any(s => SourceIdentifiers(s).Any(t =>
-        !t.Member && s.Substring(t.Start, t.Length) is "TIME" or "SCREEN_PIXEL_SIZE"));
+        !t.Member && s.Substring(t.Start, t.Length) is "TIME" or "SCREEN_PIXEL_SIZE" or "SCREEN_UV"));
     private static Dictionary<string, string> ExpressionBuiltins(Type stage, Dictionary<string, string> aliases, bool global = false)
     {
         var result = new Dictionary<string, string>(StringComparer.Ordinal) { ["TIME"] = aliases["e2d_values"] + ".TIME" };
@@ -68,7 +68,17 @@ public sealed partial class VisualShader
             return result;
         }
         result["TEXTURE_PIXEL_SIZE"] = aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE";
-        if (stage == Type.Fragment) result["SCREEN_PIXEL_SIZE"] = aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE";
+        if (stage is Type.Fragment or Type.Light)
+        {
+            result["SCREEN_PIXEL_SIZE"] = aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE";
+            result["SCREEN_UV"] = "(gl_FragCoord.xy * " + aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE)";
+            result["FRAGCOORD"] = "gl_FragCoord";
+        }
+        if (stage == Type.Light || global)
+            foreach (var (name, _) in CanvasLightFields) if (aliases.TryGetValue(name, out var symbol)) result[name] = symbol;
+        if (stage == Type.Fragment || global)
+            foreach (var (name, _) in SurfaceFields)
+                if (name != "NORMAL_USED" && aliases.ContainsKey("e2d_surface") && aliases.TryGetValue(name, out var symbol)) result[name] = symbol;
         if (stage == Type.Vertex)
         {
             result["CUSTOM0"] = aliases["inMeshCustom0"]; result["CUSTOM1"] = aliases["inMeshCustom1"];

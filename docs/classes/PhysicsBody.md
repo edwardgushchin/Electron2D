@@ -64,7 +64,7 @@ A failed direct BodySetMode publication retains the committed mode and motion po
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
-- **Source:** [PhysicsBody.cs](../../src/Scene/2D/PhysicsBody.cs)
+- **Source:** [PhysicsBody.GroupMotion.cs](../../src/Scene/2D/PhysicsBody.GroupMotion.cs), [PhysicsBody.cs](../../src/Scene/2D/PhysicsBody.cs)
 - **Declaration:** `public abstract class PhysicsBody : CollisionObject`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
@@ -237,3 +237,5 @@ and wider numerical/platform/performance acceptance keep their separate scopes.
 [Oblique long circle motion](../components/physics-queries.md#oblique-long-circle-motion) verifies the existing public cast/overlap and scene/raw body-motion paths across four unit-basis poses, both source/peer roles and signs. CPU/software-GPU/registered owner/separate CLR and NativeAOT profiles retain the existing tolerances and strict zero warmed managed allocation; wider acceptance remains open.
 
 [One-way motion entry](../components/physics-queries.md#one-way-body-motion-entry) selects new impacts from their actual contact side. Tangent/receding front-corner hits are distinct from releasing a receding initial overlap; invalid sides cannot hide a later obstacle. Recovery depth and separation-ray source policy retain their contracts.
+
+[Processing-group motion](../components/physics-group-motion.md) permits current-group velocity/state authoring with ordered owner publication, prepared activity observations and retained failure/retry state. Numerical operations and other authoring families retain their individual access rules.

@@ -24,16 +24,17 @@ public partial class StaticBody : PhysicsBody
     /// <summary>Gets or sets global-axis surface velocity without translating the body.</summary>
     /// <value>Finite scene units per second; zero by default.</value>
     /// <remarks>Contact response and point-velocity queries include this velocity. On an AnimatableBody
-    /// it adds to target motion without changing the target pose. Edits wake touching bodies.</remarks>
+    /// it adds to target motion without changing the target pose. Edits wake touching bodies.
+    /// The owner or current processing group may read or write this value. Worker writes publish in order at the owner barrier.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The velocity is not finite.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owner thread or solver phase.</exception>
     /// <exception cref="ObjectDisposedException">The body has been disposed.</exception>
     public Vector2 ConstantLinearVelocity
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _constantLinearVelocity; }
+        get { EnsureMotionReadAccess(); return _constantLinearVelocity; }
         set
         {
-            EnsureMutable();
+            EnsureMotionMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
             PreparePendingServerMode(writing: true);
             if (_constantLinearVelocity == value) return;
@@ -44,16 +45,17 @@ public partial class StaticBody : PhysicsBody
     /// <summary>Gets or sets surface rotation speed without rotating the body.</summary>
     /// <value>Finite radians per second; zero by default. Positive values follow the scene rotation direction.</value>
     /// <remarks>Point velocity includes angular speed around the body center of mass. On an AnimatableBody
-    /// it adds to target motion without changing the target pose. Edits wake touching bodies.</remarks>
+    /// it adds to target motion without changing the target pose. Edits wake touching bodies.
+    /// The owner or current processing group may read or write this value. Worker writes publish in order at the owner barrier.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The velocity is not finite.</exception>
     /// <exception cref="InvalidOperationException">Access violates the owner thread or solver phase.</exception>
     /// <exception cref="ObjectDisposedException">The body has been disposed.</exception>
     public float ConstantAngularVelocity
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _constantAngularVelocity; }
+        get { EnsureMotionReadAccess(); return _constantAngularVelocity; }
         set
         {
-            EnsureMutable();
+            EnsureMotionMutable();
             if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
             PreparePendingServerMode(writing: true);
             if (_constantAngularVelocity == value) return;

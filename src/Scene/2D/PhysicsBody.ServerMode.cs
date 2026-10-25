@@ -13,9 +13,35 @@ public abstract partial class PhysicsBody
 
     internal bool HasServerMode => _serverMode is not null;
     internal PhysicsServer.BodyMode EffectiveBodyMode => PhysicsMadeStatic ? PhysicsServer.BodyMode.Static : _serverMode ?? RequestedBodyMode;
-    internal Vector2 ServerLinearVelocity { get { PreparePendingServerMode(); return HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.LinearVelocity : _serverLinear; } }
-    internal float ServerAngularVelocity { get { PreparePendingServerMode(); return HasBackend && EffectiveBodyMode != PhysicsServer.BodyMode.Static ? Backend.AngularVelocity : _serverAngular; } }
-    internal bool ServerSleeping { get { PreparePendingServerMode(); return HasBackend ? !Backend.IsAwake : EffectiveBodyMode == PhysicsServer.BodyMode.Static || _serverSleeping; } }
+    internal Vector2 ServerLinearVelocity
+    {
+        get
+        {
+            PreparePendingServerMode();
+            if (!HasBackend || EffectiveBodyMode == PhysicsServer.BodyMode.Static) return _serverLinear;
+            if (!IsGroupMotionAuthoring) return Backend.LinearVelocity;
+            return GroupLinearVelocity + (EffectiveBodyMode == PhysicsServer.BodyMode.Kinematic ? _serverLinear : default);
+        }
+    }
+    internal float ServerAngularVelocity
+    {
+        get
+        {
+            PreparePendingServerMode();
+            if (!HasBackend || EffectiveBodyMode == PhysicsServer.BodyMode.Static) return _serverAngular;
+            if (!IsGroupMotionAuthoring) return Backend.AngularVelocity;
+            return GroupAngularVelocity + (EffectiveBodyMode == PhysicsServer.BodyMode.Kinematic ? _serverAngular : 0);
+        }
+    }
+    internal bool ServerSleeping
+    {
+        get
+        {
+            PreparePendingServerMode();
+            if (!HasBackend) return EffectiveBodyMode == PhysicsServer.BodyMode.Static || _serverSleeping;
+            return IsGroupMotionAuthoring ? GroupSleeping : !Backend.IsAwake;
+        }
+    }
 
     internal void SetServerMode(PhysicsServer.BodyMode mode)
     {
@@ -38,6 +64,7 @@ public abstract partial class PhysicsBody
 
     internal void PreparePendingServerMode(bool writing = false)
     {
+        if (IsGroupMotionAuthoring) { EnsureMotionWriteAccess(); return; }
         if (this is PhysicalBone physical) physical.PreparePendingActivation();
         if (writing || _serverModeDirty)
         {
@@ -106,6 +133,7 @@ public abstract partial class PhysicsBody
     internal void SetServerSleeping(bool value)
     {
         PreparePendingServerMode(writing: true);
+        if (EffectiveBodyMode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic) return;
         _serverSleeping = value;
         if (value) { _serverLinear = default; _serverAngular = 0; }
         if (HasBackend) Backend.PublishMotion(awake: !value);

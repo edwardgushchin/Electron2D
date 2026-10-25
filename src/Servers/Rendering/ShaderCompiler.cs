@@ -83,6 +83,7 @@ internal static unsafe partial class ShaderCompiler
             {
                 var resources = Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(metadata).ResourceInfo;
                 resources.NumSamplers = Math.Max(resources.NumSamplers, SamplerCount(code));
+                resources.NumUniformBuffers = Math.Max(resources.NumUniformBuffers, UniformBufferCount(code, fragment));
                 return ShaderCross.CompileGraphicsShaderFromSPIRV(device, (nint)pointer, (nuint)code.Length, "main",
                     fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, in resources);
             }
@@ -107,6 +108,22 @@ internal static unsafe partial class ShaderCompiler
         }
         // Composed libraries retain unused slots before storage buffers; native layouts must retain that extent.
         if (count > 16) throw new NotSupportedException("Native sampled images exceed sixteen slots per stage.");
+        return count;
+    }
+
+    private static uint UniformBufferCount(byte[] code, bool fragment)
+    {
+        var source = new MaterialLightingProgram.Module(code).Instructions;
+        var types = source.Where(i => MaterialLightingProgram.Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var blocks = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 3 && i[2] == 2).Select(i => i[1]).ToHashSet();
+        var bindings = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 4 && i[2] == 33).ToDictionary(i => i[1], i => i[3]);
+        var sets = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 4 && i[2] == 34).ToDictionary(i => i[1], i => i[3]);
+        uint count = 0;
+        foreach (var variable in source.Where(i => MaterialLightingProgram.Op(i) == 59 && i[3] == 2))
+            if (blocks.Contains(types[variable[1]][3]) && sets.GetValueOrDefault(variable[2]) == (fragment ? 3u : 1u) && bindings.TryGetValue(variable[2], out var binding))
+                count = Math.Max(count, checked(binding + 1));
+        // Lighting variants can use uniform slots absent from the unlit entry's active resources.
+        if (count > 4) throw new NotSupportedException("Native uniform buffers exceed four slots per stage.");
         return count;
     }
 
@@ -165,7 +182,7 @@ internal static unsafe partial class ShaderCompiler
         if (mode == Shader.Mode.TextureBlit && (program.HasInstanceUniforms || program.UsesScreenTexture || program.UsesSDFTexture || program.ScreenPixelSizeUniform is not null || program.SDFCoordsUniform is not null || program.Textures.Any(t => t.IsCanvasTexture)))
             throw new NotSupportedException("Blit shaders have no scene, screen or command-texture interface; use SOURCE_TEXTURE0 through SOURCE_TEXTURE3.");
         if (!fragment) program.ValidateVertexFrame();
-        code = program.NativeCode;
+        code = program.ValidationCode ?? program.NativeCode;
         Run(() =>
         {
             fixed (byte* pointer = code)

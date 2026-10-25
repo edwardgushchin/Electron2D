@@ -103,17 +103,18 @@ public partial class RigidBody : PhysicsBody
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
     /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.
     /// An active direct PhysicsServer mode profile shares immediate scene/server velocity state and rejects numerical-hook writes.
-    /// Access repairs incomplete direct-mode preparation before consuming or changing motion.</remarks>
+    /// Owner access repairs incomplete direct-mode preparation before consuming or changing motion.
+    /// The current processing group observes prepared state and queues ordered motion publication for the owner barrier.</remarks>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is nonfinite.</exception>
     public Vector2 LinearVelocity
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerLinearVelocity : _linearVelocity; }
+        get { EnsureMotionReadAccess(); return HasServerMode ? ServerLinearVelocity : _linearVelocity; }
         set
         {
-            EnsureMutable();
+            EnsureMotionMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
-            Space?.EnsureImplementationWriteAccess();
+            EnsureMotionWriteAccess();
             PreparePendingServerMode(writing: true);
             _linearVelocity = value;
             if (HasServerMode) SetServerLinearVelocity(value);
@@ -124,13 +125,14 @@ public partial class RigidBody : PhysicsBody
     /// <summary>Gets or sets angular velocity in radians per second.</summary>
     /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.
     /// An active direct PhysicsServer mode profile shares immediate scene/server velocity state and rejects numerical-hook writes.
-    /// Access repairs incomplete direct-mode preparation before consuming or changing motion.</remarks>
+    /// Owner access repairs incomplete direct-mode preparation before consuming or changing motion.
+    /// The current processing group observes prepared state and queues ordered motion publication for the owner barrier.</remarks>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float AngularVelocity
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerAngularVelocity : _angularVelocity; }
-        set { EnsureMutable(); Finite(value); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(writing: true); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(angular: value, awake: true); }
+        get { EnsureMotionReadAccess(); return HasServerMode ? ServerAngularVelocity : _angularVelocity; }
+        set { EnsureMotionMutable(); Finite(value); EnsureMotionWriteAccess(); PreparePendingServerMode(writing: true); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.PublishMotion(angular: value, awake: true); }
     }
 
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
@@ -220,16 +222,17 @@ public partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
     /// <remarks>Disabling automatic sleep wakes a dynamic body, including detached direct server configuration.
+    /// The owner or current processing group may assign this policy. Worker changes are published after the group joins.
     /// Assignment rejects during a borrowed numerical implementation call before changing configuration.
     /// Packed scenes preserve this permission.</remarks>
     /// <value>True by default.</value>
-    /// <exception cref="InvalidOperationException">Assignment is off the scene owner thread or inside a borrowed numerical implementation call.</exception>
+    /// <exception cref="InvalidOperationException">Assignment is outside the owner/current group or inside a borrowed numerical implementation call.</exception>
     public bool CanSleep
     {
-        get { ThrowIfDisposed(); return _canSleep; }
+        get { EnsureMotionReadAccess(); return _canSleep; }
         set
         {
-            EnsureMutable(); Space?.EnsureImplementationWriteAccess();
+            EnsureMotionMutable(); EnsureMotionWriteAccess();
             PreparePendingServerMode(writing: true);
             _canSleep = value;
             if (!value && !_freeze) _sleeping = false;
@@ -243,17 +246,18 @@ public partial class RigidBody : PhysicsBody
     /// <remarks>Explicit dynamic sleep clears velocity and suppresses the automatic sleep-change event.
     /// This state survives reentry even when automatic sleep is disabled. Static participation reports inactivity
     /// while detached without changing the retained dynamic sleep request. Packed scenes retain that request
-    /// independently of static inactivity.</remarks>
+    /// independently of static inactivity. Current-group reads use the prepared activity snapshot and accepted motion requests.
+    /// Worker writes publish in order on the owner after the group joins; static and kinematic direct profiles ignore dynamic sleep commands.</remarks>
     /// <value>False for a new dynamic body; true during static participation.</value>
     public bool Sleeping
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); PreparePendingServerMode(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : EffectiveBodyMode == PhysicsServer.BodyMode.Static || _sleeping; }
+        get { EnsureMotionReadAccess(); PreparePendingServerMode(); return HasServerMode ? ServerSleeping : HasBackend ? IsGroupMotionAuthoring ? GroupSleeping : !Backend.IsAwake : EffectiveBodyMode == PhysicsServer.BodyMode.Static || _sleeping; }
         set
         {
-            EnsureMutable(); Space?.EnsureImplementationWriteAccess(); PreparePendingServerMode(writing: true); _sleeping = value; _sleepChangePending = false;
+            EnsureMotionMutable(); EnsureMotionWriteAccess(); PreparePendingServerMode(writing: true); _sleeping = value; _sleepChangePending = false;
             if (value && !_freeze && !PhysicsMadeStatic) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
             if (HasServerMode) SetServerSleeping(value);
-            else if (HasBackend) Backend.PublishMotion(awake: !value);
+            else if (HasBackend && EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.PublishMotion(awake: !value);
         }
     }
 

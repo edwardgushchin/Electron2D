@@ -47,3 +47,7 @@ graph.ConnectNodes(VisualShader.Type.Fragment, 2, 0, 0, 0);
 ```
 
 Save and import with the existing offline graph workflow. The setter has no output port and remains an executing root. See [typed varying transport](../components/visual-shaders.md#typed-varying-transport) for interpolation, native capacity, verification commands and limits.
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

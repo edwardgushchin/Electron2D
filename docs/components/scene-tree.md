@@ -2,7 +2,7 @@
 
 `QuitOnGoBack` defaults to true independently of `AutoAcceptQuit`. Root system back notifications precede this policy, and public `Window.GoBackRequested` subscribers follow it. Blocking root signals suppresses both policy and signal; child-window requests do not quit. The [system back runtime](window-runtime.md#system-back-navigation) owns native production and verification.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 ## Selected authoring context
 
@@ -246,6 +246,12 @@ The scene owner or active group may set ProcessThreadGroupOrder and ProcessThrea
 
 [The public metadata consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.GroupContext.cs) exercises these permissions, later frame ordering, both message-only lanes, inherited stored descriptors, invalid masks, derived vetoes, disposal, nested regular/indexed failures, callback delivery order, actual physical motion/queries and strict warmed owner/all-thread managed allocation. Evidence and its execution profiles are recorded in `bin/physics-group-context/2026-10-18/validation.json`; this does not complete general worker scene/backend access or hardware performance acceptance.
 
+### Committed group-role metadata
+
+Changing an attached Node's `ProcessThreadGroup` completes inherited membership rebinding before its synchronous `PropertyListChanged` event. A handler can enqueue to the new group; explicit nested boundaries keep their execution owner. Exceptions leave the selected role and membership committed, while a nested role assignment determines the final state. Equal and detached writes remain silent, and ordinary signal blocking suppresses only delivery. The setter retains its owner, lifetime, capture and physical-borrow preflight.
+
+The [public role regression](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ProcessGroupRoles.cs), included in `--process-groups`, checks eight Node branches, all three roles, message delivery after the event, nested boundaries, invalid/foreign/disposed writes, observer errors, reentry and blocked signals alongside actual selected physical steps and point queries. `bin/physics-group-roles/2026-10-25/` retains the failing former implementation and current receipts. All twelve CLR/strict full-trim NativeAOT CPU/no-device, NVIDIA GPU and registered ordinary/separate profiles pass, including 1536 measured prepared full frames at strict 0/0 owner/all-thread managed bytes. Runtime role changes may allocate replacement groups; the existing prepared full-frame allocation bracket measures steady processing after configuration. Broader worker operations remain open on their owning methods.
+
 ## Process policy and physics pause
 
 `ProcessMode` controls callback eligibility independently of each public/internal lane switch. All five modes resolve through the nearest explicit ancestor; internal children inherit normally and an explicit descendant starts another policy boundary. Detached nodes cannot process and change policy silently. A root entering with Inherit stores Pausable; an attached root rejects Inherit.
@@ -335,3 +341,5 @@ complete physics/network acceptance.
 [Custom decoration input](../classes/Window.md#custom-decoration-input) uses shared window reception before exclusive-child rejection. Embedded forwarding remains available; final blocked client callbacks cannot execute even through direct PushInput. The local handled flag clears before this blocked return, preserving the ordinary per-event transition.
 
 Configuration-warning requests and queries permit the owner/current processing group, including physical descendants. The synchronous edited-root event is metadata; it grants no numerical/native access. See [grouped canvas diagnostics](canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
+
+[Physical motion inputs](physics-group-motion.md) now retain accepted current-group scalar requests and publish them after the worker barrier, before later main collectors and stepping. Failed publication retains the ordered tail. This does not widen unrelated hierarchy, numerical or renderer operations.

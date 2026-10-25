@@ -127,3 +127,5 @@ Sampled-image graph imports retain validated ShaderImagePolicy records per Shade
 The private NormalMapFlagsUniform records the validated canvas-fragment renderer field and survives paired-stage composition. It is excluded from material, instance and global descriptors. See [the connected normal producer](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
 
 Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` contract in both canvas stages; it follows the resolved diffuse image logical metadata, independently of material samplers. See [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) for authoring, stage/lifetime rules and verification limits.
+
+Authored light programs retain validated function/state IDs, full validation code and declared native uniform slot extents. Light records retain raw color and separate energy without widening their eight-vector frame layout. The compositor invokes the private function per actual light and keeps the unlit entry separate. See [canvas light graphs](../components/canvas-light-graphs.md) for the exact integration and measured limits.

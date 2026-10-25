@@ -498,7 +498,7 @@ Validated connections select VisualShaderNodeReroute roles across downstream cha
 
 `public void AddVarying(string name, VisualShader.VaryingMode mode, VisualShaderVaryingType type)` adds one unique ASCII identifier, including a leading underscore. The name is case-sensitive. Null throws ArgumentNullException; invalid/duplicate names and the 4096-declaration capacity throw ArgumentException. Invalid or nonselectable mode/type values throw ArgumentOutOfRangeException. It emits Changed after commitment; observer failure does not roll back the declaration. The graph owns this table independently of borrowed nodes and compiled programs.
 
-Only reachable accesses consume native transport: four custom scalar/vector locations or one four-column numeric matrix. Unused declarations have no native cost. The native limit is checked at import before publication; source authoring can retain a larger unused declaration set. See [VisualShaderVaryingType](VisualShaderVaryingType.md) and [VisualShader.VaryingMode](VisualShader.VaryingMode.md).
+FragmentToLight uses private values in the fragment module, consumed by its real per-light function. Only reachable VertexToFragmentLight accesses consume native transport: four custom scalar/vector locations or one four-column numeric matrix. Unused declarations have no native cost. The native limit is checked at import before publication; source authoring can retain a larger unused declaration set. See [VisualShaderVaryingType](VisualShaderVaryingType.md) and [VisualShader.VaryingMode](VisualShader.VaryingMode.md).
 
 <a id="hasvarying"></a>
 ### HasVarying
@@ -511,3 +511,9 @@ Only reachable accesses consume native transport: four custom scalar/vector loca
 `public void RemoveVarying(string name)` removes an existing declaration and emits Changed after commitment. Null throws ArgumentNullException; a missing name throws ArgumentException. Node references remain authored; reachable dangling accesses reject the next import without replacing the old program.
 
 These operations throw ObjectDisposedException on a disposed graph. Shallow and deep duplication each copy the declaration table. Portable archives preserve its names/types independently of node state. See the executable [write/read example](VisualShaderNodeVarying.md#example) and [connected contract](../components/visual-shaders.md#typed-varying-transport).
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.
+
+[Canvas fragment surfaces](../components/canvas-surfaces.md) execute fragment normal/map/depth and independent light/shadow positions through the existing retained material and scene-light path. Renderer-owned original model/canvas normal bases are excluded from material properties. Point-size/coordinate producers retain their separate dependencies.

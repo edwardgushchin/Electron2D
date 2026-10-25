@@ -1,3 +1,5 @@
+[Canvas fragment surfaces](../components/canvas-surfaces.md) execute normal/map/depth and independent light/shadow positions across retained geometry, mesh instances and particle streams using original draw/canvas normal bases.
+
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) now expose decoded custom0/custom1 and logical instance IDs to vertex authoring, including existing MultiMesh/particle ordering and named varying transport.
 
 [Sampled component views](../components/local-compute.md#sampled-component-views) execute initial channel maps across local compute/graphics and retained canvas, particle and writable-texture consumers, with copied descriptions and unchanged raw transfers. Shared alternate-format/subresource views remain separate.
@@ -531,3 +533,5 @@ Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture
 [ItemList layout](../components/item-list-layout.md) executes natural text/icon measurement independently of visible trimming, automatic minima, fixed/equal-width grids, stable two-axis pages and signed RTL current-item scrolling. The public consumer covers real viewport input and typed scene storage; full keyboard/signal reentry and target acceptance retain their own limits.
 
 [ItemList input](../components/item-list-input.md) connects selection/navigation/search to focused input and native committed text, preserving notification order and retiring stale model indices after callbacks.
+
+Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](../components/canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.

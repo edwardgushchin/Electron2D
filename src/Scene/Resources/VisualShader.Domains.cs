@@ -13,6 +13,8 @@ internal sealed class VisualShaderDomainSources(Shader.Mode mode, string? vertex
     internal readonly string Code = fragmentOrCompute;
     internal readonly IReadOnlyList<VisualShaderImage> Images = images;
     internal readonly IReadOnlyList<VisualShaderBlockName> Blocks = blocks;
+    internal CanvasStageSource? Light { get; init; }
+    internal CanvasStageSource? Surface { get; init; }
     public void Dispose()
     {
         List<Exception>? errors = null;
@@ -32,6 +34,8 @@ public sealed partial class VisualShader
         internal readonly Dictionary<(Type Stage, int ID), MeshEmissionBake> Meshes = [];
         internal Dictionary<string, string> Symbols = [];
         internal int BlitOutputs = 1;
+        internal bool Canvas;
+        internal SurfacePlan? Surface;
         internal string StageHeader(Type stage) => "#undef ELECTRON2D_SHADER_STAGE\n#define ELECTRON2D_SHADER_STAGE " + (int)stage + "\nvoid " + Symbols["e2d_stage_" + (int)stage] + "() {\n";
     }
     internal VisualShaderDomainSources GenerateDomainSources()
@@ -39,7 +43,7 @@ public sealed partial class VisualShader
         ThrowIfDisposed();
         if (_mode == Mode.CanvasItem)
         {
-            var canvas = GenerateSources(); return new(_mode, canvas.Vertex, canvas.Fragment, canvas.Images, canvas.Blocks, []);
+            var canvas = GenerateSources(); return new(_mode, canvas.Vertex, canvas.Fragment, canvas.Images, canvas.Blocks, []) { Light = canvas.Light, Surface = canvas.Surface };
         }
         var owned = new List<Resource>();
         try
@@ -157,6 +161,20 @@ public sealed partial class VisualShader
         bool Has(int p) => incoming.ContainsKey((0, p)) || root.GetDefaultInputValues().Any(d => d.Port == p);
         void Emit(string text) => source.AppendLine(RewriteExpression(text, aliases));
         void Set(int p, string destination) { if (Has(p)) Emit(destination + " = " + input(0, p) + ";"); }
+        if (domain.Canvas)
+        {
+            if (stage == Type.Light) { Set(0, "LIGHT.rgb"); Set(1, "LIGHT.a"); Set(2, "SHADOW_MODULATE.rgb"); }
+            else
+            {
+                Set(0, "COLOR.rgb"); Set(1, "COLOR.a");
+                if (domain.Surface is not null)
+                {
+                    Set(2, "NORMAL"); Set(3, "NORMAL_MAP"); Set(4, "NORMAL_MAP_DEPTH"); Set(5, "LIGHT_VERTEX"); Set(6, "SHADOW_VERTEX");
+                }
+                else for (var p = 2; p < root.Inputs.Length; p++) if (Has(p)) throw new NotSupportedException("This canvas fragment output requires its surface-state integration.");
+            }
+            return;
+        }
         if (stage == Type.TextureBlit) { for (var p = 0; p < domain.BlitOutputs; p++) Set(p, "e2d_color" + p); return; }
         if (stage is Type.StartCustom or Type.ProcessCustom)
         { Set(0, "CUSTOM.rgb"); Set(1, "CUSTOM.a"); Set(2, "VELOCITY.xy"); Set(3, "COLOR.rgb"); Set(4, "COLOR.a"); Set(5, "TRANSFORM"); return; }

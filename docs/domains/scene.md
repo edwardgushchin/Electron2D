@@ -10,7 +10,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -501,3 +501,5 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 [Node hierarchy duplication](../components/node-duplication.md) executes the complete DuplicateFlags family through current scene factories, typed property storage and linked scene instances. Source/ancestor resource and file leases keep copied subtrees alive after original-scene disposal. Raw copies keep authoring ownership unset; linked contents retain template ownership. Authoring/fresh file loading, headless execution and native rendered evidence have separate verification scopes.
 
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
+
+[Committed processing-group roles](../components/scene-tree.md#committed-group-role-metadata) now publish Node property-list changes after inherited membership rebinding. Detached/equal writes are silent; observer errors and nested role changes preserve committed execution ownership across ordinary and physical nodes. General worker scene/backend access remains tracked separately.

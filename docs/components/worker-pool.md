@@ -1,6 +1,6 @@
 # Worker execution component
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 ## Scope and ownership
 
@@ -39,3 +39,5 @@ Validated pool creation captures engine thread initializers and starts every wor
 The group-context control exposes the former 32-byte first touch on a newly selected worker even after many frames had warmed another worker. Startup preparation makes both distinct workers' first/repeated accesses zero. A forced-contention NativeAOT control also exposes the former 120-byte lazy gate event; prepared contention must use zero bytes. Blocking/failing startup tests, the worker pool suite and the [physical group attribution profile](node-groups.md#worker-context-preparation-and-allocation-attribution) verify readiness, cleanup and zero warmed execution. Hardware/native/foreign acceptance remains separate.
 
 The job retains only the internal [factory construction scope](../classes/ElectronObject.md#factory-construction-provenance), installs/restores it through dispatch and nested helping, and clears it on retirement. User ExecutionContext and SynchronizationContext remain uncaptured. A closed scope releases all object references and ceases to block scene activation.
+
+Worker startup prepares the construction-context read used by every dispatch before publishing readiness. This prepares CoreCLR per-thread managed storage on each worker, including workers first selected after scene warmup. See the measured trace and verification limits in [processing-group physical motion](physics-group-motion.md).

@@ -1,6 +1,6 @@
 # Canvas lights and occlusion
 
-Last updated: 2026-10-14
+Last updated: 2026-10-25
 
 `Light` is an Entity family. `PointLight` places a centered borrowed texture mask using Offset and TextureScale; `DirectionalLight` uses its transformed direction and normalized Height. Visible enabled sources are captured per rendered viewport. Inclusive canvas-layer and item-Z ranges select receivers; reversed ranges select nothing. Point masks intersect each item's LightMask, while directional sources ignore receiving masks. ShadowItemCullMask independently selects visible contour placements.
 
@@ -21,3 +21,5 @@ Compatibility renders diffuse textures and Unshaded fixed materials, and rejects
 `LightingTests` verifies resource graphs, validation, copies and typed scene metadata. Native checks exercise actual GPU lighting/channel/SDF/retained-RID pixels, physics interpolation and compatibility rejection. Prepared owner-frame allocation measurements are distinct from driver/internal native allocations, foreign-platform verification and owner acceptance.
 
 Coordinate rebasing updates previous/current interpolation endpoints and the canonical retained light/occluder transform together. The shift survives subsequent ticks and global interpolation disable/enable. Nonfinite products reject atomically; the GPU [retained canvas checks](canvas-rendering.md#retained-canvas-item-interpolation) verify light/occluder rebase pixels through subsequent ticks and global mode changes. Compatibility continues to reject the light pass.
+
+Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.

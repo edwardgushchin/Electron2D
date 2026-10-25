@@ -93,13 +93,14 @@ public partial class CharacterBody : PhysicsBody
 
     /// <summary>Gets or sets the desired velocity in scene units per second.</summary>
     /// <value>Zero by default; MoveAndSlide can update this value after floor or ceiling contact.</value>
+    /// <remarks>The owner or current processing group may author this value. Numerical movement remains an owner operation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A component or vector length is nonfinite.</exception>
     public Vector2 Velocity
     {
-        get { EnsureReadable(); return _velocity; }
+        get { EnsureMotionReadAccess(); return _velocity; }
         set
         {
-            EnsureMutable();
+            EnsureMotionMutable();
             if (!value.IsFinite() || !float.IsFinite(value.Length()))
                 throw new ArgumentOutOfRangeException(nameof(value));
             _velocity = value;

@@ -1,6 +1,6 @@
 # MaterialLightingProgram
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 - Declaration: `internal static class MaterialLightingProgram`
 - Source: [MaterialLightingProgram.cs](../../src/Servers/Rendering/MaterialLightingProgram.cs)
@@ -22,3 +22,5 @@ Lighting/glyph fragment composition uses Program.Fragment when a paired program 
 ## Sampled descriptor array integration
 
 Lighting and glyph composition parse ShaderProgram.NativeCode so fixed sampled descriptor arrays already have scalar physical slots. They preserve original shader export identity and count all additional engine samplers against the same stage limit. SamplerArrayTests exercises shared/split vertex/fragment arrays with lights, instancing, groups, glyphs, HDR and MSAA. See [the component contract](../components/shader-materials.md#fixed-sampled-descriptor-arrays).
+
+Authored light programs retain validated function/state IDs, full validation code and declared native uniform slot extents. Light records retain raw color and separate energy without widening their eight-vector frame layout. The compositor invokes the private function per actual light and keeps the unlit entry separate. See [canvas light graphs](../components/canvas-light-graphs.md) for the exact integration and measured limits.

@@ -390,6 +390,16 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
             if (Program.NormalMapFlagsUniform is { } normal)
                 MemoryMarshal.Write(Buffers[normal.Buffer].AsSpan(normal.Offset, sizeof(float) * 4), in normalMapFlags);
+            if (Program.NormalModelBasisUniform is { } normalModel)
+            {
+                var basis = CanvasMatrices.NormalBasis(matrices?.NormalModel ?? Transform.Identity);
+                MemoryMarshal.Write(Buffers[normalModel.Buffer].AsSpan(normalModel.Offset, sizeof(float) * 4), in basis);
+            }
+            if (Program.NormalCanvasBasisUniform is { } normalCanvas)
+            {
+                var basis = CanvasMatrices.NormalBasis(matrices?.Canvas ?? Transform.Identity);
+                MemoryMarshal.Write(Buffers[normalCanvas.Buffer].AsSpan(normalCanvas.Offset, sizeof(float) * 4), in basis);
+            }
             if (Program.TexturePixelSizeUniform is { } texturePixels)
                 MemoryMarshal.Write(Buffers[texturePixels.Buffer].AsSpan(texturePixels.Offset, sizeof(float) * 2), in texturePixelSize);
             if (Program.ModelMatrixUniform is { } model) CanvasMatrices.Write(model, Buffers, matrices?.Model ?? Transform.Identity);

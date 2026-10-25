@@ -10,6 +10,9 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal int ParticleStorageBuffers { get; set; } = 1;
     internal readonly byte[] Code = code;
     internal byte[] NativeCode { get; init; } = code;
+    internal byte[]? ValidationCode { get; init; }
+    internal CanvasStageEntry? AuthoredLight { get; init; }
+    internal CanvasStageEntry? Surface { get; init; }
     internal readonly int[] BufferSizes = bufferSizes;
     internal readonly Dictionary<string, ShaderUniform> Uniforms = uniforms;
     internal readonly ShaderTexture[] Textures = textures ?? [];
@@ -22,6 +25,8 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal readonly ShaderUniform? ScreenPixelSizeUniform = screenPixelSizeUniform;
     internal readonly ShaderUniform? SDFCoordsUniform = sdfCoordsUniform;
     internal ShaderUniform? NormalMapFlagsUniform { get; init; }
+    internal ShaderUniform? NormalModelBasisUniform { get; init; }
+    internal ShaderUniform? NormalCanvasBasisUniform { get; init; }
     internal ShaderUniform? TexturePixelSizeUniform { get; init; }
     internal ShaderUniform? ModelMatrixUniform { get; init; }
     internal ShaderUniform? CanvasMatrixUniform { get; init; }

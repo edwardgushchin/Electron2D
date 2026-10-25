@@ -10,7 +10,7 @@ public static partial class BackendChecks
         ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, 2);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         if (backend is null) PhysicsServerManager.RegisterServer("ProcessGroups", () => new Solver());
-        try { ProcessGroups(backend); }
+        try { ProcessGroupRoles(backend); ProcessGroups(backend); }
         finally { ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, workers); ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, old); }
     }
     private static void ProcessGroups(PhysicsServer.Backend? backend)

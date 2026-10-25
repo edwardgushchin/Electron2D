@@ -4,6 +4,7 @@ namespace Electron2D;
 /// <remarks>Graph edits are source authoring. Save the resource and run ShaderImport with --visual-shader to
 /// produce a new compiled resource. Existing materials keep the previous immutable program until reloaded.
 /// Added nodes are borrowed; reserved outputs and factory-created replacements belong to the graph.
+/// Canvas fragment surface outputs feed retained automatic and authored scene lighting.
 /// Authoring is single-threaded cold work.</remarks>
 public sealed partial class VisualShader : Shader
 {
@@ -14,6 +15,8 @@ public sealed partial class VisualShader : Shader
         Vertex = 0,
         /// <summary>Computes canvas fragment color.</summary>
         Fragment = 1,
+        /// <summary>Computes the contribution and shadow modulation of each selected canvas light.</summary>
+        Light = 2,
         /// <summary>Initializes a newly born particle.</summary>
         Start = 3,
         /// <summary>Processes an active particle outside a contact.</summary>
@@ -42,12 +45,12 @@ public sealed partial class VisualShader : Shader
         internal readonly SortedDictionary<int, Entry> Nodes = [];
         internal readonly List<VisualShaderConnection> Connections = [];
     }
-    private static readonly Type[] GraphStages = [Type.Vertex, Type.Fragment, Type.Start, Type.Process, Type.Collide, Type.StartCustom, Type.ProcessCustom, Type.TextureBlit];
+    private static readonly Type[] GraphStages = [Type.Vertex, Type.Fragment, Type.Light, Type.Start, Type.Process, Type.Collide, Type.StartCustom, Type.ProcessCustom, Type.TextureBlit];
     private readonly Graph[] _graphs = Enumerable.Range(0, (int)Type.Max).Select(i => new Graph((Type)i)).ToArray();
     private Mode _mode = Mode.CanvasItem;
-    private static bool IsGraphStage(Type stage) => stage is Type.Vertex or Type.Fragment or Type.Start or Type.Process or Type.Collide or Type.StartCustom or Type.ProcessCustom or Type.TextureBlit;
+    private static bool IsGraphStage(Type stage) => stage is Type.Vertex or Type.Fragment or Type.Light or Type.Start or Type.Process or Type.Collide or Type.StartCustom or Type.ProcessCustom or Type.TextureBlit;
     private static bool IsParticleStage(Type stage) => stage is >= Type.Start and <= Type.ProcessCustom;
-    private Type[] ActiveStages => _mode switch { Mode.Particles => [Type.Start, Type.Process, Type.Collide, Type.StartCustom, Type.ProcessCustom], Mode.TextureBlit => [Type.TextureBlit], _ => [Type.Vertex, Type.Fragment] };
+    private Type[] ActiveStages => _mode switch { Mode.Particles => [Type.Start, Type.Process, Type.Collide, Type.StartCustom, Type.ProcessCustom], Mode.TextureBlit => [Type.TextureBlit], _ => [Type.Vertex, Type.Fragment, Type.Light] };
     private readonly Dictionary<VisualShaderNode, int> _watched = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<VisualShaderNode> _ownedDefinitions = new(ReferenceEqualityComparer.Instance);
     private readonly Action<Resource> _childChanged;

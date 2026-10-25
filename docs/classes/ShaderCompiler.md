@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -95,3 +95,5 @@ ValidateInterface reflects the original logical interface and then verifies nati
 ## Default metadata validation
 
 Reflection validates the versioned typed default OpString payload before constructing/publishing a program. Names, scalar/array length, logical type and finite/canonical components must match active user material/Instance fields. Renderer/global defaults reject. Both canvas stages, TextureBlit and particle compute use this same boundary. Source extraction remains offline in ShaderImport. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
+
+Authored light programs retain validated function/state IDs, full validation code and declared native uniform slot extents. Light records retain raw color and separate energy without widening their eight-vector frame layout. The compositor invokes the private function per actual light and keeps the unlit entry separate. See [canvas light graphs](../components/canvas-light-graphs.md) for the exact integration and measured limits.

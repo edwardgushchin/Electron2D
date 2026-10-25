@@ -12,6 +12,8 @@ namespace Electron2D;
 /// four-by-four uniforms after Frame. They expose the original item/draw/mesh/instance pose, canvas-to-framebuffer
 /// basis and framebuffer-to-clip projection. They are omitted from material parameters, defaults and globals.
 /// Existing vertex positions retain their framebuffer-coordinate convention.
+/// Canvas-fragment NORMAL_MODEL_BASIS and NORMAL_CANVAS_BASIS are renderer-owned float4 columns of
+/// independently normalized draw and canvas bases, excluded from material parameters.
 /// A canvas non-array float2 TEXTURE_PIXEL_SIZE uniform receives the inverse logical dimensions of the
 /// resolved command diffuse image in either stage, or one for an absent/empty image. Atlas regions retain the
 /// backing image dimensions. This renderer-owned value is independent of material samplers and cannot be

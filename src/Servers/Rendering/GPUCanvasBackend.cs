@@ -355,7 +355,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 }
                 if (batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader)
                 { var tint = (output.HDR ? LinearColor(batch.GlyphModulation) : batch.GlyphModulation) * canvasColor; SDL.SetGPUBlendConstants(pass, new() { R = tint.R, G = tint.G, B = tint.B, A = tint.A }); }
-                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner, normalMapFlags: batch.NormalMapFlags, texturePixelSize: batch.Material.Program.TexturePixelSizeUniform is null ? default : CanvasTexturePixelSize(batch), matrices: batch.Matrices);
+                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner, normalMapFlags: SurfaceNormalMapFlags(batch), texturePixelSize: batch.Material.Program.TexturePixelSizeUniform is null ? default : CanvasTexturePixelSize(batch), matrices: batch.Matrices);
                 if (batch.Material is { Textures.Length: > 0 } textured)
                 {
                     var samplers = _textureBindings[textured];

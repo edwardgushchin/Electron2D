@@ -5,7 +5,7 @@ import struct
 import subprocess
 
 
-def source(lighting, normal, specular, masks):
+def source(lighting, normal, specular, masks, authored=False, surface=False):
     text = lighting[lighting.index('float cross2'):]
     main = text.index('float4 main(')
     body = text[main:]
@@ -14,6 +14,27 @@ def source(lighting, normal, specular, masks):
     body = body.replace('return float4(result, base.a * (item.w == 2 ? lightOnlyAlpha : ambient.a));', 'e2d_output = float4(result, base.a * (item.w == 2 ? lightOnlyAlpha : ambient.a));')
     body = body.replace('any(localUV < 0)', 'any(lessThan(localUV, float2(0)))').replace('any(localUV >= 1)', 'any(greaterThanEqual(localUV, float2(1)))')
     body = body.replace('float4 mask = 1;', 'float4 mask = float4(1);').replace('? map.rgb : 1', '? map.rgb : float3(1)')
+    if authored:
+        begin = body.index('        float3 lit = reflection(')
+        end = body.index('        lit = lerp(', begin)
+        body = body[:begin] + '''
+        float4 contribution = e2d_authored_light_hook(normal, float4(lightColor.rgb * mask.rgb, lightColor.a * mask.a), range.z,
+            lightVector, x.w != 0, x.w == 0 ? float3(endpoint, y.w) : float3(0), float3(position.xy, 0),
+            float4(specularColor, specular.a * (counts.w != 0 ? map.a : 1)), shadowColor);
+        float3 lit = contribution.rgb;
+        float weight = contribution.a;
+''' + body[end:]
+    if surface:
+        body = body.replace('    float3 result =', '''    bool normalUsed = counts.z != 0;
+    float3 lightVertex = float3(position.xy, 0); float2 shadowVertex = position.xy;
+    e2d_surface_hook(normal, normalUsed, lightVertex, shadowVertex);
+    float3 result =''', 1)
+        body = body.replace('dot(x.xy, position.xy)', 'dot(x.xy, lightVertex.xy)').replace('dot(y.xy, position.xy)', 'dot(y.xy, lightVertex.xy)')
+        body = body.replace('float3(endpoint - position.xy, y.w)', 'float3(endpoint - lightVertex.xy, y.w - lightVertex.z)')
+        body = body.replace('endpoint = position.xy -', 'endpoint = shadowVertex -')
+        body = body.replace('float2 delta = endpoint - position.xy;', 'float2 delta = endpoint - shadowVertex;')
+        body = body.replace('shadow(position.xy +', 'shadow(shadowVertex +')
+        body = body.replace('float3(position.xy, 0),', 'lightVertex,').replace(', counts.z != 0);', ', normalUsed);')
     text = text[:main] + 'void main() {\n' + '''
 vec4 position = gl_FragCoord;
 ambient = lighting[e2d_item]; specular = lighting[e2d_item+1];
@@ -39,6 +60,11 @@ item = floatBitsToUint(lighting[e2d_item+2]); counts = floatBitsToUint(lighting[
     header += f'layout(set=2,binding={slot},std430) readonly buffer E2DLighting {{ vec4 lighting[]; }};\n'
     header += 'layout(origin_upper_left) in vec4 gl_FragCoord;\n'
     header += 'int asint(float v){return floatBitsToInt(v);} int asint(uint v){return int(v);}\nuint asuint(float v){return floatBitsToUint(v);}\n'
+    if authored:
+        header += '''vec4 e2d_authored_light_hook(vec3 normal, vec4 color, float energy, vec3 direction, bool directional,
+            vec3 light_position, vec3 vertex, vec4 specular_value, inout vec4 shadow_color) { return vec4(0.0); }\n'''
+    if surface:
+        header += 'void e2d_surface_hook(inout vec3 normal, inout bool used, inout vec3 vertex, inout vec2 shadow_vertex) {}\n'
     for hlsl, glsl in [('float4','vec4'), ('float3','vec3'), ('float2','vec2'), ('lerp','mix'), ('ddx','dFdx'), ('ddy','dFdy')]:
         text = re.sub(rf'\b{hlsl}\b', glsl, text)
     return header + text
