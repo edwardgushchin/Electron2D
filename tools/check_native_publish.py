@@ -23,6 +23,20 @@ WEBRTC_EXPORTS = {"e2d_rtc_" + name for name in (
     "event_kind", "event_string", "event_channel", "event_release", "channel_create", "channel_destroy",
     "channel_close", "channel_poll", "channel_info", "channel_string", "channel_size", "channel_read", "channel_send")}
 
+WEBP_EXPORTS = {"e2d_webp_encode", "e2d_webp_decode"}
+
+
+def check_private_webp(rid: str, library: Path) -> None:
+    header = library.read_bytes()[:20]
+    assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "WebP ELF architecture mismatch"
+    dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(library)], text=True)
+    assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libElectron2DWebP.so"], "WebP SONAME mismatch"
+    assert not re.search(r"\((RPATH|RUNPATH)\)", dynamic), "WebP retains a build-machine search path"
+    dependencies = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
+    assert dependencies <= {"libm.so.6", "libc.so.6"}, f"Unreviewed WebP dependencies: {dependencies}"
+    symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(library)], text=True)
+    assert WEBP_EXPORTS <= {line.split()[-1] for line in symbols.splitlines()}, "WebP encoder/decoder bridge exports are missing"
+
 
 def check_private_webrtc(rid: str, library: Path) -> None:
     header = library.read_bytes()[:20]
@@ -83,7 +97,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     assert all((native / name).is_file() for name in names), f"Missing native render/text files: {names}"
     assert not any((publish / name).exists() for name in names), "Native render/text files must retain their RID directory"
     assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
-    platform_packages = {name.split("/")[0] for name in packages if name.startswith("Electron2D.")}
+    platform_packages = {name.split("/")[0] for name, library in packages.items() if name.startswith("Electron2D.") and library["type"] == "package"}
     assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
     private_text = native / "libElectron2DTextBreak.so"
     assert not (publish / "libElectron2DTextBreak.so").exists(), "Private text library must be under runtimes/RID/native"
@@ -105,6 +119,9 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         webrtc = native / "libElectron2DWebRTC.so"
         assert webrtc.is_file() and not (publish / webrtc.name).exists(), "WebRTC must retain its RID directory"
         check_private_webrtc(rid, webrtc)
+        webp = native / "libElectron2DWebP.so"
+        assert webp.is_file() and not (publish / webp.name).exists(), "WebP must retain its RID directory"
+        check_private_webp(rid, webp)
         audio = native / "libFAudio.so.0"
         assert audio.is_file(), "Missing pinned native audio backend"
         header = audio.read_bytes()[:20]
@@ -131,7 +148,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         assert not any(name in ktx_dynamic for name in ("libktx", "libbasis", "libzstd", "RPATH", "RUNPATH")), "KTX codec closure must remain private and relocatable"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
-        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet/WebRTC backends verified (no global ICU dependency)")
+        print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet/WebRTC/WebP backends verified (no global ICU dependency)")
     else:
         assert not list(publish.rglob("libElectron2DENet.so")), "Linux ENet backend leaked into a foreign publish"
         assert not list(publish.rglob("libFAudio*")), "Linux audio library leaked into a foreign publish"

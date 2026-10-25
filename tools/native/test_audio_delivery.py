@@ -11,13 +11,17 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class AudioDeliveryTests(unittest.TestCase):
+    property_name = "Electron2DAudioNativeLibrary"
+    linux_name = "libFAudio.so.0"
+    macos_name = "libFAudio.0.dylib"
+
     def run_target(self, rid, library=True, publish=True):
         with tempfile.TemporaryDirectory(prefix="electron2d audio delivery ") as directory:
             root = Path(directory)
             source = root / "local library"
             source.write_bytes(b"prepared audio with offline output")
             os.utime(source, (1, 1))
-            name = "libFAudio.0.dylib" if rid.startswith("osx-") else "libFAudio.so.0"
+            name = self.macos_name if rid.startswith("osx-") else self.linux_name
             outputs = [root / "build"] + ([root / "publish"] if publish else [])
             for output in outputs:
                 native = output / "runtimes" / rid / "native"
@@ -28,7 +32,7 @@ class AudioDeliveryTests(unittest.TestCase):
                 f'<RuntimeIdentifier>{rid}</RuntimeIdentifier>'
                 f'<TargetDir>{escape(str(outputs[0]))}/</TargetDir>'
                 + (f'<PublishDir>{escape(str(outputs[1]))}/</PublishDir>' if publish else '')
-                + (f'<Electron2DAudioNativeLibrary>{escape(str(source if library is True else root / "missing"))}</Electron2DAudioNativeLibrary>' if library else '')
+                + (f'<{self.property_name}>{escape(str(source if library is True else root / "missing"))}</{self.property_name}>' if library else '')
                 + '</PropertyGroup>'
                 f'<Import Project="{escape(str(ROOT / "tools/native-consumer.props"))}" />'
                 '<Target Name="CopyFilesToOutputDirectory" /><Target Name="Publish" /></Project>')

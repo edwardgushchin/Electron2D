@@ -56,4 +56,18 @@
     <Copy SourceFiles="$(Electron2DKTXNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerKTXName)" />
     <Copy SourceFiles="$(Electron2DKTXNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerKTXName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <PropertyGroup>
+    <_Electron2DConsumerWebPName>libElectron2DWebP.so</_Electron2DConsumerWebPName>
+    <_Electron2DConsumerWebPName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DWebP.dylib</_Electron2DConsumerWebPName>
+    <_Electron2DConsumerWebPPath Condition="'$(Electron2DWebPNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DWebPNativeLibrary)'))</_Electron2DConsumerWebPPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerWebPOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DWebPNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerWebPName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerWebPPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerWebPOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DWebPNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <Copy SourceFiles="$(Electron2DWebPNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)" />
+    <Copy SourceFiles="$(Electron2DWebPNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import platform
 import re
 import shutil
 from pathlib import Path
@@ -20,6 +21,32 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "linux" and all(shutil.which(tool) for tool in ("cc", "nm", "readelf")), "Linux ELF tools are unavailable")
+    def test_webp_publish_rejects_encoder_only_and_nonportable_assets(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "bridge.c"
+            library = root / "libElectron2DWebP.so"
+            rid = "linux-x64" if platform.machine() == "x86_64" else "linux-arm64"
+
+            def build(decoder=True, rpath=False):
+                source.write_text("void e2d_webp_encode(void) {}\n" + ("void e2d_webp_decode(void) {}\n" if decoder else ""))
+                command = ["cc", "-shared", "-fPIC", "-Wl,-soname,libElectron2DWebP.so", str(source), "-o", str(library)]
+                if rpath:
+                    command.append("-Wl,-rpath,/unshipped-build-directory")
+                subprocess.run(command, check=True, capture_output=True)
+
+            build(decoder=False)
+            with self.assertRaisesRegex(AssertionError, "WebP"):
+                package.check_private_webp(rid, library)
+            build()
+            package.check_private_webp(rid, library)
+            with self.assertRaisesRegex(AssertionError, "architecture"):
+                package.check_private_webp("linux-arm64" if rid == "linux-x64" else "linux-x64", library)
+            build(rpath=True)
+            with self.assertRaisesRegex(AssertionError, "search path"):
+                package.check_private_webp(rid, library)
+
     @unittest.skipUnless(shutil.which("cmake"), "CMake is unavailable")
     def test_webrtc_windows_finds_the_selected_private_import_libraries(self):
         with tempfile.TemporaryDirectory() as directory:

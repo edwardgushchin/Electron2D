@@ -16,6 +16,36 @@ The locally restored Linux x64 `0.1.0-alpha` FAudio asset checked on 2026-10-19 
 
 `tools/native/test_audio_delivery.py` executes the actual MSBuild targets for both Linux/macOS RIDs, stale build/publish copies, paths containing spaces, an absent publish directory, missing-file failure and unchanged default/foreign selection. The fresh consumer protocol in `tools/native/test_consumer.py` also exercises ordinary audio followed by eight real RGB movie frames, 6,508 PCM frames at 48 kHz/59 FPS and one End. Local Linux x64 project-reference and package-consumer execution is recorded separately from foreign-host execution and publication.
 
+## Maintainer WebP asset selection
+
+Repository desktop consumers also honor `Electron2DWebPNativeLibrary` on Linux and
+macOS. Pass an absolute path to the already built target library to `dotnet build`
+or `dotnet publish`. The consumer selects its publish destination before SDK conflict checks, retaining
+unrelated assets and the ordinary duplicate-output validation. It then copies the
+selected library after packaged assets into
+`runtimes/<RID>/native/libElectron2DWebP.so` or `libElectron2DWebP.dylib`, including
+when the selected file has an older timestamp. A missing explicit file fails the
+copy; an unset property and foreign targets retain ordinary package selection.
+The override compiles no native code and changes no restored package/cache file.
+
+Linux package and self-contained publish admission share the WebP ELF check:
+selected architecture, unique SONAME, no build-machine search path, static codec
+closure with only libc/libm imports, and both `e2d_webp_encode` and
+`e2d_webp_decode`. Encoder-only older bundles reject before runtime execution.
+This gate does not publish a replacement platform package or prove foreign-host
+execution. `tools/native/test_webp_delivery.py` reuses the audio delivery scenarios
+for both desktop RID pairs; `test_package.py` compiles real ELF fixtures to reject
+missing decoder, wrong architecture and RUNPATH cases.
+
+The 2026-10-25 Linux development admission rebuilt the bridge from the pinned
+1.6.0 archive and passed the native bridge executable, actual self-contained CLI
+admission and public exact-RGBA consumer. The same CLI rejects the retained
+encoder-only library. This does not qualify the downloaded platform bundle for
+release: its consumer delivers 101 notices while current source has 102, missing
+LineBuilder-LICENSE.txt and retaining an older THIRD_PARTY_NOTICES.md. The strict
+license checker also retains its older expected count. Both the package notice
+update and its license gate remain open; no license check was disabled.
+
 ## Installation model
 
 The native package regression models the pinned codec archive with its embedded encoder object and whole-loads the merged result (`-force_load` on Apple, `--whole-archive` on ELF). It requires one encoder member and executes a consumer of every fixture entry point. The fixture no longer assumes a separate encoder input to the merge helper.

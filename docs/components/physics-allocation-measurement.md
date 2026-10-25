@@ -934,3 +934,27 @@ This is not hardware reliability or performance acceptance.
 This payload belongs to 7eb4e4da6. Later main changes, including grouped coordinate
 reads, have their own source proofs and focused matrices; this aggregate does not
 qualify them. There is no complete success marker and no full-goal acceptance.
+
+
+## Local native admission after the decoder failure (2026-10-25)
+
+The retained 7eb4e4da6 aggregate is still rejected. A later Linux development
+payload uses the existing WebP producer from the verified 1.6.0 archive. Its
+bridge SHA-256 is 7c5fa64c2471ab590062846aaac0d7d33f1936625e3ac9d150fbbb49b9e38e25.
+All eight selected private libraries pass architecture/loader/ABI admission.
+The actual self-contained checker now rejects the old encoder-only bridge;
+application projects sharing the Electron2D prefix no longer count as platform
+packages. Explicit WebP selection also survives build/publish copying and the
+SDK duplicate-output check without relaxing unrelated conflict validation.
+
+Five fresh-process selectors pass on the frozen 367-file payload: public WebP,
+imported CompressedTexture, CompressedTextureArray, and CPU/GPU grouped physical
+frames. The latter two retain 128 measured complete frames at 0/0 owner/all-thread
+bytes. A separate public Image consumer passes exact RGBA save/load from /tmp
+with no library search-path override or accessible graphics driver.
+
+Evidence belongs to bin/physics-native-admission/2026-10-25/. These are admission
+checks, not a complete aggregate or performance result. The downloaded platform
+bundle retains its separate notice/license qualification gap documented in
+[native delivery](../native-packaging.md#maintainer-webp-asset-selection). No
+allocation threshold, default executable workload or license gate is relaxed.

@@ -328,6 +328,7 @@ jobs:
       - name: Verify public native consumers with native tools blocked
         run: |
           python -B tools/native/test_audio_delivery.py
+          python -B tools/native/test_webp_delivery.py
           python -B tools/native/test_consumer.py bin/native-feed '${{ matrix.rid }}' --managed
   native_cross:
     needs: cross_matrix

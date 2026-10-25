@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
-from check_native_publish import TEXT_EXPORTS, WEBRTC_EXPORTS, check_private_text, check_private_webrtc
+from check_native_publish import TEXT_EXPORTS, WEBRTC_EXPORTS, WEBP_EXPORTS, check_private_text, check_private_webrtc, check_private_webp
 
 PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-arm64"),
              "Windows": ("win-x86", "win-x64", "win-arm64"),
@@ -42,7 +42,7 @@ def required_exports(name):
         return {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
                 "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}
     if "Electron2DWebP" in name:
-        return {"e2d_webp_encode", "e2d_webp_decode"}
+        return WEBP_EXPORTS
     if "FreeType" in name:
         return {"FT_Init_FreeType", "FT_New_Memory_Face", "FT_Load_Glyph"}
     if "Crypto" in name or "crypto" in name:
@@ -240,6 +240,7 @@ def inspect(rid, directory):
     if rid.startswith("linux-"):
         check_private_text(rid, directory / libraries[0])
         check_private_webrtc(rid, directory / "libElectron2DWebRTC.so")
+        check_private_webp(rid, directory / "libElectron2DWebP.so")
     return checksums
 
 
