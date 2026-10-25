@@ -133,7 +133,9 @@ public partial class Shader : Resource
     /// <param name="name">The exact texture parameter name.</param>
     /// <param name="texture">The default texture, or null to clear it.</param>
     /// <param name="index">Zero for scalar bindings, otherwise the zero-based fixed descriptor array element.</param>
-    /// <remarks>A material override takes precedence per element. Changes emit Changed after mutation; ownership remains with the caller.</remarks>
+    /// <remarks>A material override takes precedence per element. Changes emit Changed after mutation; ownership remains with the caller.
+    /// An atlas can be configured before its source is assigned. Native sampling requires its resolved source
+    /// and rejects an empty atlas instead of substituting a fallback image.</remarks>
     /// <exception cref="ArgumentException">The parameter is not an ordinary sampled image or its sampled scalar type differs.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the reflected element count.</exception>
     /// <exception cref="InvalidOperationException">Texture validation replaces the program or reenters a default update.</exception>

@@ -1541,8 +1541,11 @@ The existing source already implements the decoder. Native export preflight foun
 only that missing required export; the refreshed candidate changes one native
 file, preserving both managed assemblies. The original short compressed-texture
 control fails with exit -6; the refreshed control and the native bridge's seven
-encoder/decoder, canary, animation and cleanup profiles pass. The corrected full
-ordinary run remains pending, and this does not qualify or publish the cached
+encoder/decoder, canary, animation and cleanup profiles pass. The corrected-native full
+ordinary run completed in 4,399.18 seconds with exit 0, its exact completion
+marker, unchanged payload and no Xid. Its managed source remains the frozen
+1853912481c84126a5d903aa91aa0561e7c48146 cohort; later point-program and atlas-source
+changes have separate targeted checks. This does not qualify or publish the cached
 native package. Receipts are under `bin/physics-main-suite/2026-10-25/`.
 
 ## NativeAOT network processes, 2026-10-15

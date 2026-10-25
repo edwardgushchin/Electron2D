@@ -220,7 +220,7 @@ internal static partial class RenderingRuntimeTests
         Check(frames == 3 && !atlas.IsDisposed && !texture.IsDisposed, "Renderer shutdown retains borrowed atlas resources.");
         Console.WriteLine($"Atlas pixel checks passed: {backend}/{fixture ?? "default"}.");
     }
-    private static void VerifyAtlasMaterial(string fixture)
+    private static void VerifyAtlasMaterial(string fixture, bool wrapped = false)
     {
         using var image = Image.CreateEmpty(2, 1, false, Image.Format.Rgba8);
         image.SetPixel(0, 0, Colors.Red); image.SetPixel(1, 0, Colors.Green);
@@ -229,7 +229,11 @@ internal static partial class RenderingRuntimeTests
         using var nested = new AtlasTexture { Atlas = atlas };
         using var shader = LoadShader(fixture);
         using var material = new ShaderMaterial { Shader = shader };
-        shader.SetDefaultTextureParameter("colorMap", nested);
+        using var empty = new AtlasTexture();
+        shader.SetDefaultTextureParameter("colorMap", empty);
+        Check(ReferenceEquals(shader.GetDefaultTextureParameter("colorMap"), empty), "An empty atlas remains authorable before sampling.");
+        using var channels = wrapped ? new CanvasTexture { DiffuseTexture = nested } : null;
+        shader.SetDefaultTextureParameter("colorMap", (Texture?)channels ?? nested);
         material.SetShaderParameter("detailMap", texture);
         material.SetShaderParameter("tint", Colors.White);
         var window = new Window { Size = new Vector2i(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
@@ -250,7 +254,7 @@ internal static partial class RenderingRuntimeTests
         catch (InvalidOperationException error) when (error.Message.Contains("sampled atlas has no source")) { }
         Released(window);
         Check(frames == 2 && !atlas.IsDisposed && !texture.IsDisposed, "Material atlases sample full live storage and reject an empty source on the following frame.");
-        Console.WriteLine($"Atlas material binding checks passed: {fixture}.");
+        Console.WriteLine($"Atlas material binding checks passed: {fixture}, wrapped={wrapped}.");
     }
 
 }

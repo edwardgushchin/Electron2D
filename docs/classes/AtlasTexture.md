@@ -57,7 +57,7 @@ This constructs resources and a detached node; scene attachment uses the normal 
 
 ### Atlas
 
-Null draws nothing. Identity reassignment is a no-op. A replacement validates the complete atlas chain and rejects direct or indirect cycles with ArgumentException, including competing concurrent assignments; disposed sources throw ObjectDisposedException. Validation occurs before detaching the old source.
+Null draws nothing through the view drawing methods. Named shader sampling requires a source, including through a diffuse channel wrapper, and throws InvalidOperationException when the source is absent. Cold configuration remains valid; the [current contract](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26) records native canvas/blit checks. Identity reassignment is a no-op. A replacement validates the complete atlas chain and rejects direct or indirect cycles with ArgumentException, including competing concurrent assignments; disposed sources throw ObjectDisposedException. Validation occurs before detaching the old source.
 
 Only nested AtlasTexture sources forward Changed. Replacing or disposing the view disconnects that subscription. ImageTexture and custom Texture changes do not forward: updated pixels are still observed by the renderer, but source size changes require an explicit redraw when recorded geometry depends on that size. A view's own changes request a Sprite redraw; arbitrary custom canvas commands require QueueRedraw to change their recorded region. Retained commands borrow their recorded underlying texture, so disposing a view alone does not erase previously recorded drawing.
 

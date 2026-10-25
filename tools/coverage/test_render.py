@@ -79,6 +79,16 @@ def check_physics_report(pages):
     for method in ("draw_polyline_colors", "draw_primitive"):
         assert any(key.startswith("CanvasItem::method:" + method + "(") and state == "Partial" for key, state in expected.items()), "Uniform strokes must not hide attribute-bearing raster gaps"
     assert expected["class:CanvasItem"] == "Partial"
+    for method in ("draw_texture", "draw_texture_rect", "draw_texture_rect_region"):
+        rows = [row for row in canvas_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "texture-drawing-contract-2026-10-26" in rows[0]
+        assert not any(key.startswith("CanvasItem::method:" + method + "(") for key in expected)
+    texture_page = pages[CLASS_PAGES / "Texture.md"]
+    for method in ("draw", "draw_rect", "draw_rect_region", "_draw", "_draw_rect", "_draw_rect_region"):
+        rows = [row for row in texture_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "texture-drawing-contract-2026-10-26" in rows[0]
+    texture_classes = [row for row in texture_page.splitlines() if row.startswith("| [`class ")]
+    assert len(texture_classes) == 2 and all(" | Partial | " in row for row in texture_classes)
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" not in expected

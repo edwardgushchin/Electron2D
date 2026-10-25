@@ -558,7 +558,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 if (material.Program.Textures[i].IsEngineTexture) { if (configured == 0 && material.Program.Textures[i].ImagePolicy is { } enginePolicy) configured = ImageSampler(enginePolicy, anisotropy); bindings[i] = new() { Sampler = configured }; maps[i] = 0; continue; }
                 var descriptor = material.Program.Textures[i];
                 if (configured == 0 && descriptor.ImagePolicy is { } policy) configured = ImageSampler(policy, anisotropy);
-                var resource = ShaderTexture.Source(_textureScratch[i]) ?? (_textureScratch[i] is Texture ? RenderingTextureRegistry.PlaceholderTexture : _textureScratch[i]) ?? ImageFallback(descriptor.IsArray, descriptor.ImagePolicy!.Value.Fallback);
+                var resource = ShaderTexture.Source(_textureScratch[i], requireAtlasSource: true) ?? (_textureScratch[i] is Texture ? RenderingTextureRegistry.PlaceholderTexture : _textureScratch[i]) ?? ImageFallback(descriptor.IsArray, descriptor.ImagePolicy!.Value.Fallback);
                 maps[i] = TextureSwizzles.Source(resource);
                 nint handle;
                 if (resource is TextureLayered array)

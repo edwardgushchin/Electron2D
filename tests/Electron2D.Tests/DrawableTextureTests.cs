@@ -168,6 +168,11 @@ internal static class DrawableTextureTests
                 using (var atlas = new AtlasTexture { Atlas = blue })
                 {
                     material.SetShaderParameter("detail", atlas); texture.BlitRectMulti(new(0, 0, 8, 8), [red, white], [b], material: material); Pixel(b, Colors.Blue);
+                    atlas.Atlas = null;
+                    Reject<InvalidOperationException>(() => texture.BlitRectMulti(new(0, 0, 8, 8), [red, white], [b], material: material)); Pixel(b, Colors.Blue);
+                    using var channels = new CanvasTexture { DiffuseTexture = atlas };
+                    material.SetShaderParameter("detail", channels);
+                    Reject<InvalidOperationException>(() => texture.BlitRectMulti(new(0, 0, 8, 8), [red, white], [b], material: material)); Pixel(b, Colors.Blue);
                 }
                 material.SetShaderParameter("detail", white);
                 using (var channels = new CanvasTexture { DiffuseTexture = texture })

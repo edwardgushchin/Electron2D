@@ -166,7 +166,7 @@ public sealed partial class RenderingServer
     {
         if (source is { IsDisposed: true }) throw new ObjectDisposedException(nameof(source));
         if (suppliedSource && source is AtlasTexture) source = null;
-        if (source is CanvasTexture channels) source = ShaderTexture.Source(channels) ?? RenderingTextureRegistry.PlaceholderTexture;
+        if (source is CanvasTexture channels) source = ShaderTexture.Source(channels, requireAtlasSource: !suppliedSource) ?? RenderingTextureRegistry.PlaceholderTexture;
         if (source is AtlasTexture atlas) source = atlas.RenderingTexture ?? throw new InvalidOperationException("A sampled atlas has no source texture.");
         if (source is null)
         {

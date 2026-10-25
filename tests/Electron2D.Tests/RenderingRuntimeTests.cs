@@ -13,6 +13,29 @@ internal static partial class RenderingRuntimeTests
         {
             Engine.MaxFPS = 60;
             ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ATLAS_MATERIAL") is { } atlasFixture)
+            {
+                ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); VerifyAtlasMaterial(atlasFixture, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ATLAS_MATERIAL_WRAPPED") == "1"); return;
+            }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_TEXTURES") == "1")
+            {
+                VerifyTextureResources(); VerifyAtlasResources(); VerifyTextureProxyResources(); VerifyCanvasGeometryAllocations();
+                foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "compatibility", "gpu" })
+                {
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+                    var software = VerifyCanvasSampling(backend); VerifySamplingCapabilities(backend, software);
+                    VerifyCanvasTexture(backend); VerifyAtlasFrame(backend); VerifyCanvasTextureFailures(); VerifyCanvasHDR(backend);
+                    if (backend != "gpu") continue;
+                    foreach (var fixture in new[] { "CanvasHLSL", "CanvasGLSL" })
+                    {
+                        VerifyCanvasTexture(backend, fixture); VerifyAtlasFrame(backend, fixture); VerifyCanvasSampling(backend, fixture);
+                    }
+                    VerifyCanvasUV(); VerifyAtlasMaterial("TextureHlsl"); VerifyAtlasMaterial("TextureGlsl");
+                    VerifyAtlasMaterial("TextureHlsl", wrapped: true); VerifyAtlasMaterial("TextureGlsl", wrapped: true);
+                }
+                Console.WriteLine("Canvas texture drawing, virtual dispatch, atlas, sampling, UV and failure contracts passed.");
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_ORDER") == "1") { foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasOrdering(backend); } return; }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_TOPOLOGY_NATIVE") == "1")
             {

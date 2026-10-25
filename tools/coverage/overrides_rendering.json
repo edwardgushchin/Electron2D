@@ -5416,8 +5416,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Executable retained texture drawing with stretch/repeat, source regions, flips, transpose, modulation and half-texel UV clipping. CanvasItem replaces the opaque canvas RID; public virtual Texture methods also supply the extension hooks, and null Color means white. CanvasTextureTests verifies both backends, HLSL/GLSL, Update/SetImage, virtual dispatch, UV readback and failure cleanup on Linux Wayland; software triangles bypass the pinned native quad shortcut. Canvas sampling inheritance, GPU mipmaps and anisotropy are verified by CanvasSamplingRenderingTests; further texture kinds and full canvas integration remain pending under ADR 0028. CanvasDrawCallbackTests and CanvasPolygonTests cover all nine object/RID/direct Texture drawing routes: recording guards precede virtual size queries, and final size callbacks cannot retain commands after receiver or texture disposal. Broader texture-kind/canvas acceptance remains open.",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028: the complete nondeprecated draw/rect/region and virtual-hook family maps to typed Texture methods with nullable Color=white and a borrowed CanvasItem receiver. Object, RID and direct Texture entry routes preserve virtual dispatch, recording/owner/lifetime guards, copied geometry and live pixel updates. Canonical GPU/compatibility/software tests cover flips, transpose, repeat, clipped UVs, sampling/mips, HLSL/GLSL, nested atlases and cleanup. Public moving CPU/GPU owner/separate receivers execute all nine entry routes, exact solved-state preservation and strict zero warmed redraw/replay bytes. Native named sampling rejects an empty atlas, including a diffuse wrapper, before submission while cold authoring remains valid. See docs/components/canvas-rendering.md#texture-drawing-contract-2026-10-26. Concrete texture kinds, aggregate type rows, platform/native-memory and full physical performance retain their own gates.",
       "godot": [
         "CanvasItem::method:draw_texture(Texture2D:,Vector2:,Color:)",
         "CanvasItem::method:draw_texture_rect(Texture2D:,Rect2:,bool:,Color:,bool:)",

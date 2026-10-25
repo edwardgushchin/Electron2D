@@ -76,12 +76,16 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
         if ((ArrayLength != 0) != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(ArrayLength != 0 ? "an array" : "a scalar binding")}.");
     }
     internal bool SameType(ShaderTexture other) => IsArray == other.IsArray && PixelType == other.PixelType && ArrayLength == other.ArrayLength;
-    internal static Resource? Source(Resource? texture)
+    internal static Resource? Source(Resource? texture, bool requireAtlasSource = false)
     {
         if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
         if (texture is LayeredTextureProxy layered) texture = RenderingTextureRegistry.ResolveLayeredProxySource(layered.ProxyTarget);
-        if (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
-        if (texture is CanvasTexture channels) texture = Source(channels.DiffuseTexture);
+        if (texture is AtlasTexture atlas)
+        {
+            texture = atlas.RenderingTexture;
+            if (texture is null && requireAtlasSource) throw new InvalidOperationException("A sampled atlas has no source texture.");
+        }
+        if (texture is CanvasTexture channels) texture = Source(channels.DiffuseTexture, requireAtlasSource);
         return texture;
     }
     internal static int ResourcePixelType(Resource? texture) => Source(texture) switch

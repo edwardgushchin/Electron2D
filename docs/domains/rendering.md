@@ -1,3 +1,5 @@
+[Texture drawing](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26) now has a current native contract across object/RID/direct virtual routes and moving CPU/GPU receivers. Named atlas sampling rejects missing backing storage before canvas/blit submission while cold authoring remains valid.
+
 [Canvas command metadata](../components/canvas-command-metadata.md) supplies retained region and initial-UV specular values to offline graphs and ordinary fragment materials across geometry families.
 
 [Canvas fragment surfaces](../components/canvas-surfaces.md) execute normal/map/depth and independent light/shadow positions across retained geometry, mesh instances and particle streams using original draw/canvas normal bases.

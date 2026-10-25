@@ -1119,6 +1119,8 @@ Errors: `ArgumentNullException` — The font or text is null.; `ArgumentExceptio
 
 ## Texture RID overloads
 
+The [current texture drawing contract](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26) qualifies direct, object and RID dispatch, virtual overrides, retained pixels, callback/lifetime guards and actual moving physical receivers. Resource-specific capabilities retain their own documented limits.
+
 ### DrawTexture with RID
 
 `public void DrawTexture(RID texture, Vector2 position, Color? modulate = null)`

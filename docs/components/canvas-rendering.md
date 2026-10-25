@@ -222,6 +222,54 @@ Sprite borrows its texture, records through the texture's virtual region draw me
 
 [Polygon](../classes/Polygon.md) builds filled spatial contours through the same retained polygon recorder. It copies local vertices, index contours, UVs and vertex colors; borrows its texture; and stores typed scene state. Inverted fill bridges the contour to its padded bounds, ignoring explicit index contours while enabled. Native Linux Wayland compatibility/GPU, GPU HLSL/GLSL and dummy/software pixel checks cover separate index contours, texture sampling, inverted fill and redraw after color or border changes. Self-intersections, holes between explicit index contours and skeletal deformation are outside the current executable path; [coverage](../coverage/classes/Polygon2D.md) records the member-specific limits.
 
+### Texture drawing contract, 2026-10-26
+
+DrawTexture, DrawTextureRect and DrawTextureRectRegion are qualified together
+with Texture.Draw, DrawRect and DrawRectRegion and their virtual override roles.
+The nine pinned declarations in CanvasItem/Texture2D are nondeprecated. Their
+[source dispatch](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/resources/texture.cpp)
+selects custom drawing before ordinary retained texture commands; the accepted
+C# projection uses the same public virtual method for each entry/hook pair.
+Nullable Color means white. The target, geometry, recording scope and lifetime
+are checked before virtual size calls and again before command commit.
+
+The current canonical selector reuses complete image/atlas resources, virtual
+overrides, Update/SetImage, signed destination/source axes, transpose, repeat,
+clipped/unclipped UVs, inherited sampling, GPU mips/anisotropy, HLSL/GLSL and
+failure-cleanup checks. Additional current cases exercise mesh, drawable,
+portable, compressed, DPI, placeholder, animated, curve/noise, proxy/RID and
+renderer-device inputs. Their resource-specific capabilities remain on their
+own rows; this closes the generic drawing contract.
+
+Eight public-only CPU/GPU owner/separate profiles on both native renderers draw
+all nine object/RID/direct Texture entry routes on a moving RigidBody. All 72
+positive pixel checks preserve exact solved pose, velocity, tick and RID. Another
+72 final-size-callback disposal cases reject safely. The later 1,024 warmed
+redraw/replay submissions require strict 0/0 owner/all-thread managed bytes;
+these are render submissions, not complete physical steps. Canonical retained
+geometry also keeps its separate 1,000-replay owner-byte gate.
+
+The new selection exposed a real named-material error: after two valid atlas
+frames and a live image update, removing the source rendered the diagnostic
+texture instead of rejecting the third draw. Both untraced HLSL and GLSL controls
+fail. Source normalization now requires a backing image for named canvas/blit
+samplers, including a CanvasTexture diffuse wrapper. Cold authoring/type queries
+still accept an unassigned atlas. Ordinary canvas channel fallbacks, pure
+pixel-size/region queries and reserved blit-source policies retain their existing
+roles. Direct/wrapped atlas checks preserve the original pixel tolerances, error
+and cleanup assertions; blit failures also preserve the previous target pixels.
+
+All 33 corrected profiles pass on Linux Wayland/NVIDIA and dummy/software. This
+CoreCLR cohort pins the integrated canvas-point revision plus this source patch;
+commands, source/payload hashes, RED/diagnostic/fixed outcomes and captures are in
+`bin/physics-texture-draw-contract/2026-10-25/qualification.json`. Functional times
+are not throughput measurements. Native/foreign allocations, NativeAOT for this
+cohort, other platforms and owner visual acceptance remain separate.
+
+Three inherited declarations close: 1,334/1,369 (97.44%), 35 open and 92 Excluded.
+The six Texture entry/hook rows also close outside that physics denominator.
+CanvasItem/Texture class rows and attribute-bearing primitive gaps remain open.
+
 ## GUI control pixel snapping
 
 GUISnapControlsToPixels is an independent stored property on every Window and SubViewport, true initially. For an attached Control whose primary Rotation satisfies `abs(sin(Rotation * 4)) < 0.00001`, rendering rounds the complete local transform origin with `floor(origin + 0.5)`. The basis and size stay unchanged. A logical offset transform participates before rounding; a visual-only offset composes afterwards. Parent Entity and CanvasLayer matrices, canvas scaling and final vertex snapping retain their own stages. Ineligible rotations and detached controls retain fractional local origins. This is visual geometry: public Position/GetTransform/GetGlobalTransform/rectangles, layout, input, focus and physics coordinates remain fractional.
@@ -522,10 +570,11 @@ stroke/timing pixels and both public server hosts pass separate checks.
 Commands, source/payload hashes, captures, original RED and corrected receipts
 are under `bin/physics-uniform-stroke-contract/2026-10-25/qualification.json`.
 The census closes ten inherited declarations: 1,331/1,369 (97.22%), 38 open and
-92 Excluded. The separately running full suite retains its frozen managed
-payload and previous test-source identity; this cohort changes only its HDR
-test oracle, not runtime source. Neither that pending run, owner visual
-acceptance, other platforms nor final physical performance is inferred here.
+92 Excluded. The separate full suite subsequently completed in 4,399.18 seconds with exit 0
+and its exact completion marker, retaining the frozen managed payload and prior
+test-source identity. It does not execute this newer HDR test oracle or the later
+point-program/atlas-source changes. Owner visual acceptance, other platforms and
+final physical performance remain separate.
 
 ### Native thin-stroke verification (2026-10-20–21)
 

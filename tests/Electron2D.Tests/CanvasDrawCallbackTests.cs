@@ -199,6 +199,31 @@ internal static class CanvasDrawCallbackTests
     }
     private static void TextureBoundaries(Painter body)
     {
+        using var image = Image.CreateEmpty(1, 1, false, Image.Format.Rgba8); image.Fill(Colors.Yellow);
+        using var drawable = ImageTexture.CreateFromImage(image); var drawableRID = drawable.GetRID();
+        var window = (Window)body.GetViewport()!; var identity = body.GetRID();
+        var pose = body.GlobalTransform; var velocity = body.LinearVelocity; var space = body.GetWorld()!.Space;
+        var tick = PhysicsServer.SpaceGetTick(space);
+        for (var route = 0; route < 9; route++)
+        {
+            body.TextureProbe = item =>
+            {
+                item.DrawSetTransform(new(0, 40), scale: new(8, 8));
+                DrawTextureRoute(item, drawable, drawableRID, route);
+            };
+            try
+            {
+                body.QueueRedraw(); RenderingServer.ForceDraw(false);
+                using var frame = window.GetTexture().GetImage()!;
+                var point = body.GlobalPosition + new Vector2(4, 44);
+                var pixel = frame.GetPixel((int)(point.X * frame.Width / window.Size.X), (int)(point.Y * frame.Height / window.Size.Y));
+                Check(Math.Abs(pixel.R - 1) < .05f && Math.Abs(pixel.G - 1) < .05f && pixel.B < .05f,
+                    "Every inherited object/RID/direct texture route draws actual pixels on the moving physical receiver");
+                Check(body.GetRID() == identity && body.GlobalTransform == pose && body.LinearVelocity == velocity && PhysicsServer.SpaceGetTick(space) == tick,
+                    "Texture drawing preserves the solved pose, velocity, tick and physical identity");
+            }
+            finally { body.TextureProbe = null; }
+        }
         using var outside = new SizeCallbackTexture();
         Reject<InvalidOperationException>(() => outside.Draw(body, Vector2.Zero));
         Check(outside.Queries == 0, "Direct texture drawing rejects an inactive recording before virtual size callbacks");

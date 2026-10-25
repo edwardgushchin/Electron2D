@@ -53,6 +53,8 @@ DisplayServer.CursorSetCustomImage also accepts this resource through its Resour
 | `virtual void DrawRectRegion(CanvasItem canvasItem, Rect2 rect, Rect2 sourceRect, Color? modulate = null, bool transpose = false, bool clipUV = true)` | Draws a source region in logical texture pixels. |
 | `virtual bool IsPixelOpaque(int x, int y)` | Tests alpha above 0.1 at clamped logical coordinates. |
 
+The [current texture drawing contract](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26) qualifies direct, object and RID dispatch, virtual overrides, retained pixels, callback/lifetime guards and actual moving physical receivers. Resource-specific capabilities retain their own documented limits.
+
 ## Property descriptions
 
 ### PixelFormat

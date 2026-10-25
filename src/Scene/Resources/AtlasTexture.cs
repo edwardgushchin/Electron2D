@@ -28,7 +28,9 @@ public sealed class AtlasTexture : Texture
     /// <summary>Gets or sets the borrowed source texture.</summary>
     /// <value>Null by default. An empty source draws nothing.</value>
     /// <remarks>Only nested atlas views forward Changed. Pixel updates on other textures remain visible through
-    /// retained commands, but do not automatically request a new recording for changed source dimensions.</remarks>
+    /// retained commands, but do not automatically request a new recording for changed source dimensions.
+    /// An empty view records no drawing commands. Named shader sampling instead requires a resolved source,
+    /// including through a diffuse channel wrapper, and rejects an empty view with InvalidOperationException.</remarks>
     /// <exception cref="ArgumentException">The assignment would create an atlas cycle.</exception>
     /// <exception cref="ObjectDisposedException">This view or a supplied source is disposed.</exception>
     public Texture? Atlas

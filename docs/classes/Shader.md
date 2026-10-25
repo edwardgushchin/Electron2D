@@ -86,7 +86,7 @@ Returns a read-only list with exact uniform names. Descriptors use `ShaderMateri
 
 ### SetDefaultTextureParameter
 
-Validates a named sampled texture and stores a borrowed default. Null clears it. A material override wins over this default. Index selects the reflected descriptor element; scalars accept only zero and out-of-range indices throw ArgumentOutOfRangeException. Bad names/types throw ArgumentException; a disposed shader or supplied texture throws ObjectDisposedException. Mutation precedes Changed; callback failure does not undo it. Matching named defaults survive shader reload.
+Validates a named sampled texture and stores a borrowed default. Null clears it. A material override wins over this default. Index selects the reflected descriptor element; scalars accept only zero and out-of-range indices throw ArgumentOutOfRangeException. Bad names/types throw ArgumentException; a disposed shader or supplied texture throws ObjectDisposedException. Mutation precedes Changed; callback failure does not undo it. Matching named defaults survive shader reload. An unassigned atlas can be configured; native named sampling requires its resolved source and rejects a missing source before submission, including through diffuse channel views. See the [texture drawing contract](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26).
 
 ### GetDefaultTextureParameter
 
