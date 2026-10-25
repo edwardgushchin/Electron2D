@@ -2,7 +2,10 @@ namespace Electron2D;
 
 internal sealed partial class CanvasPolygon
 {
-    private bool _antialiased;
+    private bool _antialiased, _weldBoundary;
+    private readonly Dictionary<Vector2, int> _weldedVertices = [];
+    private readonly Dictionary<(int A, int B), (int A, int B)> _edgeSources = [];
+    private int[] _boundarySource = [];
     private readonly Dictionary<(int A, int B), int> _edgeCounts = [];
     private readonly List<(int A, int B)> _edges = [];
     private Vector2[] _contour = [], _normals = [], _edgeNormals = [];
@@ -38,9 +41,20 @@ internal sealed partial class CanvasPolygon
         }
     }
 
-    internal void EnableAntialias(ReadOnlySpan<Vector2> invertedInner)
+    internal void EnableAntialias(ReadOnlySpan<Vector2> invertedInner, bool weldPositions = false)
     {
-        _antialiased = true; _edges.Clear(); _edgeCounts.Clear();
+        _antialiased = true; _weldBoundary = weldPositions; _edges.Clear(); _edgeCounts.Clear(); _edgeSources.Clear();
+        if (weldPositions)
+        {
+            _weldedVertices.Clear();
+            if (_boundarySource.Length < VertexCount) Array.Resize(ref _boundarySource, VertexCount);
+            for (var i = 0; i < VertexCount; i++)
+            {
+                var point = Vertices[i].Position;
+                if (!_weldedVertices.TryGetValue(point, out var source)) _weldedVertices.Add(point, source = i);
+                _boundarySource[i] = source;
+            }
+        }
         if (!invertedInner.IsEmpty)
         {
             // The triangulation bridge is a numerical slit, not a visible boundary.
@@ -55,7 +69,7 @@ internal sealed partial class CanvasPolygon
             {
                 AddEdge(Indices[i], Indices[i + 1]); AddEdge(Indices[i + 1], Indices[i + 2]); AddEdge(Indices[i + 2], Indices[i]);
             }
-            foreach (var (edge, count) in _edgeCounts) for (var i = 0; i < count; i++) _edges.Add(edge);
+            foreach (var (edge, count) in _edgeCounts) for (var i = 0; i < count; i++) _edges.Add(_edgeSources[edge]);
         }
         if (_transformed.Length < VertexCount) Array.Resize(ref _transformed, VertexCount);
         if (_normals.Length < VertexCount) Array.Resize(ref _normals, VertexCount);
@@ -64,9 +78,13 @@ internal sealed partial class CanvasPolygon
 
     private void AddEdge(int a, int b)
     {
-        if (_edgeCounts.TryGetValue((b, a), out var reverse) && reverse > 0) _edgeCounts[(b, a)] = reverse - 1;
-        else _edgeCounts[(a, b)] = _edgeCounts.GetValueOrDefault((a, b)) + 1;
+        var key = (A: BoundaryIndex(a), B: BoundaryIndex(b));
+        if (key.A == key.B) return;
+        if (_edgeCounts.TryGetValue((key.B, key.A), out var reverse) && reverse > 0) _edgeCounts[(key.B, key.A)] = reverse - 1;
+        else { _edgeCounts[key] = _edgeCounts.GetValueOrDefault(key) + 1; _edgeSources[key] = (a, b); }
     }
+
+    private int BoundaryIndex(int index) => _weldBoundary ? _boundarySource[index] : index;
 
     private void AddLoop(ReadOnlySpan<Vector2> points, bool positive)
     {
@@ -100,14 +118,14 @@ internal sealed partial class CanvasPolygon
             var (a, b) = _edges[i]; var from = _transformed[a].Position; var to = _transformed[b].Position;
             var dx = (double)to.X - from.X; var dy = (double)to.Y - from.Y; var length = Math.Sqrt(dx * dx + dy * dy);
             var normal = length == 0 ? Vector2.Zero : new Vector2((float)(dy / length * sign), (float)(-dx / length * sign));
-            _edgeNormals[i] = normal; _normals[a] += normal; _normals[b] += normal;
+            _edgeNormals[i] = normal; _normals[BoundaryIndex(a)] += normal; _normals[BoundaryIndex(b)] += normal;
         }
         for (var i = 0; i < _edges.Count; i++)
         {
             var (from, to) = _edges[i]; var normal = _edgeNormals[i]; if (normal == Vector2.Zero) continue;
             var a = _transformed[from]; var b = _transformed[to];
-            var c = b with { Position = b.Position + FringeOffset(_normals[to], normal), Color = blend == BlendMode.PremultAlpha ? new Color(0, 0, 0, 0) : b.Color with { A = 0 } };
-            var d = a with { Position = a.Position + FringeOffset(_normals[from], normal), Color = blend == BlendMode.PremultAlpha ? new Color(0, 0, 0, 0) : a.Color with { A = 0 } };
+            var c = b with { Position = b.Position + FringeOffset(_normals[BoundaryIndex(to)], normal), Color = blend == BlendMode.PremultAlpha ? new Color(0, 0, 0, 0) : b.Color with { A = 0 } };
+            var d = a with { Position = a.Position + FringeOffset(_normals[BoundaryIndex(from)], normal), Color = blend == BlendMode.PremultAlpha ? new Color(0, 0, 0, 0) : a.Color with { A = 0 } };
             if (!c.Position.IsFinite() || !d.Position.IsFinite()) throw new InvalidOperationException("Polygon antialias geometry overflowed finite coordinates.");
             output.Add(a); output.Add(b); output.Add(c); output.Add(a); output.Add(c); output.Add(d);
         }

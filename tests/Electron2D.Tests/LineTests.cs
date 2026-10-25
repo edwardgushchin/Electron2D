@@ -34,7 +34,7 @@ internal static class LineTests
         line.Closed = false; line.Antialiased = false; line.JointMode = LineJointMode.Sharp; line.SharpLimit = 2;
         line.Points = [new(0, 0), new(20, 0), new(20, -20)];
         line.PrepareCanvas(); vertices.Clear(); batches.Clear(); line.AppendCanvas(vertices, batches, Transform.Identity);
-        Check(vertices[2].Position == new Vector2(15, -5) && vertices[5].Position == new Vector2(25, 5),
+        Check(vertices.Any(v => v.Position == new Vector2(15, -5)) && vertices.Any(v => v.Position == new Vector2(25, 5)),
             "A right-turn sharp joint preserves the two sides of the strip.");
         line.Closed = false; line.Antialiased = false; line.Points = [new(0, 0), new(20, 0), new(0, 1)];
         line.PrepareCanvas(); vertices.Clear(); batches.Clear(); line.AppendCanvas(vertices, batches, Transform.Identity);
@@ -53,7 +53,7 @@ internal static class LineTests
         using var gradient = new Gradient { Colors = [Colors.Red, Colors.Blue] };
         using var colored = new Line { Points = [Vector2.Zero, new(20, 0)], Gradient = gradient };
         colored.PrepareCanvas(); vertices.Clear(); batches.Clear(); colored.AppendCanvas(vertices, batches, Transform.Identity);
-        Check(vertices[0].Color == Colors.Red && vertices[2].Color == Colors.Blue, "Gradient follows normalized line length.");
+        Check(vertices.Where(v => v.Position.X == 0).All(v => v.Color == Colors.Red) && vertices.Where(v => v.Position.X == 20).All(v => v.Color == Colors.Blue), "Gradient follows normalized line length.");
         colored.Points = [new(0, 0), new(20, 0), new(40, 0)]; colored.BeginCapMode = LineCapMode.Box;
         colored.PrepareCanvas(); vertices.Clear(); batches.Clear(); colored.AppendCanvas(vertices, batches, Transform.Identity);
         Check(vertices.Any(v => v.Position.X == 20 && v.Color == gradient.Sample(25f / 45f)),

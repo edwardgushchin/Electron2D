@@ -49,15 +49,20 @@ internal sealed partial class CanvasPolygon
         data.QuantizeSkin(); VertexCount = points.Length; IndexCount = drawCount; _skinEnabled = false; _rawTriangles = true;
     }
     private static T[] Resize<T>(T[] values, int length) { if (values.Length != length) Array.Resize(ref values, length); return values; }
-    internal void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)
+    internal void SetTriangles(ReadOnlySpan<CanvasVertex> triangles, ReadOnlySpan<int> indices = default)
     {
         _antialiased = _hasContourMapping = false;
         _skinEnabled = _rawTriangles = false;
         if (Vertices.Length < triangles.Length) Array.Resize(ref Vertices, triangles.Length);
-        if (Indices.Length < triangles.Length) Array.Resize(ref Indices, triangles.Length);
-        VertexCount = IndexCount = triangles.Length;
+        IndexCount = indices.IsEmpty ? triangles.Length : indices.Length; VertexCount = triangles.Length;
+        if (Indices.Length < IndexCount) Array.Resize(ref Indices, IndexCount);
         triangles.CopyTo(Vertices);
-        for (var i = 0; i < triangles.Length; i++) Indices[i] = i;
+        if (indices.IsEmpty) for (var i = 0; i < triangles.Length; i++) Indices[i] = i;
+        else
+        {
+            indices.CopyTo(Indices);
+            for (var i = 0; i < VertexCount; i++) Vertices[i] = Vertices[i] with { VertexID = (uint)i };
+        }
     }
 
     private void Triangulate(ReadOnlySpan<Vector2> points)

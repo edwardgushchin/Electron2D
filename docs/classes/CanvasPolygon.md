@@ -1,6 +1,6 @@
 # CanvasPolygon
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 - Declaration: `internal sealed partial class CanvasPolygon`
 - Source: [CanvasPolygon.cs](../../src/Servers/Rendering/CanvasPolygon.cs), [boundary geometry](../../src/Servers/Rendering/CanvasPolygon.Antialias.cs)
@@ -21,7 +21,7 @@ Internal retained vertex/index storage owned by CanvasItem. It is not a public r
 | `CanvasVertex[] Vertices`, `int VertexCount` | Copied local vertices, finite colors and normalized UVs; trailing capacity is unused. |
 | `int[] Indices`, `int IndexCount` | Filled triangle indices, with reusable capacity. |
 | `void Set(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, bool primitive, int[][]? contours = null)` | Copies validated attributes; triangulates a contour through shared Geometry logic or creates fixed triangle/quad indices. |
-| `void SetTriangles(ReadOnlySpan<CanvasVertex> triangles)` | Copies validated triangle vertices from internal scene drawing and writes sequential indices without contour triangulation. |
+| `void SetTriangles(ReadOnlySpan<CanvasVertex> triangles, ReadOnlySpan<int> indices = default)` | Copies validated internal triangle vertices and optional indices; indexed vertices retain their source IDs without contour triangulation. |
 | `void RemapUV(Rect2 mapping)` | Applies normalized atlas origin/scale to stored UVs, rejecting nonfinite output. |
 | `(int Count, Mesh.PrimitiveType Primitive) Append(List<CanvasVertex> output, Transform transform, Color modulation, bool snap, CanvasItem? skinOwner = null, bool linear = false, BlendMode blend = BlendMode.Mix)` | Appends transformed/modulated geometry and returns the native point/line prefix count/topology; filled triangles return the default prefix. |
 
@@ -29,7 +29,7 @@ Internal retained vertex/index storage owned by CanvasItem. It is not a public r
 
 Set is called only after CanvasItem validates counts, values, resource lifetime and drawing scope. Triangulate uses a reusable index array, normalizes winding, visits consecutive ears and relaxes the convexity/edge test after a stalled pass to permit degenerate final ears. A second stalled pass throws ArgumentException. Self-intersections and holes have no supported contract. Double intermediates keep finite float coordinates from overflowing the determinant calculation. Ear selection has cubic worst-case complexity; large constantly redrawn contours need separate performance work.
 
-Line uses SetTriangles through the internal CanvasItem triangle recorder. It preserves each vertex's color and UV and bypasses contour triangulation, then follows the same retained command, atlas remap, transform and backend batch path.
+Line uses indexed SetTriangles through the internal CanvasItem triangle recorder. It preserves each vertex's color and UV and bypasses contour triangulation, then follows the same retained command, atlas remap, transform and backend batch path.
 
 RemapUV runs before the command is committed. Append rejects transformed positions or modulated colors that overflow. Point/line endpoints transform and snap before native batch submission; coincident transformed two-point lines produce nothing. GPU rendering uses point/line rasterization. Compatibility expands those already transformed endpoints into its existing one-pixel triangle footprints. Filled geometry retains its stored triangulation while positions and colors transform every submission. Vertex snapping does not modify the recorded local values.
 
@@ -48,3 +48,5 @@ SetIndexedTriangles reuses copied MeshSurfaceData arrays for raw producer storag
 Polygon.Antialiased records explicit contours together and compacts only referenced vertices, retaining their original skin-source indices. Unused vertices do not affect bounds or transformed finite checks. Retained directed triangle edges cancel reverse counterparts, removing shared diagonals before replay. Inversion supplies separate inner and outer loops so the numerical triangulation slit never receives a fringe. EnableAntialias prepares reused edge counts, boundary pairs, transformed vertices and normal arrays; every Set variant clears activation before reusing a pool slot.
 
 Append skins, transforms and snaps vertices, preserves the original fill triangles, then expands each boundary with alpha-zero outer vertices. UV/RGB remain attached to the source boundary; PremultAlpha fades all channels. Multiply blending reject before appending because they ignore coverage alpha. Width is one framebuffer pixel before authored vertex programs; miter reach is bounded to four pixels. Reversed/reflected winding, collapsed geometry, finite overflow and failed recording retain explicit checks. Fixed-capacity redraw and active pose replay reuse all arrays and dictionary capacity. PolygonAntialiasTests checks topology, shared seams, inverted loops, attributes, native pixels and prepared owner managed bytes; native allocation and foreign targets remain unverified.
+
+Line boundary coverage optionally welds equal positions only for edge cancellation and accumulated normals. Surviving edges retain their original endpoint attributes and vertex IDs. This removes strip/cap and closed-loop seams without collapsing UV/color discontinuities. Other polygon callers retain their indexed topology policy. See [Line geometry](../components/line-geometry.md).

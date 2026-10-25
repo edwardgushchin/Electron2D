@@ -48,13 +48,16 @@ public abstract partial class CanvasItem
     public void DrawPrimitive(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, ReadOnlySpan<Vector2> uvs, Texture? texture = null) =>
         RecordPolygon(points, colors, uvs, texture, primitive: true);
 
-    internal void DrawTriangleArray(ReadOnlySpan<CanvasVertex> triangles, Texture? texture)
+    internal void DrawTriangleArray(ReadOnlySpan<CanvasVertex> triangles, Texture? texture) => DrawTriangleArray(triangles, default, texture, false);
+
+    internal void DrawTriangleArray(ReadOnlySpan<CanvasVertex> triangles, ReadOnlySpan<int> indices, Texture? texture, bool antialiased)
     {
         EnsureDrawing();
         Rect2? uvMapping = null;
         if (texture is AtlasTexture view) texture = view.ResolvePolygonTexture(true, out uvMapping);
         EnsureDrawing();
-        if (triangles.Length == 0 || triangles.Length % 3 != 0) throw new ArgumentException("Triangle vertices must form complete triangles.", nameof(triangles));
+        if (triangles.Length == 0 || (indices.IsEmpty ? triangles.Length : indices.Length) % 3 != 0) throw new ArgumentException("Triangle vertices must form complete triangles.", nameof(triangles));
+        foreach (var index in indices) if ((uint)index >= (uint)triangles.Length) throw new ArgumentOutOfRangeException(nameof(indices));
         foreach (var vertex in triangles)
         {
             if (!vertex.Position.IsFinite() || !vertex.UV.IsFinite()) throw new ArgumentException("Triangle coordinates must be finite.", nameof(triangles));
@@ -64,7 +67,8 @@ public abstract partial class CanvasItem
         _polygons ??= [];
         if (_polygonCount == _polygons.Count) _polygons.Add(new());
         var polygon = _polygons[_polygonCount];
-        polygon.SetTriangles(triangles);
+        polygon.SetTriangles(triangles, indices);
+        if (antialiased) polygon.EnableAntialias(default, weldPositions: true);
         if (uvMapping is { } mapping) polygon.RemapUV(mapping);
         (_canvasCommands ??= []).Add(new CanvasCommand(false, default, default, Colors.White, 0, false, Transform.Identity, texture, Polygon: polygon));
         _polygonCount++;

@@ -762,9 +762,9 @@ def main():
     assert "../../classes/PlaceholderTexture.md" in placeholder_rows[0]
     factory_row = next(row for row in pages[CLASS_PAGES / "Texture.md"].splitlines() if row.startswith("| [`method create_placeholder("))
     assert " | Implemented | " in factory_row and "CreatePlaceholder" in factory_row
-    assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
+    assert " | Implemented | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
     line_rows = [row for row in pages[CLASS_PAGES / "Line2D.md"].splitlines() if row.startswith("| [`")]
-    assert len(line_rows) == 33 and all(" | Unimplemented | " not in row and " | Blocked | " not in row for row in line_rows)
+    assert len(line_rows) == 33 and all(" | Implemented | " in row for row in line_rows)
     assert "native-menu service" in class_rows["NativeMenu"]
     packed_types = [item["name"] for item in upstream["types"]
                     if item["name"].startswith("Packed") and item["name"].endswith("Array")]

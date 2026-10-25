@@ -523,3 +523,5 @@ Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture
 [Typed varying transport](../components/visual-shaders.md#typed-varying-transport) connects graph declarations and numeric getter/setter resources to ordinary, mesh, instanced and nine-patch canvas geometry and automatic scene lighting. Native custom locations remain independent of renderer-owned mesh/glyph fields; the authored light-graph stage retains its separate dependency.
 
 [Curve image graph lookups](../components/visual-shaders.md#curve-image-lookups) connect borrowed scalar/RGB curve textures to both canvas stages, particle stages and writable-texture graphs through the shared offline importer.
+
+[Line geometry](../components/line-geometry.md) now executes the complete polyline property family: indexed capped/jointed strips, distance-based width/color/UV sampling and transformed full-boundary coverage. It reuses current GPU and compatibility drawing; hardware, foreign-platform and SDL software fractional-raster limits remain explicit.
