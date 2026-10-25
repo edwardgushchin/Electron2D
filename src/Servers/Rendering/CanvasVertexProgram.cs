@@ -50,7 +50,7 @@ internal static class CanvasVertexProgram
             instructions[instructions.IndexOf(variable)] = replacement; privateVariables.Add(id);
             instructions.RemoveAll(i => Op(i) == 71 && i[1] == id && i[2] is 11 or 14 or 30 or 31 or 32);
         }
-        uint rawVertexID = 0, meshVertexID = 0, vertexIDType = 0, boolType = 0;
+        uint rawVertexID = 0, meshVertexID = 0, meshIdentityType = 0, vertexIDType = 0, boolType = 0;
         if (vertexID != 0)
         {
             vertexIDType = Pointee(vertexID);
@@ -61,9 +61,15 @@ internal static class CanvasVertexProgram
             Privatize(vertexID);
             rawVertexID = ID(); added.Add(Instruction(59, Pointer(1, vertexIDType), rawVertexID, 1));
             annotations.Add(Instruction(71, rawVertexID, 11, 42));
-            meshVertexID = Variable(1, uintType, 15); newInputs.AddRange([rawVertexID, meshVertexID]);
+            newInputs.Add(rawVertexID);
         }
-        if ((procedural || instanced) && boolType == 0)
+        if (vertexID != 0 || instanceID != 0 && !instanced)
+        {
+            meshIdentityType = basic.FirstOrDefault(i => Op(i) == 23 && i[2] == uintType && i[3] == 2)?[1] ?? 0;
+            if (meshIdentityType == 0) { meshIdentityType = ID(); basic.Add(Instruction(23, meshIdentityType, uintType, 2)); }
+            meshVertexID = Variable(1, meshIdentityType, 15); newInputs.Add(meshVertexID);
+        }
+        if ((procedural || instanced || instanceID != 0) && boolType == 0)
         {
             boolType = basic.FirstOrDefault(i => Op(i) == 20)?[1] ?? 0;
             if (boolType == 0) { boolType = ID(); basic.Add(Instruction(20, boolType)); }
@@ -76,13 +82,13 @@ internal static class CanvasVertexProgram
             rawColor = Variable(1, float4, 1);
             basis = Variable(1, float4, 3); translation = Variable(1, float4, 4); tint = Variable(1, float4, 5); rawCustom = Variable(1, float4, 6);
             newInputs.AddRange([rawColor, basis, translation, tint, rawCustom]);
-            if (instanceID != 0)
-            {
-                instanceIDType = Pointee(instanceID);
-                if (declarations[instanceIDType] is not [_, _, 32, _] || Op(declarations[instanceIDType]) != 21) throw new NotSupportedException("Canvas instance identity requires a 32-bit integer builtin.");
-                Privatize(instanceID); rawInstanceID = ID(); added.Add(Instruction(59, Pointer(1, instanceIDType), rawInstanceID, 1));
-                annotations.Add(Instruction(71, rawInstanceID, 11, 43)); newInputs.Add(rawInstanceID);
-            }
+        }
+        if (instanceID != 0)
+        {
+            instanceIDType = Pointee(instanceID);
+            if (declarations[instanceIDType] is not [_, _, 32, _] || Op(declarations[instanceIDType]) != 21) throw new NotSupportedException("Canvas instance identity requires a 32-bit integer builtin.");
+            Privatize(instanceID); rawInstanceID = ID(); added.Add(Instruction(59, Pointer(1, instanceIDType), rawInstanceID, 1));
+            annotations.Add(Instruction(71, rawInstanceID, 11, 43)); newInputs.Add(rawInstanceID);
         }
         var glyphInput = Variable(1, float4, 14); var glyphOutput = Variable(3, float4, 11, flat: true);
         newInputs.Add(glyphInput); newOutputs.Add(glyphOutput);
@@ -103,9 +109,16 @@ internal static class CanvasVertexProgram
         if (vertexID != 0)
         {
             var raw = Load(vertexIDType, rawVertexID); if (vertexIDType != uintType) raw = Value(124, uintType, raw);
-            var mesh = Load(uintType, meshVertexID);
+            var mesh = Value(81, uintType, Load(meshIdentityType, meshVertexID), 0);
             var selected = Value(169, uintType, Value(171, boolType, mesh, Constant(uint.MaxValue)), mesh, raw);
             body.Add(Instruction(62, vertexID, vertexIDType == uintType ? selected : Value(124, vertexIDType, selected)));
+        }
+        if (instanceID != 0 && !instanced)
+        {
+            var raw = Load(instanceIDType, rawInstanceID); if (instanceIDType != uintType) raw = Value(124, uintType, raw);
+            var mesh = Value(81, uintType, Load(meshIdentityType, meshVertexID), 1);
+            var selected = Value(169, uintType, Value(171, boolType, mesh, Constant(uint.MaxValue)), mesh, raw);
+            body.Add(Instruction(62, instanceID, instanceIDType == uintType ? selected : Value(124, instanceIDType, selected)));
         }
         uint proceduralOrigin = 0, proceduralX = 0, proceduralY = 0;
         if (procedural)

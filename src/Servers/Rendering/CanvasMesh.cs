@@ -213,26 +213,26 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         {
             instances.Presentation(index, fraction, out var pose, out var color, out var custom);
             var first = output.Count;
-            AppendSurface(output, MeshLOD.Select(data, lods, transform * pose), primitive, transform * pose, modulation * (linear ? CanvasGeometry.LinearColor(color) : color), snap, custom, palette, toPalette, fromPalette, linear);
+            AppendSurface(output, MeshLOD.Select(data, lods, transform * pose), primitive, transform * pose, modulation * (linear ? CanvasGeometry.LinearColor(color) : color), snap, custom, palette, toPalette, fromPalette, linear, (uint)index);
             if (splitBatches is not null) AddBatch(output, splitBatches, template with { First = first, Count = output.Count - first });
         }
     }
-    private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear)
+    private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, uint instanceID = uint.MaxValue)
     {
         var count = data.Indices.Length == 0 ? data.VertexCount : data.Indices.Length;
-        if (data.IsProcedural) { for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, false, custom, palette, toPalette, fromPalette, linear)); return; }
+        if (data.IsProcedural) { for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, false, custom, palette, toPalette, fromPalette, linear, instanceID)); return; }
         if (primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip)
         {
             if (primitive == Mesh.PrimitiveType.Triangles)
-                for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear));
+                for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID));
             else
-                for (var i = 0; i + 2 < count; i++) { output.Add(Vertex(data, i + (i % 2), transform, modulation, snap, custom, palette, toPalette, fromPalette, linear)); output.Add(Vertex(data, i + 1 - (i % 2), transform, modulation, snap, custom, palette, toPalette, fromPalette, linear)); output.Add(Vertex(data, i + 2, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear)); }
+                for (var i = 0; i + 2 < count; i++) { output.Add(Vertex(data, i + (i % 2), transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID)); output.Add(Vertex(data, i + 1 - (i % 2), transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID)); output.Add(Vertex(data, i + 2, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID)); }
             return;
         }
         var step = primitive == Mesh.PrimitiveType.Lines ? 2 : 1;
         for (var i = 0; i < count - (primitive == Mesh.PrimitiveType.Points ? 0 : 1); i += step)
         {
-            var a = Vertex(data, i, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear); var b = primitive == Mesh.PrimitiveType.Points ? a : Vertex(data, i + 1, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear);
+            var a = Vertex(data, i, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID); var b = primitive == Mesh.PrimitiveType.Points ? a : Vertex(data, i + 1, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID);
             var dx = (double)b.Position.X - a.Position.X; var dy = (double)b.Position.Y - a.Position.Y;
             if (primitive != Mesh.PrimitiveType.Points && dx == 0 && dy == 0) continue;
             var length = double.Hypot(dx, dy);
@@ -253,10 +253,10 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         for (var slot = 0; slot < slots; slot++) { var entry = index * slots + slot; var weight = data.Weights[entry]; if (weight == 0) continue; var transformed = palette[data.Bones[entry]] * source; x += transformed.X * (double)weight; y += transformed.Y * (double)weight; total += weight; }
         var result = fromPalette.BasisXform(new((float)x, (float)y)) + fromPalette.Origin * (float)total; if (!result.IsFinite()) throw new InvalidOperationException("Mesh skin deformation overflowed finite coordinates."); return result;
     }
-    private static CanvasVertex Vertex(MeshSurfaceData data, int order, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear)
+    private static CanvasVertex Vertex(MeshSurfaceData data, int order, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, uint instanceID = uint.MaxValue)
     {
         var index = data.Indices.Length == 0 ? order : data.Indices[order];
-        return VertexIndex(data, index, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear);
+        return VertexIndex(data, index, transform, modulation, snap, custom, palette, toPalette, fromPalette, linear, instanceID);
     }
     private MultiMeshGPUDraw AppendGPU(List<CanvasVertex> vertices, MeshSurfaceData data, Mesh.PrimitiveType primitive, MultiMeshGPUState state, MultiMesh instances, int surface, Transform canvas, Color modulation, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, MeshLOD[] lods)
     {
@@ -275,7 +275,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         }
         return new(state, surface, indices, data.Indices.Length, lods, canvas, modulation, instances.Stride, instances.InstanceCount, instances.DrawCount, instances.UseColors, instances.UseCustomData, instances.UseIndirect, instances.InterpolationEnabled ? Math.Clamp(fraction, 0, 1) : 1, instances.PhysicsInterpolationQualityMode);
     }
-    private static CanvasVertex VertexIndex(MeshSurfaceData data, int index, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear)
+    private static CanvasVertex VertexIndex(MeshSurfaceData data, int index, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, uint instanceID = uint.MaxValue)
     {
         var affine = transform;
         if (data.IsProcedural && !palette.IsEmpty && data.Bones.Length != 0)
@@ -286,6 +286,6 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         if (data.IsProcedural && (!affine.X.IsFinite() || !affine.Y.IsFinite())) throw new InvalidOperationException("Procedural mesh transforms exceed finite coordinates.");
         var position = data.IsProcedural ? affine.Origin : transform * Deform(data, index, palette, toPalette, fromPalette); var sourceColor = data.Colors.Length == 0 ? Colors.White : data.Colors[index]; var color = (linear ? CanvasGeometry.LinearColor(sourceColor) : sourceColor) * modulation;
         if (!position.IsFinite() || !color.IsFinite()) throw new InvalidOperationException("Mesh canvas values overflowed finite coordinates.");
-        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index], data.Normals.Length == 0 ? default : data.Normals[index], data.Tangents.Length == 0 ? default : data.Tangents[index], data.Custom0 is null ? default : data.Custom0.Values[index], data.Custom1 is null ? default : data.Custom1.Values[index], data.Custom2 is null ? default : data.Custom2.Values[index], data.Custom3 is null ? default : data.Custom3.Values[index], Glyph: data.IsProcedural ? new(affine.X.X, affine.X.Y, affine.Y.X, affine.Y.Y) : default, VertexID: (uint)index);
+        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index], data.Normals.Length == 0 ? default : data.Normals[index], data.Tangents.Length == 0 ? default : data.Tangents[index], data.Custom0 is null ? default : data.Custom0.Values[index], data.Custom1 is null ? default : data.Custom1.Values[index], data.Custom2 is null ? default : data.Custom2.Values[index], data.Custom3 is null ? default : data.Custom3.Values[index], Glyph: data.IsProcedural ? new(affine.X.X, affine.X.Y, affine.Y.X, affine.Y.Y) : default, VertexID: (uint)index, InstanceID: instanceID);
     }
 }

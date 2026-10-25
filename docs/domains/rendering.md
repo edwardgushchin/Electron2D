@@ -1,3 +1,5 @@
+[Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) now expose decoded custom0/custom1 and logical instance IDs to vertex authoring, including existing MultiMesh/particle ordering and named varying transport.
+
 [Sampled component views](../components/local-compute.md#sampled-component-views) execute initial channel maps across local compute/graphics and retained canvas, particle and writable-texture consumers, with copied descriptions and unchanged raw transfers. Shared alternate-format/subresource views remain separate.
 
 [Repeatable scalar graph variation](../components/visual-shaders.md#repeatable-scalar-variation) supplies seed-driven material values through the existing canvas, particle and writable-texture graph paths, including unclamped equal/reversed-bound arithmetic.

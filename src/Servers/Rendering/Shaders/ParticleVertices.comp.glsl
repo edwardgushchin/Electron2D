@@ -43,8 +43,8 @@ void main()
     {
         draws[instance * 4] = alive ? counts.y : 0; draws[instance * 4 + 1] = 1; draws[instance * 4 + 2] = instance * counts.y; draws[instance * 4 + 3] = instance;
     }
-    uint source = counts.z + vertex * 42, outputBase = index * 42;
-    for (uint word = 0; word < 42; word++) vertices[outputBase + word] = geometry[source + word];
+    uint source = counts.z + vertex * 43, outputBase = index * 43;
+    for (uint word = 0; word < 43; word++) vertices[outputBase + word] = geometry[source + word];
     vec4 x = particle.x, y = particle.y, color = particle.color, custom = particle.custom;
     if (timing.x < 1 && previous[particleIndex].state.y == particle.state.y && (previous[particleIndex].state.x & 1u) != 0)
     {
@@ -84,6 +84,7 @@ void main()
     color *= modulation * vec4(uintBitsToFloat(geometry[source + 2]), uintBitsToFloat(geometry[source + 3]), uintBitsToFloat(geometry[source + 4]), uintBitsToFloat(geometry[source + 5]));
     if ((counts.w & 8u) != 0) color.rgb *= color.a;
     if (!alive || !finiteValue(transformed.x) || !finiteValue(transformed.y) || any(isnan(color)) || any(isinf(color))) { transformed = vec2(0); color = vec4(0); if (vertex == 0) draws[instance * 4] = 0; }
+    vertices[outputBase + 42] = particleIndex;
     vertices[outputBase] = floatBitsToUint(transformed.x); vertices[outputBase + 1] = floatBitsToUint(transformed.y);
     for (uint lane = 0; lane < 4; lane++) { vertices[outputBase + 2 + lane] = floatBitsToUint(color[lane]); vertices[outputBase + 8 + lane] = floatBitsToUint(custom[lane]); }
     if ((counts.w & 2u) != 0)

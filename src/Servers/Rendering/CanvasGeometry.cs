@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Electron2D;
 
 [StructLayout(LayoutKind.Sequential)]
-internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vector2 UV = default, Color InstanceCustom = default, Vector2 UV2 = default, Vector3 Normal = default, Vector4 Tangent = default, Vector4 Custom0 = default, Vector4 Custom1 = default, Vector4 Custom2 = default, Vector4 Custom3 = default, Vector4 Glyph = default, uint VertexID = uint.MaxValue);
+internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vector2 UV = default, Color InstanceCustom = default, Vector2 UV2 = default, Vector3 Normal = default, Vector4 Tangent = default, Vector4 Custom0 = default, Vector4 Custom1 = default, Vector4 Custom2 = default, Vector4 Custom3 = default, Vector4 Glyph = default, uint VertexID = uint.MaxValue, uint InstanceID = uint.MaxValue);
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color,
     float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect2 Source = default,

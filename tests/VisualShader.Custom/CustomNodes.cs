@@ -11,10 +11,12 @@ internal static class CustomNodes
         ResourceFileTypes.RegisterResource("checks.CustomNumeric", CreateNumeric);
         ResourceFileTypes.RegisterResource("checks.CustomProcedure", CreateProcedure);
         ResourceFileTypes.RegisterResource("checks.CustomOther", CreateOther);
+        ResourceFileTypes.RegisterResource("checks.CustomMeshInputs", CreateMeshInputs);
     }
     private static CustomNumericNode CreateNumeric() => new();
     private static CustomProcedureNode CreateProcedure() => new();
     private static CustomOtherNode CreateOther() => new();
+    private static CustomMeshInputsNode CreateMeshInputs() => new();
     internal static VisualShaderPortDefault Value(P role) => role switch
     {
         P.Scalar => new VisualShaderPortDefault<float>(0, .25f),
@@ -146,4 +148,20 @@ internal sealed class CustomOtherNode : CustomProcedureNode
     public override string GetFuncCode(Shader.Mode mode, VisualShader.Type type) => "vec3 customOtherLocal=customOther();";
     public override string GetCode(IReadOnlyList<string> inputVariables, IReadOnlyList<string> outputVariables, Shader.Mode mode, VisualShader.Type type) => outputVariables[0] + "=customOtherLocal;";
     protected override Resource CreateDuplicateInstance() => new CustomOtherNode();
+}
+
+internal sealed class CustomMeshInputsNode : VisualShaderNodeCustom
+{
+    public override int GetInputPortCount() => 3;
+    public override int GetOutputPortCount() => 1;
+    public override P GetInputPortType(int port) => port < 2 ? P.Vector4 : P.Scalar;
+    public override P GetOutputPortType(int port) => P.Vector3;
+    public override string GetGlobalCode(Shader.Mode mode) => """
+        #if ELECTRON2D_SHADER_STAGE == 0
+        bool mesh_channels(vec4 a, vec4 b) { return all(lessThan(abs(CUSTOM0-a),vec4(.00002))) && all(lessThan(abs(CUSTOM1-b),vec4(.00002))); }
+        #endif
+        """;
+    public override string GetCode(IReadOnlyList<string> inputs, IReadOnlyList<string> outputs, Shader.Mode mode, VisualShader.Type type) =>
+        outputs[0] + " = mesh_channels(" + inputs[0] + "," + inputs[1] + ") && INSTANCE_ID == (INSTANCE_CUSTOM.y>0.0?int(INSTANCE_CUSTOM.x)+(int(INSTANCE_CUSTOM.y)-1)*65536:0) ? vec3(.25,.5,.75)*" + inputs[2] + " : vec3(1,0,0);";
+    protected override Resource CreateDuplicateInstance() => new CustomMeshInputsNode();
 }

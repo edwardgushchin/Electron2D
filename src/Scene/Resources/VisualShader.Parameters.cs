@@ -39,7 +39,7 @@ public sealed partial class VisualShader
             var name = parameter.ParameterName;
             if (name.Length == 0 || !char.IsAsciiLetter(name[0]) || name.Any(c => !(char.IsAsciiLetterOrDigit(c) || c == '_')) ||
                 name.StartsWith("gl_", StringComparison.Ordinal) || name.Contains("__", StringComparison.Ordinal) ||
-                name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "size" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
+                name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "CUSTOM0" or "CUSTOM1" or "INSTANCE_ID" or "size" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
                 throw new InvalidDataException("A graph parameter requires a nonreserved ASCII shader identifier.");
             if (_mode == Mode.TextureBlit && name is "SOURCE_TEXTURE0" or "SOURCE_TEXTURE1" or "SOURCE_TEXTURE2" or "SOURCE_TEXTURE3")
                 throw new InvalidDataException("Writable-texture source names are renderer-owned and cannot be material parameters.");
@@ -132,6 +132,11 @@ public sealed partial class VisualShader
         if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeRotationByAxis))
             extra.Append(VisualShaderNodeRotationByAxis.RotationDefinition(aliases["e2d_axis_rotation"]));
         if (sdf) extra.Append(SDFDefinitions(reachable.Select(id => graph.Nodes[id].Node), aliases));
+        if (stage == Type.Vertex)
+            for (var channel = 0; channel < 2; channel++)
+                if (reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input && input.InputName == "custom" + channel) ||
+                    ExpressionSources(stage, reachable, custom).Any(s => SourceIdentifiers(s).Any(t => !t.Member && s.Substring(t.Start, t.Length) == "CUSTOM" + channel)))
+                    extra.Append("layout(location=").Append(10 + channel).Append(") in vec4 ").Append(aliases["inMeshCustom" + channel]).AppendLine(";");
         extra.Append(CustomGlobals(custom, stage, aliases)).Append(GlobalExpressionHeader(stage, aliases));
         return header.Replace("void main() {", extra + "void main() {", StringComparison.Ordinal);
     }

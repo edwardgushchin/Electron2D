@@ -69,6 +69,11 @@ public sealed partial class VisualShader
         }
         result["TEXTURE_PIXEL_SIZE"] = aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE";
         if (stage == Type.Fragment) result["SCREEN_PIXEL_SIZE"] = aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE";
+        if (stage == Type.Vertex)
+        {
+            result["CUSTOM0"] = aliases["inMeshCustom0"]; result["CUSTOM1"] = aliases["inMeshCustom1"];
+            result["INSTANCE_ID"] = "gl_InstanceIndex";
+        }
         if (!global)
         {
             foreach (var name in new[] { "UV", "COLOR", "INSTANCE_CUSTOM" }) result[name] = aliases[name];

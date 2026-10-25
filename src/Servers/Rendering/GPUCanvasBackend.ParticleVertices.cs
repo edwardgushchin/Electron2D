@@ -20,7 +20,7 @@ internal sealed unsafe partial class GPUCanvasBackend
     private readonly record struct ParticleVertexParameters(Vector4 X, Vector4 Y, Color Color, Vector4i Counts, Vector4i History, Vector4i Options, Vector4 Timing, Vector4 Sheet);
     private void PrepareParticleVertices(nint command, ReadOnlySpan<CanvasBatch> batches, int lightingBytes, Vector2i size)
     {
-        if (sizeof(CanvasVertex) != 168) throw new NotSupportedException("The particle vertex kernel requires the current canvas vertex layout.");
+        if (sizeof(CanvasVertex) != 172) throw new NotSupportedException("The particle vertex kernel requires the current canvas vertex layout.");
         var ordinal = 0; var inputs = stackalloc nint[7]; var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[2];
         foreach (var batch in batches)
         {
@@ -45,7 +45,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             var frequency = source.FixedFPS > 0 ? source.FixedFPS : 60;
             var fraction = source.Interpolate && (source.FixedFPS > 0 || source.Trails && source.BindPoses.Length > 1) ? (float)Math.Clamp(source.Remainder * frequency, 0, 1) : 1;
             var parameters = new ParticleVertexParameters(new(canvas.X.X, canvas.Y.X, 0, canvas.Origin.X), new(canvas.X.Y, canvas.Y.Y, 0, canvas.Origin.Y), drawing.Color,
-                new(source.Amount, batch.Count, checked(lightingBytes / 4 + batch.First * 42), (batch.LinearColors ? 1 : 0) | (batch.Procedural ? 2 : 0) | (source.Trails && drawing.Geometry.HasSkin ? 4 : 0) | (batch.GroupShader ? 8 : 0)),
+                new(source.Amount, batch.Count, checked(lightingBytes / 4 + batch.First * 43), (batch.LinearColors ? 1 : 0) | (batch.Procedural ? 2 : 0) | (source.Trails && drawing.Geometry.HasSkin ? 4 : 0) | (batch.GroupShader ? 8 : 0)),
                 new(gpu.HistoryFrames, gpu.HistoryNext, gpu.HistoryWritten, source.BindPoses.Length), new((int)source.Align, (int)source.AlignAxis, size.X, checked((int)groups.Width * 64)), new(fraction, frequency, source.TrailLength, size.Y), drawing.Sheet);
             SDL.PushGPUComputeUniformData(command, 0, (nint)(&parameters), (uint)sizeof(ParticleVertexParameters));
             var pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 2); if (pass == 0) throw Failure("begin particle canvas conversion");

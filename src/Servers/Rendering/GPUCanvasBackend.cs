@@ -132,7 +132,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         attributes[instanced ? 9 : 6] = new() { Location = 9, Format = SDL.GPUVertexElementFormat.Float4, Offset = 68 };
         for (uint channel = 0; channel < 4; channel++) attributes[(instanced ? 10 : 7) + channel] = new() { Location = 10 + channel, Format = SDL.GPUVertexElementFormat.Float4, Offset = 84 + channel * 16 };
         attributes[instanced ? 14 : 11] = new() { Location = 14, Format = SDL.GPUVertexElementFormat.Float4, Offset = 148 };
-        attributes[instanced ? 15 : 12] = new() { Location = 15, Format = SDL.GPUVertexElementFormat.Uint, Offset = 164 };
+        attributes[instanced ? 15 : 12] = new() { Location = 15, Format = SDL.GPUVertexElementFormat.Uint2, Offset = 164 };
         var blendState = blend switch
         {
             BlendMode.Mix => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),

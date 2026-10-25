@@ -6,6 +6,9 @@ namespace Electron2D;
 /// reports the named semantic role. Canvas texture_pixel_size reads the inverse logical dimensions of the
 /// current command's resolved diffuse texture in vertex and fragment stages, or one for a missing image.
 /// Atlas regions retain the backing image size; material image overrides do not change this input.
+/// Canvas vertex custom0/custom1 read the first two decoded mesh channels, independently of instance_custom.
+/// Canvas vertex instance_id reads the logical instance or particle slot, or zero for ordinary geometry.
+/// These three names have the scalar-zero role outside the canvas vertex stage.
 /// Known inputs in their applicable context require a real renderer producer.</remarks>
 public sealed class VisualShaderNodeInput : VisualShaderNode
 {
@@ -53,7 +56,8 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         >= VisualShader.Type.Start and <= VisualShader.Type.ProcessCustom => _inputName is "active" or "color" or "custom" or "delta" or "emission_transform" or "index" or "lifetime" or "number" or "random_seed" or "time" or "transform" or "velocity" ||
             _inputName == "restart" && stage is VisualShader.Type.Process or VisualShader.Type.ProcessCustom or VisualShader.Type.Collide ||
             _inputName is "collision_depth" or "collision_normal" && stage == VisualShader.Type.Collide,
-        _ => _inputName is "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "custom0" or "custom1" or "vertex_id" or "instance_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture"
+        _ => _inputName is "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "vertex_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture" ||
+            stage == VisualShader.Type.Vertex && _inputName is "custom0" or "custom1" or "instance_id"
     };
     internal PortType[] OutputsFor(VisualShader.Type stage) => [IsKnownInStage(stage) ? InputKind : PortType.Scalar];
     private PortType InputKind => _inputName switch
@@ -102,6 +106,9 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         "screen_uv" when stage == VisualShader.Type.Fragment => "(gl_FragCoord.xy * SCREEN_PIXEL_SIZE)",
         "texture_pixel_size" when stage is VisualShader.Type.Vertex or VisualShader.Type.Fragment => "TEXTURE_PIXEL_SIZE",
         "vertex_id" when stage == VisualShader.Type.Vertex => "gl_VertexIndex",
+        "instance_id" when stage == VisualShader.Type.Vertex => "gl_InstanceIndex",
+        "custom0" when stage == VisualShader.Type.Vertex => "inMeshCustom0",
+        "custom1" when stage == VisualShader.Type.Vertex => "inMeshCustom1",
         _ when !IsKnownInStage(stage) => "0.0",
         _ => throw new NotSupportedException($"Canvas input '{_inputName}' has no executing producer in this graph stage.")
     };
