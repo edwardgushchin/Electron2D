@@ -95,6 +95,12 @@ The native qualification workflow packs managed `net10.0`, Android, iOS and tvOS
 
 ## CI and package contents
 
+`tools/native/Native.csproj` restores the managed project reference to retain its
+package dependency, then packs with `NoBuild=true`: its payload contains no
+managed assembly. This avoids rebuilding Electron2D and the shader toolchain for
+each of the seven platform packages. `CheckNativePackageInputs` still validates
+the complete selected native closure before nuspec generation.
+
 The Linux WebP ELF audit allows only libc, libm and the loader matching the
 selected architecture: `ld-linux-x86-64.so.2` or `ld-linux-aarch64.so.1`.
 A foreign loader, external WebP codec, build-machine search path, wrong CPU or

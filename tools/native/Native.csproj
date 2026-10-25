@@ -11,6 +11,8 @@
     <PackageLicenseFile>licence/Electron2D-LICENSE.txt</PackageLicenseFile>
     <RepositoryUrl>https://github.com/edwardgushchin/Electron2D</RepositoryUrl>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- Restore resolves the managed dependency; this package contains only native payloads. -->
+    <NoBuild>true</NoBuild>
     <EnableDefaultItems>false</EnableDefaultItems>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
     <NativePackageRIDs Condition="'$(NativePackageRIDs)' == '' and '$(NativePackagePlatform)' == 'Linux'">linux-x64,linux-arm64</NativePackageRIDs>

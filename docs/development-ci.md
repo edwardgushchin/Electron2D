@@ -63,7 +63,10 @@ checks for the native contract.
 ## Complete qualification
 
 The reusable native workflow produces the final managed package alongside all
-seven platform packages. Its desktop source/ProjectReference consumers remain;
+seven platform packages. Native package projects restore their dependency graph
+and pack without rebuilding the runtime or shader toolchain. Their native input
+audit still runs before nuspec generation and the managed dependency is retained.
+Its desktop source/ProjectReference consumers remain;
 the package consumers now use the supplied final managed package without
 repacking it. The full RID Build matrix retains source compilation and analyzers.
 The Tests matrix uses `Electron2DUsePackage=true` through the shared consumer

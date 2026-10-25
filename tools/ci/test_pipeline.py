@@ -21,6 +21,46 @@ import plan
 
 
 class Pipeline(unittest.TestCase):
+    def test_native_pack_retains_dependency_and_audit_without_building_the_runtime(self):
+        root = Path(__file__).resolve().parents[2]
+        version = packages.native.configuration()['version']
+        with tempfile.TemporaryDirectory(prefix='e2d native pack ') as directory:
+            work = Path(directory); native = work/'tools/native'; native.mkdir(parents=True)
+            for name in ('Native.csproj', 'README.md', 'Electron2D.targets'):
+                (native/name).write_bytes((root/'tools/native'/name).read_bytes())
+            (work/'tools/native-package.props').write_bytes((root/'tools/native-package.props').read_bytes())
+            (work/'Electron2D.csproj').write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+                '<TargetFramework>net10.0</TargetFramework><PackageId>Electron2D</PackageId><Version>'+version+
+                '</Version></PropertyGroup><Target Name="RejectRuntimeBuild" BeforeTargets="BeforeBuild">'
+                '<Error Text="Unwanted runtime rebuild during native packaging" /></Target></Project>')
+            (work/'licence').mkdir(); (work/'licence/Electron2D-LICENSE.txt').write_text('MIT fixture')
+            artifacts = work/'bin/native-artifacts'; payload = artifacts/'runtimes/browser-wasm/native/fixture.a'
+            payload.parent.mkdir(parents=True); payload.write_bytes(b'validated native fixture')
+            (artifacts/'native-manifest.json').write_text('{}')
+            audit = native/'package.py'
+            audit.write_text('import sys\nfrom pathlib import Path\n'
+                'assert sys.argv[1]=="check" and sys.argv[-1]=="Web"\n'
+                'assert sys.argv[sys.argv.index("--rids")+1]=="browser-wasm"\n'
+                'assert (Path(sys.argv[2])/"runtimes/browser-wasm/native/fixture.a").read_bytes()==b"validated native fixture"\n'
+                'Path(__file__).with_name("audit-ran").touch()\n')
+            config = work/'nuget.config'; config.write_text('<configuration><packageSources><clear /></packageSources></configuration>')
+            command = ['dotnet', 'pack', str(native/'Native.csproj'), '-c', 'Release',
+                '-p:NativePackagePlatform=Web', '-p:NuGetAudit=false', '-p:RestoreConfigFile='+str(config), '-o', str(work/'feed')]
+            packed = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(packed.returncode, 0, packed.stdout+packed.stderr)
+            self.assertTrue((native/'audit-ran').exists())
+            archive = work/'feed'/f'Electron2D.Web.{version}.nupkg'
+            with ZipFile(archive) as bundle:
+                self.assertEqual(bundle.read('runtimes/browser-wasm/native/fixture.a'), payload.read_bytes())
+                spec = ET.fromstring(bundle.read('Electron2D.Web.nuspec'))
+                dependencies = [node for node in spec.iter() if node.tag.rsplit('}', 1)[-1]=='dependency']
+                self.assertEqual([(node.get('id'), node.get('version')) for node in dependencies], [('Electron2D', version)])
+            archive.unlink(); audit.write_text('raise SystemExit("invalid native fixture")\n')
+            rejected = subprocess.run(command, capture_output=True, text=True)
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertIn('invalid native fixture', rejected.stdout+rejected.stderr)
+            self.assertFalse(archive.exists())
+
     def test_webp_elf_dependencies_accept_only_the_matching_system_loader(self):
         with tempfile.TemporaryDirectory() as directory:
             library = Path(directory) / 'libElectron2DWebP.so'
