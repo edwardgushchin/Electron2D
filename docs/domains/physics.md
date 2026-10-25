@@ -8,6 +8,8 @@
 
 # Physics domain
 
+[Fresh GPU swept-pair and CCD discovery](../components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25) shares completion, keeps candidate counts resident and retries bounded output growth without repeating physical time or forces.
+
 [Scalar GPU velocity observations](../components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25) retain qualified values through non-velocity authoring; numerical steps, targeted motion edits, full state/activity and replay keep their respective invalidation rules.
 
 [Pure scene completion](../components/gpu-resident-reports.md#pure-scene-completion-policy-2026-10-22) now chooses the existing selected body/contact path for dense moving observers and retains incremental history for stationary/sleeping observers. Every path still publishes validated current state; no solver or public API is replaced.

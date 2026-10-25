@@ -971,6 +971,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CONTACT_COLORS") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SOLVER") == "1") { GPUPhysicsSolverStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS") == "1") { GPUPhysicsContactStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SHAPES") == "1") { GPUPhysicsSpatialTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CCD_BATCH") == "1") { GPUPhysicsCCDBatchTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CCD") == "1") { GPUPhysicsCCDStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SLEEP") == "1") { GPUPhysicsSleepStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_MASS") == "1") { GPUPhysicsMassStoreTests.Run(); return; }

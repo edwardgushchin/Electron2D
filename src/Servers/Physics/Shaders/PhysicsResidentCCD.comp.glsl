@@ -10,13 +10,13 @@ layout(std430,set=0,binding=3) readonly buffer Shapes { Shape shapes[]; };
 layout(std430,set=0,binding=4) readonly buffer Pairs { uvec4 pairs[]; };
 layout(std430,set=1,binding=1) buffer Centers { vec2 centers[]; };
 layout(std430,set=0,binding=5) readonly buffer Corrections { vec4 corrections[]; };
-layout(std430,set=1,binding=0) buffer Summary { uvec2 summary; };
+layout(std430,set=1,binding=0) buffer Summary { uvec4 summary; };
 layout(std140,set=2,binding=0) uniform Settings { uvec4 counts; vec4 tolerances; uvec4 history; };
 const float epsilon=1.1920928955078125e-7;
 #include "PhysicsCollisionMath.inc.glsl"
 ResidentBody bodyA,bodyB;
 float contactLimit=3.402823466e38;
-void fail(){atomicOr(summary.x,1u);}
+void fail(){atomicOr(summary.w,1u);}
 #include "PhysicsResidentCollision.inc.glsl"
 #define ONE_WAY_STATE_BINDING 6
 #define ONE_WAY_TABLE_BINDING 7
@@ -165,7 +165,7 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
             float travelBound=tolerances.w*length(vb.xy-va.xy)+bound;
             float next=time+0.9*max(4*tolerances.x,episodeMargin-gap)/travelBound;
             if(next>1)return 1;
-            if(next==time){atomicOr(summary.x,2u);return 1;}
+            if(next==time){atomicOr(summary.w,2u);return 1;}
             time=next;continue;
         }
         bool needsEntry=false;
@@ -238,15 +238,17 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
         if(next==time)
         {
             if(gap<=4*tolerances.x)return time;
-            atomicOr(summary.x,2u);return 1;
+            atomicOr(summary.w,2u);return 1;
         }
         time=next;
     }
-    atomicOr(summary.x,4u);return 1;
+    atomicOr(summary.w,4u);return 1;
 }
 void main()
 {
-    uint i=gl_GlobalInvocationID.x;if(i>=counts.x)return;
+    uint limit=counts.x;
+    if(history.w!=0u){if(summary.x!=0u)return;limit=min(limit,summary.y);}
+    uint i=gl_GlobalInvocationID.x;if(i>=limit)return;
     oneWayInfo=history.xy;
     uvec4 pair=pairs[i];activePair=pair;
     if(pair.x>=counts.y||pair.y>=counts.y){fail();return;}
@@ -285,5 +287,5 @@ void main()
         }
     }
     if(first<0||first>1||!finite2(vec2(first))){fail();return;}
-    atomicMin(summary.y,floatBitsToUint(first));
+    atomicMin(summary.z,floatBitsToUint(first));
 }

@@ -228,6 +228,74 @@ in an observed interval against the predeclared 1.0 limit. Its 1/8 result is
 rejected, with no automatic retry or changed threshold. It establishes no GPU
 speed ratio or real-window FPS result; see local `isolated-analysis.json`.
 
+## Shared swept-pair and CCD completion (2026-10-25)
+
+Fresh swept-pair discovery now records its CCD consumer in the same command.
+The sweep reads the device pair count, bounded by retained pair capacity; empty
+or stale output slots never become candidates. A capacity miss discards the
+partial sweep result, grows the pair output once and repeats immutable discovery.
+It does not repeat velocity/force integration or consume additional physical time.
+The existing cached-pair path and internal `SeparateCCDSubmissions` control retain
+separate completion. CCD modes, geometry, one-way policy, correction motion,
+numerical tolerances and interval/refinement budgets are unchanged.
+
+The existing 16-byte spatial summary holds independent pair error/count words
+followed by CCD fraction/error words. Both statuses are validated before accepting
+the sweep. No buffer, body mirror or shader binding is added: both ordinary and
+portable CCD programs retain eight readonly buffers, two writable buffers and one
+uniform. The status reset occupies eight bytes after any geometry edits in reused
+upload scratch. CCD wait accounting includes pair completion when shared, and its
+query counter includes recorded empty-pair dispatches. Launches are bounded by
+pair capacity, so unused device lanes and empty-result status traffic remain real
+costs; fewer completions alone do not establish a throughput gain.
+
+[GPUPhysicsCCDBatchTests](../../tests/Electron2D.Tests/GPUPhysicsCCDBatchTests.cs)
+compares the same near-miss trajectory with four substeps and sixteen solver iterations.
+After 128 warm cycles, 64 complete reset/simulation cycles give:
+
+| Mode | Submissions | Upload bytes | Readback bytes | CCD dispatches | Managed owner/all bytes |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Separate | 1,280 | 25,600 | 14,848 | 192 | 0 / 0 |
+| Shared | 1,088 | 26,112 | 15,360 | 256 | 0 / 0 |
+
+Three nonempty sweeps per cycle each save one completion. The fourth, empty
+sweep adds eight upload/readback bytes. Tests also verify empty results after
+previous candidates and shape-slot reuse, cold growth across 128 independent
+thin-wall trajectories, preserved elastic response and the once-only force
+duration of an unrelated free body. Position/velocity tolerances are stated in
+the fixture. The cold case exceeds the existing minimum 64-slot reservation.
+
+The source-qualified control trace on `e656f4f4` attributes all successful waits:
+38.179 submissions per network physical frame, including 4.633 pair searches for
+CCD followed by 4.633 separate CCD completions. A source inventory missed the
+generic query method; all 25 compiled caller literals identify `ExecuteQueries`
+as the sole omitted label. The raw trace and explicit attribution correction
+remain in `bin/physics-step-cost/2026-10-25/`. This trace preserves the three-process
+physical/zero-byte assertions and is diagnostic under external load, with no
+new isolated CPU/GPU or real-window FPS acceptance.
+
+Release JIT checks on Linux x64/NVIDIA Vulkan pass the complete resident CCD
+suite, public CPU/GPU CCD/boundary/directed-ray contracts on owner and separate
+physics threads, cold pipeline creation, kinematic/surface behavior and common
+world checkpoints. Warmed reset/step and checkpoint checks retain strict zero
+owner/all-thread managed bytes. Both embedded CCD modules pass pinned SPIR-V
+validation and preserve the same descriptor/local-size interface; foreign-driver
+execution and NativeAOT qualification were not repeated for this slice.
+
+Three-process checks also pass 600 paced ticks, 900 unpaced ticks and a separate
+600-tick diagnostic trace, each with late admission after tick 310. CPU authority
+and late CPU client verify denied GPU startup; the predicting client uses NVIDIA
+Vulkan. All roles finish with the same 39 object identities and zero warmed
+owner/all-thread step and replay allocations. The GPU cold replay still records
+2,336 managed bytes before warm qualification. Unpaced delivery uses the ordinary
+protocol without phase-progress barriers. The shared diagnostic trace averages
+33.613 submissions across 2,283 physical frames versus 38.179 across 2,330 control
+frames; upload/readback averages are 1,059/5,876 and 1,065/5,865 bytes respectively.
+Different delivery/replay schedules and external load prevent interpreting these
+means or elapsed run times as a paired throughput result. Raw reports, payload
+hashes, source/resource proofs and explicit validation remain in the same artifact
+directory. No physics API coverage status is promoted by this batching change.
+
 ## Verification and measurement method
 
 Run `ELECTRON2D_TEST_GPU_RESIDENT_BODY=1 dotnet tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll`

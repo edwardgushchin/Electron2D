@@ -1,5 +1,12 @@
 # GPUPhysicsBodyStore
 
+[Shared swept-pair/CCD completion](../components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25)
+keeps fresh candidate counts on device until the bounded sweep completes. The
+existing spatial summary retains independent pair and CCD results; capacity
+recovery repeats discovery without advancing time or forces. Cached pairs and
+the separate diagnostic control remain available. No native buffer or public
+declaration is added.
+
 [Resident policy flag diagnostics](../components/gpu-resident-bodies.md#scalar-body-edit-flags)
 check actual CCD/report/sleep bits before and after integration, unrelated locks
 and lanes, and strict warmed allocation limits. A scalar-edit candidate did not
@@ -87,7 +94,7 @@ failed with device loss and remains open.
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-23
+Last updated: 2026-10-25
 
 [Resident Area sorting](../components/physics-areas.md#resident-area-sorting-in-nativeaot) now uses one cached explicit comparison over the existing active prefix. This removes a reproduced 48-byte NativeAOT allocation per dirty-profile sort while retaining priority/traversal order, buffers and transfer/wait policy. The full changed-parameter fixture keeps a strict zero managed-byte gate; native allocation and target GPU performance remain separate.
 

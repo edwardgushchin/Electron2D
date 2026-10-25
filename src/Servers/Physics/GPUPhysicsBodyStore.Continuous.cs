@@ -8,6 +8,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     private int _ccdBodyCount;
     private RenderHandle? _ccdPipeline;
+    // Diagnostic control for the same swept pairs and CCD kernel with separate completion waits.
+    internal bool SeparateCCDSubmissions;
     private const float CCDTolerance = 0.001f;
     [StructLayout(LayoutKind.Sequential)]
     private struct CCDSettings
@@ -20,6 +22,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     internal long CCDQueryCount { get; private set; }
     internal long CCDIntervalCount { get; private set; }
+    /// <summary>Gets sweep completion wait, including pair discovery when both stages share completion.</summary>
     internal double CCDWaitMS { get; private set; }
     internal CCDMode GetCCDMode(BodyHandle body) { Validate(body); return _slots[body.Index].CCDMode; }
     internal void SetCCDMode(BodyHandle body, CCDMode mode)
@@ -59,10 +62,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private float FindCCDFraction(float delta)
     {
+        if (ShapeCount >= 2 && !SeparateCCDSubmissions)
+        {
+            Step(0, default); FlushJoints();
+            if (!PairsCurrent(CCDTolerance, delta, _hasPositionCorrections)) return FindCCDBatch(delta);
+        }
         var pairs = FindPairs(CCDTolerance, delta, _hasPositionCorrections);
         if (pairs == 0) return 1;
-        EnsureOneWay();
-        _ccdPipeline ??= _context.CreatePipeline("PhysicsResidentCCD.comp.spv");
+        PrepareCCD();
         var wait = WaitMS;
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident continuous collision");
@@ -70,49 +77,88 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         {
             var mapped = SDL.MapGPUTransferBuffer(Device, _spatialUpload!.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map continuous collision reset");
-            ((uint*)mapped)[0] = 0; ((float*)mapped)[1] = 1;
+            ((float*)mapped)[0] = 1; ((uint*)mapped)[1] = 0;
             SDL.UnmapGPUTransferBuffer(Device, _spatialUpload.DangerousGetHandle());
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin continuous collision reset");
-            UploadSpatial(copy, _spatialSummary!, 0, 8); SDL.EndGPUCopyPass(copy);
-            var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[2];
-            outputs[0] = new() { Buffer = _spatialSummary!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _centers!.DangerousGetHandle() };
-            var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 2);
-            if (compute == 0) throw GPUPhysicsDevice.Failure("begin continuous collision sweep");
-            SDL.BindGPUComputePipeline(compute, _ccdPipeline.DangerousGetHandle());
-            var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(),
-                _shapesGPU!.DangerousGetHandle(), _pairsGPU!.DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle(), _oneWayHistoryGPU!.DangerousGetHandle(), _oneWayHistoryTableGPU!.DangerousGetHandle() };
-            SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
-            var settings = new CCDSettings
-            {
-                Pairs = (uint)pairs,
-                Shapes = (uint)_shapeHighWater,
-                Bodies = (uint)_highWater,
-                Corrections = _hasPositionCorrections ? 1u : 0u,
-                HistoryCount = (uint)_oneWayHistoryCount,
-                HistoryCapacity = (uint)OneWayHistoryTableSize,
-                EpisodeMargin = _contactMargin,
-                Tolerances = new(CCDTolerance, 0.5f, 0.00001f, delta)
-            };
-            SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(CCDSettings));
-            SDL.DispatchGPUCompute(compute, ((uint)pairs + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
+            SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _spatialUpload!.DangerousGetHandle() },
+                new() { Buffer = _spatialSummary!.DangerousGetHandle(), Offset = 8, Size = 8 }, false);
+            SDL.EndGPUCopyPass(copy);
+            RecordCCD(command, pairs, delta, residentPairs: false);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin continuous collision summary");
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
+            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary.DangerousGetHandle(), Offset = 8, Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
-            UploadBytes += 8; ReadbackBytes += 8; UniformBytes += sizeof(CCDSettings); CCDQueryCount++; CCDWaitMS += WaitMS - wait;
+            UploadBytes += 8; ReadbackBytes += 8; CCDQueryCount++; CCDWaitMS += WaitMS - wait;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map continuous collision summary");
             float result;
-            try
-            {
-                result = ((float*)mapped)[1];
-                if (*(uint*)mapped != 0 || !float.IsFinite(result) || result < 0 || result > 1)
-                    throw new InvalidOperationException($"GPU continuous collision returned an invalid or unconverged sweep (status {*(uint*)mapped}, fraction {result}).");
-            }
+            try { result = AcceptCCDStatus(mapped, 0); }
             finally { SDL.UnmapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle()); }
             _failed = false; return result;
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+    }
+
+    /// <summary>Records swept pair discovery and its bounded CCD consumer before reading either result.</summary>
+    private float FindCCDBatch(float delta)
+    {
+        _pairBodyVersion = -1; _pairMargin = CCDTolerance; _pairSweepDelta = delta; _pairSweepCorrections = _hasPositionCorrections;
+        PrepareGeometry(); EnsureSpatial(); PrepareCCD();
+        var wait = WaitMS; var retry = false;
+        while (true)
+        {
+            var result = DispatchSpatial(retry, continuous: true);
+            if (result.Pairs > _pairCapacity)
+            {
+                if (retry) { _failed = true; throw new InvalidOperationException("The immutable GPU swept pair batch changed during capacity recovery."); }
+                Grow(ref _pairsGPU, ref _pairCapacity, result.Pairs, sizeof(PairData), false);
+                PairCapacityRetries++; retry = true; continue;
+            }
+            PairCount = result.Pairs; CommitGeometry();
+            _pairBodyVersion = _boundsBodyVersion = _bodyVersion; _pairShapeVersion = _boundsShapeVersion = _shapeVersion;
+            CCDWaitMS += WaitMS - wait; return result.Fraction;
+        }
+    }
+
+    private void PrepareCCD()
+    {
+        EnsureOneWay();
+        _ccdPipeline ??= _context.CreatePipeline("PhysicsResidentCCD.comp.spv");
+    }
+
+    private void RecordCCD(nint command, int pairs, float delta, bool residentPairs)
+    {
+        var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[2];
+        outputs[0] = new() { Buffer = _spatialSummary!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _centers!.DangerousGetHandle() };
+        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 2);
+        if (compute == 0) throw GPUPhysicsDevice.Failure("begin continuous collision sweep");
+        SDL.BindGPUComputePipeline(compute, _ccdPipeline!.DangerousGetHandle());
+        var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(),
+            _shapesGPU!.DangerousGetHandle(), _pairsGPU!.DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle(), _oneWayHistoryGPU!.DangerousGetHandle(), _oneWayHistoryTableGPU!.DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
+        var settings = new CCDSettings
+        {
+            Pairs = (uint)pairs,
+            Shapes = (uint)_shapeHighWater,
+            Bodies = (uint)_highWater,
+            Corrections = _hasPositionCorrections ? 1u : 0u,
+            HistoryCount = (uint)_oneWayHistoryCount,
+            HistoryCapacity = (uint)OneWayHistoryTableSize,
+            EpisodeMargin = _contactMargin,
+            Padding = residentPairs ? 1u : 0u,
+            Tolerances = new(CCDTolerance, 0.5f, 0.00001f, delta)
+        };
+        SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(CCDSettings));
+        SDL.DispatchGPUCompute(compute, ((uint)pairs + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
+        UniformBytes += sizeof(CCDSettings);
+    }
+
+    private static float AcceptCCDStatus(nint mapped, uint offset)
+    {
+        var values = (uint*)((byte*)mapped + offset); var result = *(float*)values;
+        if (values[1] != 0 || !float.IsFinite(result) || result < 0 || result > 1)
+            throw new InvalidOperationException($"GPU continuous collision returned an invalid or unconverged sweep (status {values[1]}, fraction {result}).");
+        return result;
     }
 }

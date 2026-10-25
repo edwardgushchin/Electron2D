@@ -158,15 +158,17 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         capacity = next;
     }
 
-    private (int Pairs, int Contacts, int OneWay) DispatchSpatial(bool retry, bool pairs = true, bool contacts = false)
+    private (int Pairs, int Contacts, int OneWay, float Fraction) DispatchSpatial(bool retry, bool pairs = true, bool contacts = false, bool continuous = false)
     {
         var batchVelocity = _batchedVelocity.HasValue;
-        var command = SDL.AcquireGPUCommandBuffer(Device);
-        if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident spatial work");
         var uniformBytes = 0L;
         var vertexBytes = retry ? 0 : checked((uint)(_vertexEditCount * sizeof(VertexEdit)));
         var geometryBytes = retry ? 0 : checked((uint)(_dirtyGeometry.Count * sizeof(GeometryEdit)));
         var shapeBytes = retry ? 0 : checked((uint)(_dirtyShapes.Count * sizeof(ShapeEdit)));
+        var ccdResetOffset = checked(8 + vertexBytes + geometryBytes + shapeBytes);
+        if (continuous) GrowTransfer(ref _spatialUpload, ref _spatialUploadBytes, checked((int)ccdResetOffset + 8), SDL.GPUTransferBufferUsage.Upload);
+        var command = SDL.AcquireGPUCommandBuffer(Device);
+        if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident spatial work");
         try
         {
             var mapped = SDL.MapGPUTransferBuffer(Device, _spatialUpload!.DangerousGetHandle(), false);
@@ -177,6 +179,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 fixed (VertexEdit* source = _vertexEdits) System.Buffer.MemoryCopy(source, (byte*)mapped + 8, vertexBytes, vertexBytes);
                 fixed (GeometryEdit* source = _geometryEdits) System.Buffer.MemoryCopy(source, (byte*)mapped + 8 + vertexBytes, geometryBytes, geometryBytes);
                 fixed (ShapeEdit* source = _shapeEdits) System.Buffer.MemoryCopy(source, (byte*)mapped + 8 + vertexBytes + geometryBytes, shapeBytes, shapeBytes);
+                if (continuous) { var status = (uint*)((byte*)mapped + ccdResetOffset); *(float*)status = 1; status[1] = 0; }
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _spatialUpload.DangerousGetHandle()); }
             var copy = SDL.BeginGPUCopyPass(command);
@@ -186,6 +189,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (vertexBytes > 0) UploadSpatial(copy, _vertexEditsGPU!, 8, vertexBytes);
             if (geometryBytes > 0) UploadSpatial(copy, _geometryEditsGPU!, 8 + vertexBytes, geometryBytes);
             if (shapeBytes > 0) UploadSpatial(copy, _shapeEditsGPU!, 8 + vertexBytes + geometryBytes, shapeBytes);
+            if (continuous) SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _spatialUpload!.DangerousGetHandle(), Offset = ccdResetOffset },
+                new() { Buffer = _spatialSummary!.DangerousGetHandle(), Offset = 8, Size = 8 }, false);
             SDL.EndGPUCopyPass(copy);
             DispatchBatchedVelocity(command);
             if (!retry)
@@ -208,31 +213,35 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             }
             if (pairs) uniformBytes += SpatialPass(command, 4, _shapeHighWater);
             if (contacts) uniformBytes += RecordContacts(command, _contactMargin, residentPairs: true);
+            if (continuous) RecordCCD(command, _pairCapacity, _pairSweepDelta, residentPairs: true);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident pair summary");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
             if (batchVelocity) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload.DangerousGetHandle(), Offset = 8 });
+            if (continuous) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary.DangerousGetHandle(), Offset = 8, Size = 8 }, new() { TransferBuffer = _spatialDownload.DangerousGetHandle(), Offset = 24 });
             SDL.EndGPUCopyPass(copy);
             if (contacts) DownloadContactStatus(command, 16);
             _failed = true; Finish(ref command);
             UploadBytes += 8 + vertexBytes + geometryBytes + shapeBytes; UniformBytes += uniformBytes; ReadbackBytes += 8;
             if (batchVelocity) { UploadBytes += 8; ReadbackBytes += 8; }
+            if (continuous) { UploadBytes += 8; ReadbackBytes += 8; CCDQueryCount++; }
             if (contacts) { UploadBytes += _oneWayShapeCount > 0 ? 16 : 8; ReadbackBytes += _oneWayShapeCount > 0 ? 16 : 8; ContactSubmissionCount++; }
             GeometryUploadBytes += vertexBytes + geometryBytes; ShapeUploadBytes += shapeBytes; if (pairs) BroadPhaseSubmissionCount++; else QuerySpatialSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident pair summary");
-            uint count; var contactCounts = (Contacts: 0, OneWay: 0);
+            uint count; var contactCounts = (Contacts: 0, OneWay: 0); var fraction = 1f;
             try
             {
                 if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU resident geometry returned invalid bounds or pair state.");
                 if (batchVelocity && ((uint*)mapped)[2] != 0) throw new InvalidOperationException("GPU resident velocity work returned invalid state.");
                 count = ((uint*)mapped)[1];
                 if (contacts) contactCounts = AcceptContactStatus(mapped, 16);
+                if (continuous) fraction = AcceptCCDStatus(mapped, 24);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle()); }
             if (count > int.MaxValue) throw new InvalidOperationException("The GPU pair count exceeds addressable storage.");
             _failed = false; _treeTopologyDirty = false;
-            return ((int)count, contactCounts.Contacts, contactCounts.OneWay);
+            return ((int)count, contactCounts.Contacts, contactCounts.OneWay, fraction);
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
     }

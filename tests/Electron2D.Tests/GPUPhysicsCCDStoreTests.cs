@@ -8,7 +8,7 @@ internal static class GPUPhysicsCCDStoreTests
 {
     internal static void Run()
     {
-        VerifyModesAndImpact(); VerifyFamilies(); VerifyRayDifference(); VerifyMovingAndRotating(); VerifyPolicyAndForces(); VerifyFailure(); VerifyResidency();
+        VerifyModesAndImpact(); VerifyFamilies(); VerifyRayDifference(); VerifyMovingAndRotating(); VerifyPolicyAndForces(); VerifyFailure(); VerifyResidency(); GPUPhysicsCCDBatchTests.Run();
         Console.WriteLine("Resident CCD: per-body modes, thin obstacles, impact response, full geometry/rotation, filters, force cadence and residency passed.");
     }
     private static Store.BodyHandle Body(Store s, Vector2 at = default, Vector2 speed = default, CCD ccd = CCD.Disabled, Mode mode = Mode.Rigid,

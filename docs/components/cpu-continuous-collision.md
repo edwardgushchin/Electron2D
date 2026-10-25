@@ -1,6 +1,8 @@
 # Per-body continuous collision
 
-Last updated: 2026-10-19
+Last updated: 2026-10-25
+
+The independent GPU path now shares [fresh swept-pair/CCD completion](gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25), retaining its numerical stages and bounded capacity recovery. The comparison fixture records the saved completions and extra empty-result status bytes; complete performance and platform acceptance remain separate.
 
 [CCD policy operation audit](physics-registered-adapter.md#ccd-policy-operation-audit) now checks the complete scene/raw mode input pair through actual selected implementations, numerical hooks, wake repair and real circle response. Controls distinguish configured detection from shared substeps and ordinary contact margins. JIT/strict NativeAOT CPU/software-GPU/registered owner/separate frames retain strict zero managed bytes; complete numerical and target-hardware acceptance remain separate.
 
