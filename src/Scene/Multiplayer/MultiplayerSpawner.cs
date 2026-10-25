@@ -95,7 +95,7 @@ public class MultiplayerSpawner : Node
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(MultiplayerSpawner) ? CreateInstance : base.CreateSceneInstanceFactory();
     private static Node CreateInstance() => new MultiplayerSpawner();
     /// <inheritdoc />
-    public override string[] GetConfigurationWarnings() => _spawnPath.Length == 0 || GetNodeOrNull(_spawnPath) is null ? ["A valid SpawnPath is required for multiplayer spawning."] : base.GetConfigurationWarnings();
+    public override string[] GetConfigurationWarnings() { var warnings = base.GetConfigurationWarnings(); return _spawnPath.Length == 0 || GetNodeOrNull(_spawnPath) is null ? [.. warnings, "A valid SpawnPath is required for multiplayer spawning."] : warnings; }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {

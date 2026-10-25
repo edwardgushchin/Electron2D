@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Only tolerant scene loading creates this role. It has ordinary Node behavior and no unavailable
 /// compiled behavior. Stored-value and connection recording are bounded typed authoring operations.
 /// Recorded connections do not execute until the original endpoint and adapter are restored.
-/// Access is confined to the attached scene's owner thread and fails after disposal. Mutations also
+/// Retained-field authoring is confined to the attached scene's owner thread and fails after disposal.
+/// Inherited configuration diagnostics also permit the node's current processing group. Mutations also
 /// observe the ordinary editor authoring guard and synchronous editor-change callbacks.</remarks>
 public sealed partial class MissingNode : Node
 {

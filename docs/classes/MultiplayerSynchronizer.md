@@ -1,6 +1,6 @@
 # MultiplayerSynchronizer
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.MultiplayerSynchronizer`. **Source:** [MultiplayerSynchronizer.cs](../../src/Scene/Multiplayer/MultiplayerSynchronizer.cs).
 
@@ -190,9 +190,9 @@ Returns this node's current configuration warnings for tooling.
 
 Returns: An empty array by default. Overrides return ordered warning messages and should include base warnings.
 
-Remarks: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
+Remarks: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner or this node's current processing group. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
 
-System.InvalidOperationException: An attached query runs off the scene owner thread.
+System.InvalidOperationException: An attached query runs outside the owner/current processing group.
 
 System.ObjectDisposedException: This node is disposed.
 

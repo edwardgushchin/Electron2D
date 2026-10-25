@@ -290,7 +290,7 @@ public abstract class Range : Control
     /// <exception cref="ObjectDisposedException">The control is disposed.</exception>
     public void Unshare() { Write(); _shared.Owners.Remove(_owner); _shared = _shared.Copy(); _shared.Owners.Add(_owner); _generation++; }
     /// <inheritdoc />
-    public override string[] GetConfigurationWarnings() => ExpEdit && MinValue < 0 ? [.. base.GetConfigurationWarnings(), "Exponential editing requires a nonnegative minimum."] : base.GetConfigurationWarnings();
+    public override string[] GetConfigurationWarnings() { var warnings = base.GetConfigurationWarnings(); return _shared.ExpEdit && _shared.Min < 0 ? [.. warnings, "Exponential editing requires a nonnegative minimum."] : warnings; }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(property => property.Name != nameof(SizeFlagsVertical)).Concat(RangeProperties);
     /// <inheritdoc />

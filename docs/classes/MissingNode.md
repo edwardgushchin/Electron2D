@@ -1,6 +1,6 @@
 # MissingNode
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 - **Source:** [MissingNode.cs](../../src/Scene/Main/MissingNode.cs), [property metadata](../../src/Scene/Main/MissingNode.Properties.cs).
 - **Declaration:** `public sealed partial class MissingNode : Node`
@@ -135,3 +135,5 @@ Runs ordinary Node cleanup, including connection retirement, then clears retaine
 ## Verification and limits
 
 Fresh CLR processes write a scene with compiled actors, load it without their factories/adapters, edit and duplicate it, resave it, then restore actual actor processing and scalar/resource-bound compiled connections. Checks cover aliases, scene-local Resource identity, Node reference remapping, independent array snapshots, connection-resource aliases, recording flags, schema changes, owner/disposal guards, authoring failure rollback, atomic failed writes, unavailable linked-scene flattening and independent valid/malformed archives for versions 3–7. Six actual RGB frames per display pair (three per GPU/compatibility backend) verify healthy sibling output, inactive unavailable behavior and normal cleanup on software Vulkan/OpenGL Wayland and X11. These checks establish neither missing gameplay/rendering nor hardware, foreign-platform, editor or native allocator acceptance.
+
+Configuration-warning queries and inherited refresh requests permit the owner/current processing group; retained authoring operations keep their existing guards. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

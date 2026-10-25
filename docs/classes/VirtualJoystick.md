@@ -1,6 +1,6 @@
 # VirtualJoystick
 
-Last updated: 2026-10-14
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class VirtualJoystick : Control`. **Source:** [runtime](../../src/Scene/GUI/VirtualJoystick.cs), [storage](../../src/Scene/GUI/VirtualJoystick.Storage.cs). **Inherits:** [Control](Control.md). **Component:** [Touch game controls](../components/touch-game-controls.md).
 
@@ -128,3 +128,5 @@ scene.AddChild(stick);
 [Managed checks](../../tests/Electron2D.Tests/TouchControlTests.cs) exercise independent actions, contact cancellation, gesture modes, reentry/failure, owner/capture guards and typed scene storage in a fresh process. [Native checks](../../tests/Electron2D.Tests/TouchControlNativeTests.cs) exercise queued SDL contacts, actual button/tip pixels and warmed motion/rendering on Linux GPU and compatibility. Physical touchscreens, mobile hardware, foreign rendering, inherited semantic accessibility and native allocator totals remain unverified. See ADR 0038, ADR 0083, ADR 0008 and ADR 0051 for shared contracts.
 
 An active contact uses the existing internal processing lane to retire input at the next frame when inherited InputEnabled, effective pointer policy, viewport input disabling or authoring selection prevents further contact delivery. This lane stops after retirement; ordinary user processing flags remain independent.
+
+Configuration-warning queries and inherited refresh requests permit the owner/current processing group; retained authoring operations keep their existing guards. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

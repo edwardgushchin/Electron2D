@@ -158,7 +158,7 @@ public partial class TouchScreenButton : Entity
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings()
-    { CheckTouch(); return _action.Length != 0 && !InputMap.HasAction(_action) ? ["The touch-button input action is not registered."] : base.GetConfigurationWarnings(); }
+    { var warnings = base.GetConfigurationWarnings(); return _action.Length != 0 && !InputMap.HasAction(_action) ? [.. warnings, "The touch-button input action is not registered."] : warnings; }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {

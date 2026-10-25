@@ -380,7 +380,7 @@ public sealed partial class SceneTree : MainLoop
     }
 
     /// <summary>Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh.</summary>
-    /// <remarks>Arguments are this tree and the requesting node. Delivery is synchronous on the owner thread,
+    /// <remarks>Arguments are this tree and the requesting node. Delivery is synchronous on the requesting node's owner/current group,
     /// without automatic warning evaluation or deduplication. A throwing subscriber stops later subscribers.
     /// A consumer queries Node.GetConfigurationWarnings; no scene dock or editor UI is created.</remarks>
     public event Action<SceneTree, Node>? NodeConfigurationWarningChanged;

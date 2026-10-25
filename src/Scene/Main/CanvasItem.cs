@@ -31,12 +31,12 @@ public abstract partial class CanvasItem : Node
     public override string[] GetConfigurationWarnings()
     {
         var warnings = new List<string>(base.GetConfigurationWarnings());
-        if (IsInsideTree && (ClipChildren != ClipChildrenMode.Disabled || this is CanvasGroup))
+        if (IsInsideTree && (_clipChildren != ClipChildrenMode.Disabled || this is CanvasGroup))
         {
             var clipping = false; var group = false;
             for (var node = Parent; node is not null && (!clipping || !group); node = node.Parent)
             {
-                if (!clipping && node is CanvasItem { ClipChildren: not ClipChildrenMode.Disabled }) { warnings.Add($"Ancestor '{node.Name}' clips children; nested masks share a backbuffer and cannot compose independently."); clipping = true; }
+                if (!clipping && node is CanvasItem ancestor && ancestor._clipChildren != ClipChildrenMode.Disabled) { warnings.Add($"Ancestor '{node.Name}' clips children; nested masks share a backbuffer and cannot compose independently."); clipping = true; }
                 if (!group && node is CanvasGroup) { warnings.Add($"Ancestor '{node.Name}' is a CanvasGroup; nested groups and masks share a backbuffer and cannot compose independently."); group = true; }
             }
         }

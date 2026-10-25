@@ -6619,10 +6619,16 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance.",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance. Grouped canvas diagnostics now preserve logical active-group canvas IDs, current-group Color writes, synchronized membership/promotion and synchronous warning refresh outside canvas gates. Built-in warning providers guard invalid-state branches before diagnostics; full selected physics/query loops retain strict zero managed bytes. See docs/components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics. Other reserved GUI/world consumers and full native/platform/performance acceptance remain open.",
       "godot": [
         "CanvasItem::method:get_canvas()",
-        "CanvasLayer::method:get_canvas()",
+        "CanvasLayer::method:get_canvas()"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance.",
+      "godot": [
         "RenderingServer::enum:CanvasItemTextureFilter",
         "RenderingServer::enum:CanvasItemTextureRepeat",
         "RenderingServer::enum_value:CanvasItemTextureFilter.CANVAS_ITEM_TEXTURE_FILTER_DEFAULT",
@@ -7169,7 +7175,7 @@
         "CanvasModulate::property:color"
       ],
       "state": "Implemented",
-      "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate."
+      "reason": "ADR 0028: real whole-canvas scene modulation through one visible Entity per logical canvas, waiting-node promotion, layer/shared-World arbitration, actual membership and warning/failure handling. Typed Color and exact factories restore fresh scene files. CanvasModulateTests exercises managed ownership/lifetime/guards and native GPU/Compatibility pixels, with 64 warmed zero-allocation owner frames. Existing compatibility lighting/shader gates and other-platform/native allocator/owner acceptance remain separate. Grouped canvas diagnostics now preserve logical active-group canvas IDs, current-group Color writes, synchronized membership/promotion and synchronous warning refresh outside canvas gates. Built-in warning providers guard invalid-state branches before diagnostics; full selected physics/query loops retain strict zero managed bytes. See docs/components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics. Other reserved GUI/world consumers and full native/platform/performance acceptance remain open."
     },
     {
       "godot": [

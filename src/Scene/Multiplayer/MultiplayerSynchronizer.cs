@@ -133,7 +133,7 @@ public class MultiplayerSynchronizer : Node
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(MultiplayerSynchronizer) ? CreateInstance : base.CreateSceneInstanceFactory();
     private static Node CreateInstance() => new MultiplayerSynchronizer();
     /// <inheritdoc />
-    public override string[] GetConfigurationWarnings() => _rootPath.Length == 0 || GetNodeOrNull(_rootPath) is null ? ["A valid RootPath is required for property synchronization."] : base.GetConfigurationWarnings();
+    public override string[] GetConfigurationWarnings() { var warnings = base.GetConfigurationWarnings(); return _rootPath.Length == 0 || GetNodeOrNull(_rootPath) is null ? [.. warnings, "A valid RootPath is required for property synchronization."] : warnings; }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {

@@ -1249,24 +1249,25 @@ public partial class Node : ElectronObject
     /// <summary>Returns this node's current configuration warnings for tooling.</summary>
     /// <returns>An empty array by default. Overrides return ordered warning messages and should include base warnings.</returns>
     /// <remarks>This query does not cache results, emit events or require an edited scene. Attached queries run on
-    /// the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.</remarks>
-    /// <exception cref="InvalidOperationException">An attached query runs off the scene owner thread.</exception>
+    /// the scene owner or this node's current processing group. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.</remarks>
+    /// <exception cref="InvalidOperationException">An attached query runs outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     public virtual string[] GetConfigurationWarnings()
     {
-        ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return [];
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return [];
     }
 
     /// <summary>Requests a configuration-warning refresh for this node in the selected edited scene.</summary>
     /// <remarks>Emits SceneTree.NodeConfigurationWarningChanged synchronously only when this node is the
     /// EditedSceneRoot or its descendant. Detached nodes and trees without a selected scene emit nothing.
-    /// It does not query, cache or compare warning strings. Repeated requests each emit; handler errors propagate.</remarks>
-    /// <exception cref="InvalidOperationException">Mutation is unavailable or this is not the scene owner thread.</exception>
+    /// It does not query, cache or compare warning strings. Repeated requests each emit; handler errors propagate.
+    /// Delivery is synchronous on the owner or this node's current processing group, without numerical or native permissions.</remarks>
+    /// <exception cref="InvalidOperationException">Capture/derived validation rejects access or this is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="Exception">A warning-change subscriber fails.</exception>
     public void UpdateConfigurationWarnings()
     {
-        EnsureMutable(); Tree?.NotifyConfigurationWarningsChanged(this);
+        EnsureProcessingAccess(); RenderingServer.NotifyRenderMutation(); Tree?.NotifyConfigurationWarningsChanged(this);
     }
 
     /// <summary>Determines whether this node is a strict ancestor of another node.</summary>

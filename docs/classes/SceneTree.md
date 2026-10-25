@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -713,7 +713,7 @@ Receives this tree after a pending scene has entered and completed ready deliver
 
 Occurs when a node in EditedSceneRoot's subtree requests a configuration-warning refresh.
 
-Contract: Arguments are this tree and the requesting node. Delivery is synchronous on the owner thread, without automatic warning evaluation or deduplication. A throwing subscriber stops later subscribers. A consumer queries Node.GetConfigurationWarnings; no scene dock or editor UI is created.
+Contract: Arguments are this tree and the requesting node. Delivery is synchronous on the requesting node's owner/current processing group, without automatic warning evaluation or deduplication. A throwing subscriber stops later subscribers. A consumer queries Node.GetConfigurationWarnings; no scene dock or editor UI is created.
 
 
 <a id="e-electron2d-scenetree-nodeadded"></a>
@@ -1144,3 +1144,5 @@ Native popup lifetimes retain opening order separately from embedded windows. Po
 The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
 
 [Custom decoration input](../classes/Window.md#custom-decoration-input) uses shared window reception before exclusive-child rejection. Embedded forwarding remains available; final blocked client callbacks cannot execute even through direct PushInput. The local handled flag clears before this blocked return, preserving the ordinary per-event transition.
+
+`NodeConfigurationWarningChanged` is synchronous on the requesting node's owner/current processing group. Its edited-root filter and error ordering remain unchanged; it grants no tree mutation or numerical/native permission. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

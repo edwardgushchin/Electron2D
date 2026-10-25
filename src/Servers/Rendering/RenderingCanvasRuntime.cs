@@ -8,15 +8,19 @@ internal sealed class RenderingCanvasRuntime
     internal readonly WeakReference<CanvasLayer>? Layer;
     internal readonly WeakReference<WorldRuntime>? World;
     internal Color Modulate = Colors.White;
+    internal readonly object ModulationGate = new();
     internal readonly List<WeakReference<CanvasModulate>> Modulators = [];
     internal void RestoreSceneModulation()
     {
-        while (Modulators.Count != 0)
+        lock (ModulationGate)
         {
-            if (Modulators[0].TryGetTarget(out var node) && !node.IsDisposed) { Modulate = node.AuthoredColor; return; }
-            Modulators.RemoveAt(0);
+            while (Modulators.Count != 0)
+            {
+                if (Modulators[0].TryGetTarget(out var node) && !node.IsDisposed) { Modulate = node.AuthoredColor; return; }
+                Modulators.RemoveAt(0);
+            }
+            Modulate = Colors.White;
         }
-        Modulate = Colors.White;
     }
     internal readonly Dictionary<RID, Attachment> Attachments = [];
     internal sealed class Attachment { internal bool Attached = true; internal Transform? Transform; internal int? Layer, Sublayer; }

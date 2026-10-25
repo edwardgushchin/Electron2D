@@ -108,7 +108,7 @@ public partial class MenuButton : Button
         ThrowCollected("Menu button notification callbacks failed.", errors);
     }
     /// <inheritdoc />
-    public override string[] GetConfigurationWarnings() { CheckMenuButton(); var own = base.GetConfigurationWarnings(); var popup = _popup.GetConfigurationWarnings(); return own.Length == 0 ? popup : popup.Length == 0 ? own : [.. own, .. popup]; }
+    public override string[] GetConfigurationWarnings() { var own = base.GetConfigurationWarnings(); var popup = _popup.GetConfigurationWarnings(); return own.Length == 0 ? popup : popup.Length == 0 ? own : [.. own, .. popup]; }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(MenuButton) ? CreateMenuButton : base.CreateSceneInstanceFactory();
     private static Node CreateMenuButton() => new MenuButton();

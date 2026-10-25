@@ -19,16 +19,26 @@ public class CanvasModulate : Entity
     /// <remarks>Each assignment commits, including equal values. Hidden or waiting nodes retain their
     /// authored color without changing the selected canvas. No redraw of sibling commands is required.</remarks>
     /// <exception cref="ArgumentException">A color component is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">An attached access is off-owner or mutation occurs during scene capture.</exception>
+    /// <remarks>Reads permit the owner or any active processing group; writes permit the owner/current group.
+    /// Caller coordination is required for concurrent observations. Native rendering consumes the joined managed color state.</remarks>
+    /// <exception cref="InvalidOperationException">An attached access is outside its permitted processing scope or mutation occurs during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     public Color Color
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _color; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _color; }
         set
         {
-            EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Canvas modulation must be finite.", nameof(value));
-            _color = value;
-            if (_canvas is { Modulators.Count: > 0 } canvas && ReferenceEquals(canvas.Modulators[0], _registration)) canvas.Modulate = value;
+            EnsureProcessingAccess(); RenderingServer.NotifyRenderMutation();
+            if (!value.IsFinite()) throw new ArgumentException("Canvas modulation must be finite.", nameof(value));
+            if (_canvas is { } canvas)
+            {
+                lock (canvas.ModulationGate)
+                {
+                    _color = value;
+                    if (canvas.Modulators.Count != 0 && ReferenceEquals(canvas.Modulators[0], _registration)) canvas.Modulate = value;
+                }
+            }
+            else _color = value;
         }
     }
 
@@ -48,18 +58,25 @@ public class CanvasModulate : Entity
 
     private void ReconcileCanvas()
     {
+        Tree?.EnsureProcessingAccess(this);
         var next = IsInsideCanvas && !IsDisposed && IsVisibleInTree ? RenderingCanvasRegistry.Resolve(GetCanvas()) : null;
         if (ReferenceEquals(next, _canvas)) return;
         if (_canvas is { } previous)
         {
-            var index = previous.Modulators.IndexOf(_registration); previous.Modulators.Remove(_registration);
-            if (index == 0) previous.RestoreSceneModulation();
+            lock (previous.ModulationGate)
+            {
+                var index = previous.Modulators.IndexOf(_registration); previous.Modulators.Remove(_registration);
+                if (index == 0) previous.RestoreSceneModulation();
+            }
         }
         _canvas = next;
         if (next is not null)
         {
-            next.Modulators.Add(_registration);
-            if (next.Modulators.Count == 1) next.Modulate = _color;
+            lock (next.ModulationGate)
+            {
+                next.Modulators.Add(_registration);
+                if (next.Modulators.Count == 1) next.Modulate = _color;
+            }
         }
         if (!IsDisposed) UpdateConfigurationWarnings();
     }
@@ -69,7 +86,8 @@ public class CanvasModulate : Entity
     public override string[] GetConfigurationWarnings()
     {
         var warnings = base.GetConfigurationWarnings();
-        return _canvas is { Modulators.Count: > 1 }
+        bool duplicate = false; if (_canvas is { } canvas) lock (canvas.ModulationGate) duplicate = canvas.Modulators.Count > 1;
+        return duplicate
             ? [.. warnings, "Only one visible CanvasModulate controls a canvas. Other visible modulators wait for its removal or hiding."] : warnings;
     }
 

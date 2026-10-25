@@ -58,3 +58,13 @@ The root selector is `ELECTRON2D_TEST_GROUP_WORLDS=cpu|gpu|registered`, optional
 suffixed with `-threaded` and `-pool-owner`. It verifies cold concurrent logical
 world publication, lifetime/startup guards and 128 complete warmed physics/query
 frames at zero owner/all-thread managed bytes. See [worlds](../../docs/components/worlds.md#world-observations-from-processing-groups).
+
+### Grouped canvas modulation
+
+Run public `--group-modulation --cpu|--gpu` (omit backend for the registered
+provider), optionally `--threaded` and `--pool-owner`. The root selector is
+`ELECTRON2D_TEST_GROUP_MODULATION=cpu|gpu|registered` with matching suffixes.
+Native pixels use `--native-group-modulation --cpu|--gpu`, optional `--threaded`,
+and `ELECTRON2D_GROUP_MODULATION_RENDERER=gpu|compatibility`; use the corresponding
+`ELECTRON2D_TEST_NATIVE_GROUP_MODULATION` root selector. See
+[grouped canvas diagnostics](../../docs/components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

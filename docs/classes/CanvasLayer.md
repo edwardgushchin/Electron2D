@@ -1,6 +1,6 @@
 # CanvasLayer
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 - Declaration: `public class CanvasLayer : Node`
 - Source: [CanvasLayer.cs](../../src/Scene/Main/CanvasLayer.cs)
@@ -327,7 +327,7 @@ Typed exceptions replace native error fallthrough and reject arithmetic overflow
 
 [CanvasLayerTests](../../tests/Electron2D.Tests/CanvasLayerTests.cs) covers defaults, decomposition, signed/singular transforms, packing, owner/capture/disposal guards, callback failure/reentry, nested/neutral/TopLevel membership, input copies, finite overflow, even/odd viewport snapping and zero-allocation queries. [CanvasLayerRenderingTests](../../tests/Electron2D.Tests/CanvasLayerRenderingTests.cs) covers six ordering/visibility frames and eight transform/camera/input/snapping frames per path. Native checks passed on Linux Wayland compatibility/GPU including HLSL/GLSL, and dummy/software; warmed layer rendering allocates zero managed bytes in the measured interval. Physical input, visual owner acceptance and other platforms are not claimed.
 
-GetCanvas's opaque identity awaits the first backend-neutral renderer resource-identity/lifetime slice, together with CanvasItem.GetCanvas and the corresponding low-level server operations. No fake identity is exposed. CustomViewport targets an independent single-layer SubViewport; it remains Partial for embedded/nested containers and multiple native windows. Editor UI and embedded-window stacking require those actual capabilities; layer 1024 alone does not implement them. The class remains Partial in coverage for these dependencies. Existing Node gaps remain recorded on their declaring type.
+GetCanvas exposes a stable logical RID before native startup. Owner/active-group reads share one synchronized lazy registration with a cached volatile reference; disposal retires it after releasing the cache gate. CustomViewport targets an independent single-layer SubViewport; it remains Partial for embedded/nested containers and multiple native windows. Editor UI and embedded-window stacking require those actual capabilities; layer 1024 alone does not implement them. The class remains Partial in coverage for these dependencies. Existing Node gaps remain recorded on their declaring type.
 
 CanvasItem visibility masks inside every layer are tested against the destination Viewport.CanvasCullMask. The layer starts an independent canvas group, so masks on scene ancestors outside that group do not suppress it. Layer Visible remains a separate logical condition; see [mask culling](../components/canvas-rendering.md#canvas-visibility-masks).
 

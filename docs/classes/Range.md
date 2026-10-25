@@ -1,6 +1,6 @@
 # Range
 
-Last updated: 2026-10-06
+Last updated: 2026-10-25
 
 **Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [Slider](Slider.md), [TextureProgressBar](TextureProgressBar.md)
 
@@ -76,3 +76,5 @@ Groups store weak owners and release links on disposal; snapshots retain owners 
 [Slider](Slider.md) uses an internal two-pass interaction operation: a changed click preserves source hook/redraw with only its local signal suppressed while peers receive ordinary delivery, followed by forced shared delivery after drag state activation. Forced nested gesture delivery temporarily removes that local suppression and restores it in finally, preserving the inner gesture's own notification without exposing a new public Range operation. Ordinary recursive value notification suppression remains unchanged.
 
 SpinBox uses the same internal min-offset/step/rounded/Page/bounds calculation for its custom arrow grid, then writes through the ordinary shared value pass. Range sharing/event/lifetime semantics remain the numeric source of truth. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
+
+Configuration-warning queries and inherited refresh requests permit the owner/current processing group; retained authoring operations keep their existing guards. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

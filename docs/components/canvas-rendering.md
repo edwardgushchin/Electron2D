@@ -839,3 +839,61 @@ Mesh, CPU/native instances, GPU-authored instance storage and particle templates
 [Device screen lists](local-compute.md#native-screen-drawing) can replace one final native main/child window presentation through the shared GPU queue. Canvas viewport images remain independently rendered, and ordinary canvas presentation resumes when no screen list is pending.
 
 [Mesh graph inputs](visual-shaders.md#mesh-channels-and-logical-instance-inputs) use a 172-byte private canvas vertex record. Input location 15 reads exact vertex/instance uint32 identities at bytes 164/168, independently of glyph fields. CPU-expanded MultiMesh fills its source instance slot without adding draw calls; GPU particle conversion writes the source slot independently of sort order. Existing positions/color/UV/custom/normal/glyph offsets remain unchanged.
+
+## Grouped canvas modulation and diagnostics
+
+CanvasItem.GetCanvas and CanvasLayer.GetCanvas are logical identity observations
+for the owner or any active processing group, with caller coordination for lifetime
+changes. A layer publishes one cached canvas under a cold gate and volatile pointer;
+retirement clears it under the same gate and unregisters outside it. A viewport-free
+item resolves its fallback World canvas. These lookups do not start a renderer.
+
+CanvasModulate Color reads allow active groups; writes and reconciliation require
+the owner/current group. Capture, lifetime, finite-color and derived mutation
+validation precede changes. Each canvas serializes membership, waiting/active
+color updates and promotion. No two canvas gates are held together, and user
+warning/notification callbacks run after release. Native rendering consumes joined
+managed state. Manual entry/exit notifications still cannot forge actual membership.
+Waiting colors, server overrides, equal writes, disposal and session cleanup keep
+the existing contract. No native operation gains worker permission.
+
+Node configuration-warning queries and refreshes use their owner/current-group
+contract. Refresh preserves edited-root filtering and synchronous original errors,
+without evaluating strings. Built-in warning providers perform the base guard
+before even invalid-state returns and read diagnostic metadata rather than
+invoking unrelated owner-only operations. Warning string snapshots are cold
+allocating queries; prepared refresh/tint/notification/full-physics loops require
+zero owner/all-thread managed bytes. Other reserved GUI/world handlers remain
+Partial on their declaring families.
+
+The public `--group-modulation` and root `ELECTRON2D_TEST_GROUP_MODULATION`
+fixtures exercise concurrent lazy layer IDs, default/layer/fallback identities,
+Color writes, numeric notifications, warning-provider inheritance, foreign/plain
+worker rejection, failure continuation, capture/veto/disposal and actual selected
+physics/query identity. CPU, independent GPU and registered backends run ordinary
+and pooled owners with owner/separate numerical policies. Each profile keeps
+128 measured complete physics/query frames after two 128-frame preparation
+brackets, with a strict 0/0 byte limit. Six-unit/s motion over .01 seconds uses
+.002-unit tolerance; metadata, IDs and callback counts are exact.
+
+`--native-group-modulation` and the root native selector verify actual window
+pixels for concurrent tints, promotion, layer isolation and World replacement.
+Pixel tolerance is .012 per RGB component, matching the existing framebuffer
+quantization bound. Captures occur outside the separate 64 warmed process/render
+frames measured at the strict owner/all-thread zero limit. Evidence is retained
+under `bin/physics-group-modulation/2026-10-25/`; hardware throughput/FPS, foreign
+platforms, native allocator totals and owner visual acceptance remain separate.
+
+The 2026-10-25 qualification passed 54 fresh-process profiles: 34 CLR and 20 strict
+NativeAOT, including 16 grouped native-window fixtures and eight existing regression
+profiles. Thirty new physics/query intervals measured 128 frames each at 0/0 owner/all-thread
+managed bytes; 16 new window intervals measured 64 process/render frames each at 0/0.
+The root fixture additionally exercises the internal recovery-node diagnostic role,
+for 29 provider roles versus 28 in the public-only consumer. Runtime/consumer authored
+PDB sources and all 201 embedded resources agree between CLR and NativeAOT inputs.
+The full runtime formatter retains pre-existing whitespace failures in four untouched
+files; owned runtime, complete test and consumer formatting checks pass. Release build,
+compiled coverage, wiki tests, generation and regeneration check pass. The declaration
+census remains 1306/1369 (95.40%); remaining Partial/Blocked/Unimplemented entries and
+full performance/network/platform acceptance are unchanged. See the local
+`bin/physics-group-modulation/2026-10-25/validation.json` and raw per-profile receipts.

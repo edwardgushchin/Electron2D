@@ -1,6 +1,6 @@
 # SubViewportContainer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public class SubViewportContainer : Container`.
 
@@ -163,7 +163,7 @@ Returns this node's current configuration warnings for tooling.
 
 Returns: An empty array by default. Overrides return ordered warning messages and should include base warnings.
 
-System.InvalidOperationException: An attached query runs off the scene owner thread.
+System.InvalidOperationException: An attached query runs outside the owner/current processing group.
 
 System.ObjectDisposedException: This node is disposed.
 

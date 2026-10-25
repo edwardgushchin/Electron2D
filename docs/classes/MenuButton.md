@@ -1,6 +1,6 @@
 # MenuButton
 
-Last updated: 2026-10-19
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.MenuButton`. **Inherits:** [Button](Button.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/MenuButton.cs), [storage](../../src/Scene/GUI/MenuButton.Storage.cs). **Component:** [Command menu buttons](../components/command-menu-buttons.md).
 
@@ -194,3 +194,5 @@ False initially; both buttons must opt in.
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+Configuration-warning queries and inherited refresh requests permit the owner/current processing group; retained authoring operations keep their existing guards. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

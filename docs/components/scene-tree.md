@@ -333,3 +333,5 @@ does not establish native allocations, hardware speed, foreign platforms or
 complete physics/network acceptance.
 
 [Custom decoration input](../classes/Window.md#custom-decoration-input) uses shared window reception before exclusive-child rejection. Embedded forwarding remains available; final blocked client callbacks cannot execute even through direct PushInput. The local handled flag clears before this blocked return, preserving the ordinary per-event transition.
+
+Configuration-warning requests and queries permit the owner/current processing group, including physical descendants. The synchronous edited-root event is metadata; it grants no numerical/native access. See [grouped canvas diagnostics](canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

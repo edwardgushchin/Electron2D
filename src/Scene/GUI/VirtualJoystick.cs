@@ -145,7 +145,7 @@ public partial class VirtualJoystick : Control
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings()
-    { CheckJoystick(); var warnings = new List<string>(base.GetConfigurationWarnings()); foreach (var action in _actions) if (action.Length != 0 && !InputMap.HasAction(action)) warnings.Add("A virtual-joystick action is not registered: " + action); return [.. warnings]; }
+    { var warnings = new List<string>(base.GetConfigurationWarnings()); foreach (var action in _actions) if (action.Length != 0 && !InputMap.HasAction(action)) warnings.Add("A virtual-joystick action is not registered: " + action); return [.. warnings]; }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     { foreach (var binding in _bindings) binding.Release(); _finger = null; _revision++; try { base.Dispose(disposing); } finally { Pressed = Tapped = FlickCanceled = null; Released = Flicked = null; } }

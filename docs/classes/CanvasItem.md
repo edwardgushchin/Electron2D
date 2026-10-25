@@ -149,7 +149,7 @@ Returns inverse `C` times the owning viewport's current mouse position. The view
 
 Applies inverse `G` to GetGlobalMousePosition. A singular logical global transform throws InvalidOperationException. Viewport membership and its native/emulated/isolated section policy are inherited.
 
-All coordinate queries require a live item. GetCanvasLayerNode permits the owner or any active processing group; the remaining canvas/viewport queries enforce the attached owner thread. Except GetCanvasLayerNode and the detached fallback of GetGlobalTransformWithCanvas, they require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
+All coordinate queries require a live item. GetCanvasLayerNode and GetCanvas permit the owner or any active processing group; the remaining canvas/viewport queries enforce the attached owner thread. GetCanvas returns an empty RID while detached and supports viewport-free fallback worlds. Except these logical identity queries and the detached fallback of GetGlobalTransformWithCanvas, coordinate queries require active viewport membership; missing membership/off-owner access throws InvalidOperationException and disposal throws ObjectDisposedException. Queries preserve logical node state and do not emit notifications.
 
 Verification: [managed hierarchy, inverse, lifetime and input-copy checks](../../tests/Electron2D.Tests/CanvasCoordinateTests.cs); [Wayland GPU/compatibility and dummy rendering/input checks](../../tests/Electron2D.Tests/CanvasCoordinateRenderingTests.cs). Native readback includes noncommuting viewport transforms, independent canvas roots, retained commands, pixel snapping and HLSL/GLSL materials. Camera and CanvasLayer are integrated; Control layout is present, while GUI input, themes, nested viewports and content scaling remain absent; no physical-input/visual or other-platform acceptance is claimed.
 
@@ -1294,9 +1294,9 @@ Returns this node's current configuration warnings for tooling.
 
 Returns: A caller-owned snapshot including base warnings and, while attached and clipping (or a CanvasGroup), the first clipping ancestor and the first group ancestor. Physical Node ancestry is inspected even across neutral/TopLevel canvas boundaries. Disabled ordinary canvas items add no warnings.
 
-Remarks: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
+Remarks: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner or this node's current processing group. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
 
-System.InvalidOperationException: An attached query runs off the scene owner thread.
+System.InvalidOperationException: An attached query runs outside the owner/current processing group.
 
 System.ObjectDisposedException: This node is disposed.
 
@@ -1391,3 +1391,7 @@ ResolveCanvasGlyph projects the retained item MSDF flag only onto ordinary image
 Unset/cleared instance parameters read their compiled authored scalar/vector default, with zero only when metadata is absent. Explicit values survive compatible reload. Prepared parameter names retain their typed value/descriptor for allocation-free set/clear cycles, while cleared values stay out of active stored descriptors. Rendered ordinary/surface/mesh/instance consumers use per-item defaults. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
 
 Canvas normal-consuming graphs preserve each texture rectangle's flip/transpose independently across retained batches. Mesh/attribute draws retain their separate local-normal convention. See [Fresnel normals](../components/visual-shaders.md#fresnel-and-implicit-canvas-normals).
+
+## Logical canvas identity from groups
+
+`GetCanvas()` permits coordinated reads by the owner or any active processing group. Layers retain their independent RID; viewport-free scenes return the fallback World canvas. Detached items return an empty RID. The lookup starts no native renderer and grants no native/physical mutation permission. See [grouped canvas diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).

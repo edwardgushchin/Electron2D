@@ -183,7 +183,15 @@ public partial class CanvasLayer : Node
     protected override void Dispose(bool disposing)
     {
         try { base.Dispose(disposing); }
-        finally { if (disposing) { if (_canvasRuntime is { } canvas) RenderingCanvasRegistry.Remove(canvas.RID); _canvasRuntime = null; VisibilityChanged = null; _viewport = _customViewport = null; } }
+        finally
+        {
+            if (disposing)
+            {
+                RenderingCanvasRuntime? canvas; lock (_canvasGate) { canvas = _canvasRuntime; _canvasRuntime = null; }
+                if (canvas is not null) RenderingCanvasRegistry.Remove(canvas.RID);
+                VisibilityChanged = null; _viewport = _customViewport = null;
+            }
+        }
     }
 
     internal Viewport? CanvasViewport => _viewport;

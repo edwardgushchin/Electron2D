@@ -2,7 +2,7 @@
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) read volatile tree membership without acquiring scene ownership. Attached-node counts select Engine.MainLoop; independent trees remain outside that count.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -620,9 +620,9 @@ Delivers the notification to this node first, then each current descendant in de
 
 Requests a configuration-warning refresh for this node in the selected edited scene.
 
-Contract: Emits SceneTree.NodeConfigurationWarningChanged synchronously only when this node is the EditedSceneRoot or its descendant. Detached nodes and trees without a selected scene emit nothing. It does not query, cache or compare warning strings. Repeated requests each emit; handler errors propagate.
+Contract: Emits SceneTree.NodeConfigurationWarningChanged synchronously on the owner/current processing group only when this node is the EditedSceneRoot or its descendant. Detached nodes and trees without a selected scene emit nothing. It does not query, cache or compare warning strings. Repeated requests each emit; handler errors propagate.
 
-InvalidOperationException: Mutation is unavailable or this is not the scene owner thread.
+InvalidOperationException: Capture/derived validation rejects access or the caller is outside the owner/current processing group.
 
 ObjectDisposedException: This node is disposed.
 
@@ -636,9 +636,9 @@ Returns this node's current configuration warnings for tooling.
 
 Returns: An empty array by default. Overrides return ordered warning messages and should include base warnings.
 
-Contract: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner thread. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
+Contract: This query does not cache results, emit events or require an edited scene. Attached queries run on the scene owner or the node's current processing group. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.
 
-InvalidOperationException: An attached query runs off the scene owner thread.
+InvalidOperationException: An attached query runs outside the owner/current processing group.
 
 ObjectDisposedException: This node is disposed.
 
@@ -1988,3 +1988,7 @@ NotificationEditorPreSave = 9001 and NotificationEditorPostSave = 9002 are publi
 Factory results require [construction provenance](ElectronObject.md#factory-construction-provenance) in the current invocation. Unrelated concurrent construction cannot transfer caller ownership; nested factories, ordinary Task context flow and engine worker tasks remain supported.
 
 MissingNode duplication preserves retained fields, recovery identity, remapped Node references and authored nonexecuting connections. Raw duplication without Signals omits these records; UseInstantiation still preserves connections supplied by the source template. InternalState controls the transient recording flags. See [MissingNode](MissingNode.md).
+
+## Configuration diagnostics in groups
+
+`GetConfigurationWarnings` and `UpdateConfigurationWarnings` retain the owner/current-group scope on physical, canvas, GUI and multiplayer descendants. Refresh callbacks run synchronously outside canvas gates, preserve selected-edited-root filtering and propagate original subscriber errors. Queries are cold string snapshots, while refresh itself need not allocate after preparation. Built-in invalid-configuration branches still perform the common lifetime/scope guard first. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
