@@ -411,6 +411,23 @@ Verification on 2026-10-25 uses a fresh source build and separate frozen payload
 
 Thirteen current functional profiles pass: dense owner/separate, common publication, mixed owner/separate, space checkpoint, replication reconfiguration, combined completion, public contact projection on GPU owner/separate and CPU without a device, and real Wayland GPU/compatibility windows with separate GPU physics. Render checks cover pixel, motion and allocation assertions; they do not measure massive-window FPS or establish human acceptance. PDB hashes bind 2,584 runtime, 957 root-test and 270 public-consumer authored inputs. Whole-step speedup, repeated real-window FPS, NativeAOT for this slice and full-goal acceptance remain open; declaration coverage remains 1306/1369 (95.40%), with 63 open rows.
 
+### Full-step admission and network continuation (2026-10-25)
+
+A fresh eight-case comparison pins the compiled authored sources of local `acac7dc93d8ef43faf5bddfdb55c53ecc7bee5fd`, one immutable payload, 16,384 awake monitored bodies, four walls, 144 Hz, four substeps, 16 iterations, 1,600 warm frames and 256 samples. Its GPU/CPU/CPU/GPU order covers headless steps and real windows. Admission retains 30 two-second quiet intervals at most 0.25 other CPU cores, and adds GPU utilization at most 5% plus rejection of foreign non-desktop GPU contexts. Each running case retains the existing one-core foreign-CPU ceiling. Foreign application processes are observed, never stopped by this check. Admission expired after 600.842344 seconds with zero of eight cases started. There is no new step/FPS comparison or speedup claim. The terminal controller is not a pending job to restart.
+
+The same frozen runtime then passed two functional three-process checks. Each starts a CPU authority, an independent GPU client and a later CPU client. Both CPU participants deny actual GPU startup and create no rendering service. Each check observes four CLR processes including its controller, exactly one with NVIDIA mappings and none with software GPU mappings. These runs retain packet loss, delay, duplication and reordering, all 39 portable actors, contacts and joint families, sleep/wake correction, lifecycle/control-epoch changes, prediction/replay and effect confirmation. The requested late-join trigger is tick 310; admission occurs at the observed ticks below.
+
+| Check mode | Final tick | GPU corrections / replayed ticks | Late CPU join / corrections / replayed ticks | GPU warm live / replay samples |
+| --- | ---: | ---: | ---: | ---: |
+| Coordinated check | 600 | 177 / 2,145 | 339 / 96 / 1,192 | 88 / 1,084 |
+| Ordinary session, `--unpaced` | 900 | 125 / 1,480 | 387 / 92 / 1,327 | 154 / 1,015 |
+
+Warm steps in all six participants and the four clients' measured warm replay retain zero owner/all-thread managed bytes. The GPU's complete replay allocation counter still contains 2,336 cold bytes; it is not covered by the warmed claim. The ordinary session has zero check-progress traffic and waits. All participants request separate numerical execution; CPU probes observe that lane directly, while this GPU probe reports device work/traffic and does not independently observe its numerical thread.
+
+GPU cumulative upload/readback is 5,358,904/15,339,348 bytes in the coordinated check and 4,030,444/11,226,332 bytes in the ordinary session. The respective submission/wait totals are 114,424/14,387.9685 ms and 80,445/8,130.8099 ms. These totals include preparation, simulation, corrections and replay under external load; they are diagnostics, not isolated per-step or comparative performance. Reports also retain live/correction percentiles, application traffic and logical command/event history payloads of 524,288/36,864 bytes per participant; these payload counts exclude object headers, other retained state and native/driver memory.
+
+Exact commands, participant reports, maps, telemetry, source/payload hashes and the rejected admission are in `bin/physics-full-comparison/2026-10-25/`; `network-validation.json` separates functional acceptance from performance. No coverage state is promoted. Further comparison requires a new quiet admission; repeated blind attempts or timings from these functional runs cannot close the performance gate.
+
 ## Measured publication cost
 
 Linux/.NET 10.0.1, Vulkan, NVIDIA GeForce RTX 3090 Ti. The same retained world has
