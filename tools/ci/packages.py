@@ -52,6 +52,7 @@ def inventory(feed):
                 required = {f'lib/{tfm}/Electron2D.{ext}' for tfm in
                             ('net10.0', 'net10.0-android36.0', 'net10.0-ios26.0', 'net10.0-tvos26.0') for ext in ('dll', 'xml')}
                 browser = {f'runtimes/browser-wasm/lib/net10.0/Electron2D.{ext}' for ext in ('dll', 'xml')}
+                required.add('buildTransitive/Electron2D.targets')
                 if not required.issubset(names) or {n for n in names if n.startswith('runtimes/')} != browser:
                     raise ValueError('Incomplete or foreign managed framework assets')
             else:

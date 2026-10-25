@@ -21,6 +21,63 @@ import plan
 
 
 class Pipeline(unittest.TestCase):
+    def test_managed_browser_assets_stay_out_of_desktop_outputs(self):
+        root = Path(__file__).resolve().parents[2]
+        targets = root / 'tools/managed-runtime.targets'
+        with tempfile.TemporaryDirectory(prefix='e2d managed assets ') as directory:
+            work = Path(directory); feed = work / 'feed'; feed.mkdir()
+            config = work / 'nuget.config'
+            packages.feed_config(feed, config)
+            seed = work / 'seed'; seed.mkdir()
+            (seed/'Library.csproj').write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+                '<TargetFramework>net10.0</TargetFramework><AssemblyName>Electron2D</AssemblyName>'
+                '<NuGetAudit>false</NuGetAudit></PropertyGroup></Project>')
+            (seed/'Marker.cs').write_text('namespace Electron2D; public static class Marker { public const string Value = "fixture"; }')
+            subprocess.run(['dotnet','build',str(seed/'Library.csproj'),'-o',str(seed/'out'),
+                            '--verbosity','quiet'],check=True,stdout=subprocess.DEVNULL)
+            assembly = (seed/'out/Electron2D.dll').read_bytes()
+            with ZipFile(feed / 'Electron2D.1.0.0.nupkg', 'w') as archive:
+                archive.writestr('Electron2D.nuspec', '<package><metadata><id>Electron2D</id>'
+                    '<version>1.0.0</version><authors>test</authors><description>fixture</description></metadata></package>')
+                archive.writestr('lib/net10.0/Electron2D.dll', assembly)
+                archive.writestr('runtimes/browser-wasm/lib/net10.0/Electron2D.dll', assembly)
+                archive.writestr('runtimes/browser-wasm/lib/net10.0/Electron2D.xml', '<doc />')
+                if targets.exists(): archive.write(targets, 'buildTransitive/Electron2D.targets')
+            app = work / 'app'; app.mkdir(); project = app / 'Consumer.csproj'
+            project.write_text('<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework>'
+                '<OutputType>Exe</OutputType><NuGetAudit>false</NuGetAudit></PropertyGroup><ItemGroup>'
+                '<PackageReference Include="Electron2D" Version="[1.0.0]" /></ItemGroup></Project>')
+            (app/'Program.cs').write_text('System.Console.WriteLine(Electron2D.Marker.Value);')
+            subprocess.run(['dotnet','restore',str(project),'--configfile',str(config),
+                            '--packages',str(work/'cache'),'--verbosity','quiet'], check=True)
+            output = subprocess.check_output(['dotnet','msbuild',str(project),'-nologo',
+                '-t:ResolvePackageAssets','-getItem:RuntimeTargetsCopyLocalItems'],text=True)
+            items = json.loads(output)['Items']['RuntimeTargetsCopyLocalItems']
+            self.assertFalse(any(p.get('RuntimeIdentifier')=='browser-wasm' for p in items))
+            for command in ('build','publish'):
+                output = work / command
+                result = subprocess.run(['dotnet',command,str(project),'--no-restore','-o',str(output),
+                    '--verbosity','quiet'],capture_output=True,text=True)
+                self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+                self.assertEqual((output/'Electron2D.dll').read_bytes(),assembly)
+                self.assertFalse((output/'runtimes/browser-wasm').exists())
+            for rid in ('', 'linux-x64', 'browser-wasm'):
+                rows = ''.join(f'<{item} Include="{name}"><NuGetPackageId>{owner}</NuGetPackageId>'
+                    f'<RuntimeIdentifier>{target}</RuntimeIdentifier></{item}>'
+                    for item in ('RuntimeTargetsCopyLocalItems','_ResolvedCopyLocalPublishAssets')
+                    for name,owner,target in [('browser','Electron2D','browser-wasm'),
+                        ('desktop','Electron2D','linux-x64'),('other','Other','browser-wasm')])
+                probe = work / 'Probe.proj'
+                probe.write_text('<Project><PropertyGroup><RuntimeIdentifier>' + rid +
+                    '</RuntimeIdentifier></PropertyGroup><ItemGroup>' + rows + '</ItemGroup>'
+                    f'<Import Project="{packages.escape(str(targets))}" /></Project>')
+                result = subprocess.check_output(['dotnet','msbuild',str(probe),'-nologo',
+                    '-t:Electron2DManagedBuildLayout;Electron2DManagedPublishLayout',
+                    '-getItem:RuntimeTargetsCopyLocalItems,_ResolvedCopyLocalPublishAssets'],text=True)
+                for entries in json.loads(result)['Items'].values():
+                    self.assertEqual({p['Identity'] for p in entries},
+                        {'browser','desktop','other'} if rid=='browser-wasm' else {'desktop','other'})
+
     def test_native_source_fingerprint_is_independent_of_platform_path_order(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
@@ -74,6 +131,7 @@ class Pipeline(unittest.TestCase):
             with ZipFile(root / f'{identity}.{version}.nupkg', 'w') as archive:
                 archive.writestr(identity + '.nuspec', f'<package><metadata><id>{identity}</id><version>{version}</version></metadata></package>')
                 if identity == 'Electron2D':
+                    archive.writestr('buildTransitive/Electron2D.targets', 'managed layout')
                     for tfm in ('net10.0', 'net10.0-android36.0', 'net10.0-ios26.0', 'net10.0-tvos26.0'):
                         for ext in ('dll', 'xml'): archive.writestr(f'lib/{tfm}/Electron2D.{ext}', tfm)
                     for ext in ('dll', 'xml'): archive.writestr(f'runtimes/browser-wasm/lib/net10.0/Electron2D.{ext}', 'browser')
@@ -120,6 +178,9 @@ class Pipeline(unittest.TestCase):
             native.write_bytes(original)
             master = root / f'Electron2D.{version}.nupkg'; original_master = master.read_bytes()
             self.rewrite(master, lambda items: items.pop('lib/net10.0-ios26.0/Electron2D.dll'))
+            with self.assertRaises(ValueError): packages.inventory(root)
+            master.write_bytes(original_master)
+            self.rewrite(master, lambda items: items.pop('buildTransitive/Electron2D.targets'))
             with self.assertRaises(ValueError): packages.inventory(root)
             master.write_bytes(original_master)
             master.rename(root / 'wrong-name.nupkg')
