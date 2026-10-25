@@ -30,8 +30,7 @@ internal static class MeshVertexIDTests
     private static Shader Program(string language, bool modern = false) => Shader.CreateFromSPIRV(modern ? Modern(Module(language, "vert")) : Module(language, "vert"), Module(language, "frag"));
     internal static void Run()
     {
-        Check(Marshal.SizeOf<CanvasVertex>() == 168 && Marshal.OffsetOf<CanvasVertex>("<VertexID>k__BackingField").ToInt32() == 164, "Vertex identity has an exact integer GPU layout.");
-        Check(new CanvasVertex(Vector2.Zero, Colors.White).VertexID == uint.MaxValue, "Ordinary canvas geometry selects its native builtin.");
+        CanvasVertexLayoutTests.Run();
         foreach (var primitive in Enum.GetValues<Mesh.PrimitiveType>())
         {
             using var mesh = new ArrayMesh(); mesh.AddSurfaceFromArrays(primitive, Data(primitive));
