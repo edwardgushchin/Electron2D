@@ -2,7 +2,50 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
+
+## Current comparison admission
+
+The complete comparison prepared for `a8df21d9033ec655e7f65425fc629e27c154b613`
+did not start a physical case. Its initial quiet-window admission expired after
+601.389 seconds: all 275 observations exceeded the .25-core background CPU limit,
+so zero of the required 30 consecutive two-second quiet samples accumulated.
+Background CPU load ranged from .453 to 14.620 cores, with median .627; total GPU
+utilization ranged from 2% to 92%, with median 20%. No foreign compute context was
+observed. This is an admission failure; it supplies no current step latency,
+CPU/GPU speed ratio, window FPS, numerical result or driver-failure evidence.
+
+The unchanged workload was 16,384 awake monitored scene bodies, four walls,
+144 Hz, four substeps and sixteen solver sweeps, contact handlers and eight-contact
+caps, with interpolation enabled and sleep disabled. Each fresh process required
+1600 warmup and 256 measured frames. The planned order was GPU/CPU/CPU/GPU
+headless, followed by the same order in real Wayland windows. Both paths use the
+same frozen runtime and complete physical features. Admission retains the .25-core
+CPU and 5% total GPU limits with no foreign compute context; later cases require
+three quiet observations. During each case, other-process average CPU activity
+must remain within one core. No case was retried, no threshold was relaxed and no
+user application was stopped.
+
+Evidence is retained under `bin/physics-full-comparison/2026-10-25-a8df21d90/`:
+`current-method.json`, `current-controller.json`,
+`current-isolation-history.jsonl` and `admission-summary.json`. The 79-file frozen
+payload and runner hashes still match their manifests. Its 3806 unique authored
+sources were checked against the committed source; the accepted assembly retains
+its precommit revision metadata, so source closure establishes the association.
+Runtime/root SHA-256 are
+`9a45903c85c1db55a5cd2890860290e247783033a27a2952a26b03ad81596f5a` and
+`fba3efebd718de3f749a92d3cee38101bde8b0c33cd631ddc3770d0ca6723369`.
+The frozen payload uses existing qualified hardlinks with zero new binary storage.
+The admission history SHA-256 is
+`405b95b5d4e6fadd50a28ff945a224f5f096e7e2e97851c5dc3a89f74d702055`.
+
+Current complete headless/window comparison remains open until a host interval
+passes the original admission and case-isolation criteria. A new attempt needs a
+new evidence directory and a source-qualified cohort for its selected revision;
+the terminal controller is not restarted automatically. Earlier measurements
+below retain their own revisions and do not qualify these later completion-sharing
+changes. Functional zero-allocation checks and reduced submission counts remain
+separate evidence, as do full backend, platform and owner acceptance.
 
 The [2026-10-20 RTX baseline](physics-rtx-current.md) repeats complete raw-server
 and monitored-scene paths, real-window FPS and native allocation request traffic.
