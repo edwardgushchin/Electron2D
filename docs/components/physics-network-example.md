@@ -1500,6 +1500,51 @@ bin/physics-network-current/2026-10-15/validation.json and its frozen manifests,
 reports and logs.
 
 
+## Current NVIDIA window qualification, 2026-10-25
+
+Six current-source three-process scenarios complete 600 authority ticks with a
+CPU server, an NVIDIA GPU client and a late CPU client. Three use the separate
+public example; three use the linked test host with backend diagnostics. Each
+host runs GPU rendering with owner/separate numerical execution and Compatibility
+rendering with owner numerical execution. CPU participants prove denied GPU
+startup and run without a display/render service. Loss, delay, duplication,
+reordering, generations, control handoff, coupled geometry/joints, sleep/wake,
+replay, confirmed events and final convergence retain the existing assertions.
+
+All 18 simulation participants pass 2,875 warmed ordinary and 12,819 warmed replay
+intervals at strict 0/0 owner/all-thread managed bytes. Every window draws actual
+smoothing/interpolation and preserves its solved physics across the checked draw;
+the captures include the expected separated presented/solved markers. GPU client
+maps require NVIDIA and reject software ICDs. This cohort uses CoreCLR; prior
+NativeAOT evidence keeps its own source/target limits.
+
+| Host / renderer / numerical lane | Frames | Observed FPS | Effective VSync | Whole-window owner managed B |
+| --- | ---: | ---: | --- | ---: |
+| Public / GPU / owner | 446 | 18.5646 | Enabled | 4,262,568 |
+| Public / GPU / separate | 453 | 17.5292 | Enabled | 4,262,352 |
+| Public / Compatibility / owner | 2,382 | 89.5624 | Disabled | 4,826,448 |
+| Instrumented / GPU / owner | 552 | 25.3089 | Enabled | 4,337,808 |
+| Instrumented / GPU / separate | 471 | 20.3979 | Enabled | 4,339,216 |
+| Instrumented / Compatibility / owner | 2,671 | 117.5906 | Disabled | 4,808,216 |
+
+All requested Disabled VSync and used check-only authority pacing. The ordinary
+full suite ran concurrently; these FPS observations do not compare renderer or
+physics throughput. Whole-window allocations are nonzero and stay separate from
+the zero-byte physical/replay brackets. Captures, complete process reports,
+commands, maps and source/payload hashes are retained under
+`bin/physics-network-current/2026-10-25/qualification.json`.
+
+The public consumer was restored/rebuilt with the current-source WebP facade
+selected explicitly. The initial full ordinary suite reached compressed textures
+but failed because its cached native package exported only `e2d_webp_encode`.
+The existing source already implements the decoder. Native export preflight found
+only that missing required export; the refreshed candidate changes one native
+file, preserving both managed assemblies. The original short compressed-texture
+control fails with exit -6; the refreshed control and the native bridge's seven
+encoder/decoder, canary, animation and cleanup profiles pass. The corrected full
+ordinary run remains pending, and this does not qualify or publish the cached
+native package. Receipts are under `bin/physics-main-suite/2026-10-25/`.
+
 ## NativeAOT network processes, 2026-10-15
 
 The public PhysicsNetwork example now publishes with NativeAOT and linker/compiler

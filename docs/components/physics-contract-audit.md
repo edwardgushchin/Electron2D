@@ -855,8 +855,8 @@ The public `PhysicsCheckpoint` factory and world-local tick counter now expose
 that local replay point to game code. [Portable snapshots](physics-snapshots.md) now
 add bounded capture/apply between compatible CPU/GPU worlds and explicit identity
 bindings. The [PhysicsNetwork example](physics-network-example.md) now exercises authoritative
-lifecycle and reconciliation in separate processes. General game-state rollback,
-rendered presentation and the complete performance/platform gates remain open.
+lifecycle and reconciliation in separate processes. General game-state rollback and the complete performance/platform gates remain open;
+current Linux window presentation evidence is recorded in physics-network-example.
 
 | Required integration | Existing prerequisite | Open acceptance |
 | --- | --- | --- |
@@ -864,7 +864,7 @@ rendered presentation and the complete performance/platform gates remain open.
 | Portable identity/lifecycle | PhysicsNetwork manifests verify portable IDs/generations, removal/recreation, control epochs and late join | The required lifecycle scenario is verified. Other game recipes and speculative client spawning need application policy; keep RIDs and backend identities private. |
 | Authoritative snapshots | Public PhysicsSnapshot/PhysicsSnapshotMap with portable IDs, CPU/GPU capture/apply, observer history, one-way/sleep state and measured publication | PhysicsNetwork verifies token admission, lifecycle correction and CPU-authority/GPU-client convergence under adverse delivery. Internet authentication and other game authoring policies are outside the example. |
 | Prediction/correction | Fixed scene physics lane, public forces/state operations and tick-qualified local PhysicsCheckpoint | The example now verifies bounded input replay and injected-divergence correction for CPU/GPU clients. Cross-platform numerical verification remains open; custom nonphysical game state needs application rollback policy. |
-| Remote presentation | Existing transform interpolation infrastructure | The example numerically verifies a 16-snapshot interpolation ring and local smoothing without moving solved bodies; rendered/network-window acceptance remains open. |
+| Remote presentation | Transform interpolation and the public NetworkWindow consumer | Current Linux/Wayland NVIDIA runs exercise a real GPU/Compatibility client window, smoothing/interpolation and snapshot/pixel preservation with CPU authority and a late CPU client. See physics-network-example.md#current-nvidia-window-qualification-2026-10-25. Full throughput, native/foreign memory, other platforms and owner visual acceptance remain open. |
 | Events | Current owner-thread physical event ordering | PhysicsNetwork verifies phase-separated callbacks and exactly-once confirmed contact/Area records across replay, generations and ownership. The checked contact/Area effects satisfy the example; other game effects need their own policy and evidence. |
 | Network testing/performance | Existing socket/ENet/replication tests and bounded buffers | PhysicsNetwork covers these scenarios with real ENet processes and application-level impairment. Routed/OS-level loss, broader game workloads, cross-platform runs and the full GPU/window performance targets remain open. |
 
