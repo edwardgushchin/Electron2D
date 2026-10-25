@@ -39,7 +39,7 @@ public sealed partial class VisualShader
             var name = parameter.ParameterName;
             if (name.Length == 0 || !char.IsAsciiLetter(name[0]) || name.Any(c => !(char.IsAsciiLetterOrDigit(c) || c == '_')) ||
                 name.StartsWith("gl_", StringComparison.Ordinal) || name.Contains("__", StringComparison.Ordinal) ||
-                name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "CUSTOM0" or "CUSTOM1" or "INSTANCE_ID" or "size" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
+                name is "TIME" or "SCREEN_PIXEL_SIZE" or "SDF_COORDS" or "NORMAL_MAP_FLAGS" or "TEXTURE_PIXEL_SIZE" or "MODEL_MATRIX" or "CANVAS_MATRIX" or "SCREEN_MATRIX" or "CUSTOM0" or "CUSTOM1" or "INSTANCE_ID" or "size" or "TEXTURE" or "NORMAL_TEXTURE" or "SPECULAR_SHININESS_TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE")
                 throw new InvalidDataException("A graph parameter requires a nonreserved ASCII shader identifier.");
             if (_mode == Mode.TextureBlit && name is "SOURCE_TEXTURE0" or "SOURCE_TEXTURE1" or "SOURCE_TEXTURE2" or "SOURCE_TEXTURE3")
                 throw new InvalidDataException("Writable-texture source names are renderer-owned and cannot be material parameters.");
@@ -96,10 +96,13 @@ public sealed partial class VisualShader
         var normal = NeedsCanvasNormal(stage, reachable);
         var texturePixels = reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput { InputName: "texture_pixel_size" }) ||
             ExpressionSources(stage, reachable, custom).Any(s => SourceIdentifiers(s).Any(t => !t.Member && s.Substring(t.Start, t.Length) == "TEXTURE_PIXEL_SIZE"));
-        var rendererValues = normal || texturePixels || ReadsRendererValues(ExpressionSources(stage, reachable, custom)) || reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)) || screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
+        var matrices = stage == Type.Vertex ? new[] { "MODEL_MATRIX", "CANVAS_MATRIX", "SCREEN_MATRIX" }.Where(name =>
+            reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input && input.GetInputRealName() == name) ||
+            ExpressionSources(stage, reachable, custom).Any(s => SourceIdentifiers(s).Any(t => !t.Member && s.Substring(t.Start, t.Length) == name))).ToArray() : [];
+        var rendererValues = matrices.Length != 0 || normal || texturePixels || ReadsRendererValues(ExpressionSources(stage, reachable, custom)) || reachable.Any(id => IsSDFNode(graph.Nodes[id].Node)) || screenUV || selected.Any(p => p.Qualifier == Q.None) || reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput input &&
             (input.GenerateExpression(stage).Contains("TIME", StringComparison.Ordinal) || input.GenerateExpression(stage).Contains("SCREEN_PIXEL_SIZE", StringComparison.Ordinal)));
         var reserved = stage == Type.Vertex ? "float TIME;" : "float TIME; vec2 SCREEN_PIXEL_SIZE;";
-        var sdfFields = (sdf ? " vec4 SDF_COORDS;" : "") + (normal ? " vec4 NORMAL_MAP_FLAGS;" : "") + (texturePixels ? " vec2 TEXTURE_PIXEL_SIZE;" : "");
+        var sdfFields = (sdf ? " vec4 SDF_COORDS;" : "") + (normal ? " vec4 NORMAL_MAP_FLAGS;" : "") + (texturePixels ? " vec2 TEXTURE_PIXEL_SIZE;" : "") + string.Concat(matrices.Select(name => " mat4 " + name + ";"));
         var fields = string.Join(" ", selected.Where(p => p.Qualifier == Q.None).Select(p => VisualShaderValues.Name(p.Outputs[0]) + " " + p.ParameterName + ";"));
         header = header.Replace(reserved + " };", reserved + sdfFields + " " + fields + " } " + aliases["e2d_values"] + ";", StringComparison.Ordinal);
         if (!rendererValues)

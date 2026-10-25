@@ -8,6 +8,10 @@ namespace Electron2D;
 /// This interface accepts optional float4 color at location zero,
 /// float2 UV at location one, raw float4 instance data at location two, float2 secondary UV at location four, mesh-local float3 normal at five and float4 tangent at six, framebuffer position, and one float4 color output. TEXTURE at set two, binding zero
 /// samples the current canvas command, or opaque white for untextured geometry; it is not a material parameter.
+/// Canvas vertex MODEL_MATRIX, CANVAS_MATRIX and SCREEN_MATRIX are renderer-owned non-array float32
+/// four-by-four uniforms after Frame. They expose the original item/draw/mesh/instance pose, canvas-to-framebuffer
+/// basis and framebuffer-to-clip projection. They are omitted from material parameters, defaults and globals.
+/// Existing vertex positions retain their framebuffer-coordinate convention.
 /// A canvas non-array float2 TEXTURE_PIXEL_SIZE uniform receives the inverse logical dimensions of the
 /// resolved command diffuse image in either stage, or one for an absent/empty image. Atlas regions retain the
 /// backing image dimensions. This renderer-owned value is independent of material samplers and cannot be
@@ -112,7 +116,7 @@ public partial class Shader : Resource
     /// material access also accepts Color and Rect2. Float2x2 uses Transform. Revert values use each compiled default,
     /// with implicit numeric zero/matrix identity when absent. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
     /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed numeric and sampled descriptor arrays use array-valued descriptors; scalar sampled images use Texture or TextureLayered, matched by image role and float/signed/unsigned scalar type.
-    /// Renderer-owned command/blit sources and render TIME are omitted.</returns>
+    /// Renderer-owned command/blit sources, render TIME and canvas matrices are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
     /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>
     /// <exception cref="ObjectDisposedException">The shader is disposed.</exception>

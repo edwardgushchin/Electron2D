@@ -1,5 +1,7 @@
 # Canvas rendering
 
+[Canvas matrix inputs](visual-shaders.md#canvas-matrix-inputs) retain original model and canvas bases during ordering, extend them through draw/mesh/instance transforms, and expose readonly numeric vertex matrices without recovering originals from a canvas inverse. Each viewport owns its pose snapshot.
+
 [Sampled component views](local-compute.md#sampled-component-views) follow device-backed command/material images through paired stages, lighting, glyphs, clipping and particle consumers. Raw snapshots preserve storage channels.
 
 Last updated: 2026-10-25

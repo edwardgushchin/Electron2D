@@ -59,8 +59,13 @@ public sealed unsafe partial class RenderingDevice
         var info = _serverOwner.DeviceScreen(screen); var format = ScreenFormat(info.Format);
         if (!_screens.TryGetValue(screen, out var target) || target.Size != info.Size || target.Format != format)
         {
-            using var description = new RDTextureFormat { Width = (uint)info.Size.X, Height = (uint)info.Size.Y, Format = info.Format,
-                UsageBits = TextureUsageBits.ColorAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanCopyFrom };
+            using var description = new RDTextureFormat
+            {
+                Width = (uint)info.Size.X,
+                Height = (uint)info.Size.Y,
+                Format = info.Format,
+                UsageBits = TextureUsageBits.ColorAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanCopyFrom
+            };
             using var view = new RDTextureView(); var texture = TextureCreate(description, view); RID framebuffer;
             try { framebuffer = FramebufferCreate([texture], format); } catch { FreeRID(texture); throw; }
             var replacement = new ScreenTarget(texture, framebuffer, info.Size, format);

@@ -7,11 +7,12 @@ internal sealed unsafe partial class GPUCanvasBackend
 {
     private sealed class InstanceStream : IDisposable
     {
-        internal RenderHandle? Instances, Commands;
+        internal RenderHandle? Instances, Commands, Models;
+        internal int ModelCapacity;
         internal int Capacity, CommandCapacity;
-        public void Dispose() { Instances?.Dispose(); Commands?.Dispose(); }
+        public void Dispose() { Instances?.Dispose(); Commands?.Dispose(); Models?.Dispose(); }
     }
-    private RenderHandle? _instancePack, _instanceIndices, _instanceIndexUpload, _instanceLODs, _instanceLODUpload;
+    private RenderHandle? _instancePack, _instancePackModels, _instanceIndices, _instanceIndexUpload, _instanceLODs, _instanceLODUpload;
     private int _instanceIndexCapacity, _instanceLODCapacity;
     private readonly List<InstanceStream> _instanceStreams = [];
     private int[] _streamByBatch = [], _indexByBatch = [], _lodByBatch = [];
@@ -73,19 +74,29 @@ internal sealed unsafe partial class GPUCanvasBackend
             var copy = SDL.BeginGPUCopyPass(command); if (copy == 0) throw Failure("upload instance LODs");
             SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _instanceLODUpload.DangerousGetHandle() }, new() { Buffer = _instanceLODs!.DangerousGetHandle(), Size = checked((uint)lodCount * 16) }, false); SDL.EndGPUCopyPass(copy);
         }
-        var output = stackalloc SDL.GPUStorageBufferReadWriteBinding[2]; var input = stackalloc nint[4];
+        var output = stackalloc SDL.GPUStorageBufferReadWriteBinding[3]; var input = stackalloc nint[4];
         for (var i = 0; i < batches.Length; i++)
         {
-            var ordinal = _streamByBatch[i]; if (ordinal < 0) continue; var batch = batches[i]; var gpu = batch.GPU;
+            var ordinal = _streamByBatch[i]; if (ordinal < 0) continue; var batch = batches[i]; var gpu = batch.GPU; var models = batch.UsesModelPoseTable;
             while (_instanceStreams.Count <= ordinal) _instanceStreams.Add(new()); var stream = _instanceStreams[ordinal];
             if (stream.Capacity < gpu.Capacity)
             {
                 var replacement = InstanceBuffer(checked((uint)gpu.Capacity * 64), SDL.GPUBufferUsageFlags.Vertex | SDL.GPUBufferUsageFlags.ComputeStorageWrite);
                 stream.Instances?.Dispose(); stream.Instances = replacement; stream.Capacity = gpu.Capacity;
             }
+            if (models && stream.ModelCapacity < gpu.Capacity)
+            {
+                var replacement = InstanceBuffer(checked((uint)gpu.Capacity * 32), SDL.GPUBufferUsageFlags.GraphicsStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite);
+                stream.Models?.Dispose(); stream.Models = replacement; stream.ModelCapacity = gpu.Capacity;
+            }
+            if (models && _instancePackModels is null)
+            {
+                _instancePackModels = new(ShaderCompiler.CreateComputePipeline(Device, BuiltInShaders.Read("InstancePackModels.comp.spv")), h => SDL.ReleaseGPUComputePipeline(Device, h), _device);
+            }
             var commands = gpu.LODs is { Length: > 0 } ? gpu.Capacity : 1;
             if (stream.CommandCapacity < commands) { var replacement = InstanceBuffer(checked((uint)commands * 20), SDL.GPUBufferUsageFlags.Indirect | SDL.GPUBufferUsageFlags.ComputeStorageWrite); stream.Commands?.Dispose(); stream.Commands = replacement; stream.CommandCapacity = commands; }
             output[0] = new() { Buffer = stream.Instances!.DangerousGetHandle() }; output[1] = new() { Buffer = stream.Commands!.DangerousGetHandle() };
+            if (models) output[2] = new() { Buffer = stream.Models!.DangerousGetHandle() };
             input[0] = gpu.State!.Handle(gpu.State.Current, Device); input[1] = gpu.State.Handle(gpu.State.Previous, Device); input[2] = gpu.State.Handle(gpu.Indirect ? gpu.State.Commands : gpu.State.Current, Device); input[3] = _instanceLODs!.DangerousGetHandle();
             var groups = ((uint)gpu.Capacity + 63) / 64; var width = Math.Min(65535u, groups);
             var parameters = new InstanceParameters
@@ -99,12 +110,12 @@ internal sealed unsafe partial class GPUCanvasBackend
                 Physics = new(gpu.Fraction, (float)gpu.Quality, width * 64, 0)
             };
             SDL.PushGPUComputeUniformData(command, 0, (nint)(&parameters), (uint)sizeof(InstanceParameters));
-            var pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)output, 2); if (pass == 0) throw Failure("begin instance conversion");
-            SDL.BindGPUComputePipeline(pass, _instancePack.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(pass, 0, (nint)input, 4); SDL.DispatchGPUCompute(pass, width, (groups + width - 1) / width, 1); SDL.EndGPUComputePass(pass);
+            var pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)output, models ? 3u : 2u); if (pass == 0) throw Failure("begin instance conversion");
+            SDL.BindGPUComputePipeline(pass, (models ? _instancePackModels! : _instancePack).DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(pass, 0, (nint)input, 4); SDL.DispatchGPUCompute(pass, width, (groups + width - 1) / width, 1); SDL.EndGPUComputePass(pass);
         }
     }
     private void ReleaseInstanceStreams()
     {
-        foreach (var stream in _instanceStreams) stream.Dispose(); _instanceStreams.Clear(); _instancePack?.Dispose(); _instanceIndices?.Dispose(); _instanceIndexUpload?.Dispose(); _instanceLODs?.Dispose(); _instanceLODUpload?.Dispose();
+        foreach (var stream in _instanceStreams) stream.Dispose(); _instanceStreams.Clear(); _instancePack?.Dispose(); _instancePackModels?.Dispose(); _instanceIndices?.Dispose(); _instanceIndexUpload?.Dispose(); _instanceLODs?.Dispose(); _instanceLODUpload?.Dispose();
     }
 }

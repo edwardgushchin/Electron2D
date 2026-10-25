@@ -132,7 +132,7 @@ public sealed partial class RenderingServer
         var localFit = item.Transform.AffineInverse() * fit;
         var first = _vertices.Count; Quad(localFit, color, pixels, item.Transform);
         var state = material?.RequireCanvasState();
-        _batches.Add(new(first, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: GetClip(item.Node, pixels), InstanceOwner: state?.Program.HasInstanceUniforms == true ? item.Node : null, CanvasModulation: material is null or CanvasItemMaterial { LightMode: LightMode.Unshaded } ? null : item.Node.RenderCanvas()?.Modulate ?? Colors.White));
+        _batches.Add(new(first, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: GetClip(item.Node, pixels), InstanceOwner: state?.Program.HasInstanceUniforms == true ? item.Node : null, Matrices: item.Matrices.For(state), CanvasModulation: material is null or CanvasItemMaterial { LightMode: LightMode.Unshaded } ? null : item.Node.RenderCanvas()?.Modulate ?? Colors.White));
     }
     private Rect2? VertexBounds(int first, int end, Rect2? initial)
     {

@@ -29,7 +29,7 @@ public sealed partial class RenderingServer : ElectronObject
     private List<CanvasVertex> _vertices = [];
     private List<CanvasBatch> _batches = [];
     private List<RenderEntry> _order = [];
-    private Dictionary<CanvasItem, Transform> _repeatTransforms = [];
+    private Dictionary<CanvasItem, Transform> _repeatTransforms = [], _repeatModels = [];
     private Dictionary<CanvasItem, Transform> _canvasTransforms = [];
     private float _interpolationFraction = 1f;
     private List<YSortEntry> _ySort = [];
@@ -130,9 +130,10 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly List<CanvasVertex> Vertices = [];
         internal readonly CanvasLightingFrame Lighting = new();
         internal readonly List<CanvasInstance> Instances = [];
+        internal readonly List<CanvasModelPose> ModelPoses = [];
         internal readonly List<CanvasBatch> Batches = [];
         internal readonly List<RenderEntry> Order = [];
-        internal readonly Dictionary<CanvasItem, Transform> Repeats = [], Transforms = [];
+        internal readonly Dictionary<CanvasItem, Transform> Repeats = [], RepeatModels = [], Transforms = [];
         internal readonly List<YSortEntry> YSort = [];
         internal readonly Resource?[] TextureScratch = new Resource?[32];
         internal int State;
@@ -146,7 +147,7 @@ public sealed partial class RenderingServer : ElectronObject
     private readonly Dictionary<Viewport, CanvasFrame> _canvasFrames = new(ReferenceEqualityComparer.Instance);
     private readonly List<CanvasFrame> _activeFrames = [];
     private void UseFrame(CanvasFrame frame)
-    { _viewport = frame.Viewport; _lighting = frame.Lighting; _nodes = frame.Nodes; _vertices = frame.Vertices; _instances = frame.Instances; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
+    { _viewport = frame.Viewport; _lighting = frame.Lighting; _nodes = frame.Nodes; _vertices = frame.Vertices; _instances = frame.Instances; _modelPoses = frame.ModelPoses; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _repeatModels = frame.RepeatModels; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
     private Color FrameClear(Viewport viewport) => viewport.TransparentBG ? default : _clearColor with { A = 1 };
     private void CaptureViewports(Node node)
     {
@@ -248,7 +249,7 @@ public sealed partial class RenderingServer : ElectronObject
             try { if (_frameSubmitted) DeliverFrameCallbacks(ref frameError); }
             finally
             {
-                foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Instances.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
+                foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Instances.Clear(); frame.ModelPoses.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.RepeatModels.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
                 _submittedFrames.Clear(); _nativeFrameStarted = false; _activeFrames.Clear(); _presentations.Clear(); _presentationFrames.Clear(); _presentationQueue.Clear(); _submittingTextures = false; _rendering = false; _frameSubmitted = false; _swapBuffers = true;
             }
         }
@@ -290,7 +291,7 @@ public sealed partial class RenderingServer : ElectronObject
         _renderingDevice?.FlushRendererCommands();
         frame.Clear = FrameClear(frame.Viewport); frame.ClearEnabled = ClearMode(frame.Viewport) != ViewportClearMode.Never;
         _submittingTextures = true;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses)); }
         finally { _submittingTextures = false; }
         frame.RenderObjects = _backend.RenderObjects; frame.RenderPrimitives = _backend.RenderPrimitives; frame.RenderDrawCalls = _backend.RenderDrawCalls;
         ViewportSubmitted(frame.Viewport);
@@ -329,7 +330,7 @@ public sealed partial class RenderingServer : ElectronObject
     }
     private void BuildFrame(CanvasFrame frame, SceneTree tree)
     {
-        UseFrame(frame); _instances.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
+        UseFrame(frame); _instances.Clear(); _modelPoses.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
         var viewport = frame.Viewport; var pixels = _backend.FindTarget(viewport)!.Size;
         var framebufferTransform = viewport is Window embedded ? new Transform(0, Vector2.One * embedded.RenderDensity, 0, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
@@ -364,7 +365,7 @@ public sealed partial class RenderingServer : ElectronObject
                 _canvasTooltipOverlay = SceneTree.IsTooltipNode(node);
                 _canvasID = ReferenceEquals(canvas, viewport.DefaultCanvasRuntime) ? 0 : (ulong)canvas.RID.GetID();
                 _canvasBasis = framebufferTransform * canvasTransform;
-                OrderCanvas(node, _canvasBasis);
+                OrderCanvas(node, _canvasBasis, Transform.Identity);
             }
         }
         finally { _canvasChildOrder.Clear(); _canvasRootOrder.Clear(); }
@@ -401,7 +402,7 @@ public sealed partial class RenderingServer : ElectronObject
             var clip = GetClip(item.Node, pixels);
             if (((clip is null || clip.Value.HasArea()) && !HasEmptyOwnClip(item.Node, pixels) || item.Node.MayIgnoreClip))
             {
-                AppendScreenCanvas(item.Node, item.Transform, clip, pixels, unshaded);
+                AppendScreenCanvas(item.Node, item.Transform, clip, pixels, unshaded, item.Matrices);
             }
             return;
         }
@@ -417,7 +418,9 @@ public sealed partial class RenderingServer : ElectronObject
                 var displacement = new Vector2((float)((x - times / 2) * (double)size.X), (float)((y - times / 2) * (double)size.Y));
                 transform.Origin += sourceTransform.BasisXform(displacement);
                 if (!transform.IsFinite()) throw new InvalidOperationException("Canvas repetition overflowed finite coordinates.");
-                AppendScreenCanvas(item.Node, transform, repeatedClip, pixels, unshaded);
+                var matrices = item.Matrices;
+                matrices = matrices with { Model = matrices.Model with { Origin = matrices.Model.Origin + _repeatModels[repeatSource].BasisXform(displacement) } };
+                AppendScreenCanvas(item.Node, transform, repeatedClip, pixels, unshaded, matrices);
             }
     }
 
@@ -475,10 +478,10 @@ public sealed partial class RenderingServer : ElectronObject
         for (var i = 0; i < children.Count; i++) CaptureSceneNodes(children[i]);
     }
 
-    private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
+    private void OrderCanvas(CanvasItem item, Transform transform, Transform model, bool alreadyYSorted = false)
     {
         if (!item.RenderVisible || (item.RenderVisibilityLayer & CanvasCullMask(_viewport)) == 0) return;
-        if (item is ParallaxLayer layer) _repeatTransforms[layer] = transform;
+        if (item is ParallaxLayer layer) { _repeatTransforms[layer] = transform; _repeatModels[layer] = model; }
         if (!alreadyYSorted)
         {
             var local = item.RenderLocal(_interpolationFraction);
@@ -488,12 +491,13 @@ public sealed partial class RenderingServer : ElectronObject
                 local.Origin = CanvasGeometry.Snap(local.Origin);
             }
             transform *= local;
+            model *= local;
         }
         if (item.RenderYSort)
         {
             if (alreadyYSorted && !IsCompositor(item))
             {
-                AddRenderEntry(item, transform);
+                AddRenderEntry(item, transform, model);
                 return;
             }
             var first = _ySort.Count;
@@ -503,19 +507,19 @@ public sealed partial class RenderingServer : ElectronObject
             CollectionsMarshal.AsSpan(_ySort).Slice(first, count).Sort(static (left, right) =>
                 Mathf.IsEqualApprox(left.Transform.Origin.Y, right.Transform.Origin.Y) ? left.Order.CompareTo(right.Order) : left.Transform.Origin.Y.CompareTo(right.Transform.Origin.Y));
             for (var index = first; index < first + count; index++)
-                if (!IsCompositor(item) || !ReferenceEquals(_ySort[index].Node, item)) OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, alreadyYSorted: true);
-            if (IsCompositor(item)) AddRenderEntry(item, transform);
+                if (!IsCompositor(item) || !ReferenceEquals(_ySort[index].Node, item)) OrderCanvas(_ySort[index].Node, transform * _ySort[index].Transform, model * _ySort[index].Transform, alreadyYSorted: true);
+            if (IsCompositor(item)) AddRenderEntry(item, transform, model);
             _ySort.RemoveRange(first, count);
             return;
         }
-        OrderChildren(item, transform, behind: true);
-        if (IsCompositor(item)) { OrderChildren(item, transform, behind: false); AddRenderEntry(item, transform); }
-        else { AddRenderEntry(item, transform); OrderChildren(item, transform, behind: false); }
+        OrderChildren(item, transform, model, behind: true);
+        if (IsCompositor(item)) { OrderChildren(item, transform, model, behind: false); AddRenderEntry(item, transform, model); }
+        else { AddRenderEntry(item, transform, model); OrderChildren(item, transform, model, behind: false); }
     }
 
-    private void AddRenderEntry(CanvasItem item, Transform transform)
+    private void AddRenderEntry(CanvasItem item, Transform transform, Transform model)
     {
-        if (IsRepeatSource(item) && (item is not ParallaxLayer || item.ServerState?.ItemRepeatSize is not null)) _repeatTransforms[item] = transform;
+        if (IsRepeatSource(item) && (item is not ParallaxLayer || item.ServerState?.ItemRepeatSize is not null)) { _repeatTransforms[item] = transform; _repeatModels[item] = model; }
         _canvasTransforms[item] = transform;
         if (!IsCompositor(item) && item.ServerState?.CustomRect is not null)
         {
@@ -525,7 +529,7 @@ public sealed partial class RenderingServer : ElectronObject
             var size = _backend.FindTarget(_viewport)!.Size;
             if (!area.Intersects(new Rect2(Vector2.Zero, size), includeBorders: true)) return;
         }
-        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.RenderZ, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item), transform));
+        _order.Add(new(item, _canvasTooltipOverlay, _canvasStacking, _canvasID, item.RenderZ, _order.Count, item.CanvasUsesWorldCoordinates ? _canvasBasis : transform, ParentGroup(item), transform, new(model, _canvasBasis)));
     }
 
     private bool HasEmptyOwnClip(CanvasItem item, Vector2i pixels, CanvasItem? repeatSource = null) =>
@@ -570,10 +574,10 @@ public sealed partial class RenderingServer : ElectronObject
             .Merge(first with { Position = first.Position + x + y });
     }
 
-    private void OrderChildren(CanvasItem item, Transform transform, bool behind)
+    private void OrderChildren(CanvasItem item, Transform transform, Transform model, bool behind)
     {
         var first = CollectCanvasChildren(item); var count = _canvasChildOrder.Count;
-        try { for (var i = first; i < count; i++) if (_canvasChildOrder[i].Node.RenderBehind == behind) OrderCanvas(_canvasChildOrder[i].Node, transform); }
+        try { for (var i = first; i < count; i++) if (_canvasChildOrder[i].Node.RenderBehind == behind) OrderCanvas(_canvasChildOrder[i].Node, transform, model); }
         finally { _canvasChildOrder.RemoveRange(first, _canvasChildOrder.Count - first); }
     }
 
@@ -630,7 +634,7 @@ public sealed partial class RenderingServer : ElectronObject
             finally
             {
                 _forcedTextureRedraw?.Clear(); _forcedTextureRedraw = null; _presentedWindows.Clear(); FramePreDrawCore = FramePostDrawCore = null; _queuedFrameCallbacks.Clear(); _completedFrameCallbacks.Clear(); foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
-                _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
+                _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _modelPoses.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _repeatModels.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
                 _contactCanvases.Clear();
                 _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;
                 _globalParameters.Clear();
@@ -647,6 +651,6 @@ public sealed partial class RenderingServer : ElectronObject
         if (_ownerThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Rendering requires the scene owner thread.");
     }
 
-    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasItem? Group, Transform CopyTransform);
+    private readonly record struct RenderEntry(CanvasItem Node, bool TooltipOverlay, long Stacking, ulong CanvasID, int Z, int Order, Transform Transform, CanvasItem? Group, Transform CopyTransform, CanvasMatrices Matrices);
     private readonly record struct YSortEntry(CanvasItem Node, Transform Transform, int Order);
 }

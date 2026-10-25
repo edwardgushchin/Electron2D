@@ -18,6 +18,8 @@
 
 # Rendering domain
 
+[Canvas matrix inputs](../components/visual-shaders.md#canvas-matrix-inputs) retain original item/instance transforms through ordinary, mesh, MultiMesh and GPU-particle streams, including singular canvas transforms, and expose renderer-owned numeric model/canvas/screen matrices to canvas vertex programs.
+
 [Completed canvas counters](../components/canvas-counters.md) connect actual GPU/Compatibility geometry submission to shared ViewportRenderInfo/ViewportRenderInfoType selectors, static RenderingServer queries and Performance. Failed/skipped frame boundaries and GPU-authored capacity budgets remain explicit.
 
 [Layered device multiview](../components/local-compute.md#layered-multiview) executes ordered view-indexed draws into array color/depth targets, including per-view input passes and MSAA resolve, without changing extra layers.

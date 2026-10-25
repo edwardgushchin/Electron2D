@@ -9,8 +9,9 @@ internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, Mas
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null, bool Procedural = false, Mesh.PrimitiveType Primitive = Mesh.PrimitiveType.Triangles, bool SnapGeneratedVertices = false, bool SnapNativeLines = false, MultiMeshGPUDraw GPU = default, ParticleGPUDraw? Particles = null, Texture? TextureSource = null, long ObjectCount = 1, Vector4 NormalMapFlags = default)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool MIPMaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null, CanvasGlyph Glyph = default, Color GlyphModulation = default, bool LinearColors = false, Color? CanvasModulation = null, Rect2? VisibilityBounds = null, bool Procedural = false, Mesh.PrimitiveType Primitive = Mesh.PrimitiveType.Triangles, bool SnapGeneratedVertices = false, bool SnapNativeLines = false, MultiMeshGPUDraw GPU = default, ParticleGPUDraw? Particles = null, Texture? TextureSource = null, long ObjectCount = 1, Vector4 NormalMapFlags = default, CanvasMatrices? Matrices = null)
 {
+    internal bool UsesModelPoseTable => Material?.Program.ModelMatrixUniform is not null && (InstanceCount > 0 || Particles is not null) && (Procedural || !GroupShader && !MaskShader);
     internal float RasterMargin => Primitive is Mesh.PrimitiveType.Points or Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip ? SnapNativeLines ? 1 : .5f : 0;
     internal byte[]? ShaderCode => Material?.Program.NativeCode;
 }
@@ -79,7 +80,7 @@ internal abstract partial class CanvasBackend : IDisposable
     internal virtual void EndFrame() { }
     internal abstract void Sync(CanvasRenderTarget? target);
     internal abstract void ReleaseTemporaryTexture(Texture texture);
-    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true);
+    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default);
     internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false, bool requireFrame = true);
     internal void SeedHistory(CanvasBackend source)
     {

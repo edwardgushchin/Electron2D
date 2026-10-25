@@ -50,8 +50,13 @@ internal sealed unsafe partial class GPUCanvasBackend
             SDL.EndGPURenderPass(pass); pass = 0;
             if (screen != 0)
             {
-                var output = new SDL.GPUBlitInfo { Source = new() { Texture = screen, W = (uint)screenSize.X, H = (uint)screenSize.Y },
-                    Destination = new() { Texture = presentation.Next.DangerousGetHandle(), W = (uint)presentation.Size.X, H = (uint)presentation.Size.Y }, LoadOp = SDL.GPULoadOp.DontCare, Filter = SDL.GPUFilter.Nearest };
+                var output = new SDL.GPUBlitInfo
+                {
+                    Source = new() { Texture = screen, W = (uint)screenSize.X, H = (uint)screenSize.Y },
+                    Destination = new() { Texture = presentation.Next.DangerousGetHandle(), W = (uint)presentation.Size.X, H = (uint)presentation.Size.Y },
+                    LoadOp = SDL.GPULoadOp.DontCare,
+                    Filter = SDL.GPUFilter.Nearest
+                };
                 SDL.BlitGPUTexture(command, in output);
             }
             Check(SDL.WaitAndAcquireGPUSwapchainTexture(command, window, out var swapchain, out var width, out var height), "acquire swapchain texture");

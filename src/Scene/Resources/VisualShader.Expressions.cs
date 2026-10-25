@@ -73,6 +73,7 @@ public sealed partial class VisualShader
         {
             result["CUSTOM0"] = aliases["inMeshCustom0"]; result["CUSTOM1"] = aliases["inMeshCustom1"];
             result["INSTANCE_ID"] = "gl_InstanceIndex";
+            foreach (var name in new[] { "MODEL_MATRIX", "CANVAS_MATRIX", "SCREEN_MATRIX" }) result[name] = aliases["e2d_values"] + "." + name;
         }
         if (!global)
         {

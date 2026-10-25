@@ -96,10 +96,10 @@ internal sealed unsafe partial class GPUCanvasBackend
         _linearizePipeline?.Dispose(); _presentationPipeline?.Dispose();
     }
 
-    private static void PushFrame(nint command, Vector4 dimensions, Color modulation)
+    private static void PushFrame(nint command, Vector4 dimensions, Color modulation, int? modelOffset = null)
     {
-        var frame = stackalloc Vector4[2] { dimensions, new(modulation.R, modulation.G, modulation.B, modulation.A) };
-        SDL.PushGPUVertexUniformData(command, 0, (nint)frame, (uint)(2 * sizeof(Vector4)));
+        var frame = stackalloc Vector4[3] { dimensions, new(modulation.R, modulation.G, modulation.B, modulation.A), new(BitConverter.Int32BitsToSingle(modelOffset ?? 0), 0, 0, 0) };
+        SDL.PushGPUVertexUniformData(command, 0, (nint)frame, (uint)((modelOffset.HasValue ? 3 : 2) * sizeof(Vector4)));
     }
 
     private static Color LinearColor(Color value) => CanvasGeometry.LinearColor(value);
