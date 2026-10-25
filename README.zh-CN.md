@@ -61,7 +61,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 - [核心服务与文件](docs/domains/core.md)。项目设置、JSON/XML 和配置文件、目录操作、压缩、加密及 ZIP 归档。数学、随机数、后台任务和运行时诊断。
 - [本地化](docs/domains/localization.md)。翻译域与上下文、PO/MO 目录、语言回退、整数复数规则、伪本地化及本地化资源选择。
 - [网络](docs/domains/networking.md)。TCP/UDP 和本地套接字、TLS/DTLS、HTTP/HTTPS、WebSocket 及 ENet。[WebRTC 数据通道](docs/components/webrtc.md)、类型化 RPC、权限控制、联网对象生成及[属性复制](docs/components/scene-replication.md)。
-- [项目自动化](tools/Batch/README.md)。创建和构建 C# 项目、保存与加载场景、运行无图形场景，以及捕获实际渲染帧并生成结构化报告。渲染捕获需要原生窗口和渲染器。
+- [共享项目工作流](docs/components/project-jobs.md)。创建或打开项目，共享编辑未保存的场景与 C# 代码，构建和运行不可变快照，并检查带有过期状态的实际截图。任务目前需要 Linux；截图需要原生窗口和渲染器。
 
 着色器材质、GPU 粒子、光照与阴影及 HDR 需要 GPU 渲染器；兼容渲染器提供其文档所述的 2D 功能。物理后端与渲染器分别选择。具体支持范围和验证限制见各子系统文档及[平台报告](docs/platform-verification.md)。
 
@@ -223,7 +223,7 @@ Electron2D 处于 alpha 阶段。公共 API 仍在开发中，可能随版本变
 | 查找类或方法 | [API 参考](docs/inventory.md) |
 | 了解子系统 | [文档目录](docs/README.md) |
 | 准备着色器 | [HLSL 和 GLSL 导入工具](tools/shaders/README.md) |
-| 自动构建项目、运行场景和捕获画面 | [项目批处理工具](tools/Batch/README.md) |
+| 构建和运行未保存的项目并检查截图 | [共享项目任务](docs/components/project-jobs.md) |
 | 准备发布 | [发布流程](docs/releasing.md) |
 
 <a id="examples"></a>

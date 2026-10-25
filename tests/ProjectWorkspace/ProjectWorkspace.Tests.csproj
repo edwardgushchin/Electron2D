@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../editor/Session/Electron2D.Editor.Session.csproj" />
+    <Compile Include="../../editor/Workspace/ProjectWorkspace.cs;../../editor/Workspace/SourceTextProjection.cs;../../editor/Workspace/EditorApplication.cs;../../editor/EditorScene.cs" Link="%(Filename)%(Extension)" />
+    <Content Include="../../editor/Assets/IBMPlexSans-Regular.ttf" Link="Assets/IBMPlexSans-Regular.ttf" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../editor/Assets/IBMPlexSans-SemiBold.ttf;../../docs/design/assets/sprite/mark-dark.svg;../../docs/design/assets/sprite/sparkle.svg;../../docs/design/assets/sprite/app-icon.svg" Link="Assets/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
+</Project>

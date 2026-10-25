@@ -1,6 +1,6 @@
 # TextEdit
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.TextEdit`. **Source:** [source](../../src/Scene/GUI/TextEdit.cs). **Component:** [Multiline editing](../components/multiline-editing.md).
 
@@ -257,3 +257,5 @@ Native dropdown/context anchors now resolve through the containing viewport into
 Visual selection adjacency uses a fixed .001 logical-pixel tolerance in the shared layout helper, preserving real unselected BIDI gaps at large advance coordinates. See [the text editing contract](../components/text-server.md#caret-selection-and-navigation).
 
 Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.
+
+Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now clip partial rows to the text content viewport. Fully invisible gutter rows skip recording. Typed custom callbacks retain their explicit drawing responsibility. [Native workspace regression](../../tests/ProjectWorkspace/Program.cs) checks that line numbers do not escape below a resized source control on both native backends. This does not change public declarations or broader semantic-service/IME/platform acceptance.

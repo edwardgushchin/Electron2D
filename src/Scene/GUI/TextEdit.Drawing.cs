@@ -109,14 +109,24 @@ public partial class TextEdit
             start += Math.Max(1, text.Length);
         }
     }
+    internal Rect2 GutterClipRect => new(new(0, _contentRect.Position.Y), new(Size.X, _contentRect.Size.Y));
+    internal void DrawGutterTexture(CanvasItem canvas, Texture texture, Rect2 destination, Color color)
+    {
+        var clipped = destination.Intersection(GutterClipRect);
+        if (!clipped.HasArea() || !destination.HasArea()) return;
+        var size = texture.GetSize();
+        var source = new Rect2((clipped.Position - destination.Position) / destination.Size * size, clipped.Size / destination.Size * size);
+        canvas.DrawTextureRectRegion(texture, clipped, source, color);
+    }
     private void DrawGutters(int lineIndex, float y)
     {
         var x = IsLayoutRTL() ? _contentRect.End.X : _contentRect.Position.X - GetTotalGutterWidth(); var line = _lines[lineIndex];
         for (var i = 0; i < _gutters.Count; i++)
         {
             var gutter = _gutters[i]; if (!gutter.Draw) continue; var cell = line.Gutters[i]; var rect = new Rect2(new(x, y), new(gutter.Width, _rowHeight)); x += gutter.Width;
-            if (gutter.Type == GutterType.String && cell.Layout.LineCount > 0) cell.Layout.Draw(this, rect.Position + new Vector2(Math.Max(0, (rect.Size.X - cell.Layout.Size.X) / 2), cell.Layout.FirstAscent), cell.Color, clipRect: rect.Intersection(new(Vector2.Zero, Size)));
-            else if (gutter.Type == GutterType.Icon && cell.Icon is { IsDisposed: false } icon) DrawTextureRect(icon, rect, false, cell.Color);
+            if (!rect.Intersects(GutterClipRect)) continue;
+            if (gutter.Type == GutterType.String && cell.Layout.LineCount > 0) cell.Layout.Draw(this, rect.Position + new Vector2(Math.Max(0, (rect.Size.X - cell.Layout.Size.X) / 2), cell.Layout.FirstAscent), cell.Color, clipRect: rect.Intersection(GutterClipRect));
+            else if (gutter.Type == GutterType.Icon && cell.Icon is { IsDisposed: false } icon) DrawGutterTexture(this, icon, rect, cell.Color);
             else if (gutter.Type == GutterType.Custom) { gutter.CustomDraw?.Invoke(this, lineIndex, i, rect); if (IsDisposed) return; }
         }
     }

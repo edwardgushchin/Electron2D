@@ -4,7 +4,7 @@
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
 
-[Compiled project batch execution](../components/project-batch.md) currently joins disk-based project operations, detached authoring, headless stepping and native capture through public runtime APIs. Its four tooling SDK types remain outside the runtime. ADR 0090 now selects a live project session and snapshot jobs as the target workflow; the existing tool's commands/SDK/formats are replaceable, while runtime entry points retain their owning contracts.
+[Shared project jobs](../components/project-jobs.md) join unsaved session authoring, immutable builds, fresh headless/native execution and real capture through public runtime APIs. Their tooling SDK remains outside the runtime; Engine lifecycle/input/capture entry points keep their own contracts.
 
 The Android application host supplies [system back navigation](../components/window-runtime.md#system-back-navigation) through the ordinary Engine lifecycle. Its existing unavailable STDIN read contract now has an explicit Android console guard; size validation remains first.
 

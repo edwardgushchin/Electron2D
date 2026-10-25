@@ -1,6 +1,6 @@
 # Code authoring
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 Viewport.PushTextInput replaces the focused CodeEdit document through inherited Text. It preserves literal supplied text instead of running paired input or indentation, retains undo history and executes TextSet cleanup synchronously. Read-only mode suppresses user input while allowing this authoring operation.
 
@@ -21,3 +21,5 @@ After CodeEdit, the next selection compares RichTextLabel/RichTextEffect/CharFXT
 The full-suite verification initially failed with tiered compilation enabled: AudioDelay's silent interval measured 5416 managed bytes; a longer individual warmup passed audio but a physics parameter interval then failed. Isolated delay passed and the original full suite passed with tiered compilation disabled. The final Release test project explicitly selects that stable optimized JIT profile; production settings are unchanged, and all zero-byte assertions/counts remain intact. Temporary numeric audio instrumentation and per-test warmup changes were reverted. These observations isolate the runtime-profile sensitivity, but do not identify its allocating call stack or prove the tiered profile allocation-free.
 
 CodeEdit detects completion-filter overrides through the strongly bound virtual delegate at construction. Inherited overrides participate, including with no text context; a hidden non-virtual method preserves the ordinary context filter. The public-only prerequisite fixture exercises both cases in managed and NativeAOT hosts.
+
+Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now clip partial rows to the text content viewport. Fully invisible gutter rows skip recording. Typed custom callbacks retain their explicit drawing responsibility. [Native workspace regression](../../tests/ProjectWorkspace/Program.cs) checks that line numbers do not escape below a resized source control on both native backends. This does not change public declarations or broader semantic-service/IME/platform acceptance.

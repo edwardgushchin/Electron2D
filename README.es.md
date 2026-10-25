@@ -61,7 +61,7 @@ Este es un resumen de las principales funciones ya implementadas en el motor. La
 - [Servicios básicos y archivos](docs/domains/core.md). Ajustes del proyecto, JSON/XML y configuración, directorios, compresión, cifrado y archivos ZIP. Matemáticas, números aleatorios, tareas en segundo plano y diagnóstico de ejecución.
 - [Localización](docs/domains/localization.md). Dominios y contextos de traducción, catálogos PO/MO, idiomas de respaldo, reglas plurales enteras, pseudolocalización y selección de recursos localizados.
 - [Redes](docs/domains/networking.md). TCP/UDP y sockets locales, TLS/DTLS, HTTP/HTTPS, WebSocket y ENet. [Canales de datos WebRTC](docs/components/webrtc.md), RPC tipadas, autoridad, creación de objetos en red y [replicación de propiedades](docs/components/scene-replication.md).
-- [Automatización de proyectos](tools/Batch/README.md). Crea y compila proyectos C#, guarda/carga escenas, ejecuta escenarios sin gráficos y captura fotogramas renderizados con informes estructurados. La captura requiere una ventana nativa y un renderizador.
+- [Proyecto compartido](docs/components/project-jobs.md). Crea/abre un proyecto, edita una escena y código C# compartidos sin guardar, compila y ejecuta instantáneas inmutables y revisa capturas con su estado de vigencia. Los trabajos requieren Linux; la captura exige ventana y renderizador nativos.
 
 Los materiales con shaders, las partículas GPU, la iluminación con sombras y HDR requieren el renderizador GPU; el renderizador de compatibilidad ofrece el perfil 2D descrito en su documentación. El backend de física se elige independientemente del renderizador. Consulta la documentación enlazada y el [informe de plataformas](docs/platform-verification.md) para conocer el alcance y las limitaciones de las verificaciones.
 
@@ -223,7 +223,7 @@ Puedes crear escenas en código, guardarlas con `PackedScene` y volver a cargarl
 | Encontrar una clase o un método | [Referencia de la API](docs/inventory.md) |
 | Entender un subsistema | [Índice de documentación](docs/README.md) |
 | Preparar shaders | [Herramienta de importación de HLSL y GLSL](tools/shaders/README.md) |
-| Automatizar compilaciones, escenarios y capturas | [Ejecución por lotes de proyectos](tools/Batch/README.md) |
+| Compilar y ejecutar cambios sin guardar y revisar capturas | [Trabajos del proyecto compartido](docs/components/project-jobs.md) |
 | Preparar una versión | [Procedimiento de publicación](docs/releasing.md) |
 
 <a id="examples"></a>

@@ -1,6 +1,6 @@
 # CodeEdit
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.CodeEdit`. **Source:** [source](../../src/Scene/GUI/CodeEdit.cs). **Component:** [Code authoring](../components/code-authoring.md).
 
@@ -1331,3 +1331,5 @@ The inherited cursor hook selects PointingHand only for a validated lookup symbo
 `protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)` projects the ordinary Control cursor hook for the current symbol.
 
 Completion-filter override detection uses a bound typed virtual delegate. Inherited overrides participate; hidden non-virtual methods preserve ordinary context filtering.
+
+Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now clip partial rows to the text content viewport. Fully invisible gutter rows skip recording. Typed custom callbacks retain their explicit drawing responsibility. [Native workspace regression](../../tests/ProjectWorkspace/Program.cs) checks that line numbers do not escape below a resized source control on both native backends. This does not change public declarations or broader semantic-service/IME/platform acceptance.

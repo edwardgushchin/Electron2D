@@ -61,7 +61,7 @@ This is an overview of the main features already implemented in the engine. Indi
 - [Core services and files](docs/domains/core.md). Project settings, JSON/XML and configuration files, directory operations, compression, encryption and ZIP archives. Math, random generation, worker tasks and runtime diagnostics.
 - [Localization](docs/domains/localization.md). Translation domains and contexts, PO/MO catalogs, locale fallback, integer plural rules, pseudolocalization and localized resource selection.
 - [Networking](docs/domains/networking.md). TCP/UDP/local sockets, TLS/DTLS, HTTP/HTTPS, WebSocket and ENet. [WebRTC data channels](docs/components/webrtc.md), typed RPC, authority, scene spawning and [property replication](docs/components/scene-replication.md).
-- [Project automation](tools/Batch/README.md). Create and build C# projects, save/load scenes, run headless scenarios and capture actual rendered frames with structured reports. Rendered capture requires a native window and renderer.
+- [Shared project workflow](docs/components/project-jobs.md). Create/open a source project, edit one shared unsaved scene and C# buffer, then build/run immutable snapshots and inspect real captures with stale attribution. Jobs currently require Linux; rendered capture requires a native window and renderer.
 
 Shader materials, GPU particles, lighting/shadows and HDR require the GPU renderer; the compatibility renderer supports its documented 2D profile. Physics backend selection is independent of renderer selection. See the linked subsystem documents and [platform report](docs/platform-verification.md) for exact support and verification limits.
 
@@ -229,7 +229,7 @@ Create scenes in code, save them with `PackedScene` and reload them from [resour
 | Find a class or method | [API reference](docs/inventory.md) |
 | Understand a subsystem | [Documentation index](docs/README.md) |
 | Prepare shaders | [HLSL and GLSL import tool](tools/shaders/README.md) |
-| Automate project builds, scenarios and captures | [Project batch runner](tools/Batch/README.md) |
+| Build/run unsaved projects and inspect captures | [Shared project jobs](docs/components/project-jobs.md) |
 | Prepare a release | [Release runbook](docs/releasing.md) |
 
 <a id="examples"></a>

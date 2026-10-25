@@ -7,7 +7,7 @@ namespace Electron2D;
 /// <summary>Edits source text with indentation, delimiters, folding, markers and typed completion.</summary>
 /// <remarks>Logical lines and Unicode scalar columns share the TextEdit document/history. Fonts and option
 /// icons are borrowed; parsing, authoring and first shaping are cold. Required gutters and hover timer belong
-/// to this control. Completion providers are application callbacks rather than a built-in language parser.
+/// to this control. Built-in line numbers and marker/folding icons clip partial rows to the text content viewport. Completion providers are application callbacks rather than a built-in language parser.
 /// Inherited virtual completion filters participate; hidden non-virtual methods keep the ordinary context filter. Override detection uses a bound typed delegate.</remarks>
 public partial class CodeEdit : TextEdit
 {
