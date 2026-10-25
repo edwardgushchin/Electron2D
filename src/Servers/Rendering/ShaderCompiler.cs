@@ -73,8 +73,9 @@ internal static unsafe partial class ShaderCompiler
         }
     });
 
-    internal static nint CreateShader(nint device, byte[] code, bool fragment) => Run(() =>
+    internal static nint CreateShader(nint device, byte[] code, bool fragment, bool sizedPoints = false) => Run(() =>
     {
+        CanvasPointProgram.ValidateNative(code, fragment, SDL.GetGPUDeviceDriver(device) ?? "", sizedPoints);
         fixed (byte* pointer = code)
         {
             var metadata = ShaderCross.ReflectGraphicsSPIRV((nint)pointer, (nuint)code.Length, 0);

@@ -1,6 +1,6 @@
 # GPUPhysicsDevice
 
-Last updated: 2026-10-23
+Last updated: 2026-10-25
 
 **Declaration:** `internal sealed class GPUPhysicsDevice : IDisposable`
 
@@ -34,3 +34,7 @@ Constructor failure releases any acquired device and SDL video reference. Ordina
 owners dispose pipelines/buffers before the device reference. The GPU suite checks
 compute lifetime with both renderers and after failed physics work. Repeated
 resident-store creation also exercises the compute-only initialization path.
+
+## Canvas point integration
+
+See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.

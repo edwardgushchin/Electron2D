@@ -70,6 +70,7 @@ public sealed partial class VisualShader
         result["TEXTURE_PIXEL_SIZE"] = aliases["e2d_values"] + ".TEXTURE_PIXEL_SIZE";
         if (stage is Type.Fragment or Type.Light)
         {
+            result["POINT_COORD"] = "gl_PointCoord";
             result["SCREEN_PIXEL_SIZE"] = aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE";
             result["SCREEN_UV"] = "(gl_FragCoord.xy * " + aliases["e2d_values"] + ".SCREEN_PIXEL_SIZE)";
             result["FRAGCOORD"] = "gl_FragCoord";
@@ -86,6 +87,7 @@ public sealed partial class VisualShader
         }
         if (stage == Type.Vertex)
         {
+            result["POINT_SIZE"] = "gl_PointSize";
             result["CUSTOM0"] = aliases["inMeshCustom0"]; result["CUSTOM1"] = aliases["inMeshCustom1"];
             result["INSTANCE_ID"] = "gl_InstanceIndex";
             foreach (var name in new[] { "MODEL_MATRIX", "CANVAS_MATRIX", "SCREEN_MATRIX" }) result[name] = aliases["e2d_values"] + "." + name;

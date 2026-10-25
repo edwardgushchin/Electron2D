@@ -1,6 +1,6 @@
 # Mesh.PrimitiveType
 
-Last updated: 2026-10-02
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D` · **Declaration:** `public enum Electron2D.Mesh.PrimitiveType` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -22,7 +22,7 @@ var value = Mesh.PrimitiveType.LineStrip;
 | --- | --- |
 | `public const Electron2D.Mesh.PrimitiveType LineStrip = 2` | Connected one-framebuffer-pixel line segments. |
 | `public const Electron2D.Mesh.PrimitiveType Lines = 1` | Independent pairs of one-framebuffer-pixel line vertices. |
-| `public const Electron2D.Mesh.PrimitiveType Points = 0` | Independent one-framebuffer-pixel points. |
+| `public const Electron2D.Mesh.PrimitiveType Points = 0` | Independent points, one framebuffer pixel unless an authored vertex output changes their diameter. |
 | `public const Electron2D.Mesh.PrimitiveType TriangleStrip = 4` | Connected triangles with alternating winding. |
 | `public const Electron2D.Mesh.PrimitiveType Triangles = 3` | Independent triangles. |
 
@@ -46,7 +46,7 @@ Summary: Independent pairs of one-framebuffer-pixel line vertices.
 
 `public const Electron2D.Mesh.PrimitiveType Points = 0`
 
-Summary: Independent one-framebuffer-pixel points.
+Summary: Independent points, one framebuffer pixel unless an authored vertex output changes their diameter.
 
 
 ### TriangleStrip

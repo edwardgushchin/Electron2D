@@ -36,13 +36,12 @@ internal static partial class GraphChecks
     private static void AuthorInvalidLightGraphs(string folder)
     {
         Directory.CreateDirectory(folder);
-        foreach (var failure in new[] { "missing", "role", "vertex-read", "light-write", "cycle", "point", "fragment-light" })
+        foreach (var failure in new[] { "missing", "role", "vertex-read", "light-write", "cycle", "light-size", "fragment-light" })
         {
             using var graph = new V();
             using var getter = new VisualShaderNodeVaryingGetter { VaryingName = failure == "missing" ? "absent" : "value", VaryingType = failure == "role" ? T.Int : T.Float };
             using var setter = new VisualShaderNodeVaryingSetter { VaryingName = "value" };
             using var first = new VisualShaderNodeFloatOp(); using var second = new VisualShaderNodeFloatOp();
-            using var input = new VisualShaderNodeInput { InputName = "point_coord" };
             using var expression = new VisualShaderNodeExpression();
             graph.AddVarying("value", V.VaryingMode.FragmentToLight, T.Float);
             if (failure == "light-write") graph.AddNode(V.Type.Light, setter, default, 2);
@@ -51,9 +50,10 @@ internal static partial class GraphChecks
                 graph.AddNode(V.Type.Light, first, default, 2); graph.AddNode(V.Type.Light, second, default, 3);
                 graph.ConnectNodesForced(V.Type.Light, 2, 0, 3, 0); graph.ConnectNodesForced(V.Type.Light, 3, 0, 2, 0); graph.ConnectNodesForced(V.Type.Light, 2, 0, 0, 1);
             }
-            else if (failure == "point")
+            else if (failure == "light-size")
             {
-                graph.AddNode(V.Type.Light, input, default, 2); graph.ConnectNodesForced(V.Type.Light, 2, 0, 0, 0);
+                expression.AddOutputPort(0, P.Vector3, "rgb"); expression.Expression = "rgb=vec3(POINT_SIZE);";
+                graph.AddNode(V.Type.Light, expression, default, 2); graph.ConnectNodesForced(V.Type.Light, 2, 0, 0, 0);
             }
             else if (failure == "fragment-light")
             {

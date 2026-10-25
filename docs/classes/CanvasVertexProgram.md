@@ -1,6 +1,6 @@
 # CanvasVertexProgram
 
-Last updated: 2026-10-18
+Last updated: 2026-10-25
 
 - Declaration: `internal static class CanvasVertexProgram`
 - Source: [CanvasVertexProgram.cs](../../src/Servers/Rendering/CanvasVertexProgram.cs)
@@ -31,3 +31,7 @@ Original instance identity is carried as two exact numerical 16-bit halves in pr
 Point topology also receives an initialized float PointSize output. Compose reuses an existing standalone/member builtin or adds an output interface, stores one before the authored entry and preserves later authored writes. Native point/line consumers exercise GLSL/HLSL modules without a size assignment and HLSL with a declared size output; other platforms retain their own execution gates. See [native primitive integration](../components/canvas-rendering.md#native-point-and-line-primitives).
 
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) retain decoded custom channels and exact logical instance IDs across hardware streams, CPU-expanded snapping and sorted GPU particles. The private CanvasVertex record is 172 bytes, with uint2 identities at byte 164/input location 15; glyph fields retain their existing offsets. Native and allocation verification is scoped by that contract.
+
+## Canvas point integration
+
+See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.

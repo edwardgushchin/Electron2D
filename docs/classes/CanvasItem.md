@@ -574,7 +574,7 @@ Both polygon methods require this item's active NotificationDraw, synchronous Dr
 
 Copies one to four local points: one point, a two-point line, a triangle, or a quad split along vertices 0–2. Zero points and more than four throw ArgumentException. No polygon triangulation is performed. Missing colors repeat the first supplied color, or white if empty; missing UVs are zero. Extra attributes are ignored. Used values must be finite. Texture borrowing, errors, scope, transforms and modulation follow DrawPolygon. Atlas primitives sample the full underlying image with unchanged UVs.
 
-Points cover one framebuffer pixel; lines use a one-pixel flat-cap strip, even under nonuniform item or drawing scale. Coincident line endpoints draw nothing. These short primitives have no antialias fringe. GPU rendering submits native points/lines. Compatibility uses native SDL points and uniform-color lines when untextured; textured or interpolated-color primitives retain triangle footprints. Subpixel coverage follows each driver. Vertex snapping snaps transformed primitive endpoints before submission.
+Points cover one framebuffer pixel by default; an authored GPU vertex output can change their diameter. Lines use a one-pixel flat-cap strip, even under nonuniform item or drawing scale. Coincident line endpoints draw nothing. These short primitives have no antialias fringe. GPU rendering submits native points/lines. Compatibility uses native SDL points and uniform-color lines when untextured; textured or interpolated-color primitives retain triangle footprints. Subpixel coverage follows each driver. Vertex snapping snaps transformed primitive endpoints before submission.
 
 Example inside an Entity subclass (uses only the public API):
 
@@ -1399,3 +1399,7 @@ Canvas normal-consuming graphs preserve each texture rectangle's flip/transpose 
 [Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) cover inherited physical/GUI roles and cold Window layout publication.
 
 Consuming fragment materials retain original rectangle/nine-patch source metadata in each batch. Different regions cannot coalesce through either retained geometry path. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.
+
+## Authored point diameter
+
+GPU point surfaces/commands preserve native topology and the authored vertex point diameter. See [canvas point programs](../components/canvas-points.md) for defaults, coordinates, geometry and capability limits.

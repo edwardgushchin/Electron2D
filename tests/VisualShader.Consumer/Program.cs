@@ -4,7 +4,10 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "command-metadata-cpu") GraphChecks.CommandMetadataCPU();
+    if (args.Length > 0 && args[0] == "point-inputs-author") GraphChecks.AuthorPointInputs(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "point-raw-author") GraphChecks.AuthorPointRaw(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "point-inputs-gpu") GraphChecks.RenderPointInputs(IOPath.GetFullPath(args[1]), args);
+    else if (args.Length > 0 && args[0] == "command-metadata-cpu") GraphChecks.CommandMetadataCPU();
     else if (args.Length > 0 && args[0] == "command-metadata-author") GraphChecks.AuthorCommandMetadata(IOPath.GetFullPath(args[1]));
     else if (args.Length > 0 && args[0] == "command-metadata-gpu") GraphChecks.RenderCommandMetadata(IOPath.GetFullPath(args[1]), args);
     else if (args.Length > 0 && args[0] == "surface-author") GraphChecks.AuthorSurface(IOPath.GetFullPath(args[1]));

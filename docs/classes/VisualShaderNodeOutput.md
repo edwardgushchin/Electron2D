@@ -78,4 +78,8 @@ The public VisualShader.Consumer and native particle integration corpus exercise
 
 See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.
 
-[Canvas fragment surfaces](../components/canvas-surfaces.md) execute fragment normal/map/depth and independent light/shadow positions through the existing retained material and scene-light path. Renderer-owned original model/canvas normal bases are excluded from material properties. Point-size/coordinate producers retain their separate dependencies.
+[Canvas fragment surfaces](../components/canvas-surfaces.md) execute fragment normal/map/depth and independent light/shadow positions through the existing retained material and scene-light path. Renderer-owned original model/canvas normal bases are excluded from material properties. Point-size/coordinate producers execute through [canvas point programs](../components/canvas-points.md).
+
+## Canvas points
+
+[Canvas point programs](../components/canvas-points.md) document vertex point-size output, stage-specific typed inputs, expression/global/custom source roles, actual point topology and backend capability limits.

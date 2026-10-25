@@ -154,3 +154,7 @@ Canvas command texture size uses the renderer-owned float2 `TEXTURE_PIXEL_SIZE` 
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) retain decoded custom channels and exact logical instance IDs across hardware streams, CPU-expanded snapping and sorted GPU particles. The private CanvasVertex record is 172 bytes, with uint2 identities at byte 164/input location 15; glyph fields retain their existing offsets. Native and allocation verification is scoped by that contract.
 
 Consuming fragment programs receive retained source regions or logical full-image pixel extents and the existing raw/HDR specular color/shininess factor through ordinary uniform buffers. See [canvas command metadata](../components/canvas-command-metadata.md) for semantics and verification.
+
+## Canvas point integration
+
+See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.

@@ -75,7 +75,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
     public override string[] GetPropertyOptions(int index) => ["Zero", "One", "Two"];
     public override string GetPropertyName(int index) => "selection";
     public override int GetDefaultInputPort(P type) => type == P.Sampler ? 1 : 0;
-    public override int GetInputPortCount() => Kind is 5 or 11 ? 2 : Kind is 8 or 22 ? 1 : Kind == 12 ? GetOptionIndex(0) == 0 ? 1 : 2 : 0;
+    public override int GetInputPortCount() => Kind is 5 or 11 ? 2 : Kind is 8 or 22 or 23 ? 1 : Kind == 12 ? GetOptionIndex(0) == 0 ? 1 : 2 : 0;
     public override P GetInputPortType(int port) => Kind is 5 or 11 ? port == 0 ? P.Sampler : P.Vector2 : Kind == 12 && port == 0 ? GetOptionIndex(0) == 0 ? P.Boolean : P.Vector4 : P.Scalar;
     public override int GetOutputPortCount() => Kind is 1 or 107 ? 2 : 1;
     public override P GetOutputPortType(int port) => port == 0 ? P.Vector3 : Kind == 107 ? P.Sampler : P.Scalar;
@@ -86,6 +86,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
         CustomNodes.Calls.Add("global");
         return Kind switch
         {
+            23 => "#if ELECTRON2D_SHADER_STAGE == 0\nfloat pointScale(float size){return POINT_SIZE*size/3.0;}\n#else\nvec3 pointColor(){return vec3(POINT_COORD,.75);}\n#endif",
             22 => "#if ELECTRON2D_SHADER_STAGE == 1\nvec4 customCommandData(){return REGION_RECT+SPECULAR_SHININESS;}\n#endif",
             >= 200 and <= 210 => "vec3 customShared(){return vec3(0.25,0.5,0.75);}",
             0 => "vec3 customShared(){return vec3(" + (GetOptionIndex(0) == 0 ? "0.125,0.25,0.375" : "0.25,0.5,0.75") + ");}",
@@ -99,6 +100,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
     public override string GetFuncCode(Shader.Mode mode, VisualShader.Type type)
     {
         CustomNodes.Calls.Add("function:" + type);
+        if (Kind == 23) return type == VisualShader.Type.Vertex ? "POINT_SIZE=3;" : type == VisualShader.Type.Fragment ? "UV=vec2(.99);" : "";
         if (Kind == 22) return type == VisualShader.Type.Fragment ? "UV=vec2(.99);" : "";
         return Kind is >= 200 and <= 210 ? (type == (VisualShader.Type)(Kind - 200) ? "vec3 customLocal=customShared();" : "") : Kind == 16 && mode == Shader.Mode.Particles && type == VisualShader.Type.Collide ? "COLOR=vec4(0.75,0.5,0.25,1.0); return;" : Kind == 0 ? "vec3 customLocal=customShared();" : Kind == 10 ? "COLOR=vec4(0.25,0.5,0.75,1.0);return;" : Kind == 110 ? "/*" + new string('b', 5 * 1024 * 1024) + "*/" : "";
     }
@@ -108,6 +110,7 @@ internal class CustomProcedureNode : VisualShaderNodeCustom
         var output = outputVariables[0];
         return Kind switch
         {
+            23 => type == VisualShader.Type.Vertex ? "POINT_SIZE=pointScale(" + inputVariables[0] + ");" + output + "=vec3(1);" : output + "=pointColor();",
             22 => "float metadataValue=customCommandData()[int(" + inputVariables[0] + ")]/256.0+.5;" + output + "=vec3(fract(metadataValue*255.0),floor(metadataValue*255.0)/255.0,.75);",
             0 or >= 200 and <= 210 => output + "=customLocal;",
             1 => "float value=0.0;for(int i=0;i<4;i++){if(i!=1)value+=0.125;}" + output + "=vec3(value,0.5,0.75);" + outputVariables[1] + "=0.5;",

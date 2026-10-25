@@ -12,7 +12,7 @@ Last updated: 2026-10-25
 | Inherited scene-root authoring | PackedScene, SceneState and Node; root templates, inherited overrides and rebinding | Root authorship first needs the editor's inherited-state/instance-mode metadata lifecycle. Runtime instantiation does not itself designate a new inherited root. |
 | Particle attractor input | Particle graph input plus emitter/force integrations | Requires an actual attractor producer, retained force accumulation and compute-frame transport. Constant input would not establish the capability. |
 
-The selected slice completes authored per-light execution, including source/compiled resources, typed copying, import rejection, retained program reload, material/global/Instance values, images and compiled custom providers. [Fragment surface outputs](canvas-surfaces.md) now supply normal/map/depth and independent light/shadow positions. Point builtins, fragment region/specular command metadata and particle attractor forces retain their separate producer dependencies.
+The selected slice completes authored per-light execution, including source/compiled resources, typed copying, import rejection, retained program reload, material/global/Instance values, images and compiled custom providers. [Fragment surface outputs](canvas-surfaces.md) now supply normal/map/depth and independent light/shadow positions. [Point builtins](canvas-points.md) and [fragment region/specular command metadata](canvas-command-metadata.md) now execute; particle attractor forces retain their producer dependency.
 
 ## Public workflow
 

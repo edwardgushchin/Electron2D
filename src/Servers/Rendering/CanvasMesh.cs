@@ -39,7 +39,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                         var surfaceVisibility = visibility ?? (surface.Data.IsProcedural ? transform * (instances is null ? surface.PackedAABB ?? default : instances.GetPresentationBounds(fraction)) : null);
                         var instanceCount = 0; var firstInstance = 0;
                         if (surface.LODs.Length == 0 && instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
-                            (surface.Data.IsProcedural || surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip) &&
+                            (surface.Data.IsProcedural || UsesNativePoints(surface.Primitive) || surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip) &&
                             RenderingServer.Service is { } renderer && renderer.CanInstance(skinOwner) &&
                             TryInstanceBounds(surface.Data, arrays.CustomAABB != default ? arrays.CustomAABB : surface.PackedAABB, out var bounds) && renderer.TryAppendInstances(instances, transform, color, arrays.CustomAABB != default ? arrays.CustomAABB : surface.PackedAABB ?? bounds, fraction, out firstInstance, linear, recordBounds: surfaceVisibility is null, models: (surface.Material?.RequireCanvasState() ?? inheritedMaterial)?.Program.ModelMatrixUniform is not null))
                         {
@@ -49,12 +49,12 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                         else if (instances is not null && (surface.Data.IsProcedural || (surface.Material?.RequireCanvasState() ?? inheritedMaterial)?.Program.ModelMatrixUniform is not null))
                         {
                             if (instances.DrawCount == 0) continue;
-                            var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: surfaceVisibility, procedural: surface.Data.IsProcedural, primitive: surface.Data.IsProcedural ? surface.Primitive : Mesh.PrimitiveType.Triangles, snap: snap, textureSource: textureSource, matrices: matrices);
+                            var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: surfaceVisibility, procedural: surface.Data.IsProcedural, primitive: NativePrimitive(surface.Data, surface.Primitive), snap: snap, textureSource: textureSource, matrices: matrices);
                             AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear, batches, template);
                             continue;
                         }
                         else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
-                        if (vertices.Count != first) AddBatch(vertices, batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear, surfaceVisibility, surface.Data.IsProcedural, surface.Data.IsProcedural ? surface.Primitive : Mesh.PrimitiveType.Triangles, snap, textureSource, matrices));
+                        if (vertices.Count != first) AddBatch(vertices, batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount, linear, surfaceVisibility, surface.Data.IsProcedural, NativePrimitive(surface.Data, surface.Primitive), snap, textureSource, matrices));
                     }
                 }
                 return;
@@ -73,12 +73,12 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
                 if (instances is not null && (surface.Data.IsProcedural || (surface.Material?.RequireCanvasState() ?? inheritedMaterial)?.Program.ModelMatrixUniform is not null))
                 {
                     if (instances.DrawCount == 0) continue;
-                    var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: surface.Data.IsProcedural ? surface.Primitive : Mesh.PrimitiveType.Triangles, snap: snap, textureSource: textureSource, matrices: matrices);
+                    var template = Batch(0, 0, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: NativePrimitive(surface.Data, surface.Primitive), snap: snap, textureSource: textureSource, matrices: matrices);
                     AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear, batches, template);
                     continue;
                 }
                 AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette, surface.LODs, linear);
-                if (vertices.Count != first) AddBatch(vertices, batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: surface.Data.IsProcedural ? surface.Primitive : Mesh.PrimitiveType.Triangles, snap: snap, textureSource: textureSource));
+                if (vertices.Count != first) AddBatch(vertices, batches, Batch(first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, linear: linear, visibility: visibility, procedural: surface.Data.IsProcedural, primitive: NativePrimitive(surface.Data, surface.Primitive), snap: snap, textureSource: textureSource));
             }
         }
         finally { if (lease is not null) lease.ReplayReaders--; }
@@ -171,6 +171,8 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
         if (!bounds.IsFinite() || !bounds.End.IsFinite()) throw new ArithmeticException("Mesh bounds exceed finite rectangles.");
         return bounds;
     }
+    private static bool UsesNativePoints(Mesh.PrimitiveType primitive) => primitive == Mesh.PrimitiveType.Points && RenderingServer.Service?.NativePoints == true;
+    private static Mesh.PrimitiveType NativePrimitive(MeshSurfaceData data, Mesh.PrimitiveType primitive) => data.IsProcedural || UsesNativePoints(primitive) ? primitive : Mesh.PrimitiveType.Triangles;
     private static CanvasBatch Batch(int first, int count, Material? surfaceMaterial, MaterialState? inheritedMaterial, BlendMode inheritedBlend,
         Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0, bool linear = false, Rect2? visibility = null, bool procedural = false, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles, bool snap = false, Texture? textureSource = null, CanvasMatrices? matrices = null)
     {
@@ -220,7 +222,7 @@ internal sealed partial class CanvasMesh(Mesh mesh, Transform local, Color modul
     private static void AppendSurface(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, Color custom, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette, bool linear, uint instanceID = uint.MaxValue)
     {
         var count = data.Indices.Length == 0 ? data.VertexCount : data.Indices.Length;
-        if (data.IsProcedural) { for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, false, custom, palette, toPalette, fromPalette, linear, instanceID)); return; }
+        if (data.IsProcedural || UsesNativePoints(primitive)) { for (var i = 0; i < count; i++) output.Add(Vertex(data, i, transform, modulation, !data.IsProcedural && snap, custom, palette, toPalette, fromPalette, linear, instanceID)); return; }
         if (primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip)
         {
             if (primitive == Mesh.PrimitiveType.Triangles)

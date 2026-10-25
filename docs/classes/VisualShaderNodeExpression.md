@@ -111,3 +111,7 @@ The public VisualShader.Consumer exercises typed defaults, copies, factories, ty
 - [Typed resources](../decisions/resources.md#adr-0013)
 
 [Canvas command metadata](../components/canvas-command-metadata.md) supplies read-only fragment regions and initial-UV specular values through the same retained program. See its geometry conventions, ownership, typed sampler boundary and verification limits.
+
+## Canvas points
+
+[Canvas point programs](../components/canvas-points.md) document vertex point-size output, stage-specific typed inputs, expression/global/custom source roles, actual point topology and backend capability limits.

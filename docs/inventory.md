@@ -1017,6 +1017,8 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [GradientTextureData](classes/GradientTextureData.md) | [GradientTextureData.cs](../src/Scene/Resources/GradientTextureData.cs) | [gradients](components/gradients.md) |
 | [CurveTextureData](classes/CurveTextureData.md) | [CurveTextureData.cs](../src/Scene/Resources/CurveTextureData.cs) | [curves](components/curves.md) |
 | [Image.State](classes/Image.State.md) | [Image.cs](../src/Core/IO/Image.cs) | [images](components/images.md) |
+| [GPUDeviceFactory](classes/GPUDeviceFactory.md) | [GPUDeviceFactory.cs](../src/Servers/Rendering/GPUDeviceFactory.cs) | [canvas-points](components/canvas-points.md) |
+| [CanvasPointProgram](classes/CanvasPointProgram.md) | [CanvasPointProgram.cs](../src/Servers/Rendering/CanvasPointProgram.cs) | [canvas-points](components/canvas-points.md) |
 | [CanvasVertexProgram](classes/CanvasVertexProgram.md) | [CanvasVertexProgram.cs](../src/Servers/Rendering/CanvasVertexProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [CanvasSamplerArrays](classes/CanvasSamplerArrays.md), [CanvasSamplerArrays.Slot](classes/CanvasSamplerArrays.md#slot) | [CanvasSamplerArrays.cs](../src/Servers/Rendering/CanvasSamplerArrays.cs), [pair propagation](../src/Servers/Rendering/CanvasSamplerArrays.Pairs.cs) | [shader-materials](components/shader-materials.md#fixed-sampled-descriptor-arrays) |
 | [ShaderProgram](classes/ShaderProgram.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |

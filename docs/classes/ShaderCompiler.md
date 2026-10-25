@@ -97,3 +97,7 @@ ValidateInterface reflects the original logical interface and then verifies nati
 Reflection validates the versioned typed default OpString payload before constructing/publishing a program. Names, scalar/array length, logical type and finite/canonical components must match active user material/Instance fields. Renderer/global defaults reject. Both canvas stages, TextureBlit and particle compute use this same boundary. Source extraction remains offline in ShaderImport. See [authored uniform defaults](../components/shader-materials.md#authored-uniform-defaults).
 
 Authored light programs retain validated function/state IDs, full validation code and declared native uniform slot extents. Light records retain raw color and separate energy without widening their eight-vector frame layout. The compositor invokes the private function per actual light and keeps the unlit entry separate. See [canvas light graphs](../components/canvas-light-graphs.md) for the exact integration and measured limits.
+
+## Canvas point integration
+
+See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.

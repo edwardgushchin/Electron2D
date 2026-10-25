@@ -8,7 +8,7 @@ public abstract partial class Mesh : Resource
     /// <summary>Defines the ordering of a surface's indexed or sequential vertices.</summary>
     public enum PrimitiveType
     {
-        /// <summary>Independent one-framebuffer-pixel points.</summary>
+        /// <summary>Independent points, one framebuffer pixel unless an authored vertex output changes their diameter.</summary>
         Points = 0,
         /// <summary>Independent pairs of one-framebuffer-pixel line vertices.</summary>
         Lines = 1,

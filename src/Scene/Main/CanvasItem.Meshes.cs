@@ -10,7 +10,8 @@ public abstract partial class CanvasItem
     /// <param name="transform">Local mesh transform, identity when null.</param>
     /// <param name="modulate">Mesh color multiplier, white when null.</param>
     /// <remarks>Retained draws observe surface edits without rerecording. Geometry lifetime is rechecked after virtual atlas identity resolution. Per-surface materials override this item's
-    /// material; transforms, clip, order, sampling and modulation remain inherited canvas policies.</remarks>
+    /// material; transforms, clip, order, sampling and modulation remain inherited canvas policies. GPU point
+    /// surfaces retain native topology and the authored vertex point diameter.</remarks>
     /// <exception cref="ArgumentNullException">The mesh is null.</exception>
     /// <exception cref="ArgumentException">Transform or color is nonfinite.</exception>
     /// <exception cref="ObjectDisposedException">A borrowed resource is disposed.</exception>
