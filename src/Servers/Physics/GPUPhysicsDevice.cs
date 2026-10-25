@@ -9,6 +9,7 @@ internal sealed class GPUPhysicsDevice : IDisposable
     internal nint Device => Handle.DangerousGetHandle();
     internal string Driver { get; }
     internal string DeviceName { get; }
+    internal bool SupportsSizedPoints { get; }
     /// <summary>Observes cold pipeline creation for scoped executable ownership checks.</summary>
     internal static Action<string, int, int>? PipelineCreationForTesting { get; set; }
     private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
@@ -27,8 +28,14 @@ internal sealed class GPUPhysicsDevice : IDisposable
             {
                 DisplayServer.RestoreVideoEnvironment(previous); previous = null;
             }
-            Handle = device = RenderingServer.Service?.RetainComputeDevice() ??
-                new RenderHandle(SDL.CreateGPUDevice(ShaderCompiler.GetFormats(), false, null), SDL.DestroyGPUDevice);
+            var renderer = RenderingServer.Service;
+            var shared = renderer?.RetainComputeDevice();
+            if (shared is not null) { Handle = device = shared; SupportsSizedPoints = renderer!.SupportsSizedPoints; }
+            else
+            {
+                var created = GPUDeviceFactory.Create(false); SupportsSizedPoints = created.SizedPoints;
+                Handle = device = new RenderHandle(created.Device, SDL.DestroyGPUDevice);
+            }
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
             DeviceName = SDL.GetStringProperty(SDL.GetGPUDeviceProperties(Device), SDL.Props.GPUDeviceNameString, "unknown") ?? "unknown";
         }

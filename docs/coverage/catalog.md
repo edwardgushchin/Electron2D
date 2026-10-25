@@ -971,7 +971,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VisualShaderNodeMix](classes/VisualShaderNodeMix.md) | VisualShaderNode | Implemented | 10 |
 | [VisualShaderNodeMultiplyAdd](classes/VisualShaderNodeMultiplyAdd.md) | VisualShaderNode | Implemented | 7 |
 | [VisualShaderNodeOuterProduct](classes/VisualShaderNodeOuterProduct.md) | VisualShaderNode | Implemented | 0 |
-| [VisualShaderNodeOutput](classes/VisualShaderNodeOutput.md) | VisualShaderNode | Partial | 0 |
+| [VisualShaderNodeOutput](classes/VisualShaderNodeOutput.md) | VisualShaderNode | Implemented | 0 |
 | [VisualShaderNodeParameter](classes/VisualShaderNodeParameter.md) | VisualShaderNode | Implemented | 9 |
 | [VisualShaderNodeParameterRef](classes/VisualShaderNodeParameterRef.md) | VisualShaderNode | Implemented | 1 |
 | [VisualShaderNodeParticleAccelerator](classes/VisualShaderNodeParticleAccelerator.md) | VisualShaderNode | Implemented | 6 |

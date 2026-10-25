@@ -625,12 +625,9 @@ fourth component. Author alpha separately or connect a scalar operation.
 
 Input executes color, UV, vertex, time and raw instance custom data, plus
 fragment coordinates, screen pixel size/UV and vertex ID in their appropriate
-stages. Unknown names retain the scalar-zero role. Matrix, image, logical command texture-size, mesh/instance-ID and authored light producers now execute through their documented ABI. Point and remaining surface/particle producers retain their exact separate dependencies. Physical textureSize is never substituted for logical command texture metadata.
+stages. Unknown names retain the scalar-zero role. Matrix, image, logical command texture-size, mesh/instance-ID and authored light producers now execute through their documented ABI. Point and fragment-surface producers now execute through [canvas points](canvas-points.md) and [canvas surfaces](canvas-surfaces.md); the particle attractor force retains its producer dependency. Physical textureSize is never substituted for logical command texture metadata.
 
-Point-size, normal/normal-map/depth, light-vertex and shadow-vertex output ports
-retain their documented port indices, but selecting them rejects import until
-their actual graph-to-canvas ABI integration exists. The class coverage remains
-Partial for the native point producer. Fragment surface outputs now execute; see [canvas fragment surfaces](canvas-surfaces.md). Authored light graphs and both varying roles now execute; see [canvas light graphs](canvas-light-graphs.md). Editor frame/preview consumers remain explicit prerequisites. Vertex transport is described below.
+Canvas vertex output port four executes native point size; fragment ports two through six execute normal/normal-map/depth, light-vertex and shadow-vertex values. See [canvas points](canvas-points.md) and [canvas fragment surfaces](canvas-surfaces.md) for their native capability and retained-state contracts. Authored light graphs and both varying roles execute through [canvas light graphs](canvas-light-graphs.md). Output class coverage is Implemented; the input class remains Partial for the particle attractor-force producer. Editor frame/preview consumers retain their own prerequisites. Vertex transport is described below.
 Sky/volumetric scene domains and deprecated inert graph offset are excluded.
 
 ## Verification and limits
@@ -1387,7 +1384,7 @@ Custom channels are independent of `instance_custom`. Present channels decode al
 
 Instance identity follows the source slot across ordinary retained expansion and hardware streams. A private uint2 input at vertex location 15 carries the original vertex and instance IDs. Its second word is populated by CPU-expanded instances and by the GPU particle vertex kernel, independently of sorted draw ordinal. Ordinary geometry uses the absent-identity sentinel and the native builtin. The private canvas vertex record grows from 168 to 172 bytes; glyph and transform fields retain their layout. Hardware instance streams keep their existing exact identity adapter. Changing particle draw order or switching between hardware instancing and CPU-expanded snapping therefore preserves identity-dependent material effects. This uses the existing command and mesh buffers and adds no CPU readback or per-frame bridge. Authored source changes require offline reimport; runtime material use does not invoke a compiler. Shader materials require the GPU backend under the existing contract.
 
-The candidate comparison selected these three executing roles over an authored light stage (which needs a per-light authored function boundary and shared material inputs) and three canvas matrix roles (which need original transform bases across ordinary, retained, instanced and procedural geometry). The matrix producer dependency was subsequently implemented in [canvas matrix inputs](#canvas-matrix-inputs); point and authored-light roles still keep `VisualShaderNodeInput` Partial.
+The candidate comparison selected these three executing roles over an authored light stage (which needs a per-light authored function boundary and shared material inputs) and three canvas matrix roles (which need original transform bases across ordinary, retained, instanced and procedural geometry). The matrix producer dependency was subsequently implemented in [canvas matrix inputs](#canvas-matrix-inputs); point and authored-light roles were subsequently implemented; particle attractor force keeps `VisualShaderNodeInput` Partial.
 
 ### Verification
 
@@ -1417,11 +1414,11 @@ Raw GLSL/HLSL canvas vertex sources declare these names as nonarray float32 four
 
 The public `MatrixInputs` consumer checks all sixteen components of all three roles through ordinary polygons, mesh-local transforms, CPU/GPU MultiMesh and GPU particles. GPU-written instance poses differ from the unchanged authored CPU snapshot. It exercises nodes, expressions and both source languages, sorted particles, singular/restored canvas, CPU expansion with snapping, position-free instancing and automatic light composition. `tools/shaders/check_canvas_matrices.py` runs authoring/import, 24 rejected interfaces with unchanged output hashes, and optional real rendering. The 112 exported native vertex variants, including SPIR-V 1.0/1.3/1.5 and an implicit instance-index producer, pass independent SPIR-V validation. The Linux software Vulkan component run checks 15,120 component observations across the root and two independent viewport snapshots; the additional modern-module run checks 8,208. Each measures 64 active/64 idle frames with zero owner/all-thread managed bytes. These receipts establish local execution; physical GPU, native heap, foreign platforms and owner acceptance remain separate.
 
-Selection compared this producer family with inherited scene packing and Material placeholder creation. Matrices unlock three executing semantics across four geometry families on the current backend; inherited packing needs a complete scene reconstruction/edit-state slice, and a standalone placeholder operation has less immediate runtime value. Point builtins/outputs and particle `attractor_force` retain their separate producer dependencies. Authored-light translation and numeric fragment command metadata now execute; the input class remains Partial.
+Selection compared this producer family with inherited scene packing and Material placeholder creation. Matrices unlock three executing semantics across four geometry families on the current backend; inherited packing needs a complete scene reconstruction/edit-state slice, and a standalone placeholder operation has less immediate runtime value. Point builtins/outputs now execute through [canvas point programs](canvas-points.md); particle `attractor_force` retains its force producer dependency. Authored-light translation and numeric fragment command metadata now execute; the input class remains Partial.
 
 ## Canvas fragment surfaces
 
-See [canvas fragment surfaces](canvas-surfaces.md) for normal/map/depth and independent light/shadow outputs, basis order, retained ownership, executable probes and limits. The point-size producer remains open.
+See [canvas fragment surfaces](canvas-surfaces.md) for normal/map/depth and independent light/shadow outputs, basis order, retained ownership, executable probes and limits. The [point-size and coordinate producer](canvas-points.md) now executes.
 
 ## Canvas command metadata
 

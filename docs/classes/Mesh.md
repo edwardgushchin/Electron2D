@@ -1,6 +1,6 @@
 # Mesh
 
-Last updated: 2026-10-20
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D` · **Declaration:** `public abstract class Electron2D.Mesh` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -397,3 +397,7 @@ GetAABB retains geometry-derived bounds for ordinary resources and authored rect
 ## Procedural mesh integration
 
 Face extraction skips UseEmptyVertexArray surfaces. Custom generated surfaces retain an independent logical count and may override OnGetAABB with authored visibility. Default procedural bounds are empty without recursive callbacks. See [the connected contract](../components/meshes.md#procedural-surfaces-without-positions).
+
+## Authored point diameter
+
+GPU point surfaces/commands preserve native topology and the authored vertex point diameter. See [canvas point programs](../components/canvas-points.md) for defaults, coordinates, geometry and capability limits.

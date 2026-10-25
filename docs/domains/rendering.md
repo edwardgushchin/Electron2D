@@ -537,3 +537,5 @@ Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture
 [ItemList input](../components/item-list-input.md) connects selection/navigation/search to focused input and native committed text, preserving notification order and retiring stale model indices after callbacks.
 
 Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](../components/canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.
+
+[Canvas point programs](../components/canvas-points.md) execute native point size and coordinates across graph, expression/custom and paired GLSL/HLSL shaders, meshes, instances and particles.

@@ -5,6 +5,7 @@ namespace Electron2D;
 /// stage and node ID, even without output connections. Use this source for functions, constants or
 /// declarations that satisfy the existing shader ABI. Compiler diagnostics preserve native GLSL stage
 /// restrictions. ELECTRON2D_SHADER_STAGE is zero for Vertex and one for Fragment during preprocessing.
+/// POINT_SIZE is available in vertex helpers; POINT_COORD is read-only in fragment/light helpers.
 /// Local statements and graph port values belong to VisualShaderNodeExpression instead.</remarks>
 public sealed class VisualShaderNodeGlobalExpression : VisualShaderNodeExpression
 {

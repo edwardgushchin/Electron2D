@@ -38,7 +38,7 @@ public abstract partial class CanvasItem
     /// <param name="uvs">Finite normalized vertex UVs. Missing entries are zero; extra entries are ignored.</param>
     /// <param name="texture">An optional borrowed live texture; atlas primitives sample the underlying full image.</param>
     /// <remarks>Copies supplied data. Points and lines remain one framebuffer pixel wide under scaling and have no
-    /// antialias fringe. GPU rendering retains native point/line topology. Compatibility rendering uses native
+    /// antialias fringe by default. An authored GPU vertex output can change the point diameter. GPU rendering retains native point/line topology. Compatibility rendering uses native
     /// untextured points and uniform-color lines; textured or interpolated-color primitives retain triangle
     /// footprints with backend-specific subpixel coverage. A coincident two-point line draws nothing. Primitive UVs
     /// do not remap atlas regions.</remarks>

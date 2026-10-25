@@ -273,7 +273,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         try
         {
             if (modules.Length == 1) { entry.Compute = new(_context.Handle, modules[0]); entry.Handle = entry.Compute.Handle; }
-            else { entry.Handle = new(ShaderCompiler.CreateShader(Device, modules[0], false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); entry.FragmentHandle = new(ShaderCompiler.CreateShader(Device, modules[1], true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); }
+            else { entry.Handle = new(ShaderCompiler.CreateShader(Device, modules[0], false, _context.SupportsSizedPoints), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); entry.FragmentHandle = new(ShaderCompiler.CreateShader(Device, modules[1], true, _context.SupportsSizedPoints), h => SDL.ReleaseGPUShader(Device, h), _context.Handle); }
             return entry;
         }
         catch { ReleaseProgram(entry); throw; }

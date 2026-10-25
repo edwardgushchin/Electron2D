@@ -21,7 +21,10 @@ namespace Electron2D;
 /// source rectangle for rectangle/nine-patch commands and full logical image pixel extents for attribute
 /// geometry. Canvas fragment specular_shininess caches the float-sampled channel times the command's
 /// color/shininess factor at initial UV, before custom setup or later UV edits. Both are read-only Vector4
-/// values; specular_shininess also retains its per-light role.</remarks>
+/// values; specular_shininess also retains its per-light role. Canvas vertex point_size is a scalar,
+/// initialized to one before authored code. Fragment/light point_coord is a read-only Vector2 across
+/// the native point footprint, from top-left zero to bottom-right one; it is independent of UV.
+/// Outside these stages both names retain scalar zero. Other primitive coordinates are undefined.</remarks>
 public sealed class VisualShaderNodeInput : VisualShaderNode
 {
     private string _inputName = "[None]";
@@ -69,9 +72,9 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         >= VisualShader.Type.Start and <= VisualShader.Type.ProcessCustom => _inputName is "active" or "color" or "custom" or "delta" or "emission_transform" or "index" or "lifetime" or "number" or "random_seed" or "time" or "transform" or "velocity" ||
             _inputName == "restart" && stage is VisualShader.Type.Process or VisualShader.Type.ProcessCustom or VisualShader.Type.Collide ||
             _inputName is "collision_depth" or "collision_normal" && stage == VisualShader.Type.Collide,
-        _ => _inputName is "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "vertex_id" or "at_light_pass" or "point_size" or "point_coord" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture" ||
-            stage == VisualShader.Type.Fragment && _inputName is "region_rect" or "specular_shininess" ||
-            stage == VisualShader.Type.Vertex && _inputName is "custom0" or "custom1" or "instance_id" or "model_matrix" or "canvas_matrix" or "screen_matrix"
+        _ => _inputName is "color" or "uv" or "vertex" or "time" or "fragcoord" or "instance_custom" or "vertex_id" or "at_light_pass" or "screen_pixel_size" or "screen_uv" or "texture_pixel_size" or "texture" or "normal_texture" or "specular_shininess_texture" ||
+            stage == VisualShader.Type.Fragment && _inputName is "point_coord" or "region_rect" or "specular_shininess" ||
+            stage == VisualShader.Type.Vertex && _inputName is "point_size" or "custom0" or "custom1" or "instance_id" or "model_matrix" or "canvas_matrix" or "screen_matrix"
     };
     internal PortType[] OutputsFor(VisualShader.Type stage) => [IsKnownInStage(stage) ? InputKind : PortType.Scalar];
     private PortType InputKind => _inputName switch
@@ -128,6 +131,8 @@ public sealed class VisualShaderNodeInput : VisualShaderNode
         "instance_id" when stage == VisualShader.Type.Vertex => "gl_InstanceIndex",
         "custom0" when stage == VisualShader.Type.Vertex => "inMeshCustom0",
         "custom1" when stage == VisualShader.Type.Vertex => "inMeshCustom1",
+        "point_size" when stage == VisualShader.Type.Vertex => "gl_PointSize",
+        "point_coord" when stage is VisualShader.Type.Fragment or VisualShader.Type.Light => "gl_PointCoord",
         _ when !IsKnownInStage(stage) => "0.0",
         _ => throw new NotSupportedException($"Canvas input '{_inputName}' has no executing producer in this graph stage.")
     };

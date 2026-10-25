@@ -13,6 +13,9 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (args.Length == 2 && args[0] == "--canvas-point-contract") { CanvasPointTests.Run(args[1]); return; }
+if (args.Length == 3 && args[0] == "--canvas-point-variants") { CanvasPointTests.Export(args[1], args[2]); return; }
+if (args.Length == 3 && args[0] == "--canvas-point-modern-sources") { CanvasLightGraphTests.ModernSources(args[1], args[2], ["point-node", "point-global", "point-light"]); return; }
 if (args.Length == 3 && args[0] == "--canvas-light-variants") { CanvasLightGraphTests.Export(args[1], args[2]); return; }
 if (args.Length == 3 && args[0] == "--canvas-command-variants") { CanvasLightGraphTests.Export(args[1], args[2], requireStage: false); return; }
 if (args.Length == 2 && args[0] == "--canvas-command-contract") { CanvasCommandMetadataTests.Run(args[1]); return; }

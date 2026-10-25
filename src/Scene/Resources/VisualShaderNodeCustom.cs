@@ -7,6 +7,7 @@ namespace Electron2D;
 /// Callbacks provide typed ports, defaults, metadata and GLSL source; no delegate or assembly is loaded from an archive.
 /// Definition discovery is lazy, after the derived constructor. Successful option edits rebuild callback defaults.
 /// Derived stored schema fields precede base descriptors, and derived resources retain the ordinary explicit copy hooks.
+/// Canvas callbacks share POINT_SIZE in Vertex and read-only POINT_COORD in Fragment/Light.
 /// Source callbacks run during import, never during material drawing. Editor UI remains a separate consumer.</remarks>
 public abstract class VisualShaderNodeCustom : VisualShaderNode
 {

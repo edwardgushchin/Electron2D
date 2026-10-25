@@ -57,6 +57,8 @@ public sealed partial class RenderingServer : ElectronObject
     }
 
     internal static RenderingServer? Service => Volatile.Read(ref _instance);
+    internal bool SupportsSizedPoints => _backend is GPUCanvasBackend gpu && gpu.SupportsSizedPoints;
+    internal bool NativePoints => _backend is GPUCanvasBackend;
 
     internal RenderHandle? RetainComputeDevice()
     {

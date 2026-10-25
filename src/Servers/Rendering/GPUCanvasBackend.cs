@@ -43,6 +43,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     }
     internal override string Method => "gpu";
     internal override string Driver { get; }
+    internal bool SupportsSizedPoints { get; }
     private nint Device => _device.DangerousGetHandle();
 
     internal RenderHandle RetainComputeDevice() => new(Device, static _ => { }, _device);
@@ -52,8 +53,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if ((SDL.GetWindowFlags(window.DangerousGetHandle()) & SDL.WindowFlags.Transparent) != 0)
             throw new NotSupportedException("The SDL GPU API cannot present transparent native windows; use compatibility rendering.");
         _window = window.DangerousGetHandle();
-        var (device, relaxed) = CreateDevice();
+        var (device, relaxed, sizedPoints) = GPUDeviceFactory.Create(true);
         _relaxedAndroidDevice = relaxed;
+        SupportsSizedPoints = sizedPoints;
         _device = new RenderHandle(device, SDL.DestroyGPUDevice, window);
         var claimed = false;
         RenderHandle? vertex = null, instancedVertex = null, lightingVertex = null, lightingInstanced = null;
@@ -80,29 +82,6 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         }
     }
 
-    private static (nint Device, bool Relaxed) CreateDevice()
-    {
-        var formats = ShaderCompiler.GetFormats();
-        var device = SDL.CreateGPUDevice(formats, false, null);
-        if (device != 0 || !OperatingSystem.IsAndroid() || (formats & SDL.GPUShaderFormat.SPIRV) == 0)
-            return (device, false);
-
-        // The canvas does not use these optional Vulkan features; older Android GPUs may lack them.
-        var props = SDL.CreateProperties();
-        if (props == 0) throw Failure("configure an Android GPU device");
-        try
-        {
-            if (!SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateShadersSPIRVBoolean, true) ||
-                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureClipDistanceBoolean, false) ||
-                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureDepthClampingBoolean, false) ||
-                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) ||
-                !SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false))
-                throw Failure("configure optional Android GPU features");
-            return (SDL.CreateGPUDeviceWithProperties(props), true);
-        }
-        finally { SDL.DestroyProperties(props); }
-    }
-
     internal override Vector2i GetPixelSize()
     {
         Check(SDL.GetWindowSizeInPixels(_window, out var width, out var height), "query GPU window size");
@@ -111,7 +90,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private RenderHandle CreateShader(byte[] code, bool fragment)
     {
-        return new RenderHandle(ShaderCompiler.CreateShader(Device, code, fragment), h => SDL.ReleaseGPUShader(Device, h), _device);
+        return new RenderHandle(ShaderCompiler.CreateShader(Device, code, fragment, SupportsSizedPoints), h => SDL.ReleaseGPUShader(Device, h), _device);
     }
 
     private RenderHandle CreatePipeline(byte[] code, BlendMode blend, bool overwrite = false, bool instanced = false, bool lighting = false, SDL.GPUTextureFormat format = SDL.GPUTextureFormat.R8G8B8A8Unorm, SDL.GPUSampleCount samples = SDL.GPUSampleCount.SampleCount1, bool lcd = false, byte[]? vertexCode = null, Mesh.PrimitiveType primitive = Mesh.PrimitiveType.Triangles)

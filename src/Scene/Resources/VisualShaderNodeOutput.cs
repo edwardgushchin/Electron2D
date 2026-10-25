@@ -6,7 +6,10 @@ namespace Electron2D;
 /// replacing the current light's automatic contribution. TextureBlit accepts four numeric RGBA outputs.
 /// Fragment ports two through six author the normal, normal map, map depth, light position and shadow position.
 /// The normal map overrides the direct normal and blends from the flat normal by its unclamped depth.
-/// Particle roots use VisualShaderNodeParticleOutput. Unsupported point outputs reject during import.</remarks>
+/// Vertex port four writes the native point diameter in framebuffer pixels. Unconnected values retain
+/// one unless authored code changed it. Sizes must be positive finite values in the device range;
+/// programs requiring sized points reject on devices without that capability.
+/// Particle roots use VisualShaderNodeParticleOutput.</remarks>
 public class VisualShaderNodeOutput : VisualShaderNode
 {
     internal VisualShader.Type Stage;

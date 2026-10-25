@@ -29,7 +29,7 @@ public sealed partial class VisualShader
         var stagePlan = domain?.Plans[stage] ?? PlanStage(stage);
         var incoming = stagePlan.Incoming;
         var root = GetNode(stage, 0);
-        var lastSupported = domain is null ? stage == Type.Vertex ? 3 : 1 : root.Inputs.Length - 1;
+        var lastSupported = domain is null ? stage == Type.Vertex ? 4 : 1 : root.Inputs.Length - 1;
         for (var port = lastSupported + 1; port < root.Inputs.Length; port++)
             if (incoming.ContainsKey((0, port)) || root.GetDefaultInputValues().Any(v => v.Port == port))
                 throw new NotSupportedException($"Canvas {stage} output {port} requires its separate graph output integration.");
@@ -56,6 +56,10 @@ public sealed partial class VisualShader
         var header = domain is null ? ParameterHeader(stage, reachable, parameters, slots, plan.Images, aliases, custom) : domain.StageHeader(stage);
         if (varyings is not null) header = VaryingHeader(stage, varyings, header);
         var source = new StringBuilder(header);
+        if (stage == Type.Vertex && (incoming.ContainsKey((0, 4)) || root.GetDefaultInputValues().Any(d => d.Port == 4) ||
+            reachable.Any(id => graph.Nodes[id].Node is VisualShaderNodeInput { InputName: "point_size" }) ||
+            expressionSources.Any(s => SourceIdentifiers(s).Any(t => !t.Member && s.Substring(t.Start, t.Length) == "POINT_SIZE"))))
+            source.AppendLine("gl_PointSize = 1.0;");
         if (stage == Type.Fragment && domain?.Surface is { } surface) EmitSurfaceStart(source, aliases, surface);
         if (NeedsCommandInput(stage, reachable, custom, "SPECULAR_SHININESS")) EmitSpecularStart(source, aliases);
         EmitCustomFunctions(custom, stage, aliases, source);
@@ -105,7 +109,7 @@ public sealed partial class VisualShader
                 for (var port = 0; port <= lastSupported; port++)
                 {
                     if (!incoming.ContainsKey((0, port)) && !defaults.Any(d => d.Port == port)) continue;
-                    var destination = stage == Type.Vertex ? port switch { 0 => "VERTEX", 1 => "UV", 2 => "COLOR.rgb", _ => "COLOR.a" }
+                    var destination = stage == Type.Vertex ? port switch { 0 => "VERTEX", 1 => "UV", 2 => "COLOR.rgb", 3 => "COLOR.a", _ => "gl_PointSize" }
                         : port == 0 ? "COLOR.rgb" : "COLOR.a";
                     source.Append("    ").Append(StageExpression(destination, aliases)).Append(" = ").Append(Input(0, port)).AppendLine(";");
                 }

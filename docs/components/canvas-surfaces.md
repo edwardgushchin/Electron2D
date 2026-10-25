@@ -9,7 +9,7 @@ Last updated: 2026-10-25
 | Candidate | API value and dependent families | Backend feasibility |
 | --- | --- | --- |
 | Fragment surfaces | Five graph/material/input/expression/custom families; normal maps and displaced lighting/shadows | Selected: original model/canvas snapshots and native light composition already exist. |
-| Point size/coordinates | Four output/input/expression/custom families; procedural point sprites | Requires replacing the fixed native point-size output and supplying portable point coordinates and capability policy. |
+| Point size/coordinates | Four output/input/expression/custom families; procedural point sprites | At selection, required native point-size output and a coordinate/capability policy. Subsequently implemented in [canvas points](canvas-points.md). |
 | Shared texture views | RDTextureView, RenderingDevice, TextureRD and TextureArrayRD; alternate formats and subresources | Requires native shared-view lifetime and writable alias synchronization, beyond existing initial component maps. |
 
 ## Authoring and surface behavior

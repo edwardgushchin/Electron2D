@@ -970,3 +970,7 @@ Authored canvas light graphs replace each real light contribution through the ex
 ## Fragment command metadata
 
 Consuming retained batches capture the complete rectangle/nine-patch source region before geometry expansion. Region identity participates in both canvas and mesh coalescing; attribute geometry instead receives full logical image pixel extents. [Canvas command metadata](canvas-command-metadata.md) documents the initial-UV specular cache, ordinary shader fields, typed channel boundary and executable verification.
+
+## Authored native points
+
+[Canvas point programs](canvas-points.md) preserve native Points for GPU ArrayMesh/instance replay as well as primitive and GPU-particle streams. The compatibility path retains its existing point geometry and shader-material refusal.

@@ -1,7 +1,8 @@
 namespace Electron2D;
 
 /// <summary>Executes a GLSL statement block with typed, named graph ports during offline canvas import.</summary>
-/// <remarks>Reachable blocks run after their inputs, in a local scope. Numeric outputs begin at zero,
+/// <remarks>Canvas POINT_SIZE reads/writes the vertex diameter; POINT_COORD reads the native
+/// fragment/light point coordinate independently of UV. Reachable blocks run after their inputs, in a local scope. Numeric outputs begin at zero,
 /// except matrices which begin at identity. Input sampler names refer to connected image symbols;
 /// samplers cannot be local output variables. Global definitions use VisualShaderNodeGlobalExpression.
 /// Statements can contain loops, branches and fragment discard. The shader compiler validates stage
