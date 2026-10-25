@@ -88,6 +88,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal SamplerLink[] Samplers = [];
         internal PushStage[] Push = [];
         internal byte[][] Sources = [];
+        internal Dictionary<uint, Specialization> Constants = null!;
+        internal int[]? OutputSlots;
+        internal uint ViewIndex;
+        internal GraphicsRecipe? Recipe;
+        internal Dictionary<TextureSwizzleKey, SwizzleVariant>? SwizzleVariants;
         internal Entry? Variant;
         internal RenderHandle[] ViewPipelines = [];
         internal Entry[] ViewPrograms = [];
@@ -244,13 +249,13 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
         var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return program;
     }
-    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null, uint viewIndex = 0)
+    private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null, uint viewIndex = 0, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? swizzles = null)
     {
         var used = new HashSet<uint>(); var modules = sources.Select(code => template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
         if (!template && constants.Keys.Any(id => !used.Contains(id))) throw new ArgumentException("A specialization identifier is not declared by this shader.", nameof(constants));
         var layouts = new Binding[modules.Length][]; var pushes = new PushStage[modules.Length][]; var samplers = new SamplerLink[modules.Length][];
         for (var i = 0; i < modules.Length; i++)
-        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i], samplers[i]) = RemapCore(LowerViewIndex(modules[i], viewIndex, stage), stage, template); }
+        { var stage = modules.Length == 1 ? ShaderStage.Compute : i == 0 ? ShaderStage.Vertex : ShaderStage.Fragment; (modules[i], layouts[i], pushes[i], samplers[i]) = RemapCore(LowerViewIndex(modules[i], viewIndex, stage), stage, template, swizzles); }
         var layout = layouts.SelectMany(l => l).ToArray();
         var samplerLinks = samplers.SelectMany(s => s).ToArray();
         NormalizeSamplerSources(layout, samplerLinks);
@@ -261,6 +266,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || !b.DynamicCount && !first.DynamicCount && b.Count != first.Count || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
+        entry.Sources = sources; entry.Constants = constants; entry.OutputSlots = outputSlots; entry.ViewIndex = viewIndex;
         if (template) return entry;
         if (entry.Samplers.Any(s => s.Sampler is null)) PrepareFetchSampler();
         if (outputSlots is not null) modules[1] = RemapFragmentOutputs(modules[1], outputSlots, entry.Outputs);
@@ -374,6 +380,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         if (_pipeline is null) throw new InvalidOperationException("Bind a compute pipeline first.");
         RequirePush(_pipeline);
+        var sampledVariant = SampledVariant(Get(_pushPipeline, Kind.Pipeline));
+        _pipeline = sampledVariant?.Programs[0] ?? PipelineProgram(Get(_pushPipeline, Kind.Pipeline));
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
         Span<uint> bufferSizes = stackalloc uint[8];
         var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
@@ -456,7 +464,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
-        _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
+        _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -471,7 +479,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines();
-            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
+            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }
         base.Dispose(disposing);

@@ -7,11 +7,12 @@ namespace Electron2D;
 // SDL exposes scalar descriptor slots; opaque values become slot indices only in the derived native module.
 internal static partial class CanvasSamplerArrays
 {
-    private sealed record Slot(uint Type, uint Variable, int Index, uint Selector, uint ImageSelector);
+    private sealed record Slot(uint Type, uint Variable, int Index, uint Selector, uint ImageSelector, uint Swizzle = 0);
 
-    internal static byte[] Lower(byte[] code, ShaderTexture[] textures, bool needsSampler = false, DevicePlan? device = null)
+    internal static byte[] Lower(byte[] code, ShaderTexture[] textures, bool needsSampler = false, DevicePlan? device = null, IReadOnlyList<uint>? swizzles = null, bool native = false)
     {
-        if (device is null && !needsSampler && !textures.Any(t => t.ArrayLength != 0)) return code;
+        if (device is null && !needsSampler && !textures.Any(t => t.ArrayLength != 0) && (swizzles is null || swizzles.All(v => v == 0))) return code;
+        if (swizzles is not null && swizzles.Count != textures.Length) throw new ArgumentException("A sampled component map is required for every native texture slot.", nameof(swizzles));
         var module = new Module(code);
         var source = module.Instructions;
         var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
@@ -27,7 +28,7 @@ internal static partial class CanvasSamplerArrays
         // Rewritten signatures and interleaved constants need uint before every global declaration.
         var integerDeclaration = types[integer]; source.Remove(integerDeclaration); declarations.Remove(integerDeclaration);
         source.Insert(source.FindIndex(i => Category(Op(i)) == 10), integerDeclaration);
-        bool Opaque(uint type) => types.TryGetValue(type, out var i) && (Op(i) is 26 or 27 || Op(i) == 25 && (device is null || i[7] == 1) || Op(i) == 28 && Opaque(i[2]) || Op(i) == 32 && i[2] == 0 && Opaque(i[3]));
+        bool Opaque(uint type) => types.TryGetValue(type, out var i) && (Op(i) is 26 or 27 || Op(i) == 25 && ((device is null && !native) || i[7] == 1) || Op(i) == 28 && Opaque(i[2]) || Op(i) == 32 && i[2] == 0 && Opaque(i[3]));
         uint Element(uint type)
         {
             var i = types[type]; return Op(i) == 32 ? Element(i[3]) : Op(i) == 28 ? Element(i[2]) : type;
@@ -73,7 +74,7 @@ internal static partial class CanvasSamplerArrays
                 var pair = device.Pairs[index]; var resource = resources.Single(r => r[2] == pair.Image); var element = Element(resource[1]);
                 var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);
                 annotations.Add(Instruction(71, variable, 33, (uint)index)); annotations.Add(Instruction(71, variable, 34, device.Set));
-                slots.Add(new(element, variable, index, pair.ImageIndex * device.Stride + pair.SamplerIndex, pair.ImageIndex));
+                slots.Add(new(element, variable, index, pair.ImageIndex * device.Stride + pair.SamplerIndex, pair.ImageIndex, device.Swizzles?[index] ?? 0));
                 if (Op(types[element]) == 25)
                 {
                     var sampler = next++; declarations.Add(Instruction(59, Type(32, 0, Type(26)), sampler, 0)); interfaces.Add(sampler); samplers.Add(index, sampler);
@@ -87,13 +88,13 @@ internal static partial class CanvasSamplerArrays
                 var binding = decorations.TryGetValue(resource[2], out var d) && d.TryGetValue(33, out var b) ? b : uint.MaxValue;
                 var first = Array.FindIndex(textures, t => t.Binding == binding);
                 declarations.Add(Instruction(43, integer, resource[2], (uint)Math.Max(0, first)));
-                if (first < 0 || Op(types[element]) == 26 || names.GetValueOrDefault(resource[2]) != textures[first].NativeName) continue;
+                if (first < 0 || Op(types[element]) == 26 || !native && names.GetValueOrDefault(resource[2]) != textures[first].NativeName) continue;
                 for (var index = first; index < textures.Length && textures[index].Binding == binding; index++)
                 {
                     var variable = next++; declarations.Add(Instruction(59, Type(32, 0, element), variable, 0)); interfaces.Add(variable);
                     annotations.Add(Instruction(71, variable, 33, (uint)index));
                     annotations.Add(Instruction(71, variable, 34, d![34])); Name(variable, $"EDSampler{index}_{element}");
-                    slots.Add(new(element, variable, index, (uint)index, (uint)index));
+                    slots.Add(new(element, variable, index, (uint)index, (uint)index, swizzles?[index] ?? 0));
                     if (Op(types[element]) == 25)
                     {
                         var sampler = next++; declarations.Add(Instruction(59, Type(32, 0, Type(26)), sampler, 0)); interfaces.Add(sampler); samplers.Add(index, sampler);
@@ -151,7 +152,57 @@ internal static partial class CanvasSamplerArrays
                 helper.Add(Instruction(248, next++));
                 uint Invoke(Slot slot)
                 {
-                    var sample = (uint[])template.Clone(); sample[2] = next++; sample[3] = Load(slot, resourceType, helper); helper.Add(sample); return sample[2];
+                    var swizzle = slot.Swizzle;
+                    if (swizzle == 0 || op is < 87 or > 97)
+                    { var unchanged = (uint[])template.Clone(); unchanged[2] = next++; unchanged[3] = Load(slot, resourceType, helper); helper.Add(unchanged); return unchanged[2]; }
+                    var sample = (uint[])template.Clone(); sample[3] = Load(slot, resourceType, helper);
+                    uint Execute(uint[] operation) { operation[2] = next++; helper.Add(operation); return operation[2]; }
+                    int Component(int lane) { var selected = (int)((swizzle >> (lane * 3)) & 7); return selected == 0 ? lane + 3 : selected; }
+                    var resultType = types[instruction[1]]; var scalar = Op(resultType) == 23 ? resultType[2] : instruction[1];
+                    uint Literal(uint value, uint type)
+                    {
+                        if (value == 0) return Zero(type);
+                        var existing = declarations.Concat(source).FirstOrDefault(i => Op(i) == 43 && i[1] == type && i[3] == (Op(types[type]) == 22 ? 0x3f800000u : 1u));
+                        if (existing is not null) return existing[2];
+                        var id = next++; declarations.Add(Instruction(43, type, id, Op(types[type]) == 22 ? 0x3f800000u : 1u)); return id;
+                    }
+                    uint Splat(int selected)
+                    {
+                        var value = Literal(selected == 2 || selected == 6 ? 1u : 0u, scalar);
+                        if (Op(resultType) != 23) return value;
+                        var result = next++; helper.Add(Instruction(80, [instruction[1], result, .. Enumerable.Repeat(value, (int)resultType[3])])); return result;
+                    }
+                    if (op is 89 or 90 or 93 or 94 or 97)
+                        return Component(0) == 3 ? Execute(sample) : Splat(Component(0));
+                    if (op == 96)
+                    {
+                        var component = template[5]; var componentType = valueTypes[instruction[5]];
+                        var known = source.FirstOrDefault(i => Op(i) == 43 && i[2] == instruction[5]);
+                        uint Gather(int lane)
+                        {
+                            var selected = Component(lane); if (selected is 1 or 2) return Splat(selected);
+                            var operation = (uint[])sample.Clone(); operation[5] = Constant((uint)(selected - 3)); return Execute(operation);
+                        }
+                        if (known is not null && known[3] < 4) return Gather((int)known[3]);
+                        var result = Zero(instruction[1]);
+                        for (var lane = 0; lane < 4; lane++)
+                        {
+                            var gathered = Gather(lane); var laneID = next++;
+                            declarations.Add(Instruction(43, componentType, laneID, (uint)lane));
+                            var condition = next++; helper.Add(Instruction(170, boolean, condition, component, laneID));
+                            var splat = next++; helper.Add(Instruction(80, [Type(23, boolean, 4), splat, condition, condition, condition, condition]));
+                            var merged = next++; helper.Add(Instruction(169, instruction[1], merged, splat, gathered, result)); result = merged;
+                        }
+                        return result;
+                    }
+                    var raw = Execute(sample); var components = new uint[4];
+                    for (var lane = 0; lane < components.Length; lane++)
+                    {
+                        var selected = Component(lane);
+                        if (selected is 1 or 2) components[lane] = Literal(selected == 2 ? 1u : 0u, scalar);
+                        else { components[lane] = next++; helper.Add(Instruction(81, scalar, components[lane], raw, (uint)(selected - 3))); }
+                    }
+                    var mapped = next++; helper.Add(Instruction(80, [instruction[1], mapped, .. components])); return mapped;
                 }
                 uint result;
                 // Eager implicit sampling preserves quad derivatives even for a nonuniform selected descriptor.

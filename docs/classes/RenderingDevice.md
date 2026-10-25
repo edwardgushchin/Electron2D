@@ -465,7 +465,7 @@ A texture RID belonging to this device.
 | Parameter | Contract |
 | --- | --- |
 | `format` | Allocation description copied before returning. |
-| `view` | Initial view description; native format reinterpretation and swizzles require a view adapter. |
+| `view` | Copied initial sampled component mapping; alternate pixel formats require a shared native format view. |
 | `data` | One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears. |
 
 - `T:System.NotSupportedException`: The requested format, view or allocation role is not supported.

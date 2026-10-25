@@ -191,6 +191,11 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             screenMipmaps |= batch.MIPMaps || batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && batch.Material?.Program.UsesScreenTexture == true;
             if (batch.Material?.Program.TimeUniform is not null && !float.IsFinite((float)time))
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
+            if (batch.Material is { } material && material.Textures.Length != 0)
+            {
+                _usedMaterials.Add(material); PrepareTextures(material, batch.MaxAnisotropy);
+                PrepareGraphChannels(batch);
+            }
             var code = GlyphCode(batch); var vertexCode = VertexCode(batch); var effectiveBlend = batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend; var key = (code, vertexCode, effectiveBlend, batch.InstanceCount > 0, samples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive);
             _usedPrograms.Add(key);
             if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, effectiveBlend, instanced: batch.InstanceCount > 0, lighting: batch.Lighting is not null && batch.Material is not null && !batch.MaskShader && !batch.GroupShader, samples: samples, lcd: batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format: format, vertexCode: vertexCode, primitive: batch.Primitive));
@@ -201,11 +206,6 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 if (!_pipelines.ContainsKey((_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, Mesh.PrimitiveType.Triangles)))
                     _pipelines.Add((_defaultFragment, null, BlendMode.PremultAlpha, false, samples, false, format, Mesh.PrimitiveType.Triangles), CreatePipeline(_defaultFragment, BlendMode.PremultAlpha, format: format, samples: samples));
                 _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
-            }
-            if (batch.Material is { } material && material.Textures.Length != 0)
-            {
-                _usedMaterials.Add(material); PrepareTextures(material, batch.MaxAnisotropy);
-                PrepareGraphChannels(batch);
             }
             if (!batch.GroupShader && UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
             if (batch.Glyph.Mode != CanvasGlyphMode.None) _ = CanvasBinding(batch with { Material = null });
@@ -547,12 +547,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         return _layeredTextures[texture].Handle;
     }
 
-    private static byte[]? VertexCode(CanvasBatch batch) => (batch.GroupShader || batch.MaskShader) && !batch.Procedural ? null : batch.Material?.Program.VertexCode(batch.InstanceCount > 0, batch.Lighting is not null && !batch.MaskShader && !batch.GroupShader, batch.Procedural);
+    private byte[]? VertexCode(CanvasBatch batch) => SwizzledVertex(batch);
 
     private void PrepareTextures(MaterialState material, int anisotropy)
     {
         if (!_textureBindings.TryGetValue(material, out var bindings))
             _textureBindings.Add(material, bindings = new SDL.GPUTextureSamplerBinding[material.Textures.Length]);
+        if (!_materialSwizzles.TryGetValue(material, out var maps)) _materialSwizzles.Add(material, maps = new uint[material.Textures.Length]);
         try
         {
             material.CopyTextures(_textureScratch);
@@ -560,10 +561,11 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             {
                 var configured = material.Samplers[i] is { } configuration
                     ? (_shaderSamplers ??= new(_device, Driver, !_relaxedAndroidDevice)).Get(configuration) : 0;
-                if (material.Program.Textures[i].IsEngineTexture) { if (configured == 0 && material.Program.Textures[i].ImagePolicy is { } enginePolicy) configured = ImageSampler(enginePolicy, anisotropy); bindings[i] = new() { Sampler = configured }; continue; }
+                if (material.Program.Textures[i].IsEngineTexture) { if (configured == 0 && material.Program.Textures[i].ImagePolicy is { } enginePolicy) configured = ImageSampler(enginePolicy, anisotropy); bindings[i] = new() { Sampler = configured }; maps[i] = 0; continue; }
                 var descriptor = material.Program.Textures[i];
                 if (configured == 0 && descriptor.ImagePolicy is { } policy) configured = ImageSampler(policy, anisotropy);
                 var resource = ShaderTexture.Source(_textureScratch[i]) ?? (_textureScratch[i] is Texture ? RenderingTextureRegistry.PlaceholderTexture : _textureScratch[i]) ?? ImageFallback(descriptor.IsArray, descriptor.ImagePolicy!.Value.Fallback);
+                maps[i] = TextureSwizzles.Source(resource);
                 nint handle;
                 if (resource is TextureLayered array)
                 {
@@ -596,17 +598,18 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void ReleaseTemporaryTexture(Texture texture)
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
-    internal override void BeginFrame() { _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _sampledSwizzles.BeginFrame(); _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); (_usedLightMaskPipelines, _previousLightMaskPipelines) = (_previousLightMaskPipelines, _usedLightMaskPipelines); _usedLightMaskPipelines.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
         RetireParticleVertices(); RetireParticlePrograms();
+        foreach (var pair in _lightMaskPipelines) if (!_usedLightMaskPipelines.Contains(pair.Key) && !_previousLightMaskPipelines.Contains(pair.Key)) { pair.Value.Dispose(); _lightMaskPipelines.Remove(pair.Key); }
         RetireColorViews();
         foreach (var pair in _glyphPrograms) if (!_usedGlyphPrograms.Contains(pair.Key) && !_previousGlyphPrograms.Contains(pair.Key)) _unusedGlyphPrograms.Add(pair.Key);
         foreach (var key in _unusedGlyphPrograms) _glyphPrograms.Remove(key); _unusedGlyphPrograms.Clear();
         foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !_previousPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(0)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(1)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(2))) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
         foreach (var pair in _layeredTextures) if (!_usedLayeredTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _layeredTextures.Remove(pair.Key); }
-        foreach (var pair in _textureBindings) if (!_usedMaterials.Contains(pair.Key)) _textureBindings.Remove(pair.Key);
+        foreach (var pair in _textureBindings) if (!_usedMaterials.Contains(pair.Key)) { _textureBindings.Remove(pair.Key); _materialSwizzles.Remove(pair.Key); }
         foreach (var pair in _litPrograms) if (!_usedLitPrograms.Contains(pair.Key)) _litPrograms.Remove(pair.Key);
     }
     internal override void ValidateMSAA(Viewport.MSAA mode)
@@ -704,11 +707,11 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         foreach (var texture in _textures.Values) texture.Dispose();
         foreach (var texture in _layeredTextures.Values) texture.Dispose();
         _layeredTextures.Clear(); _usedLayeredTextures.Clear();
-        _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
+        _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _materialSwizzles.Clear(); _sampledSwizzles.Clear(); _usedMaterials.Clear();
         _shaderSamplers?.Dispose();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
         _samplers.Clear(); DisposeColorViews(); DisposeImageFallbacks(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
-        foreach (var pipeline in _lightMaskPipelines) pipeline?.Dispose();
+        foreach (var pipeline in _lightMaskPipelines.Values) pipeline.Dispose(); _lightMaskPipelines.Clear(); _usedLightMaskPipelines.Clear(); _previousLightMaskPipelines.Clear();
         _sdfTarget?.Dispose(); _sdfPipeline?.Dispose(); ReleaseParticlePrograms(); ReleaseParticleVertices();
         _litPrograms.Clear(); _usedLitPrograms.Clear();
         ReleaseInstanceStreams(); _pipelines.Clear(); foreach (var pipeline in _clearPipelines) pipeline?.Dispose();

@@ -140,6 +140,7 @@ public sealed unsafe partial class RenderingDevice
         for (var i = 0; i < textures.Length; i++)
         {
             var image = Get(textures[i], Kind.Texture); var info = image.Texture!;
+            if (info.Swizzle != 0) throw new ArgumentException("Framebuffer attachments require identity component mappings.", nameof(textures));
             if (!unique.Add(image.NativeHandle) || info.Layers < viewCount || info.Mips != 1) throw new ArgumentException("Framebuffer images require distinct single-mip targets with enough layers for every view.", nameof(textures));
             var current = new Vector2i(checked((int)info.Width), checked((int)info.Height)); if (i == 0) size = current; else if (size != current) throw new ArgumentException("Attachment dimensions must match.", nameof(textures));
             formats[i] = info.Format; usage[i] = info.Usage; samples[i] = info.Samples;

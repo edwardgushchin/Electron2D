@@ -1,6 +1,6 @@
 # TextureRD
 
-Last updated: 2026-10-12
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.TextureRD`. **Source:** [TextureRD.cs](../../src/Scene/Resources/TextureRD.cs). **Component:** [Local compute](../components/local-compute.md#device-images-in-canvas).
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-12
 
 A borrowed ordinary sampled image of the retained GPU rendering device. Binding TextureRDRID validates the owner thread, ended compute list, live global-device identity and sampled image role before publication. A successful assignment emits Changed. Local-device images reject. Signed/unsigned integer image roles execute with nearest native sampling and matching typed descriptors; scalar-aware light receivers, normal/specular channels, light-mask atlases and alpha clipping execute on the GPU.
 
-The binding borrows device pixels; disposing the resource or freeing a server wrapper never frees the source image. Freeing the device image empties live metadata; renderer shutdown expires the device. Canvas drawing samples native storage directly with no CPU frame bridge. Snapshots require CPURead or CanCopyFrom, synchronize device work and copy every mip. Representable formats retain encoded data; other sampled color formats convert on GPU to floating RGBA. Resource archives reconstruct an unbound object; duplication borrows the same image. Mutating bindings and disposing live bindings obey device owner/submission guards.
+The binding borrows device pixels; disposing the resource or freeing a server wrapper never frees the source image. Freeing the device image empties live metadata; renderer shutdown expires the device. Canvas drawing samples native storage directly with no CPU frame bridge. Sampled component maps captured by the device image follow ordinary/layered shader, lighting and particle consumers; snapshots retain raw image components. Snapshots require CPURead or CanCopyFrom, synchronize device work and copy every mip. Representable formats retain encoded data; other sampled color formats convert on GPU to floating RGBA. Resource archives reconstruct an unbound object; duplication borrows the same image. Mutating bindings and disposing live bindings obey device owner/submission guards.
 
 ## Example
 

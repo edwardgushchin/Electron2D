@@ -8,12 +8,12 @@ public sealed unsafe partial class RenderingDevice
     private static int ResourceWidth(UniformType type) => type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1;
     private static int ResourceID(Binding binding, int lane = 0) => binding.Element * ResourceWidth(binding.Type) + lane;
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) { var result = RemapCore(code, stage, false); return (result.Code, result.Layout, result.Push); }
-    private static (byte[] Code, Binding[] Layout, PushStage[] Push, SamplerLink[] Samplers) RemapCore(byte[] code, ShaderStage stage, bool template)
+    private static (byte[] Code, Binding[] Layout, PushStage[] Push, SamplerLink[] Samplers) RemapCore(byte[] code, ShaderStage stage, bool template, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? swizzles = null)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
         var imageArrays = DeviceImageArrays.Lower(code, template); code = imageArrays.Code;
         var texelTranslation = TexelBufferProgram.Lower(code, template); code = texelTranslation.Code;
-        var samplerTranslation = CanvasSamplerArrays.LowerDevice(code, template); code = samplerTranslation.Code;
+        var samplerTranslation = CanvasSamplerArrays.LowerDevice(code, template, swizzles); code = samplerTranslation.Code;
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
         var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;

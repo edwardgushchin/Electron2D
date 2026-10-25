@@ -82,6 +82,7 @@ internal static unsafe partial class ShaderCompiler
             try
             {
                 var resources = Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(metadata).ResourceInfo;
+                resources.NumSamplers = Math.Max(resources.NumSamplers, SamplerCount(code));
                 return ShaderCross.CompileGraphicsShaderFromSPIRV(device, (nint)pointer, (nuint)code.Length, "main",
                     fragment ? ShaderCross.ShaderStage.Fragment : ShaderCross.ShaderStage.Vertex, in resources);
             }
@@ -89,16 +90,25 @@ internal static unsafe partial class ShaderCompiler
         }
     });
 
-    internal static uint SamplerCount(byte[] code) => Run(() =>
+    internal static uint SamplerCount(byte[] code)
     {
-        fixed (byte* pointer = code)
+        var source = new MaterialLightingProgram.Module(code).Instructions;
+        var types = source.Where(i => MaterialLightingProgram.Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var bindings = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 4 && i[2] == 33).ToDictionary(i => i[1], i => i[3]);
+        var samplers = source.Where(i => MaterialLightingProgram.Op(i) == 59 && i[3] == 0 && MaterialLightingProgram.Op(types[types[i[1]][3]]) == 26).Select(i => bindings[i[2]]).ToHashSet();
+        uint count = 0;
+        foreach (var variable in source.Where(i => MaterialLightingProgram.Op(i) == 59 && i[3] == 0))
         {
-            var metadata = ShaderCross.ReflectGraphicsSPIRV((nint)pointer, (nuint)code.Length, 0);
-            if (metadata == 0) throw new ArgumentException("Shader reflection failed: " + SDL.GetError(), nameof(code));
-            try { return Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(metadata).ResourceInfo.NumSamplers; }
-            finally { SDL.Free(metadata); }
+            var type = types[types[variable[1]][3]];
+            var combined = MaterialLightingProgram.Op(type) == 27;
+            if (combined) type = types[type[2]];
+            if (MaterialLightingProgram.Op(type) != 25 || type[7] != 1 || !combined && !samplers.Contains(bindings[variable[2]])) continue;
+            count = Math.Max(count, checked(bindings[variable[2]] + 1));
         }
-    });
+        // Composed libraries retain unused slots before storage buffers; native layouts must retain that extent.
+        if (count > 16) throw new NotSupportedException("Native sampled images exceed sixteen slots per stage.");
+        return count;
+    }
 
     internal readonly record struct DeviceIO(uint Location, int Type, uint Width);
     internal static (DeviceIO[] Inputs, DeviceIO[] Outputs) ValidateDeviceGraphics(byte[] vertex, byte[] fragment) => Run(() =>

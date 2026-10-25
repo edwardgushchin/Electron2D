@@ -1,6 +1,6 @@
 # RDTextureView
 
-Last updated: 2026-10-11
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureView`. **Source:** [RDTextureView.cs](../../src/Servers/Rendering/Device/RDTextureView.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -8,14 +8,18 @@ Last updated: 2026-10-11
 
 ## Description
 
-A caller-owned initial view description. DataFormat.Max retains the allocation format. The executing local profile accepts matching formats and identity/channel-preserving mappings. Nonidentity swizzles and format reinterpretation require the native-view adapter and throw during creation. This description owns no native identity and does not extend texture lifetime.
+A caller-owned initial view description. DataFormat.Max retains the allocation format. Creation copies each output channel's R/G/B/A, Identity, Zero or One source. Sampling uses the copied map after format conversion and filtering; fetch and gather follow the same component view. Depth comparison precedes its component map. Storage-image descriptors, input attachments and framebuffer attachments require identity maps. Updates, copies, clears and snapshots preserve raw stored channels. Alternate format reinterpretation still requires shared native format/subresource views and fails explicitly. This description owns no native identity and does not extend texture lifetime.
 
 ## Example
 
 Device examples require a live caller-owned RenderingDevice; view examples also require an allocation format. See the [complete executable consumer](../../tests/Electron2D.Tests/RenderingDeviceTextureTests.cs).
 
 ```csharp
-using var view = new RDTextureView();
+using var view = new RDTextureView
+{
+    SwizzleR = RenderingDevice.TextureSwizzle.A,
+    SwizzleA = RenderingDevice.TextureSwizzle.One
+};
 var texture = device.TextureCreate(format, view);
 ```
 

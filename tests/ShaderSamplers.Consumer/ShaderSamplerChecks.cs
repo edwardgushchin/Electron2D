@@ -4,6 +4,8 @@ internal static partial class ShaderSamplerChecks
 {
     internal static void Run(string[] args)
     {
+        if (args.Length > 0 && args[0] == "swizzles-canvas") { SwizzleCanvas(args); return; }
+        if (args.Length > 0 && args[0] == "swizzles-device") { TextureSwizzleRuntimeChecks.Run(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", "Device")); return; }
         if (args.Length > 0 && args[0] == "compatibility") { Compatibility(); return; }
         if (args.Length > 0 && args[0] == "screen") { Screen(args[1]); return; }
         if (args.Length > 0 && args[0] == "native") { Native(args[1]); return; }

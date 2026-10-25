@@ -240,7 +240,10 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListDisableScissor(long drawList) { DrawList(drawList); SetScissor(new(0, 0, _drawTarget!.Size.X, _drawTarget.Size.Y)); }
     private void BindDrawResources()
     {
-        var program = PipelineProgram(_graphicsPipeline!); RequirePush(program);
+        var original = PipelineProgram(_graphicsPipeline!); RequirePush(original);
+        var sampledVariant = SampledVariant(_graphicsPipeline!);
+        var program = sampledVariant?.Programs[_drawView] ?? original;
+        SDL.BindGPUGraphicsPipeline(_drawPass, sampledVariant is null ? GraphicsHandle(_graphicsPipeline!) : sampledVariant.Pipelines[_drawView].DangerousGetHandle());
         Span<SDL.GPUTextureSamplerBinding> samplerBinding = stackalloc SDL.GPUTextureSamplerBinding[1];
         Span<nint> storageBinding = stackalloc nint[1];
         foreach (var descriptor in program.Layout)

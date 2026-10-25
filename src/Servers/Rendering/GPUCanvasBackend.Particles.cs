@@ -6,8 +6,8 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUCanvasBackend
 {
     private ComputePipeline? _particleStep, _particleQueue, _particleOrder;
-    private readonly Dictionary<ShaderProgram, ComputePipeline> _particlePrograms = [];
-    private HashSet<ShaderProgram> _usedParticlePrograms = [], _previousParticlePrograms = [];
+    private readonly Dictionary<byte[], ComputePipeline> _particlePrograms = [];
+    private HashSet<byte[]> _usedParticlePrograms = [], _previousParticlePrograms = [];
     private readonly List<RenderingParticleState> _particlePrepared = [];
     private readonly List<(RenderingParticleState State, ParticleCheckpoint Before)> _particleChanges = [];
     private readonly record struct ParticleCheckpoint(double Phase, double Remainder, double InactiveTime, uint Cycle, bool Emitting, bool Clear, bool Inactive, long Frame, int HistoryNext, int HistoryWritten, bool Initialized, long SubemissionFrame, Transform PreviousEmission);
@@ -51,10 +51,9 @@ internal sealed unsafe partial class GPUCanvasBackend
     private void PrepareProcess(MaterialState state)
     {
         if (state.Program.Mode != Shader.Mode.Particles) throw new NotSupportedException("Particle process materials require particle compute programs.");
-        _usedParticlePrograms.Add(state.Program);
-        if (!_particlePrograms.ContainsKey(state.Program))
-            _particlePrograms.Add(state.Program, new(_device, state.Program.NativeCode));
         if (state.Textures.Length > 0) { _usedMaterials.Add(state); PrepareTextures(state, 1); }
+        var code = ParticleCode(state); _usedParticlePrograms.Add(code);
+        if (!_particlePrograms.ContainsKey(code)) _particlePrograms.Add(code, new(_device, code));
     }
     private static void ValidateParticleWork(RenderingParticleState source, double delta)
     {
@@ -156,7 +155,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                     SDL.PushGPUComputeUniformData(command, 0, (nint)(&frame), (uint)sizeof(ParticleFrameLayout));
                     writable[1] = new() { Buffer = gpu.Outgoing.DangerousGetHandle() };
                     sizes[1] = checked(((uint)gpu.OutgoingCapacity + 1) * 96);
-                    var program = _particlePrograms[process.Program];
+                    var program = _particlePrograms[ParticleCode(process)];
                     program.PrepareBufferSizes(command, ReadOnlySpan<uint>.Empty, sizes[..process.Program.ParticleStorageBuffers]);
                     pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)writable, (uint)process.Program.ParticleStorageBuffers); if (pass == 0) throw Failure("begin particle process");
                     SDL.BindGPUComputePipeline(pass, program.DangerousGetHandle()); program.BindBufferSizes(pass);

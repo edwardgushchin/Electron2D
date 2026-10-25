@@ -1,6 +1,6 @@
 # RenderingDevice.TextureSwizzle
 
-Last updated: 2026-10-11
+Last updated: 2026-10-25
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.TextureSwizzle`. **Source:** [RenderingDevice.TextureEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.TextureEnums.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -25,9 +25,9 @@ var selection = RenderingDevice.TextureSwizzle.A;
 | `public const Electron2D.RenderingDevice.TextureSwizzle G = 4` | Selects the green component. |
 | `public const Electron2D.RenderingDevice.TextureSwizzle Identity = 0` | Preserves the component owning this swizzle. |
 | `public const Electron2D.RenderingDevice.TextureSwizzle Max = 7` | Nonselectable upper bound; DataFormat.Max also means no view override. |
-| `public const Electron2D.RenderingDevice.TextureSwizzle One = 2` | Selects constant one; requires a view adapter. |
+| `public const Electron2D.RenderingDevice.TextureSwizzle One = 2` | Selects numeric one in the sampled scalar type. |
 | `public const Electron2D.RenderingDevice.TextureSwizzle R = 3` | Selects the red component. |
-| `public const Electron2D.RenderingDevice.TextureSwizzle Zero = 1` | Selects constant zero; requires a view adapter. |
+| `public const Electron2D.RenderingDevice.TextureSwizzle Zero = 1` | Selects numeric zero in the sampled scalar type. |
 
 ## Member descriptions
 
@@ -83,7 +83,7 @@ Nonselectable upper bound; DataFormat.Max also means no view override.
 public const Electron2D.RenderingDevice.TextureSwizzle One = 2
 ```
 
-Selects constant one; requires a view adapter.
+Selects numeric one in the sampled scalar type.
 
 <a id="member-198146b49141"></a>
 ### R
@@ -101,7 +101,7 @@ Selects the red component.
 public const Electron2D.RenderingDevice.TextureSwizzle Zero = 1
 ```
 
-Selects constant zero; requires a view adapter.
+Selects numeric zero in the sampled scalar type.
 
 ## Lifetime and verification
 

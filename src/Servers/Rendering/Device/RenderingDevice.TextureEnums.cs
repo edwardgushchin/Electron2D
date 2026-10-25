@@ -512,11 +512,11 @@ public sealed unsafe partial class RenderingDevice
         Identity = 0,
         /// <summary>Nonselectable upper bound; DataFormat.Max also means no view override.</summary>
         Max = 7,
-        /// <summary>Selects constant one; requires a view adapter.</summary>
+        /// <summary>Selects numeric one in the sampled scalar type.</summary>
         One = 2,
         /// <summary>Selects the red component.</summary>
         R = 3,
-        /// <summary>Selects constant zero; requires a view adapter.</summary>
+        /// <summary>Selects numeric zero in the sampled scalar type.</summary>
         Zero = 1,
     }
     /// <summary>Filtering within a mip level or between mip levels.</summary>

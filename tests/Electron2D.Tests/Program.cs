@@ -13,6 +13,8 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_SWIZZLES") is { } swizzleFolder) { TextureSwizzleLoweringTests.Run(swizzleFolder); TextureSwizzleRuntimeChecks.Run(swizzleFolder); return; }
+
 if (args.Length == 3 && args[0] == "--visual-shader-source-hashes") { VisualShaderSourceRegressionTests.Write(args[1], args[2]); return; }
 if (args.SequenceEqual(new[] { "--visual-shader-custom-topology" }))
 {

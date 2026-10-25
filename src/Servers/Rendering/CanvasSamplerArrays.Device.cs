@@ -7,9 +7,9 @@ internal static partial class CanvasSamplerArrays
     internal readonly record struct DeviceSource(uint Set, int Binding, RenderingDevice.UniformType Type, int Count = 1, int Element = 0, bool Dynamic = false);
     internal readonly record struct DeviceShape(bool Array, bool Depth, int PixelType);
     internal readonly record struct DevicePair(uint Image, uint Sampler, uint ImageIndex, uint SamplerIndex, bool UsesSampler, int ImageElement = 0, int SamplerElement = 0);
-    internal sealed record DevicePlan(uint Set, uint Stride, uint ImageCount, Dictionary<uint, uint> Values, Dictionary<uint, DeviceSource> Sources, Dictionary<uint, DeviceShape> Shapes, HashSet<(uint Image, uint Sampler)> Comparisons, DevicePair[] Pairs);
+    internal sealed record DevicePlan(uint Set, uint Stride, uint ImageCount, Dictionary<uint, uint> Values, Dictionary<uint, DeviceSource> Sources, Dictionary<uint, DeviceShape> Shapes, HashSet<(uint Image, uint Sampler)> Comparisons, DevicePair[] Pairs, uint[]? Swizzles = null);
 
-    internal static (byte[] Code, DevicePlan? Plan) LowerDevice(byte[] code, bool symbolic = false)
+    internal static (byte[] Code, DevicePlan? Plan) LowerDevice(byte[] code, bool symbolic = false, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? swizzles = null)
     {
         var module = new Module(code); var source = module.Instructions;
         var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
@@ -47,7 +47,7 @@ internal static partial class CanvasSamplerArrays
         var ordinary = Normalize(FindPairs(source, ids, Opaque, PairUse.Ordinary));
         if (comparisons.Overlaps(ordinary)) throw new NotSupportedException("A sampled pair cannot require both comparison and ordinary filtering; bind separate samplers.");
         bool UnknownDepth(uint[] image) { var type = types[Element(image)]; if (Op(type) == 27) type = types[type[2]]; return type[4] == 2; }
-        if (resources.All(i => Op(types[types[i[1]][3]]) is not (28 or 29)) && pairs.All(p => p.Sampler != 0 && origins[p.Image] == origins[p.Sampler]) && images.All(i => origins[i[2]].Type == RenderingDevice.UniformType.SamplerWithTexture && !UnknownDepth(i))) return (code, null);
+        if ((swizzles is null || swizzles.Values.All(v => v == 0)) && resources.All(i => Op(types[types[i[1]][3]]) is not (28 or 29)) && pairs.All(p => p.Sampler != 0 && origins[p.Image] == origins[p.Sampler]) && images.All(i => origins[i[2]].Type == RenderingDevice.UniformType.SamplerWithTexture && !UnknownDepth(i))) return (code, null);
         var actual = pairs.Where(p => p.Sampler != 0).ToHashSet();
         foreach (var query in pairs.Where(p => p.Sampler == 0)) if (!actual.Any(p => p.Image == query.Image)) actual.Add(query);
         var imageIndices = new Dictionary<uint, uint>(); uint imageTotal = 0;
@@ -82,7 +82,7 @@ internal static partial class CanvasSamplerArrays
             if (scalar.Length < 3 || scalar[2] != 32 || Op(scalar) is not (21 or 22)) throw new NotSupportedException("Sampled device images require 32-bit scalar components.");
             shapes.Add(image[2], new(type[5] != 0, type[4] == 1 || comparisons.Any(p => p.Image == image[2]), Op(scalar) == 22 ? 0 : scalar[3] == 1 ? 1 : 2));
         }
-        var plan = new DevicePlan(nativeSet, stride, imageTotal, values, origins, shapes, comparisons, expanded.ToArray());
+        var plan = new DevicePlan(nativeSet, stride, imageTotal, values, origins, shapes, comparisons, expanded.ToArray(), swizzles is null ? null : expanded.Select(p => { var origin = origins[p.Image]; return swizzles.GetValueOrDefault((origin.Set, origin.Binding, p.ImageElement)); }).ToArray());
         return (Lower(code, [], device: plan), plan);
     }
 }

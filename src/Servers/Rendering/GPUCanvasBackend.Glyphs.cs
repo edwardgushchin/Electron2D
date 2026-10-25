@@ -11,10 +11,10 @@ internal sealed unsafe partial class GPUCanvasBackend
     private byte[] GlyphCode(CanvasBatch batch)
     {
         var source = BatchCode(batch);
-        if (batch.Glyph.Mode == CanvasGlyphMode.None) return source;
+        if (batch.Glyph.Mode == CanvasGlyphMode.None) return SwizzledFragment(batch, source);
         if (ShaderTexture.ResourcePixelType(batch.Texture) != 0) throw new NotSupportedException("Glyph coverage requires floating sampled texture values.");
         var key = (source, batch.Glyph.Mode == CanvasGlyphMode.LCD); _usedGlyphPrograms.Add(key);
-        if (_glyphPrograms.TryGetValue(key, out var prepared)) return prepared;
+        if (_glyphPrograms.TryGetValue(key, out var prepared)) return SwizzledFragment(batch, prepared);
         var samplers = ShaderCompiler.SamplerCount(source);
         var textures = new ShaderTexture[samplers];
         for (var i = 0; i < textures.Length; i++) textures[i] = new(i == 0 && (batch.Material is null || FragmentUsesCanvasTexture(batch.Material.Program)) ? "TEXTURE" : "glyph_source_" + i, i);
@@ -26,7 +26,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             var transformed = new ShaderProgram(decoded, [], new(StringComparer.Ordinal), transformedTextures);
             decoded = MaterialLightingProgram.ComposeGlyph(transformed, true);
         }
-        _glyphPrograms.Add(key, decoded); return decoded;
+        _glyphPrograms.Add(key, decoded); return SwizzledFragment(batch, decoded);
     }
     private void BindGlyphTexture(nint pass, CanvasBatch batch)
     {

@@ -107,6 +107,7 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
+                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray());
                 var views = FramebufferLayouts(framebufferFormat).ViewCount;
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try

@@ -18,8 +18,9 @@ internal sealed unsafe partial class GPUCanvasBackend
         return ((normal + 1) * 4 + specular + 1) * 2 + (_materialMasks ? 1 : 0);
     }
     private Vector2i _lightAtlasSize;
-    private readonly RenderHandle?[] _lightMaskPipelines = new RenderHandle?[3];
+    private readonly Dictionary<(int Scalar, uint Swizzle), RenderHandle> _lightMaskPipelines = [];
     private Func<Texture, Vector2i>? _lightMaskSize;
+    private HashSet<(int Scalar, uint Swizzle)> _usedLightMaskPipelines = [], _previousLightMaskPipelines = [];
     private byte[] BatchCode(CanvasBatch batch)
     {
         if (batch.MaskShader) return BuiltInShaders.Clip(ShaderTexture.ResourcePixelType(batch.Texture));
@@ -60,8 +61,13 @@ internal sealed unsafe partial class GPUCanvasBackend
         {
             _ = CanvasBinding(new(0, 0, null, mask.Texture));
             var scalar = ShaderTexture.ResourcePixelType(mask.Texture);
-            var code = scalar switch { 1 => BuiltInShaders.SignedFragment, 2 => BuiltInShaders.UnsignedFragment, _ => _defaultFragment };
-            _lightMaskPipelines[scalar] ??= CreatePipeline(code, BlendMode.Mix, overwrite: true, format: SDL.GPUTextureFormat.R32G32B32A32Float);
+            var swizzle = TextureSwizzles.Source(mask.Texture); var key = (scalar, swizzle); _usedLightMaskPipelines.Add(key);
+            if (!_lightMaskPipelines.ContainsKey(key))
+            {
+                var code = scalar switch { 1 => BuiltInShaders.SignedFragment, 2 => BuiltInShaders.UnsignedFragment, _ => _defaultFragment };
+                if (swizzle != 0) code = _sampledSwizzles.Get(code, [swizzle]);
+                _lightMaskPipelines.Add(key, CreatePipeline(code, BlendMode.Mix, overwrite: true, format: SDL.GPUTextureFormat.R32G32B32A32Float));
+            }
         }
         frame.PackMasks(_lightMaskSize ??= LightMaskSize, initialize: false);
         _ = Sampler(TextureFilter.Linear, TextureRepeat.Disabled);
@@ -125,7 +131,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             {
                 var mask = frame.Masks[index]; var region = mask.Region;
                 var scissor = new SDL.Rect { X = region.Position.X, Y = region.Position.Y, W = region.Size.X, H = region.Size.Y }; SDL.SetGPUScissor(pass, in scissor);
-                SDL.BindGPUGraphicsPipeline(pass, _lightMaskPipelines[ShaderTexture.ResourcePixelType(mask.Texture)]!.DangerousGetHandle());
+                SDL.BindGPUGraphicsPipeline(pass, _lightMaskPipelines[(ShaderTexture.ResourcePixelType(mask.Texture), TextureSwizzles.Source(mask.Texture))].DangerousGetHandle());
                 var sampler = CanvasBinding(new(0, 0, null, mask.Texture));
                 SDL.BindGPUFragmentSamplers(pass, 0, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(&sampler, 1), 1);
                 SDL.DrawGPUPrimitives(pass, 6, 1, (uint)(first + index * 6), 0);

@@ -1,3 +1,5 @@
+[Sampled component views](components/local-compute.md#sampled-component-views) connect copied RDTextureView channel maps to bound-image shader variants across local device, canvas, lighting/glyph, particle and writable-texture paths. Raw storage remains independent; alternate format and shared-subresource views keep their native ownership prerequisites.
+
 # Engine inventory
 
 Existing PhysicsSpace and GPUPhysicsColliderImplementation now share [pure scene completion cost selection](components/gpu-resident-reports.md#pure-scene-completion-policy-2026-10-22), without a new production type or public declaration.

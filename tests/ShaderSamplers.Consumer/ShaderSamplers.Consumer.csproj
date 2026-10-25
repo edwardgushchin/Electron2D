@@ -3,8 +3,12 @@
     <Electron2DShaderImportTool>../../tools/shaders/bin/$(Configuration)/net10.0/Electron2D.ShaderImport</Electron2DShaderImportTool>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/TextureSwizzleRuntimeChecks*.cs" Link="%(Filename)%(Extension)" /></ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
   <ItemGroup>
+    <Electron2DShader Include="Shaders/Device/*.comp.glsl" Stage="compute" Profile="device" />
+    <Electron2DShader Include="Shaders/Device/*.vert.glsl" Stage="vertex" Profile="device" />
+    <Electron2DShader Include="Shaders/Device/*.frag.glsl" Stage="fragment" Profile="device" />
     <Electron2DShader Include="Shaders/*.frag.glsl;Shaders/*.frag.hlsl" Stage="fragment" Profile="canvas" />
     <Electron2DShader Update="Shaders/Blit*.frag.*" Profile="texture-blit" />
     <Electron2DShader Include="Shaders/*.vert.glsl" Stage="vertex" Profile="canvas" />

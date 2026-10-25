@@ -26,6 +26,7 @@ public sealed unsafe partial class RenderingDevice
         var texture = Get(ids[binding.Type == UniformType.SamplerWithTexture ? 1 : 0], Kind.Texture).Texture!;
         if (PixelType(texture.Format) != binding.PixelType) throw new ArgumentException("The shader pixel scalar type does not match the texture format.", nameof(ids));
         if (binding.Depth && !DepthFormat(texture.Format)) throw new ArgumentException("The shader requires a depth image.", nameof(ids));
+        if (texture.Swizzle != 0 && binding.Type is UniformType.Image or UniformType.InputAttachment) throw new ArgumentException("Storage images and framebuffer inputs require identity component mappings.", nameof(ids));
         if (binding.Type == UniformType.InputAttachment)
         {
             if ((texture.Usage & TextureUsageBits.InputAttachment) == 0 || texture.Mips != 1 || (texture.Samples != TextureSamples.Samples1) != binding.Multisample) throw new ArgumentException("The texture lacks the required ordinary input attachment/sample role.", nameof(ids));
@@ -113,7 +114,7 @@ public sealed unsafe partial class RenderingDevice
         41 => DataFormat.R64SINT,
         _ => DataFormat.Max
     };
-    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false);
+    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false, uint Swizzle = 0);
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {
         var native = (SDL.GPUTextureUsageFlags)0;
@@ -145,10 +146,12 @@ public sealed unsafe partial class RenderingDevice
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
-    /// <param name="view">Initial view description; native format reinterpretation and swizzles require a view adapter.</param>
+    /// <param name="view">Copied initial sampled component mapping; alternate pixel formats require a shared native format view.</param>
     /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
-    /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary R32 Storage allocations also retain native simultaneous read-modify-write access.</remarks>
+    /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary R32 Storage allocations also retain native simultaneous read-modify-write access.
+    /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
+    /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     public RID TextureCreate(RDTextureFormat format, RDTextureView view, ReadOnlySpan<byte[]> data = default)
     {
@@ -159,9 +162,7 @@ public sealed unsafe partial class RenderingDevice
         if (mips > 1 + System.Numerics.BitOperations.Log2(Math.Max(width, height))) throw new ArgumentException("The mip count exceeds this image.", nameof(format));
 
         if (view.FormatOverride != DataFormat.Max && view.FormatOverride != pixelFormat ||
-            view.SwizzleR is not (TextureSwizzle.R or TextureSwizzle.Identity) || view.SwizzleG is not (TextureSwizzle.G or TextureSwizzle.Identity) ||
-            view.SwizzleB is not (TextureSwizzle.B or TextureSwizzle.Identity) || view.SwizzleA is not (TextureSwizzle.A or TextureSwizzle.Identity) ||
-            shareable.Any(f => f != pixelFormat)) throw new NotSupportedException("Alternate native formats and channel views require texture-view integration.");
+            shareable.Any(f => f != pixelFormat)) throw new NotSupportedException("Alternate native formats require texture-view integration.");
         if (!TextureIsFormatSupportedForUsage(pixelFormat, format.Samples != TextureSamples.Samples1 ? usage & ~(TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo) : usage)) throw new NotSupportedException("The device does not support this texture format/usage.");
         var samples = format.Samples; var resolve = format.IsResolveBuffer;
         if ((usage & TextureUsageBits.InputAttachment) != 0 && (mips != 1)) throw new ArgumentException("Input attachments require single-mip textures.", nameof(format));
@@ -173,7 +174,7 @@ public sealed unsafe partial class RenderingDevice
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
             var allowedUsage = targetRole | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment);
             if (mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets; sampling, storage and raw transfers require separate adapters.");
-            var multi = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples) };
+            var multi = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, Swizzle: TextureSwizzles.Capture(view)) };
             try
             {
                 multi.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
@@ -186,7 +187,7 @@ public sealed unsafe partial class RenderingDevice
         if (DepthFormat(pixelFormat))
         {
             if (!data.IsEmpty) throw new NotSupportedException("Raw depth/stencil uploads require a native aspect-transfer adapter.");
-            var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable) };
+            var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, Swizzle: TextureSwizzles.Capture(view)) };
             try
             {
                 depthEntry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
@@ -205,7 +206,7 @@ public sealed unsafe partial class RenderingDevice
         }
         if (total == 0 || total > int.MaxValue || transferSize > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format));
         foreach (var bytes in data) if (bytes is null || bytes.Length != total) throw new ArgumentException("Each mip chain must have the exact byte size.", nameof(data));
-        var info = new TextureInfo(pixelFormat, kind, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve);
+        var info = new TextureInfo(pixelFormat, kind, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve, TextureSwizzles.Capture(view));
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = total };
         try
         {

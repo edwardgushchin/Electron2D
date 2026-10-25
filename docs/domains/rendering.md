@@ -1,3 +1,5 @@
+[Sampled component views](../components/local-compute.md#sampled-component-views) execute initial channel maps across local compute/graphics and retained canvas, particle and writable-texture consumers, with copied descriptions and unchanged raw transfers. Shared alternate-format/subresource views remain separate.
+
 [Repeatable scalar graph variation](../components/visual-shaders.md#repeatable-scalar-variation) supplies seed-driven material values through the existing canvas, particle and writable-texture graph paths, including unclamped equal/reversed-bound arithmetic.
 
 [Screen-space derivative graphs](../components/visual-shaders.md#screen-space-derivatives) execute scalar/vector default, fine and coarse rates through offline fragment import, enabling derivative-scaled procedural edge smoothing.

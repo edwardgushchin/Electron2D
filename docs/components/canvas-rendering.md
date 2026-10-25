@@ -1,5 +1,7 @@
 # Canvas rendering
 
+[Sampled component views](local-compute.md#sampled-component-views) follow device-backed command/material images through paired stages, lighting, glyphs, clipping and particle consumers. Raw snapshots preserve storage channels.
+
 Last updated: 2026-10-25
 
 

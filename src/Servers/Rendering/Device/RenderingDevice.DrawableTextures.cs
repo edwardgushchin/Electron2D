@@ -7,6 +7,7 @@ public sealed unsafe partial class RenderingDevice
     private readonly Dictionary<(byte[] Code, DataFormat Format, int Count, BlitBlendMode Blend), RenderHandle> _drawablePipelines = [];
     private RenderHandle? _drawableLinearSampler, _drawableNearestSampler;
     private ShaderSamplerCache? _drawableShaderSamplers;
+    private TextureSwizzleCache? _drawableSwizzles;
     internal void AdvanceDrawableSamplerEpoch() => _drawableShaderSamplers?.AdvanceEpoch();
 
     internal void GenerateDrawableMIPMaps(RID texture)
@@ -25,6 +26,7 @@ public sealed unsafe partial class RenderingDevice
         for (var i = 0; i < targets.Length; i++)
             colors[i] = new() { Texture = Get(targets[i], Kind.Texture).NativeHandle, MipLevel = (uint)mip, LoadOp = SDL.GPULoadOp.Load, StoreOp = SDL.GPUStoreOp.Store };
         var bindings = stackalloc SDL.GPUTextureSamplerBinding[16];
+        Span<uint> swizzles = stackalloc uint[16]; swizzles.Clear(); var mapped = false;
         var sampleCount = material is null ? targets.Length : samples.Length;
         for (var i = 0; i < sampleCount; i++)
         {
@@ -34,6 +36,7 @@ public sealed unsafe partial class RenderingDevice
             if (PixelType(sample.Texture!.Format) != (descriptor?.PixelType ?? 0) || (sample.Texture.Type == TextureType.TextureArray) != (descriptor?.IsArray ?? false))
                 throw new ArgumentException("A blit image does not match its sampled scalar type or shape.");
             var integer = PixelType(sample.Texture.Format) != 0;
+            swizzles[i] = sample.Texture.Swizzle; mapped |= swizzles[i] != 0;
             bindings[i] = new()
             {
                 Texture = sample.NativeHandle,
@@ -43,6 +46,7 @@ public sealed unsafe partial class RenderingDevice
         }
         if (rect.Size.X == 0 || rect.Size.Y == 0) return;
         var fragment = material?.Program.NativeCode ?? BuiltInShaders.DrawableFragment(targets.Length);
+        if (mapped) fragment = (_drawableSwizzles ??= new()).Get(fragment, swizzles);
         var key = (fragment, info.Format, targets.Length, blend);
         if (!_drawablePipelines.TryGetValue(key, out var pipeline))
         {
@@ -122,6 +126,6 @@ public sealed unsafe partial class RenderingDevice
     {
         foreach (var pipeline in _drawablePipelines.Values) pipeline.Dispose(); _drawablePipelines.Clear();
         _drawableLinearSampler?.Dispose(); _drawableNearestSampler?.Dispose();
-        _drawableShaderSamplers?.Dispose();
+        _drawableShaderSamplers?.Dispose(); _drawableSwizzles?.Clear();
     }
 }
