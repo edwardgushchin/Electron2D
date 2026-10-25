@@ -2254,3 +2254,5 @@ The existing VisualShaderNodeInput canvas family also executes original model/ca
 [Direct-space input sampling](components/physics-space-query-contract.md) belongs to existing PhysicsDirectSpaceState, CPUPhysicsWorldBackend and GPU query preparation. Pose, motion, margin and filters are captured before procedural source evaluation; no new production type is introduced.
 
 [Six-operation group invocation qualification](components/scene-thread-messages.md) belongs to existing Node.ThreadMessages, SceneTree.ThreadMessages and retained typed queues; no production type or runtime API is added.
+
+[Persistent replacement wakeup](components/physics-registered-adapter.md#persistent-replacement-wakeup) belongs to existing RigidBody force properties and PhysicsBodyRuntime configured state/motion publication. The duplicate scene-only wake helper is removed; no production type is added.

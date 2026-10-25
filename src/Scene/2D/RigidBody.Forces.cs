@@ -17,6 +17,9 @@ public partial class RigidBody
 
     /// <summary>Gets or sets the finite force applied at the center of mass every physics step.</summary>
     /// <value>Zero by default; the value persists until replaced or cleared.</value>
+    /// <remarks>Shares server force authoring and wakeup for the current effective body mode, including a direct mode override.
+    /// A nonzero replacement wakes dynamic participation; zero preserves sleep and the torque channel.
+    /// A failed selected wake is retained for preparation before later numerical access.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">A component is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed, including zero and equal assignments.</exception>
     public Vector2 ConstantForce
@@ -25,15 +28,15 @@ public partial class RigidBody
         set
         {
             EnsureMutable();
-            if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
-            EnsurePhysicsParticipationChange();
-            _constantForce = value; GPUParametersDirty = true;
-            if (value != Vector2.Zero) WakeForPersistentForce();
+            PhysicsServer.BodySetConstantForce(GetRID(), value);
         }
     }
 
     /// <summary>Gets or sets the finite torque applied every physics step.</summary>
     /// <value>Zero by default; the value persists until replaced or cleared.</value>
+    /// <remarks>Shares server force authoring and wakeup for the current effective body mode, including a direct mode override.
+    /// A nonzero replacement wakes dynamic participation; zero preserves sleep and the force channel.
+    /// A failed selected wake is retained for preparation before later numerical access.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after the world has failed, including zero and equal assignments.</exception>
     public float ConstantTorque
@@ -42,10 +45,7 @@ public partial class RigidBody
         set
         {
             EnsureMutable();
-            Finite(value);
-            EnsurePhysicsParticipationChange();
-            _constantTorque = value; GPUParametersDirty = true;
-            if (value != 0) WakeForPersistentForce();
+            PhysicsServer.BodySetConstantTorque(GetRID(), value);
         }
     }
 
@@ -148,12 +148,6 @@ public partial class RigidBody
             EnsureMutable();
             PhysicsServer.BodySetAxisVelocity(GetRID(), axisVelocity);
         }
-    }
-
-    private void WakeForPersistentForce()
-    {
-        if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAwake(true);
-        else _sleeping = false;
     }
 
     private static void ValidateForceAndPosition(Vector2 force, Vector2 position)

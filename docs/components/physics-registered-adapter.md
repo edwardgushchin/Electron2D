@@ -4614,3 +4614,14 @@ cannot refund a consumed force allowance. The [public free-witness regression](p
 proves this through displacement, final velocity and complete contact impulse,
 with CPU/resident-GPU controls. No shipping solver or public API changed; the
 class and wider acceptance gates remain open.
+
+
+## Persistent replacement wakeup
+
+RigidBody.ConstantForce and ConstantTorque now use the same configured-state and wake path as the server setters. The former scene-only helper inspected Freeze and wrote a different sleep field for detached direct profiles. Consequently a nonzero property replacement could leave an actual dynamic body asleep while the equivalent RID operation woke it. It also bypassed retained wake publication after a selected error.
+
+Replacement now follows the effective mode after pending preparation. Rigid/RigidLinear participation wakes for nonzero input, including equal writes, regardless of its scene Freeze configuration. Inactive static/kinematic authoring stores the totals without clearing the future sleep request. Zero replacement preserves current sleep and the other channel. A failed selected wake keeps the committed persistent input and retries the retained request before later numerical access. Both properties keep ordinary mutation validation, owner/phase/failure guards and geometry-independent configured authoring. No worker numerical permission or public API is added.
+
+The public-only --constant-wake consumer covers ordinary RigidBody, scene-frozen RigidBody and PhysicalBone, all four direct modes, attached/detached state and property/RID force/torque routes: 96 cold cases. It also verifies inactive stored sleep, both zero-channel controls, equal nonzero wake, actual .2 linear or .01 angular response with .0001 absolute scene-unit tolerance, selected wake failure/original exception/retry and exact query/RID/slot identity. After 128 warm frames, 128 changing complete frames require 384 owner callbacks and strict zero owner/all-thread managed bytes. CPU/GPU/registered and owner/separate numerical policies retain independent receipts. Common force/state, transaction/factory and shared root body suites supply the regression scope.
+
+Evidence is under bin/physics-constant-wake/2026-10-25/: negative and final payload/source manifests, exact commands, process/driver receipts and qualification.json. All 46 final profiles passed: 24 CLR and 22 strict NativeAOT. The original CPU failure and final-consumer/old-runtime negative control are retained. Complete inherited API, full ordinary-suite, cross-process networking, native allocation, foreign platforms and mass-performance/window acceptance stay separate; declaration counts do not increase for this existing-API correction.

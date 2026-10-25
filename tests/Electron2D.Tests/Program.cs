@@ -692,7 +692,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_CONTRACT") is { } bodyContract)
 {
     var backend = bodyContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
-    PhysicsBodyStateTests.Run(backend); PhysicsServerForceTests.Run(backend); PhysicsContactImpulseTests.Run(backend);
+    PhysicsBodyStateTests.Run(backend); RigidBodyForceTests.Run(backend); PhysicsServerForceTests.Run(backend); PhysicsContactImpulseTests.Run(backend);
     PhysicsReportOnlyTests.Run(backend);
     return;
 }

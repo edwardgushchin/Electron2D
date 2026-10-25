@@ -1910,3 +1910,5 @@ platform/hardware performance gates remain open.
 [Direct-body contract audit](../components/physics-body-state-contract.md) accounts for both body-state type families, changed full-frame extension dispatch, selected factories and explicit inherited/full-goal limits.
 
 [Inherited group invocation](../components/scene-thread-messages.md) accounts for the six typed safe/deferred Node methods and real physical receivers without granting arbitrary worker numerical mutation.
+
+[Persistent replacement wakeup](../components/physics-registered-adapter.md#persistent-replacement-wakeup) now shares scene and RID effective-role wakeup, detached sleep state and selected failure preparation for both RigidBody persistent properties.
