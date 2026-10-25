@@ -1902,3 +1902,5 @@ real impulse wake and public checkpoint restoration reuse record storage without
 changing physical identity or sleep policy. The existing global contact graph
 budget, retained-impulse convergence and broader allocation/native/network/
 platform/hardware performance gates remain open.
+
+[Processing-group motion](../components/physics-group-motion.md) adds current-group scene velocity/sleep/surface authoring and character desired velocity with original-owner numerical publication. Qualification and remaining inherited API limits are recorded with that component.

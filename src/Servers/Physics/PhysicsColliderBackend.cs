@@ -105,7 +105,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         finally
         {
             _implementation = null;
-            _pendingMotion = null;
+            DiscardPendingMotion();
             _pendingGravityScale = null;
             _filterDirty = false;
             _identityDirty = false; _priorityDirty = false;

@@ -37,7 +37,12 @@ internal sealed class WorkerPoolRuntime : IDisposable
             CurrentWorker = this;
             try
             {
-                try { Pool._initializeThread?.Invoke(); _ = GC.GetAllocatedBytesForCurrentThread(); }
+                try
+                {
+                    Pool._initializeThread?.Invoke();
+                    _ = ElectronObject.ConstructionContext;
+                    _ = GC.GetAllocatedBytesForCurrentThread();
+                }
                 catch (Exception error) { StartupFailure = ExceptionDispatchInfo.Capture(error); return; }
                 finally { Pool._ready.Signal(); }
                 AllocationStart = GC.GetAllocatedBytesForCurrentThread();

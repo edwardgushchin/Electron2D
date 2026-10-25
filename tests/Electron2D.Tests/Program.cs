@@ -530,6 +530,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_CODEC_ENET") == "1"
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); FileCompressionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NODE_NAMES") == "1") { VerifyNodeHierarchyAndTransforms(); SceneHierarchyTests.Run(); NodeUniqueNameTests.Run(); NodeReplacementTests.Run(); return; }
 if (args.Length >= 2 && args[0] == "--node-groups-child") { BackendChecks.ReadNodeGroups(args[1], args.Contains("--gpu") ? PhysicsServer.Backend.GPU : args.Contains("--cpu") ? PhysicsServer.Backend.CPU : null, args.Contains("--threaded")); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GROUP_MOTION_COSTS") is { } groupMotionBackend) { PhysicsGroupMotionCosts.Run(groupMotionBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GROUP_TLS") == "1") { PhysicsGroupAllocationTests.ThreadStaticControl(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GROUP_ALLOCATIONS") is { } allocationGroupMode) { PhysicsGroupAllocationTests.Run(allocationGroupMode); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_LIFECYCLE") == "1") { CanvasLifecycleTests.Run(); return; }

@@ -112,3 +112,5 @@ now run PhysicsSurfaceVelocityTests with explicit backend selection. The linked 
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
 
 The full shared PhysicsSurfaceVelocityTests now executes on explicitly selected CPU/GPU worlds with backend assertions and 0/0 owner/all-thread bytes over 64 warm active contact frames. The shared PhysicsServerStateTests verifies immediate static teleport and wakeup of supported scene/raw bodies; legacy staged controls and private native lock injection remain CPU diagnostics.
+
+[Processing-group motion](../components/physics-group-motion.md) permits current-group velocity/state authoring with ordered owner publication, prepared activity observations and retained failure/retry state. Numerical operations and other authoring families retain their individual access rules.

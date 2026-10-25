@@ -2246,3 +2246,5 @@ ShaderProgram/ShaderTexture retain validated immutable image policy under [the s
 
 
 The existing VisualShaderNodeInput canvas family also executes original model/canvas/screen matrix producers across ordinary, mesh, MultiMesh and GPU-particle streams; see [canvas matrix inputs](components/visual-shaders.md#canvas-matrix-inputs). It executes the renderer-owned command texture_pixel_size producer through ShaderProgram, MaterialState, SpirvReflection and GPUCanvasBackend; see [the executable contract](components/visual-shaders.md#command-texture-pixel-size).
+
+[Processing-group physical motion](components/physics-group-motion.md) belongs to existing PhysicsBody, RigidBody, StaticBody, CharacterBody, PhysicsColliderBackend and SceneTree. [PhysicsBody.GroupMotion](../src/Scene/2D/PhysicsBody.GroupMotion.cs) retains attachment-qualified observations; the existing backend motion adapter retains ordered value requests and owner retry/retirement. No new production type is introduced.

@@ -13,7 +13,7 @@ public partial class SceneTree
     private readonly List<GroupEntry> _groupFrame = [];
     private readonly List<ProcessingGroup> _groupStage = [];
     private readonly List<(CanvasItem Item, ulong Attachment)> _transformPublications = [];
-    internal enum ScenePublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset, CanvasIdentity, PhysicsParticipation, PhysicalBoneActivation }
+    internal enum ScenePublicationKind { CanvasPolicy, CameraPolicy, CameraScroll, ViewportReset, CanvasIdentity, PhysicsParticipation, PhysicalBoneActivation, PhysicsMotion }
     private readonly record struct ScenePublication(Node Node, ScenePublicationKind Kind, ulong Attachment, Vector2 Position = default, float Rotation = 0, ulong CanvasID = 0, RID Body = default, ulong CanvasAttachment = 0);
     private readonly List<ScenePublication> _scenePublications = [];
     internal void QueueScenePublication(Node node, ScenePublicationKind kind)
@@ -69,6 +69,7 @@ public partial class SceneTree
                             break;
                         case ScenePublicationKind.PhysicsParticipation: ((CollisionObject)node).PublishPhysicsParticipation(); break;
                         case ScenePublicationKind.PhysicalBoneActivation: ((PhysicalBone)node).PreparePendingActivation(); break;
+                        case ScenePublicationKind.PhysicsMotion: ((PhysicsBody)node).Backend.PreparePendingMotion(); break;
                     }
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
@@ -226,6 +227,9 @@ public partial class SceneTree
                 {
                     if (!_processingWorkGatePrepared) PrepareProcessingWorkGate();
                     _runGroupWorker ??= index => RunProcessingGroup(_groupStage[index]);
+                    foreach (var group in _groupStage)
+                        foreach (var node in group.Members)
+                            if (node is PhysicsBody body) body.PrepareGroupMotion();
                     BeginSceneTransformAuthoring();
                     try
                     {

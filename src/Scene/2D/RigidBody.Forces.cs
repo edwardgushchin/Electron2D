@@ -132,13 +132,22 @@ public partial class RigidBody
     /// <param name="axisVelocity">An axis whose direction and length give the new component in scene units per second.</param>
     /// <remarks>Active bodies project current selected motion, including impulses not yet synchronized to scene properties.
     /// Inactive native roles retain their configured future velocity. A zero vector keeps velocity and wakes eligible dynamic bodies.
-    /// Selected publication errors retain the requested velocity for the ordinary motion preparation retry.</remarks>
+    /// Selected publication errors retain the requested velocity for the ordinary motion preparation retry.
+    /// Current-group calls project the prepared logical velocity and queue its result for the owner barrier.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">An input or resulting velocity is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Attached mutation is off-owner, inside a numerical hook or after world failure.</exception>
     public void SetAxisVelocity(Vector2 axisVelocity)
     {
-        EnsureMutable();
-        PhysicsServer.BodySetAxisVelocity(GetRID(), axisVelocity);
+        if (IsGroupMotionAuthoring)
+        {
+            EnsureMotionMutable();
+            LinearVelocity = PhysicsBodyRuntime.ProjectAxisVelocity(LinearVelocity, axisVelocity);
+        }
+        else
+        {
+            EnsureMutable();
+            PhysicsServer.BodySetAxisVelocity(GetRID(), axisVelocity);
+        }
     }
 
     private void WakeForPersistentForce()
