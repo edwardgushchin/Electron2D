@@ -1,20 +1,20 @@
-namespace Electron2D.Tools.Batch;
+namespace Electron2D.Editor;
 
 /// <summary>Provides bounded observations, assertions and explicit completion for one scenario.</summary>
 /// <remarks>The root and random generator are borrowed. Calls run on the engine owner thread. Reporting is
 /// allocating tooling work, outside engine allocation measurements. A seed describes only this generator.</remarks>
-public sealed class BatchContext
+public sealed class SessionRunContext
 {
-    private readonly BatchRequest _request;
-    private readonly BatchReport _report;
+    private readonly RunRequest _request;
+    private readonly RunReport _report;
     private Node? _root;
     private readonly int _owner = Environment.CurrentManagedThreadId;
     private bool _released;
     private int _reportBytes;
     internal bool Completed;
-    internal BatchContext(BatchRequest request, BatchReport report) { _request = request; _report = report; Random = new() { Seed = request.Seed }; }
+    internal SessionRunContext(RunRequest request, RunReport report) { _request = request; _report = report; Random = new() { Seed = request.Seed }; }
     /// <summary>Gets the execution mode.</summary>
-    public BatchMode Mode => _request.Mode;
+    public SessionRunMode Mode => _request.Mode;
     /// <summary>Gets the current one-based step, or zero before simulation.</summary>
     public int Step { get; internal set; }
     /// <summary>Gets the maximum number of completed steps.</summary>
@@ -34,7 +34,7 @@ public sealed class BatchContext
     private void Access()
     {
         ObjectDisposedException.ThrowIf(_released, this);
-        if (Environment.CurrentManagedThreadId != _owner) throw new InvalidOperationException("The batch context requires its owner thread.");
+        if (Environment.CurrentManagedThreadId != _owner) throw new InvalidOperationException("The run context requires its owner thread.");
     }
     internal void Release() { Access(); Random.Dispose(); _released = true; }
     private void CheckName(string name)
@@ -47,7 +47,7 @@ public sealed class BatchContext
     }
     private void AddBudget(int bytes)
     {
-        if (bytes > 4 * 1024 * 1024 - _reportBytes) throw new InvalidOperationException("Observation and assertion data exceeds the four-MiB JSON budget.");
+        if (bytes > 4 * 1024 * 1024 - _reportBytes) throw new InvalidOperationException("SessionObservation and assertion data exceeds the four-MiB JSON budget.");
         _reportBytes += bytes;
     }
     /// <summary>Records a finite numeric observation at the current step.</summary>
@@ -65,9 +65,9 @@ public sealed class BatchContext
     {
         CheckName(name); ArgumentNullException.ThrowIfNull(message); if (message.Length > 4096) throw new ArgumentOutOfRangeException(nameof(message));
         AddBudget(6 * message.Length); _report.Assertions.Add(new(Step, name, condition, message));
-        if (!condition) throw new BatchFailure("ASSERTION_FAILED", 5, message);
+        if (!condition) { if (_report.ExitCode == 0) _report.ExitCode = 5; throw new JobFailure("ASSERTION_FAILED", 5, message); }
     }
     /// <summary>Requests success after the current step completes; reaching the budget alone is a failure.</summary>
-    /// <exception cref="InvalidOperationException">Simulation has not started or this is authoring mode.</exception>
-    public void Complete() { Access(); if (Step == 0 || Mode == BatchMode.Authoring) throw new InvalidOperationException("Complete a running simulation step."); Completed = true; }
+    /// <exception cref="InvalidOperationException">Simulation has not started.</exception>
+    public void Complete() { Access(); if (Step == 0) throw new InvalidOperationException("Complete a running simulation step."); Completed = true; }
 }

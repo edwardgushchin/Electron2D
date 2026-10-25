@@ -98,7 +98,7 @@ public sealed partial class ProjectSession : IDisposable
 
     internal SessionScene Scene()
     {
-        Check();
+        Check(); FlushCodeBuffer();
         return new(_state.SceneID, _state.ScenePath, _state.SceneRevision,
             SessionStorage.Hash(_state.Scene) != _state.SavedSceneHash, External(SessionDocumentKind.Scene),
             Array.AsReadOnly(_state.Nodes.Select(n => new SessionNode(n.ID, n.ParentID, n.Name, n.TypeName, n.Revision, n.CanEdit, n.Transform)).ToArray()));
@@ -106,13 +106,13 @@ public sealed partial class ProjectSession : IDisposable
 
     internal SessionCode Code()
     {
-        Check(); return new(_state.CodeID, _state.CodePath, _state.CodeRevision, _state.Code != _state.SavedCode || _state.BOM != _state.SavedBOM,
+        Check(); FlushCodeBuffer(); return new(_state.CodeID, _state.CodePath, _state.CodeRevision, _state.Code != _state.SavedCode || _state.BOM != _state.SavedBOM,
             External(SessionDocumentKind.Code), _state.Code);
     }
 
     internal IReadOnlyList<SessionOperation> InspectHistory()
     {
-        Check(); return Array.AsReadOnly(_state.History.Select(h => new SessionOperation(h.ID, h.Label, h.Origin, h.Applied)).ToArray());
+        Check(); FlushCodeBuffer(); return Array.AsReadOnly(_state.History.Select(h => new SessionOperation(h.ID, h.Label, h.Origin, h.Applied)).ToArray());
     }
 
     private string PathFor(SessionDocumentKind kind) => _storage.Resolve(kind switch
@@ -140,7 +140,8 @@ public sealed partial class ProjectSession : IDisposable
 
     private void Begin()
     {
-        Check(); if (_busy) throw new InvalidOperationException("Session mutations cannot reenter a transition."); _busy = true;
+        Check(); if (_busy || _readingCode) throw new InvalidOperationException("Session mutations cannot reenter a transition or input reader.");
+        FlushCodeBuffer(); _busy = true;
     }
 
     private SessionConflictException Conflict(Guid objectID, ulong expected, ulong actual, bool code = false) =>
@@ -363,8 +364,10 @@ public sealed partial class ProjectSession : IDisposable
     public void Dispose()
     {
         if (_disposed) return;
-        if (_thread != Environment.CurrentManagedThreadId || _busy) throw new InvalidOperationException("Dispose on the idle session owner thread.");
-        _disposed = true; Changed = null;
+        if (_thread != Environment.CurrentManagedThreadId || _busy || _readingCode) throw new InvalidOperationException("Dispose on the idle session owner thread.");
+        if (!_faulted) FlushCodeBuffer();
+        _activeJob?.Cancel();
+        _disposed = true; Changed = null; _codeBuffer?.Release(); _codeBuffer = null;
         try { foreach (var history in _history.Values) history.Dispose(); }
         finally { _storage.Dispose(); }
     }

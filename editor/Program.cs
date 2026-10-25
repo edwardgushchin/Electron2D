@@ -10,7 +10,13 @@ semibold.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Asset
 using var regular = new FontFile();
 regular.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
 Engine.MaxFPS = 60;
-return Engine.Run(EditorScene.CreateWindow(mark, sparkle, appIcon, semibold, regular));
+if (args.Length is not (0 or 2) || args.Length == 2 && args[0] != "--project")
+    throw new ArgumentException("Use --project DIRECTORY, or open a project from the editor.");
+using var application = new EditorApplication(mark, sparkle, appIcon, semibold, regular, args.Length == 2 ? args[1] : null);
+int code;
+try { code = Engine.Run(application.Window); }
+finally { try { application.Dispose(); } finally { await application.RetireJobsAsync(); } }
+return code;
 
 // Desktop shells match the executable's application ID to this entry on both Linux display protocols.
 static void RegisterDesktopApplication()

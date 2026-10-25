@@ -16,6 +16,7 @@
   <ItemGroup><Compile Remove="Session/**/*.cs" /></ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../Electron2D.csproj" />
+    <ProjectReference Include="Session/Electron2D.Editor.Session.csproj" />
     <Content Include="../docs/design/assets/sprite/sparkle.svg" Link="Assets/sparkle.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="../docs/design/assets/sprite/mark-dark.svg" Link="Assets/mark-dark.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="../docs/design/assets/sprite/app-icon.svg" Link="Assets/app-icon.svg" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />

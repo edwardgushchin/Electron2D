@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <summary>A multiline Unicode editor with multiple carets, selections, history, gutters and syntax colors.</summary>
 /// <remarks>Coordinates use logical lines and Unicode scalar columns. Attached mutations belong to the scene
 /// owner; editing, first-seen shaping, history and highlight parsing are cold operations. Fonts/highlighters
-/// are borrowed; the scrollbars and context menu are required owned children. Prepared drawing reuses buffers.</remarks>
+/// are borrowed; the scrollbars and context menu are required owned children. Prepared drawing reuses buffers. Built-in gutter text and icons clip to the content viewport; custom draw callbacks retain their explicit drawing responsibility.</remarks>
 public partial class TextEdit : Control
 {
     /// <summary>Identifies groups of edits merged into one undo action.</summary>

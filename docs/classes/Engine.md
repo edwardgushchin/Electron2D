@@ -585,7 +585,7 @@ int code = Engine.Run((root, nextFrame) =>
 }, window, "capture.png", 60);
 ```
 
-The snippet requires a detached `window` and registered `move` action. [Project batch execution](../components/project-batch.md) supplies a complete compiled caller and structured process supervision. [EngineBeforeFrameTests](../../tests/Electron2D.Tests/EngineBeforeFrameTests.cs) checks all six overloads, readiness/order, input, failure/restart, skipped pending work and prepared owner allocation. Physical GPU, native allocator totals and other-platform acceptance remain separate.
+The snippet requires a detached `window` and registered `move` action. [Shared project jobs](../components/project-jobs.md) supplies a complete compiled caller and structured process supervision. [EngineBeforeFrameTests](../../tests/Electron2D.Tests/EngineBeforeFrameTests.cs) checks all six overloads, readiness/order, input, failure/restart, skipped pending work and prepared owner allocation. Physical GPU, native allocator totals and other-platform acceptance remain separate.
 
 ## Measured host-delta smoothing
 

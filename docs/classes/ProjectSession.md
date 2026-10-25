@@ -51,14 +51,14 @@ origin is nonblank and at most 128 characters. Returns a disposable [SessionClie
 
 ### Dispose
 
-Idempotent on an already disposed owner; otherwise requires the idle creating thread. Disposal during mutation/event delivery or from another thread rejects. Histories release their retained callbacks and the OS lease is released even if retirement fails. Committed dirty buffers/history remain in recovery for the next owner. Existing clients then reject operations with ObjectDisposedException.
+Idempotent on an already disposed owner; otherwise requires the idle creating thread. Disposal during mutation/event delivery or from another thread rejects. Pending local source is flushed first; a failed flush leaves the owner open for resolution. Disposal requests cancellation of the active job; its caller must still await process retirement through SessionJob.DisposeAsync. Histories release their retained callbacks and the OS lease is released even if retirement fails. Committed dirty buffers/history remain in recovery for the next owner. Existing clients then reject operations with ObjectDisposedException.
 
 ## Event descriptions
 
 ### Changed
 
-Receives [SessionResult](SessionResult.md) after one committed Apply/Undo/Redo/Save/Refresh (including an explicit no-op result). Mutations cannot reenter the event. Each registered observer is attempted; failures append diagnostics to the returned result. Observers see committed state. Subscriptions follow ordinary CLR lifetime and must be used on the session thread; owner disposal releases them. This is a synchronous no-UI core; stage 2 editor dispatch subscribes separately.
+Receives [SessionResult](SessionResult.md) after one committed Apply/Undo/Redo/Save/Refresh (including an explicit no-op result). Mutations cannot reenter the event. Each registered observer is attempted; failures append diagnostics to the returned result. Observers see committed state. Subscriptions follow ordinary CLR lifetime and must be used on the session thread; owner disposal releases them. This remains a synchronous no-UI core; the editor subscribes through the same operation clients.
 
 ## Dependencies and verification
 
-Uses public PackedScene/ResourceLoader/ResourceSaver, typed Node/Entity operations and UndoRedo. Internal storage/model helpers are documented in [the component](../components/project-session.md#storage-model). [ProjectSession.Tests](../../tests/ProjectSession/Program.cs) exercises independent processes, clients and actual persistence. The editor startup does not yet attach views, jobs or an agent; those gates remain open under ADR 0090.
+Uses public PackedScene/ResourceLoader/ResourceSaver, typed Node/Entity operations and UndoRedo. Internal storage/model helpers are documented in [the component](../components/project-session.md#storage-model). [ProjectSession.Tests](../../tests/ProjectSession/Program.cs) exercises independent processes, clients and actual persistence. [Editor views and immutable jobs](../components/project-jobs.md) now attach to this core. Actual transport/executor and in-editor agent control remain open under ADR 0090.

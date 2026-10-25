@@ -1,6 +1,6 @@
 # Multiline editing and syntax highlighting
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 [TextEdit](../classes/TextEdit.md) provides an executable multiline authoring control on the existing Control, Font/TextLayout and canvas backends. [SyntaxHighlighter](../classes/SyntaxHighlighter.md) is its typed resource extension point; [CodeHighlighter](../classes/CodeHighlighter.md) supplies keyword/category/delimiter parsing. [TextMenuAction](../classes/TextMenuAction.md) is the shared LineEdit/TextEdit command identity under ADR 0051.
 
@@ -19,3 +19,5 @@ The [hierarchical cells component](hierarchical-cells.md) now consumes TextEdit 
 IME preedit is projected at every active caret, including multiple carets on one logical line. Source/display scalar mapping keeps hit testing and caret layout in the document coordinate space; apply commits one grouped edit. History version identities remain distinct when an undone branch is replaced.
 
 [Code authoring](code-authoring.md) now consumes the same document/highlighter/history/input/storage pipeline through CodeEdit. The shared GetLineRangesFromCarets correctly uses an unselected caret position and excludes a selected final line at column zero; duplication and line commands exercise that correction.
+
+Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now clip partial rows to the text content viewport. Fully invisible gutter rows skip recording. Typed custom callbacks retain their explicit drawing responsibility. [Native workspace regression](../../tests/ProjectWorkspace/Program.cs) checks that line numbers do not escape below a resized source control on both native backends. This does not change public declarations or broader semantic-service/IME/platform acceptance.

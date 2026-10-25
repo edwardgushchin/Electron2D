@@ -21,6 +21,9 @@ A trusted in-process capability created by [ProjectSession.Connect](ProjectSessi
 | `public SessionResult Redo(Guid operationID)` | Guarded replay of a retained undone group. |
 | `public SessionResult Save(SessionDocumentKind kind, ulong expectedRevision)` | Publish one project file with conflict checks and exact write diagnostics. |
 | `public SessionResult Refresh(SessionDocumentKind kind, ulong expectedRevision, SessionExternalResolution resolution = SessionExternalResolution.Reject)` | Reconcile the persisted base and live document without writing a project file. |
+| `public SessionCodeBuffer BindCodeBuffer(Func<SessionCodeEdit?> readPending, Action<SessionCodeEdit, Exception>? rejected = null)` | Bind one local pending-source reader before observations/mutations. |
+| `public Node CreatePreview(ulong expectedSceneRevision)` | Return a caller-owned passive built-in scene projection at a fresh token. |
+| `public SessionJob StartJob(SessionJobOptions options, ulong expectedSceneRevision, ulong expectedCodeRevision)` | Submit an immutable unsaved snapshot for asynchronous build/run. |
 | `public void Dispose()` | Release this handle, leaving the session/documents open. |
 
 ## Property descriptions
@@ -63,10 +66,22 @@ kind identifies one scene/code document and expectedRevision must match that doc
 
 Requires a fresh token. Reject refreshes clean state and rejects unsaved overlap. UseDisk explicitly replaces live content with disk. KeepLive preserves live content while acknowledging disk as the persisted base. Missing/invalid files reject without replacing live state. Reconciliation advances document revision, retires affected history and persists recovery; it never saves a project file. Replacing scene content creates new node IDs; document ID remains stable. Source replacement preserves the observed disk BOM, while KeepLive retains the live buffer's BOM. There is no automatic text merge.
 
+### BindCodeBuffer
+
+readPending synchronously returns a typed source proposal with the view's observed token, or null. One ingress is admitted per owner. It must be side-effect-free, owner-thread and non-reentrant. The session drains it before reads, mutations, jobs/staleness and normal disposal so deferred native notifications cannot omit manual input. rejected receives a failed proposal and original exception before propagation; it must retain the visible draft for review. The returned binding is caller-owned; this client also disposes it. Invalid binding/reentry rejects with InvalidOperationException. See [SessionCodeBuffer](SessionCodeBuffer.md).
+
+### CreatePreview
+
+expectedSceneRevision must match the live scene. Returns a detached caller-owned duplicate of exact built-in Node/Entity/Polygon/Line/Sprite roles with the unsaved pose overlay. No project class/script/connection or gameplay role is attached; unsupported roles throw NotSupportedException. Ordinary archive construction still has trusted callbacks. This is static authored drawing, not actual game verification. Dispose the projection after removing its view. See [the preview boundary](../components/project-jobs.md#human-and-programmatic-views).
+
+### StartJob
+
+options names one qualified root .csproj and binary SDK. Both expected tokens must be fresh; external scene/code changes reject. Pending manual text is drained before token checks, so callers must inspect after visible input. Returns caller-owned SessionJob without waiting for compilation/execution. One active job is admitted. Timing, files, dependency-profile and disk admission limits are explicit in [shared jobs](../components/project-jobs.md#immutable-input-and-project-profile). Undefined inputs reject; platform/control/profile failures never fall back silently. Compilation/failure/cancel/deadline become terminal structured results. Cancel then await DisposeAsync before removal/shutdown. Authoring continues and IsStale reports later document changes.
+
 ### Dispose
 
 Releases only this capability. Subsequent methods throw ObjectDisposedException; disposal is idempotent. It does not discard unsaved buffers or unsubscribe session-wide observers.
 
 ## Shared errors and verification
 
-Owner operations reject wrong-thread access, mutation reentry, disposed owners and a faulted persistence boundary. [Executable checks](../../tests/ProjectSession/Program.cs) cover these rules and cross-process recovery. UI, snapshot jobs, transport/authentication and actual agent acceptance remain separate stages.
+Owner operations reject wrong-thread access, mutation reentry, disposed owners and a faulted persistence boundary. [Executable checks](../../tests/ProjectSession/Program.cs) cover these rules and cross-process recovery. [Native editor views and immutable jobs](../components/project-jobs.md) use the same clients. Transport/authentication and actual agent acceptance remain separate stages.

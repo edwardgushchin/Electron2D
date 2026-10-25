@@ -33,6 +33,7 @@ internal sealed record HistoryState(Guid ID, string Label, string Origin, NodeSt
 
 [JsonSourceGenerationOptions(UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, IncludeFields = true, IgnoreReadOnlyProperties = true)]
 [JsonSerializable(typeof(DocumentState))]
+[JsonSerializable(typeof(NodeState[]))]
 internal partial class SessionJSON : JsonSerializerContext;
 
 internal sealed class SessionStorage : IDisposable
@@ -58,6 +59,11 @@ internal sealed class SessionStorage : IDisposable
         // Keep this inode: unlinking a live lock would admit another owner on a different inode.
         _lease = new FileStream(Resolve(".electron2d/session/owner.lock", metadata: true), FileMode.OpenOrCreate,
             System.IO.FileAccess.ReadWrite, FileShare.None);
+        try
+        {
+            if (!OperatingSystem.IsWindows()) File.SetUnixFileMode(_directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        }
+        catch { _lease.Dispose(); throw; }
     }
 
     internal string Resolve(string relative, bool metadata = false)

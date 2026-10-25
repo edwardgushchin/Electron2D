@@ -8,6 +8,7 @@ namespace Electron2D.Editor;
 public sealed class SessionClient : IDisposable
 {
     private ProjectSession? _session;
+    private SessionCodeBuffer? _codeBuffer;
     internal SessionClient(ProjectSession session, string origin) { _session = session; Origin = origin; }
     /// <summary>Gets the attribution attached to every operation submitted by this client.</summary>
     /// <value>The immutable nonblank origin supplied by the host.</value>
@@ -57,6 +58,20 @@ public sealed class SessionClient : IDisposable
     /// <returns>The resulting revisions; this operation does not write a project document.</returns>
     /// <exception cref="SessionConflictException">The revision is stale or a dirty buffer lacks explicit resolution.</exception>
     public SessionResult Refresh(SessionDocumentKind kind, ulong expectedRevision, SessionExternalResolution resolution = SessionExternalResolution.Reject) => Session.Refresh(Origin, kind, expectedRevision, resolution);
+    /// <summary>Registers a synchronous local pending-code reader before session observations and operations.</summary>
+    /// <param name="readPending">Returns a bounded typed edit with the view's token, or null when unchanged.</param>
+    /// <param name="rejected">Restores/retains a rejected proposal in the client UI; called before the original failure propagates.</param>
+    /// <returns>The single bound ingress; dispose it before retiring the view.</returns>
+    public SessionCodeBuffer BindCodeBuffer(Func<SessionCodeEdit?> readPending, Action<SessionCodeEdit, Exception>? rejected = null) =>
+        _codeBuffer = Session.BindCodeBuffer(Origin, readPending, rejected);
+    /// <summary>Captures the current authoring inputs and starts an owned immutable snapshot job.</summary>
+    /// <param name="options">Bounded project/SDK/build/run options.</param><param name="expectedSceneRevision">Observed scene token.</param><param name="expectedCodeRevision">Observed source token.</param>
+    /// <returns>An asynchronous job; submission and process start do not establish success.</returns>
+    public SessionJob StartJob(SessionJobOptions options, ulong expectedSceneRevision, ulong expectedCodeRevision) => Session.StartJob(options, expectedSceneRevision, expectedCodeRevision);
+    /// <summary>Creates an independent caller-owned static built-in preview without attaching project classes, connections or active gameplay roles.</summary>
+    /// <param name="expectedSceneRevision">Fresh scene token.</param><returns>A detached Node/Entity/Polygon/Line/Sprite hierarchy; unsupported roles reject explicitly.</returns>
+    /// <remarks>Ordinary trusted archive constructors/resource setup can still execute during reconstruction.</remarks>
+    public Node CreatePreview(ulong expectedSceneRevision) => Session.CreatePreview(expectedSceneRevision);
     /// <summary>Releases this client handle.</summary>
-    public void Dispose() => _session = null;
+    public void Dispose() { _codeBuffer?.Dispose(); _codeBuffer = null; _session = null; }
 }

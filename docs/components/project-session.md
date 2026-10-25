@@ -4,15 +4,19 @@ Last updated: 2026-10-26
 
 ## Scope and dependency direction
 
-[ProjectSession](../classes/ProjectSession.md) is the first no-UI authoring core selected by [ADR 0090](../decisions/agent-native.md#adr-0090). `editor/Session/Electron2D.Editor.Session.csproj` builds `Electron2D.Editor.Session.dll`, separately from the startup application and `Electron2D.dll`. It references only public runtime APIs. The startup UI does not yet consume this library. The runtime does not reference it.
+[ProjectSession](../classes/ProjectSession.md) is the first no-UI authoring core selected by [ADR 0090](../decisions/agent-native.md#adr-0090). `editor/Session/Electron2D.Editor.Session.csproj` builds `Electron2D.Editor.Session.dll`, separately from the startup application and `Electron2D.dll`. It references only public runtime APIs. The editor UI and immutable jobs consume this library through the shared operation boundary. The runtime does not reference it.
 
-One owner opens one existing typed scene and one strict UTF-8 `.cs` file. Trusted local [SessionClient](../classes/SessionClient.md) handles inspect the same unsaved state and submit transform, rename, reparent and complete-source-buffer operations. This is stage 1's bounded document boundary, not a project manager, inspector, language service or agent connection. Existing Batch tooling remains until the stage 2 job replacement.
+One owner opens one existing typed scene and one strict UTF-8 `.cs` file. Trusted local [SessionClient](../classes/SessionClient.md) handles inspect the same unsaved state and submit transform, rename, reparent and complete-source-buffer operations. This bounded document boundary now backs the [editor workflow and snapshot jobs](project-jobs.md). Language services and actual agent transport remain absent.
+
+## Shared views and pending input
+
+[SessionCodeBuffer](../classes/SessionCodeBuffer.md) binds one synchronous local pending-code reader. Before observations, mutations, job snapshots/staleness and normal owner disposal, the session publishes visible pending text through a guarded SessionCodeEdit. Readers cannot mutate/reenter/dispose their binding. Rejected proposals reach a client callback before the original error propagates, so the view retains a draft for explicit review instead of overwriting it. No edit is a no-op. Disposing a binding unregisters it; clients flush before retiring a view. Unix recovery metadata uses owner-only directory access.
 
 ## Ownership, identities and commit boundary
 
 `ProjectSession.Open` holds an exclusive `FileStream` lease on the stable `.electron2d/session/owner.lock` inode for its lifetime. It never unlinks that inode. Another process or local owner fails explicitly; a live but unreachable owner does not cause a writable fallback. Process death releases the OS lease. A second no-UI host must use the same canonical project root. Input/metadata symbolic links, outside-root documents, metadata documents and identical scene/code paths reject. This is cooperative local ownership, not a security boundary against a process that ignores the lease or changes filesystem paths concurrently. Local client handles are capabilities granted by the host; network discovery, authentication and attach transport remain stage 3 work.
 
-All operations, queries and owner disposal use the creating thread. No model/network/build work or game loop runs there. Mutations and disposal reject reentry while staging or notifying. Snapshots contain copied value data and read-only node lists, never mutable engine references. Events run in registration order after a committed transition. Observer failures are returned as `observer-failed` diagnostics; they cannot turn a committed edit into an apparent rollback.
+All operations, queries and owner disposal use the creating thread. No model/network work or game loop runs there. Job submission captures document values and bounded filesystem inventories; compilation/execution runs asynchronously outside the owner. Mutations and disposal reject reentry while staging or notifying. Snapshots contain copied value data and read-only node lists, never mutable engine references. Events run in registration order after a committed transition. Observer failures are returned as `observer-failed` diagnostics; they cannot turn a committed edit into an apparent rollback.
 
 Document GUIDs, node GUIDs and revisions live in the recovery record. GUIDs survive owner restart, rename and reparent. Revisions use a checked increasing session clock, including undo/redo. Unrelated source edits do not invalidate object tokens; independent object-property edits can continue. A hierarchy group conservatively guards the complete scene. External UseDisk scene refresh creates new object identities and retires scene-dependent history instead of guessing correspondence from names or paths.
 
@@ -40,7 +44,7 @@ Limits are 4096 scene nodes, 16 MiB encoded scene, 4 MiB UTF-8 source including 
 
 | Types | Responsibility |
 | --- | --- |
-| [ProjectSession](../classes/ProjectSession.md), [SessionClient](../classes/SessionClient.md) | Owner lifetime, shared operations, client attribution, snapshots and publication |
+| [ProjectSession](../classes/ProjectSession.md), [SessionClient](../classes/SessionClient.md), [SessionCodeBuffer](../classes/SessionCodeBuffer.md) | Owner lifetime, shared operations, client attribution, snapshots and publication |
 | [SessionScene](../classes/SessionScene.md), [SessionCode](../classes/SessionCode.md), [SessionNode](../classes/SessionNode.md) | Immutable document/object observations |
 | [SessionEdit](../classes/SessionEdit.md), [SessionTransformEdit](../classes/SessionTransformEdit.md), [SessionRenameEdit](../classes/SessionRenameEdit.md), [SessionReparentEdit](../classes/SessionReparentEdit.md), [SessionCodeEdit](../classes/SessionCodeEdit.md) | Bounded typed authoring requests |
 | [SessionDocumentKind](../classes/SessionDocumentKind.md), [SessionExternalResolution](../classes/SessionExternalResolution.md), [SessionChangeKind](../classes/SessionChangeKind.md) | Document, reconciliation and event vocabulary |
