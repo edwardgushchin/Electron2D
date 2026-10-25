@@ -527,3 +527,5 @@ Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture
 [Line geometry](../components/line-geometry.md) now executes the complete polyline property family: indexed capped/jointed strips, distance-based width/color/UV sampling and transformed full-boundary coverage. It reuses current GPU and compatibility drawing; hardware, foreign-platform and SDL software fractional-raster limits remain explicit.
 
 [ItemList layout](../components/item-list-layout.md) executes natural text/icon measurement independently of visible trimming, automatic minima, fixed/equal-width grids, stable two-axis pages and signed RTL current-item scrolling. The public consumer covers real viewport input and typed scene storage; full keyboard/signal reentry and target acceptance retain their own limits.
+
+[ItemList input](../components/item-list-input.md) connects selection/navigation/search to focused input and native committed text, preserving notification order and retiring stale model indices after callbacks.

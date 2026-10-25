@@ -3,6 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../Electron2D.Tests/ItemListTests.cs" Link="ItemListTests.cs" />
+    <Compile Include="../Electron2D.Tests/ItemListInputTests.cs" Link="ItemListInputTests.cs" />
+    <Compile Include="../Electron2D.Tests/ItemListInputRenderingTests.cs" Link="ItemListInputRenderingTests.cs" />
     <Compile Include="../Electron2D.Tests/ItemListLayoutTests.cs" Link="ItemListLayoutTests.cs" />
     <Compile Include="../Electron2D.Tests/ItemListLayoutRenderingTests.cs" Link="ItemListLayoutRenderingTests.cs" />
   </ItemGroup>

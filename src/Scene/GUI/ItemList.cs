@@ -84,6 +84,7 @@ public partial class ItemList : Control
             EnsureMutable();
             if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
             if (value == _items.Count) return;
+            _shiftAnchor = _deferSelectSingle = -1;
             if (value < _items.Count)
             {
                 for (var index = value; index < _items.Count; index++) UnwatchIcon(_items[index].Icon);
@@ -101,7 +102,7 @@ public partial class ItemList : Control
     public SelectMode SelectionMode
     {
         get { ThrowIfDisposed(); return _selectMode; }
-        set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); _selectMode = value; QueueRedraw(); }
+        set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_selectMode == value) return; _selectMode = value; _inputRevision++; _shiftAnchor = _deferSelectSingle = -1; QueueRedraw(); }
     }
 
     /// <summary>Gets or sets the current keyboard-navigation item.</summary>
@@ -115,7 +116,7 @@ public partial class ItemList : Control
             EnsureMutable(); ValidateIndex(value);
             if (_current == value) return;
             if (_selectMode == SelectMode.Single) Select(value);
-            else { _current = value; QueueRedraw(); }
+            else { _current = value; _inputRevision++; QueueRedraw(); }
         }
     }
 
@@ -163,7 +164,8 @@ public partial class ItemList : Control
     /// <param name="selectable">The new policy; existing selection is retained.</param>
     public void SetItemSelectable(int index, bool selectable)
     {
-        EnsureMutable(); GetItem(index, negative: true).Selectable = selectable;
+        EnsureMutable(); var item = GetItem(index, negative: true);
+        if (item.Selectable == selectable) return; item.Selectable = selectable; _inputRevision++;
     }
 
     /// <summary>Returns whether an item is disabled for new selection and activation.</summary>
@@ -177,7 +179,7 @@ public partial class ItemList : Control
     public void SetItemDisabled(int index, bool disabled)
     {
         EnsureMutable(); var item = GetItem(index, negative: true);
-        if (item.Disabled == disabled) return; item.Disabled = disabled; QueueRedraw();
+        if (item.Disabled == disabled) return; item.Disabled = disabled; _inputRevision++; QueueRedraw();
     }
 
     /// <summary>Selects an eligible item without emitting a GUI-selection event.</summary>
@@ -189,10 +191,16 @@ public partial class ItemList : Control
         if (single || _selectMode == SelectMode.Single)
         {
             if (!item.Selectable || item.Disabled) return;
-            for (var i = 0; i < _items.Count; i++) _items[i].Selected = i == index;
-            _current = index;
+            var changed = _current != index;
+            for (var i = 0; i < _items.Count; i++)
+            {
+                changed |= _items[i].Selected != (i == index);
+                _items[i].Selected = i == index;
+            }
+            _current = index; _ensureCurrentVisible = false;
+            if (changed) _inputRevision++;
         }
-        else if (item.Selectable && !item.Disabled) item.Selected = true;
+        else if (item.Selectable && !item.Disabled && !item.Selected) { item.Selected = true; _inputRevision++; }
         QueueRedraw();
     }
 
@@ -200,9 +208,11 @@ public partial class ItemList : Control
     /// <param name="index">A valid zero-based item index.</param>
     public void Deselect(int index)
     {
-        EnsureMutable(); GetItem(index).Selected = false;
+        EnsureMutable(); var item = GetItem(index);
+        var changed = item.Selected || _selectMode == SelectMode.Single && _current != -1;
+        item.Selected = false;
         if (_selectMode == SelectMode.Single) _current = -1;
-        QueueRedraw();
+        if (changed) _inputRevision++; QueueRedraw();
     }
 
     /// <summary>Clears every selected item and the current navigation index.</summary>
@@ -210,8 +220,9 @@ public partial class ItemList : Control
     {
         EnsureMutable();
         if (_items.Count == 0) return;
-        foreach (var item in _items) item.Selected = false;
-        _current = -1; QueueRedraw();
+        var changed = _current != -1;
+        foreach (var item in _items) { changed |= item.Selected; item.Selected = false; }
+        _current = -1; if (changed) _inputRevision++; QueueRedraw();
     }
 
     /// <summary>Returns whether the requested item is selected.</summary>
@@ -238,6 +249,7 @@ public partial class ItemList : Control
     public void MoveItem(int fromIndex, int toIndex)
     {
         EnsureMutable(); ValidateIndex(fromIndex); ValidateIndex(toIndex);
+        _shiftAnchor = _deferSelectSingle = -1;
         if (IsAnythingSelected() && GetSelectedItems()[0] == fromIndex) _current = toIndex;
         var item = _items[fromIndex]; _items.RemoveAt(fromIndex); _items.Insert(toIndex, item); InvalidateListLayout();
     }
@@ -247,6 +259,7 @@ public partial class ItemList : Control
     public void RemoveItem(int index)
     {
         EnsureMutable(); ValidateIndex(index); UnwatchIcon(_items[index].Icon); _items.RemoveAt(index);
+        _shiftAnchor = _deferSelectSingle = -1;
         if (_current == index) _current = -1;
         else if (_current > index) _current--;
         InvalidateListLayout();
@@ -257,13 +270,15 @@ public partial class ItemList : Control
     {
         EnsureMutable();
         foreach (var icon in _watchedIcons.Keys) { icon.Changed -= IconChanged; icon.Disposed -= IconDisposed; }
-        _watchedIcons.Clear(); _items.Clear(); _current = -1; InvalidateListLayout();
+        _watchedIcons.Clear(); _items.Clear(); _current = -1; _searchLength = 0;
+        _shiftAnchor = _deferSelectSingle = -1; InvalidateListLayout();
     }
 
     /// <summary>Sorts items by source text using ordinal string order, carrying their state with them.</summary>
     public void SortItemsByText()
     {
         EnsureMutable();
+        _shiftAnchor = _deferSelectSingle = -1;
         _items.Sort(static (left, right) => StringComparer.Ordinal.Compare(left.Text, right.Text));
         if (_selectMode == SelectMode.Single)
             for (var index = 0; index < _items.Count; index++)

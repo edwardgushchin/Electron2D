@@ -90,7 +90,7 @@ public partial class ItemList
 
     private void InvalidateListLayout()
     {
-        _layoutDirty = true; _layoutGeneration++;
+        _layoutDirty = true; _layoutGeneration++; _inputRevision++;
         QueueRedraw();
         UpdateMinimumSize();
     }

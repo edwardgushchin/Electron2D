@@ -18,7 +18,7 @@ Visible text is prepared after fitting with the actual content allocation, prese
 
 Vertical and horizontal overflow consume each other's actual viewport page. Wrap fitting accounts for the vertical bar; nonwrapping content retains its horizontal extent. RTL keeps the signed negative horizontal range. CenterOnCurrent centers either selected axis immediately. EnsureCurrentIsVisible queues both-axis adjustment for drawing, including RTL. Enlargement clears obsolete ranges and scroll values. Hint modes and tiled/stretched hint textures use the existing draw path.
 
-Failed measurement stays dirty for retry. A virtual measurement cannot recursively query an incomplete layout or silently publish geometry after changing its inputs. Prepared geometry is available to scrollbar clamp observers before range publication invokes them. Broader mutating signal reentry remains outside this completed family.
+Failed measurement stays dirty for retry. A virtual measurement cannot recursively query an incomplete layout or silently publish geometry after changing its inputs. Prepared geometry is available to scrollbar clamp observers before range publication invokes them. [The input slice](item-list-input.md) additionally retires old index operations after model mutation from a callback.
 
 Borrowed icon changes/disposal may arrive from a worker. Callbacks only set an atomic pending flag and invalidate retained canvas recording. The scene owner removes disposed icon edges, updates subscriptions and rebuilds measurement; GetItemIcon observes a disposed source as absent. Layout operations retain owner/capture/disposal checks. Replacing or destroying a list never destroys borrowed textures.
 

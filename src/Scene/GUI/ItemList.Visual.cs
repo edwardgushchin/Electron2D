@@ -38,6 +38,7 @@ public partial class ItemList
     {
         foreach (var icon in _watchedIcons.Keys) { icon.Changed -= IconChanged; icon.Disposed -= IconDisposed; }
         _watchedIcons.Clear();
+        ItemSelected = null; MultiSelected = null; ItemClicked = null; ItemActivated = null; EmptyClicked = null;
         base.Dispose(disposing);
     }
 

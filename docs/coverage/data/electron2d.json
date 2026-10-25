@@ -123283,6 +123283,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ItemList.OnTextInput(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ItemList",
+    "name": "OnTextInput",
+    "signature": "protected override System.Void OnTextInput(System.String text)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ItemList.RemoveItem(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.ItemList",

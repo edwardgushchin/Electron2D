@@ -4,6 +4,7 @@ internal static class ItemListTests
 {
     internal static void Run()
     {
+        ItemListInputTests.Run();
         ItemListLayoutTests.Run();
         using var list = new ItemList();
         Check(list.ChildCount == 0 && list.GetChildCount(includeInternal: true) == 2 &&

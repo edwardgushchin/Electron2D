@@ -767,8 +767,8 @@ def main():
     assert len(line_rows) == 33 and all(" | Implemented | " in row for row in line_rows)
     item_rows = [row for row in pages[CLASS_PAGES / "ItemList.md"].splitlines() if row.startswith("| [`")]
     item_partial = [row for row in item_rows if " | Partial | " in row]
-    assert len(item_partial) == 6 and any("[`class ItemList`]" in row for row in item_partial)
-    assert all("[`signal " in row or "[`class " in row for row in item_partial)
+    assert not item_partial
+    assert all(" | Implemented | " in row for row in item_rows if "[`signal " in row or "[`class ItemList`]" in row)
     assert "native-menu service" in class_rows["NativeMenu"]
     packed_types = [item["name"] for item in upstream["types"]
                     if item["name"].startswith("Packed") and item["name"].endswith("Array")]
