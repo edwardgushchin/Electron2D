@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="tools/package-readme.md" Pack="true" PackagePath="README.md" />
+    <None Include="tools/managed-runtime.targets" Pack="true" PackagePath="buildTransitive/Electron2D.targets" />
     <None Include="$(BrowserManagedAssetDirectory)/Electron2D.dll;$(BrowserManagedAssetDirectory)/Electron2D.xml" Pack="true" PackagePath="runtimes/browser-wasm/lib/net10.0/" Condition="'$(BrowserManagedAssetDirectory)' != ''" />
     <None Remove="licence/*" />
     <None Include="licence/*" Exclude="licence/ReferenceData-LICENSE.txt" Pack="true" PackagePath="licence/" CopyToPublishDirectory="Never" />

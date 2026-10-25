@@ -1,0 +1,13 @@
+<Project>
+  <!-- RID-less desktop output must not deploy the browser-specific managed implementation. -->
+  <Target Name="Electron2DManagedBuildLayout" AfterTargets="ResolvePackageAssets" Condition="'$(RuntimeIdentifier)' != 'browser-wasm'">
+    <ItemGroup>
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeTargetsCopyLocalItems.NuGetPackageId)' == 'Electron2D' and '%(RuntimeTargetsCopyLocalItems.RuntimeIdentifier)' == 'browser-wasm'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="Electron2DManagedPublishLayout" AfterTargets="_ResolveCopyLocalAssetsForPublish;_ComputeResolvedCopyLocalPublishAssets" Condition="'$(RuntimeIdentifier)' != 'browser-wasm'">
+    <ItemGroup>
+      <_ResolvedCopyLocalPublishAssets Remove="@(_ResolvedCopyLocalPublishAssets)" Condition="'%(_ResolvedCopyLocalPublishAssets.NuGetPackageId)' == 'Electron2D' and '%(_ResolvedCopyLocalPublishAssets.RuntimeIdentifier)' == 'browser-wasm'" />
+    </ItemGroup>
+  </Target>
+</Project>
