@@ -1,6 +1,6 @@
 # WorldRuntime
 
-Last updated: 2026-10-13
+Last updated: 2026-10-25
 
 - Visibility: internal
 - Source: [WorldRuntime.cs](../../src/Scene/Resources/WorldRuntime.cs)
@@ -17,6 +17,8 @@ Retains complete world identity independently of public resource wrappers: canva
 Last-resource release uses the physics release guard so a failed GPU interval
 does not prevent disposal. Owner-thread, active-solver and live body callback
 restrictions remain enforced. Binding a failed world still rejects.
+
+Active groups may obtain coordinated logical associations through synchronized viewport/fallback caches and a stable scene world-set snapshot. First scene-bound space initialization checks the scene owner before setting the creation flag or invoking a backend factory. Existing space identities remain borrowed reads; numerical/native operations retain their own guards. Existing viewport spaces preflight on owner entry. See [grouped world observations](../components/worlds.md#world-observations-from-processing-groups).
 
 ## Verification
 

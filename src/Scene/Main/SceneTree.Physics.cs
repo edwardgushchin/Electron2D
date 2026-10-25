@@ -2,15 +2,16 @@ namespace Electron2D;
 
 public sealed partial class SceneTree
 {
-    // ponytail: the distinct world list is tiny for ordinary viewport graphs; index by identity if measured scale requires it.
-    private readonly List<WorldRuntime> _physicsWorlds = [];
+    // Publish only at cold binding; readers retain a stable world set without per-frame copies.
+    private volatile WorldRuntime[] _physicsWorlds = [];
     private readonly List<PhysicsSpace> _sceneTransformSpaces = [];
     private void BeginSceneTransformAuthoring()
     {
-        _sceneTransformSpaces.EnsureCapacity(_physicsWorlds.Count);
+        var worlds = _physicsWorlds;
+        _sceneTransformSpaces.EnsureCapacity(worlds.Length);
         try
         {
-            foreach (var world in _physicsWorlds)
+            foreach (var world in worlds)
                 if (world.ExistingSpace is { } space) { space.BeginSceneTransformAuthoring(this); _sceneTransformSpaces.Add(space); }
         }
         catch { EndSceneTransformAuthoring(); throw; }
@@ -23,13 +24,20 @@ public sealed partial class SceneTree
     private World? _physicsWorld;
     private readonly List<CanvasItem> _worldRebindPending = [];
     private WorldRuntime? _defaultWorldRuntime;
-    internal void BindWorld(WorldRuntime runtime) { EnsureOwnerThread(); if (runtime.Bind(this)) _physicsWorlds.Add(runtime); }
+    internal void BindWorld(WorldRuntime runtime)
+    {
+        EnsureProcessingReadAccess();
+        lock (_workGate) if (runtime.Bind(this)) _physicsWorlds = [.. _physicsWorlds, runtime];
+    }
     internal World GetPhysicsWorld()
     {
-        EnsureOwnerThread();
+        EnsureProcessingReadAccess();
         if (Root is Viewport view) return view.FindWorld()!;
-        var runtime = _defaultWorldRuntime ??= WorldRuntime.CreateSceneDefault(); BindWorld(runtime);
-        return _physicsWorld is { IsDisposed: false } current ? current : _physicsWorld = new(runtime);
+        lock (_workGate)
+        {
+            var runtime = _defaultWorldRuntime ??= WorldRuntime.CreateSceneDefault(); BindWorld(runtime);
+            return _physicsWorld is { IsDisposed: false } current ? current : _physicsWorld = new(runtime);
+        }
     }
     private PhysicsSpace PhysicsSpaceFor(CanvasItem item) { var runtime = item.GetWorld()!.Runtime; BindWorld(runtime); return runtime.Space; }
     internal void EnsurePhysicsParticipationChange(bool releasing = false)
@@ -86,13 +94,13 @@ public sealed partial class SceneTree
             catch (Exception e) { CollectException(ref errors, e); }
         }
         if (_paused) return;
-        var count = _physicsWorlds.Count; for (var i = 0; i < count; i++) if (_physicsWorlds[i].ExistingSpace is { } space) try { space.SetDebugContacts(_debugCollisionsHint ? DebugContactLimit : 0); space.Step(delta); } catch (Exception e) { CollectException(ref errors, e); }
+        foreach (var runtime in _physicsWorlds) if (runtime.ExistingSpace is { } space) try { space.SetDebugContacts(_debugCollisionsHint ? DebugContactLimit : 0); space.Step(delta); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void ReleasePhysicsWorlds(ref List<Exception>? errors)
     {
         try { _physicsWorld?.Dispose(); } catch (Exception e) { CollectException(ref errors, e); }
         _physicsWorld = null;
         foreach (var runtime in _physicsWorlds) try { try { runtime.ExistingSpace?.SetDebugContacts(0); } finally { runtime.Detach(this); } } catch (Exception e) { CollectException(ref errors, e); }
-        _physicsWorlds.Clear(); _worldRebindPending.Clear(); _defaultWorldRuntime = null;
+        _physicsWorlds = []; _worldRebindPending.Clear(); _defaultWorldRuntime = null;
     }
 }

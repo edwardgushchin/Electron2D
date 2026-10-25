@@ -49,3 +49,12 @@ checks, source and executable fingerprints; label instrumented timings separatel
 Hardware capability, real-window FPS and target mass-scene advantage require
 their own profiles. The current bounded software-driver evidence and its limits
 are in [complete scene measurements](../../docs/components/physics-scene-performance.md#scoped-native-allocation-profiling-2026-10-14).
+
+### Grouped world references
+
+Run `--group-worlds --cpu|--gpu` (omit either for the registered provider), with
+optional `--threaded` and `--pool-owner`, in PhysicsBackendExtension.Consumer.
+The root selector is `ELECTRON2D_TEST_GROUP_WORLDS=cpu|gpu|registered`, optionally
+suffixed with `-threaded` and `-pool-owner`. It verifies cold concurrent logical
+world publication, lifetime/startup guards and 128 complete warmed physics/query
+frames at zero owner/all-thread managed bytes. See [worlds](../../docs/components/worlds.md#world-observations-from-processing-groups).

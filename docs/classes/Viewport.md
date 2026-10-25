@@ -598,7 +598,7 @@ The viewport owns its borrowed default canvas and supports simultaneous attachme
 
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
 
-`World? World { get; set; }` starts with an independent default; null resets it, and an explicit resource is borrowed. `World? FindWorld()` returns the current valid world. World association is discoverable and not stored. Off-owner, capture/submission, live physics callback and cross-tree binding changes reject before publication.
+`World? World { get; set; }` starts with an independent default; null resets it, and an explicit resource is borrowed. `World? FindWorld()` returns the current valid world. The owner or any active processing group may read both associations, with synchronized lazy wrapper publication and logical scene binding. An existing space is preflighted on owner entry; first numerical initialization remains on the owner. World association is discoverable and not stored. Off-owner, capture/submission, live physics callback and cross-tree binding changes reject before publication. See [grouped world observations](../components/worlds.md#world-observations-from-processing-groups).
 
 <a id="physics-picking"></a>
 ## Physics picking

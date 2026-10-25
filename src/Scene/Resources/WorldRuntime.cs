@@ -53,6 +53,7 @@ internal sealed class WorldRuntime
                 {
                     PhysicsServer.Service.GetSceneSpace(_spaceRID); return _spaceRID;
                 }
+                SceneOwner?.EnsureOwnerThread();
                 if (_creatingSpace) throw new InvalidOperationException("A world cannot recursively create its physics space.");
                 _creatingSpace = true;
             }

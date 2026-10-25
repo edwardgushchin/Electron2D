@@ -755,6 +755,8 @@ Stretches a source region of a borrowed texture over a local rectangle during ca
 
 An attached item receives its nearest viewport's selected [World](World.md), or the SceneTree fallback in a viewport-free scene. Detached access returns null. World.Canvas, Space and DirectSpaceState share runtime identity. NotificationWorldChanged (36) follows committed viewport replacement in parent-first order, excludes independent nested viewports and continues after observer failures. See [the world contract](../components/worlds.md) and [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs).
 
+The owner or any active processing group may read this borrowed association, including coordinated foreign-group/tree observations. Lazy wrappers and logical drivers are published once without starting physics. Numerical/native access and concurrent lifetime changes retain their separate rules; see [grouped world observations](../components/worlds.md#world-observations-from-processing-groups).
+
 <a id="m-electron2d-canvasitem-getglobaltransform"></a>
 ### `public Transform GetGlobalTransform()`
 

@@ -8,7 +8,9 @@ namespace Electron2D;
 /// Resource copies validate replacement identity, source lifetime and last-owner release before base state or notifications change.
 /// Once transferred, the new runtime remains shared if cleanup of the previous runtime reports an error.
 /// Each constructor captures <see cref="ProjectSettings.Physics2DRunOnSeparateThread"/> with feature overrides.
-/// A selected numerical thread joins before owner publication; later project edits affect new runtimes only.</remarks>
+/// A selected numerical thread joins before owner publication; later project edits affect new runtimes only.
+/// Logical world references may be observed from active scene groups. Initializing scene-bound physics still
+/// requires the scene owner; a borrowed reference does not grant numerical or native access on a worker.</remarks>
 public sealed class World : Resource
 {
     private WorldRuntime _runtime;
@@ -57,6 +59,7 @@ public sealed class World : Resource
     public RID Canvas { get { ThrowIfDisposed(); _runtime.EnsureAlive(); return _runtime.Canvas.RID; } }
     /// <summary>Gets the stable borrowed identity of the world's live physics space.</summary>
     /// <value>Created on first access; shared with scene bodies and direct query views.</value>
+    /// <exception cref="InvalidOperationException">Scene-bound physics is first accessed outside the scene owner thread.</exception>
     /// <exception cref="ArgumentException">The scene-owned world expired.</exception>
     /// <exception cref="ObjectDisposedException">This wrapper is disposed.</exception>
     public RID Space { get { ThrowIfDisposed(); return _runtime.SpaceRID; } }

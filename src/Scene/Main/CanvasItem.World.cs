@@ -8,12 +8,14 @@ public abstract partial class CanvasItem
 
     /// <summary>Gets the canvas and physics world selected by this item's viewport.</summary>
     /// <returns>The selected <see cref="World"/>, or null while this item is detached.</returns>
-    /// <exception cref="InvalidOperationException">An attached item is queried off its scene owner thread.</exception>
+    /// <remarks>The owner or any active processing group may read this borrowed association. Callers coordinate
+    /// concurrent lifetime changes; the returned world retains its separate numerical and native access rules.</remarks>
+    /// <exception cref="InvalidOperationException">An attached item is queried outside scene processing scope.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public World? GetWorld()
     {
         ThrowIfDisposed();
-        Tree?.EnsureOwnerThread();
+        Tree?.EnsureProcessingReadAccess();
         return Tree is null ? null : GetViewport()?.FindWorld() ?? Tree.GetPhysicsWorld();
     }
 }

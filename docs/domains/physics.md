@@ -8,6 +8,8 @@
 
 # Physics domain
 
+[Grouped world observations](../components/worlds.md#world-observations-from-processing-groups) publish lazy world wrappers and logical scene drivers safely for active groups while retaining owner-only numerical startup. No declaration states change; complete numerical, inherited, network, platform and performance acceptance remain separate.
+
 [GPU contact finalization](../components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) shares the last solver/position completion while retaining frozen snapshots, complete impulses and idle publication.
 
 [Fresh GPU swept-pair and CCD discovery](../components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25) shares completion, keeps candidate counts resident and retries bounded output growth without repeating physical time or forces.

@@ -1,12 +1,12 @@
 # Canvas and physics worlds
 
-Last updated: 2026-10-14
+Last updated: 2026-10-25
 
 A World combines one stable logical rendering canvas with one lazily created registered physics space. Viewport.World selects that runtime; CanvasItem.GetWorld resolves the nearest viewport's selection, or a SceneTree fallback in a viewport-free scene. FindWorld returns the live local world. Each ordinary viewport starts independently. Assigning another viewport's World shares scene canvas content and physics queries/simulation; null assignment creates a fresh independent default, matching the pinned viewport setter. CanvasLayer canvases keep their explicit viewport scope.
 
 World can explicitly select CPU or GPU physics independently of rendering, with
 optional startup-only CPU fallback. Requested/actual choice and fallback reason
-are observable. Parameterless creation and fresh default viewport worlds use CPU.
+are observable. Parameterless creation selects CPU; implicit viewport/fallback worlds capture the project selection.
 Duplicates share selection with the runtime. See [backend selection](physics-backends.md)
 for execution, failure and verification limits.
 
@@ -83,3 +83,52 @@ managed bytes. The prescribed 60-unit/s body advances one unit per 1/60-s frame,
 within .02 units; metadata, identity, event counts and query membership are exact.
 Structural copies are outside that bracket. Native/platform/network, hardware
 performance and full numerical-extension acceptance remain separate.
+
+## World observations from processing groups
+
+CanvasItem.GetWorld, Viewport.FindWorld and the World property getter are logical
+observations for the owner or any active processing group, including coordinated
+reads across groups and trees. The pinned canvas_item.cpp:1265, viewport.cpp:1358/1382
+and Node read-thread guard permit these reads. Detached canvas items still return
+null; disposed receivers reject. Ordinary external/pool jobs have no active-group
+permission. Callers coordinate concurrent lifetime changes; separate reads are not
+an atomic scene snapshot.
+
+Viewport and viewport-free fallback caches publish one wrapper under a
+scene or viewport gate. Reopening a disposed bound wrapper preserves its runtime
+identity. Retiring an expired owned wrapper runs outside the cache gate. Scene
+binding publishes an immutable array of distinct worlds under the scene gate;
+steps, debug readers and retirement retain stable snapshots. The array is replaced
+only when a new runtime is bound, with no per-frame copy. A viewport with an
+already-created space preflights its owner and phase on scene entry. Empty default
+worlds keep their lazy project selection and numerical startup.
+
+A returned world grants no numerical or native permission. Scene-bound first
+physics access requires the scene owner before the creation flag, selected factory
+or device is touched. Reading an existing space RID remains a logical identity
+observation; direct-state queries, viewport replacement and native viewport access
+retain their ordinary owner/borrow guards. Callback failures still release joined
+groups before later world steps.
+
+The public-only `--group-worlds` and root `ELECTRON2D_TEST_GROUP_WORLDS` fixtures
+exercise concurrent first fallback/viewport reads, another tree's lazy association,
+wrapper reopening, cold-start rejection without factory calls, an existing empty
+space, actual selected motion/query identity, shared once-per-tick stepping,
+replacement, reader failure and teardown expiration. Ordinary and pooled owners
+use CPU, independent GPU and registered implementations, with owner/separate
+numerical policies. Each profile measures 128 complete physics/query frames after
+128 warm frames and a further 128 stabilization frames, requiring exactly zero
+owner/all-thread managed bytes. Prescribed motion is .12 units per .01-second
+frame with .002-unit tolerance; identities, ticks, membership and factory counts
+are exact. Evidence is retained in `bin/physics-group-worlds/2026-10-25/`. This
+slice does not close remaining GUI/world notification consumers, full numerical
+extension/network/platform acceptance or hardware throughput/window FPS.
+
+Current-source verification passes 35 CLR and 12 strict NativeAOT profiles. Thirty
+new group-world profiles measure 3840 complete physics/query frames at 0/0 managed
+bytes. Shared CPU/GPU physics and existing copy/canvas suites remain intact; real
+Wayland GPU/compatibility windows pass their world/pixel checks. Process maps
+observe physical NVIDIA Vulkan for GPU physics and no software substitute; native
+profiles have no CoreCLR. All 3809 authored PDB sources match the tested cohort,
+and NativeAOT inputs match all 201 runtime resources. This is Linux x64 functional
+evidence, without a new mass-throughput or window-FPS claim.

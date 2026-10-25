@@ -1,4 +1,5 @@
-if (args.Contains("--contact-projection")) PhysicsContactProjectionTests.Run(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : Electron2D.PhysicsServer.Backend.CPU, args.Contains("--threaded"));
+if (args.Contains("--group-worlds")) BackendChecks.RunGroupWorlds(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"), args.Contains("--pool-owner"));
+else if (args.Contains("--contact-projection")) PhysicsContactProjectionTests.Run(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : Electron2D.PhysicsServer.Backend.CPU, args.Contains("--threaded"));
 else if (args.Contains("--event-membership")) BackendChecks.RunEventMembership(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--joint-energy")) PhysicsJointEnergyTests.Run(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : Electron2D.PhysicsServer.Backend.CPU, args.Contains("--threaded"));
 else if (args.Contains("--dense-capacity")) PhysicsDenseContactCapacityTests.Run(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : Electron2D.PhysicsServer.Backend.CPU, args.Contains("--threaded"));

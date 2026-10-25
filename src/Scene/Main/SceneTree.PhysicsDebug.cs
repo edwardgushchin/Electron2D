@@ -5,7 +5,7 @@ public sealed partial class SceneTree
     private bool _debugCollisionsHint;
     internal readonly Color DebugContactColor = ProjectSettings.GetWithOverride(ProjectSettings.DebugCollisionContactColor);
     internal readonly int DebugContactLimit = ProjectSettings.GetWithOverride(ProjectSettings.DebugCollisionMaxContacts);
-    internal ReadOnlySpan<WorldRuntime> DebugPhysicsWorlds => System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_physicsWorlds);
+    internal ReadOnlySpan<WorldRuntime> DebugPhysicsWorlds => _physicsWorlds;
     internal readonly Color DebugCollisionsColor = ProjectSettings.GetWithOverride(ProjectSettings.DebugCollisionShapeColor);
 
     /// <summary>Gets or sets whether scene collision geometry, casts, joint markers and contact points are drawn.</summary>

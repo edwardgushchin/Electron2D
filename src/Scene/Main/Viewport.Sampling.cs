@@ -166,6 +166,7 @@ public abstract partial class Viewport
             ThrowCollected("Viewport detachment callbacks failed.", errors); return;
         }
         MarkRenderingActive();
+        PrepareExistingWorldBinding();
         Tree!.RegisterGUIViewport(this);
         base.OnTreeMembershipChanged(true);
         UpdateTextureSampling(filter: true); UpdateTextureSampling(filter: false);
