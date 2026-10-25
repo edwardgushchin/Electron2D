@@ -51,6 +51,8 @@ public sealed partial class VisualShader
             else if (existing != image) throw new InvalidDataException("Conflicting graph image declarations.");
             nodes.Add(id, image.Name);
         }
+        bool CurveInputPresent(int id, VisualShaderNode node) => node.GetDefaultInputValues().Any(v => v.Port == 0) ||
+            GetGraph(stage).Connections.Any(c => c.ToNode == id && c.ToPort == 0);
         foreach (var id in reachable.Order())
         {
             var node = GetNode(stage, id);
@@ -81,6 +83,10 @@ public sealed partial class VisualShader
                         Add(id, new(stage, "NORMAL_TEXTURE", false)); break;
                 }
             }
+            else if (node is VisualShaderNodeCurveTexture curve && CurveInputPresent(id, node))
+                Add(id, new(stage, Anonymous(id), false, new(false, 0, 0, 2, false), curve.Texture));
+            else if (node is VisualShaderNodeCurveXYZTexture curveXYZ && CurveInputPresent(id, node))
+                Add(id, new(stage, Anonymous(id), false, new(false, 0, 0, 0, false), curveXYZ.Texture));
             else if (node is VisualShaderNodeTextureArray layered && layered.Source == VisualShaderNodeLayeredSample.SourceEnum.Texture)
                 Add(id, new(stage, Anonymous(id), true, new(false, 0, 0, 0, false), layered.TextureArray));
             else if (node is VisualShaderNodeInput input && input.OutputsFor(stage)[0] == P.Sampler)

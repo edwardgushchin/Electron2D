@@ -718,6 +718,8 @@ def render():
             updated = "2026-10-25"
         if name in {"VisualShader", "VisualShaderNodeVarying", "VisualShaderNodeVaryingGetter", "VisualShaderNodeVaryingSetter"}:
             updated = "2026-10-25"
+        if name in {"VisualShaderNodeCurveTexture", "VisualShaderNodeCurveXYZTexture", "VisualShaderNodeOutput"}:
+            updated = "2026-10-25"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

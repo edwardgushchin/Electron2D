@@ -521,3 +521,5 @@ Imported [typed reroute chains](../components/visual-shaders.md#typed-reroute-ch
 Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture pixel size](../components/visual-shaders.md#command-texture-pixel-size) producer in vertex and fragment stages, including shared paired layouts and live diffuse metadata. This does not complete the remaining matrix, point/custom-channel, instance-ID or light graph producers.
 
 [Typed varying transport](../components/visual-shaders.md#typed-varying-transport) connects graph declarations and numeric getter/setter resources to ordinary, mesh, instanced and nine-patch canvas geometry and automatic scene lighting. Native custom locations remain independent of renderer-owned mesh/glyph fields; the authored light-graph stage retains its separate dependency.
+
+[Curve image graph lookups](../components/visual-shaders.md#curve-image-lookups) connect borrowed scalar/RGB curve textures to both canvas stages, particle stages and writable-texture graphs through the shared offline importer.

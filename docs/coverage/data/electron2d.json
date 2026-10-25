@@ -14757,6 +14757,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.VisualShaderNodeCurveTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeCurveTexture",
+    "name": "VisualShaderNodeCurveTexture",
+    "signature": "public sealed class Electron2D.VisualShaderNodeCurveTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeResizableBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.VisualShaderNodeCurveXYZTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.VisualShaderNodeCurveXYZTexture",
+    "name": "VisualShaderNodeCurveXYZTexture",
+    "signature": "public sealed class Electron2D.VisualShaderNodeCurveXYZTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.VisualShaderNodeResizableBase",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.VisualShaderNodeCustom",
     "kind": "type",
     "declaringType": "Electron2D.VisualShaderNodeCustom",
@@ -27983,6 +28013,32 @@
     "name": ".ctor",
     "signature": "protected VisualShaderNodeConstant()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeCurveTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeCurveTexture",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeCurveTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.VisualShaderNodeCurveXYZTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.VisualShaderNodeCurveXYZTexture",
+    "name": ".ctor",
+    "signature": "public VisualShaderNodeCurveXYZTexture()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -226401,6 +226457,136 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisualShaderNodeCurveTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeCurveTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeCurveTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeCurveTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeCurveTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeCurveTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeCurveXYZTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeCurveXYZTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeCurveXYZTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeCurveXYZTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.VisualShaderNodeCurveXYZTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.VisualShaderNodeCurveXYZTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShaderNodeCustom.GetCategory()",
     "kind": "method",
     "declaringType": "Electron2D.VisualShaderNodeCustom",
@@ -277433,6 +277619,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.VisualShaderValueType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeCurveTexture.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeCurveTexture",
+    "name": "Texture",
+    "signature": "public Electron2D.CurveTexture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CurveTexture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisualShaderNodeCurveXYZTexture.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisualShaderNodeCurveXYZTexture",
+    "name": "Texture",
+    "signature": "public Electron2D.CurveXYZTexture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CurveXYZTexture",
     "value": null
   },
   {

@@ -58,6 +58,7 @@ public sealed partial class VisualShader
             if (!incoming.TryGetValue((id, port), out var edge))
             {
                 if (node.Inputs[port] == VisualShaderNode.PortType.Sampler) return "";
+                if (node is VisualShaderNodeCurveTexture or VisualShaderNodeCurveXYZTexture && !node.GetDefaultInputValues().Any(v => v.Port == port)) return "";
                 if (node is VisualShaderNodeFresnel fresnel && port == 0 && !fresnel.GetInputPortDefaultValue<Vector3>(0).HasValue)
                     return domain is not null ? "vec3(0.0)" : stage == Type.Fragment ? aliases["e2d_normal"] :
                         throw new NotSupportedException("An implicit canvas normal requires the fragment graph stage; connect or author a vertex normal explicitly.");
@@ -152,6 +153,8 @@ public sealed partial class VisualShader
                         VisualShaderNodeSDFRaymarch => raymarch + (output == 0 ? ".x" : output == 1 ? ".y != 0.0" : ".zw"),
                         VisualShaderNodeTextureSDF or VisualShaderNodeTextureSDFNormal or VisualShaderNodeSDFToScreenUV or VisualShaderNodeScreenUVToSDF => SDFExpression(node.GenerateExpression(output, inputs), aliases),
                         VisualShaderNodeTexture or VisualShaderNodeLayeredSample => SampleImage(sampler, inputs),
+                        VisualShaderNodeCurveTexture => inputs[0].Length == 0 ? "0.0" : "texture(" + sampler + ", vec2(" + inputs[0] + ")).r",
+                        VisualShaderNodeCurveXYZTexture => inputs[0].Length == 0 ? "vec3(0.0)" : "texture(" + sampler + ", vec2(" + inputs[0] + ")).rgb",
                         VisualShaderNodeColorFunc color => color.GenerateExpression(output, inputs).Replace("e2d_rgb_to_hsv(", aliases["e2d_rgb_to_hsv"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeRotationByAxis => node.GenerateExpression(output, inputs).Replace("e2d_axis_rotation(", aliases["e2d_axis_rotation"] + "(", StringComparison.Ordinal),
                         VisualShaderNodeRandomRange => node.GenerateExpression(output, inputs).Replace("e2d_random_range(", aliases["e2d_random_range"] + "(", StringComparison.Ordinal),

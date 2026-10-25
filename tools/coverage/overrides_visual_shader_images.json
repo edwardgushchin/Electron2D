@@ -309,6 +309,26 @@
       "godot": "VisualShaderNode::enum_value:PortType.PORT_TYPE_SAMPLER",
       "electron2d": "enumValue:Electron2D.VisualShaderNode.PortType.Sampler()",
       "reason": "ADRs 0001/0004/0013/0028/0051: opaque ordinary/independent-array graph sampling executes through the existing offline paired importer, typed material/global image bindings and validated versioned image policy. Preserve implicit UV/LOD, borrowed source/default aliases, selectors, render-only white/black/transparent/normal/flow defaults, filtering/repeat, screen and canvas normal/specular ownership, contextual sampler references, copies and archives. Encoded color views refresh layers/mips on the GPU for HDR; float/linear images and screen sources retain their domains. Per-item images, wrong sampler shapes, unsupported screen policies and malformed metadata reject before publication. Compatibility rejects authored shaders; hardware, native heap and foreign platform acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeCurveTexture",
+      "electron2d": "T:Electron2D.VisualShaderNodeCurveTexture",
+      "reason": "ADRs 0004/0013/0028: scalar and RGB curve lookup nodes execute through existing floating-point images and the shared offline canvas, particle and writable-texture importer. Preserve scalar zero defaults, explicit absence, connected-input priority, borrowed image/curve aliases, numeric signed/HDR values, sampler policies, shared copies and portable factories. Pixel rebakes of bound curves refresh existing materials; source edits require reimport. Native heap, hardware, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeCurveTexture::property:texture",
+      "electron2d": "property:Electron2D.VisualShaderNodeCurveTexture.Texture()",
+      "reason": "ADRs 0004/0013/0028: scalar and RGB curve lookup nodes execute through existing floating-point images and the shared offline canvas, particle and writable-texture importer. Preserve scalar zero defaults, explicit absence, connected-input priority, borrowed image/curve aliases, numeric signed/HDR values, sampler policies, shared copies and portable factories. Pixel rebakes of bound curves refresh existing materials; source edits require reimport. Native heap, hardware, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "class:VisualShaderNodeCurveXYZTexture",
+      "electron2d": "T:Electron2D.VisualShaderNodeCurveXYZTexture",
+      "reason": "ADRs 0004/0013/0028: scalar and RGB curve lookup nodes execute through existing floating-point images and the shared offline canvas, particle and writable-texture importer. Preserve scalar zero defaults, explicit absence, connected-input priority, borrowed image/curve aliases, numeric signed/HDR values, sampler policies, shared copies and portable factories. Pixel rebakes of bound curves refresh existing materials; source edits require reimport. Native heap, hardware, foreign platforms and editor acceptance remain separate."
+    },
+    {
+      "godot": "VisualShaderNodeCurveXYZTexture::property:texture",
+      "electron2d": "property:Electron2D.VisualShaderNodeCurveXYZTexture.Texture()",
+      "reason": "ADRs 0004/0013/0028: scalar and RGB curve lookup nodes execute through existing floating-point images and the shared offline canvas, particle and writable-texture importer. Preserve scalar zero defaults, explicit absence, connected-input priority, borrowed image/curve aliases, numeric signed/HDR values, sampler policies, shared copies and portable factories. Pixel rebakes of bound curves refresh existing materials; source edits require reimport. Native heap, hardware, foreign platforms and editor acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -391,6 +411,16 @@
         "VisualShaderNodeTextureParameter::enum_value:TextureSource.SOURCE_NORMAL_ROUGHNESS"
       ],
       "reason": "ADR 0004: these pinned selectors sample three-dimensional scene depth, normal/roughness or roughness targets. Electron2D has no such scene producers; the numeric UV/layer array role remains applicable and implemented. No implementation trigger."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:VisualShaderNodeCurveTexture",
+        "VisualShaderNodeCurveTexture::property:texture",
+        "class:VisualShaderNodeCurveXYZTexture",
+        "VisualShaderNodeCurveXYZTexture::property:texture"
+      ],
+      "reason": "ADRs 0004/0013/0028: scalar and RGB curve lookup nodes execute through existing floating-point images and the shared offline canvas, particle and writable-texture importer. Preserve scalar zero defaults, explicit absence, connected-input priority, borrowed image/curve aliases, numeric signed/HDR values, sampler policies, shared copies and portable factories. Pixel rebakes of bound curves refresh existing materials; source edits require reimport. Native heap, hardware, foreign platforms and editor acceptance remain separate."
     }
   ],
   "extras": [
@@ -457,6 +487,38 @@
     {
       "electron2d": "method:Electron2D.VisualShaderNodeTextureParameter.GetPropertyDescriptors()",
       "reason": "Typed Resource construction, duplicate/resource-edge policy and stored-property descriptors for the executing sampled-image graph family under ADRs 0001/0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeCurveTexture..ctor()",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCurveTexture.CreateDuplicateInstance()",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCurveTexture.GetPropertyDescriptors()",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCurveTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "constructor:Electron2D.VisualShaderNodeCurveXYZTexture..ctor()",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCurveXYZTexture.CreateDuplicateInstance()",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCurveXYZTexture.GetPropertyDescriptors()",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
+    },
+    {
+      "electron2d": "method:Electron2D.VisualShaderNodeCurveXYZTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed curve sampler construction, inherited resource duplication and stored borrowed image descriptors under ADRs 0013/0028."
     }
   ]
 }

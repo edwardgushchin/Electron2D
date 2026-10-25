@@ -4,7 +4,10 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "mesh-inputs-cpu") GraphChecks.MeshInputsCPU();
+    if (args.Length > 0 && args[0] == "curves-cpu") GraphChecks.CurvesCPU();
+    else if (args.Length > 0 && args[0] == "curves-author") GraphChecks.AuthorCurves(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "curves-gpu") GraphChecks.RenderCurves(IOPath.GetFullPath(args[1]), args);
+    else if (args.Length > 0 && args[0] == "mesh-inputs-cpu") GraphChecks.MeshInputsCPU();
     else if (args.Length > 0 && args[0] == "mesh-inputs-author") GraphChecks.AuthorMeshInputs(IOPath.GetFullPath(args[1]));
     else if (args.Length > 0 && args[0] == "mesh-inputs-gpu") GraphChecks.RenderMeshInputs(IOPath.GetFullPath(args[1]), args);
     else if (args.Length > 0 && args[0] == "varyings-cpu") GraphChecks.VaryingsCPU();
@@ -62,6 +65,7 @@ internal static partial class GraphChecks
     { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     internal static void CPU()
     {
+        CurvesCPU();
         MeshInputsCPU();
         VaryingsCPU();
         RerouteCPU();
