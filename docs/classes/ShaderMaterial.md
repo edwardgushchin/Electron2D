@@ -228,3 +228,7 @@ The [authored uniform defaults](../components/shader-materials.md#authored-unifo
 [Typed graph varyings](../components/visual-shaders.md#typed-varying-transport) share the existing vertex/fragment parameter namespace and physical buffer copies. Live gain updates reach the vertex producer and fragment checks without rebuilding recorded geometry. Numeric matrix/flat integer/Boolean transport and glyph/light composition retain the material lifetime, reload and allocation contracts.
 
 [Mesh graph inputs](../components/visual-shaders.md#mesh-channels-and-logical-instance-inputs) connect per-mesh custom channels and logical instance IDs to vertex material authoring. Offline source changes require reimport; live uniforms retain prepared geometry.
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

@@ -10,6 +10,8 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
     internal int ParticleStorageBuffers { get; set; } = 1;
     internal readonly byte[] Code = code;
     internal byte[] NativeCode { get; init; } = code;
+    internal byte[]? ValidationCode { get; init; }
+    internal CanvasLightEntry? AuthoredLight { get; init; }
     internal readonly int[] BufferSizes = bufferSizes;
     internal readonly Dictionary<string, ShaderUniform> Uniforms = uniforms;
     internal readonly ShaderTexture[] Textures = textures ?? [];

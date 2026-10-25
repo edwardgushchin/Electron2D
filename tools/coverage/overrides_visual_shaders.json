@@ -1874,6 +1874,16 @@
       "godot": "VisualShader::enum_value:VaryingType.VARYING_TYPE_MAX",
       "electron2d": "enumValue:Electron2D.VisualShaderVaryingType.Max()",
       "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+    },
+    {
+      "godot": "VisualShader::enum_value:VaryingMode.VARYING_MODE_FRAG_TO_LIGHT",
+      "electron2d": "enumValue:Electron2D.VisualShader.VaryingMode.FragmentToLight()",
+      "reason": "ADR 0028: authored canvas light graphs execute once per contributing scene light on the existing GPU material compositor. Typed light inputs, RGB/alpha/shadow outputs, both varying producer roles, shared parameters/images and custom procedures survive offline import, portable storage and reload. Seventeen public programs pass Linux software Vulkan pixels and prepared 64 active/64 idle frames at zero managed bytes; physical hardware, native heap, foreign platforms and owner acceptance remain separate."
+    },
+    {
+      "godot": "VisualShader::enum_value:Type.TYPE_LIGHT",
+      "electron2d": "enumValue:Electron2D.VisualShader.Type.Light()",
+      "reason": "ADR 0028: authored canvas light graphs execute once per contributing scene light on the existing GPU material compositor. Typed light inputs, RGB/alpha/shadow outputs, both varying producer roles, shared parameters/images and custom procedures survive offline import, portable storage and reload. Seventeen public programs pass Linux software Vulkan pixels and prepared 64 active/64 idle frames at zero managed bytes; physical hardware, native heap, foreign platforms and owner acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -1882,7 +1892,7 @@
       "godot": [
         "class:VisualShader"
       ],
-      "reason": "Canvas graph source/import and immutable compiled programs execute. Particle/light/blit graph domains, custom varying transport and editor frame/preview consumers retain their specific integration triggers."
+      "reason": "Canvas, authored light, particle and writable-texture graph domains, both varying producer roles and immutable imported programs execute. Editor frame/preview/discovery consumers retain their specific real-editor integration prerequisites."
     },
     {
       "state": "Implemented",
@@ -1982,20 +1992,6 @@
       "reason": "ADRs 0001/0004/0028: typed numeric canvas graph authoring, immutable default/connection snapshots, compiled registered factories and owned-output/borrowed-definition lifetime; portable graph archives enter the existing offline ShaderImport and ordinary ShaderMaterial renderer. Scalar and vector operations execute in 57 public consumer programs, both canvas stages, software Wayland/X11 and HDR/MSAA with zero prepared managed bytes. Source edits require reimport; no runtime compiler or universal value wrapper."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "VisualShader::enum_value:VaryingMode.VARYING_MODE_FRAG_TO_LIGHT"
-      ],
-      "reason": "Trigger: executable authored light-graph stage with fragment-to-light variable ownership, invocation and output transport under ADR 0028. Vertex-to-fragment declarations and private native varying transport now execute; this selector enters that first light-graph producer slice."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "VisualShader::enum_value:Type.TYPE_LIGHT"
-      ],
-      "reason": "Trigger: translate authored light graphs into native canvas-light custom shader transport in the first light-graph slice under ADR 0028; particle and writable-texture graphs already execute."
-    },
-    {
       "state": "Excluded",
       "godot": [
         "VisualShader::enum_value:Type.TYPE_FOG",
@@ -2038,21 +2034,21 @@
       "godot": [
         "class:VisualShaderNodeInput"
       ],
-      "reason": "Numeric color/UV/vertex/time/custom and logical command texture_pixel_size projections execute through the compiled canvas ABI. Texture size is renderer-owned in both canvas stages, follows resolved diffuse metadata and changes independently of material samplers. Canvas vertex custom0/custom1 now consume decoded mesh channels, and instance_id consumes logical instance/particle identity through existing native variants; expressions/global functions use the same producers. Outside canvas vertex these three input nodes retain scalar zero. Canvas vertex model/canvas/screen matrices now retain original item/draw/mesh/instance poses and framebuffer/clip matrices, including singular canvas transforms and sorted GPU particles without CPU readback. All sixteen components execute in graph/expression/GLSL/HLSL probes. Remaining dependencies are point builtins and their graph outputs, the authored-light stage translator, a particle attractor_force producer, and numeric region_rect/specular_shininess command metadata."
+      "reason": "Numeric color/UV/vertex/time/custom and logical command texture_pixel_size projections execute through the compiled canvas ABI. Texture size is renderer-owned in both canvas stages, follows resolved diffuse metadata and changes independently of material samplers. Canvas vertex custom0/custom1 now consume decoded mesh channels, and instance_id consumes logical instance/particle identity through existing native variants; expressions/global functions use the same producers. Outside canvas vertex these three input nodes retain scalar zero. Canvas vertex model/canvas/screen matrices now retain original item/draw/mesh/instance poses and framebuffer/clip matrices, including singular canvas transforms and sorted GPU particles without CPU readback. All sixteen components execute in graph/expression/GLSL/HLSL probes. Authored light inputs now execute actual light state, sampled normal/specular channels, fragment UV/color and logical texture size. Remaining dependencies are point builtins and their graph outputs, a particle attractor_force producer, and fragment region_rect/specular_shininess command metadata."
     },
     {
       "state": "Partial",
       "godot": [
         "class:VisualShaderNodeOutput"
       ],
-      "reason": "Canvas position/UV/color/alpha outputs execute. Normal, Normal Map and Normal Map Depth first require separately retained original Model/Canvas normal bases across ordinary retained geometry, CPU/GPU instances, skinned/procedural meshes and particle/trail streams, plus typed fragment-output capture and scene-light composition. Current geometry only retains their combined transform; UV derivatives or normalization of combined columns do not preserve the nonuniform-scale/skew contract. Point-size, light/shadow-position outputs retain their separate canvas ABI integrations. Unsupported selected outputs reject import atomically."
+      "reason": "Canvas position/UV/color/alpha and authored light RGB/alpha/shadow-modulation outputs execute. Normal, Normal Map and Normal Map Depth first require separately retained original Model/Canvas normal bases across ordinary retained geometry, CPU/GPU instances, skinned/procedural meshes and particle/trail streams, plus typed fragment-output capture and scene-light composition. Current geometry only retains their combined transform; UV derivatives or normalization of combined columns do not preserve the nonuniform-scale/skew contract. Point-size, light/shadow-position outputs retain their separate canvas ABI integrations. Unsupported selected outputs reject import atomically."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "VisualShader::enum:Type"
       ],
-      "reason": "ADR 0028: numeric canvas graph stages and port roles execute. Separate particle/light/blit graph translators and matrix/sampled-image port integration retain their explicit missing roles; no inert selector values are exposed."
+      "reason": "ADR 0028: every applicable stage selector executes through its canvas vertex/fragment/light, particle lifecycle or writable-texture producer. The light slice closes the final applicable selector; sky/fog retain exact ADR 0004 spatial exclusions. Unsupported individual surface/point inputs and outputs retain their own class dependencies, independently of this complete stage identity family."
     },
     {
       "state": "Implemented",
@@ -2417,7 +2413,7 @@
         "VisualShader::enum_value:VaryingType.VARYING_TYPE_TRANSFORM",
         "VisualShader::enum_value:VaryingType.VARYING_TYPE_MAX"
       ],
-      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Light-graph authoring, hardware, native heap and foreign-platform acceptance retain separate prerequisites."
+      "reason": "ADRs 0001/0004/0013/0028/0051: typed graph declarations and getter/setter resources transport all eight numeric roles from vertex into fragment through private native locations 12..15. Preserve copied declarations, borrowed aliases, type-before-default restoration, selected-edge/root dependency order, smooth floating/matrix and flat integer/Boolean values, typed unwritten defaults, last imported programs and atomic rejection. Public CLR software Wayland/X11/HDR/MSAA consumers execute 26 graphs and GLSL/HLSL pairs over four geometry streams, automatic lighting and live shared-stage values; prepared active/idle managed allocation remains zero. Both vertex-to-fragment/light and private fragment-to-light roles now execute, including all eight private numeric roles and a full vertex matrix. Hardware, native heap and foreign-platform acceptance remain separate."
     }
   ],
   "extras": [

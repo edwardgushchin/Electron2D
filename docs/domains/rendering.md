@@ -531,3 +531,5 @@ Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture
 [ItemList layout](../components/item-list-layout.md) executes natural text/icon measurement independently of visible trimming, automatic minima, fixed/equal-width grids, stable two-axis pages and signed RTL current-item scrolling. The public consumer covers real viewport input and typed scene storage; full keyboard/signal reentry and target acceptance retain their own limits.
 
 [ItemList input](../components/item-list-input.md) connects selection/navigation/search to focused input and native committed text, preserving notification order and retiring stale model indices after callbacks.
+
+Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](../components/canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.

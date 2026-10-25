@@ -10,7 +10,7 @@ public sealed class VisualShaderNodeVaryingGetter : VisualShaderNodeVarying
 
 ## Description
 
-Reads one value from the selected declaration. It has no inputs and one output with the selected numeric role. Fragment reads receive interpolated vertex data; vertex reads observe the value at their graph evaluation point. Values begin at typed zero or matrix identity before any writes. Sharing a name does not create a graph dependency; use vertex writes and fragment reads for stage transport.
+Reads one value from the selected declaration. It has no inputs and one output with the selected numeric role. Fragment reads receive interpolated vertex data; vertex reads observe the value at their graph evaluation point. Values begin at typed zero or matrix identity before any writes. Sharing a name does not create a graph dependency; use the declared vertex/fragment producer and a later canvas stage for transport. Light reads receive interpolated vertex values or private values from the completed fragment according to the declaration.
 
 ## Member summary
 
@@ -28,3 +28,7 @@ See the complete [declaration/write/read example](VisualShaderNodeVarying.md#exa
 ## Verification
 
 The public [CPU](../../tests/VisualShader.Consumer/Varyings.CPU.cs), [authoring](../../tests/VisualShader.Consumer/Varyings.Author.cs) and [native](../../tests/VisualShader.Consumer/Varyings.Render.cs) consumers exercise declaration access, all eight numeric roles, defaults, persistence and actual geometry streams. [The connected component contract](../components/visual-shaders.md#typed-varying-transport) records the verified profiles and remaining limits.
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

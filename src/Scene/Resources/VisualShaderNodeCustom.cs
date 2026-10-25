@@ -43,14 +43,16 @@ public abstract class VisualShaderNodeCustom : VisualShaderNode
     /// <param name="mode">The shader domain.</param>
     /// <param name="type">The target graph stage, including other stages when this provider is reachable.</param>
     /// <returns>Empty initially; source is included once per concrete provider type and stage.</returns>
-    /// <remarks>Nonempty particle-stage setup activates that stage even when its reserved output has no assignments.
+    /// <remarks>Nonempty particle or canvas light setup activates that stage even when its reserved output has no assignments.
     /// Return empty source for stages that should remain inactive.</remarks>
     public virtual string GetFuncCode(Shader.Mode mode, VisualShader.Type type)
     { RequireContext(mode, type); return ""; }
     /// <summary>Produces shared GLSL declarations for the active shader module.</summary>
     /// <param name="mode">The shader domain.</param>
     /// <returns>Empty initially; source is included once per concrete reachable provider type.</returns>
-    /// <remarks>Use ELECTRON2D_SHADER_STAGE for native stage-specific declarations. Distinct provider types own their own symbol names.</remarks>
+    /// <remarks>Use ELECTRON2D_SHADER_STAGE for native stage-specific declarations. Shared fragment/light declarations
+    /// use native stage one; their generated function bodies use stages one and two respectively. Distinct provider
+    /// types own their own symbol names.</remarks>
     public virtual string GetGlobalCode(Shader.Mode mode)
     { ThrowIfDisposed(); if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode)); return ""; }
     /// <summary>Returns the active input count.</summary>

@@ -4,7 +4,10 @@ using IOPath = System.IO.Path;
 try
 {
     CustomNodes.Register();
-    if (args.Length > 0 && args[0] == "matrix-inputs-cpu") GraphChecks.MatrixInputsCPU();
+    if (args.Length > 0 && args[0] == "light-graphs-cpu") GraphChecks.LightGraphsCPU();
+    else if (args.Length > 0 && args[0] == "light-graphs-author") GraphChecks.AuthorLightGraphs(IOPath.GetFullPath(args[1]));
+    else if (args.Length > 0 && args[0] == "light-graphs-gpu") GraphChecks.RenderLightGraphs(IOPath.GetFullPath(args[1]), args);
+    else if (args.Length > 0 && args[0] == "matrix-inputs-cpu") GraphChecks.MatrixInputsCPU();
     else if (args.Length > 0 && args[0] == "matrix-inputs-author") GraphChecks.AuthorMatrixInputs(IOPath.GetFullPath(args[1]));
     else if (args.Length > 0 && args[0] == "matrix-inputs-gpu") GraphChecks.RenderMatrixInputs(IOPath.GetFullPath(args[1]), args);
     else if (args.Length > 0 && args[0] == "curves-cpu") GraphChecks.CurvesCPU();
@@ -68,7 +71,7 @@ internal static partial class GraphChecks
     { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }
     internal static void CPU()
     {
-        CurvesCPU(); MatrixInputsCPU();
+        LightGraphsCPU(); CurvesCPU(); MatrixInputsCPU();
         MeshInputsCPU();
         VaryingsCPU();
         RerouteCPU();

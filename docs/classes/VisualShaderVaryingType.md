@@ -22,7 +22,7 @@ public enum VisualShaderVaryingType
 | <a id="transform"></a>`Transform` | 7 | Numeric System.Numerics.Matrix4x4; four interpolated column vectors. |
 | <a id="max"></a>`Max` | 8 | Nonselectable upper bound. |
 
-Each scalar/vector consumes one of four native custom varying locations. Transform consumes all four; its components interpolate independently without scene-space transform semantics. Boolean, signed and unsigned data preserve flat primitive interpolation. Floating data uses ordinary smooth interpolation. Max is not selectable. No sampled-image or universal runtime value role is present.
+For VertexToFragmentLight, each scalar/vector consumes one of four native custom varying locations. Transform consumes all four; its components interpolate independently without scene-space transform semantics. Boolean, signed and unsigned data preserve flat primitive interpolation. Floating data uses ordinary smooth interpolation. FragmentToLight retains the same eight numeric roles privately per fragment without interpolation or native location cost. Max is not selectable. No sampled-image or universal runtime value role is present.
 
 ## Example
 

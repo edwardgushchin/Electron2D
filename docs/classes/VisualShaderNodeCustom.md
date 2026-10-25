@@ -1,6 +1,6 @@
 # VisualShaderNodeCustom
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 Source: [VisualShaderNodeCustom.cs](../../src/Scene/Resources/VisualShaderNodeCustom.cs).
 
@@ -159,7 +159,7 @@ public virtual System.String GetFuncCode(Electron2D.Shader.Mode mode, Electron2D
 
 Produces one statement block at the beginning of each active graph stage function.
 
-Empty initially; source is included once per concrete provider type and stage.
+Empty initially; source is included once per concrete provider type and stage. Nonempty particle or Light setup activates that stage even without output assignments. Return empty for stages intended to stay inactive.
 
 Parameters:
 
@@ -175,7 +175,7 @@ public virtual System.String GetGlobalCode(Electron2D.Shader.Mode mode)
 
 Produces shared GLSL declarations for the active shader module.
 
-Use ELECTRON2D_SHADER_STAGE for native stage-specific declarations. Distinct provider types own their own symbol names.
+Use ELECTRON2D_SHADER_STAGE for native stage-specific declarations. Shared fragment/light globals use stage one, and their bodies use one/two. Distinct provider types own their own symbol names.
 
 Empty initially; source is included once per concrete reachable provider type.
 
@@ -476,3 +476,7 @@ The public VisualShader.Consumer exercises typed defaults, copies, factories, ty
 - [Typed resources](../decisions/resources.md#adr-0013)
 
 Nonempty GetFuncCode particle-stage setup activates that stage, including SDF contact queries and the Collide/Process branch, when its reserved output is empty. Return empty source for stages the provider does not define. The provider-only contact regression checks actual compute state rather than compilation alone.
+
+## Authored canvas lights
+
+See [canvas light graphs](../components/canvas-light-graphs.md) for the executing stage, typed inputs/outputs, fragment/vertex varying producers, shared native resource slots, custom provider activation, portable program validation and measured limits.

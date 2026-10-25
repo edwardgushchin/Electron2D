@@ -42,11 +42,11 @@ internal sealed class CanvasLightingFrame
         Data.Add(new(inverse.X.X, inverse.Y.X, inverse.Origin.X, kind));
         Data.Add(new(inverse.X.Y, inverse.Y.Y, inverse.Origin.Y, height));
         Data.Add(new(origin.X, origin.Y, direction.X, direction.Y));
-        Data.Add(new(lightColor.R, lightColor.G, lightColor.B, light.Color.A));
+        Data.Add(new(sourceColor.R, sourceColor.G, sourceColor.B, light.Color.A));
         Data.Add(new(light.ShadowColor.R, light.ShadowColor.G, light.ShadowColor.B, light.ShadowColor.A));
         Data.Add(new(light.ShadowEnabled ? (int)light.ShadowFilter + 1 : 0, light.ShadowFilterSmooth, maxDistance, (int)light.BlendMode));
         Data.Add(new(Bits(light.RangeItemCullMask), Bits(light.ShadowItemCullMask), Bits(light.RangeZMin), Bits(light.RangeZMax)));
-        Data.Add(new(Bits(light.RangeLayerMin), Bits(light.RangeLayerMax), 0, 0));
+        Data.Add(new(Bits(light.RangeLayerMin), Bits(light.RangeLayerMax), light.Energy, 0));
         // Atlas regions follow the fixed eight-vector light records in a separate table.
         if (texture is not null) Masks.Add((texture, LightCount, default));
         LightCount++;

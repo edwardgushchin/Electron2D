@@ -1,6 +1,6 @@
 # VisualShader.Type
 
-Last updated: 2026-10-22
+Last updated: 2026-10-25
 
 Source: [VisualShader.cs](../../src/Scene/Resources/VisualShader.cs).
 
@@ -23,6 +23,7 @@ See the executable authoring and runtime workflow in [particle and writable-text
 | [`public enum Electron2D.VisualShader.Type`](#member-48cc808d870d) | The source stage containing a graph. |
 | [`public const Electron2D.VisualShader.Type Collide = 5`](#member-a06c39b432d0) | Processes an active particle touching the canvas distance field. |
 | [`public const Electron2D.VisualShader.Type Fragment = 1`](#member-c5d87a95f843) | Computes canvas fragment color. |
+| [`public const Electron2D.VisualShader.Type Light = 2`](#light) | Computes one actual canvas scene-light contribution. |
 | [`public const Electron2D.VisualShader.Type Max = 11`](#member-17d66c334528) | The nonselectable upper bound of all shader graph stage identities. |
 | [`public const Electron2D.VisualShader.Type Process = 4`](#member-a47bbf11a53a) | Processes an active particle outside a contact. |
 | [`public const Electron2D.VisualShader.Type ProcessCustom = 7`](#member-9a11cad2d555) | Applies custom channels after ordinary particle processing. |
@@ -120,6 +121,11 @@ public const Electron2D.VisualShader.Type Vertex = 0
 ```
 
 Transforms supplied canvas vertices before rasterization.
+
+<a id="light"></a>
+### `Light`
+
+`public const Electron2D.VisualShader.Type Light = 2` selects the authored canvas per-light stage. Node zero accepts RGB, alpha and RGB shadow modulation. Fragment/color, both varying roles, images and shared parameters follow [the light graph contract](../components/canvas-light-graphs.md).
 
 ## Lifecycle and verification
 
