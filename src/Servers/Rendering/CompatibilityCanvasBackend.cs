@@ -36,7 +36,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             Driver = SDL.GetRendererName(_renderer.DangerousGetHandle()) ?? "unknown";
             int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var lineMethod);
             _nativeLineMethod = lineMethod;
-            _rasterAttributeLines = Driver == "software" || Driver is "opengl" or "opengles2" && lineMethod is not (2 or 3);
+            _rasterAttributeLines = Driver == "software" || lineMethod is not (2 or 3);
             CaptureGraphicsHandles(window.DangerousGetHandle());
             Check(SDL.SetRenderDrawBlendMode(_renderer.DangerousGetHandle(), SDL.BlendMode.Blend), "set canvas blending");
         }
@@ -266,7 +266,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 }
                 if (batch.Primitive is Mesh.PrimitiveType.Lines or Mesh.PrimitiveType.LineStrip)
                 {
-                    RecordCanvasDraw(batch, DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines, Driver == "software" && texture != 0));
+                    RecordCanvasDraw(batch, DrawThinLines(renderer, texture, _vertices.AsSpan(batch.First, batch.Count), batch.Primitive, batch.SnapNativeLines));
                     continue;
                 }
                 // SDL 3.4.16's software quad shortcut loses transposed/constant UVs. Separate triangles bypass it.
@@ -318,7 +318,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         return calls;
     }
 
-    private int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap, bool splitTriangles)
+    private int DrawThinLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
     {
         if (texture == 0 && primitive == Mesh.PrimitiveType.LineStrip && vertices.Length > 1)
         {
@@ -344,37 +344,14 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         if (_nativeLineMethod == 3 && Driver != "software" && attributes) return DrawGeometryAttributeLines(renderer, texture, vertices, primitive, snap);
         if (_rasterAttributeLines && attributes) return DrawAttributeLines(renderer, texture, vertices, primitive, snap);
         if (_nativeLineMethod == 2 && Driver is "opengl" or "opengles2" && attributes) return DrawGLAttributeLines(renderer, texture, vertices, primitive, snap);
-        var calls = 0;
-        Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
-        Span<SDL.FPoint> endpoints = stackalloc SDL.FPoint[2];
-        for (var i = 1; i < vertices.Length; i += primitive == Mesh.PrimitiveType.LineStrip ? 1 : 2)
+        if (_nativeLineMethod == 2 && attributes) return DrawMaskedNativeLines(renderer, texture, vertices, primitive, snap);
+        var calls = 0; Span<SDL.FPoint> endpoints = stackalloc SDL.FPoint[2];
+        for (var i = 1; i < vertices.Length; i += 2)
         {
-            var a = vertices[i - 1]; var b = vertices[i]; var from = new Vector2(a.Position.X, a.Position.Y); var to = new Vector2(b.Position.X, b.Position.Y);
-            if (from == to) continue;
-            if (texture == 0 && primitive == Mesh.PrimitiveType.Lines && SameColor(a.Color, b.Color))
-            {
-                endpoints[0] = LinePoint(a.Position, snap); endpoints[1] = LinePoint(b.Position, snap);
-                if (endpoints[0].X == endpoints[1].X && endpoints[0].Y == endpoints[1].Y) continue;
-                SetPrimitiveColor(renderer, a.Color);
-                Check(SDL.RenderLines(renderer, endpoints, 2), "draw compatibility line");
-                calls++;
-                continue;
-            }
-            // shortcut: retain triangle coverage for other native line methods/drivers until their attribute rasterizers are qualified.
-            var offset = CanvasStroke.ThinLineOffset(from, to);
-            quad[0] = quad[1] = quad[3] = a; quad[2] = quad[4] = quad[5] = b;
-            for (var j = 0; j < quad.Length; j++)
-            {
-                var position = (j is 0 or 2 or 5 ? offset : -offset) + new Vector2(quad[j].Position.X, quad[j].Position.Y);
-                if (snap) position = CanvasGeometry.Snap(position);
-                quad[j].Position = new() { X = position.X, Y = position.Y };
-            }
-            var step = splitTriangles ? 3 : 6;
-            for (var first = 0; first < quad.Length; first += step)
-            {
-                Check(SDL.RenderGeometry(renderer, texture, quad.Slice(first, step), step, 0, 0), "draw compatibility thin line");
-                calls++;
-            }
+            endpoints[0] = LinePoint(vertices[i - 1].Position, snap); endpoints[1] = LinePoint(vertices[i].Position, snap);
+            if (EqualPoint(endpoints[0], endpoints[1])) continue;
+            SetPrimitiveColor(renderer, vertices[i - 1].Color);
+            Check(SDL.RenderLines(renderer, endpoints, 2), "draw compatibility line"); calls++;
         }
         return calls;
     }
@@ -640,6 +617,6 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         _graphics = default;
         foreach (var texture in _textures.Values) texture.Handle.Dispose();
         _textures.Clear(); _usedTextures.Clear(); ReleaseTargets();
-        try { ReleaseLineGL(); } finally { _renderer.Dispose(); }
+        try { _lineCoverage?.Dispose(); _lineComposite?.Dispose(); ReleaseLineGL(); } finally { _renderer.Dispose(); }
     }
 }

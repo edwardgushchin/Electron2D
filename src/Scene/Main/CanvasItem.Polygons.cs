@@ -40,10 +40,10 @@ public abstract partial class CanvasItem
     /// <remarks>Copies supplied data. Points and lines remain one framebuffer pixel wide under scaling and have no
     /// antialias fringe by default. An authored GPU vertex output can change the point diameter. GPU rendering retains native point/line topology. Compatibility rendering uses native
     /// untextured points and uniform-color lines. Textured point quads follow software, OpenGL, OpenGL ES, Vulkan and SDL GPU point coverage;
-    /// software and the default OpenGL/OpenGL ES point-line method rasterize textured/interpolated lines with per-pixel attributes.
+    /// software and the default compatibility point-line method rasterize textured/interpolated lines with per-pixel attributes.
     /// OpenGL/OpenGL ES native-line mode preserves native lines with vertex colors and UVs.
     /// Geometry-line mode retains endpoint squares and connecting triangles with vertex colors and UVs.
-    /// Other line methods and drivers retain backend-specific triangle footprints. A coincident two-point line draws nothing. Primitive UVs
+    /// Other hardware native-line modes retain driver coverage with projected vertex attributes. A coincident two-point line draws nothing. Primitive UVs
     /// do not remap atlas regions.</remarks>
     /// <exception cref="ArgumentException">Used data is nonfinite or the vertex count is outside one through four.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>

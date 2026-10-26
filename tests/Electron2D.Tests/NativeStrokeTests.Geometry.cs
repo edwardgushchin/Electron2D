@@ -78,8 +78,13 @@ internal static partial class NativeStrokeTests
         using var sampled = definition.SampleTexture?.GetImage();
         using var texture = sampled is null ? null : new RenderHandle(SDL.CreateTexture(renderer, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Static, sampled.Width, sampled.Height), SDL.DestroyTexture);
         if (texture is not null)
-            Check(SDL.UpdateTexture(texture.DangerousGetHandle(), 0, sampled!.GetData(), sampled.Width * 4) && SDL.SetTextureBlendMode(texture.DangerousGetHandle(), SDL.BlendMode.Blend) && SDL.SetTextureScaleMode(texture.DangerousGetHandle(), SDL.ScaleMode.Nearest), "Prepare independent geometry texture");
-        Clear(1); Check(SDL.SetRenderDrawBlendMode(renderer, SDL.BlendMode.Blend), "Set attributed geometry oracle blend");
+            Check(SDL.UpdateTexture(texture.DangerousGetHandle(), 0, sampled!.GetData(), sampled.Width * 4) && SDL.SetTextureBlendMode(texture.DangerousGetHandle(), SDL.BlendMode.Blend) && SDL.SetTextureScaleMode(texture.DangerousGetHandle(), definition.Linear ? SDL.ScaleMode.Linear : SDL.ScaleMode.Nearest), "Prepare independent geometry texture");
+        Check(SDL.SetRenderTextureAddressMode(renderer, definition.Repeat ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp, definition.Repeat ? SDL.TextureAddressMode.Wrap : SDL.TextureAddressMode.Clamp), "Set independent geometry texture addressing");
+        Clear(1); Check(SDL.SetRenderDrawBlendMode(renderer, SDL.BlendMode.Blend), "Set oracle background blend");
+        if (definition.Background is { } backdrop)
+            Check(SDL.SetRenderDrawColorFloat(renderer, backdrop.R, backdrop.G, backdrop.B, backdrop.A) && SDL.RenderFillRect(renderer, new SDL.FRect { X = clip.X, Y = clip.Y, W = clip.W, H = clip.H }), "Draw geometry oracle background");
+        Check(SDL.SetRenderDrawBlendMode(renderer, SDLOracleBlend(definition.Blend)), "Set attributed geometry oracle blend");
+        if (texture is not null) Check(SDL.SetTextureBlendMode(texture.DangerousGetHandle(), SDLOracleBlend(definition.Blend)), "Set attributed geometry texture blend");
         if (geometry.Length != 0) Check(SDL.RenderGeometry(renderer, texture?.DangerousGetHandle() ?? 0, geometry, geometry.Length, 0, 0), "Draw captured attributed geometry");
         var pixels = ReadSDLGeometryCell(renderer, clip);
         for (var y = 0; y < clip.H; y++) for (var x = 0; x < clip.W; x++)

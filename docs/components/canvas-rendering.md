@@ -1146,6 +1146,88 @@ Partial; physics declaration coverage stays 1347/1369 (98.39%), with 22 open and
 92 Excluded. Full-step physical performance, native allocator, foreign-platform
 and owner visual acceptance remain separate.
 
+## Native attribute composition, 2026-10-26
+
+The shared SDL point-line kernel now selects attributed pixels for every hardware
+driver in the default/hint-1 modes; software continues using its own kernel.
+Geometry mode retains the independently captured endpoint-square topology above.
+OpenGL/OpenGL ES native mode keeps its existing public flush/GL adapter. Other
+hardware native modes use actual SDL_RenderLines coverage in two reusable GPU
+targets, retaining native rasterization without a private SDL structure, second
+renderer, CPU image bridge, readback or engine-requested completion wait.
+
+Each independent pair or connected segment draws weighted native coverage. An
+appended native continuation and its subtraction remove the unwanted endpoint
+of an interior/closed segment; only the open final segment retains its native
+last endpoint. Consecutive equal/snapped-equal sources keep their outgoing
+attributes without an extra primitive. Coverage normalization preserves overlap
+counts before clamping to the native covered pixel. A bounded clip rectangle is
+split at the original endpoint planes so color/UV projection remains linear
+inside the segment and constant beyond either endpoint. Coordinates and weights
+use double intermediates; scratch and submitted positions stay bounded by the
+visible target rather than the length of an offscreen source segment.
+
+Apply the existing source texture filter/addressing and interpolated color/UVs
+through that coverage, then restore the original canvas blend. Multiplicative
+composition adds the neutral inverse coverage; replacement composition retains
+the uncovered destination before adding covered attributes. The original target,
+clip, source blend, draw color/blend and addressing survive the internal passes.
+The two native targets grow together and retire before their owning renderer.
+They require eight bytes per capacity pixel: 10,223,616 bytes at 768x1664. There
+is no per-pixel managed mirror. Cold growth/resize is outside warmed budgets.
+
+Draw-call accounting includes native line/attribute geometry and excludes the
+normalization/composition copies and clears, preserving [canvas counter meaning](canvas-counters.md).
+A separate 64x32 public SubViewport checks one logical object/primitive, exact
+native geometry calls, actual colored pixels and repeated target-size switching.
+The expanded public scene/server corpus also includes all five supported hardware
+blend modes over a translucent background, grouped gradients, and linear texture
+filtering with clamped/repeated UVs. Software retains its explicit non-Mix/group
+and linear-filter capability errors; its supported corpus uses Mix/Nearest.
+
+Final source-bound qualification under `bin/physics-native-vulkan-lines/2026-10-26/` passes **124 fresh CLR/strict full-trim NativeAOT profiles**, **156 lifecycles**, **98,238,464 pixel comparisons**, **24,960 rendered frames** and **19,968 warmed measured render frames**. The moving physics prefixes and active/idle process-render brackets retain exact 0/0 owner/all-thread managed bytes. CPU-only software controls deny GPU availability; all hardware profiles verify NVIDIA mappings without software-driver mappings or new kernel Xid. Four PDB/source receipts match 2,658 runtime and nine fixture sources per runtime. Managed geometry/recording controls pass in both runtimes.
+
+DrawPrimitive and DrawPolylineColors become Implemented, together with CanvasItemAddPrimitive, CanvasItemAddPolyline and CanvasItemAddMultiline. The physics census becomes **1349/1369 (98.54%)**, **20 open** (12 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded. CanvasItem remains Partial for its separate whole-type audit; this slice does not certify the whole physics goal. Original investigation outcomes follow.
+A CLR SDL GPU renderer attempt failed in vkGetPhysicalDeviceSurfaceFormatsKHR
+before the first rendered frame; its immutable receipt has no new kernel Xid.
+Fresh-process repeats of the same payload/profile pass. The original failure
+remains rejected and unattributed. Two unprepared NativeAOT profiles later fail
+the physics-prefix allocation assertion at 136,320/136,320 bytes. Isolated cold
+point queries allocate 129,400/129,400 CLR and 136,064/136,064 NativeAOT bytes,
+then zero on subsequent calls. A controlled late pointer entry after 96 steps
+creates PhysicsResidentQueries.comp.spv and allocates 129,712/129,712 CLR or
+136,376/136,376 NativeAOT bytes over the complete first frame; later frames are
+zero. A debugger trace independently places this lazy pipeline creation under
+ProcessPhysicsPicking. It does not provide a calibrated warm allocation total.
+
+The final fixture uses public Engine.Run's pre-frame input boundary and PushInput
+to exercise enabled pointer picking in cold setup, then asserts the GPU point
+pipeline was created before frame 32. Picking stays enabled during measurement.
+Cold preparation and retained query capacity are required by the existing
+[query warmup contract](../decisions/physics-picking.md#adr-0099); the strict zero
+budgets, measured boundaries and 32/64/64 frame schedule are unchanged. Injecting
+input from Ready was rejected by the lifecycle reentry guard and was replaced by
+the public host boundary. All original failed receipts remain rejected.
+Prepared process/render timings include native presentation submission and omit
+the fixed numerical step and a GPU-completion guarantee; they are diagnostics,
+not whole-goal physics/FPS or native-allocator acceptance.
+
+Observed process/render timing for hardware native-line mode (hint 2):
+
+| Runtime | SDL driver | Observed p50 range, ms | Highest p95, ms |
+| --- | --- | ---: | ---: |
+| clr | vulkan | 25.3693–43.6119 | 58.2253 |
+| clr | gpu | 3.7040–3.9036 | 4.4728 |
+| native | vulkan | 26.2037–45.7564 | 57.7286 |
+| native | gpu | 4.4694–13.5333 | 18.3588 |
+
+These ranges combine the recorded CPU/GPU-owner/separate and repeated-lifecycle
+profiles of the 160-case 768x1664 fixture. Full-capacity coverage/attribute clears
+and copies remain visible costs; concurrent host activity is retained in every
+receipt. The ranges are functional-cohort diagnostics, with no isolated renderer
+comparison or mass-scene performance acceptance.
+
+
 ## Retained distance-field mode
 
 `RenderingServer.CanvasItemSetDistanceFieldMode(RID item, bool enabled)` enables multichannel signed-distance-field (MSDF) decoding for ordinary image commands of a live scene or caller-owned item. It uses the existing RGB-median/derivative decoder with pixel range four and no outline. The [pinned method description](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/RenderingServer.xml) specifies multichannel images, including msdfgen output; this is distinct from scene collision SDF sampling and scalar-alpha distance images.

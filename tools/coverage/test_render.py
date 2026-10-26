@@ -86,8 +86,14 @@ def check_physics_report(pages):
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "uniform-stroke-contract-2026-10-25" in rows[0]
         assert not any(key.startswith("CanvasItem::method:" + method + "(") for key in expected)
     for method in ("draw_polyline_colors", "draw_primitive"):
-        assert any(key.startswith("CanvasItem::method:" + method + "(") and state == "Partial" for key, state in expected.items()), "Uniform strokes must not hide attribute-bearing raster gaps"
+        rows = [row for row in canvas_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "native-attribute-composition-2026-10-26" in rows[0]
+        assert not any(key.startswith("CanvasItem::method:" + method + "(") for key in expected)
     assert expected["class:CanvasItem"] == "Partial"
+    server_page = pages[CLASS_PAGES / "RenderingServer.md"]
+    for method in ("canvas_item_add_primitive", "canvas_item_add_polyline", "canvas_item_add_multiline"):
+        rows = [row for row in server_page.splitlines() if row.startswith("| [`method " + method + "(")]
+        assert len(rows) == 1 and " | Implemented | " in rows[0] and "native-attribute-composition-2026-10-26" in rows[0]
     for method in ("draw_texture", "draw_texture_rect", "draw_texture_rect_region"):
         rows = [row for row in canvas_page.splitlines() if row.startswith("| [`method " + method + "(")]
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "texture-drawing-contract-2026-10-26" in rows[0]

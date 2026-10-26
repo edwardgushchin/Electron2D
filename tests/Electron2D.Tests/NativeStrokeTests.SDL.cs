@@ -24,8 +24,10 @@ internal static partial class NativeStrokeTests
             Check(SDL.SetRenderDrawBlendMode(handle, SDL.BlendMode.Blend), "Set independent SDL oracle blending");
             foreach (var (painter, definition, origin) in subjects)
             {
-                if (!FlatSDLColor(definition)) continue;
                 Check(SDL.SetRenderClipRect(handle, new SDL.Rect { X = origin.X, Y = origin.Y, W = 64, H = 32 }), "Clip independent SDL primitive");
+                if (definition.Background is { } backdrop)
+                    Check(SDL.SetRenderDrawColorFloat(handle, backdrop.R, backdrop.G, backdrop.B, backdrop.A) && SDL.RenderFillRect(handle, new SDL.FRect { X = origin.X, Y = origin.Y, W = 64, H = 32 }), "Draw independent native line background");
+                if (!FlatSDLColor(definition)) continue;
                 var transform = painter.GetGlobalTransform(); var points = new SDL.FPoint[definition.Points.Length];
                 for (var i = 0; i < points.Length; i++)
                 {
@@ -136,11 +138,35 @@ internal static partial class NativeStrokeTests
                     if (sampled is not null)
                     {
                         var uv = definition.UVs![i - 1].Lerp(definition.UVs[i], t);
-                        color *= sampled.GetPixel(Math.Clamp((int)(uv.X * sampled.Width), 0, sampled.Width - 1), Math.Clamp((int)(uv.Y * sampled.Height), 0, sampled.Height - 1));
+                        color *= SDLOracleSample(sampled, uv, definition.Linear, definition.Repeat);
                     }
                     var destination = result.GetPixel(origin.X + x, origin.Y + y); color.A *= alpha;
-                    result.SetPixel(origin.X + x, origin.Y + y, new(color.R * color.A + destination.R * (1 - color.A), color.G * color.A + destination.G * (1 - color.A), color.B * color.A + destination.B * (1 - color.A), color.A + destination.A * (1 - color.A)));
+                    var blended = definition.Blend switch
+                    {
+                        Electron2D.BlendMode.Add => destination + color * color.A,
+                        Electron2D.BlendMode.Sub => destination - color * color.A,
+                        Electron2D.BlendMode.Mul => destination * color,
+                        Electron2D.BlendMode.PremultAlpha => color + destination * (1 - color.A),
+                        _ => new Color(color.R * color.A + destination.R * (1 - color.A), color.G * color.A + destination.G * (1 - color.A), color.B * color.A + destination.B * (1 - color.A), color.A + destination.A * (1 - color.A))
+                    };
+                    result.SetPixel(origin.X + x, origin.Y + y, blended);
                 }
         }
     }
+
+    private static Color SDLOracleSample(Image image, Vector2 uv, bool linear, bool repeat)
+    {
+        Color Pixel(int x, int y) => image.GetPixel(repeat ? (x % image.Width + image.Width) % image.Width : Math.Clamp(x, 0, image.Width - 1), repeat ? (y % image.Height + image.Height) % image.Height : Math.Clamp(y, 0, image.Height - 1));
+        if (!linear) return Pixel((int)MathF.Floor(uv.X * image.Width), (int)MathF.Floor(uv.Y * image.Height));
+        var x = uv.X * image.Width - .5f; var y = uv.Y * image.Height - .5f; var ix = (int)MathF.Floor(x); var iy = (int)MathF.Floor(y);
+        return Pixel(ix, iy).Lerp(Pixel(ix + 1, iy), x - ix).Lerp(Pixel(ix, iy + 1).Lerp(Pixel(ix + 1, iy + 1), x - ix), y - iy);
+    }
+
+    private static SDL.BlendMode SDLOracleBlend(Electron2D.BlendMode mode) => mode switch
+    {
+        Electron2D.BlendMode.Mix => SDL.BlendMode.Blend,
+        Electron2D.BlendMode.PremultAlpha => SDL.BlendMode.BlendPremultiplied,
+        Electron2D.BlendMode.Mul => SDL.ComposeCustomBlendMode(SDL.BlendFactor.DstColor, SDL.BlendFactor.Zero, SDL.BlendOperation.Add, SDL.BlendFactor.DstAlpha, SDL.BlendFactor.Zero, SDL.BlendOperation.Add),
+        _ => SDL.ComposeCustomBlendMode(SDL.BlendFactor.SrcAlpha, SDL.BlendFactor.One, mode == Electron2D.BlendMode.Sub ? SDL.BlendOperation.RevSubtract : SDL.BlendOperation.Add, SDL.BlendFactor.SrcAlpha, SDL.BlendFactor.One, mode == Electron2D.BlendMode.Sub ? SDL.BlendOperation.RevSubtract : SDL.BlendOperation.Add)
+    };
 }
