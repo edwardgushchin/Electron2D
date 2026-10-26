@@ -13,9 +13,10 @@ public partial class LineEdit
         if (!_editing || !_editable) return;
         _ime = ""; _imeSelection = default; UserInsert(text);
     }
+    private static string NormalizeUserText(string text) => text.Replace("\r", "").Replace("\n", "").Replace("\t", "");
     private void UserInsert(string text)
     {
-        text = text.Replace("\r", "").Replace("\n", "").Replace("\t", "");
+        text = NormalizeUserText(text);
         if (text.Length == 0) return; var before = _text;
         if (_selecting) DeleteRange(_selectionFrom, _selectionTo);
         List<Exception>? errors = null;
@@ -132,17 +133,32 @@ public partial class LineEdit
     /// <inheritdoc />
     protected override DragPayload? OnGetDragData(Vector2 atPosition)
     {
-        if (!_dragAndDropSelectionEnabled || !_selecting || _secret || !_dragAttempt) return null;
-        var column = HitColumn(atPosition); if (column < _selectionFrom || column > _selectionTo) return null;
+        var accessible = atPosition == AccessibilityDragPosition;
+        if (!_dragAndDropSelectionEnabled || !_selecting || _secret || !accessible && !_dragAttempt) return null;
+        var column = accessible ? _caret : HitColumn(atPosition); if (!accessible && (column < _selectionFrom || column > _selectionTo)) return null;
+        if (accessible) _dragAttempt = true;
         _pointerSelecting = false; var text = GetSelectedText(); _dragFrom = _selectionFrom; _dragTo = _selectionTo; _dragHandled = false;
         var preview = new Label(text) { AutoTranslateMode = NodeAutoTranslateMode.Disabled }; SetDragPreview(preview); return _dragPayload = new DragPayload<string>(text);
     }
     /// <inheritdoc />
-    protected override bool OnCanDropData(Vector2 atPosition, DragPayload payload) => _editable && payload is DragPayload<string>;
+    protected override bool OnCanDropData(Vector2 atPosition, DragPayload payload) => CanAcceptTextDrop(atPosition, payload);
+    private bool CanAcceptTextDrop(Vector2 atPosition, DragPayload payload)
+    {
+        if (!_editable || payload is not DragPayload<string> data) return false;
+        var self = ReferenceEquals(payload, _dragPayload); if (_maxLength == 0 && !self) return true;
+        var count = ScalarCount(_text); var column = atPosition == AccessibilityDragPosition ? _caret : HitColumn(atPosition);
+        if (self && (_dragTo > count || !_text.AsSpan(UTF16Index(_text, _dragFrom), UTF16Index(_text, _dragTo) - UTF16Index(_text, _dragFrom)).SequenceEqual(data.Value))) return false;
+        if (_maxLength == 0 || self && column >= _dragFrom && column <= _dragTo && (!CopyDrag || column > _dragFrom && column < _dragTo)) return true;
+        var removed = self && !CopyDrag ? _dragTo - _dragFrom : !self && _selecting && column >= _selectionFrom && column <= _selectionTo ? _selectionTo - _selectionFrom : 0;
+        var incoming = 0; foreach (var rune in data.Value.EnumerateRunes()) if (rune.Value is not ('\r' or '\n' or '\t')) incoming++;
+        return (long)count - removed + incoming <= _maxLength;
+    }
     /// <inheritdoc />
     protected override void OnDropData(Vector2 atPosition, DragPayload payload)
     {
-        if (!OnCanDropData(atPosition, payload)) return; ApplyIME(); Edit(); var column = HitColumn(atPosition); var text = ((DragPayload<string>)payload).Value;
+        if (!CanAcceptTextDrop(atPosition, payload)) throw new InvalidOperationException("The text target cannot accept the complete payload."); ApplyIME(); Edit();
+        if (!CanAcceptTextDrop(atPosition, payload)) throw new InvalidOperationException("The text target changed during drop preparation.");
+        var column = atPosition == AccessibilityDragPosition ? _caret : HitColumn(atPosition); var text = NormalizeUserText(((DragPayload<string>)payload).Value);
         var self = ReferenceEquals(payload, _dragPayload);
         if (self)
         {

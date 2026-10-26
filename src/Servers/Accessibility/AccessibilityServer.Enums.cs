@@ -149,6 +149,8 @@ public sealed partial class AccessibilityServer
         ShowTooltip = 8,
         /// <summary>Requests opening a context menu through a no-argument callback.</summary>
         ShowContextMenu = 21,
+        /// <summary>Invokes a published integer-ID custom action.</summary>
+        Custom = 22,
         /// <summary>Requests one semantic numeric increment using a no-argument callback.</summary>
         Increment = 6,
         /// <summary>Requests a numeric value using an Action&lt;double&gt; callback.</summary>

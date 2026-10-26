@@ -31,7 +31,7 @@ public sealed partial class SceneTree
         try
         {
             if (preview is not null) SetGUIDragPreview(source, preview);
-            _gui.Section.GuiDragPayload = payload; _gui.Section.DragViewport = source.GetViewport();
+            _gui.Section.GuiDragPayload = payload; _gui.Section.DragViewport = source.GetViewport(); InvalidateAccessibilityDrag();
         }
         catch
         {
@@ -129,7 +129,7 @@ public sealed partial class SceneTree
                 if (payload is not null && !candidate.IsDisposed && ReferenceEquals(candidate.Tree, this) &&
                     candidate.IsVisibleInTree && candidate.EffectiveMouseFilter != MouseFilter.Ignore)
                 {
-                    _gui.Section.GuiDragPayload = payload; _gui.Section.DragViewport = viewport; _gui.Section.GuiDragPreparing = false;
+                    _gui.Section.GuiDragPayload = payload; _gui.Section.DragViewport = viewport; InvalidateAccessibilityDrag(); _gui.Section.GuiDragPreparing = false;
                     _gui.GuiMouseCapture = null; _gui.GuiMouseCaptureMask = 0;
                     try { (_gui.Section.Viewport ?? viewport).PropagateNotification(Node.NotificationDragBegin); }
                     catch (Exception error) { CollectException(ref errors, error); }
@@ -145,25 +145,26 @@ public sealed partial class SceneTree
     }
 
     private Control? FindGUIDropTarget(Control? target, Viewport viewport, Vector2 point, DragPayload payload,
-        ref List<Exception>? errors)
+        ref List<Exception>? errors, bool accessibility = false)
     {
         for (CanvasItem? item = target; item is not null;)
         {
+            if (item.IsDisposed || !ReferenceEquals(item.Tree, this)) break;
             var next = item.TopLevel ? null : item.GetParentItem();
             if (item is Control candidate && !candidate.IsDisposed && ReferenceEquals(candidate.Tree, this) &&
                 ReferenceEquals(GUIState(candidate.GetViewport()!).Section, _gui.Section) && candidate.IsVisibleInTree &&
-                candidate.EffectiveMouseFilter != MouseFilter.Ignore)
+                (accessibility || candidate.EffectiveMouseFilter != MouseFilter.Ignore))
             {
                 try
                 {
-                    var local = candidate.MakeCanvasPositionLocal(PointInViewport(viewport, candidate.GetViewport()!, point));
-                    if (candidate.CanDropData(local, payload) && !candidate.IsDisposed && ReferenceEquals(candidate.Tree, this) &&
+                    var local = accessibility ? Control.AccessibilityDragPosition : candidate.MakeCanvasPositionLocal(PointInViewport(viewport, candidate.GetViewport()!, point));
+                    if ((accessibility ? candidate.CanAccessibilityDrop(payload) : candidate.CanDropData(local, payload)) && !candidate.IsDisposed && ReferenceEquals(candidate.Tree, this) &&
                         ReferenceEquals(GUIState(candidate.GetViewport()!).Section, _gui.Section) && candidate.IsVisibleInTree &&
-                        candidate.EffectiveMouseFilter != MouseFilter.Ignore)
+                        (accessibility || candidate.EffectiveMouseFilter != MouseFilter.Ignore))
                         return candidate;
                 }
                 catch (Exception error) { CollectException(ref errors, error); }
-                if (candidate.EffectiveMouseFilter == MouseFilter.Stop) break;
+                if (!candidate.IsDisposed && candidate.EffectiveMouseFilter == MouseFilter.Stop) break;
             }
             item = next;
         }
@@ -183,7 +184,7 @@ public sealed partial class SceneTree
         ApplyGUICursor(ref errors);
     }
 
-    private void CompleteGUIDrag(Viewport viewport, Vector2 point, bool attemptDrop, ref List<Exception>? errors)
+    private void CompleteGUIDrag(Viewport viewport, Vector2 point, bool attemptDrop, ref List<Exception>? errors, Control? accessibilityTarget = null)
     {
         if (_gui.Section.GuiDragPayload is not { } payload || _gui.Section.GuiDragCompleting) return;
         _gui.Section.GuiDragCompleting = true;
@@ -191,15 +192,17 @@ public sealed partial class SceneTree
         try
         {
             if (attemptDrop)
-            {
-                var target = MouseTargetControl(viewport) ?? FindMouseControl(viewport, point, ref errors);
-                var accepted = FindGUIDropTarget(target, viewport, point, payload, ref errors);
-                if (accepted is not null)
-                    try { accepted.DropData(accepted.MakeCanvasPositionLocal(PointInViewport(viewport, accepted.GetViewport()!, point)), payload); successful = true; }
-                    catch (Exception error) { CollectException(ref errors, error); }
-            }
+                try
+                {
+                    var target = accessibilityTarget ?? MouseTargetControl(viewport) ?? FindMouseControl(viewport, point, ref errors);
+                    var accepted = FindGUIDropTarget(target, viewport, point, payload, ref errors, accessibilityTarget is not null);
+                    if (accepted is not null)
+                        try { if (accessibilityTarget is not null) accepted.DropAccessibilityData(payload); else accepted.DropData(accepted.MakeCanvasPositionLocal(PointInViewport(viewport, accepted.GetViewport()!, point)), payload); successful = true; }
+                        catch (Exception error) { CollectException(ref errors, error); }
+                }
+                catch (Exception error) { CollectException(ref errors, error); }
             try { ClearGUIDragPreview(); } catch (Exception error) { CollectException(ref errors, error); }
-            _gui.Section.GuiDragPayload = null; _gui.Section.DragViewport = null; _gui.Section.GuiDragSource = null; _gui.Section.GuiDragHovered = null;
+            _gui.Section.GuiDragPayload = null; _gui.Section.DragViewport = null; _gui.Section.GuiDragSource = null; InvalidateAccessibilityDrag(); _gui.Section.GuiDragHovered = null;
             _gui.Section.GuiDragPreparing = false; _gui.GuiDragAttempted = false; _gui.Section.GuiDragPossible = false;
             _gui.GuiDragTravel = Vector2.Zero; _gui.Section.GuiDragSuccessful = successful;
             (_gui.Section.Viewport ?? viewport).ClearGUIDragDescription();

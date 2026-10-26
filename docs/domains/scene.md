@@ -521,3 +521,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.
 
 [The complete CanvasItem audit](../components/canvas-item-contract.md) connects direct custom, spatial, UI and physical descendants through common metadata, retained identities and composed queries. Owner/current-group rendering-metadata authoring preserves numerical guards; visibility/hierarchy/native operations retain individual access. Ancestor Node/Object gaps remain separate.
+
+[Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.

@@ -505,6 +505,13 @@ def main():
         if owner == "LineEdit":
             assert all(" | Implemented | " in next(row for row in rows if f"method {name}(" in row) for name in ("get_menu", "is_menu_visible"))
             assert " | Implemented | " in next(row for row in rows if "property bool context_menu_enabled " in row)
+    assert " | Implemented | " in next(row for row in accessibility_rows if "enum AccessibilityAction" in row)
+    assert " | Implemented | " in next(row for row in accessibility_rows if "enum_value ACTION_CUSTOM [AccessibilityAction]" in row)
+    for name in ("update_add_custom_action", "update_set_extra_info"):
+        assert " | Implemented | " in next(row for row in accessibility_rows if f"method {name}(" in row)
+    assert all(" | Implemented | " in next(row for row in control_rows if f"method {name}(" in row) for name in ("accessibility_drag", "accessibility_drop"))
+    project_rows = pages[CLASS_PAGES / "ProjectSettings.md"].splitlines()
+    assert " | Implemented | " in next(row for row in project_rows if " input/ui_accessibility_drag_and_drop`" in row)
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

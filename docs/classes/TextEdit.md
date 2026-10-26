@@ -267,3 +267,5 @@ Native scrolling publishes pixel projections of visual-row offsets, keeps smooth
 Repeated identical IME composition updates preserve an independently scrolled view; changed composition still updates caret visibility.
 
 Context-menu refresh preserves caller-added entries and removed standard commands. Typed submenu IDs identify the existing direction and Unicode menus. Native ShowContextMenu reuses ContextMenuEnabled and ordinary command guards; see [native live/popup output](AccessibilityServer.md#native-live-and-popups).
+
+Accessible drag reads the selection without pointer drag-attempt state and inserts at the current primary caret, including inherited CodeEdit behavior. Normal complex-operation history and source move/copy lifetime remain active. Intrinsic string/editability guards remain enforced even with forwarded acceptance. See [accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag).

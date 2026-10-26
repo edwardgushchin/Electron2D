@@ -1,6 +1,6 @@
 # Input runtime component
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [Manual device sensor values](device-sensors.md) retain four independent Vector3 snapshots under the Input lock. Their setters are callable from any thread and their values feed headless scene execution; hardware acquisition remains absent.
 
@@ -190,3 +190,5 @@ still requires its documented producer and is not inferred from these names.
 The current Linux managed/JIT/NativeAOT checks require no display or renderer. The
 independent C++ table/classifier fixtures include Linux, Windows and macOS vocabularies;
 foreign runtime execution and actual keyboard layouts remain separate platform checks.
+
+[Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.

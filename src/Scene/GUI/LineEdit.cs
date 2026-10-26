@@ -54,7 +54,7 @@ public partial class LineEdit : Control
     public string Text { get { CheckLineEdit(); return _text; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); AssignText(value); } }
     /// <summary>Gets or sets the caret's scalar column, clamped to the current text length.</summary>
     /// <value>Zero initially. Direct assignments may address the interior of a grapheme.</value>
-    public int CaretColumn { get { CheckLineEdit(); return _caret; } set { EnsureMutable(); _caret = Math.Clamp(value, 0, ScalarCount(_text)); ResetBlink(); FitCaret(); } }
+    public int CaretColumn { get { CheckLineEdit(); return _caret; } set { EnsureMutable(); _caret = Math.Clamp(value, 0, ScalarCount(_text)); ResetBlink(); FitCaret(); AccessibilityQueued = true; } }
     /// <summary>Gets or sets the scalar length limit and resets the current text through that limit.</summary>
     /// <value>Zero initially; zero is unlimited.</value>
     /// <exception cref="ArgumentOutOfRangeException">The limit is negative.</exception>
@@ -172,7 +172,7 @@ public partial class LineEdit : Control
     private void ResourceDisposed(ElectronObject resource) => ResourceChanged((Resource)resource);
     private void CheckLineEdit() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private void Set<T>(ref T field, T value) { if (EqualityComparer<T>.Default.Equals(field, value)) return; field = value; Invalidate(); }
-    private void Invalidate() { _dirty = true; QueueRedraw(); if (Tree?.IsClosing != true) UpdateMinimumSize(); }
+    private void Invalidate() { _dirty = true; QueueRedraw(); AccessibilityQueued = true; if (Tree?.IsClosing != true) UpdateMinimumSize(); }
     private void ResetBlink() { _blinkTime = 0; _caretVisible = true; QueueRedraw(); }
     private static int ScalarCount(string text) { var count = 0; foreach (var rune in text.EnumerateRunes()) count++; return count; }
     private static int UTF16Index(string text, int column) { var index = 0; foreach (var rune in text.EnumerateRunes()) { if (column-- <= 0) break; index += rune.Utf16SequenceLength; } return index; }

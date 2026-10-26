@@ -2287,3 +2287,5 @@ AccessibilityServer.Collections.cs/CollectionSources.cs and ATSPIServer.Collecti
 AccessibilityServer.Live/LiveSources and ATSPIServer.Live publish typed announcements, popup kinds and tooltip/actions. PopupMenu.Accessibility keeps item semantic ownership separate from its MenuItems rendered canvas. LineEdit.Popup owns lazy text menus; AccessibilityLiveTests and its Popups partial exercise embedded and native surface sources.
 
 [CanvasItem metadata and material scratch](components/canvas-item-contract.md) reuse existing CanvasItem partials, Node processing guards, weak item identities and GPUCanvasBackend. Owner/current-group frontend authoring and weak per-material scratch storage introduce no production type, public declaration or dependency.
+
+Control.AccessibilityDrag and SceneTree.AccessibilityDrag connect non-positional typed GUI transactions. AccessibilityServer.Custom/DragSources and ATSPIServer.Custom supply integer-ID actions, composed names and cached source context; existing Element retains transient state without new public types. AccessibilityDragTests managed/native partials and its independent libatspi client cover the complete path.

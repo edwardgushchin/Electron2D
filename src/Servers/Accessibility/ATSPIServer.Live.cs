@@ -7,6 +7,7 @@ namespace Electron2D;
 internal sealed unsafe partial class ATSPIServer
 {
     private readonly List<Element> _announcements = [];
+    internal void Announce(Element e, string text) => Emit(e.Path, "org.a11y.atspi.Event.Object", "Announcement", Event("", (int)Live.Assertive, 0, S(text), e));
     internal void QueueAnnouncement(Element element, string? text = null)
     {
         if (element.TextProtected) return;

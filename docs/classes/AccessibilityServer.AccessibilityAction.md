@@ -8,7 +8,7 @@ Last updated: 2026-10-26
 
 ## Description
 
-Typed compiled actions run on the display owner. Click activates the ordinary button path; Focus and Blur reuse GUI focus. Collapse/Expand request branch changes through no-argument callbacks. numeric SetValue is available through Action<double>; directed text selection and replacement use typed callbacks; typed unit/hint/point/offset scrolling has real native consumers; tooltip/context-menu actions use ordinary presentation; remaining color/custom payload families retain their dependencies.
+Typed compiled actions run on the display owner. Click activates the ordinary button path; Focus and Blur reuse GUI focus. Collapse/Expand request branch changes through no-argument callbacks. numeric SetValue is available through Action<double>; directed text selection and replacement use typed callbacks; typed unit/hint/point/offset scrolling has real native consumers; tooltip/context-menu actions use ordinary presentation; remaining color payload families retain their dependencies.
 
 ## Values
 
@@ -35,6 +35,7 @@ Typed compiled actions run on the display owner. Click activates the ordinary bu
 | <a id="scrollintoview"></a>`ScrollIntoView` | 17 | Reveal request with a typed preferred edge. |
 | <a id="scrolltopoint"></a>`ScrollToPoint` | 18 | Target placement at a window-client point. |
 | <a id="setscrolloffset"></a>`SetScrollOffset` | 19 | Absolute offset in local scroll coordinates. |
+| <a id="custom"></a>`Custom` | 22 | A published signed integer ID through a compiled integer callback. |
 | <a id="setvalue"></a>`SetValue` | 20 | Numeric request via Action<double>; other payload families remain incomplete. |
 
 Use `AccessibilityServer.UpdateAddAction(id, AccessibilityServer.AccessibilityAction.Click, Activate)` in an active supported display owner. Invalid numeric selectors reject. Element lifetime and native availability follow the owning service.
@@ -42,3 +43,6 @@ Use `AccessibilityServer.UpdateAddAction(id, AccessibilityServer.AccessibilityAc
 [Native scrolling](AccessibilityServer.md#native-scrolling) defines coordinate spaces, source unit projection, endpoint actions, clipping and owner/lifetime rules.
 
 [Native collections](AccessibilityServer.md#native-collections) defines item selection, branch actions and source behavior.
+
+
+[Custom actions and accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag) defines publication, ordinal stability, guards and the typed callback. All enum selectors now have their declared values; the remaining color value callback is an owning method/source gap.

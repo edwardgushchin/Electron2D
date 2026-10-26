@@ -825,3 +825,5 @@ Repeated identical IME composition updates preserve an independently scrolled vi
 | `public bool IsMenuVisible()` | Current visibility; does not allocate a menu. |
 
 See [native popup output](AccessibilityServer.md#native-live-and-popups) for assistive actions and native surface identity.
+
+Pointer-free drag hooks use the current scalar selection/caret and preserve secret/read-only/history policy. Complete normalized drop capacity is preflighted; exceeding MaxLength rejects the whole transfer, preserving its source. Intrinsic type/editability/capacity validation also applies after forwarded acceptance and IME/focus preparation. Rejection after an already accepted request throws instead of silently succeeding. See [accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag).

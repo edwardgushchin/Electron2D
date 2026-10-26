@@ -192,14 +192,15 @@ public partial class TextEdit
     /// <inheritdoc />
     protected override DragPayload? OnGetDragData(Vector2 atPosition)
     {
-        if (!_dragAndDropSelectionEnabled || !_dragAttempt || !IsMouseOverSelection()) return null; _draggingCursor = false; _dragFrom = SelectionStart(_carets[0]); _dragTo = SelectionEnd(_carets[0]); _dragOriginal = Text; var text = GetSelectedText(); SetDragPreview(new Label(text) { AutoTranslateMode = NodeAutoTranslateMode.Disabled }); _dragHandled = false; return _dragPayload = new DragPayload<string>(text);
+        var accessible = atPosition == AccessibilityDragPosition;
+        if (!_dragAndDropSelectionEnabled || !HasSelection() || !accessible && (!_dragAttempt || !IsMouseOverSelection())) return null; if (accessible) _dragAttempt = true; _draggingCursor = false; _dragFrom = SelectionStart(_carets[0]); _dragTo = SelectionEnd(_carets[0]); _dragOriginal = Text; var text = GetSelectedText(); SetDragPreview(new Label(text) { AutoTranslateMode = NodeAutoTranslateMode.Disabled }); _dragHandled = false; return _dragPayload = new DragPayload<string>(text);
     }
     /// <inheritdoc />
     protected override bool OnCanDropData(Vector2 atPosition, DragPayload payload) => _editable && payload is DragPayload<string>;
     /// <inheritdoc />
     protected override void OnDropData(Vector2 atPosition, DragPayload payload)
     {
-        if (!OnCanDropData(atPosition, payload)) return; var target = GetLineColumnAtPos((Vector2i)atPosition); var offset = Offset(target); BeginComplexOperation(); try { if (ReferenceEquals(payload, _dragPayload)) { _dragHandled = true; var start = Offset(_dragFrom); var end = Offset(_dragTo); if (offset >= start && offset <= end) return; if (!CopyDrag) { Replace(_dragFrom, _dragTo, ""); if (offset > end) offset -= end - start; target = PositionAt(offset); } } RemoveSecondaryCarets(); MoveCaretTo(0, target, false); InsertTextAtCaret(((DragPayload<string>)payload).Value, 0); } finally { EndComplexOperation(); }
+        if (!_editable || payload is not DragPayload<string>) throw new InvalidOperationException("The text target cannot accept this payload."); var target = atPosition == AccessibilityDragPosition ? _carets[0].Position : GetLineColumnAtPos((Vector2i)atPosition); var offset = Offset(target); BeginComplexOperation(); try { if (ReferenceEquals(payload, _dragPayload)) { _dragHandled = true; var start = Offset(_dragFrom); var end = Offset(_dragTo); if (offset >= start && offset <= end) return; if (!CopyDrag) { Replace(_dragFrom, _dragTo, ""); if (offset > end) offset -= end - start; target = PositionAt(offset); } } RemoveSecondaryCarets(); MoveCaretTo(0, target, false); InsertTextAtCaret(((DragPayload<string>)payload).Value, 0); } finally { EndComplexOperation(); }
     }
     private void FinishTextDrag() { var payload = _dragPayload; _dragPayload = null; _dragAttempt = false; if (payload != null && !_dragHandled && _editable && IsDragSuccessful() && !CopyDrag && Text == _dragOriginal) DeleteSelection(); _dragHandled = false; _dragOriginal = ""; }
 }

@@ -139,3 +139,5 @@ Native accessibility scrolling now connects existing scrollable GUI sources to A
 [Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.
 
 [Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.
+
+[Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.

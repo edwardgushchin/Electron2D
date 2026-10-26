@@ -1,6 +1,6 @@
 # Viewport
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 **Inherits:** [Node](Node.md)
 
@@ -673,3 +673,5 @@ Automatic physics picking ignores a canvas whose determinant is zero/nonfinite o
 [Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) preserve logical transforms and bounds while pointer/native operations retain their separate guards.
 
 Embedding-policy edits reject attached windows whose embedding owner would change. A nearer embedding viewport shields its windows from ancestor edits, preserving their identities and popup-coordinate boundary.
+
+The unbound project keyboard drag action and Control.AccessibilityDrag/AccessibilityDrop share this connected-section state. Source callbacks can prepare a preview before returning payload data. Explicit target requests use a non-positional sentinel and ordinary completion/retirement. [The accessibility contract](AccessibilityServer.md#custom-actions-and-accessible-drag) owns native announcements, source context and failure behavior.

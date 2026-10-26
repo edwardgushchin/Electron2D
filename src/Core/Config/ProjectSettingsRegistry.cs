@@ -163,6 +163,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(InputUIPageUp, isBasic: false);
         RegisterInternal(InputUIPageDown, isBasic: false);
         RegisterInternal(InputUIMenu, isBasic: false);
+        RegisterInternal(InputUIAccessibilityDragAndDrop, isBasic: false);
         RegisterInternal(InputUIAccept, isBasic: false);
         RegisterInternal(InputUICancel, isBasic: false);
         RegisterInternal(InputUIColorPickerDeletePreset, isBasic: false);
@@ -1272,6 +1273,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, InputUIPageUp) ||
         ReferenceEquals(setting, InputUIPageDown) ||
         ReferenceEquals(setting, InputUIMenu) ||
+        ReferenceEquals(setting, InputUIAccessibilityDragAndDrop) ||
         ReferenceEquals(setting, InputUIAccept) ||
         ReferenceEquals(setting, InputUICancel) ||
         ReferenceEquals(setting, InputUIColorPickerDeletePreset) ||

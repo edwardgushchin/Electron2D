@@ -233,7 +233,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         if (name is "version" or "InterfaceVersion") return U(1);
         if (iface == Accessible) return name switch
         {
-            "Name" => S(e.Name),
+            "Name" => NameVariant(e),
             "Description" => S(e.Description),
             "Parent" => ParentRef(e),
             "ChildCount" => I(e.Children.Count),
@@ -292,7 +292,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     {
         var b = Builder("a(so)"); try { foreach (var child in e.Children) g_variant_builder_add_value(b, ObjectRef(child)); return g_variant_builder_end(b); } finally { g_variant_builder_unref(b); }
     }
-    private nint CacheItem(Element e) => Tuple([ObjectRef(e), ObjectRef(_owner.Application), ParentRef(e), I(e.Parent?.Children.IndexOf(e) ?? -1), I(e.Children.Count), Interfaces(e), S(e.Name), U(NativeRole(e)), S(e.Description), States(e)]);
+    private nint CacheItem(Element e) => Tuple([ObjectRef(e), ObjectRef(_owner.Application), ParentRef(e), I(e.Parent?.Children.IndexOf(e) ?? -1), I(e.Children.Count), Interfaces(e), NameVariant(e), U(NativeRole(e)), S(e.Description), States(e)]);
     private nint CacheItems()
     {
         var b = Builder("a((so)(so)(so)iiassusau)");
@@ -333,13 +333,13 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             if (method == "GetActions")
             {
                 var builder = Builder("a(sss)");
-                try { for (var i = 0; i < ActionCount(e); i++) { var name = ActionName(ActionAt(e, i)); g_variant_builder_add_value(builder, Tuple([S(name), S(name), S("")])); } return Tuple([g_variant_builder_end(builder)]); }
+                try { for (var i = 0; i < ActionCount(e); i++) { var name = ActionName(e, ActionAt(e, i)); g_variant_builder_add_value(builder, Tuple([S(name), S(name), S("")])); } return Tuple([g_variant_builder_end(builder)]); }
                 finally { g_variant_builder_unref(builder); }
             }
             var action = ActionAt(e, IntArg(args, 0));
             return method switch
             {
-                "GetName" or "GetLocalizedName" or "GetDescription" => Tuple([S(ActionName(action))]),
+                "GetName" or "GetLocalizedName" or "GetDescription" => Tuple([S(ActionName(e, action))]),
                 "GetKeyBinding" => Tuple([S("")]),
                 "DoAction" => Tuple([B(InvokeRequest(e, action))]),
                 _ => throw new InvalidOperationException("Unknown action method.")
@@ -351,19 +351,21 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     }
     private static bool HasPageActions(Element e) => e.HasNumericValue && e.NumericJump > 0 && e.SetValueAction is not null && !e.Flag(AFlag.ReadOnly);
     private static bool HasOffsetActions(Element e) => e.SetScrollOffsetAction is not null && (e.ScrollMask & 12) != 0;
-    private static int ActionCount(Element e) => e.Actions.Count + (HasPageActions(e) ? 2 : 0) + 2 * (e.ScrollUnitActions?.Count ?? 0) + (HasOffsetActions(e) ? 2 : 0);
+    private static int ActionCount(Element e) => e.Actions.Count + (e.CustomActions?.Count ?? 0) + (HasPageActions(e) ? 2 : 0) + 2 * (e.ScrollUnitActions?.Count ?? 0) + (HasOffsetActions(e) ? 2 : 0);
     private static (AAction Action, int Jump) ActionAt(Element e, int index)
     {
         if (index < 0) throw new InvalidRequestException("The action index is outside the supported action list.");
         for (var action = AAction.Click; action <= AAction.ShowContextMenu; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return (action, 0);
+        if (e.CustomActions is { } custom) foreach (var pair in custom) if (index-- == 0) return (AAction.Custom, pair.ID);
         if (HasPageActions(e)) { if (index is 0 or 1) return (AAction.SetValue, index == 0 ? -1 : 1); index -= 2; }
         for (var action = AAction.ScrollDown; action <= AAction.ScrollUp; action++)
             if (e.ScrollUnitActions?.ContainsKey(action) == true) { if (index is 0 or 1) return (action, index); index -= 2; }
         if (HasOffsetActions(e) && index is 0 or 1) return (AAction.SetScrollOffset, index == 0 ? -1 : 1);
         throw new InvalidRequestException("The action index is outside the supported action list.");
     }
-    private static string ActionName((AAction Action, int Jump) request) => request.Action switch
+    private static string ActionName(Element e, (AAction Action, int Jump) request) => request.Action switch
     {
+        AAction.Custom => CustomDescription(e, request.Jump),
         AAction.SetValue => request.Jump < 0 ? "page-decrement" : "page-increment",
         AAction.SetScrollOffset => request.Jump < 0 ? "scroll-to-start" : "scroll-to-end",
         AAction.ScrollUp => request.Jump == 0 ? "scroll-up" : "scroll-page-up",
@@ -386,6 +388,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     };
     private static bool InvokeRequest(Element e, (AAction Action, int Jump) request)
     {
+        if (request.Action == AAction.Custom) return InvokeCustom(e, request.Jump);
         if (request.Action == AAction.SetValue) return InvokeValue(e, e.NumericValue + request.Jump * e.NumericJump);
         if (request.Action == AAction.SetScrollOffset)
         {
@@ -436,7 +439,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         if (g_dbus_connection_emit_signal(_connection, 0, path, iface, name, value, out var error) == 0) throw new ExternalException(ErrorMessage(error));
     }
     internal void PropertyChanged(Element e, string property, string value)
-    { Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event(property, 0, 0, S(value), e)); if (property is "accessible-name" or "accessible-value") QueueAnnouncement(e, value); }
+    { Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event(property, 0, 0, property == "accessible-name" ? NameVariant(e) : S(value), e)); if (property is "accessible-name" or "accessible-value") QueueAnnouncement(e, value); }
     internal void NumericChanged(Element e, string property, double value)
     {
         var builder = Builder("a{sv}");

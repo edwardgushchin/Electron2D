@@ -57,7 +57,7 @@ public abstract partial class Viewport
     /// <param name="description">The nonnull description stored on this viewport; connected getters read the section root.</param>
     public void SetGUIDragDescription(string description)
     {
-        EnsureMutable(); ArgumentNullException.ThrowIfNull(description); _guiDragDescription = description;
+        EnsureMutable(); ArgumentNullException.ThrowIfNull(description); if (_guiDragDescription == description) return; _guiDragDescription = description; Tree?.InvalidateAccessibilityDrag();
     }
 
     /// <summary>Cancels this connected viewport section's active drag, destroying its preview.</summary>
@@ -67,5 +67,5 @@ public abstract partial class Viewport
         Tree?.CancelGUIDrag(this);
     }
 
-    internal void ClearGUIDragDescription() => _guiDragDescription = string.Empty;
+    internal void ClearGUIDragDescription() { if (_guiDragDescription.Length == 0) return; _guiDragDescription = string.Empty; Tree?.InvalidateAccessibilityDrag(); }
 }

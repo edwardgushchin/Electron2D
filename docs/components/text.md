@@ -154,3 +154,5 @@ The [owned font-cache producer](text-server.md#owned-font-sources-and-caches) re
 [Project line-breaking strictness](line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
 
 LineEdit supplies a lazy borrowed context menu, stored ContextMenuEnabled, ordinary right-click/ui_menu routing and typed direction/Unicode submenu IDs. Runtime customization remains outside scene storage. Native tooltip/context and live-policy integration follows [the accessibility contract](../classes/AccessibilityServer.md#native-live-and-popups).
+
+[Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.

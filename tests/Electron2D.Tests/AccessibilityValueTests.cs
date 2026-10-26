@@ -72,7 +72,7 @@ internal static class AccessibilityValueTests
             AccessibilityServer.UpdateSetBounds(manual, new(260, 220, 24, 24));
             AccessibilityServer.UpdateSetNumRange(manual, -5, 50); AccessibilityServer.UpdateSetNumStep(manual, .25); AccessibilityServer.UpdateSetNumJump(manual, 8);
             AccessibilityServer.UpdateSetNumValue(manual, double.NaN);
-            AccessibilityServer.UpdateAddAction(manual, ActionKind.SetValue, value => AccessibilityServer.UpdateSetNumValue(manual, Math.Clamp(value, -5, 50)));
+            AccessibilityServer.UpdateAddAction(manual, ActionKind.SetValue, (double value) => AccessibilityServer.UpdateSetNumValue(manual, Math.Clamp(value, -5, 50)));
             var start = new ProcessStartInfo("python3") { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
             start.ArgumentList.Add(Path.GetFullPath("tests/AccessibilityClient/values.py"));
             client = Process.Start(start)!; output = client.StandardOutput.ReadToEndAsync(); errors = client.StandardError.ReadToEndAsync();

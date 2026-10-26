@@ -1702,7 +1702,7 @@ public sealed partial class SceneTree : MainLoop
         }
 
         if (inputEvent is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion or InputEventAction)) return;
-        if (_gui.Section.GuiDragPayload is not null && inputEvent.IsAction("ui_cancel", true))
+        if (_gui.Section.GuiDragPayload is not null && inputEvent.IsActionPressed("ui_cancel", exactMatch: true))
         {
             CompleteGUIDrag(viewport, _gui.Section.GuiDragPointer, attemptDrop: false, ref errors);
             SetInputAsHandled();

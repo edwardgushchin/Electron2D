@@ -34,6 +34,13 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal readonly string Path;
         internal readonly List<Element> Children = [];
         internal readonly Dictionary<AccessibilityAction, Action> Actions = [];
+        internal List<(int ID, string Description)>? CustomActions;
+        internal Action<int>? CustomAction;
+        internal string ExtraInfo = "", SourceExtraInfo = "";
+        internal ulong SourceDragRevision = ulong.MaxValue;
+        internal bool SourceDragEditable, SourceDragVisible;
+        internal (bool Accepted, string Description, string Locale)? SourceDragContext;
+        internal string SourceDragAcceptInfo = "", SourceDragRejectInfo = "";
         internal readonly List<Relation> Relations = [], ExpectedRelations = [];
         internal readonly HashSet<Element> RelationOwners = [];
         internal ulong SourceRelationRevision;
@@ -251,7 +258,7 @@ public sealed partial class AccessibilityServer : ElectronObject
                     try { Free(item); } catch (Exception error) { (errors ??= []).Add(error); }
         e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
         e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
-        e.Retired = true; ClearCollectionSource(e); ClearScroll(e); e.SourceShowTooltipAction = e.SourceHideTooltipAction = e.SourceContextMenuAction = null; e.AnnouncementText = null; e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
+        e.Retired = true; ClearCollectionSource(e); ClearScroll(e); e.SourceShowTooltipAction = e.SourceHideTooltipAction = e.SourceContextMenuAction = null; e.AnnouncementText = null; e.Actions.Clear(); e.CustomActions?.Clear(); e.CustomAction = null; _elements.Remove(e.ID); _elementRevision++;
         RetireRelations(e, ref errors); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
         try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
         try { ValidateTextSelections(); } catch (Exception error) { (errors ??= []).Add(error); }
@@ -398,7 +405,7 @@ public sealed partial class AccessibilityServer : ElectronObject
             {
                 r.ClearCollectionSource(e); ClearScroll(e); e.SourceShowTooltipAction = e.SourceHideTooltipAction = e.SourceContextMenuAction = null; e.AnnouncementText = null;
                 e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
-                e.Retired = true; e.Actions.Clear(); e.Children.Clear(); e.Parent = null; e.Source = null;
+                e.Retired = true; e.Actions.Clear(); e.CustomActions?.Clear(); e.CustomAction = null; e.Children.Clear(); e.Parent = null; e.Source = null;
                 e.Relations.Clear(); e.RelationOwners.Clear(); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
                 e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
             }

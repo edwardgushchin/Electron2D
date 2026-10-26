@@ -15,7 +15,7 @@ public partial class Control
     public void SetDragForwarding(Func<Vector2, DragPayload?>? getData,
         Func<Vector2, DragPayload, bool>? canDrop, Action<Vector2, DragPayload>? drop)
     {
-        EnsureMutable(); _forwardGetDragData = getData; _forwardCanDropData = canDrop; _forwardDropData = drop;
+        EnsureMutable(); _forwardGetDragData = getData; _forwardCanDropData = canDrop; _forwardDropData = drop; AccessibilityQueued = true;
     }
 
     /// <summary>Produces a typed payload for a drag beginning at a control-local position.</summary>
@@ -50,19 +50,19 @@ public partial class Control
         else OnDropData(atPosition, payload);
     }
 
-    /// <summary>Produces drag data for an automatic pointer drag; null rejects the attempt.</summary>
-    /// <param name="atPosition">The original left-press position in local coordinates.</param>
+    /// <summary>Produces drag data for a pointer or non-positional accessible drag; null rejects the attempt.</summary>
+    /// <param name="atPosition">The original local left-press position, or positive-infinite coordinates for an accessible request.</param>
     /// <returns>A typed payload, or null.</returns>
     protected virtual DragPayload? OnGetDragData(Vector2 atPosition) => null;
 
     /// <summary>Tests a potential drop target; false rejects it.</summary>
-    /// <param name="atPosition">The current local pointer position.</param>
+    /// <param name="atPosition">The current local pointer position, or positive-infinite coordinates for an accessible request.</param>
     /// <param name="payload">The borrowed typed payload.</param>
     /// <returns>Whether the target accepts the payload.</returns>
     protected virtual bool OnCanDropData(Vector2 atPosition, DragPayload payload) => false;
 
     /// <summary>Consumes an accepted drop after the target test succeeds.</summary>
-    /// <param name="atPosition">The current local pointer position.</param>
+    /// <param name="atPosition">The current local pointer position, or positive-infinite coordinates for an accessible request.</param>
     /// <param name="payload">The borrowed typed payload.</param>
     protected virtual void OnDropData(Vector2 atPosition, DragPayload payload) { }
 

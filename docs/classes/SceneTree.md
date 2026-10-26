@@ -1150,3 +1150,5 @@ The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-life
 ## Native accessibility integration
 
 The ordinary frame completion runs automatic semantic reconciliation after deferred work; physics-only passes do not publish partial semantic updates. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.
+
+Private AccessibilityDrag operations reuse GUIDrag preparation/completion and the connected viewport section. Null/error/departing sources, retired targets and invalid acceptance cannot leave preview or payload ownership active. Focused unhandled GUI input supports the permanent unbound drag command. See [accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag).

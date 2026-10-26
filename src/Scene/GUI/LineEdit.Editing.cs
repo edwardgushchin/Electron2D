@@ -82,12 +82,12 @@ public partial class LineEdit
     {
         EnsureMutable(); if (!_selectingEnabled) return; if (fromColumn == 0 && toColumn == 0) { Deselect(); return; }
         var count = ScalarCount(_text); fromColumn = Math.Clamp(fromColumn, 0, count); toColumn = toColumn < 0 ? count : Math.Min(toColumn, count);
-        if (fromColumn >= toColumn) return; _selectionFrom = fromColumn; _selectionTo = toColumn; _selectionAnchor = fromColumn; _selecting = true; QueueRedraw();
+        if (fromColumn >= toColumn) return; _selectionFrom = fromColumn; _selectionTo = toColumn; _selectionAnchor = fromColumn; _selecting = true; QueueRedraw(); AccessibilityQueued = true;
     }
     /// <summary>Selects the whole text without moving a nonempty line's caret.</summary>
     public void SelectAll() { EnsureMutable(); if (!_selectingEnabled) return; if (_text.Length == 0) { _caret = 0; return; } Select(); }
     /// <summary>Clears selection.</summary>
-    public void Deselect() { EnsureMutable(); _selecting = false; _selectionFrom = _selectionTo = 0; QueueRedraw(); }
+    public void Deselect() { EnsureMutable(); _selecting = false; _selectionFrom = _selectionTo = 0; QueueRedraw(); AccessibilityQueued = true; }
     /// <summary>Returns whether a nonempty interval is selected.</summary><returns>True for an active selection.</returns>
     public bool HasSelection() { CheckLineEdit(); return _selecting; }
     /// <summary>Returns the selected source text, including password text when called programmatically.</summary><returns>The selected substring or empty.</returns>

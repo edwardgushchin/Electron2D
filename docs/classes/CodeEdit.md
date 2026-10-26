@@ -1337,3 +1337,5 @@ Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now c
 Native Text/EditableText output uses this control's existing document, caret/selection and ordinary editing path. Unicode offsets, password/length/read-only policies, scrolling and verification limits follow the [native text service contract](AccessibilityServer.md#native-text). Semantic line identities are runtime-owned and are not stored in scenes.
 
 Native scrolling inherits TextEdit visual-row/pixel projection and preserves carets, selections and editing history. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
+
+Inherited TextEdit accessible drag/drop uses real selection, primary caret, history and read-only guards. It is exercised as a destination by [AccessibilityDragTests](../../tests/Electron2D.Tests/AccessibilityDragTests.cs); see [the shared contract](AccessibilityServer.md#custom-actions-and-accessible-drag).

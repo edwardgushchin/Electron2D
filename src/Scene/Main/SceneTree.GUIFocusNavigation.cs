@@ -17,6 +17,12 @@ public sealed partial class SceneTree
         bool Pressed(string action) => map.HasActionCore(action) && inputEvent.IsActionPressed(action, allowEcho: true, exactMatch: !analog) &&
             (!analog || Input.IsActionJustPressedByEvent(action, inputEvent));
 
+        if (_gui.GuiFocus is { } owner && owner.CanProcess() && Pressed("ui_accessibility_drag_and_drop"))
+        {
+            if (_gui.Section.GuiDragPayload is not null) owner.AccessibilityDrop(); else owner.AccessibilityDrag();
+            SetInputAsHandled(); return;
+        }
+
         Control? next = null;
         var requested = false;
         if (Pressed("ui_focus_next")) { next = from.FindNextValidFocus(); requested = true; }

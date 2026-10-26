@@ -363,8 +363,8 @@
     {
       "godot": "AccessibilityServer::enum:AccessibilityAction",
       "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityAction",
-      "state": "Partial",
-      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
     },
     {
       "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_BLUR",
@@ -1079,6 +1079,42 @@
       "electron2d": "property:Electron2D.Control.AccessibilityLive()",
       "state": "Implemented",
       "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Custom()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddCustomAction(Electron2D.RID,System.Int32,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_extra_info(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetExtraInfo(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
+    },
+    {
+      "godot": "Control::method:accessibility_drag()",
+      "electron2d": "method:Electron2D.Control.AccessibilityDrag()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
+    },
+    {
+      "godot": "Control::method:accessibility_drop()",
+      "electron2d": "method:Electron2D.Control.AccessibilityDrop()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
+    },
+    {
+      "godot": "ProjectSettings::property:input/ui_accessibility_drag_and_drop",
+      "electron2d": "property:Electron2D.ProjectSettings.InputUIAccessibilityDragAndDrop()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
     }
   ],
   "extras": [
@@ -1120,31 +1156,27 @@
     },
     {
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.AccessibilityServer.AccessibilityScrollUnit>)",
-      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for custom and remaining value payload signatures."
+      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for remaining color value payload signatures."
     },
     {
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.AccessibilityServer.AccessibilityScrollHint>)",
-      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for custom and remaining value payload signatures."
+      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for remaining color value payload signatures."
     },
     {
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.Vector2>)",
-      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for custom and remaining value payload signatures."
+      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for remaining color value payload signatures."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<System.Int32>)",
+      "reason": "ADR 0114: compiled integer custom-ID callback for the original update_add_action Callable concept. The original row remains Partial for the remaining typed color value consumer. Use explicit scalar lambda parameter types to distinguish integer custom IDs and double numeric values."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Complete color/custom metadata and remaining payload-action/content-producer families retain their row triggers. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Color values, braille/class/role/state/shortcut/URL and typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
       "godot": [
         "class:AccessibilityServer"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native custom-action state and event consumer with actual GUI source transitions. Do not add inert metadata or unsupported action selectors.",
-      "godot": [
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
-        "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)"
       ]
     },
     {
@@ -1169,7 +1201,6 @@
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
         "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
         "AccessibilityServer::method:update_set_classname(RID:,String:)",
-        "AccessibilityServer::method:update_set_extra_info(RID:,String:)",
         "AccessibilityServer::method:update_set_role_description(RID:,String:)",
         "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
         "AccessibilityServer::method:update_set_state_description(RID:,String:)",
@@ -1192,20 +1223,6 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: native assistive drag/drop actions, announced drag context and typed payload routing into the existing GUI drag lifecycle remain absent. Numeric values and semantic relations already execute; neither supplies this transport.",
-      "godot": [
-        "Control::method:accessibility_drag()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: native assistive drag/drop actions, announced drag context and typed payload routing into the existing GUI drag lifecycle remain absent. Numeric values and semantic relations already execute; neither supplies this transport.",
-      "godot": [
-        "Control::method:accessibility_drop()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
       "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
       "godot": [
         "ProjectSettings::property:accessibility/general/accessibility_driver"
@@ -1216,13 +1233,6 @@
       "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
       "godot": [
         "ProjectSettings::property:accessibility/general/updates_per_second"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
-      "godot": [
-        "ProjectSettings::property:input/ui_accessibility_drag_and_drop"
       ]
     },
     {
@@ -1341,14 +1351,7 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Typed scroll payloads and native placement execute. Remaining custom/color/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
-      "godot": [
-        "AccessibilityServer::enum:AccessibilityAction"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Typed scroll payloads and native placement execute. Remaining custom/color/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
+      "reason": "ADR 0114: native no-argument actions, double numeric values, RID/scalar selection, string replacement, scrolling payloads and integer custom IDs execute. Typed color values still require the verified native representation and real ColorPicker source; unsupported signatures reject.",
       "godot": [
         "AccessibilityServer::method:update_add_action(RID:,int:AccessibilityServer.AccessibilityAction,Callable:)"
       ]
@@ -1496,6 +1499,19 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates.",
+      "godot": [
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
+        "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)",
+        "AccessibilityServer::method:update_set_extra_info(RID:,String:)",
+        "Control::method:accessibility_drag()",
+        "Control::method:accessibility_drop()",
+        "ProjectSettings::property:input/ui_accessibility_drag_and_drop",
+        "AccessibilityServer::enum:AccessibilityAction"
+      ]
     }
   ]
 }

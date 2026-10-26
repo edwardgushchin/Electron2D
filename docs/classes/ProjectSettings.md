@@ -1666,3 +1666,7 @@ Host feature tags now share OS.AddHostFeatures: platform and device family, poin
 
 <a id="accessibilitysupport"></a>
 `public static ProjectSetting<AccessibilitySupport> AccessibilitySupport { get; }` defines `accessibility/general/accessibility_support`, default Auto, valid values Auto/Always/Disabled. The [enum](AccessibilitySupport.md) and [native accessibility component](../components/accessibility.md) describe actual display-startup consumption and support limits. Registry serialization preserves the typed setting; changing it affects the next display lifetime.
+
+## Keyboard drag action
+
+`public static ProjectSetting<InputActionSettings> InputUIAccessibilityDragAndDrop { get; }` registers the permanent `input/ui_accessibility_drag_and_drop` definition with an empty initial binding list. Independent registries save/restore it through the existing version-one schema and cannot unregister the built-in key. Assign a typed binding and call InputMap.LoadFromProjectSettings to activate it. [Accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag) uses the focused control after ordinary unhandled GUI input.

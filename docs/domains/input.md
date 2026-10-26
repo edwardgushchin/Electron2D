@@ -1,6 +1,6 @@
 # Input domain
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [Device sensor values](../components/device-sensors.md) add eight typed operations for manual acceleration, gravity, gyroscope and magnetic-field simulation. Four raw values feed ordinary scene callbacks; automatic mobile acquisition remains a separate missing producer.
 
@@ -140,3 +140,5 @@ Formatting, named parsing and character capability execute independently of nati
 ## Collapsed pointer-query canvases
 
 [Physics picking](../components/physics-picking.md#collapsed-canvas-mappings) now skips only a noninvertible or numerically unusable canvas map before CPU/GPU point queries. Other canvases, queued event disposal, hover departure/reentry and scene processing continue through the existing owner/lifetime path. Authored zero-scale CanvasLayer/follow states remain valid scene values.
+
+[Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.

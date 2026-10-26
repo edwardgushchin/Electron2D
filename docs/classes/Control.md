@@ -327,7 +327,7 @@ For a native preedit update, DisplayServer first commits `IMEGetText` and the Un
 <a id="setdragforwarding"></a><a id="forcedrag"></a><a id="setdragpreview"></a><a id="isdragsuccessful"></a>
 `SetDragForwarding` stores nullable typed delegates for the three hooks; each supplied delegate replaces its virtual hook, even if it returns null or false. Delegates are disconnected on disposal. `ForceDrag` starts immediately with a nonnull payload and an optional preview. A preview must be live, detached, parentless and not queued for deletion; it becomes tree-owned and is disposed after a completed or cancelled drag. `SetDragPreview` replaces and destroys any previous preview while dragging or preparing a source callback. The active preview ignores pointer hit testing and renders above regular canvas layers. `IsDragSuccessful` reports the viewport's retained most-recent result; detached controls report false. Source removal or hiding cancels the drag.
 
-Only root-viewport drag routes execute. Nested/cross-window drag routing and native accessibility drag/drop retain separate dependencies. [GUIDragTests](../../tests/Electron2D.Tests/GUIDragTests.cs) covers typed identity, threshold, forwarded and ancestor targets, previews, cancellation, failure and activation rollback; [GUIDragRenderingTests](../../tests/Electron2D.Tests/GUIDragRenderingTests.cs) verifies preview pixels and CanDrop cursor on Linux Wayland GPU and compatibility. Native allocations, other platforms and owner acceptance remain unverified; see [ADR 0038](../decisions/input.md#adr-0038) and [coverage](../coverage/classes/Control.md).
+Pointer and accessible operations share the existing connected-section transport. Cross-window transaction transfer and further nested-route qualification retain their own gates. [GUIDragTests](../../tests/Electron2D.Tests/GUIDragTests.cs) covers typed identity, threshold, forwarded and ancestor targets, previews, cancellation, failure and activation rollback; [GUIDragRenderingTests](../../tests/Electron2D.Tests/GUIDragRenderingTests.cs) verifies preview pixels and CanDrop cursor on Linux Wayland GPU and compatibility. Native allocations, other platforms and owner acceptance remain unverified; see [ADR 0038](../decisions/input.md#adr-0038) and [coverage](../coverage/classes/Control.md).
 
 ## Container size flags
 
@@ -530,3 +530,13 @@ ControlsNodes supplies ControllerFor/ControlledBy, DescribedByNodes supplies Des
 ## Live region policy
 
 AccessibilityLive is a stored [AccessibilityLiveMode](AccessibilityServer.AccessibilityLiveMode.md) property, default Off. Assignment requires a live owner-thread control, respects capture guards and rejects unknown values. Duplication and scene archives retain the authored policy. Source text/captions and ordinary GUI tooltip/menu behavior feed [native live and popup output](AccessibilityServer.md#native-live-and-popups); explicit service overrides last until the corresponding source field changes.
+
+<a id="accessibilitydrag"></a><a id="accessibilitydrop"></a>
+## Accessible drag operations
+
+| Declaration | Contract |
+| --- | --- |
+| `public void AccessibilityDrag()` | Prepares one source transaction, invoking its virtual/forwarded producer with positive-infinite coordinates. |
+| `public void AccessibilityDrop()` | Tries the current payload on this control/ancestors without hit testing, then finalizes. |
+
+Both require an attached owner-thread control and respect capture/lifetime guards. Explicit targets may use MouseFilter.Ignore. The public finite-position convenience methods retain their existing validation; their underlying hooks can receive the accessibility sentinel. Full ownership, failure, keyboard, text/capacity and native consumers are defined in [the service contract](AccessibilityServer.md#custom-actions-and-accessible-drag).

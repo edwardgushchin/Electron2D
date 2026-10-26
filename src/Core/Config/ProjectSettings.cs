@@ -603,6 +603,10 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<InputActionSettings> InputUIPageDown { get; } =
         CreateDefaultKeyAction("ui_page_down", Key.PageDown);
 
+    /// <summary>Defines the configurable keyboard/assistive drag-and-drop action.</summary>
+    /// <value>The permanent input/ui_accessibility_drag_and_drop setting; no bindings initially.</value>
+    public static ProjectSetting<InputActionSettings> InputUIAccessibilityDragAndDrop { get; } = new("input/ui_accessibility_drag_and_drop", new InputActionSettings());
+
     /// <summary>Defines the keyboard Menu key for focused list context input.</summary>
     /// <value>The permanent typed <c>input/ui_menu</c> setting.</value>
     public static ProjectSetting<InputActionSettings> InputUIMenu { get; } =

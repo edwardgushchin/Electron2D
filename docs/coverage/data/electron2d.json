@@ -29975,6 +29975,19 @@
     "value": "3"
   },
   {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Custom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "Custom",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction Custom = 22",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "22"
+  },
+  {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Decrement()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
@@ -71464,6 +71477,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddAction",
+    "signature": "public static System.Void UpdateAddAction(Electron2D.RID id, Electron2D.AccessibilityServer.AccessibilityAction action, System.Action\u003CSystem.Int32\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "action",
+        "type": "Electron2D.AccessibilityServer.AccessibilityAction",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action\u003CSystem.String\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -71510,6 +71552,35 @@
       {
         "name": "childID",
         "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddCustomAction(Electron2D.RID,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddCustomAction",
+    "signature": "public static System.Void UpdateAddCustomAction(Electron2D.RID id, System.Int32 actionID, System.String actionDescription)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "actionID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "actionDescription",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -71798,6 +71869,30 @@
       {
         "name": "otherID",
         "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetExtraInfo(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetExtraInfo",
+    "signature": "public static System.Void UpdateSetExtraInfo(Electron2D.RID id, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -99194,6 +99289,32 @@
     "declaringType": "Electron2D.Control",
     "name": "AcceptEvent",
     "signature": "public System.Void AcceptEvent()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.AccessibilityDrag()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityDrag",
+    "signature": "public System.Void AccessibilityDrag()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.AccessibilityDrop()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityDrop",
+    "signature": "public System.Void AccessibilityDrop()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -269006,6 +269127,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "InputUIAccept",
     "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIAccept { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.InputUIAccessibilityDragAndDrop()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "InputUIAccessibilityDragAndDrop",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.InputActionSettings\u003E InputUIAccessibilityDragAndDrop { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
