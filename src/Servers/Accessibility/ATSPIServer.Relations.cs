@@ -23,7 +23,8 @@ internal sealed unsafe partial class ATSPIServer
             if (!groups.TryGetValue(kind, out var targets)) groups[kind] = targets = [];
             if (!targets.Contains(target)) targets.Add(target);
         }
-        foreach (var relation in element.Relations) Add(RelationTypes(relation.Kind).Forward, relation.Target);
+        foreach (var relation in element.Relations) if (relation.Automatic) Add(RelationTypes(relation.Kind).Forward, relation.Target);
+        foreach (var relation in element.Relations) if (!relation.Automatic) Add(RelationTypes(relation.Kind).Forward, relation.Target);
         foreach (var owner in element.RelationOwners)
             if (!owner.Retired) foreach (var relation in owner.Relations)
                     if (relation.Target == element) Add(RelationTypes(relation.Kind).Reverse, owner);

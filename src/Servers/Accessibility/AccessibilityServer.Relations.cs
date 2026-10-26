@@ -10,7 +10,7 @@ public sealed partial class AccessibilityServer
     private ulong _elementRevision;
     /// <summary>Adds a non-owning reference to an element that is controlled by this element.</summary>
     /// <param name="id">The producer.</param><param name="relatedID">A live target in the same native window.</param>
-    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime.</remarks>
+    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime. Manual additions follow the current authored source targets.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Elements belong to different native windows.</exception>
@@ -24,7 +24,7 @@ public sealed partial class AccessibilityServer
 
     /// <summary>Adds a non-owning reference to an element that describes this element.</summary>
     /// <param name="id">The producer.</param><param name="relatedID">A live target in the same native window.</param>
-    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime.</remarks>
+    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime. Manual additions follow the current authored source targets.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Elements belong to different native windows.</exception>
@@ -38,7 +38,7 @@ public sealed partial class AccessibilityServer
 
     /// <summary>Adds a non-owning reference to an element that provides details about this element.</summary>
     /// <param name="id">The producer.</param><param name="relatedID">A live target in the same native window.</param>
-    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime.</remarks>
+    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime. Manual additions follow the current authored source targets.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Elements belong to different native windows.</exception>
@@ -52,7 +52,7 @@ public sealed partial class AccessibilityServer
 
     /// <summary>Adds a non-owning reference to an element that follows this element in the semantic reading flow.</summary>
     /// <param name="id">The producer.</param><param name="relatedID">A live target in the same native window.</param>
-    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime.</remarks>
+    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime. Manual additions follow the current authored source targets.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Elements belong to different native windows.</exception>
@@ -66,7 +66,7 @@ public sealed partial class AccessibilityServer
 
     /// <summary>Adds a non-owning reference to an element that labels this element.</summary>
     /// <param name="id">The producer.</param><param name="relatedID">A live target in the same native window.</param>
-    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime.</remarks>
+    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime. Manual additions follow the current authored source targets.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Elements belong to different native windows.</exception>
@@ -80,7 +80,7 @@ public sealed partial class AccessibilityServer
 
     /// <summary>Adds a non-owning reference to an element that is another member of the same radio group.</summary>
     /// <param name="id">The producer.</param><param name="relatedID">A live target in the same native window.</param>
-    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime.</remarks>
+    /// <remarks>Repeated targets are deduplicated. References retire with either element; they never transfer lifetime. Manual additions follow the current authored source targets.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Elements belong to different native windows.</exception>
@@ -267,5 +267,13 @@ public sealed partial class AccessibilityServer
         for (var i = owner.Relations.Count - 1; i >= 0; i--)
             if (owner.Relations[i].Automatic && !owner.ExpectedRelations.Contains(owner.Relations[i])) r.RemoveRelation(owner, i);
         foreach (var relation in owner.ExpectedRelations) r.AddRelation(owner, relation);
+        var ordinal = 0; var reordered = false;
+        for (var i = 0; i < owner.Relations.Count; i++)
+            if (owner.Relations[i].Automatic)
+            {
+                var desired = owner.ExpectedRelations[ordinal++];
+                if (owner.Relations[i] != desired) { owner.Relations[i] = desired; reordered = true; }
+            }
+        if (reordered) r._native!.RelationsChanged(owner);
     }
 }

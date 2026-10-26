@@ -62,13 +62,17 @@ def find(title):
             return node
 
 
-def relation(node, kind):
+def relation_list(node, kind):
     text = method(node, A, 'GetRelationSet')
     # Read protocol tuples, not engine identifiers.
     for number, targets in re.findall(r'\((?:uint32 )?(\d+),\s*(\[.*?\])\)', text):
         if int(number) == kind:
-            return set(refs(targets))
-    return set()
+            return refs(targets)
+    return []
+
+
+def relation(node, kind):
+    return set(relation_list(node, kind))
 
 
 def action(node, label):
@@ -134,10 +138,14 @@ wait_for(lambda: state(options['Option A'], 12) and not state(chooser, 12))
 action(next_button, 'click'); wait_for(lambda: relation(slider, 2) == {caption, alternate})
 action(next_button, 'click'); wait_for(lambda: not relation(slider, 2) and not relation(unnamed, 2))
 action(next_button, 'click'); restored = wait_for(lambda: find('Restored gain'))
-wait_for(lambda: relation(slider, 2) == {alternate} and relation(unnamed, 2) == {restored})
+wait_for(lambda: relation(slider, 2) == {alternate} and relation(unnamed, 2) == {restored, alternate})
 assert restored != caption and relation(restored, 1) == {unnamed}
+assert relation_list(unnamed, 2) == [restored, alternate]
+order_start = len(events)
 action(next_button, 'click'); wait_for(lambda: any('ActiveDescendantChanged' in event and options['Option B'][1] in event for event in events))
 wait_for(lambda: state(chooser, 31) and state(options['Option B'], 12) and not state(options['Option A'], 12))
+wait_for(lambda: relation_list(unnamed, 2) == [alternate, restored])
+wait_for(lambda: any('accessible-relation-set' in event and unnamed[1] in event for event in events[order_start:]))
 action(next_button, 'click'); wait_for(lambda: not state(chooser, 31) and state(chooser, 12) and not state(options['Option B'], 12))
 assert options['Option B'] in refs(method(link, H, 'GetObject', '0'))
 action(next_button, 'click'); wait_for(lambda: 'false' in method(link, H, 'IsValid'))

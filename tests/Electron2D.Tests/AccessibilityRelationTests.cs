@@ -38,11 +38,11 @@ internal static partial class AccessibilityRelationTests
             phase++;
             switch (phase)
             {
-                case 1: slider.AccessibilityLabeledByNodes = ["../Alternate"]; break;
+                case 1: slider.AccessibilityLabeledByNodes = ["../Alternate"]; unnamed.AccessibilityLabeledByNodes = ["../GainLabel", "../Alternate"]; break;
                 case 2: window.RemoveChild(caption); caption.Dispose(); alternate.Name = "Renamed"; break;
                 case 3:
                     alternate.Name = "Alternate"; caption = new Label { Name = "GainLabel", Text = "Restored gain", Position = new(12, 8), Size = new(160, 24) }; window.AddChild(caption); break;
-                case 4: chooser.Text = "Option B selected"; AccessibilityServer.UpdateSetActiveDescendant(chooserID, second); break;
+                case 4: unnamed.AccessibilityLabeledByNodes = ["../Alternate", "../GainLabel"]; chooser.Text = "Option B selected"; AccessibilityServer.UpdateSetActiveDescendant(chooserID, second); break;
                 case 5: chooser.Text = "Choose A or B"; AccessibilityServer.UpdateAddChild(window.GetAccessibilityElement(), second); break;
                 case 6: AccessibilityServer.FreeElement(second); break;
                 case 7: radioB.ToggleMode = false; break;

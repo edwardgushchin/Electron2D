@@ -42,7 +42,8 @@ public partial class Control
     /// <summary>Gets or sets authored paths to the nodes controlled by this control.</summary>
     /// <value>An empty array initially. Arrays are copied in and out and stored in scenes.</value>
     /// <remarks>Empty and unresolved paths are ignored until resolvable. Targets in another native window are ignored.
-    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.</remarks>
+    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.
+    /// Native targets follow authored path order before additional manual relations.</remarks>
     /// <exception cref="ArgumentNullException">The array is null.</exception>
     /// <exception cref="ArgumentException">An array item is null or contains malformed node-path syntax.</exception>
     /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
@@ -56,7 +57,8 @@ public partial class Control
     /// <summary>Gets or sets authored paths to the nodes describing this control.</summary>
     /// <value>An empty array initially. Arrays are copied in and out and stored in scenes.</value>
     /// <remarks>Empty and unresolved paths are ignored until resolvable. Targets in another native window are ignored.
-    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.</remarks>
+    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.
+    /// Native targets follow authored path order before additional manual relations.</remarks>
     /// <exception cref="ArgumentNullException">The array is null.</exception>
     /// <exception cref="ArgumentException">An array item is null or contains malformed node-path syntax.</exception>
     /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
@@ -70,7 +72,8 @@ public partial class Control
     /// <summary>Gets or sets authored paths to the nodes labelling this control.</summary>
     /// <value>An empty array initially. Arrays are copied in and out and stored in scenes.</value>
     /// <remarks>Empty and unresolved paths are ignored until resolvable. Targets in another native window are ignored.
-    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.</remarks>
+    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.
+    /// Native targets follow authored path order before additional manual relations.</remarks>
     /// <exception cref="ArgumentNullException">The array is null.</exception>
     /// <exception cref="ArgumentException">An array item is null or contains malformed node-path syntax.</exception>
     /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
@@ -84,7 +87,8 @@ public partial class Control
     /// <summary>Gets or sets authored paths to the nodes following this control in semantic reading flow.</summary>
     /// <value>An empty array initially. Arrays are copied in and out and stored in scenes.</value>
     /// <remarks>Empty and unresolved paths are ignored until resolvable. Targets in another native window are ignored.
-    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.</remarks>
+    /// Topology and assignment changes refresh native relations without retaining scene element RIDs.
+    /// Native targets follow authored path order before additional manual relations.</remarks>
     /// <exception cref="ArgumentNullException">The array is null.</exception>
     /// <exception cref="ArgumentException">An array item is null or contains malformed node-path syntax.</exception>
     /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
