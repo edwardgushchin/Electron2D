@@ -27,3 +27,5 @@ Live source reconciliation publishes stored priority, raw tooltip text, popup ca
 Drag source reconciliation runs only after a revision, queued update, editability/visibility change or locale change. It tests non-positional acceptance, caches both feedback strings and preserves manual overrides until the source field changes. Reentrant source retirement is checked before remaining publication. [The shared contract](AccessibilityServer.md#custom-actions-and-accessible-drag) defines context and ownership.
 
 [Contextual native navigation](AccessibilityServer.md#contextual-navigation) publishes retained source help/container fragments and actual button/menu keybindings. Class/role attributes retain the native taxonomy; source changes, override precedence and callback retirement have their own verification.
+
+LinkButton URI snapshots publish [native hyperlink destinations](AccessibilityServer.md#native-hyperlinks). Changed source URIs queue dependent contextual-help refresh; unchanged sources preserve explicit service overrides, and new identities restore current authoring.

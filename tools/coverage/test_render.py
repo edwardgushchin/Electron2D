@@ -508,7 +508,7 @@ def main():
         if owner == "LineEdit":
             assert all(" | Implemented | " in next(row for row in rows if f"method {name}(" in row) for name in ("get_menu", "is_menu_visible"))
             assert " | Implemented | " in next(row for row in rows if "property bool context_menu_enabled " in row)
-    for name in ("update_set_shortcut", "update_set_classname", "update_set_role_description"):
+    for name in ("update_set_shortcut", "update_set_classname", "update_set_role_description", "update_set_url"):
         assert " | Implemented | " in next(row for row in accessibility_rows if f"method {name}(" in row)
     for name in ("_accessibility_get_contextual_info", "_get_accessibility_container_name"):
         assert " | Implemented | " in next(row for row in control_rows if f"method {name}(" in row)

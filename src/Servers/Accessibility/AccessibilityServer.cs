@@ -37,6 +37,8 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal List<(int ID, string Description)>? CustomActions;
         internal Action<int>? CustomAction;
         internal string ExtraInfo = "", SourceExtraInfo = "";
+        internal string URL = "";
+        internal string? SourceURL;
         internal string ContainerContext = "", HelpText = "", ClassName = "", RoleDescription = "", Shortcut = "";
         internal string? SourceShortcut, SourceContextLocale;
         internal Control? SourceContextParent;

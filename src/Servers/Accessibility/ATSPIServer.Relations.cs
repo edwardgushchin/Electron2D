@@ -56,19 +56,19 @@ internal sealed unsafe partial class ATSPIServer
     }
     private nint HyperlinkProperty(Element element, string name) => name switch
     {
-        "NAnchors" => g_variant_new_int16(AccessibilityServer.RelatedTarget(element, Kind.LinkTarget) is null ? (short)0 : (short)1),
+        "NAnchors" => I(AccessibilityServer.HasHyperlink(element) ? 1 : 0),
         "StartIndex" or "EndIndex" => I(-1),
         _ => throw new InvalidRequestException("Unknown hyperlink property.")
     };
     private nint HyperlinkCall(Element element, string method, nint args)
     {
         var target = AccessibilityServer.RelatedTarget(element, Kind.LinkTarget);
-        if (method == "IsValid") return Tuple([B(target is not null)]);
-        if (target is null || IntArg(args, 0) != 0) throw new InvalidRequestException("The hyperlink anchor is absent or outside its range.");
+        if (method == "IsValid") return Tuple([B(AccessibilityServer.HasHyperlink(element))]);
+        if (!AccessibilityServer.HasHyperlink(element) || IntArg(args, 0) != 0) throw new InvalidRequestException("The hyperlink anchor is absent or outside its range.");
         return method switch
         {
-            "GetObject" => Tuple([ObjectRef(target)]),
-            "GetURI" => Tuple([S("")]),
+            "GetObject" => Tuple([ObjectRef(target ?? element)]),
+            "GetURI" => Tuple([S(element.URL)]),
             _ => throw new InvalidRequestException("Unknown hyperlink method.")
         };
     }

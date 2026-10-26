@@ -3,7 +3,7 @@
 Last updated: 2026-10-26
 
 - Declaration: `public sealed partial class AccessibilityServer : ElectronObject`
-- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs), [collection API](../../src/Servers/Accessibility/AccessibilityServer.Collections.cs), [collection sources](../../src/Servers/Accessibility/AccessibilityServer.CollectionSources.cs)
+- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs), [collection API](../../src/Servers/Accessibility/AccessibilityServer.Collections.cs), [collection sources](../../src/Servers/Accessibility/AccessibilityServer.CollectionSources.cs), [URL publication](../../src/Servers/Accessibility/AccessibilityServer.Links.cs)
 - Inherits: [ElectronObject](ElectronObject.md); no derived types or public constructor.
 - Component: [Native accessibility](../components/accessibility.md)
 
@@ -71,6 +71,7 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateAddRelatedRadioGroup(RID id, RID relatedID)` | [UpdateAddRelatedRadioGroup](#updateaddrelatedradiogroup) |
 | `public static void UpdateSetMemberOf(RID id, RID groupID)` | [UpdateSetMemberOf](#updatesetmemberof) |
 | `public static void UpdateSetErrorMessage(RID id, RID otherID)` | [UpdateSetErrorMessage](#updateseterrormessage) |
+| `public static void UpdateSetURL(RID id, string url)` | [Native hyperlinks](#native-hyperlinks) |
 | `public static void UpdateSetInPageLinkTarget(RID id, RID otherID)` | [UpdateSetInPageLinkTarget](#updatesetinpagelinktarget) |
 | `public static void UpdateSetActiveDescendant(RID id, RID otherID)` | [UpdateSetActiveDescendant](#updatesetactivedescendant) |
 | `public static void UpdateSetFocus(RID id)` | [UpdateSetFocus](#updatesetfocus) |
@@ -251,7 +252,7 @@ Supplies separate outer/decorated and inner/client rectangles in screen coordina
 
 Closing a native child window retires all its elements, including unattached ones. Display teardown removes native registrations, connection/context ownership, callbacks and RID membership even after callback or notification failure. Reopening creates a new bridge and new element identities. Protected `ValidateDisposal()` rejects disposal of the permanent service.
 
-[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profiles cover Accessible/Application/Component/Action/Value/Text/EditableText/Selection/Table/TableCell/Cache and native announcements. Color values and remaining braille/state/URL metadata/payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
+[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profiles cover Accessible/Application/Component/Action/Value/Text/EditableText/Selection/Table/TableCell/Cache and native announcements. Color values and remaining braille/state metadata and color payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
 
 <a id="numeric-values"></a>
 ### Numeric values
@@ -327,7 +328,7 @@ Replaces the target containing a validation error, publishing native ErrorMessag
 
 `public static void UpdateSetInPageLinkTarget(RID id, RID otherID)`
 
-Replaces the internal-link anchor. Empty otherID clears it. A real Hyperlink interface advertises one anchor and returns its target from GetObject(0). Other indices reject. Internal links have no external URI or originating Hypertext range: GetURI returns empty, StartIndex/EndIndex return -1. Clearing/retirement advertises no interface and reports zero anchors/IsValid=false on the already registered object.
+Replaces the non-owning internal target of the [native hyperlink](#native-hyperlinks). Empty otherID clears only this target; an independently published URL survives. GetObject(0) prefers the live internal target. Internal-only anchors return an empty URI and unknown Hypertext indices (-1). Target validation and retirement follow the semantic graph rules above.
 
 <a id="updatesetactivedescendant"></a>
 ### UpdateSetActiveDescendant
@@ -548,3 +549,15 @@ UpdateSetShortcut publishes human-readable direct shortcut text. Empty clears it
 UpdateSetClassName publishes the native `class` attribute; automatic Control sources initially supply their runtime class name. UpdateSetRoleDescription publishes the author-localized `roledescription` attribute. It preserves the standard role enum, machine role name, actions and states. Empty strings remove either attribute, equal values are silent, and null rejects. These methods retain service owner, availability and live-RID guards. Explicit attribute overrides persist for the identity; a replacement source identity receives its own defaults.
 
 [Accessible.xml](https://github.com/GNOME/at-spi2-core/blob/3e62300dae26649dc002f799c8f16bf792316b04/xml/Accessible.xml) and [Action.xml](https://github.com/GNOME/at-spi2-core/blob/3e62300dae26649dc002f799c8f16bf792316b04/xml/Action.xml) pin HelpText and the keybinding triple. [The GTK accessibility contract](https://gnome.pages.gitlab.gnome.org/gtk/gtk4/section-accessibility.html) describes contextual help and role descriptions. AccessibilityContextTests and its independent libatspi/GIO client exercise names/help, source overrides, real key activation, mutable/menu shortcuts, raw GetActions, invalid ordinals, Unicode/native-buffer boundaries, reparenting, callback retirement/failure and fresh reopening. Prepared idle/active owner-frame budgets, strict NativeAOT, rendering, human-reader, native-heap, physical-device, platform and package gates remain distinct.
+
+## Native hyperlinks
+
+UpdateSetURL(RID id, string url) publishes one external destination through AT-SPI Hyperlink. The supplied string is retained unchanged; native UTF-8 conversion uses the existing normalization for NUL and invalid Unicode. Empty clears the URL, equal values are silent and null rejects. Normal native-bridge, live-RID and display-owner guards apply. Publishing never opens or validates a resource, installs an input handler or changes the element's role or actions.
+
+The anchor exists while either a nonempty URL or a live UpdateSetInPageLinkTarget target exists. GetURI(0) returns the URL, including empty for an internal-only anchor. GetObject(0) returns the internal target when present, otherwise the source accessible itself, following the [GTK external-link implementation](https://github.com/GNOME/gtk/blob/gtk-3-24/gtk/a11y/gtklinkbuttonaccessible.c). Other indices reject. StartIndex and EndIndex are -1 because this slice does not produce a containing Hypertext range. IsValid describes the retained anchor, without probing target reachability. Clearing one endpoint or retiring its internal target preserves the other. With neither endpoint, Accessible stops advertising Hyperlink; an existing interface handle reports zero anchors/IsValid=false and rejects GetURI/GetObject. Registration retires with the owning element.
+
+NAnchors uses signed Int32 in both introspection and values. The pinned [libatspi client](https://github.com/GNOME/at-spi2-core/blob/3e62300dae26649dc002f799c8f16bf792316b04/atspi/atspi-hyperlink.c) requests `i` and the [provider adapter](https://github.com/GNOME/at-spi2-core/blob/3e62300dae26649dc002f799c8f16bf792316b04/atk-adaptor/adaptors/hyperlink-adaptor.c) returns Int32. Their XML annotation incorrectly says Int16; following it previously made libatspi read zero anchors. Native consumers expecting the earlier Int16 annotation must accept Int32.
+
+LinkButton automatically publishes its stored URI and uses its existing Click pipeline. Explicit service URL overrides, including empty, persist until the observed source URI changes. The URI setter queues semantic refresh, including dependent custom contextual help. A replacement/reparented identity receives the current source value. Packed scenes and duplication preserve the authored URI while omitting native identities and cached overrides.
+
+ELECTRON2D_TEST_ACCESSIBILITY_URL=managed checks null/availability guards and packed/duplicated URI ownership. compatibility/gpu execute [AccessibilityURLTests](../../tests/Electron2D.Tests/AccessibilityURLTests.cs) and an independent [libatspi/GIO client](../../tests/AccessibilityClient/url.py): real URI discovery, external/internal coexistence, count ABI, invalid indices, clearing, target/source retirement, reparenting, long/Unicode/native-normalized strings, override refresh, actual activation hooks, callback failure and fresh reopening. These tests never launch an external resource; the source hook records its actual configured URI. Prepared 64 idle/64 active owner-frame samples and a strict source NativeAOT consumer retain separate native-heap, hardware, foreign-platform, human-reader, OS handoff and release-package gates.

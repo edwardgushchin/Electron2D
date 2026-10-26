@@ -282,7 +282,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             if (e.TableCellRegistered) g_variant_builder_add_value(b, S(TableCellInterface));
             if (e.TextEnabled) g_variant_builder_add_value(b, S(TextInterface));
             if (e.ReplaceTextAction is not null && (e.SetTextSelectionAction is not null || e.Source is LineEdit or TextEdit)) g_variant_builder_add_value(b, S(EditableTextInterface));
-            if (AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.LinkTarget) is not null) g_variant_builder_add_value(b, S(Hyperlink));
+            if (AccessibilityServer.HasHyperlink(e)) g_variant_builder_add_value(b, S(Hyperlink));
             if (e.IsApplication) g_variant_builder_add_value(b, S(ApplicationInterface));
             return g_variant_builder_end(b);
         }

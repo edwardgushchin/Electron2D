@@ -646,7 +646,7 @@
       "godot": "AccessibilityServer::method:update_set_in_page_link_target(RID:,RID:)",
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetInPageLinkTarget(Electron2D.RID,Electron2D.RID)",
       "state": "Implemented",
-      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate. Internal targets coexist with an independent external URL; libatspi verifies the native Int32 count ABI and target-retirement fallback to the source accessible."
     },
     {
       "godot": "AccessibilityServer::method:update_set_active_descendant(RID:,RID:)",
@@ -1145,6 +1145,12 @@
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetRoleDescription(Electron2D.RID,System.String)",
       "state": "Implemented",
       "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_url(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetURL(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable external native Hyperlink destination with automatic LinkButton URI publication, explicit/source override policy, internal-target coexistence and retirement. Independent libatspi/GIO clients exercise actual Int32 anchor counts, GetURI/GetObject, invalid indices, Unicode/native normalization, authoring, actual activation hook and failures on software Compatibility/GPU. Prepared owner frames and strict source NativeAOT retain human-reader, native-heap, foreign-platform, OS-handoff and package gates."
     }
   ],
   "extras": [
@@ -1204,7 +1210,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Color values, braille/state/URL and typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Color values, braille/state and typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
       "godot": [
         "class:AccessibilityServer"
       ]
@@ -1226,12 +1232,11 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/state/URL metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
+      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/state metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
       "godot": [
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
         "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
-        "AccessibilityServer::method:update_set_state_description(RID:,String:)",
-        "AccessibilityServer::method:update_set_url(RID:,String:)"
+        "AccessibilityServer::method:update_set_state_description(RID:,String:)"
       ]
     },
     {
@@ -1535,6 +1540,13 @@
         "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
         "AccessibilityServer::method:update_set_classname(RID:,String:)",
         "AccessibilityServer::method:update_set_role_description(RID:,String:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: executable external native Hyperlink destination with automatic LinkButton URI publication, explicit/source override policy, internal-target coexistence and retirement. Independent libatspi/GIO clients exercise actual Int32 anchor counts, GetURI/GetObject, invalid indices, Unicode/native normalization, authoring, actual activation hook and failures on software Compatibility/GPU. Prepared owner frames and strict source NativeAOT retain human-reader, native-heap, foreign-platform, OS-handoff and package gates.",
+      "godot": [
+        "AccessibilityServer::method:update_set_url(RID:,String:)"
       ]
     }
   ]

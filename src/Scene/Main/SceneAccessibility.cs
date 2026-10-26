@@ -97,6 +97,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var alteredFlags = e.SourcePrepared ? e.SourceFlags ^ flags : (1UL << 10) - 1;
             for (var index = 0; index < 10; index++) if ((alteredFlags & 1UL << index) != 0) AccessibilityServer.UpdateSetFlag(id, (Flag)index, (flags & 1UL << index) != 0);
             if (node is Range numeric) changed |= AccessibilityServer.UpdateSourceNumeric(e, numeric);
+            if (node is LinkButton link) changed |= AccessibilityServer.UpdateSourceURL(e, link);
             if (node is Control actionControl) AccessibilityServer.UpdateSourceActions(e, actionControl);
             if (e.IsWindow)
             {

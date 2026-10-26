@@ -120,9 +120,9 @@ public sealed partial class AccessibilityServer
         r.SetRelation(owner, RelationKind.ErrorMessage, target);
     }
 
-    /// <summary>Sets the single native Hyperlink anchor for an internal link.</summary>
+    /// <summary>Sets the internal target of the single native Hyperlink anchor.</summary>
     /// <param name="id">The producer.</param><param name="otherID">A live same-window target, or an empty RID to clear.</param>
-    /// <remarks>This is a non-owning relationship. Replacing or retiring the target removes its old reference.</remarks>
+    /// <remarks>This is a non-owning relationship. Replacing or retiring the target removes its old reference and preserves an independently published URL.</remarks>
     /// <exception cref="NotSupportedException">No native bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An identity is absent, foreign or retired.</exception>
     /// <exception cref="ArgumentException">Windows differ, or an active target is not a strict descendant.</exception>

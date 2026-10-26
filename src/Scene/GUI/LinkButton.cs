@@ -53,11 +53,11 @@ public partial class LinkButton : BaseButton
     /// <value>Empty initially, suppressing platform opening while retaining Pressed notification.</value>
     /// <remarks>Opening runs before Pressed, on the activating thread. OS.ShellOpen normalizes paths and
     /// validates the identifier at activation. Its platform errors follow inherited callback aggregation.
-    /// Setting this property does not launch an application.</remarks>
+    /// A changed URI queues native semantic updates, including dependent contextual help. Setting this property does not launch an application.</remarks>
     /// <exception cref="ArgumentNullException">The identifier is null.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
     /// <exception cref="ObjectDisposedException">The link is disposed.</exception>
-    public string URI { get { CheckLink(); return _uri; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); _uri = value; } }
+    public string URI { get { CheckLink(); return _uri; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); if (_uri == value) return; _uri = value; QueueAccessibilityUpdate(); } }
     /// <summary>Gets or sets the text underline policy.</summary>
     /// <value>Always initially. Unknown numeric values retain the active-state underline policy.</value>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>

@@ -149,7 +149,7 @@ wait_for(lambda: any('accessible-relation-set' in event and unnamed[1] in event 
 action(next_button, 'click'); wait_for(lambda: not state(chooser, 31) and state(chooser, 12) and not state(options['Option B'], 12))
 assert options['Option B'] in refs(method(link, H, 'GetObject', '0'))
 action(next_button, 'click'); wait_for(lambda: 'false' in method(link, H, 'IsValid'))
-assert H not in method(link, A, 'GetInterfaces') and 'int16 0' in method(link, P, 'Get', H, 'NAnchors')
+assert H not in method(link, A, 'GetInterfaces') and re.search(r'<(?:int32 )?0>', method(link, P, 'Get', H, 'NAnchors'))
 action(next_button, 'click'); wait_for(lambda: not relation(stereo, 5) and not relation(mono, 5))
 action(next_button, 'click'); wait_for(lambda: relation(stereo, 5) == {mono} and relation(mono, 5) == {stereo})
 action(next_button, 'click'); wait_for(lambda: not relation(stereo, 5) and not relation(mono, 5) and not relation(slider, 5))

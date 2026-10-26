@@ -192,6 +192,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINKED_SCENES") is { } l
 
 if (args.Length == 2 && args[0] == "--accessibility-scene") { AccessibilityFoundationTests.ReadScene(args[1]); return; }
 if (args is ["--accessibility-relations-scene", var relationScene]) { AccessibilityRelationTests.ReadScene(relationScene); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_URL") is { } urlProfile) { if (urlProfile == "managed") AccessibilityURLTests.RunManaged(); else AccessibilityURLTests.RunNative(urlProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_CONTEXT") is { } contextProfile) { if (contextProfile == "managed") AccessibilityContextTests.RunManaged(); else AccessibilityContextTests.RunNative(contextProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_DRAG") is { } dragProfile) { if (dragProfile == "managed") AccessibilityDragTests.RunManaged(); else if (dragProfile == "regression") { GUIDragTests.Run(); InputActionSettingsTests.Run(); } else AccessibilityDragTests.RunNative(dragProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_LIVE") is { } liveBackend) { AccessibilityLiveTests.RunNative(liveBackend); return; }

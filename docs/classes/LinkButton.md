@@ -8,7 +8,7 @@ Displays a translated, shaped text link. Pointer, touch, action, shortcut and to
 
 Fonts and focus styles are borrowed. Attached access requires the scene owner thread and authored mutation is forbidden during capture. Fonts are checked by identity and content generation; changes from workers defer invalidation to the owner. Detach/reentry and disposal retire pending callbacks and font subscriptions. A minimum-size query cannot consume the pending redraw obligation. Text shaping prepares storage; unchanged layouts and warmed recording reuse it.
 
-The default `FocusMode.Accessibility` preserves the specialized focus policy: the current accessibility service is absent. Choose `FocusMode.All` for ordinary keyboard/controller navigation. The pointing-hand cursor becomes an arrow when disabled. The natural text line determines minimum size without padding or background; trimming releases minimum width. Layout RTL aligns the line at the right edge, independently of the paragraph's writing direction.
+The default `FocusMode.Accessibility` preserves the specialized focus policy and permits native accessibility navigation when supported. Choose `FocusMode.All` for ordinary keyboard/controller navigation. The pointing-hand cursor becomes an arrow when disabled. The natural text line determines minimum size without padding or background; trimming releases minimum width. Layout RTL aligns the line at the right edge, independently of the paragraph's writing direction.
 
 ## Example
 
@@ -56,7 +56,7 @@ Untranslated caption; translation uses `Atr` and `TranslationContext`. Equal wri
 
 ### URI
 
-A protocol URI or filesystem path. Empty suppresses the platform operation. Null is rejected at assignment; `OS.ShellOpen` validates nonempty identifiers and rejects NUL at activation. It normalizes ordinary paths. The identifier persists with the scene; callback delegates and activation state do not. Opening is a cold external operation, outside the repeated render budget.
+A protocol URI or filesystem path. Empty suppresses the platform operation. Null is rejected at assignment; `OS.ShellOpen` validates nonempty identifiers and rejects NUL at activation. It normalizes ordinary paths. The identifier persists with the scene; callback delegates and activation state do not. Opening is a cold external operation, outside the repeated render budget. A changed value queues semantic refresh and publishes the actual URI as a [native hyperlink](AccessibilityServer.md#native-hyperlinks), including dependent contextual help. Source changes replace service URL overrides; publication alone never activates the link.
 
 ### Underline
 

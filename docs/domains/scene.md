@@ -525,3 +525,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.
 
 [Contextual native navigation](../classes/AccessibilityServer.md#contextual-navigation) connects custom container position/help, direct keybinding metadata from real button/menu sources, class names and role descriptions. The owning contract defines override, lifecycle and verification boundaries.
+
+[Native hyperlink destinations](../classes/AccessibilityServer.md#native-hyperlinks) connect LinkButton URI authoring and generic producers to external AT-SPI consumers, retaining internal targets and the existing activation pipeline.
