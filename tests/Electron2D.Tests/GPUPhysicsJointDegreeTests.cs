@@ -56,6 +56,7 @@ internal static class GPUPhysicsJointDegreeTests
         private readonly Store.Snapshot[] _state = new Store.Snapshot[1];
         private readonly int[] _limits = [4], _counts = new int[1];
         private readonly Store.ContactReport[] _contacts = new Store.ContactReport[4];
+        private readonly Store.ShapeHandle _floorShape;
         private readonly Store.JointHandle[] _joints;
         private int _pins;
         internal float MaxAnchorError, MaxSpeed;
@@ -66,7 +67,7 @@ internal static class GPUPhysicsJointDegreeTests
             _pins = count; Store.PackColoredContacts = contacts; Store.PackSolverBodyState = bodies; Store.CaptureContactReports = true;
             _body = Store.Add(new(PhysicsServer.BodyMode.RigidLinear, Vector2.Zero, 0, Vector2.Zero, 0, CanSleep: false));
             _floor = Store.Add(new(PhysicsServer.BodyMode.Static, new(0, 3), 0, new(30, 0), 0));
-            Store.AddShape(_body, _circle); Store.AddShape(_floor, _rectangle);
+            Store.AddShape(_body, _circle); _floorShape = Store.AddShape(_floor, _rectangle);
             Store.SetCollisionPriority(_body, 7);
             _joints = new Store.JointHandle[count];
             for (var i = 0; i < count; i++) _joints[i] = Store.AddJoint(new(PhysicsServer.JointType.Pin, _body, default, Transform.Identity, Transform.Identity));
@@ -93,7 +94,8 @@ internal static class GPUPhysicsJointDegreeTests
             Store.Read(_read, _state); Store.ReadContactReports(_read, _limits, _counts, _contacts);
             Check(Store.Count == 2 && Store.JointCount == _pins && Store.ContactPointCount > 0 && Store.ContactColorCount > 0,
                 "The complete world retains both bodies, every authored pin and a real colored contact");
-            Check(_counts[0] > 0 && _contacts[0].ColliderBody == _floor.Index && _contacts[0].Normal.DistanceTo(Vector2.Up) < .001f,
+            Check(_counts[0] > 0 && _contacts[0].ColliderShape == _floorShape.Index &&
+                _contacts[0].ColliderShapeGeneration == _floorShape.Generation && _contacts[0].Normal.DistanceTo(Vector2.Up) < .001f,
                 "The pinned body reports the actual conveyor floor and support normal");
             var speed = new Vector2(_state[0].Velocity.X, _state[0].Velocity.Y).Length();
             MaxAnchorError = MathF.Max(MaxAnchorError, Position.Length()); MaxSpeed = MathF.Max(MaxSpeed, speed);
