@@ -9,9 +9,9 @@ Decisions in this log: [0090](#adr-0090).
 <a id="adr-0090"></a>
 ## ADR 0090: Make Electron2D agent-native
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
-- Status: Accepted by the user on 2026-10-01; live project collaboration, in-editor agent control and replacement of the existing batch interface accepted on 2026-10-25.
+- Status: Accepted by the user on 2026-10-01; live project collaboration, in-editor agent control and replacement of the existing batch interface accepted on 2026-10-25; user workflows, contextual inspection and operation composition clarified on 2026-10-26.
 - Scope: Game and engine development workflows, public API/documentation, project and scene authoring, editor automation, batch execution and observable verification.
 - Refines: [0004: Product scope](product.md#adr-0004) and [0027: Editor/game boundary](product.md#adr-0027).
 - Preserves: [0001: Typed C#](product.md#adr-0001), [0014: Resource lifetime and hot-path allocation](resources.md#adr-0014), [0015: Host lifecycle](core-object-runtime.md#adr-0015), [0016: Scheduling](core-object-runtime.md#adr-0016), [0021: Platform verification](product.md#adr-0021), [0023: Typed packed scenes](scene.md#adr-0023), and [0028: Renderer capabilities](rendering.md#adr-0028).
@@ -38,6 +38,23 @@ The existing typed C# surface, persistence, scene lifecycle, undo history, captu
 
 The shared live-scene save operation is ResourceSaver.SaveScene under ADR 0013. It projects the authoring host's pre-save/capture/write/post-save lifecycle without requiring editor widgets or a runtime dependency on the editor assembly. Only this explicit authoring operation publishes Node's editor save notifications; ordinary Pack, PackForSave and resource Save retain their existing contracts. This reusable operation does not establish a unified project CLI, visual editor or complete agent workflow.
 
+#### User workflows and editor-independent access
+
+Agent-native means that understanding a project, making a valid change and checking its result are first-class programmatic workflows over the same state and rules used by a human. The agent can discover supported operations, inspect unsaved documents, apply attributed changes, observe conflicts, run a snapshot and retrieve diagnostics and real output. A chat panel alone does not establish this capability.
+
+| User workflow | Interaction surface and state owner |
+| --- | --- |
+| Human authoring without an agent | The editor's normal views use the live session. No model connection is required. |
+| Agent controlled inside the editor | The user supplies a task and context in the editor panel; a replaceable executor invokes shared operations. Human edits continue through the same owner. |
+| External agent while the editor is open | The user works in a local Codex or another compatible client. Its tools attach to the open project's owner and observe the same unsaved documents; committed changes appear in normal editor views. |
+| External agent without an editor window | An explicit no-UI operation host owns the same session core and jobs. The user interacts entirely through the external client; authoring, history and recovery do not require native editor widgets. |
+
+These are product workflows, with their implemented bounds recorded in the [agent component](../components/project-agent.md). External-client operation needs a reachable, authorized owner and a configured tools connection; opening a conversation alone does not create either. The initial executable host is explicitly started. Automatic startup, installed one-click setup and seamless transfer between a no-UI owner and an editor owner require their own verified lifecycle. Opening the editor must never create a second writer or silently discard the no-UI owner's unsaved state.
+
+A complete no-UI workflow includes explicit saving and fresh-process reopen when the user grants publication rights. Granting those rights must be possible through the no-UI host integration; the product must not require opening the editor just to authorize a save. The current explicit host's default no-save capability is an implementation limit, not a permanent restriction of this workflow.
+
+No editor window does not mean no renderer. Inspection and ordinary authoring can remain without UI, simulation can run headlessly, and a visual check uses a separate real rendered job with its required display/backend capabilities. Saved results reopen normally; unsaved results remain recoverable session state and are not implicitly published to project files.
+
 #### Session ownership and concurrent authoring
 
 - One authoritative owner admits mutations for a project root. With an open editor, external operation clients attach to its session. Without an editor, an operation host can own the same session core. Discovery, owner lease, authentication, expiry and crash recovery must prevent two independent writers; an unreachable or ambiguous live owner must not silently cause a writable headless fallback.
@@ -63,6 +80,10 @@ ACP and MCP are complementary, not alternative implementations of project semant
 The editor owns its agent panel: task input, attached selection/context, conversation history, operation/change timeline, job progress, relevant diagnostics/images, interruption and safe undo. The executor can run in a separate local process while this panel is the user's complete interaction surface. Model calls, credentials, provider packages and agent lifecycle stay outside `Electron2D.dll`. Reuse a suitable executor's agent loop behind the adapter rather than binding the project model to one provider or constructing a general-purpose orchestration framework first.
 
 Expose clear semantic tools backed by operation-specific typed models. Discover the full applicable operation surface progressively, with a compact active set, scoped search/inspection, bounded responses and actionable errors. Include names and relevant context alongside stable identities. Tool descriptions document prerequisites, effects and failure behavior; publish only executable capabilities, without successful placeholders. Transport field names do not authorize arbitrary runtime `Get/Set/Call`.
+
+Context must identify the target project/owner, documents and stable objects, together with the observed revisions. A user's selection is useful context, not permission to modify everything nearby. For spatial tasks, combine scoped structured objects, viewport bounds and coordinate-space information with an image when useful. Identify an authored preview separately from rendered game evidence, and retain the image's source/revision or snapshot identity. Fetch detailed context as needed rather than injecting the complete scene, code and tool catalog into every turn. The panel makes affected objects and owner-confirmed operations visible while work proceeds.
+
+Agents must be able to compose supported typed operations to perform repetitive or novel tasks without a model round trip for every object. Composition remains a client/executor capability over the same session boundary: every mutation retains validation, permissions, expected revisions, attribution, history and cancellation semantics. A sequence of committed groups is not automatically one atomic transaction. This does not select a new script interpreter, arbitrary runtime dispatch, a provider-specific code mode or a replacement scenario SDK. Evaluate a concrete composition mechanism against real tasks after the first integrated workflow; reuse an executor's suitable facilities where possible.
 
 Start with one agent alongside the human. Permissions cover authorized task scope; routine reversible changes need not prompt for every call. Destructive/external effects follow explicit policy and remain attributable. Source code, tool output and imported assets are data, not authority to expand permissions. Direct agent/shell file writes cannot bypass unsaved-buffer conflict checks: route them through the session or reconcile them as external edits. Concurrent multi-agent mutation, remote collaboration and automatic conflict resolution require measured need and separate verified capabilities.
 
@@ -111,11 +132,13 @@ Implement connected executable slices under the [maintenance contract](../mainta
 | 1. Next project-authoring slice, before a functional editor project workflow | A no-UI session core with one owner, stable identities, unsaved scene/code documents, bounded typed operations, revisions, events, persistence/recovery and grouped history. Real tests cover independent owner processes, two operation clients, stale/conflicting edits, undo after manual work, external changes, failed apply/save and fresh-process reopen. No agent/model connection is needed to establish these deterministic guarantees. |
 | 2. First functional editor project workflow, using stage 1 | Minimal open project, scene tree/inspector/code views and preview subscribe to the shared session; manual and programmatic changes appear together without forced save. Snapshot jobs exercise an unsaved edit, build, fresh game execution, actual capture, stale results, deadline/cancel and cleanup. Replace/remove the existing Batch controller/SDK/formats and affected consumers/docs in this job slice, without a compatibility bridge. Runtime entry points retain their separate owning contracts. |
 | 3. First agent-enabled editor milestone, after stages 1–2 and before editor polish | A real local operations transport and one real agent adapter, preferably ACP where supported, connected to the editor's task/conversation panel. Verify selection context, unsaved reads/writes, meaningful progress, interruption, disconnect/reconnect, missing capability and executor failure. Run the co-development acceptance scenario below with the stated executor/model/tool versions; a fake adapter remains only a deterministic test fixture. |
-| 4. After the first co-development milestone | Expand semantic tool coverage and context discovery, measure repair quality and regressions, then qualify installed distribution, other agents/platforms and larger workloads. Add parallel agent execution or hot reload only through their own justified and verified slices. |
+| 4. After the first co-development milestone | Expand semantic tools, scoped spatial context and composition of typed operations, measuring repair quality and regressions on real tasks. Qualify external-client workflows with both an editor owner and an explicit no-UI owner, then installed distribution, other agents/platforms and larger workloads. Add parallel agent execution or hot reload only through their own justified and verified slices. |
 
 The first bounded implementation target is one existing typed scene and one C# source buffer: open/inspect them, change an Entity transform through typed session operations, preserve an unsaved manual edit, reject an overlapping stale edit, undo safely, then save/reopen in a fresh process. Establish actual owner exclusion across processes. This proves stage 1's document/operation boundary before building a full project manager, plugin framework, language service or agent transport.
 
 The minimum co-development acceptance scenario opens a real project, makes a human edit without saving, asks the agent from inside the editor to change another part, and shows both in the normal views. An overlapping stale edit must conflict without data loss. Undo/cancellation preserves later manual work. Build/run verifies the intended unsaved snapshot, returns state assertions and actual rendered evidence, and marks older evidence stale after another edit. Include invalid input, callback/build/runtime failure, process disconnect, recovery and cleanup. Repeat the shared operation path without editor UI. This scenario, not terminal launch or panel screenshots, establishes the first integrated capability.
+
+Expanded-context acceptance must distinguish two open projects and renamed/reparented objects, keep selection context separate from edit scope, and identify stale images and coordinate spaces. A composition slice must exercise multiple typed edits, a stale intermediate revision, cancellation after a committed group and safe undo after human work. Test the real external client against both owner modes, including explicit no-UI publication rights, save and fresh-process reopen, before claiming that complete user workflow; transport tests alone establish only its underlying tools path.
 
 The [coverage roadmap](../coverage/roadmap.md#live-project-and-agent-delivery) tracks this dependency order without promoting absent editor APIs. Human assessment of game feel and visual quality remains separate from automated correctness.
 
@@ -150,7 +173,7 @@ Missing capabilities remain gaps with exact triggers in [coverage](../coverage/i
 
 ### Research references
 
-Reviewed on 2026-10-25. These sources inform separation of application state, agent execution, tools and editor context. They do not supply Electron2D's transaction guarantees, select a mandatory provider or establish tested integration:
+Reviewed on 2026-10-25 and 2026-10-26. These sources inform separation of application state, agent execution, tools and editor context. They do not supply Electron2D's transaction guarantees, select a mandatory provider or establish tested integration:
 
 - [OpenAI: application-owned context/tools and a reusable agent executor](https://developers.openai.com/blog/codex-as-a-platform).
 - [Anthropic: semantic tools, bounded results and evaluation on real tasks](https://www.anthropic.com/research/writing-tools-for-agents).
@@ -160,3 +183,9 @@ Reviewed on 2026-10-25. These sources inform separation of application state, ag
 - [Zed: external executors with an in-editor conversation surface](https://zed.dev/docs/ai/external-agents).
 - [Gemini CLI: IDE context, native diffs and ACP](https://geminicli.com/docs/ide-integration/).
 - [Unity: current CLI/MCP operation routing](https://docs.unity.com/en-us/unity-cli/replace-mcp-server-unity-cli). Transport choices can evolve independently of authoring semantics.
+- [Roblox: official live Studio agent integration](https://github.com/Roblox/roblox-studio-agent-plugin). Combines model inspection, authoring, playtest, console and images; explicitly warns that not every change can be undone.
+- [Epic: Experimental Unreal MCP](https://dev.epicgames.com/documentation/unreal-engine/unreal-mcp-in-unreal-editor). Separates transport from toolsets, serializes calls on the game thread and discovers tools progressively. Its transport does not establish Electron2D's authentication or transaction contract.
+- [tldraw: agent starter kit](https://tldraw.dev/starter-kits/agent) and [experience evolving the canvas harness](https://tldraw.dev/blog/harnessing-the-agents). Combines structured/visual spatial context and visible edits; later work delegates the agent loop to external executors and uses code to compose live Editor API operations. This informs composition without selecting arbitrary runtime dispatch.
+- [Figma: beta native canvas authoring](https://developers.figma.com/docs/figma-mcp-server/write-to-canvas/). Explicit file/selection targeting and ordinary editable document output; Plugin API execution is a product-specific mechanism, not a required engine design.
+- [Autodesk: Assistant in Fusion](https://help.autodesk.com/view/fusion360/ENU/?contextId=LEARNINGPANEL). Integrates explanation, inspection, guided work and authorized execution alongside the document.
+- [OpenAI: external local clients and MCP configuration](https://learn.chatgpt.com/docs/extend/mcp). A client connection still requires Electron2D's live owner and qualified operations; it does not imply cloud access to a local project.

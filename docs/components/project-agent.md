@@ -38,6 +38,8 @@ Wire requests/responses use length-prefixed bounded JSON (eight MiB), one outsta
 
 ## Programmatic and no-UI paths
 
+The [user workflow contract](../decisions/agent-native.md#user-workflows-and-editor-independent-access) includes both an agent inside the editor and an external client such as Codex. The existing transport supports attachment to either a native workspace owner or the explicit no-UI owner below. Its schemas, unsaved state, revision checks, history and jobs are shared. A local external conversation can therefore use the tools without an editor window; a running owner is still required.
+
 An already open native workspace publishes the endpoint. A client attaches through [SessionOperationsClient](../classes/SessionOperationsClient.md); it never opens a fallback owner. The following partial example requires an existing pumping owner and projectRoot:
 
 ```csharp
@@ -59,6 +61,20 @@ dotnet Electron2D.Editor.Session.dll --session-mcp /absolute/source/project acto
 ```
 
 The bridge negotiates the exercised MCP versions, tool schemas and live-owner calls. `ELECTRON2D_OPERATIONS_CAPABILITY` privately supplies a named token when issued by the host; otherwise private discovery supplies default rights. Never print/store the token in task text. Stdin EOF/cancel disconnects the client and cancels pending ingress/jobs; committed groups remain recoverable. These entry points are actual commands in the separate session executable; they are not an installed-distribution claim.
+
+For a local Codex CLI, register the bridge as a stdio MCP server using resolved absolute paths to the qualified session assembly and source project:
+
+```bash
+codex mcp add electron2d -- dotnet /absolute/session-build/Electron2D.Editor.Session.dll --session-mcp /absolute/source/project external-codex
+```
+
+This is a setup example, not a command that this documentation executes. Start the owner first, keep its stdin open, and verify the tools in the client before assigning work. The MCP bridge only attaches; it does not start an owner or acquire the writer lease. With the editor already open, use its endpoint instead of starting another owner. Codex MCP configuration is described in the [official documentation](https://learn.chatgpt.com/docs/extend/mcp).
+
+The explicit host currently issues default discovery rights, so an attached agent can author and run jobs but cannot `save` or discard live buffers with `UseDisk`. Those require a named capability explicitly granted by a host integration; the editor exposes the controls described above. No-UI edits remain dirty and recoverable on host shutdown. To continue in the native editor today, retire the no-UI host first and reopen the same project to recover its documents, review and save. Opening another writable owner while the host is alive is rejected; seamless UI attachment/owner handoff is not implemented.
+
+No-UI authoring does not load the editor's window/assets or require an active renderer. A headless simulation job checks behavior without images. A rendered job runs a separate native game process and can open a game window; it needs the selected renderer/display environment even though the editor stays closed. The existing capture path must not be described as display-free rendering.
+
+The qualified real-model acceptance below covers the in-editor Codex adapter. Transport/public-consumer checks establish the no-UI tools path; an ordinary external Codex CLI session in both owner modes has not received a separate real-model acceptance claim. No-UI publication-rights setup, automatic owner startup, installed setup, spatial viewport/image context and a general composition interface remain future work under stage 4. The current executor's code-mode tool routing is not a new general engine scripting API.
 
 ## Executor, cancellation and failure
 
