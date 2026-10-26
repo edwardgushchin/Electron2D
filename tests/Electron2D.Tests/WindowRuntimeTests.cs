@@ -257,7 +257,7 @@ internal static class WindowRuntimeTests
                 {
                     if (flag == WindowFlag.Max)
                         Reject<ArgumentOutOfRangeException>(() => template.SetFlag(flag, true));
-                    else if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus or WindowFlag.Popup or WindowFlag.Transparent or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled))
+                    else if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.MousePassthrough or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus or WindowFlag.Popup or WindowFlag.Transparent or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled))
                     {
                         Reject<NotSupportedException>(() => template.GetFlag(flag));
                         Reject<NotSupportedException>(() => template.SetFlag(flag, false));

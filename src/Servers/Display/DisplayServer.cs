@@ -607,6 +607,7 @@ public sealed partial class DisplayServer : ElectronObject
                 root._nativeChildren.Remove(_sdlWindowId);
                 if (ReferenceEquals(root._pendingInputWindow, this)) root._pendingInputWindow = null;
                 SceneWindow = null;
+                _mouseInputRegion?.Dispose(); _mouseInputRegion = null; _mouseInputPolygon = [];
                 _pendingDroppedFiles = null;
                 _window.Dispose();
                 base.Dispose(disposing);
@@ -618,6 +619,7 @@ public sealed partial class DisplayServer : ElectronObject
                 catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
             AccessibilityServer.RetireDisplay();
             SceneWindow = null;
+            _mouseInputRegion?.Dispose(); _mouseInputRegion = null; _mouseInputPolygon = [];
             _pendingDroppedFiles = null;
             DisposeDialogs();
             _defaultWindowIcon?.Dispose(); _defaultWindowIcon = null;
@@ -680,6 +682,8 @@ public sealed partial class DisplayServer : ElectronObject
         EnsureOwner();
         if (!_renderingAttached) throw new InvalidOperationException("The window has no rendering owner.");
         _graphicsHandleQuery = query;
+        _mouseInputRegion?.Dispose(); _mouseInputRegion = null;
+        ApplyMouseInputRegion(_mousePassthrough, _mouseInputPolygon);
     }
 
     internal void ReleaseRenderingWindow() { EnsureOwner(); _graphicsHandleQuery = null; _renderingAttached = false; }

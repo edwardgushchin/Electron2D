@@ -5376,7 +5376,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate.",
+      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."
       "godot": [
         "class:NoiseTexture2D",
         "NoiseTexture2D::property:as_normal_map",
@@ -5432,7 +5432,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
       "godot": [
         "Texture2D::method:get_width()",
         "Texture2D::method:_get_width()"
@@ -5440,7 +5440,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028).",
+      "reason": "The C# virtual/abstract method and concrete texture overrides project both the query and extension hook. Dimensions are logical pixels; ImageTexture starts at zero and SetSizeOverride changes them without resampling. Custom texture behavior, further texture implementations and the complete rendering integration remain pending (ADRs 0004/0028)."
       "godot": [
         "Texture2D::method:get_height()",
         "Texture2D::method:_get_height()"
@@ -5448,7 +5448,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Virtual GetSize and its synchronized ImageTexture override return logical dimensions as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028).",
+      "reason": "Virtual GetSize and its synchronized ImageTexture override return logical dimensions as Vector2. ImageTexture state starts at zero and supports independent pixel dimensions through SetSizeOverride. Additional texture families remain pending (ADRs 0004/0028)."
       "godot": [
         "Texture2D::method:get_size()"
       ]
@@ -5463,7 +5463,7 @@
     },
     {
       "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039).",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039)."
       "godot": [
         "Texture2D::method:has_alpha()",
         "Texture2D::method:_has_alpha()"
@@ -5471,7 +5471,7 @@
     },
     {
       "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039).",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039)."
       "godot": [
         "Texture2D::method:has_mipmaps()",
         "Texture2D::method:_has_mipmaps()"
@@ -5479,7 +5479,7 @@
     },
     {
       "state": "Partial",
-      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039).",
+      "reason": "One virtual typed property supplies the query and extension hook. Metadata describes the copied source Image, not its internal GPU upload conversion. Empty textures report L8/false/zero; alpha reflects the format. Copied byte, normalized/float, BC/ETC/EAC/ASTC and all four UInt16 source layouts now preserve source metadata and complete mip chains. Compatibility samples base mips for supported formats and explicitly rejects integer/high-precision roles it cannot preserve. This broader row retains its target-backend verification gate under ADR 0021; Linux/Vulkan and local Compatibility are exercised, while Windows D3D12, macOS Metal, Android and iOS execution is unverified (ADRs 0004/0028/0039)."
       "godot": [
         "Texture2D::method:get_mipmap_count()",
         "Texture2D::method:_get_mipmap_count()"
@@ -5495,7 +5495,7 @@
     },
     {
       "state": "Partial",
-      "reason": "The virtual query supplies the typed extension hook, including ImageTexture logical-to-source coordinate conversion, edge clamping and alpha > 0.1. Missing pixels are treated as opaque. RenderingTextureTests covers size overrides and pixel ownership; additional texture-family behavior remains pending (ADRs 0004/0028).",
+      "reason": "The virtual query supplies the typed extension hook, including ImageTexture logical-to-source coordinate conversion, edge clamping and alpha > 0.1. Missing pixels are treated as opaque. RenderingTextureTests covers size overrides and pixel ownership; additional texture-family behavior remains pending (ADRs 0004/0028)."
       "godot": [
         "Texture2D::method:_is_pixel_opaque(int:,int:)"
       ]
@@ -5527,35 +5527,35 @@
     },
     {
       "state": "Partial",
-      "reason": "Inherited ResourceLocalToScene supplies the existing default-false scene-local duplication policy; no redundant ImageTexture property. Resource graph copying exists, but the complete texture serialization/import and scene-instantiation integration remains pending (ADRs 0013/0014/0028).",
+      "reason": "Inherited ResourceLocalToScene supplies the existing default-false scene-local duplication policy; no redundant ImageTexture property. Resource graph copying exists, but the complete texture serialization/import and scene-instantiation integration remains pending (ADRs 0013/0014/0028)."
       "godot": [
         "ImageTexture::property:resource_local_to_scene"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Protected virtual OnDraw records after NotificationDraw and synchronous Draw handlers into one initially empty retained list. Owner-only scope, coalesced/in-scope requests, retained replay, blocked/deferred signals, hidden/show/detach/reentry, all three failure/discard/retry stages and queued physical receiver retirement execute in public CanvasDrawCallbackTests. Sixteen Linux NVIDIA CLR/strict NativeAOT CPU/GPU physics x GPU/compatibility renderer x owner/separate-thread profiles verify actual movement, RID/collider queries and native pixels, plus 64 active/64 retained render intervals per profile at zero owner/all-thread managed bytes. ADRs 0008/0023/0028 apply. Drawing-method gaps, native/driver allocations, physical-step/performance, foreign-platform and owner acceptance retain separate gates.",
+      "reason": "Protected virtual OnDraw records after NotificationDraw and synchronous Draw handlers into one initially empty retained list. Owner-only scope, coalesced/in-scope requests, retained replay, blocked/deferred signals, hidden/show/detach/reentry, all three failure/discard/retry stages and queued physical receiver retirement execute in public CanvasDrawCallbackTests. Sixteen Linux NVIDIA CLR/strict NativeAOT CPU/GPU physics x GPU/compatibility renderer x owner/separate-thread profiles verify actual movement, RID/collider queries and native pixels, plus 64 active/64 retained render intervals per profile at zero owner/all-thread managed bytes. ADRs 0008/0023/0028 apply. Drawing-method gaps, native/driver allocations, physical-step/performance, foreign-platform and owner acceptance retain separate gates."
       "godot": [
         "CanvasItem::method:_draw()"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented.",
+      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented."
       "godot": [
         "RenderingServer::method:get_current_rendering_method()"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented.",
+      "reason": "Reports the active backend after startup selection, on the scene owner thread. Method tokens are gpu/compatibility; driver names come from the active SDL backend. Native Linux Wayland and dummy fallback checks exist. Backend-neutral SDL adaptation follows ADR 0028; other targets and live device recovery remain unimplemented."
       "godot": [
         "RenderingServer::method:get_current_rendering_driver_name()"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Owner-thread readback of the finite root-framebuffer color initialized from the typed project setting. Runtime changes are observed by the initial canvas renderer. Offscreen/multiwindow target clear policies and the full backend matrix remain pending (ADR 0028).",
+      "reason": "Owner-thread readback of the finite root-framebuffer color initialized from the typed project setting. Runtime changes are observed by the initial canvas renderer. Offscreen/multiwindow target clear policies and the full backend matrix remain pending (ADR 0028)."
       "godot": [
         "RenderingServer::method:get_default_clear_color()"
       ]
@@ -5572,28 +5572,28 @@
     },
     {
       "state": "Partial",
-      "reason": "Typed backend-selection setting defaults to gpu and accepts gpu/compatibility. It is sampled at Engine.Run startup; native identities are adapted to SDL GPU and SDL_Renderer under ADR 0028. Feature overrides use the existing registry. Remaining target backends require native verification.",
+      "reason": "Typed backend-selection setting defaults to gpu and accepts gpu/compatibility. It is sampled at Engine.Run startup; native identities are adapted to SDL GPU and SDL_Renderer under ADR 0028. Feature overrides use the existing registry. Remaining target backends require native verification."
       "godot": [
         "ProjectSettings::property:rendering/renderer/rendering_method"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Typed startup fallback policy defaults to true. Under ADR 0028 this reference key projects GPU-to-SDL_Renderer fallback, whose driver need not be OpenGL. False requires GPU initialization; it is not a live recovery switch. Initial dummy/Wayland checks exist, other targets remain unverified.",
+      "reason": "Typed startup fallback policy defaults to true. Under ADR 0028 this reference key projects GPU-to-SDL_Renderer fallback, whose driver need not be OpenGL. False requires GPU initialization; it is not a live recovery switch. Initial dummy/Wayland checks exist, other targets remain unverified."
       "godot": [
         "ProjectSettings::property:rendering/rendering_device/fallback_to_opengl3"
       ]
     },
     {
       "state": "Partial",
-      "reason": "Typed Color definition defaults to (0.3, 0.3, 0.3, 1) and rejects nonfinite channels. Engine.Run initializes the root framebuffer from the active setting/feature override. The initial renderer is executable; offscreen/multiwindow clear policies remain pending (ADR 0028).",
+      "reason": "Typed Color definition defaults to (0.3, 0.3, 0.3, 1) and rejects nonfinite channels. Engine.Run initializes the root framebuffer from the active setting/feature override. The initial renderer is executable; offscreen/multiwindow clear policies remain pending (ADR 0028)."
       "godot": [
         "ProjectSettings::property:rendering/environment/defaults/default_clear_color"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Reports the executing CanvasItem, TextureBlit or Particles domain; the connected default-value consumer checks both source languages, real outputs, invalid-domain atomicity and disposal (ADR 0028).",
+      "reason": "Reports the executing CanvasItem, TextureBlit or Particles domain; the connected default-value consumer checks both source languages, real outputs, invalid-domain atomicity and disposal (ADR 0028)."
       "godot": [
         "Shader::method:get_mode()"
       ]
@@ -5704,7 +5704,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md.",
+      "reason": "AtlasTexture implements borrowed nested atlas views under ADRs 0004/0013/0028: floored region sizes and fractional positions, independent zero-axis fallback, margin drawing, crop/opacity queries, FilterClip precedence, ignored tiling, source virtual dispatch and shared full-source material storage. AtlasTextureTests audits defaults, notifications (nested atlas sources only), duplication modes, local-scene ownership, callback failure, disposal and native Linux Wayland compatibility/GPU HLSL/GLSL readback. Typed safety rejects cycles/nonfinite rectangles, checks integer conversions and skips zero-axis drawing; SDL software input truncates fractional UVs, with an explicit boundary-pixel difference asserted in tests under the ADR 0028 fallback precision limit; other platforms retain ADR 0021 verification limits. See docs/classes/AtlasTexture.md."
       "godot": [
         "class:AtlasTexture",
         "AtlasTexture::property:atlas",
@@ -5716,7 +5716,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, current typed loop modes, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed and frame memberships retain/release uploaded cache residency through replacement, copying, clear, callback failure and disposal. Retired bool-loop aliases are excluded under ADR 0004. See docs/classes/SpriteFrames.md.",
+      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, current typed loop modes, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed and frame memberships retain/release uploaded cache residency through replacement, copying, clear, callback failure and disposal. Retired bool-loop aliases are excluded under ADR 0004. See docs/classes/SpriteFrames.md."
       "godot": [
         "class:SpriteFrames",
         "SpriteFrames::enum:LoopMode",
@@ -5745,7 +5745,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "AnimatedSprite directly inherits Entity under ADR 0008 and implements the pinned animated-sprite source behavior: idle playback, reverse/custom speed, autoplay, frame/progress, nonloop/linear/ping-pong transitions, events, typed packing and virtual texture drawing. AnimatedSpriteTests and AnimatedSpriteRenderingTests cover managed state and native Wayland compatibility/GPU HLSL/GLSL plus dummy readback, actual host timing and callback-failure cleanup. The pinned C++ timing differs from its XML: transitions consume at the previous frame rate and ping-pong retains endpoints; exact boundaries transition on the next positive tick and processing is capped at frame-count plus one iterations. Source behavior is retained rather than silently changed; see docs/classes/AnimatedSprite.md. C# exception/thread/lifetime safety follows existing ADRs; other platforms remain unverified under ADR 0021.",
+      "reason": "AnimatedSprite directly inherits Entity under ADR 0008 and implements the pinned animated-sprite source behavior: idle playback, reverse/custom speed, autoplay, frame/progress, nonloop/linear/ping-pong transitions, events, typed packing and virtual texture drawing. AnimatedSpriteTests and AnimatedSpriteRenderingTests cover managed state and native Wayland compatibility/GPU HLSL/GLSL plus dummy readback, actual host timing and callback-failure cleanup. The pinned C++ timing differs from its XML: transitions consume at the previous frame rate and ping-pong retains endpoints; exact boundaries transition on the next positive tick and processing is capped at frame-count plus one iterations. Source behavior is retained rather than silently changed; see docs/classes/AnimatedSprite.md. C# exception/thread/lifetime safety follows existing ADRs; other platforms remain unverified under ADR 0021."
       "godot": [
         "class:AnimatedSprite2D",
         "AnimatedSprite2D::method:get_playing_speed()",
@@ -5774,7 +5774,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md.",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
       "godot": [
         "class:CurveTexture",
         "CurveTexture::enum:TextureMode",
@@ -5788,7 +5788,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md.",
+      "reason": "CurveTexture and CurveXYZTexture provide synchronous float curve-to-texture baking: width 256 (32..4096), height one, unit coordinates i/width, RGB replication or red-only RF storage, independent XYZ RGBF channels, null zero channels and distinct borrowed source subscriptions. CurveTextureTests covers sampling, storage, events, coherent concurrent snapshots, graph duplication, local-scene ownership and failure/disposal. RenderingCurveTextureTests verifies native Linux Wayland GPU canvas plus eight HDR/negative/channel/update stages for each HLSL/GLSL material and explicit unsupported-float fallback rejection. Original RF/RGBF storage expands to RGBA32Float for the existing upload path; Red saves CPU source storage, not current GPU memory. Default resources have dimensions but no readable image until changed; uninitialized draws fail explicitly. Typed exceptions and backend limits follow ADRs 0001/0013/0028; shared Texture/Resource gaps remain on their own rows. See docs/components/curves.md."
       "godot": [
         "class:CurveXYZTexture",
         "CurveXYZTexture::property:curve_x",
@@ -5800,7 +5800,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md.",
+      "reason": "Gradient implements copied points, lazy indexed sorting and unsorted removal, Linear/Constant/Cubic sampling, SRGB/LinearSRGB/OKLAB, alpha, exact endpoints and source event timing. GradientTests verifies numeric samples, ordering, events, copy/local ownership, failure, concurrency and warm allocations. Typed validation and widened finite offset arithmetic follow ADRs 0001/0013/0034; editor-only inspector hiding awaits the editor slice. Inherited Resource gaps remain separate. See docs/components/gradients.md."
       "godot": [
         "class:Gradient",
         "Gradient::enum:ColorSpace",
@@ -5828,7 +5828,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md.",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
       "godot": [
         "class:GradientTexture1D",
         "GradientTexture1D::property:gradient",
@@ -5839,7 +5839,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md.",
+      "reason": "GradientRampTexture and GradientTexture implement inclusive samples and Linear/Radial/Square/Conic fills, None/Repeat/Mirror, RGBA8/RGBAF, source subscriptions, coalesced lazy updates without forwarded Changed, frozen pixels on null source and typed copy/local ownership. GradientTests verifies modes, bounds, byte quantization, concurrency, disposal and failed-bake recovery. RenderingGradientTests verifies Linux Wayland GPU/compatibility and dummy LDR, retained worker updates, GPU HDR and six stages per HLSL/GLSL material; unsupported compatibility HDR fails explicitly. Naming, width-one zero sampling and widened geometry follow ADRs 0004/0013/0034. Shared Texture/Resource gaps and other platforms remain separate; uninitialized textures have no image and reject drawing instead of creating native placeholder IDs. See docs/components/gradients.md."
       "godot": [
         "class:GradientTexture2D",
         "GradientTexture2D::enum:Fill",
@@ -5911,7 +5911,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028).",
+      "reason": "Root camera implementation is executable and audited; editor preview overlays, inherited node physics interpolation/reset/render interpolation, and independent offscreen/nested/multiwindow viewports remain unimplemented integrations (ADRs 0008, 0021, 0028)."
       "godot": [
         "class:Camera2D",
         "Camera2D::property:custom_viewport",
@@ -5937,7 +5937,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md.",
+      "reason": "CanvasLayerTests and native CanvasLayerRenderingTests audit pinned canvas_layer.cpp, canvas_item.cpp and renderer_viewport.cpp: defaults, full/signed/singular matrix components, grouping before Z, sibling order, direct visibility boundaries, callback recovery, layer membership, input and distinct logical/render follow transforms. Typed finite checks, canonical matrix packing and detached ownership follow ADRs 0003/0004/0008/0023/0028. Wayland compatibility/GPU HLSL/GLSL and dummy pass. See docs/classes/CanvasLayer.md."
       "godot": [
         "CanvasLayer::property:layer",
         "CanvasLayer::property:visible",
@@ -5986,7 +5986,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract. The same render clock also drives the optional fragment TIME built-in.",
+      "reason": "Audited retained time intervals: positive/negative/zero period, signed modulo, offset, inclusive start/exclusive end, unwrapped bounds, ordered conditional transforms, end reset, per-item/replay isolation, no rerecording, resource skipping and failure rollback. CanvasTimingTests and CanvasTimingRenderingTests cover scaled render steps, pause, live rollover/feature overrides and disabled-frame time, with Wayland GPU/compatibility, HLSL/GLSL and dummy readback. Finite inputs and owner-thread/lifetime guards follow the typed runtime contract. The same render clock also drives the optional fragment TIME built-in."
       "godot": [
         "CanvasItem::method:draw_animation_slice(float:,float:,float:,float:)",
         "CanvasItem::method:draw_end_animation()"
@@ -5994,7 +5994,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open.",
+      "reason": "ADR 0046: stored ParentNode/Disabled/Enabled policy connects direct-parent and TopLevel/neutral boundaries, logical global scale, viewport multiplication, native font and SVG raster generation, shared last-owner cache retirement and retained invalidation. Explicit font factors and MSDF preserve their raster policies. CanvasOversamplingTests verifies actual pixels/cache factors, signed scale, reparenting, hidden restore, packed/file policy, ownership and warmed full frames on Linux software renderers. Foreign/hardware/native-allocation and whole-physics performance gates remain open."
       "godot": [
         "CanvasItem::enum:OversamplingWithScale",
         "CanvasItem::enum_value:OversamplingWithScale.OVERSAMPLING_WITH_SCALE_DISABLED",
@@ -6006,7 +6006,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified.",
+      "reason": "ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified."
       "godot": [
         "CanvasItem::method:draw_polygon(PackedVector2Array:,PackedColorArray:,PackedVector2Array:,Texture2D:)",
         "CanvasItem::method:draw_colored_polygon(PackedVector2Array:,Color:,PackedVector2Array:,Texture2D:)"
@@ -6600,7 +6600,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes now execute through CanvasItem.ClipChildren; nested mask/group ranges explicitly reject. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent.",
+      "reason": "ADRs 0008/0014/0028 executable native group/screen composition: same-Z child grouping, fitted/default or recorded owner geometry, once-only SelfModulate opacity, fit/clear margins, native backbuffer copies at draw order, implicit first screen snapshot, and reserved SCREEN_TEXTURE/SCREEN_PIXEL_SIZE in shared SPIR-V. CanvasCompositionTests exercises typed packing/guards/callback failures, GPU/hardware compatibility pixels, clipped/disabled/hidden/masked/Z copies, group transforms/Y-sort/recorded masks/empty groups, SubViewport alpha/resize and 64 active/64 idle stable-size frames with zero managed bytes. GPU HLSL/GLSL exercise custom group materials, clear margins and generated explicit LOD. Compatibility rejects custom shaders/mipmaps; software rejects premultiplied group composition before drawing. Nested same-Z groups and writable-backbuffer sampling reject explicitly; inherited alpha-mask modes now execute through CanvasItem.ClipChildren; nested mask/group ranges explicitly reject. Editor inspector hiding, other platforms, native allocator totals and owner acceptance remain unverified or dependent."
       "godot": [
         "class:BackBufferCopy",
         "BackBufferCopy::enum:CopyMode",
@@ -6617,7 +6617,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Pinned canvas_item.cpp/.h, renderer_canvas_cull.cpp and renderer_canvas_render_rd.cpp audit: stored Disabled/Only/AndDraw with Max sentinel, equal-write silence and commit-before-warning refresh; drawn command/texture/tint alpha masks same-Z descendants over the copied background. AndDraw inserts ordinary owner drawing before children and always uses built-in final masking; Only accepts an overriding material. No recorded commands or no captured child range preserve ordinary drawing. CanvasGroup stores policy without replacing its group mode. Physical-ancestor clipping/group warnings preserve the source boundary; nested same-Z masks/groups and writable screen reads explicitly reject under ADR 0028. CanvasClipTests verifies guards, callbacks, packing, native Wayland GPU/hardware compatibility pixels, texture/partial/overlap alpha, Y-sort, Z/TopLevel/neutral boundaries, transparent SubViewport/resize, custom HLSL/GLSL Only materials, and 64 active plus 64 idle warmed frames with zero managed bytes. Software advanced mask blending rejects before drawing. Native/driver allocations, other platforms, editor inspector hiding and owner visual acceptance remain separate gates.",
+      "reason": "Pinned canvas_item.cpp/.h, renderer_canvas_cull.cpp and renderer_canvas_render_rd.cpp audit: stored Disabled/Only/AndDraw with Max sentinel, equal-write silence and commit-before-warning refresh; drawn command/texture/tint alpha masks same-Z descendants over the copied background. AndDraw inserts ordinary owner drawing before children and always uses built-in final masking; Only accepts an overriding material. No recorded commands or no captured child range preserve ordinary drawing. CanvasGroup stores policy without replacing its group mode. Physical-ancestor clipping/group warnings preserve the source boundary; nested same-Z masks/groups and writable screen reads explicitly reject under ADR 0028. CanvasClipTests verifies guards, callbacks, packing, native Wayland GPU/hardware compatibility pixels, texture/partial/overlap alpha, Y-sort, Z/TopLevel/neutral boundaries, transparent SubViewport/resize, custom HLSL/GLSL Only materials, and 64 active plus 64 idle warmed frames with zero managed bytes. Software advanced mask blending rejects before drawing. Native/driver allocations, other platforms, editor inspector hiding and owner visual acceptance remain separate gates."
       "godot": [
         "CanvasItem::enum:ClipChildrenMode",
         "CanvasItem::enum_value:ClipChildrenMode.CLIP_CHILDREN_DISABLED",
@@ -6637,7 +6637,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance.",
+      "reason": "ADRs 0004/0028/0051/0092/0095: caller-owned canvas/items execute retained Mesh/MultiMesh commands through the existing GPU/compatibility renderer. Independent native hierarchy/properties preserve scene authored getters; matching setters/redraw republish. Stable owned/borrowed identities, multi-viewport attachments with independent transforms/stacking, inherited/self/canvas modulation, Z/Y/behind order, clipping/custom/automatic bounds, root mirroring, sampler inheritance, cycle/depth/owner guards and independent orphan/free/shutdown lifetime are verified by RenderingCanvasTests. Linux native pixels and prepared allocation evidence do not imply hardware instancing, native allocator or other-platform acceptance."
       "godot": [
         "RenderingServer::enum:CanvasItemTextureFilter",
         "RenderingServer::enum:CanvasItemTextureRepeat",
@@ -7018,7 +7018,7 @@
         "Viewport::property:sdf_oversize",
         "Viewport::property:sdf_scale"
       ],
-      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
       "state": "Implemented"
     },
     {
@@ -7037,42 +7037,42 @@
     },
     {
       "state": "Implemented",
-      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values.",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values."
       "godot": [
         "CanvasItem::method:get_instance_shader_parameter(StringName:)"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
       "godot": [
         "CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values.",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values."
       "godot": [
         "RenderingServer::method:canvas_item_get_instance_shader_parameter(RID:,StringName:)"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
       "godot": [
         "RenderingServer::method:canvas_item_set_instance_shader_parameter(RID:,StringName:,Variant:)"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values.",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values."
       "godot": [
         "RenderingServer::method:canvas_item_get_instance_shader_parameter_default_value(RID:,StringName:)"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values.",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the compiled authored default (implicit zero when absent). Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers now use the shared validated authored-default metadata; prepared set/clear reuses typed entries without storing inactive values."
       "godot": [
         "RenderingServer::method:canvas_item_get_instance_shader_parameter_list(RID:)"
       ]
@@ -7365,7 +7365,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates.",
+      "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
       "godot": [
         "RenderingServer::enum:ViewportAnisotropicFiltering",
         "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_DISABLED",
@@ -7396,6 +7396,18 @@
       "reason": "ADR 0004: pinned SpriteFrames.xml marks this member deprecated: Use [method set_animation_loop_mode] instead. The applicable replacement is implemented; no alias or implementation trigger remains.",
       "godot": [
         "SpriteFrames::method:set_animation_loop(StringName:,bool:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: SDL_GPU native timestamp query pools, command-buffer timestamp insertion and completed query readback, or an accepted native command-buffer bridge providing all three on the active renderers. The current SDL_GPU API exposes none; SDL issue 11696 remains open at candidate selection on 2026-10-27 (https://github.com/libsdl-org/SDL/issues/11696). CPU elapsed time cannot implement GPU timestamps. Implement capture, names, CPU/GPU values, count and completed-frame ownership together when that dependency lands.",
+      "godot": [
+        "RenderingDevice::method:capture_timestamp(String:)",
+        "RenderingDevice::method:get_captured_timestamp_cpu_time(int:)",
+        "RenderingDevice::method:get_captured_timestamp_gpu_time(int:)",
+        "RenderingDevice::method:get_captured_timestamp_name(int:)",
+        "RenderingDevice::method:get_captured_timestamps_count()",
+        "RenderingDevice::method:get_captured_timestamps_frame()"
       ]
     }
   ],

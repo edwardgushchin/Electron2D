@@ -2,7 +2,7 @@
 
 The production Android host's [system back producer](window-runtime.md#system-back-navigation) posts to the active display's retained owner queue. `DisplayServer.GoBackRequested` delivers after buffered native input, before frame callbacks, including in `ForceProcessAndDropEvents`. Request capture, callback failure and retirement follow [ADR 0040](../decisions/display.md#adr-0040).
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 ## Scope
 
@@ -24,6 +24,12 @@ The scene Window now consumes the existing `TextInput` and `TextEditing` events 
 
 ## Per-window typed events
 
+The per-window [native mouse input region](window-input-region.md) is applied by
+the compositor/window system before this event queue. A native button release
+clears that button from every retained window mask, including a former press
+owner after passthrough changes the native release destination. Its native mask is independent
+of scene-authored Window storage and retains selected-window lifetime checks.
+
 `DisplayServer.GetWindowEvents(windowID)` supplies the stable borrowed [DisplayWindowEvents](../classes/DisplayWindowEvents.md) publisher for each active native identity. Static events remain main-window notifications. The family covers input, committed/composing text, ordinary/forced-popup close, back, focus, pointer/content-scale, effective rectangle and owned file-drop batches. Explicit publisher disposal only clears subscriptions; native retirement disposes it, and scene child reopening creates a new native ID. Owner-thread registration/disposal, callback replacement and failure-safe retirement follow [ADR 0044](../decisions/display.md#adr-0044).
 
 Parsed input captures live recipients before state mutation, commits raw/action state, then selects the tagged native window or broadcasts untagged events before ordinary scene dispatch. Disposed recipients are skipped; new recipients begin next parse. Callback failures preserve other windows and scene delivery. Native notification handlers follow the existing window/scene callback and use the captured publisher; a replacement never receives an in-flight old event. Forced popup callbacks run before automatic hide and cannot cancel it by throwing.
@@ -34,7 +40,7 @@ The low-level native test cohort and public consumer execute this contract. Requ
 
 ## Dependencies and interactions
 
-Vendored SDL3-CS source supplies internal managed native bindings in `Electron2D.dll`; a target-specific SDL3 library is supplied transitively by the runtime project on Linux. On Linux Wayland and X11, `LinuxPortalThemeSupport` also calls system `libdbus-1.so.3` for a bounded capability probe without an external command or managed package. `DisplayServer` depends on `ElectronObject`, `Input`, `Image`, `Vector2`/`Vector2i`, `Rect2`, and `Rect2i`. `Engine.Run`/`RunAsync` own the ordinary application clock; manual embedding can supply its own elapsed time. RenderingServer owns the active renderer under Engine.Run; Window registers its borrowed native-context query with DisplayServer and removes it at shutdown.
+Vendored SDL3-CS source supplies internal managed native bindings in `Electron2D.dll`; a target-specific SDL3 library is supplied transitively by the runtime project on Linux. On Linux Wayland and X11, `LinuxPortalThemeSupport` also calls system `libdbus-1.so.3` for a bounded capability probe without an external command or managed package. `DisplayServer` depends on `ElectronObject`, `Input`, `Image`, `Vector2`/`Vector2i`, `Rect2`, and `Rect2i`. `Engine.Run`/`RunAsync` own the ordinary application clock; manual embedding can supply its own elapsed time. Native mouse regions use system X11/Xext, Windows user32/gdi32/comctl32, or Cocoa Objective-C APIs without a managed package. RenderingServer owns the active renderer under Engine.Run; Window registers its borrowed native-context query with DisplayServer and removes it at shutdown.
 
 On GNOME Wayland, native-looking client-side title bars require libdecor with its GTK plugin and a GTK backend matching the selected video driver. An inherited `GDK_BACKEND=x11` made `libdecor-gtk` fail initialization and fall back to Cairo. `Open` now updates both native and managed environment values before SDL video initialization and restores the inherited value if startup fails or selects another driver; other driver/backend combinations are unchanged. A process-local GTK style provider extends the selected title-bar background through its border box; it is removed with the window. In a visible Stillglass-Dark session, this removed a transparent one-pixel seam while keeping the themed controls. GTK is optional; without it libdecor may use its fallback decoration.
 

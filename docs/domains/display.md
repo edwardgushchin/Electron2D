@@ -2,11 +2,15 @@
 
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.
 
 ## Responsibility
+
+[Native mouse input regions](../components/window-input-region.md) connect Window
+authored policies and DisplayServer's per-window operation to actual native input
+regions, including geometry/scale refresh and renderer surface replacement.
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 

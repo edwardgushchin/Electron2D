@@ -1,6 +1,6 @@
 # DisplayServer
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-10-26
 
 Owns one native SDL video connection and its main window.
 
-Public static declarations are in [`DisplayServer.API.cs`](../../src/Servers/Display/DisplayServer.API.cs).
+Public static facade declarations are in [`DisplayServer.API.cs`](../../src/Servers/Display/DisplayServer.API.cs) and feature partials such as [`DisplayServer.InputRegion.cs`](../../src/Servers/Display/DisplayServer.InputRegion.cs).
 
 ## Description
 
@@ -46,6 +46,13 @@ The active server is a process singleton, not an `Engine` owned object. `Electro
 `GetWindowEvents(windowID)` returns a borrowed [DisplayWindowEvents](DisplayWindowEvents.md) publisher for a live native main/child window. Existing static events keep their main-window scope. The publisher retains its ID after disposal; explicit disposal only clears subscriptions, while native hide/retirement disposes the publisher and reopening creates a new native identity. Registration and disposal require the display owner thread. See the publisher page for input ordering, failure and replacement semantics.
 
 ## Examples
+
+`WindowSetMousePassthrough(ReadOnlySpan<Vector2> region, int windowId = MainWindowId)`
+copies an even-odd native input polygon for a live main/child window. Empty restores
+the ordinary input region. WindowFlag.MousePassthrough overrides the retained mask.
+The operation requires the display owner and leaves authored Window properties
+unchanged. Native integer bounds, unsupported drivers and request failures remain
+explicit. See [native input regions](../components/window-input-region.md).
 
 ```csharp
 using Electron2D;

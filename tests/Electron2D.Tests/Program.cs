@@ -13,6 +13,8 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_INPUT_REGION") is { } regionProfile) { if (regionProfile == "managed") WindowInputRegionTests.Managed(); else if (regionProfile == "queue") WindowInputRegionTests.Queue(); else if (regionProfile == "runtime") WindowRuntimeTests.Run(); else WindowInputRegionNativeTests.Run(regionProfile); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_MODELS") is { } modelProfile) { if (modelProfile == "managed") AccessibilityModelTests.Managed(); else AccessibilityModelTests.Native(modelProfile); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_HINT") is { } hintProfile) { if (hintProfile == "managed") EditorHintTests.Managed(); else EditorHintTests.Native(hintProfile); return; }

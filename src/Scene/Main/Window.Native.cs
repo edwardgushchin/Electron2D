@@ -216,7 +216,7 @@ public partial class Window
     {
         if (flag < WindowFlag.ResizeDisabled || flag >= WindowFlag.Max)
             throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag.");
-        if (flag is WindowFlag.Transparent or WindowFlag.Popup or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled) return;
+        if (flag is WindowFlag.MousePassthrough or WindowFlag.Transparent or WindowFlag.Popup or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled) return;
         if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
             throw new NotSupportedException($"Window flag {flag} requires a native capability that is not integrated.");
     }

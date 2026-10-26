@@ -93,7 +93,7 @@ public enum WindowFlag
     Popup = 5,
     /// <summary>Whether content extends under the native title bar; requires platform title-bar integration.</summary>
     ExtendToTitle = 6,
-    /// <summary>Whether mouse input passes to an underlying application window; requires native hit-test integration.</summary>
+    /// <summary>Whether native mouse input passes to an underlying window.</summary>
     MousePassthrough = 7,
     /// <summary>Whether native rounded window corners are suppressed; requires platform window-style integration.</summary>
     SharpCorners = 8,

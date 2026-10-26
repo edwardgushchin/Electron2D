@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -60,10 +60,22 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public int CurrentScreen { get; set; }`](#currentscreen) | Gets the observed display index, or requests placement on a zero-based display index. |
 | [`public bool Unresizable { get; set; }`](#unresizable) | Gets or sets the policy preventing user border resizing. |
 | [`public bool Borderless { get; set; }`](#borderless) | Gets or sets the policy removing native or embedded window borders and title bar. |
+| [`public bool MousePassthrough { get; set; }`](#native-mouse-input) | Passes native mouse input through the whole window. |
+| [`public Vector2[] MousePassthroughPolygon { get; set; }`](#native-mouse-input) | Copies the native client-coordinate polygon accepting mouse input. |
 | [`public bool AlwaysOnTop { get; set; }`](#alwaysontop) | Gets or sets the policy requesting placement above ordinary windows. |
 | [`public bool Unfocusable { get; set; }`](#unfocusable) | Gets or sets the policy preventing keyboard focus. |
 | [`public bool ForceNative { get; set; }`](#forcenative) | Overrides a containing embedding viewport while hidden. |
 | [`public bool TransientToFocused { get; set; }`](#transienttofocused) | Chooses the focused native transient owner on the next show. |
+
+## Native mouse input
+
+`MousePassthrough` defaults to false and shares `WindowFlag.MousePassthrough`.
+It overrides input from `MousePassthroughPolygon`, whose default is empty. Both
+properties survive scenes and duplication. Polygon setters/getters copy finite
+vertices; failed native changes preserve authored state. Hidden children reapply
+the policy when reopened. Embedded windows keep normal GUI input routing.
+See [native input regions](../components/window-input-region.md) for even-odd
+filling, client/native units, drawing differences and platform verification.
 
 ## Methods
 

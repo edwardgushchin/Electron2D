@@ -427,6 +427,7 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetFlagCore(flag, MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
+        if (flag == WindowFlag.MousePassthrough) return _mousePassthrough;
         if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
         var native = SDL.GetWindowFlags(window);
@@ -450,6 +451,7 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) { ResolveWindow(windowId).WindowSetFlagCore(flag, enabled, MainWindowId); return; }
         EnsureOwner();
         var window = GetWindow(windowId);
+        if (flag == WindowFlag.MousePassthrough) { SetMousePassthrough(enabled); return; }
         if (IsNativePopup && flag is WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled or WindowFlag.Borderless or WindowFlag.ResizeDisabled)
         {
             if (!enabled) throw new NotSupportedException("A native popup cannot enable top-level decoration or presentation policies.");
@@ -463,6 +465,7 @@ public sealed partial class DisplayServer
         }
         if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
+        var previousBorderless = flag == WindowFlag.Borderless && (SDL.GetWindowFlags(window) & SDL.WindowFlags.Borderless) != 0;
         var success = flag switch
         {
             WindowFlag.Borderless => SDL.SetWindowBordered(window, !enabled),
@@ -474,6 +477,20 @@ public sealed partial class DisplayServer
         };
         if (!success)
             throw SDLFailure("change window flag");
+        if (flag == WindowFlag.Borderless)
+        {
+            try { RefreshMouseInputRegion(); }
+            catch (Exception error)
+            {
+                try
+                {
+                    if (!SDL.SetWindowBordered(window, !previousBorderless)) throw SDLFailure("restore window borders");
+                    RefreshMouseInputRegion();
+                }
+                catch (Exception rollback) { throw new AggregateException(error, rollback); }
+                throw;
+            }
+        }
     }
 
     internal bool WindowIsMaximizeAllowedCore(int windowId = MainWindowId)

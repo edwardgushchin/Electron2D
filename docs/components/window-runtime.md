@@ -1,6 +1,6 @@
 # Window runtime component
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -15,7 +15,7 @@ Process-wide service operations and events use static access to retained objects
 
 Engine reserves its idle state, opens the native window through DisplayServer and initializes RenderingServer before creating SceneTree. On Android, iOS, tvOS and browsers the native surface sets the observed pixel size. Default size-limit calls are omitted on these profiles; nonzero configured limits fail explicitly at startup. Browser startup fills its document. RunAsync yields between frames on the native owner thread and reserves Android startup before its internal activity enters the native video thread. It publishes the tree before ready, drives the native event pump before fixed/process frames, and submits the canvas after scene processing. Cleanup disposes the scene, rendering resources and display in that order. MaxFPS uses unscaled monotonic time; native events continue during bounded waits. SceneTree.Quit requests exit and returns its code from Run or the RunAsync task. Window.CloseRequested precedes the default AutoAcceptQuit decision.
 
-Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, four executable policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Window.Position is the native desktop position and is rejected on Wayland. Window declares its own Visible, Show/Hide and VisibilityChanged API; it has no Entity transform or CanvasItem drawing surface; inherited viewport transforms place child canvases. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
+Window properties configure title, positive client size, minimum/maximum constraints, optional desktop position and screen, mode, native input/presentation policies and visibility. Mode queries report observed native state; flag queries retain accepted configuration and are stored in PackedScene. Unsupported policies reject use, and platform refusal does not commit a requested flag. Native calls inherit DisplayServer platform capability failures. Window.Position is the native desktop position and is rejected on Wayland. Window declares its own Visible, Show/Hide and VisibilityChanged API; it has no Entity transform or CanvasItem drawing surface; inherited viewport transforms place child canvases. GetVisibleRect uses a zero client origin. SizeChanged follows client-size updates, never mere desktop movement.
 
 Interactive `Window.StartDrag` and `StartResize` remain blocked with their DisplayServer counterparts: SDL hit testing identifies draggable edges but does not start an interactive move or resize. An X11 window-manager request or Wayland xdg_toplevel request with the initiating pointer serial, followed by compositor verification, is required.
 
@@ -285,6 +285,10 @@ commit before acceptance and restoration on cancellation.
 The native decoration producer for TitlebarChanged remains a separate prerequisite. TitleChanged covers text changes; custom nonclient input and system back requests now have their own executing producers.
 
 ## Independent native windows
+
+Native Windows retain an authored [mouse input polygon and full passthrough
+policy](window-input-region.md), reapplied after native identity replacement.
+Embedded windows retain the same properties without filtering their GUI input.
 
 Ordinary desktop Window children now own independent native presentation surfaces under the active Engine.Run session. Native IDs are zero for main and increasing positive values for child lifetimes. Hidden/detached children retire their native ID; reactivation allocates a new one. Hiding preserves the viewport resource, texture and completed history. Native close requests affect the child signal and do not automatically quit. Native child surfaces remain visible when their scene parent hides.
 

@@ -9,9 +9,10 @@ internal static class DisplayServerWindowEventNativeTests
         Check(DisplayServer.GetName() == "Wayland", "The native close test requires Wayland.");
         var windows = SDL.GetWindows(out var count);
         Check(count == 1 && windows is { Length: 1 }, "The native close test needs one window.");
-        var window = windows![0];
+        var window = display.AcquireRenderingWindow().DangerousGetHandle();
         var windowId = SDL.GetWindowID(window);
         var renderer = SDL.CreateRenderer(window, "software");
+        if (renderer == 0) display.ReleaseRenderingWindow();
         Check(renderer != 0, $"Cannot draw the native close test window: {SDL.GetError()}");
         var closeRequests = 0;
         var focusIn = 0;
@@ -56,6 +57,7 @@ internal static class DisplayServerWindowEventNativeTests
             DisplayServer.WindowMouseEntered -= OnEnter;
             DisplayServer.WindowMouseExited -= OnExit;
             SDL.DestroyRenderer(renderer);
+            display.ReleaseRenderingWindow();
         }
     }
 

@@ -223,6 +223,9 @@ The [Physics domain](physics.md) supplies RigidBody, StaticBody, CollisionShape,
 
 ## Windowed lifecycle
 
+Window's authored [native mouse input policy](../components/window-input-region.md)
+survives scene copying and native reopening; embedded GUI routing stays unchanged.
+
 The [Window runtime component](../components/window-runtime.md) provides Window : Viewport : Node, root native ownership, presentation mode, four executable native policies, optional screen selection, client/decorated geometry, IME/taskbar requests, window events and scene input handling. WindowMode and WindowFlag describe the mode/policy identifiers. Capability failures stay explicit; declared policy IDs do not imply implemented native integration. Engine.Run consumes the configured window and children. The root canvas renders retained rectangles, lines, polylines, dashes, arcs, circles, ellipses, polygons, short primitives, textures and GPU shader materials after scene processing. Control rectangle layout and the first root viewport input path are present; embedded viewport containers and root content scaling execute; remaining GUI families and independent native child windows retain their owning coverage gates.
 
 Pixel-snapping integration is described by [the canvas component](../components/canvas-rendering.md#pixel-snapping). Viewport owns independent transform/vertex policies; rendering preserves logical node transforms, while Sprite local queries honor attached transform snapping. Project defaults initialize the explicit root Window at construction.

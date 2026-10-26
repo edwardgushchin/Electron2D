@@ -73,6 +73,7 @@ public sealed partial class DisplayServer
         List<Exception>? failures = null;
         try
         {
+            try { UpdateMouseInputRegions(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             try { AccessibilityServer.PumpNative(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             DispatchPendingGamepadConnections(ref failures);
             if (dropInput)
@@ -291,6 +292,7 @@ public sealed partial class DisplayServer
                 }
                 break;
             case SDL.EventType.WindowDisplayScaleChanged:
+                RefreshMouseInputRegion();
                 RenderingServer.NotifyRenderMutation();
                 if (_waylandWindowPosition)
                 {
@@ -306,6 +308,7 @@ public sealed partial class DisplayServer
                 break;
             case SDL.EventType.WindowResized when !_pixelWindowCoordinates:
             case SDL.EventType.WindowPixelSizeChanged when _pixelWindowCoordinates:
+                RefreshMouseInputRegion();
                 RenderingServer.NotifyRenderMutation();
                 if (_waylandWindowPosition)
                     RefreshBlankWindowSurface();
@@ -528,7 +531,14 @@ public sealed partial class DisplayServer
         if (!position.IsFinite())
             throw new ArgumentOutOfRangeException(nameof(source), "Native mouse-button coordinates must be finite.");
         var mask = ButtonMask(button);
-        _heldMouseButtons = source.Down ? _heldMouseButtons | mask : _heldMouseButtons & ~mask;
+        if (source.Down) _heldMouseButtons |= mask;
+        else
+        {
+            // A native input-region change can move the release to another window.
+            var root = _rootDisplay ?? this;
+            root._heldMouseButtons &= ~mask;
+            foreach (var child in root._childWindows.Values) child._heldMouseButtons &= ~mask;
+        }
         using var @event = new InputEventMouseButton
         {
             WindowID = this.WindowID,

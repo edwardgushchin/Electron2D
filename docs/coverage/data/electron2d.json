@@ -105894,6 +105894,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowSetMousePassthrough(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetMousePassthrough",
+    "signature": "public static System.Void WindowSetMousePassthrough(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E region, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowSetPopupSafeRect(System.Int32,Electron2D.Rect2i)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -283434,6 +283458,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.WindowMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.MousePassthrough()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "MousePassthrough",
+    "signature": "public System.Boolean MousePassthrough { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.MousePassthroughPolygon()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "MousePassthroughPolygon",
+    "signature": "public Electron2D.Vector2[] MousePassthroughPolygon { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {
