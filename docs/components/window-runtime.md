@@ -167,7 +167,8 @@ python3 -B tests/PhysicsBackendExtension.Consumer/wayland_dpi.py \
 ```
 
 An executable path selects NativeAOT. The helper requires Linux Mutter with its
-headless virtual-output option and Python GI/Gio. It creates a private session bus,
+headless virtual-output option, Python GI/Gio, PipeWire with `pw-dump`, a C compiler,
+`pkg-config` and the PipeWire development headers. It creates a private session bus,
 refuses an occupied display-configuration service and verifies the service's PID
 against its owned compositor before every temporary scale edit. It changes only
 that compositor from `1` to `1.25` and back to `1`, bounds the complete case at
@@ -193,7 +194,8 @@ GPU control and a control with libdecor disabled completed; neither closes the
 ordinary decorated presentation gate. Extra synchronization, event pumping and
 presentation re-claim experiments failed and were reverted. The failing cases
 and native stack remain evidence, not passing qualification. DPI coverage stays
-Partial and the inherited physics declaration ratio remains 1,336/1,369 (97.59%).
+Partial; that earlier checkpoint recorded 1,336/1,369 physical declarations (97.59%).
+The [generated physics report](../coverage/physics-status.md) retains current counts.
 The cause of the native wait, foreign hosts and owner visual acceptance remain open.
 
 ### Standalone native presentation control
@@ -232,14 +234,52 @@ that distinction. Mailbox completes the same native scale/presentation round tri
 A server-only protocol trace stops after FIFO barrier waits. These observations
 isolate a native presentation-mode difference; they do not distinguish an SDL,
 driver, protocol or compositor defect. Immediate mode is reported unsupported.
-Attempted PipeWire capture controls did not obtain a consuming stream and do not
-establish whether a continuously consumed headless output changes the result.
+The initial PipeWire controls did not obtain a consuming stream. The consumed-output
+control below now supplies actual buffers, but does not eliminate the FIFO failure.
 
 Receipts and source/library/payload identities are under
 `bin/native-scale-presentation/2026-10-26/`. Passing Mailbox is a diagnostic
 control, not FIFO qualification. Keep notification 1009 Partial, preserve selected
 VSync and investigate the native FIFO path. No runtime workaround or coverage-state
 change accompanies this control.
+
+### Consumed virtual-output control
+
+The isolated helper compiles `tests/Electron2D.Tests/native_wayland_capture.c`
+inside its output directory. The drain negotiates mapped BGRx MemFd buffers,
+validates their bounds, returns each buffer and records nonempty-buffer counts.
+Before connecting, the helper verifies that both the D-Bus screen-cast service and
+the PipeWire source client belong to its owned compositor. It never records the
+user's desktop. Its private session and drain are retired before the compositor.
+
+Mutter stops a monitor recording when a scale edit changes that monitor's logical
+geometry. The helper therefore creates a new recording after each committed scale
+configuration and requires a nonempty buffer from all three recordings. Captures
+are damage-driven: unchanged client presentations need not produce additional
+buffers. The initial two-buffer requirement incorrectly rejected successful
+compatibility cases whose final recording contained one buffer; it was corrected
+without changing the consumer's eight-frame, pixel, event or physical assertions.
+These captures establish stream operation, not compositor FPS or capture cost.
+
+Eight fresh compatibility profiles pass: CLR and strict full-trim NativeAOT, each
+with CPU/GPU physics and owner/separate numerical execution. They retain the real
+root/child scale round trip, rendered pixels, event order and physical identities.
+Two CLR GPU-renderer CPU-physics controls also pass. However, another CPU profile
+and the GPU-physics GPU-renderer profile still stall before their first transition.
+The layer-policy control does not establish a cause: the passing and failing
+process maps contain no optional Vulkan layers.
+
+A native C FIFO control completes with reconnected recordings, but a consuming
+virtual-monitor control still fails. Separate diagnostic SDL builds with a finite
+acquisition timeout and native event pumping likewise fail their 30-second alarm.
+A control requesting NVIDIA's explicit-sync opt-out also fails. Those SDK and environment experiments
+are not runtime fixes. A late debugger attachment observes the native wait through
+`drmSyncobjTimelineWait` and `VULKAN_INTERNAL_AcquireSwapchainTexture`; a successful
+debugger-launched run does not qualify the ordinary path. The SDL/driver/compositor
+cause remains unresolved, so notification 1009 and its sibling events retain their
+existing coverage states. Receipts and source/binary identities are retained in
+`bin/dpi-fifo-consumer/2026-10-26/`. Whole-goal numerical, network, allocation,
+performance, foreign-platform and owner acceptance remain separate.
 
 Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.
 
