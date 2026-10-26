@@ -1,6 +1,6 @@
 # Native accessibility
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 ## Scope and owned types
 
@@ -77,3 +77,8 @@ ELECTRON2D_TEST_ACCESSIBILITY_LIVE=gpu or compatibility launches [an independent
 ELECTRON2D_TEST_ACCESSIBILITY_DRAG=managed checks [ownership, forwarding, keyboard remapping/project files and text/capacity](../../tests/Electron2D.Tests/AccessibilityDragTests.Managed.cs). gpu/compatibility run [a real public scene](../../tests/Electron2D.Tests/AccessibilityDragTests.cs) and [an independent libatspi client](../../tests/AccessibilityClient/drag.py): exact signed IDs, replacement ordinals, empty descriptions, disabled/unbound/retired actions, NUL/Unicode/large name context, actual announcements, preview output, acceptance changes, transfers and callback failure/reopening. Prepared idle/active full frames are measured separately from cold source preparation and native requests. Strict NativeAOT references the same public fixtures; source-consumer qualification does not establish release-package, native-heap, physical-device, foreign-adapter or human reader acceptance.
 
 [Contextual native navigation](../classes/AccessibilityServer.md#contextual-navigation) connects custom container position/help, direct keybinding metadata from real button/menu sources, class names and role descriptions. The owning contract defines override, lifecycle and verification boundaries.
+
+
+[Producer models](../classes/AccessibilityServer.md#producer-models) connect typed, process-local element metadata to existing compiled native actions. The service retains the slot without owning disposal; replacement, clearing and all element retirement paths release it. Automatic scene identities and copying remain separate. AccessibilityModelTests and its independent native client verify current-model lookup, ownership, failures and prepared reference-model frame budgets.
+
+The foundation retirement/reopening regression gives its deferred child finite bounds before attachment: Visible includes connected semantic groups, while Showing also requires nonempty geometry. Attaching that subtree still has to emit the real showing transition.

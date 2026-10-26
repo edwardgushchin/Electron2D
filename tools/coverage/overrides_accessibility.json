@@ -1151,6 +1151,18 @@
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetURL(Electron2D.RID,System.String)",
       "state": "Implemented",
       "reason": "ADR 0114: executable external native Hyperlink destination with automatic LinkButton URI publication, explicit/source override policy, internal-target coexistence and retirement. Independent libatspi/GIO clients exercise actual Int32 anchor counts, GetURI/GetObject, invalid indices, Unicode/native normalization, authoring, actual activation hook and failures on software Compatibility/GPU. Prepared owner frames and strict source NativeAOT retain human-reader, native-heap, foreign-platform, OS-handoff and package gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:element_get_meta(RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.ElementGetMeta`1(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114/0001: generic per-element CLR producer slot, default/null/type semantics and current-model lookup from real native actions. Strong reference replacement/clear/retirement, source copying, owner/identity rejection, failure cleanup and prepared reference-model frames execute; no dynamic value container or model disposal. NativeAOT source, hardware, human-reader, native-heap, foreign-platform and package gates remain distinct."
+    },
+    {
+      "godot": "AccessibilityServer::method:element_set_meta(RID:,Variant:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.ElementSetMeta`1(Electron2D.RID,T)",
+      "state": "Implemented",
+      "reason": "ADR 0114/0001: generic per-element CLR producer slot, default/null/type semantics and current-model lookup from real native actions. Strong reference replacement/clear/retirement, source copying, owner/identity rejection, failure cleanup and prepared reference-model frames execute; no dynamic value container or model disposal. NativeAOT source, hardware, human-reader, native-heap, foreign-platform and package gates remain distinct."
     }
   ],
   "extras": [
@@ -1223,8 +1235,8 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: typed per-element metadata keys with exact owner/copy/retirement semantics; no untyped variant container. Do not add inert metadata or unsupported action selectors.",
+      "state": "Implemented",
+      "reason": "ADR 0114/0001: generic per-element CLR producer slot, default/null/type semantics and current-model lookup from real native actions. Strong reference replacement/clear/retirement, source copying, owner/identity rejection, failure cleanup and prepared reference-model frames execute; no dynamic value container or model disposal. NativeAOT source, hardware, human-reader, native-heap, foreign-platform and package gates remain distinct.",
       "godot": [
         "AccessibilityServer::method:element_get_meta(RID:)",
         "AccessibilityServer::method:element_set_meta(RID:,Variant:)"
@@ -1232,7 +1244,7 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/state metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
+      "reason": "ADR 0114: the 2026-10-27 consumer check found Orca brailleroledescription in the shared role path, but braillelabel only in its web accessible-name generator, which rejects ordinary desktop content. Complete this connected presentation slice after a real desktop braille-label consumer and GUI-source propagation execute. state_description has no verified native projection in the inspected AccessKit Unix adapter f3026222559c7f5f46d8f25cb7404de68eb149f0; establish an actual native state-description consumer before exposing it. No inert setters or invented role/state attributes.",
       "godot": [
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
         "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",

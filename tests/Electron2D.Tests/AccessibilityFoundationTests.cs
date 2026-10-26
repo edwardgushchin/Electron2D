@@ -82,6 +82,7 @@ internal static partial class AccessibilityFoundationTests
                         var parent = AccessibilityServer.CreateElement(window.GetWindowID(), Role.Container);
                         AccessibilityServer.UpdateSetName(parent, "Deferred subtree");
                         var child = AccessibilityServer.CreateSubElement(parent, Role.Button); AccessibilityServer.UpdateSetName(child, "Deferred child");
+                        AccessibilityServer.UpdateSetBounds(child, new(8, 88, 80, 16));
                         AccessibilityServer.UpdateAddChild(root, parent);
                     }
                 });

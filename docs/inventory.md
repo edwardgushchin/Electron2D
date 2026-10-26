@@ -2295,3 +2295,6 @@ Control.AccessibilityContext adds the two native context hooks. AccessibilitySer
 AccessibilityServer.Links adds UpdateSetURL and retained source URI snapshots within existing Element ownership. SceneAccessibility publishes LinkButton URIs; ATSPIServer.Relations/Protocol share internal/external anchor discovery and the native Int32 count ABI. AccessibilityURLTests and its independent libatspi/GIO client exercise source, authoring, activation and lifetime.
 
 Engine adds the transient IsEditorHint host property and retained descriptor, selected by editor/Program. Existing audio, sprite, animation, video and scoped timer owners consume it. SpriteFrames tracks private texture-cache memberships through existing Texture residency primitives; no new production type or native dependency is introduced. EditorHintTests covers the public host/source path; AnimatedSpriteTests covers borrowed cache lifetime.
+
+
+AccessibilityServer.Metadata adds generic per-element producer model access within the existing Element owner. Native action callbacks retrieve the current model by RID; references retire with element identity and never enter scene storage. AccessibilityModelTests and tests/AccessibilityClient/models.py exercise typed values, reference release and actual native action dispatch without a new production type or dependency.

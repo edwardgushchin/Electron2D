@@ -145,3 +145,6 @@ Native accessibility scrolling now connects existing scrollable GUI sources to A
 [Contextual native navigation](../classes/AccessibilityServer.md#contextual-navigation) connects custom container position/help, direct keybinding metadata from real button/menu sources, class names and role descriptions. The owning contract defines override, lifecycle and verification boundaries.
 
 [Native hyperlink destinations](../classes/AccessibilityServer.md#native-hyperlinks) connect LinkButton URI authoring and generic producers to external AT-SPI consumers, retaining internal targets and the existing activation pipeline.
+
+
+[Producer models](../classes/AccessibilityServer.md#producer-models) let native action handlers resolve the current typed model by element RID. The slot follows native element lifetime and stays outside authored scene storage; the owning reference records release, type and verification contracts.

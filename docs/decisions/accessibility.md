@@ -1,6 +1,6 @@
 # Native accessibility and semantic scene output
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 <a id="adr-0114"></a>
 ## ADR 0114: Typed accessibility elements with a native assistive-technology bridge
@@ -12,6 +12,8 @@ Accepted. This implements the current service ownership required by [ADR 0041](d
 ### Decision
 
 AccessibilityServer is a static public service backed by a permanent internal ElectronObject. It owns session-unique element RIDs, typed roles/flags, parent/child relationships and registered compiled actions. RIDs are distinct from rendering/physics resources and never reused. Window roots are owned by the native window; ordinary elements by their producer, while sub-elements retire with their semantic parent. Stale/wrong-kind identities, foreign windows, cycles, incompatible action signatures and nonfinite geometry fail explicitly. Native failure must not publish an apparently supported service.
+
+Producer metadata is one process-local slot per live element, projected as ElementSetMeta<T>/ElementGetMeta<T> under ADR 0001. It retains ordinary CLR references or boxed values; null clears and an empty slot returns default(T). Retrieval uses CLR assignability/unboxing, without numeric conversion or a dynamic value container. Producers choose a compatible type and may use nullable value types to distinguish absence. Reference identity and normal value-copy semantics are preserved. The service owns the slot lifetime, never disposal or deep cloning of its contents. Replacement, clearing and every retirement path release the previous reference. Native action callbacks can resolve their current model by RID; metadata alone publishes no native attribute and never travels through scene copying or serialization. The same native-owner and live-identity guards apply to reads and writes.
 
 The first executable profile connects the core element tree, names/descriptions, bounds, checked/disabled/hidden state, focus and no-argument activation to Linux AT-SPI through the system GIO/GLib ABI. It exports the actual Accessible, Application, Component, Action and Cache protocols, registers with the session accessibility registry and emits topology/property/state/focus changes. The adapter owns its connection and private main context. Native requests run on the display owner during the existing event pump; application callbacks never run on a bus worker thread or cross an unmanaged exception boundary. Callback failures follow the display pump's aggregated exception policy. Retiring a window removes its tree and retiring the display releases all native registrations and connection/context ownership.
 

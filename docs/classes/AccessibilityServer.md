@@ -1,9 +1,9 @@
 # AccessibilityServer
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 - Declaration: `public sealed partial class AccessibilityServer : ElectronObject`
-- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs), [collection API](../../src/Servers/Accessibility/AccessibilityServer.Collections.cs), [collection sources](../../src/Servers/Accessibility/AccessibilityServer.CollectionSources.cs), [URL publication](../../src/Servers/Accessibility/AccessibilityServer.Links.cs)
+- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs), [collection API](../../src/Servers/Accessibility/AccessibilityServer.Collections.cs), [collection sources](../../src/Servers/Accessibility/AccessibilityServer.CollectionSources.cs), [URL publication](../../src/Servers/Accessibility/AccessibilityServer.Links.cs), [producer metadata](../../src/Servers/Accessibility/AccessibilityServer.Metadata.cs)
 - Inherits: [ElectronObject](ElectronObject.md); no derived types or public constructor.
 - Component: [Native accessibility](../components/accessibility.md)
 
@@ -71,6 +71,8 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateAddRelatedRadioGroup(RID id, RID relatedID)` | [UpdateAddRelatedRadioGroup](#updateaddrelatedradiogroup) |
 | `public static void UpdateSetMemberOf(RID id, RID groupID)` | [UpdateSetMemberOf](#updatesetmemberof) |
 | `public static void UpdateSetErrorMessage(RID id, RID otherID)` | [UpdateSetErrorMessage](#updateseterrormessage) |
+| `public static void ElementSetMeta<T>(RID id, T? meta)` | [Producer models](#producer-models) |
+| `public static T? ElementGetMeta<T>(RID id)` | [Producer models](#producer-models) |
 | `public static void UpdateSetURL(RID id, string url)` | [Native hyperlinks](#native-hyperlinks) |
 | `public static void UpdateSetInPageLinkTarget(RID id, RID otherID)` | [UpdateSetInPageLinkTarget](#updatesetinpagelinktarget) |
 | `public static void UpdateSetActiveDescendant(RID id, RID otherID)` | [UpdateSetActiveDescendant](#updatesetactivedescendant) |
@@ -561,3 +563,23 @@ NAnchors uses signed Int32 in both introspection and values. The pinned [libatsp
 LinkButton automatically publishes its stored URI and uses its existing Click pipeline. Explicit service URL overrides, including empty, persist until the observed source URI changes. The URI setter queues semantic refresh, including dependent custom contextual help. A replacement/reparented identity receives the current source value. Packed scenes and duplication preserve the authored URI while omitting native identities and cached overrides.
 
 ELECTRON2D_TEST_ACCESSIBILITY_URL=managed checks null/availability guards and packed/duplicated URI ownership. compatibility/gpu execute [AccessibilityURLTests](../../tests/Electron2D.Tests/AccessibilityURLTests.cs) and an independent [libatspi/GIO client](../../tests/AccessibilityClient/url.py): real URI discovery, external/internal coexistence, count ABI, invalid indices, clearing, target/source retirement, reparenting, long/Unicode/native-normalized strings, override refresh, actual activation hooks, callback failure and fresh reopening. These tests never launch an external resource; the source hook records its actual configured URI. Prepared 64 idle/64 active owner-frame samples and a strict source NativeAOT consumer retain separate native-heap, hardware, foreign-platform, human-reader, OS handoff and release-package gates.
+
+
+Remaining braille/state presentation has an explicit consumer dependency. The 2026-10-27 check found Orca's shared [role-description path](https://gitlab.gnome.org/GNOME/orca/-/blob/main/src/orca/ax_object.py) reading brailleroledescription, but its [braille-label path](https://gitlab.gnome.org/GNOME/orca/-/blob/main/src/orca/scripts/web/braille_generator.py) is restricted to web content. A working desktop braille-label reader and GUI propagation are required for the connected slice. State description still needs an actual native consumer/projection; the inspected [Unix adapter](https://github.com/AccessKit/accesskit/blob/f3026222559c7f5f46d8f25cb7404de68eb149f0/atspi-common/src/node.rs) does not supply one. These remain implementation obligations in coverage.
+
+## Producer models
+
+ElementSetMeta<T> associates one model or value with a live element. A registered action can capture its RID and use ElementGetMeta<T> on each invocation, so replacing the slot changes the model used by the existing native action. Empty slots return default(T); null clears regardless of the former type. Nullable value types distinguish absence from zero/default. Reference retrieval preserves identity and accepts compatible base/interface types. Value types box on assignment and copy on retrieval. Incompatible nonempty reads throw InvalidCastException; no numeric coercion or deep cloning occurs. Both methods enforce the ordinary native-owner, availability and live-RID guards, including no-op writes and empty reads.
+
+The slot holds a strong reference until replacement, clearing or retirement. It never owns or disposes the caller's model. Parent-owned subelements, source detach, window/display shutdown and failure cleanup release their slots. A replacement scene identity starts empty; scene duplication/packing does not retain the native RID or model. Reparenting a live generic element preserves its slot. Metadata is producer-local and is not a native attribute, a stored scene property or an automatic name/value source.
+
+```csharp
+AccessibilityServer.ElementSetMeta(element, model);
+AccessibilityServer.UpdateAddAction(element, AccessibilityServer.AccessibilityAction.Click, () =>
+{
+    var current = AccessibilityServer.ElementGetMeta<MyModel>(element);
+    if (current is not null) current.Activate();
+});
+```
+
+ELECTRON2D_TEST_ACCESSIBILITY_MODELS=managed checks unavailable-service guards. compatibility/gpu execute [AccessibilityModelTests](../../tests/Electron2D.Tests/AccessibilityModelTests.cs) with an independent [native action client](../../tests/AccessibilityClient/models.py): current/replaced/cleared models, CLR reference/value behavior, wrong-type/owner/identity rejection, weak-reference release, scene detach/reattach, reentrant retirement, callback failure and fresh reopening. Prepared 64 idle/64 active owner-frame samples cover reference-model reads/replacement. Value-type assignment may box. NativeAOT source execution, package delivery, native heap, physical hardware, foreign adapters and human-reader acceptance remain separate gates.

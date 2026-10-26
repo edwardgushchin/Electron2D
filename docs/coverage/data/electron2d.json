@@ -71180,6 +71180,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.ElementGetMeta\u00601(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "ElementGetMeta",
+    "signature": "public static T ElementGetMeta\u003CT\u003E(Electron2D.RID id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.ElementSetMeta\u00601(Electron2D.RID,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "ElementSetMeta",
+    "signature": "public static System.Void ElementSetMeta\u003CT\u003E(Electron2D.RID id, T meta)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "meta",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.FreeElement(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
