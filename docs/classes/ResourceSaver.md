@@ -1,6 +1,6 @@
 # ResourceSaver
 
-Last updated: 2026-10-20
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.ResourceSaver`. **Source:** [ResourceSaver.cs](../../src/Core/IO/ResourceSaver.cs).
 
@@ -127,3 +127,5 @@ ShaderInclude source (`.hlslinc`/`.glslinc`) participates in the existing ordere
 `ResourceSaver.SaveScene(root, "user://level.e2dscene")` is the explicit authoring operation. It sends parent-first Node.NotificationEditorPreSave (9001), captures the owned scene using PackForSave, writes through the existing registered saver and updates the root SceneFilePath on successful write. Node.NotificationEditorPostSave (9002) is attempted once pre-save delivery has begun, even after callback/capture/write failure. Internal/unowned descendants receive notifications although owner filtering still decides what is persisted. Temporary packed data retires before post-save cleanup.
 
 Input, owner and capture-access rejection before pre-save sends no notifications. Same-root recursive/concurrent saves reject without a second lifecycle. Callback changes are application-owned; post-save callbacks can restore temporary state. A post-save or origin-observer error does not roll back an already committed file. Independent operation/retirement/cleanup exceptions retain their identity and order. Plain Save, Pack and PackForSave retain their existing notification-free behavior. See [the executable contract](../components/resource-files.md#live-scene-authoring-save).
+
+[Version-8 material recovery](../components/material-placeholders.md) preserves typed missing-material fields and graphs for compiled restoration, with strict default loading, legacy readers and explicit missing-payload provenance. See [resource-file layout](../components/resource-files.md#version-8-material-recovery).

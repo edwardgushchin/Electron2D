@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
 
 ## Live-scene authoring save
 
@@ -127,7 +127,7 @@ ImmediateMesh saves completed surfaces and material graph aliases through AMS2 t
 
 Version 2 introduced explicit scalar/resource/resource-array/node-reference roles and per-field byte order to the existing bounded archive. Version 4 definitions distinguish generic resources, Mesh and ordinary Texture. Meshes retain finite nonnegative Rect2 bounds; textures retain finite signed integer dimensions. Version 4 also records missing payloads independently from unavailable factory identities. Known version-1/2/3 resource graphs, including legacy texture roles, retain their original layouts. Allocate-before-apply, exact known schemas, checksums, endian/compression, atomic write and owned rollback remain enforced. Version-1 known graphs still load; version-1 unknown fields reject because their resource IDs cannot safely be identified and relocated.
 
-ResourceLoader.SetAbortOnMissingResources defaults true. A synchronous archive graph or threaded request captures the policy once, including nested dependencies. False permits MissingResource for an unavailable generic factory, PlaceholderMesh for an unavailable mesh factory and PlaceholderTexture for an unavailable ordinary texture factory. Missing external archive dependencies retain original factory/path/UID identity and aliases. Factory failures, corrupt files, unsupported Node references and incompatible concrete property types still fail; no assembly or CLR type is loaded from file data. Material/Font/AudioStream/Shape and other exact subtype substitutions need their own typed producer. MissingNode remains blocked on persistent signal/endpoint storage and safe node-reference projection.
+ResourceLoader.SetAbortOnMissingResources defaults true. A synchronous archive graph or threaded request captures the policy once, including nested dependencies. False permits MissingResource for an unavailable generic factory, PlaceholderMesh for an unavailable mesh factory PlaceholderTexture for an unavailable ordinary texture factory and, in version 8, PlaceholderMaterial for an unavailable material factory. Missing external archive dependencies retain original factory/path/UID identity and aliases. Factory failures, corrupt files, unsupported Node references and incompatible concrete property types still fail; no assembly or CLR type is loaded from file data. Concrete material subtypes, Font/AudioStream/Shape and other exact subtype substitutions need their own typed producer. MissingNode recovery uses the version-7 connection and node-reference contract below.
 
 MissingResource retains original factory identity and exact encoded scalar fields, including absent codecs. Resource fields are live borrowed identities, so saving a subresource as a new root, endian changes, duplication, local graphs and Replace remap references correctly. SetRecordedProperty/GetRecordedProperty use closed typed codecs/schemas and never dispatch into CLR members. RecordingProperties defaults false, permits exact-schema edits to existing fields and gates additions. Descriptor discovery exposes copied scalar bytes or typed base-resource identities; original schemas remain private wire metadata. OriginalClass is non-stored metadata and controls the saved factory identity. Explicit assignment authors a recorded-state binding and clears missing-payload provenance; automatic copying preserves it. An authored MissingResource with an empty OriginalClass still persists its recorded fields.
 
@@ -168,7 +168,7 @@ Mounted res:// resources now share [resource pack resolution](resource-packs.md)
 
 ## Version 5 linked scene records
 
-Version 5 introduced linked scene headers; the current writer uses version 7 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
+Version 5 introduced linked scene headers; the current writer uses version 8 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
 
 ## Version 6 deferred scene records
 
@@ -195,3 +195,9 @@ Numeric shader matrix values use the BCL System.Numerics.Matrix4x4 carrier. Its 
 Visual shader archives also register the concrete numeric parameter definitions and ParameterRef. Copied DefaultValue, qualifier/slot state, advisory ranges and enum labels remain authoring data; shared declarations retain aliases across stages. The compiled program carries its own validated defaults/hints, so a source edit requires reimport. See [graph parameters](visual-shaders.md#parameters-and-graph-local-references).
 
 Derivative graph definitions register the same typed resource factory and preserve OpType, Function, Precision and numeric defaults/absence. MultiplyAdd and derivatives store the shared VisualShaderFloatOpType identity. Graphs written with the former MultiplyAdd nested enum identity require reauthoring/reimport; strict schema lookup rejects it instead of creating a public alias.
+
+## Version 8 material recovery
+
+Version 8 adds Material as resource role 3, without bounds; resource provenance/field records and version-7 scene/connection tables retain their layouts. Known versions 1–7 remain readable using their original role validation. Unknown legacy generic definitions cannot be inferred to be materials. Metadata, UID rewriting and discovery use the same bounded reader as loading.
+
+[Material placeholders](material-placeholders.md) retain unknown factory fields, aliases/cycles, scene-local ownership and missing external payload provenance through copies, bundles and threaded loading. Strict mode remains the default; unavailable concrete subtypes, corrupt role/schema/provenance and factory failures still reject before cache publication. A returned factory restores retained fields in a fresh process; an unbundled external dependency can revive when its file returns.

@@ -9160,6 +9160,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PlaceholderMaterial",
+    "kind": "type",
+    "declaringType": "Electron2D.PlaceholderMaterial",
+    "name": "PlaceholderMaterial",
+    "signature": "public sealed class Electron2D.PlaceholderMaterial",
+    "visibility": "public",
+    "baseType": "Electron2D.Material",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PlaceholderMesh",
     "kind": "type",
     "declaringType": "Electron2D.PlaceholderMesh",
@@ -24584,6 +24599,19 @@
     "declaringType": "Electron2D.PinJoint",
     "name": ".ctor",
     "signature": "public PinJoint()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PlaceholderMaterial..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PlaceholderMaterial",
+    "name": ".ctor",
+    "signature": "public PlaceholderMaterial()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -126673,6 +126701,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Material.CreatePlaceholder()",
+    "kind": "method",
+    "declaringType": "Electron2D.Material",
+    "name": "CreatePlaceholder",
+    "signature": "public Electron2D.PlaceholderMaterial CreatePlaceholder()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PlaceholderMaterial",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Material.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Material",
@@ -156952,6 +156993,96 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PlaceholderMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PlaceholderMaterial",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PlaceholderMaterial.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.PlaceholderMaterial",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PlaceholderMaterial.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PlaceholderMaterial",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PlaceholderMaterial.RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PlaceholderMaterial",
+    "name": "RemapResourceReferences",
+    "signature": "protected override System.Void RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E remap)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "remap",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

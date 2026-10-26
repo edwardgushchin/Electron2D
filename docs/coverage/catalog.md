@@ -441,7 +441,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |
 | [Marshalls](classes/Marshalls.md) | Object | Excluded | 6 |
-| [Material](classes/Material.md) | Resource | Partial | 10 |
+| [Material](classes/Material.md) | Resource | Implemented | 10 |
 | [MenuBar](classes/MenuBar.md) | Control | Partial | 40 |
 | [MenuButton](classes/MenuButton.md) | Button | Partial | 17 |
 | [Mesh](classes/Mesh.md) | Resource | Partial | 89 |
@@ -640,7 +640,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PinJoint3D](classes/PinJoint3D.md) | Joint3D | Excluded | 9 |
 | [PlaceholderCubemap](classes/PlaceholderCubemap.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderCubemapArray](classes/PlaceholderCubemapArray.md) | PlaceholderTextureLayered | Excluded | 0 |
-| [PlaceholderMaterial](classes/PlaceholderMaterial.md) | Material | Blocked | 0 |
+| [PlaceholderMaterial](classes/PlaceholderMaterial.md) | Material | Implemented | 0 |
 | [PlaceholderMesh](classes/PlaceholderMesh.md) | Mesh | Implemented | 1 |
 | [PlaceholderTexture2D](classes/PlaceholderTexture2D.md) | Texture2D | Implemented | 2 |
 | [PlaceholderTexture2DArray](classes/PlaceholderTexture2DArray.md) | PlaceholderTextureLayered | Implemented | 0 |

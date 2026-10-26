@@ -298,8 +298,6 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041)."
     if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
         return "Blocked", "Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021)."
-    if name == "PlaceholderMaterial":
-        return "Blocked", "Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023)."
     if name in {"BlitMaterial", "DrawableTexture2D"}:
         return "Blocked", "Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028)."
     if name in {"CanvasTexture", "MeshTexture"}:
