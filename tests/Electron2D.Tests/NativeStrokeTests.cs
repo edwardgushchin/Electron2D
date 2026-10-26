@@ -5,7 +5,7 @@ using static TextureArrayTests;
 
 internal static partial class NativeStrokeTests
 {
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
     private delegate nint GLString(uint name);
     private sealed class Painter : Entity
     {
@@ -128,14 +128,28 @@ internal static partial class NativeStrokeTests
             new("collapsed gradient", collapsed, collapsedColors, false, n => RenderingServer.CanvasItemAddMultiline(n.GetCanvasItem(), collapsed, collapsedColors), true)
         ];
         if (!compatibility) return cases;
-        Vector2[] lineUV = [new(.25f, .25f), new(.75f, .25f)];
+        // Keep nearest-sampler transitions away from an exactly interpolated half texel.
+        Vector2[] lineUV = [new(.22f, .25f), new(.81f, .25f)];
         return [.. cases,
             new("textured line", horizontal, [Colors.White, Colors.White], false, n => n.DrawPrimitive(horizontal, [Colors.White], lineUV, pointTexture), true, lineUV, SampleTexture: pointTexture),
-            new("translucent atlas line", line, [faded[0], faded[2]], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), line, [faded[0], faded[2]], [new(.25f, .25f), new(.75f, .75f)], pointAtlas.GetRID()), true, [new(.25f, .25f), new(.75f, .75f)], SampleTexture: pointTexture),
+            new("translucent atlas line", line, [faded[0], faded[2]], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), line, [faded[0], faded[2]], [new(.22f, .27f), new(.81f, .86f)], pointAtlas.GetRID()), true, [new(.22f, .27f), new(.81f, .86f)], SampleTexture: pointTexture),
             new("reversed textured line", [horizontal[1], horizontal[0]], [Colors.White, Colors.White], false, n => n.DrawPrimitive([horizontal[1], horizontal[0]], [Colors.White], lineUV, pointTexture), true, lineUV, SampleTexture: pointTexture)
         ];
     }
     internal static void Run(string profile)
+    {
+        var lifecycles = profile.EndsWith("-lifecycle", StringComparison.Ordinal) ? 2 : 1;
+        for (var i = 0; i < lifecycles; i++)
+        {
+            RunOnce(profile);
+            if (lifecycles == 2)
+            {
+                Check(SDL3.SDL.GLGetCurrentContext() == 0, "The completed renderer releases its native GL context before the next lifecycle");
+                Console.WriteLine($"Native stroke lifecycle {profile}: {i + 1}/{lifecycles} complete.");
+            }
+        }
+    }
+    private static void RunOnce(string profile)
     {
         var gpu = profile.StartsWith("gpu", StringComparison.Ordinal); var baseline = Environment.GetEnvironmentVariable("ELECTRON2D_NATIVE_STROKE_BASELINE") == "1";
         var snap = profile.Contains("snap", StringComparison.Ordinal); var hdr = profile.Contains("hdr", StringComparison.Ordinal);

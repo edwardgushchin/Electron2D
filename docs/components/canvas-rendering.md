@@ -1016,12 +1016,60 @@ process-map, shader, PE/PDB and authored-source receipts bind these runs to the
 executed CLR/native inputs; no new kernel GPU error was recorded.
 
 The final verification receipts are retained under
-`bin/physics-attribute-lines/2026-10-26/validation.json`. SDL native line/geometry methods (hints
-2/3) and other drivers retain the prior triangle path and its explicit subpixel
-limit. DrawPrimitive, DrawPolylineColors and the attribute-bearing server rows
+`bin/physics-attribute-lines/2026-10-26/validation.json`. At that checkpoint SDL
+native line/geometry methods (hints 2/3) and other drivers retained the prior
+triangle path and its explicit subpixel limit; [the following slice](#native-attributed-gl-lines-2026-10-26)
+now qualifies native OpenGL/OpenGL ES hint 2. DrawPrimitive, DrawPolylineColors and the attribute-bearing server rows
 remain Partial. Physics declaration accounting stays 1346/1369 (98.32%): 23 open,
 92 Excluded. This does not establish full-step physics speedup, native allocator,
 foreign-platform or owner visual acceptance.
+
+## Native attributed GL lines, 2026-10-26
+
+CompatibilityCanvasBackend also preserves interpolated color and texture UVs for
+SDL's native OpenGL/OpenGL ES line method (hint 2). It retains the public SDL
+[flush/invalidation boundary](https://wiki.libsdl.org/SDL3/SDL_FlushRenderer)
+and SDL-owned shader, texture, blend, viewport, scissor and render-target state.
+A degenerate SDL triangle prepares that state; the subsequent native GL line draw
+uses the selected driver's half-pixel and quarter-pixel endpoint policy. Separate
+line pairs remain separate; repeated strip positions retain their color/UV values
+without another endpoint displacement. Global renderer hints remain unchanged.
+
+Desktop GL uses pinned client vertex arrays. OpenGL ES retains one private VBO,
+growing only with prepared capacity and reflecting the current SDL program's
+position/color/UV locations. Teardown deletes the VBO in its owning context before
+renderer destruction. The next SDL queue rebinds its own vertex state. There is
+no second production renderer, mask/readback path, custom shader or explicit GPU
+wait. Actual native draw accounting includes the state-preparation command.
+
+The independent oracle uses native additive SDL prefix subtraction to isolate
+connected segment coverage while retaining preceding endpoint displacement.
+Attribute interpolation uses the observed NVIDIA major-axis rule; this is a
+scoped hardware observation, not a universal OpenGL interpolation claim. Texture
+fixtures retain variable nearest samples and alpha with asymmetric UV phases to
+avoid an exact half-texel discontinuity. Every case retains the unchanged .012
+per-channel tolerance. Two complete window/renderer/world lifecycles per lifecycle
+profile also assert that renderer destruction leaves no current GL context.
+
+Twenty CLR and twenty strict full-trim, reflection-disabled NativeAOT profiles
+pass 44 complete lifecycles: 22,478,848 compared pixels in 7,040 render frames.
+All 5,632 measured active/idle render intervals retain strict 0/0 owner/all-thread
+managed bytes. Another 3,304 PhysicsFrameStarted-to-body-state-sync intervals
+retain 0/0 bytes; later physics-frame work remains outside that bracket. Actual
+NVIDIA mappings, absent software fallback/CoreCLR in native execution, unchanged
+payload manifests, four PE/PDB/source cohorts (2638/988/2638/7 authored documents),
+actual ILC input hashes and eight matching main shader outputs bind the results.
+No new kernel GPU error was recorded. SDL reports native version 3.4.18.
+
+Final qualification receipts are retained under
+`bin/physics-native-attribute-lines/2026-10-26/validation.json`, SHA-256
+bd8d7c4b7198afccbb3a0f89628460c86737cc1ba9cbac664968a29d380bcdd8. The former runtime is RED against
+the same hint-2 fixture at the first primitive line coverage pixel. Geometry method
+(hint 3) and other drivers remain open. DrawPrimitive, DrawPolylineColors and the
+attribute-bearing server rows remain Partial; physics declarations remain
+1346/1369 (98.32%), with 23 open and 92 Excluded. This bounded renderer change does
+not establish full-step physics performance, native allocator, foreign-platform
+or owner visual acceptance.
 
 ## Retained distance-field mode
 

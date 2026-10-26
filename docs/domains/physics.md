@@ -1,3 +1,5 @@
+[Native attributed GL lines](../components/canvas-rendering.md#native-attributed-gl-lines-2026-10-26) now cover SDL OpenGL/OpenGL ES hint 2, including repeated lifecycle checks. Geometry mode and other drivers remain open; this renderer fix promotes no physics declaration: **1346/1369 (98.32%)**, **23 open** (15 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded.
+
 [The common-body contract](../components/physics-body-contract.md) audits all six PhysicsBody methods and the body-specific picking default across its five concrete scene roles. Its public consumer preserves motion/output/exception/gravity and direct-profile publication boundaries; inherited declarations and complete physics acceptance remain separate.
 
 [Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) extend inherited physical/GUI logical query access without changing numerical or native permissions.

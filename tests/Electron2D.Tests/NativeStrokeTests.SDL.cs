@@ -74,6 +74,19 @@ internal static partial class NativeStrokeTests
         var points = definition.Points.Select(point => painter.GetGlobalTransform() * point).ToArray();
         if (snap) for (var i = 0; i < points.Length; i++) points[i] = (points[i] + new Vector2(.5f, .5f)).Floor();
         using var sampled = definition.SampleTexture?.GetImage();
+        var nativeLines = int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var method) && method == 2 && RenderingServer.GetCurrentRenderingDriverName() is "opengl" or "opengles2";
+        var rasterPoints = points.ToArray();
+        if (nativeLines)
+            for (var i = 0; i < rasterPoints.Length; i++)
+            {
+                var point = points[i] + new Vector2(.5f, .5f);
+                if (i != 0 && (definition.Connected || i % 2 != 0))
+                {
+                    if (points[i] == points[i - 1]) point = rasterPoints[i - 1];
+                    else { var angle = MathF.Atan2(point.Y - rasterPoints[i - 1].Y, point.X - rasterPoints[i - 1].X); point += new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * .25f; }
+                }
+                rasterPoints[i] = point;
+            }
         var last = points.Length - 1;
         if (definition.Connected) while (last > 0 && points[last - 1] == points[last]) last--;
         for (var i = 1; i <= last; i += definition.Connected ? 1 : 2)
@@ -87,7 +100,14 @@ internal static partial class NativeStrokeTests
                 Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 0) && SDL.RenderClear(renderer), "Clear native attribute coverage");
                 Check(SDL.SetRenderDrawBlendMode(renderer, SDL.BlendMode.Add) && SDL.SetRenderDrawColorFloat(renderer, 32f / 255, 32f / 255, 32f / 255, 1), "Set independent coverage weight");
                 SDL.FPoint P(Vector2 p) => new() { X = p.X, Y = p.Y };
-                SDL.FPoint[] path = subtract ? [P(b), P(tail)] : drawEnd ? [P(a), P(b)] : [P(a), P(b), P(tail)];
+                SDL.FPoint[] path;
+                if (nativeLines)
+                {
+                    // Prefix subtraction preserves each preceding quarter-pixel endpoint displacement.
+                    var prefix = definition.Connected ? points[..(i + (subtract ? 0 : 1))] : [a, b];
+                    path = prefix.Where((point, index) => index == 0 || point != prefix[index - 1]).Select(P).ToArray();
+                }
+                else path = subtract ? [P(b), P(tail)] : drawEnd ? [P(a), P(b)] : [P(a), P(b), P(tail)];
                 Check(SDL.RenderLines(renderer, path, path.Length), "Rasterize native attribute coverage");
                 using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, clip), SDL.DestroySurface);
                 using var rgba = new RenderHandle(SDL.ConvertSurface(surface.DangerousGetHandle(), BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888), SDL.DestroySurface);
@@ -95,13 +115,17 @@ internal static partial class NativeStrokeTests
                 for (var y = 0; y < 32; y++) for (var x = 0; x < 64; x++) values[y * 64 + x] = Marshal.ReadByte(data.Pixels + y * data.Pitch + x * 4);
                 return values;
             }
-            var coverage = Coverage(false); var following = drawEnd ? null : Coverage(true);
+            var coverage = Coverage(false); var following = nativeLines ? definition.Connected && i > 1 ? Coverage(true) : null : drawEnd ? null : Coverage(true);
             var ca = definition.Colors[i - 1 < definition.Colors.Length ? i - 1 : 0]; var cb = definition.Colors[i < definition.Colors.Length ? i : 0];
             for (var y = 0; y < 32; y++) for (var x = 0; x < 64; x++)
                 {
                     var alpha = Math.Clamp((coverage[y * 64 + x] - (following?[y * 64 + x] ?? 0)) / 32f, 0, 1); if (alpha == 0) continue;
-                    var dx = (double)b.X - a.X; var dy = (double)b.Y - a.Y;
-                    var t = (float)Math.Clamp(((origin.X + x - a.X) * dx + (origin.Y + y - a.Y) * dy) / (dx * dx + dy * dy), 0, 1);
+                    var from = nativeLines ? rasterPoints[i - 1] : a; var to = nativeLines ? rasterPoints[i] : b;
+                    var sample = new Vector2(origin.X + x, origin.Y + y) + (nativeLines ? new Vector2(.5f, .5f) : Vector2.Zero);
+                    var dx = (double)to.X - from.X; var dy = (double)to.Y - from.Y;
+                    // The qualified NVIDIA native-line path interpolates along its major axis.
+                    var weight = nativeLines ? Math.Abs(dx) >= Math.Abs(dy) ? (sample.X - from.X) / dx : (sample.Y - from.Y) / dy : ((sample.X - from.X) * dx + (sample.Y - from.Y) * dy) / (dx * dx + dy * dy);
+                    var t = (float)Math.Clamp(weight, 0, 1);
                     var color = ca.Lerp(cb, t);
                     if (sampled is not null)
                     {

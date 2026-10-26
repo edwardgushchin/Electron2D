@@ -1,3 +1,5 @@
+[Native attributed GL lines](canvas-rendering.md#native-attributed-gl-lines-2026-10-26) now cover SDL OpenGL/OpenGL ES hint 2, including repeated lifecycle checks. Geometry mode and other drivers remain open; this renderer fix promotes no physics declaration: **1346/1369 (98.32%)**, **23 open** (15 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded.
+
 [The complete CollisionObject contract](physics-collision-object-contract.md) reconciles its 45 declared members and qualifies interleaved owner slots, queries/events and disabled-role recovery across all six Body/Area siblings in CPU/GPU CLR/strict NativeAOT owner/separate profiles. Its class row becomes Implemented: **1346/1369 (98.32%)**, **23 open** (15 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded. Inherited and complete-goal gates remain open; earlier counts below record checkpoints.
 
 [Current-main network qualification](physics-network-example.md#current-main-network-qualification-2026-10-26)

@@ -2,8 +2,8 @@
 
 Last updated: 2026-10-26
 
-- Declaration: `internal sealed class CompatibilityCanvasBackend : CanvasBackend`
-- Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs)
+- Declaration: `internal sealed partial class CompatibilityCanvasBackend : CanvasBackend`
+- Source: [CompatibilityCanvasBackend.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.cs), [CompatibilityCanvasBackend.GL.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.GL.cs)
 - Component: [canvas-rendering](../components/canvas-rendering.md)
 - Visibility: internal; unavailable to engine consumers.
 
@@ -64,7 +64,7 @@ Queries physical render output dimensions.
 
 `internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)`
 
-Validates shader absence, prepares base-level texture copies and prunes unused resources. Converts vertices into reusable SDL storage, applies clamp/repeat and nearest filtering, and submits triangles. Untextured points use SDL.RenderPoint. Uniform-color thin lines use SDL.RenderLines with endpoint snapping; connected strips retain reusable point storage and suppress consecutive equal endpoints. A strip uses one native call, preserving translucent joins. Software and the default OpenGL/OpenGL ES point-line method use [attributed native pixel coverage](../components/canvas-rendering.md#attributed-point-line-method-2026-10-26) for interpolated-color/textured lines, with reusable point/triangle buffers and unclipped endpoint projection. Other line methods/drivers retain per-segment triangle geometry and corner snapping. Textured points align their quad origin to software/OpenGL/OpenGL ES native point coverage; other drivers retain the centered footprint. Native draw accounting follows actual submissions. The software driver gets separate textured triangles to avoid its incorrect quad shortcut. Restores the window target in finally. present controls final window copy/presentation.
+Validates shader absence, prepares base-level texture copies and prunes unused resources. Converts vertices into reusable SDL storage, applies clamp/repeat and nearest filtering, and submits triangles. Untextured points use SDL.RenderPoint. Uniform-color thin lines use SDL.RenderLines with endpoint snapping; connected strips retain reusable point storage and suppress consecutive equal endpoints. A strip uses one native call, preserving translucent joins. Software and the default OpenGL/OpenGL ES point-line method use [attributed native pixel coverage](../components/canvas-rendering.md#attributed-point-line-method-2026-10-26) for interpolated-color/textured lines, with reusable point/triangle buffers and unclipped endpoint projection. [Native attributed GL lines](../components/canvas-rendering.md#native-attributed-gl-lines-2026-10-26) use SDL flush cooperation for hint 2, retaining SDL state and a reusable GLES buffer. Geometry method and other drivers retain per-segment triangle geometry and corner snapping. Textured points align their quad origin to software/OpenGL/OpenGL ES native point coverage; other drivers retain the centered footprint. Native draw accounting follows actual submissions. The software driver gets separate textured triangles to avoid its incorrect quad shortcut. Restores the window target in finally. present controls final window copy/presentation.
 
 ### Readback
 
@@ -82,7 +82,7 @@ Returns captured borrowed GL/EGL/GLX identities only for the actual Linux GL/GLE
 
 `public override void Dispose()`
 
-Clears exposed identities and releases texture cache, target and renderer. SafeHandle disposal is idempotent. Borrowed resources held by nodes/materials are not disposed.
+Clears exposed identities and releases texture cache, targets, the owned GLES line buffer in its owning context, and renderer. SafeHandle disposal is idempotent. Borrowed resources held by nodes/materials are not disposed.
 
 ## Verification and limits
 

@@ -3,13 +3,14 @@ using SDL3;
 
 namespace Electron2D;
 
-internal sealed class CompatibilityCanvasBackend : CanvasBackend
+internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _renderer;
     private SDL.Vertex[] _vertices = [];
     private SDL.FPoint[] _linePoints = [];
     private SDL.Vertex[] _attributePoints = [], _attributeTriangles = [];
     private readonly bool _rasterAttributeLines;
+    private readonly int _nativeLineMethod;
     private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels, ulong Revision)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
@@ -34,6 +35,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         {
             Driver = SDL.GetRendererName(_renderer.DangerousGetHandle()) ?? "unknown";
             int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var lineMethod);
+            _nativeLineMethod = lineMethod;
             _rasterAttributeLines = Driver == "software" || Driver is "opengl" or "opengles2" && lineMethod is not (2 or 3);
             CaptureGraphicsHandles(window.DangerousGetHandle());
             Check(SDL.SetRenderDrawBlendMode(_renderer.DangerousGetHandle(), SDL.BlendMode.Blend), "set canvas blending");
@@ -340,6 +342,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         var attributes = texture != 0 || primitive == Mesh.PrimitiveType.LineStrip;
         for (var i = 1; !attributes && i < vertices.Length; i += 2) attributes = !SameColor(vertices[i - 1].Color, vertices[i].Color);
         if (_rasterAttributeLines && attributes) return DrawAttributeLines(renderer, texture, vertices, primitive, snap);
+        if (_nativeLineMethod == 2 && Driver is "opengl" or "opengles2" && attributes) return DrawGLAttributeLines(renderer, texture, vertices, primitive, snap);
         var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
         Span<SDL.FPoint> endpoints = stackalloc SDL.FPoint[2];
@@ -635,6 +638,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     {
         _graphics = default;
         foreach (var texture in _textures.Values) texture.Handle.Dispose();
-        _textures.Clear(); _usedTextures.Clear(); ReleaseTargets(); _renderer.Dispose();
+        _textures.Clear(); _usedTextures.Clear(); ReleaseTargets();
+        try { ReleaseLineGL(); } finally { _renderer.Dispose(); }
     }
 }
