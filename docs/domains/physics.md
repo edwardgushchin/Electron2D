@@ -976,7 +976,7 @@ recorded in the component; this does not close the remaining physics/network goa
 [Physics picking](../components/physics-picking.md) connects CollisionObject and
 Viewport through actual CPU/GPU point queries, with shape-index input, object/shape
 hover, stored eligibility, canvas transforms, handled-state routing and cleanup.
-It has common and native-window checks. Broader GPU conformance, tile/backend
+[Late native pointer entry](../components/physics-picking.md#late-native-entry-preparation) reuses activation-prepared state, with owned cache disposal and common/native-window checks. Broader GPU conformance, tile/backend
 extensions, networking and whole-application performance requirements stay open.
 
 [Physics canvas diagnostics](../components/physics-debug.md) now connect Shape.Draw,

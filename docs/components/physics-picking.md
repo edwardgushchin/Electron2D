@@ -110,6 +110,33 @@ CPU and GPU reuse PhysicsDirectSpaceState's actual point queries. Scene eligibil
 is applied before the 64-hit cap. Node.IsGreaterThan now walks ancestry without
 allocating temporary lists and correctly includes internal children.
 
+### Late native entry preparation
+
+Enabling PhysicsObjectPicking prepares the viewport's retained picking state and
+internal passive motion event. An unauthored root prepares the same objects when
+SceneTree samples its project default. This keeps their first construction outside
+a later physics frame when native pointer entry first makes GUI position known.
+Disabled viewports retain their cleared cache for reactivation. Viewport disposal
+retires the passive event and owned point-query parameters, including viewports
+that never receive pointer input. Query/hit capacity growth and user callbacks
+retain their own costs.
+
+PhysicsPickingTests.LateEntry warms the selected moving world and point-query path
+through a second viewport for 96 frames, then invokes the same internal entry
+boundary as the native Window producer. The original CPU/GPU owner/separate
+profiles each allocated 904/904 owner/all-thread managed bytes in the next complete
+physics frame. Preparing that cache makes the same bracket zero. Project-default
+and authored roots, 64 disable/re-enable frames and unused-viewport disposal are
+checked separately; the disposal assertion also caught the previously unretired
+query-parameter object. Qualified source/payload and RED receipts are recorded in
+`bin/physics-late-picking/2026-10-26/`. Eight fresh CLR/strict full-trim NativeAOT
+CPU/GPU owner/separate regression profiles and four full common picking-fixture
+runs pass. CPU controls deny GPU availability. Two real Wayland renderer controls
+also preserve native pixels and zero measured process/rendering and
+PhysicsFrameStarted-to-state-sync intervals on the available NVIDIA device; later
+physics-frame work is outside that native bracket. These are functional/allocation checks; native allocator,
+isolated performance and foreign-platform acceptance remain separate.
+
 The steady physics pass and sorted passive hover reuse scratch; newly queued input
 copies, first use, growth and user callbacks have separate costs. GPU picking
 uses [adaptive result readback](gpu-resident-queries.md#device-work-and-traffic)

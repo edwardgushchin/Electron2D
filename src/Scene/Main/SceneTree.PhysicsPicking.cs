@@ -248,6 +248,7 @@ internal sealed class PhysicsPickingState : IDisposable
     {
         List<Exception>? errors = null; DisposeEvents(ref errors);
         try { _passive?.Dispose(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
+        try { Parameters.Dispose(); } catch (Exception error) { AnimationNode.CollectException(ref errors, error); }
         Objects.Clear(); Shapes.Clear(); Hits.Clear(); ExitObjects.Clear(); ExitShapes.Clear();
         AnimationNode.ThrowCollected("Physics picking cleanup callbacks failed.", errors);
     }

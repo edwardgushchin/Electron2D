@@ -618,6 +618,8 @@ later hits and canvases. Borrowed event coordinates remain viewport-local; a can
 inverse and exact canvas ID select physics geometry. Shared World, custom canvas
 viewports and embedded container routing use the same queries on CPU/GPU.
 
+Enabling picking prepares its retained state and passive motion event; root activation does the same for the project default. A late native pointer entry can then reuse those objects inside an already warmed physical frame. Viewport disposal releases both the event and its owned point-query parameters.
+
 Disabling picking or GUI input drops pending copies and clears hover. Pointer exit,
 viewport detachment and disposal do the same. Capture suppresses picking. Active
 hover refreshes on physics frames without requiring pointer movement. Mutations

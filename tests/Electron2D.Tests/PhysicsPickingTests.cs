@@ -16,7 +16,8 @@ internal static partial class PhysicsPickingTests
     private static void Verify(PhysicsServer.Backend backend)
     {
         Bindings(backend); DeliveryAndHover(backend); OrderingAndConsumption(backend); CoordinatesAndWorlds(backend); SingularCanvases(backend);
-        DisposalFailures(backend); LifetimeAndErrors(backend); Capacity(backend); NestedAndLayerPolicy(backend); Measure(backend);
+        DisposalFailures(backend); LifetimeAndErrors(backend); Capacity(backend); NestedAndLayerPolicy(backend);
+        LateNativeEntry(backend, false); LateNativeEntry(backend, true); Measure(backend);
         Console.WriteLine($"Public physics picking passed on {backend}: input/hover order, logical shapes, policies, canvas/world routing, lifecycle and warmed allocation.");
     }
     private static void DefaultsAndPacking()
@@ -261,9 +262,11 @@ internal static partial class PhysicsPickingTests
         internal readonly World World; internal readonly SubViewport View; internal readonly SceneTree Tree;
         internal readonly CircleShape Shape = new() { Radius = 12 };
         private int _serial;
-        internal Fixture(PhysicsServer.Backend backend)
+        internal Fixture(PhysicsServer.Backend backend, bool authoredPicking = true)
         {
-            World = new(backend); View = new() { Name = "View", World = World, Size = new(512, 300), PhysicsObjectPicking = true }; Tree = new(View);
+            World = new(backend); View = new() { Name = "View", World = World, Size = new(512, 300) };
+            if (authoredPicking) View.PhysicsObjectPicking = true;
+            Tree = new(View);
         }
         internal Probe Body(Vector2 point, Node? parent = null)
         {

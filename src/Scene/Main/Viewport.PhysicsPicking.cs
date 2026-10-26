@@ -5,11 +5,21 @@ public abstract partial class Viewport
     private bool _physicsObjectPicking, _physicsObjectPickingSort, _physicsObjectPickingFirstOnly;
     private bool _physicsPickingAuthored;
     internal PhysicsPickingState? Picking;
-    internal void InitializePhysicsPicking() { if (!_physicsPickingAuthored) _physicsObjectPicking = ProjectSettings.GetWithOverride(ProjectSettings.PhysicsObjectPicking); }
+    internal void InitializePhysicsPicking()
+    {
+        if (!_physicsPickingAuthored) _physicsObjectPicking = ProjectSettings.GetWithOverride(ProjectSettings.PhysicsObjectPicking);
+        PreparePhysicsPicking();
+    }
+    private void PreparePhysicsPicking()
+    {
+        // Native pointer entry can first make the position known after physics warmup.
+        if (_physicsObjectPicking) _ = (Picking ??= new()).PassiveMouse;
+    }
     /// <summary>Gets or sets whether unhandled pointer events are queued for physics object picking.</summary>
     /// <value>False initially. Scene activation samples the project default for an unauthored root viewport.</value>
     /// <remarks>Delivery runs at the beginning of a physics frame, after its start notification and before node callbacks.
-    /// Disabling clears pending events and hover. At most 64 eligible logical shape hits per canvas are selected before optional sorting.
+    /// Enabling prepares retained picking state and its passive motion event. Disabling clears pending events and hover.
+    /// At most 64 eligible logical shape hits per canvas are selected before optional sorting.
     /// Canvases with zero or nonfinite determinants, or nonfinite inverse-mapped query positions, contribute no hits.
     /// Other canvases continue normally; mouse hover exits on that pass and resumes under a stationary pointer when mapping becomes valid.</remarks>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
@@ -18,7 +28,7 @@ public abstract partial class Viewport
     public bool PhysicsObjectPicking
     {
         get { ThrowIfDisposed(); return _physicsObjectPicking; }
-        set { EnsureMutable(); _physicsPickingAuthored = true; if (_physicsObjectPicking == value) return; _physicsObjectPicking = value; if (!value) Tree?.ClearPhysicsPicking(this); }
+        set { EnsureMutable(); _physicsPickingAuthored = true; if (_physicsObjectPicking == value) return; _physicsObjectPicking = value; if (value) PreparePhysicsPicking(); else Tree?.ClearPhysicsPicking(this); }
     }
     /// <summary>Gets or sets whether selected hits are ordered by descending effective Z and reverse scene order.</summary>
     /// <value>False initially; unsorted delivery order is unspecified.</value>
