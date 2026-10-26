@@ -14,7 +14,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AStar3D](classes/AStar3D.md) | RefCounted | Excluded | 27 |
 | [AStarGrid2D](classes/AStarGrid2D.md) | RefCounted | Implemented | 43 |
 | [AcceptDialog](classes/AcceptDialog.md) | Window | Partial | 26 |
-| [AccessibilityServer](classes/AccessibilityServer.md) | Object | Blocked | 178 |
+| [AccessibilityServer](classes/AccessibilityServer.md) | Object | Partial | 178 |
 | [AimModifier3D](classes/AimModifier3D.md) | BoneConstraint3D | Excluded | 11 |
 | [AnimatableBody2D](classes/AnimatableBody2D.md) | StaticBody2D | Implemented | 1 |
 | [AnimatableBody3D](classes/AnimatableBody3D.md) | StaticBody3D | Excluded | 1 |
@@ -198,7 +198,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ConeTwistJoint3D](classes/ConeTwistJoint3D.md) | Joint3D | Excluded | 14 |
 | [ConfigFile](classes/ConfigFile.md) | RefCounted | Implemented | 17 |
 | [ConfirmationDialog](classes/ConfirmationDialog.md) | AcceptDialog | Partial | 5 |
-| [Container](classes/Container.md) | Control | Partial | 11 |
+| [Container](classes/Container.md) | Control | Implemented | 11 |
 | [Control](classes/Control.md) | CanvasItem | Partial | 267 |
 | [ConvertTransformModifier3D](classes/ConvertTransformModifier3D.md) | BoneConstraint3D | Excluded | 25 |
 | [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | Shape2D | Implemented | 2 |

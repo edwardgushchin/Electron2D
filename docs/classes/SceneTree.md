@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -1146,3 +1146,7 @@ The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-life
 [Custom decoration input](../classes/Window.md#custom-decoration-input) uses shared window reception before exclusive-child rejection. Embedded forwarding remains available; final blocked client callbacks cannot execute even through direct PushInput. The local handled flag clears before this blocked return, preserving the ordinary per-event transition.
 
 `NodeConfigurationWarningChanged` is synchronous on the requesting node's owner/current processing group. Its edited-root filter and error ordering remain unchanged; it grants no tree mutation or numerical/native permission. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
+
+## Native accessibility integration
+
+The ordinary frame completion runs automatic semantic reconciliation after deferred work; physics-only passes do not publish partial semantic updates. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.

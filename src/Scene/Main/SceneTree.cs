@@ -207,6 +207,7 @@ public sealed partial class SceneTree : MainLoop
             }
             _tweens.Clear();
             ClearPendingWork();
+            _accessibility = null;
             ReleasePhysicsWorlds(ref errors);
             FinalizeMultiplayer(ref errors);
             ClearEventSubscribers();
@@ -1166,6 +1167,7 @@ public sealed partial class SceneTree : MainLoop
             CollectException(ref errors, error);
         }
 
+        _accessibility = null;
         ReleasePhysicsWorlds(ref errors);
 
         FinalizeMultiplayer(ref errors);
@@ -1413,6 +1415,7 @@ public sealed partial class SceneTree : MainLoop
             if (!physics) ProcessGUITooltips(unscaledDelta, ref errors);
             ProcessTweens(delta, unscaledDelta, physics, ref errors);
             FlushDeferredCore(ref errors, flushTransforms: true);
+            if (!physics) try { SynchronizeAccessibility(); } catch (Exception error) { CollectException(ref errors, error); }
             if (captureInterpolation) CapturePhysicsInterpolation(start: false, ref errors);
         }
         finally

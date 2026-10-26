@@ -722,6 +722,7 @@ public partial class Control : CanvasItem
             ThrowCollected("Control visibility callbacks failed.", errors);
         }
         else base.OnNotification(what);
+        if (what is NotificationEnterTree or NotificationTranslationChanged) RefreshAccessibilityText();
         if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();
@@ -746,7 +747,7 @@ public partial class Control : CanvasItem
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(SizeFlagProperties).Concat(ThemeProperties).Concat(TooltipProperties).Concat(ThemeOwner.Properties<Control>());
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ControlProperties).Concat(FocusProperties).Concat(AccessibilityProperties).Concat(SizeFlagProperties).Concat(ThemeProperties).Concat(TooltipProperties).Concat(ThemeOwner.Properties<Control>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Control) ? CreateControl : base.CreateSceneInstanceFactory();

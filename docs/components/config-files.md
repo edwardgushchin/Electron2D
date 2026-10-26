@@ -1,6 +1,6 @@
 # Configuration files component
 
-Last updated: 2026-10-14
+Last updated: 2026-10-26
 
 ## Scope
 
@@ -94,3 +94,5 @@ Built-in MSAA and LCD subpixel settings retain compiled JSON metadata for hosts
 with JSON reflection disabled. The public PhysicsNetwork startup check initializes
 the complete registry and round-trips both enum schemas before its process run.
 This verifies ordinary reflection-disabled managed execution, not a NativeAOT publish.
+
+The built-in generated JSON metadata includes AccessibilitySupport. Independent-registry save/load is exercised in CLR and NativeAOT by AccessibilityFoundationTests; the runtime does not depend on reflection to initialize the new project policy.

@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -950,3 +950,7 @@ WindowNonclientTests checks ownership, edges, disabled rectangles, internal mous
 ## Device screen lifetime
 
 A live native GetWindowID() selects its [RenderingDevice screen](RenderingDevice.md#native-window-drawing). Width/height use native graphics pixels; its private screen image is independent of the scene viewport texture. Native child hide/detach/disposal reject an active command list using retained screen resources before changing window, parent or disposal state. End the list first. Tree rollback and renderer shutdown cancel unfinished work and release the images. Hiding a child retires its native ID; reopening uses a fresh ID.
+
+## Native accessibility integration
+
+Native windows own independent semantic roots and active focus; embedded windows share their containing native root. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.

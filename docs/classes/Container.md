@@ -1,6 +1,6 @@
 # Container
 
-Last updated: 2026-10-06
+Last updated: 2026-10-26
 
 **Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PanelContainer](PanelContainer.md), [BoxContainer](BoxContainer.md), [GridContainer](GridContainer.md), [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md), [AspectRatioContainer](AspectRatioContainer.md), [FlowContainer](FlowContainer.md), [SplitContainer](SplitContainer.md), [TabContainer](TabContainer.md)
 
@@ -22,6 +22,7 @@ tree.ProcessFrame(0);
 
 | Signature | Contract |
 | --- | --- |
+| `public bool AccessibilityRegion { get; set; }` | Stored landmark policy, false by default; requires an accessible name. |
 | `public Container()` | Initializes pass-through input, maximum propagation and child listeners. |
 | `public const int NotificationPreSortChildren = 50` | Pre-arrangement notification. |
 | `public const int NotificationSortChildren = 51` | Arrangement notification. |
@@ -59,10 +60,13 @@ Order is NotificationPreSortChildren (50), PreSortChildren, NotificationSortChil
 
 Owner/lifetime guards apply to reads and mutations; scene capture rejects mutation. Removing controls clears parent allocation caches and listeners. An own MaximumSizeChanged event requests sorting even when the container rectangle does not resize; parent maximum updates clear obsolete child allocation caches before refresh, so later fits can use raised bounds. A direct Control child changing TopLevel clears its parent allocation cache and requests minimum refresh/sort, updating its layout eligibility automatically. Cached action queues and reusable box slots allocate zero managed bytes after capacity preparation in the measured small hierarchy. [BoxContainerTests](../../tests/Electron2D.Tests/BoxContainerTests.cs) checks phases, coalescing, failures, membership, flags/default reverts/packing, stale cross-tree sorts and captured batches. [Native checks](../../tests/Electron2D.Tests/BoxContainerRenderingTests.cs) render actual child rectangles on Linux Wayland GPU and compatibility. Native allocator counts, large-GUI performance, other platforms and owner acceptance remain unverified.
 
-AccessibilityRegion remains Blocked: native semantic landmark publication/update/removal needs the accessibility service and viewport/control semantic identity. [Coverage](../coverage/classes/Container.md) leaves the class Partial for that exact dependency. No inert semantic property is exposed. See [ADR 0081](../decisions/rendering.md#adr-0081).
+<a id="accessibilityregion"></a>
+`public bool AccessibilityRegion { get; set; }` defaults false and is inherited by every container. True publishes the native landmark role using Control.AccessibilityName; false restores the normal container role. Equal writes are silent; changes queue semantic output without touching layout. The property is stored, duplicated and restored in fresh scene files. Mutations retain owner/capture/disposal guards. A named-region authoring warning resolves when a descriptive name is supplied. Actual native role changes and fresh-process restoration are checked by [AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs). See [ADR 0081](../decisions/rendering.md#adr-0081) and [native accessibility](../components/accessibility.md).
 
 [FlowContainer](FlowContainer.md) and its fixed HFlow/VFlow subclasses consume the same deferred sort/lifecycle/final-fit hooks for wrapping layout, alongside box/grid containers.
 
 The shared FitChildInRect path now attempts rotation and scale reset after a committed rectangle resize callback fails, collecting errors after required stages. It skips further mutation if the child was disposed or reparented during a callback. SplitContainerTests verifies a failing first-panel resize still resets its visual transform and fits later panels. This applies to every current layout consumer.
 
 [Tab panels](../components/tab-panels.md) add TabContainer as an executable consumer with all 31 declared theme keys, Container fitting/maximum propagation and exact scene/file factories. Indexed restore uses a private typed schema count before owned child construction. Public signatures of these shared owners are unchanged.
+
+Name, landmark and displayed-caption changes refresh the existing edited-scene configuration-warning notification; equal writes remain silent.

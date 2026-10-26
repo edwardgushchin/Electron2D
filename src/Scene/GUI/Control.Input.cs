@@ -20,8 +20,8 @@ public enum FocusMode
     Click = 1,
     /// <summary>Can also receive focus through keyboard or controller navigation.</summary>
     All = 2,
-    /// <summary>Receives focus only while a screen reader is active.</summary>
-    /// <remarks>The current runtime has no accessibility service, so this value is retained but cannot take focus.</remarks>
+    /// <summary>Receives focus while native accessibility output is active.</summary>
+    /// <remarks>Eligible only while the native accessibility runtime is active.</remarks>
     Accessibility = 3
 }
 
@@ -165,7 +165,7 @@ public partial class Control
     internal FocusMode EffectiveFocusMode =>
         IsFocusBehaviorEnabled() && Tree?.IsTooltipControl(this) != true ? _focusMode : FocusMode.None;
 
-    internal bool CanReceiveGUIFocus => EffectiveFocusMode is FocusMode.Click or FocusMode.All;
+    internal bool CanReceiveGUIFocus => EffectiveFocusMode is FocusMode.Click or FocusMode.All || EffectiveFocusMode == FocusMode.Accessibility && AccessibilityServer.IsActive;
 
     /// <summary>Returns the pointer filter after applying the inherited recursive policy.</summary>
     /// <returns><see cref="MouseFilter.Ignore"/> when this control's pointer behavior is disabled; otherwise <see cref="MouseFilter"/>.</returns>

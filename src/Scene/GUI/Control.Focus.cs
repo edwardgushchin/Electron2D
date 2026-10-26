@@ -139,7 +139,7 @@ public partial class Control
 
     private bool IsFocusCandidate(Viewport viewport, bool explicitPath) =>
         !IsDisposed && IsVisibleInTree && ReferenceEquals(GetViewport(), viewport) &&
-        (EffectiveFocusMode == FocusMode.All || explicitPath && EffectiveFocusMode == FocusMode.Click);
+        (EffectiveFocusMode == FocusMode.All || EffectiveFocusMode == FocusMode.Accessibility && AccessibilityServer.IsActive || explicitPath && EffectiveFocusMode == FocusMode.Click);
 
     private static List<Control> NavigationControls(Viewport viewport)
     {

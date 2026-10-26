@@ -2,13 +2,14 @@ namespace Electron2D;
 
 /// <summary>Base control for deferred arrangement of direct non-top-level child controls.</summary>
 /// <remarks>Child sizing/visibility/flags/order changes coalesce sorting. Layout notifications and events run on
-/// the owner thread; callback errors continue required phases. Native accessibility regions remain separate.</remarks>
+/// the owner thread; callback errors continue required phases. Native accessibility region output follows the active application policy.</remarks>
 public class Container : Control
 {
     /// <summary>Identifies the notification immediately before a child arrangement pass.</summary>
     public const int NotificationPreSortChildren = 50;
     /// <summary>Identifies the child arrangement notification.</summary>
     public const int NotificationSortChildren = 51;
+    private bool _accessibilityRegion;
     private bool _pendingSort;
     private bool _sorting, _sortAgain;
     private SceneTree? _queuedTree;
@@ -16,9 +17,20 @@ public class Container : Control
     private ulong _sortGeneration;
     private static readonly PropertyDescriptor[] ContainerProperties =
     [
+        new PropertyDescriptor<Container, bool>(nameof(AccessibilityRegion), node => node.AccessibilityRegion, (node, value) => node.AccessibilityRegion = value, _ => false, stored: true),
         new PropertyDescriptor<Container, MouseFilter>(nameof(MouseFilter), node => node.MouseFilter, (node, value) => node.MouseFilter = value, _ => MouseFilter.Pass, stored: true),
         new PropertyDescriptor<Container, bool>(nameof(PropagateMaximumSize), node => node.PropagateMaximumSize, (node, value) => node.PropagateMaximumSize = value, _ => true, stored: true)
     ];
+    /// <summary>Gets or sets whether native accessibility publishes this container as a named landmark region.</summary>
+    /// <value>False by default. Use <see cref="Control.AccessibilityName"/> to provide a descriptive name.</value>
+    /// <remarks>Stored in scenes and inherited by all container types. Changes queue semantic output without changing layout.</remarks>
+    /// <exception cref="ObjectDisposedException">This container is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Mutation is off-owner or capture-owned.</exception>
+    public bool AccessibilityRegion
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityRegion; }
+        set { EnsureMutable(); if (_accessibilityRegion == value) return; _accessibilityRegion = value; QueueAccessibilityUpdate(); UpdateConfigurationWarnings(); }
+    }
     /// <summary>Creates a container with pass-through pointer input and maximum-size propagation enabled.</summary>
     public Container()
     {

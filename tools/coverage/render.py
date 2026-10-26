@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -712,6 +712,8 @@ def render():
             updated = "2026-10-21"
         if name == "RenderingDevice":
             updated = "2026-10-24"
+        if name in {"AccessibilityServer", "Container", "Control", "Node", "ProjectSettings", "Window"}:
+            updated = "2026-10-26"
         if name == "RDTextureView":
             updated = "2026-10-25"
         if name in {"VisualShader", "VisualShaderNodeVarying", "VisualShaderNodeVaryingGetter", "VisualShaderNodeVaryingSetter"}:

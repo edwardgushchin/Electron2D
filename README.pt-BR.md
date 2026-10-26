@@ -1,5 +1,7 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · Português (BR)</p>
 
+A acessibilidade nativa no Linux publica nomes, papéis, estados e ações de botões e foco via AT-SPI. Defina `ProjectSettings.AccessibilitySupport` antes de abrir uma janela; os protocolos de texto, valores e tabelas e os adaptadores de outras plataformas continuam em desenvolvimento.
+
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">

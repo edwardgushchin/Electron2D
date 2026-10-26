@@ -1,6 +1,6 @@
 # Project settings component
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 ## Scope
 
@@ -113,3 +113,7 @@ The permanent LocaleResourceRemaps definition stores up to 4096 immutable source
 ## Host platform integration
 
 OS and registries share the built-in host/build/architecture/device vocabulary. Parent architecture tags such as x86 and arm, pointer bitness, template build configuration and supported thread profile now select real typed overrides. Custom tags remain runtime-managed; saving stores override values rather than activation. Dynamic service feature observations belong to OS.HasFeature and explicit caller selection contexts.
+
+## Accessibility application policy
+
+The registered typed `ProjectSetting<AccessibilitySupport> ProjectSettings.AccessibilitySupport` uses `accessibility/general/accessibility_support` and defaults to Auto. Independent registries retain the same built-in identity and validation. Auto/Always/Disabled are sampled per display lifetime by [native accessibility](accessibility.md); changes apply at reopening. The policy never changes global desktop preferences. Driver and update-frequency settings remain unimplemented.

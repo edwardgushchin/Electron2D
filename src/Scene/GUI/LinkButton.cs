@@ -19,6 +19,7 @@ public partial class LinkButton : BaseButton
         /// <summary>Omit the underline in every state.</summary>
         Never = 2
     }
+    internal string AccessibleLinkText => _translatedText;
     private string _text = string.Empty, _translatedText = string.Empty, _language = string.Empty, _uri = string.Empty, _ellipsis = "…";
     private global::Electron2D.TextDirection _textDirection;
     private TextOverrunBehavior _overrun;
@@ -46,7 +47,7 @@ public partial class LinkButton : BaseButton
     public string Text
     {
         get { CheckLink(); return _text; }
-        set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var translated = Atr(value); if (_text == value && _translatedText == translated) return; _text = value; _translatedText = translated; InvalidateLink(); }
+        set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var translated = Atr(value); if (_text == value && _translatedText == translated) return; _text = value; _translatedText = translated; InvalidateLink(); if (!IsDisposed) UpdateConfigurationWarnings(); }
     }
     /// <summary>Gets or sets the URI or path passed to the platform resource opener on activation.</summary>
     /// <value>Empty initially, suppressing platform opening while retaining Pressed notification.</value>

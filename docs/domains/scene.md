@@ -12,7 +12,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -511,3 +511,7 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Committed processing-group roles](../components/scene-tree.md#committed-group-role-metadata) now publish Node property-list changes after inherited membership rebinding. Detached/equal writes are silent; observer errors and nested role changes preserve committed execution ownership across ordinary and physical nodes. General worker scene/backend access remains tracked separately.
 
 [Typed group invocation](../components/scene-thread-messages.md) has a complete six-member dispatch audit with current selected physics, real worker/nested execution and separate receiver-permission limits.
+
+## Native accessibility producers
+
+[SceneAccessibility](../classes/SceneAccessibility.md) reconciles automatic Node semantic identity/order after ordinary frame/deferred work. Node exposes queued update/invalidate notifications and warning/focused-element extension points. Control stores translated accessible names/descriptions; GUI focus and BaseButton activation remain the behavior owners. Native RIDs and callbacks are never copied or serialized. See [Native accessibility](../components/accessibility.md) for application policy, native protocols and verification limits.

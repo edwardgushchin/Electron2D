@@ -2,7 +2,7 @@
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) read volatile tree membership without acquiring scene ownership. Attached-node counts select Engine.MainLoop; independent trees remain outside that count.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -127,6 +127,10 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| [`public RID GetAccessibilityElement()`](#getaccessibilityelement) | Borrowed transient identity, empty outside automatic native output. |
+| `public void QueueAccessibilityUpdate()` | Coalesces producer notification at the next semantic pass. |
+| [`protected virtual string[] OnGetAccessibilityConfigurationWarnings()`](#ongetaccessibilityconfigurationwarnings) | Cold authoring warnings; empty by default. |
+| [`protected virtual RID OnGetFocusedAccessibilityElement()`](#ongetfocusedaccessibilityelement) | Selects the same-window semantic focus target. |
 | [`public void SetEditableInstance(Node node, bool isEditable)`](#m-electron2d-node-seteditableinstance-electron2d-node-system-boolean) | Sets the strict descendant's flag; false also unfolds the receiver. |
 | [`public bool IsEditableInstance(Node? node)`](#m-electron2d-node-iseditableinstance-electron2d-node) | Queries the target flag through a current ancestor; null is false. |
 | [`public void UpdateConfigurationWarnings()`](#diagnostics-updateconfigurationwarnings) | Requests a configuration-warning refresh for this node in the selected edited scene. |
@@ -221,6 +225,8 @@ root.AddChild(new Entity { Name = "Player", Position = new Vector2(32, 16) });
 
 | Member | Contract |
 | --- | --- |
+| `public const int NotificationAccessibilityUpdate = 3000` | Producer metadata update after automatic defaults. |
+| `public const int NotificationAccessibilityInvalidate = 3001` | Transient native identity retirement. |
 | [`public const int NotificationApplicationFocusIn = 2016`](#f-electron2d-node-notificationapplicationfocusin) | Identifies that the application received keyboard focus. |
 | [`public const int NotificationApplicationFocusOut = 2017`](#f-electron2d-node-notificationapplicationfocusout) | Identifies that the application lost keyboard focus. |
 | [`public const int NotificationApplicationPaused = 2015`](#f-electron2d-node-notificationapplicationpaused) | Identifies that the application is about to be suspended. |
@@ -2001,3 +2007,17 @@ MissingNode duplication preserves retained fields, recovery identity, remapped N
 `GetConfigurationWarnings` and `UpdateConfigurationWarnings` retain the owner/current-group scope on physical, canvas, GUI and multiplayer descendants. Refresh callbacks run synchronously outside canvas gates, preserve selected-edited-root filtering and propagate original subscriber errors. Queries are cold string snapshots, while refresh itself need not allocate after preparation. Built-in invalid-configuration branches still perform the common lifetime/scope guard first. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
 
 [Complete typed invocation qualification](../components/scene-thread-messages.md) covers all six safe/deferred methods, inherited physical receivers, current-group motion, retained numerical guards and strict CLR/NativeAOT full-frame checks.
+
+## Native accessibility
+
+<a id="getaccessibilityelement"></a>
+`public RID GetAccessibilityElement()` returns a borrowed semantic element only inside an automatic accessible native scene. Outside it the identity is empty; disposed calls reject and attached calls require the owner. The identity is transient, never copied or serialized, and changes after retirement/re-entry. `public void QueueAccessibilityUpdate()` coalesces requests for the next scene pass; detached requests survive until eligible entry, and attached processing-group guards apply.
+
+<a id="notificationaccessibilityupdate"></a>
+`public const int NotificationAccessibilityUpdate = 3000` requests custom metadata after automatic defaults; `public const int NotificationAccessibilityInvalidate = 3001` announces retirement before the identity is cleared. Callback failure does not retain the native object. Custom sub-elements retire with their source element.
+
+<a id="ongetaccessibilityconfigurationwarnings"></a>
+`protected virtual string[] OnGetAccessibilityConfigurationWarnings()` returns an empty warning array by default and participates in the existing GetConfigurationWarnings query. Overrides of that public query must retain base warnings when needed.
+
+<a id="ongetfocusedaccessibilityelement"></a>
+`protected virtual RID OnGetFocusedAccessibilityElement()` returns this node's element by default. A composite can return one of its live same-window sub-elements; stale or cross-window selections reject. The controller calls it only for a node in the active GUI focus chain. See [native accessibility](../components/accessibility.md) for ownership, timing, tests and remaining protocol families.

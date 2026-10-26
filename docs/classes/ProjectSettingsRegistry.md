@@ -1,6 +1,6 @@
 # ProjectSettingsRegistry
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -881,3 +881,7 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 ## Host platform integration
 
 Construction captures the same host feature vocabulary as OS. Independent registries keep their own custom activation and override storage. OS queries use the retained global registry; they do not borrow custom flags from another registry. Public explicit feature lists remain their own selection context.
+
+## Accessibility built-in definition
+
+Independent registries register the same [ProjectSettings.AccessibilitySupport](ProjectSettings.md#accessibilitysupport) key and enum validator. Its default is Auto; its executable consumer is display startup, not the registry itself. Project settings persistence and feature overrides use the existing built-in registry path.

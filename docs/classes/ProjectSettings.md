@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -73,6 +73,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
+| [`public static ProjectSetting<AccessibilitySupport> AccessibilitySupport { get; }`](#accessibilitysupport) | Registered Auto/Always/Disabled native output policy, sampled per display lifetime. |
 | [`public static ProjectSetting<int> MovieWriterMixRate { get; }`](#moviewritermixrate) | Built-in recording rate; 48000 Hz, supported 1000..200000. |
 | [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
 | [`public static ProjectSetting<float> MovieWriterVideoQuality { get; }`](#moviewritervideoquality) | AVI/Theora quality, 0.75 initially; finite 0..1. |
@@ -1660,3 +1661,8 @@ Advanced stored definition, registered with restart-required metadata in every i
 ## Host platform integration
 
 Host feature tags now share OS.AddHostFeatures: platform and device family, pointer bitness, process architecture/family, managed runtime/scalar precision, template build role and supported thread profile. Query matching and override precedence retain the existing normalized case-insensitive policy. Runtime custom activation remains explicit after settings save/load. OS adds live service observations to its own query; default registry overrides remain host/custom and an explicit feature list retains full caller control.
+
+## AccessibilitySupport
+
+<a id="accessibilitysupport"></a>
+`public static ProjectSetting<AccessibilitySupport> AccessibilitySupport { get; }` defines `accessibility/general/accessibility_support`, default Auto, valid values Auto/Always/Disabled. The [enum](AccessibilitySupport.md) and [native accessibility component](../components/accessibility.md) describe actual display-startup consumption and support limits. Registry serialization preserves the typed setting; changing it affects the next display lifetime.

@@ -187,6 +187,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINKED_SCENES") is { } l
     return;
 }
 
+if (args.Length == 2 && args[0] == "--accessibility-scene") { AccessibilityFoundationTests.ReadScene(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "lifetimes") { AccessibilityFoundationTests.RunLifetimes(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "managed") { AccessibilityFoundationTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") is { } accessibilityBackend) { AccessibilityFoundationTests.RunNative(accessibilityBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "prototype") { AccessibilityFoundationTests.RunPrototype(); return; }
 if (args.Length == 3 && args[0] == "--material-placeholder") { MaterialPlaceholderTests.RunChild(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_PLACEHOLDER") == "managed") { MaterialPlaceholderTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_PLACEHOLDER") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_PLACEHOLDER") is { } materialPlaceholderBackend) { MaterialPlaceholderTests.RunNative(materialPlaceholderBackend); return; }

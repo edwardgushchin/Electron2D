@@ -2,7 +2,7 @@
 
 The production Android host's [system back producer](window-runtime.md#system-back-navigation) posts to the active display's retained owner queue. `DisplayServer.GoBackRequested` delivers after buffered native input, before frame callbacks, including in `ForceProcessAndDropEvents`. Request capture, callback failure and retirement follow [ADR 0040](../decisions/display.md#adr-0040).
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 ## Scope
 
@@ -170,3 +170,7 @@ Runtime requests leave stored scene Window policies and ancestry intact. A subse
 Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
 
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
+
+## Accessibility owner pump
+
+The [native accessibility service](accessibility.md) initializes only for an eligible display/application policy or manual producer. ProcessEvents pumps its private native context on the existing owner and aggregates callback errors with other display callback failures. Native-window/display retirement removes semantic registrations before native ownership is released. Retained window title and driver identity avoid repeated managed UTF-8 strings during stable semantic frames; public observed-title queries keep their existing SDL behavior.

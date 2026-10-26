@@ -73,13 +73,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 112 | 3 | 0 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 16 | 2 | 0 | 0 | 0 |
-| [Node](classes/Node.md) | [Object](classes/Object.md) | 204 | 2 | 6 | 1 | 1 |
+| [Node](classes/Node.md) | [Object](classes/Object.md) | 210 | 2 | 0 | 1 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 37 | 4 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 427 | 13 | 11 | 3 | 37 |
+| **Total** | | 433 | 13 | 5 | 3 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -91,14 +91,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`class:MainLoop`](classes/MainLoop.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`MainLoop::signal:on_request_permissions_result(String:,bool:)`](classes/MainLoop.md) | Partial | Typed C# event for the permission-result signal; native host permission-request integration remains absent under ADR 0015 and ADR 0021.; Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit. |
 | [`class:Node`](classes/Node.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
-| [`Node::constant:NOTIFICATION_ACCESSIBILITY_INVALIDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
-| [`Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::constant:NOTIFICATION_WM_DPI_CHANGE`](classes/Node.md) | Partial | ADRs 0008/0044: notification 1009 follows effective window/backing scale, not physical display DPI, as confirmed by the pinned Wayland/macOS producers. WindowNotificationTests retains propagation, failure/lifetime/mutation and zero-byte warmed checks. The public native root/child consumer verifies committed viewport size, owner/parent-first physical descendants, nested boundaries, one signal, unchanged pose/RID, continued selected CPU/GPU motion/query identity and actual pixels through scale 1 -> 1.25 -> 1 on compatibility rendering. FIFO GPU presentation on the isolated Mutter compositor stalls in native SDL/NVIDIA swapchain acquisition, sometimes before the first scale event; source/stack/control receipts are in bin/window-dpi/2026-10-26/. Keep Partial pending this native presentation gate; foreign-host acceptance remains separate. Physical ScreenGetDpi retains its own metrics prerequisite. See docs/components/window-runtime.md#native-dpi-scale-reproduction. |
 | [`Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED`](classes/Node.md) | Unimplemented | Exact prerequisite: complete per-window native HDR output request/support/enabled and luminance policy, executing HDR presentation/transfer, active maximum-linear-value observation and ordered Window/Node change delivery. Current half-float canvases still use SDR presentation; native swapchain-format availability does not prove active HDR output. See docs/components/hdr-canvas.md#native-output-prerequisite and bin/physics-output-capability/2026-10-25/. No inert identity is exposed. |
-| [`Node::method:_get_accessibility_configuration_warnings()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
-| [`Node::method:_get_focused_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
-| [`Node::method:get_accessibility_element()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
-| [`Node::method:queue_accessibility_update()`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`class:Object`](classes/Object.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Object::constant:NOTIFICATION_EXTENSION_RELOADED`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_init()`](classes/Object.md) | Unimplemented | The pinned callback initializes an instantiated owner Script, potentially after owner construction; it is not only CLR base construction. Ordinary C# constructors and Script.New already execute. A typed owner/script initialization projection with argument, scene/duplication, identity, callback-order and failure behavior remains required under ADR 0091. Do not dispatch a virtual initializer from ElectronObject construction. |

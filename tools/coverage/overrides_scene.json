@@ -9945,7 +9945,7 @@
     },
     {
       "state": "Partial",
-      "reason": "Click/All eligibility, hidden pointer focus, focused keyboard delivery, Tab/arrow action navigation, hide/detach release, focus notifications and focus events run in the root viewport. Accessibility focus, exact directional ranking, scroll clipping and nested viewport routing remain absent.",
+      "reason": "Click/All eligibility, hidden pointer focus, focused keyboard delivery, Tab/arrow action navigation, hide/detach release, focus notifications and focus events run in the root viewport. Native accessibility eligibility is now supplied by ADR 0114. Exact directional ranking, scroll clipping and nested viewport routing remain absent.",
       "godot": [
         "Control::enum:FocusMode",
         "Control::property:focus_mode",
@@ -10291,7 +10291,6 @@
       "state": "Unimplemented",
       "reason": "Next Window native-control projection and platform capability audit over the existing DisplayServer, including modes, flags, IME, native notifications and geometry (ADR 0040).",
       "godot": [
-        "Window::property:auto_translate",
         "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
         "Window::property:mouse_passthrough",
@@ -10748,20 +10747,6 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0081: Control size bits/stretch ratios and deferred Container fit/phase callbacks execute through Box/HBox/VBox primary allocation, min/max weighted refit, alignment/RTL, child eligibility and actual spacers. BoxContainerTests verifies state/lifecycle/packing/callbacks, captured batch reuse and zero warmed allocations; native GPU/compatibility tests verify rendered geometry. Accessibility semantic service remains separately blocked."
-    },
-    {
-      "godot": [
-        "class:Container"
-      ],
-      "state": "Partial",
-      "reason": "ADR 0081: complete current layout base and real box consumers execute; AccessibilityRegion remains Blocked until native accessibility semantic tree/region service integrates. No inert region bool is exposed."
-    },
-    {
-      "godot": [
-        "Container::property:accessibility_region"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0081 with ADR 0041: trigger first native semantic accessibility tree/landmark region integration; add and verify Container.AccessibilityRegion in that service slice, including a named screen-reader region."
     },
     {
       "godot": [

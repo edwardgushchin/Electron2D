@@ -73,6 +73,7 @@ public sealed partial class DisplayServer
         List<Exception>? failures = null;
         try
         {
+            try { AccessibilityServer.PumpNative(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             DispatchPendingGamepadConnections(ref failures);
             if (dropInput)
             {
