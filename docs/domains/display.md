@@ -141,3 +141,5 @@ Native accessibility scrolling now connects existing scrollable GUI sources to A
 [Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.
 
 [Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.
+
+[Contextual native navigation](../classes/AccessibilityServer.md#contextual-navigation) connects custom container position/help, direct keybinding metadata from real button/menu sources, class names and role descriptions. The owning contract defines override, lifecycle and verification boundaries.

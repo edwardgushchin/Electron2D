@@ -32,6 +32,12 @@ public partial class PopupMenu
         if (e.CollectionItem is not Item item) return -1; var index = e.CollectionSourceIndex;
         return (uint)index < (uint)_items.Count && _items[index] == item ? index : _items.IndexOf(item);
     }
+    internal string AccessibilityShortcut(Element e)
+    {
+        var index = AccessibilityCollectionIndex(e); if (index < 0) return ""; var item = _items[index];
+        if (item.ShortcutDisabled) return "";
+        return item.Shortcut is { IsDisposed: false } shortcut && shortcut.HasValidEvent() ? shortcut.GetAsText() : item.Accelerator == Key.None ? "" : AcceleratorText(item.Accelerator);
+    }
     internal bool AccessibilityCollectionLive(Element e) => !IsDisposed && IsInsideTree && Visible && AccessibilityCollectionIndex(e) >= 0;
     internal Rect2 AccessibilityCollectionRect(Element e)
     { Measure(); var index = AccessibilityCollectionIndex(e); return index < 0 || !_items[index].Visible ? default : _items[index].Rect; }

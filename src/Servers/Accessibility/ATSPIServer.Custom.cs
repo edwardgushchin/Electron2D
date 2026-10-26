@@ -21,15 +21,17 @@ internal sealed unsafe partial class ATSPIServer
     }
     private static nint NameVariant(Element e)
     {
-        if (e.ExtraInfo.Length == 0 && e.Name.AsSpan().Trim().Length == e.Name.Length) return S(e.Name);
-        var name = e.Name.AsSpan().TrimStart(); var extra = e.ExtraInfo.AsSpan().TrimEnd();
-        if (name.IsEmpty) extra = extra.TrimStart(); else if (extra.IsEmpty) name = name.TrimEnd();
-        var capacity = checked(Encoding.UTF8.GetByteCount(name) + Encoding.UTF8.GetByteCount(extra) + 2 * (name.Count('\0') + extra.Count('\0')) + 2);
+        if ((!e.IncludeContainerContext || e.ContainerContext.Length == 0) && e.ExtraInfo.Length == 0 && e.Name.AsSpan().Trim().Length == e.Name.Length) return S(e.Name);
+        var name = e.Name.AsSpan().TrimStart(); var container = e.IncludeContainerContext ? e.ContainerContext.AsSpan() : default; var extra = e.ExtraInfo.AsSpan().TrimEnd();
+        if (name.IsEmpty) { container = container.TrimStart(); if (container.IsEmpty) extra = extra.TrimStart(); }
+        if (extra.IsEmpty) { container = container.TrimEnd(); if (container.IsEmpty) name = name.TrimEnd(); }
+        var capacity = checked(Encoding.UTF8.GetByteCount(name) + Encoding.UTF8.GetByteCount(container) + Encoding.UTF8.GetByteCount(extra) + 2 * (name.Count('\0') + container.Count('\0') + extra.Count('\0')) + 3);
         byte* allocated = null;
         Span<byte> buffer = capacity <= 1024 ? stackalloc byte[capacity] : new(allocated = (byte*)NativeMemory.Alloc((nuint)capacity), capacity);
         try
         {
-            var at = Write(name, buffer); if (!name.IsEmpty && !extra.IsEmpty) buffer[at++] = (byte)' ';
+            var at = Write(name, buffer); if (at != 0 && !container.IsEmpty) buffer[at++] = (byte)' ';
+            at += Write(container, buffer[at..]); if (at != 0 && !extra.IsEmpty) buffer[at++] = (byte)' ';
             at += Write(extra, buffer[at..]); buffer[at] = 0;
             fixed (byte* p = buffer) return g_variant_new_string(p);
         }

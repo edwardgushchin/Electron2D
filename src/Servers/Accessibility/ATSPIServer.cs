@@ -239,7 +239,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             "ChildCount" => I(e.Children.Count),
             "Locale" => S(TranslationServer.Culture.Name),
             "AccessibleId" => S(e.Path),
-            "HelpText" => S(""),
+            "HelpText" => S(e.HelpText),
             _ => throw new InvalidOperationException("Unknown accessible property.")
         };
         if (iface == ActionInterface && name == "NActions") return I(ActionCount(e));
@@ -333,14 +333,14 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             if (method == "GetActions")
             {
                 var builder = Builder("a(sss)");
-                try { for (var i = 0; i < ActionCount(e); i++) { var name = ActionName(e, ActionAt(e, i)); g_variant_builder_add_value(builder, Tuple([S(name), S(name), S("")])); } return Tuple([g_variant_builder_end(builder)]); }
+                try { for (var i = 0; i < ActionCount(e); i++) { var request = ActionAt(e, i); var name = ActionName(e, request); g_variant_builder_add_value(builder, Tuple([S(name), S(name), S(KeyBinding(e, request))])); } return Tuple([g_variant_builder_end(builder)]); }
                 finally { g_variant_builder_unref(builder); }
             }
             var action = ActionAt(e, IntArg(args, 0));
             return method switch
             {
                 "GetName" or "GetLocalizedName" or "GetDescription" => Tuple([S(ActionName(e, action))]),
-                "GetKeyBinding" => Tuple([S("")]),
+                "GetKeyBinding" => Tuple([S(KeyBinding(e, action))]),
                 "DoAction" => Tuple([B(InvokeRequest(e, action))]),
                 _ => throw new InvalidOperationException("Unknown action method.")
             };

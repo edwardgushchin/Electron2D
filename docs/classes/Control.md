@@ -105,6 +105,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | Member | Contract |
 | --- | --- |
 | `protected override string[] OnGetAccessibilityConfigurationWarnings()` | Adds missing action/landmark name warnings to the inherited hook. |
+| `protected virtual string OnAccessibilityGetContextualInfo()` | Native contextual HelpText. |
+| `protected virtual string OnGetAccessibilityContainerName(Node node)` | Immediate-child position, forwarding this container to a parent Control by default. |
 | `public float GetAnchor(Side side)` | Reads one anchor fraction. |
 | `public void SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)` | Updates one anchor and optionally the opposite anchor. |
 | `public void SetAnchorsPreset(LayoutPreset preset, bool keepOffsets = false)` | Applies all four anchor fractions; preserves the current rectangle unless offsets are kept. |
@@ -540,3 +542,7 @@ AccessibilityLive is a stored [AccessibilityLiveMode](AccessibilityServer.Access
 | `public void AccessibilityDrop()` | Tries the current payload on this control/ancestors without hit testing, then finalizes. |
 
 Both require an attached owner-thread control and respect capture/lifetime guards. Explicit targets may use MouseFilter.Ignore. The public finite-position convenience methods retain their existing validation; their underlying hooks can receive the accessibility sentinel. Full ownership, failure, keyboard, text/capacity and native consumers are defined in [the service contract](AccessibilityServer.md#custom-actions-and-accessible-drag).
+
+## Contextual accessible navigation
+
+The two context hooks connect custom container position and keyboard help to actual native names/HelpText. They refresh on queued source or ancestor updates, topology and locale changes. Non-Control parents end forwarding. Explicit name overrides remain until the source name/context changes. [The service contract](AccessibilityServer.md#contextual-navigation) owns composition, callback lifetime, native shortcut sources and measured limits.

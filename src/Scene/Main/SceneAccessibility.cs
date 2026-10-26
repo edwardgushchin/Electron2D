@@ -66,6 +66,8 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var name = node switch { Control c => c.AccessibleCaption, Window w => w.AccessibilityTitle, _ => "" };
             var description = node is Control c2 ? c2.AccessibleDescription : "";
             var role = RoleFor(node); var flags = 0UL;
+            var contextChanged = node is Control contextSource && AccessibilityServer.UpdateSourceContext(e, contextSource);
+            if (e.Retired || node.IsDisposed || node.IsDepartingTree || !ReferenceEquals(node.Tree, tree)) continue;
             if (node is Control liveSource) { AccessibilityServer.UpdateSourceLive(e, liveSource); AccessibilityServer.UpdateSourceDrag(e, liveSource); }
             if (e.Retired || node.IsDisposed || node.IsDepartingTree || !ReferenceEquals(node.Tree, tree)) continue;
             if (node is PopupMenu menuSource) menuSource.AccessibilitySyncCollection(e);
@@ -87,7 +89,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
                 _ => default,
             };
             var changed = !e.SourcePrepared || name != e.SourceName || description != e.SourceDescription || role != e.SourceRole || flags != e.SourceFlags || isChecked != e.SourceChecked || bounds != e.SourceBounds;
-            if (!e.SourcePrepared || name != e.SourceName) AccessibilityServer.UpdateSetName(id, name);
+            if (!e.SourcePrepared || name != e.SourceName || contextChanged) AccessibilityServer.UpdateSourceName(e, name, contextChanged);
             if (!e.SourcePrepared || description != e.SourceDescription) AccessibilityServer.UpdateSetDescription(id, description);
             if (!e.SourcePrepared || role != e.SourceRole) AccessibilityServer.UpdateSetRole(id, role);
             if (!e.SourcePrepared || bounds != e.SourceBounds) AccessibilityServer.UpdateSetBounds(id, bounds);

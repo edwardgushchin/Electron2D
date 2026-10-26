@@ -71828,6 +71828,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetClassName(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetClassName",
+    "signature": "public static System.Void UpdateSetClassName(Electron2D.RID id, System.String className)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "className",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateSetDescription(Electron2D.RID,System.String)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -72457,6 +72481,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetRoleDescription(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetRoleDescription",
+    "signature": "public static System.Void UpdateSetRoleDescription(Electron2D.RID id, System.String description)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateSetScrollX(Electron2D.RID,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -72556,6 +72604,30 @@
       {
         "name": "max",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetShortcut(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetShortcut",
+    "signature": "public static System.Void UpdateSetShortcut(Electron2D.RID id, System.String shortcut)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shortcut",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -100514,6 +100586,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Control.OnAccessibilityGetContextualInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnAccessibilityGetContextualInfo",
+    "signature": "protected virtual System.String OnAccessibilityGetContextualInfo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Control.OnCanDropData(Electron2D.Vector2,Electron2D.DragPayload)",
     "kind": "method",
     "declaringType": "Electron2D.Control",
@@ -100591,6 +100676,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Control.OnGetAccessibilityContainerName(Electron2D.Node)",
+    "kind": "method",
+    "declaringType": "Electron2D.Control",
+    "name": "OnGetAccessibilityContainerName",
+    "signature": "protected virtual System.String OnGetAccessibilityContainerName(Electron2D.Node node)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "node",
+        "type": "Electron2D.Node",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {

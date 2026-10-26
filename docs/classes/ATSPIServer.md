@@ -23,3 +23,5 @@ CollectionProtocol/Collections export native selection and table/cell queries an
 ATSPIServer.Live coalesces pending live content on the owner and emits the pinned Object.Announcement signature. Hidden/protected/retired and Off regions suppress output; numeric formatting uses a stack UTF-8 buffer. Popup/tooltip metadata and action names use the same native states/attributes/actions as ordinary queries. See [the service contract](AccessibilityServer.md#native-live-and-popups).
 
 The Custom partial publishes integer-ID actions and composes native Name/cache/events from base name and extra context through stack/native UTF-8 storage. The existing native callback boundary handles custom errors and retirement. [Custom actions](AccessibilityServer.md#custom-actions-and-accessible-drag) owns the public contract.
+
+[Contextual native navigation](AccessibilityServer.md#contextual-navigation) publishes retained source help/container fragments and actual button/menu keybindings. Class/role attributes retain the native taxonomy; source changes, override precedence and callback retirement have their own verification.

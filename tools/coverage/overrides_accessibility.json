@@ -1115,6 +1115,36 @@
       "electron2d": "property:Electron2D.ProjectSettings.InputUIAccessibilityDragAndDrop()",
       "state": "Implemented",
       "reason": "ADRs 0038/0114: native integer custom actions, composed name context and pointer-free Control drag/drop execute through typed GUI payloads, source text/caret hooks, prepared preview ownership and the configurable unbound input action. Native libatspi, lifecycle/failure/Unicode/capacity, keyboard, strict NativeAOT and prepared idle/active checks define local verification; native heaps, physical devices, foreign adapters, human readers and release packages retain separate gates."
+    },
+    {
+      "godot": "Control::method:_accessibility_get_contextual_info()",
+      "electron2d": "method:Electron2D.Control.OnAccessibilityGetContextualInfo()",
+      "state": "Implemented",
+      "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
+    },
+    {
+      "godot": "Control::method:_get_accessibility_container_name(Node:)",
+      "electron2d": "method:Electron2D.Control.OnGetAccessibilityContainerName(Electron2D.Node)",
+      "state": "Implemented",
+      "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetShortcut(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_classname(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetClassName(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_role_description(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetRoleDescription(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates."
     }
   ],
   "extras": [
@@ -1174,7 +1204,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Color values, braille/class/role/state/shortcut/URL and typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Color values, braille/state/URL and typed producer metadata retain their exact native/source triggers. Integer custom callbacks and composed name context execute. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
       "godot": [
         "class:AccessibilityServer"
       ]
@@ -1196,29 +1226,12 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/role/state/class/shortcut/URL metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
+      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/state/URL metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
       "godot": [
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
         "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
-        "AccessibilityServer::method:update_set_classname(RID:,String:)",
-        "AccessibilityServer::method:update_set_role_description(RID:,String:)",
-        "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
         "AccessibilityServer::method:update_set_state_description(RID:,String:)",
         "AccessibilityServer::method:update_set_url(RID:,String:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: contextual naming/announcement helper and its actual composite/container source text remain absent. Native semantic relations execute, but do not implement this contextual naming override.",
-      "godot": [
-        "Control::method:_accessibility_get_contextual_info()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: contextual naming/announcement helper and its actual composite/container source text remain absent. Native semantic relations execute, but do not implement this contextual naming override.",
-      "godot": [
-        "Control::method:_get_accessibility_container_name(Node:)"
       ]
     },
     {
@@ -1511,6 +1524,17 @@
         "Control::method:accessibility_drop()",
         "ProjectSettings::property:input/ui_accessibility_drag_and_drop",
         "AccessibilityServer::enum:AccessibilityAction"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: contextual Control help/container hooks, native HelpText and composed names, direct Action keybindings from actual mutable button/menu sources, and class/role attributes execute through the owner bridge. Parent generations, non-Control boundaries, source override/retirement, native wire failures and prepared active/idle frames retain explicit verification. Human readers, native heaps, physical devices, foreign platforms and release packages remain separate gates.",
+      "godot": [
+        "Control::method:_accessibility_get_contextual_info()",
+        "Control::method:_get_accessibility_container_name(Node:)",
+        "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
+        "AccessibilityServer::method:update_set_classname(RID:,String:)",
+        "AccessibilityServer::method:update_set_role_description(RID:,String:)"
       ]
     }
   ]

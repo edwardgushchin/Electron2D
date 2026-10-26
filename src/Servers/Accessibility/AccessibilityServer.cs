@@ -37,6 +37,11 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal List<(int ID, string Description)>? CustomActions;
         internal Action<int>? CustomAction;
         internal string ExtraInfo = "", SourceExtraInfo = "";
+        internal string ContainerContext = "", HelpText = "", ClassName = "", RoleDescription = "", Shortcut = "";
+        internal string? SourceShortcut, SourceContextLocale;
+        internal Control? SourceContextParent;
+        internal bool SourceContextPrepared, ExplicitShortcut, IncludeContainerContext;
+        internal ulong SourceContextGeneration, SourceParentContextGeneration, SourceContextPath;
         internal ulong SourceDragRevision = ulong.MaxValue;
         internal bool SourceDragEditable, SourceDragVisible;
         internal (bool Accepted, string Description, string Locale)? SourceDragContext;
@@ -280,7 +285,8 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
     /// <exception cref="ArgumentNullException">A required text or callback argument is null.</exception>
-    public static void UpdateSetName(RID id, string name) { ArgumentNullException.ThrowIfNull(name); var r = Require(); var e = r.Get(id); if (e.Name == name) return; e.Name = name; r._native!.PropertyChanged(e, "accessible-name", name); }
+    /// <remarks>Replaces the complete source/container name. Supplementary ExtraInfo remains independent; a later source name or container change restores automatic naming.</remarks>
+    public static void UpdateSetName(RID id, string name) { ArgumentNullException.ThrowIfNull(name); var r = Require(); var e = r.Get(id); var context = e.IncludeContainerContext && e.ContainerContext.Length != 0; e.IncludeContainerContext = false; if (e.Name == name && !context) return; e.Name = name; r._native!.PropertyChanged(e, "accessible-name", name); }
     /// <summary>Sets the human-readable accessible description.</summary><param name="id">Element.</param><param name="description">Description.</param>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>

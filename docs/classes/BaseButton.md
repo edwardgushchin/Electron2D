@@ -177,3 +177,5 @@ Disposed button access throws ObjectDisposedException. Attached off-owner access
 ## Native accessibility integration
 
 Native Click actions reuse the validated button activation pipeline, including toggle/group ordering, callback failures and reentry guards. They do not fabricate pointer events. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.
+
+[Contextual native navigation](AccessibilityServer.md#contextual-navigation) publishes retained source help/container fragments and actual button/menu keybindings. Class/role attributes retain the native taxonomy; source changes, override precedence and callback retirement have their own verification.
