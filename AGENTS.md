@@ -4,7 +4,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 
 ## Find the relevant source of truth
 
-- For architecture work, read `docs/decisions/index.md`, the affected bounded decision document, and only the cross-domain ADRs it links. Update the active ADR in place when its decision changes, following [ADR 0030](docs/decisions/product.md#adr-0030).
+- For architecture work, start with `docs/decisions/index.md`, then inspect the affected ADR sections and only the cross-domain contracts needed for the task. Use headings, search and bounded ranges; read a whole document when its connected contract requires it. Update the active ADR in place when its decision changes, following [ADR 0030](docs/decisions/product.md#adr-0030).
 - Before adding or changing public/protected API, read [ADR 0004](docs/decisions/product.md#adr-0004) and the owning ADR. Apply product-wide rules to the complete type/member family, including parameter/result types, factories, accessors and siblings. Specific rename lists are examples of the policy, not its boundary. Resolve a conflict with an existing decision before implementation; recording the implementation in a new local ADR does not authorize that conflict.
 - For project/scene tooling, editor automation, batch hosts or capture, follow [ADR 0090](docs/decisions/agent-native.md#adr-0090). Verify the exercised programmatic workflow and distinguish authoring, headless simulation and real rendered output; record absent prerequisites instead of claiming tool or agent acceptance from compilation alone.
 - For current behavior, read the affected `docs/domains/`, `docs/components/`, and `docs/classes/` pages. `docs/inventory.md` maps implemented production types; it is not a compatibility register.
@@ -13,6 +13,8 @@ These instructions apply to the whole repository. Keep this file about how to wo
 - For release preparation or publication, follow [the release runbook](docs/releasing.md). Finish all README locales and release notes before final qualification; publish the qualified package files and retain their exact source/run/artifact identities. Check the runbook's automation status before claiming that a step is implemented.
 - Runtime source is under `src/` and built by `Electron2D.csproj`; executable checks are under `tests/Electron2D.Tests/`. `editor/` and `examples/` contain separate consumers when implemented. Consumer code and projects use only the public Electron2D API; backend dependencies and probes stay in the runtime project and tests. Verify the current project layout before adding files.
 - Keep tool output focused: locate relevant declarations with `rg`, read the ranges needed for the audit, and inspect every result of a batch while returning a compact summary. Read full files when necessary. For broad API work, finish one connected vertical slice and update coverage before moving on.
+- Load documentation progressively: entry/index, relevant contract, then implementation detail or evidence as needed. Do not preload every ADR, class page, skill reference or journal entry. Search before reading large files; narrow a truncated query instead of repeatedly dumping it. Carry source paths, anchors and revisions into continuation notes.
+- Update the canonical affected document with the behavior/decision change, repair its links and distinguish implemented, planned and unverified claims. Keep summaries brief and link to the owning detail; do not copy a full contract into multiple guides or turn the journal into the product manual.
 
 ## Implementation discipline
 

@@ -68,6 +68,20 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 
 着色器材质、GPU 粒子、光照与阴影及 HDR 需要 GPU 渲染器；兼容渲染器提供其文档所述的 2D 功能。物理后端与渲染器分别选择。具体支持范围和验证限制见各子系统文档及[平台报告](docs/platform-verification.md)。
 
+<a id="agent-support"></a>
+
+## 智能体提供商与客户端
+
+支持范围仅限于经过验证的客户端版本和平台。详见[支持矩阵及限制](docs/components/project-agent.md#provider-and-client-support)。
+
+- **OpenAI / Codex：** 已验证有限工作流的编辑器执行器，使用 Linux 上的 Codex CLI 0.163.0。外部 CLI 的真实模型验收仍需单独进行。
+- **Anthropic / Claude Code：** 计划提供编辑器执行器及操作/skill 配置，尚未验证。
+- **Google / Gemini CLI：** 计划提供编辑器执行器及操作/skill 配置，尚未验证。
+- **GitHub / Copilot CLI：** 计划作为操作/skill 的外部客户端，尚未验证。
+- **Cursor / Cursor Agent：** 计划作为操作/skill 的外部客户端，尚未验证。
+
+随附的开发 skill、按需限量加载文档上下文，以及支持分支、提交、push 和 worktree 的[编辑器 Git 工作区](docs/decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host)，均已纳入架构决策，目前尚未实现。手动开发和常规 .NET 游戏构建无需智能体提供商。
+
 <a id="quick-start"></a>
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> 快速开始

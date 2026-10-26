@@ -68,6 +68,20 @@ Este é um resumo dos principais recursos já implementados no motor. As APIs do
 
 Materiais com shaders, partículas GPU, iluminação com sombras e HDR exigem o renderizador GPU; o renderizador de compatibilidade oferece o perfil 2D descrito na documentação. O backend de física é escolhido independentemente do renderizador. Consulte os documentos vinculados e o [relatório de plataformas](docs/platform-verification.md) para ver o suporte e os limites das verificações.
 
+<a id="agent-support"></a>
+
+## Provedores e clientes de agentes
+
+O suporte se limita a versões de clientes e plataformas verificadas. Consulte a [matriz de suporte e seus limites](docs/components/project-agent.md#provider-and-client-support).
+
+- **OpenAI / Codex:** executor do editor verificado para um fluxo limitado, Codex CLI 0.163.0 no Linux. A aceitação com um modelo real no CLI externo continua separada.
+- **Anthropic / Claude Code:** executor do editor e perfil de operações/skill planejados; ainda não verificados.
+- **Google / Gemini CLI:** executor do editor e perfil de operações/skill planejados; ainda não verificados.
+- **GitHub / Copilot CLI:** cliente externo de operações/skill planejado; ainda não verificado.
+- **Cursor / Cursor Agent:** cliente externo de operações/skill planejado; ainda não verificado.
+
+Um skill de desenvolvimento incluído, a carga limitada de documentação no contexto e o [espaço Git do editor](docs/decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host), com branches, commits, push e worktrees, fazem parte da arquitetura aceita e ainda não estão implementados. O desenvolvimento manual e a compilação habitual de jogos com .NET não exigem um provedor de agentes.
+
 <a id="quick-start"></a>
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Primeiros passos

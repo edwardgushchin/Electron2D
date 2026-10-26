@@ -68,6 +68,20 @@ Este es un resumen de las principales funciones ya implementadas en el motor. La
 
 Los materiales con shaders, las partículas GPU, la iluminación con sombras y HDR requieren el renderizador GPU; el renderizador de compatibilidad ofrece el perfil 2D descrito en su documentación. El backend de física se elige independientemente del renderizador. Consulta la documentación enlazada y el [informe de plataformas](docs/platform-verification.md) para conocer el alcance y las limitaciones de las verificaciones.
 
+<a id="agent-support"></a>
+
+## Proveedores y clientes de agentes
+
+El soporte se limita a versiones de clientes y plataformas verificadas. Consulta la [matriz de soporte y sus límites](docs/components/project-agent.md#provider-and-client-support).
+
+- **OpenAI / Codex:** ejecutor del editor verificado para un flujo limitado, Codex CLI 0.163.0 en Linux. La aceptación con un modelo real en el CLI externo sigue siendo independiente.
+- **Anthropic / Claude Code:** ejecutor del editor y perfil de operaciones/skill previstos; aún sin verificar.
+- **Google / Gemini CLI:** ejecutor del editor y perfil de operaciones/skill previstos; aún sin verificar.
+- **GitHub / Copilot CLI:** cliente externo de operaciones/skill previsto; aún sin verificar.
+- **Cursor / Cursor Agent:** cliente externo de operaciones/skill previsto; aún sin verificar.
+
+Un skill de desarrollo incluido, la carga acotada de documentación en el contexto y el [espacio de trabajo Git del editor](docs/decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host), con ramas, commits, push y worktrees, forman parte de la arquitectura aceptada y aún no están implementados. El desarrollo manual y la compilación habitual de juegos con .NET no requieren un proveedor de agentes.
+
 <a id="quick-start"></a>
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Inicio rápido

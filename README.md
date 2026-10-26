@@ -68,6 +68,20 @@ This is an overview of the main features already implemented in the engine. Indi
 
 Shader materials, GPU particles, lighting/shadows and HDR require the GPU renderer; the compatibility renderer supports its documented 2D profile. Physics backend selection is independent of renderer selection. See the linked subsystem documents and [platform report](docs/platform-verification.md) for exact support and verification limits.
 
+<a id="agent-support"></a>
+
+## Agent providers and clients
+
+Support is scoped to tested client/version/platform profiles. See the [support matrix and limits](docs/components/project-agent.md#provider-and-client-support).
+
+- **OpenAI / Codex:** qualified bounded editor executor, Codex CLI 0.163.0 on Linux. External CLI real-model acceptance remains separate.
+- **Anthropic / Claude Code:** planned editor executor and operations/skill profile; not yet qualified.
+- **Google / Gemini CLI:** planned editor executor and operations/skill profile; not yet qualified.
+- **GitHub / Copilot CLI:** planned external operations/skill client; not yet qualified.
+- **Cursor / Cursor Agent:** planned external operations/skill client; not yet qualified.
+
+A bundled development skill, bounded documentation context and the [editor Git workspace](docs/decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host), including branches, commits, push and worktrees, are accepted architecture and remain unimplemented. Manual development and ordinary .NET game builds require no agent provider.
+
 <a id="quick-start"></a>
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Quick start

@@ -10,6 +10,20 @@ Open/create the source project, select the **Agent** tab beside Inspector, conne
 
 The panel shows literal bounded conversation, owner-confirmed operation successes/failures, executor status/model, shared selection, and task/interruption outcomes. Inspector shows real job progress, terminal diagnostics and captures with input/stale attribution. Normal history lists attributed human/external groups. **Undo last agent change** uses the same guarded inverse and refuses overlapping later work. Conversation output is limited to 64 KiB; source and operation history remain authoritative. No imported text, source or executor message can expand permissions.
 
+## Provider and client support
+
+This is the current product support list, shared by the root README locales. A provider/model vendor, an editor-controlled executor and an external MCP client are different capabilities. The architecture selects these targets; planned rows are unavailable until their real profile is implemented and qualified.
+
+| Provider / client | Editor-controlled executor | External operations and skill | Current evidence/status |
+| --- | --- | --- | --- |
+| OpenAI / Codex | **Qualified bounded profile:** codex-cli 0.163.0 app-server, Linux/.NET 10, existing CLI login | MCP stdio transport executes with editor/no-UI owners; normal external CLI real-model acceptance remains separate. Bundled development skill is planned. | Actual native-panel model scenario verifies unsaved edits, stale-conflict repair, snapshot assertions/capture, interruption and reconnect; see [verification](#verification-and-measured-limits). |
+| Anthropic / Claude Code | Planned first-party executor profile | Planned operations/skill qualification | Instruction/skill formats researched; no qualified Electron2D integration. |
+| Google / Gemini CLI | Planned first-party executor profile | Planned operations/skill qualification | Instruction/skill formats researched; no qualified Electron2D integration. |
+| GitHub / Copilot CLI | No promised editor-control adapter | Planned external operations/skill profile | No qualified Electron2D integration. Copilot surfaces differ; this target is the local CLI. |
+| Cursor / Cursor Agent | No promised editor-control adapter | Planned external operations/skill profile | No qualified Electron2D integration. This is an external-client target, not a promise for every model Cursor offers. |
+
+The measured OpenAI profile covers its actually selected model and task, not every OpenAI model or compatible endpoint. Installing a skill or listing MCP tools alone does not qualify another provider. A support claim records exact client/model/platform/authentication, owner modes, supported rights, installed artifact and acceptance limits. Manual authoring and ordinary game builds require no provider.
+
 ## Owner, discovery and permissions
 
 `ProjectSession.StartOperations(project, sdk)` starts one [SessionOperationsHost](../classes/SessionOperationsHost.md) over this exact existing owner/document pair. The creator calls `Pump` on the owner thread; socket workers only frame/authenticate/queue requests. No hidden writable owner/thread is created. Private `.electron2d/session/operations.json` identifies protocol version one, fresh owner generation, a random capability and an owner-private Unix socket. Discovery/socket permissions are 0600 and the temporary socket directory is 0700. Unsafe project paths/symlinks, world/group-readable discovery, invalid generations and forged/nonnamed capabilities reject. Metadata is secret and must not enter logs or source control.
@@ -25,6 +39,8 @@ MCP `tools/list` exports version-matched operation schemas from the actual typed
 The [Git-backed project memory contract](../decisions/agent-native.md#git-backed-project-memory) adds project-owned documentation, a six-section development journal and fresh-client bootstrap as the next stage-4 slice. [Portable instructions](../decisions/agent-native.md#portable-project-instructions-and-engineering-discipline) make `AGENTS.md` canonical, require every qualified executor to complete the task with the smallest necessary change and account for client-specific loading/imports. That slice also validates new Conventional Commits 1.0.0 messages and confirms journal publication; instruction text alone is not enforcement.
 
 The current `context` result does not include Git status, project instructions, Markdown documents or journal entries; operations cannot edit/publish those documents or create commits. Conversation reconnect resumes the current executor's history; it does not establish provider-independent continuation from the game repository. Instructions and history belong to project files; provider-private memory is optional. The researched instruction-loading profiles are not additional qualified Electron2D executors.
+
+[Bounded documentation context](../decisions/agent-native.md#bounded-context-and-documentation-workflow) and the [bundled development skill](../decisions/agent-native.md#bundled-development-skill-and-provider-support) are stage-4a requirements: compact bootstrap, indexed/sectioned retrieval, progressive skill references and confirmed documentation/journal publication. Neither budget enforcement nor a packaged/installed shared skill exists in the current executor. The editor's [full Git workspace](../decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host), including branches/remotes/push/worktrees, is stage 4b and remains unimplemented.
 
 | Operation | Executed contract |
 | --- | --- |

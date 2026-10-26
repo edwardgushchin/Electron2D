@@ -1,6 +1,6 @@
 # Releasing Electron2D
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 This is the maintainer runbook for future releases. Product versions follow
 [ADR 0096](decisions/versioning.md#adr-0096); platform acceptance follows
@@ -72,6 +72,14 @@ candidate and requires the affected checks and final qualification again. Finish
 release documentation beforehand. Save test receipts as artifacts instead of
 creating a post-test documentation commit that moves the candidate. Do not use
 `[skip ci]` to make an untested release SHA appear qualified.
+
+## Qualify editor agent capabilities when included
+
+For a release that includes the stage-4 editor/tooling features in [ADR 0090](decisions/agent-native.md#bundled-development-skill-and-provider-support), qualify the actual delivered skill and Git/context operations before advertising them. This is a future feature gate; it does not assert that those features or their packaging are implemented today. Runtime-only releases do not acquire an agent installation requirement.
+
+- Retain engine/skill/protocol versions, package/source/content identities and the exact provider/client/model/platform profile. Verify the canonical skill entry and relative references from the installed payload, project-local setup/upgrade preservation and fresh clone/worktree discovery.
+- Exercise a real authoring plus documentation/journal task using bounded context. Qualify Git workspace operations and rights against actual repositories, including failure/conflict/dirty-buffer cases; local bare-remote tests do not establish hosted authentication or network delivery.
+- Update the [support matrix](components/project-agent.md#provider-and-client-support), all root README locales and release notes from that evidence. Keep planned, unqualified, editor-controlled and external-client capabilities distinct; do not promote a provider solely because its instruction format is recognized.
 
 ## Promote the qualified files
 
