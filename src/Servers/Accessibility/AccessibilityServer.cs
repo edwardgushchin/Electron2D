@@ -13,6 +13,11 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal readonly string Path;
         internal readonly List<Element> Children = [];
         internal readonly Dictionary<AccessibilityAction, Action> Actions = [];
+        internal readonly List<Relation> Relations = [], ExpectedRelations = [];
+        internal readonly HashSet<Element> RelationOwners = [];
+        internal ulong SourceRelationRevision;
+        internal ButtonGroup? SourceRelationGroup;
+        internal bool SourceRelationToggle, HyperlinkRegistered;
         internal Element? Parent;
         internal Node? Source;
         internal string? SourceName, SourceDescription;
@@ -73,7 +78,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     internal IEnumerable<Element> Elements => _elements.Values;
     private Element Add(int windowID, AccessibilityRole role)
     {
-        ValidateRole(role); var e = new Element(windowID, role); _elements.Add(e.ID, e);
+        ValidateRole(role); _elementRevision++; var e = new Element(windowID, role); _elements.Add(e.ID, e);
         try { _native!.Register(e); }
         catch { _elements.Remove(e.ID); throw; }
         return e;
@@ -99,8 +104,12 @@ public sealed partial class AccessibilityServer : ElectronObject
         var newIndex = index < 0 ? count : index;
         if (previous == parent && oldIndex == newIndex) return;
         previous?.Children.Remove(child); child.Parent = parent; parent.Children.Insert(newIndex, child);
-        if (previous is not null) _native!.ChildrenChanged(previous, child, false, oldIndex);
-        _native!.ChildrenChanged(parent, child, true);
+        List<Exception>? errors = null;
+        if (previous is not null)
+            try { _native!.ChildrenChanged(previous, child, false, oldIndex); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { _native!.ChildrenChanged(parent, child, true); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
+        if (errors is not null) throw new AggregateException("Accessibility hierarchy notifications failed.", errors);
     }
     /// <summary>Creates a producer-owned element associated with a native window.</summary>
     /// <param name="windowID">A live native window identity.</param><param name="role">The semantic role.</param>
@@ -145,6 +154,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
     /// <exception cref="AggregateException">Native retirement failed after all owned elements were attempted.</exception>
+    /// <exception cref="AggregateException">Native publication fails after required graph and ownership work is attempted.</exception>
     public static void FreeElement(RID id)
     {
         var r = Require(); var e = r.Get(id); if (e.IsWindow || e.Source is not null) throw new InvalidOperationException("The native window or scene node owns this accessibility element."); r.Free(e);
@@ -152,7 +162,16 @@ public sealed partial class AccessibilityServer : ElectronObject
     private void Free(Element e)
     {
         List<Exception>? errors = null;
-        if (_focused.GetValueOrDefault(e.WindowID) == e) _focused.Remove(e.WindowID);
+        if (_focusOwners.GetValueOrDefault(e.WindowID) == e)
+        {
+            _focusOwners.Remove(e.WindowID);
+            if (_focused.Remove(e.WindowID, out var selected))
+            {
+                selected.Focused = false;
+                try { _native!.StateChanged(selected, "focused", false); } catch (Exception error) { (errors ??= []).Add(error); }
+            }
+        }
+        else if (_focused.GetValueOrDefault(e.WindowID) == e) { _focused.Remove(e.WindowID); e.Focused = false; }
         while (e.Children.Count != 0)
         {
             var child = e.Children[^1];
@@ -172,7 +191,9 @@ public sealed partial class AccessibilityServer : ElectronObject
             try { _native!.ChildrenChanged(parent, e, false, index); } catch (Exception error) { (errors ??= []).Add(error); }
         }
         e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
-        e.Retired = true; e.Actions.Clear(); _elements.Remove(e.ID);
+        e.Retired = true; e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
+        RetireRelations(e, ref errors); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
+        try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
         try { _native!.Unregister(e); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Accessibility element retirement failed.", errors);
     }
@@ -182,6 +203,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
     /// <exception cref="ArgumentException">The relationship crosses native windows or creates a cycle.</exception>
+    /// <exception cref="AggregateException">Native publication fails after required graph and ownership work is attempted.</exception>
     public static void UpdateAddChild(RID id, RID childID) { var r = Require(); var child = r.Get(childID); if (child.IsWindow) throw new InvalidOperationException("Native window roots are owned by the service."); r.Attach(r.Get(id), child, -1); }
     /// <summary>Sets the human-readable accessible name.</summary><param name="id">Element.</param><param name="name">Name, including an empty value.</param>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
@@ -256,15 +278,13 @@ public sealed partial class AccessibilityServer : ElectronObject
         var r = Require(); var e = r.Get(id); e.Actions[action] = callback; r._native!.ActionsChanged(e);
     }
     /// <summary>Publishes the currently focused semantic element.</summary><param name="id">A live element.</param>
+    /// <remarks>Active-descendant chains select semantic focus without moving the ordinary GUI focus owner.</remarks>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
     public static void UpdateSetFocus(RID id)
     {
-        var r = Require(); var e = r.Get(id); if (r._focused.GetValueOrDefault(e.WindowID) == e) return;
-        if (r._focused.TryGetValue(e.WindowID, out var previous)) { previous.Focused = false; r._native!.StateChanged(previous, "focused", false); }
-        r._focused[e.WindowID] = e; e.Focused = true;
-        if (r._windows[e.WindowID].WindowFocused) r._native!.StateChanged(e, "focused", true);
+        var r = Require(); r.SetFocusOwner(r.Get(id));
     }
     /// <summary>Publishes the native window's active focus state.</summary><param name="windowID">Native window.</param><param name="focused">Whether the window currently has native focus.</param>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
@@ -298,8 +318,10 @@ public sealed partial class AccessibilityServer : ElectronObject
     }
     internal static void ClearFocusIf(RID id)
     {
-        var r = Runtime; if (!r._elements.TryGetValue(id, out var e) || r._focused.GetValueOrDefault(e.WindowID) != e) return;
-        r._focused.Remove(e.WindowID); e.Focused = false; r._native?.StateChanged(e, "focused", false);
+        var r = Runtime;
+        if (!r._elements.TryGetValue(id, out var owner) || r._focusOwners.GetValueOrDefault(owner.WindowID) != owner && r._focused.GetValueOrDefault(owner.WindowID) != owner) return;
+        r._focusOwners.Remove(owner.WindowID);
+        if (r._focused.Remove(owner.WindowID, out var selected)) { selected.Focused = false; r._native?.StateChanged(selected, "focused", false); }
     }
     internal static void PumpNative() { Runtime._native?.Pump(); }
     internal static void RetireDisplay()
@@ -308,10 +330,11 @@ public sealed partial class AccessibilityServer : ElectronObject
         try { r._native?.Dispose(); }
         finally
         {
-            r._native = null; r._attempted = false; r._automatic = false; r._focused.Clear();
+            r._native = null; r._attempted = false; r._automatic = false; r._focused.Clear(); r._focusOwners.Clear(); r._activeOwners.Clear();
             foreach (var e in r._elements.Values)
             {
                 e.Retired = true; e.Actions.Clear(); e.Children.Clear(); e.Parent = null; e.Source = null;
+                e.Relations.Clear(); e.RelationOwners.Clear(); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
                 e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
             }
             r._elements.Clear(); r._windows.Clear(); r.Application.Children.Clear();

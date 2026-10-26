@@ -131,6 +131,8 @@ internal sealed unsafe partial class ATSPIServer
         Set(40, e.Flag(Flag.Visited));
         Set(16, e.Flag(Flag.Modal));
         Set(43, e.Flag(Flag.ReadOnly));
+        Set(31, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ActiveDescendant) is not null);
+        Set(36, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ErrorMessage) is not null);
         Set(39, e.Role == Role.DefaultButton);
         return Array("u", [g_variant_new_uint32((uint)bits), g_variant_new_uint32((uint)(bits >> 32))]);
     }

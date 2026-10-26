@@ -52,6 +52,16 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateSetNumRange(RID id, double min, double max)` | [Numeric values](#numeric-values) |
 | `public static void UpdateSetNumStep(RID id, double step)` | [Numeric values](#numeric-values) |
 | `public static void UpdateSetNumJump(RID id, double jump)` | [Numeric values](#numeric-values) |
+| `public static void UpdateAddRelatedControls(RID id, RID relatedID)` | [UpdateAddRelatedControls](#updateaddrelatedcontrols) |
+| `public static void UpdateAddRelatedDescribedBy(RID id, RID relatedID)` | [UpdateAddRelatedDescribedBy](#updateaddrelateddescribedby) |
+| `public static void UpdateAddRelatedDetails(RID id, RID relatedID)` | [UpdateAddRelatedDetails](#updateaddrelateddetails) |
+| `public static void UpdateAddRelatedFlowTo(RID id, RID relatedID)` | [UpdateAddRelatedFlowTo](#updateaddrelatedflowto) |
+| `public static void UpdateAddRelatedLabeledBy(RID id, RID relatedID)` | [UpdateAddRelatedLabeledBy](#updateaddrelatedlabeledby) |
+| `public static void UpdateAddRelatedRadioGroup(RID id, RID relatedID)` | [UpdateAddRelatedRadioGroup](#updateaddrelatedradiogroup) |
+| `public static void UpdateSetMemberOf(RID id, RID groupID)` | [UpdateSetMemberOf](#updatesetmemberof) |
+| `public static void UpdateSetErrorMessage(RID id, RID otherID)` | [UpdateSetErrorMessage](#updateseterrormessage) |
+| `public static void UpdateSetInPageLinkTarget(RID id, RID otherID)` | [UpdateSetInPageLinkTarget](#updatesetinpagelinktarget) |
+| `public static void UpdateSetActiveDescendant(RID id, RID otherID)` | [UpdateSetActiveDescendant](#updatesetactivedescendant) |
 | `public static void UpdateSetFocus(RID id)` | [UpdateSetFocus](#updatesetfocus) |
 | `public static void SetWindowFocused(int windowID, bool focused)` | [SetWindowFocused](#setwindowfocused) |
 | `public static void SetWindowRect(int windowID, Rect2 rectOut, Rect2 rectIn)` | [SetWindowRect](#setwindowrect) |
@@ -196,7 +206,7 @@ Supplies separate outer/decorated and inner/client rectangles in screen coordina
 
 Closing a native child window retires all its elements, including unattached ones. Display teardown removes native registrations, connection/context ownership, callbacks and RID membership even after callback or notification failure. Reopening creates a new bridge and new element identities. Protected `ValidateDisposal()` rejects disposal of the permanent service.
 
-[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profile covers Accessible/Application/Component/Action/Value/Cache. Native text, color values, table, richer relationships and remaining payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
+[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profile covers Accessible/Application/Component/Action/Value/Cache. Native text, color values, table and remaining payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
 
 <a id="numeric-values"></a>
 ### Numeric values
@@ -206,3 +216,77 @@ UpdateSetNumValue publishes the actual double and enables the native Value inter
 The Action<double> overload of UpdateAddAction accepts SetValue only. A native CurrentValue write passes a finite requested value to that callback on the display owner. The callback owns mutation and publication; successful invocation does not invent a result. No-argument registration accepts Click/Focus/Blur/Decrement/Increment and rejects SetValue. Positive jump plus numeric callback exposes page-decrement/page-increment native actions using the current published value. Zero jump removes them. Value Text formats the number on query; SpinBox uses its displayed affixes/numerals.
 
 Automatic Range descendants publish values, authored bounds, positive Step or one, and Page as jump. Slider, ScrollBar, SpinBox and progress displays have their native roles. ProgressBar/TextureProgressBar and non-editable Slider/SpinBox reject writes and step/page actions. Hidden/disabled/detached/queued/retired controls also reject requests. Ordinary Value policy owns snapping, rounding, page caps, shared peers, protected hooks and ValueChanged. Native writes reject nonfinite requests before invoking a callback; callback failures propagate through the pump's aggregate policy. Source updates publish after ordinary scene processing; custom NotificationAccessibilityUpdate overrides survive until the corresponding source field changes.
+
+## Semantic relationships
+
+Non-owning relationships publish actual AT-SPI relations. Elements must be live and belong to the same native window. They do not transfer lifetime or change the semantic hierarchy. Invalid/stale/foreign identities throw KeyNotFoundException, cross-window targets throw ArgumentException, absent support throws NotSupportedException and off-owner access throws InvalidOperationException. Target retirement removes references and native reciprocal output. Repeated adds are idempotent. Native notification failures aggregate after graph changes commit; required retirement cleanup still runs. Non-hierarchical cycles are allowed. Automatic source links and manual producer links have separate provenance; changing source paths preserves a matching manual link. Forward output uses the current authored source order before additional manual targets; pure source reorder changes native output and emits a relation event.
+
+<a id="updateaddrelatedcontrols"></a>
+### UpdateAddRelatedControls
+
+`public static void UpdateAddRelatedControls(RID id, RID relatedID)`
+
+Adds a target controlled by this producer. Native output is ControllerFor and its reciprocal ControlledBy. Insertion order is retained and duplicate targets are ignored.
+
+<a id="updateaddrelateddescribedby"></a>
+### UpdateAddRelatedDescribedBy
+
+`public static void UpdateAddRelatedDescribedBy(RID id, RID relatedID)`
+
+Adds a describing target. Native output is DescribedBy and its reciprocal DescriptionFor. Insertion order is retained and duplicate targets are ignored.
+
+<a id="updateaddrelateddetails"></a>
+### UpdateAddRelatedDetails
+
+`public static void UpdateAddRelatedDetails(RID id, RID relatedID)`
+
+Adds supplementary detail content. Native output is Details and reciprocal DetailsFor. Insertion order is retained and duplicate targets are ignored.
+
+<a id="updateaddrelatedflowto"></a>
+### UpdateAddRelatedFlowTo
+
+`public static void UpdateAddRelatedFlowTo(RID id, RID relatedID)`
+
+Adds the next semantic reading-flow target. Native output is FlowsTo and reciprocal FlowsFrom. Insertion order is retained and duplicate targets are ignored.
+
+<a id="updateaddrelatedlabeledby"></a>
+### UpdateAddRelatedLabeledBy
+
+`public static void UpdateAddRelatedLabeledBy(RID id, RID relatedID)`
+
+Adds a target supplying a label. Native output is LabelledBy and reciprocal LabelFor; its name is not copied into this producer's Name. Insertion order is retained and duplicate targets are ignored.
+
+<a id="updateaddrelatedradiogroup"></a>
+### UpdateAddRelatedRadioGroup
+
+`public static void UpdateAddRelatedRadioGroup(RID id, RID relatedID)`
+
+Adds another radio peer through native MemberOf. Call for each directed peer pair; self-membership is not generated automatically. Insertion order is retained and duplicate targets are ignored.
+
+<a id="updatesetmemberof"></a>
+### UpdateSetMemberOf
+
+`public static void UpdateSetMemberOf(RID id, RID groupID)`
+
+Replaces the single explicit group target through native MemberOf. An empty groupID clears it. Radio-peer membership remains independent.
+
+<a id="updateseterrormessage"></a>
+### UpdateSetErrorMessage
+
+`public static void UpdateSetErrorMessage(RID id, RID otherID)`
+
+Replaces the target containing a validation error, publishing native ErrorMessage/ErrorFor and invalid-entry state. Empty otherID clears the error and state; freeing the target also clears them.
+
+<a id="updatesetinpagelinktarget"></a>
+### UpdateSetInPageLinkTarget
+
+`public static void UpdateSetInPageLinkTarget(RID id, RID otherID)`
+
+Replaces the internal-link anchor. Empty otherID clears it. A real Hyperlink interface advertises one anchor and returns its target from GetObject(0). Other indices reject. Internal links have no external URI or originating Hypertext range: GetURI returns empty, StartIndex/EndIndex return -1. Clearing/retirement advertises no interface and reports zero anchors/IsValid=false on the already registered object.
+
+<a id="updatesetactivedescendant"></a>
+### UpdateSetActiveDescendant
+
+`public static void UpdateSetActiveDescendant(RID id, RID otherID)`
+
+Replaces the strict descendant selected when this composite owns semantic focus; a non-descendant or self throws ArgumentException. Empty otherID clears it. Native output includes ActiveDescendantChanged and manages-descendants; semantic focus follows active-descendant chains. Reparenting outside the owner or retiring a target clears it and returns focus to the surviving owner. This selects semantic focus and does not move the ordinary GUI focus owner.

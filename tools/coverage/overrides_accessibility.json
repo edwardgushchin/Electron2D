@@ -593,6 +593,90 @@
       "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.SetValue()",
       "state": "Partial",
       "reason": "ADR 0114: native Value property reads/writes and real page actions; seven automatic numeric widgets reuse Range mutation, shared events and read-only policy. Independent native clients, owner failure/reopening and prepared active/idle frames verify the consumer; human reader and foreign platforms remain separate gates."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_related_controls(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddRelatedControls(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_related_described_by(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddRelatedDescribedBy(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_related_details(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddRelatedDetails(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_related_flow_to(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddRelatedFlowTo(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_related_labeled_by(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddRelatedLabeledBy(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_related_radio_group(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddRelatedRadioGroup(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_member_of(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetMemberOf(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_error_message(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetErrorMessage(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_in_page_link_target(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetInPageLinkTarget(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_active_descendant(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetActiveDescendant(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "Control::property:accessibility_controls_nodes",
+      "electron2d": "property:Electron2D.Control.AccessibilityControlsNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "Control::property:accessibility_described_by_nodes",
+      "electron2d": "property:Electron2D.Control.AccessibilityDescribedByNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "Control::property:accessibility_labeled_by_nodes",
+      "electron2d": "property:Electron2D.Control.AccessibilityLabeledByNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "Control::property:accessibility_flow_to_nodes",
+      "electron2d": "property:Electron2D.Control.AccessibilityFlowToNodes()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
     }
   ],
   "extras": [
@@ -628,7 +712,7 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Complete text/value/table/relationship/announcement and payload-action families remain absent with exact row triggers.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Complete text/color/table/announcement and remaining payload-action families retain exact row triggers.",
       "godot": [
         "class:AccessibilityServer"
       ]
@@ -733,22 +817,6 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: owned typed element relationships and native Accessible relation-set publication with target retirement and source-property integration. Do not add inert metadata or unsupported action selectors.",
-      "godot": [
-        "AccessibilityServer::method:update_add_related_controls(RID:,RID:)",
-        "AccessibilityServer::method:update_add_related_described_by(RID:,RID:)",
-        "AccessibilityServer::method:update_add_related_details(RID:,RID:)",
-        "AccessibilityServer::method:update_add_related_flow_to(RID:,RID:)",
-        "AccessibilityServer::method:update_add_related_labeled_by(RID:,RID:)",
-        "AccessibilityServer::method:update_add_related_radio_group(RID:,RID:)",
-        "AccessibilityServer::method:update_set_active_descendant(RID:,RID:)",
-        "AccessibilityServer::method:update_set_error_message(RID:,RID:)",
-        "AccessibilityServer::method:update_set_in_page_link_target(RID:,RID:)",
-        "AccessibilityServer::method:update_set_member_of(RID:,RID:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
       "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native attributes/help/locale/action-keybinding or role/state-description consumer for this exact metadata field, including updates and client readback. Do not add inert metadata or unsupported action selectors.",
       "godot": [
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
@@ -766,63 +834,35 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "reason": "ADR 0114: contextual naming/announcement helper and its actual composite/container source text remain absent. Native semantic relations execute, but do not implement this contextual naming override.",
       "godot": [
         "Control::method:_accessibility_get_contextual_info()"
       ]
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "reason": "ADR 0114: contextual naming/announcement helper and its actual composite/container source text remain absent. Native semantic relations execute, but do not implement this contextual naming override.",
       "godot": [
         "Control::method:_get_accessibility_container_name(Node:)"
       ]
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "reason": "ADR 0114: native assistive drag/drop actions, announced drag context and typed payload routing into the existing GUI drag lifecycle remain absent. Numeric values and semantic relations already execute; neither supplies this transport.",
       "godot": [
         "Control::method:accessibility_drag()"
       ]
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "reason": "ADR 0114: native assistive drag/drop actions, announced drag context and typed payload routing into the existing GUI drag lifecycle remain absent. Numeric values and semantic relations already execute; neither supplies this transport.",
       "godot": [
         "Control::method:accessibility_drop()"
       ]
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
-      "godot": [
-        "Control::property:accessibility_controls_nodes"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
-      "godot": [
-        "Control::property:accessibility_described_by_nodes"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
-      "godot": [
-        "Control::property:accessibility_flow_to_nodes"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
-      "godot": [
-        "Control::property:accessibility_labeled_by_nodes"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "reason": "ADR 0114: native live-region mode and real source-triggered announcements remain absent; semantic relations and numeric value events do not implement live announcements.",
       "godot": [
         "Control::property:accessibility_live"
       ]
@@ -1007,6 +1047,26 @@
       "reason": "ADR 0114: native Value property reads/writes and real page actions; seven automatic numeric widgets reuse Range mutation, shared events and read-only policy. Independent native clients, owner failure/reopening and prepared active/idle frames verify the consumer; human reader and foreign platforms remain separate gates. SetValue color/text payloads await typed native color/text consumers.",
       "godot": [
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_VALUE"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate.",
+      "godot": [
+        "AccessibilityServer::method:update_add_related_controls(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_described_by(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_details(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_flow_to(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_labeled_by(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_radio_group(RID:,RID:)",
+        "AccessibilityServer::method:update_set_member_of(RID:,RID:)",
+        "AccessibilityServer::method:update_set_error_message(RID:,RID:)",
+        "AccessibilityServer::method:update_set_in_page_link_target(RID:,RID:)",
+        "AccessibilityServer::method:update_set_active_descendant(RID:,RID:)",
+        "Control::property:accessibility_controls_nodes",
+        "Control::property:accessibility_described_by_nodes",
+        "Control::property:accessibility_labeled_by_nodes",
+        "Control::property:accessibility_flow_to_nodes"
       ]
     }
   ]

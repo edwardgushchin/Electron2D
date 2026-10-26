@@ -6,12 +6,13 @@ namespace Electron2D;
 internal sealed class SceneAccessibility(SceneTree tree)
 {
     private readonly List<Node> _nodes = [];
-    private ulong _revision = ulong.MaxValue;
+    private ulong _revision = ulong.MaxValue, _relationsPathRevision = ulong.MaxValue, _relationsElementRevision = ulong.MaxValue;
+    private bool _relationsDirty;
     private readonly Dictionary<int, RID> _focus = [], _previousFocus = [];
     private readonly Dictionary<RID, int> _childOrder = [];
     internal static SceneAccessibility? Create(SceneTree tree) =>
         tree.Root is Window window && window.GetWindowID() >= 0 && AccessibilityServer.AutomaticOutput ? new(tree) : null;
-    private static Window? NativeWindow(Node node)
+    internal static Window? NativeWindow(Node node)
     {
         var window = node.GetWindow();
         while (window is not null && window.GetWindowID() < 0) window = window.Embedder?.GetWindow();
@@ -61,6 +62,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
             if (node.IsDisposed || node.IsDepartingTree || !ReferenceEquals(node.Tree, tree)) continue;
             var id = GetElement(node); if (!id.IsValid()) continue;
             var e = AccessibilityServer.SourceElement(node)!;
+            if (node is Control relationControl && (e.SourceRelationRevision != relationControl.AccessibilityRelationRevision || e.SourceRelationGroup != (node as BaseButton)?.MembershipGroup || e.SourceRelationToggle != (node is BaseButton { ToggleMode: true }))) _relationsDirty = true;
             var name = node switch { Control c => c.AccessibleCaption, Window w => w.AccessibilityTitle, _ => "" };
             var description = node is Control c2 ? c2.AccessibleDescription : "";
             var role = RoleFor(node); var flags = 0UL;
@@ -106,9 +108,44 @@ internal sealed class SceneAccessibility(SceneTree tree)
                 _focus[e.WindowID] = selected;
             }
         }
+        SyncRelations();
         foreach (var (window, id) in _previousFocus) if (!_focus.ContainsKey(window)) AccessibilityServer.ClearFocusIf(id);
         _previousFocus.Clear();
         foreach (var (window, id) in _focus) { AccessibilityServer.UpdateSetFocus(id); _previousFocus[window] = id; }
+    }
+    private void SyncRelations()
+    {
+        if (!_relationsDirty && _relationsPathRevision == tree.PathRevision && _relationsElementRevision == AccessibilityServer.ElementRevision) return;
+        foreach (var node in _nodes)
+        {
+            if (node is not Control control || node.IsDisposed || node.IsDepartingTree || !ReferenceEquals(node.Tree, tree) || AccessibilityServer.SourceElement(node) is not { } element) continue;
+            element.ExpectedRelations.Clear();
+            AddPaths(control, element, control.AccessibilityControlsPaths, AccessibilityServer.RelationKind.Controls);
+            AddPaths(control, element, control.AccessibilityDescribedByPaths, AccessibilityServer.RelationKind.DescribedBy);
+            AddPaths(control, element, control.AccessibilityLabeledByPaths, AccessibilityServer.RelationKind.LabeledBy);
+            AddPaths(control, element, control.AccessibilityFlowToPaths, AccessibilityServer.RelationKind.FlowTo);
+            var group = (control as BaseButton)?.MembershipGroup;
+            if (control is BaseButton { ToggleMode: true } && group is not null)
+                foreach (var peer in group.GetButtons())
+                    if (peer != control && !peer.IsDisposed && !peer.IsDepartingTree && ReferenceEquals(peer.Tree, tree) && peer.ToggleMode && GetElement(peer) is var peerID && AccessibilityServer.SourceElement(peer) is { } related && related.WindowID == element.WindowID)
+                        element.ExpectedRelations.Add(new(AccessibilityServer.RelationKind.RadioGroup, related, Automatic: true));
+            AccessibilityServer.ReconcileSourceRelations(element);
+            element.SourceRelationRevision = control.AccessibilityRelationRevision; element.SourceRelationGroup = group; element.SourceRelationToggle = control is BaseButton { ToggleMode: true };
+        }
+        _relationsDirty = false; _relationsPathRevision = tree.PathRevision; _relationsElementRevision = AccessibilityServer.ElementRevision;
+    }
+    private void AddPaths(Control control, AccessibilityServer.Element element, ReadOnlySpan<string> paths, AccessibilityServer.RelationKind kind)
+    {
+        foreach (var path in paths)
+        {
+            if (path.Length == 0 || control.GetNodeOrNull(path) is not { IsDisposed: false, IsDepartingTree: false } target || !ReferenceEquals(target.Tree, tree)) continue;
+            _ = GetElement(target);
+            if (AccessibilityServer.SourceElement(target) is { } related && related.WindowID == element.WindowID)
+            {
+                var relation = new AccessibilityServer.Relation(kind, related, Automatic: true);
+                if (!element.ExpectedRelations.Contains(relation)) element.ExpectedRelations.Add(relation);
+            }
+        }
     }
     private static bool HasActiveFocus(Control control)
     {
