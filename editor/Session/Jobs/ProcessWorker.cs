@@ -9,13 +9,16 @@ internal static partial class ProcessWorker
 {
     internal static async Task<int> Main(string[] args)
     {
-        if (args.Length < 3 || args[0] != "--session-process-worker" || !OperatingSystem.IsLinux()) return 2;
+        if (args is ["--session-mcp", var root, var actor]) return await SessionMCP.Run(root, actor).ConfigureAwait(false);
+        if (args is ["--session-host", var projectRoot, var sdk]) return SessionOperationHostEntry.Run(projectRoot, sdk);
+        var interactive = args.Length > 0 && args[0] == "--session-agent-worker";
+        if (args.Length < 3 || !interactive && args[0] != "--session-process-worker" || !OperatingSystem.IsLinux()) return 2;
         var group = Environment.ProcessId;
         if (GetProcessGroup() != group) return 7;
-        var start = new ProcessStartInfo(args[2]) { WorkingDirectory = args[1], UseShellExecute = false };
+        var start = new ProcessStartInfo(args[2]) { WorkingDirectory = args[1], UseShellExecute = false, RedirectStandardInput = interactive };
         foreach (var arg in args.Skip(3)) start.ArgumentList.Add(arg);
         using var child = Process.Start(start) ?? throw new InvalidOperationException("The owned process did not start.");
-        var gone = Console.OpenStandardInput().ReadAsync(new byte[1]).AsTask();
+        var gone = interactive ? Relay(Console.OpenStandardInput(), child.StandardInput.BaseStream) : Console.OpenStandardInput().ReadAsync(new byte[1]).AsTask();
         var exited = child.WaitForExitAsync();
         if (await Task.WhenAny(exited, gone).ConfigureAwait(false) == gone)
         {
@@ -43,6 +46,11 @@ internal static partial class ProcessWorker
             if (timer.Elapsed > TimeSpan.FromSeconds(5)) { Kill(-group, 9); return 4; }
             await Task.Delay(10).ConfigureAwait(false);
         }
+    }
+    private static async Task Relay(Stream input, Stream output)
+    {
+        try { await input.CopyToAsync(output).ConfigureAwait(false); }
+        catch (IOException) { }
     }
     [LibraryImport("libc", EntryPoint = "getpgrp")]
     private static partial int GetProcessGroup();

@@ -18,9 +18,10 @@ public sealed class SessionJob : IAsyncDisposable
     private SessionJobStatus _status = SessionJobStatus.Queued;
     private string _stage = "Queued";
     private SessionSnapshotInfo? _snapshot;
-    internal SessionJob(ProjectSession owner, CapturedProject captured, string output)
+    internal long Sequence { get; }
+    internal SessionJob(ProjectSession owner, CapturedProject captured, string output, long sequence)
     {
-        _owner = owner; _captured = captured; OutputPath = output;
+        _owner = owner; _captured = captured; OutputPath = output; Sequence = sequence;
         _timeout = new CancellationTokenSource(captured.Options.DeadlineMilliseconds);
         ID = Guid.ParseExact(IOPath.GetFileName(output), "N"); SnapshotID = Guid.NewGuid();
         File.WriteAllText(IOPath.Combine(output, "job.owner"), ID.ToString("N"));
@@ -165,14 +166,14 @@ public sealed class SessionJob : IAsyncDisposable
         Cancel(); await Completion.ConfigureAwait(false);
         lock (_gate) { if (_disposed) return; _disposed = true; _cancellation.Dispose(); _timeout.Dispose(); }
     }
-    /// <summary>Removes this completed job's generated input/build/results; it never deletes source project files.</summary>
+    /// <summary>Removes this completed job's generated input/build/results and shared registry handle; it never deletes source project files.</summary>
     /// <exception cref="InvalidOperationException">The owned processes have not finished retiring.</exception>
     public void RemoveResult()
     {
         if (!Completion.IsCompleted) throw new InvalidOperationException("Wait for terminal cleanup before removing generated job data.");
         var path = JobProtocol.ChildPath(_captured.Root, IOPath.GetRelativePath(_captured.Root, OutputPath));
-        if (!Directory.Exists(path)) return;
+        if (!Directory.Exists(path)) { _owner.ForgetJob(ID); return; }
         if (File.ReadAllText(IOPath.Combine(path, "job.owner")) != ID.ToString("N")) throw new InvalidDataException("The generated directory no longer belongs to this job.");
-        Directory.Delete(path, recursive: true);
+        Directory.Delete(path, recursive: true); _owner.ForgetJob(ID);
     }
 }

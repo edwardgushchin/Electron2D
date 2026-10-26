@@ -62,6 +62,7 @@ This is an overview of the main features already implemented in the engine. Indi
 - [Localization](docs/domains/localization.md). Translation domains and contexts, PO/MO catalogs, locale fallback, integer plural rules, pseudolocalization and localized resource selection.
 - [Networking](docs/domains/networking.md). TCP/UDP/local sockets, TLS/DTLS, HTTP/HTTPS, WebSocket and ENet. [WebRTC data channels](docs/components/webrtc.md), typed RPC, authority, scene spawning and [property replication](docs/components/scene-replication.md).
 - [Shared project workflow](docs/components/project-jobs.md). Create/open a source project, edit one shared unsaved scene and C# buffer, then build/run immutable snapshots and inspect real captures with stale attribution. Jobs currently require Linux; rendered capture requires a native window and renderer.
+- [Agent in the editor](docs/components/project-agent.md). A native task/conversation panel connects the qualified local Codex CLI to shared unsaved documents through authenticated MCP operations, with guarded history, cancellation, reconnect and real snapshot evidence. Current executor/transport qualification requires Linux and an existing CLI login.
 
 Shader materials, GPU particles, lighting/shadows and HDR require the GPU renderer; the compatibility renderer supports its documented 2D profile. Physics backend selection is independent of renderer selection. See the linked subsystem documents and [platform report](docs/platform-verification.md) for exact support and verification limits.
 

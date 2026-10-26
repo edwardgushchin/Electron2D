@@ -10,6 +10,7 @@ internal sealed class EditorApplication : IDisposable
     private readonly List<ProjectWorkspace> _retiring = [];
     private ProjectWorkspace? _workspace;
     private ProjectSession? _session;
+    private string? _projectRoot;
     private bool _disposed;
     internal Window Window { get; }
     internal EditorApplication(Texture mark, Texture sparkle, Texture icon, Font semibold, Font regular, string? projectDirectory)
@@ -39,13 +40,17 @@ internal sealed class EditorApplication : IDisposable
         {
             _workspace?.PrepareClose();
             var project = create ? SessionProject.Create(_directory.Text, AppContext.BaseDirectory) : SessionProject.Open(_directory.Text);
-            if (_session?.ProjectRoot == project.Root) { _message.Text = project.Name + " is already open."; return; }
+            if (_projectRoot == project.Root)
+            {
+                if (_session is { IsFaulted: false }) { _message.Text = project.Name + " is already open."; return; }
+                RetireWorkspace();
+            }
             var session = project.OpenSession();
             ProjectWorkspace workspace;
             try { workspace = new(project, session, AppContext.BaseDirectory, _regular, _mono); }
             catch { session.Dispose(); throw; }
             RetireWorkspace();
-            _session = session; _workspace = workspace; shell.AddChild(workspace); workspace.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+            _session = session; _projectRoot = project.Root; _workspace = workspace; shell.AddChild(workspace); workspace.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
             workspace.SizeFlagsVertical = Control.SizeFlags.ExpandFill; workspace.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
             if (Window.GetNodeOrNull("Brand") is Control brand) brand.Visible = false;
             _message.Text = project.Name + " · shared scene/code session";
@@ -54,7 +59,7 @@ internal sealed class EditorApplication : IDisposable
     }
     private void RetireWorkspace()
     {
-        var workspace = _workspace; var session = _session; _workspace = null; _session = null;
+        var workspace = _workspace; var session = _session; _workspace = null; _session = null; _projectRoot = null;
         try { workspace?.Dispose(); }
         finally { if (workspace is not null) _retiring.Add(workspace); session?.Dispose(); }
     }

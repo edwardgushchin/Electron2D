@@ -57,7 +57,7 @@ internal static partial class ProcessJob
     }
     [LibraryImport("libc", EntryPoint = "kill", SetLastError = true)]
     private static partial int KillGroup(int group, int signal);
-    private static void TerminateSession(int processID)
+    internal static void TerminateSession(int processID)
     {
         if (KillGroup(-processID, 9) != 0 && Marshal.GetLastPInvokeError() != 3)
             throw new JobFailure("JOB_CLEANUP_FAILED", 4, "The owned process group could not be terminated.");

@@ -62,6 +62,7 @@ Este é um resumo dos principais recursos já implementados no motor. As APIs do
 - [Localização](docs/domains/localization.md). Domínios e contextos de tradução, catálogos PO/MO, idiomas de fallback, regras inteiras de plural, pseudolocalização e seleção de recursos localizados.
 - [Rede](docs/domains/networking.md). TCP/UDP e sockets locais, TLS/DTLS, HTTP/HTTPS, WebSocket e ENet. [Canais de dados WebRTC](docs/components/webrtc.md), RPC tipadas, autoridade, criação de objetos em rede e [replicação de propriedades](docs/components/scene-replication.md).
 - [Projeto compartilhado](docs/components/project-jobs.md). Crie/abra um projeto, edite uma cena e código C# compartilhados sem salvar, compile e execute snapshots imutáveis e confira capturas com indicação de desatualização. Os trabalhos exigem Linux; a captura exige janela e renderizador nativos.
+- [Agente no editor](docs/components/project-agent.md). O painel nativo de tarefas e conversa conecta a versão verificada do Codex CLI aos documentos compartilhados sem salvar por operações MCP autenticadas, com histórico protegido, cancelamento, reconexão e capturas reais. O perfil atual exige Linux e login no CLI.
 
 Materiais com shaders, partículas GPU, iluminação com sombras e HDR exigem o renderizador GPU; o renderizador de compatibilidade oferece o perfil 2D descrito na documentação. O backend de física é escolhido independentemente do renderizador. Consulte os documentos vinculados e o [relatório de plataformas](docs/platform-verification.md) para ver o suporte e os limites das verificações.
 

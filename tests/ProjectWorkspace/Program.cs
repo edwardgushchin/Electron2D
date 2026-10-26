@@ -3,6 +3,8 @@ using Electron2D.Editor;
 using IOPath = System.IO.Path;
 
 if (args is ["--application", var appOutput, var appBackend]) return ApplicationTests.Run(IOPath.GetFullPath(appOutput), appBackend);
+if (args is ["--agent", var agentOutput, var agentBackend]) return AgentTests.Run(IOPath.GetFullPath(agentOutput), agentBackend);
+if (args is ["--fault", var faultOutput]) return FaultedWorkspaceChecks.Run(IOPath.GetFullPath(faultOutput));
 ProjectionTests.Run();
 
 var output = IOPath.GetFullPath(args[0]); Directory.CreateDirectory(output);

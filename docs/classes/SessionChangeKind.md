@@ -17,6 +17,7 @@ A published session transition.
 | [Redone](#redone) | 2 | A guarded replay of an earlier group. |
 | [Saved](#saved) | 3 | One document's persistence boundary. |
 | [Refreshed](#refreshed) | 4 | An explicitly reconciled external file. |
+| [Selected](#selected) | 5 | Owner-local shared selection; no document/history change. |
 
 ## Enumeration descriptions
 
@@ -39,6 +40,10 @@ One document's persistence boundary.
 ### Refreshed
 
 An explicitly reconciled external file.
+
+### Selected
+
+The shared selected stable object changed or was explicitly observed through a selection operation. Selection context is owner-local and is not persisted.
 
 ## Usage and verification
 

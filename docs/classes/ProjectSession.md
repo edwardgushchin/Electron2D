@@ -31,6 +31,8 @@ Partial snippet: the caller supplies an existing projectRoot and imports Electro
 | --- | --- |
 | `public static ProjectSession Open(string projectRoot, string scenePath, string codePath)` | Acquire/recover the sole project owner for the existing document pair. |
 | `public string ProjectRoot { get; }` | Canonical leased root directory. |
+| `public bool IsFaulted { get; }` | Owner-thread recovery status remains readable after uncertain publication. |
+| `public SessionOperationsHost StartOperations(SessionProject project, string sdkDirectory)` | Publish one authenticated local endpoint over this exact owner/project; caller pumps/disposes it. |
 | `public event Action<SessionResult>? Changed` | Committed transitions in registration order. |
 | `public SessionClient Connect(string origin)` | Create a trusted local capability with immutable attribution. |
 | `public void Dispose()` | Release histories/lease, preserving recoverable unsaved documents. |
@@ -44,6 +46,14 @@ projectRoot is an existing directory; scenePath/codePath are distinct relative p
 ### ProjectRoot
 
 Returns the canonical absolute project directory. Queries require the owner thread and a live, nonfaulted owner.
+
+### IsFaulted
+
+True after publication/recovery becomes uncertain. Readable on the owner thread until disposal; ordinary operations remain rejected until close/reopen. The native workspace disables editing and permits safe close/reopen after handling any visible unapplied draft.
+
+### StartOperations
+
+Uses this owner and the matching project document pair, with the qualified job SDK. One idle host is allowed. Linux Unix sockets are required; mismatched roots/documents, a second host, busy/faulted/disposed state or unsafe metadata reject. See [SessionOperationsHost](SessionOperationsHost.md).
 
 ### Connect
 
