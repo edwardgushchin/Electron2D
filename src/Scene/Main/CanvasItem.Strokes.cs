@@ -25,7 +25,7 @@ public abstract partial class CanvasItem
     /// <param name="colors">Finite vertex colors; empty uses white, missing entries repeat the last supplied color, extra entries are ignored.</param>
     /// <param name="width">Finite local width; negative values produce one-pixel lines, zero produces no geometry.</param>
     /// <param name="antialiased">Whether to add local feather geometry. Ignored for negative-width polylines and multilines.</param>
-    /// <remarks>Input values are copied. Positive-width joins use a bisector limited to three half-widths; an approximately repeated endpoint closes the strip.</remarks>
+    /// <remarks>Input values are copied. Positive-width joins use a bisector limited to three half-widths; an approximately repeated endpoint closes the strip. Negative-width compatibility geometry-line mode retains endpoint colors across native squares and connecting triangles.</remarks>
     /// <exception cref="ArgumentException">Used coordinates, colors or width are nonfinite, or input counts are invalid.</exception>
     /// <exception cref="InvalidOperationException">Called outside this item's recording scope or off its owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>

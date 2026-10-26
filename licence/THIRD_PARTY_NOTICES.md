@@ -52,7 +52,7 @@ The license texts above are published together in `licence/`. The comparison dat
 
 ## Native files in the current self-contained Linux publish
 
-The compatibility canvas attribute-line selector adapts SDL 3.4.18's software, point-line and native GL endpoint coverage rules in C#. It is an altered implementation, not original SDL source; the unchanged [SDL notice](SDL-LICENSE.txt) applies. Its sources are `src/Servers/Rendering/CompatibilityCanvasBackend.cs` and `CompatibilityCanvasBackend.GL.cs`.
+The compatibility canvas attribute-line selector adapts SDL 3.4.18's software, point-line, native GL endpoint and geometry-line coverage rules in C#. It is an altered implementation, not original SDL source; the unchanged [SDL notice](SDL-LICENSE.txt) applies. Its sources are `src/Servers/Rendering/CompatibilityCanvasBackend.cs`, `CompatibilityCanvasBackend.GL.cs` and `CompatibilityCanvasBackend.GeometryLines.cs`.
 
 The managed `Electron2D` package includes no native payload. Applications explicitly select `Electron2D.{Platform}` 0.2.0-alpha, whose version identifies the minimum supported engine version. Its Linux source-rebuild profile uses the pinned SDL3-CS.Linux binary and official SDL 3.4.18 headers; no second SDL library is compiled or shipped. Each platform package includes applicable notices under `licence/`. The release workflow audits and publishes the matching managed and platform package bundle.
 

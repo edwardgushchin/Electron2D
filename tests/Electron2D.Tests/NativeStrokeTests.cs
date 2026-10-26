@@ -138,6 +138,7 @@ internal static partial class NativeStrokeTests
     }
     internal static void Run(string profile)
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_NATIVE_STROKE_ORACLE_OUTPUT") is not null) { RunOnce(profile); return; }
         var lifecycles = profile.EndsWith("-lifecycle", StringComparison.Ordinal) ? 2 : 1;
         for (var i = 0; i < lifecycles; i++)
         {
@@ -156,20 +157,18 @@ internal static partial class NativeStrokeTests
         var language = profile.Contains("hlsl", StringComparison.Ordinal) ? "HLSL" : "GLSL";
         ProjectSettings.Set(ProjectSettings.RenderingMethod, gpu ? "gpu" : "compatibility"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         ProjectSettings.Set(ProjectSettings.SnapVerticesToPixel, snap); ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, profile.Contains("separate", StringComparison.Ordinal)); Engine.MaxFPS = 120;
-        using var world = new World(profile.Contains("physics-gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
         using var pointImage = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
             [255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 128]);
         using var pointTexture = ImageTexture.CreateFromImage(pointImage);
         using var pointAtlas = new AtlasTexture { Atlas = pointTexture, Region = new(1, 0, 1, 1) };
         var cases = Cases(pointTexture, pointAtlas, !gpu); var height = ((cases.Length + 3) / 4) * 160 + 64;
-        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
         var customVertex = profile.Contains("vertex", StringComparison.Ordinal);
         using var fragment = gpu && (profile.Contains("material", StringComparison.Ordinal) || customVertex) ? customVertex
             ? Shader.CreateFromSPIRV(Module($"DeviceNative{(profile.Contains("declared", StringComparison.Ordinal) ? "Stroke" : "Primitive")}{language}.vert.spv"), Module($"DeviceNativeStroke{language}.frag.spv"))
             : Shader.CreateFromSPIRV(Module($"DeviceNativeStroke{language}.frag.spv")) : null;
         using var subjectMaterial = fragment is null ? null : new ShaderMaterial { Shader = fragment };
         var comparisons = new List<(Vector2i Origin, string Name)>();
-        var subjects = new List<(Painter Painter, Case Definition, Vector2i Origin)>(); Image? oracle = null;
+        var subjects = new List<(Painter Painter, Case Definition, Vector2i Origin)>(); var cells = new List<Control>(); Image? oracle = null;
         Transform[] bases = [Transform.Identity, new(.18f, new(1.1f, .8f), .14f, new(3, -2)), new(0, new(-.8f, 1.1f), 0, new(56, 0)), new(0, new(1.25f, 1.5f), 0, new(-10.25f, -8.25f))];
         for (var row = 0; row < cases.Length; row++)
             for (var column = 0; column < bases.Length; column++)
@@ -178,10 +177,27 @@ internal static partial class NativeStrokeTests
                 var cell = new Control { Position = origin, Size = new(64, 32), ClipContents = true };
                 var painter = new Painter { Transform = basis, Paint = item.Draw, Material = subjectMaterial }; if (item.Name == "short dash" && !profile.StartsWith("software", StringComparison.Ordinal)) { var group = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; group.AddChild(painter); cell.AddChild(group); }
                 else cell.AddChild(painter);
-                window.AddChild(cell);
+                cells.Add(cell);
                 comparisons.Add((origin, item.Name + "/" + column));
                 subjects.Add((painter, item, origin));
             }
+        var oracleDriver = Environment.GetEnvironmentVariable("SDL_RENDER_DRIVER");
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_NATIVE_STROKE_ORACLE_OUTPUT") is { } oracleOutput)
+        {
+            Check(SDL3.SDL.Init(SDL3.SDL.InitFlags.Video), "Initialize the isolated native oracle lifecycle");
+            try
+            {
+                using var reference = SDLOracle(subjects, new(768, height), snap, oracleDriver);
+                File.WriteAllBytes(oracleOutput, reference.GetData());
+                Console.WriteLine($"Native SDL oracle {oracleDriver}: {reference.Width}x{reference.Height} completed in its own process.");
+            }
+            finally { SDL3.SDL.QuitSubSystem(SDL3.SDL.InitFlags.Video); }
+            return;
+        }
+        if (!gpu && !baseline && oracleDriver is "vulkan" or "gpu") oracle = SeparateSDLOracle(profile, new(768, height));
+        using var world = new World(profile.Contains("physics-gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
+        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
+        foreach (var cell in cells) window.AddChild(cell);
         var modulation = new CanvasModulate(); window.AddChild(modulation);
         var moving = new MovingLine { Position = new(12, height - 34), GravityScale = 0, CanSleep = false, CollisionLayer = 0, CollisionMask = 0, LinearVelocity = new(6, 0), LinearDamp = 0, LinearDampMode = RigidBody.DampMode.Replace };
         using var shape = new CircleShape { Radius = 1 }; moving.AddChild(new CollisionShape { Shape = shape }); window.AddChild(moving);
@@ -242,6 +258,8 @@ internal static partial class NativeStrokeTests
                         Check(nonempty > 0, $"Every clipped affine stroke case renders actual pixels: {name}");
                     }
                 }
+                // Finish cold oracle collection/finalizers before warmed allocation measurements.
+                if (frame == 1) AllocationWarmupCheck.Collect();
                 if (++frame != 160) return;
                 Check(physicsTicks > 8 && physicsOwn == 0 && physicsAll == 0, $"Selected moving physics allocated {physicsOwn}/{physicsAll} B in {physicsTicks} intervals");
                 Check(activeOwn == 0 && activeAll == 0 && idleOwn == 0 && idleAll == 0, $"Native stroke managed bytes active={activeOwn}/{activeAll}, idle={idleOwn}/{idleAll}");

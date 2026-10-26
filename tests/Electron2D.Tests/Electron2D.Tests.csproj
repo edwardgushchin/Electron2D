@@ -9,6 +9,7 @@
     <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/SDLGeometryLineOracle.json" LogicalName="Electron2D.SDLGeometryLineOracle.json" />
     <Content Include="Fixtures/KeyCodeNames.json" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Fixtures/JoyMotion.csv" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Fixtures/StandardInputHost.py" CopyToOutputDirectory="PreserveNewest" />

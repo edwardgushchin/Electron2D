@@ -1065,11 +1065,86 @@ Final qualification receipts are retained under
 `bin/physics-native-attribute-lines/2026-10-26/validation.json`, SHA-256
 bd8d7c4b7198afccbb3a0f89628460c86737cc1ba9cbac664968a29d380bcdd8. The former runtime is RED against
 the same hint-2 fixture at the first primitive line coverage pixel. Geometry method
-(hint 3) and other drivers remain open. DrawPrimitive, DrawPolylineColors and the
+(hint 3) and other drivers remained open at that checkpoint; [the next slice](#attributed-geometry-lines-2026-10-26)
+now covers geometry mode and Vulkan/SDL GPU point origins. DrawPrimitive, DrawPolylineColors and the
 attribute-bearing server rows remain Partial; physics declarations remain
 1346/1369 (98.32%), with 23 open and 92 Excluded. This bounded renderer change does
 not establish full-step physics performance, native allocator, foreign-platform
 or owner visual acceptance.
+
+## Attributed geometry lines, 2026-10-26
+
+CompatibilityCanvasBackend carries endpoint colors and UVs through SDL geometry
+line mode (hint 3) on nonsoftware drivers. Software ignores that hint and retains
+its software line kernel. Each nonrepeated geometry point contributes its native unit square;
+axis-aligned segments add two connecting triangles and diagonals add four. A
+closed strip omits the first square and emits its closing square once. Repeated
+or snapped-equal points add no square/segment while retaining outgoing source
+attributes. Independent pairs retain their own caps. Vertex snapping precedes
+expansion; endpoint corners are not snapped again. One reusable triangle buffer
+and one native geometry submission retain native blending, textures, atlas UVs,
+clipping, target lifetime and actual draw accounting. Production adds no mask,
+readback, shader, GPU wait or second renderer.
+
+The [pinned SDL geometry source](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/render/SDL_render.c)
+provides the independent eight-direction C index traces retained in
+[SDLGeometryLineOracle.json](../../tests/Electron2D.Tests/Fixtures/SDLGeometryLineOracle.json).
+The unmodified draw-segment C block was compiled with a recording ADD_TRIANGLE
+macro. The fixture records the complete source SHA-256 and native corner roles.
+Tests replay these captured indices with independent public input colors/UVs in
+an SDL texture target. Every weighted coverage pixel is also compared against
+actual SDL_RenderLines; the existing .012 attributed-image tolerance is unchanged.
+The production selector is not called by either reference path.
+
+Vulkan and SDL GPU textured points now retain their unsnapped native unit-quad
+origin, including exact half-pixel cases. An integer-rounded trial failed the
+fractional-point oracle and was rejected. Software still truncates, desktop GL
+rounds and OpenGL ES retains its unsnapped origin.
+
+The native Vulkan/gpu reference renderer runs in a separate bounded process
+before constructing the game world and renderer. It returns the complete raw
+RGBA image from the same deterministic fixture; child failure, timeout or a
+truncated image rejects the comparison. Creating/destroying a second native renderer inside the
+first presented frame reproduced a native present crash; GDB points through SDL
+VULKAN_RenderPresent and the NVIDIA dispatch. This remains a recorded native
+multi-renderer limitation, not an engine workaround or evidence of its repair.
+A same-process cold-reinitialization trial passed CPU controls but failed one
+CLR GPU-physics initialization; the same selector passed under GDB and NativeAOT.
+That failed cohort remains rejected. Process isolation avoids sharing native
+dispatch while keeping every geometric comparison and the game presentation
+path intact. Auxiliary native-window device lifetime remains a separate open
+qualification, including the production per-window Compatibility backends.
+
+The fixture now uses the existing AllocationWarmupCheck.Collect after its two
+cold image/oracle frames, before the remaining warmup and all measured intervals.
+It finishes two blocking collections and their pending finalizers; the same
+controlled second-finalization calibration passes. Render operation counts,
+measured frame counts and exact zero-byte limits remain unchanged. An earlier
+unprepared CLR OpenGL/separate-GPU-physics run reported 129,656/129,656 bytes.
+Four interval diagnostics and three calibrated tagged-root profiles did not
+reproduce it; no warmed object event was observed in those traced controls.
+The original failure lacks a native allocation-context snapshot and remains
+unattributed. Prepared runs cannot retrospectively qualify that failed interval.
+
+The final cohort passes all 29 CLR and 29 strict full-trim NativeAOT profiles:
+66 renderer/world lifecycles, 128 Compatibility or 116 GPU clipped affine cases
+per image, and 34,013,184 compared pixels. Moving CPU/GPU physics runs on the
+owner or separate thread without fallback. All measured active/idle render
+owner/all-thread counters and PhysicsFrameStarted-to-state-sync counters remain
+exactly zero; work after that physical callback interval is outside the claim.
+A matched control removes only the geometry dispatch while retaining the same
+test assembly; it fails at primitive line/0, pixel 8,10. Restoring the dispatch
+passes the corresponding image. Portable PDB identity/source hashes bind both
+CLR assemblies and both frozen NativeAOT compiler-input assemblies to 2,650
+runtime and nine focused test/host sources, including the embedded oracle bytes.
+
+Qualification receipts, source proofs, controller scripts and validation are
+retained under `bin/physics-geometry-qualified/2026-10-26/`. Geometry mode is no longer the open
+attributed-line trigger. Default/native line modes on SDL Vulkan/gpu and foreign
+driver qualification remain open. DrawPrimitive and DrawPolylineColors retain
+Partial; physics declaration coverage stays 1347/1369 (98.39%), with 22 open and
+92 Excluded. Full-step physical performance, native allocator, foreign-platform
+and owner visual acceptance remain separate.
 
 ## Retained distance-field mode
 

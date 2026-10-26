@@ -9,13 +9,14 @@ internal static partial class NativeStrokeTests
     private static bool FlatSDLColor(Case definition) => !definition.VertexColors &&
         (!definition.Connected || definition.Colors.All(color => color == definition.Colors[0]));
 
-    private static Image SDLOracle(List<(Painter Painter, Case Definition, Vector2i Origin)> subjects, Vector2i size, bool snap)
+    private static Image SDLOracle(List<(Painter Painter, Case Definition, Vector2i Origin)> subjects, Vector2i size, bool snap, string? selectedDriver = null)
     {
+        var driver = selectedDriver ?? RenderingServer.GetCurrentRenderingDriverName();
         var previousWindow = SDL.GLGetCurrentWindow(); var previousContext = SDL.GLGetCurrentContext();
         try
         {
             using var window = new RenderHandle(SDL.CreateWindow("Primitive oracle", size.X, size.Y, SDL.WindowFlags.Hidden), SDL.DestroyWindow);
-            using var renderer = new RenderHandle(SDL.CreateRenderer(window.DangerousGetHandle(), RenderingServer.GetCurrentRenderingDriverName()), SDL.DestroyRenderer, window);
+            using var renderer = new RenderHandle(SDL.CreateRenderer(window.DangerousGetHandle(), driver), SDL.DestroyRenderer, window);
             var handle = renderer.DangerousGetHandle();
             using var target = new RenderHandle(SDL.CreateTexture(handle, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, renderer);
             Check(SDL.SetRenderTarget(handle, target.DangerousGetHandle()), "Bind independent SDL texture target");
@@ -58,7 +59,7 @@ internal static partial class NativeStrokeTests
             using var mask = new RenderHandle(SDL.CreateTexture(handle, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, renderer);
             Check(SDL.SetRenderTarget(handle, mask.DangerousGetHandle()), "Bind independent attribute coverage");
             foreach (var (painter, definition, origin) in subjects)
-                if (!FlatSDLColor(definition)) SDLAttributeOracle(handle, result, painter, definition, origin, snap);
+                if (!FlatSDLColor(definition)) SDLAttributeOracle(handle, result, painter, definition, origin, snap, driver);
             return result;
         }
         finally
@@ -67,14 +68,19 @@ internal static partial class NativeStrokeTests
         }
     }
 
-    private static void SDLAttributeOracle(nint renderer, Image result, Painter painter, Case definition, Vector2i origin, bool snap)
+    private static void SDLAttributeOracle(nint renderer, Image result, Painter painter, Case definition, Vector2i origin, bool snap, string driver)
     {
         var clip = new SDL.Rect { X = origin.X, Y = origin.Y, W = 64, H = 32 };
         Check(SDL.SetRenderClipRect(renderer, clip), "Clip native attribute coverage");
         var points = definition.Points.Select(point => painter.GetGlobalTransform() * point).ToArray();
         if (snap) for (var i = 0; i < points.Length; i++) points[i] = (points[i] + new Vector2(.5f, .5f)).Floor();
+        if (SDL.GetHint(SDL.Hints.RenderLineMethod) == "3" && driver != "software")
+        {
+            SDLGeometryAttributeOracle(renderer, result, definition, points, clip);
+            return;
+        }
         using var sampled = definition.SampleTexture?.GetImage();
-        var nativeLines = int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var method) && method == 2 && RenderingServer.GetCurrentRenderingDriverName() is "opengl" or "opengles2";
+        var nativeLines = int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var method) && method == 2 && driver is "opengl" or "opengles2";
         var rasterPoints = points.ToArray();
         if (nativeLines)
             for (var i = 0; i < rasterPoints.Length; i++)

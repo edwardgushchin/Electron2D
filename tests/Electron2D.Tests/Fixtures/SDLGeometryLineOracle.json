@@ -1,0 +1,151 @@
+{
+  "source": "https://raw.githubusercontent.com/libsdl-org/SDL/release-3.4.18/src/render/SDL_render.c",
+  "sourceSHA256": "6338807b452872ed180b60454d4e0dd5ab645469be6545b3944b22ffdb9fc312",
+  "method": "Segment index traces from the unchanged SDL_RenderLines draw-segment C block compiled with a recording ADD_TRIANGLE macro; unit squares use native corner order.",
+  "pointIndices": [
+    0,
+    1,
+    2,
+    0,
+    2,
+    3
+  ],
+  "segments": [
+    {
+      "direction": [
+        1,
+        0
+      ],
+      "indices": [
+        1,
+        4,
+        7,
+        1,
+        7,
+        2
+      ]
+    },
+    {
+      "direction": [
+        -1,
+        0
+      ],
+      "indices": [
+        5,
+        0,
+        3,
+        5,
+        3,
+        6
+      ]
+    },
+    {
+      "direction": [
+        0,
+        1
+      ],
+      "indices": [
+        2,
+        5,
+        4,
+        2,
+        4,
+        3
+      ]
+    },
+    {
+      "direction": [
+        0,
+        -1
+      ],
+      "indices": [
+        6,
+        1,
+        0,
+        6,
+        0,
+        7
+      ]
+    },
+    {
+      "direction": [
+        1,
+        1
+      ],
+      "indices": [
+        1,
+        5,
+        4,
+        1,
+        4,
+        2,
+        2,
+        4,
+        7,
+        2,
+        7,
+        3
+      ]
+    },
+    {
+      "direction": [
+        -1,
+        1
+      ],
+      "indices": [
+        4,
+        0,
+        5,
+        5,
+        0,
+        3,
+        5,
+        3,
+        6,
+        6,
+        3,
+        2
+      ]
+    },
+    {
+      "direction": [
+        1,
+        -1
+      ],
+      "indices": [
+        0,
+        4,
+        7,
+        0,
+        7,
+        1,
+        1,
+        7,
+        6,
+        1,
+        6,
+        2
+      ]
+    },
+    {
+      "direction": [
+        -1,
+        -1
+      ],
+      "indices": [
+        6,
+        5,
+        1,
+        6,
+        1,
+        0,
+        7,
+        6,
+        0,
+        7,
+        0,
+        3
+      ]
+    }
+  ]
+}

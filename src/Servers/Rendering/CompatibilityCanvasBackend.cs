@@ -301,7 +301,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
             {
                 "software" => new SDL.FPoint { X = MathF.Truncate(center.Position.X), Y = MathF.Truncate(center.Position.Y) },
                 "opengl" => LinePoint(center.Position, true),
-                "opengles2" => center.Position,
+                "opengles2" or "vulkan" or "gpu" => center.Position,
                 // shortcut: retain centered coverage on other drivers until their native point oracles execute.
                 _ => new SDL.FPoint { X = center.Position.X - .5f, Y = center.Position.Y - .5f }
             };
@@ -341,6 +341,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         }
         var attributes = texture != 0 || primitive == Mesh.PrimitiveType.LineStrip;
         for (var i = 1; !attributes && i < vertices.Length; i += 2) attributes = !SameColor(vertices[i - 1].Color, vertices[i].Color);
+        if (_nativeLineMethod == 3 && Driver != "software" && attributes) return DrawGeometryAttributeLines(renderer, texture, vertices, primitive, snap);
         if (_rasterAttributeLines && attributes) return DrawAttributeLines(renderer, texture, vertices, primitive, snap);
         if (_nativeLineMethod == 2 && Driver is "opengl" or "opengles2" && attributes) return DrawGLAttributeLines(renderer, texture, vertices, primitive, snap);
         var calls = 0;
