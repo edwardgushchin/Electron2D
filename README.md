@@ -77,6 +77,11 @@ Support is scoped to tested client/version/platform profiles. See the [support m
 - **OpenAI / Codex:** qualified bounded editor executor, Codex CLI 0.163.0 on Linux. External CLI real-model acceptance remains separate.
 - **Anthropic / Claude Code:** planned editor executor and operations/skill profile; not yet qualified.
 - **Google / Gemini CLI:** planned editor executor and operations/skill profile; not yet qualified.
+- **DeepSeek:** planned backend through a compatible executor; not yet qualified.
+- **Moonshot AI / Kimi:** planned Kimi Code CLI editor/MCP/skill profile; not yet qualified.
+- **Alibaba / Qwen:** planned Qwen Code editor/MCP/skill profile; not yet qualified.
+- **Z.ai / GLM:** planned backend through a compatible executor; not yet qualified.
+- **MiniMax / M-series:** planned backend through a compatible executor; not yet qualified.
 - **GitHub / Copilot CLI:** planned external operations/skill client; not yet qualified.
 - **Cursor / Cursor Agent:** planned external operations/skill client; not yet qualified.
 

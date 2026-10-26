@@ -11,6 +11,11 @@ The [support matrix](components/project-agent.md#provider-and-client-support) re
 - **OpenAI / Codex:** qualified bounded editor executor, codex-cli 0.163.0 on Linux; external-client real-model acceptance and bundled skill delivery remain separate.
 - **Anthropic / Claude Code:** planned editor executor and operations/skill profile; unqualified.
 - **Google / Gemini CLI:** planned editor executor and operations/skill profile; unqualified.
+- **DeepSeek:** planned backend through a compatible executor; unqualified.
+- **Moonshot AI / Kimi:** planned Kimi Code CLI editor/MCP/skill profile; unqualified.
+- **Alibaba / Qwen:** planned Qwen Code editor/MCP/skill profile; unqualified.
+- **Z.ai / GLM:** planned backend through a compatible executor; unqualified.
+- **MiniMax / M-series:** planned backend through a compatible executor; unqualified.
 - **GitHub / Copilot CLI:** planned external operations/skill client; unqualified.
 - **Cursor / Cursor Agent:** planned external operations/skill client; unqualified.
 

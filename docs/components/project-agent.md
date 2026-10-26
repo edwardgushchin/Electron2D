@@ -19,10 +19,17 @@ This is the current product support list, shared by the root README locales. A p
 | OpenAI / Codex | **Qualified bounded profile:** codex-cli 0.163.0 app-server, Linux/.NET 10, existing CLI login | MCP stdio transport executes with editor/no-UI owners; normal external CLI real-model acceptance remains separate. Bundled development skill is planned. | Actual native-panel model scenario verifies unsaved edits, stale-conflict repair, snapshot assertions/capture, interruption and reconnect; see [verification](#verification-and-measured-limits). |
 | Anthropic / Claude Code | Planned first-party executor profile | Planned operations/skill qualification | Instruction/skill formats researched; no qualified Electron2D integration. |
 | Google / Gemini CLI | Planned first-party executor profile | Planned operations/skill qualification | Instruction/skill formats researched; no qualified Electron2D integration. |
+| DeepSeek | Planned model backend through a compatible executor | Planned operations/skill qualification through that executor | Official Codex/Claude Code routes researched; neither route is qualified in Electron2D. |
+| Moonshot AI / Kimi | Planned native Kimi Code CLI profile; ACP candidate | Planned Kimi Code CLI MCP/skill profile | Native ACP/MCP/skills documented; no qualified Electron2D integration. |
+| Alibaba / Qwen | Planned native Qwen Code profile; ACP candidate | Planned Qwen Code MCP/skill profile | Native ACP/MCP/skills documented; no qualified Electron2D integration. |
+| Z.ai / GLM | Planned model backend through a compatible executor | Planned operations/skill qualification through that executor | Official Claude Code route researched; no qualified Electron2D integration. |
+| MiniMax / M-series | Planned model backend through a compatible executor | Planned operations/skill qualification through that executor | Official Claude Code route researched; no qualified Electron2D integration. |
 | GitHub / Copilot CLI | No promised editor-control adapter | Planned external operations/skill profile | No qualified Electron2D integration. Copilot surfaces differ; this target is the local CLI. |
 | Cursor / Cursor Agent | No promised editor-control adapter | Planned external operations/skill profile | No qualified Electron2D integration. This is an external-client target, not a promise for every model Cursor offers. |
 
 The measured OpenAI profile covers its actually selected model and task, not every OpenAI model or compatible endpoint. Installing a skill or listing MCP tools alone does not qualify another provider. A support claim records exact client/model/platform/authentication, owner modes, supported rights, installed artifact and acceptance limits. Manual authoring and ordinary game builds require no provider.
+
+The [provider/backend contract](../decisions/agent-native.md#bundled-development-skill-and-provider-support) distinguishes model vendor from executor vendor: using Codex or Claude Code with DeepSeek/GLM/MiniMax does not inherit the existing OpenAI qualification. Record the actual endpoint/region/model/authentication and executor version, with isolated launch configuration and the same bounded context, skill, documentation/journal and Git checks. A provider's wire compatibility or native ACP/MCP support alone remains researched capability, not available Electron2D support.
 
 ## Owner, discovery and permissions
 

@@ -77,6 +77,11 @@ O suporte se limita a versões de clientes e plataformas verificadas. Consulte a
 - **OpenAI / Codex:** executor do editor verificado para um fluxo limitado, Codex CLI 0.163.0 no Linux. A aceitação com um modelo real no CLI externo continua separada.
 - **Anthropic / Claude Code:** executor do editor e perfil de operações/skill planejados; ainda não verificados.
 - **Google / Gemini CLI:** executor do editor e perfil de operações/skill planejados; ainda não verificados.
+- **DeepSeek:** provedor de modelos por um executor compatível planejado; ainda não verificado.
+- **Moonshot AI / Kimi:** perfil do Kimi Code CLI para o editor, MCP e skill planejado; ainda não verificado.
+- **Alibaba / Qwen:** perfil do Qwen Code para o editor, MCP e skill planejado; ainda não verificado.
+- **Z.ai / GLM:** provedor de modelos por um executor compatível planejado; ainda não verificado.
+- **MiniMax / M-series:** provedor de modelos por um executor compatível planejado; ainda não verificado.
 - **GitHub / Copilot CLI:** cliente externo de operações/skill planejado; ainda não verificado.
 - **Cursor / Cursor Agent:** cliente externo de operações/skill planejado; ainda não verificado.
 

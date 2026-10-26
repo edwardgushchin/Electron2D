@@ -77,6 +77,11 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 - **OpenAI / Codex：** 已验证有限工作流的编辑器执行器，使用 Linux 上的 Codex CLI 0.163.0。外部 CLI 的真实模型验收仍需单独进行。
 - **Anthropic / Claude Code：** 计划提供编辑器执行器及操作/skill 配置，尚未验证。
 - **Google / Gemini CLI：** 计划提供编辑器执行器及操作/skill 配置，尚未验证。
+- **DeepSeek：** 计划通过兼容执行器接入模型提供商，尚未验证。
+- **Moonshot AI / Kimi：** 计划提供 Kimi Code CLI 的编辑器、MCP 和 skill 配置，尚未验证。
+- **Alibaba / Qwen：** 计划提供 Qwen Code 的编辑器、MCP 和 skill 配置，尚未验证。
+- **Z.ai / GLM：** 计划通过兼容执行器接入模型提供商，尚未验证。
+- **MiniMax / M-series：** 计划通过兼容执行器接入模型提供商，尚未验证。
 - **GitHub / Copilot CLI：** 计划作为操作/skill 的外部客户端，尚未验证。
 - **Cursor / Cursor Agent：** 计划作为操作/skill 的外部客户端，尚未验证。
 
