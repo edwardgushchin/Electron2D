@@ -1,6 +1,6 @@
 # MainLoop
 
-Last updated: 2026-10-20
+Last updated: 2026-10-26
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -19,6 +19,8 @@ Defines the host-driven lifecycle and frame callbacks for an Electron2D applicat
 `MainLoop` is the owner-thread lifecycle boundary between an application host or [`Engine`](Engine.md) and Electron2D. It pairs one successful initialization with variable-step and fixed-step callbacks and one finalization. Engine-driven callbacks also carry their original pre-time-scale delta as internal frame context for built-in scene behavior; public callbacks continue to receive only the effective delta. Each lane also scopes and clears [`Input`](Input.md) just-transition state, and the internal event-dispatch boundary validates owner thread and idle-running state before Input mutates state. It owns no thread, clock, window, event pump, renderer, raw input state, or physics world.
 
 The creating thread owns lifecycle and frame execution. A custom loop owns whatever resources its protected callbacks acquire and must release successfully initialized state from `OnFinalize()`.
+
+The [native permission-result path](../components/main-loop.md#native-permission-results) transfers Android Activity results to this exact loop's next frame entry. Callback failures leave unread results queued; terminal lifetime drops pending and late results. Standard platform requests remain separate from the event publisher.
 
 The creating thread is the owner thread. A host initializes the loop once, supplies non-negative finite frame
 deltas, and finalizes it once. Returning `true` from a frame callback asks the host to stop the
@@ -258,8 +260,9 @@ Finalizes a running loop, clears loop event subscribers, and then releases inher
 Occurs when a previously requested operating-system permission receives a result.
 
 **Remarks:** The first argument is this loop, the second is the platform permission name, and the third indicates whether
-it was granted. Delivery is synchronous on the owner thread. A throwing subscriber stops later subscribers and
-propagates its exception to the platform integration that published the result.
+it was granted. Native Android results are copied into a per-loop queue and delivered on the owner at the next frame
+entry, before the frame hook. A throwing subscriber stops later subscribers and faults the frame; that result is consumed
+and unread results remain queued. Terminal lifetime drops pending/late results. The protected publisher remains synchronous for custom hosts.
 
 ## Constant Descriptions
 

@@ -1,6 +1,6 @@
 # Main loop component
 
-Last updated: 2026-10-20
+Last updated: 2026-10-26
 
 ## Scope
 
@@ -18,7 +18,7 @@ This Core component defines the host-facing application lifecycle, variable-step
 
 A direct host can call `Initialize()`, drive `Process(delta)` and `PhysicsProcess(delta)` in its chosen cadence, and then call `FinalizeLoop()` or `Dispose()`. Direct calls treat the supplied delta as the effective and original lane delta and original process step. The implemented [`Engine runtime`](engine-runtime.md) is the normal coordinator: `Engine.Start()` initializes a created loop or attaches an already running one, `AdvanceFrame()` schedules fixed callbacks before process while carrying scaled and original lane deltas plus the original process step, and `Stop()` finalizes without disposing. The original timing values are internal callback context used by built-in scene behavior such as [`Timer`](../classes/Timer.md); protected user callbacks continue to receive one effective delta. Hooks are synchronous and non-reentrant. A frame exception returns the loop to running state; initialization and finalization failures are terminal.
 
-The host may deliver system notifications through inherited `Notify(int)` and publishes a permission result through a protected typed endpoint supplied to platform integrations. `SceneTree` forwards system notifications to active nodes.
+The host may deliver system notifications through inherited `Notify(int)` and publishes a permission result through a protected typed endpoint. The owned Android host queues native results for the exact active loop. `SceneTree` forwards system notifications to active nodes.
 
 ## Dependencies
 
@@ -36,7 +36,7 @@ The component depends on Core object lifecycle, the process-wide Input transitio
 
 ## Current implementation status and exclusions
 
-The lifecycle, callbacks, stop results, constants, `Engine` attachment, Input transition integration, error states and `SceneTree` integration execute. `Engine.Run(Window)` owns the ordinary windowed clock, event pump, pacing, exit-code result and cleanup. Those services belong to their respective components; MainLoop itself remains caller-driven. Native permission requests and results retain their separate platform prerequisite. Runtime exception diagnostics do not establish an operating-system crash handler.
+The lifecycle, callbacks, stop results, constants, `Engine` attachment, Input transition integration, error states and `SceneTree` integration execute. `Engine.Run(Window)` owns the ordinary windowed clock, event pump, pacing, exit-code result and cleanup. Those services belong to their respective components; MainLoop itself remains caller-driven. Android permission results have a native producer; OS request/query/revocation APIs remain separate platform work. Runtime exception diagnostics do not establish an operating-system crash handler.
 
 ## Verification
 
@@ -79,6 +79,57 @@ under `bin/physics-loop-lifecycle/2026-10-20/`. This callback audit does not clo
 the permission signal, the MainLoop/Object class-wide inherited audit, native
 allocator totals, hardware performance or another platform. It adds no runtime
 API or numerical algorithm.
+
+## Native permission results
+
+The owned Android Activity forwards its SDK permission callback to the SDL base,
+then copies permission names and grant decisions to the current window's exact
+MainLoop. A weak Activity identity and the current Engine loop identity reject
+inactive, replaced or destroyed hosts. A missing decision is denial. Core keeps
+only names and booleans; it acquires no Android dependency or permission-request
+API. Applications may issue requests through their standard Android bootstrap.
+
+The loop drains a captured FIFO count at its next idle or physics entry, after
+Input setup and before the frame hook. Handlers run on the creating thread and
+can safely edit scene physics even when numerical simulation uses a separate
+thread. Results posted inside a handler wait for another entry. A subscriber
+exception consumes its current result and skips that frame hook; the original
+exception escapes and unread results remain queued. Signal blocking consumes
+results without replay. Custom hosts retain the protected synchronous publisher.
+
+Failed initialization, successful finalization and disposal close the queue and
+release pending names; late results cannot migrate to a successor loop. A rejected
+lifecycle operation leaves the live queue intact. Queue growth and native string
+marshalling are cold work; prepared active and empty full-frame paths allocate
+zero managed bytes.
+
+`ELECTRON2D_TEST_LOOP_PERMISSIONS=cpu|gpu`, with optional
+`ELECTRON2D_TEST_PHYSICS_THREAD=1`, checks copied batches, four concurrent producers,
+FIFO/error/reentry/blocking policy, terminal reference release and real advancing
+physical frames. Each selected profile warms 128 and measures 128 permission-active
+frames with strict zero owner/all-thread managed bytes. A scoped strict NativeAOT
+harness links these same tests; it does not qualify the unrelated aggregate test
+project for trimming.
+
+`tests/Permissions.Android` uses SDK requests and actual system dialogs for grant,
+denial, mixed two-permission order and a throwing game handler. Its native window
+uses explicit CPU physics with separate numerical execution and compatibility
+rendering. Before requesting, it validates a positive allocation control, 128
+warm and 128 measured full frames at strict zero managed bytes, advancing motion
+and a rendered pixel. After the result, eight further physical frames preserve
+body identity and selected velocity. The .001 velocity and .02 travel tolerances
+cover scene/solver float conversion and accumulation, respectively. The controller
+requires an explicitly selected emulator and an initially absent test package,
+saves dialog XML/screenshots and removes only its test package after each case:
+
+```bash
+python3 -B tests/Permissions.Android/run.py /absolute/path/to/test.apk emulator-5556 /absolute/path/to/new-results
+```
+
+Evidence is retained under `bin/physics-permissions/2026-10-26/`. Android emulation
+does not qualify physical devices, native allocation totals or performance. Other
+platform permission policies, OS permission-request methods and the complete
+MainLoop/Object inherited audit retain their own gates.
 
 ## Decisions
 

@@ -102,6 +102,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_RIDS") is { } r
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_OVERSAMPLING") is { } canvasOversampling) { CanvasOversamplingTests.Run(canvasOversampling); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_RELATED") == "1") { BoxContainerTests.Run(); GridContainerTests.Run(); FlowContainerTests.Run(); LayoutContainersTests.Run(); PanelContainerTests.Run(); ThemeResourceTests.Run(); NavigationBakingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_CONTRACT") == "1") { VerifySceneTree(); VerifySceneTreeGroupsEventsAndTimers(); VerifySceneTreeFailureSafety(); VerifyEventConnections(); Console.WriteLine("Deferred tree and typed setter regressions passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOOP_PERMISSIONS") is { } permissionBackend) { MainLoopPermissionTests.Run(permissionBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LOOP_LIFECYCLE") == "1") { VerifyEngine(); VerifyMainLoop(); VerifyInput(); Console.WriteLine("Main loop, Engine lifecycle and Input lanes passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_RELATIONS") is { } windowRelations) { try { if (windowRelations == "display") DisplayServerRelationsTests.Display(); else DisplayServerRelationsTests.RunNative(windowRelations); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUP_SCENE") is { } nativePopupScene) { try { NativePopupWindowTests.RunScene(nativePopupScene, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_POPUPS")!); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
@@ -2076,6 +2077,8 @@ VerifyEngine();
 PhysicsClockTests.Run();
 PhysicsSeparateThreadTests.Run();
 VerifyMainLoop();
+MainLoopPermissionTests.Run();
+MainLoopPermissionTests.Run(PhysicsServer.Backend.GPU);
 VerifyNodeHierarchyAndTransforms();
 VerifyProcessing();
 VerifySceneTree();

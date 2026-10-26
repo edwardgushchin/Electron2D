@@ -63,6 +63,11 @@ def check_physics_report(pages):
     propagation = [row for row in node_page.splitlines() if row.startswith("| [`method propagate_notification(")]
     assert len(propagation) == 1 and " | Implemented | " in propagation[0] and "notification-propagation-contract" in propagation[0]
     assert "Node::method:propagate_notification(int:)" not in expected
+    loop_page = pages[CLASS_PAGES / "MainLoop.md"]
+    permission = [row for row in loop_page.splitlines() if row.startswith("| [`signal on_request_permissions_result(")]
+    assert len(permission) == 1 and " | Implemented | " in permission[0] and "native-permission-results" in permission[0]
+    assert "MainLoop::signal:on_request_permissions_result(String:,bool:)" not in expected
+    assert expected["class:MainLoop"] == "Partial", "Native permission results must not close the inherited class audit"
     assert expected["Object::method:notification(int:,bool:)"] == "Partial", "Tree traversal must not hide per-class notification ordering gaps"
     resource_page = pages[CLASS_PAGES / "Resource.md"]
     for method in ("copy_from_resource", "duplicate", "duplicate_deep"):

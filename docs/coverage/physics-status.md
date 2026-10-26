@@ -72,14 +72,14 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | Declaring type | Base | Implemented | Partial | Blocked | Unimplemented | Excluded |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 112 | 3 | 0 | 0 | 0 |
-| [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 16 | 2 | 0 | 0 | 0 |
+| [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 17 | 1 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 204 | 2 | 6 | 1 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 37 | 4 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 427 | 13 | 11 | 3 | 37 |
+| **Total** | | 428 | 12 | 11 | 3 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -89,7 +89,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`CanvasItem::method:draw_polyline_colors(PackedVector2Array:,PackedColorArray:,float:,bool:)`](classes/CanvasItem.md) | Partial | DrawPolylineColors records copied interpolated vertex colors with the shared join/width/feather contract. Native GPU lines and independent device pixels execute; the SDL compatibility path still expands nonuniform-color thin strips to triangles, retaining its exact subpixel line/end coverage gap. Uniform/segment-color sibling methods are qualified separately in docs/components/canvas-rendering.md#uniform-stroke-contract-2026-10-25; their evidence does not close this attribute-bearing path. |
 | [`CanvasItem::method:draw_primitive(PackedVector2Array:,PackedColorArray:,PackedVector2Array:,Texture2D:)`](classes/CanvasItem.md) | Partial | ReadOnlySpan inputs are copied into reusable retained commands. Audited pinned CanvasItem, renderer_canvas_cull and triangulate sources: counts/defaults, either winding, concavity, degenerates, per-vertex attributes and immediate atlas UV mapping. Typed exceptions and finite checks follow ADR 0004. CanvasPolygonTests and five-frame CanvasPolygonRenderingTests verify inputs, rollback, reentry/disposal, snapshots, transformed/modulated vertices, live textures, native Wayland GPU/compatibility HLSL/GLSL and dummy/software. Warmed redraw/triangulation/replay allocates zero managed bytes. See docs/components/canvas-rendering.md#polygon-commands. Other native platforms unverified. Triangle/quad layout and partial-attribute defaults are checked. GPU point/two-vertex primitives retain native Points/Lines with copied attributes, pre-vertex snapping and one-pixel point-size initialization in built-in/authored vertex stages. NativeStrokeTests adds public scene/server producers, direct RenderingDevice topology pixel oracles over clipped affine cases, GLSL/HLSL, HDR/MSAA and actual moving CPU/GPU physical receivers with strict zero managed bytes in warmed active/idle process-frame brackets and separate PhysicsFrameStarted-to-state-sync brackets; later physics-frame work is outside that interval. Compatibility now submits native untextured points and uniform-color segments/strips; textured or interpolated-color ranges retain triangle footprints and their subpixel gap. Independent SDL texture-target oracles cover affine clipping, repeated translucent joins and snap collapse; foreign acceptance remains open. See docs/components/canvas-rendering.md#native-sdl-primitive-verification-2026-10-22. Evidence: bin/physics-native-primitives/2026-10-21/validation.json. |
 | [`class:MainLoop`](classes/MainLoop.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
-| [`MainLoop::signal:on_request_permissions_result(String:,bool:)`](classes/MainLoop.md) | Partial | Typed C# event for the permission-result signal; native host permission-request integration remains absent under ADR 0015 and ADR 0021.; Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit. |
 | [`class:Node`](classes/Node.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_INVALIDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |
 | [`Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE`](classes/Node.md) | Blocked | Trigger: first typed 2D GUI and accessibility slice after rendering. |

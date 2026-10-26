@@ -15,6 +15,39 @@ internal static class AndroidWindowHost
     private static int _movieFPS;
     private static Action<Window, ulong>? _beforeFrame;
     private static bool _movieDisableVSync;
+    private static WeakReference<AndroidGameActivity>? _activity;
+
+    internal static void AttachActivity(AndroidGameActivity activity)
+    {
+        lock (Gate) _activity = new(activity);
+    }
+
+    internal static bool DetachActivity(AndroidGameActivity activity)
+    {
+        lock (Gate)
+        {
+            if (_activity is null || !_activity.TryGetTarget(out var current) || !ReferenceEquals(current, activity)) return false;
+            _activity = null;
+            return true;
+        }
+    }
+
+    internal static void PostPermissionResults(AndroidGameActivity activity, string[] permissions, Android.Content.PM.Permission[] results)
+    {
+        MainLoop? loop;
+        lock (Gate)
+        {
+            if (!_started || activity.IsFinishing || activity.IsDestroyed || _activity is null ||
+                !_activity.TryGetTarget(out var current) || !ReferenceEquals(current, activity)) return;
+            loop = _window?.Tree;
+            if (!ReferenceEquals(loop, Engine.Service.MainLoopCore)) return;
+        }
+        if (loop is null) return;
+        foreach (var permission in permissions) if (string.IsNullOrEmpty(permission)) return;
+        Span<bool> granted = permissions.Length <= 64 ? stackalloc bool[permissions.Length] : new bool[permissions.Length];
+        for (var i = 0; i < granted.Length; i++) granted[i] = i < results.Length && results[i] == Android.Content.PM.Permission.Granted;
+        loop.PostPermissionResults(permissions, granted);
+    }
 
     internal static Task<int> RunAsync(Window window, string? moviePath = null, int movieFPS = 60, bool movieDisableVSync = false, Action<Window, ulong>? beforeFrame = null)
     {
@@ -77,6 +110,7 @@ internal sealed class AndroidGameActivity : SDLActivity
 
     protected override void OnCreate(Android.OS.Bundle? savedInstanceState)
     {
+        AndroidWindowHost.AttachActivity(this);
         base.OnCreate(savedInstanceState);
         if (OperatingSystem.IsAndroidVersionAtLeast(33))
         {
@@ -86,6 +120,13 @@ internal sealed class AndroidGameActivity : SDLActivity
     }
 
     public override void OnBackPressed() => RequestGoBack();
+
+    [SupportedOSPlatform("android23.0")]
+    public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
+    {
+        base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        AndroidWindowHost.PostPermissionResults(this, permissions, grantResults);
+    }
 
     public override bool DispatchKeyEvent(Android.Views.KeyEvent? e)
     {
@@ -122,7 +163,7 @@ internal sealed class AndroidGameActivity : SDLActivity
         }
         finally
         {
-            try { AndroidWindowHost.CancelPending(); }
+            try { if (AndroidWindowHost.DetachActivity(this)) AndroidWindowHost.CancelPending(); }
             finally { base.OnDestroy(); }
         }
     }

@@ -687,8 +687,8 @@
     {
       "electron2d": "event:Electron2D.MainLoop.OnRequestPermissionsResult()",
       "godot": "MainLoop::signal:on_request_permissions_result(String:,bool:)",
-      "state": "Partial",
-      "reason": "Typed C# event for the permission-result signal; native host permission-request integration remains absent under ADR 0015 and ADR 0021."
+      "state": "Implemented",
+      "reason": "ADRs 0002/0015/0021: the [native Android permission-result path](../../components/main-loop.md#native-permission-results) copies SDK names/decisions to the exact active window loop and drains a captured FIFO on its owner before the next frame hook. Four actual emulator dialog scenarios cover grant, denial, mixed batch order and exact original handler-error identity, advancing separate-thread CPU physics and rendered output; each validates warmed complete-frame 0/0 managed bytes. Eight Linux CLR/strict NativeAOT CPU/NVIDIA-GPU owner/separate profiles cover copy, concurrency, nested posting, error recovery, blocking, retirement and active full frames at strict0/0. Protected custom-host delivery remains synchronous; OS request/query/revocation methods, other platform policies, the inherited class audit and package publication retain their own gates. Evidence: bin/physics-permissions/2026-10-26/native-qualified-cases/results.json and qualification.json."
     },
     {
       "electron2d": "event:Electron2D.SceneTree.PhysicsFrameStarted()",
@@ -951,8 +951,8 @@
     {
       "electron2d": "method:Electron2D.MainLoop.NotifyRequestPermissionsResult(System.String,System.Boolean)",
       "godot": "MainLoop::signal:on_request_permissions_result(String:,bool:)",
-      "state": "Partial",
-      "reason": "Typed C# counterpart; behavioral parity remains subject to lifecycle and host-integration audit."
+      "state": "Implemented",
+      "reason": "ADRs 0002/0015/0021: the [native Android permission-result path](../../components/main-loop.md#native-permission-results) copies SDK names/decisions to the exact active window loop and drains a captured FIFO on its owner before the next frame hook. Four actual emulator dialog scenarios cover grant, denial, mixed batch order and exact original handler-error identity, advancing separate-thread CPU physics and rendered output; each validates warmed complete-frame 0/0 managed bytes. Eight Linux CLR/strict NativeAOT CPU/NVIDIA-GPU owner/separate profiles cover copy, concurrency, nested posting, error recovery, blocking, retirement and active full frames at strict0/0. Protected custom-host delivery remains synchronous; OS request/query/revocation methods, other platform policies, the inherited class audit and package publication retain their own gates. Evidence: bin/physics-permissions/2026-10-26/native-qualified-cases/results.json and qualification.json."
     },
     {
       "electron2d": "method:Electron2D.MainLoop.OnFinalize()",
@@ -12129,6 +12129,13 @@
         "Viewport::enum_value:AnisotropicFiltering.ANISOTROPY_MAX",
         "Viewport::property:anisotropic_filtering_level"
       ]
+    },
+    {
+      "godot": [
+        "MainLoop::signal:on_request_permissions_result(String:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0002/0015/0021: the [native Android permission-result path](../../components/main-loop.md#native-permission-results) copies SDK names/decisions to the exact active window loop and drains a captured FIFO on its owner before the next frame hook. Four actual emulator dialog scenarios cover grant, denial, mixed batch order and exact original handler-error identity, advancing separate-thread CPU physics and rendered output; each validates warmed complete-frame 0/0 managed bytes. Eight Linux CLR/strict NativeAOT CPU/NVIDIA-GPU owner/separate profiles cover copy, concurrency, nested posting, error recovery, blocking, retirement and active full frames at strict0/0. Protected custom-host delivery remains synchronous; OS request/query/revocation methods, other platform policies, the inherited class audit and package publication retain their own gates. Evidence: bin/physics-permissions/2026-10-26/native-qualified-cases/results.json and qualification.json."
     }
   ]
 }

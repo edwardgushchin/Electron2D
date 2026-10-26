@@ -192,7 +192,7 @@ These capabilities are useful independently of scripting and serialization. They
 <a id="adr-0015"></a>
 ## ADR 0015: Main-loop lifecycle and host boundary
 
-Last updated: 2026-09-21
+Last updated: 2026-10-26
 
 ### Status
 
@@ -210,7 +210,11 @@ The existing `SceneTree` constructor activates its root immediately, and disposa
 
 The lifecycle is a single owner-thread state machine. Initialization and finalization are one-shot and non-reentrant. A frame exception restores running state; initialization or finalization failure is terminal. `Dispose()` automatically finalizes only a successfully initialized running loop. A failed `OnInitialize()` owns rollback of its partial acquisition because no matched initialization exists for `OnFinalize()`.
 
-The permission signal is a synchronous typed C# event with a protected publisher. The twelve system notification identifiers retain their reference values. Native event generation and permission requests are not implemented until the SDL application host exists.
+The permission signal is a synchronous typed C# event with a protected publisher for custom hosts. The owned Android Activity also observes native permission-result callbacks after forwarding them to its SDL base. It copies each platform name/decision into the current window's exact MainLoop queue. An inactive, replaced or destroyed Activity cannot route results to another loop. Core owns no Android types.
+
+The creating thread drains a captured FIFO count at the next Process or PhysicsProcess entry, after input-lane setup and before the frame hook. Callback-posted results wait for another entry. A subscriber failure consumes that result, preserves its original exception and prevents the current frame hook; unread results remain queued. No user handler runs on the Android UI callback thread. Failed initialization, finalization and disposal close acceptance and release pending names. Rejected finalization/disposal leaves the live queue intact. Prepared active and empty frame paths must retain zero managed allocation.
+
+Permission requests remain platform operations. This result-delivery slice observes standard SDK/SDL requests through the real Android host; it does not introduce OS request/query/revocation methods or claim another platform's permission policy. The twelve system notification identifiers retain their reference values.
 
 `SceneTree` derives from `MainLoop`, completes base initialization as part of successful construction, maps the two loop hooks to its established frame lanes, and returns `false` because application-quit policy remains a host concern. Explicit finalization and disposal both close work acceptance, exit and dispose the hierarchy, dispose timers, and clear subscribers. System notifications are propagated depth-first to live attached nodes. ADR 0038 later adds typed scene input propagation and exact SDL-host triggers for platform focus effects.
 
@@ -222,7 +226,7 @@ The `SceneTree` frame scheduler and timer phase reuse owned lists after warm-up,
 - `SceneTree` can be driven through either `MainLoop.Process`/`PhysicsProcess` or its existing void frame wrappers.
 - Explicit `FinalizeLoop()` releases `SceneTree` ownership but does not itself dispose the base object; `Dispose()` remains required for complete logical lifetime termination.
 - Callback and teardown failures have deterministic state outcomes instead of allowing lifecycle retries.
-- The first executable SDL consumer uses this integration boundary for timing and stop requests; platform permission results remain separate work.
+- The ordinary SDL consumer uses this integration boundary for timing and stop requests; Android additionally supplies native permission results without moving platform request operations into Core.
 - Core remains independent of SDL and Scene; Scene depends on Core.
 
 ### Rejected alternatives

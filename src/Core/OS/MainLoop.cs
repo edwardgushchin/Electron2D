@@ -8,7 +8,7 @@ namespace Electron2D;
 /// deltas, and finalizes it once. Returning <see langword="true"/> from a frame callback asks the host to stop the
 /// application. The class does not create a thread, clock, window, renderer, input pump, or physics scheduler.
 /// </remarks>
-public abstract class MainLoop : ElectronObject
+public abstract partial class MainLoop : ElectronObject
 {
     /// <summary>Identifies an operating-system low-memory warning.</summary>
     public const int NotificationOsMemoryWarning = 2009;
@@ -53,8 +53,11 @@ public abstract class MainLoop : ElectronObject
     /// <summary>Occurs when a previously requested operating-system permission receives a result.</summary>
     /// <remarks>
     /// The first argument is this loop, the second is the platform permission name, and the third indicates whether
-    /// it was granted. Delivery is synchronous on the owner thread. A throwing subscriber stops later subscribers and
-    /// propagates its exception to the platform integration that published the result.
+    /// it was granted. Native Android results are queued for the owning loop's next frame entry, before its frame
+    /// callback. Delivery is synchronous on the owner thread. A throwing subscriber stops later subscribers and
+    /// propagates its exception to the frame caller; that result is consumed and unread results remain queued.
+    /// Finalization, failed initialization and disposal discard pending native results. Custom hosts may still use
+    /// the protected synchronous publisher.
     /// </remarks>
     public event Action<MainLoop, string, bool>? OnRequestPermissionsResult { add => _publisherOnRequestPermissionsResult.Add(value); remove => _publisherOnRequestPermissionsResult.Remove(value); }
     private EventPublisher<Action<MainLoop, string, bool>> _publisherOnRequestPermissionsResult;
@@ -84,6 +87,7 @@ public abstract class MainLoop : ElectronObject
         }
         catch
         {
+            ClosePermissionResults();
             _state = LoopState.InitializationFailed;
             throw;
         }
@@ -204,6 +208,7 @@ public abstract class MainLoop : ElectronObject
     /// </remarks>
     private protected void CompleteFailedLoopConstruction()
     {
+        ClosePermissionResults();
         _state = LoopState.Finalized;
         _publisherOnRequestPermissionsResult.Handlers = null;
         CompleteFailedConstruction();
@@ -246,6 +251,7 @@ public abstract class MainLoop : ElectronObject
 
         if (disposing)
         {
+            ClosePermissionResults();
             if (_state == LoopState.Running)
             {
                 try
@@ -305,6 +311,7 @@ public abstract class MainLoop : ElectronObject
 
         try
         {
+            DispatchPermissionResults();
             return physics ? OnPhysicsProcess(delta) : OnProcess(delta);
         }
         finally
@@ -325,6 +332,7 @@ public abstract class MainLoop : ElectronObject
             ValidateFinalization();
 
         _state = LoopState.Finalizing;
+        ClosePermissionResults();
 
         try
         {
