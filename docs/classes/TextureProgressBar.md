@@ -1,6 +1,6 @@
 # TextureProgressBar
 
-Last updated: 2026-09-27
+Last updated: 2026-10-26
 
 **Inherits:** [Range](Range.md), Control, CanvasItem, Node, ElectronObject
 
@@ -69,3 +69,5 @@ var bar = new TextureProgressBar
 Side accessors require Left/Top/Right/Bottom. Public access uses owner/lifetime/capture guards. [Range](Range.md) supplies shared double value/ratio/signals and policy timing. Descriptors restore config before Value, preserving fractional values despite the default Step=1; exact type is retained. Sharing and resource ownership are not serialized as native runtime state.
 
 [Managed tests](../../tests/Electron2D.Tests/RangeProgressTests.cs) verify resources/modes/angles/minimum/config/errors/packing and shared state. [Native tests](../../tests/Electron2D.Tests/TextureProgressRenderingTests.cs) compare every pixel of nine half/empty/full masks and six linear nine-patch masks, inspect readback grids and measure 64 warmed active radial frames with zero managed allocation on GPU/compatibility Linux Wayland. Native allocators, broad GUI cost, other platforms and owner acceptance are unverified. Inherited vertical flags default to Fill with exact stored defaults and real Container layout under [ADR 0081](../decisions/rendering.md#adr-0081); class [coverage](../coverage/classes/TextureProgressBar.md) is Implemented in its bounded scope. See [ADR 0080](../decisions/rendering.md#adr-0080).
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.

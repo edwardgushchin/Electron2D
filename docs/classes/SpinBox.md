@@ -1,6 +1,6 @@
 # SpinBox
 
-Last updated: 2026-10-06
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.SpinBox`. **Inherits:** [Range](Range.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/SpinBox.cs), [input/layout](../../src/Scene/GUI/SpinBox.Input.cs), [storage](../../src/Scene/GUI/SpinBox.Storage.cs). **Component:** [Numeric input](../components/numeric-input.md).
 
@@ -53,3 +53,7 @@ Engine.Run(root);
 Attached operations require the scene owner and respect capture/mutation guards. Required internal-field disposal is rejected while SpinBox remains live. CustomArrowStep rejects nonfinite input. Bad formulas preserve the prior value; failed observers remain aggregated after committed value/text. Release/hide/exit/readonly/focus loss cancel active repeat/capture and restore native mouse mode. Precise warp requires an advertised DisplayServer.MouseWarp capability. Formula evaluation uses the private scalar data profile; generic object/string/collection scripting is not claimed.
 
 PackedScene and fresh-process resource files recreate the owned field and typed defaults. Runtime input/cache/delegates are not stored. SpinBoxTests and SpinBoxRenderingTests cover the connected field, locale, sharing, failure and native workflows; see the [component](../components/numeric-input.md) for the exact prepared managed-allocation boundary and remaining platform/semantic prerequisites.
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.
+
+Numeric accessibility publishes the parent SpinButton and Value interface. Native focus requests target the required field; field focus selects the parent numeric element for semantic focus. Typed numeric requests reuse Range.Value, while editing/selection protocols remain a separate slice.

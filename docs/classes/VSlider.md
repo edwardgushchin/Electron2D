@@ -1,6 +1,6 @@
 # VSlider
 
-Last updated: 2026-09-27
+Last updated: 2026-10-26
 
 **Inherits:** [Slider](Slider.md), [Range](Range.md), [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** —
 
@@ -23,3 +23,5 @@ using var slider = new VSlider { MinValue = 0, MaxValue = 10, Value = 5 };
 The constructor fixes the internal orientation; no public orientation property exists. Default Theme entries are resolved under VSlider then inherited type dependencies. A custom subclass supplies its own exact factory. The caller owns a detached instance until it joins a hierarchy; styles and textures remain borrowed.
 
 Managed SliderTests and eight native pixel/input phases pass on Linux Wayland GPU and compatibility. Reused input cycles and active redraw frames allocate zero managed bytes in their bounded warmed measurements; see [Slider](Slider.md) for scope and limits. See [Slider](Slider.md) for interaction/event details, limits and dependencies, and [coverage](../coverage/classes/VSlider.md) for its own rows.
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.

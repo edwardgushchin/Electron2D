@@ -135,6 +135,7 @@ public partial class SpinBox : Range
     protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; EndInteraction(); Changed -= ConfigurationChanged; ClearTextCache(); } base.Dispose(disposing); }
     private sealed class SpinBoxLineEdit(SpinBox owner) : LineEdit
     {
+        protected override RID OnGetFocusedAccessibilityElement() => owner.GetAccessibilityElement();
         protected override void OnGUIInput(InputEvent input) { if (owner._dragging) { AcceptEvent(); return; } base.OnGUIInput(input); }
         protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._disposing) throw new InvalidOperationException("The required numeric input is owned by SpinBox."); base.ValidateDisposal(); }
     }

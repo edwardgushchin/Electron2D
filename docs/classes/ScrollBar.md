@@ -1,6 +1,6 @@
 # ScrollBar
 
-Last updated: 2026-09-30
+Last updated: 2026-10-26
 
 **Inherits:** [Range](Range.md), [Control](Control.md), CanvasItem, [Node](Node.md), ElectronObject · **Inherited By:** [HScrollBar](HScrollBar.md), [VScrollBar](VScrollBar.md)
 
@@ -35,3 +35,5 @@ bar.Scrolling += () => Console.WriteLine(bar.Value);
 Minimum geometry uses the current theme's `scroll`, `grabber`, `decrement`, `increment`, and orientation padding keys. Drawing selects highlighted/pressed variants. Absent or disposed required theme items fail explicitly. The renderer consumes the current theme resource revision on a later redraw; the node does not own borrowed resources.
 
 [ScrollBarTests](../../tests/Electron2D.Tests/ScrollBarTests.cs) checks defaults, wheel/event order, custom keyboard step, RTL direction, page click and degenerate dragging. [ScrollThemeTests](../../tests/Electron2D.Tests/ScrollThemeTests.cs) checks built-in resources. [ScrollRenderingTests](../../tests/Electron2D.Tests/ScrollRenderingTests.cs) covers bars as part of a scroll container on Linux Wayland GPU and compatibility backends, including 64 warmed active offset/layout/render frames with zero managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified. See [coverage](../coverage/classes/ScrollBar.md).
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.

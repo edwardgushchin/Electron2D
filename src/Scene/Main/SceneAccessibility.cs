@@ -67,6 +67,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var visible = node is not CanvasItem canvas || canvas.IsVisibleInTree;
             if (node is Window win) visible = win.Visible;
             if (!visible) flags |= 1UL << (int)Flag.Hidden;
+            if (node is Range rangeFlags && !AccessibilityServer.NumericEditable(rangeFlags)) flags |= 1UL << (int)Flag.ReadOnly;
             if (node is BaseButton { Disabled: true }) flags |= 1UL << (int)Flag.Disabled;
             if (node is Window or Control { ClipContents: true }) flags |= 1UL << (int)Flag.ClipsChildren;
             var isChecked = node is BaseButton { ToggleMode: true, ButtonPressed: true };
@@ -85,6 +86,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
             if (!e.SourcePrepared || isChecked != e.SourceChecked) AccessibilityServer.UpdateSetChecked(id, isChecked);
             var alteredFlags = e.SourcePrepared ? e.SourceFlags ^ flags : (1UL << 10) - 1;
             for (var index = 0; index < 10; index++) if ((alteredFlags & 1UL << index) != 0) AccessibilityServer.UpdateSetFlag(id, (Flag)index, (flags & 1UL << index) != 0);
+            if (node is Range numeric) changed |= AccessibilityServer.UpdateSourceNumeric(e, numeric);
             if (node is Control actionControl) AccessibilityServer.UpdateSourceActions(e, actionControl);
             if (e.IsWindow)
             {
@@ -128,6 +130,10 @@ internal sealed class SceneAccessibility(SceneTree tree)
         LinkButton => Role.Link,
         BaseButton => Role.Button,
         Label => Role.StaticText,
+        Slider => Role.Slider,
+        ScrollBar => Role.ScrollBar,
+        ProgressBar or TextureProgressBar => Role.ProgressIndicator,
+        Range => Role.SpinButton,
         Container { AccessibilityRegion: true } => Role.Region,
         Panel or PanelContainer => Role.Panel,
         _ => Role.Container,

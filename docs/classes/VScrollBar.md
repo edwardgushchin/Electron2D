@@ -1,6 +1,6 @@
 # VScrollBar
 
-Last updated: 2026-09-30
+Last updated: 2026-10-26
 
 **Inherits:** [ScrollBar](ScrollBar.md), [Range](Range.md), [Control](Control.md), CanvasItem, [Node](Node.md), ElectronObject · **Inherited By:** —
 
@@ -20,3 +20,5 @@ var bar = new VScrollBar { MaxValue = 500, Page = 100, Value = 40 };
 | `protected override Func<Node> CreateSceneInstanceFactory()` | Recreates an exact VScrollBar during typed scene instantiation. |
 
 All value, input, theme and lifetime behavior comes from [ScrollBar](ScrollBar.md). A subclass that needs exact scene reconstruction supplies its own factory. Managed and Linux Wayland GPU/compatibility checks are linked from the base page; see [coverage](../coverage/classes/VScrollBar.md).
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.

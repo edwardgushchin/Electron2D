@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Base control for a shared numeric range with snapping, ratio conversion and typed notifications.</summary>
 /// <remarks>Bounds, value, step, page and allow/exponential policies can be shared. Rounded is local to each control.
 /// Ordinary shared notifications run for attached owners; Share explicitly notifies its target even while detached.
-/// Shared links and event snapshots are runtime state and are not packed.</remarks>
+/// Shared links and event snapshots are runtime state and are not packed.
+/// Active native accessibility publishes numeric state. Semantic step requests use positive Step or one, while Page
+/// supplies page actions. Requests reuse Value; progress displays and non-editable inputs remain read-only.</remarks>
 public abstract class Range : Control
 {
     private sealed class Shared

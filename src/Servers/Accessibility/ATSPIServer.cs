@@ -9,7 +9,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class ATSPIServer : IDisposable
 {
-    private const string Accessible = "org.a11y.atspi.Accessible", Component = "org.a11y.atspi.Component", ActionInterface = "org.a11y.atspi.Action", ApplicationInterface = "org.a11y.atspi.Application", Cache = "org.a11y.atspi.Cache";
+    private const string Accessible = "org.a11y.atspi.Accessible", Component = "org.a11y.atspi.Component", ActionInterface = "org.a11y.atspi.Action", ValueInterface = "org.a11y.atspi.Value", ApplicationInterface = "org.a11y.atspi.Application", Cache = "org.a11y.atspi.Cache";
     private const string CachePath = "/org/a11y/atspi/cache", Registry = "org.a11y.atspi.Registry", RegistryRoot = "/org/a11y/atspi/accessible/root", NullPath = "/org/a11y/atspi/null";
     private sealed class InvalidRequestException(string message, bool retired = false) : Exception(message)
     { internal string ErrorName => retired ? "org.freedesktop.DBus.Error.UnknownObject" : "org.freedesktop.DBus.Error.InvalidArgs"; }
@@ -132,6 +132,12 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         catch { Unregister(e); throw; }
         finally { g_main_context_pop_thread_default(_context); }
     }
+    internal void EnableValue(Element e)
+    {
+        g_main_context_push_thread_default(_context);
+        try { RegisterInterface(_registrations[e], e.Path, ValueInterface); }
+        finally { g_main_context_pop_thread_default(_context); }
+    }
     private void RegisterInterface(Registration r, string path, string iface)
     {
         var handle = GCHandle.Alloc(r); _liveNativeHandles++;
@@ -198,11 +204,19 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         var r = Target(data);
         try
         {
+            if (r.Element.Retired) throw new InvalidRequestException("The accessibility element has retired.", retired: true);
+            if (r.Bridge._disposing) throw new InvalidRequestException("The accessibility owner is retiring.");
+            if (Marshal.PtrToStringUTF8(iface) == ValueInterface && Marshal.PtrToStringUTF8(property) == "CurrentValue")
+            {
+                if (!InvokeValue(r.Element, g_variant_get_double(value))) throw new InvalidRequestException("This element cannot accept the requested numeric value.");
+                return 1;
+            }
             if (r.Element.IsApplication && Marshal.PtrToStringUTF8(iface) == ApplicationInterface && Marshal.PtrToStringUTF8(property) == "Id")
             { r.Bridge._applicationID = g_variant_get_int32(value); return 1; }
             SetError(error, "The accessible property is read-only."); return 0;
         }
-        catch (Exception e) { r.Bridge.Fail(e); SetError(error, e.Message); return 0; }
+        catch (InvalidRequestException e) { SetError(error, e.Message, e.ErrorName); return 0; }
+        catch (Exception e) { r.Bridge.Fail(e is CallbackException { InnerException: { } original } ? original : e); SetError(error, e.Message); return 0; }
     }
     private nint ObjectRef(Element? e) => e is null ? Ref("", NullPath) : Ref(UniqueName, e.Path);
     private nint ParentRef(Element e) => e.IsApplication ? Ref(Registry, RegistryRoot) : ObjectRef(e.Parent);
@@ -225,7 +239,20 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             "HelpText" => S(""),
             _ => throw new InvalidOperationException("Unknown accessible property.")
         };
-        if (iface == ActionInterface && name == "NActions") return I(e.Actions.Count);
+        if (iface == ActionInterface && name == "NActions") return I(ActionCount(e));
+        if (iface == ValueInterface)
+        {
+            if (!e.HasNumericValue) throw new InvalidRequestException("The element has no numeric value.");
+            return name switch
+            {
+                "CurrentValue" => g_variant_new_double(e.NumericValue),
+                "MinimumValue" => g_variant_new_double(e.NumericMinimum),
+                "MaximumValue" => g_variant_new_double(e.NumericMaximum),
+                "MinimumIncrement" => g_variant_new_double(e.NumericStep),
+                "Text" => S(e.Source is SpinBox spin ? spin.GetLineEdit().Text : e.NumericValue.ToString(TranslationServer.Culture)),
+                _ => throw new InvalidRequestException("Unknown numeric property.")
+            };
+        }
         if (iface == ApplicationInterface) return name switch
         {
             "ToolkitName" => S("Electron2D"),
@@ -242,7 +269,8 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         try
         {
             g_variant_builder_add_value(b, S(Accessible)); g_variant_builder_add_value(b, S(Component));
-            if (e.Actions.Count != 0) g_variant_builder_add_value(b, S(ActionInterface));
+            if (ActionCount(e) != 0) g_variant_builder_add_value(b, S(ActionInterface));
+            if (e.HasNumericValue) g_variant_builder_add_value(b, S(ValueInterface));
             if (e.IsApplication) g_variant_builder_add_value(b, S(ApplicationInterface));
             return g_variant_builder_end(b);
         }
@@ -288,7 +316,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             if (method == "GetActions")
             {
                 var builder = Builder("a(sss)");
-                try { for (var i = 0; i < e.Actions.Count; i++) { var name = ActionName(ActionAt(e, i)); g_variant_builder_add_value(builder, Tuple([S(name), S(name), S("")])); } return Tuple([g_variant_builder_end(builder)]); }
+                try { for (var i = 0; i < ActionCount(e); i++) { var name = ActionName(ActionAt(e, i)); g_variant_builder_add_value(builder, Tuple([S(name), S(name), S("")])); } return Tuple([g_variant_builder_end(builder)]); }
                 finally { g_variant_builder_unref(builder); }
             }
             var action = ActionAt(e, IntArg(args, 0));
@@ -296,27 +324,42 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             {
                 "GetName" or "GetLocalizedName" or "GetDescription" => Tuple([S(ActionName(action))]),
                 "GetKeyBinding" => Tuple([S("")]),
-                "DoAction" => Tuple([B(Invoke(e, action))]),
+                "DoAction" => Tuple([B(action.Jump == 0 ? Invoke(e, action.Action) : InvokeValue(e, e.NumericValue + action.Jump * e.NumericJump))]),
                 _ => throw new InvalidOperationException("Unknown action method.")
             };
         }
         if (iface == Component) return ComponentCall(e, method, args);
         throw new InvalidOperationException("Unknown accessibility interface.");
     }
-    private static AAction ActionAt(Element e, int index)
+    private static bool HasPageActions(Element e) => e.HasNumericValue && e.NumericJump > 0 && e.SetValueAction is not null && !e.Flag(AFlag.ReadOnly);
+    private static int ActionCount(Element e) => e.Actions.Count + (HasPageActions(e) ? 2 : 0);
+    private static (AAction Action, int Jump) ActionAt(Element e, int index)
     {
         if (index < 0) throw new InvalidRequestException("The action index is outside the supported action list.");
-        for (var action = AAction.Click; action <= AAction.Blur; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return action;
+        for (var action = AAction.Click; action <= AAction.Increment; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return (action, 0);
+        if (HasPageActions(e) && index is 0 or 1) return (AAction.SetValue, index == 0 ? -1 : 1);
         throw new InvalidRequestException("The action index is outside the supported action list.");
     }
-    private static string ActionName(AAction action) => action switch { AAction.Click => "click", AAction.Focus => "focus", AAction.Blur => "blur", _ => throw new ArgumentOutOfRangeException(nameof(action)) };
-    private static bool Invoke(Element e, AAction action)
+    private static string ActionName((AAction Action, int Jump) request) => request.Jump != 0 ? (request.Jump < 0 ? "page-decrement" : "page-increment") : request.Action switch { AAction.Click => "click", AAction.Focus => "focus", AAction.Blur => "blur", AAction.Decrement => "decrement", AAction.Increment => "increment", _ => throw new ArgumentOutOfRangeException(nameof(request)) };
+    private static bool CanInvoke(Element e)
     {
-        if (!Showing(e) || e.Flag(AFlag.Disabled)) return false;
+        if (e.Retired || !Showing(e) || e.Flag(AFlag.Disabled)) return false;
         if (e.Source is { } source && (source.IsDisposed || !source.IsInsideTree || source.IsDepartingTree || source.IsQueuedForDeletion || source is BaseButton { Disabled: true } || source is CanvasItem { IsVisibleInTree: false } || source is Window { Visible: false })) return false;
         for (var p = e; p is not null; p = p.Parent) if (p.Flag(AFlag.Hidden) || p.Source is Window { Visible: false }) return false;
+        return true;
+    }
+    private static bool CanEditValue(Element e) => CanInvoke(e) && !e.Flag(AFlag.ReadOnly) && (e.Source is not Range range || AccessibilityServer.NumericEditable(range));
+    private static bool InvokeValue(Element e, double value)
+    {
+        if (!double.IsFinite(value) || !e.HasNumericValue || !CanEditValue(e) || e.SetValueAction is not { } callback) return false;
+        try { callback(value); } catch (Exception error) { throw new CallbackException(error); }
+        return true;
+    }
+    private static bool Invoke(Element e, AAction action)
+    {
+        if (!CanInvoke(e) || action is AAction.Increment or AAction.Decrement && !CanEditValue(e)) return false;
         if (!e.Actions.TryGetValue(action, out var callback)) return false;
-        if (action == AAction.Focus && callback == e.SourceFocusAction && e.Source is Control { CanReceiveGUIFocus: false }) return false;
+        if (action == AAction.Focus && callback == e.SourceFocusAction && e.Source is Control control && !AccessibilityServer.FocusSource(control).CanReceiveGUIFocus) return false;
         try { callback(); } catch (Exception error) { throw new CallbackException(error); }
         return true;
     }
@@ -332,6 +375,17 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         if (g_dbus_connection_emit_signal(_connection, 0, path, iface, name, value, out var error) == 0) throw new ExternalException(ErrorMessage(error));
     }
     internal void PropertyChanged(Element e, string property, string value) => Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event(property, 0, 0, S(value), e));
+    internal void NumericChanged(Element e, string property, double value)
+    {
+        var builder = Builder("a{sv}");
+        try
+        {
+            g_variant_builder_add_value(builder, g_variant_new_dict_entry(S(property), g_variant_new_variant(g_variant_new_double(value))));
+            Emit(e.Path, "org.freedesktop.DBus.Properties", "PropertiesChanged", Tuple([S(ValueInterface), g_variant_builder_end(builder), Array("s", [])]));
+        }
+        finally { g_variant_builder_unref(builder); }
+        if (property == "CurrentValue") Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event("accessible-value", 0, 0, g_variant_new_double(value), e));
+    }
     internal void RoleChanged(Element e) => Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event("accessible-role", 0, 0, U(NativeRole(e)), e));
     internal void StateChanged(Element e, string state, bool value) => Emit(e.Path, "org.a11y.atspi.Event.Object", "StateChanged", Event(state, value ? 1 : 0, 0, I(0), e));
     internal void ActionsChanged(Element e) => Emit(CachePath, Cache, "AddAccessible", Tuple([CacheItem(e)]));

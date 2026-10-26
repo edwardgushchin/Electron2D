@@ -1,6 +1,6 @@
 # ProgressBar
 
-Last updated: 2026-10-14
+Last updated: 2026-10-26
 
 Themed display for a shared numeric [Range](Range.md). It draws background and fill styles, followed by centered percentage text and its optional outline. Indeterminate mode draws a clipped moving segment and hides the text. Both current renderers execute the same retained canvas commands.
 
@@ -54,3 +54,5 @@ Shared Range state remains executable. Exact scene factories store Range configu
 [ProgressBarTests](../../tests/Electron2D.Tests/ProgressBarTests.cs) verifies direction identities, RTL, fractional style rounding, font minimum, bounded/unbounded and exponential percentages, domain numerals, nonfinite/disposed/off-owner errors, theme mutation, shared values, hidden/pause behavior and edited-subtree preview. A fresh process restores and executes the saved exact node type.
 
 Native GPU and Compatibility tests inspect every pixel of empty/quarter/half/full and RTL fill masks, preview clipping, text and outline. Sixty-four prepared active frames include value updates, indeterminate steps, recording and rendering with zero measured managed owner-thread bytes. Native allocation totals, semantic screen-reader delivery, foreign platform execution and owner acceptance remain unverified. See [ADR 0080](../decisions/rendering.md#adr-0080).
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.
