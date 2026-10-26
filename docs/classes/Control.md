@@ -59,6 +59,10 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | --- | --- |
 | [`public string AccessibilityName { get; set; }`](#accessibilityname) | Stored translatable semantic name; empty uses the prepared caption. |
 | `public string AccessibilityDescription { get; set; }` | Stored translatable description, empty by default. |
+| [`public string[] AccessibilityControlsNodes { get; set; }`](#accessibilitycontrolsnodes) | Copied, stored paths for native semantic controllers. |
+| [`public string[] AccessibilityDescribedByNodes { get; set; }`](#accessibilitydescribedbynodes) | Copied, stored paths for native semantic descriptions. |
+| [`public string[] AccessibilityLabeledByNodes { get; set; }`](#accessibilitylabeledbynodes) | Copied, stored paths for native semantic labels. |
+| [`public string[] AccessibilityFlowToNodes { get; set; }`](#accessibilityflowtonodes) | Copied, stored paths for native semantic reading flow. |
 | `public string TranslationContext { get; set; }` | Local default automatic translation context, empty initially; stored and revertible. |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
 | `public Vector2 Size { get; set; }` | Finite requested size, clamped to the effective minimum and maximum. |
@@ -512,3 +516,13 @@ Automatic output publishes role, transformed window-client bounds, visibility, c
 Protected `override string[] OnGetAccessibilityConfigurationWarnings()` adds a warning for an unnamed BaseButton action or Container landmark. It preserves base warnings; authored names or displayed button captions resolve the warning. This is a cold authoring query.
 
 Name, landmark and displayed-caption changes refresh the existing edited-scene configuration-warning notification; equal writes remain silent.
+
+<a id="accessibilitycontrolsnodes"></a>
+<a id="accessibilitydescribedbynodes"></a>
+<a id="accessibilitylabeledbynodes"></a>
+<a id="accessibilityflowtonodes"></a>
+### AccessibilityControlsNodes, AccessibilityDescribedByNodes, AccessibilityLabeledByNodes, AccessibilityFlowToNodes
+
+Each string array starts empty and is copied on assignment and retrieval. Null arrays throw ArgumentNullException, null items and malformed node-path syntax throw ArgumentException; access requires a live owner-thread control and mutation respects capture guards. Empty and unresolved paths are ignored; normal relative/absolute Node path rules apply. Authored paths survive duplication and scene archives; process-local RIDs do not. Topology, native-identity and property revisions resolve current targets again. Automatic publication ignores targets in a different native window and deduplicates repeated targets. Clearing or retargeting an array removes only its automatic links; explicit AccessibilityServer links survive until their own lifetime ends.
+
+ControlsNodes supplies ControllerFor/ControlledBy, DescribedByNodes supplies DescribedBy/DescriptionFor, LabeledByNodes supplies LabelledBy/LabelFor, and FlowToNodes supplies FlowsTo/FlowsFrom. An otherwise unnamed action with a resolved nonempty same-window label does not need a duplicate name; invalid/missing labels leave its warning. ButtonGroup toggle peers publish current directed MemberOf relations; toggling mode, changing membership, leaving the tree or changing native windows updates the graph. See [the service reference](AccessibilityServer.md#semantic-relationships) and [ADR 0114](../decisions/accessibility.md#adr-0114).

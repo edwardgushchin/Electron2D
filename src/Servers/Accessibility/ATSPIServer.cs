@@ -132,10 +132,11 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         catch { Unregister(e); throw; }
         finally { g_main_context_pop_thread_default(_context); }
     }
-    internal void EnableValue(Element e)
+    internal void EnableValue(Element e) => EnableInterface(e, ValueInterface);
+    private void EnableInterface(Element e, string iface)
     {
         g_main_context_push_thread_default(_context);
-        try { RegisterInterface(_registrations[e], e.Path, ValueInterface); }
+        try { RegisterInterface(_registrations[e], e.Path, iface); }
         finally { g_main_context_pop_thread_default(_context); }
     }
     private void RegisterInterface(Registration r, string path, string iface)
@@ -253,6 +254,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
                 _ => throw new InvalidRequestException("Unknown numeric property.")
             };
         }
+        if (iface == Hyperlink) return HyperlinkProperty(e, name);
         if (iface == ApplicationInterface) return name switch
         {
             "ToolkitName" => S("Electron2D"),
@@ -271,6 +273,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             g_variant_builder_add_value(b, S(Accessible)); g_variant_builder_add_value(b, S(Component));
             if (ActionCount(e) != 0) g_variant_builder_add_value(b, S(ActionInterface));
             if (e.HasNumericValue) g_variant_builder_add_value(b, S(ValueInterface));
+            if (AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.LinkTarget) is not null) g_variant_builder_add_value(b, S(Hyperlink));
             if (e.IsApplication) g_variant_builder_add_value(b, S(ApplicationInterface));
             return g_variant_builder_end(b);
         }
@@ -302,7 +305,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             "GetChildAtIndex" => Tuple([ObjectRef(e.Children.ElementAtOrDefault(IntArg(args, 0)))]),
             "GetChildren" => Tuple([Children(e)]),
             "GetIndexInParent" => Tuple([I(e.Parent?.Children.IndexOf(e) ?? -1)]),
-            "GetRelationSet" => Tuple([Array("(ua(so))", [])]),
+            "GetRelationSet" => Tuple([Relations(e)]),
             "GetRole" => Tuple([U(NativeRole(e))]),
             "GetRoleName" or "GetLocalizedRoleName" => Tuple([S(NativeRoleName(e))]),
             "GetState" => Tuple([States(e)]),
@@ -329,6 +332,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             };
         }
         if (iface == Component) return ComponentCall(e, method, args);
+        if (iface == Hyperlink) return HyperlinkCall(e, method, args);
         throw new InvalidOperationException("Unknown accessibility interface.");
     }
     private static bool HasPageActions(Element e) => e.HasNumericValue && e.NumericJump > 0 && e.SetValueAction is not null && !e.Flag(AFlag.ReadOnly);

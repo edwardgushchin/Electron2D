@@ -1,6 +1,6 @@
 # ButtonGroup
 
-Last updated: 2026-10-16
+Last updated: 2026-10-26
 
 **Declaration:** `public class ButtonGroup : Resource` · **Source:** [ButtonGroup.cs](../../src/Scene/Resources/ButtonGroup.cs)
 
@@ -78,3 +78,5 @@ Creates a group without selecting any button. Assigning buttons does not force s
 Activation validates mutable peers before committing selection. Captured membership generations prevent callbacks from acting on buttons removed/reassigned during the operation; nested newer activation cancels the older group traversal. Callback errors are collected so valid peer/local phases still complete. Prepared group activation reuses snapshot buffers. Public snapshots and first-use capacity growth allocate.
 
 [BaseButtonTests](../../tests/Electron2D.Tests/BaseButtonTests.cs) covers selection ordering, AllowUnpress, silent writes, membership snapshots, disposal, copied/scene-local groups, reentrant callbacks, failure continuation and prepared input allocations. Final executed results and backend limits belong to the completed slice report.
+
+Native accessibility publishes directed MemberOf links among current attached toggle peers in the same native window. Mode/membership and tree changes update those non-owning links independently of checked state; see [semantic relationships](AccessibilityServer.md#semantic-relationships).

@@ -70832,6 +70832,174 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddRelatedControls(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddRelatedControls",
+    "signature": "public static System.Void UpdateAddRelatedControls(Electron2D.RID id, Electron2D.RID relatedID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "relatedID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddRelatedDescribedBy(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddRelatedDescribedBy",
+    "signature": "public static System.Void UpdateAddRelatedDescribedBy(Electron2D.RID id, Electron2D.RID relatedID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "relatedID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddRelatedDetails(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddRelatedDetails",
+    "signature": "public static System.Void UpdateAddRelatedDetails(Electron2D.RID id, Electron2D.RID relatedID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "relatedID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddRelatedFlowTo(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddRelatedFlowTo",
+    "signature": "public static System.Void UpdateAddRelatedFlowTo(Electron2D.RID id, Electron2D.RID relatedID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "relatedID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddRelatedLabeledBy(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddRelatedLabeledBy",
+    "signature": "public static System.Void UpdateAddRelatedLabeledBy(Electron2D.RID id, Electron2D.RID relatedID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "relatedID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddRelatedRadioGroup(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddRelatedRadioGroup",
+    "signature": "public static System.Void UpdateAddRelatedRadioGroup(Electron2D.RID id, Electron2D.RID relatedID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "relatedID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetActiveDescendant(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetActiveDescendant",
+    "signature": "public static System.Void UpdateSetActiveDescendant(Electron2D.RID id, Electron2D.RID otherID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "otherID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateSetBounds(Electron2D.RID,Electron2D.Rect2)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -70904,6 +71072,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetErrorMessage(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetErrorMessage",
+    "signature": "public static System.Void UpdateSetErrorMessage(Electron2D.RID id, Electron2D.RID otherID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "otherID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateSetFlag(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityFlags,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -70944,6 +71136,54 @@
     "parameters": [
       {
         "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetInPageLinkTarget(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetInPageLinkTarget",
+    "signature": "public static System.Void UpdateSetInPageLinkTarget(Electron2D.RID id, Electron2D.RID otherID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "otherID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetMemberOf(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetMemberOf",
+    "signature": "public static System.Void UpdateSetMemberOf(Electron2D.RID id, Electron2D.RID groupID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "groupID",
         "type": "Electron2D.RID",
         "default": null
       }
@@ -250718,6 +250958,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.AccessibilityControlsNodes()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityControlsNodes",
+    "signature": "public System.String[] AccessibilityControlsNodes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AccessibilityDescribedByNodes()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityDescribedByNodes",
+    "signature": "public System.String[] AccessibilityDescribedByNodes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.AccessibilityDescription()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -250728,6 +250994,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AccessibilityFlowToNodes()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityFlowToNodes",
+    "signature": "public System.String[] AccessibilityFlowToNodes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Control.AccessibilityLabeledByNodes()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityLabeledByNodes",
+    "signature": "public System.String[] AccessibilityLabeledByNodes { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
