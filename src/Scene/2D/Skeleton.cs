@@ -7,7 +7,7 @@ namespace Electron2D;
 /// Prepared modification execution and local override requests allow the skeleton's current group, checking all target bones.
 /// Scene configuration, binding/setup, numerical queries and palette replay use the scene owner thread. Retained polygons observe
 /// live poses without rebuilding their triangulation. Resource/editor and native backend ownership remain separate.</remarks>
-public class Skeleton : Entity
+public partial class Skeleton : Entity
 {
     private readonly List<Bone> _bones = [], _build = [];
     private Transform[] _inverse = [], _pose = [], _skinPalette = [];
@@ -155,6 +155,7 @@ public class Skeleton : Entity
             if (what == NotificationChildOrderChanged) InvalidateSetup();
             if (!reversed) base.OnNotification(what);
             if (IsDisposed) return;
+            if (what == NotificationDraw) DrawEditorGizmos();
             if (what is NotificationReady or NotificationPostEnterTree) { EnsureSetup(); _stack?.Bind(this); }
             else if (what == NotificationInternalProcess) ExecuteModifications(ProcessDeltaTime, ProcessPhase.Idle);
             else if (what == NotificationInternalPhysicsProcess) ExecuteModifications(PhysicsProcessDeltaTime, ProcessPhase.Physics);

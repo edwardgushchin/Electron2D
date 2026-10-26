@@ -295,6 +295,7 @@ public abstract partial class CanvasItem
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         SyncItemRasterScale();
         PhysicsDebugDrawing.Refresh(this);
+        if (this is Skeleton skeleton) skeleton.RefreshEditorGizmos();
         if (this is NavigationAgentDebugCanvas navigationDebug) navigationDebug.Refresh();
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         if (ServerState is { Commands: { } painter } state) { painter.Dispose(); state.Commands = null; }

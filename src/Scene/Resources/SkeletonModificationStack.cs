@@ -5,7 +5,7 @@ namespace Electron2D;
 /// active processing groups and prepared execution allows the skeleton's current group;
 /// executing/setup callbacks cannot restructure or reenter the list. Cloning always copies modification resources,
 /// preserving aliases through the existing resource duplication session. Bound skeletons are weak references.</remarks>
-public sealed class SkeletonModificationStack : Resource
+public sealed partial class SkeletonModificationStack : Resource
 {
     private readonly object _gate = new();
     private readonly List<SkeletonModification?> _mods = [];

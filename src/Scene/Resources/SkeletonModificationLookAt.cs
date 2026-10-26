@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Aims a selected skeletal bone at a scene target using endpoint direction and optional angular limits.</summary>
 /// <remarks>Paths resolve relative to the bound Skeleton and cache by scene-path/setup revision. Missing targets
 /// skip execution until the binding becomes valid. Configuration is copied and stored; scene references are weak.</remarks>
-public sealed class SkeletonModificationLookAt : SkeletonModification
+public sealed partial class SkeletonModificationLookAt : SkeletonModification
 {
     private int _boneIndex = -1;
     private string _boneNode = string.Empty, _targetPath = string.Empty;
@@ -13,7 +13,7 @@ public sealed class SkeletonModificationLookAt : SkeletonModification
     private WeakReference<Entity>? _target;
     private WeakReference<Bone>? _bone;
     /// <summary>Creates an unselected idle look-at modification.</summary>
-    public SkeletonModificationLookAt() { }
+    public SkeletonModificationLookAt() { EditorDrawGizmo = true; }
     /// <summary>Gets or sets the explicit bone index when BoneNode is empty.</summary><value>Minus one initially.</value>
     public int BoneIndex { get { lock (ModificationGate) { ThrowIfDisposed(); return _boneIndex; } } set { lock (ModificationGate) { EnsureModificationMutable(); if (value < -1) throw new ArgumentOutOfRangeException(nameof(value)); _boneIndex = value; _boneNode = string.Empty; _cacheDirty = true; } EmitChanged(); } }
     /// <summary>Gets or sets the relative bone path, overriding a numeric selection.</summary><value>Empty initially.</value>

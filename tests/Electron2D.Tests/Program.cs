@@ -729,6 +729,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RIGID_CONTRACT") == "1") { BackendChecks.RunRigidBodyContract(threaded: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR_GIZMOS") == "1") { SkeletonGizmoTests.Run(PhysicsServer.Backend.CPU, false, "compatibility"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_CONTRACT") == "1") { BackendChecks.RunServerContract(threaded: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_CONTRACT") is { } bodyContract)
 {
@@ -1945,6 +1946,7 @@ MeshSkinTests.Run();
 MultiMeshTests.Run();
 CPUParticlesTests.Run();
 SkeletonTests.Run();
+SkeletonGizmoTests.Run(PhysicsServer.Backend.CPU, false, "compatibility");
 SkeletonIKTests.Run();
 SkeletonJiggleTests.Run();
 PhysicalBoneTests.Run(); PhysicalBoneTests.Run(PhysicsServer.Backend.GPU);

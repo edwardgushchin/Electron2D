@@ -1,6 +1,8 @@
 # SkeletonModificationLookAt
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
+
+[Editor gizmos](../components/skeletal-editor-gizmos.md) now use the actual edited-scene canvas owner, typed stored visibility, built-in/custom drawing and the shared editor preview. Numerical execution and broader acceptance remain separately qualified.
 
 - Declaration: `public sealed class SkeletonModificationLookAt : SkeletonModification`
 - Source: [SkeletonModificationLookAt.cs](../../src/Scene/Resources/SkeletonModificationLookAt.cs)
@@ -69,6 +71,7 @@ rig.SetModificationStack(stack);
 | `public System.Void SetConstraintAngleMax(System.Single angle)` | [Sets the finite upper angle boundary.](#setconstraintanglemax) |
 | `public System.Void SetConstraintAngleMin(System.Single angle)` | [Sets the finite lower angle boundary.](#setconstraintanglemin) |
 | `public System.Void SetEnableConstraint(System.Boolean enableConstraint)` | [Enables angle constraints.](#setenableconstraint) |
+| `protected override System.Void OnDrawEditorGizmo()` | [Editor drawing and lifetime contract.](#ondraweditorgizmo) |
 
 ## Member descriptions
 
@@ -216,10 +219,16 @@ Gets or sets the target path relative to its skeleton.
 
 Empty initially; target must be a live Entity.
 
+### OnDrawEditorGizmo
+
+`protected override System.Void OnDrawEditorGizmo()`
+
+Records the selected bone's length and configured angle interval or complement; missing selections omit the guide. See the [editor drawing contract](../components/skeletal-editor-gizmos.md).
+
 ## Lifecycle, errors and verification
 
 Scene-bound configuration follows the skeleton's owner thread; prepared pose execution also allows its current processing group. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
 
-SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos retain their authoring trigger; IK solvers, physical bones and general Mesh skin now execute through their concrete components.
+SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor drawing follows the [implemented authoring contract](../components/skeletal-editor-gizmos.md); IK solvers, physical bones and general Mesh skin now execute through their concrete components.
 
 See [skeletal animation](../components/skeletal-animation.md), [the mesh decision](../decisions/mesh.md#adr-0092) and the linked base-class lifecycle.

@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>The stack borrows modifications. Scene bindings are weak and transient; derived types opt into exact
 /// resource copying and storage. Configuration and setup require the scene owner; prepared pose execution also allows
 /// the skeleton's current processing group. Editor gizmos require the editor owner and are not runtime switches.</remarks>
-public abstract class SkeletonModification : Resource
+public abstract partial class SkeletonModification : Resource
 {
     internal readonly object ModificationGate = new();
     private WeakReference<SkeletonModificationStack>? _stack;
@@ -66,10 +66,11 @@ public abstract class SkeletonModification : Resource
         return angle;
     }
     /// <summary>Copies stored base settings without transient bindings.</summary><param name="target">Fresh exact derived target.</param>
-    protected void CopyModificationState(SkeletonModification target) { lock (ModificationGate) { ThrowIfDisposed(); target._enabled = _enabled; target._mode = _mode; } }
+    protected void CopyModificationState(SkeletonModification target) { lock (ModificationGate) { ThrowIfDisposed(); target._enabled = _enabled; target._mode = _mode; target._editorDrawGizmo = _editorDrawGizmo; } }
     private static readonly PropertyDescriptor[] ModificationProperties =
     [
         new PropertyDescriptor<SkeletonModification, bool>(nameof(Enabled), m => m.Enabled, (m, v) => m.Enabled = v, _ => true, stored: true),
+        new PropertyDescriptor<SkeletonModification, bool>(nameof(EditorDrawGizmo), m => m.EditorDrawGizmo, (m, v) => m.EditorDrawGizmo = v, m => m is SkeletonModificationLookAt or SkeletonModificationTwoBoneIK or SkeletonModificationCCDIK, stored: true),
         new PropertyDescriptor<SkeletonModification, ProcessPhase>(nameof(ExecutionMode), m => m.ExecutionMode, (m, v) => m.ExecutionMode = v, _ => ProcessPhase.Idle, stored: true)
     ];
     /// <inheritdoc />

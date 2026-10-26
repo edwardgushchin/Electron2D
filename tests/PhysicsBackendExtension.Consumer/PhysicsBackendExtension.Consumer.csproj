@@ -31,4 +31,5 @@
   <ItemGroup><Compile Include="../Electron2D.Tests/CanvasDrawCallbackTests.cs" Link="CanvasDrawCallbackTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsContactProjectionTests.cs" Link="PhysicsContactProjectionTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/ShapeOwnerTests.cs" Link="ShapeOwnerTests.cs" /><Compile Include="../Electron2D.Tests/CollisionDisableModeTests.cs" Link="CollisionDisableModeTests.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/SkeletonGizmoTests*.cs" Link="%(Filename)%(Extension)" /></ItemGroup>
 </Project>

@@ -1,6 +1,8 @@
 # SkeletonModificationStackHolder
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
+
+[Editor gizmos](../components/skeletal-editor-gizmos.md) now use the actual edited-scene canvas owner, typed stored visibility, built-in/custom drawing and the shared editor preview. Numerical execution and broader acceptance remain separately qualified.
 
 - Declaration: `public sealed class SkeletonModificationStackHolder : SkeletonModification`
 - Source: [SkeletonModificationStackHolder.cs](../../src/Scene/Resources/SkeletonModificationStackHolder.cs)
@@ -54,6 +56,7 @@ rig.SetModificationStack(root); // Existing live Skeleton context.
 | `protected override System.Void OnExecute(System.Double delta)` | [Inherited typed lifecycle/schema callback.](#onexecute) |
 | `protected override System.Void OnSetupModification(Electron2D.SkeletonModificationStack modificationStack)` | [Inherited typed lifecycle/schema callback.](#onsetupmodification) |
 | `public System.Void SetHeldModificationStack(Electron2D.SkeletonModificationStack heldModificationStack)` | [Assigns a borrowed child stack, committing before child setup callbacks.](#setheldmodificationstack) |
+| `protected override System.Void OnDrawEditorGizmo()` | [Editor drawing and lifetime contract.](#ondraweditorgizmo) |
 
 ## Member descriptions
 
@@ -123,12 +126,18 @@ Replacement during setup/execution rejects. A graph containing this holder rejec
 
 Invalid numeric/count/index inputs throw ArgumentOutOfRangeException; invalid paths/vectors throw ArgumentException. Disposed access rejects; scene-bound mutation requires its owner thread. Settings remain committed before Changed/PropertyListChanged callbacks; exception cleanup is described below. Referenced resources and scene nodes remain borrowed.
 
+### OnDrawEditorGizmo
+
+`protected override System.Void OnDrawEditorGizmo()`
+
+Delegates to the bound child stack outside the holder metadata lock. The holder visibility flag controls delegation; numerical stack enablement does not. See the [editor drawing contract](../components/skeletal-editor-gizmos.md).
+
 ## Ownership, storage, failure and verification
 
 Stacks/modifications remain caller-owned borrowed resources. Scene binding is weak, follows one attached skeleton and rejects competing live bindings. Setup callbacks run after binding commitment; failures retain assigned resources and keep the affected parent unprepared for explicit Setup retry. Structural graph replacement, disposal or binding reset during running setup/execution rejects before terminal changes. Nested setup/execution depth is bounded to 128; cold graph validation also caps 16384 visited stacks. Warm solve/replay uses existing scene ownership and reusable resource state, independent of graphics startup.
 
 PackedScene already force-copies a rig's stack graph. Holder copying always force-copies the child graph through the same duplication session, preserving shared child/modification aliases with independent bindings per scene instance. Exact built-in schemas/factories persist configuration; no target caches, holder leases, force/velocity histories or native identities are saved. Joint blobs are versioned, limited to 4096 joints and 64 MiB and validated fully before replacement. Loading in another process executes the ordinary public controller path.
 
-SkeletonJiggleTests checks exact force/velocity samples, reset/nonzero origins, gravity/default overrides, guarded numeric inputs, reflected aiming, path reconnection, actual collision/mask/phase behavior, direct child selection, independent child strength, shared-child removal, cycles, setup retry, running disposal/reentry, graph copies/aliases and fresh .e2dscene execution. 128 prepared nested simulation cycles report zero managed bytes. Native Engine.Run hosts on current Linux GPU/compatibility verify actual Jiggle, held-stack and ray-blocked Polygon pixels and 64 prepared render/query/solve intervals at zero managed allocation. Native allocator behavior, large graphs/rig throughput, foreign targets and owner acceptance remain unverified. Editor gizmos keep their separate authoring dependency; owned palettes and generic Mesh skin now execute through the mesh component.
+SkeletonJiggleTests checks exact force/velocity samples, reset/nonzero origins, gravity/default overrides, guarded numeric inputs, reflected aiming, path reconnection, actual collision/mask/phase behavior, direct child selection, independent child strength, shared-child removal, cycles, setup retry, running disposal/reentry, graph copies/aliases and fresh .e2dscene execution. 128 prepared nested simulation cycles report zero managed bytes. Native Engine.Run hosts on current Linux GPU/compatibility verify actual Jiggle, held-stack and ray-blocked Polygon pixels and 64 prepared render/query/solve intervals at zero managed allocation. Native allocator behavior, large graphs/rig throughput, foreign targets and owner acceptance remain unverified. Editor drawing follows the [implemented authoring contract](../components/skeletal-editor-gizmos.md); owned palettes and generic Mesh skin now execute through the mesh component.
 
 See [skeletal animation](../components/skeletal-animation.md), [Skeleton](Skeleton.md), [SkeletonModificationStack](SkeletonModificationStack.md), [physics queries](PhysicsDirectSpaceState.md) and [ADR 0092](../decisions/mesh.md#adr-0092).

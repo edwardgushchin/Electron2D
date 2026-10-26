@@ -1,6 +1,6 @@
 # SkeletonModificationFABRIK
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
 
 - Declaration: `public sealed class SkeletonModificationFABRIK : SkeletonModification`
 - Source: [SkeletonModificationFABRIK.cs](../../src/Scene/Resources/SkeletonModificationFABRIK.cs)
@@ -226,6 +226,6 @@ Enabled and ExecutionMode retain base semantics. Solvers request transient local
 
 Built-in exact factories and stored descriptors restore settings through .e2dscene/PackedScene. Chains use a versioned blob with joint selection and scalar/vector policies, bounded to 64 MiB and validated completely before replacement. Copying owns independent joint records and drops transient scratch/binding. PackedScene already force-copies complete stack graphs per rig, preserving resource aliases and instance-owned lifetime. Custom resource consumers still use the existing typed registration contract.
 
-SkeletonIKTests exercises actual target endpoints, bend/length/distance constraints, mirrors/endpoint angles, local/global/inverted CCD limits, magnets, final orientation, three-joint convergence, degenerate and missing selections, copied/fresh-process scenes, failed-pass rollback and 128 prepared iterations per solver with zero managed bytes. Engine.Run hosts verify all three solvers' deformed Polygon pixels on current Linux GPU/compatibility and 64 prepared render/solve intervals with zero managed bytes. Native allocator activity, large-rig performance, foreign platforms and owner acceptance remain unverified. Editor gizmos retain their exact authoring trigger; server palettes and general Mesh skin channels now execute through the mesh component.
+SkeletonIKTests exercises actual target endpoints, bend/length/distance constraints, mirrors/endpoint angles, local/global/inverted CCD limits, magnets, final orientation, three-joint convergence, degenerate and missing selections, copied/fresh-process scenes, failed-pass rollback and 128 prepared iterations per solver with zero managed bytes. Engine.Run hosts verify all three solvers' deformed Polygon pixels on current Linux GPU/compatibility and 64 prepared render/solve intervals with zero managed bytes. Native allocator activity, large-rig performance, foreign platforms and owner acceptance remain unverified. Editor drawing follows the [implemented authoring contract](../components/skeletal-editor-gizmos.md); server palettes and general Mesh skin channels now execute through the mesh component.
 
 See [skeletal animation](../components/skeletal-animation.md), [Skeleton](Skeleton.md), [SkeletonModificationStack](SkeletonModificationStack.md) and [ADR 0092](../decisions/mesh.md#adr-0092).

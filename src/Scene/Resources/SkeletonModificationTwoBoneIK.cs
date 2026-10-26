@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>Selections resolve relative to the bound Skeleton. Missing bones/targets or nonpositive segment lengths
 /// skip the solve. Settings copy/store; scene bindings stay weak. Bone endpoint lengths use the minimum absolute
 /// global scale, so nonuniform scale retains that conservative length policy.</remarks>
-public sealed class SkeletonModificationTwoBoneIK : SkeletonModification
+public sealed partial class SkeletonModificationTwoBoneIK : SkeletonModification
 {
     private readonly SkeletonIKBinding _target = new(), _one = new(), _two = new();
     private string _targetPath = string.Empty, _onePath = string.Empty, _twoPath = string.Empty;
@@ -12,7 +12,7 @@ public sealed class SkeletonModificationTwoBoneIK : SkeletonModification
     private float _minimum, _maximum;
     private bool _flip;
     /// <summary>Creates an unselected, enabled idle-phase two-bone solver.</summary>
-    public SkeletonModificationTwoBoneIK() { }
+    public SkeletonModificationTwoBoneIK() { EditorDrawGizmo = true; }
     /// <summary>Gets or sets relative scene path of the Entity target.</summary><value>Empty initially.</value>
     public string TargetNodePath { get { lock (ModificationGate) { ThrowIfDisposed(); return _targetPath; } } set { SkeletonIKBinding.Path(value); lock (ModificationGate) { EnsureModificationMutable(); _targetPath = value; } EmitChanged(); } }
     /// <summary>Gets or sets minimum root-to-target solve distance in canvas-world pixels.</summary><value>Zero disables the minimum.</value>
@@ -65,6 +65,7 @@ public sealed class SkeletonModificationTwoBoneIK : SkeletonModification
         new PropertyDescriptor<SkeletonModificationTwoBoneIK, string>(nameof(TargetNodePath), m => m.TargetNodePath, (m, v) => m.TargetNodePath = v, _ => string.Empty, stored: true),
         new PropertyDescriptor<SkeletonModificationTwoBoneIK, float>(nameof(TargetMinimumDistance), m => m.TargetMinimumDistance, (m, v) => m.TargetMinimumDistance = v, _ => 0, stored: true),
         new PropertyDescriptor<SkeletonModificationTwoBoneIK, float>(nameof(TargetMaximumDistance), m => m.TargetMaximumDistance, (m, v) => m.TargetMaximumDistance = v, _ => 0, stored: true),
+        new PropertyDescriptor<SkeletonModificationTwoBoneIK, bool>(nameof(EditorDrawMinMax), m => m.EditorDrawMinMax, (m, v) => m.EditorDrawMinMax = v, _ => false, stored: true),
         new PropertyDescriptor<SkeletonModificationTwoBoneIK, bool>(nameof(FlipBendDirection), m => m.FlipBendDirection, (m, v) => m.FlipBendDirection = v, _ => false, stored: true),
         new PropertyDescriptor<SkeletonModificationTwoBoneIK, int>("_joint_one_index", m => m.GetJointOneBoneIndex(), (m, v) => { if (v == -1) { lock (m.ModificationGate) { m.EnsureModificationMutable(); m._oneIndex = -1; } } else m.SetJointOneBoneIndex(v); }, _ => -1, stored: true),
         new PropertyDescriptor<SkeletonModificationTwoBoneIK, string>("_joint_one_path", m => m.GetJointOneBoneNode(), (m, v) => m.SetJointOneBoneNode(v), _ => string.Empty, stored: true),
@@ -79,6 +80,6 @@ public sealed class SkeletonModificationTwoBoneIK : SkeletonModification
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
         var copy = (SkeletonModificationTwoBoneIK)target; CopyModificationState(copy);
-        lock (ModificationGate) { copy._targetPath = _targetPath; copy._onePath = _onePath; copy._twoPath = _twoPath; copy._oneIndex = _oneIndex; copy._twoIndex = _twoIndex; copy._minimum = _minimum; copy._maximum = _maximum; copy._flip = _flip; }
+        lock (ModificationGate) { copy._editorDrawMinMax = _editorDrawMinMax; copy._targetPath = _targetPath; copy._onePath = _onePath; copy._twoPath = _twoPath; copy._oneIndex = _oneIndex; copy._twoIndex = _twoIndex; copy._minimum = _minimum; copy._maximum = _maximum; copy._flip = _flip; }
     }
 }

@@ -188998,6 +188998,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Skeleton.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Skeleton",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModification.ClampAngle(System.Single,System.Single,System.Single,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModification",
@@ -189119,6 +189132,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModification.OnDrawEditorGizmo()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "OnDrawEditorGizmo",
+    "signature": "protected virtual System.Void OnDrawEditorGizmo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -189371,6 +189397,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointEditorDrawGizmo(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "GetCCDIKJointEditorDrawGizmo",
+    "signature": "public System.Boolean GetCCDIKJointEditorDrawGizmo(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModificationCCDIK.GetCCDIKJointEnableConstraint(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModificationCCDIK",
@@ -189419,6 +189464,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.OnDrawEditorGizmo()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "OnDrawEditorGizmo",
+    "signature": "protected override System.Void OnDrawEditorGizmo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -189577,6 +189635,30 @@
       },
       {
         "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationCCDIK.SetCCDIKJointEditorDrawGizmo(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationCCDIK",
+    "name": "SetCCDIKJointEditorDrawGizmo",
+    "signature": "public System.Void SetCCDIKJointEditorDrawGizmo(System.Int32 jointIndex, System.Boolean drawGizmo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "drawGizmo",
         "type": "System.Boolean",
         "default": null
       }
@@ -190543,6 +190625,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SkeletonModificationLookAt.OnDrawEditorGizmo()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationLookAt",
+    "name": "OnDrawEditorGizmo",
+    "signature": "protected override System.Void OnDrawEditorGizmo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModificationLookAt.OnExecute(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -191224,6 +191319,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.OnDrawEditorGizmo()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "OnDrawEditorGizmo",
+    "signature": "protected override System.Void OnDrawEditorGizmo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModificationStackHolder.OnExecute(System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModificationStackHolder",
@@ -191395,6 +191503,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationTwoBoneIK.OnDrawEditorGizmo()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "OnDrawEditorGizmo",
+    "signature": "protected override System.Void OnDrawEditorGizmo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -274762,6 +274883,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SkeletonModification.EditorDrawGizmo()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "EditorDrawGizmo",
+    "signature": "public System.Boolean EditorDrawGizmo { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SkeletonModification.Enabled()",
     "kind": "property",
     "declaringType": "Electron2D.SkeletonModification",
@@ -275045,6 +275179,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationTwoBoneIK.EditorDrawMinMax()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationTwoBoneIK",
+    "name": "EditorDrawMinMax",
+    "signature": "public System.Boolean EditorDrawMinMax { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

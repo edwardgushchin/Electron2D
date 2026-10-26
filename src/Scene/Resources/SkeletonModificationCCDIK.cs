@@ -4,22 +4,22 @@ namespace Electron2D;
 /// <remarks>Joint settings are copied scene-independent resource data. Paths and indices resolve against the bound
 /// Skeleton using weak revision-aware caches. Resizing/storage/copying are cold operations; prepared execution
 /// retains scratch arrays and borrows scene nodes. Missing selections skip execution without authoring a pose.</remarks>
-public sealed class SkeletonModificationCCDIK : SkeletonModification
+public sealed partial class SkeletonModificationCCDIK : SkeletonModification
 {
     private struct Joint
     {
         internal string Path;
         internal int Index;
         internal SkeletonIKBinding Binding;
-        internal bool RotateFromJoint, EnableConstraint, Invert, Local;
+        internal bool RotateFromJoint, EnableConstraint, Invert, Local, EditorGizmo;
         internal float Minimum, Maximum;
-        public Joint() { Path = string.Empty; Index = -1; Binding = new(); Local = true; Maximum = Mathf.Tau; }
+        public Joint() { Path = string.Empty; Index = -1; Binding = new(); Local = true; EditorGizmo = true; Maximum = Mathf.Tau; }
     }
     private Joint[] _joints = [];
     private readonly SkeletonIKBinding _target = new();
     private string _targetPath = string.Empty;
     /// <summary>Creates an empty enabled idle-phase solver.</summary>
-    public SkeletonModificationCCDIK() { }
+    public SkeletonModificationCCDIK() { EditorDrawGizmo = true; }
     /// <summary>Gets or resizes the number of authored joints, preserving the retained prefix.</summary><value>Zero initially; zero through 4096. New slots have no bone selection.</value>
     public int CCDIKDataChainLength { get { lock (ModificationGate) { ThrowIfDisposed(); return _joints.Length; } } set { lock (ModificationGate) { EnsureModificationMutable(); if (value < 0 || value > 4096) throw new ArgumentOutOfRangeException(nameof(value)); var old = _joints.Length; Array.Resize(ref _joints, value); for (var i = old; i < value; i++) _joints[i] = new(); } NotifyPropertyListChanged(); EmitChanged(); } }
     /// <summary>Gets or sets the Entity target path relative to its skeleton.</summary><value>Empty initially; missing targets skip execution.</value>
@@ -86,11 +86,11 @@ public sealed class SkeletonModificationCCDIK : SkeletonModification
     {
         lock (ModificationGate)
         {
-            ThrowIfDisposed(); using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream); writer.Write(1); writer.Write(_joints.Length);
+            ThrowIfDisposed(); using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream); writer.Write(2); writer.Write(_joints.Length);
             foreach (var joint in _joints)
             {
                 writer.Write(joint.Path); writer.Write(joint.Index);
-                writer.Write(joint.RotateFromJoint); writer.Write(joint.EnableConstraint); writer.Write(joint.Minimum); writer.Write(joint.Maximum); writer.Write(joint.Invert); writer.Write(joint.Local);
+                writer.Write(joint.RotateFromJoint); writer.Write(joint.EnableConstraint); writer.Write(joint.Minimum); writer.Write(joint.Maximum); writer.Write(joint.Invert); writer.Write(joint.Local); writer.Write(joint.EditorGizmo);
                 if (stream.Length > 64 * 1024 * 1024) throw new InvalidOperationException("IK archive exceeds its budget.");
             }
             return stream.ToArray();
@@ -102,11 +102,11 @@ public sealed class SkeletonModificationCCDIK : SkeletonModification
         lock (ModificationGate)
         {
             EnsureModificationMutable(); if (bytes.Length == 0) { _joints = []; return; }
-            using var stream = new MemoryStream(bytes, false); using var reader = new BinaryReader(stream); if (reader.ReadInt32() != 1) throw new InvalidDataException("Invalid IK archive version."); var count = reader.ReadInt32(); if (count < 0 || count > 4096) throw new InvalidDataException("Invalid IK joint count."); var joints = new Joint[count];
+            using var stream = new MemoryStream(bytes, false); using var reader = new BinaryReader(stream); var version = reader.ReadInt32(); if (version is not (1 or 2)) throw new InvalidDataException("Invalid IK archive version."); var count = reader.ReadInt32(); if (count < 0 || count > 4096) throw new InvalidDataException("Invalid IK joint count."); var joints = new Joint[count];
             for (var i = 0; i < count; i++)
             {
                 var joint = new Joint { Path = reader.ReadString(), Index = reader.ReadInt32() }; SkeletonIKBinding.Path(joint.Path); if (joint.Index < -1) throw new InvalidDataException("Invalid IK bone selection.");
-                joint.RotateFromJoint = reader.ReadBoolean(); joint.EnableConstraint = reader.ReadBoolean(); joint.Minimum = reader.ReadSingle(); joint.Maximum = reader.ReadSingle(); joint.Invert = reader.ReadBoolean(); joint.Local = reader.ReadBoolean(); SkeletonIKBinding.Scalar(joint.Minimum); SkeletonIKBinding.Scalar(joint.Maximum);
+                joint.RotateFromJoint = reader.ReadBoolean(); joint.EnableConstraint = reader.ReadBoolean(); joint.Minimum = reader.ReadSingle(); joint.Maximum = reader.ReadSingle(); joint.Invert = reader.ReadBoolean(); joint.Local = reader.ReadBoolean(); SkeletonIKBinding.Scalar(joint.Minimum); SkeletonIKBinding.Scalar(joint.Maximum); if (version == 2) joint.EditorGizmo = reader.ReadBoolean();
                 joints[i] = joint;
             }
             if (stream.Position != stream.Length) throw new InvalidDataException("Trailing IK joint bytes."); _joints = joints;

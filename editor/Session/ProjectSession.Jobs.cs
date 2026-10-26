@@ -82,13 +82,36 @@ public sealed partial class ProjectSession
             Expected(SessionDocumentKind.Scene, expectedSceneRevision);
             using var source = Decode(_storage, _state.Scene, PathFor(SessionDocumentKind.Scene), _state.Nodes);
             foreach (var node in Flatten(source))
-                if (node.GetType() != typeof(Node) && node.GetType() != typeof(Entity) && node.GetType() != typeof(Polygon) && node.GetType() != typeof(Line) && node.GetType() != typeof(Sprite))
+                if (node.GetType() != typeof(Node) && node.GetType() != typeof(Entity) && node.GetType() != typeof(Polygon) && node.GetType() != typeof(Line) && node.GetType() != typeof(Sprite) && node.GetType() != typeof(Skeleton) && node.GetType() != typeof(Bone))
                     throw new NotSupportedException($"Authoring preview has no passive projection for {node.GetType().Name}; run the frozen snapshot for actual gameplay output.");
+                else if (node is Skeleton skeleton) ValidatePreviewStack(skeleton.GetModificationStack(), 0, []);
             // Static built-in drawing only: no project classes, event connections or active gameplay node roles.
             var copy = source.Duplicate(0);
-            try { SceneOverlay.Apply(copy, _state.Nodes); return copy; }
+            try
+            {
+                SceneOverlay.Apply(copy, _state.Nodes);
+                foreach (var node in Flatten(copy)) if (node is Skeleton) node.ProcessMode = ProcessMode.Disabled;
+                return copy;
+            }
             catch { copy.Dispose(); throw; }
         }
         finally { _busy = false; }
+    }
+
+    private static void ValidatePreviewStack(SkeletonModificationStack? stack, int depth, HashSet<SkeletonModificationStack> visited)
+    {
+        if (stack is null) return;
+        if (depth >= 128) throw new NotSupportedException("Authoring preview modification graph exceeds its budget.");
+        if (!visited.Add(stack)) return;
+        if (visited.Count > 16384) throw new NotSupportedException("Authoring preview modification graph exceeds its budget.");
+        for (var i = 0; i < stack.ModificationCount; i++)
+        {
+            var mod = stack.GetModification(i);
+            if (mod is null) continue;
+            if (mod is not (SkeletonModificationLookAt or SkeletonModificationTwoBoneIK or SkeletonModificationCCDIK
+                or SkeletonModificationFABRIK or SkeletonModificationJiggle or SkeletonModificationPhysicalBones or SkeletonModificationStackHolder))
+                throw new NotSupportedException($"Authoring preview has no passive projection for modification {mod.GetType().Name}.");
+            if (mod is SkeletonModificationStackHolder holder) ValidatePreviewStack(holder.GetHeldModificationStack(), depth + 1, visited);
+        }
     }
 }

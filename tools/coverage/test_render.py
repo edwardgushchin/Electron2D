@@ -541,6 +541,12 @@ def main():
     assert " | Blocked | " in next(row for row in screen_rows if "property bool show_rect" in row)
     enabler_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenEnabler2D.md"].splitlines() if row.startswith("| [`")]
     assert len(enabler_rows) == 7 and all(" | Implemented | " in row for row in enabler_rows)
+    modification_rows = [row for row in pages[CLASS_PAGES / "SkeletonModification2D.md"].splitlines()
+                         if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(modification_rows) == 12 and all(" | Implemented | " in row for row in modification_rows)
+    assert all("skeletal-editor-gizmos.md" in row for row in modification_rows
+               if any(name in row for name in ("method _draw_editor_gizmo(", "method get_editor_draw_gizmo(",
+                                               "method set_editor_draw_gizmo(", "class SkeletonModification2D")))
     server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert "../../classes/PhysicsServer.md" in class_rows["PhysicsServer2D"]

@@ -47,59 +47,59 @@ internal sealed class ProjectWorkspace : Control
         if (selection.NodeID == Guid.Empty) _human.SelectNode(_scene.Nodes.FirstOrDefault(n => n.CanEdit && n.Transform.HasValue)?.ID ?? _scene.Nodes[0].ID, _scene.Revision, selection.Revision);
         try
         {
-        var theme = new Theme { DefaultFont = regular, DefaultFontSize = 14 }; _resources.Add(theme); Theme = theme;
-        _code.AddThemeFontOverride("font", mono); _sessionCode.AddThemeFontOverride("font", mono);
-        _code.AddThemeFontSizeOverride("font_size", 14); _sessionCode.AddThemeFontSizeOverride("font_size", 14);
-        var layout = new VBoxContainer { Name = "Layout", Separation = 10 }; AddChild(layout); layout.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        var toolbar = new HBoxContainer { Name = "Toolbar", Separation = 8, CustomMinimumSize = new(0, 40) }; layout.AddChild(toolbar);
-        toolbar.AddChild(new Label(project.Name) { SizeFlagsHorizontal = SizeFlags.ExpandFill, ClipText = true });
-        AddButton(toolbar, "Save scene", "SaveScene", () => Save(SessionDocumentKind.Scene));
-        AddButton(toolbar, "Save code", "SaveCode", () => Save(SessionDocumentKind.Code));
-        toolbar.AddChild(_history);
-        AddButton(toolbar, "Undo", "Undo", () => PlayHistory(false, true)); AddButton(toolbar, "Redo", "Redo", () => PlayHistory(true, true));
-        var body = _body; body.Name = "Body"; body.SizeFlagsVertical = body.SizeFlagsHorizontal = SizeFlags.ExpandFill; layout.AddChild(body);
-        var tree = Column("Scene"); tree.AddChild(_sceneStatus); tree.AddChild(_nodes);
-        var sceneReconcile = new HBoxContainer(); tree.AddChild(sceneReconcile);
-        AddButton(sceneReconcile, "Keep live", "KeepScene", () => Reconcile(SessionDocumentKind.Scene, SessionExternalResolution.KeepLive));
-        AddButton(sceneReconcile, "Reload disk", "ReloadScene", () => Reconcile(SessionDocumentKind.Scene, SessionExternalResolution.UseDisk));
-        body.AddChild(Panel(tree));
-        var main = _main; main.Name = "Main"; main.SizeFlagsHorizontal = main.SizeFlagsVertical = SizeFlags.ExpandFill; body.AddChild(main);
-        var center = new VSplitContainer { Name = "Center", SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill };
-        main.AddChild(center);
-        var authored = Column("Authored scene"); authored.AddChild(_previewStatus);
-        var preview = new SubViewportContainer { Name = "Preview", Stretch = true, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, CustomMinimumSize = new(300, 180) };
-        preview.AddChild(_viewport); authored.AddChild(preview); center.AddChild(Panel(authored));
-        var source = Column(project.CodeFile); source.AddChild(_codeStatus);
-        var sourceActions = new HBoxContainer(); source.AddChild(sourceActions);
-        AddButton(sourceActions, "Keep live", "KeepCode", () => Reconcile(SessionDocumentKind.Code, SessionExternalResolution.KeepLive));
-        AddButton(sourceActions, "Reload disk", "ReloadCode", () => Reconcile(SessionDocumentKind.Code, SessionExternalResolution.UseDisk));
-        _retry = AddButton(sourceActions, "Apply reviewed draft", "ApplyDraft", ApplyDraft); _discard = AddButton(sourceActions, "Discard draft", "DiscardDraft", DiscardDraft);
-        _retry.Visible = _discard.Visible = false;
-        var sources = new HSplitContainer { SizeFlagsVertical = SizeFlags.ExpandFill }; source.AddChild(sources); sources.AddChild(_code);
-        _conflictPane.AddChild(new Label("Current shared session — review before replacing")); _conflictPane.AddChild(_sessionCode); sources.AddChild(_conflictPane);
-        center.AddChild(Panel(source));
-        var inspector = Column("Inspector"); inspector.CustomMinimumSize = new(240, 0); inspector.AddChild(_selection);
-        inspector.AddChild(new Label("Position X")); inspector.AddChild(_x); inspector.AddChild(new Label("Position Y")); inspector.AddChild(_y);
-        inspector.AddChild(new Label("Snapshot execution"));
-        _mode.AddItem("Headless", 0); _mode.AddItem("GPU capture", 1); _mode.AddItem("Compatibility capture", 2); _mode.Select(1); inspector.AddChild(_mode);
-        inspector.AddChild(new Label("Frame budget")); inspector.AddChild(_frames);
-        var jobs = new HBoxContainer(); inspector.AddChild(jobs);
-        _build = AddButton(jobs, "Build", "Build", () => StartJob(SessionJobKind.Build)); _run = AddButton(jobs, "Run snapshot", "Run", () => StartJob(SessionJobKind.Run));
-        _cancel = AddButton(inspector, "Cancel job", "Cancel", () => _job?.Cancel());
-        inspector.AddChild(_jobStatus); inspector.AddChild(_captureStatus); inspector.AddChild(_capture);
-        AddButton(inspector, "Clear job results", "ClearResults", ClearResults);
-        var tabs = new TabContainer { Name = "InspectorTabs", CustomMinimumSize = new(280, 0), SizeFlagsVertical = SizeFlags.ExpandFill };
-        var inspectorPanel = Panel(inspector); inspectorPanel.Name = "Inspector"; tabs.AddChild(inspectorPanel);
-        _agent = new(project, session, _human, sdk, executorFactory); var agentPanel = Panel(_agent); agentPanel.Name = "Agent"; tabs.AddChild(agentPanel);
-        main.AddChild(tabs);
-        _feedback.Name = "Feedback"; _feedback.ClipText = true; _feedback.CustomMinimumSize = new(0, 28); layout.AddChild(_feedback);
-        _nodes.ItemSelected += SelectNode; _nodes.NothingSelected += SelectNode;
-        _codeBuffer = _human.BindCodeBuffer(ReadPendingSource, RejectSource);
-        _code.TextChanged += EditSource; _code.HistoryRequested = redo => PlayHistory(redo, false);
-        _x.ValueChanged += value => EditPosition(value, true); _y.ValueChanged += value => EditPosition(value, false);
-        _session.Changed += Changed;
-        foreach (var label in new[] { _selection, _sceneStatus, _codeStatus, _previewStatus, _jobStatus, _captureStatus }) label.ClipText = true;
-        RefreshViews();
+            var theme = new Theme { DefaultFont = regular, DefaultFontSize = 14 }; _resources.Add(theme); Theme = theme;
+            _code.AddThemeFontOverride("font", mono); _sessionCode.AddThemeFontOverride("font", mono);
+            _code.AddThemeFontSizeOverride("font_size", 14); _sessionCode.AddThemeFontSizeOverride("font_size", 14);
+            var layout = new VBoxContainer { Name = "Layout", Separation = 10 }; AddChild(layout); layout.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+            var toolbar = new HBoxContainer { Name = "Toolbar", Separation = 8, CustomMinimumSize = new(0, 40) }; layout.AddChild(toolbar);
+            toolbar.AddChild(new Label(project.Name) { SizeFlagsHorizontal = SizeFlags.ExpandFill, ClipText = true });
+            AddButton(toolbar, "Save scene", "SaveScene", () => Save(SessionDocumentKind.Scene));
+            AddButton(toolbar, "Save code", "SaveCode", () => Save(SessionDocumentKind.Code));
+            toolbar.AddChild(_history);
+            AddButton(toolbar, "Undo", "Undo", () => PlayHistory(false, true)); AddButton(toolbar, "Redo", "Redo", () => PlayHistory(true, true));
+            var body = _body; body.Name = "Body"; body.SizeFlagsVertical = body.SizeFlagsHorizontal = SizeFlags.ExpandFill; layout.AddChild(body);
+            var tree = Column("Scene"); tree.AddChild(_sceneStatus); tree.AddChild(_nodes);
+            var sceneReconcile = new HBoxContainer(); tree.AddChild(sceneReconcile);
+            AddButton(sceneReconcile, "Keep live", "KeepScene", () => Reconcile(SessionDocumentKind.Scene, SessionExternalResolution.KeepLive));
+            AddButton(sceneReconcile, "Reload disk", "ReloadScene", () => Reconcile(SessionDocumentKind.Scene, SessionExternalResolution.UseDisk));
+            body.AddChild(Panel(tree));
+            var main = _main; main.Name = "Main"; main.SizeFlagsHorizontal = main.SizeFlagsVertical = SizeFlags.ExpandFill; body.AddChild(main);
+            var center = new VSplitContainer { Name = "Center", SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill };
+            main.AddChild(center);
+            var authored = Column("Authored scene"); authored.AddChild(_previewStatus);
+            var preview = new SubViewportContainer { Name = "Preview", Stretch = true, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, CustomMinimumSize = new(300, 180) };
+            preview.AddChild(_viewport); authored.AddChild(preview); center.AddChild(Panel(authored));
+            var source = Column(project.CodeFile); source.AddChild(_codeStatus);
+            var sourceActions = new HBoxContainer(); source.AddChild(sourceActions);
+            AddButton(sourceActions, "Keep live", "KeepCode", () => Reconcile(SessionDocumentKind.Code, SessionExternalResolution.KeepLive));
+            AddButton(sourceActions, "Reload disk", "ReloadCode", () => Reconcile(SessionDocumentKind.Code, SessionExternalResolution.UseDisk));
+            _retry = AddButton(sourceActions, "Apply reviewed draft", "ApplyDraft", ApplyDraft); _discard = AddButton(sourceActions, "Discard draft", "DiscardDraft", DiscardDraft);
+            _retry.Visible = _discard.Visible = false;
+            var sources = new HSplitContainer { SizeFlagsVertical = SizeFlags.ExpandFill }; source.AddChild(sources); sources.AddChild(_code);
+            _conflictPane.AddChild(new Label("Current shared session — review before replacing")); _conflictPane.AddChild(_sessionCode); sources.AddChild(_conflictPane);
+            center.AddChild(Panel(source));
+            var inspector = Column("Inspector"); inspector.CustomMinimumSize = new(240, 0); inspector.AddChild(_selection);
+            inspector.AddChild(new Label("Position X")); inspector.AddChild(_x); inspector.AddChild(new Label("Position Y")); inspector.AddChild(_y);
+            inspector.AddChild(new Label("Snapshot execution"));
+            _mode.AddItem("Headless", 0); _mode.AddItem("GPU capture", 1); _mode.AddItem("Compatibility capture", 2); _mode.Select(1); inspector.AddChild(_mode);
+            inspector.AddChild(new Label("Frame budget")); inspector.AddChild(_frames);
+            var jobs = new HBoxContainer(); inspector.AddChild(jobs);
+            _build = AddButton(jobs, "Build", "Build", () => StartJob(SessionJobKind.Build)); _run = AddButton(jobs, "Run snapshot", "Run", () => StartJob(SessionJobKind.Run));
+            _cancel = AddButton(inspector, "Cancel job", "Cancel", () => _job?.Cancel());
+            inspector.AddChild(_jobStatus); inspector.AddChild(_captureStatus); inspector.AddChild(_capture);
+            AddButton(inspector, "Clear job results", "ClearResults", ClearResults);
+            var tabs = new TabContainer { Name = "InspectorTabs", CustomMinimumSize = new(280, 0), SizeFlagsVertical = SizeFlags.ExpandFill };
+            var inspectorPanel = Panel(inspector); inspectorPanel.Name = "Inspector"; tabs.AddChild(inspectorPanel);
+            _agent = new(project, session, _human, sdk, executorFactory); var agentPanel = Panel(_agent); agentPanel.Name = "Agent"; tabs.AddChild(agentPanel);
+            main.AddChild(tabs);
+            _feedback.Name = "Feedback"; _feedback.ClipText = true; _feedback.CustomMinimumSize = new(0, 28); layout.AddChild(_feedback);
+            _nodes.ItemSelected += SelectNode; _nodes.NothingSelected += SelectNode;
+            _codeBuffer = _human.BindCodeBuffer(ReadPendingSource, RejectSource);
+            _code.TextChanged += EditSource; _code.HistoryRequested = redo => PlayHistory(redo, false);
+            _x.ValueChanged += value => EditPosition(value, true); _y.ValueChanged += value => EditPosition(value, false);
+            _session.Changed += Changed;
+            foreach (var label in new[] { _selection, _sceneStatus, _codeStatus, _previewStatus, _jobStatus, _captureStatus }) label.ClipText = true;
+            RefreshViews();
         }
         catch (Exception error) { try { Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); } throw; }
     }
@@ -223,6 +223,7 @@ internal sealed class ProjectWorkspace : Control
                 try
                 {
                     var next = _human.CreatePreview(scene.Revision); _instance?.Dispose(); _instance = next; _viewport.AddChild(next);
+                    if (Tree is { } treeOwner) treeOwner.EditedSceneRoot = next;
                     _previewStatus.Text = "Authored scene · r" + scene.Revision;
                 }
                 catch (NotSupportedException error) { _instance?.Dispose(); _instance = null; _previewStatus.Text = error.Message; }
@@ -237,6 +238,15 @@ internal sealed class ProjectWorkspace : Control
         finally { _binding = false; }
         BindInspector(); _refresh = false;
     }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+        if (!reversed) base.OnNotification(what);
+        if (what == NotificationPostEnterTree && _instance is { IsInsideTree: true } && Tree is { } owner)
+            owner.EditedSceneRoot = _instance;
+        if (reversed) base.OnNotification(what);
+    }
+
     protected override void OnProcess(double delta)
     {
         base.OnProcess(delta); _poll += delta;

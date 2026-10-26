@@ -1,6 +1,8 @@
 # SkeletonModificationCCDIK
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
+
+[Editor gizmos](../components/skeletal-editor-gizmos.md) now use the actual edited-scene canvas owner, typed stored visibility, built-in/custom drawing and the shared editor preview. Numerical execution and broader acceptance remain separately qualified.
 
 - Declaration: `public sealed class SkeletonModificationCCDIK : SkeletonModification`
 - Source: [SkeletonModificationCCDIK.cs](../../src/Scene/Resources/SkeletonModificationCCDIK.cs)
@@ -71,6 +73,9 @@ rig.SetModificationStack(stack); // Existing scene context.
 | `public System.Void SetCCDIKJointConstraintInLocalSpace(System.Int32 jointIndex, System.Boolean value)` | [Sets whether limits use parent-relative rotation rather than canvas-world rotation.](#setccdikjointconstraintinlocalspace) |
 | `public System.Void SetCCDIKJointEnableConstraint(System.Int32 jointIndex, System.Boolean value)` | [Sets whether joint angle limits apply.](#setccdikjointenableconstraint) |
 | `public System.Void SetCCDIKJointRotateFromJoint(System.Int32 jointIndex, System.Boolean value)` | [Sets whether to aim the bone endpoint directly instead of rotating the tip-to-target offset.](#setccdikjointrotatefromjoint) |
+| `public System.Boolean GetCCDIKJointEditorDrawGizmo(System.Int32 jointIndex)` | [Editor drawing and lifetime contract.](#getccdikjointeditordrawgizmo) |
+| `protected override System.Void OnDrawEditorGizmo()` | [Editor drawing and lifetime contract.](#ondraweditorgizmo) |
+| `public System.Void SetCCDIKJointEditorDrawGizmo(System.Int32 jointIndex, System.Boolean drawGizmo)` | [Editor drawing and lifetime contract.](#setccdikjointeditordrawgizmo) |
 
 ## Member descriptions
 
@@ -326,6 +331,24 @@ Empty initially. Typically an Entity child of the final bone.
 
 Invalid indices/phase/nonfinite values throw ArgumentOutOfRangeException or ArgumentException before configuration changes. Disposed calls reject with ObjectDisposedException; attached off-owner mutation rejects with InvalidOperationException. Callback and arithmetic failures follow the restoration contract below. Scene references remain borrowed.
 
+### GetCCDIKJointEditorDrawGizmo
+
+`public System.Boolean GetCCDIKJointEditorDrawGizmo(System.Int32 jointIndex)`
+
+Returns the stored flag for a valid joint slot; new and version-one archived joints default true. See the [editor drawing contract](../components/skeletal-editor-gizmos.md).
+
+### OnDrawEditorGizmo
+
+`protected override System.Void OnDrawEditorGizmo()`
+
+Records each selected visible joint's configured angle guide, including local/global constraints and interval inversion. See the [editor drawing contract](../components/skeletal-editor-gizmos.md).
+
+### SetCCDIKJointEditorDrawGizmo
+
+`public System.Void SetCCDIKJointEditorDrawGizmo(System.Int32 jointIndex, System.Boolean drawGizmo)`
+
+Changes the stored flag for a valid joint slot on the bound scene owner and emits Changed. Invalid indices preserve configuration. See the [editor drawing contract](../components/skeletal-editor-gizmos.md).
+
 ## Lifecycle, errors, storage and verification
 
 Stacks borrow the resource and scene selections. Setters follow the bound skeleton owner; copied configuration is guarded by the resource gate. Joint/target bindings are weak and refresh on scene path, hierarchy/rest, owner or selection changes. Missing/renamed/orphan selections do not fall back to a stale index. A bound numeric setter validates the current index and authors its relative path, retaining the bone through later reordering; a detached setter keeps its nonnegative deferred index. Initial unselected indices are -1. Paths are bounded to 65536 characters and contain no NUL; counts range from zero to 4096; numeric inputs must be finite. Invalid setters/archives preserve configuration. Attached disposal and stack ownership follow SkeletonModification/Stack.
@@ -334,6 +357,6 @@ Enabled and ExecutionMode retain base semantics. Solvers request transient local
 
 Built-in exact factories and stored descriptors restore settings through .e2dscene/PackedScene. Chains use a versioned blob with joint selection and scalar/vector policies, bounded to 64 MiB and validated completely before replacement. Copying owns independent joint records and drops transient scratch/binding. PackedScene already force-copies complete stack graphs per rig, preserving resource aliases and instance-owned lifetime. Custom resource consumers still use the existing typed registration contract.
 
-SkeletonIKTests exercises actual target endpoints, bend/length/distance constraints, mirrors/endpoint angles, local/global/inverted CCD limits, magnets, final orientation, three-joint convergence, degenerate and missing selections, copied/fresh-process scenes, failed-pass rollback and 128 prepared iterations per solver with zero managed bytes. Engine.Run hosts verify all three solvers' deformed Polygon pixels on current Linux GPU/compatibility and 64 prepared render/solve intervals with zero managed bytes. Native allocator activity, large-rig performance, foreign platforms and owner acceptance remain unverified. Editor gizmos retain their exact authoring trigger; server palettes and general Mesh skin channels now execute through the mesh component.
+SkeletonIKTests exercises actual target endpoints, bend/length/distance constraints, mirrors/endpoint angles, local/global/inverted CCD limits, magnets, final orientation, three-joint convergence, degenerate and missing selections, copied/fresh-process scenes, failed-pass rollback and 128 prepared iterations per solver with zero managed bytes. Engine.Run hosts verify all three solvers' deformed Polygon pixels on current Linux GPU/compatibility and 64 prepared render/solve intervals with zero managed bytes. Native allocator activity, large-rig performance, foreign platforms and owner acceptance remain unverified. Editor drawing follows the [implemented authoring contract](../components/skeletal-editor-gizmos.md); server palettes and general Mesh skin channels now execute through the mesh component.
 
 See [skeletal animation](../components/skeletal-animation.md), [Skeleton](Skeleton.md), [SkeletonModificationStack](SkeletonModificationStack.md) and [ADR 0092](../decisions/mesh.md#adr-0092).

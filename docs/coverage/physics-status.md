@@ -74,8 +74,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [Object](classes/Object.md) | — | 38 | 3 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
-| [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 440 | 6 | 5 | 3 | 37 |
+| [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
+| **Total** | | 444 | 5 | 2 | 3 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -91,10 +91,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |
 | [`Object::signal:script_changed()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`class:Resource`](classes/Resource.md) | Partial | Typed managed resource lifecycle, paths, IDs, local scenes, RID dispatch and copy/duplication operations execute under ADR 0013. See docs/components/resources.md#copy-and-duplicate-contract for the completed generic copy family and physical resource consumers. Full inherited Object live-script binding/initialization and class acceptance remain open on their declaring rows; these are not missing duplication-session behavior. |
-| [`class:SkeletonModification2D`](classes/SkeletonModification2D.md) | Partial | All runtime callbacks, setup/phase/configuration and angle constraints execute. Only editor gizmo callbacks/state require the first actual editor canvas-gizmo owner; no inert runtime switch. |
-| [`SkeletonModification2D::method:_draw_editor_gizmo()`](classes/SkeletonModification2D.md) | Blocked | Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented. |
-| [`SkeletonModification2D::method:get_editor_draw_gizmo()`](classes/SkeletonModification2D.md) | Blocked | Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented. |
-| [`SkeletonModification2D::method:set_editor_draw_gizmo(bool:)`](classes/SkeletonModification2D.md) | Blocked | Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented. |
 
 ## Cross-domain physics consumers
 

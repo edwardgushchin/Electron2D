@@ -1,6 +1,8 @@
 # SkeletonModificationStack
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
+
+[Editor gizmos](../components/skeletal-editor-gizmos.md) now use the actual edited-scene canvas owner, typed stored visibility, built-in/custom drawing and the shared editor preview. Numerical execution and broader acceptance remain separately qualified.
 
 - Declaration: `public sealed class SkeletonModificationStack : Resource`
 - Source: [SkeletonModificationStack.cs](../../src/Scene/Resources/SkeletonModificationStack.cs)
@@ -202,7 +204,7 @@ One initially; valid range zero through one.
 
 Scene-bound configuration follows the skeleton's owner thread; prepared pose execution also allows its current processing group. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
 
-SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, physics synchronization and general Mesh skin channels retain exact coverage triggers.
+SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Broader physics synchronization and Mesh skin acceptance retain their own current contracts. Editor drawing is recorded in the linked gizmo contract.
 
 See [skeletal animation](../components/skeletal-animation.md), [the mesh decision](../decisions/mesh.md#adr-0092) and the linked base-class lifecycle.
 

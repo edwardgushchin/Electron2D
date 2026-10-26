@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Borrows and executes a child modification stack on the same skeleton and matching phase.</summary>
 /// <remarks>Child strength is independent of parent strength. Graph copies always duplicate the held stack,
 /// preserving aliases. Cycles and excessive nesting reject; shared child binding lasts through its final holder.</remarks>
-public sealed class SkeletonModificationStackHolder : SkeletonModification
+public sealed partial class SkeletonModificationStackHolder : SkeletonModification
 {
     private SkeletonModificationStack? _held;
     private WeakReference<SkeletonModificationStack>? _bound;

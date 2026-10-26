@@ -779,7 +779,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Skeleton2D](classes/Skeleton2D.md) | Node2D | Implemented | 9 |
 | [Skeleton3D](classes/Skeleton3D.md) | Node3D | Excluded | 63 |
 | [SkeletonIK3D](classes/SkeletonIK3D.md) | SkeletonModifier3D | Excluded | 14 |
-| [SkeletonModification2D](classes/SkeletonModification2D.md) | Resource | Partial | 11 |
+| [SkeletonModification2D](classes/SkeletonModification2D.md) | Resource | Implemented | 11 |
 | [SkeletonModification2DCCDIK](classes/SkeletonModification2DCCDIK.md) | SkeletonModification2D | Implemented | 17 |
 | [SkeletonModification2DFABRIK](classes/SkeletonModification2DFABRIK.md) | SkeletonModification2D | Implemented | 10 |
 | [SkeletonModification2DJiggle](classes/SkeletonModification2DJiggle.md) | SkeletonModification2D | Implemented | 28 |
