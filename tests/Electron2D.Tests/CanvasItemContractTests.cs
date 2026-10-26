@@ -179,6 +179,7 @@ internal static class CanvasItemContractTests
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, separate); Engine.MaxFPS = 240;
         try
         {
+            using var trace = PhysicsAllocationTrace.Open(backend, tagDomain: 0x2_0000_0000UL);
             using var world = new World(backend); using var shape = new CircleShape { Radius = 2 }; using var material = new CanvasItemMaterial();
             using var shader = renderer == "gpu" ? LoadInstanceShader() : null;
             using var shaderMaterial = shader is null ? null : new ShaderMaterial { Shader = shader };
@@ -189,19 +190,33 @@ internal static class CanvasItemContractTests
             body.AddChild(new CollisionShape { Shape = shape }); writer.AddChild(body);
             var frame = 0; var writes = 0; var ownerThread = Environment.CurrentManagedThreadId;
             long before = 0, allBefore = 0, active = 0, activeAll = 0, idle = 0, idleAll = 0;
+            var samples = new (long Owner, long All, long Worker, int Thread, int GC0, int GC1, int GC2)[128];
+            var traceActive = false; var gc0 = 0; var gc1 = 0; var gc2 = 0;
             writer.Write = () =>
             {
-                Check(Environment.CurrentManagedThreadId != ownerThread, "Native metadata authoring runs on a real worker");
-                if (frame >= 160) return;
-                // Prepare custom-pipeline eviction and reconstruction before measuring one-frame visibility cycles.
-                Author(body, (frame & 1) != 0, material); body.VisibilityLayer = frame is >= 30 and < 35 || (frame & 3) == 3 ? 2u : 1u; writes++;
-                if (shaderMaterial is not null)
+                var workerBefore = GC.GetAllocatedBytesForCurrentThread();
+                try
                 {
-                    body.Material = shaderMaterial; body.UseParentMaterial = false;
-                    body.SetInstanceShaderParameter<Color>("tint", (frame & 1) != 0 ? Colors.White : Colors.Red);
-                    body.SetInstanceShaderParameter<bool>("enabled", true);
-                    body.SetInstanceShaderParameter<Vector2i>("channel", new(1, 1));
-                    body.SetInstanceShaderParameter<uint>("number", 2u);
+                    Check(Environment.CurrentManagedThreadId != ownerThread, "Native metadata authoring runs on a real worker");
+                    if (frame >= 160) return;
+                    // Prepare custom-pipeline eviction and reconstruction before measuring one-frame visibility cycles.
+                    Author(body, (frame & 1) != 0, material); body.VisibilityLayer = frame is >= 30 and < 35 || (frame & 3) == 3 ? 2u : 1u; writes++;
+                    if (shaderMaterial is not null)
+                    {
+                        body.Material = shaderMaterial; body.UseParentMaterial = false;
+                        body.SetInstanceShaderParameter<Color>("tint", (frame & 1) != 0 ? Colors.White : Colors.Red);
+                        body.SetInstanceShaderParameter<bool>("enabled", true);
+                        body.SetInstanceShaderParameter<Vector2i>("channel", new(1, 1));
+                        body.SetInstanceShaderParameter<uint>("number", 2u);
+                    }
+                }
+                finally
+                {
+                    if (frame >= 96)
+                    {
+                        samples[frame - 96].Worker = GC.GetAllocatedBytesForCurrentThread() - workerBefore;
+                        samples[frame - 96].Thread = Environment.CurrentManagedThreadId;
+                    }
                 }
             };
             window.Ready += _ =>
@@ -210,8 +225,15 @@ internal static class CanvasItemContractTests
                 RenderingServer.SetDefaultClearColor(Colors.Black);
                 RenderingServer.FramePostDraw += () =>
                 {
-                    if (frame is >= 96 and < 160) { active += GC.GetAllocatedBytesForCurrentThread() - before; activeAll += GC.GetTotalAllocatedBytes(true) - allBefore; }
-                    if (frame >= 160) { idle += GC.GetAllocatedBytesForCurrentThread() - before; idleAll += GC.GetTotalAllocatedBytes(true) - allBefore; }
+                    if (frame >= 96)
+                    {
+                        ref var sample = ref samples[frame - 96];
+                        sample.Owner = GC.GetAllocatedBytesForCurrentThread() - before; sample.All = GC.GetTotalAllocatedBytes(true) - allBefore;
+                        if (traceActive) { trace!.End(); traceActive = false; }
+                        sample.GC0 = GC.CollectionCount(0) - gc0; sample.GC1 = GC.CollectionCount(1) - gc1; sample.GC2 = GC.CollectionCount(2) - gc2;
+                        if (frame < 160) { active += sample.Owner; activeAll += sample.All; }
+                        else { idle += sample.Owner; idleAll += sample.All; }
+                    }
                     if (frame is 0 or 1 or 3 or 223)
                     {
                         using var image = window.GetTexture().GetImage()!;
@@ -226,20 +248,38 @@ internal static class CanvasItemContractTests
                     }
                     if (frame == 95) AllocationWarmupCheck.Collect();
                     if (++frame != 224) return;
-                    Check(active == 0 && activeAll == 0 && idle == 0 && idleAll == 0 && writes == 160, $"Complete native scheduling/physics/process/render intervals allocated active={active}/{activeAll}, idle={idle}/{idleAll} B");
+                    long worker = 0;
+                    for (var i = 0; i < samples.Length; i++)
+                    {
+                        worker += samples[i].Worker;
+                        if (samples[i].Owner != 0 || samples[i].All != 0 || samples[i].Worker != 0)
+                            Console.WriteLine($"Canvas allocation frame {i + 96}: owner/all/worker={samples[i].Owner}/{samples[i].All}/{samples[i].Worker}, owner/worker threads={ownerThread}/{samples[i].Thread}, GC={samples[i].GC0}/{samples[i].GC1}/{samples[i].GC2}, trace={trace?.Tag(500UL + (ulong)i) ?? 0}, runtime={Environment.Version}, serverGC={System.Runtime.GCSettings.IsServerGC}.");
+                    }
+                    Check(active == 0 && activeAll == 0 && idle == 0 && idleAll == 0 && worker == 0 && writes == 160, $"Complete native scheduling/physics/process/render intervals allocated active={active}/{activeAll}, idle={idle}/{idleAll}, authoring-worker={worker} B");
                     Check(body.Position.X > 24.05f && PhysicsServer.SpaceGetTick(world.Space) > 2 && world.PhysicsBackend == backend && world.PhysicsFallbackReason is null, "Metadata authoring retains actual selected-backend motion without fallback");
                     window.Tree!.Quit();
                 };
             };
-            Check(Engine.Run((_, tick) =>
+            int result;
+            try
             {
-                if (tick == 1)
+                result = Engine.Run((_, tick) =>
                 {
-                    using var mouse = new InputEventMouseMotion { Position = new(8, 8), GlobalPosition = new(8, 8) }; window.PushInput(mouse, true);
-                }
-                if (frame >= 96) Check(window.Size == new Vector2i(320, 240), "Native allocation intervals require the prepared client size");
-                before = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
-            }, window) == 0 && frame == 224, "The complete native canvas metadata loop finishes");
+                    if (tick == 1)
+                    {
+                        using var mouse = new InputEventMouseMotion { Position = new(8, 8), GlobalPosition = new(8, 8) }; window.PushInput(mouse, true);
+                    }
+                    if (frame >= 96)
+                    {
+                        Check(window.Size == new Vector2i(320, 240), "Native allocation intervals require the prepared client size");
+                        gc0 = GC.CollectionCount(0); gc1 = GC.CollectionCount(1); gc2 = GC.CollectionCount(2);
+                        if (trace is not null) { trace.Begin(trace.Tag(500UL + (ulong)(frame - 96))); traceActive = true; }
+                    }
+                    before = GC.GetAllocatedBytesForCurrentThread(); allBefore = GC.GetTotalAllocatedBytes(true);
+                }, window);
+            }
+            finally { if (traceActive) trace!.End(); }
+            Check(result == 0 && frame == 224, "The complete native canvas metadata loop finishes");
             Console.WriteLine($"Canvas metadata native {renderer}/{backend}/{separate}: 160 worker updates, actual pixels, moving physics; active={active}/{activeAll}, idle={idle}/{idleAll} B in 128 complete intervals.");
         }
         finally

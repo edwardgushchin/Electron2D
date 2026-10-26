@@ -278,6 +278,8 @@ not change those payloads and are not part of this evidence cohort.
 
 ## Reading future failures
 
+[Canvas frame attribution](canvas-item-contract.md#allocation-failure-attribution) uses the same calibrated profiler around both initial/final counters, with separate owner/authoring-worker observations, per-frame GC context and a deliberate 32-byte worker control. The older untraced window result remains open; fresh controls do not retroactively qualify it.
+
 Keep the strict counters and raw failures. Record runtime, source/payload hashes,
 thread identity, measurement boundaries and GC context. Use independently
 calibrated object events to locate the producer when counter-only evidence is
