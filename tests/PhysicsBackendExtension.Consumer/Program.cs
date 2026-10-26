@@ -213,6 +213,7 @@ else if (args.Contains("--history")) BackendChecks.RunHistory(args.Contains("--g
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
 else if (args.Contains("--joint-response")) BackendChecks.RunJointResponse(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null, args.Contains("--threaded"));
+else if (args.Contains("--collision-objects")) BackendChecks.RunCollisionObjects(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU : Electron2D.PhysicsServer.Backend.CPU, args.Contains("--threaded"));
 else if (args.Contains("--shape-owners")) BackendChecks.RunShapeOwners(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--picking")) BackendChecks.RunPicking(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :

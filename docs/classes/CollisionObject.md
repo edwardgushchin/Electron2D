@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 ## Disabled body role recovery
 
@@ -78,7 +78,7 @@ Changing the policy while disabled applies it immediately. Entry, reparent and r
 
 ## Limits and verification
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Collision priority and [viewport pointer callbacks/events](../components/physics-picking.md) now execute; complete public cross-backend shape-owner/disable conformance remains open.
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Collision priority and [viewport pointer callbacks/events](../components/physics-picking.md) now execute; the [complete declared contract](../components/physics-collision-object-contract.md) now has composed CPU/GPU CLR/strict NativeAOT owner/separate-thread qualification. Inherited gaps, native heap, foreign platforms and full-goal performance/acceptance remain open.
 
 ## Shape-owner example
 

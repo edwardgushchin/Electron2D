@@ -174,7 +174,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ClassDB](classes/ClassDB.md) | Object | Excluded | 36 |
 | [CodeEdit](classes/CodeEdit.md) | TextEdit | Partial | 145 |
 | [CodeHighlighter](classes/CodeHighlighter.md) | SyntaxHighlighter | Implemented | 21 |
-| [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Partial | 45 |
+| [CollisionObject2D](classes/CollisionObject2D.md) | Node2D | Implemented | 45 |
 | [CollisionObject3D](classes/CollisionObject3D.md) | Node3D | Excluded | 36 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Implemented | 9 |
 | [CollisionPolygon3D](classes/CollisionPolygon3D.md) | Node3D | Excluded | 6 |

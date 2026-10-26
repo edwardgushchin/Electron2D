@@ -915,7 +915,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OWNER_DISABLE_CONTRACT")
 {
     foreach (var backend in ownerBackend == "cpu" ? new[] { PhysicsServer.Backend.CPU } : new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
     {
-        ShapeOwnerTests.Run(backend); CollisionDisableModeTests.Run(backend);
+        BackendChecks.RunCollisionObjects(backend, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_THREAD") == "1");
     }
     return;
 }
@@ -1962,9 +1962,8 @@ RigidBodyContactTests.Run(); RigidBodyContactTests.Run(PhysicsServer.Backend.GPU
 PhysicsBodyStateTests.Run(); PhysicsBodyStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerStateTests.Run(); PhysicsServerStateTests.Run(PhysicsServer.Backend.GPU);
 PhysicsContactImpulseTests.Run(); PhysicsContactImpulseTests.Run(PhysicsServer.Backend.GPU);
-ShapeOwnerTests.Run(); ShapeOwnerTests.Run(PhysicsServer.Backend.GPU);
+BackendChecks.RunCollisionObjects(PhysicsServer.Backend.CPU); BackendChecks.RunCollisionObjects(PhysicsServer.Backend.GPU);
 ShapePairEventTests.Run(); ShapePairEventTests.Run(PhysicsServer.Backend.GPU);
-CollisionDisableModeTests.Run(); CollisionDisableModeTests.Run(PhysicsServer.Backend.GPU);
 PhysicsMassProfileTests.Run();
 PhysicsMassProfileTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerForceTests.Run(); PhysicsServerForceTests.Run(PhysicsServer.Backend.GPU);

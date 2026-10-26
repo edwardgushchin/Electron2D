@@ -30,7 +30,7 @@ internal static class CollisionDisableModeTests
             (int)CollisionDisableMode.KeepActive == 2, "Stored defaults and enum values.");
         using var tree = new SceneTree(root);
         Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "The complete scene uses the explicitly selected physics backend.");
-        Check(!body.HasBackend && removedArea.Backend.ShapeCount == 0 && independent.HasBackend,
+        Check(!Attached(body) && !Attached(removedArea) && Attached(independent),
             "Disabled inherited entry omits bodies/areas; an explicit process mode breaks inheritance.");
         branch.ProcessMode = ProcessMode.Pausable;
         using var point = new PhysicsPointQueryParameters { Position = Vector2.Zero };
@@ -38,30 +38,30 @@ internal static class CollisionDisableModeTests
         Check(direct.IntersectPoint(point).Any(hit => hit.ColliderRID == rid), "Enabling restores query membership immediately.");
         var view = PhysicsServer.BodyGetDirectState(rid)!;
         tree.Paused = true;
-        Check(body.HasBackend, "Pausing alone does not invoke a disable policy.");
+        Check(Attached(body), "Pausing alone does not invoke a disable policy.");
         tree.Paused = false;
         tree.PhysicsFrame(1d / 60);
         var exits = 0; var shapeExits = 0;
         observer.BodyExited += _ => exits++;
         observer.BodyShapeExited += (_, _, _, _) => shapeExits++;
         branch.ProcessMode = ProcessMode.Disabled;
-        Check(exits == 1 && shapeExits == 1 && !observer.HasOverlappingBodies() && !body.HasBackend &&
+        Check(exits == 1 && shapeExits == 1 && !observer.HasOverlappingBodies() && !Attached(body) &&
             !direct.IntersectPoint(point).Any(hit => hit.ColliderRID == rid), "Remove clears peer pairs and query membership synchronously.");
         Reject<InvalidOperationException>(() => _ = view.Transform);
         Check(body.GetRID() == rid && body.GetShapeOwners()[0] == owner && body.ShapeOwnerGetShapeCount(owner) == 1,
             "RID, owners and borrowed geometry survive removal.");
         body.DisableMode = CollisionDisableMode.KeepActive;
-        Check(body.HasBackend && !ReferenceEquals(view, PhysicsServer.BodyGetDirectState(rid)),
+        Check(Attached(body) && !ReferenceEquals(view, PhysicsServer.BodyGetDirectState(rid)),
             "Changing a disabled policy reattaches with a new live view.");
         body.LinearVelocity = new(30, 0); tree.PhysicsFrame(1d / 60);
         Check(body.Position.X > 0.4f, "KeepActive continues dynamics with disabled node callbacks.");
         body.DisableMode = CollisionDisableMode.Remove;
         branch.RemoveChild(body); body.ProcessMode = ProcessMode.Inherit; root.AddChild(body);
-        Check(body.HasBackend, "Reparenting out of a disabled ancestor restores inherited participation.");
+        Check(Attached(body), "Reparenting out of a disabled ancestor restores inherited participation.");
         body.Notify(Node.NotificationDisabled);
-        Check(body.HasBackend, "Manual notification cannot fake effective disabled processing.");
+        Check(Attached(body), "Manual notification cannot fake effective disabled processing.");
         Reject<ArgumentOutOfRangeException>(() => body.DisableMode = (CollisionDisableMode)99);
-        Check(body.DisableMode == CollisionDisableMode.Remove && body.HasBackend, "Invalid policy rejects before mutation.");
+        Check(body.DisableMode == CollisionDisableMode.Remove && Attached(body), "Invalid policy rejects before mutation.");
         Check(Task.Run(() => Capture(() => body.DisableMode = CollisionDisableMode.KeepActive)).Result is InvalidOperationException,
             "Attached policies enforce scene owner-thread mutation.");
     }
@@ -106,7 +106,7 @@ internal static class CollisionDisableModeTests
             "Enabling never unfreezes a user-frozen body.");
         support.Freeze = false;
         support.ProcessMode = ProcessMode.Disabled; support.DisableMode = CollisionDisableMode.Remove;
-        Check(!support.HasBackend, "Changing MakeStatic to Remove detaches.");
+        Check(!Attached(support), "Changing MakeStatic to Remove detaches.");
         support.LinearVelocity = new(25, 0); support.GravityScale = 0;
         support.DisableMode = CollisionDisableMode.KeepActive;
         tree.PhysicsFrame(1d / 60);
@@ -178,7 +178,7 @@ internal static class CollisionDisableModeTests
         Action<Entity> fail = _ => throw new ApplicationException("departure");
         sensor.BodyExited += fail;
         Check(Capture(() => branch.ProcessMode = ProcessMode.Disabled) is AggregateException &&
-            !first.HasBackend && !second.HasBackend && !sensor.HasOverlappingBodies(),
+            !Attached(first) && !Attached(second) && !sensor.HasOverlappingBodies(),
             "A throwing departure subscriber cannot skip remaining inherited disable transitions.");
         sensor.BodyExited -= fail;
         branch.ProcessMode = ProcessMode.Pausable;
@@ -194,9 +194,9 @@ internal static class CollisionDisableModeTests
         };
         Add(poseMutation, circle); root.AddChild(poseMutation); tree.PhysicsFrame(1d / 60);
         Check(poseMutation.Rejected && poseMutation.ProcessMode == ProcessMode.Inherit &&
-            poseMutation.DisableMode == CollisionDisableMode.Remove && !poseMutation.Freeze && poseMutation.HasBackend,
+            poseMutation.DisableMode == CollisionDisableMode.Remove && !poseMutation.Freeze && Attached(poseMutation),
             "Solver pose callbacks reject policy/process/freeze changes before replacing stored state.");
-        Check(hook.Called && !hook.HasBackend, "Post-solver integration may disable its own object after solver ownership ends.");
+        Check(hook.Called && !Attached(hook), "Post-solver integration may disable its own object after solver ownership ends.");
         var packedRoot = new SubViewport { World = world };
         var packedBody = new RigidBody { DisableMode = CollisionDisableMode.MakeStatic, ProcessMode = ProcessMode.Disabled };
         packedRoot.AddChild(packedBody); packedBody.Owner = packedRoot;
@@ -257,6 +257,9 @@ internal static class CollisionDisableModeTests
             ProcessMode = ProcessMode.Disabled;
         }
     }
+
+    private static bool Attached(CollisionObject collider) =>
+        (collider is Area ? PhysicsServer.AreaGetSpace(collider.GetRID()) : PhysicsServer.BodyGetSpace(collider.GetRID())) != default;
 
     private static void Add(CollisionObject collider, Shape shape) => collider.ShapeOwnerAddShape(collider.CreateShapeOwner(null), shape);
     private static Exception? Capture(Action action) { try { action(); return null; } catch (Exception error) { return error; } }

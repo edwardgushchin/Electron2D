@@ -6478,8 +6478,8 @@
       "godot": [
         "class:CollisionObject2D"
       ],
-      "state": "Partial",
-      "reason": "Scene/server ownership, filtering, shape owners, disable modes and pointer delivery execute. The complete existing ShapeOwnerTests and CollisionDisableModeTests now use explicitly selected CPU/GPU worlds and public mode/velocity/field assertions; pointer delivery also runs public CPU/GPU worlds (ADR 0099). Separate registered-owner read/lifecycle checks cover all Body siblings and Area. Inherited API gaps and broader solver/extension acceptance remain open on their declaring families."
+      "state": "Implemented",
+      "reason": "Complete declared CollisionObject contract: all 45 pinned members are applicable and already mapped; the abstract class now has composed public CPU/GPU CLR/strict NativeAOT owner/separate-thread qualification. Interleaved repeated-resource slots retain query/event indices through structural removal, group disabling, whole-object Remove, edits while removed, KeepActive/MakeStatic and restored sibling roles/sensing. All six body/Area siblings execute, including a genuinely active Skeleton-bound PhysicalBone. Full ShapeOwnerTests/CollisionDisableModeTests, tree-less owner reads, picking and priority checks retain 9216 measured complete frames across 80 strict 0/0 owner/all-thread allocation intervals. Disable tests use public attachment observations. See docs/components/physics-collision-object-contract.md and bin/physics-collision-object/2026-10-26/validation.json. Inherited rows remain open on their declaring families; native heap, foreign platforms, complete solver/extension and whole-goal performance/acceptance are separate."
     },
     {
       "godot": [
