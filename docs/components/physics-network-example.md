@@ -2,6 +2,63 @@
 
 Last updated: 2026-10-26
 
+## Native window timing diagnosis, 2026-10-26
+
+Seven additional strict NativeAOT GPU-window sessions pass the existing public
+network checks: 900 authority ticks, late admission at 310, 39 actors, all three
+joint families, impaired transport, lifecycle and convergence. Their 21 simulation
+participants complete **7011 warmed ordinary steps** and **32278 warmed replay
+intervals**, all at **0/0 owner/all-thread managed bytes**. Numerical tolerances,
+precise allocation reads and workload are unchanged. Executable capture checks
+pass; these seven new PNGs have not received a separate human visual review.
+Only GPU participants map NVIDIA, no software GPU or CoreCLR is observed, CPU
+participants verify denied GPU startup, and kernel intervals contain no new Xid.
+
+One immutable diagnostic executable runs the accessibility setting in ABBA order.
+The host selects the existing public setting before starting the unchanged
+application; it adds no production setting or default change.
+
+| Accessibility setting / order | FPS | Frame p50 / p95 / p99, ms |
+| --- | ---: | --- |
+| Auto / first | 18.3025 | 8.1897 / 134.6262 / 211.7055 |
+| Disabled / first | 20.9799 | 7.3123 / 119.8390 / 172.3952 |
+| Disabled / second | 25.7602 | 7.0184 / 106.7389 / 139.6195 |
+| Auto / second | 17.6850 | 9.0163 / 130.1716 / 172.8007 |
+
+This does **not** establish an accessibility performance defect: external process
+CPU activity varies between 1.34 and 3.64 logical cores during these sessions,
+including concurrent compilation. A later read of the desktop accessibility flag
+is false, but that is not a per-session startup observation. Two more Auto runs
+start after five quiet samples but encounter new background builds, averaging
+4.35 and 3.72 external CPU cores. Their 17.8467 and 23.4698 FPS are rejected as
+quiet performance samples; their functional checks still pass. No other task's
+process or global desktop setting is changed.
+
+A separate instrumented executable times every existing precise
+`GC.GetTotalAllocatedBytes(true)` call at its five source sites. It retains all
+reads and zero-byte assertions. The GPU participant's 7856 calls total
+**15.159028 ms**, **0.050316%** of its active interval; the window site's 888 calls
+account for 2.608040 ms. This measured cost does not explain the long frames.
+The implementation of the pinned [.NET 10.0.1 NativeAOT precise counter](https://raw.githubusercontent.com/dotnet/runtime/v10.0.1/src/coreclr/nativeaot/Runtime/GCHelpers.cpp)
+suspends managed execution, but its measured cost here does not justify removing
+or weakening the checks. This separate binary's 29.2828 FPS is not a causal
+comparison with the policy binary.
+
+Evidence is local ignored `bin/physics-network-window-policy/2026-10-26/`:
+`validation.json`, `source-proof-final.json`, build proofs, ILC responses,
+`host-comparison.json`, quiet-gate decisions and complete per-run receipts,
+process maps, telemetry, reports and PNGs. Source/PDB verification binds all
+2626 authored runtime documents in both builds, plus 16 policy-host and 17
+instrumented-host documents. The two runtime assemblies have different binary
+identities; only their verified authored runtime inputs are equal. Policy native
+SHA-256 is `9ecdace2d50be44a650faa90e28e9217105fa20cc5bfe6fb4f8f6c1dca40db8f`.
+All six policy sessions use that exact executable. Sandboxed image-loader helpers
+are recorded separately from the four application process roles.
+
+No production change or coverage promotion follows from this diagnosis. Physics
+API remains **1345/1369 (98.25%)**, with **24 open** rows. Matched quiet performance,
+mass-load GPU advantage and full-goal acceptance remain open.
+
 ## Current-main network qualification, 2026-10-26
 
 Fourteen fresh immutable-payload public-example profiles pass after the combined
