@@ -198,7 +198,7 @@ The cause of the native wait, foreign hosts and owner visual acceptance remain o
 
 ### Standalone native presentation control
 
-`tools/ci/native_window_scale.c` removes the engine, managed runtime, physics,
+`tests/Electron2D.Tests/native_window_scale.c` removes the engine, managed runtime, physics,
 shaders and offscreen blits from the reproduction. It clears one or two SDL GPU
 swapchains directly, pumps native events and uses the same isolated compositor
 helper for the real `1 -> 1.25 -> 1` transition. Each phase checks one notification
@@ -212,7 +212,7 @@ qualified output; no installed system SDL library is selected by this command:
 
 ```bash
 scale_native_dir="/absolute/qualified/output/runtimes/linux-x64/native"
-cc -std=c11 -O2 -g -Wall -Wextra -Werror tools/ci/native_window_scale.c \
+cc -std=c11 -O2 -g -Wall -Wextra -Werror tests/Electron2D.Tests/native_window_scale.c \
   "$scale_native_dir/libSDL3.so.0" -Wl,-rpath,"$scale_native_dir" \
   -o /absolute/path/native-window-scale
 python3 -B tests/PhysicsBackendExtension.Consumer/wayland_dpi.py \
