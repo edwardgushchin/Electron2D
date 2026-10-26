@@ -4,7 +4,15 @@
 
 [Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-27
+
+## Declared contract and numerical parameter reads
+
+The [complete declared-family audit](../components/physics-rigid-body-contract.md)
+composes storage, forces, contacts, mass, fields, roles, CCD and integration checks.
+BodyGetCanSleep reads this body's retained permission during a selected Solve,
+including its borrowed separate thread, without entering scene processing access.
+Direct CanSleep property access retains its owner/current-group guard.
 
 ## Contact reporting policy guards
 

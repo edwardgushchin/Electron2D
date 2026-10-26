@@ -1,8 +1,9 @@
 using Electron2D;
 
-internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
+internal sealed class RigidBodyForceTests(PhysicsServer.Backend? backend)
 {
-    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new RigidBodyForceTests(backend).RunCore();
+    internal static void Run(PhysicsServer.Backend? backend = PhysicsServer.Backend.CPU) => new RigidBodyForceTests(backend).RunCore();
+    private World CreateWorld() => backend is { } selected ? new World(selected) : new World("RigidBodyContract");
     private void RunCore()
     {
         _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
@@ -49,7 +50,7 @@ internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
     private void VerifyPositionedAndRotationalActions()
     {
         using var circle = new CircleShape();
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody
         {
             Position = new(100, 0),
@@ -61,7 +62,7 @@ internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
         var collider = new CollisionShape { Shape = circle, Position = new(10, 0) };
         body.AddChild(collider);
         root.AddChild(body);
-        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
         body.AddConstantForce(new(0, 10), new(10, 0));
         Check(MathF.Abs(body.ConstantTorque) < 0.001f,
             "An offset constant force uses the updated shifted center of mass before the first step.");
@@ -119,7 +120,7 @@ internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
     private void VerifyPersistentForcesAndPacking()
     {
         using var circle = new CircleShape();
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var body = new RigidBody
         {
             GravityScale = 0,
@@ -131,7 +132,7 @@ internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
         root.AddChild(body);
         using (var tree = new SceneTree(root))
         {
-            Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+            Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
             body.ConstantForce = new(100, 0);
             for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
             Check(body.LinearVelocity.X > 80 && body.GlobalPosition.X > 35,
@@ -188,7 +189,7 @@ internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
         }
 
         using var circle = new CircleShape();
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var moving = new RigidBody
         {
             GravityScale = 0,
@@ -200,7 +201,7 @@ internal sealed class RigidBodyForceTests(PhysicsServer.Backend backend)
         };
         moving.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(moving);
-        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         var before = GC.GetAllocatedBytesForCurrentThread(); var allBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);

@@ -1,8 +1,10 @@
 using Electron2D;
 
-internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
+internal sealed class RigidFreezeModeTests(PhysicsServer.Backend? backend)
 {
-    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new RigidFreezeModeTests(backend).RunCore();
+    internal static void Run(PhysicsServer.Backend? backend = PhysicsServer.Backend.CPU) => new RigidFreezeModeTests(backend).RunCore();
+
+    private World CreateWorld() => backend is { } selected ? new World(selected) : new World("RigidBodyContract");
 
     private void RunCore()
     {
@@ -18,11 +20,11 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
 
     private void VerifyRolesAndMotion()
     {
-        using var circle = new CircleShape(); using var world = new World(backend); var root = new SubViewport { World = world };
+        using var circle = new CircleShape(); using var world = CreateWorld(); var root = new SubViewport { World = world };
         var body = new RigidBody { Mass = 2, Inertia = 100, LockRotation = true, CanSleep = false };
         Add(body, circle); root.AddChild(body); using var tree = new SceneTree(root);
         var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
-        Check(body.RequestedBodyMode == PhysicsServer.BodyMode.RigidLinear,
+        Check(PhysicsServer.BodyGetMode(body.GetRID()) == PhysicsServer.BodyMode.RigidLinear,
             "Configured rotation lock selects the complete RigidLinear role.");
         Check(body.FreezeMode == RigidFreezeMode.Static && (int)RigidFreezeMode.Kinematic == 1, "Freeze enum values and default.");
         body.FreezeMode = RigidFreezeMode.Kinematic;
@@ -47,13 +49,13 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
         Check(Near(state.InverseMass, 0.5f) && state.InverseInertia == 0 && body.FreezeMode == RigidFreezeMode.Kinematic,
             "Unfreezing restores dynamic mass and configured rotation lock while retaining the mode.");
         body.LockRotation = false; Check(Near(1 / state.InverseInertia, 100), "Unlock restores explicit inertia.");
-        Check(body.RequestedBodyMode == PhysicsServer.BodyMode.Rigid, "Unlock restores the complete Rigid role.");
+        Check(PhysicsServer.BodyGetMode(body.GetRID()) == PhysicsServer.BodyMode.Rigid, "Unlock restores the complete Rigid role.");
     }
 
     private void VerifyDynamicContact()
     {
         using var box = new RectangleShape { Size = new(20, 20) }; using var circle = new CircleShape { Radius = 5 };
-        using var world = new World(backend); var root = new SubViewport { World = world }; var pusher = new RigidBody { Name = "pusher", FreezeMode = RigidFreezeMode.Kinematic, Freeze = true };
+        using var world = CreateWorld(); var root = new SubViewport { World = world }; var pusher = new RigidBody { Name = "pusher", FreezeMode = RigidFreezeMode.Kinematic, Freeze = true };
         var target = new RigidBody
         {
             Name = "target",
@@ -72,7 +74,7 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
     private void VerifyFastPathContact()
     {
         using var box = new RectangleShape { Size = new(10, 10) }; using var circle = new CircleShape { Radius = 5 };
-        using var world = new World(backend); var root = new SubViewport { World = world }; var pusher = new RigidBody { Name = "pusher", Freeze = true, FreezeMode = RigidFreezeMode.Kinematic };
+        using var world = CreateWorld(); var root = new SubViewport { World = world }; var pusher = new RigidBody { Name = "pusher", Freeze = true, FreezeMode = RigidFreezeMode.Kinematic };
         var target = new RigidBody { Name = "target", Position = new(25, 0), GravityScale = 0, CanSleep = false };
         Add(pusher, box); Add(target, circle); root.AddChild(pusher); root.AddChild(target); using var tree = new SceneTree(root);
         var observer = new CountCallbacks
@@ -95,7 +97,7 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
 
     private void VerifyLifetimeAndPolicy()
     {
-        using var circle = new CircleShape(); using var world = new World(backend); var root = new SubViewport { World = world };
+        using var circle = new CircleShape(); using var world = CreateWorld(); var root = new SubViewport { World = world };
         var body = new RigidBody
         {
             Freeze = true,
@@ -123,11 +125,11 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
 
     private void VerifyStorageAndFailures()
     {
-        using var world = new World(backend); var root = new SubViewport { World = world }; var body = new RigidBody { FreezeMode = RigidFreezeMode.Kinematic, Freeze = true, Mass = 4 };
+        using var world = CreateWorld(); var root = new SubViewport { World = world }; var body = new RigidBody { FreezeMode = RigidFreezeMode.Kinematic, Freeze = true, Mass = 4 };
         root.AddChild(body); body.Owner = root; using var scene = new PackedScene(); scene.Pack(root); root.Dispose();
         using var copy = (SubViewport)scene.Instantiate(); copy.World = world;
         using var tree = new SceneTree(copy); var stored = (RigidBody)copy.GetChild(0);
-        Check(PhysicsServer.SpaceGetBackend(stored.GetWorld()!.Space) == backend, "Packed freeze configuration enters the explicitly assigned world.");
+        Check(PhysicsServer.SpaceGetBackend(stored.GetWorld()!.Space) == (backend ?? PhysicsServer.Backend.Extension), "Packed freeze configuration enters the explicitly assigned world.");
         Check(stored.Freeze && stored.FreezeMode == RigidFreezeMode.Kinematic && stored.Mass == 4 &&
             PhysicsServer.BodyGetMode(stored.GetRID()) == PhysicsServer.BodyMode.Kinematic, "PackedScene restores freeze policy and physical role.");
         Reject<ArgumentOutOfRangeException>(() => stored.FreezeMode = (RigidFreezeMode)42);
@@ -150,7 +152,7 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
 
     private void VerifySiblingIdleRotation()
     {
-        using var world = new World(backend); var root = new SubViewport { World = world }; var body = new AnimatableBody(); root.AddChild(body); using var tree = new SceneTree(root);
+        using var world = CreateWorld(); var root = new SubViewport { World = world }; var body = new AnimatableBody(); root.AddChild(body); using var tree = new SceneTree(root);
         body.Rotation = 0.1f; tree.PhysicsFrame(1d / 60); tree.PhysicsFrame(1d / 60);
         Check(MathF.Abs(PhysicsServer.BodyGetAngularVelocity(body.GetRID())) < 0.001f,
             "Synchronized kinematic siblings must not generate angular motion from decoding their own solved pose.");
@@ -158,7 +160,7 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
 
     private void VerifyWarmMotion()
     {
-        using var box = new RectangleShape { Size = new(20, 20) }; using var world = new World(backend); var root = new SubViewport { World = world };
+        using var box = new RectangleShape { Size = new(20, 20) }; using var world = CreateWorld(); var root = new SubViewport { World = world };
         var body = new RigidBody { Freeze = true, FreezeMode = RigidFreezeMode.Kinematic }; Add(body, box); root.AddChild(body);
         var distant = new RigidBody { Name = "distant", Position = new(5000, 0), GravityScale = 0, CanSleep = false };
         Add(distant, box); root.AddChild(distant);

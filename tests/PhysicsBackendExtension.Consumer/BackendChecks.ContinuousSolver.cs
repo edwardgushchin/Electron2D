@@ -6,9 +6,11 @@ public static partial class BackendChecks
     {
         private bool HasContinuousBodies()
         {
-            foreach (var body in Bodies.Values) if (body.Dynamic && body.ContinuousMode != CCDMode.Disabled) return true;
+            foreach (var body in Bodies.Values) if (SweepMode(body) != CCDMode.Disabled) return true;
             return false;
         }
+        private static CCDMode SweepMode(Body body) => !body.IsArea && body.Mode == PhysicsServer.BodyMode.Kinematic && body.Awake &&
+            (body.Velocity != Vector2.Zero || body.Angular != 0) ? CCDMode.CastShape : body.Dynamic ? body.ContinuousMode : CCDMode.Disabled;
         private void SolveContinuous(float delta)
         {
             foreach (var body in Bodies.Values) body.FrameForcesApplied = body.PrepareAdvance(delta);
@@ -35,14 +37,16 @@ public static partial class BackendChecks
                 foreach (var b in Bodies.Values)
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
-                        a.InvMass + b.InvMass == 0 || (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 ||
+                        a.Mode == PhysicsServer.BodyMode.Static && b.Mode == PhysicsServer.BodyMode.Static ||
+                        a.InvMass + b.InvMass == 0 && a.ReportedLimit == 0 && b.ReportedLimit == 0 ||
+                        (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 ||
                         Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
                     var motion = Motion(a) - Motion(b); var speed = motion.Length() + AngularShapeSpeed(a) + AngularShapeSpeed(b) +
                         BoundaryRotationSpeed(a, b) + BoundaryRotationSpeed(b, a);
                     if (speed == 0) continue;
                     var hit = false; var fraction = 1f;
-                    if (a.Dynamic && a.ContinuousMode != CCDMode.Disabled && (a.Mask & b.Layer) != 0 && SweptContact(a, b, motion * duration, duration, out var first)) { hit = true; fraction = first; }
-                    if (b.Dynamic && b.ContinuousMode != CCDMode.Disabled && (b.Mask & a.Layer) != 0 && SweptContact(b, a, -motion * duration, duration, out var second)) { hit = true; fraction = MathF.Min(fraction, second); }
+                    if (SweepMode(a) != CCDMode.Disabled && (a.Mode == PhysicsServer.BodyMode.Kinematic || (a.Mask & b.Layer) != 0) && SweptContact(a, b, motion * duration, duration, out var first)) { hit = true; fraction = first; }
+                    if (SweepMode(b) != CCDMode.Disabled && (b.Mode == PhysicsServer.BodyMode.Kinematic || (b.Mask & a.Layer) != 0) && SweptContact(b, a, -motion * duration, duration, out var second)) { hit = true; fraction = MathF.Min(fraction, second); }
                     if (!hit) continue;
                     var extent = MathF.Min(a.MinimumThickness, b.MinimumThickness);
                     interval = MathF.Min(interval, .25f * extent / speed);
@@ -80,7 +84,7 @@ public static partial class BackendChecks
         private bool SweptContact(Body a, Body b, Vector2 motion, float duration, out float fraction)
         {
             fraction = 1; var hit = false;
-            var full = a.ContinuousMode == CCDMode.CastShape || b.Dynamic && b.ContinuousMode == CCDMode.CastShape;
+            var full = SweepMode(a) == CCDMode.CastShape || SweepMode(b) == CCDMode.CastShape;
             var spinA = full ? RotationMotion(a) : 0; var spinB = RotationMotion(b);
             for (var i = 0; i < a.Shapes; i++) for (var j = 0; j < b.Shapes; j++)
                 {

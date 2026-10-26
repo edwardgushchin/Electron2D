@@ -59,7 +59,11 @@ def check_physics_report(pages):
         rows = [row for row in node_page.splitlines() if row.startswith("| [`method " + method + "(")]
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "scene-thread-messages.md" in rows[0]
         assert not any(key.startswith("Node::method:" + method + "(") for key in expected)
-    assert expected["class:Node"] == expected["class:RigidBody2D"] == "Partial", "Invocation completion must retain receiver gaps"
+    assert expected["class:Node"] == "Partial", "Invocation completion must retain unrelated receiver gaps"
+    rigid_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines() if row.startswith("| [`")]
+    assert len(rigid_rows) == 55 and all(" | Implemented | " in row for row in rigid_rows)
+    assert "physics-rigid-body-contract.md" in rigid_rows[0]
+    assert "class:RigidBody2D" not in expected, "The complete own-type audit retains inherited gaps on their declaring types"
     propagation = [row for row in node_page.splitlines() if row.startswith("| [`method propagate_notification(")]
     assert len(propagation) == 1 and " | Implemented | " in propagation[0] and "notification-propagation-contract" in propagation[0]
     assert "Node::method:propagate_notification(int:)" not in expected
@@ -808,7 +812,7 @@ def main():
                          ("CollisionObject2D", "CollisionObject"), ("PhysicsBody2D", "PhysicsBody"),
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
-        assert (" | Implemented | " if name in {"Shape2D", "CollisionObject2D", "CollisionShape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "PhysicsBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
+        assert (" | Implemented | " if name in {"Shape2D", "CollisionObject2D", "CollisionShape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "PhysicsBody2D", "RigidBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
     for name, count in (("UPNP", 45), ("UPNPDevice", 22)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name

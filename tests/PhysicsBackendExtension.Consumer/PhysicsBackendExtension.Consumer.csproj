@@ -9,6 +9,8 @@
     <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/RigidFreezeModeTests.cs" Link="RigidFreezeModeTests.cs" /><Compile Include="../Electron2D.Tests/ShapePairEventTests.cs" Link="ShapePairEventTests.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../Electron2D.Tests/RigidBodyForceTests.cs" Link="RigidBodyForceTests.cs" /><Compile Include="../Electron2D.Tests/RigidBodyContactTests.cs" Link="RigidBodyContactTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/AllocationWarmupCheck.cs" Link="AllocationWarmupCheck.cs" /><Compile Include="../PhysicsSpaceExtension.Consumer/CircleQueries.cs" Link="CircleQueries.cs" /><Compile Include="../Electron2D.Tests/PhysicsDenseContactTests.cs" Link="PhysicsDenseContactTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsTransientContactTests.cs" Link="PhysicsTransientContactTests.cs" /></ItemGroup>
   <ItemGroup><Compile Include="../Electron2D.Tests/PhysicsPointContainmentTests.cs" Link="PhysicsPointContainmentTests.cs" /></ItemGroup>

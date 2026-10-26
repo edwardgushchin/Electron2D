@@ -4,7 +4,15 @@ The [indexed slot operation audit](../components/physics-shapes.md#indexed-slot-
 
 The [Body/Area append audit](../components/physics-shapes.md#bodyarea-append-contract-audit) closes both public append operations and their registered projections under the accepted rigid-pose contract. Pending/disabled slots, exact logical indices, canonical geometry, ownership, rollback/retry and zero warmed managed frames are covered; overall physics acceptance remains separate.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-27
+
+## Retained sleep permission
+
+BodyGetCanSleep shares the guarded configured-parameter read boundary for scene
+and raw bodies, including selected Solve on the separate numerical thread.
+It performs no solver query and grants no direct scene access. The
+[rigid-body contract audit](../components/physics-rigid-body-contract.md#authored-sleep-permission-on-the-solver-thread)
+records the corrected scene forwarding, failed controls and verification limits.
 
 ## Contact reporting policy guards
 

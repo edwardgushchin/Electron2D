@@ -63,6 +63,7 @@ public partial class RigidBody : PhysicsBody
     private bool _freeze;
     private bool _lockRotation;
     private bool _canSleep = true;
+    internal bool ConfiguredCanSleep => _canSleep;
     private bool _sleeping;
 
     /// <summary>Creates a detached dynamic body with one-unit mass and ordinary gravity.</summary>

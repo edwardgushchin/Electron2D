@@ -230,6 +230,13 @@ performance acceptance remains open.
 
 # API coverage register
 
+The [rigid-body declared contract](../components/physics-rigid-body-contract.md)
+completes its class audit after correcting separate-thread configured reads and
+the external provider's kinematic paths. Physics declaration coverage is
+1352/1369 (98.76%), with 17 open and 92 Excluded. Its member rows were already
+Implemented; complete numerical/network/native/platform/performance acceptance
+remains separate.
+
 [Explicit native audio delivery](../native-packaging.md#maintainer-audio-asset-selection) now preserves the selected Linux/macOS library through repository consumer build/publish. The executable consumer protocol includes realtime output and actual RGB/offline PCM recording; the locally restored alpha bundle's missing offline exports retain an explicit publication gate. No declaration state changes in this delivery repair.
 
 [Viewport GUI control snapping](../components/canvas-rendering.md#gui-control-pixel-snapping) now executes a stored true-by-default policy across Window/SubViewport and Control descendants. It preserves fractional logical/input geometry while rounding eligible local visual translations before visual offsets. Managed/fresh-process and native GPU/compatibility checks include prepared zero-managed-byte active/idle intervals; foreign/native-allocation acceptance remains separate.

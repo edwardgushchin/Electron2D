@@ -20,6 +20,8 @@
 
 # Physics domain
 
+The [rigid-body declared contract](../components/physics-rigid-body-contract.md) records the complete own family, corrected separate-thread configured reads, independent kinematic paths and CPU/GPU/registered CLR/native qualification. Inherited declarations and full-goal acceptance retain their separate gates.
+
 [Grouped canvas diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics) preserve logical canvas IDs, synchronized tints and warning callbacks alongside actual selected physics/query frames. Declaration counts do not change; general GUI/world notification and full-goal gates remain open.
 
 [Grouped world observations](../components/worlds.md#world-observations-from-processing-groups) publish lazy world wrappers and logical scene drivers safely for active groups while retaining owner-only numerical startup. No declaration states change; complete numerical, inherited, network, platform and performance acceptance remain separate.

@@ -94,7 +94,7 @@ internal sealed partial class PhysicsBodyRuntime
         else owner.Server!.SetSleeping(sleeping);
     }
 
-    internal bool GetCanSleep() => Owners.Scene is RigidBody rigid ? rigid.CanSleep : Owners.Server?.GetCanSleep() ?? _canSleep;
+    internal bool GetCanSleep() => Owners.Scene is RigidBody rigid ? rigid.ConfiguredCanSleep : Owners.Server?.GetCanSleep() ?? _canSleep;
 
     internal void SetCanSleep(bool canSleep)
     {

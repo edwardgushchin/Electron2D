@@ -742,7 +742,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RibbonTrailMesh](classes/RibbonTrailMesh.md) | PrimitiveMesh | Excluded | 9 |
 | [RichTextEffect](classes/RichTextEffect.md) | Resource | Implemented | 1 |
 | [RichTextLabel](classes/RichTextLabel.md) | Control | Partial | 173 |
-| [RigidBody2D](classes/RigidBody2D.md) | PhysicsBody2D | Partial | 54 |
+| [RigidBody2D](classes/RigidBody2D.md) | PhysicsBody2D | Implemented | 54 |
 | [RigidBody3D](classes/RigidBody3D.md) | PhysicsBody3D | Excluded | 51 |
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |
 | [SceneMultiplayer](classes/SceneMultiplayer.md) | MultiplayerAPI | Implemented | 17 |

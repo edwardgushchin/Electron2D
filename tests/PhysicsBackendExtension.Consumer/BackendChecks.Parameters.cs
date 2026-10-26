@@ -18,6 +18,7 @@ public static partial class BackendChecks
     public static void RunParameterReads() => ParameterReadChecks();
     private static void ParameterReadChecks()
     {
+        var ownerThread = Thread.CurrentThread;
         Solver? solver = null;
         PhysicsServerManager.RegisterServer("ParameterReads", () => solver = new());
         using var world = new World("ParameterReads"); var space = world.Space;
@@ -98,6 +99,8 @@ public static partial class BackendChecks
                 Read(raw); Read(scene.GetRID()); ReadPolicies(raw); ReadPolicies(scene.GetRID()); solvedReads++;
                 if (checkedSolveGuards) return;
                 checkedSolveGuards = true;
+                if (Thread.CurrentThread != ownerThread)
+                    Reject<InvalidOperationException>(() => _ = scene.CanSleep);
                 foreach (var id in new[] { raw, scene.GetRID() })
                 {
                     Reject<InvalidOperationException>(() => PhysicsServer.BodySetMode(id, PhysicsServer.BodyMode.Rigid));

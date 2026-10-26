@@ -716,6 +716,8 @@ def render():
             updated = "2026-10-26"
         if name == "RDTextureView":
             updated = "2026-10-25"
+        if name == "RigidBody2D":
+            updated = "2026-10-27"
         if name in {"VisualShader", "VisualShaderNodeVarying", "VisualShaderNodeVaryingGetter", "VisualShaderNodeVaryingSetter"}:
             updated = "2026-10-25"
         if name in {"VisualShaderNodeCurveTexture", "VisualShaderNodeCurveXYZTexture", "VisualShaderNodeOutput"}:

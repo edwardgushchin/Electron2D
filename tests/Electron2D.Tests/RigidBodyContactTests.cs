@@ -1,8 +1,9 @@
 using Electron2D;
 
-internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
+internal sealed class RigidBodyContactTests(PhysicsServer.Backend? backend)
 {
-    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new RigidBodyContactTests(backend).RunCore();
+    internal static void Run(PhysicsServer.Backend? backend = PhysicsServer.Backend.CPU) => new RigidBodyContactTests(backend).RunCore();
+    private World CreateWorld() => backend is { } selected ? new World(selected) : new World("RigidBodyContract");
     private void RunCore()
     {
         _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
@@ -17,7 +18,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var circle = new CircleShape();
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody { ContactMonitor = true, MaxContactsReported = 4, LockRotation = true };
@@ -28,7 +29,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
         var enters = 0; var exits = 0;
         body.BodyEntered += _ => enters++;
         body.BodyExited += _ => exits++;
-        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(enters == 1 && exits == 0 && body.GetCollidingBodies().Length == 1 &&
               body.GetContactCount() >= 2,
@@ -69,7 +70,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var bodyGeometry = new RectangleShape { Size = new(20, 20) };
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody { ContactMonitor = true, MaxContactsReported = 2 };
@@ -79,7 +80,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
         body.BodyEntered += other => { Check(ReferenceEquals(other, floor), "Contact enter identifies the other body."); enters++; };
         body.BodyExited += other => { Check(ReferenceEquals(other, floor), "Contact exit identifies the other body."); exits++; };
         body.SleepingStateChanged += changed => { Check(ReferenceEquals(changed, body), "Sleep event identifies its body."); sleepEvents++; };
-        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
         Check(body.GetContactCount() == 0 && body.GetCollidingBodies().Length == 0,
             "Contact state starts empty before the first fixed step.");
         for (var frame = 0; frame < 180; frame++) tree.PhysicsFrame(1d / 60);
@@ -139,7 +140,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var bodyGeometry = new CircleShape();
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody();
@@ -147,7 +148,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
         root.AddChild(floor); root.AddChild(body);
         var enters = 0;
         body.BodyEntered += _ => enters++;
-        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
         for (var frame = 0; frame < 120; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GetContactCount() == 0 && enters == 0 && body.GetCollidingBodies().Length == 0,
             "Zero max contacts and disabled monitoring report no contacts by default.");
@@ -186,7 +187,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
     {
         using var floorGeometry = new RectangleShape { Size = new(200, 20) };
         using var bodyGeometry = new CircleShape();
-        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+        using var selectedWorld = CreateWorld(); using var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = floorGeometry });
         var body = new RigidBody
@@ -206,7 +207,7 @@ internal sealed class RigidBodyContactTests(PhysicsServer.Backend backend)
             if (enters == 1) root.RemoveChild(floor);
         };
         body.BodyExited += _ => exits++;
-        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Scene fixture uses the explicitly selected backend.");
+        using var tree = new SceneTree(root); Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == (backend ?? PhysicsServer.Backend.Extension), "Scene fixture uses the explicitly selected backend.");
         tree.PhysicsFrame(1d / 60);
         Check(enters == 1 && exits == 1 && body.GetCollidingBodies().Length == 0,
             "A contact callback can remove the collider and receive one exit without stale state.");

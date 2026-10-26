@@ -1271,7 +1271,8 @@ public sealed partial class PhysicsServer
     /// <summary>Gets retained automatic sleep permission.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>True by default; explicit sleep assignments remain available when false.</returns>
-    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks.
+    /// <remarks>Reads retained authoring without solver queries, including inside selected numerical implementation hooks
+    /// on the world's separate solver thread. This does not grant scene access to that thread.
     /// Owner, lifetime and ordinary failed-world guards apply.</remarks>
     public static bool BodyGetCanSleep(RID body) => Service.BodyGetCanSleepCore(body);
 
