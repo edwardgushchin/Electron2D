@@ -11,7 +11,7 @@ Decisions in this log: [0090](#adr-0090).
 
 Last updated: 2026-10-26
 
-- Status: Accepted by the user on 2026-10-01; live project collaboration, in-editor agent control and replacement of the existing batch interface accepted on 2026-10-25; user workflows, contextual inspection, operation composition and Git-backed project memory accepted on 2026-10-26.
+- Status: Accepted by the user on 2026-10-01; live project collaboration, in-editor agent control and replacement of the existing batch interface accepted on 2026-10-25; user workflows, contextual inspection, operation composition, Git-backed project memory, portable instructions, engineering discipline, conventional commits and structured journals accepted on 2026-10-26.
 - Scope: Game and engine development workflows, public API/documentation, project and scene authoring, project Git/documentation/journal ownership, editor automation, batch execution and observable verification.
 - Refines: [0004: Product scope](product.md#adr-0004) and [0027: Editor/game boundary](product.md#adr-0027).
 - Preserves: [0001: Typed C#](product.md#adr-0001), [0014: Resource lifetime and hot-path allocation](resources.md#adr-0014), [0015: Host lifecycle](core-object-runtime.md#adr-0015), [0016: Scheduling](core-object-runtime.md#adr-0016), [0021: Platform verification](product.md#adr-0021), [0023: Typed packed scenes](scene.md#adr-0023), and [0028: Renderer capabilities](rendering.md#adr-0028).
@@ -67,13 +67,13 @@ The initial layout below belongs **inside each created game project**, not the e
 
 | Project path | Owned context |
 | --- | --- |
-| `AGENTS.md` | Compact entry point: project rules, authoritative document links and how to inspect/build/check the project. Route to canonical documents instead of duplicating their contents. |
+| `AGENTS.md` | Canonical portable instructions: project map, working commands, engineering discipline, Git/journal rules and authoritative document links. Keep essential rules inline and reference longer documents. |
 | `docs/project.md` | Game goals, gameplay/scope, constraints, project structure and the supported build/run/check workflow. |
 | `docs/decisions.md` | Accepted project decisions and rationale; distinguish current decisions from superseded proposals. |
 | `docs/development/index.md` | Current state, active work, known gaps, next steps and relevant journal/evidence links. Maintain a summary rather than a second complete history. |
 | `docs/development/YYYY-MM-DD/<entry-id>.md` | One durable record per meaningful human/agent work block. Stable separate entry files avoid a shared append target; corrections reference earlier entries instead of silently rewriting their evidence. |
 
-Journal records capture the goal and starting state, actual changes and reasons, useful failed/rejected approaches, checks actually executed and their limits, unresolved work and the next continuation. Link affected files, decisions and evidence using commit/blob identities when committed, or document revisions/content identities when dirty. Record actor/task attribution and timestamps without depending on a provider-private session ID. An entry may precede a Git commit and must say so; never invent a future commit hash or label unsaved input as committed. Update the current summary when state changes materially. Exclude credentials, capability tokens, raw private conversations and generated build/capture bulk; retain useful evidence references and verification limits.
+Journal records follow the [structured work-block contract](#structured-development-journal) below. Link affected files, decisions and evidence using commit/blob identities when committed, or document revisions/content identities when dirty. Update the current summary when state changes materially. Exclude credentials, capability tokens, raw private conversations and generated build/capture bulk; retain useful evidence references and verification limits.
 
 Documentation and journal documents participate in the same session ownership, revision/conflict, recovery and explicit-publication rules as other authoring documents. Human/agent updates must not overwrite open Markdown buffers. The host records confirmed operation/job facts; the agent or human supplies intent and rationale. Record meaningful task/checkpoint boundaries rather than every tool call or keystroke. Interrupted work retains an unfinished checkpoint where available; failed or missing journal publication remains visible and cannot be called durable context merely because code changed. Publication follows the task's granted rights in both owner modes.
 
@@ -82,6 +82,68 @@ On every new or resumed agent connection, including a provider change, expose a 
 Keep live operations, file publication and Git commits distinct. A commit records selected persisted content; it does not save buffers, replace undo or prove a test used those contents. Shared programmatic status/diff/history and authorized local commit operations check the observed repository/index/HEAD and a bounded path/content set. Preserve unrelated staged/unstaged work; no blanket staging, implicit stash/reset or history rewrite. Initial/subsequent commits follow project policy and real author identity; creation does not invent identity or mandate a commit per edit. Remote creation, push and history rewriting require their own authorization. Branch changes reconcile or reject dirty live documents before changing their base; external Git changes invalidate stale context and use ordinary reconciliation.
 
 This is the **first next project-authoring extension of stage 4**, before general context/composition expansion or provider-independent continuation claims. Extend the existing creator and document owner; do not wait for a complete editor, importer/exporter or runtime API census. Git project initialization and Markdown/journal/Git operations are not implemented by the current bounded workflow.
+
+#### Portable project instructions and engineering discipline
+
+The game project's root **`AGENTS.md` is the single canonical instruction source**. Use ordinary UTF-8 Markdown, clear headings and concise actionable bullets; no required vendor frontmatter, personal paths, private extensions or provider account. The product target is fewer than 200 lines for the root entry, not a claim that providers share a size limit. Keep detailed decisions, API reference and work history in linked project documents; load those when relevant. References alone do not guarantee that a client reads their content.
+
+The creator seeds these sections from the actual project template and supported tool profile, then maintains them with the project:
+
+1. Project purpose, directory map and authoritative documents. Unknown game requirements stay explicit.
+2. Exact supported setup/build/run/check commands, working directories and prerequisites; distinguish persisted-file commands from live unsaved snapshot operations. Verify generated commands before advertising them; identify unavailable capabilities rather than shipping invented commands.
+3. The engineering rules below, including complete scope and meaningful verification.
+4. Git safety and Conventional Commits 1.0.0, journal structure/location and completion criteria. Put these essential obligations in the entry itself, with links for detail.
+
+Every executor receives the same engineering policy:
+
+- Read the affected code and callers first; include consumers, tests, fixtures, configuration, exports and documentation in the scope. Complete the requested behavior and its affected contracts while preserving unrelated work.
+- Implement the smallest complete solution within existing architecture. Prefer an existing project component/helper, then standard library/platform facilities, then an installed dependency. Justify a new dependency only when needed.
+- Keep existing interfaces, layers and useful data forms. Avoid speculative abstractions, wrappers, conversions, configuration, options and future scaffolding. Prefer clear direct code and deletion where they fully solve the task.
+- Preserve boundary validation, error handling, data safety, security, accessibility and resource ownership. Fix a common cause in its shared implementation. Brevity cannot justify dropping required behavior.
+- Verify non-trivial behavior with a small meaningful check and relevant failure cases. Skip implementation-mirroring tests and tests for trivial reversible edits; retain required project gates. Report only checks actually run and their practical limits.
+- Explain non-obvious reasons in comments. A deliberate temporary compromise uses `shortcut: <known limit>, <concrete upgrade trigger>` and cannot defer the requested behavior. Finish with a clear result, evidence and remaining work.
+
+Nested `AGENTS.md` files may add genuinely local guidance. Keep scopes explicit and avoid contradicting shared rules: loader discovery, precedence and overrides differ by client. Preserve existing user instructions; report conflicts or disabled/overridden loading rather than silently replacing files or claiming the canonical policy is active.
+
+Instruction loading belongs to a **qualified client/executor profile**, not to the model provider's name. Official documentation reviewed on 2026-10-26 gives these integration choices; this table is research, not qualification of those clients in Electron2D:
+
+| Client | Canonical-file integration and qualification concern |
+| --- | --- |
+| OpenAI Codex | Native root-to-working-directory `AGENTS.md` discovery. Account for more-specific instructions, `AGENTS.override.md`, configured fallback names and the combined instruction-byte budget; verify actual loaded sources in a fresh session. |
+| Anthropic Claude Code | Current versions support native `AGENTS.md`, subject to version, project-instruction settings and competing `CLAUDE.md`/local files. Where the profile requires it, a minimal `CLAUDE.md` imports `@AGENTS.md` as an actual import line. Check loaded instructions instead of assuming either universal native support or a universally required wrapper. |
+| Google Gemini CLI | Configure project instruction discovery with `context.fileName` set to `AGENTS.md`, or use a minimal `GEMINI.md` importing `@./AGENTS.md`. Verify loaded memory; avoid configuring both paths to load the same rules twice. |
+| Cursor | Native root and nested `AGENTS.md` support. Keep essential instructions in the file; a linked document is not automatically inlined. Specialized client rules are optional additions, not a second policy copy. |
+| GitHub Copilot | Native support varies by feature/client. Use `AGENTS.md` where supported; other surfaces use `.github/copilot-instructions.md`. A plain Markdown pointer is not a guaranteed import: the integration must supply the resolved canonical content or declare this profile unsupported. |
+| Other executors | Use their documented native loader, a supported import, or adapter-supplied canonical text. No automatic-discovery claim without an exercised profile. |
+
+Create a minimal provider entry only when the chosen profile needs it; do not prepopulate parallel policy copies or modify global user settings. Resolve supported imports inside the project, preserving existing files and detecting duplicates/conflicts. An adapter may supply resolved canonical content when its executor lacks a loader. Bootstrap identifies applicable instruction paths, versions/content identities and scope, and distinguishes native loading from adapter delivery. Verify effective receipt using client diagnostics where available and an exercised task; missing, overridden or truncated context remains visible. Refresh instructions on resume/reconnect or invalidate their receipt after a relevant edit. Project text remains context, not enforcement: session permissions, validation, Git and journal checks enforce their own operation contracts. Arbitrary external agents cannot be guaranteed to comply merely by having this file.
+
+#### Conventional project commits
+
+All newly created project commits use [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): a type, optional parenthesized scope, optional breaking marker, colon, space and description; optional body and footers follow blank lines. For example, `feat(player): add jump buffering`, `fix(save): preserve the previous slot` and `docs: record level constraints`. Use `feat` for new functionality and `fix` for a correction. Project policy also permits suitable types such as `docs`, `refactor`, `test`, `perf`, `build`, `ci` and `chore`; the specification does not mandate a closed type list.
+
+An authorized breaking change uses **either** `!` before the colon **or** the uppercase `BREAKING CHANGE:` footer (the specification also accepts `BREAKING-CHANGE:`). The marker does not authorize breaking an accepted contract or automatically publish a release. Commit a coherent verified task/checkpoint, not each tool call. A failed commit leaves the task's actual persisted/uncommitted state explicit; never invent author identity or rewrite old messages to make existing history conform.
+
+The shared commit operation validates the new message before mutating the index/history and checks the bounded persisted selection and observed Git state. Reuse project hook/CI validation where present; instructions alone do not establish enforcement, and direct Git access outside the host retains the executor's ordinary permissions. UI and no-UI clients have the same policy. Preserve the earlier separation between Save, live history and commits, unrelated staged changes, and separately authorized remote/destructive actions.
+
+#### Structured development journal
+
+Record **meaningful work blocks**, not prompts, turns or raw tool output. Group investigation, failed candidates, the final change and its verification for one objective in one entry; split independent objectives. An acknowledgement or trivial answer does not create an empty entry. Use the project's language and ordinary Markdown. Each entry has a stable ID, concrete title, observed date/time with timezone where known, actor/task attribution and optional artifact/correction references. A provider-private conversation identifier may be extra attribution, never the required key.
+
+All six sections are required. Their semantic identities are stable; human-readable headings may follow the project's language. When a section has no applicable facts, say so briefly rather than inventing content.
+
+| Section | Required content |
+| --- | --- |
+| Context | User objective, starting state, scope and constraints in the author's own words. Enough to continue without the conversation. |
+| Timeline | Significant observed phases, useful failed candidates and reasons for rejection. Record actual times with timezone/date across midnight; mark unknown time explicitly. |
+| Changes | Final behavior and affected files/components. Distinguish abandoned/reverted experiments and pre-existing or unresolved defects. |
+| Decisions | Choices, evidence, rejected alternatives and causal reasons. |
+| Checks | Exact executed commands, statuses, relevant counts, input revisions/hashes and artifact references; failures, partial results and verification limits. Planned checks are not results; compilation is not rendered or human acceptance. |
+| Next steps | Remaining work, smallest useful continuation and any required user decision; explicitly say when none remains. |
+
+Summarize the relevant Git baseline once and the actual delta, adding a commit identity only when one exists. Preserve full digests when they identify evidence. A journal entry may precede a commit; identify dirty/live input honestly. Do not require an entry to contain the hash of the commit that contains that same entry: resolve that association from Git by entry ID/path, avoiding a self-referential follow-up commit loop. Link project-relative artifacts and decisions, not raw private conversations or secrets.
+
+The human or agent authors intent and rationale; the host validates required sections and attaches confirmed operation/job/publication facts without pretending to infer motivation. Publish through shared Markdown operations with expected revisions and granted rights. Completion reports distinguish a durable entry from a recoverable draft or failed write. Retry an uncertain write using the same entry ID without duplication; a later correction gets a new ID referencing the earlier entry, while an independent later block does not supersede it. Do not rewrite evidence silently. A missing/failed publication requires repair or an explicit reported limit before claiming that the task's context is durable. The current-state index links the material result and smallest next step without duplicating the whole history.
 
 #### Session ownership and concurrent authoring
 
@@ -160,7 +222,7 @@ Implement connected executable slices under the [maintenance contract](../mainta
 | 1. Next project-authoring slice, before a functional editor project workflow | A no-UI session core with one owner, stable identities, unsaved scene/code documents, bounded typed operations, revisions, events, persistence/recovery and grouped history. Real tests cover independent owner processes, two operation clients, stale/conflicting edits, undo after manual work, external changes, failed apply/save and fresh-process reopen. No agent/model connection is needed to establish these deterministic guarantees. |
 | 2. First functional editor project workflow, using stage 1 | Minimal open project, scene tree/inspector/code views and preview subscribe to the shared session; manual and programmatic changes appear together without forced save. Snapshot jobs exercise an unsaved edit, build, fresh game execution, actual capture, stale results, deadline/cancel and cleanup. Replace/remove the existing Batch controller/SDK/formats and affected consumers/docs in this job slice, without a compatibility bridge. Runtime entry points retain their separate owning contracts. |
 | 3. First agent-enabled editor milestone, after stages 1–2 and before editor polish | A real local operations transport and one real agent adapter, preferably ACP where supported, connected to the editor's task/conversation panel. Verify selection context, unsaved reads/writes, meaningful progress, interruption, disconnect/reconnect, missing capability and executor failure. Run the co-development acceptance scenario below with the stated executor/model/tool versions; a fake adapter remains only a deterministic test fixture. |
-| 4. After the first co-development milestone | First deliver Git-backed creation and shared documentation/journal/context publication in both owner modes, with fresh-client continuation. Then expand semantic tools, spatial context and composition, measuring repair quality and regressions. Qualify external-client workflows, installed distribution, other agents/platforms and larger workloads. Add parallel agents or hot reload through their own justified and verified slices. |
+| 4. After the first co-development milestone | First deliver Git-backed creation, portable canonical instructions and shared documentation/six-section journal/context publication in both owner modes, with validated conventional commits and fresh-client continuation. Then expand semantic tools, spatial context and composition, measuring repair quality and regressions. Qualify external-client workflows, installed distribution, other agents/platforms and larger workloads. Add parallel agents or hot reload through their own justified and verified slices. |
 
 The first bounded implementation target is one existing typed scene and one C# source buffer: open/inspect them, change an Entity transform through typed session operations, preserve an unsaved manual edit, reject an overlapping stale edit, undo safely, then save/reopen in a fresh process. Establish actual owner exclusion across processes. This proves stage 1's document/operation boundary before building a full project manager, plugin framework, language service or agent transport.
 
@@ -169,6 +231,8 @@ The minimum co-development acceptance scenario opens a real project, makes a hum
 Expanded-context acceptance must distinguish two open projects and renamed/reparented objects, keep selection context separate from edit scope, and identify stale images and coordinate spaces. A composition slice must exercise multiple typed edits, a stale intermediate revision, cancellation after a committed group and safe undo after human work. Test the real external client against both owner modes, including explicit no-UI publication rights, save and fresh-process reopen, before claiming that complete user workflow; transport tests alone establish only its underlying tools path.
 
 Git/context acceptance creates a project through UI and no-UI operations, verifies its dedicated repository and seed documents, and exercises unavailable Git, initialization failure and existing/enclosing repository preservation. Perform an edit plus an attributed journal update, publish selected files, commit only authorized content, then reopen/clone and reconstruct work from a fresh independent client without the prior conversation. Reconnect before saving to verify dirty overlays; test denied publication, interrupted journal writes, concurrent Markdown edits, unrelated staged files, unborn/detached/changed HEAD and external checkout conflicts. Journal claims must match actual checks; private tokens/generated bulk stay absent. Qualify real executor/provider switches separately from these deterministic document/Git checks.
+
+Instruction/journal acceptance verifies actual generated commands, root/subdirectory discovery and a fresh/resumed client with the canonical file or its required import/adapter path. Exercise competing instructions, missing/truncated context and instruction edits; inspect effective loading and record the client/version/settings used. Check six journal sections, unknown-time handling, failed/retried publication without duplicate entries and a referenced correction. Commit acceptance covers optional scopes/bodies/footers, both breaking-marker forms and rejection of malformed messages before index/history mutation. A real task must also establish the shared engineering policy and fresh-provider continuation; schema/message checks alone cannot prove agent behavior.
 
 The [coverage roadmap](../coverage/roadmap.md#live-project-and-agent-delivery) tracks this dependency order without promoting absent editor APIs. Human assessment of game feel and visual quality remains separate from automated correctness.
 
@@ -203,8 +267,15 @@ Missing capabilities remain gaps with exact triggers in [coverage](../coverage/i
 
 ### Research references
 
-Reviewed on 2026-10-25 and 2026-10-26. These sources inform separation of application state, agent execution, tools and editor context. They do not supply Electron2D's transaction guarantees, select a mandatory provider or establish tested integration:
+Reviewed on 2026-10-25 and 2026-10-26. These sources inform instruction portability, application state, agent execution, tools and editor context. They do not supply Electron2D's transaction guarantees, select a mandatory provider or establish tested integration:
 
+- [AGENTS.md: plain Markdown and scoped repository instructions](https://agents.md/).
+- [OpenAI: AGENTS.md discovery, overrides and instruction budgets](https://learn.chatgpt.com/docs/agent-configuration/agents-md), [concise project-specific working guidance](https://learn.chatgpt.com/docs/learn/best-practices).
+- [Anthropic: effective instruction files, native AGENTS.md support and imports](https://code.claude.com/docs/en/memory).
+- [Google: hierarchical instructions, configurable filenames and imports](https://geminicli.com/docs/cli/gemini-md/).
+- [Cursor: project rules and root/nested AGENTS.md](https://cursor.com/docs/rules).
+- [GitHub: custom-instruction support by Copilot feature/client](https://docs.github.com/en/copilot/reference/custom-instructions-support).
+- [Conventional Commits 1.0.0: message syntax, types and breaking changes](https://www.conventionalcommits.org/en/v1.0.0/).
 - [OpenAI: application-owned context/tools and a reusable agent executor](https://developers.openai.com/blog/codex-as-a-platform).
 - [Anthropic: semantic tools, bounded results and evaluation on real tasks](https://www.anthropic.com/research/writing-tools-for-agents).
 - [Anthropic: retrieve relevant context as needed](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents).
