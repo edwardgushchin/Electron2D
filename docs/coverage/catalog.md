@@ -623,8 +623,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsPointQueryParameters3D](classes/PhysicsPointQueryParameters3D.md) | RefCounted | Excluded | 5 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | RefCounted | Implemented | 8 |
 | [PhysicsRayQueryParameters3D](classes/PhysicsRayQueryParameters3D.md) | RefCounted | Excluded | 9 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | Object | Partial | 214 |
-| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | PhysicsServer2D | Partial | 140 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | Object | Implemented | 214 |
+| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | PhysicsServer2D | Implemented | 140 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | Object | Implemented | 2 |
 | [PhysicsServer3D](classes/PhysicsServer3D.md) | Object | Excluded | 342 |
 | [PhysicsServer3DExtension](classes/PhysicsServer3DExtension.md) | PhysicsServer3D | Excluded | 196 |

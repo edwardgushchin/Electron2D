@@ -1,6 +1,8 @@
 # PhysicsServerExtension
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
+
+The [declared server/extension contract](../components/physics-server-contract.md) records all 140 pinned implementation operations, their common-metadata and selected numerical roles, combined checks and remaining full-goal gates.
 
 Selected CompleteBody and EndStep failures latch the world as unusable and suppress
 body-state observers. Successful retirement after pre-Solve preparation failure
@@ -9,8 +11,7 @@ notification recovery policy. See [lifecycle publication boundaries](../componen
 
 The [distributed closed joint network](../components/physics-joints.md#distributed-closed-joint-network)
 exercises the independent public provider with all three joint families and 128
-portable identities. Its bounded numerical/replay profile leaves the complete
-extension class Partial.
+portable identities. Its bounded numerical/replay profile contributes to the declared-family audit; complete numerical and network acceptance remains separate.
 
 ## Contact reporting policy guards
 
@@ -185,7 +186,7 @@ and complete extension acceptance remain open.
 public-only registered/CPU/GPU consumer. Replacement errors preserve original
 geometry, continue every rollback/retirement and retain all failures; incomplete
 borrowers retry during guarded preparation. Ten formerly unmapped extension rows
-project to the common resource role as Partial. Full numerical-extension and final
+project to the common resource role; the declared-family audit records their completed paths. Full numerical-extension and final
 physical/network/performance acceptance remain open.
 
 [Body construction and continuous policy](../components/physics-registered-adapter.md#body-construction-and-continuous-policy)

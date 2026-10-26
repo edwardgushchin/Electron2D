@@ -1,6 +1,8 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-20
+Last updated: 2026-10-27
+
+The [declared server/extension contract](../components/physics-server-contract.md) records all 140 pinned implementation operations, their common-metadata and selected numerical roles, combined checks and remaining full-goal gates.
 
 [Long contour pair checks](../components/physics-queries.md#long-pairs-of-flat-and-rounded-contours)
 verify rotated capsule contacts and continuous flat-core movement through real
@@ -301,7 +303,7 @@ if (IsBodyExcludedFromMotionTest(candidateRID) ||
 
 ## Verification and limits
 
-[Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The separate public-only consumer implements a bounded circle/constraint model; it is a test solver, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+[Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The separate public-only consumer implements a bounded circle/constraint model; it is a test solver, not a production backend. The declared-family audit records supported custom geometry and exercised operations; complete numerical/network/native/platform/performance acceptance remains open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 `GetPortableOneWayCount` bounds the next `CapturePortableOneWays` span, even after retained storage has grown. Returned count cannot exceed that current span. Valid continuation requires distinct bound colliders, enabled logical shapes, implementation-validated nonnegative pieces and no duplicate unordered pair. `CompletePortableRestore` receives the translated local identities, restored tick and finite nonnegative source step in seconds; restore implementation timing before later queries or callback views. The required `step` argument replaces the earlier two-argument hook; the external consumer checks actual pass-through and contact impulses after restore.
 

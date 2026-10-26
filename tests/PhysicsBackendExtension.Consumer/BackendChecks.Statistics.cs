@@ -72,6 +72,35 @@ public static partial class BackendChecks
                 for (var i = 0; i < 128; i++) Frame();
                 owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
                 Check(owner == 0 && all == 0, $"Full moving statistics frames allocate {owner}/{all} B");
+                var secondSpace = backend is { } selected ? PhysicsServer.SpaceCreate(selected) : PhysicsServer.SpaceCreate(name);
+                var secondBody = PhysicsServer.BodyCreate();
+                try
+                {
+                    PhysicsServer.BodySetMode(secondBody, PhysicsServer.BodyMode.Kinematic);
+                    PhysicsServer.BodySetCanSleep(secondBody, false);
+                    PhysicsServer.BodySetSpace(secondBody, secondSpace);
+                    PhysicsServer.SpaceSetActive(secondSpace, true);
+                    Counts(3, 1, "A new world contributes no unfinished sample");
+                    PhysicsServer.SpaceStep(secondSpace, 1d / 60);
+                    Counts(4, 1, "Scene and owned server worlds contribute independent completed samples");
+                    PhysicsServer.SpaceSetActive(secondSpace, false);
+                    Counts(3, 1, "Local inactivity excludes only its own world's sample");
+                    PhysicsServer.SpaceSetActive(secondSpace, true);
+                    PhysicsServer.SetActive(false);
+                    try
+                    {
+                        PhysicsServer.SpaceStep(secondSpace, 1d / 60); Step();
+                        Counts(4, 1, "Global suspension retains both completed samples");
+                    }
+                    finally { PhysicsServer.SetActive(true); }
+                    PhysicsServer.FreeRID(secondSpace); secondSpace = default;
+                    Counts(3, 1, "Retirement removes only the retired world's contribution");
+                }
+                finally
+                {
+                    PhysicsServer.FreeRID(secondBody);
+                    if (secondSpace.IsValid()) PhysicsServer.FreeRID(secondSpace);
+                }
                 Console.WriteLine($"Statistics {world.PhysicsBackendName}, threaded={threaded}: contacts/sensors/kinematic/joint/sleep/history, 128 warm/128 measured full frames {owner}/{all} B passed.");
 
                 void Frame() { PhysicsServer.BodyApplyCentralImpulse(raw, new(.001f, 0)); Step(); Counts(3, 1, "Measured complete frame retains actual groups"); }

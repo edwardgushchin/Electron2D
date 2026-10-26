@@ -581,7 +581,11 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 159, "Partial": 1, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
+                "Implemented": 160, "Partial": 0, "Unimplemented": 0, "Blocked": 0, "Excluded": 55}
+    extension_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2DExtension.md"].splitlines()
+                      if row.startswith("| [`") and "github.com/godotengine" in row]
+    assert len(extension_rows) == 141 and all(" | Implemented | " in row for row in extension_rows)
+    assert "physics-server-contract.md" in server_rows[0] and "physics-server-contract.md" in extension_rows[0]
     for owner, prefix in (("PhysicsServer2D", ""), ("PhysicsServer2DExtension", "_")):
         rows = pages[CLASS_PAGES / (owner + ".md")].splitlines()
         row = next(row for row in rows if f"method {prefix}free_rid(" in row)

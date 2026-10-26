@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-20
+Last updated: 2026-10-27
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -309,7 +309,7 @@ interception would leave scene behavior and direct queries outside the extension
 
 ### Current implementation boundary
 
-PhysicsServerManager now registers typed factories returning fresh PhysicsServerBackend/Extension objects. Named World/Space selection exposes requested/actual names and Extension identity, with immutable lazy captures and reserved built-in choices. The complete implemented numerical boundary includes public collider/joint/history hooks and immutable configuration/observation values; query exclusions are borrowed spans. A separate public-only circle/spring consumer drives real scene and owned server spaces, priority/factory/lifetime errors, queries, observations and local/portable restore with zero warmed frame allocations. This does not close custom geometry or certify all 140 reference operation semantics; those missing or unexercised paths stay open.
+PhysicsServerManager now registers typed factories returning fresh PhysicsServerBackend/Extension objects. Named World/Space selection exposes requested/actual names and Extension identity, with immutable lazy captures and reserved built-in choices. The complete implemented numerical boundary includes public collider/joint/history hooks and immutable configuration/observation values; query exclusions are borrowed spans. The separate public-only consumer drives real scene and owned server spaces with independent numerical geometry, contacts, joints, queries and private/portable history. The [declared-family audit](../components/physics-server-contract.md) records all 140 reference operations, their typed common/selected paths and combined lifecycle/failure checks. Complete numerical, network, native/platform and performance acceptance remains separate; passing the declared-family checks does not certify every possible custom algorithm or workload.
 
 ### Rejected alternatives
 

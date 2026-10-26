@@ -44,9 +44,13 @@ public static partial class BackendChecks
                 Check(solver is not null, "The registered implementation is actually initialized");
                 using var unbound = new Solver(); Reject<InvalidOperationException>(() => _ = unbound.IsFlushingQueries);
                 nestedSpace = PhysicsServer.SpaceCreate("NotificationPhase"); nested = factory!; PhysicsServer.SpaceSetActive(nestedSpace, true);
-                nested.StepHook = () => Check(!nested.IsFlushingQueries && PhysicsServer.SpaceIsFlushingQueries(space), "Other-world solve keeps independent delivery status");
+                var ownerThread = Thread.CurrentThread; var nestedChecked = false; var solveChecked = false;
+                Action readNested = () => _ = nested.IsFlushingQueries;
+                Action readSolver = () => _ = solver!.IsFlushingQueries;
+                Action readWorld = () => PhysicsServer.SpaceIsFlushingQueries(space);
+                nested.StepHook = () => SolveStatus(nested, true, ref nestedChecked);
                 nested.FlushHook = () => Check(nested.IsFlushingQueries && solver!.IsFlushingQueries, "Nested other-world flushing retains both active scopes");
-                solver!.StepHook = () => Check(!solver.IsFlushingQueries && !PhysicsServer.SpaceIsFlushingQueries(space), "Numerical solve is outside notification delivery");
+                solver!.StepHook = () => SolveStatus(solver, false, ref solveChecked);
                 solver.FlushHook = () =>
                 {
                     Phase(); flushes++;
@@ -56,6 +60,19 @@ public static partial class BackendChecks
                 };
                 solver.SyncHook = () => Check(!solver.IsFlushingQueries && !PhysicsServer.SpaceIsFlushingQueries(space), "End synchronization runs after delivery");
                 nest = true;
+
+                void SolveStatus(Solver active, bool outerFlushing, ref bool checkedAccess)
+                {
+                    if (Thread.CurrentThread == ownerThread)
+                        Check(!active.IsFlushingQueries && PhysicsServer.SpaceIsFlushingQueries(space) == outerFlushing,
+                            "Owner-thread solving retains independent notification status");
+                    else if (!checkedAccess)
+                    {
+                        checkedAccess = true;
+                        Reject<InvalidOperationException>(active == nested ? readNested : readSolver);
+                        Reject<InvalidOperationException>(readWorld);
+                    }
+                }
             }
             Tick(0); Check(force >= 2 && script > 0 && sync >= 2 && contacts > 0 && areas > 0, "Real scene/raw body, contact and Area callbacks execute");
             for (var i = 0; i < 128; i++) Tick(i);

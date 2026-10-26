@@ -63,6 +63,7 @@ public static partial class BackendChecks
         RunBodyParameters();
         WorldPolicyChecks();
         RunWorldParameters();
+        RunStatistics();
         SceneSpaceChecks();
         RunMembership();
         RunAreaFields();
