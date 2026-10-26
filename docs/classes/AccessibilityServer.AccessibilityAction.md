@@ -8,7 +8,7 @@ Last updated: 2026-10-26
 
 ## Description
 
-Typed compiled actions run on the display owner. Click activates the ordinary button path; Focus and Blur reuse GUI focus. This is the executable first action subset; numeric SetValue is available through Action<double>; directed text selection and replacement use typed callbacks; typed unit/hint/point/offset scrolling has real native consumers; remaining value/color/custom/popup payload families retain their dependencies.
+Typed compiled actions run on the display owner. Click activates the ordinary button path; Focus and Blur reuse GUI focus. Collapse/Expand request branch changes through no-argument callbacks. numeric SetValue is available through Action<double>; directed text selection and replacement use typed callbacks; typed unit/hint/point/offset scrolling has real native consumers; remaining value/color/custom/popup payload families retain their dependencies.
 
 ## Values
 
@@ -17,6 +17,8 @@ Typed compiled actions run on the display owner. Click activates the ordinary bu
 | <a id="click"></a>`Click` | 0 | Activates the element. |
 | <a id="focus"></a>`Focus` | 1 | Requests focus. |
 | <a id="blur"></a>`Blur` | 2 | Releases focus. |
+| <a id="collapse"></a>`Collapse` | 3 | Requests branch collapse. |
+| <a id="expand"></a>`Expand` | 4 | Requests branch expansion. |
 | <a id="decrement"></a>`Decrement` | 5 | No-argument numeric decrement. |
 | <a id="increment"></a>`Increment` | 6 | No-argument numeric increment. |
 | <a id="settextselection"></a>`SetTextSelection` | 9 | Anchor/focus line RIDs and scalar offsets via a four-argument callback. |
@@ -35,3 +37,5 @@ Typed compiled actions run on the display owner. Click activates the ordinary bu
 Use `AccessibilityServer.UpdateAddAction(id, AccessibilityServer.AccessibilityAction.Click, Activate)` in an active supported display owner. Invalid numeric selectors reject. Element lifetime and native availability follow the owning service.
 
 [Native scrolling](AccessibilityServer.md#native-scrolling) defines coordinate spaces, source unit projection, endpoint actions, clipping and owner/lifetime rules.
+
+[Native collections](AccessibilityServer.md#native-collections) defines item selection, branch actions and source behavior.

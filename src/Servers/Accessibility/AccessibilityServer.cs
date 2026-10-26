@@ -60,6 +60,21 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal Action<AccessibilityScrollUnit>? SourceScrollUpAction, SourceScrollDownAction, SourceScrollLeftAction, SourceScrollRightAction;
         internal Action? SourceScrollBackwardAction, SourceScrollForwardAction;
 
+        internal CollectionState? Collection;
+        internal bool SelectionRegistered, TableRegistered, TableCellRegistered, CollectionRetirementQueued;
+        internal Control? CollectionSource;
+        internal object? CollectionItem;
+        internal TreeItem? CollectionTreeItem;
+        internal int CollectionSourceIndex, CollectionSourceColumn;
+        internal bool CollectionSelectable = true;
+        internal Element? CollectionParent;
+        internal Dictionary<object, Element>? SourceCollectionElements;
+        internal HashSet<object>? SourceCollectionExpected;
+        internal List<object>? SourceCollectionRemoved;
+        internal List<Element>? SourceCollectionOrder;
+        internal CollectionState? SourceCollectionSnapshot;
+        internal long SourceCollectionVersion = long.MinValue, SourceCollectionStateVersion = long.MinValue;
+        internal Element? SourceCollectionActive;
         internal bool OwnedSubelement, IsApplication, IsWindow, Focused, Checked, Retired, ScreenOriginKnown, WindowFocused;
         internal Rect2 OuterRect, InnerRect;
         internal AccessibilityRole Role;
@@ -222,9 +237,13 @@ public sealed partial class AccessibilityServer : ElectronObject
             var index = parent.Children.IndexOf(e); parent.Children.RemoveAt(index); e.Parent = null;
             try { _native!.ChildrenChanged(parent, e, false, index); } catch (Exception error) { (errors ??= []).Add(error); }
         }
+        if (e.SourceCollectionElements is { } collection)
+            foreach (var item in collection.Values.ToArray())
+                if (!item.Retired && item.CollectionSource == e.Source)
+                    try { Free(item); } catch (Exception error) { (errors ??= []).Add(error); }
         e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
         e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
-        e.Retired = true; ClearScroll(e); e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
+        e.Retired = true; ClearCollectionSource(e); ClearScroll(e); e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
         RetireRelations(e, ref errors); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
         try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
         try { ValidateTextSelections(); } catch (Exception error) { (errors ??= []).Add(error); }
@@ -302,7 +321,7 @@ public sealed partial class AccessibilityServer : ElectronObject
         if (!transform.IsFinite()) throw new ArgumentOutOfRangeException(nameof(transform));
         var r = Require(); var e = r.Get(id); if (!TransformBounds(e.Bounds, transform).IsFinite() || !TransformBounds(e.Bounds, transform).End.IsFinite()) throw new ArgumentOutOfRangeException(nameof(transform)); if (e.Transform == transform) return; e.Transform = transform; r._native!.BoundsChanged(e);
     }
-    /// <summary>Registers a compiled no-argument activation, focus, numeric step or sequential scroll callback.</summary><param name="id">Element.</param><param name="action">Action kind.</param><param name="callback">Borrowed callback run on the display owner.</param>
+    /// <summary>Registers a compiled no-argument activation, focus, branch, numeric step or sequential scroll callback.</summary><param name="id">Element.</param><param name="action">Action kind.</param><param name="callback">Borrowed callback run on the display owner.</param>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
@@ -310,7 +329,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="ArgumentNullException">A required text or callback argument is null.</exception>
     public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)
     {
-        ArgumentNullException.ThrowIfNull(callback); if (action is not (AccessibilityAction.Click or AccessibilityAction.Focus or AccessibilityAction.Blur or AccessibilityAction.Decrement or AccessibilityAction.Increment or AccessibilityAction.ScrollBackward or AccessibilityAction.ScrollForward)) throw new ArgumentOutOfRangeException(nameof(action));
+        ArgumentNullException.ThrowIfNull(callback); if (action is not (AccessibilityAction.Click or AccessibilityAction.Focus or AccessibilityAction.Blur or AccessibilityAction.Decrement or AccessibilityAction.Increment or AccessibilityAction.Expand or AccessibilityAction.Collapse or AccessibilityAction.ScrollBackward or AccessibilityAction.ScrollForward)) throw new ArgumentOutOfRangeException(nameof(action));
         var r = Require(); var e = r.Get(id); e.Actions[action] = callback; r._native!.ActionsChanged(e);
     }
     /// <summary>Publishes the currently focused semantic element.</summary><param name="id">A live element.</param>
@@ -369,12 +388,13 @@ public sealed partial class AccessibilityServer : ElectronObject
             r._native = null; r._attempted = false; r._automatic = false; r._focused.Clear(); r._focusOwners.Clear(); r._activeOwners.Clear();
             foreach (var e in r._elements.Values)
             {
+                r.ClearCollectionSource(e); ClearScroll(e);
                 e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
                 e.Retired = true; e.Actions.Clear(); e.Children.Clear(); e.Parent = null; e.Source = null;
                 e.Relations.Clear(); e.RelationOwners.Clear(); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
                 e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
             }
-            r._elements.Clear(); r._windows.Clear(); r.Application.Children.Clear();
+            r._elements.Clear(); r._windows.Clear(); r._collectionSources.Clear(); r._collectionRetirements.Clear(); r.Application.Children.Clear();
         }
     }
     internal static void RetireWindow(int windowID)

@@ -255,6 +255,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
                 _ => throw new InvalidRequestException("Unknown numeric property.")
             };
         }
+        if (iface is SelectionInterface or TableInterface or TableCellInterface) return CollectionProperty(e, iface, name);
         if (iface == TextInterface) return TextProperty(e, name);
         if (iface == Hyperlink) return HyperlinkProperty(e, name);
         if (iface == ApplicationInterface) return name switch
@@ -275,6 +276,9 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             g_variant_builder_add_value(b, S(Accessible)); g_variant_builder_add_value(b, S(Component));
             if (ActionCount(e) != 0) g_variant_builder_add_value(b, S(ActionInterface));
             if (e.HasNumericValue) g_variant_builder_add_value(b, S(ValueInterface));
+            if (e.SelectionRegistered) g_variant_builder_add_value(b, S(SelectionInterface));
+            if (e.TableRegistered) g_variant_builder_add_value(b, S(TableInterface));
+            if (e.TableCellRegistered) g_variant_builder_add_value(b, S(TableCellInterface));
             if (e.TextEnabled) g_variant_builder_add_value(b, S(TextInterface));
             if (e.ReplaceTextAction is not null && (e.SetTextSelectionAction is not null || e.Source is LineEdit or TextEdit)) g_variant_builder_add_value(b, S(EditableTextInterface));
             if (AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.LinkTarget) is not null) g_variant_builder_add_value(b, S(Hyperlink));
@@ -304,6 +308,9 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         if (e.Retired) throw new InvalidRequestException("The accessibility element has retired.", retired: true);
         if (iface == Cache && method == "GetItems") return Tuple([CacheItems()]);
         if (iface == ApplicationInterface) return method switch { "GetLocale" => Tuple([S(TranslationServer.Culture.Name)]), "GetApplicationBusAddress" => Tuple([S("")]), _ => throw new InvalidOperationException("Unknown application method.") };
+        if (iface == SelectionInterface) return SelectionCall(e, method, args);
+        if (iface == TableInterface) return TableCall(e, method, args);
+        if (iface == TableCellInterface) return TableCellCall(e, method);
         if (iface == TextInterface) return TextCall(e, method, args);
         if (iface == EditableTextInterface) return EditableTextCall(e, method, args);
         if (iface == Accessible) return method switch
@@ -364,6 +371,8 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         AAction.ScrollRight => request.Jump == 0 ? "scroll-right" : "scroll-page-right",
         AAction.ScrollBackward => "scroll-backward",
         AAction.ScrollForward => "scroll-forward",
+        AAction.Expand => "expand",
+        AAction.Collapse => "collapse",
         AAction.Click => "click",
         AAction.Focus => "focus",
         AAction.Blur => "blur",

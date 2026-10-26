@@ -45,19 +45,20 @@ internal sealed unsafe partial class ATSPIServer
         return from < low ? from - low : to - high;
     }
     private static float Offset(float current, double delta, float min, float max, bool bounded) => (float)Math.Clamp(current + delta, bounded ? min : -float.MaxValue, bounded ? max : float.MaxValue);
-    private static bool ScrollMoves(Element parent, Element target)
+    private static byte ScrollAxes(Element parent, Element target)
     {
-        if (parent.SetScrollOffsetAction != parent.SourceSetScrollOffsetAction) return true;
-        if (target.TextSource == parent.Source && target.TextSource is not null) return true;
-        if ((target.Source ?? target.TextSource) is not CanvasItem item) return target.Source is null && target.TextSource is null;
+        if (parent.SetScrollOffsetAction != parent.SourceSetScrollOffsetAction) return 3;
+        if (target.CollectionSource == parent.Source && target.CollectionSource is not null) return (byte)(target.Role == AccessibilityServer.AccessibilityRole.ColumnHeader ? 1 : 3);
+        if (target.TextSource == parent.Source && target.TextSource is not null) return 3;
+        if ((target.Source ?? target.TextSource ?? target.CollectionSource) is not CanvasItem item) return (byte)(target.Source is null && target.TextSource is null ? 3 : 0);
         for (var child = item; child.RenderParent is { } owner; child = owner)
             if (owner == parent.Source) return owner switch
             {
-                ScrollContainer container => container.AccessibilityScrollsChild(child),
-                GraphEdit => child is GraphElement,
-                _ => false,
+                ScrollContainer container => (byte)(container.AccessibilityScrollsChild(child) ? 3 : 0),
+                GraphEdit => (byte)(child is GraphElement ? 3 : 0),
+                _ => 0,
             };
-        return false;
+        return 0;
     }
     private static bool ScrollTo(Element e, uint hint, Vector2? point)
     {
@@ -72,10 +73,12 @@ internal sealed unsafe partial class ATSPIServer
         var target = Bounds(e); var accepted = false;
         for (var parent = e.Parent; parent is not null; parent = parent.Parent)
         {
-            if (parent.SetScrollOffsetAction is null || !ScrollMoves(parent, e)) continue;
+            var axes = ScrollAxes(parent, e);
+            if (parent.SetScrollOffsetAction is null || axes == 0) continue;
             if (!CanInvoke(parent)) return false;
             var frame = AccessibilityServer.SourceScrollFrame(parent) ?? (parent.Transform, parent.Bounds, parent.ScrollOffset, parent.ScrollMinimum, parent.ScrollMaximum, (byte)(parent.ScrollMask & 12));
             var (world, view, before, min, max, ranges) = frame;
+            if (e.Role == AccessibilityServer.AccessibilityRole.ColumnHeader && e.CollectionSource == parent.Source && parent.Source is Tree tree) view = tree.AccessibilityCollectionHeaderView();
             if (world.Determinant() == 0 || !float.IsFinite(world.Determinant()) || !world.IsFinite() || view.Size.X <= 0 || view.Size.Y <= 0) return false;
             var inverse = world.AffineInverse(); if (!inverse.IsFinite()) return false;
             var local = inverse * target;
@@ -97,15 +100,19 @@ internal sealed unsafe partial class ATSPIServer
                 dx = RevealDelta(local.Position.X, local.End.X, view.Position.X, view.End.X, horizontal);
                 dy = RevealDelta(local.Position.Y, local.End.Y, view.Position.Y, view.End.Y, vertical);
             }
+            if ((axes & 1) == 0) dx = 0; if ((axes & 2) == 0) dy = 0;
             var requested = new Vector2(Offset(before.X, dx, min.X, max.X, (ranges & 4) != 0), Offset(before.Y, dy, min.Y, max.Y, (ranges & 8) != 0));
             if (!InvokeScrollPoint(parent, requested, false)) return false;
             accepted = true; if (e.Retired || parent.Retired) return true;
-            var after = AccessibilityServer.SourceScrollFrame(parent)?.Offset ?? parent.ScrollOffset;
+            var tabSource = e.CollectionSource is TabBar sourceTabs && parent.Source == sourceTabs ? sourceTabs : null;
+            tabSource?.AccessibilityRevealCollection(e);
+            var sourceAfter = AccessibilityServer.SourceScrollFrame(parent);
+            var after = sourceAfter?.Offset ?? parent.ScrollOffset;
             // The producer may publish on the next frame; its accepted request still defines the pending displacement.
-            if (after == before) after = requested;
+            if (sourceAfter is null && after == before) after = requested;
             var movement = world.BasisXform(after - before);
             if (!movement.IsFinite()) return false;
-            target.Position -= movement;
+            if (tabSource is not null) target = Bounds(e); else target.Position -= movement;
             if (parent.Flag(AccessibilityServer.AccessibilityFlags.ClipsChildren)) target = target.Intersection(world * view);
         }
         return accepted;

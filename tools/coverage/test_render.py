@@ -477,7 +477,10 @@ def main():
     scroll_names = ("update_set_scroll_x", "update_set_scroll_y", "update_set_scroll_x_range", "update_set_scroll_y_range")
     scroll_rows = [next(row for row in accessibility_rows if f"method {name}(" in row) for name in scroll_names]
     assert len(scroll_rows) == 4 and all(" | Implemented | " in row for row in scroll_rows)
-    assert " | Unimplemented | " in next(row for row in accessibility_rows if "method update_set_list_item_count(" in row)
+    collection_names = ('update_set_list_item_count', 'update_set_list_item_index', 'update_set_list_item_level', 'update_set_list_item_selected', 'update_set_list_item_expanded', 'update_set_list_orientation', 'update_set_table_row_count', 'update_set_table_column_count', 'update_set_table_row_index', 'update_set_table_column_index', 'update_set_table_cell_position', 'update_set_table_cell_span')
+    collection_rows = [next(row for row in accessibility_rows if f"method {name}(" in row) for name in collection_names]
+    assert len(collection_rows) == 12 and all(" | Implemented | " in row for row in collection_rows)
+    assert all(" | Implemented | " in next(row for row in accessibility_rows if f"enum_value ACTION_{name} [AccessibilityAction]" in row) for name in ("COLLAPSE", "EXPAND"))
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

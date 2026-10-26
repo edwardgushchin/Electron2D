@@ -1622,3 +1622,5 @@ Gets or sets local branch visibility.
 Attached operations require the owning scene thread and a live item/control. Invalid indices, invalid enum values, nonfinite required configuration and ownership/cycle violations throw before mutation. Item/metadata/resource lifetimes follow the description above. See [hierarchical cells](../components/hierarchical-cells.md) for runtime flow, exercised editor and native workflows, allocation boundaries and dependency limits; [Tree coverage](../coverage/classes/Tree.md) and [TreeItem coverage](../coverage/classes/TreeItem.md) account for the applicable comparison surface. Relevant decisions: ADRs 0004, 0008, 0014, 0023, 0038, 0046, 0051 and 0083.
 
 Autowrap trimming accepts only current TextLineBreakFlags bits; unknown and retired bits throw ArgumentOutOfRangeException before publication. Use TrimStartEdgeSpaces | TrimEndEdgeSpaces for both edges.
+
+Native cell identities survive reorder and same-window tree transfer; selection and Collapsed changes use their ordinary events. See [native collections](AccessibilityServer.md#native-collections) for source policy, lifetime and verification limits.

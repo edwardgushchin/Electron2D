@@ -1815,7 +1815,7 @@
         "class:Tree"
       ],
       "state": "Partial",
-      "reason": "Current hierarchy/cell authoring and embedded editing execute. Independent native popup windows require the Window/DisplayServer child-window host; current popup editors require GUIEmbedSubwindows on a containing viewport. Native semantic accessibility consumes retained cell/button descriptions only after its service exists. Editor-authored item graphs and physical/foreign acceptance are separate gates; runtime item graphs are not serialized as Nodes."
+      "reason": "Current hierarchy/cell authoring and embedded editing execute. Independent native popup windows require the Window/DisplayServer child-window host; current popup editors require GUIEmbedSubwindows on a containing viewport. Native collection selection, table/cell/header navigation and folding execute under ADR 0114. Retained per-cell button descriptions and embedded-editor semantic actions require their complete accessory source/action slice. Editor-authored item graphs and physical/foreign acceptance are separate gates; runtime item graphs are not serialized as Nodes."
     },
     {
       "godot": [

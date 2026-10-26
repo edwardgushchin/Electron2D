@@ -29926,6 +29926,19 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Collapse()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "Collapse",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction Collapse = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "3"
+  },
+  {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Decrement()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
@@ -29937,6 +29950,19 @@
     "parameters": [],
     "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
     "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Expand()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "Expand",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction Expand = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Focus()",
@@ -71707,6 +71733,150 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetListItemCount(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetListItemCount",
+    "signature": "public static System.Void UpdateSetListItemCount(Electron2D.RID id, System.Int32 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetListItemExpanded(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetListItemExpanded",
+    "signature": "public static System.Void UpdateSetListItemExpanded(Electron2D.RID id, System.Boolean expanded)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "expanded",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetListItemIndex(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetListItemIndex",
+    "signature": "public static System.Void UpdateSetListItemIndex(Electron2D.RID id, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetListItemLevel(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetListItemLevel",
+    "signature": "public static System.Void UpdateSetListItemLevel(Electron2D.RID id, System.Int32 level)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "level",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetListItemSelected(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetListItemSelected",
+    "signature": "public static System.Void UpdateSetListItemSelected(Electron2D.RID id, System.Boolean selected)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "selected",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetListOrientation(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetListOrientation",
+    "signature": "public static System.Void UpdateSetListOrientation(Electron2D.RID id, System.Boolean vertical)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "vertical",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateSetMemberOf(Electron2D.RID,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -72051,6 +72221,160 @@
       {
         "name": "max",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTableCellPosition(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTableCellPosition",
+    "signature": "public static System.Void UpdateSetTableCellPosition(Electron2D.RID id, System.Int32 rowIndex, System.Int32 columnIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "rowIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "columnIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTableCellSpan(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTableCellSpan",
+    "signature": "public static System.Void UpdateSetTableCellSpan(Electron2D.RID id, System.Int32 rowSpan, System.Int32 columnSpan)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "rowSpan",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "columnSpan",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTableColumnCount(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTableColumnCount",
+    "signature": "public static System.Void UpdateSetTableColumnCount(Electron2D.RID id, System.Int32 count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTableColumnIndex(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTableColumnIndex",
+    "signature": "public static System.Void UpdateSetTableColumnIndex(Electron2D.RID id, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTableRowCount(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTableRowCount",
+    "signature": "public static System.Void UpdateSetTableRowCount(Electron2D.RID id, System.Int32 count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTableRowIndex(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTableRowIndex",
+    "signature": "public static System.Void UpdateSetTableRowIndex(Electron2D.RID id, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
         "default": null
       }
     ],

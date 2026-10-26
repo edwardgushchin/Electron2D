@@ -10,7 +10,7 @@ SceneTree retains one controller for automatic native semantic output. A cached 
 
 Native windows have separate roots and focus targets. Embedded windows and SubViewport controls belong to their containing native window; focus follows the active viewport/embedded chain. Source state and numeric snapshots avoid re-emitting defaults over custom metadata every frame. Topology changes, callback dispatch and native queries are cold allocation-capable work; unchanged warmed traversal reuses node/focus/order storage. Nodes retire their own borrowed identity and owned sub-elements before leaving a tree, including exceptional exits. Scene serialization stores metadata, never the native identity or callbacks. SceneTree finalization releases the retained traversal/controller.
 
-This private controller cannot add text editing or selection/table protocols by assigning a role. See the service's row-level coverage and ADR 0114 for follow-up boundaries. AccessibilityFoundationTests exercises actual native output and independently launched protocol clients.
+Text editing and collection protocols require actual source records and native consumers; assigning a role alone is insufficient. AccessibilityFoundationTests exercises actual native output and independently launched protocol clients.
 
 Range sources publish numeric state and editable/read-only actions through the Value interface. Value, bounds, step and page snapshots suppress redundant native output and preserve custom overrides until source changes; delegates are created only when the source binds. AccessibilityValueTests covers all seven concrete widgets through an external native client.
 
@@ -19,3 +19,5 @@ Stored Control relation paths and ButtonGroup toggle membership reconcile after 
 The [native text slice](AccessibilityServer.md#native-text) adds source line reconciliation, Text/EditableText request handling and scalar geometry/ICU boundaries. Private query snapshots and copied TextStyle metadata retain no borrowed native font pointers; active source publication reuses cached lines.
 
 Eight existing GUI source families now publish prepared native scroll snapshots and default callbacks. Source flags reflect actual rendered clips, and source changes preserve the existing explicit-override policy. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
+
+CollectionSources reconciles actual ItemList items, Tree cells/headers and TabBar tabs. A complete source pass precedes stale-record retirement so same-window transfers preserve identity. Prepared metadata snapshots preserve custom overrides until the source changes; source retirement clears records/callback contexts. See [native collections](AccessibilityServer.md#native-collections).

@@ -118,7 +118,7 @@ internal static partial class AccessibilityFoundationTests
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.CreateSubElement(parent, Role.Button, -2));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.CreateSubElement(parent, Role.Button, 4));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateSetFlag(parent, (Flag)10, true));
-        Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateAddAction(parent, (AAction)3, () => { }));
+        Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateAddAction(parent, (AAction)7, () => { }));
         Reject<ArgumentNullException>(() => AccessibilityServer.UpdateAddAction(parent, AAction.Click, (Action)null!));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateSetBounds(parent, new(0, 0, -1, 4)));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateSetBounds(parent, new(float.NaN, 0, 1, 1)));

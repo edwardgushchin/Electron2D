@@ -90,7 +90,7 @@ public partial class Tree
             _vBar.Position = new(IsLayoutRTL() ? leftMargin : Size.X - _vBar.GetBoundMinimumSize().X - right, topMargin); _vBar.Size = new(_vBar.GetBoundMinimumSize().X, Math.Max(1, Size.Y - topMargin - bottom - hHeight)); _vBar.MinValue = 0; _vBar.Step = 1; _vBar.MaxValue = Math.Max(_contentHeight, _body.Size.Y); _vBar.Page = _body.Size.Y; _vBar.Visible = _scrollV && _contentHeight > _body.Size.Y;
             _hBar.Position = new(leftMargin + (IsLayoutRTL() ? vWidth : 0), Size.Y - hHeight - bottom); _hBar.Size = new(Math.Max(1, Size.X - leftMargin - right - vWidth), hHeight); _hBar.MinValue = 0; _hBar.Step = 1; _hBar.MaxValue = Math.Max(_contentWidth, _body.Size.X); _hBar.Page = _body.Size.X; _hBar.Visible = _scrollH && _contentWidth > _body.Size.X;
             foreach (var name in new[] { "arrow", "arrow_collapsed", "arrow_collapsed_mirrored", "checked", "checked_disabled", "indeterminate", "indeterminate_disabled", "unchecked", "unchecked_disabled", "select_arrow", "updown", "scroll_hint" }) Watch(GetThemeIcon(name));
-            _texturesResident = IsInsideTree; _fontGeneration = font.GetContentGeneration(); _titleGeneration = titleFont.GetContentGeneration(); _dirty = false;
+            _texturesResident = IsInsideTree; _fontGeneration = font.GetContentGeneration(); _titleGeneration = titleFont.GetContentGeneration(); _dirty = false; _accessibilityCollectionVersion++;
         }
         finally { _building = false; }
     }

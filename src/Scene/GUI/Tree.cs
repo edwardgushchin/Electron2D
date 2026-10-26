@@ -116,15 +116,16 @@ public partial class Tree : Control
     }
     private List<(TreeItem Item, int Column)> BeginSelectionChanges()
     {
+        _accessibilityCollectionVersion++;
         var depth = _selectionDepth++;
         if (_selectionChanges.Count <= depth) _selectionChanges.Add([]);
         var changes = _selectionChanges[depth]; changes.Clear(); return changes;
     }
     /// <summary>Deselects every row/cell; multiple mode also clears the cursor.</summary>
-    public void DeselectAll() { EnsureTreeMutable(); for (var item = _root; item != null; item = item.WalkNext(false, true)) foreach (var cell in item.Cells) cell.Selected = false; _selected = null; _selectedColumn = -1; QueueRedraw(); }
+    public void DeselectAll() { EnsureTreeMutable(); _accessibilityCollectionVersion++; for (var item = _root; item != null; item = item.WalkNext(false, true)) foreach (var cell in item.Cells) cell.Selected = false; _selected = null; _selectedColumn = -1; QueueRedraw(); }
     internal void SelectItemCell(TreeItem item, int column, bool selected, bool cursor, bool notifyMulti = true)
     {
-        EnsureTreeMutable(); RequireItem(item); var cell = item.At(column); if (selected && !cell.Selectable) return; var changed = cell.Selected != selected; if (!changed && !_allowReselect) { if (selected && cursor && (_selected != item || _selectedColumn != column)) { _selected = item; _selectedColumn = column; QueueRedraw(); if (_selectMode == SelectMode.Multi && notifyMulti) BeginEventEmission(_publisherCellSelected.Handlers)?.Invoke(); } return; }
+        EnsureTreeMutable(); RequireItem(item); _accessibilityCollectionVersion++; var cell = item.At(column); if (selected && !cell.Selectable) return; var changed = cell.Selected != selected; if (!changed && !_allowReselect) { if (selected && cursor && (_selected != item || _selectedColumn != column)) { _selected = item; _selectedColumn = column; QueueRedraw(); if (_selectMode == SelectMode.Multi && notifyMulti) BeginEventEmission(_publisherCellSelected.Handlers)?.Invoke(); } return; }
         if (selected && _selectMode != SelectMode.Multi) DeselectAll(); if (_selectMode == SelectMode.Row) foreach (var c in item.Cells) c.Selected = selected && c.Selectable; else cell.Selected = selected;
         if (cursor && selected) { _selected = item; _selectedColumn = column; } else if (!selected) { if (_selectMode != SelectMode.Multi && _selected == item && (_selectMode == SelectMode.Row || _selectedColumn == column)) { _selected = null; _selectedColumn = -1; } }
         QueueRedraw(); List<Exception>? errors = null;

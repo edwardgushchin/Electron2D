@@ -515,3 +515,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 ## Native accessibility producers
 
 [SceneAccessibility](../classes/SceneAccessibility.md) reconciles automatic Node semantic identity/order after ordinary frame/deferred work. Node exposes queued update/invalidate notifications and warning/focused-element extension points. Control stores translated accessible names/descriptions; GUI focus and BaseButton activation remain the behavior owners. Native RIDs and callbacks are never copied or serialized. See [Native accessibility](../components/accessibility.md) for application policy, native protocols and verification limits.
+
+[Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.

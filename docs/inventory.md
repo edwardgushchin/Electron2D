@@ -2281,3 +2281,5 @@ The existing VisualShaderNodeInput canvas family also executes original model/ca
 | [Core event connections](components/event-connections.md) | [EventPublisher.Generic.Store](classes/EventPublisher.Generic.Store.md) | [source](../src/Core/Object/EventPublisher.cs) | Private delegate snapshot/mutation and membership synchronization. |
 
 AccessibilityServer.Scroll.cs/ScrollSources.cs and ATSPIServer.Scroll.cs add finite scroll metadata, typed callbacks and native placement/actions. The existing eight GUI source families have AccessibilityScroll partials; tuple snapshots and source callback fields stay private to their owning types.
+
+AccessibilityServer.Collections.cs/CollectionSources.cs and ATSPIServer.Collections.cs/CollectionProtocol.cs add native Selection/Table/TableCell and owned item/tab/cell/header reconciliation. CollectionState stays internal to AccessibilityServer; source callbacks and snapshot fields remain private to existing Element/GUI owners. ItemList, Tree and TabBar have AccessibilityCollection partials; TreeItem/TabContainer reuse those producers.

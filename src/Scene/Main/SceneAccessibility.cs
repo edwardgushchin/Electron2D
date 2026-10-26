@@ -67,10 +67,11 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var description = node is Control c2 ? c2.AccessibleDescription : "";
             var role = RoleFor(node); var flags = 0UL;
             if (node is LineEdit or TextEdit) AccessibilityServer.UpdateSourceText(e);
-            if (node is Control scrollSource) AccessibilityServer.UpdateSourceScroll(e, scrollSource);
+            if (node is Control scrollSource) { AccessibilityServer.UpdateSourceScroll(e, scrollSource); AccessibilityServer.UpdateSourceCollection(e, scrollSource); }
             var visible = node is not CanvasItem canvas || canvas.IsVisibleInTree;
             if (node is Window win) visible = win.Visible;
             if (!visible) flags |= 1UL << (int)Flag.Hidden;
+            if (node is ItemList { SelectionMode: not ItemList.SelectMode.Single } or Tree { SelectionMode: Tree.SelectMode.Multi }) flags |= 1UL << (int)Flag.Multiselectable;
             if (node is Range rangeFlags && !AccessibilityServer.NumericEditable(rangeFlags)) flags |= 1UL << (int)Flag.ReadOnly;
             if (node is BaseButton { Disabled: true }) flags |= 1UL << (int)Flag.Disabled;
             if (node is Window || node is Control { RenderClip: not null }) flags |= 1UL << (int)Flag.ClipsChildren;
@@ -110,6 +111,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
                 _focus[e.WindowID] = selected;
             }
         }
+        AccessibilityServer.FinishSourceCollections();
         SyncRelations();
         foreach (var (window, id) in _previousFocus) if (!_focus.ContainsKey(window)) AccessibilityServer.ClearFocusIf(id);
         _previousFocus.Clear();

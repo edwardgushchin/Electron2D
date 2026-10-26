@@ -137,6 +137,10 @@ public sealed partial class AccessibilityServer
         Focus = 1,
         /// <summary>Releases focus.</summary>
         Blur = 2,
+        /// <summary>Requests collapsing a branch through a no-argument callback.</summary>
+        Collapse = 3,
+        /// <summary>Requests expanding a branch through a no-argument callback.</summary>
+        Expand = 4,
         /// <summary>Requests one semantic numeric decrement using a no-argument callback.</summary>
         Decrement = 5,
         /// <summary>Requests one semantic numeric increment using a no-argument callback.</summary>

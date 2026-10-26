@@ -3,7 +3,7 @@
 Last updated: 2026-10-26
 
 - Declaration: `public sealed partial class AccessibilityServer : ElectronObject`
-- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs)
+- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs), [collection API](../../src/Servers/Accessibility/AccessibilityServer.Collections.cs), [collection sources](../../src/Servers/Accessibility/AccessibilityServer.CollectionSources.cs)
 - Inherits: [ElectronObject](ElectronObject.md); no derived types or public constructor.
 - Component: [Native accessibility](../components/accessibility.md)
 
@@ -79,7 +79,6 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateSetPlaceholder(RID id, string placeholder)` | [UpdateSetPlaceholder](#updatesetplaceholder) |
 | `public static void UpdateSetNextOnLine(RID id, RID otherID)` | [UpdateSetNextOnLine](#updatesetnextonline) |
 | `public static void UpdateSetPreviousOnLine(RID id, RID otherID)` | [UpdateSetPreviousOnLine](#updatesetpreviousonline) |
-
 | `public static void UpdateSetScrollX(RID id, float position)` | [UpdateSetScrollX](#updatesetscrollx) |
 | `public static void UpdateSetScrollXRange(RID id, float min, float max)` | [UpdateSetScrollXRange](#updatesetscrollxrange) |
 | `public static void UpdateSetScrollY(RID id, float position)` | [UpdateSetScrollY](#updatesetscrolly) |
@@ -88,13 +87,26 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<AccessibilityScrollHint> callback)` | [Scroll callbacks](#scroll-callbacks) |
 | `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<Vector2> callback)` | [Scroll callbacks](#scroll-callbacks) |
 
+| `public static void UpdateSetListItemCount(RID id, int size)` | [Native collections](#native-collections) |
+| `public static void UpdateSetListItemIndex(RID id, int index)` | [Native collections](#native-collections) |
+| `public static void UpdateSetListItemLevel(RID id, int level)` | [Native collections](#native-collections) |
+| `public static void UpdateSetTableRowCount(RID id, int count)` | [Native collections](#native-collections) |
+| `public static void UpdateSetTableColumnCount(RID id, int count)` | [Native collections](#native-collections) |
+| `public static void UpdateSetTableRowIndex(RID id, int index)` | [Native collections](#native-collections) |
+| `public static void UpdateSetTableColumnIndex(RID id, int index)` | [Native collections](#native-collections) |
+| `public static void UpdateSetListItemSelected(RID id, bool selected)` | [Native collections](#native-collections) |
+| `public static void UpdateSetListItemExpanded(RID id, bool expanded)` | [Native collections](#native-collections) |
+| `public static void UpdateSetListOrientation(RID id, bool vertical)` | [Native collections](#native-collections) |
+| `public static void UpdateSetTableCellPosition(RID id, int rowIndex, int columnIndex)` | [Native collections](#native-collections) |
+| `public static void UpdateSetTableCellSpan(RID id, int rowSpan, int columnSpan)` | [Native collections](#native-collections) |
+
 ## Enumerations
 
 | Type | Contract |
 | --- | --- |
 | [AccessibilityRole](AccessibilityServer.AccessibilityRole.md) | All 48 semantic role selectors and native role projections. |
 | [AccessibilityFlags](AccessibilityServer.AccessibilityFlags.md) | Ten independent state/geometry selectors. |
-| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Activation/focus, numeric/text and typed scroll requests; other payload families remain incomplete. |
+| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Activation/focus/expansion, numeric/text and typed scroll requests; other payload families remain incomplete. |
 | [AccessibilityScrollUnit](AccessibilityServer.AccessibilityScrollUnit.md) | Item and page scroll amounts. |
 | [AccessibilityScrollHint](AccessibilityServer.AccessibilityScrollHint.md) | Six preferred reveal edges. |
 
@@ -203,7 +215,7 @@ Sets the affine transform applied to the element's bounds. The matrix and result
 
 `public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)`
 
-Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Decrement, Increment, ScrollBackward or ScrollForward. The Action<double> overload accepts numeric SetValue only. The four-argument RID/scalar overload accepts SetTextSelection; the string overload accepts ReplaceSelectedText. Their producer and source rules are specified in [Native text](#native-text). Unit/hint/point/offset overloads are specified in [Native scrolling](#native-scrolling). Remaining value/custom/popup payload families await their native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
+Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Collapse, Expand, Decrement, Increment, ScrollBackward or ScrollForward. The Action<double> overload accepts numeric SetValue only. The four-argument RID/scalar overload accepts SetTextSelection; the string overload accepts ReplaceSelectedText. Their producer and source rules are specified in [Native text](#native-text). Unit/hint/point/offset overloads are specified in [Native scrolling](#native-scrolling). Remaining value/custom/popup payload families await their native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
 
 <a id="updatesetfocus"></a>
 ### UpdateSetFocus
@@ -458,3 +470,28 @@ Publishes inclusive finite vertical bounds with `min <= max`, independently of t
 | `UpdateAddAction(RID id, AccessibilityAction action, Action<Vector2> callback)` | ScrollToPoint: finite window-client point; SetScrollOffset: finite absolute local offset. |
 
 Callbacks are borrowed, replaced by another registration for that selector and released with the element. They execute on the display owner. Native failures reply with Failed and aggregate on that owner; callbacks may retire their producer and owned subtree. No exception crosses the unmanaged ABI. Null callbacks throw ArgumentNullException and mismatched selectors throw ArgumentOutOfRangeException. Like the four setters, these methods require a supported display, owner-thread access and a live same-service RID; unavailable support throws NotSupportedException, ownership violations InvalidOperationException and unknown/foreign/retired identities KeyNotFoundException. Nonfinite offsets and nonfinite/reversed ranges throw ArgumentOutOfRangeException before publication.
+
+## Native collections
+
+Collection setters publish actual producer state without changing selection, resizing a table or invoking callbacks. Equal updates are silent. Counts, positions, indices and levels are nonnegative integers; spans are positive integers. Public item indices and hierarchy levels start at zero; native posinset/level attributes start at one. Counts and cell coordinates are independent publications, so partially built tables retain their authored state. Invalid values throw ArgumentOutOfRangeException; support, thread and RID guards follow the service lifetime contract.
+
+| Publication | Native consumer |
+| --- | --- |
+| UpdateSetListItemCount | Collection size and Selection discovery. Item indices inherit the parent's set size. |
+| UpdateSetListItemIndex / Level | Position and hierarchy attributes. |
+| UpdateSetListItemSelected | Selected/selectable states, Selection enumeration and change events. |
+| UpdateSetListItemExpanded | Expandable/expanded states and change events. Collapse/Expand use no-argument UpdateAddAction callbacks. |
+| UpdateSetListOrientation | Horizontal/vertical states. |
+| UpdateSetTableRowCount / ColumnCount | Table dimensions and interface discovery. |
+| UpdateSetTableRowIndex / ColumnIndex | Row/column attributes and RowHeader/ColumnHeader lookup. |
+| UpdateSetTableCellPosition / Span | TableCell discovery, row/column/span queries, containing table and header cells. |
+
+Native Selection uses actual direct-child indices, including any non-item siblings; selected-child indices address only the selected snapshot. Requests reuse registered Focus/Blur callbacks for custom items, whose producer owns mutation and publication. Automatic consumers reuse their ordinary public selection paths. Hidden, disabled, detached, retired and read-only owners reject mutation. Nonselectable source items reject new selection. SelectAll and table-axis requests preflight the source's single, row or multi selection policy. Snapshot dispatch tolerates callbacks that reparent or retire the collection; callback failures retain the original exception for the owner and reply Failed on the wire.
+
+Table queries include dimensions, cells, actual accessible child indices, spans, headers, selected rows/columns and axis selection. Merged cells cover their published extent; overflow-safe arithmetic preserves int.MaxValue metadata. Selected-axis enumeration rejects a response exceeding 1,000,000 distinct candidate indices with a native argument error rather than allocating an unbounded message. This is a native response limit, not a public count/span limit. Unpublished caption/summary/header relations return null references. Nested tables own their own cells.
+
+ItemList owns one transient item element per actual item. Focus selects that item through Select's ordinary single/current behavior and focuses the owner; native multi-selection uses additive Select. Activation raises ItemActivated. Programmatic ItemList selection remains silent. Tree owns header/cell elements, reports visible table rows, merged spans and ordinary TreeItem.Select/Deselect events, and exposes Collapse/Expand through Collapsed. Cells are direct tree children so table child indices remain usable; NODE_CHILD_OF/NODE_PARENT_OF relations retain hierarchy. Hidden roots are transparent. Folding and visibility retain identities while excluding hidden cells from table coordinates and interaction. TabBar owns tab elements, respects disabled/hidden tabs and DeselectEnabled and preserves CurrentTab during reveal. TabContainer's owned strip uses the same producer.
+
+IDs follow actual item/tab/cell objects during reorder and same-window TreeItem transfer. Reconciliation retires removed records after all source owners have had a chance to claim transferred objects. Node/window retirement removes owned virtual records even after manual semantic reparenting. Scene duplication creates independent IDs; archives retain only source GUI state. Prepared idle and active selection publication reuses cached layouts, delegates and records; cold requests/topology/layout/native allocation remain separate.
+
+[The public collection scene](../../tests/Electron2D.Tests/AccessibilityCollectionTests.cs) and [independent wire/libatspi client](../../tests/AccessibilityClient/collection.py) exercise native selection, table/cell discovery, spans/headers, expansion, scrolling, source events, identity transfer, retirement, invalid requests and failure/reopening. Native software-backend and source NativeAOT checks do not establish physical-device, human-reader, foreign-platform or release-package acceptance.

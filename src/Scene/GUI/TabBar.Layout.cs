@@ -116,6 +116,19 @@ public partial class TabBar
             {
                 var tab = _tabs[i]; tab.Offset += shift; tab.Rect = new(IsLayoutRTL() ? Size.X - tab.Offset - tab.Width : tab.Offset, 0, tab.Width, Size.Y); PlaceContent(i);
             }
+        var prefix = 0f; var origin = 0f; var visibleCount = 0;
+        for (var i = 0; i < _tabs.Count; i++)
+        {
+            var tab = _tabs[i]; tab.AccessibilityRect = default; if (tab.Hidden) continue;
+            if (visibleCount++ > 0) prefix += _tabSeparation;
+            if (i == _offset) origin = prefix;
+            tab.AccessibilityRect = new(prefix, 0, tab.Width, Size.Y); prefix += tab.Width;
+        }
+        foreach (var tab in _tabs)
+        {
+            if (tab.Hidden) continue; var x = tab.AccessibilityRect.Position.X - origin + shift;
+            tab.AccessibilityRect = new(IsLayoutRTL() ? Size.X - x - tab.Width : x, 0, tab.Width, Size.Y);
+        }
         if (IsLayoutRTL()) { _nextRect = new(0, 0, _decrement.GetWidth(), Size.Y); _backRect = new(_decrement.GetWidth(), 0, _increment.GetWidth(), Size.Y); }
         else { _backRect = new(Size.X - arrows, 0, _decrement.GetWidth(), Size.Y); _nextRect = new(Size.X - _increment.GetWidth(), 0, _increment.GetWidth(), Size.Y); }
     }

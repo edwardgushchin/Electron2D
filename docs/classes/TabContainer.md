@@ -722,3 +722,5 @@ Occurs when a valid assignment selects a tab, including an equal assignment.
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+The owned TabBar supplies native tab Selection through the same page-selection path. See [native collections](AccessibilityServer.md#native-collections) for source policy, lifetime and verification limits.

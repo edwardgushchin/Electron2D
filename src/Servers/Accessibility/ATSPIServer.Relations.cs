@@ -10,9 +10,14 @@ internal sealed unsafe partial class ATSPIServer
     internal void EnableHyperlink(Element element) => EnableInterface(element, Hyperlink);
     private static (uint Forward, uint Reverse) RelationTypes(Kind kind) => kind switch
     {
-        Kind.Controls => (3, 4), Kind.DescribedBy => (18, 17), Kind.Details => (19, 20),
-        Kind.FlowTo => (10, 11), Kind.LabeledBy => (2, 1), Kind.RadioGroup or Kind.MemberOf => (5, 0),
-        Kind.ErrorMessage => (21, 22), _ => (0, 0)
+        Kind.Controls => (3, 4),
+        Kind.DescribedBy => (18, 17),
+        Kind.Details => (19, 20),
+        Kind.FlowTo => (10, 11),
+        Kind.LabeledBy => (2, 1),
+        Kind.RadioGroup or Kind.MemberOf => (5, 0),
+        Kind.ErrorMessage => (21, 22),
+        _ => (0, 0)
     };
     private nint Relations(Element element)
     {
@@ -28,6 +33,8 @@ internal sealed unsafe partial class ATSPIServer
         foreach (var owner in element.RelationOwners)
             if (!owner.Retired) foreach (var relation in owner.Relations)
                     if (relation.Target == element) Add(RelationTypes(relation.Kind).Reverse, owner);
+        if (element.CollectionParent is { } collectionParent) Add(7, collectionParent);
+        if (element.Parent is { } collectionOwner) foreach (var child in collectionOwner.Children) if (child.CollectionParent == element) Add(8, child);
         var builder = Builder("a(ua(so))");
         try
         {

@@ -7,7 +7,7 @@ public partial class TabBar
     private (Vector2 Offset, Vector2 Minimum, Vector2 Maximum, Vector2 Step, Vector2 Page, Rect2 View, byte Axes, byte Ranges) _accessibilityScrollMetrics;
     internal (Vector2 Offset, Vector2 Minimum, Vector2 Maximum, Vector2 Step, Vector2 Page, Rect2 View, byte Axes, byte Ranges) AccessibilityScrollMetrics()
     {
-        RebuildTabs(false); var enabled = _scrollingEnabled && _clipTabs;
+        RebuildTabs(); var enabled = _scrollingEnabled && _clipTabs;
         if (_accessibilityScrollCachedVersion == _accessibilityScrollVersion && _accessibilityScrollEnabled == enabled) return _accessibilityScrollMetrics;
         var arrows = _buttonsVisible ? _decrement.GetWidth() + _increment.GetWidth() : 0;
         var page = Math.Max(0, Size.X - arrows); var view = new Rect2(IsLayoutRTL() ? arrows : 0, 0, page, Size.Y);
@@ -37,11 +37,14 @@ public partial class TabBar
     {
         var state = AccessibilityScrollMetrics(); if (!_scrollingEnabled || !_clipTabs) return;
         var wanted = Math.Clamp(offset.X, state.Minimum.X, state.Maximum.X); if (IsLayoutRTL()) wanted = -wanted;
-        var prefix = 0f; var selected = -1; var count = 0;
+        var prefix = 0f; var selected = -1; var count = 0; var distance = float.PositiveInfinity;
+        var maximum = IsLayoutRTL() ? -state.Minimum.X : state.Maximum.X;
         for (var i = 0; i < _tabs.Count; i++)
         {
             if (_tabs[i].Hidden) continue; if (count++ > 0) prefix += _tabSeparation;
-            if (prefix > wanted && selected >= 0) break; selected = i; prefix += _tabs[i].Width;
+            if (prefix > maximum) break;
+            var candidate = Math.Abs(prefix - wanted); if (candidate < distance) { distance = candidate; selected = i; }
+            prefix += _tabs[i].Width;
         }
         if (selected >= 0 && selected != _offset) { _offset = selected; PlaceTabs(); QueueRedraw(); }
     }

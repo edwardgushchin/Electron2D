@@ -8,6 +8,7 @@ internal sealed unsafe partial class ATSPIServer
 {
     private static Rect2 Bounds(Element e)
     {
+        if (e.CollectionSource is not null) return AccessibilityServer.CollectionBounds(e);
         if (e.TextSource is { IsDisposed: false, IsInsideTree: true } source)
         {
             if (source is TextEdit edit && (uint)e.TextLine >= (uint)edit.GetLineCount()) return default;
@@ -32,7 +33,7 @@ internal sealed unsafe partial class ATSPIServer
         var connected = false;
         for (var p = e; p is not null; p = p.Parent)
         {
-            if (p.Retired || p.Flag(AFlag.Hidden)) return false;
+            if (p.Retired || p.Flag(AFlag.Hidden) || !AccessibilityServer.CollectionItemLive(p)) return false;
             if (p.Source is { } source && (source.IsDisposed || !source.IsInsideTree || source.IsDepartingTree || source.IsQueuedForDeletion || source is CanvasItem { IsVisibleInTree: false } || source is Window { Visible: false })) return false;
             connected |= p.IsApplication;
         }
@@ -46,14 +47,14 @@ internal sealed unsafe partial class ATSPIServer
     }
     private static bool InheritsClip(Element target, Element parent)
     {
-        if (parent.Source is not CanvasItem owner || (target.Source ?? target.TextSource) is not CanvasItem item) return true;
+        if (parent.Source is not CanvasItem owner || (target.Source ?? target.TextSource ?? target.CollectionSource) is not CanvasItem item) return true;
         for (var child = item; child is not null; child = child.RenderParent) if (child == owner) return true;
         return false;
     }
     private static bool Showing(Element e)
     {
         if (!Visible(e)) return false; if (e.IsApplication) return true;
-        var rect = Bounds(e); if (rect.Size.X <= 0 || rect.Size.Y <= 0) return false;
+        var rect = Bounds(e); if (e.CollectionSource is TabBar tabs && !tabs.AccessibilityCollectionDrawn(e)) return false; if (rect.Size.X <= 0 || rect.Size.Y <= 0) return false;
         for (var p = e.Parent; p is not null; p = p.Parent)
         {
             if (!p.Flag(AFlag.ClipsChildren) || !InheritsClip(e, p)) continue;
@@ -65,7 +66,7 @@ internal sealed unsafe partial class ATSPIServer
     private static bool Contains(Element e, int x, int y, uint kind)
     {
         var coordinates = Coordinates(e, kind);
-        if (!Visible(e) || kind == 0 && WindowRoot(e) is not { ScreenOriginKnown: true } || !coordinates.HasPoint(new(x, y))) return false;
+        if (!Visible(e) || e.CollectionSource is TabBar tabs && !tabs.AccessibilityCollectionDrawn(e) || kind == 0 && WindowRoot(e) is not { ScreenOriginKnown: true } || !coordinates.HasPoint(new(x, y))) return false;
         var windowPoint = new Vector2(x, y) - coordinates.Position + Bounds(e).Position;
         for (var p = e.Parent; p is not null; p = p.Parent) if (p.Flag(AFlag.ClipsChildren) && InheritsClip(e, p) && !ClipBounds(p).HasPoint(windowPoint)) return false;
         return true;

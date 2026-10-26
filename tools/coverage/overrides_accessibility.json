@@ -899,6 +899,90 @@
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetScrollYRange(Electron2D.RID,System.Single,System.Single)",
       "state": "Implemented",
       "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_list_item_count(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetListItemCount(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_list_item_index(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetListItemIndex(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_list_item_level(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetListItemLevel(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_list_item_selected(RID:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetListItemSelected(Electron2D.RID,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_list_item_expanded(RID:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetListItemExpanded(Electron2D.RID,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_list_orientation(RID:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetListOrientation(Electron2D.RID,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_table_row_count(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTableRowCount(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_table_column_count(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTableColumnCount(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_table_row_index(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTableRowIndex(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_table_column_index(RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTableColumnIndex(Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_table_cell_position(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTableCellPosition(Electron2D.RID,System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_table_cell_span(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTableCellSpan(Electron2D.RID,System.Int32,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_COLLAPSE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Collapse()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_EXPAND",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Expand()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
     }
   ],
   "extras": [
@@ -954,20 +1038,18 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families. Complete color/table/announcement and remaining payload-action/content-producer families retain their row triggers.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Complete color/announcement and remaining payload-action/content-producer families retain their row triggers.",
       "godot": [
         "class:AccessibilityServer"
       ]
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native live-announcement/expanded/popup/custom-action state and event consumer with actual GUI source transitions. Do not add inert metadata or unsupported action selectors.",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native live-announcement/popup/custom-action state and event consumer with actual GUI source transitions. Do not add inert metadata or unsupported action selectors.",
       "godot": [
         "AccessibilityServer::enum:AccessibilityLiveMode",
         "AccessibilityServer::enum:AccessibilityPopupType",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_COLLAPSE",
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_EXPAND",
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_HIDE_TOOLTIP",
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_CONTEXT_MENU",
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_TOOLTIP",
@@ -981,24 +1063,6 @@
         "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)",
         "AccessibilityServer::method:update_set_live(RID:,int:AccessibilityServer.AccessibilityLiveMode)",
         "AccessibilityServer::method:update_set_popup_type(RID:,int:AccessibilityServer.AccessibilityPopupType)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: native scrolling and typed scroll payloads execute. Remaining collection metadata enters the native Selection/Table/TableCell slice with owned row/cell identities, index/selection/expanded state and actual ItemList/Tree/TabBar consumers; assigning a role is insufficient.",
-      "godot": [
-        "AccessibilityServer::method:update_set_list_item_count(RID:,int:)",
-        "AccessibilityServer::method:update_set_list_item_expanded(RID:,bool:)",
-        "AccessibilityServer::method:update_set_list_item_index(RID:,int:)",
-        "AccessibilityServer::method:update_set_list_item_level(RID:,int:)",
-        "AccessibilityServer::method:update_set_list_item_selected(RID:,bool:)",
-        "AccessibilityServer::method:update_set_list_orientation(RID:,bool:)",
-        "AccessibilityServer::method:update_set_table_cell_position(RID:,int:,int:)",
-        "AccessibilityServer::method:update_set_table_cell_span(RID:,int:,int:)",
-        "AccessibilityServer::method:update_set_table_column_count(RID:,int:)",
-        "AccessibilityServer::method:update_set_table_column_index(RID:,int:)",
-        "AccessibilityServer::method:update_set_table_row_count(RID:,int:)",
-        "AccessibilityServer::method:update_set_table_row_index(RID:,int:)"
       ]
     },
     {
@@ -1315,6 +1379,26 @@
         "AccessibilityServer::method:update_set_scroll_x_range(RID:,float:,float:)",
         "AccessibilityServer::method:update_set_scroll_y(RID:,float:)",
         "AccessibilityServer::method:update_set_scroll_y_range(RID:,float:,float:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate.",
+      "godot": [
+        "AccessibilityServer::method:update_set_list_item_count(RID:,int:)",
+        "AccessibilityServer::method:update_set_list_item_index(RID:,int:)",
+        "AccessibilityServer::method:update_set_list_item_level(RID:,int:)",
+        "AccessibilityServer::method:update_set_list_item_selected(RID:,bool:)",
+        "AccessibilityServer::method:update_set_list_item_expanded(RID:,bool:)",
+        "AccessibilityServer::method:update_set_list_orientation(RID:,bool:)",
+        "AccessibilityServer::method:update_set_table_row_count(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_column_count(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_row_index(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_column_index(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_cell_position(RID:,int:,int:)",
+        "AccessibilityServer::method:update_set_table_cell_span(RID:,int:,int:)",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_COLLAPSE",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_EXPAND"
       ]
     }
   ]

@@ -135,3 +135,5 @@ Semantic relationships now connect stored Control paths and live radio groups to
 Native accessibility now includes [text and editing](../classes/AccessibilityServer.md#native-text) for LineEdit/TextEdit/CodeEdit, with typed manual producers and copied shaped text. The owning reference records exact native, allocation and platform limits.
 
 Native accessibility scrolling now connects existing scrollable GUI sources to AT-SPI placement and typed actions. [The service contract](../classes/AccessibilityServer.md#native-scrolling) owns coordinate, clipping, lifetime and verification boundaries.
+
+[Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.

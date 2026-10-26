@@ -6,7 +6,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class ATSPIServer
 {
-    private static uint NativeRole(AccessibilityServer.Element e) => e.IsApplication ? 75u : e.TextProtected ? 40u : e.Role switch
+    private static uint NativeRole(AccessibilityServer.Element e) => e.IsApplication ? 75u : e.TextProtected ? 40u : e.Role == Role.Tree && e.TableRegistered ? 66u : e.Role switch
     {
         Role.Unknown => 67u,
         Role.DefaultButton => 43u,
@@ -58,7 +58,7 @@ internal sealed unsafe partial class ATSPIServer
         Role.TextRun => 61u,
         _ => throw new ArgumentOutOfRangeException(nameof(e)),
     };
-    private static string NativeRoleName(AccessibilityServer.Element e) => e.IsApplication ? "application" : e.TextProtected ? "password text" : e.Role switch
+    private static string NativeRoleName(AccessibilityServer.Element e) => e.IsApplication ? "application" : e.TextProtected ? "password text" : e.Role == Role.Tree && e.TableRegistered ? "tree table" : e.Role switch
     {
         Role.Unknown => "unknown",
         Role.DefaultButton => "push button",
@@ -138,6 +138,10 @@ internal sealed unsafe partial class ATSPIServer
         Set(31, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ActiveDescendant) is not null);
         Set(36, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ErrorMessage) is not null);
         Set(39, e.Role == Role.DefaultButton);
+        Set(22, e.Collection?.Selected is not null && e.CollectionSelectable);
+        Set(23, e.Collection?.Selected == true);
+        Set(9, e.Collection?.Expanded is not null); Set(10, e.Collection?.Expanded == true);
+        Set(14, e.Collection?.Vertical == false); Set(29, e.Collection?.Vertical == true);
         return Array("u", [g_variant_new_uint32((uint)bits), g_variant_new_uint32((uint)(bits >> 32))]);
     }
     private readonly List<AccessibilityServer.Element> _visibilityNodes = [];

@@ -41,7 +41,7 @@ public partial class TabBar : Control
         internal readonly TextLayout Layout = new(), Intrinsic = new();
         internal float Width, TextWidth, Offset;
         internal Vector2 IconSize;
-        internal Rect2 Rect, ButtonRect, CloseRect;
+        internal Rect2 Rect, ButtonRect, CloseRect, AccessibilityRect;
     }
     private sealed class MetadataValue<T>(T value) { internal readonly T Value = value; }
     private readonly List<Tab> _tabs = [];
