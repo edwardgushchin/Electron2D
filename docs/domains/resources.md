@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -324,3 +324,7 @@ Shader resource storage now includes a bounded typed sampler-state table. [Sampl
 Compiled [particle and writable-texture visual graphs](../components/visual-shaders.md#particle-and-writable-texture-graph-domains) use the existing offline importer, immutable program/material ownership and native compute/blit consumers. Lifecycle graph roots, exact device birth numbers, borrowed planar mesh emission and typed supplied-field masks execute through those consumers; light/varying/editor transport retains its own gate.
 
 Typed visual graph routing uses [VisualShaderNodeReroute](../classes/VisualShaderNodeReroute.md) for numeric, matrix and ordinary/array sampler chains. Role inference, typed portable storage and offline/native execution use the existing [visual shader pipeline](../components/visual-shaders.md#typed-reroute-chains).
+
+## Material recovery
+
+[Material placeholders](../components/material-placeholders.md) connect fresh program-free Material factories with version-8 typed missing-material recovery, opaque graph preservation, cache/worker/local ownership and fresh-process restoration. Current native evidence covers Linux software GPU/Compatibility; physical GPU, native-heap, foreign and owner gates remain distinct.

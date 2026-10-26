@@ -187,6 +187,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINKED_SCENES") is { } l
     return;
 }
 
+if (args.Length == 3 && args[0] == "--material-placeholder") { MaterialPlaceholderTests.RunChild(args[1], args[2]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_PLACEHOLDER") == "managed") { MaterialPlaceholderTests.RunManaged(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_PLACEHOLDER") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATERIAL_PLACEHOLDER") is { } materialPlaceholderBackend) { MaterialPlaceholderTests.RunNative(materialPlaceholderBackend); return; }
 if (args.Length == 3 && args[0] == "--missing-texture") { MissingTextureTests.RunChild(args[1], args[2]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") == "managed") { MissingTextureTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_TEXTURE") is { } missingTextureBackend) { MissingTextureTests.RunNative(missingTextureBackend); return; }
@@ -1875,6 +1878,7 @@ TextureArrayTests.Run();
 NumericMatrixTests.Run("managed");
 MeshTextureTests.Managed();
 TexturePlaceholderTests.RunManaged();
+MaterialPlaceholderTests.RunManaged();
 MissingTextureTests.RunManaged();
 LinkedSceneTests.RunManaged();
 DeferredSceneTests.RunManaged();

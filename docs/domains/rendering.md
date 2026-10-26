@@ -42,7 +42,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [Integer material graphs](../components/visual-shaders.md#integer-arithmetic-and-bit-patterns) now execute exact signed/unsigned arithmetic, functions and bit masks through the existing archive/import/material path. Byte-encoded and UV-driven consumers observe precision before float conversion.
 
@@ -541,3 +541,7 @@ Canvas graphs and imported HLSL/GLSL execute the renderer-owned [command texture
 Authored canvas light graphs replace each real light contribution through the existing compositor. See [the light graph contract](../components/canvas-light-graphs.md) for ports, varying storage, resource ownership and verification.
 
 [Canvas point programs](../components/canvas-points.md) execute native point size and coordinates across graph, expression/custom and paired GLSL/HLSL shaders, meshes, instances and particles.
+
+## Material recovery
+
+[Material placeholders](../components/material-placeholders.md) use ordinary canvas color drawing through loaded scene resources and direct borrowed material RID bindings. Returned materials restore their actual blend behavior; particle compute rejects the canvas-only fallback. Current native evidence covers Linux software GPU/Compatibility; physical GPU, native-heap, foreign and owner gates remain distinct.

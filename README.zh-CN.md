@@ -57,7 +57,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 - [输入](docs/domains/input.md)。键盘、鼠标、触控、控制器、操作映射、快捷键，以及带 IME 组合输入的文本输入。
 - [窗口与显示](docs/domains/display.md)。窗口和全屏模式、多视口、嵌入式及原生弹出窗口、显示信息查询、缩放和画面呈现控制。
 - [导航](docs/domains/navigation.md)。点图和网格 A-star 寻路、多边形区域、导航链接、从几何数据烘焙导航、代理沿路径移动及相互避障。
-- [资源](docs/domains/resources.md)。类型化加载与保存、后台加载、图像、字体、音频、渐变、曲线及噪声纹理。[PCK/ZIP 资源包](docs/components/resource-packs.md)将文件挂载到资源文件系统。
+- [资源](docs/domains/resources.md)。类型化加载与保存、后台加载、图像、字体、音频、渐变、曲线及噪声纹理。[PCK/ZIP 资源包](docs/components/resource-packs.md)将文件挂载到资源文件系统。 [缺失材质恢复](docs/components/material-placeholders.md)保留场景资源数据，供原始类型恢复后使用。
 - [核心服务与文件](docs/domains/core.md)。项目设置、JSON/XML 和配置文件、目录操作、压缩、加密及 ZIP 归档。数学、随机数、后台任务和运行时诊断。
 - [本地化](docs/domains/localization.md)。翻译域与上下文、PO/MO 目录、语言回退、整数复数规则、伪本地化及本地化资源选择。
 - [网络](docs/domains/networking.md)。TCP/UDP 和本地套接字、TLS/DTLS、HTTP/HTTPS、WebSocket 及 ENet。[WebRTC 数据通道](docs/components/webrtc.md)、类型化 RPC、权限控制、联网对象生成及[属性复制](docs/components/scene-replication.md)。

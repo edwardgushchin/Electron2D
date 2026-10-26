@@ -1,10 +1,10 @@
 namespace Electron2D;
 
 internal enum ResourceFieldRole : byte { Scalar, Resource, ResourceArray, Node }
-internal enum ResourceArchiveRole : byte { Resource, Mesh, Texture }
+internal enum ResourceArchiveRole : byte { Resource, Mesh, Texture, Material }
 internal sealed class MissingResourceData
 {
-    internal static MissingResourceData? For(Resource resource) => resource switch { MissingResource missing => missing.Data, PlaceholderMesh mesh => mesh.Data, PlaceholderTexture texture => texture.Data, _ => null };
+    internal static MissingResourceData? For(Resource resource) => resource switch { MissingResource missing => missing.Data, PlaceholderMesh mesh => mesh.Data, PlaceholderTexture texture => texture.Data, PlaceholderMaterial material => material.Data, _ => null };
     internal sealed record Field(string Name, string Schema, ResourceFieldRole Role, bool BigEndian, byte[] Bytes, Resource?[] References, bool NullArray);
     internal readonly Dictionary<string, Field> Fields = new(StringComparer.Ordinal);
     private long _bytes;

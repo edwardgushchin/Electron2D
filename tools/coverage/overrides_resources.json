@@ -574,6 +574,21 @@
       "godot": "MissingNode::property:recording_signals",
       "electron2d": "property:Electron2D.MissingNode.RecordingSignals()",
       "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
+    },
+    {
+      "godot": "class:PlaceholderMaterial",
+      "electron2d": "T:Electron2D.PlaceholderMaterial",
+      "reason": "ADRs 0013/0014/0028: fresh caller-owned program-free canvas placeholders work across the complete material family. Version-8 typed Material recovery retains original factory/opaque fields, aliases/cycles, scene-local ownership and missing-payload provenance through copies, worker requests and file bundles; fresh processes restore the actual blend material. Strict default, legacy versions 1\u20137, cache rollback/replacement, concrete subtype and corrupt role/provenance boundaries are verified. Linux software GPU/Compatibility pixels and 64 prepared RID switches per backend have separate physical-GPU/native-heap/foreign/owner gates."
+    },
+    {
+      "godot": "Material::method:create_placeholder()",
+      "electron2d": "method:Electron2D.Material.CreatePlaceholder()",
+      "reason": "ADRs 0013/0014/0028: fresh caller-owned program-free canvas placeholders work across the complete material family. Version-8 typed Material recovery retains original factory/opaque fields, aliases/cycles, scene-local ownership and missing-payload provenance through copies, worker requests and file bundles; fresh processes restore the actual blend material. Strict default, legacy versions 1\u20137, cache rollback/replacement, concrete subtype and corrupt role/provenance boundaries are verified. Linux software GPU/Compatibility pixels and 64 prepared RID switches per backend have separate physical-GPU/native-heap/foreign/owner gates."
+    },
+    {
+      "godot": "class:Material",
+      "electron2d": "T:Electron2D.Material",
+      "reason": "ADRs 0013/0014/0028: fresh caller-owned program-free canvas placeholders work across the complete material family. Version-8 typed Material recovery retains original factory/opaque fields, aliases/cycles, scene-local ownership and missing-payload provenance through copies, worker requests and file bundles; fresh processes restore the actual blend material. Strict default, legacy versions 1\u20137, cache rollback/replacement, concrete subtype and corrupt role/provenance boundaries are verified. Linux software GPU/Compatibility pixels and 64 prepared RID switches per backend have separate physical-GPU/native-heap/foreign/owner gates."
     }
   ],
   "statusGroups": [
@@ -834,6 +849,15 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0001/0002/0013/0023: loader-created typed missing-node recovery, original class/scene producers, bounded editable archived fields, genuine new-name/event-record gates, nonexecuting retained connection metadata and version-7 fresh-process restoration of actual compiled behavior. Missing scene resaves discard unavailable inherited data with warnings; typed roles, owner lifetime, original delegate-free reconstruction and strict failures remain enforced. Linux managed/software-native evidence is separate from foreign-platform/editor acceptance."
+    },
+    {
+      "godot": [
+        "class:PlaceholderMaterial",
+        "Material::method:create_placeholder()",
+        "class:Material"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0028: fresh caller-owned program-free canvas placeholders work across the complete material family. Version-8 typed Material recovery retains original factory/opaque fields, aliases/cycles, scene-local ownership and missing-payload provenance through copies, worker requests and file bundles; fresh processes restore the actual blend material. Strict default, legacy versions 1\u20137, cache rollback/replacement, concrete subtype and corrupt role/provenance boundaries are verified. Linux software GPU/Compatibility pixels and 64 prepared RID switches per backend have separate physical-GPU/native-heap/foreign/owner gates. Material runtime inheritance, factory and borrowed identity are executable; editor inspection/extension hooks and 3D exclusions retain their individual dependency rows."
     }
   ],
   "extras": [
@@ -1175,11 +1199,60 @@
       "reason": "ADRs 0002/0013/0023: typed C# projection for retained recovery fields, explicit compiled connection recording and ordinary Node lifetime/factory/property hooks. These are executable cold authoring operations documented in MissingNode.md, not additional reference declarations or dynamic dispatch.",
       "adr": "ADRs 0002/0013/0023"
     },
-    {"electron2d": "T:Electron2D.ResourceLocaleRemap", "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.", "adr": "adr-0007"},
-    {"electron2d": "constructor:Electron2D.ResourceLocaleRemap..ctor(System.String,System.String,System.String)", "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.", "adr": "adr-0007"},
-    {"electron2d": "property:Electron2D.ResourceLocaleRemap.SourcePath()", "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.", "adr": "adr-0007"},
-    {"electron2d": "property:Electron2D.ResourceLocaleRemap.Locale()", "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.", "adr": "adr-0007"},
-    {"electron2d": "property:Electron2D.ResourceLocaleRemap.LocalizedPath()", "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.", "adr": "adr-0007"},
-    {"electron2d": "property:Electron2D.ProjectSettings.LocaleResourceRemaps()", "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.", "adr": "adr-0007"}
+    {
+      "electron2d": "T:Electron2D.ResourceLocaleRemap",
+      "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ResourceLocaleRemap..ctor(System.String,System.String,System.String)",
+      "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "property:Electron2D.ResourceLocaleRemap.SourcePath()",
+      "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "property:Electron2D.ResourceLocaleRemap.Locale()",
+      "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "property:Electron2D.ResourceLocaleRemap.LocalizedPath()",
+      "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.LocaleResourceRemaps()",
+      "reason": "ADRs0007/0013/0019: typed immutable source/locale/target projection of internationalization/locale/translation_remaps, bounded validation, copied project arrays and compiled JSON metadata. Ordered real file selection and live refresh execute in ResourceLocales.Consumer; no unrelated capability is introduced.",
+      "adr": "adr-0007"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PlaceholderMaterial..ctor()",
+      "reason": "Typed C# construction and inherited Resource copy/remap/disposal projection for retained material fields and graph ownership. The factory is Material.CreatePlaceholder; no additional extension or native ownership API is exposed.",
+      "adr": "ADRs 0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMaterial.CreateDuplicateInstance()",
+      "reason": "Typed C# construction and inherited Resource copy/remap/disposal projection for retained material fields and graph ownership. The factory is Material.CreatePlaceholder; no additional extension or native ownership API is exposed.",
+      "adr": "ADRs 0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMaterial.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction and inherited Resource copy/remap/disposal projection for retained material fields and graph ownership. The factory is Material.CreatePlaceholder; no additional extension or native ownership API is exposed.",
+      "adr": "ADRs 0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMaterial.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction and inherited Resource copy/remap/disposal projection for retained material fields and graph ownership. The factory is Material.CreatePlaceholder; no additional extension or native ownership API is exposed.",
+      "adr": "ADRs 0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMaterial.Dispose(System.Boolean)",
+      "reason": "Typed C# construction and inherited Resource copy/remap/disposal projection for retained material fields and graph ownership. The factory is Material.CreatePlaceholder; no additional extension or native ownership API is exposed.",
+      "adr": "ADRs 0013/0014/0028"
+    }
   ]
 }

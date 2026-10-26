@@ -45,7 +45,7 @@ internal static partial class ResourceArchive
         if (uid == ResourceUID.InvalidID) uid = ResourceUID.CreateID();
         var file = new byte[checked(64 + encoded.Length)];
         "E2DASSET"u8.CopyTo(file);
-        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 7);
+        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 8);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(12), (int)flags);
         BinaryPrimitives.WriteInt64LittleEndian(file.AsSpan(16), uid);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(24), payload.Length);
@@ -64,7 +64,7 @@ internal static partial class ResourceArchive
         using var stream = ResourcePacks.OpenRead(path);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
-        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6 or 7) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
+        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
         var id = BinaryPrimitives.ReadInt64LittleEndian(header[16..]);
         return id >= 0 ? id : throw new InvalidDataException("Invalid resource UID.");
     }
@@ -83,7 +83,7 @@ internal static partial class ResourceArchive
         var length = FileAccess.GetSize(path);
         if (length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
         var bytes = FileAccess.GetFileAsBytes(path);
-        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6 or 7)) throw new InvalidDataException("Unsupported resource archive version.");
+        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
     }

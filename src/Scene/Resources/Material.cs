@@ -9,6 +9,11 @@ namespace Electron2D;
 public abstract partial class Material : Resource
 {
     private protected Material() { }
+    /// <summary>Creates a fresh canvas material without retaining this material's program or parameters.</summary>
+    /// <returns>A caller-owned placeholder using ordinary canvas color drawing.</returns>
+    /// <remarks>Names, paths, local-scene flags and source resource graphs are not copied. A placeholder is not a particle compute program.</remarks>
+    /// <exception cref="ObjectDisposedException">This material is disposed.</exception>
+    public PlaceholderMaterial CreatePlaceholder() { ThrowIfDisposed(); return new(); }
     internal abstract MaterialState? GetCanvasState();
     internal MaterialState? RequireCanvasState()
     {

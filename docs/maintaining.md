@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -538,3 +538,5 @@ For Custom graph dependency changes, run the root --visual-shader-custom-topolog
 probe and the Custom author/import/render corpus. Cover last incoming edges,
 selected versus overridden cycles, callback count and disconnected providers in
 the other stage; ordinary graph and provider traversal must select the same edges.
+
+For material placeholders and recovery, run `ELECTRON2D_TEST_MATERIAL_PLACEHOLDER=managed`, `gpu` and `compatibility` with the Release runner. Managed verification includes a fresh-process restoration child, all source material kinds, worker policy capture, shallow/deep/local graph identity, missing-payload bundles/external revival, cache rollback/replacement, concrete subtype rejection and known versions 1–7. Run missing-texture, missing-resource, resource-archive, deferred-scene and resource-base profiles after archive role changes. Native profiles require missing/restored pixels and 64 prepared material RID switches; use `ELECTRON2D_CAPTURE_DIR` to retain images. Zero owner-thread managed bytes do not establish native-heap, physical GPU or foreign acceptance.

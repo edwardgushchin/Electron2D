@@ -1,11 +1,11 @@
 # Material
 
-Last updated: 2026-10-11
+Last updated: 2026-10-26
 
 - Declaration: `public abstract class Material : Resource`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
 - Inherits: [Resource](Resource.md)
-- Inherited by: [ShaderMaterial](ShaderMaterial.md), [CanvasItemMaterial](CanvasItemMaterial.md), [ParticleProcessMaterial](ParticleProcessMaterial.md), [BlitMaterial](BlitMaterial.md)
+- Inherited by: [ShaderMaterial](ShaderMaterial.md), [CanvasItemMaterial](CanvasItemMaterial.md), [ParticleProcessMaterial](ParticleProcessMaterial.md), [BlitMaterial](BlitMaterial.md), [PlaceholderMaterial](PlaceholderMaterial.md)
 - Component: [Shader materials](../components/shader-materials.md)
 
 ## Description and API
@@ -13,6 +13,8 @@ Last updated: 2026-10-11
 The base resource for selecting canvas, writable-texture or particle processing. Its `private protected Material()` constructor restricts executable material implementations to the runtime assembly. `override RID GetRID()` supplies a stable borrowed material identity before native startup; there is no consumer implementation hook. Use ShaderMaterial for programmable fragments or CanvasItemMaterial for fixed blend modes, then assign the resource to `CanvasItem.Material`.
 
 Nodes borrow materials. Their disposal does not dispose a shared material. Resource identity, synchronous `Changed`, graph copying and logical disposal follow the inherited Resource contract. The internal render state contains shader code/layout and uniform buffers, without exposing SDL handles to consumers.
+
+`public PlaceholderMaterial CreatePlaceholder()` returns a new caller-owned canvas placeholder without copying the source program, parameters, names, paths or local-scene policy. Disposed sources reject the call. This works across all runtime material kinds, including compute and blit sources; the result itself is canvas-only. Automatic archive recovery retains opaque fields separately. See [material placeholders](../components/material-placeholders.md).
 
 ## Limits and verification
 

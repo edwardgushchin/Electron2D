@@ -49,6 +49,7 @@ public static partial class ResourceFileTypes
         RegisterResourceArray<SkeletonModification>();
         RegisterResource("MissingResource", CreateMissingResource);
         RegisterResource("PlaceholderMesh", CreatePlaceholderMesh);
+        RegisterResource("PlaceholderMaterial", CreatePlaceholderMaterial);
         RegisterResourceArray<Resource>();
         RegisterResource("ArrayMesh", CreateArrayMesh);
         RegisterResource("ImporterMesh", CreateImporterMesh);
@@ -185,6 +186,7 @@ public static partial class ResourceFileTypes
     private static NavigationObstacle CreateNavigationObstacle() => new();
     private static MissingResource CreateMissingResource() => new();
     private static PlaceholderMesh CreatePlaceholderMesh() => new();
+    private static PlaceholderMaterial CreatePlaceholderMaterial() => new();
     private static ArrayMesh CreateArrayMesh() => new();
     private static ImporterMesh CreateImporterMesh() => new();
     private static ImmediateMesh CreateImmediateMesh() => new();

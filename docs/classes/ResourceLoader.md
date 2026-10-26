@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed partial class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
@@ -265,3 +265,5 @@ The .ogv source path recognizes VideoStream and VideoStreamTheora, validates com
 [`ProjectSettings.LocaleResourceRemaps`](ProjectSettings.md#localeresourceremaps) selects physical backing files through [`ResourceLocaleRemap`](ResourceLocaleRemap.md). `Load`, `Exists`, `GetDependencies` and `RenameDependencies` use the selected file. Caller UID resolution, cache key, ResourcePath, original archive UID and internal subresource prefixes retain the logical source. `GetResourceUID` reads the original file. Custom format loaders receive physical `path` and logical `originalPath` separately. Relative archive dependencies resolve beside the selected file; discovery returns resolved fallback paths, and rewriting accepts resolved or stored relative tokens while preserving relative storage.
 
 Mapped loads use the existing graph/cache-mode pipeline. Weak associations include Ignore/IgnoreDeep results; culture and explicit translation refresh copy independent prepared data into compatible live objects before scene notification. Configuration removal restores originals once. A missing selected file falls back to original; malformed selected data throws and preserves the earlier target. Pending threaded requests capture map/culture at acceptance and reject stale preparation before publication. Published resources participate in later refresh. See [full lifecycle and verification](../components/localized-resources.md).
+
+[Version-8 material recovery](../components/material-placeholders.md) preserves typed missing-material fields and graphs for compiled restoration, with strict default loading, legacy readers and explicit missing-payload provenance. See [resource-file layout](../components/resource-files.md#version-8-material-recovery).

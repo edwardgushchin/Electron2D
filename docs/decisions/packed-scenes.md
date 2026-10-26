@@ -1,13 +1,13 @@
 # Packed scenes and runtime hierarchy duplication
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 This bounded document owns ADR 0023. The [decision index](index.md) routes adjacent scene and resource contracts.
 
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 ### Status
 
@@ -95,7 +95,7 @@ Archive version 7 makes connection labels, delivery policy and the single bound 
 
 Ordinary C# event subscribers and EventConnection tokens remain runtime objects. Authored SceneConnectionBinding subscriptions store only registered compiled schema IDs, selected endpoint indices and typed bound payloads under ADR 0010. They are restored before lifecycle notification; source delegates and Nodes are never serialized.
 
-ResourceSaver/ResourceLoader persist the typed PackedScene model as version-7 archives under ADR 0013, with version-1/2/3/4/5/6 layouts retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, inherited-root authoring and non-Disabled edit states remain absent. Missing-node recovery executes as specified above. Deferred linked instances execute as specified above. Actual linked runtime subscenes execute as specified above. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic, Mesh and ordinary Texture missing-resource recovery executes under ADR 0013, including version-4 missing-payload provenance; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader persist the typed PackedScene model as version-8 archives under ADR 0013, with version-1/2/3/4/5/6/7 layouts retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, inherited-root authoring and non-Disabled edit states remain absent. Missing-node recovery executes as specified above. Deferred linked instances execute as specified above. Actual linked runtime subscenes execute as specified above. Programmatic descriptions, transient folding, explicit edited-scene membership and flattened editable-owner capture execute as described above. Generic, Mesh, ordinary Texture and Material missing-resource recovery executes under ADR 0013, including version-4 missing-payload provenance and the version-8 Material role; other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
 
 ### Consequences
 
