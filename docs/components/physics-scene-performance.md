@@ -2,7 +2,7 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 The authorized [2026-10-20 RTX baseline](physics-rtx-current.md) adds physical
 GPU monitored-scene measurements and calibrated native request counts. Its 16,384-body scene medians were close with worse GPU tails. The later
@@ -17,6 +17,97 @@ separate ordinary timing and software-driver limits. Older trials below keep
 their own revisions and workloads.
 
 ## Current-main populated monitor refresh (2026-10-26)
+
+### Process and owner CPU time
+
+Schema 6 of `PhysicsPipelinePerformance` additionally reports `processCPU` and
+`ownerCPU` distributions, plus their `meanProcessCPUMS` and `meanOwnerCPUMS`.
+On Linux these are elapsed CPU milliseconds from `CLOCK_PROCESS_CPUTIME_ID` and
+`CLOCK_THREAD_CPUTIME_ID`, sampled around the complete physical step. Process
+time sums work on all process threads, including numerical/contact workers and
+driver threads; owner time measures only the calling native thread. Other work
+inside the same process can contribute. Unsupported platforms report null.
+
+These intervals include the small clock/timestamp bookkeeping around the step.
+Process CPU time can exceed wall time when workers run concurrently; it must not
+be subtracted from wall time to infer a wait. Neither value measures GPU device
+time. Existing GPU wait measurements include owner-side scheduling inside fence
+waits, and several independently sorted distributions cannot identify the same
+slow frame. Clock reads do not change the physical workload or allocation gate.
+
+Before warmup, calibration requires monotonic clocks, CPU progress during owner
+work, and exclusion of an owner sleep interval. A failed native read preserves
+its immediate errno and stops the benchmark. Wrong wall-clock substitution and
+an invalid clock ID are retained negative controls. The same producer executes
+in CLR and strict NativeAOT; 128 prepared reads require zero owner/all-thread
+managed bytes. Scoped NativeAOT clock qualification does not qualify the
+aggregate physics executable for NativeAOT or measure native heap allocation.
+
+The matched observer records host activity and NVIDIA telemetry once per second
+for both numerical backends. It runs outside the measured process. No clock,
+power or affinity policy is forced. An earlier fast GPU-only observation and its
+one-second control are retained; the control did not improve the median, so
+polling frequency is not established as the cause of the long tail. Evidence:
+`bin/physics-publication-latency/2026-10-26/`.
+
+### Matched-observer diagnostic series
+
+The retained runtime and test payload is source-qualified against
+`932e51d2ae6e8ae498aeeab885821b6c6d4cad2c` plus this benchmark-only change:
+2671 authored runtime documents and 999 test documents. The numerical runtime
+and public API receive no change from this slice. Each process retains 16384
+RigidBody nodes, four walls, eight-contact monitoring, interpolation, disabled
+sleeping, four substeps and sixteen iterations at 144 Hz. It warms 1600 frames
+and measures 128 complete physical frames. CPU headless children disable GPU
+discovery; GPU children load NVIDIA, with no software Vulkan in either lane.
+
+| Order | Physics | Wall mean / p50 / p99, ms | Process CPU mean, ms | Owner CPU mean, ms | Physical managed owner/all B |
+| --- | --- | --- | ---: | ---: | --- |
+| First | CPU | 114.4977 / 111.9056 / 157.8476 | 302.2339 | 65.8337 | 0/0 |
+| First | GPU | 102.7756 / 102.1680 / 111.8584 | 92.4966 | 63.0666 | 0/0 |
+| Reverse | GPU | 104.7135 / 104.5562 / 111.6100 | 95.0535 | 65.4339 | 0/0 |
+| Reverse | CPU | 235.6824 / 196.0010 / 478.6154 | 412.3492 | 94.5597 | 0/0 |
+
+These observations demonstrate the new CPU-time producer and retain successful
+physical/public-state, contact, energy and strict managed-allocation checks.
+They do not establish a stable speedup. CPU wall means vary by more than twofold
+on this shared workstation. External activity receipts include concurrent
+compilation and other large test processes, with materially different load
+between trials; whole-process activity totals do not identify a particular slow
+frame. Keep every trial and repeat performance qualification under controlled
+external load before making a throughput or tail-latency claim.
+
+The original reverse CPU process survived termination of its series controller.
+Its final report and cleanup are retained, but its OS exit was not reaped by the
+observer. It is unqualified; the separately supervised reverse CPU row above
+has a complete exit/payload/telemetry receipt. Neither result is erased.
+
+### Native-window diagnostic pair
+
+The same complete scene opens a fixed 1152x800 Wayland window and uses the GPU
+renderer for either numerical backend. It renders all instances and injects a
+native mouse-motion event each frame. Captured images pass pixel checks and were
+inspected. VSync remains Enabled after the Disabled request.
+
+| Physics | Physical wall mean / p50 / p99, ms | Process CPU mean, ms | Actual FPS | Render p50, ms | Physical managed owner/all B |
+| --- | --- | ---: | ---: | ---: | --- |
+| CPU | 165.5604 / 138.4263 / 426.7248 | 356.3997 | 3.5157 | 106.2676 | 0/0 |
+| GPU | 146.4385 / 127.6551 / 399.8061 | 113.7048 | 3.9831 | 88.3424 | 0/0 |
+
+The outer input-pump brackets allocate 47104 B CPU and 47472 B GPU while
+materializing typed native input events. Pose publication, process and rendering
+allocate zero owner bytes; every complete physical interval is strict 0/0.
+These are not allocation-free complete window loops. They do not resolve the
+separate historical 32-byte canvas observation.
+
+All six diagnostic profiles use one frozen payload. Their reports retain full
+distributions, transfer/uniform/wait costs, physical invariants, source/PDB
+identity, hashes, maps, process retirement and external CPU/GPU activity. Shared
+load prevents a stable speedup claim; the observed FPS values are not 144 Hz
+performance acceptance. CPU timing is implemented and verified, while the
+physics declaration census stays 1351/1369 (98.69%), with 18 open and 92 Excluded.
+
+### Earlier frozen pair
 
 The retained payload source-qualified against
 `cc29a550ca4d1f979b4403dd744a80bef9d995c1` also executes the complete existing `PhysicsPipelinePerformance` scene on both backends. This

@@ -110,6 +110,9 @@ internal static partial class PhysicsPipelinePerformance
             if (gpu is not null) gpu.ForceCountFirstChangeReadback = publicationControl;
             var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8]; var completionPhases = new double[3];
             var frameTimes = new double[samples]; var publishTimes = new double[samples]; var renderTimes = new double[samples];
+            var processCPU = PhysicsCPUClock.IsSupported ? new double[samples] : null;
+            var ownerCPU = PhysicsCPUClock.IsSupported ? new double[samples] : null;
+            if (processCPU is not null) PhysicsCPUClock.Verify();
             for (var i = 0; i < warmup; i++) { display?.Pump(tree); tree.PhysicsFrame(delta); display?.Draw(tree, bodies, delta); }
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
             var upload = gpu?.UploadBytes ?? 0; var readback = gpu?.ReadbackBytes ?? 0;
@@ -129,9 +132,17 @@ internal static partial class PhysicsPipelinePerformance
                 var physicalOwner = GC.GetAllocatedBytesForCurrentThread(); var physicalAll = GC.GetTotalAllocatedBytes(true);
                 var wait = gpu?.WaitMS ?? 0;
                 if (nativeAllocations) NativeAllocationProbe.Begin();
+                var cpuStart = processCPU is not null ? PhysicsCPUClock.Read() : default;
                 var start = Stopwatch.GetTimestamp();
                 try { tree.PhysicsFrame(delta); times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds; }
                 finally { if (nativeAllocations) nativeTraffic.Add(NativeAllocationProbe.End()); }
+                if (processCPU is not null)
+                {
+                    var cpuEnd = PhysicsCPUClock.Read();
+                    processCPU[i] = (cpuEnd.Process - cpuStart.Process) / 1_000_000d;
+                    ownerCPU![i] = (cpuEnd.Owner - cpuStart.Owner) / 1_000_000d;
+                    Check(processCPU[i] >= 0 && ownerCPU[i] >= 0, "Physical CPU clock samples remain monotonic");
+                }
                 physicsOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - physicalOwner;
                 physicsAllThreadsBytes += GC.GetTotalAllocatedBytes(true) - physicalAll;
                 waits[i] = (gpu?.WaitMS ?? 0) - wait;
@@ -204,7 +215,7 @@ internal static partial class PhysicsPipelinePerformance
             var capture = display?.Capture(bodies);
             var report = JsonSerializer.Serialize(new
             {
-                schema = 5,
+                schema = 6,
                 backend = backend.ToString(),
                 threaded = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread),
                 nativeAllocations,
@@ -236,6 +247,11 @@ internal static partial class PhysicsPipelinePerformance
                 samples,
                 meanMS = times.Average(),
                 step = Distribution(times),
+                meanProcessCPUMS = processCPU?.Average(),
+                processCPU = processCPU is null ? null : Distribution(processCPU),
+                meanOwnerCPUMS = ownerCPU?.Average(),
+                ownerCPU = ownerCPU is null ? null : Distribution(ownerCPU),
+                cpuClock = processCPU is null ? null : "Linux process/owner CPU milliseconds; process includes all workers and may exceed wall time",
                 wait = Distribution(waits),
                 phaseMeanMS = phases.Select(value => value / samples).ToArray(),
                 completionPhaseNames = new[] { "pose-motion-fields", "contact-capture-monitor", "extension-events" },
