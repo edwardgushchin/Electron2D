@@ -22,9 +22,9 @@ The creating thread owns lifecycle and frame execution. A custom loop owns whate
 
 The [native permission-result path](../components/main-loop.md#native-permission-results) transfers Android Activity results to this exact loop's next frame entry. Callback failures leave unread results queued; terminal lifetime drops pending and late results. Standard platform requests remain separate from the event publisher.
 
-The creating thread is the owner thread. A host initializes the loop once, supplies non-negative finite frame
-deltas, and finalizes it once. Returning `true` from a frame callback asks the host to stop the
-application. The class does not create a thread, clock, window, renderer, input pump, or physics scheduler.
+The [whole-type contract audit](../components/main-loop.md#whole-type-contract-audit)
+accounts for this complete host boundary; inherited Object gaps remain on their
+declaring type.
 
 ## Examples
 

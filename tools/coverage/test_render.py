@@ -67,7 +67,10 @@ def check_physics_report(pages):
     permission = [row for row in loop_page.splitlines() if row.startswith("| [`signal on_request_permissions_result(")]
     assert len(permission) == 1 and " | Implemented | " in permission[0] and "native-permission-results" in permission[0]
     assert "MainLoop::signal:on_request_permissions_result(String:,bool:)" not in expected
-    assert expected["class:MainLoop"] == "Partial", "Native permission results must not close the inherited class audit"
+    loop_rows = [row for row in loop_page.splitlines() if row.startswith("| [`")]
+    assert len(loop_rows) == 18 and all(" | Implemented | " in row for row in loop_rows)
+    assert "whole-type-contract-audit" in loop_rows[0]
+    assert "class:MainLoop" not in expected, "The complete own-type audit must retain Object gaps on their declaring type"
     notification = [row for row in object_page.splitlines() if row.startswith("| [`method notification(")]
     assert len(notification) == 1 and " | Implemented | " in notification[0] and "Notify(System.Int32 what, System.Boolean reversed)" in notification[0]
     assert "Object::method:notification(int:,bool:)" not in expected

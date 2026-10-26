@@ -75,8 +75,8 @@ while rejecting an extra, omitted or unscaled physical step.
 The root `ELECTRON2D_TEST_LOOP_LIFECYCLE=1` and existing physics-clock selector
 exercise default hooks, SceneTree hooks, input-lane cleanup, captured timing and
 existing lifecycle failure controls. Linux CLR and strict NativeAOT evidence lives
-under `bin/physics-loop-lifecycle/2026-10-20/`. This callback audit does not close
-the permission signal, the MainLoop/Object class-wide inherited audit, native
+under `bin/physics-loop-lifecycle/2026-10-20/`. This callback audit alone does not close
+the permission signal, the whole-type audit below, native
 allocator totals, hardware performance or another platform. It adds no runtime
 API or numerical algorithm.
 
@@ -128,8 +128,38 @@ python3 -B tests/Permissions.Android/run.py /absolute/path/to/test.apk emulator-
 
 Evidence is retained under `bin/physics-permissions/2026-10-26/`. Android emulation
 does not qualify physical devices, native allocation totals or performance. Other
-platform permission policies, OS permission-request methods and the complete
-MainLoop/Object inherited audit retain their own gates.
+platform permission policies and OS permission-request methods retain their own
+gates; inherited Object gaps remain on their declaring type.
+
+## Whole-type contract audit
+
+The pinned 4.7.2 MainLoop declares twelve constants, four virtual callbacks and
+one permission-result signal. None is deprecated. All seventeen members are
+implemented under ADRs 0002/0004/0015/0016. The compiled abstract class derives
+directly from ElectronObject and retains the separate SceneTree specialization.
+Its 27 own public/protected declarations comprise the type, eighteen mapped
+members (the signal has both an event and protected publisher), and eight typed
+host/lifetime adaptations: construction, four explicit host entry points,
+Dispose(bool), ValidateDisposal and ValidateFinalization. The bidirectional
+coverage audit accounts for each; inherited declarations remain on Object.
+
+The existing callback and native-result cohorts are qualified together on the
+current runtime under `bin/physics-main-loop-contract/2026-10-26/`. Unchanged
+public consumer callbacks execute real selected CPU/NVIDIA GPU/registered worlds
+with owner/separate numerics in CLR and strict full-trim NativeAOT. The permission
+cohort additionally checks that a derived finalization veto preserves queued
+results, future acceptance and both frame lanes. Root lifecycle/Input and physics
+clock checks retain default hooks, constants, notification propagation and
+scheduler cleanup. CPU processes deny Vulkan device discovery and load no GPU
+driver; none of these hosts creates a window or renderer. Original Android dialog
+evidence remains in the native-result section above.
+
+The class row now records the complete functional contract of this type.
+Object's automatic post-initialization, script initialization/attachment and
+extension reload remain open in the inherited physics census. This audit adds no
+runtime API and does not close native heap, foreign-platform, numerical/network,
+GPU performance or real-window allocation acceptance. In particular, the separate
+[32-byte canvas frame observation](physics-allocation-measurement.md) remains open.
 
 ## Decisions
 

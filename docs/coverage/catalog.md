@@ -436,7 +436,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [LinkButton](classes/LinkButton.md) | BaseButton | Implemented | 27 |
 | [Logger](classes/Logger.md) | RefCounted | Implemented | 7 |
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
-| [MainLoop](classes/MainLoop.md) | Object | Partial | 17 |
+| [MainLoop](classes/MainLoop.md) | Object | Implemented | 17 |
 | [MarginContainer](classes/MarginContainer.md) | Container | Implemented | 4 |
 | [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |

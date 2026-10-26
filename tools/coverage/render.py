@@ -712,7 +712,7 @@ def render():
             updated = "2026-10-21"
         if name == "RenderingDevice":
             updated = "2026-10-24"
-        if name in {"AccessibilityServer", "Container", "Control", "Node", "ProjectSettings", "Window"}:
+        if name in {"AccessibilityServer", "Container", "Control", "MainLoop", "Node", "ProjectSettings", "Window"}:
             updated = "2026-10-26"
         if name == "RDTextureView":
             updated = "2026-10-25"

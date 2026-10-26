@@ -1,6 +1,6 @@
 # MainLoop API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-10-26
 
 Godot source: [doc/classes/MainLoop.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MainLoop.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,7 +10,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class MainLoop`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MainLoop.xml) | [`public abstract class Electron2D.MainLoop`](../../classes/MainLoop.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
+| [`class MainLoop`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MainLoop.xml) | [`public abstract class Electron2D.MainLoop`](../../classes/MainLoop.md) | Implemented | ADRs 0002/0004/0015/0016: the abstract ElectronObject-derived host boundary has its complete 17-member pinned contract and 27 own compiled declarations audited in both directions. Owner-thread lifecycle, double-second callbacks, unchanged stop results, terminal cleanup, all twelve numeric constants and synchronous/queued permission delivery execute with real CPU/NVIDIA-GPU/registered physics, CLR and strict NativeAOT. Rejected finalization preserves queued and future results. Inherited Object initialization/live-script/reload gaps remain on Object; native allocation, foreign platforms and hardware performance retain separate gates. See docs/components/main-loop.md#whole-type-contract-audit. |
 | [`constant NOTIFICATION_APPLICATION_FOCUS_IN = 2016`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MainLoop.xml) | [`public const System.Int32 NotificationApplicationFocusIn = 2016`](../../classes/MainLoop.md) | Implemented | Numeric identity matches the compiled C# declaration.  |
 | [`constant NOTIFICATION_APPLICATION_FOCUS_OUT = 2017`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MainLoop.xml) | [`public const System.Int32 NotificationApplicationFocusOut = 2017`](../../classes/MainLoop.md) | Implemented | Numeric identity matches the compiled C# declaration.  |
 | [`constant NOTIFICATION_APPLICATION_PAUSED = 2015`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/MainLoop.xml) | [`public const System.Int32 NotificationApplicationPaused = 2015`](../../classes/MainLoop.md) | Implemented | Numeric identity matches the compiled C# declaration.  |

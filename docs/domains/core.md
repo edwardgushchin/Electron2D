@@ -330,7 +330,7 @@ Registered `shader_globals/name` definitions use [GlobalShaderParameterSettings<
 
 The [Time service](../components/time-service.md) now supplies typed Gregorian calendar values, signed Unix/string conversions, UTC/local system samples, timezone metadata and monotonic elapsed ticks. Static calls address one permanent registry identity and do not depend on a native session or game scheduling.
 
-The [MainLoop callback audit](../components/main-loop.md#complete-frame-and-lifecycle-callback-audit) verifies initialization, fixed/idle deltas and stop results, failure recovery and terminal finalization with real selected CPU/software-GPU/registered worlds. Explicit library-host ownership and warmed zero managed allocation remain distinct from platform permissions and hardware performance.
+The [MainLoop whole-type audit](../components/main-loop.md#whole-type-contract-audit) accounts for the complete host lifecycle, constants and permission-result contract with selected CPU/GPU/registered physical execution. Inherited Object gaps, platform policies and hardware performance retain their own gates.
 
 The [deferred call/setter contract](../components/scene-tree.md#complete-deferred-call-and-setter-contract) drains nested typed work at the current safe point before queued deletion. Selected physical frames retain exact tick counts and zero warmed managed allocation; platform and full-goal acceptance remain separate.
 

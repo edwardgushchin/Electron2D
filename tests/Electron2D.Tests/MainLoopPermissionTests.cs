@@ -6,6 +6,7 @@ internal static class MainLoopPermissionTests
     internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool threaded = false)
     {
         VerifyBatchAndFailure();
+        VerifyRejectedFinalization();
         VerifyRetirement();
         VerifyConcurrentPosting();
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
@@ -69,6 +70,24 @@ internal static class MainLoopPermissionTests
             loop.PostPermissionResults(["nested"], [true]);
             throw expected;
         }
+    }
+
+    private static void VerifyRejectedFinalization()
+    {
+        using var loop = new Loop { RejectFinalization = true };
+        loop.Initialize();
+        var delivered = 0;
+        loop.OnRequestPermissionsResult += (_, _, _) => delivered++;
+        loop.PostPermissionResults(["pending"], [true]);
+        Reject<InvalidOperationException>(loop.FinalizeLoop);
+        Check(!loop.IsDisposed && loop.Frames == 0 && delivered == 0, "Rejected finalization leaves the running loop untouched");
+        loop.Process(0);
+        loop.PostPermissionResults(["after-rejection"], [false]);
+        loop.PhysicsProcess(0);
+        Check(delivered == 2 && loop.Frames == 2, "Rejected finalization preserves pending and future native results on both lanes");
+        loop.RejectFinalization = false;
+        loop.FinalizeLoop();
+        Reject<InvalidOperationException>(() => loop.Process(0));
     }
 
     private static void VerifyRetirement()
@@ -196,7 +215,13 @@ internal static class MainLoopPermissionTests
     private sealed class Loop : MainLoop
     {
         internal bool FailInitialization;
+        internal bool RejectFinalization;
         internal int Frames;
+        protected override void ValidateFinalization()
+        {
+            if (RejectFinalization) throw new InvalidOperationException("finalization veto");
+            base.ValidateFinalization();
+        }
         protected override void OnInitialize() { if (FailInitialization) throw new ApplicationException("initialization"); }
         protected override bool OnProcess(double delta) { Frames++; return false; }
         protected override bool OnPhysicsProcess(double delta) { Frames++; return false; }
