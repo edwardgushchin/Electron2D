@@ -3,7 +3,10 @@ namespace Electron2D;
 /// <summary>Provides shared canvas drawing, visibility, materials and transform queries.</summary>
 /// <remarks>Only direct canvas children inherit canvas state. Derived types define their own local transform model.
 /// Transform-cache publication and canvas identity use one reentrant gate per item.
-/// Virtual transform getters and transform notifications execute outside that gate.</remarks>
+/// Virtual transform getters and transform notifications execute outside that gate.
+/// Logical metadata reads allow the scene owner or any active processing group with caller-coordinated writes.
+/// Rendering metadata, redraw requests and typed instance parameters may be authored by the owner/current group;
+/// visibility transitions, TopLevel rebinding, hierarchy and native operations retain their individual guards.</remarks>
 public abstract partial class CanvasItem : Node
 {
     /// <summary>Initializes a detached canvas item with visibility enabled, white modulation and no material.</summary>
@@ -18,13 +21,13 @@ public abstract partial class CanvasItem : Node
     /// CanvasGroup stores the policy but keeps its group compositor. Equal assignments are silent; changed
     /// assignments republish authored policy and commit before warning refresh. Nested masks and groups share storage and cannot render together.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The mode is not an assignable enum value.</exception>
-    /// <exception cref="InvalidOperationException">Access is off-owner or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     /// <exception cref="Exception">A warning-refresh observer throws after the value commits.</exception>
     public ClipChildrenMode ClipChildren
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _clipChildren; }
-        set { EnsureMutable(); if (value is < ClipChildrenMode.Disabled or >= ClipChildrenMode.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_clipChildren == value) return; _clipChildren = value; if (ServerState is { } state) state.Group = null; UpdateConfigurationWarnings(); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _clipChildren; }
+        set { EnsureCanvasMetadataMutable(); if (value is < ClipChildrenMode.Disabled or >= ClipChildrenMode.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_clipChildren == value) return; _clipChildren = value; if (ServerState is { } state) state.Group = null; UpdateConfigurationWarnings(); }
     }
     /// <inheritdoc />
     /// <remarks>Reports attached clipping and group ancestors through physical node ancestry.</remarks>
@@ -310,7 +313,9 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets or sets point-light receiving membership independently of visibility.</summary>
     /// <value>One initially; zero rejects point lights. Directional lights ignore this mask.</value>
-    public uint LightMask { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _lightMask; } set { EnsureMutable(); _lightMask = value; if (ServerState is { } state) state.LightMask = null; } }
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
+    /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
+    public uint LightMask { get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _lightMask; } set { EnsureCanvasMetadataMutable(); _lightMask = value; if (ServerState is { } state) state.LightMask = null; } }
 
     /// <summary>Gets or sets the rendering visibility bits tested against the viewport's canvas cull mask.</summary>
     /// <value>One initially; all 32 bits are available. Zero excludes this item's canvas subtree from rendering.</value>
@@ -318,19 +323,19 @@ public abstract partial class CanvasItem : Node
     /// inherited or combined with each other. TopLevel, neutral-node and CanvasLayer boundaries start independent
     /// canvas roots. Changes affect retained submission without redraw, visibility events or changes to Visible,
     /// IsVisibleInTree, input or processing. Logically visible items still record their pending drawing commands.</remarks>
-    /// <exception cref="InvalidOperationException">An attached item is accessed off-owner or mutated during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public uint VisibilityLayer
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _visibilityLayer; }
-        set { EnsureMutable(); _visibilityLayer = value; if (ServerState is { } state) state.VisibilityLayer = null; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _visibilityLayer; }
+        set { EnsureCanvasMetadataMutable(); _visibilityLayer = value; if (ServerState is { } state) state.VisibilityLayer = null; }
     }
 
     /// <summary>Returns whether a zero-based rendering visibility bit is enabled.</summary>
     /// <param name="layer">Bit index from zero through 31, inclusive.</param>
     /// <returns>True when the selected bit in VisibilityLayer is set.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The bit index is outside zero through 31.</exception>
-    /// <exception cref="InvalidOperationException">An attached item is queried off-owner.</exception>
+    /// <exception cref="InvalidOperationException">An attached query is outside the owner or active processing groups.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public bool GetVisibilityLayerBit(int layer)
     {
@@ -344,11 +349,11 @@ public abstract partial class CanvasItem : Node
     /// <param name="enabled">True to enable the bit; false to clear it.</param>
     /// <remarks>Does not request redraw or emit visibility events.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The bit index is outside zero through 31.</exception>
-    /// <exception cref="InvalidOperationException">An attached item is mutated off-owner or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">The caller is outside the owner/current processing group, or a capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public void SetVisibilityLayerBit(int layer, bool enabled)
     {
-        EnsureMutable();
+        EnsureCanvasMetadataMutable();
         if ((uint)layer >= 32) throw new ArgumentOutOfRangeException(nameof(layer));
         var bit = 1u << layer;
         _visibilityLayer = enabled ? _visibilityLayer | bit : _visibilityLayer & ~bit;
@@ -372,12 +377,12 @@ public abstract partial class CanvasItem : Node
     /// <remarks>Effective Z remains the primary ordering key within one canvas. A parent sorting its children by Y uses their Y
     /// positions instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
     /// Changes affect the next submission without requiring QueueRedraw.</remarks>
-    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public bool ShowBehindParent
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _showBehindParent; }
-        set { EnsureMutable(); _showBehindParent = value; if (ServerState is { } state) state.Behind = null; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _showBehindParent; }
+        set { EnsureCanvasMetadataMutable(); _showBehindParent = value; if (ServerState is { } state) state.Behind = null; }
     }
 
     /// <summary>Gets or sets whether this item and its canvas children draw in ascending local Y order.</summary>
@@ -387,12 +392,12 @@ public abstract partial class CanvasItem : Node
     /// at their root's Y position. Approximate Y ties retain scene order. Effective Z takes precedence, and
     /// neutral nodes and TopLevel children start independent canvas roots. Processing and input order are unchanged.
     /// Changes affect the next submission without requiring QueueRedraw.</remarks>
-    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public bool YSortEnabled
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _ySortEnabled; }
-        set { EnsureMutable(); var changed = _ySortEnabled != value; _ySortEnabled = value; if (ServerState is { } state) state.YSort = null; if (this is TileMapLayer tiles) tiles.DrawingYSortChanged(changed); }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _ySortEnabled; }
+        set { EnsureCanvasMetadataMutable(); var changed = _ySortEnabled != value; _ySortEnabled = value; if (ServerState is { } state) state.YSort = null; if (this is TileMapLayer tiles) tiles.DrawingYSortChanged(changed); }
     }
 
     /// <summary>Gets or sets whether this node ignores its parent's transform.</summary>
@@ -443,7 +448,7 @@ public abstract partial class CanvasItem : Node
     /// <summary>Gets or sets this node's local logical visibility.</summary>
     /// <value><see langword="true"/> by default.</value>
     /// <remarks>An actual local change notifies this item. Effective tree-visibility changes propagate through locally visible direct canvas children, including TopLevel items. Showing schedules redraw; hiding raises Hidden after visibility delivery.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is off-owner or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
     public bool Visible
@@ -451,6 +456,7 @@ public abstract partial class CanvasItem : Node
         get
         {
             ThrowIfDisposed();
+            Tree?.EnsureProcessingReadAccess();
             return _visible;
         }
         set
@@ -478,19 +484,19 @@ public abstract partial class CanvasItem : Node
     /// <remarks>Every valid assignment commits the value then requests configuration-warning refresh, even if unchanged.</remarks>
     /// <exception cref="Exception">A configuration-warning subscriber fails after assignment.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is outside the supported range.</exception>
-    /// <exception cref="InvalidOperationException">An attached node is read or mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public int ZIndex
     {
         get
         {
             ThrowIfDisposed();
-            Tree?.EnsureOwnerThread();
+            Tree?.EnsureProcessingReadAccess();
             return _zIndex;
         }
         set
         {
-            EnsureMutable();
+            EnsureCanvasMetadataMutable();
 
             if (value is < MinimumZIndex or > MaximumZIndex)
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"Z index must be between {MinimumZIndex} and {MaximumZIndex}.");
@@ -502,19 +508,19 @@ public abstract partial class CanvasItem : Node
 
     /// <summary>Gets or sets whether effective Z order accumulates ancestor Z values.</summary>
     /// <value><see langword="true"/> by default.</value>
-    /// <exception cref="InvalidOperationException">An attached node is read or mutated off the owner thread.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposing on another thread or has finished disposing.</exception>
     public bool ZAsRelative
     {
         get
         {
             ThrowIfDisposed();
-            Tree?.EnsureOwnerThread();
+            Tree?.EnsureProcessingReadAccess();
             return _zAsRelative;
         }
         set
         {
-            EnsureMutable();
+            EnsureCanvasMetadataMutable();
             _zAsRelative = value; if (ServerState is { } state) state.ZRelative = null;
         }
     }

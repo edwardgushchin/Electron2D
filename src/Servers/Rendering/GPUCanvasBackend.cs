@@ -16,8 +16,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private readonly Dictionary<TextureLayered, GPUTexture> _layeredTextures = [];
     private readonly HashSet<TextureLayered> _usedLayeredTextures = [];
     private readonly HashSet<Texture> _usedTextures = [];
-    private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
-    private readonly HashSet<MaterialState> _usedMaterials = [];
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = new();
     private readonly Resource?[] _textureScratch = new Resource?[32];
     private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
     private ShaderSamplerCache? _shaderSamplers;
@@ -172,7 +171,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
             if (batch.Material is { } material && material.Textures.Length != 0)
             {
-                _usedMaterials.Add(material); PrepareTextures(material, batch.MaxAnisotropy);
+                PrepareTextures(material, batch.MaxAnisotropy);
                 PrepareGraphChannels(batch);
             }
             var code = GlyphCode(batch); var vertexCode = VertexCode(batch); var effectiveBlend = batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend; var key = (code, vertexCode, effectiveBlend, batch.InstanceCount > 0, samples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive);
@@ -338,7 +337,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                     regionRect: batch.Material.Program.RegionRectUniform is null ? default : CanvasRegionRect(batch), canvasSpecular: batch.Material.Program.CanvasSpecularUniform is null ? default : CanvasSpecular(batch));
                 if (batch.Material is { Textures.Length: > 0 } textured)
                 {
-                    var samplers = _textureBindings[textured];
+                    var samplers = TextureBindings(textured);
                     for (var i = 0; i < samplers.Length; i++)
                     {
                         var image = textured.Program.Textures[i];
@@ -372,7 +371,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 }
                 else if (batch.Lighting is not null && batch.Material is null) BindLighting(command, pass, batch, lighting);
                 else if (batch.Material is { Textures.Length: > 0 } fragmentTextures && fragmentTextures.Program.FragmentTextureCount != 0)
-                    SDL.BindGPUFragmentSamplers(pass, 0, _textureBindings[fragmentTextures].AsSpan(0, fragmentTextures.Program.FragmentTextureCount), (uint)fragmentTextures.Program.FragmentTextureCount);
+                    SDL.BindGPUFragmentSamplers(pass, 0, TextureBindings(fragmentTextures).AsSpan(0, fragmentTextures.Program.FragmentTextureCount), (uint)fragmentTextures.Program.FragmentTextureCount);
                 else if (batch.Material is null)
                 {
                     var sampler = batch.GroupShader ? new SDL.GPUTextureSamplerBinding { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled) } : CanvasBinding(batch);
@@ -543,11 +542,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private byte[]? VertexCode(CanvasBatch batch) => SwizzledVertex(batch);
 
+    private SDL.GPUTextureSamplerBinding[] TextureBindings(MaterialState material) =>
+        _textureBindings.GetValue(material, static current => new SDL.GPUTextureSamplerBinding[current.Textures.Length]);
+
     private void PrepareTextures(MaterialState material, int anisotropy)
     {
-        if (!_textureBindings.TryGetValue(material, out var bindings))
-            _textureBindings.Add(material, bindings = new SDL.GPUTextureSamplerBinding[material.Textures.Length]);
-        if (!_materialSwizzles.TryGetValue(material, out var maps)) _materialSwizzles.Add(material, maps = new uint[material.Textures.Length]);
+        var bindings = TextureBindings(material);
+        var maps = _materialSwizzles.GetValue(material, static current => new uint[current.Textures.Length]);
         try
         {
             material.CopyTextures(_textureScratch);
@@ -592,7 +593,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void ReleaseTemporaryTexture(Texture texture)
     { _usedTextures.Remove(texture); if (_textures.Remove(texture, out var value)) value.Dispose(); }
 
-    internal override void BeginFrame() { _sampledSwizzles.BeginFrame(); _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); (_usedLightMaskPipelines, _previousLightMaskPipelines) = (_previousLightMaskPipelines, _usedLightMaskPipelines); _usedLightMaskPipelines.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _sampledSwizzles.BeginFrame(); _shaderSamplers?.AdvanceEpoch(); BeginParticleFrame(); (_usedPrograms, _previousPrograms) = (_previousPrograms, _usedPrograms); _usedLinearViews.Clear(); _usedLinearArrayViews.Clear(); BeginGlyphFrame(); (_usedLightMaskPipelines, _previousLightMaskPipelines) = (_previousLightMaskPipelines, _usedLightMaskPipelines); _usedLightMaskPipelines.Clear(); _usedLitPrograms.Clear(); _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, null, BlendMode.Mix, false, SDL.GPUSampleCount.SampleCount1, false, SDL.GPUTextureFormat.R8G8B8A8Unorm, Mesh.PrimitiveType.Triangles)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); }
     internal override void EndFrame()
     {
         RetireParticleVertices(); RetireParticlePrograms();
@@ -603,7 +604,6 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !_previousPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(0)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(1)) && !ReferenceEquals(pair.Key.Code, BuiltInShaders.Clip(2))) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
         foreach (var pair in _layeredTextures) if (!_usedLayeredTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _layeredTextures.Remove(pair.Key); }
-        foreach (var pair in _textureBindings) if (!_usedMaterials.Contains(pair.Key)) { _textureBindings.Remove(pair.Key); _materialSwizzles.Remove(pair.Key); }
         foreach (var pair in _litPrograms) if (!_usedLitPrograms.Contains(pair.Key)) _litPrograms.Remove(pair.Key);
     }
     internal override void ValidateMSAA(Viewport.MSAA mode)
@@ -701,7 +701,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         foreach (var texture in _textures.Values) texture.Dispose();
         foreach (var texture in _layeredTextures.Values) texture.Dispose();
         _layeredTextures.Clear(); _usedLayeredTextures.Clear();
-        _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _materialSwizzles.Clear(); _sampledSwizzles.Clear(); _usedMaterials.Clear();
+        _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _materialSwizzles.Clear(); _sampledSwizzles.Clear();
         _shaderSamplers?.Dispose();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
         _samplers.Clear(); DisposeColorViews(); DisposeImageFallbacks(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();

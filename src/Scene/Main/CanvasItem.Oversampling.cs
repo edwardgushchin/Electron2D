@@ -26,14 +26,14 @@ public abstract partial class CanvasItem
     /// Explicit font raster factors and MSDF fonts retain their own policies. Scale variants preserve logical sizes;
     /// changing scale can allocate raster storage. Stable retained replay reuses that storage.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is invalid or Max.</exception>
-    /// <exception cref="InvalidOperationException">Mutation occurs off-owner or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public OversamplingWithScale OversamplingWithScale
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _oversamplingWithScale; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _oversamplingWithScale; }
         set
         {
-            EnsureMutable();
+            EnsureCanvasMetadataMutable();
             if ((uint)value >= (uint)OversamplingWithScale.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_oversamplingWithScale == value) return;
             _oversamplingWithScale = value;

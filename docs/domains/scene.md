@@ -419,7 +419,7 @@ Node scheduling now captures actual enabled public/internal lane membership, wit
 
 The Node call/set/notify thread-safe and deferred-group family now publishes typed operations to the current main processing owner. A distinct FIFO runs before and after callbacks, preserving weak receiver lifetime, current-owner transfer, error continuation and prepared zero-byte delivery alongside actual physical frames. Explicit worker processing groups and message masks are implemented by the profile below; broader worker scene/backend access remains open.
 
-Node processing now includes real inherited main/worker groups, ordered barriers, per-lane message-only masks, cached member schedules and typed cross-group dispatch. Public tests connect worker results to actual physics on the owner and retain general Node/CanvasItem/Entity/backend worker-access gaps as Partial.
+Node processing now includes real inherited main/worker groups, ordered barriers, per-lane message-only masks, cached member schedules and typed cross-group dispatch. Public tests connect worker results to actual physics on the owner. CanvasItem own processing policies are qualified by [the complete type audit](../components/canvas-item-contract.md); remaining inherited Node and backend worker-access gaps retain their own Partial rows.
 
 
 [Owned name/type searches](../components/scene-hierarchy.md#owned-name-and-type-searches)
@@ -519,3 +519,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.
 
 [Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.
+
+[The complete CanvasItem audit](../components/canvas-item-contract.md) connects direct custom, spatial, UI and physical descendants through common metadata, retained identities and composed queries. Owner/current-group rendering-metadata authoring preserves numerical guards; visibility/hierarchy/native operations retain individual access. Ancestor Node/Object gaps remain separate.

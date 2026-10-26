@@ -320,6 +320,8 @@ Only Linux/Vulkan rendered behavior is verified here. Foreign targets, native al
 
 ## Per-item shader parameters
 
+CanvasItem typed instance reads/writes allow the owner/current processing group, with mutation capture and lifetime validation; the getter may prepare retained typed storage. RenderingServer operations retain their native service/owner guard. See [canvas processing access](canvas-item-contract.md#processing-access).
+
 `SetInstanceShaderParameter<T>(name, T? value)` and `GetInstanceShaderParameter<T>(name)` own copied scalar/vector overrides on one CanvasItem. Names are case sensitive; null removes an override. Values can be authored before assigning a material. ShaderMaterial remains shared, so two items borrowing it can use different values without recording their geometry again. MultiMesh hardware instances share the owning item's parameter set; instance custom data remains its separate vertex channel.
 
 HLSL `cbuffer Instance` and GLSL `uniform Instance` identify the per-item std140 block at descriptor set three (`type.Instance` is the imported HLSL type name). Native buffer bindings remain contiguous and the total four-slot fragment limit includes these blocks. Reflection permits at most sixteen scalar/vector members, with ordinary numeric signedness and logical boolean metadata. Textures, arrays, matrices and renderer-owned TIME/SCREEN_PIXEL_SIZE/SDF_COORDS are rejected in this block. This compiled UBO profile reads validated authored defaults from the same artifact metadata as material fields, with implicit zero when absent. Clearing an override follows the current declaration default after reload.

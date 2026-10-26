@@ -9187,14 +9187,14 @@
     },
     {
       "state": "Implemented",
-      "reason": "Pinned CanvasItem ZIndex defaults to zero and accepts -4096..4096; valid assignments, including equal values, request configuration-warning refresh. Invalid values retain the old Z and throw a typed C# exception under ADR 0008. SceneHierarchyTests checks bounds, rollback, owner-thread reads and PackedScene; CanvasOrderingTests passes 31 Wayland compatibility/GPU pixel cases, including inherited Z clamping and precedence. Other platforms remain unverified.",
+      "reason": "Pinned CanvasItem ZIndex defaults to zero and accepts -4096..4096; valid assignments, including equal values, request configuration-warning refresh. Invalid values retain the old Z and throw a typed C# exception under ADR 0008. SceneHierarchyTests checks bounds, rollback, processing-access checks and PackedScene; CanvasOrderingTests passes 31 Wayland compatibility/GPU pixel cases, including inherited Z clamping and precedence. Other platforms remain unverified. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:z_index"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Pinned ZAsRelative defaults true and determines whether direct canvas-parent Z accumulates, stopping at neutral or TopLevel boundaries. SceneHierarchyTests checks local/absolute values, owner-thread reads, equal assignment and PackedScene; CanvasOrderingTests passes 31 Wayland compatibility/GPU pixel cases for relative, absolute, clamped and independent-root order. Other platforms remain unverified.",
+      "reason": "Pinned ZAsRelative defaults true and determines whether direct canvas-parent Z accumulates, stopping at neutral or TopLevel boundaries. SceneHierarchyTests checks local/absolute values, processing-access checks, equal assignment and PackedScene; CanvasOrderingTests passes 31 Wayland compatibility/GPU pixel cases for relative, absolute, clamped and independent-root order. Other platforms remain unverified. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:z_as_relative"
       ]
@@ -10386,14 +10386,14 @@
     },
     {
       "state": "Implemented",
-      "reason": "Orders the canvas subtree before its parent at equal effective Z; Y-sorted parents use Y instead, while neutral/TopLevel boundaries create independent roots. Default false; typed stored property with scene capture, disposal and owner-thread guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources.",
+      "reason": "Orders the canvas subtree before its parent at equal effective Z; Y-sorted parents use Y instead, while neutral/TopLevel boundaries create independent roots. Default false; typed stored property with scene capture, disposal and processing-access guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:show_behind_parent"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Local ascending Y includes the parent at zero, flattens nested enabled children and keeps disabled child subtrees grouped; effective Z takes precedence. Composed local transforms, visibility/root boundaries and approximate scene-order ties follow the shared Mathf tolerance (ADR 0034). Default false; typed stored property with scene capture, disposal and owner-thread guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources.",
+      "reason": "Local ascending Y includes the parent at zero, flattens nested enabled children and keeps disabled child subtrees grouped; effective Z takes precedence. Composed local transforms, visibility/root boundaries and approximate scene-order ties follow the shared Mathf tolerance (ADR 0034). Default false; typed stored property with scene capture, disposal and processing-access guards under ADRs 0008/0023. SceneHierarchyTests checks defaults, affinity and PackedScene. CanvasOrderingTests verifies framebuffer ordering on Linux Wayland GPU/compatibility and dummy/software; RenderingRuntimeTests verifies zero warmed rendering allocations. Other native platforms remain unverified (ADR 0021). Audited against pinned CanvasItem and renderer_canvas_cull sources. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:y_sort_enabled"
       ]

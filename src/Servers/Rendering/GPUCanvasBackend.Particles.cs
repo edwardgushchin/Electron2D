@@ -51,7 +51,7 @@ internal sealed unsafe partial class GPUCanvasBackend
     private void PrepareProcess(MaterialState state)
     {
         if (state.Program.Mode != Shader.Mode.Particles) throw new NotSupportedException("Particle process materials require particle compute programs.");
-        if (state.Textures.Length > 0) { _usedMaterials.Add(state); PrepareTextures(state, 1); }
+        if (state.Textures.Length > 0) PrepareTextures(state, 1);
         var code = ParticleCode(state); _usedParticlePrograms.Add(code);
         if (!_particlePrograms.ContainsKey(code)) _particlePrograms.Add(code, new(_device, code));
     }
@@ -161,7 +161,7 @@ internal sealed unsafe partial class GPUCanvasBackend
                     SDL.BindGPUComputePipeline(pass, program.DangerousGetHandle()); program.BindBufferSizes(pass);
                     if (process.Textures.Length != 0)
                     {
-                        var samplers = _textureBindings[process];
+                        var samplers = TextureBindings(process);
                         for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = process.Samplers[i].HasValue ? samplers[i].Sampler : Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
                         fixed (SDL.GPUTextureSamplerBinding* pointer = samplers) SDL.BindGPUComputeSamplers(pass, 0, (nint)pointer, (uint)samplers.Length);
                     }

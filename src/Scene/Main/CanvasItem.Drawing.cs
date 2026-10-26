@@ -2,6 +2,11 @@ namespace Electron2D;
 
 public abstract partial class CanvasItem
 {
+    private void EnsureCanvasMetadataMutable()
+    {
+        EnsureProcessingAccess();
+        RenderingServer.NotifyRenderMutation();
+    }
     private static readonly PropertyDescriptor[] DrawingProperties =
     [
         new PropertyDescriptor<CanvasItem, Color>(nameof(Modulate), n => n.Modulate, (n, v) => n.Modulate = v, _ => Colors.White, stored: true),
@@ -22,23 +27,23 @@ public abstract partial class CanvasItem
     /// <summary>Gets or sets the color multiplier inherited by this node's descendants.</summary>
     /// <value>Opaque white by default.</value>
     /// <exception cref="ArgumentException">The color is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Color Modulate
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _modulate; }
-        set { EnsureMutable(); ValidateCanvasColor(value); _modulate = value; if (ServerState is { } state) state.Modulate = null; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _modulate; }
+        set { EnsureCanvasMetadataMutable(); ValidateCanvasColor(value); _modulate = value; if (ServerState is { } state) state.Modulate = null; }
     }
 
     /// <summary>Gets or sets the color multiplier applied only to this node's drawing.</summary>
     /// <value>Opaque white by default.</value>
     /// <exception cref="ArgumentException">The color is not finite.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public Color SelfModulate
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _selfModulate; }
-        set { EnsureMutable(); ValidateCanvasColor(value); _selfModulate = value; if (ServerState is { } state) state.SelfModulate = null; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _selfModulate; }
+        set { EnsureCanvasMetadataMutable(); ValidateCanvasColor(value); _selfModulate = value; if (ServerState is { } state) state.SelfModulate = null; }
     }
 
     /// <summary>Gets or sets the borrowed material for this node's canvas commands.</summary>
@@ -47,15 +52,15 @@ public abstract partial class CanvasItem
     /// CanvasItemMaterial selects fixed blending; unsupported software modes fail before drawing. An externally
     /// disposed borrowed material remains readable but cannot be used for rendering until replaced. Every assignment,
     /// including an equal one, raises PropertyListChanged after storing the borrowed reference.</remarks>
-    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed, or the assigned value is already disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber throws after the material changes.</exception>
     public Material? Material
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _material; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _material; }
         set
         {
-            EnsureMutable();
+            EnsureCanvasMetadataMutable();
             if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value));
             _material = value; if (ServerState is { } state) state.MaterialAssigned = false;
             NotifyPropertyListChanged();
@@ -64,20 +69,20 @@ public abstract partial class CanvasItem
 
     /// <summary>Gets or sets whether this node uses its parent's effective material.</summary>
     /// <value>False by default. A root using its parent material uses ordinary color drawing.</value>
-    /// <exception cref="InvalidOperationException">Attached access is off the owner thread, or mutation occurs during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
     public bool UseParentMaterial
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _useParentMaterial; }
-        set { EnsureMutable(); _useParentMaterial = value; if (ServerState is { } state) state.UseParentMaterial = null; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _useParentMaterial; }
+        set { EnsureCanvasMetadataMutable(); _useParentMaterial = value; if (ServerState is { } state) state.UseParentMaterial = null; }
     }
 
     /// <summary>Requests regeneration of this node's retained drawing commands before a later visible frame.</summary>
     /// <remarks>Detached calls do nothing. Requests coalesce. Hidden nodes retain the request until visible. A request during
     /// the current recording coalesces with that recording; it does not schedule another redraw. Transforms, modulation and material changes need no redraw.</remarks>
-    /// <exception cref="InvalidOperationException">An attached node is mutated off its owner thread or during scene capture.</exception>
+    /// <exception cref="InvalidOperationException">The caller is outside the owner/current processing group, or a capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
-    public void QueueRedraw() { EnsureMutable(); if (IsInsideTree && !_drawing) InvalidateCanvas(); }
+    public void QueueRedraw() { EnsureCanvasMetadataMutable(); if (IsInsideTree && !_drawing) InvalidateCanvas(); }
 
     // Resource change notifications may arrive from a loading thread; scene work stays on the owner thread.
     internal void InvalidateCanvas() { Interlocked.Exchange(ref _redrawPending, 1); RenderingServer.NotifyRenderMutation(); }

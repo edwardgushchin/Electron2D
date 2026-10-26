@@ -1384,3 +1384,7 @@ Consuming retained batches capture the complete rectangle/nine-patch source regi
 [Canvas point programs](canvas-points.md) preserve native Points for GPU ArrayMesh/instance replay as well as primitive and GPU-particle streams. The compatibility path retains its existing point geometry and shader-material refusal.
 
 [Native accessibility](accessibility.md) consumes the same prepared captions and transformed control geometry. Container.AccessibilityRegion now publishes a named landmark through that service; its stored false default and real native role transitions leave layout behavior unchanged.
+
+## Composed CanvasItem contract
+
+[The complete type audit](canvas-item-contract.md) records current-group frontend metadata authoring, coordinated logical identities, composed CPU/GPU physical queries, actual worker-driven pixels and complete frame allocation brackets. Per-material CPU scratch survives one-frame culling through weak keys; native pipeline eviction remains separate. The audit retains explicit software PremultAlpha capability rejection and the individual drawing-method qualifications above.

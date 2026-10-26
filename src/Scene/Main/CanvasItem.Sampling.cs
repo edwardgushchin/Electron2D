@@ -54,15 +54,15 @@ public abstract partial class CanvasItem
     /// on this item. Detached changes take effect on tree entry. MIPMaps and anisotropy require GPU rendering;
     /// the software compatibility driver also rejects linear filtering. Images without mipmaps use their sole level. Arbitrary material texture parameters retain their own sampler contract.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enum value is invalid or Max.</exception>
-    /// <exception cref="InvalidOperationException">An attached item is mutated off the owner thread or during capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber throws after the change is committed.</exception>
     public TextureFilter TextureFilter
     {
-        get { ThrowIfDisposed(); return _textureFilter; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _textureFilter; }
         set
         {
-            EnsureMutable();
+            EnsureCanvasMetadataMutable();
             if ((uint)value >= (uint)TextureFilter.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_textureFilter == value) return;
             _textureFilter = value; if (ServerState is { } state) state.Filter = null;
@@ -76,15 +76,15 @@ public abstract partial class CanvasItem
     /// <remarks>An actual change requests redraw for attached inheriting canvas descendants, then raises PropertyListChanged.
     /// Detached changes take effect on tree entry. Mirror requires GPU rendering; unsupported fallback wrapping fails explicitly.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The enum value is invalid or Max.</exception>
-    /// <exception cref="InvalidOperationException">An attached item is mutated off the owner thread or during capture.</exception>
+    /// <exception cref="InvalidOperationException">A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     /// <exception cref="Exception">A property-list subscriber throws after the change is committed.</exception>
     public TextureRepeat TextureRepeat
     {
-        get { ThrowIfDisposed(); return _textureRepeat; }
+        get { ThrowIfDisposed(); Tree?.EnsureProcessingReadAccess(); return _textureRepeat; }
         set
         {
-            EnsureMutable();
+            EnsureCanvasMetadataMutable();
             if ((uint)value >= (uint)TextureRepeat.Max) throw new ArgumentOutOfRangeException(nameof(value));
             if (_textureRepeat == value) return;
             _textureRepeat = value; if (ServerState is { } state) state.Repeat = null;

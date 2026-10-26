@@ -417,6 +417,14 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTERPOLATION_NATIVE") =
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TOP_LEVEL_PHYSICS") is { } topLevelPhysics) { CanvasTopLevelPhysicsTests.Run(topLevelPhysics.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, topLevelPhysics.EndsWith("threaded", StringComparison.Ordinal)); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_ITEM_CONTRACT") is { } canvasContract)
+{
+    var backend = canvasContract.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+    var separate = canvasContract.EndsWith("threaded", StringComparison.Ordinal);
+    if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_ITEM_CONTRACT_RENDERER") is { } renderer) CanvasItemContractTests.RunNative(backend, renderer, separate);
+    else CanvasItemContractTests.Run(backend, separate);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_INTERPOLATION") is { } canvasInterpolationBackend) { if (canvasInterpolationBackend == "managed") CanvasItemInterpolationTests.RunManaged(); else CanvasItemInterpolationTests.RunNative(canvasInterpolationBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_OWNED") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA") is { } msaaBackend) { if (msaaBackend == "managed") CanvasMSAATests.RunManaged(); else CanvasMSAATests.RunNative(msaaBackend); return; }
@@ -2016,6 +2024,8 @@ TextDeliveryTests.Run();
 ViewportTextInputTests.RunManaged();
 ControlHoverTests.Run();
 CanvasLifecycleTests.Run();
+CanvasItemContractTests.Run(PhysicsServer.Backend.CPU, false);
+CanvasItemContractTests.Run(PhysicsServer.Backend.GPU, false);
 CanvasSamplingTests.Run();
 CanvasPixelSnapTests.Run();
 CanvasCoordinateTests.Run();

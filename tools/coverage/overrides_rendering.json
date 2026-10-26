@@ -2700,12 +2700,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -5348,28 +5348,28 @@
     },
     {
       "state": "Implemented",
-      "reason": "Pinned CanvasItem material setter stores a borrowed Resource and refreshes tooling properties on every assignment, including equal values. SceneHierarchyTests checks defaults, disposed-input rejection, readable externally disposed reference, committed state after callback failure, owner-thread reads, direct/neutral/TopLevel inheritance and PackedScene borrowing. CanvasMaterialRenderingTests verifies live Add/Sub/Mix paths on Linux Wayland compatibility/GPU; editor UI and other platforms remain separate.",
+      "reason": "Pinned CanvasItem material setter stores a borrowed Resource and refreshes tooling properties on every assignment, including equal values. SceneHierarchyTests checks defaults, disposed-input rejection, readable externally disposed reference, committed state after callback failure, processing-access checks, direct/neutral/TopLevel inheritance and PackedScene borrowing. CanvasMaterialRenderingTests verifies live Add/Sub/Mix paths on Linux Wayland compatibility/GPU; editor UI and other platforms remain separate. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:material"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Pinned Modulate multiplies along direct canvas ancestors and stops at neutral/TopLevel boundaries, without requiring command re-recording. SceneHierarchyTests covers white default, finite rejection, owner-thread reads and PackedScene; CanvasMaterialRenderingTests verifies three live parent/child/root-boundary pixel frames on Wayland compatibility/GPU and dummy software. Other platforms remain unverified.",
+      "reason": "Pinned Modulate multiplies along direct canvas ancestors and stops at neutral/TopLevel boundaries, without requiring command re-recording. SceneHierarchyTests covers white default, finite rejection, processing-access checks and PackedScene; CanvasMaterialRenderingTests verifies three live parent/child/root-boundary pixel frames on Wayland compatibility/GPU and dummy software. Other platforms remain unverified. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:modulate"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Pinned SelfModulate multiplies only this item's drawing, not descendants. SceneHierarchyTests covers white default, finite rejection, owner-thread reads and PackedScene; CanvasMaterialRenderingTests verifies own versus descendant pixels and a live local change without re-recording on Wayland compatibility/GPU and dummy software. Other platforms remain unverified.",
+      "reason": "Pinned SelfModulate multiplies only this item's drawing, not descendants. SceneHierarchyTests covers white default, finite rejection, processing-access checks and PackedScene; CanvasMaterialRenderingTests verifies own versus descendant pixels and a live local change without re-recording on Wayland compatibility/GPU and dummy software. Other platforms remain unverified. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:self_modulate"
       ]
     },
     {
       "state": "Implemented",
-      "reason": "Pinned UseParentMaterial defaults false and selects the direct canvas parent's effective borrowed material; own material remains stored, while neutral/TopLevel/root boundaries fall back to ordinary blending. SceneHierarchyTests checks toggles, owner-thread reads, borrowing and PackedScene; CanvasMaterialRenderingTests verifies live Add/Sub/Mix pixels on Wayland compatibility/GPU. Software rejects unsupported modes explicitly; other platforms remain unverified.",
+      "reason": "Pinned UseParentMaterial defaults false and selects the direct canvas parent's effective borrowed material; own material remains stored, while neutral/TopLevel/root boundaries fall back to ordinary blending. SceneHierarchyTests checks toggles, processing-access checks, borrowing and PackedScene; CanvasMaterialRenderingTests verifies live Add/Sub/Mix pixels on Wayland compatibility/GPU. Software rejects unsupported modes explicitly; other platforms remain unverified. Current owner/active-group observations and owner/current-group metadata authoring are exercised by CanvasItemContractTests; see docs/components/canvas-item-contract.md#processing-access.",
       "godot": [
         "CanvasItem::property:use_parent_material"
       ]
@@ -6462,7 +6462,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -7378,6 +7378,13 @@
         "RenderingServer::enum_value:ViewportAnisotropicFiltering.VIEWPORT_ANISOTROPY_MAX",
         "RenderingServer::method:viewport_set_anisotropic_filtering_level(RID:,int:RenderingServer.ViewportAnisotropicFiltering)"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:CanvasItem"
+      ],
+      "reason": "ADRs 0004/0008/0028: the abstract canvas base retains separate Entity/Control placement models and its complete 114-member pinned contract, with 104 own compiled declarations audited in both directions. Custom/UI/physical ancestry, logical identities, processing-group metadata authoring, retained drawing, queries, lifecycle and actual CLR/strict NativeAOT pixels execute. Inherited Node/Object declarations retain their separate gaps. The independent complete-frame allocation gate retains an unresolved 32-byte CLR SDL-GPU all-thread observation; this type status certifies the functional API, not that budget, numerical/network completeness or GPU performance. See docs/components/canvas-item-contract.md."
     }
   ],
   "extras": [

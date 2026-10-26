@@ -25,6 +25,8 @@ Internal GetInterpolatedGlobalVisualTransform composes the existing per-item phy
 
 ## Description
 
+[The complete type audit](../components/canvas-item-contract.md) records all 114 pinned members, 104 own compiled declarations, processing access and current-source physical/rendered qualification. Inherited Node/Object gaps retain their own rows.
+
 The abstract canvas base. Owns visibility, Z/Y order, behind-parent drawing, modulation, materials, retained drawing and transform queries/notifications. Entity supplies a concrete spatial placement model; Control supplies a rectangular layout model in the separate UI branch. A direct CanvasItem subclass can provide its own model through GetTransform and notify changes with NotifyLocalTransformChanged. Only direct canvas parents contribute transforms, modulation and materials; a neutral Node breaks those chains. TopLevel preserves the local transform while ending transform/material/modulation/Z inheritance. Visibility follows direct canvas parents, including TopLevel items, and the containing window.
 
 Transform-cache publication and canvas identity share one reentrant gate per item. Virtual transform getters and notifications execute outside that gate. Existing owner/current-group guards and coordinated multi-node reads still apply. See [the shared gate and its verification](../components/gpu-resident-reports.md#scene-transform-publication-gate-2026-10-21).
@@ -35,11 +37,11 @@ The renderer normally uses the same local transform as public logical queries. C
 
 Canvas roots follow scene order; a root's canvas subtree is ordered before the following root. TopLevel and neutral Node boundaries create separate canvas roots. Effective Z is always the primary draw key. At equal Z, children normally draw after their parent; ShowBehindParent draws a child subtree before it. YSortEnabled instead sorts the item itself (Y = 0) and its canvas children by local Y, merging nested enabled groups while keeping other child subtrees together. Drawing order does not change processing or input order.
 
-The Z and sibling-order audit closes `ZIndex`, `ZAsRelative` and `MoveToFront`. Local Z accepts -4096 through 4096; an invalid assignment throws and preserves state under ADR 0008. Equal valid Z assignments still request configuration-warning refresh. Relative Z follows direct canvas parents and stops at neutral/TopLevel boundaries. `MoveToFront` moves a child to the last sibling position, preserves the committed order after callback failure and leaves a root unchanged. Attached reads and moves enforce the scene owner thread. Managed checks and 31 Linux/Wayland pixel cases on compatibility and GPU pass; the class and other member rows retain their individual coverage states.
+The Z and sibling-order audit closes `ZIndex`, `ZAsRelative` and `MoveToFront`. Local Z accepts -4096 through 4096; an invalid assignment throws and preserves state under ADR 0008. Equal valid Z assignments still request configuration-warning refresh. Relative Z follows direct canvas parents and stops at neutral/TopLevel boundaries. `MoveToFront` moves a child to the last sibling position, preserves the committed order after callback failure and leaves a root unchanged. Attached Z/order reads permit owner/active-group access and metadata writes permit owner/current-group access; moves remain owner-only. Managed checks and 31 Linux/Wayland pixel cases on compatibility and GPU pass; the class and other member rows retain their individual coverage states.
 
 The appearance audit closes `Material`, `Modulate`, `SelfModulate` and `UseParentMaterial`. Material assignments store a borrowed resource and emit `PropertyListChanged` even for an equal assignment; callback failure leaves the assignment committed. Parent modulation reaches direct canvas descendants, while self modulation affects only this item's drawing. Parent material inheritance stops at neutral and TopLevel boundaries; a child's own material remains stored while inheritance is enabled. Managed checks and focused live pixel readback pass on Linux/Wayland compatibility and GPU, with modulation also checked in dummy/software. Editor UI, other platforms and owner visual acceptance remain separate.
 
-`GetTransform` is the abstract local placement query; the production `Entity` and `Control` overrides enforce attached owner-thread reads. The draw-transform audit closes `DrawSetTransform` and `DrawSetTransformMatrix`: each records a replacement state for later commands, with the node transform multiplied on the left. Hidden animation intervals skip transform state, rejected finite input leaves earlier state intact, and each frame replays from identity. Managed affine/replay checks, Wayland compatibility/GPU/HLSL/GLSL timing pixels and dummy/software timing pixels pass. Other CanvasItem rows retain their own statuses.
+`GetTransform` is the abstract local placement query; the production `Entity` and `Control` overrides permit coordinated owner/active-group reads. The draw-transform audit closes `DrawSetTransform` and `DrawSetTransformMatrix`: each records a replacement state for later commands, with the node transform multiplied on the left. Hidden animation intervals skip transform state, rejected finite input leaves earlier state intact, and each frame replays from identity. Managed affine/replay checks, Wayland compatibility/GPU/HLSL/GLSL timing pixels and dummy/software timing pixels pass. Other CanvasItem rows retain their own statuses.
 
 Canvas attachment is part of actual SceneTree membership. Entry delivers NotificationEnterCanvas before the tree-enter callback, then visibility delivery when initially visible. Exit delivers NotificationExitCanvas after the tree-exit callback, with children exiting first. Changing TopLevel emits an exit/entry pair for this item and schedules redraw; failures are aggregated after the transition. These notifications use ordinary C# override/base dispatch under the engine's notification contract. Manual tree notifications do not attach or detach a canvas.
 
@@ -279,7 +281,7 @@ Gets or sets the borrowed material for this node's canvas commands.
 
 **Remarks:** Disposing the node does not dispose this shared resource. [ShaderMaterial](ShaderMaterial.md) with an assigned shader requires GPU rendering. [CanvasItemMaterial](CanvasItemMaterial.md) selects fixed blending; SDL software rejects modes other than Mix before drawing. An externally disposed borrowed material remains readable but cannot be used for rendering until replaced. Every assignment, including an equal one, raises PropertyListChanged after storing the borrowed reference.
 
-**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
+**System.InvalidOperationException:** A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposed, or the assigned value is already disposed.
 
@@ -294,7 +296,7 @@ Gets or sets the color multiplier inherited by this node's descendants.
 
 **System.ArgumentException:** The color is not finite.
 
-**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
+**System.InvalidOperationException:** A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposed.
 
@@ -305,7 +307,7 @@ Gets or sets whether local transform changes dispatch `CanvasItem.NotificationLo
 
 **Value:** `false` by default. Enables both NotificationLocalTransformChanged and its typed LocalTransformChanged event while attached. Detached changes are silent. This runtime policy is not stored by PackedScene.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** A read is outside owner/active groups, or a write is outside owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -316,7 +318,7 @@ Gets or sets whether global transform changes dispatch `CanvasItem.NotificationT
 
 **Value:** `false` by default. Enables queueing when the resolved global transform becomes invalid. Tree entry queues an initial notification regardless of this flag. Enabling while attached resolves the current global transform without queueing; disabling does not cancel an existing queued notification. This runtime policy is not stored by PackedScene. See [delivery details](#transform-notification-delivery).
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** A read is outside owner/active groups, or a write is outside owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -329,7 +331,7 @@ Gets or sets the color multiplier applied only to this node's drawing.
 
 **System.ArgumentException:** The color is not finite.
 
-**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
+**System.InvalidOperationException:** A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposed.
 
@@ -338,7 +340,7 @@ Gets or sets the color multiplier applied only to this node's drawing.
 
 False by default. True draws this canvas subtree before its canvas parent when effective Z is equal. Effective Z takes precedence within each canvas. An enabled Y-sorting parent orders participating children by Y instead of this flag. Neutral parents and TopLevel items have no canvas parent to draw behind.
 
-Changes affect the next submission without QueueRedraw. The value is stored by PackedScene. Attached access off the owner thread or mutation during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
+Changes affect the next submission without QueueRedraw. The value is stored by PackedScene. Reads outside owner/active groups or writes outside owner/current group or during capture throw InvalidOperationException; access after disposal throws ObjectDisposedException.
 
 <a id="p-electron2d-canvasitem-toplevel"></a>
 ### `public bool TopLevel { get; set; }`
@@ -362,7 +364,7 @@ Gets or sets whether this node uses its parent's effective material.
 
 **Value:** False by default. A root using its parent material uses ordinary color drawing.
 
-**System.InvalidOperationException:** Attached access is off the owner thread, or mutation occurs during scene capture.
+**System.InvalidOperationException:** A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposed.
 
@@ -375,7 +377,7 @@ Gets or sets this node's local logical visibility.
 
 **Remarks:** A local change notifies this item. An effective tree-visibility change propagates through locally visible direct canvas children, including TopLevel items. Showing schedules redraw; hiding raises Hidden after visibility delivery.
 
-**System.InvalidOperationException:** An attached node is mutated off the owner thread.
+**System.InvalidOperationException:** A read is outside owner/active groups, or a write is off-owner or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -388,7 +390,7 @@ False by default. True orders the item itself at Y = 0 and its direct canvas chi
 
 Invisible children do not participate. TopLevel children and children below neutral nodes are separate canvas roots. ShowBehindParent is ignored for items directly ordered by the Y group, but still applies inside unsorted subtrees. Processing and input order remain unchanged.
 
-Changes affect the next submission without QueueRedraw. PackedScene stores the value. Attached access off the owner thread or mutation during capture throws InvalidOperationException; access after disposal throws ObjectDisposedException.
+Changes affect the next submission without QueueRedraw. PackedScene stores the value. Reads outside owner/active groups or writes outside owner/current group or during capture throw InvalidOperationException; access after disposal throws ObjectDisposedException.
 
 <a id="p-electron2d-canvasitem-zasrelative"></a>
 ### `public bool ZAsRelative { get; set; }`
@@ -397,7 +399,7 @@ Gets or sets whether effective Z order accumulates ancestor Z values.
 
 **Value:** `true` by default.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -412,7 +414,7 @@ Every valid assignment commits the Z value and then requests configuration-warni
 
 **System.ArgumentOutOfRangeException:** The assigned value is outside the supported range.
 
-**System.InvalidOperationException:** An attached node is read or mutated off the owner thread.
+**System.InvalidOperationException:** A read is outside the owner/active processing groups, or a write is outside the owner/current group or occurs during capture.
 
 **System.ObjectDisposedException:** The node is disposing on another thread or has finished disposing.
 
@@ -422,7 +424,7 @@ Every valid assignment commits the Z value and then requests configuration-warni
 
 ParentNode by default. Actual changes refresh attached inheriting descendants, request redraw, then raise PropertyListChanged on this item. Overrides and neutral parents stop propagation. Detached changes apply at entry; TopLevel and reparenting recompute inheritance. GPU supports all concrete modes; mipmaps/anisotropy fail on compatibility, and linear fails on software triangles. Base-level modes never sample stored lower mips. Anisotropy uses the viewport limit; mip interpolation uses the project startup setting. Missing image mips are not generated implicitly.
 
-Invalid or Max values throw ArgumentOutOfRangeException before mutation. InvalidOperationException rejects off-owner/capture-time mutation; ObjectDisposedException rejects disposed access. A subscriber exception leaves the new value and pending redraw committed. Equal assignments do nothing. Stored by PackedScene.
+Invalid or Max values throw ArgumentOutOfRangeException before mutation. InvalidOperationException rejects writes outside the owner/current group or during capture; ObjectDisposedException rejects disposed access. A subscriber exception leaves the new value and pending redraw committed. Equal assignments do nothing. Stored by PackedScene.
 
 ### TextureRepeat
 
@@ -634,7 +636,7 @@ Records a filled rectangle or a centered rectangular outline during canvas recor
 
 **Remarks:** Negative sizes normalize before drawing. An outline at least as wide as either dimension becomes a fill expanded by half its width, including when the original rectangle has zero area. Other outlines use exactly the closed DrawPolyline path, including width compensation, miter joins, thin-width antialias policy and final vertex snapping. Ordinary zero-width outlines produce no geometry.
 
-A filled antialiased rectangle shrinks its core by 0.3125 local units and adds 1.25-unit side and corner feathers. If the smaller adjusted core dimension lies between zero and one, feather width scales by that dimension. Very small cores may have negative adjusted dimensions; these are preserved, not clamped to zero. Filled width is ignored after finite validation. All geometry is recorded in reusable CanvasStroke storage and transforms/modulates on replay. Local overflow throws ArgumentException before committing the command. [CanvasTimingTests](../../tests/Electron2D.Tests/CanvasTimingTests.cs) and native [CanvasTimingRenderingTests](../../tests/Electron2D.Tests/CanvasTimingRenderingTests.cs) cover normalization, wide/degenerate shapes, feathers, backend pixels and zero warmed allocations. Exact thin-line hardware coverage remains Partial.
+A filled antialiased rectangle shrinks its core by 0.3125 local units and adds 1.25-unit side and corner feathers. If the smaller adjusted core dimension lies between zero and one, feather width scales by that dimension. Very small cores may have negative adjusted dimensions; these are preserved, not clamped to zero. Filled width is ignored after finite validation. All geometry is recorded in reusable CanvasStroke storage and transforms/modulates on replay. Local overflow throws ArgumentException before committing the command. [CanvasTimingTests](../../tests/Electron2D.Tests/CanvasTimingTests.cs) and native [CanvasTimingRenderingTests](../../tests/Electron2D.Tests/CanvasTimingRenderingTests.cs) cover normalization, wide/degenerate shapes, feathers, backend pixels and zero warmed allocations. Native thin-line coverage follows the individually qualified driver/method policies linked above.
 
 **System.ArgumentException:** Geometry, color or width is not finite.
 
@@ -762,7 +764,7 @@ The owner or any active processing group may read this borrowed association, inc
 
 Returns the transform composed through the direct canvas-parent chain.
 
-**Returns:** The local transform when the parent is non-canvas or TopLevel is enabled. Results are cached until global invalidation; querying resolves invalidation but leaves queued notifications intact. Attached off-owner queries throw InvalidOperationException. See [global invalidation](#global-invalidation-and-cached-queries).
+**Returns:** The local transform when the parent is non-canvas or TopLevel is enabled. Results are cached until global invalidation; querying resolves invalidation but leaves queued notifications intact. Attached queries outside owner/active groups throw InvalidOperationException. See [global invalidation](#global-invalidation-and-cached-queries).
 
 **System.ObjectDisposedException:** The item is disposed.
 
@@ -778,7 +780,7 @@ Returns the local transform supplied by this item's placement model.
 
 **Returns:** The transform relative to the direct canvas parent.
 
-**System.InvalidOperationException:** An attached item is queried off its scene owner thread; concrete overrides enforce this guard.
+**System.InvalidOperationException:** An attached query is outside the owner/active processing groups; concrete overrides enforce this guard.
 
 **System.ObjectDisposedException:** The item is disposed.
 
@@ -845,7 +847,7 @@ Requests regeneration of this node's retained drawing commands before a later vi
 
 **Remarks:** Detached calls do nothing. Requests coalesce. Hidden nodes retain the request until visible. A request during this item's active recording coalesces with that recording and does not schedule another redraw. Internal resource invalidations arriving during recording remain pending for the next frame. Transforms, modulation and material changes need no redraw.
 
-**System.InvalidOperationException:** An attached node is mutated off its owner thread or during scene capture.
+**System.InvalidOperationException:** The caller is outside the owner/current processing group, or a capture is active.
 
 **System.ObjectDisposedException:** The node is disposed.
 
@@ -1322,7 +1324,7 @@ Returns this scene-owned stable weak canvas identity, independent of native star
 
 Returns: A borrowed RID valid until node disposal; renderer FreeRID cannot release scene ownership.
 
-Throws `System.InvalidOperationException`: An attached node is read off-owner.
+Throws `System.InvalidOperationException`: An attached query is outside the owner or active processing groups.
 
 Throws `System.ObjectDisposedException`: The node is disposed.
 
@@ -1348,7 +1350,7 @@ TileMapLayer inherited Y sorting also invalidates its retained tile groups and d
 
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
 
-The item owns copied nullable scalar/vector overrides separately from Material. Detached authoring, owner/capture guards, geometry-preserving edits, inherited/surface lookup and authored storage descriptors follow [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+The item owns copied nullable scalar/vector overrides separately from Material. Detached authoring, owner/current-group and capture guards, geometry-preserving edits, inherited/surface lookup and authored storage descriptors follow [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
 
 ### Instance parameter access
 
@@ -1358,7 +1360,7 @@ Color? tint = item.GetInstanceShaderParameter<Color>("tint");
 item.SetInstanceShaderParameter<Color>("tint", null);
 ```
 
-These operations require the scene owner for attached items and reject mutation during capture or after disposal. No renderer is required for detached authoring. The current compiled profile declares zero scalar/vector defaults.
+These operations require the owner/current processing group for attached items and reject mutation during capture or after disposal. The getter may prepare retained typed storage. No renderer is required for detached authoring. Unset values follow the compiled scalar/vector default or implicit zero.
 
 A retained server visibility notification can extend command/custom culling bounds through its finite local rectangle. This also participates in clip bounds. Borrowed scene items release that runtime callback state immediately during disposal; it is not a stored scene property. See [canvas rendering](../components/canvas-rendering.md).
 
@@ -1396,7 +1398,7 @@ Canvas normal-consuming graphs preserve each texture rectangle's flip/transpose 
 
 ## Logical canvas identity from groups
 
-`GetCanvas()` permits coordinated reads by the owner or any active processing group. Layers retain their independent RID; viewport-free scenes return the fallback World canvas. Detached items return an empty RID. The lookup starts no native renderer and grants no native/physical mutation permission. See [grouped canvas diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
+`GetCanvas()` and `GetCanvasItem()` permit coordinated reads by the owner or any active processing group. First-use item identity creation shares the existing item gate and starts no native resource. Layers retain their independent RID; viewport-free scenes return the fallback World canvas. Detached items return an empty RID. The lookup starts no native renderer and grants no native/physical mutation permission. See [grouped canvas diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
 
 [Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) cover inherited physical/GUI roles and cold Window layout publication.
 

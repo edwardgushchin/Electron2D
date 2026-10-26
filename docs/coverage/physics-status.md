@@ -70,7 +70,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 
 | Declaring type | Base | Implemented | Partial | Blocked | Unimplemented | Excluded |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 114 | 1 | 0 | 0 | 0 |
+| [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 115 | 0 | 0 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 17 | 1 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 211 | 1 | 0 | 1 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
@@ -78,13 +78,12 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 438 | 8 | 5 | 3 | 37 |
+| **Total** | | 439 | 7 | 5 | 3 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
-| [`class:CanvasItem`](classes/CanvasItem.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`class:MainLoop`](classes/MainLoop.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`class:Node`](classes/Node.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED`](classes/Node.md) | Unimplemented | Exact prerequisite: complete per-window native HDR output request/support/enabled and luminance policy, executing HDR presentation/transfer, active maximum-linear-value observation and ordered Window/Node change delivery. Current half-float canvases still use SDR presentation; native swapchain-format availability does not prove active HDR output. See docs/components/hdr-canvas.md#native-output-prerequisite and bin/physics-output-capability/2026-10-25/. No inert identity is exposed. |

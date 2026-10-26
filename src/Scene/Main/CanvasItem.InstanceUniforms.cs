@@ -58,13 +58,14 @@ public abstract partial class CanvasItem
     /// Textures, arrays and matrices are not per-item parameters. Unset parameters follow the compiled shader default,
     /// with implicit zero when absent; explicit values survive compatible reloads. Prepared names retain their typed
     /// storage and descriptor so repeated set/clear cycles allocate no managed memory. Each MultiMesh node owns
-    /// one parameter set shared by its hardware instances. Compatible surface materials also consume it.</remarks>
+    /// one parameter set shared by its hardware instances. Compatible surface materials also consume it.
+    /// Reads and writes permit the owner/current processing group; the getter may prepare retained typed storage.</remarks>
     /// <exception cref="ArgumentException">The name/type is invalid or the value is nonfinite.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the scene owner or a capture is active.</exception>
+    /// <exception cref="InvalidOperationException">The caller is outside the owner/current processing group, or a capture is active.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public void SetInstanceShaderParameter<T>(string name, T? value) where T : unmanaged
     {
-        EnsureMutable();
+        EnsureCanvasMetadataMutable();
         if (InstanceUniforms.Set(name, value, GetInstanceProgram(name))) NotifyPropertyListChanged();
     }
     /// <summary>Reads this item's override or the current shader's default value.</summary>
@@ -72,8 +73,8 @@ public abstract partial class CanvasItem
     /// <param name="name">Case-sensitive parameter name.</param>
     /// <returns>The effective value, or null when neither an override nor a declaration exists.</returns>
     /// <exception cref="ArgumentException">The name or requested type is invalid.</exception>
-    /// <exception cref="InvalidOperationException">The caller is not the scene owner.</exception>
+    /// <exception cref="InvalidOperationException">The caller is outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">The item is disposed.</exception>
     public T? GetInstanceShaderParameter<T>(string name) where T : unmanaged
-    { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return InstanceUniforms.Get<T>(name, GetInstanceProgram(name)); }
+    { ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return InstanceUniforms.Get<T>(name, GetInstanceProgram(name)); }
 }

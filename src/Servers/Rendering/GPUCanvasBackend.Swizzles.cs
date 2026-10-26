@@ -3,7 +3,7 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUCanvasBackend
 {
     private readonly TextureSwizzleCache _sampledSwizzles = new();
-    private readonly Dictionary<MaterialState, uint[]> _materialSwizzles = [];
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<MaterialState, uint[]> _materialSwizzles = new();
     private uint MaterialSwizzle(MaterialState material, int index) => _materialSwizzles.TryGetValue(material, out var values) ? values[index] : 0;
     private uint CanvasSwizzle(CanvasBatch batch, ShaderTexture texture, int index)
     {

@@ -89,7 +89,9 @@ def check_physics_report(pages):
         rows = [row for row in canvas_page.splitlines() if row.startswith("| [`method " + method + "(")]
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "native-attribute-composition-2026-10-26" in rows[0]
         assert not any(key.startswith("CanvasItem::method:" + method + "(") for key in expected)
-    assert expected["class:CanvasItem"] == "Partial"
+    assert "class:CanvasItem" not in expected
+    assert " | Implemented | " in next(row for row in canvas_page.splitlines() if row.startswith("| [`class CanvasItem`"))
+    assert "docs/components/canvas-item-contract.md" in canvas_page
     server_page = pages[CLASS_PAGES / "RenderingServer.md"]
     for method in ("canvas_item_add_primitive", "canvas_item_add_polyline", "canvas_item_add_multiline"):
         rows = [row for row in server_page.splitlines() if row.startswith("| [`method " + method + "(")]
