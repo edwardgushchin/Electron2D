@@ -1,6 +1,65 @@
 # Authoritative physics network example
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
+
+## Current-main network qualification, 2026-10-26
+
+Fourteen fresh immutable-payload public-example profiles pass after the combined
+notification/accessibility runtime at `a80213e0ce15aa52835f05f19622f45d6c99bc84`. Four CPU/no-device
+and four mixed CPU-authority/GPU-client profiles cover CLR/strict full-trim
+NativeAOT with the ordinary and separate physical-thread settings. Two ordinary
+NativeAOT GPU sessions omit check-progress barriers, and four actual Wayland
+windows cover CLR/NativeAOT with GPU/compatibility rendering. Every authority
+retains 900 ticks, late admission at 310, 39 actors, all three joint families and
+the unchanged impaired transport, lifecycle, handoff, event and convergence checks.
+The eight paced headless profiles retain 250 ms early-client polling; ordinary and
+window profiles retain zero added delay. NVIDIA disk shader caching is disabled.
+
+Across 42 simulation participants, **14871 warmed ordinary steps** and
+**90442 warmed replay intervals** allocate exactly **0/0 owner/all-thread
+managed bytes**. The closed pin-loop checks retain 2017 locally solved witness
+contacts and 174 imported-contact observations. Maximum energy, momentum
+error and anchor gap are 8.4996542931, 0.0000467666 and
+0.0020751953, within the unchanged `32 * 1.01 + .0001`, `.002`
+and `.05` bounds. CPU participants actually reject unavailable GPU startup and
+create no graphics service. Only actual GPU clients map NVIDIA; no software GPU
+or CoreCLR in native processes is observed. Kernel intervals contain no new Xid.
+GPU loading preparation takes 12417.6499–20483.9330 ms,
+separately from active-session deadlines and warmed intervals.
+
+All four 800×400 PNGs were inspected. Executable checks confirm actual smoothing,
+remote interpolation and byte-identical portable physics before/after capture.
+Complete-window observations include network/capture work and are separate from
+strict zero-byte physical intervals:
+
+| Window | Frames | FPS | Frame p50 / p95 / p99, ms | Window owner / all-thread managed bytes |
+| --- | ---: | ---: | --- | ---: |
+| clr-window-gpu | 778 | 24.9081 | 7.1470 / 106.9597 / 143.7966 | 5009632 / 5009632 |
+| clr-window-compatibility | 3727 | 122.8780 | 0.6638 / 93.1371 / 107.2909 | 5554448 / 5554448 |
+| native-window-gpu | 452 | 12.1381 | 94.8567 / 167.4724 / 281.6397 | 5086376 / 5086376 |
+| native-window-compatibility | 1153 | 25.7865 | 1.0350 / 231.1174 / 310.4078 | 4760592 / 4760592 |
+
+These are bounded functional observations on a shared workstation. The native
+window observations are slower than the preceding source cohort; that is not a
+matched revision/load experiment and establishes no causal performance regression
+or renderer comparison. Throughput, native allocation and complete performance
+acceptance remain open. No numerical tolerance, workload, deadline, operation
+count or allocation assertion is relaxed.
+
+The matching portable-PDB/ILC proofs retain all 2625 runtime and 16 example authored
+source documents in both builds. Runtime SHA-256 is `db1f185948a34a21d2d42a2b942aa9a5f66b6750222e1b5041cf1d581e48adf2`;
+NativeAOT executable SHA-256 is `964287385e0ab5d05636bfeae8887400f907af4bf8b31e707b9759895ce85e63`. Later project-instruction
+commits change documentation and its coverage prose; all compiled authored inputs
+still match the live files. Evidence: `bin/physics-network-current/2026-10-26/`
+contains `plan.json`, `qualification.json`, `validation.json`, source/build proofs,
+per-role maps/environment, native response, reports, telemetry and captures.
+
+This refresh changes no runtime declarations or coverage states. Combined-main
+physics API accounting is **1345/1369 (98.25%)**, **24 open** (16 Partial,
+5 Blocked, 3 Unimplemented), 92 Excluded. The six-row increase since the preceding
+notification checkpoint belongs to the separately merged accessibility slice.
+Full numerical/extension/native-heap/foreign-platform/performance and human
+acceptance, plus the remaining inherited capabilities, are not closed here.
 
 ## Network regression after shared contact completion (2026-10-22)
 

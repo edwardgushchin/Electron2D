@@ -1,3 +1,15 @@
+[Current-main network qualification](physics-network-example.md#current-main-network-qualification-2026-10-26)
+passes fourteen fresh CLR/strict NativeAOT CPU/GPU ordinary/separate headless,
+ordinary-authority and actual Wayland-window scenarios. The 42 participants retain
+14871 warmed ordinary steps and 90442 replay intervals at exact 0/0 managed bytes.
+All four captures pass pixel/portable-state checks and were inspected. This adds
+current integration evidence and changes no declaration states. Combined-main API
+accounting is **1345/1369 (98.25%)**, **24 open** (16 Partial, 5 Blocked,
+3 Unimplemented), 92 Excluded; the six-row increase comes from the separate
+accessibility merge. Native window timings are bounded functional observations;
+complete numerical/network/native/foreign/performance/human acceptance stays open.
+Earlier counts below describe preceding source checkpoints.
+
 [Selectable inherited notification direction](object-lifecycle.md#notification-direction)
 now executes normal/reversed delivery across all built-in overrides and cooperative
 compiled C# body classes. Eight public CPU/no-device and NVIDIA GPU owner/separate
