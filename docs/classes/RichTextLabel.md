@@ -1,6 +1,6 @@
 # RichTextLabel
 
-Last updated: 2026-10-20
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.RichTextLabel`. **Source:** [source](../../src/Scene/GUI/RichTextLabel.cs). **Component:** [Rich text](../components/rich-text.md).
 
@@ -1472,3 +1472,5 @@ Native dropdown/context anchors now resolve through the containing viewport into
 [Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
 
 Native scrolling uses the current text viewport, owned vertical bar and prepared line height without changing selection. This scroll producer does not claim the remaining rich-content Text/Hypertext or collection protocols. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
+
+Native ShowContextMenu uses ContextMenuEnabled and the ordinary owned menu. Refresh addresses standard commands by ID and preserves removed or custom entries; custom IDs reach application handlers without invoking an unrelated built-in command. See [native live/popup output](AccessibilityServer.md#native-live-and-popups).

@@ -265,3 +265,5 @@ Native Text/EditableText output uses this control's existing document, caret/sel
 Native scrolling publishes pixel projections of visual-row offsets, keeps smooth-scroll target accumulation and reuses horizontal pixel scrolling. Read-only editors can scroll without moving carets or selections; CodeEdit inherits this behavior. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
 
 Repeated identical IME composition updates preserve an independently scrolled view; changed composition still updates caret visibility.
+
+Context-menu refresh preserves caller-added entries and removed standard commands. Typed submenu IDs identify the existing direction and Unicode menus. Native ShowContextMenu reuses ContextMenuEnabled and ordinary command guards; see [native live/popup output](AccessibilityServer.md#native-live-and-popups).

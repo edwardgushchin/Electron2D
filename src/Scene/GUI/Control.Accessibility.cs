@@ -4,6 +4,7 @@ public partial class Control
 {
     private string _accessibilityName = "", _accessibilityDescription = "", _resolvedAccessibilityName = "", _resolvedAccessibilityDescription = "";
     private string[] _accessibilityControlsNodes = [], _accessibilityDescribedByNodes = [], _accessibilityLabeledByNodes = [], _accessibilityFlowToNodes = [];
+    private AccessibilityServer.AccessibilityLiveMode _accessibilityLive;
     internal ulong AccessibilityRelationRevision { get; private set; }
     internal ReadOnlySpan<string> AccessibilityControlsPaths => _accessibilityControlsNodes;
     internal ReadOnlySpan<string> AccessibilityDescribedByPaths => _accessibilityDescribedByNodes;
@@ -11,6 +12,7 @@ public partial class Control
     internal ReadOnlySpan<string> AccessibilityFlowToPaths => _accessibilityFlowToNodes;
     private static readonly PropertyDescriptor[] AccessibilityProperties =
     [
+        new PropertyDescriptor<Control, AccessibilityServer.AccessibilityLiveMode>(nameof(AccessibilityLive), c => c.AccessibilityLive, (c,v) => c.AccessibilityLive=v, _ => AccessibilityServer.AccessibilityLiveMode.Off, stored: true),
         new PropertyDescriptor<Control, string>(nameof(AccessibilityName), c => c.AccessibilityName, (c,v) => c.AccessibilityName=v, _ => "", stored: true),
         new PropertyDescriptor<Control, string>(nameof(AccessibilityDescription), c => c.AccessibilityDescription, (c,v) => c.AccessibilityDescription=v, _ => "", stored: true),
         new PropertyDescriptor<Control, string[]>(nameof(AccessibilityControlsNodes), c => c.AccessibilityControlsNodes, (c,v) => c.AccessibilityControlsNodes=v, _ => [], stored: true),
@@ -18,6 +20,16 @@ public partial class Control
         new PropertyDescriptor<Control, string[]>(nameof(AccessibilityLabeledByNodes), c => c.AccessibilityLabeledByNodes, (c,v) => c.AccessibilityLabeledByNodes=v, _ => [], stored: true),
         new PropertyDescriptor<Control, string[]>(nameof(AccessibilityFlowToNodes), c => c.AccessibilityFlowToNodes, (c,v) => c.AccessibilityFlowToNodes=v, _ => [], stored: true),
     ];
+    /// <summary>Gets or sets the priority for native announcements of this control's changing content.</summary>
+    /// <value>Off initially. Stored in scenes and duplication.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The mode is unknown.</exception>
+    /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Access is off-owner or mutation is capture-owned.</exception>
+    public AccessibilityServer.AccessibilityLiveMode AccessibilityLive
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _accessibilityLive; }
+        set { EnsureMutable(); if (value is < AccessibilityServer.AccessibilityLiveMode.Off or > AccessibilityServer.AccessibilityLiveMode.Assertive) throw new ArgumentOutOfRangeException(nameof(value)); if (_accessibilityLive == value) return; _accessibilityLive = value; QueueAccessibilityUpdate(); }
+    }
     /// <summary>Gets or sets the authored accessible name, overriding this control's displayed caption.</summary>
     /// <value>Empty by default, using the control's ordinary semantic caption.</value>
     /// <remarks>Stored in scenes and automatically translated using this control's translation context.</remarks>
@@ -123,6 +135,8 @@ public partial class Control
         return (this is BaseButton or Container { AccessibilityRegion: true }) && AccessibleCaption.Length == 0 && !HasAuthoredAccessibilityLabel()
             ? [.. warnings, "Provide an accessible name for this action or landmark region."] : warnings;
     }
+    internal void ShowAccessibilityTooltip() => Tree?.ShowAccessibilityTooltip(this);
+    internal void HideAccessibilityTooltip() => Tree?.HideAccessibilityTooltip(this);
     internal void GrabAccessibilityFocus() => GrabFocus();
     internal void RefreshAccessibilityText() { _resolvedAccessibilityName = Atr(_accessibilityName); _resolvedAccessibilityDescription = Atr(_accessibilityDescription); }
     internal string AccessibleCaption => _resolvedAccessibilityName.Length != 0 ? _resolvedAccessibilityName : this switch

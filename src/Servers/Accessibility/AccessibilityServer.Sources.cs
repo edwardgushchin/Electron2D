@@ -12,6 +12,8 @@ public sealed partial class AccessibilityServer
         if (node is Control control)
         {
             BindSourceScroll(e, control);
+            e.SourceShowTooltipAction = control.ShowAccessibilityTooltip; e.SourceHideTooltipAction = control.HideAccessibilityTooltip;
+            e.SourceContextMenuAction = control switch { LineEdit line => line.AccessibilityShowContextMenu, TextEdit edit => edit.AccessibilityShowContextMenu, RichTextLabel rich => rich.AccessibilityShowContextMenu, _ => null };
             var focusSource = FocusSource(control);
             e.SourceFocusAction = focusSource.GrabAccessibilityFocus; e.SourceBlurAction = focusSource.ReleaseFocus;
             if (node is LineEdit or TextEdit)

@@ -7,20 +7,33 @@ public partial class TextEdit
     public PopupMenu GetMenu() { CheckTextEdit(); return _menu; }
     /// <summary>Reports whether the context menu is presented.</summary><returns>Popup visibility.</returns>
     public bool IsMenuVisible() { CheckTextEdit(); return _menu.Visible; }
+    internal void AccessibilityShowContextMenu() => ShowContextMenu(Size * .5f);
+    private void ShowContextMenu(Vector2 position)
+    { if (!_contextMenuEnabled || !IsInsideTree || !IsVisibleInTree) return; PrepareMenu(); _menu.PopupFromViewport(GetViewport()!, new((Vector2i)(GetGlobalTransformWithCanvas() * position), Vector2i.One)); }
     private OwnedMenu? _directionMenu, _controlMenu;
+    private bool _menuBuilt;
     private void PrepareMenu()
     {
-        _directionMenu ??= NewSubmenu("_direction"); _controlMenu ??= NewSubmenu("_unicode"); _menu.Clear(); _directionMenu.Clear(); _controlMenu.Clear();
-        foreach (var action in Enum.GetValues<TextMenuAction>())
+        if (!_menuBuilt)
         {
-            if (action == TextMenuAction.EmojiAndSymbols) continue; var id = (int)action; var popup = id >= 14 ? _controlMenu : id >= 8 && id <= 11 ? _directionMenu : _menu;
-            var label = action switch { TextMenuAction.SelectAll => "Select All", TextMenuAction.DirectionInherited => "Layout Direction", TextMenuAction.DirectionAuto => "Automatic", TextMenuAction.DirectionLTR => "Left to Right", TextMenuAction.DirectionRTL => "Right to Left", TextMenuAction.DisplayUCC => "Show Control Characters", _ => id >= 14 ? "Insert " + action.ToString()[6..] : action.ToString() };
-            if (popup == _directionMenu) popup.AddRadioCheckItem(label, id); else if (action == TextMenuAction.DisplayUCC) popup.AddCheckItem(label, id); else popup.AddItem(label, id);
-            var index = popup.ItemCount - 1; popup.SetItemDisabled(index, !_editable && (action is TextMenuAction.Cut or TextMenuAction.Paste or TextMenuAction.Clear or TextMenuAction.Undo or TextMenuAction.Redo || id >= 14));
-            if (popup == _directionMenu) popup.SetItemChecked(index, action == (_textDirection switch { TextDirection.Inherited => TextMenuAction.DirectionInherited, TextDirection.LTR => TextMenuAction.DirectionLTR, TextDirection.RTL => TextMenuAction.DirectionRTL, _ => TextMenuAction.DirectionAuto }));
-            if (action == TextMenuAction.DisplayUCC) popup.SetItemChecked(index, _drawControlChars);
+            _directionMenu = NewSubmenu("_direction"); _controlMenu = NewSubmenu("_unicode");
+            foreach (var action in Enum.GetValues<TextMenuAction>())
+            {
+                if (action is TextMenuAction.EmojiAndSymbols or TextMenuAction.SubmenuTextDirection or TextMenuAction.SubmenuInsertUCC) continue;
+                var id = (int)action; var popup = id >= 14 ? _controlMenu : id is >= 8 and <= 11 ? _directionMenu : _menu;
+                var label = action switch { TextMenuAction.SelectAll => "Select All", TextMenuAction.DirectionInherited => "Layout Direction", TextMenuAction.DirectionAuto => "Automatic", TextMenuAction.DirectionLTR => "Left to Right", TextMenuAction.DirectionRTL => "Right to Left", TextMenuAction.DisplayUCC => "Show Control Characters", _ => id >= 14 ? "Insert " + action.ToString()[6..] : action.ToString() };
+                if (popup == _directionMenu) popup.AddRadioCheckItem(label, id); else if (action == TextMenuAction.DisplayUCC) popup.AddCheckItem(label, id); else popup.AddItem(label, id);
+            }
+            _menu.AddSeparator(); _menu.AddSubmenuNodeItem("Text Direction", _directionMenu, (int)TextMenuAction.SubmenuTextDirection); _menu.AddSubmenuNodeItem("Insert Control Character", _controlMenu, (int)TextMenuAction.SubmenuInsertUCC); _menuBuilt = true;
         }
-        _menu.AddSeparator(); _menu.AddSubmenuNodeItem("Text Direction", _directionMenu, 7); _menu.AddSubmenuNodeItem("Insert Control Character", _controlMenu, 13);
+        foreach (var popup in new[] { _menu, _directionMenu!, _controlMenu! })
+            for (var index = 0; index < popup.ItemCount; index++)
+            {
+                var id = popup.GetItemID(index); if (id is < 0 or > 29) continue; var action = (TextMenuAction)id;
+                popup.SetItemDisabled(index, !_editable && (action is TextMenuAction.Cut or TextMenuAction.Paste or TextMenuAction.Clear or TextMenuAction.Undo or TextMenuAction.Redo || id >= 14));
+                if (id is >= 8 and <= 11) popup.SetItemChecked(index, action == (_textDirection switch { TextDirection.Inherited => TextMenuAction.DirectionInherited, TextDirection.LTR => TextMenuAction.DirectionLTR, TextDirection.RTL => TextMenuAction.DirectionRTL, _ => TextMenuAction.DirectionAuto }));
+                if (action == TextMenuAction.DisplayUCC) popup.SetItemChecked(index, _drawControlChars);
+            }
     }
     private OwnedMenu NewSubmenu(string name)
     {

@@ -1,6 +1,6 @@
 # OptionButton
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class OptionButton : Button`. **Inherits:** [Button](Button.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/OptionButton.cs), [layout](../../src/Scene/GUI/OptionButton.Layout.cs), [storage](../../src/Scene/GUI/OptionButton.Storage.cs). **Component:** [Dropdown choices](../components/dropdown-choices.md).
 
@@ -655,3 +655,5 @@ Inherited-policy item captions use [Control.TranslationContext](Control.md#autom
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+Native accessibility exposes real popup capability and owned menu item selection/activation through [the native popup contract](AccessibilityServer.md#native-live-and-popups). Menu records follow their semantic owner and actual rendered item canvas; native surface retirement invalidates identities.

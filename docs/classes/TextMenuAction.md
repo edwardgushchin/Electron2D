@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 **Source:** [LineEdit.Menu.cs](../../src/Scene/GUI/LineEdit.Menu.cs). **Owners:** [LineEdit](LineEdit.md) and [TextEdit](TextEdit.md).
 
-Shared typed editing commands under ADR 0051. Values 7 and 13 belong to popup submenu presentation; the count sentinel is omitted. EmojiAndSymbols requires the currently absent native picker.
+Shared typed editing commands under ADR 0051. SubmenuTextDirection=7 and SubmenuInsertUCC=13 identify real owned PopupMenu submenus in LineEdit and TextEdit; MenuOption itself leaves these structural IDs unchanged. The count sentinel is omitted. EmojiAndSymbols requires the currently absent native picker.
 
 | Name | Value | Contract |
 | --- | ---: | --- |
@@ -36,4 +36,6 @@ Shared typed editing commands under ADR 0051. Values 7 and 13 belong to popup su
 | `Paste` | 2 | Pastes clipboard text. |
 | `Redo` | 6 | Restores the following text state. |
 | `SelectAll` | 4 | Selects all text. |
+| `SubmenuTextDirection` | 7 | Identifies the text-direction submenu. |
+| `SubmenuInsertUCC` | 13 | Identifies the Unicode control-character submenu. |
 | `Undo` | 5 | Restores the preceding text state. |

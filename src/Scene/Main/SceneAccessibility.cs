@@ -66,6 +66,8 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var name = node switch { Control c => c.AccessibleCaption, Window w => w.AccessibilityTitle, _ => "" };
             var description = node is Control c2 ? c2.AccessibleDescription : "";
             var role = RoleFor(node); var flags = 0UL;
+            if (node is Control liveSource) AccessibilityServer.UpdateSourceLive(e, liveSource);
+            if (node is PopupMenu menuSource) menuSource.AccessibilitySyncCollection(e);
             if (node is LineEdit or TextEdit) AccessibilityServer.UpdateSourceText(e);
             if (node is Control scrollSource) { AccessibilityServer.UpdateSourceScroll(e, scrollSource); AccessibilityServer.UpdateSourceCollection(e, scrollSource); }
             var visible = node is not CanvasItem canvas || canvas.IsVisibleInTree;
@@ -99,6 +101,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
                 DisplayServer.Service!.SynchronizeAccessibilityRect(e.WindowID);
             }
             e.SourceName = name; e.SourceDescription = description; e.SourceRole = role; e.SourceFlags = flags; e.SourceChecked = isChecked; e.SourceBounds = bounds; e.SourcePrepared = true;
+            if (node is Control contentSource) AccessibilityServer.UpdateSourceLiveContent(e, contentSource);
             if (changed || node.AccessibilityQueued)
             {
                 node.AccessibilityQueued = false; node.DispatchAccessibilityUpdate();
@@ -111,7 +114,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
                 _focus[e.WindowID] = selected;
             }
         }
-        AccessibilityServer.FinishSourceCollections();
+        AccessibilityServer.FinishSourceCollections(); AccessibilityServer.FlushAnnouncements();
         SyncRelations();
         foreach (var (window, id) in _previousFocus) if (!_focus.ContainsKey(window)) AccessibilityServer.ClearFocusIf(id);
         _previousFocus.Clear();
@@ -164,6 +167,8 @@ internal sealed class SceneAccessibility(SceneTree tree)
     }
     private static Role RoleFor(Node node) => node switch
     {
+        PopupMenu => Role.Menu,
+        PanelContainer { Parent: CanvasLayer { IsTooltipLayer: true } } => Role.Tooltip,
         Window => Role.Window,
         CheckBox => Role.CheckBox,
         CheckButton => Role.CheckButton,

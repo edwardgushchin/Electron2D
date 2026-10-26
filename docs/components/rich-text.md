@@ -1,6 +1,6 @@
 # Rich text
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 RichTextLabel connects the existing Control, themed FontFile/FreeType/HarfBuzz/ICU text, retained canvas, input, scrolling and typed scene-resource storage. RichTextEffect and CharFXTransform add executable application glyph effects. RichTextEffectEnvironment and RichTextMetadata replace untyped effect dictionaries and link payloads with exact generic borrowed values. InlineAlignment and TextGraphemeFlags retain shared semantic domains. No additional renderer or vendored code change is introduced.
 
@@ -35,3 +35,5 @@ Graph authoring and FontVariation are now implemented connected consumers. Scrip
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
 
 Glyph property classification is shared with [shaped word ranges](text-server.md#span-font-replacement-and-shaped-word-ranges). It supplies pinned/custom punctuation, separate underscores, mandatory/soft separators and valid inline objects alongside resolved direction and native joining flags. This does not expose native glyph handles.
+
+Owned context-menu refresh addresses Copy/SelectAll by stable IDs, preserves customization and leaves custom command IDs to application handlers. Native ShowContextMenu reuses the ordinary source policy. See [native popup output](../classes/AccessibilityServer.md#native-live-and-popups).

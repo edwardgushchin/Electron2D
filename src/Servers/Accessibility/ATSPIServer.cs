@@ -170,6 +170,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     {
         if (Environment.CurrentManagedThreadId != _ownerThread) throw new InvalidOperationException("Native accessibility requests require the display owner.");
         for (var i = 0; i < 64 && g_main_context_pending(_context) != 0; i++) g_main_context_iteration(_context, 0);
+        try { FlushAnnouncements(); } catch (Exception error) { Fail(error); }
         if (_callbackErrors is { } errors) { _callbackErrors = null; throw new AggregateException("Native accessibility callbacks failed.", errors); }
     }
     private void Fail(Exception error) => (_callbackErrors ??= []).Add(error);
@@ -354,7 +355,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     private static (AAction Action, int Jump) ActionAt(Element e, int index)
     {
         if (index < 0) throw new InvalidRequestException("The action index is outside the supported action list.");
-        for (var action = AAction.Click; action <= AAction.SetValue; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return (action, 0);
+        for (var action = AAction.Click; action <= AAction.ShowContextMenu; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return (action, 0);
         if (HasPageActions(e)) { if (index is 0 or 1) return (AAction.SetValue, index == 0 ? -1 : 1); index -= 2; }
         for (var action = AAction.ScrollDown; action <= AAction.ScrollUp; action++)
             if (e.ScrollUnitActions?.ContainsKey(action) == true) { if (index is 0 or 1) return (action, index); index -= 2; }
@@ -371,6 +372,9 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         AAction.ScrollRight => request.Jump == 0 ? "scroll-right" : "scroll-page-right",
         AAction.ScrollBackward => "scroll-backward",
         AAction.ScrollForward => "scroll-forward",
+        AAction.ShowTooltip => "show-tooltip",
+        AAction.HideTooltip => "hide-tooltip",
+        AAction.ShowContextMenu => "show-context-menu",
         AAction.Expand => "expand",
         AAction.Collapse => "collapse",
         AAction.Click => "click",
@@ -431,7 +435,8 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     {
         if (g_dbus_connection_emit_signal(_connection, 0, path, iface, name, value, out var error) == 0) throw new ExternalException(ErrorMessage(error));
     }
-    internal void PropertyChanged(Element e, string property, string value) => Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event(property, 0, 0, S(value), e));
+    internal void PropertyChanged(Element e, string property, string value)
+    { Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event(property, 0, 0, S(value), e)); if (property is "accessible-name" or "accessible-value") QueueAnnouncement(e, value); }
     internal void NumericChanged(Element e, string property, double value)
     {
         var builder = Builder("a{sv}");
@@ -441,6 +446,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             Emit(e.Path, "org.freedesktop.DBus.Properties", "PropertiesChanged", Tuple([S(ValueInterface), g_variant_builder_end(builder), Array("s", [])]));
         }
         finally { g_variant_builder_unref(builder); }
+        if (property == "CurrentValue") QueueAnnouncement(e);
         if (property == "CurrentValue") Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event("accessible-value", 0, 0, g_variant_new_double(value), e));
     }
     internal void RoleChanged(Element e) => Emit(e.Path, "org.a11y.atspi.Event.Object", "PropertyChange", Event("accessible-role", 0, 0, U(NativeRole(e)), e));

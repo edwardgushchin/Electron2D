@@ -121,7 +121,7 @@ public partial class RichTextLabel : Control
     {
         ArgumentNullException.ThrowIfNull(text); _frame = _main; FocusMode = FocusMode.Accessibility; ClipContents = true;
         _glyphRenderer = DrawRichGlyph; _glyphForeground = DrawRichForeground; _scroll = new(this) { Name = "_rich_scroll" }; _menu = new(this) { Name = "_rich_menu" }; AddChild(_scroll, InternalMode.Front); AddChild(_menu, InternalMode.Front);
-        _menu.Hide(); _scroll.ValueChanged += _ => QueueRedraw(); _menu.IDPressed += id => MenuOption((MenuItems)id); _menu.AddItem("Copy", (int)MenuItems.Copy); _menu.AddItem("Select All", (int)MenuItems.SelectAll);
+        _menu.Hide(); _scroll.ValueChanged += _ => QueueRedraw(); _menu.IDPressed += id => { if ((MenuItems)id is MenuItems.Copy or MenuItems.SelectAll) MenuOption((MenuItems)id); }; _menu.AddItem("Copy", (int)MenuItems.Copy); _menu.AddItem("Select All", (int)MenuItems.SelectAll);
         Text = text;
     }
     private void ApplyParagraph(Paragraph paragraph) { var spec = _format.Paragraph; paragraph.Alignment = spec?.Alignment; paragraph.Direction = spec?.Direction; paragraph.Language = spec?.Language ?? ""; paragraph.Parser = spec?.Parser ?? StructuredTextParser.Default; paragraph.Justification = spec?.Justification ?? (TextJustificationFlags)163; paragraph.Tabs = spec?.Tabs ?? []; }

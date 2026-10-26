@@ -137,3 +137,5 @@ Native accessibility now includes [text and editing](../classes/AccessibilitySer
 Native accessibility scrolling now connects existing scrollable GUI sources to AT-SPI placement and typed actions. [The service contract](../classes/AccessibilityServer.md#native-scrolling) owns coordinate, clipping, lifetime and verification boundaries.
 
 [Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.
+
+[Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.

@@ -138,6 +138,7 @@ internal sealed unsafe partial class ATSPIServer
         Set(31, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ActiveDescendant) is not null);
         Set(36, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ErrorMessage) is not null);
         Set(39, e.Role == Role.DefaultButton);
+        Set(13, e.Tooltip.Length != 0); Set(42, e.PopupType is not null);
         Set(22, e.Collection?.Selected is not null && e.CollectionSelectable);
         Set(23, e.Collection?.Selected == true);
         Set(9, e.Collection?.Expanded is not null); Set(10, e.Collection?.Expanded == true);

@@ -983,6 +983,102 @@
       "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Expand()",
       "state": "Implemented",
       "reason": "ADR 0114: native Selection/Table/TableCell and Collapse/Expand execute with owned item/cell identities, selection/expansion/orientation, headers and merged spans. ItemList, Tree/TreeItem and TabBar/TabContainer reuse ordinary selection, focus, activation and scrolling. Independent wire/libatspi, ownership/retirement/failure and prepared software-native frame checks cover the local Linux profile; native heap, physical devices, human reader, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityLiveMode",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityLiveMode",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_OFF",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityLiveMode.Off()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_POLITE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityLiveMode.Polite()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_ASSERTIVE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityLiveMode.Assertive()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityPopupType",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityPopupType",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_MENU",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.Menu()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_LIST",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.List()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_TREE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.Tree()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_DIALOG",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.Dialog()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_TOOLTIP",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ShowTooltip()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_HIDE_TOOLTIP",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.HideTooltip()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_CONTEXT_MENU",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ShowContextMenu()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_live(RID:,int:AccessibilityServer.AccessibilityLiveMode)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetLive(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityLiveMode)",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_popup_type(RID:,int:AccessibilityServer.AccessibilityPopupType)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetPopupType(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityPopupType)",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_tooltip(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTooltip(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
+    },
+    {
+      "godot": "Control::property:accessibility_live",
+      "electron2d": "property:Electron2D.Control.AccessibilityLive()",
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
     }
   ],
   "extras": [
@@ -1038,31 +1134,17 @@
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Complete color/announcement and remaining payload-action/content-producer families retain their row triggers.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families; owned collection Selection/Table/TableCell and Collapse/Expand execute for ItemList, Tree/TreeItem and TabBar/TabContainer. Complete color/custom metadata and remaining payload-action/content-producer families retain their row triggers. Live announcements, tooltips/context actions and PopupMenu/OptionButton source navigation execute.",
       "godot": [
         "class:AccessibilityServer"
       ]
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native live-announcement/popup/custom-action state and event consumer with actual GUI source transitions. Do not add inert metadata or unsupported action selectors.",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native custom-action state and event consumer with actual GUI source transitions. Do not add inert metadata or unsupported action selectors.",
       "godot": [
-        "AccessibilityServer::enum:AccessibilityLiveMode",
-        "AccessibilityServer::enum:AccessibilityPopupType",
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_HIDE_TOOLTIP",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_CONTEXT_MENU",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_TOOLTIP",
-        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_ASSERTIVE",
-        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_OFF",
-        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_POLITE",
-        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_DIALOG",
-        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_LIST",
-        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_MENU",
-        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_TREE",
-        "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)",
-        "AccessibilityServer::method:update_set_live(RID:,int:AccessibilityServer.AccessibilityLiveMode)",
-        "AccessibilityServer::method:update_set_popup_type(RID:,int:AccessibilityServer.AccessibilityPopupType)"
+        "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)"
       ]
     },
     {
@@ -1082,7 +1164,7 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/role/state/class/shortcut/tooltip/URL metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
+      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/role/state/class/shortcut/URL metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
       "godot": [
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
         "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
@@ -1091,7 +1173,6 @@
         "AccessibilityServer::method:update_set_role_description(RID:,String:)",
         "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
         "AccessibilityServer::method:update_set_state_description(RID:,String:)",
-        "AccessibilityServer::method:update_set_tooltip(RID:,String:)",
         "AccessibilityServer::method:update_set_url(RID:,String:)"
       ]
     },
@@ -1121,13 +1202,6 @@
       "reason": "ADR 0114: native assistive drag/drop actions, announced drag context and typed payload routing into the existing GUI drag lifecycle remain absent. Numeric values and semantic relations already execute; neither supplies this transport.",
       "godot": [
         "Control::method:accessibility_drop()"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: native live-region mode and real source-triggered announcements remain absent; semantic relations and numeric value events do not implement live announcements.",
-      "godot": [
-        "Control::property:accessibility_live"
       ]
     },
     {
@@ -1400,6 +1474,28 @@
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_COLLAPSE",
         "AccessibilityServer::enum_value:AccessibilityAction.ACTION_EXPAND"
       ]
+    },
+    {
+      "godot": [
+        "AccessibilityServer::enum:AccessibilityLiveMode",
+        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_OFF",
+        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_POLITE",
+        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_ASSERTIVE",
+        "AccessibilityServer::enum:AccessibilityPopupType",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_MENU",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_LIST",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_TREE",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_DIALOG",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_TOOLTIP",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_HIDE_TOOLTIP",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_CONTEXT_MENU",
+        "AccessibilityServer::method:update_set_live(RID:,int:AccessibilityServer.AccessibilityLiveMode)",
+        "AccessibilityServer::method:update_set_popup_type(RID:,int:AccessibilityServer.AccessibilityPopupType)",
+        "AccessibilityServer::method:update_set_tooltip(RID:,String:)",
+        "Control::property:accessibility_live"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0114: real AT-SPI Announcement priority/content and live/tooltip/has-popup consumers execute. Typed publication, coalesced visible non-password updates, actual GUI tooltip/context-menu requests and PopupMenu/OptionButton owned selection/activation preserve source policy and lifetime. Independent libatspi/wire, source archive, native failure/reopening and prepared frame checks define the local profile; native heap, physical devices, human readers, foreign adapters and release-package acceptance remain separate."
     }
   ]
 }

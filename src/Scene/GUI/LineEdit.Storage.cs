@@ -10,6 +10,7 @@ public partial class LineEdit
     }
     private static readonly PropertyDescriptor[] LineEditProperties =
     [
+        new PropertyDescriptor<LineEdit,bool>(nameof(ContextMenuEnabled),c=>c.ContextMenuEnabled,(c,v)=>c.ContextMenuEnabled=v,_=>true,stored:true),
         new PropertyDescriptor<LineEdit,bool>(nameof(DrawControlChars),c=>c.DrawControlChars,(c,v)=>c.DrawControlChars=v,_=>false,stored:true),
         new PropertyDescriptor<LineEdit,HorizontalAlignment>(nameof(Alignment), c => c.Alignment, (c,v) => c.Alignment=v, _ => HorizontalAlignment.Left, stored:true),
         new PropertyDescriptor<LineEdit,string>(nameof(PlaceholderText), c => c.PlaceholderText, (c,v) => c.PlaceholderText=v, _ => "", stored:true),

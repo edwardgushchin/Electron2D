@@ -143,6 +143,12 @@ public sealed partial class AccessibilityServer
         Expand = 4,
         /// <summary>Requests one semantic numeric decrement using a no-argument callback.</summary>
         Decrement = 5,
+        /// <summary>Requests hiding a tooltip through a no-argument callback.</summary>
+        HideTooltip = 7,
+        /// <summary>Requests presenting a tooltip through a no-argument callback.</summary>
+        ShowTooltip = 8,
+        /// <summary>Requests opening a context menu through a no-argument callback.</summary>
+        ShowContextMenu = 21,
         /// <summary>Requests one semantic numeric increment using a no-argument callback.</summary>
         Increment = 6,
         /// <summary>Requests a numeric value using an Action&lt;double&gt; callback.</summary>

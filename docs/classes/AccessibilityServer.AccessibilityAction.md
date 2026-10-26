@@ -8,7 +8,7 @@ Last updated: 2026-10-26
 
 ## Description
 
-Typed compiled actions run on the display owner. Click activates the ordinary button path; Focus and Blur reuse GUI focus. Collapse/Expand request branch changes through no-argument callbacks. numeric SetValue is available through Action<double>; directed text selection and replacement use typed callbacks; typed unit/hint/point/offset scrolling has real native consumers; remaining value/color/custom/popup payload families retain their dependencies.
+Typed compiled actions run on the display owner. Click activates the ordinary button path; Focus and Blur reuse GUI focus. Collapse/Expand request branch changes through no-argument callbacks. numeric SetValue is available through Action<double>; directed text selection and replacement use typed callbacks; typed unit/hint/point/offset scrolling has real native consumers; tooltip/context-menu actions use ordinary presentation; remaining color/custom payload families retain their dependencies.
 
 ## Values
 
@@ -21,6 +21,9 @@ Typed compiled actions run on the display owner. Click activates the ordinary bu
 | <a id="expand"></a>`Expand` | 4 | Requests branch expansion. |
 | <a id="decrement"></a>`Decrement` | 5 | No-argument numeric decrement. |
 | <a id="increment"></a>`Increment` | 6 | No-argument numeric increment. |
+| <a id="hidetooltip"></a>`HideTooltip` | 7 | Cancels tooltip presentation. |
+| <a id="showtooltip"></a>`ShowTooltip` | 8 | Requests tooltip presentation. |
+| <a id="showcontextmenu"></a>`ShowContextMenu` | 21 | Requests the ordinary context menu. |
 | <a id="settextselection"></a>`SetTextSelection` | 9 | Anchor/focus line RIDs and scalar offsets via a four-argument callback. |
 | <a id="replaceselectedtext"></a>`ReplaceSelectedText` | 10 | Selected-text replacement via a string callback. |
 | <a id="scrollbackward"></a>`ScrollBackward` | 11 | No-argument sequential backward request. |

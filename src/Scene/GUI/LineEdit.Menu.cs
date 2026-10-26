@@ -54,7 +54,7 @@ public partial class LineEdit
     }
 }
 
-/// <summary>Identifies executable text editing commands; popup submenu identifiers are not editing commands.</summary>
+/// <summary>Identifies text menu commands and owned submenu entries.</summary>
 public enum TextMenuAction
 {
     /// <summary>Cuts selected text.</summary>
@@ -73,6 +73,10 @@ public enum TextMenuAction
     Redo = 6,
     /// <summary>Uses inherited text direction.</summary>
     DirectionInherited = 8,
+    /// <summary>Identifies the text direction submenu in the owned popup.</summary>
+    SubmenuTextDirection = 7,
+    /// <summary>Identifies the Unicode control-character submenu in the owned popup.</summary>
+    SubmenuInsertUCC = 13,
     /// <summary>Detects text direction.</summary>
     DirectionAuto = 9,
     /// <summary>Uses left-to-right text direction.</summary>

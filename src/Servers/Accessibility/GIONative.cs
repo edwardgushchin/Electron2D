@@ -46,6 +46,7 @@ internal static unsafe partial class GIONative
     [LibraryImport(GLib)] internal static partial nint g_variant_new_dict_entry(nint key, nint value);
     [LibraryImport(GLib)] internal static partial nint g_variant_new_variant(nint value);
     [LibraryImport(GLib, StringMarshalling = StringMarshalling.Utf8)] internal static partial nint g_variant_new_string(string value);
+    [LibraryImport(GLib, EntryPoint = "g_variant_new_string")] internal static partial nint g_variant_new_string(byte* value);
     [LibraryImport(GLib, StringMarshalling = StringMarshalling.Utf8)] internal static partial nint g_variant_new_object_path(string value);
     [LibraryImport(GLib)] internal static partial nint g_variant_new_int16(short value);
     [LibraryImport(GLib)] internal static partial nint g_variant_new_int32(int value);

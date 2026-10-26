@@ -63,6 +63,7 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal CollectionState? Collection;
         internal bool SelectionRegistered, TableRegistered, TableCellRegistered, CollectionRetirementQueued;
         internal Control? CollectionSource;
+        internal Element? CollectionOwner;
         internal object? CollectionItem;
         internal TreeItem? CollectionTreeItem;
         internal int CollectionSourceIndex, CollectionSourceColumn;
@@ -81,6 +82,13 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal ulong Flags;
         internal Rect2 Bounds;
         internal Transform Transform = Transform.Identity;
+        internal AccessibilityLiveMode? LiveMode, SourceLiveMode;
+        internal AccessibilityPopupType? PopupType, SourcePopupType;
+        internal string Tooltip = "", SourceTooltip = "";
+        internal bool AnnouncementPending;
+        internal string? AnnouncementText, SourceLiveContent;
+        internal Action? SourceShowTooltipAction, SourceHideTooltipAction, SourceContextMenuAction;
+        internal bool SourceContextMenuEnabled;
         internal string Name = "", Description = "";
         internal Element(int windowID, AccessibilityRole role)
         {
@@ -239,11 +247,11 @@ public sealed partial class AccessibilityServer : ElectronObject
         }
         if (e.SourceCollectionElements is { } collection)
             foreach (var item in collection.Values.ToArray())
-                if (!item.Retired && item.CollectionSource == e.Source)
+                if (!item.Retired && item.CollectionOwner == e)
                     try { Free(item); } catch (Exception error) { (errors ??= []).Add(error); }
         e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
         e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
-        e.Retired = true; ClearCollectionSource(e); ClearScroll(e); e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
+        e.Retired = true; ClearCollectionSource(e); ClearScroll(e); e.SourceShowTooltipAction = e.SourceHideTooltipAction = e.SourceContextMenuAction = null; e.AnnouncementText = null; e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
         RetireRelations(e, ref errors); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
         try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
         try { ValidateTextSelections(); } catch (Exception error) { (errors ??= []).Add(error); }
@@ -329,7 +337,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="ArgumentNullException">A required text or callback argument is null.</exception>
     public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)
     {
-        ArgumentNullException.ThrowIfNull(callback); if (action is not (AccessibilityAction.Click or AccessibilityAction.Focus or AccessibilityAction.Blur or AccessibilityAction.Decrement or AccessibilityAction.Increment or AccessibilityAction.Expand or AccessibilityAction.Collapse or AccessibilityAction.ScrollBackward or AccessibilityAction.ScrollForward)) throw new ArgumentOutOfRangeException(nameof(action));
+        ArgumentNullException.ThrowIfNull(callback); if (action is not (AccessibilityAction.Click or AccessibilityAction.Focus or AccessibilityAction.Blur or AccessibilityAction.Decrement or AccessibilityAction.Increment or AccessibilityAction.Expand or AccessibilityAction.Collapse or AccessibilityAction.ScrollBackward or AccessibilityAction.ScrollForward or AccessibilityAction.ShowTooltip or AccessibilityAction.HideTooltip or AccessibilityAction.ShowContextMenu)) throw new ArgumentOutOfRangeException(nameof(action));
         var r = Require(); var e = r.Get(id); e.Actions[action] = callback; r._native!.ActionsChanged(e);
     }
     /// <summary>Publishes the currently focused semantic element.</summary><param name="id">A live element.</param>
@@ -388,7 +396,7 @@ public sealed partial class AccessibilityServer : ElectronObject
             r._native = null; r._attempted = false; r._automatic = false; r._focused.Clear(); r._focusOwners.Clear(); r._activeOwners.Clear();
             foreach (var e in r._elements.Values)
             {
-                r.ClearCollectionSource(e); ClearScroll(e);
+                r.ClearCollectionSource(e); ClearScroll(e); e.SourceShowTooltipAction = e.SourceHideTooltipAction = e.SourceContextMenuAction = null; e.AnnouncementText = null;
                 e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
                 e.Retired = true; e.Actions.Clear(); e.Children.Clear(); e.Parent = null; e.Source = null;
                 e.Relations.Clear(); e.RelationOwners.Clear(); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;

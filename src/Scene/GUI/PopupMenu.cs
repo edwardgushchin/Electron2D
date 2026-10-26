@@ -82,7 +82,7 @@ public partial class PopupMenu : Popup
     internal int FindMenuItem(Item item) { CheckMenu(); return _items.IndexOf(item); }
     private Item Get(int index, bool negative = false) { CheckMenu(); return _items[Index(index, negative)]; }
     private static void Text(string text) { ArgumentNullException.ThrowIfNull(text); }
-    private void Changed() { _dirty = true; _view?.QueueRedraw(); if (IsInsideTree) Arrange(); BeginEventEmission(_publisherMenuChanged.Handlers)?.Invoke(); }
+    private void Changed() { _accessibilityCollectionVersion++; _dirty = true; _view?.QueueRedraw(); if (IsInsideTree) Arrange(); BeginEventEmission(_publisherMenuChanged.Handlers)?.Invoke(); }
     private void ChangedStructure(List<Exception>? errors = null) { try { Changed(); } catch (Exception error) { CollectException(ref errors, error); } try { NotifyPropertyListChanged(); } catch (Exception error) { CollectException(ref errors, error); } ThrowCollected("Menu structure callbacks failed.", errors); }
     private void Watch(Resource? resource)
     {

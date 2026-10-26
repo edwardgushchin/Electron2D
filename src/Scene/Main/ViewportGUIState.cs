@@ -34,7 +34,7 @@ internal sealed class ViewportGUIState(Viewport? viewport)
     internal Vector2 TooltipPosition;
     internal string ShownTooltipText = string.Empty;
     internal double TooltipRemaining;
-    internal bool TooltipScheduled;
+    internal bool TooltipScheduled, TooltipExplicit;
     internal ulong TooltipGeneration;
     internal Control? MouseTarget;
     internal Viewport? DragViewport;

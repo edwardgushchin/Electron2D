@@ -77,9 +77,10 @@ internal static partial class AccessibilityFoundationTests
         var folder = Path.Combine(Path.GetTempPath(), "electron2d-accessibility-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder);
         try
         {
-            using var root = new Control { Name = "Root", AccessibilityName = "Root name", AccessibilityDescription = "Root description" };
+            using var root = new Control { Name = "Root", AccessibilityName = "Root name", AccessibilityDescription = "Root description", AccessibilityLive = AccessibilityServer.AccessibilityLiveMode.Polite };
             var child = new Button("Caption") { Name = "Action", AccessibilityName = "Authored action", AccessibilityDescription = "Action details" }; root.AddChild(child); child.Owner = root;
             var region = new PanelContainer { Name = "Region", AccessibilityRegion = true, AccessibilityName = "Scene region" }; root.AddChild(region); region.Owner = root;
+            var line = new LineEdit { Name = "Line", ContextMenuEnabled = false, AccessibilityLive = AccessibilityServer.AccessibilityLiveMode.Assertive }; root.AddChild(line); line.Owner = root;
             var path = Path.Combine(folder, "semantic.e2dscene"); ResourceSaver.SaveScene(root, path);
             var start = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
             if (Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(AccessibilityFoundationTests).Assembly.Location);
@@ -95,6 +96,7 @@ internal static partial class AccessibilityFoundationTests
     {
         using var scene = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.IgnoreDeep); using var root = (Control)scene.Instantiate();
         var child = root.GetNode<Button>("Action");
+        Check(root.AccessibilityLive == AccessibilityServer.AccessibilityLiveMode.Polite && root.GetNode<LineEdit>("Line") is { ContextMenuEnabled: false, AccessibilityLive: AccessibilityServer.AccessibilityLiveMode.Assertive }, "Live and context-menu policies survive a fresh process.");
         Check(root.AccessibilityName == "Root name" && root.AccessibilityDescription == "Root description" && child.Text == "Caption" && child.AccessibilityName == "Authored action" && child.AccessibilityDescription == "Action details", "Scene preserves both metadata properties across process boundaries.");
         Check(root.GetNode<PanelContainer>("Region").AccessibilityRegion && root.GetNode<PanelContainer>("Region").AccessibilityName == "Scene region", "Landmark metadata survives a fresh process.");
         Check(!root.GetAccessibilityElement().IsValid() && !child.GetAccessibilityElement().IsValid(), "Scene archives have no live native identities.");
@@ -118,7 +120,7 @@ internal static partial class AccessibilityFoundationTests
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.CreateSubElement(parent, Role.Button, -2));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.CreateSubElement(parent, Role.Button, 4));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateSetFlag(parent, (Flag)10, true));
-        Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateAddAction(parent, (AAction)7, () => { }));
+        Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateAddAction(parent, (AAction)22, () => { }));
         Reject<ArgumentNullException>(() => AccessibilityServer.UpdateAddAction(parent, AAction.Click, (Action)null!));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateSetBounds(parent, new(0, 0, -1, 4)));
         Reject<ArgumentOutOfRangeException>(() => AccessibilityServer.UpdateSetBounds(parent, new(float.NaN, 0, 1, 1)));

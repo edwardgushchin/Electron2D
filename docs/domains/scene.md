@@ -267,7 +267,7 @@ SubViewport composes as a neutral Node with independently rendered children. Pac
 
 ## Text-field authoring
 
-[LineEdit](../classes/LineEdit.md) has typed stored properties and an in-memory PackedScene factory. Runtime TextInput/IME uses the existing focused Control route, including embedded viewport focus. History, scalar selection and typed text dragging execute under the scene owner; closing the host does not enqueue minimum-size work. Editor/file authoring and absent popup/native keyboard services retain their own gates.
+[LineEdit](../classes/LineEdit.md) has typed stored properties and an in-memory PackedScene factory. Runtime TextInput/IME uses the existing focused Control route, including embedded viewport focus. History, scalar selection and typed text dragging execute under the scene owner; closing the host does not enqueue minimum-size work. The owned context popup uses ordinary commands; editor integration and native keyboard services retain their own gates.
 
 [Typed scene multiplayer](../components/scene-multiplayer.md) executes owner-thread Node/SceneTree branch assignment and process polling, typed RPC/authority/local policy, authentication/deadlines and WS/WSS original-sender relay. Concrete spawning/property-schema synchronization remains the next dependent producer; other-platform/routed/native allocator and human/editor/rendered acceptance stay separate.
 
@@ -517,3 +517,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [SceneAccessibility](../classes/SceneAccessibility.md) reconciles automatic Node semantic identity/order after ordinary frame/deferred work. Node exposes queued update/invalidate notifications and warning/focused-element extension points. Control stores translated accessible names/descriptions; GUI focus and BaseButton activation remain the behavior owners. Native RIDs and callbacks are never copied or serialized. See [Native accessibility](../components/accessibility.md) for application policy, native protocols and verification limits.
 
 [Native collection accessibility](../classes/AccessibilityServer.md#native-collections) connects ItemList, Tree/TreeItem and TabBar/TabContainer source records to real Selection/Table/TableCell requests, expansion and ordinary GUI selection. The owning reference records identity, lifetime and exercised limits.
+
+[Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.

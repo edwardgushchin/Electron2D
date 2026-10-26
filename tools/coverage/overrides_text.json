@@ -4276,6 +4276,48 @@
       "godot": "Font::method:get_rids()",
       "electron2d": "method:Electron2D.Font.GetRIDs()",
       "reason": "ADR 0004/0046/0107: copies actual primary and explicit fallback source-cache RIDs in authored traversal order, preserving duplicates and skipping nulls. Ordinary resource caches, private SystemFont/FontVariation sources and automatic fallback glyph/run sources share real generation/retirement and borrowed TextServer operations. Data/configuration changes preserve file-cache identity; cache removal and owner/source rebuild retire it. Weak registry, runtime projections, independent duplicate, callback/read lifetime and executable typed/native consumers are checked; platform/package/native allocator/owner gates remain separate."
+    },
+    {
+      "godot": "LineEdit::method:get_menu()",
+      "electron2d": "method:Electron2D.LineEdit.GetMenu()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
+    },
+    {
+      "godot": "LineEdit::method:is_menu_visible()",
+      "electron2d": "method:Electron2D.LineEdit.IsMenuVisible()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
+    },
+    {
+      "godot": "LineEdit::property:context_menu_enabled",
+      "electron2d": "property:Electron2D.LineEdit.ContextMenuEnabled()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
+      "electron2d": "enumValue:Electron2D.TextMenuAction.SubmenuTextDirection()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
+    },
+    {
+      "godot": "LineEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC",
+      "electron2d": "enumValue:Electron2D.TextMenuAction.SubmenuInsertUCC()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
+    },
+    {
+      "godot": "TextEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
+      "electron2d": "enumValue:Electron2D.TextMenuAction.SubmenuTextDirection()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
+    },
+    {
+      "godot": "TextEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC",
+      "electron2d": "enumValue:Electron2D.TextMenuAction.SubmenuInsertUCC()",
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
     }
   ],
   "statusGroups": [
@@ -4805,17 +4847,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Requires the real PopupMenu : Popup : Window owner, transient native/embedded popup focus and input routing, submenu tree and menu lifetime. First connected popup slice must bind LineEdit GetMenu/IsMenuVisible/ContextMenuEnabled and the two submenu identifiers to that owner; current typed commands already execute without popup presentation.",
-      "godot": [
-        "LineEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC",
-        "LineEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
-        "LineEdit::method:get_menu()",
-        "LineEdit::method:is_menu_visible()",
-        "LineEdit::property:context_menu_enabled"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Requires DisplayServer native/mobile/browser virtual-keyboard show/hide services with keyboard-kind, text/caret selection, window coordinates and lifetime; current Linux Feature.VirtualKeyboard is false. First service-backed virtual-keyboard slice then integrates LineEdit focus/edit/show policies and eight keyboard values.",
       "godot": [
         "LineEdit::enum:VirtualKeyboardType",
@@ -5234,8 +5265,6 @@
     {
       "godot": [
         "TextEdit::enum_value:MenuItems.MENU_MAX",
-        "TextEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC",
-        "TextEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
         "TextEdit::method:adjust_carets_after_edit(int:,int:,int:,int:,int:)",
         "TextEdit::method:get_caret_index_edit_order()",
         "TextEdit::method:get_selection_column(int:)",
@@ -5243,7 +5272,7 @@
         "TextEdit::theme_item:background_color"
       ],
       "state": "Excluded",
-      "reason": "ADR 0004: pinned deprecated edit-order/background access, and popup-only submenu IDs/count sentinel, are not shipped as obsolete API or executable commands. Popup submenus execute through PopupMenu children."
+      "reason": "ADR 0004: pinned deprecated edit-order/background access, and the count sentinel, are not shipped as obsolete API or executable commands. Applicable submenu identifiers address real PopupMenu children."
     },
     {
       "godot": [
@@ -5434,6 +5463,19 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0004/0046/0107: copies actual primary and explicit fallback source-cache RIDs in authored traversal order, preserving duplicates and skipping nulls. Ordinary resource caches, private SystemFont/FontVariation sources and automatic fallback glyph/run sources share real generation/retirement and borrowed TextServer operations. Data/configuration changes preserve file-cache identity; cache removal and owner/source rebuild retire it. Weak registry, runtime projections, independent duplicate, callback/read lifetime and executable typed/native consumers are checked; platform/package/native allocator/owner gates remain separate."
+    },
+    {
+      "godot": [
+        "LineEdit::method:get_menu()",
+        "LineEdit::method:is_menu_visible()",
+        "LineEdit::property:context_menu_enabled",
+        "LineEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
+        "LineEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC",
+        "TextEdit::enum_value:MenuItems.MENU_SUBMENU_TEXT_DIR",
+        "TextEdit::enum_value:MenuItems.MENU_SUBMENU_INSERT_UCC"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0038/0051/0114: the real lazy LineEdit PopupMenu, stable borrowed queries, stored context-menu gate and both typed submenu identifiers execute. LineEdit/TextEdit retain user menu customization; native menu records invoke ordinary commands, selection/read-only/password policy and actual submenu children. Native source clients and scene/duplication/failure checks define verification; virtual keyboards, native symbol picker, foreign/hardware and human acceptance remain separate."
     }
   ],
   "extras": [

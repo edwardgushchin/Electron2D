@@ -56,7 +56,7 @@ internal sealed unsafe partial class ATSPIServer
         if (!CanInvoke(e) || e.Flag(Flag.ReadOnly)) return false;
         try
         {
-            if (e.Source is ItemList or Tree or TabBar) return AccessibilityServer.SelectCollection(e, all);
+            if (e.Source is ItemList or Tree or TabBar or PopupMenu) return AccessibilityServer.SelectCollection(e, all);
             var targets = e.Children.Where(child => child.Collection?.Selected is not null && (all ? child.CollectionSelectable && CanInvoke(child) : child.Collection.Selected == true)).ToArray();
             if (all && targets.Length > 1 && !e.Flag(Flag.Multiselectable)) return false;
             foreach (var child in targets) { if (e.Retired) return true; if (!SelectChild(e, child, all)) return false; }

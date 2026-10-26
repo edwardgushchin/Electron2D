@@ -44,6 +44,7 @@ public partial class LineEdit
         }
         if (inputEvent is InputEventMouseButton mouse)
         {
+            if (mouse.ButtonIndex == MouseButton.Right && mouse.Pressed && _contextMenuEnabled) { ShowContextMenu(mouse.Position); AcceptEvent(); return; }
             if (mouse.ButtonIndex == MouseButton.Middle && mouse.Pressed && _editable && _middleMousePasteEnabled)
             { Edit(); CaretColumn = HitColumn(mouse.Position); Deselect(); UserInsert(DisplayServer.Service?.ClipboardGetPrimaryCore() ?? ""); AcceptEvent(); return; }
             if (mouse.ButtonIndex != MouseButton.Left) return;
@@ -112,6 +113,7 @@ public partial class LineEdit
         else if (Action(movement, "ui_text_caret_line_end") || Action(movement, "ui_text_caret_down") || Action(movement, "ui_text_caret_page_down")) target = ScalarCount(_text);
         else moved = false;
         if (moved) { MoveCaret(target, key.ShiftPressed); AcceptEvent(); return; }
+        if (Action(key, "ui_menu") && _contextMenuEnabled) { AccessibilityShowContextMenu(); AcceptEvent(); return; }
         if (Action(key, "ui_swap_input_direction")) { _inputDirection = _inputDirection == TextDirection.LTR ? TextDirection.RTL : TextDirection.LTR; FitCaret(); AcceptEvent(); return; }
         if (_editable && key.Unicode >= 32 && Rune.IsValid(key.Unicode) && !key.ControlPressed && !key.AltPressed && !key.MetaPressed) { UserInsert(new Rune(key.Unicode).ToString()); AcceptEvent(); }
     }

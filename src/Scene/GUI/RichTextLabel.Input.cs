@@ -2,6 +2,10 @@ namespace Electron2D;
 
 public partial class RichTextLabel
 {
+    internal void AccessibilityShowContextMenu() => ShowContextMenu(Size * .5f);
+    private void ShowContextMenu(Vector2 position)
+    { if (!_contextMenu || !IsInsideTree || !IsVisibleInTree) return; var copy = _menu.GetItemIndex((int)MenuItems.Copy); if (copy >= 0) _menu.SetItemDisabled(copy, _selectionFrom < 0 || _selectionFrom == _selectionTo); var all = _menu.GetItemIndex((int)MenuItems.SelectAll); if (all >= 0) _menu.SetItemDisabled(all, !_selectionEnabled); _menu.PopupFromViewport(GetViewport()!, new((Vector2i)(GetGlobalTransformWithCanvas() * position), Vector2i.One)); }
+
     private RichTextMetadata? _pressedMeta;
     private Vector2 _selectionPointer;
     private bool _dragCandidate, _dragStarted;
@@ -21,7 +25,7 @@ public partial class RichTextLabel
         if (inputEvent is InputEventMouseButton mouse)
         {
             if (mouse.ButtonIndex == MouseButton.WheelUp || mouse.ButtonIndex == MouseButton.WheelDown) { if (mouse.Pressed && _scrollActive) { EnsureRichLayout(); _scroll.Value += mouse.ButtonIndex == MouseButton.WheelUp ? -_themeValues!.Fonts[0].GetHeight(_themeValues.Sizes[0]) * 3 : _themeValues!.Fonts[0].GetHeight(_themeValues.Sizes[0]) * 3; AcceptEvent(); } return; }
-            if (mouse.ButtonIndex == MouseButton.Right && mouse.Pressed && _contextMenu) { _menu.SetItemDisabled(0, _selectionFrom < 0 || _selectionFrom == _selectionTo); _menu.SetItemDisabled(1, !_selectionEnabled); _menu.PopupFromViewport(GetViewport()!, new((Vector2i)(GetGlobalTransformWithCanvas() * mouse.Position), Vector2i.One)); AcceptEvent(); return; }
+            if (mouse.ButtonIndex == MouseButton.Right && mouse.Pressed && _contextMenu) { ShowContextMenu(mouse.Position); AcceptEvent(); return; }
             if (mouse.ButtonIndex == MouseButton.Left) { var hit = HitRich(mouse.Position); if (mouse.Pressed) { if (_selectionEnabled && hit.Global >= 0) { GrabFocus(); _selectionPointer = mouse.Position; _dragStarted = false; _dragCandidate = !mouse.DoubleClick && _dragSelection && hit.Global >= _selectionFrom && hit.Global < _selectionTo; if (!_dragCandidate) { _selectionAnchor = hit.Global; _selectionFrom = _selectionTo = hit.Global; _selecting = true; if (mouse.DoubleClick && hit.Paragraph != null) { var range = hit.Paragraph.Layout.WordAt(hit.Local); _selectionFrom = hit.Paragraph.Offsets[range.From]; _selectionTo = hit.Paragraph.Offsets[range.To]; } _selecting = true; } else _selecting = false; QueueRedraw(); AcceptEvent(); } _pressedMeta = hit.Style?.Meta; } else { _selecting = false; if (_dragCandidate && !_dragStarted) Deselect(); _dragCandidate = _dragStarted = false; var meta = _pressedMeta; _pressedMeta = null; if (meta != null && ReferenceEquals(meta, hit.Style?.Meta) && _selectionFrom == _selectionTo) { BeginEventEmission(_publisherMetaClicked.Handlers)?.Invoke(meta); if (!IsDisposed) AcceptEvent(); } } }
             return;
         }

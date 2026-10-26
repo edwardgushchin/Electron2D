@@ -10,7 +10,7 @@ public sealed partial class AccessibilityServer
         owner.SourceCollectionElements ??= []; owner.SourceCollectionExpected ??= []; owner.SourceCollectionRemoved ??= []; owner.SourceCollectionOrder ??= [];
         owner.SourceCollectionExpected.Clear(); owner.SourceCollectionOrder.Clear(); return true;
     }
-    internal static Element CollectionElement(Element owner, object key, AccessibilityRole role, int index, int column = -1)
+    internal static Element CollectionElement(Element owner, object key, AccessibilityRole role, int index, int column = -1, Control? geometrySource = null)
     {
         var r = Runtime;
         if (r._collectionSources.TryGetValue(key, out var previous) && previous.WindowID != owner.WindowID) r.Free(previous);
@@ -20,7 +20,7 @@ public sealed partial class AccessibilityServer
             r._collectionSources[key] = e;
             BindCollectionActions(e, owner.Source!, role);
         }
-        e.CollectionSource = (Control)owner.Source!; e.CollectionSourceIndex = index; e.CollectionSourceColumn = column;
+        e.CollectionSource = geometrySource ?? (Control)owner.Source!; e.CollectionOwner = owner; e.CollectionSourceIndex = index; e.CollectionSourceColumn = column;
         owner.SourceCollectionElements![key] = e; owner.SourceCollectionExpected!.Add(key); owner.SourceCollectionOrder!.Add(e);
         if (e.Parent != owner) r.Attach(owner, e, -1);
         if (e.Role != role) UpdateSetRole(e.ID, role);
@@ -29,9 +29,9 @@ public sealed partial class AccessibilityServer
     private static void BindCollectionActions(Element e, Node source, AccessibilityRole role)
     {
         e.SourceFocusAction = () => FocusCollectionItem(e);
-        if (source is ItemList || source is Tree && role != AccessibilityRole.ColumnHeader)
+        if (source is ItemList or PopupMenu || source is Tree && role != AccessibilityRole.ColumnHeader)
         { e.SourceBlurAction = () => SelectCollectionItem(e, false); e.Actions[AccessibilityAction.Blur] = e.SourceBlurAction; }
-        if (source is ItemList or TabBar) e.Actions[AccessibilityAction.Click] = () => ActivateCollectionItem(e);
+        if (source is ItemList or TabBar or PopupMenu) { e.SourceClickAction = () => ActivateCollectionItem(e); e.Actions[AccessibilityAction.Click] = e.SourceClickAction; }
     }
     internal static void CollectionIdentity(Element e, string name, bool hidden, bool disabled, bool selectable)
     {
@@ -105,8 +105,8 @@ public sealed partial class AccessibilityServer
     {
         var r = Runtime; var removed = owner.SourceCollectionRemoved!; removed.Clear();
         foreach (var pair in owner.SourceCollectionElements!) if (!owner.SourceCollectionExpected!.Contains(pair.Key)) removed.Add(pair.Key);
-        foreach (var key in removed) { var e = owner.SourceCollectionElements[key]; owner.SourceCollectionElements.Remove(key); if (e.CollectionSource == owner.Source && !e.Retired && !e.CollectionRetirementQueued) { e.CollectionRetirementQueued = true; r._collectionRetirements.Add(e); } }
-        var nonSource = 0; foreach (var child in owner.Children) if (child.CollectionSource != owner.Source) nonSource++;
+        foreach (var key in removed) { var e = owner.SourceCollectionElements[key]; owner.SourceCollectionElements.Remove(key); if (e.CollectionOwner == owner && !e.Retired && !e.CollectionRetirementQueued) { e.CollectionRetirementQueued = true; r._collectionRetirements.Add(e); } }
+        var nonSource = 0; foreach (var child in owner.Children) if (child.CollectionOwner != owner) nonSource++;
         var ordinal = nonSource;
         foreach (var child in owner.SourceCollectionOrder!)
         {
@@ -123,7 +123,7 @@ public sealed partial class AccessibilityServer
         foreach (var e in r._collectionRetirements)
         {
             e.CollectionRetirementQueued = false; if (e.Retired) continue;
-            var owner = e.CollectionSource is { } source ? SourceElement(source) : null;
+            var owner = e.CollectionOwner;
             if (e.CollectionItem is { } key && owner?.SourceCollectionElements is { } items && items.TryGetValue(key, out var current) && current == e) continue;
             r.Free(e);
         }
@@ -140,18 +140,19 @@ public sealed partial class AccessibilityServer
         ItemList list => list.AccessibilityCollectionLive(e),
         Tree tree => tree.AccessibilityCollectionLive(e),
         TabBar tabs => tabs.AccessibilityCollectionLive(e),
+        PopupMenu.MenuItems items => items.MenuOwner.AccessibilityCollectionLive(e),
         _ => false,
     };
     internal static Rect2 CollectionBounds(Element e)
     {
         var source = e.CollectionSource!; if (source.IsDisposed || !source.IsInsideTree) return default;
-        var local = source switch { ItemList list => list.AccessibilityCollectionRect(e), Tree tree => tree.AccessibilityCollectionRect(e), TabBar tabs => tabs.AccessibilityCollectionRect(e), _ => default };
+        var local = source switch { ItemList list => list.AccessibilityCollectionRect(e), Tree tree => tree.AccessibilityCollectionRect(e), TabBar tabs => tabs.AccessibilityCollectionRect(e), PopupMenu.MenuItems items => items.MenuOwner.AccessibilityCollectionRect(e), _ => default };
         return (source.GetViewport()!.GetScreenTransform() * source.GetGlobalTransformWithCanvas()) * local;
     }
     internal static bool SelectCollectionItem(Element e, bool selected) => e.CollectionSource switch
-    { ItemList list => list.AccessibilitySelectCollection(e, selected), Tree tree => tree.AccessibilitySelectCollection(e, selected), TabBar tabs => tabs.AccessibilitySelectCollection(e, selected), _ => false };
+    { ItemList list => list.AccessibilitySelectCollection(e, selected), Tree tree => tree.AccessibilitySelectCollection(e, selected), TabBar tabs => tabs.AccessibilitySelectCollection(e, selected), PopupMenu.MenuItems items => items.MenuOwner.AccessibilitySelectCollection(e, selected), _ => false };
     internal static bool SelectCollection(Element owner, bool all) => owner.Source switch
-    { ItemList list => list.AccessibilitySelectCollection(all), Tree tree => tree.AccessibilitySelectCollection(all), TabBar tabs => tabs.AccessibilitySelectCollection(all), _ => false };
+    { ItemList list => list.AccessibilitySelectCollection(all), Tree tree => tree.AccessibilitySelectCollection(all), TabBar tabs => tabs.AccessibilitySelectCollection(all), PopupMenu menu => menu.AccessibilitySelectCollection(all), _ => false };
     internal static bool SelectCollectionAxis(Element owner, int index, bool row, bool selected) => owner.Source is Tree tree && tree.AccessibilitySelectCollectionAxis(index, row, selected);
     private static void FocusCollectionItem(Element e)
     {
@@ -162,11 +163,12 @@ public sealed partial class AccessibilityServer
     {
         if (e.CollectionSource is ItemList list) list.AccessibilityActivateCollection(e);
         else if (e.CollectionSource is TabBar tabs) tabs.AccessibilitySelectCollection(e, true);
+        else if (e.CollectionSource is PopupMenu.MenuItems items) items.MenuOwner.AccessibilityActivateCollection(e);
     }
     private void ClearCollectionSource(Element e)
     {
         if (e.CollectionItem is { } key && _collectionSources.TryGetValue(key, out var current) && current == e) _collectionSources.Remove(key);
         e.SourceCollectionElements?.Clear(); e.SourceCollectionExpected?.Clear(); e.SourceCollectionRemoved?.Clear(); e.SourceCollectionOrder?.Clear();
-        e.CollectionSource = null; e.CollectionItem = null; e.CollectionTreeItem = null; e.CollectionParent = e.SourceCollectionActive = null;
+        e.CollectionSource = null; e.CollectionOwner = null; e.CollectionItem = null; e.CollectionTreeItem = null; e.CollectionParent = e.SourceCollectionActive = null;
     }
 }

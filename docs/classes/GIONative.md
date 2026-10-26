@@ -11,3 +11,5 @@ Private LibraryImport boundary for optional Linux GIO, GLib and GObject. VTable 
 Tuple/array helpers consume floating GVariant child references; returned variants transfer to GIO replies or signals. Temporary type and builder references are released in finally blocks. Parameter readers own/unref their child variants. Error conversion copies and frees GError; property failures allocate an owned native D-Bus GError for the caller. Small fixed tuples use ReadOnlySpan/nint stack storage; variable native query builders are cold. Native allocator traffic is independent of managed allocation measurements.
 
 Numeric property requests read native doubles. Value change signals use native dict-entry variants for PropertiesChanged and the typed AT-SPI accessible-value event.
+
+Live numeric announcements use the existing g_variant_new_string ABI through a byte-pointer overload and stack UTF-8 storage. Native variants retain their ordinary GLib ownership; this does not measure native allocator totals.

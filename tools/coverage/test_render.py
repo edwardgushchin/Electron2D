@@ -487,6 +487,22 @@ def main():
     collection_rows = [next(row for row in accessibility_rows if f"method {name}(" in row) for name in collection_names]
     assert len(collection_rows) == 12 and all(" | Implemented | " in row for row in collection_rows)
     assert all(" | Implemented | " in next(row for row in accessibility_rows if f"enum_value ACTION_{name} [AccessibilityAction]" in row) for name in ("COLLAPSE", "EXPAND"))
+    live_names = ("update_set_live", "update_set_popup_type", "update_set_tooltip")
+    assert all(" | Implemented | " in next(row for row in accessibility_rows if f"method {name}(" in row) for name in live_names)
+    live_enums = ("AccessibilityLiveMode", "AccessibilityPopupType")
+    for kind in live_enums:
+        rows = [row for row in accessibility_rows if f"enum {kind}" in row or f"[{kind}]" in row]
+        assert len(rows) == (4 if kind == "AccessibilityLiveMode" else 5) and all(" | Implemented | " in row for row in rows)
+    assert all(" | Implemented | " in next(row for row in accessibility_rows if f"enum_value ACTION_{name} [AccessibilityAction]" in row) for name in ("SHOW_TOOLTIP", "HIDE_TOOLTIP", "SHOW_CONTEXT_MENU"))
+    control_rows = pages[CLASS_PAGES / "Control.md"].splitlines()
+    assert " | Implemented | " in next(row for row in control_rows if "property int accessibility_live " in row)
+    for owner in ("LineEdit", "TextEdit"):
+        rows = pages[CLASS_PAGES / (owner + ".md")].splitlines()
+        for name in ("MENU_SUBMENU_TEXT_DIR", "MENU_SUBMENU_INSERT_UCC"):
+            assert " | Implemented | " in next(row for row in rows if f"enum_value {name} [MenuItems]" in row)
+        if owner == "LineEdit":
+            assert all(" | Implemented | " in next(row for row in rows if f"method {name}(" in row) for name in ("get_menu", "is_menu_visible"))
+            assert " | Implemented | " in next(row for row in rows if "property bool context_menu_enabled " in row)
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

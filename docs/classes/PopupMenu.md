@@ -1,6 +1,6 @@
 # PopupMenu
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class PopupMenu : Popup`. **Inherits:** [Popup](Popup.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/PopupMenu.cs), [layout](../../src/Scene/GUI/PopupMenu.Layout.cs), [input](../../src/Scene/GUI/PopupMenu.Input.cs), [search](../../src/Scene/GUI/PopupMenu.Search.cs), [storage](../../src/Scene/GUI/PopupMenu.Storage.cs). **Component:** [Popup menus](../components/popup-menus.md).
 
@@ -1216,3 +1216,5 @@ The native role is fixed-size and borderless, cannot minimize/maximize/fullscree
 Transparent native PopupPanel/PopupMenu output executes through the compatibility backend. SDL 3.4.18's GPU API rejects transparent windows; GPU native menus require explicit `Transparent=false` before showing. The unsupported request releases its attempted native lifetime and preserves hidden state. Embedded transparent popups continue to execute on both renderers. Native titled-popup variants without the popup role, live embedding migration, foreign-platform acceptance and native system-menu service retain their exact coverage prerequisites.
 
 `NativePopupWindowTests` uses `ELECTRON2D_TEST_NATIVE_POPUPS=gpu` or `compatibility` with the Release runner. It exercises native nested parenting, IDs, outside dismissal, owner-safe rectangles, no-focus and exclusive policies, forced retirement, callback failure, real menu/option/panel/context output, and fresh-process public scene loading. Active focus/render and idle/render measurements cover 64 owner-thread intervals after 32 warmup intervals. SDL event construction, cold model edits/readback, native allocator counts, compositor screenshot acceptance, physical input and other platforms are outside the measured interval.
+
+Native accessibility exposes real popup capability and owned menu item selection/activation through [the native popup contract](AccessibilityServer.md#native-live-and-popups). Menu records follow their semantic owner and actual rendered item canvas; native surface retirement invalidates identities.

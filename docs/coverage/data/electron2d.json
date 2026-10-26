@@ -183,6 +183,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "kind": "type",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "name": "AccessibilityLiveMode",
+    "signature": "public enum Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "kind": "type",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "name": "AccessibilityPopupType",
+    "signature": "public enum Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AccessibilityServer.AccessibilityRole",
     "kind": "type",
     "declaringType": "Electron2D.AccessibilityServer.AccessibilityRole",
@@ -29978,6 +30014,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.HideTooltip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "HideTooltip",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction HideTooltip = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "7"
+  },
+  {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Increment()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
@@ -30147,6 +30196,32 @@
     "value": "20"
   },
   {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ShowContextMenu()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ShowContextMenu",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ShowContextMenu = 21",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "21"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ShowTooltip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ShowTooltip",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ShowTooltip = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "8"
+  },
+  {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Busy()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AccessibilityServer.AccessibilityFlags",
@@ -30275,6 +30350,97 @@
     "parameters": [],
     "returnType": "Electron2D.AccessibilityServer.AccessibilityFlags",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityLiveMode.Assertive()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "name": "Assertive",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityLiveMode Assertive = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityLiveMode.Off()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "name": "Off",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityLiveMode Off = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityLiveMode.Polite()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "name": "Polite",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityLiveMode Polite = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.Dialog()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "name": "Dialog",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityPopupType Dialog = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.List()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "name": "List",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityPopupType List = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.Menu()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "name": "Menu",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityPopupType Menu = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityPopupType.Tree()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "name": "Tree",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityPopupType Tree = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityPopupType",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Audio()",
@@ -56706,6 +56872,32 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.TextMenuAction.SubmenuInsertUCC()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextMenuAction",
+    "name": "SubmenuInsertUCC",
+    "signature": "public const Electron2D.TextMenuAction SubmenuInsertUCC = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextMenuAction",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.TextMenuAction.SubmenuTextDirection()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextMenuAction",
+    "name": "SubmenuTextDirection",
+    "signature": "public const Electron2D.TextMenuAction SubmenuTextDirection = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextMenuAction",
+    "value": "7"
+  },
+  {
     "id": "enumValue:Electron2D.TextMenuAction.Undo()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TextMenuAction",
@@ -71877,6 +72069,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetLive(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityLiveMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetLive",
+    "signature": "public static System.Void UpdateSetLive(Electron2D.RID id, Electron2D.AccessibilityServer.AccessibilityLiveMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateSetMemberOf(Electron2D.RID,Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -72067,6 +72283,30 @@
       {
         "name": "placeholder",
         "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetPopupType(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityPopupType)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetPopupType",
+    "signature": "public static System.Void UpdateSetPopupType(Electron2D.RID id, Electron2D.AccessibilityServer.AccessibilityPopupType popupType)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "popupType",
+        "type": "Electron2D.AccessibilityServer.AccessibilityPopupType",
         "default": null
       }
     ],
@@ -72501,6 +72741,30 @@
       {
         "name": "endChar",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetTooltip(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetTooltip",
+    "signature": "public static System.Void UpdateSetTooltip(Electron2D.RID id, System.String tooltip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -128807,6 +129071,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.LineEdit.GetMenu()",
+    "kind": "method",
+    "declaringType": "Electron2D.LineEdit",
+    "name": "GetMenu",
+    "signature": "public Electron2D.PopupMenu GetMenu()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PopupMenu",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.LineEdit.GetNextCompositeCharacterColumn(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.LineEdit",
@@ -128986,6 +129263,19 @@
     "declaringType": "Electron2D.LineEdit",
     "name": "IsEditing",
     "signature": "public System.Boolean IsEditing()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.LineEdit.IsMenuVisible()",
+    "kind": "method",
+    "declaringType": "Electron2D.LineEdit",
+    "name": "IsMenuVisible",
+    "signature": "public System.Boolean IsMenuVisible()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -252214,6 +252504,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Control.AccessibilityLive()",
+    "kind": "property",
+    "declaringType": "Electron2D.Control",
+    "name": "AccessibilityLive",
+    "signature": "public Electron2D.AccessibilityServer.AccessibilityLiveMode AccessibilityLive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityLiveMode",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Control.AccessibilityName()",
     "kind": "property",
     "declaringType": "Electron2D.Control",
@@ -259772,6 +260075,19 @@
     "declaringType": "Electron2D.LineEdit",
     "name": "ClearButtonEnabled",
     "signature": "public System.Boolean ClearButtonEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.LineEdit.ContextMenuEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.LineEdit",
+    "name": "ContextMenuEnabled",
+    "signature": "public System.Boolean ContextMenuEnabled { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

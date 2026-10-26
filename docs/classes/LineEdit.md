@@ -20,7 +20,7 @@ The default keyboard actions are permanent typed [ProjectSettings](ProjectSettin
 
 The field draws themed normal/read-only/focus styles, glyph outlines, visual selection colors, caret, placeholder and clear/right icons. Text and selection clip to the content rectangle. Empty text still has font-height caret geometry. Left/right alignment follows layout direction; Center centers unscrolled text, Fill uses existing word/Kashida expansion. ExpandToTextLength affects minimum width. Original icon mode uses intrinsic size, FitToText uses a font-height square, and FitToLineEdit fits field bounds then applies the finite RightIconScale. Icons/fonts are borrowed; notifications are polled on the scene thread, and font generations recover changes hidden by throwing observers. Typed in-memory PackedScene reconstruction stores MaxLength, Text and CaretColumn in the required order.
 
-MenuOption executes [TextMenuAction](TextMenuAction.md) without popup presentation. PopupMenu/Popup/Window transient ownership, native virtual keyboards and native symbol-picker presentation are exact remaining prerequisites. EmojiAndSymbols currently throws NotSupportedException. The class remains Partial in [coverage](../coverage/classes/LineEdit.md); this slice completes editing/display and available command behavior, not those absent hosts. Accessibility/editor file authoring, native allocator totals, broad-scene performance, other platforms and owner acceptance remain separate.
+MenuOption executes [TextMenuAction](TextMenuAction.md). GetMenu creates and returns a stable borrowed PopupMenu lazily; IsMenuVisible queries visibility without creating it. ContextMenuEnabled defaults true and is stored. Right-click, ui_menu and native accessibility requests open the real context menu through the containing viewport. Standard commands and the two typed submenus preserve ordinary editing/history/read-only/secret guards; custom entries and removed commands survive subsequent openings. The control owns disposal, and runtime menu customization stays out of scene storage. Native virtual keyboard and native symbol-picker presentation retain exact prerequisites. EmojiAndSymbols currently throws NotSupportedException. The class remains Partial in [coverage](../coverage/classes/LineEdit.md). Accessibility/editor file authoring, native allocator totals, broad-scene performance, other platforms and owner acceptance remain separate.
 
 ## Example
 
@@ -815,3 +815,13 @@ Native Text/EditableText output uses this control's existing document, caret/sel
 Native scrolling publishes positive document offsets while the public GetScrollOffset retains its negative text-translation convention. Independent panning and reading that offset preserve caret, selection and focus. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
 
 Repeated identical IME composition updates preserve an independently scrolled view; changed composition still updates caret visibility.
+
+## Context menu members
+
+| Declaration | Contract |
+| --- | --- |
+| `public bool ContextMenuEnabled { get; set; }` | Stored, true by default; disables new context-menu requests without destroying an already open menu. |
+| `public PopupMenu GetMenu()` | Stable borrowed menu; lazily creates real commands and submenus. Disposal belongs to LineEdit. |
+| `public bool IsMenuVisible()` | Current visibility; does not allocate a menu. |
+
+See [native popup output](AccessibilityServer.md#native-live-and-popups) for assistive actions and native surface identity.

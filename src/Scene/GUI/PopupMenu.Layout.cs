@@ -34,8 +34,10 @@ public partial class PopupMenu
     private Vector2 _minimum, _shadowStart, _shadowEnd;
     private Rect2i? _contentRect;
     private Vector2i _expandedSize;
-    private sealed class MenuItems(PopupMenu menu) : Control
+    internal sealed class MenuItems(PopupMenu menu) : Control
     {
+        internal PopupMenu MenuOwner => menu;
+        protected override RID OnGetFocusedAccessibilityElement() => menu.AccessibilityFocusedItem();
         protected override Vector2 OnGetMinimumSize() { menu.Measure(); return new(menu._contentWidth, menu._totalHeight); }
         protected override void OnDraw() { base.OnDraw(); menu.DrawItems(this); }
         protected override void OnGUIInput(InputEvent input) { base.OnGUIInput(input); menu.ItemsInput(input); }
@@ -76,7 +78,7 @@ public partial class PopupMenu
         var searchHeight = _searchVisible ? _search.GetCombinedMinimumSize().Y + GetThemeConstant("search_bar_separation") : 0;
         _minimum = _style.GetMinimumSize() + new Vector2(Math.Max(_contentWidth, _searchVisible ? _search.GetCombinedMinimumSize().X : 0), _totalHeight + searchHeight);
         if (Embedder is { } host) _minimum.Y = Math.Min(_minimum.Y, host.GetVisibleRect().Size.Y / _graphScale);
-        _dirty = false;
+        _dirty = false; _accessibilityCollectionVersion++;
     }
     private static string AcceleratorText(Key accelerator) { using var input = new InputEventKey { Keycode = (Key)((int)accelerator & (int)KeyModifierMask.CodeMask), ShiftPressed = ((int)accelerator & (int)KeyModifierMask.Shift) != 0, ControlPressed = ((int)accelerator & (int)KeyModifierMask.Control) != 0, AltPressed = ((int)accelerator & (int)KeyModifierMask.Alt) != 0, MetaPressed = ((int)accelerator & (int)KeyModifierMask.Meta) != 0 }; return input.AsText(); }
     private void ShadowInsets(bool visible)
@@ -107,6 +109,7 @@ public partial class PopupMenu
     private static MouseButtonMask InitialButtonMask() { MouseButtonMask mask = 0; for (var i = 1; i <= 9; i++) if (Input.IsMouseButtonPressed((MouseButton)i)) mask |= (MouseButtonMask)(1u << (i - 1)); return mask; }
     private void VisibilityUpdated()
     {
+        if (_parentMenu is { IsDisposed: false } parent) parent._accessibilityCollectionVersion++;
         if (Visible) { _openedElapsed = 0; _initialButtons = InitialButtonMask(); _grabbedOpen = _initialButtons != 0; _dirty = true; Arrange(); _scroll.ScrollVertical = 0; SetInternalProcessing(true, false); }
         else { _submenuTimer.Stop(); _gamepadDirection = 0; _pendingSubmenu = -1; _activeSubmenu = null; _focused = -1; _search.Text = ""; FilterChanged(""); if (_contentRect is { } rect) { _contentRect = null; PopupPosition = rect.Position; Size = rect.Size; } SetInternalProcessing(false, false); }
     }
