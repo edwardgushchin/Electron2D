@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -30,7 +30,7 @@ Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and p
 
 A zero additional scale is accepted. When visual-only is false it makes the logical transform singular, so coordinate queries requiring an inverse fail under the ordinary CanvasItem contract.
 
-Each viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, accessibility, project Theme loading, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
+Each viewport routes pointer events by the transformed rectangle and sends keyboard input to the focused control between `OnInput` and unhandled input. `MouseFilter` controls target selection, bubbling and hover. Hover transitions notify controls and select native cursor shapes. Tab and arrow navigation use InputMap actions and focus paths. Full GUI behavior remains partial: stationary-pointer geometry changes, exact directional ranking and scroll clipping, touch routing, exact renderer draw ordering, nested viewports, richer accessibility protocols, project Theme loading, additional container types, full locale direction policy, and button behavior are absent. See [Control coverage](../coverage/classes/Control.md) for individual gaps.
 
 [MarginContainer](MarginContainer.md), [CenterContainer](CenterContainer.md) and [AspectRatioContainer](AspectRatioContainer.md) now consume the same bound minimum, fill/shrink flags and deferred Container fitting; the margin and aspect variants also use maximum propagation and RTL alignment respectively.
 
@@ -57,6 +57,8 @@ When the window changes size, the panel's right edge stays 12 units from the win
 
 | Member | Contract |
 | --- | --- |
+| [`public string AccessibilityName { get; set; }`](#accessibilityname) | Stored translatable semantic name; empty uses the prepared caption. |
+| `public string AccessibilityDescription { get; set; }` | Stored translatable description, empty by default. |
 | `public string TranslationContext { get; set; }` | Local default automatic translation context, empty initially; stored and revertible. |
 | `public Vector2 Position { get; set; }` | Upper-left layout position before pivot and scale. |
 | `public Vector2 Size { get; set; }` | Finite requested size, clamped to the effective minimum and maximum. |
@@ -98,6 +100,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 
 | Member | Contract |
 | --- | --- |
+| `protected override string[] OnGetAccessibilityConfigurationWarnings()` | Adds missing action/landmark name warnings to the inherited hook. |
 | `public float GetAnchor(Side side)` | Reads one anchor fraction. |
 | `public void SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)` | Updates one anchor and optionally the opposite anchor. |
 | `public void SetAnchorsPreset(LayoutPreset preset, bool keepOffsets = false)` | Applies all four anchor fractions; preserves the current rectangle unless offsets are kept. |
@@ -225,7 +228,7 @@ Root-viewport pointer motion updates the hover chain even if a Node handled the 
 
 ### `FocusMode`, `GrabFocus`, `HasFocus`, `ReleaseFocus`
 
-`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; All additionally permits automatic action navigation. Accessibility retains numeric value 3 but cannot take focus without an accessibility service. `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden, in None mode or outside a root Viewport. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus transfer commits before the previous control's NotificationFocusExit and FocusExited; the root Viewport then raises GUIFocusChanged, followed by the new control's NotificationFocusEnter and FocusEntered. Explicit release sends only the exit notification and event. Changing `hideFocus` on the current owner redraws it without another notification. Focus changes request redraw. Callback failures are collected while later focus callbacks continue, then propagate as AggregateException; focus state remains committed. Reentrant release suppresses a pending enter notification or event after focus is cleared.
+`FocusMode` defaults to None, rejects unsupported enum values, and releases active focus when set back to None. Click permits focus by left pointer press or explicit `GrabFocus`; All additionally permits automatic action navigation. Accessibility retains numeric value 3 and becomes eligible while native accessibility output is active. `hideFocus` records hidden visual focus, reported as absent by `HasFocus(ignoreHiddenFocus: true)`. `GrabFocus` requires an attached control and has no effect while hidden, in None mode or outside a root Viewport. `ReleaseFocus` does nothing when this control is not focused. Hiding or detaching the control releases focus. A focus transfer commits before the previous control's NotificationFocusExit and FocusExited; the root Viewport then raises GUIFocusChanged, followed by the new control's NotificationFocusEnter and FocusEntered. Explicit release sends only the exit notification and event. Changing `hideFocus` on the current owner redraws it without another notification. Focus changes request redraw. Callback failures are collected while later focus callbacks continue, then propagate as AggregateException; focus state remains committed. Reentrant release suppresses a pending enter notification or event after focus is cleared.
 
 ### `FocusNext`, `FocusPrevious`, `FocusNeighborLeft`, `FocusNeighborTop`, `FocusNeighborRight`, `FocusNeighborBottom`
 
@@ -498,3 +501,14 @@ GUISnapControlsToPixels is an independent stored property on every Window and Su
 Visual submissions sample the current flag without rerecording Control commands; normal mutation invalidates low-processor rendering. No logical transform/rectangle notification is emitted by the flag alone. Explicit RenderingServer transform overrides retain precedence until a subsequent actual authored transform change. Interpolation retains its existing visual-pose rules. GUI snapping is separate from SnapTransformsToPixel and SnapVerticesToPixel and has no project-setting or server-only viewport mirror. Getters allow coordinated owner/active-group reads; attached mutation requires the owner and rejects capture, including equal assignments. Disposed access throws.
 
 See [verification and limits](../components/canvas-rendering.md#gui-control-pixel-snapping).
+
+## Native accessible metadata
+
+<a id="accessibilityname"></a>
+`public string AccessibilityName { get; set; }` stores an authored name, empty by default. A nonempty translated value overrides the prepared displayed caption; Button/LinkButton/Label otherwise publish their ordinary prepared text. An icon-only action needs an authored name. `public string AccessibilityDescription { get; set; }` stores supplementary text, also empty by default. Both reject null/disposed/off-owner mutations, use the Control translation context and refresh on translation notifications. Equal authored/resolved values coalesce; packed/fresh-file scenes and duplication retain source strings.
+
+Automatic output publishes role, transformed window-client bounds, visibility, clipping, button enabled/check state and registered focus/activation actions. `FocusMode.Accessibility` is eligible while real automatic output or manually published elements activate the native runtime. Native requests reuse ordinary GUI focus and BaseButton activation; hidden, disabled, detached, queued and disposed sources reject activation. Composite semantic focus and Node notifications are described on [Node](Node.md#native-accessibility). Rich text/value/table/relationship behavior remains in coverage, as do foreign-platform and human reader acceptance.
+
+Protected `override string[] OnGetAccessibilityConfigurationWarnings()` adds a warning for an unnamed BaseButton action or Container landmark. It preserves base warnings; authored names or displayed button captions resolve the warning. This is a cold authoring query.
+
+Name, landmark and displayed-caption changes refresh the existing edited-scene configuration-warning notification; equal writes remain silent.

@@ -8,6 +8,7 @@ namespace Electron2D;
 /// are counted once per button; exit, replacement and disposal release retention without disposing resources.</remarks>
 public partial class Button : BaseButton
 {
+    internal string AccessibleButtonText => _translatedText;
     private string _text = string.Empty, _translatedText = string.Empty, _language = string.Empty;
     private Texture? _icon;
     private readonly List<ButtonTextureState> _textureStates = [];
@@ -63,7 +64,7 @@ public partial class Button : BaseButton
         {
             EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var translated = TranslateButtonText(value);
             if (_text == value && _translatedText == translated) return;
-            _text = value; _translatedText = translated; Invalidate();
+            _text = value; _translatedText = translated; Invalidate(); if (!IsDisposed) UpdateConfigurationWarnings();
         }
     }
     /// <summary>Gets or sets the borrowed icon override.</summary>

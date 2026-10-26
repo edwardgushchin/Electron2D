@@ -1,6 +1,6 @@
 # Button
 
-Last updated: 2026-10-13
+Last updated: 2026-10-26
 
 **Inherits:** [BaseButton](BaseButton.md) · **Inherited By:** [OptionButton](OptionButton.md), [CheckBox](CheckBox.md), [CheckButton](CheckButton.md)
 
@@ -272,3 +272,7 @@ State styles are `normal`, `pressed`, `hover`, `disabled`, optional `hover_press
 Automatic button captions use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.
 
 The macOS focused allocation failure and optional object trace remain open in [the measurement record](../components/physics-allocation-measurement.md#prepared-button-diagnostics-2026-10-23). Earlier local passes do not clear that target failure.
+
+## Native accessibility integration
+
+Native Click actions reuse the validated button activation pipeline, including toggle/group ordering, callback failures and reentry guards. They do not fabricate pointer events. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.

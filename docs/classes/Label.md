@@ -1,6 +1,6 @@
 # Label
 
-Last updated: 2026-10-13
+Last updated: 2026-10-26
 
 **Inherits:** [Control](Control.md) · **Source:** [Label.cs](../../src/Scene/GUI/Label.cs), [Label.Layout.cs](../../src/Scene/GUI/Label.Layout.cs), [Label.Storage.cs](../../src/Scene/GUI/Label.Storage.cs) · **Component:** [Text](../components/text.md)
 
@@ -432,3 +432,7 @@ Uses the inherited [Control layout](Control.md) and [Node lifecycle](Node.md) co
 [LabelTests](../../tests/Electron2D.Tests/LabelTests.cs) covers defaults, typed packing, scalar bounds, paragraphs, grapheme wrapping, source alignment rounding, visibility, custom structured contexts, effect order, resource ownership, background/missed callbacks and active/idle allocation checks. [FontTests](../../tests/Electron2D.Tests/FontTests.cs) verifies the shared shaping and glyph-recording paths. Native renderer and platform evidence is recorded separately by the text slice; a managed geometry test does not establish pixel or platform acceptance. Text/locale changes outside prepared cache entries, first shaping/raster work, public array snapshots and custom parser code may allocate. Public low-level TextServer handles and script-language-specific structured parsing remain outside this typed consumer.
 
 Prepared text use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.
+
+## Native accessibility integration
+
+Prepared displayed text supplies the default accessible name. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.

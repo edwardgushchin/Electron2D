@@ -1,0 +1,955 @@
+{
+  "mappings": [
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityRole",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityRole",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_AUDIO",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Audio()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_BUTTON",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Button()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CELL",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Cell()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CHECK_BOX",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.CheckBox()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CHECK_BUTTON",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.CheckButton()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_COLOR_PICKER",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ColorPicker()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_COLUMN_HEADER",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ColumnHeader()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CONTAINER",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Container()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_DEFAULT_BUTTON",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.DefaultButton()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_DIALOG",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Dialog()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_IMAGE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Image()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LINK",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Link()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.List()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST_BOX",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ListBox()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST_BOX_OPTION",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ListBoxOption()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST_ITEM",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ListItem()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Menu()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_BAR",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.MenuBar()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.MenuItem()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM_CHECK_BOX",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.MenuItemCheckBox()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM_RADIO",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.MenuItemRadio()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MULTILINE_TEXT_FIELD",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.MultilineTextField()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_PANEL",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Panel()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_PROGRESS_INDICATOR",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ProgressIndicator()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_RADIO_BUTTON",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.RadioButton()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_REGION",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Region()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_ROW",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Row()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_ROW_GROUP",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.RowGroup()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_ROW_HEADER",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.RowHeader()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SCROLL_BAR",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ScrollBar()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SCROLL_VIEW",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.ScrollView()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SLIDER",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Slider()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SPIN_BUTTON",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.SpinButton()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SPLITTER",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Splitter()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_STATIC_TEXT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.StaticText()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TAB",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Tab()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TABLE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Table()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TAB_BAR",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.TabBar()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TAB_PANEL",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.TabPanel()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TEXT_FIELD",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.TextField()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TEXT_RUN",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.TextRun()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TITLE_BAR",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.TitleBar()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TOOLTIP",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Tooltip()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TREE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Tree()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TREE_ITEM",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.TreeItem()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_UNKNOWN",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Unknown()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_VIDEO",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Video()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityRole.ROLE_WINDOW",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityRole.Window()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityFlags",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityFlags",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_BUSY",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Busy()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_CLIPS_CHILDREN",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.ClipsChildren()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_DISABLED",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Disabled()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_HIDDEN",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Hidden()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_MODAL",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Modal()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_MULTISELECTABLE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Multiselectable()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_READONLY",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.ReadOnly()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_REQUIRED",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Required()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_TOUCH_PASSTHROUGH",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.TouchPassthrough()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_VISITED",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityFlags.Visited()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityAction",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityAction",
+      "state": "Partial",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_BLUR",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Blur()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CLICK",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Click()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_FOCUS",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.Focus()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:create_element(int:,int:AccessibilityServer.AccessibilityRole)",
+      "electron2d": "method:Electron2D.AccessibilityServer.CreateElement(System.Int32,Electron2D.AccessibilityServer.AccessibilityRole)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:create_sub_element(RID:,int:AccessibilityServer.AccessibilityRole,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.CreateSubElement(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityRole,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:free_element(RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.FreeElement(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:get_window_root(int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.GetWindowRoot(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:has_element(RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.HasElement(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:is_supported()",
+      "electron2d": "method:Electron2D.AccessibilityServer.IsSupported()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:set_window_focused(int:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.SetWindowFocused(System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:set_window_rect(int:,Rect2:,Rect2:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.SetWindowRect(System.Int32,Electron2D.Rect2,Electron2D.Rect2)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_action(RID:,int:AccessibilityServer.AccessibilityAction,Callable:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action)",
+      "state": "Partial",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_add_child(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddChild(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_bounds(RID:,Rect2:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetBounds(Electron2D.RID,Electron2D.Rect2)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_checked(RID:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetChecked(Electron2D.RID,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_description(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetDescription(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_flag(RID:,int:AccessibilityServer.AccessibilityFlags,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetFlag(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityFlags,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_focus(RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetFocus(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_name(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetName(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_role(RID:,int:AccessibilityServer.AccessibilityRole)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetRole(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityRole)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_transform(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Node::method:get_accessibility_element()",
+      "electron2d": "method:Electron2D.Node.GetAccessibilityElement()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Node::method:queue_accessibility_update()",
+      "electron2d": "method:Electron2D.Node.QueueAccessibilityUpdate()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Node::method:_get_accessibility_configuration_warnings()",
+      "electron2d": "method:Electron2D.Node.OnGetAccessibilityConfigurationWarnings()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Node::method:_get_focused_accessibility_element()",
+      "electron2d": "method:Electron2D.Node.OnGetFocusedAccessibilityElement()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE",
+      "electron2d": "constant:Electron2D.Node.NotificationAccessibilityUpdate()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_ACCESSIBILITY_INVALIDATE",
+      "electron2d": "constant:Electron2D.Node.NotificationAccessibilityInvalidate()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Control::property:accessibility_name",
+      "electron2d": "property:Electron2D.Control.AccessibilityName()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Control::property:accessibility_description",
+      "electron2d": "property:Electron2D.Control.AccessibilityDescription()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "ProjectSettings::property:accessibility/general/accessibility_support",
+      "electron2d": "property:Electron2D.ProjectSettings.AccessibilitySupport()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    },
+    {
+      "godot": "Container::property:accessibility_region",
+      "electron2d": "property:Electron2D.Container.AccessibilityRegion()",
+      "state": "Implemented",
+      "reason": "ADR 0114: typed native semantic service or source-producer mapping; behavior and limits are recorded in its status group."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.AccessibilitySupport",
+      "reason": "ADR 0114: typed project policy enum replaces magic setting numbers; the retained service rejects disposal under ADR 0095."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.AccessibilitySupport.Always()",
+      "reason": "ADR 0114: typed project policy enum replaces magic setting numbers; the retained service rejects disposal under ADR 0095."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.AccessibilitySupport.Auto()",
+      "reason": "ADR 0114: typed project policy enum replaces magic setting numbers; the retained service rejects disposal under ADR 0095."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.AccessibilitySupport.Disabled()",
+      "reason": "ADR 0114: typed project policy enum replaces magic setting numbers; the retained service rejects disposal under ADR 0095."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.ValidateDisposal()",
+      "reason": "ADR 0114: typed project policy enum replaces magic setting numbers; the retained service rejects disposal under ADR 0095."
+    },
+    {
+      "electron2d": "method:Electron2D.Control.OnGetAccessibilityConfigurationWarnings()",
+      "reason": "ADR 0114: typed override of the inherited Node authoring-warning hook adds missing action/landmark names while preserving base warnings."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Partial",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Complete text/value/table/relationship/announcement and payload-action families remain absent with exact row triggers.",
+      "godot": [
+        "class:AccessibilityServer"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native live-announcement/expanded/popup/custom-action state and event consumer with actual GUI source transitions. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::enum:AccessibilityLiveMode",
+        "AccessibilityServer::enum:AccessibilityPopupType",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_COLLAPSE",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CUSTOM",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_EXPAND",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_HIDE_TOOLTIP",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_CONTEXT_MENU",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SHOW_TOOLTIP",
+        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_ASSERTIVE",
+        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_OFF",
+        "AccessibilityServer::enum_value:AccessibilityLiveMode.LIVE_POLITE",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_DIALOG",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_LIST",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_MENU",
+        "AccessibilityServer::enum_value:AccessibilityPopupType.POPUP_TREE",
+        "AccessibilityServer::method:update_add_custom_action(RID:,int:,String:)",
+        "AccessibilityServer::method:update_set_live(RID:,int:AccessibilityServer.AccessibilityLiveMode)",
+        "AccessibilityServer::method:update_set_popup_type(RID:,int:AccessibilityServer.AccessibilityPopupType)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native Table/TableCell/Selection or scroll interface, source collection/index/selection/scroll state and typed payload dispatch. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::enum:AccessibilityScrollHint",
+        "AccessibilityServer::enum:AccessibilityScrollUnit",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_BACKWARD",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_DOWN",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_FORWARD",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_INTO_VIEW",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_LEFT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_RIGHT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_TO_POINT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_UP",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_SCROLL_OFFSET",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_RIGHT",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_LEFT_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_RIGHT_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_LEFT",
+        "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_ITEM",
+        "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_PAGE",
+        "AccessibilityServer::method:update_set_list_item_count(RID:,int:)",
+        "AccessibilityServer::method:update_set_list_item_expanded(RID:,bool:)",
+        "AccessibilityServer::method:update_set_list_item_index(RID:,int:)",
+        "AccessibilityServer::method:update_set_list_item_level(RID:,int:)",
+        "AccessibilityServer::method:update_set_list_item_selected(RID:,bool:)",
+        "AccessibilityServer::method:update_set_list_orientation(RID:,bool:)",
+        "AccessibilityServer::method:update_set_scroll_x(RID:,float:)",
+        "AccessibilityServer::method:update_set_scroll_x_range(RID:,float:,float:)",
+        "AccessibilityServer::method:update_set_scroll_y(RID:,float:)",
+        "AccessibilityServer::method:update_set_scroll_y_range(RID:,float:,float:)",
+        "AccessibilityServer::method:update_set_table_cell_position(RID:,int:,int:)",
+        "AccessibilityServer::method:update_set_table_cell_span(RID:,int:,int:)",
+        "AccessibilityServer::method:update_set_table_column_count(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_column_index(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_row_count(RID:,int:)",
+        "AccessibilityServer::method:update_set_table_row_index(RID:,int:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native Value interface and typed numeric/color/value callbacks integrated with real range/edit controls. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_DECREMENT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_INCREMENT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_VALUE",
+        "AccessibilityServer::method:update_set_color_value(RID:,Color:)",
+        "AccessibilityServer::method:update_set_num_jump(RID:,float:)",
+        "AccessibilityServer::method:update_set_num_range(RID:,float:,float:)",
+        "AccessibilityServer::method:update_set_num_step(RID:,float:)",
+        "AccessibilityServer::method:update_set_num_value(RID:,float:)",
+        "AccessibilityServer::method:update_set_value(RID:,String:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native Text/EditableText and selection/boundary interfaces plus typed shaped-text/edit-source lifetime, character offsets, geometry and payload callbacks. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_REPLACE_SELECTED_TEXT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_TEXT_SELECTION",
+        "AccessibilityServer::method:create_sub_text_edit_elements(RID:,RID:,float:,int:,bool:)",
+        "AccessibilityServer::method:update_set_background_color(RID:,Color:)",
+        "AccessibilityServer::method:update_set_foreground_color(RID:,Color:)",
+        "AccessibilityServer::method:update_set_next_on_line(RID:,RID:)",
+        "AccessibilityServer::method:update_set_previous_on_line(RID:,RID:)",
+        "AccessibilityServer::method:update_set_text_align(RID:,int:HorizontalAlignment)",
+        "AccessibilityServer::method:update_set_text_decorations(RID:,bool:,bool:,bool:,Color:)",
+        "AccessibilityServer::method:update_set_text_orientation(RID:,bool:)",
+        "AccessibilityServer::method:update_set_text_selection(RID:,RID:,int:,RID:,int:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: typed per-element metadata keys with exact owner/copy/retirement semantics; no untyped variant container. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::method:element_get_meta(RID:)",
+        "AccessibilityServer::method:element_set_meta(RID:,Variant:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: owned typed element relationships and native Accessible relation-set publication with target retirement and source-property integration. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::method:update_add_related_controls(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_described_by(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_details(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_flow_to(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_labeled_by(RID:,RID:)",
+        "AccessibilityServer::method:update_add_related_radio_group(RID:,RID:)",
+        "AccessibilityServer::method:update_set_active_descendant(RID:,RID:)",
+        "AccessibilityServer::method:update_set_error_message(RID:,RID:)",
+        "AccessibilityServer::method:update_set_in_page_link_target(RID:,RID:)",
+        "AccessibilityServer::method:update_set_member_of(RID:,RID:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native attributes/help/locale/action-keybinding or role/state-description consumer for this exact metadata field, including updates and client readback. Do not add inert metadata or unsupported action selectors.",
+      "godot": [
+        "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
+        "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
+        "AccessibilityServer::method:update_set_classname(RID:,String:)",
+        "AccessibilityServer::method:update_set_extra_info(RID:,String:)",
+        "AccessibilityServer::method:update_set_language(RID:,String:)",
+        "AccessibilityServer::method:update_set_placeholder(RID:,String:)",
+        "AccessibilityServer::method:update_set_role_description(RID:,String:)",
+        "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
+        "AccessibilityServer::method:update_set_state_description(RID:,String:)",
+        "AccessibilityServer::method:update_set_tooltip(RID:,String:)",
+        "AccessibilityServer::method:update_set_url(RID:,String:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::method:_accessibility_get_contextual_info()"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::method:_get_accessibility_container_name(Node:)"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::method:accessibility_drag()"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::method:accessibility_drop()"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::property:accessibility_controls_nodes"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::property:accessibility_described_by_nodes"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::property:accessibility_flow_to_nodes"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::property:accessibility_labeled_by_nodes"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: typed native relationship/live-region publication and real source-control integration; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "Control::property:accessibility_live"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "ProjectSettings::property:accessibility/general/accessibility_driver"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "ProjectSettings::property:accessibility/general/updates_per_second"
+      ]
+    },
+    {
+      "state": "Unimplemented",
+      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
+      "godot": [
+        "ProjectSettings::property:input/ui_accessibility_drag_and_drop"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned Window.xml auto_translate property carries deprecated=\"Use [member Node.auto_translate_mode] and [method Node.can_auto_translate] instead.\" No deprecated mirror or implementation trigger; use the current inherited Node translation policy.",
+      "godot": [
+        "Window::property:auto_translate"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0081/0114: inherited stored false-by-default Container.AccessibilityRegion publishes a named native landmark and restores the normal role on change without changing layout. CLR/fresh-process scenes and an independent AT-SPI client check real role transitions; unnamed regions/actions expose authoring warnings. Complete existing deferred layout remains independently checked.",
+      "godot": [
+        "class:Container"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. All selector values are present.",
+      "godot": [
+        "AccessibilityServer::enum:AccessibilityRole",
+        "AccessibilityServer::enum:AccessibilityFlags"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates.",
+      "godot": [
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_AUDIO",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_BUTTON",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CELL",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CHECK_BOX",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CHECK_BUTTON",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_COLOR_PICKER",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_COLUMN_HEADER",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_CONTAINER",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_DEFAULT_BUTTON",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_DIALOG",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_IMAGE",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LINK",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST_BOX",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST_BOX_OPTION",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_LIST_ITEM",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_BAR",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM_CHECK_BOX",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MENU_ITEM_RADIO",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_MULTILINE_TEXT_FIELD",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_PANEL",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_PROGRESS_INDICATOR",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_RADIO_BUTTON",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_REGION",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_ROW",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_ROW_GROUP",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_ROW_HEADER",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SCROLL_BAR",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SCROLL_VIEW",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SLIDER",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SPIN_BUTTON",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_SPLITTER",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_STATIC_TEXT",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TAB",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TABLE",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TAB_BAR",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TAB_PANEL",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TEXT_FIELD",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TEXT_RUN",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TITLE_BAR",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TOOLTIP",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TREE",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_TREE_ITEM",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_UNKNOWN",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_VIDEO",
+        "AccessibilityServer::enum_value:AccessibilityRole.ROLE_WINDOW",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_BUSY",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_CLIPS_CHILDREN",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_DISABLED",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_HIDDEN",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_MODAL",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_MULTISELECTABLE",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_READONLY",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_REQUIRED",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_TOUCH_PASSTHROUGH",
+        "AccessibilityServer::enum_value:AccessibilityFlags.FLAG_VISITED",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_BLUR",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_CLICK",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_FOCUS",
+        "AccessibilityServer::method:create_element(int:,int:AccessibilityServer.AccessibilityRole)",
+        "AccessibilityServer::method:create_sub_element(RID:,int:AccessibilityServer.AccessibilityRole,int:)",
+        "AccessibilityServer::method:free_element(RID:)",
+        "AccessibilityServer::method:get_window_root(int:)",
+        "AccessibilityServer::method:has_element(RID:)",
+        "AccessibilityServer::method:is_supported()",
+        "AccessibilityServer::method:set_window_focused(int:,bool:)",
+        "AccessibilityServer::method:set_window_rect(int:,Rect2:,Rect2:)",
+        "AccessibilityServer::method:update_add_child(RID:,RID:)",
+        "AccessibilityServer::method:update_set_bounds(RID:,Rect2:)",
+        "AccessibilityServer::method:update_set_checked(RID:,bool:)",
+        "AccessibilityServer::method:update_set_description(RID:,String:)",
+        "AccessibilityServer::method:update_set_flag(RID:,int:AccessibilityServer.AccessibilityFlags,bool:)",
+        "AccessibilityServer::method:update_set_focus(RID:)",
+        "AccessibilityServer::method:update_set_name(RID:,String:)",
+        "AccessibilityServer::method:update_set_role(RID:,int:AccessibilityServer.AccessibilityRole)",
+        "AccessibilityServer::method:update_set_transform(RID:,Transform2D:)",
+        "Node::method:get_accessibility_element()",
+        "Node::method:queue_accessibility_update()",
+        "Node::method:_get_accessibility_configuration_warnings()",
+        "Node::method:_get_focused_accessibility_element()",
+        "Node::constant:NOTIFICATION_ACCESSIBILITY_UPDATE",
+        "Node::constant:NOTIFICATION_ACCESSIBILITY_INVALIDATE",
+        "Control::property:accessibility_name",
+        "Control::property:accessibility_description"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Only Click/Focus/Blur are exposed; remaining typed payload and action consumers are pending.",
+      "godot": [
+        "AccessibilityServer::enum:AccessibilityAction"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Compiled Action handles only no-argument Click/Focus/Blur; richer action signatures require their corresponding native protocol and source consumer.",
+      "godot": [
+        "AccessibilityServer::method:update_add_action(RID:,int:AccessibilityServer.AccessibilityAction,Callable:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Registered typed Auto/Always/Disabled setting is sampled per display lifetime; explicit application output never changes global desktop preferences.",
+      "godot": [
+        "ProjectSettings::property:accessibility/general/accessibility_support"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0081/0114: inherited stored false-by-default Container.AccessibilityRegion publishes a named native landmark and restores the normal role on change without changing layout. CLR/fresh-process scenes and an independent AT-SPI client check real role transitions; unnamed regions/actions expose authoring warnings. Complete existing deferred layout remains independently checked.",
+      "godot": [
+        "Container::property:accessibility_region"
+      ]
+    }
+  ]
+}

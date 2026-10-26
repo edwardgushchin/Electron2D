@@ -10,6 +10,7 @@ namespace Electron2D;
 /// revision checks also recover updates hidden by earlier throwing resource observers.</remarks>
 public partial class Label : Control
 {
+    internal string AccessibleLabelText => _translatedText;
     private string _translatedText = string.Empty, _layoutLanguage = string.Empty;
     private string _text = string.Empty, _language = string.Empty, _paragraphSeparator = @"\n", _ellipsisChar = "…";
     private HorizontalAlignment _horizontalAlignment;

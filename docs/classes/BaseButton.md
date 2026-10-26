@@ -1,6 +1,6 @@
 # BaseButton
 
-Last updated: 2026-09-27
+Last updated: 2026-10-26
 
 **Declaration:** `public abstract class BaseButton : Control` · **Source:** [BaseButton.cs](../../src/Scene/GUI/BaseButton.cs)
 
@@ -173,3 +173,7 @@ See [BaseButton.DrawMode](BaseButton.DrawMode.md). The action edge uses [ButtonA
 Disposed button access throws ObjectDisposedException. Attached off-owner access and capture-owned mutation throw InvalidOperationException. Disposed borrowed groups/shortcuts are rejected when used. Configuration warning callbacks retain the inherited exception contract; input/group hook failures are aggregated after valid phases. Hide/tree removal clears transient attempts and hover while retaining toggle selection. Becoming effectively paused or process-disabled also cancels the current press/contact without activation; Always-mode buttons remain eligible during a tree pause. This prevents a release suppressed by processing policy from leaving a stale contact after resume. Group copies never copy node membership.
 
 [BaseButtonTests](../../tests/Electron2D.Tests/BaseButtonTests.cs) exercises defaults, input edges, visual states, touch identity, ui_accept/echo, groups and silent setup, callback errors/reentry, shortcuts/tooltips, scene-local packing, lifecycle/capture and prepared input allocations. [GUIButtonRoutingTests](../../tests/Electron2D.Tests/GUIButtonRoutingTests.cs) covers actual viewport touch capture, multi-contact cancellation, drag/gesture transforms, inherited bubbling and processing eligibility. Sixty-four reused local mouse/button/group cycles combined with real viewport shortcut dispatch allocate zero managed bytes after 64 warm cycles. Independently, 64 complete routed mouse cycles allocate 180,736 bytes on Linux x64: this equals the measured baseline of their three required positional event copies per cycle. Hover chain management, including a nested input dispatch from an exit callback, has its own 64 warmed zero-allocation check. Positional copies retain the ownership contract in ADR 0038; events are neither pooled nor revived. Native/frame and platform results are recorded for the completed slice in the GUI component and owning ADR. Native accessibility semantics and future drag/drop/scroll-container cancellation integration remain tracked at their owning layers.
+
+## Native accessibility integration
+
+Native Click actions reuse the validated button activation pipeline, including toggle/group ordering, callback failures and reentry guards. They do not fabricate pointer events. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.

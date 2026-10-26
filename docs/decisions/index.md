@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
@@ -48,6 +48,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Audio | [audio.md](audio.md) | 0047 |
 | Networking | [networking.md](networking.md) | 0094 |
 | Input | [input.md](input.md) | 0038 |
+| Native accessibility and semantic scene output | [accessibility.md](accessibility.md) | 0114 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |
 | Physics canvas diagnostics | [physics-debug.md](physics-debug.md) | 0100 |
 | Physics pointer delivery | [physics-picking.md](physics-picking.md) | 0099 |

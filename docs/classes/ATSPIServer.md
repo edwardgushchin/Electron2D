@@ -1,0 +1,13 @@
+# ATSPIServer
+
+Last updated: 2026-10-26
+
+- Declaration: `internal sealed unsafe partial class ATSPIServer : IDisposable`
+- Source: [ATSPIServer.cs](../../src/Servers/Accessibility/ATSPIServer.cs)
+- Component: [Native accessibility](../components/accessibility.md)
+
+Owns a private GMainContext and authenticated accessibility-bus connection. It exports Accessible, Application, Component, Action and Cache, registers its application with the real registry, and pumps bounded batches on the display owner. Native callbacks validate requests and return protocol errors. Application failures return a native Failed reply and aggregate after callbacks have returned to managed owner code. Unsupported platforms and missing optional native dependencies do not publish a fake bridge.
+
+Private Registration retains the element/bridge and native registration IDs. Each registered interface has its own GCHandle; GIO's destroy notification releases that handle only after queued callbacks retire. Unregister emits defunct/cache removal where possible, then unregisters every interface in a finally block. Dispose unregisters all objects, closes the connection, drains destroy notifications and releases context/introspection/vtable ownership. InvalidRequestException represents wire errors without poisoning the owner; CallbackException preserves the original application error for pump aggregation.
+
+Component queries project window/parent/screen geometry and semantic clipping/passthrough. Unknown Wayland screen origin uses the native unknown-coordinate sentinel; client-window bounds remain usable. Role/state tables follow the pinned protocol enums. Read-only placement/scroll methods explicitly return false; richer writable interfaces are absent. The protocol XML contains ABI declarations only, with the source identity documented in the component. Independent client tests exercise discovery, cache, events, actions and retirement; raw protocol checks are distinct from human screen-reader acceptance.

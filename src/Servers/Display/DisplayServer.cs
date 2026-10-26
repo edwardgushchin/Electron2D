@@ -48,6 +48,8 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly nint _gtkTitlebarProvider;
     private readonly string? _previousGamepadBackgroundHint;
     private Rect2i _windowRect;
+    private string _accessibilityTitle = "";
+    internal string AccessibilityTitle => IsNativePopup ? _popupTitle : _accessibilityTitle;
     internal Vector2i ObservedWindowPosition => _windowRect.Position;
     private Vector2i _waylandMinimumSize = new(64, 64);
     private Vector2i _waylandMaximumSize;
@@ -64,6 +66,7 @@ public sealed partial class DisplayServer : ElectronObject
         _sdlWindowId = SDL.GetWindowID(window);
         if (_sdlWindowId == 0)
             throw SDLFailure("identify the main window");
+        _accessibilityTitle = SDL.GetWindowTitle(window);
         var videoDriver = _videoDriver = SDL.GetCurrentVideoDriver();
         _waylandWindowPosition = videoDriver == "wayland";
         _pixelWindowCoordinates = _waylandWindowPosition || OperatingSystem.IsAndroid() ||
@@ -190,7 +193,9 @@ public sealed partial class DisplayServer : ElectronObject
                     server = new DisplayServer(window, gtkStyle.GtkScreen, gtkStyle.GtkProvider, previousGamepadBackgroundHint);
                     server.InitializeGamepads();
                     Input.Service.SetNativeFlush(server.FlushBufferedInput);
+                    AccessibilityServer.BeginDisplay();
                     _instance = server;
+                    AccessibilityServer.StartDisplayOutput();
                     return server;
                 }
                 catch
@@ -430,6 +435,7 @@ public sealed partial class DisplayServer : ElectronObject
         if (IsNativePopup) { _popupTitle = title; return; }
         if (!SDL.SetWindowTitle(GetWindow(windowId), title))
             throw SDLFailure("set window title");
+        _accessibilityTitle = title;
     }
 
     internal Vector2i WindowGetSizeCore(int windowId = MainWindowId)
@@ -516,9 +522,17 @@ public sealed partial class DisplayServer : ElectronObject
             throw SDLFailure("set window position");
     }
 
-    private static void EnsureGlobalWindowCoordinatesAvailable()
+    internal void SynchronizeAccessibilityRect(int windowID)
     {
-        if (SDL.GetCurrentVideoDriver() == "wayland")
+        if (_waylandWindowPosition) return;
+        AccessibilityServer.SetWindowRect(windowID,
+            new Rect2(WindowGetPositionWithDecorationsCore(windowID), WindowGetSizeWithDecorationsCore(windowID)),
+            new Rect2(WindowGetPositionCore(windowID), WindowGetSizeCore(windowID)));
+    }
+
+    private void EnsureGlobalWindowCoordinatesAvailable()
+    {
+        if (_waylandWindowPosition)
             throw new NotSupportedException("Wayland does not expose global top-level window coordinates.");
     }
 
@@ -588,6 +602,7 @@ public sealed partial class DisplayServer : ElectronObject
                 { Input.ReleasePressedEvents(); root._pressedInputWindow = null; }
                 ClearWindowComposition(); ReleaseWindowTouches();
                 if (ReferenceEquals(root._mouseModeWindow, this)) root._mouseModeWindow = null;
+                AccessibilityServer.RetireWindow(WindowID);
                 root._childWindows.Remove(WindowID);
                 root._nativeChildren.Remove(_sdlWindowId);
                 if (ReferenceEquals(root._pendingInputWindow, this)) root._pendingInputWindow = null;
@@ -601,6 +616,7 @@ public sealed partial class DisplayServer : ElectronObject
             foreach (var child in _childWindows.Values.ToArray())
                 try { child.Dispose(); }
                 catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
+            AccessibilityServer.RetireDisplay();
             SceneWindow = null;
             _pendingDroppedFiles = null;
             DisposeDialogs();

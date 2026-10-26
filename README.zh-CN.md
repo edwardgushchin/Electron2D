@@ -1,5 +1,7 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · 简体中文 · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
+Linux 原生无障碍功能通过 AT-SPI 发布场景名称、角色、状态以及按钮和焦点操作。请在打开窗口前设置 `ProjectSettings.AccessibilitySupport`；文本、数值和表格协议以及其他平台适配器仍在开发中。
+
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">

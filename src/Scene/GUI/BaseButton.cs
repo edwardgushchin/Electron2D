@@ -291,6 +291,24 @@ public abstract class BaseButton : Control
         if (!_down) return; _down = false;
         try { BeginEventEmission(_publisherButtonUp.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
+    private void ActivateWithoutPointer(ulong generation, SceneTree? tree, ref List<Exception>? errors)
+    {
+        if (_toggleMode)
+        {
+            _pressed = !_pressed; UnpressGroup(generation, tree, ref errors);
+            if (Current(generation, tree)) NotifyToggled(generation, tree, ref errors);
+        }
+        if (Current(generation, tree)) NotifyPressed(generation, tree, ref errors);
+    }
+    internal void ActivateAccessibility()
+    {
+        EnsureMutable(); if (_disabled || !IsInsideTree || !IsVisibleInTree || IsQueuedForDeletion) return;
+        _group?.ValidateMembers(); var generation = ++_interaction; var tree = Tree; List<Exception>? errors = null;
+        ActivateWithoutPointer(generation, tree, ref errors);
+        if (Current(generation, tree)) QueueRedraw();
+        ThrowCollected("Button accessibility callbacks failed.", errors);
+    }
+
     /// <inheritdoc />
     /// <exception cref="ArgumentNullException">The input event is null.</exception>
     /// <exception cref="InvalidOperationException">The button or a group peer cannot be mutated, or acceptance is outside input dispatch.</exception>
@@ -302,12 +320,7 @@ public abstract class BaseButton : Control
         if (_disabled || !inputEvent.IsPressed() || !IsVisibleInTree || inputEvent.IsEcho() || _shortcut is null ||
             !IsFocusOwnerInShortcutContext() || !_shortcut.MatchesEvent(inputEvent)) return;
         _group?.ValidateMembers(); var generation = ++_interaction; var tree = Tree; List<Exception>? errors = null;
-        if (_toggleMode)
-        {
-            _pressed = !_pressed; UnpressGroup(generation, tree, ref errors);
-            if (Current(generation, tree)) NotifyToggled(generation, tree, ref errors);
-        }
-        if (Current(generation, tree)) NotifyPressed(generation, tree, ref errors);
+        ActivateWithoutPointer(generation, tree, ref errors);
         if (tree is { IsDisposed: false }) try { tree.SetInputAsHandled(); } catch (Exception e) { CollectException(ref errors, e); }
         if (Current(generation, tree))
         {

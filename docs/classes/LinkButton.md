@@ -1,6 +1,6 @@
 # LinkButton
 
-Last updated: 2026-10-23
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class LinkButton : BaseButton`. **Inherits:** [BaseButton](BaseButton.md). **Inherited By:** —. **Source:** [API/storage](../../src/Scene/GUI/LinkButton.cs), [layout](../../src/Scene/GUI/LinkButton.Layout.cs). **Component:** [GUI buttons](../components/gui-buttons.md).
 
@@ -126,3 +126,7 @@ stopped run 39947670388. The revised claims check uses direct CoreFoundation/Cor
 Run 39952942294 ARM64 reports zero registered claims even after a successful LSRegisterURL for the temporary-directory app. The owned fixture now lives beneath the user Applications directory during the check; cleanup deletes only its unique directory and removes the parent only if the fixture created it and it stays empty. This location control still needs native verification.
 
 The user-Applications location control 39953997252 completes the actual ARM64 fresh-scene/native URI handoff with exactly the stored URI, then rejects the later 6,664-byte layout/recording counter delta. WarmFrames now drains both finalization passes after 64 warm frames; its 64 active and idle frames and zero-byte assertions stay unchanged. The same run times out only its extra lipo inventory command on x64. That inventory log is removed; earlier runs already recorded both applet slices, and the actual URI capture remains mandatory. Whole untraced ARM64/x64 suite acceptance is still open.
+
+## Native accessibility integration
+
+Native Click actions reuse the validated button activation pipeline, including toggle/group ordering, callback failures and reentry guards. They do not fabricate pointer events. See [native accessibility](../components/accessibility.md) for authored Control metadata, owner/lifetime rules, native checks and remaining protocol families.

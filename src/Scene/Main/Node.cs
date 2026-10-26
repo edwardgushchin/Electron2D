@@ -1266,7 +1266,7 @@ public partial class Node : ElectronObject
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     public virtual string[] GetConfigurationWarnings()
     {
-        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return [];
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return OnGetAccessibilityConfigurationWarnings();
     }
 
     /// <summary>Requests a configuration-warning refresh for this node in the selected edited scene.</summary>
@@ -2623,6 +2623,7 @@ public partial class Node : ElectronObject
             try { parent?.BeginEventEmission(parent._publisherChildExitingTree.Handlers)?.Invoke(parent, this); }
             catch (Exception error) { CollectException(ref errors, error); }
 
+            try { DetachAccessibility(); } catch (Exception error) { CollectException(ref errors, error); }
             tree.UnbindProcessingGroup(this);
             _activeViewport = null;
             Tree = null;
@@ -2638,6 +2639,7 @@ public partial class Node : ElectronObject
             HasStartedReady = false;
             if (ReferenceEquals(Tree, tree))
             {
+                try { DetachAccessibility(); } catch (Exception error) { CollectException(ref errors, error); }
                 tree.UnbindProcessingGroup(this);
                 _activeViewport = null;
                 Tree = null;

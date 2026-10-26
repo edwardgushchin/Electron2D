@@ -75,6 +75,8 @@ public partial class Window : Viewport
         }
     }
 
+    internal string AccessibilityTitle => _display?.AccessibilityTitle ?? _title;
+
     /// <summary>Gets the observed client size or requests a positive client size.</summary>
     /// <value>100 by 100 before configuration or native activation.</value>
     /// <remarks>Native changes may be asynchronous or constrained by the compositor and size limits.

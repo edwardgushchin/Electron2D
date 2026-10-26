@@ -8,6 +8,8 @@
 
 [Sampled component views](components/local-compute.md#sampled-component-views) connect copied RDTextureView channel maps to bound-image shader variants across local device, canvas, lighting/glyph, particle and writable-texture paths. Raw storage remains independent; alternate format and shared-subresource views keep their native ownership prerequisites.
 
+[Native accessibility](components/accessibility.md) adds [AccessibilityServer](classes/AccessibilityServer.md), its [AccessibilityRole](classes/AccessibilityServer.AccessibilityRole.md), [AccessibilityFlags](classes/AccessibilityServer.AccessibilityFlags.md) and partial [AccessibilityAction](classes/AccessibilityServer.AccessibilityAction.md), [AccessibilitySupport](classes/AccessibilitySupport.md), private [SceneAccessibility](classes/SceneAccessibility.md), [ATSPIServer](classes/ATSPIServer.md) and [GIONative](classes/GIONative.md). Element, Registration, wire/callback exceptions and ABI VTable/Error records stay private to their owning pages. Existing Node, Control, Window, SceneTree, BaseButton and ProjectSettings/Registry integrate the executable semantic tree without changing stored native identities.
+
 # Engine inventory
 
 Existing GPUPhysicsBodyStore now shares [final contact publication](components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) with its last numerical command, without a new production type, buffer or public declaration.

@@ -2,7 +2,7 @@
 
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.
 
@@ -123,3 +123,7 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 Public [native relationship control](../classes/DisplayServer.md#native-window-relationships) uses the retained per-window native owner for parenting, pending/effective modality and attached scene instance identity. Cycle checks, retirement, rollback and scene-policy boundaries remain in the shared display path.
 
 The [loading-image slice](../components/boot-images.md) now carries authored main-window transparency into native creation. Compatibility alpha and explicit GPU rejection/fallback use the existing native-window lifetime.
+
+## Native semantic output
+
+[Native accessibility](../components/accessibility.md) owns the static AccessibilityServer service, real Linux AT-SPI application registration, typed semantic tree and display-owner callbacks. Native windows own their root lifetime. Automatic scene output reuses GUI focus/activation and stored Control metadata; optional host libraries and unsupported target profiles remain explicit. [ADR 0114](../decisions/accessibility.md#adr-0114) defines its boundary.

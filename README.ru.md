@@ -1,5 +1,7 @@
 <p align="right"><a href="README.md">English</a> · Русский · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
+Нативная доступность в Linux передаёт имена, роли, состояния и действия кнопок и фокуса через AT-SPI. Задайте `ProjectSettings.AccessibilitySupport` перед открытием окна; протоколы текста, числовых значений и таблиц, а также адаптеры других платформ ещё разрабатываются.
+
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">

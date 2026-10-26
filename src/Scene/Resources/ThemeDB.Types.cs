@@ -9,6 +9,7 @@ public sealed partial class ThemeDB
         ["AStar"] = ["AStar", "ElectronObject"],
         ["AStarGrid"] = ["AStarGrid", "ElectronObject"],
         ["AcceptDialog"] = ["AcceptDialog", "Window", "Viewport", "Node", "ElectronObject"],
+        ["AccessibilityServer"] = ["AccessibilityServer", "ElectronObject"],
         ["AnimatableBody"] = ["AnimatableBody", "StaticBody", "PhysicsBody", "CollisionObject", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["AnimatedSprite"] = ["AnimatedSprite", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["AnimatedTexture"] = ["AnimatedTexture", "Texture", "Resource", "ElectronObject"],

@@ -4,7 +4,7 @@
 
 [Sampled component views](local-compute.md#sampled-component-views) follow device-backed command/material images through paired stages, lighting, glyphs, clipping and particle consumers. Raw snapshots preserve storage channels.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -1073,3 +1073,5 @@ Consuming retained batches capture the complete rectangle/nine-patch source regi
 ## Authored native points
 
 [Canvas point programs](canvas-points.md) preserve native Points for GPU ArrayMesh/instance replay as well as primitive and GPU-particle streams. The compatibility path retains its existing point geometry and shader-material refusal.
+
+[Native accessibility](accessibility.md) consumes the same prepared captions and transformed control geometry. Container.AccessibilityRegion now publishes a named landmark through that service; its stored false default and real native role transitions leave layout behavior unchanged.

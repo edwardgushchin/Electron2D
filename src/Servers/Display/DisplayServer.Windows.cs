@@ -417,7 +417,7 @@ public sealed partial class DisplayServer
         EnsureOwner();
         var window = GetWindow(windowId);
         if (IsNativePopup) return SDL.GetKeyboardFocus() == window;
-        return SDL.GetCurrentVideoDriver() == "wayland"
+        return _waylandWindowPosition
             ? SDL.GetMouseFocus() == window
             : (SDL.GetWindowFlags(window) & SDL.WindowFlags.InputFocus) != 0;
     }
@@ -521,7 +521,7 @@ public sealed partial class DisplayServer
         if (windowId != MainWindowId) return ResolveWindow(windowId).WindowGetSizeWithDecorationsCore(MainWindowId);
         EnsureOwner();
         var window = GetWindow(windowId);
-        if (SDL.GetCurrentVideoDriver() == "wayland")
+        if (_waylandWindowPosition)
             return WindowGetSizeCore(windowId);
         if (!SDL.GetWindowSize(window, out var width, out var height) ||
             !SDL.GetWindowBordersSize(window, out var top, out var left, out var bottom, out var right))

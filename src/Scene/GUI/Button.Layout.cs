@@ -322,7 +322,7 @@ public partial class Button
                         case NotificationThemeChanged:
                         case NotificationLayoutDirectionChanged:
                             ReleaseButtonTextureResidency(); _themeDirty = true; Invalidate(); break;
-                        case NotificationTranslationChanged: _translatedText = TranslateButtonText(_text); Invalidate(); break;
+                        case NotificationTranslationChanged: _translatedText = TranslateButtonText(_text); Invalidate(); if (!IsDisposed) UpdateConfigurationWarnings(); break;
                         case NotificationResized: if (_autowrapMode != TextAutowrapMode.Off) Invalidate(); break;
                         case NotificationInternalProcess:
                             ReadTheme(); CheckFont(); PollIcon();

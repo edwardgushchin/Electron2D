@@ -465,9 +465,13 @@ def main():
     assert len(flag_rows) == 11 and all(" | Implemented | " in row for row in flag_rows)
     container_rows = [row for row in pages[CLASS_PAGES / "Container.md"].splitlines() if row.startswith("| [`")]
     assert len(container_rows) == 12
-    assert " | Partial | " in next(row for row in container_rows if "class Container" in row)
-    assert " | Blocked | " in next(row for row in container_rows if "accessibility_region" in row)
-    assert all(" | Implemented | " in row for row in container_rows if "class Container" not in row and "accessibility_region" not in row)
+    assert all(" | Implemented | " in row for row in container_rows)
+    accessibility_rows = [row for row in pages[CLASS_PAGES / "AccessibilityServer.md"].splitlines() if row.startswith("| [`")]
+    assert " | Partial | " in next(row for row in accessibility_rows if "class AccessibilityServer" in row)
+    assert all(" | Implemented | " in row for row in accessibility_rows if any(name in row for name in ("method create_element(", "method get_window_root(", "method update_set_bounds(")))
+    assert " | Partial | " in next(row for row in accessibility_rows if "method update_add_action(" in row)
+    assert " | Unimplemented | " in next(row for row in accessibility_rows if "method update_set_num_value(" in row)
+    assert " | Unimplemented | " in next(row for row in accessibility_rows if "method update_set_text_selection(" in row)
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

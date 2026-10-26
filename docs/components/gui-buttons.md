@@ -1,6 +1,6 @@
 # GUI buttons and shortcuts
 
-Last updated: 2026-10-14
+Last updated: 2026-10-26
 
 The component turns pointer, touch, action and shortcut input into themed application actions. It owns [BaseButton](../classes/BaseButton.md), [ButtonGroup](../classes/ButtonGroup.md), [Button](../classes/Button.md), [CheckBox](../classes/CheckBox.md), [CheckButton](../classes/CheckButton.md) and [TextureButton](../classes/TextureButton.md) and [LinkButton](../classes/LinkButton.md). [Shortcut](../classes/Shortcut.md) and [InputEventShortcut](../classes/InputEventShortcut.md) integrate the input-resource and scene-routing boundary. It reuses Control, Theme, Font, StyleBox, Texture and BitMap; it adds no backend or managed dependency.
 
@@ -45,3 +45,5 @@ FileDialog exercises tooltip ownership under embedded Window GUI sections. Once 
 LinkButton is a distinct BaseButton consumer with a single shaped line, typed structured BiDi options, scalar ellipsis, natural/trimmed size, RTL placement, font outline, state colors, focus style and three underline policies. Its full typed authored state and specialized accessibility-focus/pointing-cursor defaults survive PackedScene and the registered file factory. URI activation precedes Pressed through OS.ShellOpen; empty URI keeps ordinary application actions. Borrowed font edits poll content generation and defer worker invalidation onto the current owner; subscriptions retire without disposing the font.
 
 LinkButtonTests verifies typed/runtime/file behavior and 64 warm active caption/toggle/layout/recording and idle polling cycles with zero managed bytes. Fresh compressed big-endian scene loading runs in a new process and checks actual SDL launch into an isolated xdg-open executable. LinkButtonRenderingTests exercises real text/underline/hover/pressed/released/disabled/focus/RTL-ellipsis pixels and native pointer input on GPU/compatibility; each backend passes 64 warm full rendered frames at zero managed bytes from ProcessFrameStarted through FramePostDraw. Captures are retained in the slice proof. Native allocators, accessibility host integration, ordinary browser acceptance, other platforms and final owner acceptance remain unverified.
+
+[Native accessibility](accessibility.md) reuses BaseButton's compiled activation pipeline and ordinary Control focus. Stored translated accessible names/descriptions refine prepared captions; unnamed actions produce authoring warnings. The native bridge has independent protocol/client and warmed frame checks.

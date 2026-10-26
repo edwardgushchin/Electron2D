@@ -1219,7 +1219,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: First native accessibility and theme platform-preferences bridge with supported-target probes and defined unknown-value behavior (ADR 0041); these four nondeprecated queries remain in DisplayServer.",
+      "reason": "ADR 0041/0114: core semantic tree/AT-SPI output now executes. These nondeprecated host queries still require actual platform reader-process, high-contrast, reduced-animation and reduced-transparency preference observation, change/lifetime tests and defined unavailable-value behavior. Per-application Always output and the accessibility-enabled bus setting do not establish those desktop preference values.",
       "godot": [
         "DisplayServer::method:accessibility_screen_reader_active()",
         "DisplayServer::method:accessibility_should_increase_contrast()",
@@ -1366,7 +1366,7 @@
     },
     {
       "state": "Excluded",
-      "reason": "Godot 4.7.2 deprecates these DisplayServer accessibility-tree declarations in favor of AccessibilityServer. ADR 0041 excludes their former placement permanently; the typed 2D accessibility tree and native bridge belong to the first separately accepted AccessibilityServer slice after GUI/rendering. This does not exclude accessibility behavior.",
+      "reason": "Godot 4.7.2 deprecates these DisplayServer accessibility-tree declarations in favor of AccessibilityServer. ADR 0041 excludes their former placement permanently; the typed 2D accessibility tree and native bridge belong to the current AccessibilityServer owner under ADR 0114. This does not exclude accessibility behavior.",
       "godot": [
         "DisplayServer::enum:AccessibilityAction",
         "DisplayServer::enum:AccessibilityFlags",

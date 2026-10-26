@@ -133,7 +133,7 @@ public partial class LinkButton
                             _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0); SetButtonResourceProcessing(false); break;
                         case NotificationThemeChanged:
                         case NotificationLayoutDirectionChanged: InvalidateLink(); break;
-                        case NotificationTranslationChanged: _translatedText = Atr(_text); InvalidateLink(); break;
+                        case NotificationTranslationChanged: _translatedText = Atr(_text); InvalidateLink(); if (!IsDisposed) UpdateConfigurationWarnings(); break;
                         case NotificationResized: if (_overrun != global::Electron2D.TextOverrunBehavior.NoTrimming) InvalidateLink(); break;
                         case NotificationInternalProcess:
                             PollFont();
