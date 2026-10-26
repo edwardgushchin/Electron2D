@@ -21,7 +21,7 @@ internal static partial class NativeStrokeTests
             DrawPrimitive([new(0, 20)], [Colors.Yellow], []);
         }
     }
-    private sealed record Case(string Name, Vector2[] Points, Color[] Colors, bool Connected, Action<Painter> Draw, bool VertexColors = false, Vector2[]? UVs = null);
+    private sealed record Case(string Name, Vector2[] Points, Color[] Colors, bool Connected, Action<Painter> Draw, bool VertexColors = false, Vector2[]? UVs = null, Color? ShaderColor = null, Texture? SampleTexture = null);
     internal static void Managed()
     {
         CanvasStrokeTests.Run();
@@ -71,7 +71,7 @@ internal static partial class NativeStrokeTests
         using var stream = typeof(NativeStrokeTests).Assembly.GetManifestResourceStream("Electron2D.Device." + name)!;
         using var memory = new MemoryStream(); stream.CopyTo(memory); return memory.ToArray();
     }
-    private static Case[] Cases()
+    private static Case[] Cases(Texture pointTexture, Texture pointAtlas, bool compatibility)
     {
         Vector2[] line = [new(8.25f, 9.5f), new(53.75f, 49.25f)];
         Vector2[] strip = [new(7.25f, 12.5f), new(50.5f, 24.75f), new(11.5f, 49.5f)];
@@ -90,9 +90,20 @@ internal static partial class NativeStrokeTests
         Vector2[] repeated = [new(8.25f, 12.5f), new(8.25f, 12.5f), new(30.25f, 12.5f), new(30.25f, 12.5f), new(50.25f, 25.5f)];
         Vector2[] collapsed = [new(45.1f, 8.1f), new(45.2f, 8.2f), new(8.25f, 12.5f), new(40.25f, 25.5f)];
         var translucent = new Color(.2f, .6f, .9f, .5f);
-        return [
+        Color[] faded = [new(1, 0, 0, .5f), new(0, 1, 0, .5f), new(0, 0, 1, .5f), new(1, 1, 0, .5f), new(1, 0, 0, .5f)];
+        Vector2[] horizontal = [new(8.25f, 12.5f), new(52.75f, 12.5f)];
+        Vector2[] vertical = [new(32.5f, 4.25f), new(32.5f, 29.75f)];
+        Vector2[] octants = [new(32, 16), new(58, 24), new(32, 16), new(40, 30), new(32, 16), new(24, 30), new(32, 16), new(6, 24), new(32, 16), new(6, 8), new(32, 16), new(24, 2), new(32, 16), new(40, 2), new(32, 16), new(58, 8)];
+        Color[] collapsedColors = faded[..4];
+        Color[] octantColors = Enumerable.Range(0, octants.Length).Select(i => i % 2 == 0 ? faded[0] : faded[2]).ToArray();
+        Case[] cases = [
             new("server primitive integer point", [new(16, 12)], [Colors.Cyan], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), [new(16, 12)], [Colors.Cyan], [], default)),
             new("primitive fractional point", [new(16.25f, 12.5f)], [Colors.Yellow], false, n => n.DrawPrimitive([new(16.25f, 12.5f)], [Colors.Yellow], [])),
+            new("textured integer point", [new(16, 12)], [Colors.Red], false, n => n.DrawPrimitive([new(16, 12)], [Colors.White], [new(.25f, .25f)], pointTexture), UVs: [new(.25f, .25f)], ShaderColor: Colors.White),
+            new("textured fractional point", [new(16.25f, 12.5f)], [new(0, 1, 0)], false, n => n.DrawPrimitive([new(16.25f, 12.5f)], [Colors.White], [new(.75f, .25f)], pointTexture), UVs: [new(.75f, .25f)], ShaderColor: Colors.White),
+            new("server textured point", [new(16.75f, 12.25f)], [Colors.Blue], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), [new(16.75f, 12.25f)], [Colors.White], [new(.25f, .75f)], pointTexture.GetRID()), UVs: [new(.25f, .75f)], ShaderColor: Colors.White),
+            new("translucent textured point", [new(16.5f, 12.75f)], [new(.4f, .8f, 1, 64f / 255)], false, n => n.DrawPrimitive([new(16.5f, 12.75f)], [new(.4f, .8f, 1, .5f)], [new(.75f, .75f)], pointTexture), UVs: [new(.75f, .75f)], ShaderColor: new(.4f, .8f, 1, .5f)),
+            new("atlas point", [new(16.25f, 12.75f)], [Colors.Blue], false, n => n.DrawPrimitive([new(16.25f, 12.75f)], [Colors.White], [new(.25f, .75f)], pointAtlas), UVs: [new(.25f, .75f)], ShaderColor: Colors.White),
             new("primitive line", line, [Colors.Red, Colors.Blue], false, n => n.DrawPrimitive(line, [Colors.Red, Colors.Blue], []), true),
             new("primitive UV line", line, [Colors.Cyan, Colors.Magenta], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), line, [Colors.Cyan, Colors.Magenta], primitiveLineUVs, default), true, primitiveLineUVs),
             new("line", line, [Colors.White], false, n => n.DrawLine(line[0], line[1], Colors.White)),
@@ -108,7 +119,20 @@ internal static partial class NativeStrokeTests
             new("dashes", dash, [Colors.White], false, n => n.DrawDashedLine(new(8.25f, 20.5f), new(56.25f, 20.5f), Colors.White, -1, 6, false, true)),
             new("short dash", [new(8.25f, 20.5f), new(11.25f, 20.5f)], [Colors.White], false, n => n.DrawDashedLine(new(8.25f, 20.5f), new(11.25f, 20.5f), Colors.White, -1, 6)),
             new("repeated translucent strip", repeated, [translucent], true, n => n.DrawPolyline(repeated, translucent)),
-            new("collapsed segments", collapsed, [translucent], false, n => n.DrawMultiline(collapsed, translucent))
+            new("collapsed segments", collapsed, [translucent], false, n => n.DrawMultiline(collapsed, translucent)),
+            new("horizontal gradient", horizontal, [faded[0], faded[2]], false, n => n.DrawPrimitive(horizontal, [faded[0], faded[2]], []), true),
+            new("vertical gradient", vertical, [faded[0], faded[2]], false, n => n.DrawPrimitive(vertical, [faded[0], faded[2]], []), true),
+            new("gradient octants", octants, octantColors, false, n => RenderingServer.CanvasItemAddMultiline(n.GetCanvasItem(), octants, octantColors), true),
+            new("closed translucent gradient", rectangle, faded, true, n => n.DrawPolylineColors(rectangle, faded), true),
+            new("repeated translucent gradient", repeated, faded, true, n => n.DrawPolylineColors(repeated, faded), true),
+            new("collapsed gradient", collapsed, collapsedColors, false, n => RenderingServer.CanvasItemAddMultiline(n.GetCanvasItem(), collapsed, collapsedColors), true)
+        ];
+        if (!compatibility) return cases;
+        Vector2[] lineUV = [new(.25f, .25f), new(.75f, .25f)];
+        return [.. cases,
+            new("textured line", horizontal, [Colors.White, Colors.White], false, n => n.DrawPrimitive(horizontal, [Colors.White], lineUV, pointTexture), true, lineUV, SampleTexture: pointTexture),
+            new("translucent atlas line", line, [faded[0], faded[2]], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), line, [faded[0], faded[2]], [new(.25f, .25f), new(.75f, .75f)], pointAtlas.GetRID()), true, [new(.25f, .25f), new(.75f, .75f)], SampleTexture: pointTexture),
+            new("reversed textured line", [horizontal[1], horizontal[0]], [Colors.White, Colors.White], false, n => n.DrawPrimitive([horizontal[1], horizontal[0]], [Colors.White], lineUV, pointTexture), true, lineUV, SampleTexture: pointTexture)
         ];
     }
     internal static void Run(string profile)
@@ -119,14 +143,18 @@ internal static partial class NativeStrokeTests
         ProjectSettings.Set(ProjectSettings.RenderingMethod, gpu ? "gpu" : "compatibility"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         ProjectSettings.Set(ProjectSettings.SnapVerticesToPixel, snap); ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, profile.Contains("separate", StringComparison.Ordinal)); Engine.MaxFPS = 120;
         using var world = new World(profile.Contains("physics-gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
-        var cases = Cases(); var height = ((cases.Length + 3) / 4) * 160 + 64;
-        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
+        using var pointImage = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
+            [255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 128]);
+        using var pointTexture = ImageTexture.CreateFromImage(pointImage);
+        using var pointAtlas = new AtlasTexture { Atlas = pointTexture, Region = new(1, 0, 1, 1) };
+        var cases = Cases(pointTexture, pointAtlas, !gpu); var height = ((cases.Length + 3) / 4) * 160 + 64;
+        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
         var customVertex = profile.Contains("vertex", StringComparison.Ordinal);
         using var fragment = gpu && (profile.Contains("material", StringComparison.Ordinal) || customVertex) ? customVertex
             ? Shader.CreateFromSPIRV(Module($"DeviceNative{(profile.Contains("declared", StringComparison.Ordinal) ? "Stroke" : "Primitive")}{language}.vert.spv"), Module($"DeviceNativeStroke{language}.frag.spv"))
             : Shader.CreateFromSPIRV(Module($"DeviceNativeStroke{language}.frag.spv")) : null;
         using var subjectMaterial = fragment is null ? null : new ShaderMaterial { Shader = fragment };
-        var comparisons = new List<(Vector2i Origin, string Name, bool Native)>();
+        var comparisons = new List<(Vector2i Origin, string Name)>();
         var subjects = new List<(Painter Painter, Case Definition, Vector2i Origin)>(); Image? oracle = null;
         Transform[] bases = [Transform.Identity, new(.18f, new(1.1f, .8f), .14f, new(3, -2)), new(0, new(-.8f, 1.1f), 0, new(56, 0)), new(0, new(1.25f, 1.5f), 0, new(-10.25f, -8.25f))];
         for (var row = 0; row < cases.Length; row++)
@@ -137,7 +165,7 @@ internal static partial class NativeStrokeTests
                 var painter = new Painter { Transform = basis, Paint = item.Draw, Material = subjectMaterial }; if (item.Name == "short dash" && !profile.StartsWith("software", StringComparison.Ordinal)) { var group = new CanvasGroup { FitMargin = 0, ClearMargin = 0 }; group.AddChild(painter); cell.AddChild(group); }
                 else cell.AddChild(painter);
                 window.AddChild(cell);
-                comparisons.Add((origin, item.Name + "/" + column, FlatSDLColor(item)));
+                comparisons.Add((origin, item.Name + "/" + column));
                 subjects.Add((painter, item, origin));
             }
         var modulation = new CanvasModulate(); window.AddChild(modulation);
@@ -185,15 +213,14 @@ internal static partial class NativeStrokeTests
                     if (!gpu && !baseline) oracle ??= SDLOracle(subjects, new(image.Width, image.Height), snap);
                     if (gpu) oracle ??= Oracle(subjects, new(image.Width, image.Height), snap, hdr, window.MSAA2D != Viewport.MSAA.Disabled, language, customVertex ? 2 : fragment is null ? 0 : 1);
                     if (Environment.GetEnvironmentVariable("ELECTRON2D_CAPTURE_DIR") is { } folder) { Directory.CreateDirectory(folder); image.SavePNG(System.IO.Path.Combine(folder, $"native-strokes-{profile}-{frame}.png")); oracle?.SavePNG(System.IO.Path.Combine(folder, $"native-strokes-{profile}-oracle.png")); }
-                    using var golden = !gpu && Environment.GetEnvironmentVariable("ELECTRON2D_NATIVE_STROKE_GOLDEN") is { } path ? Image.LoadFromFile(path) : null;
-                    foreach (var (origin, name, native) in comparisons)
+                    foreach (var (origin, name) in comparisons)
                     {
                         var nonempty = 0;
                         for (var y = 0; y < 32; y++) for (var x = 0; x < 64; x++)
                             {
                                 var actual = image.GetPixel(origin.X + x, origin.Y + y); if (actual.R + actual.G + actual.B > .1f) { colored++; nonempty++; }
-                                if (baseline || !gpu && !native && golden is null) continue;
-                                var expected = gpu || native ? oracle!.GetPixel(origin.X + x, origin.Y + y) : golden!.GetPixel(origin.X + x, origin.Y + y);
+                                if (baseline) continue;
+                                var expected = oracle!.GetPixel(origin.X + x, origin.Y + y);
                                 if (MathF.Abs(actual.R - expected.R) > .012f || MathF.Abs(actual.G - expected.G) > .012f || MathF.Abs(actual.B - expected.B) > .012f || MathF.Abs(actual.A - expected.A) > .012f)
                                     throw new InvalidOperationException($"Native stroke {profile}/{name} at {x},{y}: actual={actual}, native={expected}");
                                 comparedPixels++;
@@ -247,6 +274,8 @@ internal static partial class NativeStrokeTests
             {
                 var point = pose * definition.Points[i]; if (snap) point = (point + new Vector2(.5f, .5f)).Floor();
                 var tint = definition.Colors[definition.VertexColors ? i < definition.Colors.Length ? i : 0 : Math.Min(definition.Colors.Length - 1, definition.Connected ? i : i / 2)];
+                // The authored probe fragments read color/UV and do not sample the bound texture.
+                if (shaderMode != 0 && definition.ShaderColor is { } sourceColor) tint = sourceColor;
                 if (hdr) tint = tint.SRGBToLinear();
                 data[i * 8] = point.X; data[i * 8 + 1] = point.Y;
                 if (definition.UVs is { } uvs) { data[i * 8 + 6] = uvs[i].X; data[i * 8 + 7] = uvs[i].Y; }

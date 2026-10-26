@@ -54,11 +54,63 @@ internal static partial class NativeStrokeTests
             using var rgba = new RenderHandle(SDL.ConvertSurface(surface.DangerousGetHandle(), BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888), SDL.DestroySurface);
             var data = Marshal.PtrToStructure<SDL.Surface>(rgba.DangerousGetHandle()); var pixels = new byte[checked(size.X * size.Y * 4)];
             for (var y = 0; y < size.Y; y++) Marshal.Copy(data.Pixels + y * data.Pitch, pixels, y * size.X * 4, size.X * 4);
-            return Image.CreateFromData(size.X, size.Y, false, Image.Format.Rgba8, pixels);
+            var result = Image.CreateFromData(size.X, size.Y, false, Image.Format.Rgba8, pixels);
+            using var mask = new RenderHandle(SDL.CreateTexture(handle, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, renderer);
+            Check(SDL.SetRenderTarget(handle, mask.DangerousGetHandle()), "Bind independent attribute coverage");
+            foreach (var (painter, definition, origin) in subjects)
+                if (!FlatSDLColor(definition)) SDLAttributeOracle(handle, result, painter, definition, origin, snap);
+            return result;
         }
         finally
         {
             if (previousContext != 0) Check(SDL.GLMakeCurrent(previousWindow, previousContext), "Restore SDL oracle context");
+        }
+    }
+
+    private static void SDLAttributeOracle(nint renderer, Image result, Painter painter, Case definition, Vector2i origin, bool snap)
+    {
+        var clip = new SDL.Rect { X = origin.X, Y = origin.Y, W = 64, H = 32 };
+        Check(SDL.SetRenderClipRect(renderer, clip), "Clip native attribute coverage");
+        var points = definition.Points.Select(point => painter.GetGlobalTransform() * point).ToArray();
+        if (snap) for (var i = 0; i < points.Length; i++) points[i] = (points[i] + new Vector2(.5f, .5f)).Floor();
+        using var sampled = definition.SampleTexture?.GetImage();
+        var last = points.Length - 1;
+        if (definition.Connected) while (last > 0 && points[last - 1] == points[last]) last--;
+        for (var i = 1; i <= last; i += definition.Connected ? 1 : 2)
+        {
+            var a = points[i - 1]; var b = points[i]; if (a == b) continue;
+            var drawEnd = !definition.Connected || i == last && b != points[0];
+            // A distant tail cannot accidentally close the path after software integer conversion.
+            var tail = b + new Vector2(100_003, 131_071);
+            byte[] Coverage(bool subtract)
+            {
+                Check(SDL.SetRenderDrawColorFloat(renderer, 0, 0, 0, 0) && SDL.RenderClear(renderer), "Clear native attribute coverage");
+                Check(SDL.SetRenderDrawBlendMode(renderer, SDL.BlendMode.Add) && SDL.SetRenderDrawColorFloat(renderer, 32f / 255, 32f / 255, 32f / 255, 1), "Set independent coverage weight");
+                SDL.FPoint P(Vector2 p) => new() { X = p.X, Y = p.Y };
+                SDL.FPoint[] path = subtract ? [P(b), P(tail)] : drawEnd ? [P(a), P(b)] : [P(a), P(b), P(tail)];
+                Check(SDL.RenderLines(renderer, path, path.Length), "Rasterize native attribute coverage");
+                using var surface = new RenderHandle(SDL.RenderReadPixels(renderer, clip), SDL.DestroySurface);
+                using var rgba = new RenderHandle(SDL.ConvertSurface(surface.DangerousGetHandle(), BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888), SDL.DestroySurface);
+                var data = Marshal.PtrToStructure<SDL.Surface>(rgba.DangerousGetHandle()); var values = new byte[64 * 32];
+                for (var y = 0; y < 32; y++) for (var x = 0; x < 64; x++) values[y * 64 + x] = Marshal.ReadByte(data.Pixels + y * data.Pitch + x * 4);
+                return values;
+            }
+            var coverage = Coverage(false); var following = drawEnd ? null : Coverage(true);
+            var ca = definition.Colors[i - 1 < definition.Colors.Length ? i - 1 : 0]; var cb = definition.Colors[i < definition.Colors.Length ? i : 0];
+            for (var y = 0; y < 32; y++) for (var x = 0; x < 64; x++)
+                {
+                    var alpha = Math.Clamp((coverage[y * 64 + x] - (following?[y * 64 + x] ?? 0)) / 32f, 0, 1); if (alpha == 0) continue;
+                    var dx = (double)b.X - a.X; var dy = (double)b.Y - a.Y;
+                    var t = (float)Math.Clamp(((origin.X + x - a.X) * dx + (origin.Y + y - a.Y) * dy) / (dx * dx + dy * dy), 0, 1);
+                    var color = ca.Lerp(cb, t);
+                    if (sampled is not null)
+                    {
+                        var uv = definition.UVs![i - 1].Lerp(definition.UVs[i], t);
+                        color *= sampled.GetPixel(Math.Clamp((int)(uv.X * sampled.Width), 0, sampled.Width - 1), Math.Clamp((int)(uv.Y * sampled.Height), 0, sampled.Height - 1));
+                    }
+                    var destination = result.GetPixel(origin.X + x, origin.Y + y); color.A *= alpha;
+                    result.SetPixel(origin.X + x, origin.Y + y, new(color.R * color.A + destination.R * (1 - color.A), color.G * color.A + destination.G * (1 - color.A), color.B * color.A + destination.B * (1 - color.A), color.A + destination.A * (1 - color.A)));
+                }
         }
     }
 }

@@ -8,6 +8,8 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     private readonly RenderHandle _renderer;
     private SDL.Vertex[] _vertices = [];
     private SDL.FPoint[] _linePoints = [];
+    private SDL.Vertex[] _attributePoints = [], _attributeTriangles = [];
+    private readonly bool _rasterAttributeLines;
     private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels, ulong Revision)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
@@ -31,6 +33,8 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         try
         {
             Driver = SDL.GetRendererName(_renderer.DangerousGetHandle()) ?? "unknown";
+            int.TryParse(SDL.GetHint(SDL.Hints.RenderLineMethod), out var lineMethod);
+            _rasterAttributeLines = Driver == "software" || Driver is "opengl" or "opengles2" && lineMethod is not (2 or 3);
             CaptureGraphicsHandles(window.DangerousGetHandle());
             Check(SDL.SetRenderDrawBlendMode(_renderer.DangerousGetHandle(), SDL.BlendMode.Blend), "set canvas blending");
         }
@@ -278,7 +282,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
     }
 
-    private static int DrawPoints(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, bool splitTriangles)
+    private int DrawPoints(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, bool splitTriangles)
     {
         var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
@@ -291,9 +295,17 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 calls++;
                 continue;
             }
+            var origin = Driver switch
+            {
+                "software" => new SDL.FPoint { X = MathF.Truncate(center.Position.X), Y = MathF.Truncate(center.Position.Y) },
+                "opengl" => LinePoint(center.Position, true),
+                "opengles2" => center.Position,
+                // shortcut: retain centered coverage on other drivers until their native point oracles execute.
+                _ => new SDL.FPoint { X = center.Position.X - .5f, Y = center.Position.Y - .5f }
+            };
             quad.Fill(center);
             for (var j = 0; j < quad.Length; j++)
-                quad[j].Position = new() { X = center.Position.X + (j is 0 or 1 or 3 ? .5f : -.5f), Y = center.Position.Y + (j is 0 or 3 or 5 ? -.5f : .5f) };
+                quad[j].Position = new() { X = origin.X + (j is 0 or 1 or 3 ? 1 : 0), Y = origin.Y + (j is 0 or 3 or 5 ? 0 : 1) };
             var step = splitTriangles ? 3 : 6;
             for (var first = 0; first < quad.Length; first += step)
             {
@@ -325,6 +337,9 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 return 1;
             }
         }
+        var attributes = texture != 0 || primitive == Mesh.PrimitiveType.LineStrip;
+        for (var i = 1; !attributes && i < vertices.Length; i += 2) attributes = !SameColor(vertices[i - 1].Color, vertices[i].Color);
+        if (_rasterAttributeLines && attributes) return DrawAttributeLines(renderer, texture, vertices, primitive, snap);
         var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
         Span<SDL.FPoint> endpoints = stackalloc SDL.FPoint[2];
@@ -341,7 +356,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 calls++;
                 continue;
             }
-            // shortcut: SDL primitives cannot interpolate colors or UVs; retain geometry until an attribute-capable fallback exists.
+            // shortcut: retain triangle coverage for other native line methods/drivers until their attribute rasterizers are qualified.
             var offset = CanvasStroke.ThinLineOffset(from, to);
             quad[0] = quad[1] = quad[3] = a; quad[2] = quad[4] = quad[5] = b;
             for (var j = 0; j < quad.Length; j++)
@@ -359,6 +374,102 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
         return calls;
     }
+
+    // Attribute coverage follows the SDL point-line/software queues; adapted selection, see licence/SDL-LICENSE.txt.
+    private int DrawAttributeLines(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, Mesh.PrimitiveType primitive, bool snap)
+    {
+        Check(SDL.GetRenderViewport(renderer, out var viewport), "read attribute line bounds");
+        viewport.X = viewport.Y = 0;
+        var software = Driver == "software"; var clip = viewport;
+        if (software && SDL.RenderClipEnabled(renderer))
+        {
+            Check(SDL.GetRenderClipRect(renderer, out var current), "read attribute line clipping");
+            if (!SDL.GetRectIntersection(viewport, current, out clip)) return 0;
+        }
+        var connected = primitive == Mesh.PrimitiveType.LineStrip; var last = vertices.Length - 1;
+        if (connected) while (last > 0 && EqualPoint(LinePoint(vertices[last - 1].Position, snap), LinePoint(vertices[last].Position, snap))) last--;
+        var count = 0;
+        for (var i = 1; i <= last; i += connected ? 1 : 2)
+        {
+            var a = vertices[i - 1]; var b = vertices[i]; a.Position = LinePoint(a.Position, snap); b.Position = LinePoint(b.Position, snap);
+            if (EqualPoint(a.Position, b.Position)) continue;
+            var drawEnd = !connected || i == last && !EqualPoint(b.Position, LinePoint(vertices[0].Position, snap));
+            if (!software && (a.Position.X == b.Position.X || a.Position.Y == b.Position.Y))
+            {
+                var x = MathF.Min(a.Position.X, b.Position.X); var y = MathF.Min(a.Position.Y, b.Position.Y);
+                var right = MathF.Max(a.Position.X, b.Position.X); var bottom = MathF.Max(a.Position.Y, b.Position.Y);
+                if (a.Position.X == b.Position.X) { right++; bottom += drawEnd ? 1 : 0; if (!drawEnd && b.Position.Y < a.Position.Y) { y++; bottom++; } }
+                else { bottom++; right += drawEnd ? 1 : 0; if (!drawEnd && b.Position.X < a.Position.X) { x++; right++; } }
+                var leftPixel = Math.Max(clip.X, RectPixel(x)); var topPixel = Math.Max(clip.Y, RectPixel(y));
+                var rightPixel = Math.Min(clip.X + clip.W, RectPixel(right)); var bottomPixel = Math.Min(clip.Y + clip.H, RectPixel(bottom));
+                for (var py = topPixel; py < bottomPixel; py++) for (var px = leftPixel; px < rightPixel; px++) AttributePoint(ref count, px, py, a, b);
+                continue;
+            }
+            var x1 = a.Position.X; var y1 = a.Position.Y; var x2 = b.Position.X; var y2 = b.Position.Y;
+            // Clip extreme finite input before integer conversion, bounding raster work by the viewport.
+            if (MathF.Max(MathF.Max(MathF.Abs(x1), MathF.Abs(y1)), MathF.Max(MathF.Abs(x2), MathF.Abs(y2))) > int.MaxValue / 4f &&
+                !SDL.GetRectAndLineIntersectionFloat(new SDL.FRect { X = clip.X, Y = clip.Y, W = clip.W, H = clip.H }, ref x1, ref y1, ref x2, ref y2)) continue;
+            var ax = software ? (int)x1 : (int)MathF.Round(x1, MidpointRounding.AwayFromZero);
+            var ay = software ? (int)y1 : (int)MathF.Round(y1, MidpointRounding.AwayFromZero);
+            var bx = software ? (int)x2 : (int)MathF.Round(x2, MidpointRounding.AwayFromZero);
+            var by = software ? (int)y2 : (int)MathF.Round(y2, MidpointRounding.AwayFromZero);
+            if (software && drawEnd)
+            {
+                var start = connected ? LinePoint(vertices[0].Position, snap) : a.Position;
+                drawEnd = bx != (int)start.X || by != (int)start.Y;
+            }
+            var endX = bx; var endY = by;
+            if (!SDL.GetRectAndLineIntersection(clip, ref ax, ref ay, ref bx, ref by)) continue;
+            if (software && (bx != endX || by != endY)) drawEnd = true;
+            var dx = Math.Abs(bx - ax); var dy = Math.Abs(by - ay); var majorX = dx >= dy;
+            var error = 2 * (majorX ? dy : dx) - (majorX ? dx : dy);
+            var sx = ax > bx ? -1 : 1; var sy = ay > by ? -1 : 1;
+            var length = Math.Max(dx, dy) + (drawEnd ? 1 : 0);
+            for (var step = 0; step < length; step++)
+            {
+                AttributePoint(ref count, ax, ay, a, b);
+                var diagonal = error >= 0;
+                error += 2 * ((majorX ? dy : dx) - (diagonal ? majorX ? dx : dy : 0));
+                if (majorX || diagonal) ax += sx;
+                if (!majorX || diagonal) ay += sy;
+            }
+        }
+        if (count == 0) return 0;
+        var triangleCount = checked(count * 6);
+        if (_attributeTriangles.Length < triangleCount) Array.Resize(ref _attributeTriangles, Math.Max(triangleCount, _attributeTriangles.Length * 2));
+        for (var i = 0; i < count; i++)
+        {
+            var point = _attributePoints[i]; var x = point.Position.X; var y = point.Position.Y;
+            var first = i * 3; var second = count * 3 + first;
+            _attributeTriangles[first] = _attributeTriangles[first + 1] = _attributeTriangles[first + 2] = point;
+            _attributeTriangles[second] = _attributeTriangles[second + 1] = _attributeTriangles[second + 2] = point;
+            _attributeTriangles[first + 1].Position.X = x + 1; _attributeTriangles[first + 2].Position.Y = y + 1;
+            _attributeTriangles[second].Position = new() { X = x + 1, Y = y + 1 };
+            _attributeTriangles[second + 1].Position.X = x + 1; _attributeTriangles[second + 2].Position.Y = y + 1;
+        }
+        // Separate triangle halves bypass SDL software's constant-UV quad shortcut without one call per pixel.
+        var calls = software && texture != 0 ? 2 : 1; var perCall = triangleCount / calls;
+        for (var i = 0; i < calls; i++) Check(SDL.RenderGeometry(renderer, texture, _attributeTriangles.AsSpan(i * perCall, perCall), perCall, 0, 0), "draw attributed compatibility lines");
+        return calls;
+    }
+
+    private static int RectPixel(float value) => (int)Math.Clamp(MathF.Ceiling(value - .5f), int.MinValue + 1f, int.MaxValue - 128f);
+    private static bool EqualPoint(SDL.FPoint a, SDL.FPoint b) => a.X == b.X && a.Y == b.Y;
+
+    private void AttributePoint(ref int count, int x, int y, SDL.Vertex a, SDL.Vertex b)
+    {
+        if (_attributePoints.Length == count) Array.Resize(ref _attributePoints, Math.Max(count + 1, count * 2));
+        var dx = (double)b.Position.X - a.Position.X; var dy = (double)b.Position.Y - a.Position.Y;
+        var t = Math.Clamp(((x - (double)a.Position.X) * dx + (y - (double)a.Position.Y) * dy) / (dx * dx + dy * dy), 0, 1);
+        _attributePoints[count++] = new()
+        {
+            Position = new() { X = x, Y = y },
+            Color = new() { R = AttributeLerp(a.Color.R, b.Color.R, t), G = AttributeLerp(a.Color.G, b.Color.G, t), B = AttributeLerp(a.Color.B, b.Color.B, t), A = AttributeLerp(a.Color.A, b.Color.A, t) },
+            TexCoord = new() { X = AttributeLerp(a.TexCoord.X, b.TexCoord.X, t), Y = AttributeLerp(a.TexCoord.Y, b.TexCoord.Y, t) }
+        };
+    }
+
+    private static float AttributeLerp(float a, float b, double t) => (float)(a * (1 - t) + b * t);
 
     private static SDL.FPoint LinePoint(SDL.FPoint point, bool snap)
     {

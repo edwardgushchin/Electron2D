@@ -152,7 +152,7 @@ Polylines accept empty/white, uniform or per-vertex colors. Multilines additiona
 
 [RenderingPrimitiveTests](../../tests/Electron2D.Tests/RenderingPrimitiveTests.cs) exercises copied prefixes, invalid-input rollback/recovery, independent/default skin channels, first UNORM16 quantum, freed palettes, clip resurrection, multiline endpoint colors and 128 warmed indexed/gradient clear/record/replay intervals with zero managed bytes. Its public native host verifies all seventeen producers/state methods, skin, transform/interval, signed order, masks, source republishing and cleanup on Linux Wayland GPU/compatibility with fallback disabled. Existing 31-case ordering tests pass on both backends. These captures establish actual rendered behavior rather than authoring/compilation alone; whole-loop/native allocations, physical/foreign targets and owner acceptance are unverified.
 
-The uniform line route uses native GPU and SDL line primitives and is [qualified separately](#uniform-stroke-contract-2026-10-25). Low-level polyline/multiline rows retain Partial for nonuniform per-vertex/endpoint colors on the SDL triangle fallback. Textured or interpolated-color point/two-vertex primitives retain their separate coverage gap. Their recording paths are executable. MSDF/LCD commands need their signed-distance/subpixel shader and sampler contract; particle commands need real GPU emitter storage; direct material RID binding now executes through the shared [shader/material identity layer](shader-materials.md#shader-and-material-identities). None is presented as an inert flag or implemented by compiling a signature.
+The uniform line route uses native GPU and SDL line primitives and is [qualified separately](#uniform-stroke-contract-2026-10-25). Low-level polyline/multiline rows retain Partial for SDL line methods/drivers outside the [attributed point-line path](#attributed-point-line-method-2026-10-26). Point/two-vertex primitives retain their separate coverage gap on other line methods/drivers. Their recording paths are executable. MSDF/LCD commands need their signed-distance/subpixel shader and sampler contract; particle commands need real GPU emitter storage; direct material RID binding now executes through the shared [shader/material identity layer](shader-materials.md#shader-and-material-identities). None is presented as an inert flag or implemented by compiling a signature.
 
 ## Caller-owned canvases and items
 
@@ -501,7 +501,7 @@ The same material/texture/sampling batches carry polygon vertices on GPU and com
 
 The pinned [CanvasItem drawing methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp), [canvas command validation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_canvas_cull.cpp) and [triangulation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/math/triangulate.cpp) establish counts, default/per-vertex attributes, atlas handling, winding normalization and relaxed ear selection. Electron2D uses typed ReadOnlySpan inputs and exceptions under ADR 0004. Determinants and area use double intermediates to avoid overflow on finite float inputs. The comparison source's license is available in [coverage](../../licence/ReferenceData-LICENSE.txt).
 
-Polygon atlas UV remapping differs from Texture.DrawRectRegion: margins, clipping, recursive view mapping and zero-size expansion are not applied. Primitive atlas UVs do not remap at all. All input origins use the same existing texture and material checks. One-pixel primitives use native GPU topology and native SDL untextured points/uniform-color lines. Textured or interpolated-color compatibility primitives retain triangle footprints and their subpixel coverage gap; DrawPrimitive remains Partial.
+Polygon atlas UV remapping differs from Texture.DrawRectRegion: margins, clipping, recursive view mapping and zero-size expansion are not applied. Primitive atlas UVs do not remap at all. All input origins use the same existing texture and material checks. One-pixel primitives use native GPU topology and native SDL untextured points/uniform-color lines. The [attributed point-line path](#attributed-point-line-method-2026-10-26) now covers textured/interpolated lines on software and default OpenGL/OpenGL ES. Other line methods/drivers retain their triangle footprint and subpixel coverage gap; DrawPrimitive remains Partial.
 
 The remaining drawing family is classified individually in coverage: fonts/styleboxes/meshes depend on their absent resource integrations. Control.ClipContents uses axis-aligned scissor rectangles on both backends; canvas alpha masks now execute through ClipChildren composition and intermediate native render surfaces. No new public contour utility, Polygon node, mesh or clipping API is implied by these commands.
 
@@ -517,7 +517,7 @@ CanvasItem records DrawPolyline/Colors, DrawMultiline/Colors, DrawDashedLine, Dr
 
 The pinned [CanvasItem methods](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/canvas_item.cpp) and [renderer stroke/ellipse code](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_canvas_cull.cpp) define segment counts, color fallback, three-half-width miter clamp, local 1.25-unit feathers, core compensation and ellipse rings. Typed exceptions, finite checks and array-count bounds follow ADR 0004. The source license is retained in [coverage](../../licence/ReferenceData-LICENSE.txt).
 
-Thin polyline/multiline paths ignore antialiasing. Direct DrawLine, also used by the short-dash fallback, can add local feathers even around a negative-width core. GPU thin cores use native Lines/LineStrip topology and retain one-framebuffer-pixel width. GPU upload snaps raw endpoints before the vertex program; independent strips never merge and local single-line AA feathers follow in a separate triangle batch. SDL_Renderer uses native untextured uniform-color segments/strips with endpoint snapping. Textured or interpolated-color ranges retain the six-vertex triangle footprint and corner snapping. Their subpixel gap keeps DrawPolylineColors, DrawPrimitive and the attribute-bearing low-level methods Partial. Uniform/segment-color methods have their own [completed contract](#uniform-stroke-contract-2026-10-25); native rasterizers need not produce identical pixels across different devices or backends. DrawRect now reuses closed stroke geometry for outlines and local compensated geometry for fills; its remaining thin-line coverage limit is shared with other strokes. Group fitting and texture-redraw visibility grow native endpoint bounds by half a framebuffer pixel, or one pixel when endpoint snapping can move them by another half pixel. This preserves horizontal/vertical thin strokes inside groups whose FitMargin and ClearMargin are both zero; bounds round outward to whole pixels for fitted composition, avoiding an extra fractional MSAA edge while leaving native endpoints unchanged.
+Thin polyline/multiline paths ignore antialiasing. Direct DrawLine, also used by the short-dash fallback, can add local feathers even around a negative-width core. GPU thin cores use native Lines/LineStrip topology and retain one-framebuffer-pixel width. GPU upload snaps raw endpoints before the vertex program; independent strips never merge and local single-line AA feathers follow in a separate triangle batch. SDL_Renderer uses native untextured uniform-color segments/strips with endpoint snapping. Textured or interpolated-color lines now use [attributed native point-line coverage](#attributed-point-line-method-2026-10-26) on software and default OpenGL/OpenGL ES; other line methods/drivers retain the six-vertex triangle footprint and corner snapping. Textured points have a separately qualified [driver-specific origin](#textured-point-alignment-2026-10-26). Their subpixel gap keeps DrawPolylineColors, DrawPrimitive and the attribute-bearing low-level methods Partial. Uniform/segment-color methods have their own [completed contract](#uniform-stroke-contract-2026-10-25); native rasterizers need not produce identical pixels across different devices or backends. DrawRect now reuses closed stroke geometry for outlines and local compensated geometry for fills; its remaining thin-line coverage limit is shared with other strokes. Group fitting and texture-redraw visibility grow native endpoint bounds by half a framebuffer pixel, or one pixel when endpoint snapping can move them by another half pixel. This preserves horizontal/vertical thin strokes inside groups whose FitMargin and ClearMargin are both zero; bounds round outward to whole pixels for fitted composition, avoiding an extra fractional MSAA edge while leaving native endpoints unchanged.
 
 CanvasStrokeTests checks geometry/counts, miter limits, closed/repeated points, color fallback, snapshots, AA widths/local scaling, thin width, aligned/unaligned dashes, arc clamp, ellipse tessellation, wide outlines, invalid data, rollback, owner/disposal guards and zero allocation over 1,000 warmed redraw/replay iterations. CanvasPixelSnapTests guards final primitive/positive-stroke rounding; NativeStrokeTests separately guards GPU/native SDL endpoint snapping and retained attribute-bearing compatibility pixels. CanvasStrokeRenderingTests checks joins without translucent overlap, segment colors/gaps, thin scaling, dash ends, arcs, filled/outlined/wide shapes, feathers and three-frame reuse/redraw/modulation. These checks pass on Linux Wayland compatibility/GPU with both HLSL/GLSL materials and on dummy/software. Other platforms, exact hardware line coverage and owner visual acceptance remain unverified.
 
@@ -537,8 +537,8 @@ segment and no texture. Both native backends execute that contract. The shared
 Partial trigger for interpolated colors no longer applies to these ten methods.
 RenderingServer.CanvasItemAddLine enters the same guarded DrawLine path.
 
-DrawPolylineColors remains Partial: a thin nonuniform strip still uses the SDL
-triangle fallback. The low-level multiline API additionally accepts separate
+DrawPolylineColors remains Partial for line methods/drivers outside the
+[attributed point-line path](#attributed-point-line-method-2026-10-26). The low-level multiline API additionally accepts separate
 endpoint colors, so it retains that gap alongside low-level polyline and
 textured/interpolated DrawPrimitive. No class, texture or attribute-bearing row
 is closed by the uniform-family evidence.
@@ -902,7 +902,7 @@ Native point batches use the same conservative raster margin as other thin shape
 GPU pipelines submit Points/Lines. Built-in vertex modules write a one-pixel point
 size. Authored vertex composition initializes an existing standalone/member size
 builtin, or creates one, before the original entry; later author writes survive.
-Compatibility rendering submits untextured points and uniform-color lines/strips through SDL native primitives. Endpoint snapping precedes line submission; consecutive equal endpoints are suppressed. One strip call preserves translucent joins, while independent differently colored segments remain separate calls. A retained point array grows only when capacity increases. Textured or interpolated-color lines and textured points keep triangle footprints; software textured quads split into triangles to preserve constant/rotated UVs. Those attribute-bearing ranges keep their native subpixel gap open. SDL owns driver rasterization and line-method hint selection, so SDL equality does not claim equality with GPU raster rules.
+Compatibility rendering submits untextured points and uniform-color lines/strips through SDL native primitives. Endpoint snapping precedes line submission; consecutive equal endpoints are suppressed. One strip call preserves translucent joins, while independent differently colored segments remain separate calls. A retained point array grows only when capacity increases. Textured or interpolated-color lines use the [attributed point-line path](#attributed-point-line-method-2026-10-26) on software and default OpenGL/OpenGL ES. Other line methods/drivers keep their triangle footprints and native subpixel gap. Textured points use one-pixel quads aligned to native software, OpenGL and OpenGL ES point coverage; other drivers retain the prior centered footprint pending their native oracles. Software textured quads split into triangles to preserve constant/rotated UVs. See [textured point alignment](#textured-point-alignment-2026-10-26). SDL owns driver rasterization and line-method hint selection, so SDL equality does not claim equality with GPU raster rules.
 
 NativeStrokeTests includes direct scene and public server producers, endpoint
 colors/UVs, integer/fractional points, clipped affine transforms, vertex/fragment
@@ -918,6 +918,110 @@ Compatibility controls use the baseline runtime's pixels and do not establish eq
 Evidence: `bin/physics-native-primitives/2026-10-21/validation.json` and its pinned
 RD canvas source manifest. Full physics, foreign platforms, native allocator,
 real-window FPS and mass-performance acceptance remain separate.
+
+## Textured point alignment, 2026-10-26
+
+A textured integer point at (16, 12) previously covered (15, 11) on SDL software,
+while the corresponding native untextured point covered (16, 12). The shared
+scene/server primitive path now chooses the origin of its one-pixel texture quad
+from the actual SDL renderer driver. Input colors, normalized UVs, modulation,
+clipping, snapping and raw backing-image atlas sampling retain their contracts.
+
+| Driver | Quad origin after transform and optional endpoint snapping |
+| --- | --- |
+| software | Truncate each coordinate toward zero, matching native integer points. |
+| OpenGL | Floor each coordinate plus one half, matching the queued half-pixel offset and rounded native point. |
+| OpenGL ES 2 | Preserve the fractional coordinate, matching its unrounded point square. |
+| Other drivers | Retain the existing centered quad; native equivalence remains unverified. |
+
+The pinned [SDL point queues](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/render/SDL_render.c),
+[OpenGL queue](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/render/opengl/SDL_render_gl.c)
+and [OpenGL ES queue](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/render/opengles2/SDL_render_gles2.c)
+explain submission. The distinct square origins follow section 3.3 of the
+[OpenGL 2 specification](https://registry.khronos.org/OpenGL/specs/gl/glspec20.pdf)
+and [OpenGL ES 2 specification](https://registry.khronos.org/OpenGL/specs/es/2.0/es_full_spec_2.0.pdf).
+Driver line-method hints remain untouched.
+
+NativeStrokeTests adds five textured point inputs across four clipped affine
+bases: integer/fractional centers, independent texels, public server recording,
+translucent vertex/texel alpha and an atlas whose region must not remap primitive
+UVs. Independent SDL native point oracles fold the expected sampled texel into
+point color. GPU oracles retain native point topology; the authored color/UV
+probe shaders do not sample the bound texture, so their oracle uses source tint.
+The existing 0.012 per-channel tolerance has no position or neighboring-pixel
+allowance. The old software runtime fails at (15, 11) before the production fix.
+
+Thirteen CLR and thirteen strict full-trim, reflection-disabled NativeAOT profiles
+pass 92 affine cases each on Linux x64: software/snap, OpenGL/snap/OpenGL ES,
+OpenGL with GPU physics on owner/separate threads, and Vulkan built-in/snap,
+GPU physics owner/separate, HLSL fragment/vertex and HDR/MSAA programs. Receipts
+compare 9,109,504 pixels in 4,160 rendered frames. The 3,328 warmed active/idle
+process-frame brackets require zero owner/all-thread managed bytes. Another
+1,849 PhysicsFrameStarted-to-body-state-sync intervals require zero bytes; later
+physics-frame work is outside those intervals. Source/PDB checks bind both CLR
+assemblies and NativeAOT inputs to their authored sources; immutable payload and
+process maps distinguish CLR/native, NVIDIA hardware and software-only controls.
+No new kernel GPU error was recorded.
+
+Evidence: `bin/physics-attribute-primitives/2026-10-26/validation.json` and the
+source, shader, native-build and per-profile receipts beside it. The focused
+NativeAOT host is a friend test assembly. This fix does not complete textured or
+interpolated-color lines, qualify other SDL drivers/platforms, measure native heap
+or establish full-step physics performance. DrawPrimitive and DrawPolylineColors
+remain Partial; physics declaration coverage stays 1346/1369 (98.32%), with
+23 open and 92 Excluded. Full-goal and owner acceptance remain separate.
+
+## Attributed point-line method, 2026-10-26
+
+CompatibilityCanvasBackend now carries colors and UVs over native covered pixels
+for SDL software and the default OpenGL/OpenGL ES point-line method (hint 0/1).
+It captures the method at renderer creation without changing global hints.
+Uniform untextured primitives retain their direct native SDL calls.
+
+The [pinned SDL line queues](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/render/SDL_render.c)
+and [software line consumer](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/render/software/SDL_blendline.c)
+define integer conversion, clipping and endpoint ownership. Software truncates
+endpoints and clips to the active rectangle before rasterization, including a
+clipped final pixel. Integer-collapsed closed endpoints draw nothing. Hardware
+point-lines round diagonal endpoints away from zero and clip the generated walk
+to the viewport; the existing SDL scissor remains the final clip. Axis-aligned
+ranges retain native rectangle coverage. Repeated, snapped-equal and closed-strip
+endpoints preserve the native absence of an extra translucent join pixel.
+
+Each covered pixel projects onto the original transformed/snapped segment, so
+clipping does not restart its color or UV gradient. Reusable attribute and triangle
+buffers grow only when capacity increases. One geometry submission carries the
+covered pixels; software textured output uses two triangle halves to bypass the
+constant-UV quad shortcut without one native call per pixel. Source textures,
+filter/address modes, raw backing-image atlas UVs, blend state and actual native
+draw accounting retain their existing owners. Production drawing adds no native
+mask target, image readback or explicit GPU wait.
+
+The independent SDL oracle obtains segment coverage by subtracting native
+additive paths with a common distant tail. It then computes projected colors and
+nearest texture samples from the original public inputs. It does not call the
+production rasterizer. Every case is now compared; the former attribute skip and
+legacy golden-image substitution are removed. Tests include all eight directions,
+axis-aligned half-pixel edges, repeated/closed translucent strips, integer/snap
+collapse, low-level endpoint colors, textures and raw-UV atlas lines.
+
+Thirteen CLR and thirteen strict full-trim, reflection-disabled NativeAOT
+profiles pass 128 Compatibility and 116 GPU-renderer affine cases per profile,
+comparing 13,041,664 pixels in 4,160 frames. The 3,328 warmed active/idle
+process-frame brackets require zero owner/all-thread managed bytes. Another
+1,850 PhysicsFrameStarted-to-body-state-sync intervals require zero bytes;
+later physics-frame work is outside those intervals. Selected moving CPU/GPU
+worlds execute on owner/separate threads without fallback. Immutable payload,
+process-map, shader, PE/PDB and authored-source receipts bind these runs to the
+executed CLR/native inputs; no new kernel GPU error was recorded.
+
+The final verification receipts are retained under
+`bin/physics-attribute-lines/2026-10-26/validation.json`. SDL native line/geometry methods (hints
+2/3) and other drivers retain the prior triangle path and its explicit subpixel
+limit. DrawPrimitive, DrawPolylineColors and the attribute-bearing server rows
+remain Partial. Physics declaration accounting stays 1346/1369 (98.32%): 23 open,
+92 Excluded. This does not establish full-step physics speedup, native allocator,
+foreign-platform or owner visual acceptance.
 
 ## Retained distance-field mode
 
