@@ -9,6 +9,7 @@ internal sealed class ProjectWorkspace : Control
     private SessionCodeBuffer? _codeBuffer;
     private string _boundText = "";
     private readonly string _sdk;
+    private AgentPanel? _agent;
     private readonly Tree _nodes = new() { Name = "SceneTree", ClipContents = true, SizeFlagsVertical = SizeFlags.ExpandFill, CustomMinimumSize = new(180, 160), FocusMode = FocusMode.All };
     private readonly SessionCodeEditor _code = new() { Name = "Code", ClipContents = true, GuttersDrawLineNumbers = true, LineFolding = true, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, CustomMinimumSize = new(300, 180), FocusMode = FocusMode.All };
     private readonly TextEdit _sessionCode = new() { Name = "CurrentSessionCode", ClipContents = true, Editable = false, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, CustomMinimumSize = new(280, 180) };
@@ -38,10 +39,12 @@ internal sealed class ProjectWorkspace : Control
     private ImageTexture? _captureImage;
     private Button _build = null!, _run = null!, _cancel = null!, _retry = null!, _discard = null!;
 
-    internal ProjectWorkspace(SessionProject project, ProjectSession session, string sdk, Font regular, Font mono)
+    internal ProjectWorkspace(SessionProject project, ProjectSession session, string sdk, Font regular, Font mono, Func<ISessionAgentExecutor>? executorFactory = null)
     {
         Name = "Workspace"; ClipContents = true; _project = project; _session = session; _sdk = sdk; _human = session.Connect("human");
         _scene = _human.InspectScene(); _source = _human.InspectCode();
+        var selection = _human.InspectSelection();
+        if (selection.NodeID == Guid.Empty) _human.SelectNode(_scene.Nodes.FirstOrDefault(n => n.CanEdit && n.Transform.HasValue)?.ID ?? _scene.Nodes[0].ID, _scene.Revision, selection.Revision);
         try
         {
         var theme = new Theme { DefaultFont = regular, DefaultFontSize = 14 }; _resources.Add(theme); Theme = theme;
@@ -85,9 +88,12 @@ internal sealed class ProjectWorkspace : Control
         _cancel = AddButton(inspector, "Cancel job", "Cancel", () => _job?.Cancel());
         inspector.AddChild(_jobStatus); inspector.AddChild(_captureStatus); inspector.AddChild(_capture);
         AddButton(inspector, "Clear job results", "ClearResults", ClearResults);
-        main.AddChild(Panel(inspector));
+        var tabs = new TabContainer { Name = "InspectorTabs", CustomMinimumSize = new(280, 0), SizeFlagsVertical = SizeFlags.ExpandFill };
+        var inspectorPanel = Panel(inspector); inspectorPanel.Name = "Inspector"; tabs.AddChild(inspectorPanel);
+        _agent = new(project, session, _human, sdk, executorFactory); var agentPanel = Panel(_agent); agentPanel.Name = "Agent"; tabs.AddChild(agentPanel);
+        main.AddChild(tabs);
         _feedback.Name = "Feedback"; _feedback.ClipText = true; _feedback.CustomMinimumSize = new(0, 28); layout.AddChild(_feedback);
-        _nodes.ItemSelected += SelectNode;
+        _nodes.ItemSelected += SelectNode; _nodes.NothingSelected += SelectNode;
         _codeBuffer = _human.BindCodeBuffer(ReadPendingSource, RejectSource);
         _code.TextChanged += EditSource; _code.HistoryRequested = redo => PlayHistory(redo, false);
         _x.ValueChanged += value => EditPosition(value, true); _y.ValueChanged += value => EditPosition(value, false);
@@ -101,6 +107,11 @@ internal sealed class ProjectWorkspace : Control
     internal void PrepareClose()
     {
         if (_draft) throw new InvalidOperationException("Apply or discard the visible source draft before closing this project.");
+        if (_session.IsFaulted)
+        {
+            if (ReadPendingSource() is not null) throw new InvalidOperationException("Copy the visible unapplied source before reopening for persistence recovery.");
+            return;
+        }
         _codeBuffer!.Flush();
     }
     private void Changed(SessionResult result)
@@ -108,7 +119,7 @@ internal sealed class ProjectWorkspace : Control
         _refresh = true;
         // A source token and its visible buffer advance together before another native input can arrive.
         if (!_draft) BindSource(_human.InspectCode());
-        _scene = _human.InspectScene(); BindInspector();
+        _scene = _human.InspectScene(); _selected = _human.InspectSelection().NodeID; BindInspector();
     }
     private void BindSource(SessionCode source)
     {
@@ -139,8 +150,18 @@ internal sealed class ProjectWorkspace : Control
     {
         Guard(() => { var current = _human.InspectCode(); Report(_human.Apply("Apply reviewed source draft", new SessionCodeEdit(current.ID, current.Revision, SourceTextProjection.Apply(_source.Text, _boundText, _code.Text)))); _draft = false; BindSource(_human.InspectCode()); });
     }
-    private void DiscardDraft() { _draft = false; Guard(() => BindSource(_human.InspectCode())); _refresh = true; }
-    private void SelectNode() { if (_binding) return; _selected = _nodes.GetSelected()?.GetMetadata<Guid>(0) ?? Guid.Empty; BindInspector(); }
+    private void DiscardDraft()
+    {
+        _draft = false;
+        if (_session.IsFaulted) { _binding = true; try { _code.Text = _boundText; } finally { _binding = false; } }
+        else Guard(() => BindSource(_human.InspectCode()));
+        _refresh = true;
+    }
+    private void SelectNode()
+    {
+        if (_binding) return;
+        Guard(() => { var selection = _human.InspectSelection(); _human.SelectNode(_nodes.GetSelected()?.GetMetadata<Guid>(0) ?? Guid.Empty, _human.InspectScene().Revision, selection.Revision); });
+    }
     private void BindInspector()
     {
         var node = _scene.Nodes.SingleOrDefault(n => n.ID == _selected); _binding = true;
@@ -183,7 +204,7 @@ internal sealed class ProjectWorkspace : Control
     private void RefreshViews()
     {
         var scene = _human.InspectScene(); var code = _human.InspectCode();
-        var changed = _previewRevision != scene.Revision; _scene = scene;
+        var changed = _previewRevision != scene.Revision; _scene = scene; _selected = _human.InspectSelection().NodeID;
         _sceneStatus.Text = Persistence(scene.IsDirty, scene.HasExternalChange, scene.Revision);
         _codeStatus.Text = _draft ? "Unapplied draft — review the current session" : Persistence(code.IsDirty, code.HasExternalChange, code.Revision);
         if (_draft) _sessionCode.Text = SourceTextProjection.Normalize(code.Text); else BindSource(code);
@@ -199,8 +220,6 @@ internal sealed class ProjectWorkspace : Control
                 {
                     var item = _nodes.CreateItem(node.ParentID == Guid.Empty ? null : map[node.ParentID]); item.SetText(0, node.Name); item.SetMetadata(0, node.ID); map[node.ID] = item; item.Collapsed = collapsed.Contains(node.ID);
                 }
-                if (_selected == Guid.Empty || !map.ContainsKey(_selected)) _selected = scene.Nodes.FirstOrDefault(n => n.CanEdit && n.Transform.HasValue)?.ID ?? scene.Nodes[0].ID;
-                map[_selected].Select(0);
                 try
                 {
                     var next = _human.CreatePreview(scene.Revision); _instance?.Dispose(); _instance = next; _viewport.AddChild(next);
@@ -209,6 +228,7 @@ internal sealed class ProjectWorkspace : Control
                 catch (NotSupportedException error) { _instance?.Dispose(); _instance = null; _previewStatus.Text = error.Message; }
                 _previewRevision = scene.Revision;
             }
+            _nodes.DeselectAll(); if (_treeItems.TryGetValue(_selected, out var selected)) selected.Select(0);
             var selectedID = _history.Selected >= 0 && _history.Selected < _operations.Length ? _operations[_history.Selected].ID : Guid.Empty;
             _operations = _human.InspectHistory().ToArray(); _history.Clear();
             foreach (var operation in _operations) _history.AddItem((operation.IsApplied ? "Applied · " : "Undone · ") + operation.Origin + " · " + operation.Label);
@@ -220,6 +240,14 @@ internal sealed class ProjectWorkspace : Control
     protected override void OnProcess(double delta)
     {
         base.OnProcess(delta); _poll += delta;
+        if (_session.IsFaulted)
+        {
+            _code.Editable = _x.Editable = _y.Editable = false; _build.Disabled = _run.Disabled = true;
+            _retry.Visible = false; _discard.Visible = _draft; _feedback.Text = "Persistence recovery required — copy any unapplied source, then reopen the project.";
+            _agent?.Retire(); return;
+        }
+        Guard(() => _agent?.Poll());
+        Guard(() => { var jobs = _human.InspectJobs(); foreach (var shared in jobs) if (!_jobs.Contains(shared)) _jobs.Add(shared); _job = jobs.LastOrDefault(); });
         if (_layoutPhase == 0 && _body.Size.X > 800) { _body.SplitOffset = (int)(220 - _body.Size.X / 2); _layoutPhase++; }
         else if (_layoutPhase == 1) { _main.SplitOffset = (int)(_main.Size.X / 2 - 280); _layoutPhase++; }
         if (_refresh || _poll > 1) { _poll = 0; Guard(RefreshViews); }
@@ -264,7 +292,7 @@ internal sealed class ProjectWorkspace : Control
             _jobs.Clear(); _job = _capturedJob = _observedJob = null; _jobStatus.Text = "No snapshot job"; _captureStatus.Text = "No completed capture";
         });
     }
-    internal Task RetireJobsAsync() => Task.WhenAll(_jobs.Select(j => j.DisposeAsync().AsTask()));
+    internal Task RetireJobsAsync() => Task.WhenAll(_jobs.Select(j => j.DisposeAsync().AsTask()).Append(_agent?.Retirement ?? Task.CompletedTask));
     private void Report(SessionResult result) { _feedback.AddThemeColorOverride("font_color", Color.FromHTML("#F9F3EE")); _feedback.Text = result.Diagnostics.Count > 0 ? string.Join(" | ", result.Diagnostics.Select(d => d.Message)) : result.Kind + " · " + result.Origin; _refresh = true; }
     private void Guard(Action action) { try { action(); } catch (Exception error) { ShowError(error); } }
     private void ShowError(Exception error) { _feedback.Text = "Error: " + error.Message; _feedback.TooltipText = _feedback.Text; _feedback.AddThemeColorOverride("font_color", Color.FromHTML("#FFB4C6")); _refresh = true; }
@@ -287,7 +315,8 @@ internal sealed class ProjectWorkspace : Control
         var errors = new List<Exception>();
         void Cleanup(Action action) { try { action(); } catch (Exception error) { errors.Add(error); } }
         _session.Changed -= Changed;
-        if (!_draft) Cleanup(() => _codeBuffer?.Flush());
+        Cleanup(() => _agent?.Retire());
+        if (!_draft && !_session.IsFaulted) Cleanup(() => _codeBuffer?.Flush());
         foreach (var job in _jobs) Cleanup(job.Cancel);
         Cleanup(_human.Dispose);
         Cleanup(() => base.Dispose(true));

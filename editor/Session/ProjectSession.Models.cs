@@ -34,7 +34,9 @@ public enum SessionChangeKind
     /// <summary>One document's persistence boundary.</summary>
     Saved,
     /// <summary>An explicitly reconciled external file.</summary>
-    Refreshed
+    Refreshed,
+    /// <summary>Owner-local selection context changed without authoring or persistence.</summary>
+    Selected
 }
 
 /// <summary>An immutable description of one scene object; IDs survive session rename/reparent and recovery.</summary>

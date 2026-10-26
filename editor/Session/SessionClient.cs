@@ -72,6 +72,19 @@ public sealed class SessionClient : IDisposable
     /// <param name="expectedSceneRevision">Fresh scene token.</param><returns>A detached Node/Entity/Polygon/Line/Sprite hierarchy; unsupported roles reject explicitly.</returns>
     /// <remarks>Ordinary trusted archive constructors/resource setup can still execute during reconstruction.</remarks>
     public Node CreatePreview(ulong expectedSceneRevision) => Session.CreatePreview(expectedSceneRevision);
+    /// <summary>Copies the shared ordered job handles, including UI and transported submissions.</summary>
+    /// <returns>Borrowed job handles; completed generated data remains until explicit removal.</returns>
+    public IReadOnlyList<SessionJob> InspectJobs() => Session.Jobs();
+    /// <summary>Copies the current owner-local selected scene identity and token.</summary>
+    /// <returns>Selection shared by local and transported clients; empty after selected objects are replaced.</returns>
+    public SessionSelection InspectSelection() => Session.Selection();
+    /// <summary>Changes shared selection after checking the scene and selection observations.</summary>
+    /// <param name="nodeID">Current stable object identity, or empty to clear selection.</param>
+    /// <param name="expectedSceneRevision">Observed scene revision.</param>
+    /// <param name="expectedSelectionRevision">Observed owner-local selection revision.</param>
+    /// <returns>An attributed selection event without a history group, file write or document revision change.</returns>
+    public SessionResult SelectNode(Guid nodeID, ulong expectedSceneRevision, ulong expectedSelectionRevision) =>
+        Session.Select(Origin, nodeID, expectedSceneRevision, expectedSelectionRevision);
     /// <summary>Releases this client handle.</summary>
     public void Dispose() { _codeBuffer?.Dispose(); _codeBuffer = null; _session = null; }
 }

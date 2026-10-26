@@ -2,7 +2,7 @@ namespace Electron2D.Editor;
 
 /// <summary>Owns one existing typed scene and UTF-8 C# buffer without a window or scene activation.</summary>
 /// <remarks>All calls and disposal use the creating thread. A retained OS file lease excludes another owner.
-/// Clients are trusted in-process capabilities; network discovery/authentication belong to the later transport.
+/// In-process clients are trusted capabilities; the optional local transport authenticates external clients.
 /// Edits publish durable recovery before memory. Each Save publishes one file; recovery preserves other unsaved
 /// documents across interrupted multi-file workflows. Runtime factories, reconstruction and save callbacks are
 /// trusted code, not a sandbox. No SceneTree, Ready, process loop or renderer is started.</remarks>
@@ -79,6 +79,18 @@ public sealed partial class ProjectSession : IDisposable
     /// <summary>Gets the canonical project root.</summary>
     /// <value>The absolute directory protected by the writer lease.</value>
     public string ProjectRoot { get { Check(); return _storage.Root; } }
+
+    /// <summary>Reports whether uncertain publication requires retiring and reopening this owner.</summary>
+    /// <value>True after a publication/recovery failure; diagnostics and closing remain available.</value>
+    public bool IsFaulted
+    {
+        get
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (_thread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("Use the session owner thread.");
+            return _faulted;
+        }
+    }
 
     /// <summary>Publishes one committed transition, in registration order; observer failures become result diagnostics.</summary>
     public event Action<SessionResult>? Changed;
@@ -366,9 +378,13 @@ public sealed partial class ProjectSession : IDisposable
         if (_disposed) return;
         if (_thread != Environment.CurrentManagedThreadId || _busy || _readingCode) throw new InvalidOperationException("Dispose on the idle session owner thread.");
         if (!_faulted) FlushCodeBuffer();
-        _activeJob?.Cancel();
+        var errors = new List<Exception>();
+        void Retire(Action action) { try { action(); } catch (Exception error) { errors.Add(error); } }
         _disposed = true; Changed = null; _codeBuffer?.Release(); _codeBuffer = null;
-        try { foreach (var history in _history.Values) history.Dispose(); }
-        finally { _storage.Dispose(); }
+        if (_operations is { } operations) Retire(operations.Dispose);
+        if (_activeJob is { } active) Retire(active.Cancel);
+        foreach (var history in _history.Values) Retire(history.Dispose);
+        Retire(_storage.Dispose);
+        if (errors.Count > 0) throw new AggregateException("Session retirement failed after releasing the owner lease.", errors);
     }
 }

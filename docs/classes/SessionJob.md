@@ -35,7 +35,7 @@ Partial snippet: client/project/sdkDirectory come from an open owner and qualifi
 | `public bool IsStale { get; }` | Compare captured document tokens to the live owner. |
 | `public void Cancel()` | Request owned process retirement. |
 | `public ValueTask DisposeAsync()` | Cancel and await retirement. |
-| `public void RemoveResult()` | Delete this terminal job's generated data. |
+| `public void RemoveResult()` | Delete this terminal job's generated data and unregister its shared handle. |
 
 ## Property descriptions
 
@@ -82,6 +82,8 @@ Thread-safe idempotent request. No effect after disposal. Cooperative snapshot b
 Requests cancellation and awaits terminal process/log cleanup, then releases cancellation resources. Repeated calls are safe. It does not remove evidence; keep the job/result if needed. The session's Dispose requests cancellation but cannot synchronously await a blocked callback, so the job caller still awaits this method.
 
 ### RemoveResult
+
+Successful removal also unregisters this live-owner handle from SessionClient.InspectJobs. If its generated directory is already absent, the handle is still unregistered. A failed ownership/path check leaves the shared handle available for diagnosis.
 
 Requires Completion.IsCompleted, otherwise InvalidOperationException. Checks inside-root non-symlink path and exact job.owner marker before recursive deletion. Missing output is a no-op; changed ownership/unsafe paths reject. Only generated input/build/results are removed; source project documents are preserved. References to removed artifact paths cease to be usable. DisposeAsync remains the separate resource-retirement operation.
 

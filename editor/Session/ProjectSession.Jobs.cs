@@ -3,6 +3,11 @@ namespace Electron2D.Editor;
 public sealed partial class ProjectSession
 {
     private SessionJob? _activeJob;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, SessionJob> _jobs = new();
+    private long _jobSequence;
+    internal IReadOnlyList<SessionJob> Jobs() { Check(); FlushCodeBuffer(); return Array.AsReadOnly(_jobs.Values.OrderBy(j => j.Sequence).ToArray()); }
+    internal void CancelJobs(IEnumerable<Guid> ids) { foreach (var id in ids) if (_jobs.TryGetValue(id, out var job)) job.Cancel(); }
+    internal void ForgetJob(Guid id) { if (_jobs.TryRemove(id, out var job)) Interlocked.CompareExchange(ref _activeJob, null, job); }
     internal bool IsSnapshotStale(ulong scene, ulong code) { Check(); FlushCodeBuffer(); return _state.SceneRevision != scene || _state.CodeRevision != code; }
 
     internal SessionJob StartJob(SessionJobOptions options, ulong expectedSceneRevision, ulong expectedCodeRevision)
@@ -45,7 +50,8 @@ public sealed partial class ProjectSession
             var output = _storage.Resolve(".electron2d/jobs/" + Guid.NewGuid().ToString("N"), metadata: true);
             if (OperatingSystem.IsWindows()) Directory.CreateDirectory(output);
             else Directory.CreateDirectory(output, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
-            return _activeJob = new SessionJob(this, data, output);
+            var job = new SessionJob(this, data, output, checked(++_jobSequence));
+            _jobs[job.ID] = job; return _activeJob = job;
         }
         finally { _busy = false; }
     }

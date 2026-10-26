@@ -62,6 +62,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 - [本地化](docs/domains/localization.md)。翻译域与上下文、PO/MO 目录、语言回退、整数复数规则、伪本地化及本地化资源选择。
 - [网络](docs/domains/networking.md)。TCP/UDP 和本地套接字、TLS/DTLS、HTTP/HTTPS、WebSocket 及 ENet。[WebRTC 数据通道](docs/components/webrtc.md)、类型化 RPC、权限控制、联网对象生成及[属性复制](docs/components/scene-replication.md)。
 - [共享项目工作流](docs/components/project-jobs.md)。创建或打开项目，共享编辑未保存的场景与 C# 代码，构建和运行不可变快照，并检查带有过期状态的实际截图。任务目前需要 Linux；截图需要原生窗口和渲染器。
+- [编辑器中的智能体](docs/components/project-agent.md)。原生任务与对话面板通过经过身份验证的 MCP 操作，将已验证版本的 Codex CLI 连接到共享的未保存文档，支持受保护的历史记录、取消、重新连接和实际运行截图。当前执行器配置需要 Linux 和已有 CLI 登录。
 
 着色器材质、GPU 粒子、光照与阴影及 HDR 需要 GPU 渲染器；兼容渲染器提供其文档所述的 2D 功能。物理后端与渲染器分别选择。具体支持范围和验证限制见各子系统文档及[平台报告](docs/platform-verification.md)。
 

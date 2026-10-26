@@ -85,3 +85,11 @@ Releases only this capability. Subsequent methods throw ObjectDisposedException;
 ## Shared errors and verification
 
 Owner operations reject wrong-thread access, mutation reentry, disposed owners and a faulted persistence boundary. [Executable checks](../../tests/ProjectSession/Program.cs) cover these rules and cross-process recovery. [Native editor views and immutable jobs](../components/project-jobs.md) use the same clients. Transport/authentication and actual agent acceptance remain separate stages.
+
+## Shared selection and job inspection
+
+- `SessionSelection InspectSelection()` copies owner-local selection after pending source is flushed.
+- `SessionResult SelectNode(Guid nodeID, ulong expectedSceneRevision, ulong expectedSelectionRevision)` checks both observed tokens; empty nodeID clears selection. Unknown objects/stale tokens reject. Selection changes neither document revision, dirty state nor history. Native views and operations use the same selection.
+- `IReadOnlyList<SessionJob> InspectJobs()` returns a copied submission-ordered list of borrowed live-owner job handles, including jobs submitted by external clients. Job objects remain owned by their submitters/host. Terminal RemoveResult unregisters the handle; disposing a client does not clear shared results. Jobs are not reconstructed across owner lifetimes.
+
+See [SessionSelection](SessionSelection.md) and [the agent workflow](../components/project-agent.md).
