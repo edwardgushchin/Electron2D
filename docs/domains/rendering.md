@@ -18,7 +18,7 @@
 
 [Graph comparisons and conditional results](../components/visual-shaders.md#comparisons-and-conditional-results) execute typed comparisons, All/Any reductions, exact integer/Boolean choices, floating interpolation, three-way branches and native floating classification through the ordinary shader import/material path.
 
-[Point/line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) now use native GPU topology and initialized point-size output and native SDL untextured points/uniform-color lines. [Textured points](../components/canvas-rendering.md#textured-point-alignment-2026-10-26) now align with native software/OpenGL/OpenGL ES point coverage. Attribute-bearing compatibility lines and other point drivers retain their explicit subpixel limit.
+[Point/line primitives](../components/canvas-rendering.md#native-point-and-line-primitives) now use native GPU topology and initialized point-size output and native SDL untextured points/uniform-color lines. [Textured points](../components/canvas-rendering.md#textured-point-alignment-2026-10-26) now align with native software/OpenGL/OpenGL ES point coverage. [Attributed lines](../components/canvas-rendering.md#attributed-point-line-method-2026-10-26) now match software and default OpenGL/OpenGL ES point-line coverage. Other line methods/drivers retain their explicit subpixel limit.
 
 [HDR screen debanding](../components/hdr-canvas.md#screen-debanding) now connects stored viewport/root-project controls and renderer-session overrides to final GPU dithering before byte output. Linear/offscreen images and movie capture retain their precision; no production type is added.
 
@@ -488,7 +488,7 @@ Ordinary signed/unsigned R32 GPU images now execute integer atomics through scal
 
 [Loading-image presentation](../components/boot-images.md) executes immediate native-client output during readiness/loading through RenderingServer.SetBootImageWithStretch, with six sizing modes and preserved scene viewport/callback state.
 
-GPU thin canvas strokes retain native line-list/line-strip topology, including debug-draw consumers. Compatibility uses native uniform-color lines and driver-aligned textured points on software/OpenGL/OpenGL ES. Interpolated-color or textured lines and other point drivers remain separate coverage limits. See [stroke commands](../components/canvas-rendering.md#stroke-commands) for the independent pixel oracle, snapping policy and exact verification boundary.
+GPU thin canvas strokes retain native line-list/line-strip topology, including debug-draw consumers. Compatibility uses native uniform-color lines and driver-aligned textured points on software/OpenGL/OpenGL ES. [Attributed point-line coverage](../components/canvas-rendering.md#attributed-point-line-method-2026-10-26) now covers software and default OpenGL/OpenGL ES lines. Other line methods and point drivers remain separate coverage limits. See [stroke commands](../components/canvas-rendering.md#stroke-commands) for the independent pixel oracle, snapping policy and exact verification boundary.
 
 [Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
 

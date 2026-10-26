@@ -52,6 +52,8 @@ The license texts above are published together in `licence/`. The comparison dat
 
 ## Native files in the current self-contained Linux publish
 
+The compatibility canvas attribute-line selector adapts SDL 3.4.18's software and point-line coverage rules in C#. It is an altered implementation, not original SDL source; the unchanged [SDL notice](SDL-LICENSE.txt) applies. Its source is `src/Servers/Rendering/CompatibilityCanvasBackend.cs`.
+
 The managed `Electron2D` package includes no native payload. Applications explicitly select `Electron2D.{Platform}` 0.2.0-alpha, whose version identifies the minimum supported engine version. Its Linux source-rebuild profile uses the pinned SDL3-CS.Linux binary and official SDL 3.4.18 headers; no second SDL library is compiled or shipped. Each platform package includes applicable notices under `licence/`. The release workflow audits and publishes the matching managed and platform package bundle.
 
 The additional native producers compile [Zstandard 1.5.7](https://github.com/facebook/zstd/releases/tag/v1.5.7) into private ENet bridges or target archives under the original [BSD license](Zstandard-1.5.7-LICENSE.txt). Its pinned archive SHA-256 is `eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3`. Private [OpenSSL 3.6.5](https://github.com/openssl/openssl/releases/tag/openssl-3.6.5) crypto/TLS libraries retain the original [Apache 2.0 license](OpenSSL-3.6.5-LICENSE.txt); archive SHA-256 is `a2157c2830efdec3788939b00c9b0638306d3f0bbb76dc4832ee503bb397df98`. Target loader identities are renamed/relocated without changing the upstream source. Native production and actual engine integration are separate verification gates.

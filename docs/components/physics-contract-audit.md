@@ -74,7 +74,7 @@ Earlier checkpoint counts below describe their recorded source cohorts.
 
 [Explicit sleep capacity](physics-sleep.md#explicit-sleep-with-automatic-sleep-disabled) includes CanSleep=false non-static CPU bodies before the first manual sleep. Shared scene/raw queries, history and allocation checks preserve the existing manual-event policy. Declaration coverage remains 1305/1369 (95.33%), with 64 open rows.
 
-[Native inherited point/line drawing](canvas-rendering.md#native-point-and-line-primitives) closes the GPU triangle-footprint gap for DrawPrimitive and its public server producer. Compatibility textured points now match software/OpenGL/OpenGL ES native point coverage under [textured point alignment](canvas-rendering.md#textured-point-alignment-2026-10-26). Textured/interpolated-color lines and other point drivers remain Partial; no physical declaration is promoted by this bounded integration.
+[Native inherited point/line drawing](canvas-rendering.md#native-point-and-line-primitives) closes the GPU triangle-footprint gap for DrawPrimitive and its public server producer. Compatibility textured points now match software/OpenGL/OpenGL ES native point coverage under [textured point alignment](canvas-rendering.md#textured-point-alignment-2026-10-26). [Attributed lines](canvas-rendering.md#attributed-point-line-method-2026-10-26) now match software and default OpenGL/OpenGL ES point-line coverage. Other line methods/drivers remain Partial; no physical declaration is promoted by this bounded integration.
 
 # Physics contract and backend audit
 
