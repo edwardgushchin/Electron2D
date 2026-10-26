@@ -1,5 +1,7 @@
 # Scene physics bodies component
 
+The [common-body contract](physics-body-contract.md) records the complete PhysicsBody declaration audit and its public CPU/GPU/registered consumer. It preserves the difference between immediate static-profile motion and later kinematic targets, with existing CharacterBody scene-query preparation kept separate. The audit adds no runtime type or public signature.
+
 [Complete exception operations](physics-registered-adapter.md#complete-exception-operations) retain explicit ordered entries and independently counted active-joint targets. Failed selected joint collision-policy publication preserves the requested flag and common union until an equal setter, query/capture or active positive step retries; retirement removes only its own contribution. All five scene body siblings and raw bodies reject changed/equal borrowed writes and both terminal-world exception writes before mutation. Scoped retained snapshots may read on the selected numerical lane, but existing trees of detached scene inputs must still share the world's owner. Actual contact/motion response, independent sensing, wake and warmed zero-allocation frames retain their named verification limits.
 
 [Terminal world authoring](physics-registered-adapter.md#terminal-world-authoring) now shares common simulation/restore failure validation with numerical body preparation. Motion/role writes reject before authoring; valid healthy callbacks and failed-world cleanup retain their phase/lifetime rules.
@@ -7,7 +9,7 @@
 
 [Failed direct-mode publication](physics-registered-adapter.md#failed-body-mode-publication) retains authored mode/motion and retries complete numerical preparation before body access, space queries or steps. Detachment preserves that authored state, and scene role takeover prepares the prior direct profile before changing descriptors.
 
-Last updated: 2026-10-20
+Last updated: 2026-10-26
 
 Scene persistent force/torque setters now reject terminal-world access before
 retained mutation, including zero/equal assignments. Configured scene reads remain

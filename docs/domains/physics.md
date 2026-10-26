@@ -1,3 +1,5 @@
+[The common-body contract](../components/physics-body-contract.md) audits all six PhysicsBody methods and the body-specific picking default across its five concrete scene roles. Its public consumer preserves motion/output/exception/gravity and direct-profile publication boundaries; inherited declarations and complete physics acceptance remain separate.
+
 [Grouped coordinate observations](../components/canvas-rendering.md#coordinate-observation-from-processing-groups) extend inherited physical/GUI logical query access without changing numerical or native permissions.
 
 [Masked GPU command-policy updates](../components/gpu-resident-bodies.md#scalar-body-edit-flags) preserve policy bits in the cold public, two-command/five-body and warmed cases on AVX-512 at the default/256-bit width and without managed SIMD. A later forced-128-bit contact failure is isolated by a passing status-coded module and failing restored original. [Coded contact validation](../components/gpu-contact-solver.md#contact-validation-causes) retains the same validation in the existing summary word; ordinary untraced target qualification remains required.
@@ -79,7 +81,7 @@ public callback order remain intact. API declaration counts are unchanged.
 
 [Inherited point/line drawing](../components/canvas-rendering.md#native-point-and-line-primitives) now reaches native GPU topology through both scene and server producers, including a moving physical receiver. The SDL_Renderer coverage gap remains open; declaration counts stay 1305/1369 (95.33%).
 
-Last updated: 2026-10-23
+Last updated: 2026-10-26
 
 [Kinematic synchronization in processing groups](../components/physics-bodies.md#kinematic-synchronization-from-processing-groups) now permits the current group to read and switch AnimatableBody presentation policy while retaining capture, ownership and physical-borrow guards. Declaration coverage stays 1305/1369 (95.33%); inherited and final acceptance gaps remain open.
 

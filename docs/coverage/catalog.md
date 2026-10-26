@@ -608,7 +608,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicalBone3D](classes/PhysicalBone3D.md) | PhysicsBody3D | Excluded | 32 |
 | [PhysicalBoneSimulator3D](classes/PhysicalBoneSimulator3D.md) | SkeletonModifier3D | Excluded | 5 |
 | [PhysicalSkyMaterial](classes/PhysicalSkyMaterial.md) | Material | Excluded | 11 |
-| [PhysicsBody2D](classes/PhysicsBody2D.md) | CollisionObject2D | Partial | 7 |
+| [PhysicsBody2D](classes/PhysicsBody2D.md) | CollisionObject2D | Implemented | 7 |
 | [PhysicsBody3D](classes/PhysicsBody3D.md) | CollisionObject3D | Excluded | 14 |
 | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | Object | Implemented | 42 |
 | [PhysicsDirectBodyState2DExtension](classes/PhysicsDirectBodyState2DExtension.md) | PhysicsDirectBodyState2D | Implemented | 48 |

@@ -1,3 +1,5 @@
+[The common-body audit](components/physics-body-contract.md) qualifies the existing PhysicsBody declaration family through a public CPU/GPU/registered consumer. No runtime type or public signature is added.
+
 [Canvas command metadata](components/canvas-command-metadata.md) connects existing input/expression/custom/material families to retained source rectangles and specular channels. No public production type is added.
 
 [Canvas fragment surfaces](components/canvas-surfaces.md) connect five existing fragment outputs to automatic/authored lights. Private [CanvasStageProgram](classes/CanvasStageProgram.md) validates shared identities; [CanvasSurfaceProgram](classes/CanvasSurfaceProgram.md) retains the exact surface schema. No public production type is added.

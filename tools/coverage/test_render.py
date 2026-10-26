@@ -739,7 +739,7 @@ def main():
                          ("CollisionObject2D", "CollisionObject"), ("PhysicsBody2D", "PhysicsBody"),
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
-        assert (" | Implemented | " if name in {"Shape2D", "CollisionShape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
+        assert (" | Implemented | " if name in {"Shape2D", "CollisionShape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "PhysicsBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
     for name, count in (("UPNP", 45), ("UPNPDevice", 22)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
