@@ -787,6 +787,13 @@ passes 32 frozen CoreCLR/NativeAOT root/child movement and Wayland-control profi
 across selected physics, renderer and threading modes; it records its earlier
 GPU shutdown failure separately.
 
+The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
+checks real `1 -> 1.25 -> 1` transitions in independent root/child windows, including
+physical descendants, committed viewport dimensions and rendered pixels. Compatibility
+rendering passes with CPU/GPU physics; ordinary decorated GPU presentation remains
+open after a native SDL/NVIDIA acquisition stall. Physical display metrics are a
+separate capability.
+
 PackedScene captures Position only after an authored position request. An untouched root Window restores automatic native placement instead of silently requesting `(0,0)`; explicit zero remains stored and retains the platform coordinate gate. This permits saved default root windows to start on Wayland. CanvasModulateTests checks both forms, and its published scene consumer executes actual native output.
 
 Engine.RunMovie/RunMovieAsync consume this root using a project movie profile. A recording's sampled MovieWriterDisableVSync request is retained between native display and renderer creation, subject to DisplayServer fallback. The display's destruction ends the request; ordinary later windows retain their backend defaults. See [project movie startup](../components/movie-writing.md#project-movie-startup).

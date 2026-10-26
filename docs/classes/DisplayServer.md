@@ -30,6 +30,11 @@ HasFeature retains the native driver identity for each opened display lifetime, 
 
 `WindowDpiChanged` forwards a native change of the main window's display content scale. It carries no numeric value and does not measure physical dots per inch. Query `ScreenGetScale()` with its default main-window selector after delivery; on Wayland an indexed screen scale is the separate integer output scale and can differ from the window's fractional scale.
 
+The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
+verifies real root/child transitions and compatibility-renderer pixels with CPU/GPU
+physics. Ordinary decorated GPU presentation still stalls in native SDL/NVIDIA
+swapchain acquisition; complete scale/presentation qualification remains open.
+
 `WindowRectChanged` delivers a complete `Rect2i` for the main window's client area after a native move or size change. Its position uses the driver's desktop coordinates; on Wayland the position is conventionally `(0, 0)` because a reliable global top-level position is unavailable. Its size uses client pixels on Wayland, Android, iOS, tvOS and browsers, and native window units on other drivers. Each callback receives the rectangle as it stood at that event in native queue order; duplicate rectangles and events for other windows are ignored. The Wayland convention does not make the global-position query or setter available.
 
 Native key events carry independent logical, physical, and unmodified layout-label identities. Left/right control, shift, alt, and GUI scancodes set the corresponding `InputEventKey.Location`; all other scancodes use `Unspecified`. The native adapter leaves `InputEventKey.Unicode` at zero while committed text is delivered separately. SDL key events contain no produced text scalar; text-input events may contain multiple scalars or an IME commit without identifying a corresponding key press. The root Window now forwards each complete committed string and composition update to its focused Control/scene after DisplayServer state commits. Populating native key-event Unicode still requires a per-key Unicode source; the separate string bridge does not invent key attribution.

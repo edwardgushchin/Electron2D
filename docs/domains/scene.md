@@ -368,8 +368,12 @@ NodeInternalProcessingTests verifies both lanes, order and current-state mutatio
 Containing-window notifications now reach physical Node descendants in parent-first
 order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
-dummy routes plus 1024 zero-byte warmed operations. DPI/position platform limits and
-missing go-back/HDR sources remain open; see [window runtime](../components/window-runtime.md#containing-window-notifications).
+dummy routes plus 1024 zero-byte warmed operations. The
+[native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
+verifies root/child DPI delivery, physical identity and compatibility-renderer pixels;
+ordinary decorated GPU presentation remains open after an SDL/NVIDIA acquisition stall.
+Physical display metrics and HDR output retain separate prerequisites; see
+[window runtime](../components/window-runtime.md#containing-window-notifications).
 
 The exact SceneTree.Defer scheduler and SceneTree.SetDeferred now use a Scene-owned typed invocation provider. Each accepted call retains independent typed values in a slot and submits its immutable callback into the existing single FIFO queue. Slots recycle only after callback completion or discard, clearing argument/callback references even after failure. Work emitted during a drain batch joins the FIFO and runs before that flush completes. Pool operations share the lifetime/work gate; user handlers run outside it. A weak-owner Core registry recognizes only the exact registered delegate, so Core has no Scene runtime dependency. Public signatures, borrowed reference ownership, event multiplicity and cancellation remain unchanged.
 

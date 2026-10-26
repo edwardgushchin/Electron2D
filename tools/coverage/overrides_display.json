@@ -163,7 +163,7 @@
     {
       "electron2d": "event:Electron2D.DisplayServer.WindowDpiChanged()",
       "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE",
-      "reason": "Typed main-window notification follows SDL window content-scale changes. The pinned Wayland backend likewise emits this identity when its effective window scale changes, despite the DPI name. Native event ordering relative to rectangle and first-buffer updates remains to verify (ADR 0044)."
+      "reason": "Typed WindowDpiChanged follows SDL effective window-scale changes, matching the pinned native scale producers under ADR 0044. Existing root event evidence and the isolated compositor root/child consumer verify real transitions and committed viewport state with physical descendants and compatibility-renderer pixels. Ordinary decorated GPU presentation stalls in native SDL/NVIDIA swapchain acquisition, including before a scale transition; complete native presentation qualification remains open. This is not a physical display-DPI query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "electron2d": "event:Electron2D.DisplayServer.WindowRectChanged()",
@@ -1345,7 +1345,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Typed WindowDpiChanged follows SDL window content-scale changes on the main window in ProcessEvents, matching the pinned Wayland scale-change trigger despite the DPI name. A user-driven 1.25-to-1-to-1.25 move produced two native events. Exact ordering relative to the event-time client rectangle and first rendered buffer still requires the renderer vertical slice (ADR 0044).",
+      "reason": "Typed WindowDpiChanged follows SDL effective window-scale changes, matching the pinned native scale producers under ADR 0044. Existing root event evidence and the isolated compositor root/child consumer verify real transitions and committed viewport state with physical descendants and compatibility-renderer pixels. Ordinary decorated GPU presentation stalls in native SDL/NVIDIA swapchain acquisition, including before a scale transition; complete native presentation qualification remains open. This is not a physical display-DPI query. See docs/components/window-runtime.md#native-dpi-scale-reproduction.",
       "godot": [
         "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"
       ]

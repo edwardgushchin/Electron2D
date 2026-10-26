@@ -1828,6 +1828,11 @@ delivery; manual DispatchNotification does not create a native event.
 
 `public const int NotificationWmDpiChange = 1009`. SDL reports a containing-window display content-scale change, before DpiChanged. Physical DPI measurement is not implied.
 
+The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
+checks committed viewport dimensions and physical descendants in independent root/child
+windows. Compatibility rendering passes; native decorated GPU presentation remains
+open after a reproduced SDL/NVIDIA acquisition stall. This notification remains Partial.
+
 ### NotificationWmPositionChanged
 
 `public const int NotificationWmPositionChanged = 1012`. An observed native rectangle changes the containing window client position. Placement requests do not emit; Wayland does not expose global positioning. Acknowledging a requested position still emits once when it changes the last observed native position; the requested value cannot suppress that acknowledgement. Parent-first delivery stops at nested Window scopes and leaves physical poses and RID identities unchanged.

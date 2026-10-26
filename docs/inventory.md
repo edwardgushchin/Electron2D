@@ -1631,8 +1631,11 @@ order, stop before nested Window scopes and continue after callback failures.
 WindowNotificationTests exercises eight event kinds through embedded/public and SDL
 dummy routes plus 1024 zero-byte warmed operations. Native position acknowledgement
 now retains the last observed position independently of requests; the public native
-consumer exercises root/child physical receivers and rendered output. Physical DPI,
-HDR output and foreign-platform acceptance retain their separate gates; see
+consumer exercises root/child physical receivers and rendered output. The
+[native scale reproduction](components/window-runtime.md#native-dpi-scale-reproduction)
+verifies DPI delivery and compatibility-renderer pixels with CPU/GPU physics; ordinary
+decorated GPU presentation remains open after an SDL/NVIDIA acquisition stall. Physical
+display metrics, HDR output and foreign-platform acceptance retain separate gates; see
 [window runtime](components/window-runtime.md#native-position-acknowledgement).
 
 ## Linear HDR canvas output

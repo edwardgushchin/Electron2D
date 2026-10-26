@@ -125,7 +125,7 @@ The runtime SHA-256 is
 the NativeAOT consumer is
 `6349ef51623d4f34dfe89b932ca68b881dad29ff9683e9e62d93a03078e128ac`.
 Coverage advances only the inherited position-notification row, to 1,336/1,369
-applicable physics declarations (97.59%); physical DPI remains Partial.
+applicable physics declarations (97.59%); the DPI-scale notification remains Partial.
 
 The initial regression reproduced a real move with no containing notification.
 Earlier fixture failures and one renderer shutdown `VK_ERROR_DEVICE_LOST` are
@@ -136,6 +136,65 @@ not establish broad GPU renderer stability. Full ordinary/numerical/network/mass
 performance checks, native allocator totals, foreign targets and human visual
 acceptance were not repeated by this slice. Intermediate payloads were retired
 after their manifests were saved; accepted payloads and failure evidence remain.
+
+### Native DPI scale reproduction
+
+Notification 1009 observes effective window scale. At the pinned reference revision
+`ed1daf0bf001b61586d9930840f2f1394092c079`, the
+[Wayland producer](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/linuxbsd/wayland/wayland_thread.cpp#L4025-L4112)
+queues a rectangle update and DPI event when fractional/preferred buffer scale changes;
+the [macOS producer](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/macos/godot_window_delegate.mm#L226-L241)
+compares backing scale. The
+[Window consumer](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/window.cpp#L917-L920)
+updates its viewport before propagating 1009 and emitting its typed signal.
+Physical display DPI is a separate query with its own metrics prerequisite.
+
+The public-only `BackendChecks.RunNativeDPI` consumer uses an actual root and
+independent native child sharing a selected physical World. It checks committed
+pixel dimensions in each notification, owner/parent-first delivery, nested-window
+boundaries, one signal per transition, unchanged physical poses/RIDs during
+delivery, continued motion/query identity and actual red/green rendered pixels
+after eight further frames. The scale/normalized-color tolerances are `0.0001`
+and `0.02`; sizes, identity, event counts/order and immediate poses are exact.
+This is a functional check, with no warmed allocation or performance claim.
+
+Run the helper with optional `--gpu` (physics), `--threaded` and
+`--compatibility` (renderer):
+
+```bash
+python3 -B tests/PhysicsBackendExtension.Consumer/wayland_dpi.py \
+  /absolute/path/PhysicsBackendExtension.Consumer.dll /absolute/new/output
+```
+
+An executable path selects NativeAOT. The helper requires Linux Mutter with its
+headless virtual-output option and Python GI/Gio. It creates a private session bus,
+refuses an occupied display-configuration service and verifies the service's PID
+against its owned compositor before every temporary scale edit. It changes only
+that compositor from `1` to `1.25` and back to `1`, bounds the complete case at
+170 seconds and retires its own processes. No injected scale event or user desktop
+display configuration supplies the result.
+
+On 2026-10-26, four frozen CoreCLR and four strict NativeAOT compatibility-renderer
+profiles passed: CPU/GPU physics and owner/separate physics threads, with NVIDIA process maps,
+no software driver/physics fallback and no new kernel Xid. Root dimensions were
+`320x240 -> 400x300 -> 320x240`; child dimensions were
+`128x96 -> 160x120 -> 128x96`. Receipts, payload hashes, source audit and failed
+controls remain under `bin/window-dpi/2026-10-26/`.
+
+Ordinary GPU rendering with native client decorations repeatedly exceeded its
+deadline, both after delivered scale notifications and in some cases before the
+first transition. A parent-debugger reproduction stopped the native thread in
+`drmSyncobjTimelineWait` through NVIDIA, `VULKAN_INTERNAL_AcquireSwapchainTexture`
+and `SDL_WaitAndAcquireGPUSwapchainTexture_REAL`. SDL 3.4.18's
+[acquisition implementation](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/gpu/vulkan/SDL_gpu_vulkan.c#L10146-L10273)
+uses an infinite native acquire timeout even for its nonblocking variant, so
+changing that public SDL call alone does not establish a fix. A protocol-traced
+GPU control and a control with libdecor disabled completed; neither closes the
+ordinary decorated presentation gate. Extra synchronization, event pumping and
+presentation re-claim experiments failed and were reverted. The failing cases
+and native stack remain evidence, not passing qualification. DPI coverage stays
+Partial and the inherited physics declaration ratio remains 1,336/1,369 (97.59%).
+The cause of the native wait, foreign hosts and owner visual acceptance remain open.
 
 Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.
 

@@ -131,7 +131,7 @@
       "godot": "Node::constant:NOTIFICATION_WM_DPI_CHANGE",
       "electron2d": "constant:Electron2D.Node.NotificationWmDpiChange()",
       "state": "Partial",
-      "reason": "WindowNotificationTests verifies pinned numeric identity, parent-first physical descendants, nested Window boundaries, signal order, failure continuation, embedded/public routes and the SDL dummy queue. Size reaches Window only. 1024 warmed notification/event operations allocate 0/0 managed bytes; GPU, real compositor and foreign-platform acceptance remain separate. SDL reports display content scale; physical DPI coverage still requires a platform bridge under ADR 0044."
+      "reason": "ADRs 0008/0044: notification 1009 follows effective window/backing scale, not physical display DPI, as confirmed by the pinned Wayland/macOS producers. WindowNotificationTests retains propagation, failure/lifetime/mutation and zero-byte warmed checks. The public native root/child consumer verifies committed viewport size, owner/parent-first physical descendants, nested boundaries, one signal, unchanged pose/RID, continued selected CPU/GPU motion/query identity and actual pixels through scale 1 -> 1.25 -> 1 on compatibility rendering. Ordinary decorated GPU presentation stalls in native SDL/NVIDIA swapchain acquisition, sometimes before the first scale event; source/stack/control receipts are in bin/window-dpi/2026-10-26/. Keep Partial pending this native presentation gate; foreign-host acceptance remains separate. Physical ScreenGetDpi retains its own metrics prerequisite. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "godot": "Node::constant:NOTIFICATION_WM_POSITION_CHANGED",
@@ -1611,7 +1611,7 @@
       "electron2d": "event:Electron2D.Window.DpiChanged()",
       "godot": "Window::signal:dpi_changed()",
       "state": "Partial",
-      "reason": "Executable high-level root Window control/event path reuses DisplayServer, with WindowRuntimeTests on dummy and native Wayland: configuration/packed policy reconstruction, native flags and fullscreen adaptation, IME activation, signal ordering, retained drop snapshots, failure continuation and cleanup. Requests retain DisplayServer platform limits; root-only behavior lacks embedded/multiple windows and GUI, actual taskbar/IME UI and other platforms are unverified. Triggers: native platform validation under ADR 0021 and the owning multiwindow/GUI/backend slice under ADR 0008/0040."
+      "reason": "Current root/native and embedded Window events share containing-window delivery under ADRs 0008/0044. WindowNotificationTests covers physical descendants, nested scopes, dummy queue, signal/failure/lifetime/mutation and silent repeats. The native DPI consumer additionally verifies independent root/child scale transitions, committed viewport state, selected physical motion/query identity and actual compatibility-renderer pixels. Full native decorated GPU presentation stalls in SDL/NVIDIA swapchain acquisition; this gate and foreign-host acceptance remain open. Notification 1009 is window scale; physical DPI is a separate display-metrics query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "electron2d": "event:Electron2D.Window.FilesDropped()",
@@ -8600,14 +8600,14 @@
         "Window::signal:dpi_changed()"
       ],
       "state": "Partial",
-      "reason": "Current root/native and embedded Window events share containing-window notification delivery under ADRs 0008/0044. WindowNotificationTests covers physical descendants, nested Window boundaries, native dummy queue, live signal subscriptions, all delegates/later events after failure, owner/mutation rejection and cleanup; repeated pointer observations are silent. Existing root Wayland event evidence remains separate. Exact remaining gates: independent native child windows/compositor and foreign-platform acceptance; SDL DPI is content scale, not physical DPI. No absent embedded event bridge is claimed."
+      "reason": "Current root/native and embedded Window events share containing-window delivery under ADRs 0008/0044. WindowNotificationTests covers physical descendants, nested scopes, dummy queue, signal/failure/lifetime/mutation and silent repeats. The native DPI consumer additionally verifies independent root/child scale transitions, committed viewport state, selected physical motion/query identity and actual compatibility-renderer pixels. Full native decorated GPU presentation stalls in SDL/NVIDIA swapchain acquisition; this gate and foreign-host acceptance remain open. Notification 1009 is window scale; physical DPI is a separate display-metrics query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "godot": [
         "Node::constant:NOTIFICATION_WM_DPI_CHANGE"
       ],
       "state": "Partial",
-      "reason": "WindowNotificationTests verifies propagation, numeric identity, owner/parent-first physical descendants, nested boundaries and callback failure/lifetime/mutation behavior. SDL content-scale reporting does not measure physical DPI under ADR 0044; the native physical-DPI bridge and foreign-platform acceptance remain open."
+      "reason": "ADRs 0008/0044: notification 1009 follows effective window/backing scale, not physical display DPI, as confirmed by the pinned Wayland/macOS producers. WindowNotificationTests retains propagation, failure/lifetime/mutation and zero-byte warmed checks. The public native root/child consumer verifies committed viewport size, owner/parent-first physical descendants, nested boundaries, one signal, unchanged pose/RID, continued selected CPU/GPU motion/query identity and actual pixels through scale 1 -> 1.25 -> 1 on compatibility rendering. Ordinary decorated GPU presentation stalls in native SDL/NVIDIA swapchain acquisition, sometimes before the first scale event; source/stack/control receipts are in bin/window-dpi/2026-10-26/. Keep Partial pending this native presentation gate; foreign-host acceptance remains separate. Physical ScreenGetDpi retains its own metrics prerequisite. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "godot": [
