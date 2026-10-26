@@ -6,6 +6,8 @@ Last updated: 2026-10-26
 
 [ADR 0090](../decisions/agent-native.md#adr-0090) stage 2 connects the separate editor executable to [ProjectSession](project-session.md). [SessionProject](../classes/SessionProject.md) creates/opens a version-two `electron2d.project.json` naming one root .NET executable, one typed scene and one strict UTF-8 C# buffer. [SessionJob](../classes/SessionJob.md) builds/runs an immutable input. All project/session/scenario types live in `Electron2D.Editor.Session.dll`, outside the runtime. The editor and ordinary compiled projects consume public runtime APIs; Electron2D.dll references neither tooling nor game assemblies.
 
+Current creation writes the manifest, project/source/scene and `.gitignore`; it does not initialize Git or seed project documentation/journal files. [Git-backed creation and durable context](../decisions/agent-native.md#git-backed-project-memory) are the next project-authoring extension, not behavior supplied by this slice. Opening an existing project likewise performs no Git initialization or history mutation.
+
 The earlier standalone controller, its scenario SDK and version-one formats are removed. There is one shared operation boundary. Existing runtime Engine.Start/AdvanceFrame/Stop, callback-first native hosts, public input and MovieWriter keep their own contracts.
 
 ## Human and programmatic views

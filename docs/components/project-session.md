@@ -8,6 +8,8 @@ Last updated: 2026-10-26
 
 One owner opens one existing typed scene and one strict UTF-8 `.cs` file. Trusted local [SessionClient](../classes/SessionClient.md) handles inspect the same unsaved state and submit transform, rename, reparent and complete-source-buffer operations. This bounded document boundary now backs the [editor workflow and snapshot jobs](project-jobs.md). Language services remain separate; [authenticated local agent transport](project-agent.md) now consumes the same boundary.
 
+The next [Git-backed project memory slice](../decisions/agent-native.md#git-backed-project-memory) requires additional shared Markdown documents, journal publication and repository-aware context. They must reuse owner/revision/recovery rules. This bounded session currently opens only its scene and C# document; `.electron2d` recovery/private transport state is ignored local state, not the versioned development journal or a Git commit.
+
 ## Shared views and pending input
 
 [SessionCodeBuffer](../classes/SessionCodeBuffer.md) binds one synchronous local pending-code reader. Before observations, mutations, job snapshots/staleness and normal owner disposal, the session publishes visible pending text through a guarded SessionCodeEdit. Readers cannot mutate/reenter/dispose their binding. Rejected proposals reach a client callback before the original error propagates, so the view retains a draft for explicit review instead of overwriting it. No edit is a no-op. Disposing a binding unregisters it; clients flush before retiring a view. Unix recovery metadata uses owner-only directory access.

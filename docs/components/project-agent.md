@@ -22,6 +22,8 @@ This remains cooperative local ownership. Another process running as the same OS
 
 MCP `tools/list` exports version-matched operation schemas from the actual typed transport models. `context` returns current document IDs/revisions, dirty/external state, selection and the operation catalog. `scene_read` pages at most 128 stable typed objects; `code_read` pages at most 8192 UTF-16 characters and preserves surrogate boundaries. This is discovery of the supported authoring operations, not a claim of runtime-wide semantic API search.
 
+The [Git-backed project memory contract](../decisions/agent-native.md#git-backed-project-memory) adds project-owned documentation, a development journal and fresh-client bootstrap as the next stage-4 slice. The current `context` result does not include Git status, project instructions, Markdown documents or journal entries; operations cannot edit/publish those documents or create commits. Conversation reconnect resumes the current executor's history; it does not establish provider-independent continuation from the game repository. An external Worklog plugin or provider-private memory is not a product prerequisite.
+
 | Operation | Executed contract |
 | --- | --- |
 | `context`, `scene_read`, `code_read` | Copy current unsaved state after flushing pending native source. |
