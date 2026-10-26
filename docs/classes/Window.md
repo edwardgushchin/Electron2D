@@ -790,7 +790,7 @@ GPU shutdown failure separately.
 The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
 checks real `1 -> 1.25 -> 1` transitions in independent root/child windows, including
 physical descendants, committed viewport dimensions and rendered pixels. Compatibility
-rendering passes with CPU/GPU physics; ordinary decorated GPU presentation remains
+rendering passes with CPU/GPU physics; ordinary FIFO GPU presentation remains
 open after a native SDL/NVIDIA acquisition stall. Physical display metrics are a
 separate capability.
 

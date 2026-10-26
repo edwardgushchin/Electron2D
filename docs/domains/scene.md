@@ -371,7 +371,7 @@ WindowNotificationTests exercises eight event kinds through embedded/public and 
 dummy routes plus 1024 zero-byte warmed operations. The
 [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
 verifies root/child DPI delivery, physical identity and compatibility-renderer pixels;
-ordinary decorated GPU presentation remains open after an SDL/NVIDIA acquisition stall.
+ordinary FIFO GPU presentation remains open after an SDL/NVIDIA acquisition stall.
 Physical display metrics and HDR output retain separate prerequisites; see
 [window runtime](../components/window-runtime.md#containing-window-notifications).
 

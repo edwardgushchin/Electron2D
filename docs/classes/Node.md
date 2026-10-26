@@ -1830,7 +1830,7 @@ delivery; manual DispatchNotification does not create a native event.
 
 The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
 checks committed viewport dimensions and physical descendants in independent root/child
-windows. Compatibility rendering passes; native decorated GPU presentation remains
+windows. Compatibility rendering passes; native FIFO GPU presentation remains
 open after a reproduced SDL/NVIDIA acquisition stall. This notification remains Partial.
 
 ### NotificationWmPositionChanged

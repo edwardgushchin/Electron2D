@@ -163,7 +163,7 @@
     {
       "electron2d": "event:Electron2D.DisplayServer.WindowDpiChanged()",
       "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE",
-      "reason": "Typed WindowDpiChanged follows SDL effective window-scale changes, matching the pinned native scale producers under ADR 0044. Existing root event evidence and the isolated compositor root/child consumer verify real transitions and committed viewport state with physical descendants and compatibility-renderer pixels. Ordinary decorated GPU presentation stalls in native SDL/NVIDIA swapchain acquisition, including before a scale transition; complete native presentation qualification remains open. This is not a physical display-DPI query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
+      "reason": "Typed WindowDpiChanged follows SDL effective window-scale changes, matching the pinned native scale producers under ADR 0044. Existing root event evidence and the isolated compositor root/child consumer verify real transitions and committed viewport state with physical descendants and compatibility-renderer pixels. FIFO GPU presentation on the isolated Mutter compositor stalls in native SDL/NVIDIA swapchain acquisition, including before a scale transition; complete native presentation qualification remains open. This is not a physical display-DPI query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "electron2d": "event:Electron2D.DisplayServer.WindowRectChanged()",
@@ -1345,7 +1345,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Typed WindowDpiChanged follows SDL effective window-scale changes, matching the pinned native scale producers under ADR 0044. Existing root event evidence and the isolated compositor root/child consumer verify real transitions and committed viewport state with physical descendants and compatibility-renderer pixels. Ordinary decorated GPU presentation stalls in native SDL/NVIDIA swapchain acquisition, including before a scale transition; complete native presentation qualification remains open. This is not a physical display-DPI query. See docs/components/window-runtime.md#native-dpi-scale-reproduction.",
+      "reason": "Typed WindowDpiChanged follows SDL effective window-scale changes, matching the pinned native scale producers under ADR 0044. Existing root event evidence and the isolated compositor root/child consumer verify real transitions and committed viewport state with physical descendants and compatibility-renderer pixels. FIFO GPU presentation on the isolated Mutter compositor stalls in native SDL/NVIDIA swapchain acquisition, including before a scale transition; complete native presentation qualification remains open. This is not a physical display-DPI query. See docs/components/window-runtime.md#native-dpi-scale-reproduction.",
       "godot": [
         "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"
       ]

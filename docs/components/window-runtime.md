@@ -196,6 +196,51 @@ and native stack remain evidence, not passing qualification. DPI coverage stays
 Partial and the inherited physics declaration ratio remains 1,336/1,369 (97.59%).
 The cause of the native wait, foreign hosts and owner visual acceptance remain open.
 
+### Standalone native presentation control
+
+`tools/ci/native_window_scale.c` removes the engine, managed runtime, physics,
+shaders and offscreen blits from the reproduction. It clears one or two SDL GPU
+swapchains directly, pumps native events and uses the same isolated compositor
+helper for the real `1 -> 1.25 -> 1` transition. Each phase checks one notification
+per window, committed scale and presented texture dimensions after eight further
+frames. A 30-second process alarm bounds a native wait; it is a diagnostic deadline,
+not a frame-time target. This control does not read pixels or replace the public
+physical consumer's image/query checks.
+
+Compile on Linux with matching SDL headers and the pinned native library from a
+qualified output; no installed system SDL library is selected by this command:
+
+```bash
+scale_native_dir="/absolute/qualified/output/runtimes/linux-x64/native"
+cc -std=c11 -O2 -g -Wall -Wextra -Werror tools/ci/native_window_scale.c \
+  "$scale_native_dir/libSDL3.so.0" -Wl,-rpath,"$scale_native_dir" \
+  -o /absolute/path/native-window-scale
+python3 -B tests/PhysicsBackendExtension.Consumer/wayland_dpi.py \
+  /absolute/path/native-window-scale /absolute/new/output
+```
+
+`ELECTRON2D_DPI_PROBE_SINGLE=1` selects one window;
+`ELECTRON2D_DPI_PROBE_MAILBOX=1` explicitly requests Mailbox and rejects unsupported
+selection. Neither option changes the engine's presentation policy. The native
+control requires the helper's fresh control directory; standalone invocation fails.
+
+The 2026-10-26 control uses the same packaged SDL 3.4.18 and NVIDIA 615.71.09 with
+Mutter 51.0/libdecor 0.2.5. FIFO stalls with one or two windows. A two-window FIFO
+case with libdecor disabled also stalls, so decorations are not a necessary cause;
+the earlier successful undecorated engine control was insufficient to establish
+that distinction. Mailbox completes the same native scale/presentation round trip.
+A server-only protocol trace stops after FIFO barrier waits. These observations
+isolate a native presentation-mode difference; they do not distinguish an SDL,
+driver, protocol or compositor defect. Immediate mode is reported unsupported.
+Attempted PipeWire capture controls did not obtain a consuming stream and do not
+establish whether a continuously consumed headless output changes the result.
+
+Receipts and source/library/payload identities are under
+`bin/native-scale-presentation/2026-10-26/`. Passing Mailbox is a diagnostic
+control, not FIFO qualification. Keep notification 1009 Partial, preserve selected
+VSync and investigate the native FIFO path. No runtime workaround or coverage-state
+change accompanies this control.
+
 Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.
 
 [Exclusive transient selection](popup-windows.md#active-exclusive-window-chains) now
