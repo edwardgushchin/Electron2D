@@ -1,8 +1,8 @@
 # Range
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
-**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [Slider](Slider.md), [TextureProgressBar](TextureProgressBar.md)
+**Inherits:** [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [Slider](Slider.md), [ScrollBar](ScrollBar.md), [SpinBox](SpinBox.md), [ProgressBar](ProgressBar.md), [TextureProgressBar](TextureProgressBar.md)
 
 **Declaration:** `public abstract class Range : Control` · **Source:** [Range.cs](../../src/Scene/GUI/Range.cs) · **Component:** [Canvas rendering](../components/canvas-rendering.md)
 
@@ -78,3 +78,5 @@ Groups store weak owners and release links on disposal; snapshots retain owners 
 SpinBox uses the same internal min-offset/step/rounded/Page/bounds calculation for its custom arrow grid, then writes through the ordinary shared value pass. Range sharing/event/lifetime semantics remain the numeric source of truth. See [numeric input](../components/numeric-input.md) for the exercised workflow and limits.
 
 Configuration-warning queries and inherited refresh requests permit the owner/current processing group; retained authoring operations keep their existing guards. See [grouped diagnostics](../components/canvas-rendering.md#grouped-canvas-modulation-and-diagnostics).
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.

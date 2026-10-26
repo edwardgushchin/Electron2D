@@ -47,6 +47,11 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateSetBounds(RID id, Rect2 rect)` | [UpdateSetBounds](#updatesetbounds) |
 | `public static void UpdateSetTransform(RID id, Transform transform)` | [UpdateSetTransform](#updatesettransform) |
 | `public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)` | [UpdateAddAction](#updateaddaction) |
+| `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<double> callback)` | [UpdateAddAction](#updateaddaction) |
+| `public static void UpdateSetNumValue(RID id, double position)` | [Numeric values](#numeric-values) |
+| `public static void UpdateSetNumRange(RID id, double min, double max)` | [Numeric values](#numeric-values) |
+| `public static void UpdateSetNumStep(RID id, double step)` | [Numeric values](#numeric-values) |
+| `public static void UpdateSetNumJump(RID id, double jump)` | [Numeric values](#numeric-values) |
 | `public static void UpdateSetFocus(RID id)` | [UpdateSetFocus](#updatesetfocus) |
 | `public static void SetWindowFocused(int windowID, bool focused)` | [SetWindowFocused](#setwindowfocused) |
 | `public static void SetWindowRect(int windowID, Rect2 rectOut, Rect2 rectIn)` | [SetWindowRect](#setwindowrect) |
@@ -57,7 +62,7 @@ A custom producer can create an element, set its name/bounds, register an Action
 | --- | --- |
 | [AccessibilityRole](AccessibilityServer.AccessibilityRole.md) | All 48 semantic role selectors and native role projections. |
 | [AccessibilityFlags](AccessibilityServer.AccessibilityFlags.md) | Ten independent state/geometry selectors. |
-| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Click, Focus and Blur; broader action family remains incomplete. |
+| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Click, Focus, Blur, Decrement, Increment and numeric SetValue; broader payloads remain incomplete. |
 
 ## Method descriptions
 
@@ -164,7 +169,7 @@ Sets the affine transform applied to the element's bounds. The matrix and result
 
 `public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)`
 
-Registers or replaces a borrowed compiled Action for Click, Focus or Blur. No-argument dispatch is deliberate; payload-carrying actions are absent until their typed native consumer exists. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
+Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Decrement or Increment. The Action<double> overload accepts numeric SetValue only. Other payload signatures await their real native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
 
 <a id="updatesetfocus"></a>
 ### UpdateSetFocus
@@ -191,4 +196,13 @@ Supplies separate outer/decorated and inner/client rectangles in screen coordina
 
 Closing a native child window retires all its elements, including unattached ones. Display teardown removes native registrations, connection/context ownership, callbacks and RID membership even after callback or notification failure. Reopening creates a new bridge and new element identities. Protected `ValidateDisposal()` rejects disposal of the permanent service.
 
-[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profile covers Accessible/Application/Component/Action/Cache. Native text, value, table, richer relationships and payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
+[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profile covers Accessible/Application/Component/Action/Value/Cache. Native text, color values, table, richer relationships and remaining payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
+
+<a id="numeric-values"></a>
+### Numeric values
+
+UpdateSetNumValue publishes the actual double and enables the native Value interface. It preserves IEEE values, including NaN already retained by a Range. UpdateSetNumRange requires finite min <= max; UpdateSetNumStep and UpdateSetNumJump require finite nonnegative amounts. Configuration can precede the first value; it never clamps or changes the producer itself. Repeated equal values, including NaN, suppress redundant output.
+
+The Action<double> overload of UpdateAddAction accepts SetValue only. A native CurrentValue write passes a finite requested value to that callback on the display owner. The callback owns mutation and publication; successful invocation does not invent a result. No-argument registration accepts Click/Focus/Blur/Decrement/Increment and rejects SetValue. Positive jump plus numeric callback exposes page-decrement/page-increment native actions using the current published value. Zero jump removes them. Value Text formats the number on query; SpinBox uses its displayed affixes/numerals.
+
+Automatic Range descendants publish values, authored bounds, positive Step or one, and Page as jump. Slider, ScrollBar, SpinBox and progress displays have their native roles. ProgressBar/TextureProgressBar and non-editable Slider/SpinBox reject writes and step/page actions. Hidden/disabled/detached/queued/retired controls also reject requests. Ordinary Value policy owns snapping, rounding, page caps, shared peers, protected hooks and ValueChanged. Native writes reject nonfinite requests before invoking a callback; callback failures propagate through the pump's aggregate policy. Source updates publish after ordinary scene processing; custom NotificationAccessibilityUpdate overrides survive until the corresponding source field changes.

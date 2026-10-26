@@ -54,6 +54,7 @@ internal static unsafe partial class GIONative
     [LibraryImport(GLib)] internal static partial nint g_variant_new_double(double value);
     [LibraryImport(GLib)] internal static partial nint g_variant_get_child_value(nint value, nuint index);
     [LibraryImport(GLib)] internal static partial nint g_variant_get_string(nint value, out nuint length);
+    [LibraryImport(GLib)] internal static partial double g_variant_get_double(nint value);
     [LibraryImport(GLib)] internal static partial int g_variant_get_int32(nint value);
     [LibraryImport(GLib)] internal static partial uint g_variant_get_uint32(nint value);
     [LibraryImport(GLib)] internal static partial int g_variant_get_boolean(nint value);

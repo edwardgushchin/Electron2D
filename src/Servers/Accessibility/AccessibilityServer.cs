@@ -20,7 +20,11 @@ public sealed partial class AccessibilityServer : ElectronObject
         internal AccessibilityRole SourceRole;
         internal ulong SourceFlags;
         internal bool SourceChecked, SourcePrepared, SourceCanFocus;
-        internal Action? SourceFocusAction, SourceBlurAction, SourceClickAction;
+        internal Action? SourceFocusAction, SourceBlurAction, SourceClickAction, SourceIncrementAction, SourceDecrementAction;
+        internal Action<double>? SetValueAction, SourceSetValueAction;
+        internal bool HasNumericValue, SourceNumericPrepared, SourceCanEdit;
+        internal double NumericValue, NumericMinimum, NumericMaximum, NumericStep, NumericJump;
+        internal (double Value, double Minimum, double Maximum, double Step, double Jump) SourceNumeric;
 
         internal bool OwnedSubelement, IsApplication, IsWindow, Focused, Checked, Retired, ScreenOriginKnown, WindowFocused;
         internal Rect2 OuterRect, InnerRect;
@@ -167,7 +171,7 @@ public sealed partial class AccessibilityServer : ElectronObject
             var index = parent.Children.IndexOf(e); parent.Children.RemoveAt(index);
             try { _native!.ChildrenChanged(parent, e, false, index); } catch (Exception error) { (errors ??= []).Add(error); }
         }
-        e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = null;
+        e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
         e.Retired = true; e.Actions.Clear(); _elements.Remove(e.ID);
         try { _native!.Unregister(e); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Accessibility element retirement failed.", errors);
@@ -207,6 +211,7 @@ public sealed partial class AccessibilityServer : ElectronObject
         ValidateFlag(flag); var r = Require(); var e = r.Get(id); if (e.Flag(flag) == value) return;
         if (value) e.Flags |= 1UL << (int)flag; else e.Flags &= ~(1UL << (int)flag);
         r._native!.StateChanged(e, flag, value);
+        if (flag == AccessibilityFlags.ReadOnly && e.HasNumericValue) r._native.ActionsChanged(e);
     }
     /// <summary>Updates a checkable element's current checked state.</summary><param name="id">Element.</param><param name="isChecked">New checked state.</param>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
@@ -239,7 +244,7 @@ public sealed partial class AccessibilityServer : ElectronObject
         if (!transform.IsFinite()) throw new ArgumentOutOfRangeException(nameof(transform));
         var r = Require(); var e = r.Get(id); if (!TransformBounds(e.Bounds, transform).IsFinite() || !TransformBounds(e.Bounds, transform).End.IsFinite()) throw new ArgumentOutOfRangeException(nameof(transform)); if (e.Transform == transform) return; e.Transform = transform; r._native!.BoundsChanged(e);
     }
-    /// <summary>Registers a compiled no-argument activation or focus callback.</summary><param name="id">Element.</param><param name="action">Action kind.</param><param name="callback">Borrowed callback run on the display owner.</param>
+    /// <summary>Registers a compiled no-argument activation, focus or numeric step callback.</summary><param name="id">Element.</param><param name="action">Action kind.</param><param name="callback">Borrowed callback run on the display owner.</param>
     /// <exception cref="NotSupportedException">No supported native display bridge is active.</exception>
     /// <exception cref="KeyNotFoundException">An element identity is absent, retired or belongs to another owner.</exception>
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
@@ -247,7 +252,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="ArgumentNullException">A required text or callback argument is null.</exception>
     public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)
     {
-        ArgumentNullException.ThrowIfNull(callback); if (action is < AccessibilityAction.Click or > AccessibilityAction.Blur) throw new ArgumentOutOfRangeException(nameof(action));
+        ArgumentNullException.ThrowIfNull(callback); if (action is not (AccessibilityAction.Click or AccessibilityAction.Focus or AccessibilityAction.Blur or AccessibilityAction.Decrement or AccessibilityAction.Increment)) throw new ArgumentOutOfRangeException(nameof(action));
         var r = Require(); var e = r.Get(id); e.Actions[action] = callback; r._native!.ActionsChanged(e);
     }
     /// <summary>Publishes the currently focused semantic element.</summary><param name="id">A live element.</param>
@@ -307,7 +312,7 @@ public sealed partial class AccessibilityServer : ElectronObject
             foreach (var e in r._elements.Values)
             {
                 e.Retired = true; e.Actions.Clear(); e.Children.Clear(); e.Parent = null; e.Source = null;
-                e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = null;
+                e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
             }
             r._elements.Clear(); r._windows.Clear(); r.Application.Children.Clear();
         }

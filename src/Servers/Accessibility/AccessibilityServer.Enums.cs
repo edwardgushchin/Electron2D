@@ -128,7 +128,7 @@ public sealed partial class AccessibilityServer
         ClipsChildren = 9,
     }
 
-    /// <summary>Identifies a no-argument semantic activation or focus request.</summary>
+    /// <summary>Identifies a compiled semantic action and its required callback payload.</summary>
     public enum AccessibilityAction
     {
         /// <summary>Activates the element.</summary>
@@ -137,5 +137,11 @@ public sealed partial class AccessibilityServer
         Focus = 1,
         /// <summary>Releases focus.</summary>
         Blur = 2,
+        /// <summary>Requests one semantic numeric decrement using a no-argument callback.</summary>
+        Decrement = 5,
+        /// <summary>Requests one semantic numeric increment using a no-argument callback.</summary>
+        Increment = 6,
+        /// <summary>Requests a numeric value using an Action&lt;double&gt; callback.</summary>
+        SetValue = 20,
     }
 }

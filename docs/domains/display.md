@@ -127,3 +127,5 @@ The [loading-image slice](../components/boot-images.md) now carries authored mai
 ## Native semantic output
 
 [Native accessibility](../components/accessibility.md) owns the static AccessibilityServer service, real Linux AT-SPI application registration, typed semantic tree and display-owner callbacks. Native windows own their root lifetime. Automatic scene output reuses GUI focus/activation and stored Control metadata; optional host libraries and unsupported target profiles remain explicit. [ADR 0114](../decisions/accessibility.md#adr-0114) defines its boundary.
+
+Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress state, typed numeric writes and small/page actions. Requests reuse ordinary Range mutation and shared notifications; progress displays and non-editable inputs are read-only. See [ADR 0114](../decisions/accessibility.md#adr-0114) and [the accessibility component](../components/accessibility.md) for exact protocol and verification limits.

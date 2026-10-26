@@ -191,6 +191,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LINKED_SCENES") is { } l
 }
 
 if (args.Length == 2 && args[0] == "--accessibility-scene") { AccessibilityFoundationTests.ReadScene(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY_VALUES") is { } valueBackend) { AccessibilityValueTests.Run(valueBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "lifetimes") { AccessibilityFoundationTests.RunLifetimes(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") == "managed") { AccessibilityFoundationTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") is "gpu" or "compatibility" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ACCESSIBILITY") is { } accessibilityBackend) { AccessibilityFoundationTests.RunNative(accessibilityBackend); return; }

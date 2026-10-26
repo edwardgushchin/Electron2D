@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public sealed partial class AccessibilityServer
 {
+    internal static Control FocusSource(Control control) => control is SpinBox spin ? spin.GetLineEdit() : control;
     internal static Element? TryGetSource(RID id, Node node) => Runtime._elements.TryGetValue(id, out var e) && !e.Retired && e.Source == node ? e : null;
     internal static Element? SourceElement(Node node) => TryGetSource(node.AccessibilityIdentity, node);
     internal static Element BindSource(RID id, Node node)
@@ -10,14 +11,21 @@ public sealed partial class AccessibilityServer
         e.Source = node;
         if (node is Control control)
         {
-            e.SourceFocusAction = control.GrabAccessibilityFocus; e.SourceBlurAction = control.ReleaseFocus;
+            var focusSource = FocusSource(control);
+            e.SourceFocusAction = focusSource.GrabAccessibilityFocus; e.SourceBlurAction = focusSource.ReleaseFocus;
             if (node is BaseButton button) e.SourceClickAction = button.ActivateAccessibility;
+            if (node is Range range)
+            {
+                e.SourceSetValueAction = value => range.Value = value;
+                e.SourceIncrementAction = () => range.Value += range.Step > 0 ? range.Step : 1;
+                e.SourceDecrementAction = () => range.Value -= range.Step > 0 ? range.Step : 1;
+            }
         }
         return e;
     }
     internal static void UpdateSourceActions(Element e, Control control)
     {
-        var focus = control.CanReceiveGUIFocus;
+        var focus = FocusSource(control).CanReceiveGUIFocus;
         if (!e.SourcePrepared || focus != e.SourceCanFocus)
         {
             e.SourceCanFocus = focus;

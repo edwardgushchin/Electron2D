@@ -1,6 +1,6 @@
 # Slider
 
-Last updated: 2026-09-27
+Last updated: 2026-10-26
 
 **Inherits:** [Range](Range.md), [Control](Control.md), CanvasItem, Node, ElectronObject · **Inherited By:** [HSlider](HSlider.md), [VSlider](VSlider.md)
 
@@ -90,3 +90,5 @@ Motion uses displacement from the press origin and the highlighted grabber's tra
 Stored state includes slider properties and inherited Range/Control/theme values, not active dragging, hover, pending repeat or event subscribers. Exact HSlider/VSlider factories preserve their fixed axis. Owner-thread/capture/lifetime guards apply to state changes and input. Invalid drawing resources or computed nonfinite geometry fail through the existing retained recording contract, which clears failed partial recordings.
 
 SliderTests verifies defaults, themed geometry/ticks, drag/shared signals including nested peer gestures, keyboard/wheel/joypad repeat, lifecycle and packing. Reused drag events and viewport-routed keyboard actions allocate zero managed bytes across 64 measured cycles after 64 warmup cycles. SliderRenderingTests passes eight pixel/input phases through queued SDL events and the real DisplayServer/SceneTree GUI path on Linux Wayland GPU and compatibility; 64 measured active frames after 64 warmup frames allocate zero managed bytes from ProcessFrameStarted through FramePostDraw. Font resources remain a separate text dependency; the first semantic accessibility service must publish the Slider role and inherited Range value/bounds/editable metadata. Physical controller hardware, native allocator counts, broad GUI performance, other platforms and owner acceptance are not implied by managed input or native pixel tests. See [coverage](../coverage/classes/Slider.md), [ADR 0080](../decisions/rendering.md#adr-0080) and [ADR 0083](../decisions/rendering.md#adr-0083).
+
+Native numeric accessibility follows [ADR 0114](../decisions/accessibility.md#adr-0114) and [AccessibilityServer numeric values](AccessibilityServer.md#numeric-values). Automatic output publishes the current value, bounds and semantic step. Native requests reuse the ordinary Range.Value policy; progress displays and non-editable inputs are read-only. Page supplies native page actions for editable producers. Text editing/selection is a separate protocol.

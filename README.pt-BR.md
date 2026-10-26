@@ -1,6 +1,6 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · Português (BR)</p>
 
-A acessibilidade nativa no Linux publica nomes, papéis, estados e ações de botões e foco via AT-SPI. Defina `ProjectSettings.AccessibilitySupport` antes de abrir uma janela; os protocolos de texto, valores e tabelas e os adaptadores de outras plataformas continuam em desenvolvimento.
+A acessibilidade nativa no Linux publica nomes, papéis, estados, ações de botões e foco e valores numéricos de Range via AT-SPI. Slider, ScrollBar e SpinBox editáveis aceitam solicitações numéricas; indicadores de progresso são somente leitura. Defina `ProjectSettings.AccessibilitySupport` antes de abrir uma janela; os protocolos de texto e tabelas e os adaptadores de outras plataformas continuam em desenvolvimento.
 
 <h1 align="center">
   <picture>
