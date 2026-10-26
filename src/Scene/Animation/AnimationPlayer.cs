@@ -47,6 +47,7 @@ public partial class AnimationPlayer : AnimationMixer
     private void StopDeferred() { if (!IsDisposed && _playing) Stop(); }
 
     /// <summary>Gets or sets the name started on the ready notification; empty disables autoplay.</summary>
+    /// <remarks>Editor authoring preserves the name without automatic startup. Explicit Play and Queue remain available.</remarks>
     public string Autoplay { get { ThrowIfDisposed(); return _autoplay; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _autoplay = value; } }
     /// <summary>Gets the complete selected resource duration, or zero without a selection.</summary>
     public double CurrentAnimationLength { get { ThrowIfDisposed(); return HasAnimation(_assigned) ? GetAnimation(_assigned).Length : 0; } }
@@ -224,7 +225,7 @@ public partial class AnimationPlayer : AnimationMixer
         if (!done) return;
         _playing = false; _playRevision++; var completedRevision = _playRevision;
         Finished(name); if (IsDisposed || completedRevision != _playRevision) return;
-        var next = _queue.Count > 0 ? _queue.Dequeue() : _next.GetValueOrDefault(name, "");
+        var next = _queue.Count > 0 ? _queue.Dequeue() : IsInsideTree && Engine.IsEditorHint ? "" : _next.GetValueOrDefault(name, "");
         if (next.Length == 0 || !HasAnimation(next)) return;
         var queuedNames = _queue.ToArray(); Play(next); foreach (var queued in queuedNames) _queue.Enqueue(queued);
         if (!IsDisposed) BeginEventEmission(_publisherAnimationChanged.Handlers)?.Invoke(name, next);
@@ -241,7 +242,7 @@ public partial class AnimationPlayer : AnimationMixer
         var reversed = IsNotificationReversed;
 
         if (!reversed) base.OnNotification(what);
-        if (!IsDisposed && what == NotificationReady && _autoplay.Length != 0 && HasAnimation(_autoplay)) Play(_autoplay);
+        if (!IsDisposed && what == NotificationReady && !Engine.IsEditorHint && _autoplay.Length != 0 && HasAnimation(_autoplay)) Play(_autoplay);
 
         if (reversed) base.OnNotification(what);
     }

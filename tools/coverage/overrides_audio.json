@@ -3978,8 +3978,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Runtime EnterTree autoplay executes; editor-hint suppression requires the missing Engine editor-hint lifecycle and first editor host (ADRs 0027/0047).",
+      "state": "Implemented",
+      "reason": "ADR 0047/0015: existing stream and native sample transport, spatial routing and typed source API execute. The host authoring hint now suppresses autoplay while preserving stored flags and explicit Play, including pending first-step spatial startup and lazy nonspatial output preparation. EditorHintTests and existing audio sample/spatial checks exercise actual Stream/Sample PCM and current rendered backends, lifecycle/failure and warmed owner frames. Human listening, native-heap, foreign-platform and package acceptance remain separate.",
       "godot": [
         "AudioStreamPlayer::property:autoplay"
       ]
@@ -4415,8 +4415,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0047: spatial stream and native sample paths execute. Remaining trigger: Engine editor-hint lifecycle and first editor host for autoplay suppression.",
+      "state": "Implemented",
+      "reason": "ADR 0047/0015: existing stream and native sample transport, spatial routing and typed source API execute. The host authoring hint now suppresses autoplay while preserving stored flags and explicit Play, including pending first-step spatial startup and lazy nonspatial output preparation. EditorHintTests and existing audio sample/spatial checks exercise actual Stream/Sample PCM and current rendered backends, lifecycle/failure and warmed owner frames. Human listening, native-heap, foreign-platform and package acceptance remain separate.",
       "godot": [
         "AudioStreamPlayer2D::property:autoplay",
         "class:AudioStreamPlayer2D"
@@ -4470,8 +4470,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0047: native stream/bus output, procedural/recording sources and prepared lookahead/transition PCM execute. Remaining player dependencies are sample registration and editor-hint autoplay suppression. Physical listening and other platforms remain unverified.",
+      "state": "Implemented",
+      "reason": "ADR 0047/0015: existing stream and native sample transport, spatial routing and typed source API execute. The host authoring hint now suppresses autoplay while preserving stored flags and explicit Play, including pending first-step spatial startup and lazy nonspatial output preparation. EditorHintTests and existing audio sample/spatial checks exercise actual Stream/Sample PCM and current rendered backends, lifecycle/failure and warmed owner frames. Human listening, native-heap, foreign-platform and package acceptance remain separate.",
       "godot": [
         "class:AudioStreamPlayer"
       ]

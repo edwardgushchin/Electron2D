@@ -29,6 +29,7 @@ public sealed class AudioStreamEmitter : Entity
     /// <summary>Gets or sets the borrowed stream; replacement stops prepared voices.</summary>
     public AudioStream? Stream { get { Check(); return _player.Stream; } set { EnsureMutable(); _player.Stream = value; } }
     /// <summary>Gets or sets automatic playback at the first fixed scene step after entry.</summary>
+    /// <remarks>Editor authoring suppresses automatic startup without changing this flag; explicit Play remains available.</remarks>
     public bool Autoplay { get { Check(); return _autoplay; } set { EnsureMutable(); _autoplay = value; } }
     /// <summary>Gets or sets the pause state of active voices.</summary>
     /// <remarks>Stream pause prepares a final fade before freezing cursors; native sample pause stops without flushing its buffer.</remarks>
@@ -183,14 +184,14 @@ public sealed class AudioStreamEmitter : Entity
         if (!reversed) base.OnNotification(what);
         if (what == NotificationEnterTree)
         {
-            _autoplayPending = _autoplay;
+            _autoplayPending = _autoplay && !Engine.IsEditorHint;
             SetInternalProcessing(false, true);
         }
         else if (what == NotificationExitTree) _autoplayPending = false;
         else if (what == NotificationInternalPhysicsProcess)
         {
             RefreshSpatial(queryArea: true);
-            if (_autoplayPending) { _autoplayPending = false; _player.Play(); }
+            if (_autoplayPending) { _autoplayPending = false; if (!Engine.IsEditorHint) _player.Play(); }
         }
 
         if (reversed) base.OnNotification(what);

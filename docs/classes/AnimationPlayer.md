@@ -1,6 +1,6 @@
 # AnimationPlayer
 
-Last updated: 2026-10-13
+Last updated: 2026-10-27
 
 **Inherits:** [AnimationMixer](AnimationMixer.md)
 
@@ -547,3 +547,5 @@ Named blend insertion/removal reports the updated tooling property list after co
 Returns a fresh, detached, childless exact-type node. Stored descriptors reconstruct authored libraries and settings. It does not capture the source or transfer its playback state. A derived type without an explicit factory throws NotSupportedException during packing.
 
 The inherited stored ResetOnSave policy executes through [PackedScene.PackForSave](PackedScene.md#packforsave). Ordinary Pack and runtime playback keep their prior behavior.
+
+[Editor authoring mode](Engine.md#editor-authoring-mode) preserves Autoplay while suppressing automatic startup. Explicit playback remains available; source timing, native transport and lifetime keep their ordinary contracts.

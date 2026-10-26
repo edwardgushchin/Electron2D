@@ -108,6 +108,7 @@ public sealed class VideoStreamPlayer : Control
         ThrowCollected("Video replacement cleanup or publication callbacks failed.", errors);
     }
     /// <summary>Gets or sets automatic playback when this control enters the scene.</summary>
+    /// <remarks>Editor authoring preserves this flag without starting playback; explicit Play remains available.</remarks>
     /// <value>False initially.</value>
     public bool Autoplay { get { Check(); return _autoplay; } set { EnsureMutable(); _autoplay = value; } }
     /// <summary>Gets or sets scaling to the complete control rectangle.</summary>
@@ -323,7 +324,7 @@ public sealed class VideoStreamPlayer : Control
                         if (what == NotificationEnterTree)
                         {
                             _ownMutation = true; try { SetInternalProcessing(true, false); } finally { _ownMutation = false; }
-                            if (_autoplay) PlayCore(); else RefreshPause();
+                            if (_autoplay && !Engine.IsEditorHint) PlayCore(); else RefreshPause();
                         }
                         else if (what == NotificationExitTree) StopCore();
                         else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) RefreshPause();

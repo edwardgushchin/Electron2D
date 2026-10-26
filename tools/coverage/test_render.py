@@ -477,6 +477,15 @@ def main():
     container_rows = [row for row in pages[CLASS_PAGES / "Container.md"].splitlines() if row.startswith("| [`")]
     assert len(container_rows) == 12
     assert all(" | Implemented | " in row for row in container_rows)
+    engine_rows = pages[CLASS_PAGES / "Engine.md"].splitlines()
+    assert " | Implemented | " in next(row for row in engine_rows if "method is_editor_hint(" in row)
+    for owner in ("AudioStreamPlayer", "AudioStreamPlayer2D"):
+        rows = pages[CLASS_PAGES / (owner + ".md")].splitlines()
+        assert " | Implemented | " in next(row for row in rows if "property bool autoplay " in row)
+    sprite_frames = pages[CLASS_PAGES / "SpriteFrames.md"].splitlines()
+    for name in ("get_animation_loop", "set_animation_loop"):
+        row = next(row for row in sprite_frames if f"method {name}(" in row)
+        assert " | — | Excluded | " in row and "deprecated" in row
     accessibility_rows = [row for row in pages[CLASS_PAGES / "AccessibilityServer.md"].splitlines() if row.startswith("| [`")]
     assert " | Partial | " in next(row for row in accessibility_rows if "class AccessibilityServer" in row)
     assert all(" | Implemented | " in row for row in accessibility_rows if any(name in row for name in ("method create_element(", "method get_window_root(", "method update_set_bounds(")))
@@ -725,7 +734,7 @@ def main():
     assert "Electron2D.AudioStreamEmitter" in spatial_rows
     assert "../../classes/AudioStreamEmitter.md" in spatial_rows
     assert "Electron2D.AudioStreamPlayer2D" not in spatial_rows
-    assert " | Partial | " in next(row for row in spatial_rows.splitlines() if row.startswith("| [`class AudioStreamPlayer2D"))
+    assert " | Implemented | " in next(row for row in spatial_rows.splitlines() if row.startswith("| [`class AudioStreamPlayer2D"))
     assert all(" | Implemented | " in next(row for row in spatial_rows.splitlines() if row.startswith(f"| [`property float {name}"))
                for name in ("attenuation", "max_distance", "panning_strength"))
     viewport_rows = pages[CLASS_PAGES / "Viewport.md"]

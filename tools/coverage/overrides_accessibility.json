@@ -1217,7 +1217,7 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: numeric and string values have native consumers. Color value still requires a real color-picker source, typed color callback and native value/attribute/action protocol; it enters that complete color slice.",
+      "reason": "ADR 0114: ColorPicker and ColorPickerButton already execute, including ordinary numeric/hex controls. This method still needs a verified complete native RGBA value projection and typed color-write consumer integrated with those sources. AT-SPI Value accepts one scalar; the inspected Unix adapter does not project color_value. A stored color, invented packed numeric value or unconsumed attribute does not close this contract.",
       "godot": [
         "AccessibilityServer::method:update_set_color_value(RID:,Color:)"
       ]

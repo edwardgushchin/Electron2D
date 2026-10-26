@@ -1,6 +1,6 @@
 # Timer
 
-Last updated: 2026-10-02
+Last updated: 2026-10-27
 
 **Inherits:** [Node](Node.md)
 
@@ -368,3 +368,5 @@ ADR 0036 keeps typed positive-duration overloads while matching the pinned runti
 - [0036: Reusable Node timer and dual-delta frame delivery](../decisions/scene.md#adr-0036)
 
 GetConfigurationWarnings appends a cadence warning below 0.05 - Mathf.Epsilon seconds, including detached/stopped timers. Every valid WaitTime assignment requests refresh after commit; Start(duration) uses that setter before starting. A refresh handler that throws leaves the new duration and previous countdown; disposal/detachment during refresh prevents starting. SceneDiagnosticsTests verifies the threshold, repetition, reentry and failures.
+
+With [editor authoring mode](Engine.md#editor-authoring-mode), Autostart is suppressed only for timers in the selected EditedSceneRoot. The flag remains authored until an actual start; editor UI timers outside that subtree and explicit Start keep ordinary behavior.

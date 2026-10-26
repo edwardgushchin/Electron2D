@@ -74,7 +74,7 @@ AndroidGameActivity/AndroidWindowHost now produce actual framework system back r
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 [Failed initial collider preparation](components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now discards partial numerical readback while retaining common body authoring. Ordinary retirement still captures accepted motion; no production type or public declaration is added.
 
@@ -2293,3 +2293,5 @@ Control.AccessibilityDrag and SceneTree.AccessibilityDrag connect non-positional
 Control.AccessibilityContext adds the two native context hooks. AccessibilityServer.Context and ATSPIServer.Context reconcile retained help/container fragments, class/role attributes and query-time button/menu shortcuts within existing owners; no new production type or dependency is introduced. AccessibilityContextTests and its separate libatspi/GIO client exercise the complete source/protocol path.
 
 AccessibilityServer.Links adds UpdateSetURL and retained source URI snapshots within existing Element ownership. SceneAccessibility publishes LinkButton URIs; ATSPIServer.Relations/Protocol share internal/external anchor discovery and the native Int32 count ABI. AccessibilityURLTests and its independent libatspi/GIO client exercise source, authoring, activation and lifetime.
+
+Engine adds the transient IsEditorHint host property and retained descriptor, selected by editor/Program. Existing audio, sprite, animation, video and scoped timer owners consume it. SpriteFrames tracks private texture-cache memberships through existing Texture residency primitives; no new production type or native dependency is introduced. EditorHintTests covers the public host/source path; AnimatedSpriteTests covers borrowed cache lifetime.

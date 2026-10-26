@@ -4,8 +4,8 @@ Last updated: 2026-10-26
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1128 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 499 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
+1. Close 1124 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 498 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Live project and agent delivery
@@ -31,7 +31,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [RenderingDevice](classes/RenderingDevice.md) | 151 | 37 |
 | [OS](classes/OS.md) | 31 | 14 |
 | [TextServer](classes/TextServer.md) | 18 | 0 |
-| [Engine](classes/Engine.md) | 11 | 11 |
+| [Engine](classes/Engine.md) | 10 | 11 |
 | [Window](classes/Window.md) | 6 | 53 |
 | [ProjectSettings](classes/ProjectSettings.md) | 6 | 36 |
 | [AccessibilityServer](classes/AccessibilityServer.md) | 6 | 2 |
@@ -78,8 +78,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [ThemeDB](classes/ThemeDB.md) | 0 | 2 |
 | [AnimationNode](classes/AnimationNode.md) | 0 | 1 |
 | [AudioStream](classes/AudioStream.md) | 0 | 1 |
-| [AudioStreamPlayer](classes/AudioStreamPlayer.md) | 0 | 1 |
-| [AudioStreamPlayer2D](classes/AudioStreamPlayer2D.md) | 0 | 1 |
 | [CanvasLayer](classes/CanvasLayer.md) | 0 | 1 |
 | [FileDialog](classes/FileDialog.md) | 0 | 1 |
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | 0 | 1 |

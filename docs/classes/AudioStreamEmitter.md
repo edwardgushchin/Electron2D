@@ -1,6 +1,6 @@
 # AudioStreamEmitter
 
-Last updated: 2026-10-07
+Last updated: 2026-10-27
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -93,3 +93,5 @@ Animation audio bindings now prepare internal reusable child/native state and sh
 ## Viewport world integration
 
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
+
+[Editor authoring mode](Engine.md#editor-authoring-mode) preserves Autoplay while suppressing automatic startup. Explicit playback remains available; source timing, native transport and lifetime keep their ordinary contracts.

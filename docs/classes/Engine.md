@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-20
+Last updated: 2026-10-27
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
@@ -57,6 +57,7 @@ int exitCode = Engine.Run(window);
 | [`public static ulong PhysicsFrames { get; }`](#p-electron2d-engine-physicsframes) | Gets the number of fixed-step callbacks started since the process-wide engine was created. |
 | [`public static double FramesPerSecond { get; }`](#p-electron2d-engine-framespersecond) | Gets the most recently measured process-frame rate. |
 | [`public static double PhysicsInterpolationFraction { get; }`](#p-electron2d-engine-physicsinterpolationfraction) | Gets the fraction of the current fixed interval remaining after the latest scheduling decision. |
+| [`public static bool IsEditorHint { get; set; }`](#editor-authoring-mode) | Host-selected transient editor role. |
 | [`public static bool IsInPhysicsFrame { get; }`](#p-electron2d-engine-isinphysicsframe) | Gets whether the engine is executing a fixed-step callback. |
 | [`public static MainLoop MainLoop { get; }`](#p-electron2d-engine-mainloop) | Gets the currently attached application loop. |
 | [`public static string ArchitectureName { get; }`](#p-electron2d-engine-architecturename) | Gets the architecture targeted by the current Electron2D process. |
@@ -590,3 +591,11 @@ The snippet requires a detached `window` and registered `move` action. [Shared p
 ## Measured host-delta smoothing
 
 Ordinary owned Run/RunAsync sample the effective ProjectSettings.DeltaSmoothing into OS.DeltaSmoothing before scene readiness. The live thread-safe OS policy permits filtering only at stable effective classical VSync cadence, before jitter/catch-up and TimeScale. Each new loop resets confidence. Manual AdvanceFrame, explicit batch input and fixed movie cadence remain supplied input. FPS, frame-monitor sampling windows and pacing use raw measured elapsed time. See [the filter contract and executable evidence](../components/host-delta-smoothing.md).
+
+## Editor authoring mode
+
+Engine.IsEditorHint is a typed process-wide host property, initially false. The editor entry point sets it before constructing the UI. A separate game/scenario process starts with false, even when launched by the editor. Hosts performing scene authoring without editor UI may select true themselves. Atomic reads/writes work from any thread; the retained Engine property descriptor exposes the same transient value and does not store it in scenes. This is an advisory role, not editor detection, a permission boundary or a replacement scene loop.
+
+AudioStreamPlayer, AudioStreamEmitter, AnimatedSprite, AnimationPlayer and VideoStreamPlayer preserve their authored autoplay values while skipping automatic startup in authoring mode. Audio output preparation waits for explicit Play. Spatial autoplay checks scene entry and the pending first physics step. Explicit Play and ordinary lifecycle/processing still execute. Attached AnimationPlayer previews skip configured automatic next animations while honoring explicit Queue requests. Timer autostart is suppressed only inside the selected EditedSceneRoot when the hint is true; unrelated editor UI timers and explicit Start remain available. Metadata selection alone does not change runtime timer behavior. Changing the hint does not stop existing playback or retry skipped startup.
+
+EditorHintTests managed/native profiles exercise the host value and descriptor, thread visibility, authored startup preservation, explicit previews, scoped timers and callback failure/reopening. Both current renderers exercise Stream/Sample source transport, captured native PCM, decoded Theora pixels and prepared owner-frame intervals. A separate .NET startup-hook probe runs the actual editor entry point through scene frames and orderly Quit without selecting the hint itself. Source NativeAOT, package, native-heap, physical audio/display, foreign-platform and human acceptance remain distinct gates.

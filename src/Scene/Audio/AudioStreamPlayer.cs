@@ -46,7 +46,8 @@ public partial class AudioStreamPlayer : Node
         set { EnsureMutable(); if (value is { IsDisposed: true }) throw new ObjectDisposedException(nameof(value)); if (ReferenceEquals(_stream, value)) return; ReleaseVoices(); _parameters.Clear(); _stream = value; }
     }
     /// <summary>Gets or sets Autoplay configuration.</summary>
-    /// <value>False; actual EnterTree starts a configured stream.</value>
+    /// <value>False; actual EnterTree starts a configured stream outside editor authoring.</value>
+    /// <remarks>When Engine.IsEditorHint is true, startup preserves this flag and defers native output until explicit Play.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The numeric or enum value is invalid.</exception>
     /// <exception cref="InvalidOperationException">Access is off-owner/capture-owned or native configuration fails.</exception>
     /// <exception cref="ObjectDisposedException">The player is disposed.</exception>
@@ -351,10 +352,10 @@ public partial class AudioStreamPlayer : Node
             {
                 if (what == NotificationEnterTree)
                 {
-                    if (!_registered && !DeferOutputPreparation) { AudioServer.Service.Attach(this); _registered = true; }
+                    if (!_registered && !DeferOutputPreparation && !Engine.IsEditorHint) { AudioServer.Service.Attach(this); _registered = true; }
                     SetInternalProcessing(true, false);
                     PauseVoices(!CanProcess());
-                    if (_autoplay) Play();
+                    if (_autoplay && !Engine.IsEditorHint) Play();
                 }
                 else if (what == NotificationExitTree) { PauseVoices(true); }
                 else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled)

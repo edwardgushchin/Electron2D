@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A library of named animations containing borrowed textures and relative frame durations.</summary>
 /// <remarks>Starts with an empty default animation at five frames per second and linear looping. Frame edits
 /// emit Changed; animation-name, speed and loop edits do not. Sources are never disposed by the library.
-/// State access is serialized; notifications run after mutation outside the lock. Copies have independent containers.</remarks>
+/// State access is serialized; notifications run after mutation outside the lock. Copies have independent containers.
+/// Frame membership retains uploaded texture caches until removal or library disposal without disposing borrowed textures.</remarks>
 public sealed class SpriteFrames : Resource
 {
     /// <summary>Controls how playback behaves at an animation endpoint.</summary>
@@ -20,6 +21,7 @@ public sealed class SpriteFrames : Resource
     private readonly object _gate = new();
     private readonly Dictionary<string, (double Speed, LoopMode Loop, List<(Texture? Texture, float Duration)> Frames)> _animations = new(StringComparer.Ordinal);
     private readonly List<string> _order = [];
+    private readonly Dictionary<Texture, int> _residentTextures = new(ReferenceEqualityComparer.Instance);
 
     /// <summary>Creates the empty default animation.</summary>
     public SpriteFrames() { AddAnimation("default"); }
@@ -64,7 +66,9 @@ public sealed class SpriteFrames : Resource
         {
             var source = Require(from); ArgumentNullException.ThrowIfNull(to);
             if (_animations.ContainsKey(to)) throw new ArgumentException("The destination animation already exists.", nameof(to));
-            _animations.Add(to, (source.Speed, source.Loop, new(source.Frames))); _order.Add(to);
+            var frames = new List<(Texture? Texture, float Duration)>(source.Frames); RetainFrames(frames);
+            try { _animations.Add(to, (source.Speed, source.Loop, frames)); _order.Add(to); }
+            catch { foreach (var frame in frames) ReleaseTexture(frame.Texture); _animations.Remove(to); _order.Remove(to); throw; }
         }
     }
 
@@ -72,7 +76,7 @@ public sealed class SpriteFrames : Resource
     /// <param name="animation">The non-null name.</param>
     /// <exception cref="ArgumentNullException">The name is null.</exception>
     /// <exception cref="ObjectDisposedException">The library is disposed.</exception>
-    public void RemoveAnimation(string animation) { lock (_gate) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(animation); if (_animations.Remove(animation)) _order.Remove(animation); } }
+    public void RemoveAnimation(string animation) { lock (_gate) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(animation); if (_animations.Remove(animation, out var removed)) { foreach (var frame in removed.Frames) ReleaseTexture(frame.Texture); _order.Remove(animation); } } }
 
     /// <summary>Renames an animation, placing it last in insertion order, without emitting Changed.</summary>
     /// <param name="animation">The existing name.</param>
@@ -140,20 +144,6 @@ public sealed class SpriteFrames : Resource
     /// <exception cref="ObjectDisposedException">The library is disposed.</exception>
     public LoopMode GetAnimationLoopMode(string animation) { lock (_gate) return Require(animation).Loop; }
 
-    /// <summary>Sets Linear for true or None for false.</summary>
-    /// <param name="animation">The existing name.</param>
-    /// <param name="loop">Whether to use linear repetition.</param>
-    /// <remarks>Uses SetAnimationLoopMode validation and emits no Changed event.</remarks>
-    [Obsolete("Use SetAnimationLoopMode instead.")]
-    public void SetAnimationLoop(string animation, bool loop) => SetAnimationLoopMode(animation, loop ? LoopMode.Linear : LoopMode.None);
-
-    /// <summary>Tests whether the loop mode is Linear; PingPong returns false.</summary>
-    /// <param name="animation">The existing name.</param>
-    /// <returns>Whether the animation loops linearly.</returns>
-    /// <remarks>Uses GetAnimationLoopMode validation.</remarks>
-    [Obsolete("Use GetAnimationLoopMode instead.")]
-    public bool GetAnimationLoop(string animation) => GetAnimationLoopMode(animation) == LoopMode.Linear;
-
     /// <summary>Adds a borrowed frame and emits Changed.</summary>
     /// <param name="animation">The existing name.</param>
     /// <param name="texture">A live borrowed texture, or null for an empty frame.</param>
@@ -169,7 +159,9 @@ public sealed class SpriteFrames : Resource
         lock (_gate)
         {
             var frames = Require(animation).Frames; ValidateFrame(texture, duration);
-            frames.Insert(atPosition >= 0 && atPosition < frames.Count ? atPosition : frames.Count, (texture, Mathf.Max(0.01f, duration)));
+            RetainTexture(texture);
+            try { frames.Insert(atPosition >= 0 && atPosition < frames.Count ? atPosition : frames.Count, (texture, Mathf.Max(0.01f, duration))); }
+            catch { ReleaseTexture(texture); throw; }
         }
         EmitChanged();
     }
@@ -191,7 +183,8 @@ public sealed class SpriteFrames : Resource
         {
             var frames = Require(animation).Frames; ArgumentOutOfRangeException.ThrowIfNegative(index);
             if (index >= frames.Count) return;
-            ValidateFrame(texture, duration); frames[index] = (texture, Mathf.Max(0.01f, duration));
+            ValidateFrame(texture, duration); RetainTexture(texture); var previous = frames[index].Texture;
+            frames[index] = (texture, Mathf.Max(0.01f, duration)); ReleaseTexture(previous);
         }
         EmitChanged();
     }
@@ -204,7 +197,7 @@ public sealed class SpriteFrames : Resource
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the frame list.</exception>
     /// <exception cref="ObjectDisposedException">The library is disposed.</exception>
     /// <exception cref="Exception">A change handler throws after commitment.</exception>
-    public void RemoveFrame(string animation, int index) { lock (_gate) Require(animation).Frames.RemoveAt(index); EmitChanged(); }
+    public void RemoveFrame(string animation, int index) { lock (_gate) { var frames = Require(animation).Frames; var previous = frames[index].Texture; frames.RemoveAt(index); ReleaseTexture(previous); } EmitChanged(); }
 
     /// <summary>Returns the frame count of an existing animation.</summary>
     /// <param name="animation">The existing name.</param>
@@ -240,16 +233,44 @@ public sealed class SpriteFrames : Resource
     /// <exception cref="ArgumentNullException">The name is null.</exception>
     /// <exception cref="ObjectDisposedException">The library is disposed.</exception>
     /// <exception cref="Exception">A change handler throws after commitment.</exception>
-    public void Clear(string animation) { lock (_gate) Require(animation).Frames.Clear(); EmitChanged(); }
+    public void Clear(string animation) { lock (_gate) { var frames = Require(animation).Frames; foreach (var frame in frames) ReleaseTexture(frame.Texture); frames.Clear(); } EmitChanged(); }
 
     /// <summary>Removes every animation and recreates the empty default animation without emitting Changed.</summary>
     /// <exception cref="ObjectDisposedException">The library is disposed.</exception>
-    public void ClearAll() { lock (_gate) { ThrowIfDisposed(); _animations.Clear(); _order.Clear(); AddAnimation("default"); } }
+    public void ClearAll() { lock (_gate) { ThrowIfDisposed(); ReleaseTextures(); _animations.Clear(); _order.Clear(); AddAnimation("default"); } }
 
     private (double Speed, LoopMode Loop, List<(Texture? Texture, float Duration)> Frames) Require(string animation)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(animation);
         return _animations.TryGetValue(animation, out var result) ? result : throw new ArgumentException("The animation does not exist.", nameof(animation));
+    }
+
+    // Uploaded animation frames remain useful while any library entry borrows their texture.
+    private void RetainTexture(Texture? texture)
+    {
+        if (texture is null) return;
+        if (_residentTextures.TryGetValue(texture, out var count)) { _residentTextures[texture] = checked(count + 1); return; }
+        _residentTextures.Add(texture, 1);
+        try { texture.AcquireRendererCacheResidency(); }
+        catch (ObjectDisposedException) { _residentTextures.Remove(texture); }
+        catch { _residentTextures.Remove(texture); throw; }
+    }
+    private void ReleaseTexture(Texture? texture)
+    {
+        if (texture is null || !_residentTextures.TryGetValue(texture, out var count)) return;
+        if (count > 1) _residentTextures[texture] = count - 1;
+        else { _residentTextures.Remove(texture); texture.ReleaseRendererCacheResidency(); }
+    }
+    private void RetainFrames(List<(Texture? Texture, float Duration)> frames)
+    {
+        var retained = 0;
+        try { for (; retained < frames.Count; retained++) RetainTexture(frames[retained].Texture); }
+        catch { while (retained > 0) ReleaseTexture(frames[--retained].Texture); throw; }
+    }
+    private void ReleaseTextures()
+    {
+        foreach (var texture in _residentTextures.Keys) texture.ReleaseRendererCacheResidency();
+        _residentTextures.Clear();
     }
 
     private static void ValidateFrame(Texture? texture, float duration)
@@ -296,15 +317,15 @@ public sealed class SpriteFrames : Resource
         var copy = (SpriteFrames)target;
         lock (copy._gate)
         {
-            copy.ThrowIfDisposed(); copy._animations.Clear(); copy._order.Clear();
-            foreach (var animation in snapshot) { copy._animations.Add(animation.Key, animation.Value); copy._order.Add(animation.Key); }
+            copy.ThrowIfDisposed(); copy.ReleaseTextures(); copy._animations.Clear(); copy._order.Clear();
+            foreach (var animation in snapshot) { copy.RetainFrames(animation.Value.Frames); copy._animations.Add(animation.Key, animation.Value); copy._order.Add(animation.Key); }
         }
     }
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) lock (_gate) { _animations.Clear(); _order.Clear(); }
+        if (disposing) lock (_gate) { ReleaseTextures(); _animations.Clear(); _order.Clear(); }
         base.Dispose(disposing);
     }
 }

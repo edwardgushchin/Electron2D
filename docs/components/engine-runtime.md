@@ -2,7 +2,7 @@
 
 The Android activity retains actual framework back callbacks and transfers accepted requests to the existing owner pump without invoking scene code from the UI thread. [System back navigation](window-runtime.md#system-back-navigation) uses the ordinary Engine.RunAsync result, failure and owned teardown paths. Callback unregistration and SDL onCreate/onDestroy dispatch belong to the same activity lifetime.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 [Frame timing monitors](frame-monitors.md) observe completed execution using monotonic timestamps. Duration maxima publish once per unscaled host-second window; native process timing ends after presentation and before movie encoding/frame waits. Successful attachment resets samples; failed frames retain completed diagnostics.
 
@@ -105,3 +105,5 @@ Manual Start/AdvanceFrame/Stop interference still rejects. Exceptions from host 
 EngineBeforeFrameTests verifies all six new overloads on real local GPU/Compatibility hosts, original function-delegate bindings, first-frame state/delivery, quit-before-step, sync/async failure cleanup and per-run indices. Twenty-four warmup plus sixty-four full synchronous owner intervals execute with zero managed bytes. Movie readback and tool reporting remain cold work; native allocation totals, physical GPUs and foreign platforms are not inferred from that measurement.
 
 [Host delta smoothing](host-delta-smoothing.md) connects OS/project policy and effective native VSync to the ordinary owned clock before fixed-step synchronization. Manual and fixed movie input remain explicit; FPS, diagnostics and pacing use measured time.
+
+[Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.

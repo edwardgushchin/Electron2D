@@ -60,6 +60,7 @@ public sealed partial class Engine : ElectronObject
                 nameof(PhysicsInterpolationFraction),
                 engine => engine.PhysicsInterpolationFractionCore),
             new PropertyDescriptor<Engine, bool>(nameof(IsInPhysicsFrame), engine => engine.IsInPhysicsFrameCore),
+            new PropertyDescriptor<Engine, bool>(nameof(IsEditorHint), _ => IsEditorHint, (_, value) => IsEditorHint = value, _ => false),
             new PropertyDescriptor<Engine, string>(nameof(ArchitectureName), engine => engine.ArchitectureNameCore),
             new PropertyDescriptor<Engine, EngineVersionInfo>(nameof(VersionInfo), engine => engine.VersionInfoCore)
         ]);
@@ -70,6 +71,7 @@ public sealed partial class Engine : ElectronObject
     private readonly FrameSynchronizer _frameSynchronizer = new();
     private readonly FrameDeltaSmoother _frameDeltaSmoother = new();
 
+    private bool _editorHint;
     private double _timeScale = 1d;
     private int _runtimeState;
     private int _runtimeOwnerThreadId;

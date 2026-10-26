@@ -12,7 +12,7 @@
 
 [Process policy and physics pause](../components/scene-tree.md#process-policy-and-physics-pause) now preserve inherited eligibility notifications, root policy, nested failure handling and worker reads. Paused tree frames stop numerical integration while eligible callbacks continue; explicit owned spaces retain independent clocks. Public CPU/software-Vulkan/registered serial/separate managed and NativeAOT checks cover the slice. Full inherited physics, independent hardware GPU, networking and performance gates remain open.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -527,3 +527,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Contextual native navigation](../classes/AccessibilityServer.md#contextual-navigation) connects custom container position/help, direct keybinding metadata from real button/menu sources, class names and role descriptions. The owning contract defines override, lifecycle and verification boundaries.
 
 [Native hyperlink destinations](../classes/AccessibilityServer.md#native-hyperlinks) connect LinkButton URI authoring and generic producers to external AT-SPI consumers, retaining internal targets and the existing activation pipeline.
+
+[Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.

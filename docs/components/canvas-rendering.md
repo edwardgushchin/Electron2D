@@ -4,7 +4,7 @@
 
 [Sampled component views](local-compute.md#sampled-component-views) follow device-backed command/material images through paired stages, lighting, glyphs, clipping and particle consumers. Raw snapshots preserve storage channels.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -1388,3 +1388,5 @@ Consuming retained batches capture the complete rectangle/nine-patch source regi
 ## Composed CanvasItem contract
 
 [The complete type audit](canvas-item-contract.md) records current-group frontend metadata authoring, coordinated logical identities, composed CPU/GPU physical queries, actual worker-driven pixels and complete frame allocation brackets. Per-material CPU scratch survives one-frame culling through weak keys; native pipeline eviction remains separate. The audit retains explicit software PremultAlpha capability rejection and the individual drawing-method qualifications above.
+
+SpriteFrames retains uploaded frame-texture cache residency across animation switches, releasing it with membership or library lifetime without disposing borrowed textures. This removes repeated upload/cache-allocation churn in rendered AnimatedSprite previews; [the resource contract](../classes/SpriteFrames.md) covers copying, retirement and callback errors.

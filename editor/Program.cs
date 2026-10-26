@@ -1,6 +1,7 @@
 using Electron2D;
 using Electron2D.Editor;
 
+Engine.IsEditorHint = true;
 if (OperatingSystem.IsLinux()) RegisterDesktopApplication();
 using var mark = ResourceLoader.Load<ImageTexture>(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "mark-dark.svg"));
 using var sparkle = ResourceLoader.Load<ImageTexture>(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "sparkle.svg"));

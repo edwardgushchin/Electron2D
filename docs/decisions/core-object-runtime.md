@@ -1,6 +1,6 @@
 # Electron2D core object and runtime decisions
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 Recording Run/RunAsync overloads and GetWriteMoviePath follow [ADR 0109](movie-writing.md#adr-0109): the existing scheduler accepts explicit fixed cadence without realtime jitter/catch-up dropping, and the same lifecycle owns real rendered capture plus synchronous audio. Ordinary and manual frame scheduling retain their contracts.
 
@@ -11,7 +11,7 @@ Decisions in this log: [0003](#adr-0003), [0005](#adr-0005), [0009](#adr-0009), 
 <a id="adr-0003"></a>
 ## ADR 0003: Use deterministic IDisposable lifetime for engine objects
 
-Last updated: 2026-10-16
+Last updated: 2026-10-27
 
 - Status: Accepted; refined by [0009](core-object-runtime.md#adr-0009) and clarified by [0014](resources.md#adr-0014)
 - Scope: `ElectronObject` and future resource-owning derived types
@@ -61,7 +61,7 @@ The base uses atomic state transitions so concurrent disposal runs cleanup at mo
 <a id="adr-0005"></a>
 ## ADR 0005: Use numeric notifications and typed property descriptors
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 - Status: Accepted
 - Scope: Engine lifecycle notifications and tooling property exposure
@@ -108,7 +108,7 @@ This preserves custom iteration under ADRs 0001/0004/0091 without putting a univ
 <a id="adr-0009"></a>
 ## ADR 0009: Permit teardown inspection on the disposing thread
 
-Last updated: 2026-10-16
+Last updated: 2026-10-27
 
 - Status: Accepted
 - Scope: `ElectronObject.ThrowIfDisposed()` during deterministic teardown
@@ -140,7 +140,7 @@ ADR 0003 publishes `IsDisposed` as soon as disposal starts so concurrent callers
 <a id="adr-0010"></a>
 ## ADR 0010: Add owned one-shot and deferred wrappers for typed events
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 - Status: Accepted
 - Scope: Typed event subscription lifecycle and delivery policy
@@ -194,7 +194,7 @@ These capabilities are useful independently of scripting and serialization. They
 <a id="adr-0015"></a>
 ## ADR 0015: Main-loop lifecycle and host boundary
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 ### Status
 
@@ -209,6 +209,10 @@ The existing `SceneTree` constructor activates its root immediately, and disposa
 ### Decision
 
 `MainLoop` is an abstract Core type derived from `ElectronObject`. It exposes explicit typed host entry points `Initialize()`, `Process(double)`, `PhysicsProcess(double)`, and `FinalizeLoop()`, with protected `On...` hooks corresponding to the reference virtual callbacks. `Process` and `PhysicsProcess` return their callback result unchanged as the host-stop request.
+
+Engine.IsEditorHint is a process-wide typed boolean host property, initially false. The editor bootstrap sets it before constructing its UI; separately launched game/scenario processes start false. Hosts may select it for authoring without editor UI. Reads and writes are atomic and available from any thread; this is transient host configuration, not a stored scene property, automatic editor detection or permission boundary. It does not disable ordinary scene lifecycle/processing or explicit playback. A later change neither stops current playback nor retries previously skipped startup.
+
+AudioStreamPlayer, AudioStreamEmitter, AnimatedSprite, AnimationPlayer and VideoStreamPlayer suppress their automatic startup while the hint is true, preserving authored autoplay values. Audio sources defer native output preparation until an explicit Play. Spatial startup checks entry and its first fixed step. Attached AnimationPlayer previews skip configured automatic next animations while retaining explicitly queued transitions. Timer autostart is suppressed only when both the editor hint and edited-scene membership apply, preserving its authored flag. Editor UI timers outside that subtree and runtime timers keep ordinary startup; explicit Start remains available.
 
 The lifecycle is a single owner-thread state machine. Initialization and finalization are one-shot and non-reentrant. A frame exception restores running state; initialization or finalization failure is terminal. `Dispose()` automatically finalizes only a successfully initialized running loop. A failed `OnInitialize()` owns rollback of its partial acquisition because no matched initialization exists for `OnFinalize()`.
 
@@ -253,7 +257,7 @@ Managed executable checks cover state transitions, ordering preconditions, callb
 <a id="adr-0016"></a>
 ## ADR 0016: Process-wide Engine runtime and host-driven scheduling
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 ### Status
 
@@ -321,7 +325,7 @@ Managed checks use deterministic deltas to cover state transitions, ordering, fa
 <a id="adr-0050"></a>
 ## ADR 0050: Typed weak references to engine objects
 
-Last updated: 2026-10-16
+Last updated: 2026-10-27
 
 ### Status
 

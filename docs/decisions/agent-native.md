@@ -1,6 +1,6 @@
 # Agent-native development decisions
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 This bounded document owns the product's agent-native development contract. Use [the decision index](index.md) for other architectural domains; implemented behavior remains documented in class, component and domain pages.
 
@@ -9,7 +9,7 @@ Decisions in this log: [0090](#adr-0090).
 <a id="adr-0090"></a>
 ## ADR 0090: Make Electron2D agent-native
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 - Status: Accepted by the user on 2026-10-01; live project collaboration, in-editor agent control and replacement of the existing batch interface accepted on 2026-10-25; user workflows, contextual inspection, operation composition, Git-backed project memory, portable instructions, engineering discipline, conventional commits, structured journals, bounded documentation context, editor Git workspaces, bundled skills and an explicit provider/client support list accepted on 2026-10-26.
 - Scope: Game and engine development workflows, public API/documentation, project and scene authoring, project Git/documentation/journal ownership, editor automation, batch execution and observable verification.
@@ -244,6 +244,8 @@ The job layer uses public scheduling, input, persistence and capture capabilitie
 | Rendered batch | Applicable simulation plus an actual selected renderer, explicitly configured target dimensions and capture timing | Images or recordings, backend/capability identity and scenario results |
 
 Headless simulation must not claim visual verification or return a fake successful capture. A hidden native window, software fallback and a GPU offscreen target are different capabilities. Rendered batch must use the actual renderer and preserve its documented precision/capability limits; independent offscreen targets require their own complete lifecycle, sampling and readback slice. Unsupported requests fail explicitly.
+
+The editor process selects the transient Engine.IsEditorHint authoring role before scene construction. Snapshot game/scenario jobs remain separate processes with the default runtime role; launching from the editor does not make them authoring sessions. This role suppresses built-in autoplay while preserving explicit preview and ordinary lifecycle, as owned by [ADR 0015](core-object-runtime.md#adr-0015).
 
 #### Runtime and scenario contract
 

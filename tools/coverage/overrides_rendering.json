@@ -463,7 +463,7 @@
     {
       "godot": "SpriteFrames::method:get_animation_names()",
       "electron2d": "method:Electron2D.SpriteFrames.GetAnimationNames()",
-      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, deprecated bool-loop aliases, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed. See docs/classes/SpriteFrames.md."
+      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, current typed loop modes, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed and frame memberships retain/release uploaded cache residency through replacement, copying, clear, callback failure and disposal. Retired bool-loop aliases are excluded under ADR 0004. See docs/classes/SpriteFrames.md."
     },
     {
       "godot": "CurveTexture::enum:TextureMode",
@@ -2700,12 +2700,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -5716,7 +5716,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, deprecated bool-loop aliases, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed. See docs/classes/SpriteFrames.md.",
+      "reason": "SpriteFrames implements named animations, relative durations, stable loop values, silent name/rate/loop edits and frame Changed notifications; shallow/deep copies and scene-local graphs use the existing typed Resource hooks under ADRs 0004/0013/0014. AnimatedSpriteTests audits defaults, ordinal names/insertion fallback, index boundaries, current typed loop modes, notifications, copying and disposal. Invalid/nonfinite input uses typed exceptions; textures are borrowed and frame memberships retain/release uploaded cache residency through replacement, copying, clear, callback failure and disposal. Retired bool-loop aliases are excluded under ADR 0004. See docs/classes/SpriteFrames.md.",
       "godot": [
         "class:SpriteFrames",
         "SpriteFrames::enum:LoopMode",
@@ -5728,7 +5728,6 @@
         "SpriteFrames::method:clear(StringName:)",
         "SpriteFrames::method:clear_all()",
         "SpriteFrames::method:duplicate_animation(StringName:,StringName:)",
-        "SpriteFrames::method:get_animation_loop(StringName:)",
         "SpriteFrames::method:get_animation_loop_mode(StringName:)",
         "SpriteFrames::method:get_animation_names()",
         "SpriteFrames::method:get_animation_speed(StringName:)",
@@ -5739,7 +5738,6 @@
         "SpriteFrames::method:remove_animation(StringName:)",
         "SpriteFrames::method:remove_frame(StringName:,int:)",
         "SpriteFrames::method:rename_animation(StringName:,StringName:)",
-        "SpriteFrames::method:set_animation_loop(StringName:,bool:)",
         "SpriteFrames::method:set_animation_loop_mode(StringName:,int:SpriteFrames.LoopMode)",
         "SpriteFrames::method:set_animation_speed(StringName:,float:)",
         "SpriteFrames::method:set_frame(StringName:,int:,Texture2D:,float:)"
@@ -6462,7 +6460,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -7385,6 +7383,20 @@
         "class:CanvasItem"
       ],
       "reason": "ADRs 0004/0008/0028: the abstract canvas base retains separate Entity/Control placement models and its complete 114-member pinned contract, with 104 own compiled declarations audited in both directions. Custom/UI/physical ancestry, logical identities, processing-group metadata authoring, retained drawing, queries, lifecycle and actual CLR/strict NativeAOT pixels execute. Inherited Node/Object declarations retain their separate gaps. The independent complete-frame allocation gate retains an unresolved 32-byte CLR SDL-GPU all-thread observation; this type status certifies the functional API, not that budget, numerical/network completeness or GPU performance. See docs/components/canvas-item-contract.md."
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned SpriteFrames.xml marks this member deprecated: Use [method get_animation_loop_mode] instead. The applicable replacement is implemented; no alias or implementation trigger remains.",
+      "godot": [
+        "SpriteFrames::method:get_animation_loop(StringName:)"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned SpriteFrames.xml marks this member deprecated: Use [method set_animation_loop_mode] instead. The applicable replacement is implemented; no alias or implementation trigger remains.",
+      "godot": [
+        "SpriteFrames::method:set_animation_loop(StringName:,bool:)"
+      ]
     }
   ],
   "extras": [

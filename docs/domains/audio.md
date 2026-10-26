@@ -1,6 +1,6 @@
 # Audio domain
 
-Last updated: 2026-10-19
+Last updated: 2026-10-27
 
 [Movie writing](../components/movie-writing.md) reuses this domain's FAudio graph through an offline mastering voice without an SDL output stream. Prepared PCM is consumed on the recording owner; native sample/stream sources and bus effects retain their ordinary roles.
 
@@ -85,3 +85,5 @@ Scene players now preserve full attacks with 64-frame lookahead and execute prep
 AudioStreamWAV encoded payload and authored metadata now persist through the exact .e2dres factory. Animation audio cues retain stream aliases and offsets through the resource graph; see [cue persistence](../components/scene-animation.md#cue-persistence).
 
 [Video soundtracks](../components/video-playback.md) now use bounded owner-fed PCM queues over the existing resampler/FAudio transport, with embedded Vorbis decoding, track selection, scene-clock speed, gain and bus fallback. Ordinary audio imports retain their managed decoder policy.
+
+[Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.

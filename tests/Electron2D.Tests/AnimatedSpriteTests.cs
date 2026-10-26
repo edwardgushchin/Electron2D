@@ -4,8 +4,24 @@ internal static class AnimatedSpriteTests
 {
     internal static void Run()
     {
-        Resources(); Playback(); Selection(); Packing(); DrawingAndThreads(); Failures();
+        Resources(); CacheLifetime(); Playback(); Selection(); Packing(); DrawingAndThreads(); Failures();
         Console.WriteLine("SpriteFrames and AnimatedSprite managed checks passed.");
+    }
+
+    private static void CacheLifetime()
+    {
+        using var first = new ImageTexture(); using var second = new ImageTexture(); using var frames = new SpriteFrames();
+        frames.AddFrame("default", first); frames.AddFrame("default", first); frames.DuplicateAnimation("default", "copy");
+        frames.Clear("default"); Check(first.RetainRendererCache, "Another animation keeps its borrowed uploaded frame resident.");
+        frames.RemoveFrame("copy", 0); frames.RenameAnimation("copy", "renamed"); Check(first.RetainRendererCache, "Remaining membership survives removal and rename.");
+        frames.SetFrame("renamed", 0, second); Check(!first.RetainRendererCache && second.RetainRendererCache, "Replacement releases only the last old frame cache lease.");
+        using var copy = (SpriteFrames)frames.Duplicate(); frames.ClearAll(); Check(second.RetainRendererCache && !second.IsDisposed, "Shallow resource copies independently retain borrowed texture caches.");
+        copy.Dispose(); Check(!second.RetainRendererCache && !second.IsDisposed, "Final library disposal releases cache residency without disposing its texture.");
+        frames.AddFrame("default", first); Action<Resource> fail = _ => throw new InvalidOperationException("Injected frame observer failure"); frames.Changed += fail;
+        Reject<InvalidOperationException>(() => frames.SetFrame("default", 0, second)); frames.Changed -= fail;
+        Check(!first.RetainRendererCache && second.RetainRendererCache && ReferenceEquals(frames.GetFrameTexture("default", 0), second), "Observer failure preserves committed frame and matching cache ownership.");
+        second.Dispose(); frames.DuplicateAnimation("default", "retired"); using var retiredCopy = (SpriteFrames)frames.Duplicate(); frames.ClearAll(); retiredCopy.ClearAll();
+        Check(!second.RetainRendererCache && !first.IsDisposed, "Retired borrowed textures copy and release without cache underflow or ownership transfer.");
     }
 
     private static void Resources()
@@ -17,11 +33,7 @@ internal static class AnimatedSpriteTests
             frames.GetAnimationLoopMode("default") == SpriteFrames.LoopMode.Linear && frames.GetFrameCount("default") == 0, "Library defaults.");
         frames.AddAnimation("z"); frames.AddAnimation("a"); frames.AddAnimation("");
         frames.SetAnimationSpeed("z", 0); frames.SetAnimationLoopMode("z", SpriteFrames.LoopMode.PingPong);
-#pragma warning disable CS0618
-        Check(!frames.GetAnimationLoop("z"), "Legacy loop query only means linear.");
-        frames.SetAnimationLoop("z", true); Check(frames.GetAnimationLoop("z"), "Legacy loop setter.");
-        frames.SetAnimationLoop("z", false);
-#pragma warning restore CS0618
+        Check(frames.GetAnimationLoopMode("z") == SpriteFrames.LoopMode.PingPong, "Typed loop mode preserves ping-pong.");
         frames.DuplicateAnimation("z", "copy"); frames.RenameAnimation("copy", "renamed"); frames.RemoveAnimation("absent");
         Check(changes == 0 && frames.GetAnimationNames().SequenceEqual(new[] { "", "a", "default", "renamed", "z" }), "Name/rate/loop edits stay silent and names are sorted.");
         frames.AddFrame("default", texture, -10); frames.AddFrame("default", null, 2, 0); frames.AddFrame("default", texture, 3, int.MaxValue);

@@ -1,6 +1,6 @@
 # Scene animation decisions
 
-Last updated: 2026-10-13
+Last updated: 2026-10-27
 
 <a id="adr-0093"></a>
 ## ADR 0093: Typed reusable scene animation
@@ -14,6 +14,8 @@ Last updated: 2026-10-13
 Runtime tweens execute one-off instructions. Games also need reusable named clips, authored keys, relative scene targets, repeatable seeking and playback sections. Arbitrary property strings or a general value container would conflict with the typed property decision. A clip must work on multiple node instances without storing a target instance in the asset.
 
 ### Decision
+
+Editor authoring startup and explicit-preview policy follows the host role in [ADR 0015](core-object-runtime.md#adr-0015); authoring does not rewrite stored autoplay configuration.
 
 - `Animation : Resource` stores heterogeneous track metadata, with every key container and evaluator implemented as a concrete generic value type. `AddTrack<TOwner,TValue>` requires a writable `PropertyDescriptor<TOwner,TValue>`. Its optional typed interpolator uses the same role as the tween interpolator; no reflection property setter, dynamic dictionary or universal value accessor is introduced.
 - A track's relative path resolves its node from the mixer's root. An optional property suffix must equal the descriptor name. Descriptors are immutable and shared by copies. Values are read and written through generic APIs; mismatched key types fail explicitly. Node-role substitution applies to the descriptor owner, not merely to names.

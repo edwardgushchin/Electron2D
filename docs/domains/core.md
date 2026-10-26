@@ -10,7 +10,7 @@ The Android application host supplies [system back navigation](../components/win
 
 [Native permission results](../components/main-loop.md#native-permission-results) now enter the exact Android window's loop through an owner-thread FIFO before its next frame hook. Terminal lifetime discards pending results; listener errors preserve unread results and the original exception. Platform request/query APIs remain separate.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 [Custom object iteration](../components/object-lifecycle.md#custom-typed-iteration) uses the ordinary typed C# enumerator protocol on concrete compiled subclasses. Independent cursor state, readonly value retrieval, early exit/error cleanup and caller-owned lifetime guards preserve the applicable capability without a universal enumerable ElectronObject or dynamic value system.
 
@@ -166,7 +166,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Permission requests and remaining mobile/browser integrations are absent.
 - The repository has an 18-RID automated build/package/test matrix and RID-selected CharacterMovement desktop, Android/Android TV, UIKit and browser hosts. CharacterMovement was executed on Linux Wayland, one Android phone, one Android TV and Chrome; Windows/macOS/iOS/tvOS execution and store signing remain unverified for this example. Browser storage and complete production lifecycle acceptance remain separate work. See the platform report for exact scope.
 - Sparse/delta pack exporters, native executable section discovery and import remapping remain dependencies. PCK/ZIP mounting now provides read-only resource overlays; remaining exported virtual filesystem, platform-pipe backend exists. ResourceUID supplies registered identity resolution. `FileAccess`, `DirAccess`, and `ProjectSettings` resolve only configured `res://`/`user://` directories; `uid://` resolves registered file identities and unknown identities fail; `pipe://` still fails explicitly, and `ConfigFile` still accepts only ordinary operating-system paths. FastLZ and Zstandard execute with the matching native bridge; native file-codec verification covers Linux x64. The macOS and Windows extended-attribute/directory backends are implemented but not verified on native hosts. Android/iOS directory links and drive enumeration await host/storage integration.
-- No renderer draw count, logging-output controls, generated author/license manifest, script backtrace/language registry, movie writer, or editor hints; the Engine coverage inventory records each dependency boundary.
+- [Editor authoring mode](../classes/Engine.md#editor-authoring-mode) supplies the transient host role and executable startup/preview policy. The Engine coverage inventory records remaining API obligations and their dependency triggers.
 
 ## Verification
 

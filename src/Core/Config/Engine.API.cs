@@ -52,6 +52,19 @@ public sealed partial class Engine
     /// <exception cref="Exception">A startup, frame or platform operation fails after owned cleanup.</exception>
     public static Task<int> RunAsync(Window window) => Service.RunAsyncCore(window);
 
+    /// <summary>Gets or sets whether this process is hosting scene authoring in an editor.</summary>
+    /// <value>False initially; the editor host selects true before constructing its scene.</value>
+    /// <remarks>This advisory process-wide hint is safe to read and write from any thread. Automatic audio,
+    /// sprite, animation and video startup consult it; explicit playback and ordinary scene callbacks remain
+    /// available. Timer autostart also considers edited-scene membership. A change does not stop existing playback
+    /// or restart skipped startup. The hint is not scene
+    /// data and does not propagate to separately launched game processes.</remarks>
+    public static bool IsEditorHint
+    {
+        get => Volatile.Read(ref Service._editorHint);
+        set => Volatile.Write(ref Service._editorHint, value);
+    }
+
     /// <summary>Gets or sets the fixed-step callback frequency.</summary>
     /// <value>The number of physics callback opportunities per unscaled second. The default is <c>60</c>.</value>
     /// <remarks>

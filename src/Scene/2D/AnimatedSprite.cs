@@ -109,7 +109,8 @@ public class AnimatedSprite : Entity
 
     /// <summary>Gets or sets the animation played after ready handling.</summary>
     /// <value>Empty by default. An absent name has no ready-time effect.</value>
-    /// <remarks>Setting this after ready does not immediately start playback. RequestReady permits a later ready cycle.</remarks>
+    /// <remarks>Editor authoring suppresses automatic startup without changing this name. Explicit Play remains available.
+    /// Setting this after ready does not immediately start playback. RequestReady permits a later ready cycle.</remarks>
     /// <exception cref="ArgumentNullException">The name is null.</exception>
     /// <exception cref="InvalidOperationException">Mutation is unavailable.</exception>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -328,7 +329,7 @@ public class AnimatedSprite : Entity
             if (IsDisposed) return;
             if (what is NotificationEnterTree or NotificationReady or NotificationInternalProcess or NotificationDraw) RefreshFramesIfOwner();
             if (IsDisposed) return;
-            if (what == NotificationReady && _frames?.HasAnimation(_autoplay) == true) Play(_autoplay);
+            if (what == NotificationReady && !Engine.IsEditorHint && _frames?.HasAnimation(_autoplay) == true) Play(_autoplay);
             else if (what == NotificationInternalProcess && _playing) Advance(ProcessDeltaTime);
 
         }

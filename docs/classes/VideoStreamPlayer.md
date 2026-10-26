@@ -1,6 +1,6 @@
 # VideoStreamPlayer
 
-Last updated: 2026-10-16
+Last updated: 2026-10-27
 
 `public sealed class VideoStreamPlayer : Control` in [VideoStreamPlayer.cs](../../src/Scene/GUI/VideoStreamPlayer.cs).
 Part of [video playback](../components/video-playback.md), governed by [ADR 0110](../decisions/video-playback.md#adr-0110).
@@ -40,3 +40,5 @@ The first process step advances by zero. Later steps use the captured process de
 Protected overrides provide descriptors, exact scene factories, intrinsic sizing, notifications and mutation/disposal guards. Decoder callbacks cannot recursively mutate or dispose their player. Notification failure still attempts transport cleanup. Both renderers upload changed pixels under the stable ImageTexture identity; exports and duplicates are independent snapshots. Dispose releases the internal child, native decoder, frame and queue while preserving the borrowed source. Initial detached scene preparation may transfer to the first tree owner before Play; active transfer between owner threads is rejected.
 
 See [verification](../components/video-playback.md#verification) for executable source/archive/backend checks and limits.
+
+[Editor authoring mode](Engine.md#editor-authoring-mode) preserves Autoplay while suppressing automatic startup. Explicit playback remains available; source timing, native transport and lifetime keep their ordinary contracts.

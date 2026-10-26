@@ -1,6 +1,6 @@
 # Scene animation
 
-Last updated: 2026-10-13
+Last updated: 2026-10-27
 
 [ADR 0093](../decisions/scene-animation.md#adr-0093) owns reusable typed animation. The executable chain is [Animation](../classes/Animation.md) → [AnimationLibrary](../classes/AnimationLibrary.md) → [AnimationMixer](../classes/AnimationMixer.md) / [AnimationPlayer](../classes/AnimationPlayer.md) → an ordinary typed node property setter → the existing renderer.
 
@@ -245,3 +245,5 @@ AnimationTree uses an exact scene factory. Its authored writable parameter cells
 AnimationGraphPersistenceTests verifies topology, aliases, filters, cyclic modes, manual triangles, policies, conditions/predicates, owned boundary/output copies, malformed schemas, two independent scene controllers, original/loaded numeric traces and fresh-process reconstruction. A saved full scene executes three actual pixel poses on Linux Wayland GPU and compatibility renderers. AnimationNodeExtensionTests and graph/action/space/machine regressions verify execution and warmed allocations. Native/driver allocation, editor UI, foreign-platform and human acceptance remain unverified.
 
 RESET save preparation now executes through AnimationMixer.ResetOnSave and PackedScene.PackForSave. Enabled RESET value/Bézier tracks run at zero on detached nodes and isolated copied resources, capturing coupled effects while preserving source preview values/clocks/queues. Ordinary Pack captures the actual pose. Preparation failures preserve prior packed data; temporary resources are cleaned or transferred to the prepared scene. Compiled factories/setters/postprocessing execute, while lifecycle, local-resource setup and method/audio/nested event tracks are suppressed. Custom authoring state must be stored and resource duplication supported. AnimationResetSaveTests exercises policies, all controller families, coupled values/resources, errors, lifetime and portable saved scenes.
+
+[Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.

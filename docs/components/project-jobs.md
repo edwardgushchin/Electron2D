@@ -1,6 +1,6 @@
 # Shared editor workflow and immutable project jobs
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 ## Scope and dependency direction
 
@@ -47,3 +47,5 @@ Internal `EditorApplication` owns switching/window shutdown, `ProjectWorkspace` 
 [ProjectJobs](../../tests/ProjectJobs/Program.cs) exercises unsaved code+pose snapshots, editable authoring, stale provenance and real headless/native output. Its [failure contracts](../../tests/ProjectJobs/JobContracts.cs) exercise invalid bounds, pending-input ordering/conflicts/reentry, build/callback/assertion/input/budget failures, snapshot mutation, cancellation, deadline and abrupt owner death with descendants. [ProjectWorkspace](../../tests/ProjectWorkspace/Program.cs) drives native input, shared edits/history, inspector, resize, actual build/run/capture/stale display and clearing generated results. [ApplicationTests](../../tests/ProjectWorkspace/ApplicationTests.cs) exercises create/open/switch/failure/recovery in the actual shell. Tests use software Vulkan/OpenGL under Linux/Wayland; physical GPU/input/IME, foreign platforms, native heap/performance and owner visual acceptance are separate.
 
 [Authenticated local operations, the real Codex executor and the native conversation/task panel](project-agent.md) now exercise stage 3 over this owner and job registry. The native acceptance includes an actual model; installed delivery remains a separate gate. General scene editing, language services, importer/exporter/plugin systems, arbitrary project dependency closures, concurrent jobs/agents and hot reload retain their own gates.
+
+[Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.

@@ -1,6 +1,6 @@
 # AudioStreamPlayer
 
-Last updated: 2026-10-16
+Last updated: 2026-10-27
 
 **Declaration:** `public class Electron2D.AudioStreamPlayer` · **Source:** [AudioStreamPlayer.cs](../../src/Scene/Audio/AudioStreamPlayer.cs) · **Component:** [Audio playback](../components/audio-playback.md).
 
@@ -126,3 +126,5 @@ AudioStreamPlayer inherits Node and plays streams independently of scene positio
 Animation audio bindings now prepare internal reusable child/native state and share a receiver transport. Ordinary public factory/player calls retain fresh playback semantics; prepared randomizer selection occurs at actual trigger/start. [Audio tracks](../components/scene-animation.md#audio-tracks) records ownership, gain/trim/seek, cache rebuild and native/host limits.
 
 The internal video child defers native output preparation until actual audible Play. Its prepared voice history can be reset on video seek/loop without recreating transport. Public ordinary players retain eager scene attachment.
+
+[Editor authoring mode](Engine.md#editor-authoring-mode) preserves Autoplay while suppressing automatic startup. Explicit playback remains available; source timing, native transport and lifetime keep their ordinary contracts.

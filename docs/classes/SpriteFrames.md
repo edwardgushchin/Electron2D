@@ -1,6 +1,6 @@
 # SpriteFrames
 
-Last updated: 2026-09-23
+Last updated: 2026-10-27
 
 **Inherits:** [Resource](Resource.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-09-23
 
 A library of named animations consumed by [AnimatedSprite](AnimatedSprite.md). Each animation stores a nonnegative double FPS, a LoopMode, and ordered `(Texture?, float duration)` frames. Names are case-sensitive ordinal strings; empty names are valid. GetAnimationNames returns an independent sorted array. Selection fallback inside AnimatedSprite instead uses insertion order; renaming moves an animation to the end.
 
-The library borrows textures, including AtlasTexture views and null blank frames. It never disposes those resources. Each state operation is serialized under the library lock; inherited Changed handlers execute synchronously after the mutation and outside that lock. Callback exceptions propagate with state committed. Contained textures do not forward Changed. Resource duplication still requires the base caller-coordination contract.
+The library borrows textures, including AtlasTexture views and null blank frames. It never disposes those resources. Each unique frame texture retains one renderer-cache lease while this library has any membership for it, so switching frames reuses uploaded storage. DuplicateAnimation and shallow resource copies retain their own memberships; replacement, removal, clear and disposal release only the corresponding lease. Disposed borrowed textures remain inspectable/copyable as before without acquiring new native cache ownership. Each state operation is serialized under the library lock; inherited Changed handlers execute synchronously after the mutation and outside that lock. Callback exceptions propagate with state committed. Contained textures do not forward Changed. Resource duplication still requires the base caller-coordination contract.
 
 Only AddFrame, applied SetFrame, successful RemoveFrame and Clear emit Changed. Name, speed, loop and ClearAll edits are silent, including when they affect the selected animation. EmitChanged can explicitly reconcile attached consumers after such edits. Pixel changes of an existing ImageTexture are visible through retained renderer commands; geometry changes inside contained textures require explicit redraw. There is no separate public dictionary/Variant serialization surface.
 
@@ -36,7 +36,7 @@ sprite.Play();
 
 ## Enumerations
 
-[LoopMode](SpriteFrames.LoopMode.md): None = 0, Linear = 1, PingPong = 2. The obsolete bool-loop methods remain executable: true selects Linear, false selects None, and GetAnimationLoop returns false for PingPong.
+[LoopMode](SpriteFrames.LoopMode.md): None = 0, Linear = 1, PingPong = 2. The current API uses SetAnimationLoopMode/GetAnimationLoopMode; retired bool-loop aliases are absent.
 
 ## Constructors
 
@@ -58,8 +58,6 @@ sprite.Play();
 | [`public double GetAnimationSpeed(string animation)`](#api-getanimationspeed) | Returns an animation's frames per second. |
 | [`public void SetAnimationLoopMode(string animation, LoopMode loopMode)`](#api-setanimationloopmode) | Sets the endpoint behavior without emitting Changed. |
 | [`public LoopMode GetAnimationLoopMode(string animation)`](#api-getanimationloopmode) | Returns the animation's endpoint behavior. |
-| [`public void SetAnimationLoop(string animation, bool loop)`](#api-setanimationloop) | Sets Linear for true or None for false. |
-| [`public bool GetAnimationLoop(string animation)`](#api-getanimationloop) | Tests whether the loop mode is Linear; PingPong returns false. |
 | [`public void AddFrame(string animation, Texture? texture, float duration = 1f, int atPosition = -1)`](#api-addframe) | Adds a borrowed frame and emits Changed. |
 | [`public void SetFrame(string animation, int index, Texture? texture, float duration = 1f)`](#api-setframe) | Replaces a frame and emits Changed even when its values stay equal. |
 | [`public void RemoveFrame(string animation, int index)`](#api-removeframe) | Removes an existing frame and emits Changed. |
@@ -249,32 +247,6 @@ Returns: The loop mode, initially Linear.
 `ArgumentNullException`: The name is null.
 
 `ObjectDisposedException`: The library is disposed.
-
-<a id="api-setanimationloop"></a>
-### SetAnimationLoop
-
-`public void SetAnimationLoop(string animation, bool loop)`
-
-Sets Linear for true or None for false.
-
-Parameter `animation`: The existing name.
-
-Parameter `loop`: Whether to use linear repetition.
-
-Contract: Uses SetAnimationLoopMode validation and emits no Changed event.
-
-<a id="api-getanimationloop"></a>
-### GetAnimationLoop
-
-`public bool GetAnimationLoop(string animation)`
-
-Tests whether the loop mode is Linear; PingPong returns false.
-
-Parameter `animation`: The existing name.
-
-Returns: Whether the animation loops linearly.
-
-Contract: Uses GetAnimationLoopMode validation.
 
 <a id="api-addframe"></a>
 ### AddFrame

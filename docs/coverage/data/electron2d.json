@@ -192227,25 +192227,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.SpriteFrames.GetAnimationLoop(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.SpriteFrames",
-    "name": "GetAnimationLoop",
-    "signature": "public System.Boolean GetAnimationLoop(System.String animation)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "animation",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "System.Boolean",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.SpriteFrames.GetAnimationLoopMode(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.SpriteFrames",
@@ -192443,30 +192424,6 @@
       {
         "name": "newName",
         "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.SpriteFrames.SetAnimationLoop(System.String,System.Boolean)",
-    "kind": "method",
-    "declaringType": "Electron2D.SpriteFrames",
-    "name": "SetAnimationLoop",
-    "signature": "public System.Void SetAnimationLoop(System.String animation, System.Boolean loop)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "animation",
-        "type": "System.String",
-        "default": null
-      },
-      {
-        "name": "loop",
-        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -254310,6 +254267,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Engine.IsEditorHint()",
+    "kind": "property",
+    "declaringType": "Electron2D.Engine",
+    "name": "IsEditorHint",
+    "signature": "public static System.Boolean IsEditorHint { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

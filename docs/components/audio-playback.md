@@ -1,6 +1,6 @@
 # Audio playback and routed buses
 
-Last updated: 2026-10-19
+Last updated: 2026-10-27
 
 [Movie recording](movie-writing.md) drives this same prepared FAudio graph synchronously through a no-output-device master. Existing buses/effects, native sample voices and stream sources feed the recording PCM. Prepared quantum storage survives frame boundaries; source/effect failures abort capture. Live playback/input remain separate capabilities.
 
@@ -332,3 +332,5 @@ The basic AudioBusesDefaultBusLayout project setting projects audio/buses/defaul
 AudioBusLayoutTests checks all 27 effect schemas, exact controls/aliases, shallow/deep copying, file lifetimes, cache replacement/corruption, endian/compression/bundling, 255-bus capacity, invalid/disposed values, owner checks, factory/reentrancy rollback, cleanup/notification commitment, fresh-process default startup and actual FAudio Stream/Sample PCM. It measures zero managed callback bytes and FAudio allocator calls over 64 warmed post-layout passes. Two public Window runs pass on each current Linux Wayland GPU/compatibility backend. Physical listening, other targets, native graph failure injection and editor UI remain separate gates. The related dB setter now rejects a finite raw value whose linear conversion overflows before mutation.
 
 AudioStreamWAV now has an exact .e2dres graph factory with stored encoded data, format/rate/stereo/loop metadata and copied tags. Native decoded PCM and playback state are rebuilt through the existing consumer; cue file integration and verification are described in [cue persistence](scene-animation.md#cue-persistence).
+
+[Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.

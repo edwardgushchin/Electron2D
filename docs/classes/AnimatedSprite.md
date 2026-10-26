@@ -1,6 +1,6 @@
 # AnimatedSprite
 
-Last updated: 2026-10-15
+Last updated: 2026-10-27
 
 **Inherits:** [Entity](Entity.md), [CanvasItem](CanvasItem.md), [Node](Node.md)
 
@@ -504,3 +504,5 @@ which retires with its scene together with the copied frame library.
 [AnimatedSpriteRenderingTests](../../tests/Electron2D.Tests/AnimatedSpriteRenderingTests.cs) checks native pixel readback for texture/atlas/null frames, flips, centering, worker library edits, pixel updates, visibility, timed host completion and error cleanup. Verified on Linux Wayland with compatibility and GPU/Vulkan, including HLSL/GLSL canvas materials, and dummy/software compatibility. Windows, macOS, other platform backends, owner visual acceptance, published deployment and performance remain unverified. This does not add AnimationPlayer, AnimationMixer, an editor, asset import or disk scene serialization. See ADRs [0008](../decisions/scene.md#adr-0008), [0028](../decisions/rendering.md#adr-0028), and [0021](../decisions/product.md#adr-0021).
 
 GetConfigurationWarnings appends a missing-library warning whenever SpriteFrames is null, even while hidden/detached; a nonnull empty library is valid. Library replacement requests warning refresh after state/property-list changes and invalidation, before SpriteFramesChanged. A throwing warning handler leaves committed state and stops later event delivery; disposal prevents further delivery. SceneDiagnosticsTests verifies these contracts.
+
+[Editor authoring mode](Engine.md#editor-authoring-mode) preserves Autoplay while suppressing automatic startup. Explicit playback remains available; source timing, native transport and lifetime keep their ordinary contracts.

@@ -135,7 +135,8 @@ public class Timer : Node
     /// <summary>Gets or sets whether ready delivery starts the timer automatically.</summary>
     /// <value><see langword="false"/> by default.</value>
     /// <remarks>
-    /// A successful automatic start resets this property to <see langword="false"/>. Setting it after ready delivery
+    /// Editor authoring suppresses startup only inside the selected edited scene, preserving this flag. Other UI
+    /// timers and explicit Start remain available. A successful automatic start resets this property to <see langword="false"/>. Setting it after ready delivery
     /// does not start immediately; call <see cref="Start()"/> or request another ready cycle before reattachment.
     /// </remarks>
     /// <exception cref="InvalidOperationException">An attached timer is mutated off its tree's owner thread.</exception>
@@ -315,7 +316,7 @@ public class Timer : Node
 
         switch (what)
         {
-            case NotificationReady when _autostart:
+            case NotificationReady when _autostart && !(Engine.IsEditorHint && Tree?.IsEditedSceneMember(this) == true):
                 Start();
                 _autostart = false;
                 break;

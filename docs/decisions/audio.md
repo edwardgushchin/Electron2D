@@ -1,6 +1,6 @@
 # Electron2D audio decisions
 
-Last updated: 2026-10-16
+Last updated: 2026-10-27
 
 Synchronous movie output uses the same FAudio graph with a private no-device master and owned quantum buffer under [ADR 0109](movie-writing.md#adr-0109). This adds no second mixer or vendor modification; realtime output remains the default.
 
@@ -18,7 +18,7 @@ Decisions in this log: [0047](#adr-0047).
 <a id="adr-0047"></a>
 ## ADR 0047: Use FAudio over SDL3 with managed audio decoders
 
-Last updated: 2026-10-04
+Last updated: 2026-10-27
 
 ### Status
 
@@ -40,7 +40,7 @@ Electron2D needs audio playback, bus routing and effects through an engine-owned
 
 ### Scene playback roles
 
-`AudioStreamPlayer : Node` supplies stream playback independent of scene position, including music and UI sounds. `AudioStreamEmitter : Entity` supplies a positioned scene source with attenuation, stereo panning and viewport listener/Area routing, preserving its complete applicable own and inherited API under ADRs 0004/0008. It contains one private AudioStreamPlayer child to reuse playback/voice ownership; the two scene responsibilities and public inheritance branches remain distinct. The reference AudioStreamPlayer2D identity maps to AudioStreamEmitter in internal coverage. Runtime code, typed property descriptors, scene factories, XML and public documentation use only the emitter name; no second legacy public type or empty compatibility wrapper is introduced. Remaining sample/editor dependencies keep their existing coverage states.
+`AudioStreamPlayer : Node` supplies stream playback independent of scene position, including music and UI sounds. `AudioStreamEmitter : Entity` supplies a positioned scene source with attenuation, stereo panning and viewport listener/Area routing, preserving its complete applicable own and inherited API under ADRs 0004/0008. It contains one private AudioStreamPlayer child to reuse playback/voice ownership; the two scene responsibilities and public inheritance branches remain distinct. The reference AudioStreamPlayer2D identity maps to AudioStreamEmitter in internal coverage. Runtime code, typed property descriptors, scene factories, XML and public documentation use only the emitter name; no second legacy public type or empty compatibility wrapper is introduced. The host editor hint suppresses autoplay without changing authored flags. Nonspatial authoring sources defer native output preparation until explicit Play; spatial sources suppress their pending first-step startup. Explicit preview uses ordinary native transport, signals and failure/cleanup policy.
 
 ### Procedural PCM producer
 
@@ -131,7 +131,7 @@ GetOutputLatency reports opened SDL device chunk duration plus current queued so
 
 ### Prepared scene-player transitions
 
-Scene players preserve the initial full attack after 64 silent lookahead frames and use frame/native-quantum linear coefficients for live gain, pause/resume and stop. This follows the reference transition contract with the actual FAudio quantum. Stop/pause prepare one final PCM block on the owner before source Stop/cursor freeze, using the same context gate as native mixing. That explicit serialized control path preserves synchronous callback failures and safe pooled playback replacement; copied outgoing PCM is independent of disposed child playback. Seek and oldest replacement overlap the copied fade and new attack; teardown discards transient output. Source mix callbacks on either thread cannot reenter audio configuration/Lock/Unlock or owner player mutation/disposal. Finite-tail accumulation, representable stored gain and immediate solo/LFE gating are verified separately from steady gain interpolation. Output-channel PCM expansion implements independent coefficient ramps before a matching identity FAudio send; no vendor changes or new public backend types are required. Native sample playback uses its distinct complete-buffer transport below; editor-hint autoplay suppression retains its existing dependency.
+Scene players preserve the initial full attack after 64 silent lookahead frames and use frame/native-quantum linear coefficients for live gain, pause/resume and stop. This follows the reference transition contract with the actual FAudio quantum. Stop/pause prepare one final PCM block on the owner before source Stop/cursor freeze, using the same context gate as native mixing. That explicit serialized control path preserves synchronous callback failures and safe pooled playback replacement; copied outgoing PCM is independent of disposed child playback. Seek and oldest replacement overlap the copied fade and new attack; teardown discards transient output. Source mix callbacks on either thread cannot reenter audio configuration/Lock/Unlock or owner player mutation/disposal. Finite-tail accumulation, representable stored gain and immediate solo/LFE gating are verified separately from steady gain interpolation. Output-channel PCM expansion implements independent coefficient ramps before a matching identity FAudio send; no vendor changes or new public backend types are required. Native sample playback uses its distinct complete-buffer transport below; editor-hint autoplay suppression follows the host role under ADR 0015.
 
 ### Synchronized stream composition
 
