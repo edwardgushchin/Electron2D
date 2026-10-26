@@ -789,10 +789,10 @@ GPU shutdown failure separately.
 
 The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
 checks real `1 -> 1.25 -> 1` transitions in independent root/child windows, including
-physical descendants, committed viewport dimensions and rendered pixels. Compatibility
-rendering passes with CPU/GPU physics; ordinary FIFO GPU presentation remains
-open after a native SDL/NVIDIA acquisition stall. Physical display metrics are a
-separate capability.
+physical descendants, committed viewport dimensions and rendered pixels. Sixteen
+CLR/strict NativeAOT Linux/Wayland profiles pass with CPU/GPU physics, both renderers
+and owner/separate threads in an owned Mutter Devkit output. The standalone headless
+FIFO acquisition failure and physical display metrics retain separate limits.
 
 PackedScene captures Position only after an authored position request. An untouched root Window restores automatic native placement instead of silently requesting `(0,0)`; explicit zero remains stored and retains the platform coordinate gate. This permits saved default root windows to start on Wayland. CanvasModulateTests checks both forms, and its published scene consumer executes actual native output.
 

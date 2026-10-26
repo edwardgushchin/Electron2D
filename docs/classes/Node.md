@@ -1836,8 +1836,9 @@ delivery; manual DispatchNotification does not create a native event.
 
 The [native scale reproduction](../components/window-runtime.md#native-dpi-scale-reproduction)
 checks committed viewport dimensions and physical descendants in independent root/child
-windows. Compatibility rendering passes; native FIFO GPU presentation remains
-open after a reproduced SDL/NVIDIA acquisition stall. This notification remains Partial.
+windows. All sixteen CLR/strict NativeAOT Linux/Wayland profiles pass with CPU/GPU
+physics, both renderers and owner/separate physics threads in an owned Mutter Devkit
+output. The standalone headless FIFO acquisition failure remains separately recorded.
 
 ### NotificationWmPositionChanged
 

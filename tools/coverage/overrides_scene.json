@@ -130,8 +130,8 @@
     {
       "godot": "Node::constant:NOTIFICATION_WM_DPI_CHANGE",
       "electron2d": "constant:Electron2D.Node.NotificationWmDpiChange()",
-      "state": "Partial",
-      "reason": "ADRs 0008/0044: notification 1009 follows effective window/backing scale, not physical display DPI, as confirmed by the pinned Wayland/macOS producers. WindowNotificationTests retains propagation, failure/lifetime/mutation and zero-byte warmed checks. The public native root/child consumer verifies committed viewport size, owner/parent-first physical descendants, nested boundaries, one signal, unchanged pose/RID, continued selected CPU/GPU motion/query identity and actual pixels through scale 1 -> 1.25 -> 1 on compatibility rendering. FIFO GPU presentation on the isolated Mutter compositor stalls in native SDL/NVIDIA swapchain acquisition, sometimes before the first scale event; source/stack/control receipts are in bin/window-dpi/2026-10-26/. Keep Partial pending this native presentation gate; foreign-host acceptance remains separate. Physical ScreenGetDpi retains its own metrics prerequisite. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
+      "state": "Implemented",
+      "reason": "ADRs 0008/0044: notification 1009 follows effective window/backing scale; physical ScreenGetDpi retains its separate metrics prerequisite. WindowNotificationTests retains failure/lifetime/mutation and 1024 zero-byte warmed notification checks. Sixteen fresh CoreCLR/strict full-trim NativeAOT Linux/Wayland profiles pass real 1 -> 1.25 -> 1 scale transitions in independent root/child windows with CPU/GPU physics, GPU/compatibility rendering and owner/separate threads. They verify committed viewport dimensions, owner/parent-first physical descendants, nested boundaries, one signal, unchanged immediate poses/RIDs, continued motion/query identity and actual pixels. Default FIFO presentation is retained on the owned Mutter Devkit output; the standalone C control additionally requires eight acquired-texture submissions per window after each scale event. Source/PDB, frozen native inputs, payload/maps and process-retirement receipts: bin/dpi-devkit/2026-10-26/validation.json. The separate standalone headless FIFO acquisition failure remains unresolved. Foreign targets, native allocation, performance and owner acceptance remain separate under ADR 0021. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "godot": "Node::constant:NOTIFICATION_WM_POSITION_CHANGED",
@@ -1610,8 +1610,8 @@
     {
       "electron2d": "event:Electron2D.Window.DpiChanged()",
       "godot": "Window::signal:dpi_changed()",
-      "state": "Partial",
-      "reason": "Current root/native and embedded Window events share containing-window delivery under ADRs 0008/0044. WindowNotificationTests covers physical descendants, nested scopes, dummy queue, signal/failure/lifetime/mutation and silent repeats. The native DPI consumer additionally verifies independent root/child scale transitions, committed viewport state, selected physical motion/query identity and actual compatibility-renderer pixels. Native FIFO GPU presentation on the isolated Mutter compositor stalls in SDL/NVIDIA swapchain acquisition; this gate and foreign-host acceptance remain open. Notification 1009 is window scale; physical DPI is a separate display-metrics query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
+      "state": "Implemented",
+      "reason": "ADRs 0008/0044: containing-window notification precedes its typed DpiChanged signal; embedded/native scopes and failure continuation retain WindowNotificationTests coverage. Sixteen fresh CoreCLR/strict full-trim NativeAOT Linux/Wayland profiles pass real 1 -> 1.25 -> 1 scale transitions in independent root/child windows with CPU/GPU physics, GPU/compatibility rendering and owner/separate threads. They verify committed viewport dimensions, owner/parent-first physical descendants, nested boundaries, one signal, unchanged immediate poses/RIDs, continued motion/query identity and actual pixels. Default FIFO presentation is retained on the owned Mutter Devkit output; the standalone C control additionally requires eight acquired-texture submissions per window after each scale event. Source/PDB, frozen native inputs, payload/maps and process-retirement receipts: bin/dpi-devkit/2026-10-26/validation.json. The separate standalone headless FIFO acquisition failure remains unresolved. Foreign targets, native allocation, performance and owner acceptance remain separate under ADR 0021. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "electron2d": "event:Electron2D.Window.FilesDropped()",
@@ -8596,18 +8596,17 @@
         "Window::signal:focus_entered()",
         "Window::signal:focus_exited()",
         "Window::signal:mouse_entered()",
-        "Window::signal:mouse_exited()",
-        "Window::signal:dpi_changed()"
+        "Window::signal:mouse_exited()"
       ],
       "state": "Partial",
-      "reason": "Current root/native and embedded Window events share containing-window delivery under ADRs 0008/0044. WindowNotificationTests covers physical descendants, nested scopes, dummy queue, signal/failure/lifetime/mutation and silent repeats. The native DPI consumer additionally verifies independent root/child scale transitions, committed viewport state, selected physical motion/query identity and actual compatibility-renderer pixels. Native FIFO GPU presentation on the isolated Mutter compositor stalls in SDL/NVIDIA swapchain acquisition; this gate and foreign-host acceptance remain open. Notification 1009 is window scale; physical DPI is a separate display-metrics query. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
+      "reason": "WindowNotificationTests covers containing-window physical descendants, nested scopes, dummy queues, signal/failure/lifetime/mutation and silent repeats. Complete real native focus/pointer/close qualification across the root/child/embedded scope remains open; the separately qualified DPI signal has its own state and evidence under ADRs 0008/0044."
     },
     {
       "godot": [
         "Node::constant:NOTIFICATION_WM_DPI_CHANGE"
       ],
-      "state": "Partial",
-      "reason": "ADRs 0008/0044: notification 1009 follows effective window/backing scale, not physical display DPI, as confirmed by the pinned Wayland/macOS producers. WindowNotificationTests retains propagation, failure/lifetime/mutation and zero-byte warmed checks. The public native root/child consumer verifies committed viewport size, owner/parent-first physical descendants, nested boundaries, one signal, unchanged pose/RID, continued selected CPU/GPU motion/query identity and actual pixels through scale 1 -> 1.25 -> 1 on compatibility rendering. FIFO GPU presentation on the isolated Mutter compositor stalls in native SDL/NVIDIA swapchain acquisition, sometimes before the first scale event; source/stack/control receipts are in bin/window-dpi/2026-10-26/. Keep Partial pending this native presentation gate; foreign-host acceptance remains separate. Physical ScreenGetDpi retains its own metrics prerequisite. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
+      "state": "Implemented",
+      "reason": "ADRs 0008/0044: notification 1009 follows effective window/backing scale; physical ScreenGetDpi retains its separate metrics prerequisite. WindowNotificationTests retains failure/lifetime/mutation and 1024 zero-byte warmed notification checks. Sixteen fresh CoreCLR/strict full-trim NativeAOT Linux/Wayland profiles pass real 1 -> 1.25 -> 1 scale transitions in independent root/child windows with CPU/GPU physics, GPU/compatibility rendering and owner/separate threads. They verify committed viewport dimensions, owner/parent-first physical descendants, nested boundaries, one signal, unchanged immediate poses/RIDs, continued motion/query identity and actual pixels. Default FIFO presentation is retained on the owned Mutter Devkit output; the standalone C control additionally requires eight acquired-texture submissions per window after each scale event. Source/PDB, frozen native inputs, payload/maps and process-retirement receipts: bin/dpi-devkit/2026-10-26/validation.json. The separate standalone headless FIFO acquisition failure remains unresolved. Foreign targets, native allocation, performance and owner acceptance remain separate under ADR 0021. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     },
     {
       "godot": [
@@ -12121,6 +12120,13 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0002/0015/0021: the [native Android permission-result path](../../components/main-loop.md#native-permission-results) copies SDK names/decisions to the exact active window loop and drains a captured FIFO on its owner before the next frame hook. Four actual emulator dialog scenarios cover grant, denial, mixed batch order and exact original handler-error identity, advancing separate-thread CPU physics and rendered output; each validates warmed complete-frame 0/0 managed bytes. Eight Linux CLR/strict NativeAOT CPU/NVIDIA-GPU owner/separate profiles cover copy, concurrency, nested posting, error recovery, blocking, retirement and active full frames at strict0/0. Protected custom-host delivery remains synchronous; OS request/query/revocation methods, other platform policies, the inherited class audit and package publication retain their own gates. Evidence: bin/physics-permissions/2026-10-26/native-qualified-cases/results.json and qualification.json."
+    },
+    {
+      "godot": [
+        "Window::signal:dpi_changed()"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0008/0044: containing-window notification precedes its typed DpiChanged signal; embedded/native scopes and failure continuation retain WindowNotificationTests coverage. Sixteen fresh CoreCLR/strict full-trim NativeAOT Linux/Wayland profiles pass real 1 -> 1.25 -> 1 scale transitions in independent root/child windows with CPU/GPU physics, GPU/compatibility rendering and owner/separate threads. They verify committed viewport dimensions, owner/parent-first physical descendants, nested boundaries, one signal, unchanged immediate poses/RIDs, continued motion/query identity and actual pixels. Default FIFO presentation is retained on the owned Mutter Devkit output; the standalone C control additionally requires eight acquired-texture submissions per window after each scale event. Source/PDB, frozen native inputs, payload/maps and process-retirement receipts: bin/dpi-devkit/2026-10-26/validation.json. The separate standalone headless FIFO acquisition failure remains unresolved. Foreign targets, native allocation, performance and owner acceptance remain separate under ADR 0021. See docs/components/window-runtime.md#native-dpi-scale-reproduction."
     }
   ]
 }

@@ -59,6 +59,7 @@ int main(void)
                 for (int i = 0; i < count; i++) {
                     if (event.window.windowID != SDL_GetWindowID(windows[i])) continue;
                     changes[i]++;
+                    rendered[i] = 0;
                     observed = frame;
                     require(changes[i] <= phase, "Duplicate native scale notification");
                 }
@@ -83,20 +84,23 @@ int main(void)
             }
             require(SDL_SubmitGPUCommandBuffer(command), "Cannot submit presentation");
         }
-        if (frame == 16) {
+        bool presented = rendered[0] >= 8 && (count == 1 || rendered[1] >= 8);
+        if (!phase && frame >= 16 && presented) {
             for (int i = 0; i < count; i++)
                 require(SDL_fabsf(SDL_GetWindowDisplayScale(windows[i]) - 1) < .0001f, "Initial scale must be one");
             phase = 1;
             ready(directory, 0);
         }
-        if (phase && changes[0] == phase && (count == 1 || changes[1] == phase) && frame >= observed + 8) {
+        if (phase && changes[0] == phase && (count == 1 || changes[1] == phase) && frame >= observed + 8 && presented) {
             for (int i = 0; i < count; i++) {
                 int width, height;
                 require(SDL_GetWindowSizeInPixels(windows[i], &width, &height), "Cannot query pixel size");
-                require(rendered[i] > 0 && widths[i] == (Uint32)width && heights[i] == (Uint32)height,
+                require(widths[i] == (Uint32)width && heights[i] == (Uint32)height,
                         "Presented swapchain must match current pixel size");
                 require(SDL_fabsf(SDL_GetWindowDisplayScale(windows[i]) - (phase == 1 ? 1.25f : 1)) < .0001f,
                         "Unexpected committed scale");
+                printf("Native SDL phase %d window %d: %d acquired presentations, %ux%u\n",
+                       phase, i, rendered[i], widths[i], heights[i]);
                 rendered[i] = 0;
             }
             printf("Native SDL phase %d passed at frame %d\n", phase, frame);

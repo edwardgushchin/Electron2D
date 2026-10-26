@@ -19,6 +19,7 @@ def main():
     parser.add_argument("--gpu", action="store_true")
     parser.add_argument("--threaded", action="store_true")
     parser.add_argument("--compatibility", action="store_true")
+    parser.add_argument("--devkit", action="store_true", help="Show the owned output in Mutter's nested Devkit viewer")
     parser.add_argument("--in-session", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not args.in_session:
@@ -46,9 +47,10 @@ def main():
     if occupied:
         raise RuntimeError("Native DPI tests require their own empty session bus")
     socket = "electron2d-dpi-" + str(os.getpid())
-    environment = dict(os.environ, __GL_SHADER_DISK_CACHE="0", MESA_SHADER_CACHE_DISABLE="true", GSETTINGS_BACKEND="memory", GIO_USE_VFS="local", NO_AT_BRIDGE="1", GTK_USE_PORTAL="0",
+    environment = dict(os.environ, __GL_SHADER_DISK_CACHE="0", MESA_SHADER_CACHE_DISABLE="true", GSETTINGS_BACKEND="memory", GIO_USE_VFS="local", NO_AT_BRIDGE="1", GTK_A11Y="none", GDK_DEBUG="no-portals", GTK_USE_PORTAL="0",
                        XDG_CONFIG_HOME=str(output / "config"), XDG_CACHE_HOME=str(output / "cache"), XDG_DATA_HOME=str(output / "data"))
-    command = ["mutter", "--headless", "--wayland", "--no-x11", "--virtual-monitor=1280x960", "--wayland-display=" + socket]
+    command = ["mutter", "--wayland", "--no-x11", "--wayland-display=" + socket]
+    command += ["--devkit", "--devkit-args=--monitor-size=640x480"] if args.devkit else ["--headless", "--virtual-monitor=1280x960"]
     applied = []
     engine = None
     capture = None
@@ -97,12 +99,40 @@ def main():
                     raise RuntimeError("Owned compositor exited before readiness")
                 try:
                     initial = call("GetCurrentState")
+                    if not initial[1]:
+                        if time.monotonic() >= deadline:
+                            raise TimeoutError("Compositor output readiness deadline")
+                        time.sleep(.05)
+                        continue
                     break
                 except GLib.Error:
                     if time.monotonic() >= deadline:
                         raise TimeoutError("Compositor readiness deadline")
                     time.sleep(.05)
             (output / "initial-state.json").write_text(json.dumps(initial, indent=2) + "\n")
+
+            def configure_scale(scale):
+                owner = bus.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "GetConnectionUnixProcessID",
+                                      GLib.Variant("(s)", ("org.gnome.Mutter.DisplayConfig",)), None, Gio.DBusCallFlags.NONE, 5000, None).unpack()[0]
+                if owner != compositor.pid:
+                    raise RuntimeError("Refusing to configure a compositor outside this test")
+                state = call("GetCurrentState")
+                if len(state[1]) != 1 or not state[1][0][0][0].startswith("Meta-"):
+                    raise RuntimeError("Scale changes require exactly one owned virtual output")
+                monitor = state[1][0]
+                mode = next(mode for mode in monitor[1] if mode[6].get("is-current"))
+                if not any(abs(scale - supported) < .0001 for supported in mode[5]):
+                    raise RuntimeError(f"Compositor does not support requested scale {scale}")
+                logical = [(0, 0, scale, 0, True, [(monitor[0][0], mode[0], {})])]
+                call("ApplyMonitorsConfig", GLib.Variant("(uua(iiduba(ssa{sv}))a{sv})", (state[0], 1, logical, {})))
+                committed = call("GetCurrentState")
+                if len(committed[2]) != 1 or abs(committed[2][0][2] - scale) >= .0001:
+                    raise RuntimeError("Compositor did not commit the requested scale")
+                return {"scale": scale, "ownerPID": owner, "state": committed, "seconds": time.monotonic() - started}
+
+            if args.devkit:
+                # The viewer inherits its host's scale; the consumer requires a known initial scale.
+                (output / "normalized-state.json").write_text(json.dumps(configure_scale(1.0), indent=2) + "\n")
 
             def start_capture():
                 nonlocal capture, capture_session
@@ -155,18 +185,7 @@ def main():
             start_capture()
 
             def apply(scale):
-                owner = bus.call_sync("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "GetConnectionUnixProcessID",
-                                      GLib.Variant("(s)", ("org.gnome.Mutter.DisplayConfig",)), None, Gio.DBusCallFlags.NONE, 5000, None).unpack()[0]
-                if owner != compositor.pid:
-                    raise RuntimeError("Refusing to configure a compositor outside this test")
-                state = call("GetCurrentState")
-                monitor = state[1][0]
-                mode = next(mode for mode in monitor[1] if mode[6].get("is-current"))
-                if not any(abs(scale - supported) < .0001 for supported in mode[5]):
-                    raise RuntimeError(f"Compositor does not support requested scale {scale}")
-                logical = [(0, 0, scale, 0, True, [(monitor[0][0], mode[0], {})])]
-                call("ApplyMonitorsConfig", GLib.Variant("(uua(iiduba(ssa{sv}))a{sv})", (state[0], 1, logical, {})))
-                applied.append({"scale": scale, "ownerPID": owner, "state": call("GetCurrentState"), "seconds": time.monotonic() - started})
+                applied.append(configure_scale(scale))
                 (output / "applied.json").write_text(json.dumps(applied, indent=2) + "\n")
                 # Mutter retires monitor recordings when their logical geometry changes.
                 start_capture()
@@ -212,7 +231,7 @@ def main():
                     compositor.wait(timeout=10)
                 (output / "captures.json").write_text(json.dumps(captures, indent=2) + "\n")
             (output / "controller.json").write_text(json.dumps({"engineExit": None if engine is None else engine.returncode,
-                "compositorExit": compositor.returncode, "applied": applied, "seconds": time.monotonic() - started}, indent=2) + "\n")
+                "compositorExit": compositor.returncode, "devkit": args.devkit, "applied": applied, "seconds": time.monotonic() - started}, indent=2) + "\n")
     # Monitor recordings publish damage, not one buffer per client presentation.
     if len(captures) != 3 or any(item.get("frames", 0) < 1 for item in captures):
         raise RuntimeError("Every monitor configuration requires a nonempty capture stream")

@@ -124,8 +124,8 @@ The runtime SHA-256 is
 `7327f3b69d0f9ac08fb9f86ed336a959ef0aebf76ecbd41a9d0d0c310d7a0c75`;
 the NativeAOT consumer is
 `6349ef51623d4f34dfe89b932ca68b881dad29ff9683e9e62d93a03078e128ac`.
-Coverage advances only the inherited position-notification row, to 1,336/1,369
-applicable physics declarations (97.59%); the DPI-scale notification remains Partial.
+That position checkpoint advanced the inherited position row to 1,336/1,369
+applicable physics declarations (97.59%). Current DPI qualification follows below.
 
 The initial regression reproduced a real move with no containing notification.
 Earlier fixture failures and one renderer shutdown `VK_ERROR_DEVICE_LOST` are
@@ -147,70 +147,66 @@ the [macOS producer](https://github.com/godotengine/godot/blob/ed1daf0bf001b6158
 compares backing scale. The
 [Window consumer](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/scene/main/window.cpp#L917-L920)
 updates its viewport before propagating 1009 and emitting its typed signal.
-Physical display DPI is a separate query with its own metrics prerequisite.
+Physical display DPI retains its separate metrics prerequisite.
 
 The public-only `BackendChecks.RunNativeDPI` consumer uses an actual root and
 independent native child sharing a selected physical World. It checks committed
 pixel dimensions in each notification, owner/parent-first delivery, nested-window
 boundaries, one signal per transition, unchanged physical poses/RIDs during
 delivery, continued motion/query identity and actual red/green rendered pixels
-after eight further frames. The scale/normalized-color tolerances are `0.0001`
-and `0.02`; sizes, identity, event counts/order and immediate poses are exact.
-This is a functional check, with no warmed allocation or performance claim.
+after eight further frames. Scale/color tolerances are `0.0001`/`0.02`; sizes,
+identity, event counts/order and immediate poses are exact. This functional check
+makes no warmed allocation or performance claim.
 
-Run the helper with optional `--gpu` (physics), `--threaded` and
-`--compatibility` (renderer):
+Run with Mutter's [nested Devkit viewer](https://github.com/GNOME/mutter/blob/51.0/doc/building-and-running.md#running-a-nested-instance)
+and optional `--gpu` (physics), `--threaded` and `--compatibility` (renderer):
 
 ```bash
 python3 -B tests/PhysicsBackendExtension.Consumer/wayland_dpi.py \
-  /absolute/path/PhysicsBackendExtension.Consumer.dll /absolute/new/output
+  /absolute/path/PhysicsBackendExtension.Consumer.dll /absolute/new/output --devkit
 ```
 
-An executable path selects NativeAOT. The helper requires Linux Mutter with its
-headless virtual-output option, Python GI/Gio, PipeWire with `pw-dump`, a C compiler,
-`pkg-config` and the PipeWire development headers. It creates a private session bus,
-refuses an occupied display-configuration service and verifies the service's PID
-against its owned compositor before every temporary scale edit. It changes only
-that compositor from `1` to `1.25` and back to `1`, bounds the complete case at
-170 seconds and retires its own processes. No injected scale event or user desktop
-display configuration supplies the result.
+An executable path selects NativeAOT. The helper requires Linux Mutter/Devkit, a
+Wayland desktop for the viewer, Python GI/Gio, PipeWire with `pw-dump`, a C compiler,
+`pkg-config` and PipeWire headers. It creates a private session bus and verifies
+its compositor's D-Bus PID before every temporary scale edit. Devkit starts its
+own viewer window and virtual monitor; the helper waits for that output and
+normalizes its inherited initial scale to one before starting the consumer.
+Requested scales must be supported and committed by that owned monitor. The
+consumer then drives `1 -> 1.25 -> 1`; the case is bounded at 170 seconds and
+retires its own compositor, consumer and captures. User desktop display settings
+are untouched. Omitting `--devkit` retains the standalone headless diagnostic.
 
-On 2026-10-26, four frozen CoreCLR and four strict NativeAOT compatibility-renderer
-profiles passed: CPU/GPU physics and owner/separate physics threads, with NVIDIA process maps,
-no software driver/physics fallback and no new kernel Xid. Root dimensions were
-`320x240 -> 400x300 -> 320x240`; child dimensions were
-`128x96 -> 160x120 -> 128x96`. Receipts, payload hashes, source audit and failed
-controls remain under `bin/window-dpi/2026-10-26/`.
+On 2026-10-26, all sixteen fresh CoreCLR/strict full-trim NativeAOT profiles passed:
+CPU/GPU physics, GPU/compatibility rendering and owner/separate physics threads.
+They use packaged SDL 3.4.18, NVIDIA 615.71.09 and Mutter/Devkit 51.0, with no software
+driver/physics fallback or new kernel Xid. Root dimensions are
+`320x240 -> 400x300 -> 320x240`; child dimensions are
+`128x96 -> 160x120 -> 128x96`. Runtime and consumer PDBs match 2650/284 authored
+source files; frozen NativeAOT compiler inputs retain the same source checks.
+`bin/dpi-devkit/2026-10-26/validation.json` indexes all sixteen profiles, source and
+payload identities, process maps, three nonempty recordings per case and eighty
+retired compositor/consumer/capture PIDs. The unchanged headless compatibility
+route also passes a fresh helper control.
 
-Ordinary GPU rendering with native client decorations repeatedly exceeded its
-deadline, both after delivered scale notifications and in some cases before the
-first transition. A parent-debugger reproduction stopped the native thread in
-`drmSyncobjTimelineWait` through NVIDIA, `VULKAN_INTERNAL_AcquireSwapchainTexture`
-and `SDL_WaitAndAcquireGPUSwapchainTexture_REAL`. SDL 3.4.18's
-[acquisition implementation](https://github.com/libsdl-org/SDL/blob/release-3.4.18/src/gpu/vulkan/SDL_gpu_vulkan.c#L10146-L10273)
-uses an infinite native acquire timeout even for its nonblocking variant, so
-changing that public SDL call alone does not establish a fix. A protocol-traced
-GPU control and a control with libdecor disabled completed; neither closes the
-ordinary decorated presentation gate. Extra synchronization, event pumping and
-presentation re-claim experiments failed and were reverted. The failing cases
-and native stack remain evidence, not passing qualification. DPI coverage stays
-Partial; that earlier checkpoint recorded 1,336/1,369 physical declarations (97.59%).
-The [generated physics report](../coverage/physics-status.md) retains current counts.
-The cause of the native wait, foreign hosts and owner visual acceptance remain open.
+This qualifies notification 1009, Window.DpiChanged and the typed DisplayServer
+DPI identity for the current Linux/Wayland stage under ADR 0021. The inherited
+physics count becomes **1347/1369 (98.39%)**, with **22 open** declarations
+(14 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded. Full numerical/network,
+native allocation, mass-performance, foreign-platform and owner acceptance remain
+separate. The [generated physics report](../coverage/physics-status.md) owns counts.
 
 ### Standalone native presentation control
 
-`tests/Electron2D.Tests/native_window_scale.c` removes the engine, managed runtime, physics,
-shaders and offscreen blits from the reproduction. It clears one or two SDL GPU
-swapchains directly, pumps native events and uses the same isolated compositor
-helper for the real `1 -> 1.25 -> 1` transition. Each phase checks one notification
-per window, committed scale and presented texture dimensions after eight further
-frames. A 30-second process alarm bounds a native wait; it is a diagnostic deadline,
-not a frame-time target. This control does not read pixels or replace the public
-physical consumer's image/query checks.
+`tests/Electron2D.Tests/native_window_scale.c` clears one or two SDL GPU swapchains
+directly and pumps native events through the same helper. Initial readiness requires
+at least eight actual acquired-texture submissions per window; each scale event
+resets its own counter, and each following phase requires another eight. Null
+swapchain acquisitions cannot satisfy that count. Current pixel dimensions and
+one native scale notification per window remain exact. The 30-second alarm bounds
+native waits; this control makes no pixel-readback or performance claim.
 
-Compile on Linux with matching SDL headers and the pinned native library from a
-qualified output; no installed system SDL library is selected by this command:
+Compile against matching headers and the packaged SDL library:
 
 ```bash
 scale_native_dir="/absolute/qualified/output/runtimes/linux-x64/native"
@@ -218,68 +214,42 @@ cc -std=c11 -O2 -g -Wall -Wextra -Werror tests/Electron2D.Tests/native_window_sc
   "$scale_native_dir/libSDL3.so.0" -Wl,-rpath,"$scale_native_dir" \
   -o /absolute/path/native-window-scale
 python3 -B tests/PhysicsBackendExtension.Consumer/wayland_dpi.py \
-  /absolute/path/native-window-scale /absolute/new/output
+  /absolute/path/native-window-scale /absolute/new/output --devkit
 ```
 
+The default two-window FIFO control passes under Devkit with nine acquired
+presentations per window after each scale transition. Its source/binary receipts
+and logs are under `bin/dpi-devkit/2026-10-26/native-eight*`.
 `ELECTRON2D_DPI_PROBE_SINGLE=1` selects one window;
 `ELECTRON2D_DPI_PROBE_MAILBOX=1` explicitly requests Mailbox and rejects unsupported
-selection. Neither option changes the engine's presentation policy. The native
-control requires the helper's fresh control directory; standalone invocation fails.
+selection. Neither option changes the engine's presentation policy.
 
-The 2026-10-26 control uses the same packaged SDL 3.4.18 and NVIDIA 615.71.09 with
-Mutter 51.0/libdecor 0.2.5. FIFO stalls with one or two windows. A two-window FIFO
-case with libdecor disabled also stalls, so decorations are not a necessary cause;
-the earlier successful undecorated engine control was insufficient to establish
-that distinction. Mailbox completes the same native scale/presentation round trip.
-A server-only protocol trace stops after FIFO barrier waits. These observations
-isolate a native presentation-mode difference; they do not distinguish an SDL,
-driver, protocol or compositor defect. Immediate mode is reported unsupported.
-The initial PipeWire controls did not obtain a consuming stream. The consumed-output
-control below now supplies actual buffers, but does not eliminate the FIFO failure.
-
-Receipts and source/library/payload identities are under
-`bin/native-scale-presentation/2026-10-26/`. Passing Mailbox is a diagnostic
-control, not FIFO qualification. Keep notification 1009 Partial, preserve selected
-VSync and investigate the native FIFO path. No runtime workaround or coverage-state
-change accompanies this control.
+The standalone headless output still has an unresolved FIFO wait, reproduced
+without the engine, physics or decorations. A late native stack reaches
+`drmSyncobjTimelineWait` through NVIDIA and `VULKAN_INTERNAL_AcquireSwapchainTexture`;
+SDL's original call site uses an infinite `vkAcquireNextImageKHR` timeout.
+Consuming monitor streams, finite-timeout/event-pumping SDK experiments and an
+explicit-sync opt-out did not establish a fix. Successful traced or Mailbox controls
+do not resolve that failure. No SDK/runtime workaround or VSync change is adopted.
+Failure receipts remain under `bin/window-dpi/2026-10-26/`,
+`bin/native-scale-presentation/2026-10-26/` and
+`bin/dpi-fifo-consumer/2026-10-26/`; Devkit qualification does not establish broad
+compositor/driver stability or resolve that separate headless failure.
 
 ### Consumed virtual-output control
 
-The isolated helper compiles `tests/Electron2D.Tests/native_wayland_capture.c`
-inside its output directory. The drain negotiates mapped BGRx MemFd buffers,
-validates their bounds, returns each buffer and records nonempty-buffer counts.
-Before connecting, the helper verifies that both the D-Bus screen-cast service and
-the PipeWire source client belong to its owned compositor. It never records the
-user's desktop. Its private session and drain are retired before the compositor.
+The helper compiles `tests/Electron2D.Tests/native_wayland_capture.c` inside its
+output directory. The drain negotiates mapped BGRx MemFd buffers, validates bounds,
+returns each buffer and records nonempty-buffer counts. Before connecting, the
+helper verifies that the D-Bus screen-cast service and PipeWire source client
+belong to its compositor. Its private recording and drain retire before that
+compositor; the user's desktop is never selected for recording.
 
-Mutter stops a monitor recording when a scale edit changes that monitor's logical
-geometry. The helper therefore creates a new recording after each committed scale
-configuration and requires a nonempty buffer from all three recordings. Captures
-are damage-driven: unchanged client presentations need not produce additional
-buffers. The initial two-buffer requirement incorrectly rejected successful
-compatibility cases whose final recording contained one buffer; it was corrected
-without changing the consumer's eight-frame, pixel, event or physical assertions.
-These captures establish stream operation, not compositor FPS or capture cost.
-
-Eight fresh compatibility profiles pass: CLR and strict full-trim NativeAOT, each
-with CPU/GPU physics and owner/separate numerical execution. They retain the real
-root/child scale round trip, rendered pixels, event order and physical identities.
-Two CLR GPU-renderer CPU-physics controls also pass. However, another CPU profile
-and the GPU-physics GPU-renderer profile still stall before their first transition.
-The layer-policy control does not establish a cause: the passing and failing
-process maps contain no optional Vulkan layers.
-
-A native C FIFO control completes with reconnected recordings, but a consuming
-virtual-monitor control still fails. Separate diagnostic SDL builds with a finite
-acquisition timeout and native event pumping likewise fail their 30-second alarm.
-A control requesting NVIDIA's explicit-sync opt-out also fails. Those SDK and environment experiments
-are not runtime fixes. A late debugger attachment observes the native wait through
-`drmSyncobjTimelineWait` and `VULKAN_INTERNAL_AcquireSwapchainTexture`; a successful
-debugger-launched run does not qualify the ordinary path. The SDL/driver/compositor
-cause remains unresolved, so notification 1009 and its sibling events retain their
-existing coverage states. Receipts and source/binary identities are retained in
-`bin/dpi-fifo-consumer/2026-10-26/`. Whole-goal numerical, network, allocation,
-performance, foreign-platform and owner acceptance remain separate.
+Mutter stops a recording when a scale edit changes its monitor's logical geometry.
+The helper creates a new recording after each committed configuration and requires
+one nonempty buffer from all three. Damage-driven recording does not supply one
+buffer per unchanged client presentation. These counts establish stream operation;
+the native presentation counter and public consumer carry their separate assertions.
 
 Configured recording uses Engine.RunMovie/RunMovieAsync and the typed MovieWriterFile/FPS settings. All recording entry points sample MovieWriterDisableVSync before startup; the root window retains an immediate-presentation request after display creation and before renderer creation when selected, subject to native fallback. The request ends with that display lifetime. See [movie writing](movie-writing.md#project-movie-startup) for precedence, ownership and verification limits.
 
