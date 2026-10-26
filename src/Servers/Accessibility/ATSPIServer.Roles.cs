@@ -6,7 +6,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class ATSPIServer
 {
-    private static uint NativeRole(AccessibilityServer.Element e) => e.IsApplication ? 75u : e.Role switch
+    private static uint NativeRole(AccessibilityServer.Element e) => e.IsApplication ? 75u : e.TextProtected ? 40u : e.Role switch
     {
         Role.Unknown => 67u,
         Role.DefaultButton => 43u,
@@ -58,7 +58,7 @@ internal sealed unsafe partial class ATSPIServer
         Role.TextRun => 61u,
         _ => throw new ArgumentOutOfRangeException(nameof(e)),
     };
-    private static string NativeRoleName(AccessibilityServer.Element e) => e.IsApplication ? "application" : e.Role switch
+    private static string NativeRoleName(AccessibilityServer.Element e) => e.IsApplication ? "application" : e.TextProtected ? "password text" : e.Role switch
     {
         Role.Unknown => "unknown",
         Role.DefaultButton => "push button",
@@ -130,7 +130,11 @@ internal sealed unsafe partial class ATSPIServer
         Set(33, e.Flag(Flag.Required));
         Set(40, e.Flag(Flag.Visited));
         Set(16, e.Flag(Flag.Modal));
-        Set(43, e.Flag(Flag.ReadOnly));
+        Set(43, e.Flag(Flag.ReadOnly) || e.SourceTextPrepared && !e.SourceTextEditable);
+        Set(7, e.ReplaceTextAction is not null && !e.Flag(Flag.ReadOnly));
+        Set(38, e.SetTextSelectionAction is not null);
+        Set(17, e.Role == Role.MultilineTextField);
+        Set(26, e.Role == Role.TextField);
         Set(31, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ActiveDescendant) is not null);
         Set(36, AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.ErrorMessage) is not null);
         Set(39, e.Role == Role.DefaultButton);

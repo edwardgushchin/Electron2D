@@ -1,6 +1,6 @@
 # TextServer
 
-Last updated: 2026-10-20
+Last updated: 2026-10-26
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -447,3 +447,5 @@ See [Unicode security and support data](../components/text-server.md#unicode-sec
 | `bool LoadSupportData(string filename)` | Initializes the immutable embedded database; external path is unused in this profile. |
 | `bool SaveSupportData(string filename)` | Writes and flushes exact database bytes; file access failure returns false. |
 | `bool IsLocaleUsingSupportData(string locale)` | Whether word/line breaking uses dictionary support for this locale. |
+
+Internal scalar rectangles and copied font-run metadata also feed [native accessibility text](AccessibilityServer.md#native-text). This integration retains the existing buffer/font ownership and Unicode scalar contract; it adds no public text-server API.

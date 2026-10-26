@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class AccessibilityServer
 {
-    internal enum RelationKind { Controls, DescribedBy, Details, FlowTo, LabeledBy, RadioGroup, MemberOf, ErrorMessage, LinkTarget, ActiveDescendant }
+    internal enum RelationKind { Controls, DescribedBy, Details, FlowTo, LabeledBy, RadioGroup, MemberOf, ErrorMessage, LinkTarget, ActiveDescendant, TextNext, TextPrevious }
     internal readonly record struct Relation(RelationKind Kind, Element Target, bool Automatic = false);
     private readonly List<Element> _activeOwners = [];
     private readonly Dictionary<int, Element> _focusOwners = [];
@@ -216,6 +216,11 @@ public sealed partial class AccessibilityServer
                 if (_focusOwners.TryGetValue(owner.WindowID, out var focused) && !focused.Retired)
                     try { SetFocusOwner(focused); } catch (Exception error) { (errors ??= []).Add(error); }
             }
+            else if (relation.Kind is RelationKind.TextNext or RelationKind.TextPrevious)
+            {
+                for (var p = owner; p is not null && !p.IsWindow; p = p.Parent)
+                    if (p.TextEnabled) try { _native!.TextAttributesChanged(p); } catch (Exception error) { (errors ??= []).Add(error); }
+            }
             else if (relation.Kind == RelationKind.LinkTarget)
             {
                 try { _native!.ActionsChanged(owner); } catch (Exception error) { (errors ??= []).Add(error); }
@@ -227,7 +232,7 @@ public sealed partial class AccessibilityServer
                     try { _native!.StateChanged(owner, "invalid-entry", RelatedTarget(owner, RelationKind.ErrorMessage) is not null); } catch (Exception error) { (errors ??= []).Add(error); }
             }
         }
-        if (!relation.Target.Retired && relation.Target != owner && relation.Kind is not (RelationKind.ActiveDescendant or RelationKind.LinkTarget or RelationKind.MemberOf or RelationKind.RadioGroup))
+        if (!relation.Target.Retired && relation.Target != owner && relation.Kind is not (RelationKind.ActiveDescendant or RelationKind.LinkTarget or RelationKind.MemberOf or RelationKind.RadioGroup or RelationKind.TextNext or RelationKind.TextPrevious))
             try { _native!.RelationsChanged(relation.Target); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Accessibility relation notifications failed.", errors);
     }

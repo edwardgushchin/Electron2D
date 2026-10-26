@@ -47,6 +47,8 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateSetBounds(RID id, Rect2 rect)` | [UpdateSetBounds](#updatesetbounds) |
 | `public static void UpdateSetTransform(RID id, Transform transform)` | [UpdateSetTransform](#updatesettransform) |
 | `public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)` | [UpdateAddAction](#updateaddaction) |
+| `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<RID, int, RID, int> callback)` | [UpdateAddAction](#updateaddaction) |
+| `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<string> callback)` | [UpdateAddAction](#updateaddaction) |
 | `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<double> callback)` | [UpdateAddAction](#updateaddaction) |
 | `public static void UpdateSetNumValue(RID id, double position)` | [Numeric values](#numeric-values) |
 | `public static void UpdateSetNumRange(RID id, double min, double max)` | [Numeric values](#numeric-values) |
@@ -65,6 +67,18 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateSetFocus(RID id)` | [UpdateSetFocus](#updatesetfocus) |
 | `public static void SetWindowFocused(int windowID, bool focused)` | [SetWindowFocused](#setwindowfocused) |
 | `public static void SetWindowRect(int windowID, Rect2 rectOut, Rect2 rectIn)` | [SetWindowRect](#setwindowrect) |
+| `public static RID CreateSubTextEditElements(RID parentRID, RID shapedText, float minHeight, int insertPosition = -1, bool isLastLine = false)` | [CreateSubTextEditElements](#createsubtexteditelements) |
+| `public static void UpdateSetValue(RID id, string value)` | [UpdateSetValue](#updatesetvalue) |
+| `public static void UpdateSetTextSelection(RID id, RID textStartID, int startChar, RID textEndID, int endChar)` | [UpdateSetTextSelection](#updatesettextselection) |
+| `public static void UpdateSetTextAlign(RID id, HorizontalAlignment align)` | [UpdateSetTextAlign](#updatesettextalign) |
+| `public static void UpdateSetTextOrientation(RID id, bool vertical)` | [UpdateSetTextOrientation](#updatesettextorientation) |
+| `public static void UpdateSetTextDecorations(RID id, bool underline, bool strikethrough, bool overline, Color? color = null)` | [UpdateSetTextDecorations](#updatesettextdecorations) |
+| `public static void UpdateSetForegroundColor(RID id, Color color)` | [UpdateSetForegroundColor](#updatesetforegroundcolor) |
+| `public static void UpdateSetBackgroundColor(RID id, Color color)` | [UpdateSetBackgroundColor](#updatesetbackgroundcolor) |
+| `public static void UpdateSetLanguage(RID id, string language)` | [UpdateSetLanguage](#updatesetlanguage) |
+| `public static void UpdateSetPlaceholder(RID id, string placeholder)` | [UpdateSetPlaceholder](#updatesetplaceholder) |
+| `public static void UpdateSetNextOnLine(RID id, RID otherID)` | [UpdateSetNextOnLine](#updatesetnextonline) |
+| `public static void UpdateSetPreviousOnLine(RID id, RID otherID)` | [UpdateSetPreviousOnLine](#updatesetpreviousonline) |
 
 ## Enumerations
 
@@ -72,7 +86,7 @@ A custom producer can create an element, set its name/bounds, register an Action
 | --- | --- |
 | [AccessibilityRole](AccessibilityServer.AccessibilityRole.md) | All 48 semantic role selectors and native role projections. |
 | [AccessibilityFlags](AccessibilityServer.AccessibilityFlags.md) | Ten independent state/geometry selectors. |
-| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Click, Focus, Blur, Decrement, Increment and numeric SetValue; broader payloads remain incomplete. |
+| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Click/Focus/Blur, numeric requests, directed scalar selection and selected-text replacement; other payload families remain incomplete. |
 
 ## Method descriptions
 
@@ -179,7 +193,7 @@ Sets the affine transform applied to the element's bounds. The matrix and result
 
 `public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)`
 
-Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Decrement or Increment. The Action<double> overload accepts numeric SetValue only. Other payload signatures await their real native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
+Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Decrement or Increment. The Action<double> overload accepts numeric SetValue only. The four-argument RID/scalar overload accepts SetTextSelection; the string overload accepts ReplaceSelectedText. Their producer and source rules are specified in [Native text](#native-text). Other payload signatures await their real native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
 
 <a id="updatesetfocus"></a>
 ### UpdateSetFocus
@@ -206,7 +220,7 @@ Supplies separate outer/decorated and inner/client rectangles in screen coordina
 
 Closing a native child window retires all its elements, including unattached ones. Display teardown removes native registrations, connection/context ownership, callbacks and RID membership even after callback or notification failure. Reopening creates a new bridge and new element identities. Protected `ValidateDisposal()` rejects disposal of the permanent service.
 
-[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profile covers Accessible/Application/Component/Action/Value/Cache. Native text, color values, table and remaining payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
+[AccessibilityFoundationTests](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs), its managed/lifetime companions and the separate [AT-SPI client](../../tests/AccessibilityClient/probe.py) exercise public scene/native behavior. The current profile covers Accessible/Application/Component/Action/Value/Text/EditableText/Cache. Color values, table and remaining payload actions retain exact obligations in [coverage](../coverage/classes/AccessibilityServer.md). Warmed owner managed allocations, native heap allocation totals, hardware rendering, foreign platforms and human assistive-client acceptance are distinct gates.
 
 <a id="numeric-values"></a>
 ### Numeric values
@@ -290,3 +304,96 @@ Replaces the internal-link anchor. Empty otherID clears it. A real Hyperlink int
 `public static void UpdateSetActiveDescendant(RID id, RID otherID)`
 
 Replaces the strict descendant selected when this composite owns semantic focus; a non-descendant or self throws ArgumentException. Empty otherID clears it. Native output includes ActiveDescendantChanged and manages-descendants; semantic focus follows active-descendant chains. Reparenting outside the owner or retiring a target clears it and returns focus to the surviving owner. This selects semantic focus and does not move the ordinary GUI focus owner.
+
+<a id="native-text"></a>
+## Native text and editing
+
+LineEdit, TextEdit and CodeEdit publish actual text and copied semantic line identities. Native Text reads scalar offsets, character/range bounds, point hits, bounded ranges, ICU words/sentences, visual lines and paragraphs, run/inherited attributes, caret and selections. TextEdit retains indexed multiple-selection semantics. Requests run on the display owner, reuse ordinary edits/history/signals and enforce read-only and length policies. A nonselectable field remains editable. Password text is masked; native copying/cutting is rejected. Committed content excludes pending IME composition, while geometry follows its displayed insertion.
+
+SetTextSelection uses `Action<RID, int, RID, int>` with anchor RID/offset then focus RID/offset. ReplaceSelectedText uses `Action<string>` and replaces the current selection. Generic callbacks must publish their resulting content and endpoints; native success means the callback ran, not that requested text bypassed producer policy. Wrong action signatures reject before registration. Sources use cached compiled callbacks. Native errors return wire errors and user exceptions aggregate after returning to the owner pump.
+
+Source scrolling keeps selection intact; unavailable generic scrolling returns false. Unknown screen origin uses the existing unavailable screen-coordinate sentinel. Font size is projected to nominal protocol points (96 logical pixels per inch), independently of physical DPI qualification. Cold queries, snapshots and content edits may allocate; warmed unchanged publication and caret updates preserve the managed-owner frame allocation boundary.
+
+<a id="createsubtexteditelements"></a>
+### CreateSubTextEditElements
+
+`public static RID CreateSubTextEditElements(RID parentRID, RID shapedText, float minHeight, int insertPosition = -1, bool isLastLine = false)`
+
+Copies a borrowed shaped buffer into an attached parent-owned line. Empty RID creates an empty line; isLastLine=false appends LF. Finite minHeight is nonnegative; insertPosition follows CreateSubElement. The snapshot retains scalar rectangles, native font family/size/weight/style, language and direction independently of the original buffer and fonts. Use the returned line RID for scalar selection. Recreate it when its shape changes; bounds/transforms position its copied local geometry.
+
+<a id="updatesetvalue"></a>
+### UpdateSetValue
+
+`public static void UpdateSetValue(RID id, string value)`
+
+Publishes a nonnull actual string value through native valuetext attributes and text/value change events. Numeric Value.Text uses an explicitly supplied string before automatic number formatting. This setter never calls the edit callback or invents a glyph layout; shaped/source line children remain the text tree when present. Generic unshaped values are readable with unknown character geometry. Producers publish their actual result after requests.
+
+<a id="updatesettextselection"></a>
+### UpdateSetTextSelection
+
+`public static void UpdateSetTextSelection(RID id, RID textStartID, int startChar, RID textEndID, int endChar)`
+
+Publishes directed anchor/focus endpoints, including a collapsed caret. Both text lines must descend from id in the same window. Offsets are Unicode scalar positions from zero through the corresponding line length. Invalid identities, foreign/outside endpoints and out-of-range positions fail before mutation. Retiring or moving an endpoint outside the owner clears the selection.
+
+<a id="updatesettextalign"></a>
+### UpdateSetTextAlign
+
+`public static void UpdateSetTextAlign(RID id, HorizontalAlignment align)`
+
+Publishes a defined horizontal alignment through native justification attributes. The initial default is Left; descendants inherit authored attributes unless a closer run overrides them.
+
+<a id="updatesettextorientation"></a>
+### UpdateSetTextOrientation
+
+`public static void UpdateSetTextOrientation(RID id, bool vertical)`
+
+Publishes vertical text direction through native attributes. False preserves horizontal run LTR/RTL direction. This state setter does not reshape or rotate glyphs.
+
+<a id="updatesettextdecorations"></a>
+### UpdateSetTextDecorations
+
+`public static void UpdateSetTextDecorations(RID id, bool underline, bool strikethrough, bool overline, Color? color = null)`
+
+Publishes independent underline, strikethrough and overline flags and a finite decoration color. Null selects opaque black. Native readers receive styling attributes and an attribute-change event.
+
+<a id="updatesetforegroundcolor"></a>
+### UpdateSetForegroundColor
+
+`public static void UpdateSetForegroundColor(RID id, Color color)`
+
+Publishes a finite foreground color; native RGB attributes project clamped channels to 16-bit values. This semantic setter does not repaint the visual source.
+
+<a id="updatesetbackgroundcolor"></a>
+### UpdateSetBackgroundColor
+
+`public static void UpdateSetBackgroundColor(RID id, Color color)`
+
+Publishes a finite background color through the same native 16-bit RGB attribute projection. Authored values inherit through the semantic tree.
+
+<a id="updatesetlanguage"></a>
+### UpdateSetLanguage
+
+`public static void UpdateSetLanguage(RID id, string language)`
+
+Publishes a nonnull text language tag. Shaped runs retain their own language metadata; source fields otherwise use their authored Language. This does not change shaping or the application locale.
+
+<a id="updatesetplaceholder"></a>
+### UpdateSetPlaceholder
+
+`public static void UpdateSetPlaceholder(RID id, string placeholder)`
+
+Publishes nonnull placeholder-text independently of actual content. Automatic fields use their own PlaceholderText; a placeholder never becomes committed document text.
+
+<a id="updatesetnextonline"></a>
+### UpdateSetNextOnLine
+
+`public static void UpdateSetNextOnLine(RID id, RID otherID)`
+
+Sets a non-owning same-window next text neighbor; an empty RID clears it. Native visual-line boundary queries join adjacent linked fragments even when their local baselines differ. Literal LF remains a mandatory boundary. Links never reorder hierarchy or recurse; retiring either target removes its references and notifies affected text readers.
+
+<a id="updatesetpreviousonline"></a>
+### UpdateSetPreviousOnLine
+
+`public static void UpdateSetPreviousOnLine(RID id, RID otherID)`
+
+Sets a non-owning same-window previous text neighbor; an empty RID clears it. Native visual-line boundary queries join adjacent linked fragments even when their local baselines differ. Literal LF remains a mandatory boundary. Links never reorder hierarchy or recurse; retiring either target removes its references and notifies affected text readers.

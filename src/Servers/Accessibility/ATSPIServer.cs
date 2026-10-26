@@ -9,6 +9,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class ATSPIServer : IDisposable
 {
+    private const string TextInterface = "org.a11y.atspi.Text", EditableTextInterface = "org.a11y.atspi.EditableText";
     private const string Accessible = "org.a11y.atspi.Accessible", Component = "org.a11y.atspi.Component", ActionInterface = "org.a11y.atspi.Action", ValueInterface = "org.a11y.atspi.Value", ApplicationInterface = "org.a11y.atspi.Application", Cache = "org.a11y.atspi.Cache";
     private const string CachePath = "/org/a11y/atspi/cache", Registry = "org.a11y.atspi.Registry", RegistryRoot = "/org/a11y/atspi/accessible/root", NullPath = "/org/a11y/atspi/null";
     private sealed class InvalidRequestException(string message, bool retired = false) : Exception(message)
@@ -250,10 +251,11 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
                 "MinimumValue" => g_variant_new_double(e.NumericMinimum),
                 "MaximumValue" => g_variant_new_double(e.NumericMaximum),
                 "MinimumIncrement" => g_variant_new_double(e.NumericStep),
-                "Text" => S(e.Source is SpinBox spin ? spin.GetLineEdit().Text : e.NumericValue.ToString(TranslationServer.Culture)),
+                "Text" => S(e.TextValue ?? (e.Source is SpinBox spin ? spin.GetLineEdit().Text : e.NumericValue.ToString(TranslationServer.Culture))),
                 _ => throw new InvalidRequestException("Unknown numeric property.")
             };
         }
+        if (iface == TextInterface) return TextProperty(e, name);
         if (iface == Hyperlink) return HyperlinkProperty(e, name);
         if (iface == ApplicationInterface) return name switch
         {
@@ -273,6 +275,8 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             g_variant_builder_add_value(b, S(Accessible)); g_variant_builder_add_value(b, S(Component));
             if (ActionCount(e) != 0) g_variant_builder_add_value(b, S(ActionInterface));
             if (e.HasNumericValue) g_variant_builder_add_value(b, S(ValueInterface));
+            if (e.TextEnabled) g_variant_builder_add_value(b, S(TextInterface));
+            if (e.ReplaceTextAction is not null && (e.SetTextSelectionAction is not null || e.Source is LineEdit or TextEdit)) g_variant_builder_add_value(b, S(EditableTextInterface));
             if (AccessibilityServer.RelatedTarget(e, AccessibilityServer.RelationKind.LinkTarget) is not null) g_variant_builder_add_value(b, S(Hyperlink));
             if (e.IsApplication) g_variant_builder_add_value(b, S(ApplicationInterface));
             return g_variant_builder_end(b);
@@ -300,6 +304,8 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         if (e.Retired) throw new InvalidRequestException("The accessibility element has retired.", retired: true);
         if (iface == Cache && method == "GetItems") return Tuple([CacheItems()]);
         if (iface == ApplicationInterface) return method switch { "GetLocale" => Tuple([S(TranslationServer.Culture.Name)]), "GetApplicationBusAddress" => Tuple([S("")]), _ => throw new InvalidOperationException("Unknown application method.") };
+        if (iface == TextInterface) return TextCall(e, method, args);
+        if (iface == EditableTextInterface) return EditableTextCall(e, method, args);
         if (iface == Accessible) return method switch
         {
             "GetChildAtIndex" => Tuple([ObjectRef(e.Children.ElementAtOrDefault(IntArg(args, 0)))]),
@@ -309,7 +315,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             "GetRole" => Tuple([U(NativeRole(e))]),
             "GetRoleName" or "GetLocalizedRoleName" => Tuple([S(NativeRoleName(e))]),
             "GetState" => Tuple([States(e)]),
-            "GetAttributes" => Tuple([Array("{ss}", [g_variant_new_dict_entry(S("toolkit"), S("Electron2D"))])]),
+            "GetAttributes" => Tuple([AccessibleAttributes(e)]),
             "GetApplication" => Tuple([ObjectRef(_owner.Application)]),
             "GetInterfaces" => Tuple([Interfaces(e)]),
             _ => throw new InvalidOperationException("Unknown accessible method.")

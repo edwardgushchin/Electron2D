@@ -1441,3 +1441,5 @@ Requests reject native frame submission and retiring windows. Native failure att
 Window.Transparent configured before Engine.Run is passed into native main-window creation, sharing the existing child creation-time alpha policy. Compatibility preserves native alpha, including loading-image backgrounds. Strict GPU startup rejects because the current SDL GPU presentation API cannot present transparent windows; configured RenderingFallback can select Compatibility. Equal live assignments preserve the active flag; changing alpha after native creation rejects without changing authored state.
 
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
+
+Accessibility keeps screen origin unavailable on Wayland and the SDL dummy driver. Automatic semantic synchronization still publishes window-relative geometry and does not query unsupported decorated-window positions on the dummy driver.

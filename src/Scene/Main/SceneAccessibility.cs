@@ -66,6 +66,7 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var name = node switch { Control c => c.AccessibleCaption, Window w => w.AccessibilityTitle, _ => "" };
             var description = node is Control c2 ? c2.AccessibleDescription : "";
             var role = RoleFor(node); var flags = 0UL;
+            if (node is LineEdit or TextEdit) AccessibilityServer.UpdateSourceText(e);
             var visible = node is not CanvasItem canvas || canvas.IsVisibleInTree;
             if (node is Window win) visible = win.Visible;
             if (!visible) flags |= 1UL << (int)Flag.Hidden;
@@ -167,6 +168,8 @@ internal sealed class SceneAccessibility(SceneTree tree)
         LinkButton => Role.Link,
         BaseButton => Role.Button,
         Label => Role.StaticText,
+        LineEdit => Role.TextField,
+        TextEdit => Role.MultilineTextField,
         Slider => Role.Slider,
         ScrollBar => Role.ScrollBar,
         ProgressBar or TextureProgressBar => Role.ProgressIndicator,

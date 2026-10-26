@@ -6,7 +6,17 @@ namespace Electron2D;
 
 internal sealed unsafe partial class ATSPIServer
 {
-    private static Rect2 Bounds(Element e) => AccessibilityServer.TransformBounds(e.Bounds, e.Transform);
+    private static Rect2 Bounds(Element e)
+    {
+        if (e.TextSource is { IsDisposed: false, IsInsideTree: true } source)
+        {
+            var local = source is LineEdit line ? line.AccessibilityLineRect() : ((TextEdit)source).AccessibilityLineRect(e.TextLine);
+            return (source.GetViewport()!.GetScreenTransform() * source.GetGlobalTransformWithCanvas()) * local;
+        }
+        var rect = AccessibilityServer.TransformBounds(e.Bounds, e.Transform);
+        if (e.Parent is { IsTextLine: true } parent && e.TextValue is not null) rect = AccessibilityServer.TransformBounds(new(rect.Position + parent.Bounds.Position, rect.Size), parent.Transform);
+        return rect;
+    }
     private static Element? WindowRoot(Element e) { for (var p = e; p is not null; p = p.Parent) if (p.IsWindow) return p; return null; }
     private static Rect2 Coordinates(Element e, uint kind)
     {

@@ -1,6 +1,8 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · Español · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-La accesibilidad nativa en Linux publica nombres, roles, estados, acciones de botones y foco y valores numéricos de Range mediante AT-SPI. Slider, ScrollBar y SpinBox editables aceptan solicitudes numéricas; los indicadores de progreso son de solo lectura. Configure `ProjectSettings.AccessibilitySupport` antes de abrir una ventana; los protocolos de texto y tablas y los adaptadores de otras plataformas siguen en desarrollo. AT-SPI también publica relaciones de etiquetas, descripciones y controles, grupos de radio, errores de validación, descendientes activos y enlaces internos. Las relaciones siguen las rutas y la vida útil de sus destinos.
+La accesibilidad nativa en Linux publica nombres, roles, estados, acciones de botones y foco y valores numéricos de Range mediante AT-SPI. Slider, ScrollBar y SpinBox editables aceptan solicitudes numéricas; los indicadores de progreso son de solo lectura. Configure `ProjectSettings.AccessibilitySupport` antes de abrir una ventana; los protocolos de tablas y los adaptadores de otras plataformas siguen en desarrollo. AT-SPI también publica relaciones de etiquetas, descripciones y controles, grupos de radio, errores de validación, descendientes activos y enlaces internos. Las relaciones siguen las rutas y la vida útil de sus destinos.
+
+Text/EditableText nativos permiten leer y editar LineEdit/TextEdit/CodeEdit, con selección Unicode, geometría del texto y contraseñas enmascaradas. Véase el [contrato de accesibilidad](docs/classes/AccessibilityServer.md#native-text).
 
 <h1 align="center">
   <picture>

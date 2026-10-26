@@ -131,3 +131,5 @@ The [loading-image slice](../components/boot-images.md) now carries authored mai
 Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress state, typed numeric writes and small/page actions. Requests reuse ordinary Range mutation and shared notifications; progress displays and non-editable inputs are read-only. See [ADR 0114](../decisions/accessibility.md#adr-0114) and [the accessibility component](../components/accessibility.md) for exact protocol and verification limits.
 
 Semantic relationships now connect stored Control paths and live radio groups to native direct/reciprocal links, validation errors, virtual descendant focus and internal hyperlink anchors. Ownership and exercised limits are in [native accessibility](../components/accessibility.md#semantic-relationships).
+
+Native accessibility now includes [text and editing](../classes/AccessibilityServer.md#native-text) for LineEdit/TextEdit/CodeEdit, with typed manual producers and copied shaped text. The owning reference records exact native, allocation and platform limits.

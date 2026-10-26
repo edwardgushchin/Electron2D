@@ -677,6 +677,90 @@
       "electron2d": "property:Electron2D.Control.AccessibilityFlowToNodes()",
       "state": "Implemented",
       "reason": "ADR 0114: executable native semantic graph with direct/reciprocal AT-SPI relations, source/manual provenance, target retirement and repaired paths. Stored Control arrays and current radio groups have real consumers; validation, active descendant focus and internal Hyperlink targets execute through the native client. Text/table payloads, human reader and other platforms remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:create_sub_text_edit_elements(RID:,RID:,float:,int:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.CreateSubTextEditElements(Electron2D.RID,Electron2D.RID,System.Single,System.Int32,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_value(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetValue(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_text_selection(RID:,RID:,int:,RID:,int:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTextSelection(Electron2D.RID,Electron2D.RID,System.Int32,Electron2D.RID,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_text_align(RID:,int:HorizontalAlignment)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTextAlign(Electron2D.RID,Electron2D.HorizontalAlignment)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_text_orientation(RID:,bool:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTextOrientation(Electron2D.RID,System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_text_decorations(RID:,bool:,bool:,bool:,Color:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetTextDecorations(Electron2D.RID,System.Boolean,System.Boolean,System.Boolean,System.Nullable<Electron2D.Color>)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_foreground_color(RID:,Color:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetForegroundColor(Electron2D.RID,Electron2D.Color)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_background_color(RID:,Color:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetBackgroundColor(Electron2D.RID,Electron2D.Color)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_language(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetLanguage(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_placeholder(RID:,String:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetPlaceholder(Electron2D.RID,System.String)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_next_on_line(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetNextOnLine(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_previous_on_line(RID:,RID:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetPreviousOnLine(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_TEXT_SELECTION",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.SetTextSelection()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_REPLACE_SELECTED_TEXT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ReplaceSelectedText()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
     }
   ],
   "extras": [
@@ -707,12 +791,20 @@
     {
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<System.Double>)",
       "reason": "ADR 0114: compiled numeric payload overload for SetValue. The original callback reference row remains Partial until all action payload/native source families execute."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.RID, System.Int32, Electron2D.RID, System.Int32>)",
+      "reason": "ADR 0114: compiled text payload overload; four RID/scalar arguments request directed selection and string requests selected-text replacement. The original Callable row remains Partial for remaining action signatures."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<System.String>)",
+      "reason": "ADR 0114: compiled text payload overload; four RID/scalar arguments request directed selection and string requests selected-text replacement. The original Callable row remains Partial for remaining action signatures."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Complete text/color/table/announcement and remaining payload-action families retain exact row triggers.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Complete color/table/announcement and remaining payload-action families retain exact row triggers.",
       "godot": [
         "class:AccessibilityServer"
       ]
@@ -784,27 +876,9 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: native numeric Value and Action<double> are implemented. Remaining color and general text value need real color/text sources, native value-text projection and typed payload callbacks; assigning a role does not supply these consumers.",
+      "reason": "ADR 0114: numeric and string values have native consumers. Color value still requires a real color-picker source, typed color callback and native value/attribute/action protocol; it enters that complete color slice.",
       "godot": [
-        "AccessibilityServer::method:update_set_color_value(RID:,Color:)",
-        "AccessibilityServer::method:update_set_value(RID:,String:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native Text/EditableText and selection/boundary interfaces plus typed shaped-text/edit-source lifetime, character offsets, geometry and payload callbacks. Do not add inert metadata or unsupported action selectors.",
-      "godot": [
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_REPLACE_SELECTED_TEXT",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_TEXT_SELECTION",
-        "AccessibilityServer::method:create_sub_text_edit_elements(RID:,RID:,float:,int:,bool:)",
-        "AccessibilityServer::method:update_set_background_color(RID:,Color:)",
-        "AccessibilityServer::method:update_set_foreground_color(RID:,Color:)",
-        "AccessibilityServer::method:update_set_next_on_line(RID:,RID:)",
-        "AccessibilityServer::method:update_set_previous_on_line(RID:,RID:)",
-        "AccessibilityServer::method:update_set_text_align(RID:,int:HorizontalAlignment)",
-        "AccessibilityServer::method:update_set_text_decorations(RID:,bool:,bool:,bool:,Color:)",
-        "AccessibilityServer::method:update_set_text_orientation(RID:,bool:)",
-        "AccessibilityServer::method:update_set_text_selection(RID:,RID:,int:,RID:,int:)"
+        "AccessibilityServer::method:update_set_color_value(RID:,Color:)"
       ]
     },
     {
@@ -817,14 +891,12 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native attributes/help/locale/action-keybinding or role/state-description consumer for this exact metadata field, including updates and client readback. Do not add inert metadata or unsupported action selectors.",
+      "reason": "ADR 0114: text language/placeholder/styling attributes now execute. Remaining braille/role/state/class/shortcut/tooltip/URL metadata needs its real native Accessible/Hypertext/action consumer and GUI source propagation; no inert metadata setter is implemented.",
       "godot": [
         "AccessibilityServer::method:update_set_braille_label(RID:,String:)",
         "AccessibilityServer::method:update_set_braille_role_description(RID:,String:)",
         "AccessibilityServer::method:update_set_classname(RID:,String:)",
         "AccessibilityServer::method:update_set_extra_info(RID:,String:)",
-        "AccessibilityServer::method:update_set_language(RID:,String:)",
-        "AccessibilityServer::method:update_set_placeholder(RID:,String:)",
         "AccessibilityServer::method:update_set_role_description(RID:,String:)",
         "AccessibilityServer::method:update_set_shortcut(RID:,String:)",
         "AccessibilityServer::method:update_set_state_description(RID:,String:)",
@@ -1004,14 +1076,14 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Only Click/Focus/Blur are exposed; remaining typed payload and action consumers are pending.",
+      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Remaining custom/color/scroll/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
       "godot": [
         "AccessibilityServer::enum:AccessibilityAction"
       ]
     },
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Compiled Action handles Click/Focus/Blur/Decrement/Increment and Action<double> handles numeric SetValue. Color/text/selection/scroll action signatures require their corresponding native protocol and source consumer.",
+      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Remaining custom/color/scroll/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
       "godot": [
         "AccessibilityServer::method:update_add_action(RID:,int:AccessibilityServer.AccessibilityAction,Callable:)"
       ]
@@ -1067,6 +1139,26 @@
         "Control::property:accessibility_described_by_nodes",
         "Control::property:accessibility_labeled_by_nodes",
         "Control::property:accessibility_flow_to_nodes"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate.",
+      "godot": [
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_REPLACE_SELECTED_TEXT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_TEXT_SELECTION",
+        "AccessibilityServer::method:create_sub_text_edit_elements(RID:,RID:,float:,int:,bool:)",
+        "AccessibilityServer::method:update_set_background_color(RID:,Color:)",
+        "AccessibilityServer::method:update_set_foreground_color(RID:,Color:)",
+        "AccessibilityServer::method:update_set_language(RID:,String:)",
+        "AccessibilityServer::method:update_set_next_on_line(RID:,RID:)",
+        "AccessibilityServer::method:update_set_placeholder(RID:,String:)",
+        "AccessibilityServer::method:update_set_previous_on_line(RID:,RID:)",
+        "AccessibilityServer::method:update_set_text_align(RID:,int:HorizontalAlignment)",
+        "AccessibilityServer::method:update_set_text_decorations(RID:,bool:,bool:,bool:,Color:)",
+        "AccessibilityServer::method:update_set_text_orientation(RID:,bool:)",
+        "AccessibilityServer::method:update_set_text_selection(RID:,RID:,int:,RID:,int:)",
+        "AccessibilityServer::method:update_set_value(RID:,String:)"
       ]
     }
   ]

@@ -13,6 +13,17 @@ public sealed partial class AccessibilityServer
         {
             var focusSource = FocusSource(control);
             e.SourceFocusAction = focusSource.GrabAccessibilityFocus; e.SourceBlurAction = focusSource.ReleaseFocus;
+            if (node is LineEdit or TextEdit)
+            {
+                e.SourceTextSelectionAction = (anchor, start, focus, end) =>
+                {
+                    var fromLine = e.SourceTextLines.FindIndex(line => line.ID == anchor); var toLine = e.SourceTextLines.FindIndex(line => line.ID == focus);
+                    if (fromLine < 0 || toLine < 0) throw new ArgumentException("Text selection refers to a retired or foreign source line.");
+                    if (node is LineEdit line) line.AccessibilitySelect(start, end);
+                    else ((TextEdit)node).AccessibilitySelect(fromLine, start, toLine, end);
+                };
+                e.SourceTextReplaceAction = text => { if (node is LineEdit line) line.AccessibilityReplace(text); else ((TextEdit)node).AccessibilityReplace(text); };
+            }
             if (node is BaseButton button) e.SourceClickAction = button.ActivateAccessibility;
             if (node is Range range)
             {

@@ -1,6 +1,6 @@
 <p align="right">English · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-Native accessibility on Linux publishes scene names, roles, state, button/focus actions and numeric Range values through AT-SPI. Editable sliders, scroll bars and spin boxes accept native numeric requests; progress displays are read-only. Set `ProjectSettings.AccessibilitySupport` before opening a window; native text/table protocols and other platform adapters remain in progress. AT-SPI also exposes stored labels/descriptions/control links, radio groups, validation errors, active descendants and internal hyperlink anchors. Relations follow node paths and target lifetime.
+Native accessibility on Linux publishes scene names, roles, state, button/focus actions and numeric Range values through AT-SPI. Editable sliders, scroll bars and spin boxes accept native numeric requests; progress displays are read-only. Set `ProjectSettings.AccessibilitySupport` before opening a window; native table protocols and other platform adapters remain in progress. Native Text/EditableText reads and edits LineEdit/TextEdit/CodeEdit, including Unicode selections, shaped geometry and password masking. AT-SPI also exposes stored labels/descriptions/control links, radio groups, validation errors, active descendants and internal hyperlink anchors. Relations follow node paths and target lifetime.
 
 <h1 align="center">
   <picture>

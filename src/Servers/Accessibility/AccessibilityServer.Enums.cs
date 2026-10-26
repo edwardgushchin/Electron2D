@@ -143,5 +143,9 @@ public sealed partial class AccessibilityServer
         Increment = 6,
         /// <summary>Requests a numeric value using an Action&lt;double&gt; callback.</summary>
         SetValue = 20,
+        /// <summary>Requests anchor and focus text-element RIDs and Unicode scalar offsets through a four-argument callback.</summary>
+        SetTextSelection = 9,
+        /// <summary>Replaces the current selection through a string callback.</summary>
+        ReplaceSelectedText = 10,
     }
 }

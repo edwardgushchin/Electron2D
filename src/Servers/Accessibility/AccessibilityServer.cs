@@ -9,6 +9,27 @@ public sealed partial class AccessibilityServer : ElectronObject
     internal sealed class Element
     {
         internal readonly RID ID = RID.Allocate();
+        internal string? TextValue;
+        internal int TextScalarCount, SourceTextVersion;
+        internal Rect2[] TextRectangles = [];
+        internal readonly List<TextStyle> TextStyles = [];
+        internal Control? TextSource;
+        internal int TextLine;
+        internal bool TextEnabled, EditableTextRegistered, TextProtected, IsTextLine, SourceTextPrepared, SourceTextEditable, SourceTextSelectable, TextLineHasNewline;
+        internal string? SourceLineValue;
+        internal string TextLanguage = "", TextPlaceholder = "";
+        internal Action<RID, int, RID, int>? SourceTextSelectionAction;
+        internal Action<string>? SourceTextReplaceAction;
+        internal readonly List<Element> SourceTextLines = [];
+        internal Element? SelectionAnchor, SelectionFocus;
+        internal int SelectionAnchorOffset, SelectionFocusOffset;
+        internal Action<RID, int, RID, int>? SetTextSelectionAction;
+        internal Action<string>? ReplaceTextAction;
+        internal int TextFormatMask;
+        internal HorizontalAlignment TextAlignment;
+        internal bool TextVertical, TextUnderline, TextStrikethrough, TextOverline;
+        internal Color? TextForeground, TextBackground;
+        internal Color TextDecorationColor = Colors.Black;
         internal readonly int WindowID;
         internal readonly string Path;
         internal readonly List<Element> Children = [];
@@ -109,6 +130,7 @@ public sealed partial class AccessibilityServer : ElectronObject
             try { _native!.ChildrenChanged(previous, child, false, oldIndex); } catch (Exception error) { (errors ??= []).Add(error); }
         try { _native!.ChildrenChanged(parent, child, true); } catch (Exception error) { (errors ??= []).Add(error); }
         try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { ValidateTextSelections(); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Accessibility hierarchy notifications failed.", errors);
     }
     /// <summary>Creates a producer-owned element associated with a native window.</summary>
@@ -161,6 +183,8 @@ public sealed partial class AccessibilityServer : ElectronObject
     }
     private void Free(Element e)
     {
+        var textOwner = e.IsTextLine && e.TextSource is null ? ManualTextOwner(e.Parent) : null;
+        var oldText = textOwner is null ? null : CaptureText(textOwner);
         List<Exception>? errors = null;
         if (_focusOwners.GetValueOrDefault(e.WindowID) == e)
         {
@@ -191,9 +215,13 @@ public sealed partial class AccessibilityServer : ElectronObject
             try { _native!.ChildrenChanged(parent, e, false, index); } catch (Exception error) { (errors ??= []).Add(error); }
         }
         e.Parent = null; e.Source = null; e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;
+        e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
         e.Retired = true; e.Actions.Clear(); _elements.Remove(e.ID); _elementRevision++;
         RetireRelations(e, ref errors); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
         try { ValidateActiveRelations(); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { ValidateTextSelections(); } catch (Exception error) { (errors ??= []).Add(error); }
+        if (textOwner is not null && !textOwner.Retired)
+            try { _native!.TextChanged(textOwner, oldText!, CaptureText(textOwner)); } catch (Exception error) { (errors ??= []).Add(error); }
         try { _native!.Unregister(e); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Accessibility element retirement failed.", errors);
     }
@@ -333,6 +361,7 @@ public sealed partial class AccessibilityServer : ElectronObject
             r._native = null; r._attempted = false; r._automatic = false; r._focused.Clear(); r._focusOwners.Clear(); r._activeOwners.Clear();
             foreach (var e in r._elements.Values)
             {
+                e.SelectionAnchor = e.SelectionFocus = null; e.SetTextSelectionAction = e.SourceTextSelectionAction = null; e.ReplaceTextAction = e.SourceTextReplaceAction = null; e.TextSource = null; e.SourceTextLines.Clear();
                 e.Retired = true; e.Actions.Clear(); e.Children.Clear(); e.Parent = null; e.Source = null;
                 e.Relations.Clear(); e.RelationOwners.Clear(); e.ExpectedRelations.Clear(); e.SourceRelationGroup = null;
                 e.SourceFocusAction = e.SourceBlurAction = e.SourceClickAction = e.SourceIncrementAction = e.SourceDecrementAction = null; e.SetValueAction = e.SourceSetValueAction = null;

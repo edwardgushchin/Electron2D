@@ -1,6 +1,6 @@
 # LineEdit
 
-Last updated: 2026-10-19
+Last updated: 2026-10-26
 
 **Namespace:** `Electron2D`. **Declaration:** `public class LineEdit : Control`.
 
@@ -809,3 +809,5 @@ The placeholder use [Control.TranslationContext](Control.md#automatic-translatio
 Visual selection adjacency uses a fixed .001 logical-pixel tolerance in the shared layout helper, preserving real unselected BIDI gaps at large advance coordinates. See [the text editing contract](../components/text-server.md#caret-selection-and-navigation).
 
 Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.
+
+Native Text/EditableText output uses this control's existing document, caret/selection and ordinary editing path. Unicode offsets, password/length/read-only policies, scrolling and verification limits follow the [native text service contract](AccessibilityServer.md#native-text). Semantic line identities are runtime-owned and are not stored in scenes.

@@ -259,3 +259,5 @@ Visual selection adjacency uses a fixed .001 logical-pixel tolerance in the shar
 Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.
 
 Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now clip partial rows to the text content viewport. Fully invisible gutter rows skip recording. Typed custom callbacks retain their explicit drawing responsibility. [Native workspace regression](../../tests/ProjectWorkspace/Program.cs) checks that line numbers do not escape below a resized source control on both native backends. This does not change public declarations or broader semantic-service/IME/platform acceptance.
+
+Native Text/EditableText output uses this control's existing document, caret/selection and ordinary editing path. Unicode offsets, password/length/read-only policies, scrolling and verification limits follow the [native text service contract](AccessibilityServer.md#native-text). Semantic line identities are runtime-owned and are not stored in scenes.

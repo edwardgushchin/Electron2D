@@ -471,7 +471,9 @@ def main():
     assert all(" | Implemented | " in row for row in accessibility_rows if any(name in row for name in ("method create_element(", "method get_window_root(", "method update_set_bounds(")))
     assert " | Partial | " in next(row for row in accessibility_rows if "method update_add_action(" in row)
     assert " | Implemented | " in next(row for row in accessibility_rows if "method update_set_num_value(" in row)
-    assert " | Unimplemented | " in next(row for row in accessibility_rows if "method update_set_text_selection(" in row)
+    text_names = ("create_sub_text_edit_elements", "update_set_value", "update_set_text_selection", "update_set_next_on_line", "update_set_previous_on_line", "update_set_text_align", "update_set_text_orientation", "update_set_text_decorations", "update_set_foreground_color", "update_set_background_color", "update_set_language", "update_set_placeholder")
+    text_rows = [next(row for row in accessibility_rows if f"method {name}(" in row) for name in text_names]
+    assert len(text_rows) == 12 and all(" | Implemented | " in row for row in text_rows)
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]

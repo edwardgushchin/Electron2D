@@ -524,7 +524,7 @@ public sealed partial class DisplayServer : ElectronObject
 
     internal void SynchronizeAccessibilityRect(int windowID)
     {
-        if (_waylandWindowPosition) return;
+        if (_waylandWindowPosition || _videoDriver == "dummy") return;
         AccessibilityServer.SetWindowRect(windowID,
             new Rect2(WindowGetPositionWithDecorationsCore(windowID), WindowGetSizeWithDecorationsCore(windowID)),
             new Rect2(WindowGetPositionCore(windowID), WindowGetSizeCore(windowID)));

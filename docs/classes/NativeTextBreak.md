@@ -1,6 +1,6 @@
 # NativeTextBreak
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 **Declaration:** `internal static unsafe partial class NativeTextBreak` · **Source:** [NativeTextBreak.cs](../../src/Servers/Text/NativeTextBreak.cs) · **Component:** [Text](../components/text.md)
 
@@ -35,3 +35,5 @@ The existing private text library also contains the immutable MSDF core and its 
 ## Standalone string operations
 
 [NativeTextBreak.Unicode.cs](../../src/Servers/Text/NativeTextBreak.Unicode.cs) and [TextUnicode.cpp](../../src/Servers/Text/Native/TextUnicode.cpp) reuse the same process data owner and lock for public TextServer utilities. Per-call character/word iterators are closed before unpinning; no source cursor escapes. Native lowercase/titlecase and diacritic removal preflight explicit-length output under the 64 MiB UTF-16 budget. Per-scalar NFKD decomposition uses fixed native stack storage because removing nonzero combining classes makes cross-scalar reordering irrelevant. Identifier checks require NFC, XID/recommended scripts and complete contextual join controls; required Indic properties are checked before use. The filtered data adds ulayout.icu, with no upstream algorithm changes. Threaded tests, whole-string differential cases, missing-data failure and public rendered consumers are recorded in [the Unicode verification contract](../components/text-server.md#unicode-verification-2026-10-20). Foreign execution claims above precede these four new exports and do not establish their acceptance.
+
+The [native text slice](AccessibilityServer.md#native-text) adds source line reconciliation, Text/EditableText request handling and scalar geometry/ICU boundaries. Private query snapshots and copied TextStyle metadata retain no borrowed native font pointers; active source publication reuses cached lines.
