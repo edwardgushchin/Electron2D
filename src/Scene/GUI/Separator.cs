@@ -22,15 +22,22 @@ public abstract class Separator : Control
     /// <exception cref="OverflowException">Control or style dimensions exceed pixel-coordinate integer bounds.</exception>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what != NotificationDraw) return;
-        var style = GetThemeStyleBox("separator") ?? throw new InvalidOperationException("Separator drawing requires its theme style.");
-        var minimum = style.GetMinimumSize();
-        var width = checked((int)Size.X); var height = checked((int)Size.Y);
-        var styleWidth = checked((int)minimum.X); var styleHeight = checked((int)minimum.Y);
-        var rect = _vertical ? new Rect2((width - (long)styleWidth) / 2, 0, styleWidth, height)
-            : new Rect2(0, (height - (long)styleHeight) / 2, width, styleHeight);
-        DrawStyleBox(style, rect);
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (what != NotificationDraw) return;
+            var style = GetThemeStyleBox("separator") ?? throw new InvalidOperationException("Separator drawing requires its theme style.");
+            var minimum = style.GetMinimumSize();
+            var width = checked((int)Size.X); var height = checked((int)Size.Y);
+            var styleWidth = checked((int)minimum.X); var styleHeight = checked((int)minimum.Y);
+            var rect = _vertical ? new Rect2((width - (long)styleWidth) / 2, 0, styleWidth, height)
+                : new Rect2(0, (height - (long)styleHeight) / 2, width, styleHeight);
+            DrawStyleBox(style, rect);
+
+        }
     }
 }
 

@@ -65,8 +65,10 @@ public partial class MenuBar
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
+        try { if (!reversed) base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
         if (!IsDisposed && !_disposing)
             try
             {
@@ -81,5 +83,7 @@ public partial class MenuBar
             }
             catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Menu bar notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
 }

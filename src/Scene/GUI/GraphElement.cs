@@ -88,10 +88,14 @@ public class GraphElement : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren) ArrangeGraphChildren();
         else if (what is NotificationResized or NotificationThemeChanged) { QueueSort(); QueueRedraw(); }
         else if (what == NotificationDraw && GetType() == typeof(GraphElement) && CanResize && GetThemeIcon("resizer") is { } icon) DrawTexture(icon, Size - icon.GetSize());
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()

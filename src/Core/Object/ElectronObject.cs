@@ -183,15 +183,12 @@ public abstract partial class ElectronObject : IDisposable
     /// <param name="what">The notification identifier.</param>
     /// <remarks>
     /// Delivery uses normal C# virtual dispatch. An override of <see cref="OnNotification"/> is responsible for calling
-    /// its base implementation when inherited behavior is required.
+    /// its base implementation when inherited behavior is required. This overload selects the ordinary direction;
+    /// use <see cref="Notify(int, bool)"/> to request derived-first handling.
     /// </remarks>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception"><see cref="OnNotification"/> throws.</exception>
-    public void Notify(int what)
-    {
-        ThrowIfDisposed();
-        DispatchNotification(what);
-    }
+    public void Notify(int what) => Notify(what, false);
 
     /// <summary>Builds the current validated list of typed properties exposed to tooling.</summary>
     /// <returns>A read-only snapshot whose property names are unique using ordinal comparison.</returns>
@@ -344,7 +341,7 @@ public abstract partial class ElectronObject : IDisposable
         {
             try
             {
-                DispatchNotification(NotificationPreDelete);
+                DispatchNotification(NotificationPreDelete, reversed: true);
             }
             catch (Exception error)
             {
@@ -397,7 +394,9 @@ public abstract partial class ElectronObject : IDisposable
 
     /// <summary>Handles an engine notification delivered to this object.</summary>
     /// <param name="what">The notification identifier.</param>
-    /// <remarks>Derived overrides should call the base implementation unless they intentionally suppress inherited handling.</remarks>
+    /// <remarks>Derived overrides should call the base implementation unless they intentionally suppress inherited
+    /// handling. Use <see cref="IsNotificationReversed"/> to place the explicit base call after local handling for
+    /// derived-first delivery. Ordinary automatic notifications use the normal direction; pre-delete uses reverse.</remarks>
     protected virtual void OnNotification(int what)
     {
     }
@@ -406,8 +405,6 @@ public abstract partial class ElectronObject : IDisposable
     /// <remarks>Derived types may reject mutation while they are participating in an atomic operation.</remarks>
     /// <exception cref="ObjectDisposedException">Disposal has started.</exception>
     protected virtual void ValidateMutation() => ThrowIfDisposed();
-
-    internal void DispatchNotification(int what) => OnNotification(what);
 
     /// <summary>Returns the typed properties exposed to tooling before validation.</summary>
     /// <returns>The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.</returns>

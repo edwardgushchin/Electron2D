@@ -414,6 +414,11 @@
       "reason": "Typed notification/property callback adaptation (ADRs 0005 and 0009)."
     },
     {
+      "electron2d": "method:Electron2D.ElectronObject.Notify(System.Int32,System.Boolean)",
+      "godot": "Object::method:notification(int:,bool:)",
+      "reason": "ADR 0005: complete selectable inheritance direction, retaining the existing one-argument ordinary overload and explicit cooperative C# base calls."
+    },
+    {
       "electron2d": "method:Electron2D.ElectronObject.OnNotification(System.Int32)",
       "godot": "Object::method:_notification(int:)",
       "reason": "Typed notification/property callback adaptation (ADRs 0005 and 0009)."
@@ -1070,6 +1075,7 @@
     {"godot": "Time::method:get_unix_time_from_system()", "electron2d": "method:Electron2D.Time.GetUnixTimeFromSystem()", "reason": "ADR 0111: concrete typed calendar/system/monotonic operation; Info replaces the complete dictionary role family. The Time status group records numerical, lifecycle, thread and allocation verification and its limits."}
   ],
   "extras": [
+    {"electron2d": "property:Electron2D.ElectronObject.IsNotificationReversed()", "reason": "ADR 0005: protected per-object/current-invocation/thread direction lets compiled C# overrides order their explicit base call without reflection or generated nonvirtual dispatch. Nested calls and failures restore the context; asynchronous work does not inherit it.", "adr": "adr-0005"},
     {"electron2d": "method:Electron2D.ElectronObject.BeginEventEmission`1(TDelegate)", "reason": "ADRs 0002/0010: protected typed publisher gateway for ordinary C# events. Returns the same concrete delegate or null once per emission without allocations, boxing, dynamic signal names or arity adapters; custom borrowed-span signatures and caller lifetime/thread validation remain intact. Direct CLR delegate calls remain ordinary language operations.", "adr": "adr-0010"},
     {"electron2d": "property:Electron2D.Translation.PluralSelector()", "reason": "Typed optional borrowed caller delegate overrides prepared catalog or locale rules under ADR 0007; cannot be stored in resource files."},
     {"electron2d": "T:Electron2D.JoypadInfo", "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.", "adr": "docs/decisions/input.md#adr-0038"},
@@ -2487,12 +2493,14 @@
       "reason": "ADRs 0002/0010: the owned typed EventConnection.IsConnected projection combines active token state with actual runtime engine publisher membership. All 350 event declarations route through 310 observed ordinary stores, 19 prepared buffers or 21 verified facade forwards with matched add/remove targets. Duplicate/last removal, fan-out, clear/re-add, immutable captured emissions, accepted deferred calls, disposal/one-shot retirement and source-reference release retain their contracts. Nineteen CLR/strict NativeAOT profiles cover public CPU/GPU/registered owner/separate full physical frames and native/dummy window teardown with strict measured managed-byte gates. The complete ordinary NVIDIA CoreCLR suite passes on the same immutable runtime in 3866.24 s, exit 0 and exact completion marker, without payload drift or Xid. See docs/components/event-connections.md#ordinary-engine-publisher-qualification-2026-10-26. Opaque custom accessors retain the accepted logical-token observation; dynamic publisher/handler introspection is outside this typed projection. Native-heap, foreign-platform, throughput and complete physics acceptance remain separate."
     },
     {
-      "godot": [
-        "Object::method:notification(int:,bool:)",
-        "Object::method:_notification(int:)"
-      ],
+      "godot": ["Object::method:notification(int:,bool:)"],
+      "state": "Implemented",
+      "reason": "ADRs 0005/0009: Notify(int,bool) selects derived-first handling while Notify(int) retains ordinary C# base-call points. All 95 built-in overrides cooperate without reflection/delegates; custom overrides use protected IsNotificationReversed and explicit base calls. Nested/same/other-object, concurrent thread, error/reference-release, pre-delete/cancellation, signal-policy and actual Label/Control ordering checks execute through public API. Eight public CPU/no-device and NVIDIA GPU owner/separate CLR/strict full-trim NativeAOT profiles retain 2048 complete active/idle physical frames at exact zero owner/all-thread managed bytes, with stable RID, ordered velocity mutation and float motion tolerance 0.0001. Evidence: bin/physics-notification-direction/2026-10-26/. Automatic post-initialization 0 remains a separate callback/lifecycle gap; native-heap, foreign-platform, full numerical/network/performance and human acceptance remain open."
+    },
+    {
+      "godot": ["Object::method:_notification(int:)"],
       "state": "Partial",
-      "reason": "ADR 0005 retains ordinary C# virtual OnNotification dispatch and explicit base calls. Notify has no reversed parameter or per-class reversal mechanism; reserved post-initialization 0 is not automatically emitted. These remain explicit inherited capability/ordering gaps, not completion inferred from the numeric callback declarations. Existing Node/Timer/SceneTree hooks retain their documented typed lifecycle behavior."
+      "reason": "ADR 0005 implements selectable normal/reversed delivery through cooperative compiled C# overrides, including reverse automatic pre-delete. Reserved post-initialization 0 is still not automatically emitted after complete construction. Keep this inherited callback row Partial until a safe construction/factory boundary delivers it exactly once; numeric/manual declarations and directional execution alone do not close that lifecycle capability."
     },
     {
       "godot": [

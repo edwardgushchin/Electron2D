@@ -68,7 +68,15 @@ public partial class ColorPickerButton : Button
         if ((_color.R > 1 || _color.G > 1 || _color.B > 1) && GetThemeIcon("overbright_indicator", "ColorPicker") is { } indicator) DrawTexture(indicator, rect.Position);
     }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if ((what == NotificationVisibilityChanged && !IsVisibleInTree || what == NotificationExitTree) && _popup?.Visible == true) _popup.Hide(); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if ((what == NotificationVisibilityChanged && !IsVisibleInTree || what == NotificationExitTree) && _popup?.Visible == true) _popup.Hide();
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(ColorPickerButton) ? CreateColorPickerButton : base.CreateSceneInstanceFactory();
     private static Node CreateColorPickerButton() => new ColorPickerButton();

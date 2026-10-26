@@ -55,12 +55,16 @@ public partial class ScrollContainer : Container
 
         protected override void OnNotification(int what)
         {
-            base.OnNotification(what);
+            var reversed = IsNotificationReversed;
+
+            if (!reversed) base.OnNotification(what);
             if (what == NotificationDraw && _texture is { } texture)
             {
                 var rect = new Rect2(0, 0, _flipH ? -Size.X : Size.X, _flipV ? -Size.Y : Size.Y);
                 DrawTextureRect(texture, rect, _tile, _color);
             }
+
+            if (reversed) base.OnNotification(what);
         }
     }
 
@@ -401,34 +405,41 @@ public partial class ScrollContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (IsDisposed) return;
-        switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            case NotificationReady:
-                _focusViewport = GetViewport();
-                if (_focusViewport is not null) _focusViewport.GUIFocusChanged += FocusChanged;
-                Arrange();
-                break;
-            case NotificationExitTree:
-                if (_focusViewport is not null) _focusViewport.GUIFocusChanged -= FocusChanged;
-                _focusViewport = null;
-                CancelDrag();
-                break;
-            case NotificationSortChildren:
-                Arrange();
-                break;
-            case NotificationThemeChanged:
-                if (GetThemeStyleBox("focus") is { } style) _focusPanel.AddThemeStyleBoxOverride("panel", style);
-                UpdateHints();
-                break;
-            case NotificationDraw:
-                DrawStyleBox(GetThemeStyleBox("panel") ?? throw new InvalidOperationException("Scroll container requires a panel style."), new(Vector2.Zero, Size));
-                _focusPanel.Visible = _drawFocusBorder && (HasFocus(true) || _focusViewport?.GetGUIFocusOwner() is { } focus && IsAncestorOf(focus));
-                break;
-            case NotificationInternalProcess:
-                ProcessTouchDrag(ProcessDeltaTime);
-                break;
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            switch (what)
+            {
+                case NotificationReady:
+                    _focusViewport = GetViewport();
+                    if (_focusViewport is not null) _focusViewport.GUIFocusChanged += FocusChanged;
+                    Arrange();
+                    break;
+                case NotificationExitTree:
+                    if (_focusViewport is not null) _focusViewport.GUIFocusChanged -= FocusChanged;
+                    _focusViewport = null;
+                    CancelDrag();
+                    break;
+                case NotificationSortChildren:
+                    Arrange();
+                    break;
+                case NotificationThemeChanged:
+                    if (GetThemeStyleBox("focus") is { } style) _focusPanel.AddThemeStyleBoxOverride("panel", style);
+                    UpdateHints();
+                    break;
+                case NotificationDraw:
+                    DrawStyleBox(GetThemeStyleBox("panel") ?? throw new InvalidOperationException("Scroll container requires a panel style."), new(Vector2.Zero, Size));
+                    _focusPanel.Visible = _drawFocusBorder && (HasFocus(true) || _focusViewport?.GetGUIFocusOwner() is { } focus && IsAncestorOf(focus));
+                    break;
+                case NotificationInternalProcess:
+                    ProcessTouchDrag(ProcessDeltaTime);
+                    break;
+            }
+
         }
     }
 

@@ -184,22 +184,29 @@ public class ProgressBar : Range
     /// <exception cref="AggregateException">Required inherited/internal notification phases report callback failures.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawProgressBar(); return; }
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed)
-            try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawProgressBar(); return; }
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed)
+                try
                 {
-                    case NotificationInternalProcess: Advance(); break;
-                    case NotificationTranslationChanged:
-                    case NotificationThemeChanged:
-                    case NotificationLayoutDirectionChanged: UpdateMinimumSize(); QueueRedraw(); break;
+                    switch (what)
+                    {
+                        case NotificationInternalProcess: Advance(); break;
+                        case NotificationTranslationChanged:
+                        case NotificationThemeChanged:
+                        case NotificationLayoutDirectionChanged: UpdateMinimumSize(); QueueRedraw(); break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Progress notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Progress notification callbacks failed.", errors);
+
+        }
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ProgressProperties);

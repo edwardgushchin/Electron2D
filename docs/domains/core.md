@@ -36,6 +36,8 @@ ElectronObject provides passive queued-deletion observation across nodes, resour
 
 ElectronObject.CancelDisposal vetoes only the current automatic pre-delete attempt on its exact thread. Live state, identity and subscriptions return after notification; no derived cleanup occurs. Ordinary disposal, validation, callback error aggregation and terminal cleanup remain unchanged when no veto is requested.
 
+Numeric notifications now support ordinary and derived-first delivery through `Notify(int, bool)`, with a protected per-invocation direction for custom C# base calls. All built-in handlers preserve normal ordering and cooperate with reverse delivery; automatic pre-delete is reversed. Nested/error/thread contexts restore without retaining targets. Post-initialization 0 remains reserved. See [object lifecycle](../components/object-lifecycle.md#notification-direction).
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

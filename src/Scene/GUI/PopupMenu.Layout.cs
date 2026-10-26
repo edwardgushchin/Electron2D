@@ -138,5 +138,12 @@ public partial class PopupMenu
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)
-    { base.OnNotification(what); if (what is NotificationThemeChanged or Control.NotificationLayoutDirectionChanged or Control.NotificationTranslationChanged) { _dirty = true; Arrange(); } else if (what == NotificationInternalProcess) ProcessMenu(); else if (what == NotificationExitTree) { _submenuTimer.Stop(); CloseSubmenu(); } }
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (what is NotificationThemeChanged or Control.NotificationLayoutDirectionChanged or Control.NotificationTranslationChanged) { _dirty = true; Arrange(); } else if (what == NotificationInternalProcess) ProcessMenu(); else if (what == NotificationExitTree) { _submenuTimer.Stop(); CloseSubmenu(); }
+
+        if (reversed) base.OnNotification(what);
+    }
 }

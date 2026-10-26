@@ -1976,7 +1976,9 @@ public partial class Node : ElectronObject
     /// </remarks>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
 
         switch (what)
         {
@@ -1995,6 +1997,8 @@ public partial class Node : ElectronObject
                 if (IsPhysicsInterpolatedAndEnabled()) ResetPhysicsInterpolation();
                 break;
         }
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

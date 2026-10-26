@@ -92,7 +92,9 @@ public partial class SplitContainer
         }
         protected override void OnNotification(int what)
         {
-            base.OnNotification(what);
+            var reversed = IsNotificationReversed;
+
+            if (!reversed) base.OnNotification(what);
             if (what == NotificationFocusExit || what == NotificationExitTree || what == NotificationVisibilityChanged && !IsVisibleInTree) Stop();
             else if (what == NotificationThemeChanged) { UpdateTouch(); if (_touchControl is { } touch) touch.Modulate = Splitter.GetThemeColor("touch_dragger_color"); }
             else if (what == NotificationDraw && !_multi)
@@ -105,6 +107,8 @@ public partial class SplitContainer
                     if (cross - Splitter._marginBegin - Splitter._marginEnd > 0) DrawTexture(icon, Bar.Position + (Bar.Size - natural) / 2);
                 }
             }
+
+            if (reversed) base.OnNotification(what);
         }
     }
     private void ShowGrabber(int index)

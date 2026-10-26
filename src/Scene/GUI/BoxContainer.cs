@@ -176,8 +176,12 @@ public class BoxContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren) Arrange();
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override SizeFlags[] GetAllowedSizeFlagsHorizontal() => _vertical ? [SizeFlags.Fill, SizeFlags.ShrinkBegin, SizeFlags.ShrinkCenter, SizeFlags.ShrinkEnd] : base.GetAllowedSizeFlagsHorizontal();

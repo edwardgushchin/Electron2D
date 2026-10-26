@@ -76,18 +76,26 @@ public partial class Tree
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawTree(); return; }
-        base.OnNotification(what); if (IsDisposed) return;
-        switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            case NotificationEnterTree: InvalidateTree(); SetInternalProcessing(true, false); break;
-            case NotificationExitTree: CancelEditor(); ReleaseResources(); _unfoldItem = null; _pressedItem = null; SetInternalProcessing(false, false); break;
-            case NotificationResized: case NotificationThemeChanged: case NotificationTranslationChanged: case NotificationLayoutDirectionChanged: InvalidateTree(); break;
-            case NotificationFocusEnter: case NotificationFocusExit: QueueRedraw(); break;
-            case NotificationInternalProcess:
-                if (Interlocked.Exchange(ref _resourcePending, 0) != 0) InvalidateTree();
-                if (GetViewport()?.IsGUIDragging() == true) { if (GetWindow() is { } window && window.GetWindowID() != DisplayServer.InvalidWindowId) _mouse = GetLocalMousePosition(); var item = GetItemAtPosition(_mouse); if (_unfoldItem != item) { _unfoldItem = item; _unfoldTime = 0; } if (_dragUnfold && item is { Collapsed: true } && item.IsAcceptingChildren() && GetDropSectionAtPosition(_mouse) == 0) { _unfoldTime += ProcessDeltaTime; if (_unfoldTime * 1000 >= GetThemeConstant("dragging_unfold_wait_msec")) item.Collapsed = false; } var border = GetThemeConstant("scroll_border"); var speed = GetThemeConstant("scroll_speed") * ProcessDeltaTime; if (_mouse.Y < _body.Position.Y + border) _vBar.Value -= speed; else if (_mouse.Y > _body.End.Y - border) _vBar.Value += speed; QueueRedraw(); } else { _unfoldItem = null; _unfoldTime = 0; }
-                break;
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawTree(); return; }
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            switch (what)
+            {
+                case NotificationEnterTree: InvalidateTree(); SetInternalProcessing(true, false); break;
+                case NotificationExitTree: CancelEditor(); ReleaseResources(); _unfoldItem = null; _pressedItem = null; SetInternalProcessing(false, false); break;
+                case NotificationResized: case NotificationThemeChanged: case NotificationTranslationChanged: case NotificationLayoutDirectionChanged: InvalidateTree(); break;
+                case NotificationFocusEnter: case NotificationFocusExit: QueueRedraw(); break;
+                case NotificationInternalProcess:
+                    if (Interlocked.Exchange(ref _resourcePending, 0) != 0) InvalidateTree();
+                    if (GetViewport()?.IsGUIDragging() == true) { if (GetWindow() is { } window && window.GetWindowID() != DisplayServer.InvalidWindowId) _mouse = GetLocalMousePosition(); var item = GetItemAtPosition(_mouse); if (_unfoldItem != item) { _unfoldItem = item; _unfoldTime = 0; } if (_dragUnfold && item is { Collapsed: true } && item.IsAcceptingChildren() && GetDropSectionAtPosition(_mouse) == 0) { _unfoldTime += ProcessDeltaTime; if (_unfoldTime * 1000 >= GetThemeConstant("dragging_unfold_wait_msec")) item.Collapsed = false; } var border = GetThemeConstant("scroll_border"); var speed = GetThemeConstant("scroll_speed") * ProcessDeltaTime; if (_mouse.Y < _body.Position.Y + border) _vBar.Value -= speed; else if (_mouse.Y > _body.End.Y - border) _vBar.Value += speed; QueueRedraw(); } else { _unfoldItem = null; _unfoldTime = 0; }
+                    break;
+            }
+
         }
     }
 }

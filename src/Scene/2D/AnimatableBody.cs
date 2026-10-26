@@ -111,18 +111,25 @@ public sealed partial class AnimatableBody : StaticBody
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationLocalTransformChanged && _syncToPhysics && IsInsideTree && !HasServerMode)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            if (_applyingPhysicsPose) return;
-            var target = GlobalTransform;
-            _applyingPhysicsPose = true;
-            try { GlobalTransform = _lastValidTransform; }
-            finally { _applyingPhysicsPose = false; }
-            if (!target.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(target.Skew))
-                throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
-            _targetTransform = target;
-            _hasTarget = true;
+            if (what == NotificationLocalTransformChanged && _syncToPhysics && IsInsideTree && !HasServerMode)
+            {
+                if (_applyingPhysicsPose) return;
+                var target = GlobalTransform;
+                _applyingPhysicsPose = true;
+                try { GlobalTransform = _lastValidTransform; }
+                finally { _applyingPhysicsPose = false; }
+                if (!target.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(target.Skew))
+                    throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
+                _targetTransform = target;
+                _hasTarget = true;
+            }
+            if (!reversed) base.OnNotification(what);
+
         }
-        base.OnNotification(what);
     }
 }

@@ -131,7 +131,15 @@ public class MultiplayerSynchronizer : Node
     /// <inheritdoc />
     protected override void OnExitTree() { try { Stop(); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (what is NotificationInternalProcess or NotificationInternalPhysicsProcess && Tree is not null) UpdateVisibility(); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (what is NotificationInternalProcess or NotificationInternalPhysicsProcess && Tree is not null) UpdateVisibility();
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(MultiplayerSynchronizer) ? CreateInstance : base.CreateSceneInstanceFactory();
     private static Node CreateInstance() => new MultiplayerSynchronizer();

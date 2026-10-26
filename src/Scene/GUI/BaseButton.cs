@@ -331,8 +331,10 @@ public abstract class BaseButton : Control
     /// <exception cref="AggregateException">Inherited notifications or button cleanup callbacks fail after required state maintenance.</exception>
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
+        try { if (!reversed) base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
         if (!IsDisposed)
             try
             {
@@ -365,6 +367,8 @@ public abstract class BaseButton : Control
             }
             catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Button notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {

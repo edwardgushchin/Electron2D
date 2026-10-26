@@ -254,8 +254,10 @@ public partial class SplitContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (_ready && !IsDisposed) try
             {
                 if (what == NotificationChildOrderChanged) Synchronize();
@@ -275,6 +277,8 @@ public partial class SplitContainer : Container
             }
             catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Split notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

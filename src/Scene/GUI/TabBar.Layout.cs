@@ -165,13 +165,17 @@ public partial class TabBar
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationEnterTree) { _initialized = true; _dirty = true; }
         else if (what is NotificationThemeChanged or NotificationTranslationChanged or NotificationLayoutDirectionChanged or NotificationResized) { _dirty = true; QueueRedraw(); if (what != NotificationResized) UpdateMinimumSize(); }
         else if (what == NotificationDraw) DrawTabs();
         else if (what == NotificationDragEnd) { _dropVisible = false; _hoverTimer.Stop(); QueueRedraw(); }
         else if (what == NotificationInternalProcess) RepeatGamepad();
         else if (what == NotificationExitTree) { ResetInteraction(); SetInternalProcessing(false, false); }
+
+        if (reversed) base.OnNotification(what);
     }
     private void DrawTabs()
     {

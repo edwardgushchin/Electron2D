@@ -319,35 +319,42 @@ public partial class Label
     /// <exception cref="Exception">Resource, theme, shaping, drawing or inherited notification callbacks fail.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawLabel(); return; }
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed)
-            try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawLabel(); return; }
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed)
+                try
                 {
-                    case NotificationEnterTree:
-                        EnterResourceTree(); break;
-                    case NotificationExitTree:
-                        _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0);
-                        SetInternalProcessing(false, false); break;
-                    case NotificationInternalProcess:
-                        CheckResourceVersions(); if (_dirty || _textDirty) { QueueRedraw(); UpdateMinimumSize(); }
-                        break;
-                    case NotificationTranslationChanged:
-                        _translatedText = Atr(_text); if (_visibleRatio < 1) _visibleCharacters = RatioCount(_visibleRatio); Invalidate(true); break;
-                    case NotificationThemeChanged:
-                    case NotificationLayoutDirectionChanged:
-                        Invalidate(); break;
-                    case NotificationResized:
-                        Invalidate(); break;
-                    case NotificationFocusEnter:
-                    case NotificationFocusExit:
-                        QueueRedraw(); break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree:
+                            EnterResourceTree(); break;
+                        case NotificationExitTree:
+                            _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0);
+                            SetInternalProcessing(false, false); break;
+                        case NotificationInternalProcess:
+                            CheckResourceVersions(); if (_dirty || _textDirty) { QueueRedraw(); UpdateMinimumSize(); }
+                            break;
+                        case NotificationTranslationChanged:
+                            _translatedText = Atr(_text); if (_visibleRatio < 1) _visibleCharacters = RatioCount(_visibleRatio); Invalidate(true); break;
+                        case NotificationThemeChanged:
+                        case NotificationLayoutDirectionChanged:
+                            Invalidate(); break;
+                        case NotificationResized:
+                            Invalidate(); break;
+                        case NotificationFocusEnter:
+                        case NotificationFocusExit:
+                            QueueRedraw(); break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Label notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Label notification callbacks failed.", errors);
+
+        }
     }
 }

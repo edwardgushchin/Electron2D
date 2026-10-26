@@ -131,11 +131,15 @@ public class Container : Control
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        try { base.OnNotification(what); }
+        var reversed = IsNotificationReversed;
+
+        try { if (!reversed) base.OnNotification(what); }
         finally
         {
             if (!IsDisposed && (what is NotificationResized or NotificationLayoutDirectionChanged or NotificationThemeChanged || what == NotificationVisibilityChanged && IsVisibleInTree)) QueueSort();
         }
+
+        if (reversed) base.OnNotification(what);
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {

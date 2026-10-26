@@ -375,9 +375,13 @@ public sealed class ShapeCast : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if (what == NotificationInternalPhysicsProcess && _enabled) ForceShapecastUpdate();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this)) DrawDebugCast();
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

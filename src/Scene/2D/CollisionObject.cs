@@ -145,11 +145,15 @@ public abstract partial class CollisionObject : Entity
     /// publish on the scene owner after the group joins. Numeric notifications do not change effective ProcessMode.</remarks>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationEnterCanvas) PublishCanvasIdentity(GetCanvasLayerNode()?.InstanceID ?? 0);
         else if (what == NotificationExitCanvas) PublishCanvasIdentity(0);
         if (what is NotificationDisabled or NotificationEnabled && IsInsideTree)
             PublishPhysicsParticipation();
+
+        if (reversed) base.OnNotification(what);
     }
 
     internal void PublishCanvasIdentity(ulong id)

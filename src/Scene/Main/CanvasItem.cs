@@ -150,32 +150,39 @@ public abstract partial class CanvasItem : Node
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationResetPhysicsInterpolation)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            ResetInterpolationSnapshot();
-            base.OnNotification(what);
-            return;
+            if (what == NotificationResetPhysicsInterpolation)
+            {
+                ResetInterpolationSnapshot();
+                if (!reversed) base.OnNotification(what);
+                return;
+            }
+            if (what is NotificationVisibilityChanged or NotificationLocalTransformChanged or NotificationTransformChanged)
+            {
+                if (!reversed) base.OnNotification(what);
+                if (what == NotificationVisibilityChanged) BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(this);
+                else if (what == NotificationLocalTransformChanged) BeginEventEmission(_publisherLocalTransformChanged.Handlers)?.Invoke(this);
+                else BeginEventEmission(_publisherTransformChanged.Handlers)?.Invoke(this);
+                return;
+            }
+            if (what is not (NotificationParented or NotificationUnparented))
+            {
+                if (!reversed) base.OnNotification(what);
+                return;
+            }
+            if (ServerState is { } state) state.ParentAssigned = false;
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            try { if (what == NotificationParented) NotifyLocalTransformChanged(); else PropagateGlobalTransformChanged(); }
+            catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Canvas lifecycle callbacks failed.", errors);
+
         }
-        if (what is NotificationVisibilityChanged or NotificationLocalTransformChanged or NotificationTransformChanged)
-        {
-            base.OnNotification(what);
-            if (what == NotificationVisibilityChanged) BeginEventEmission(_publisherVisibilityChanged.Handlers)?.Invoke(this);
-            else if (what == NotificationLocalTransformChanged) BeginEventEmission(_publisherLocalTransformChanged.Handlers)?.Invoke(this);
-            else BeginEventEmission(_publisherTransformChanged.Handlers)?.Invoke(this);
-            return;
-        }
-        if (what is not (NotificationParented or NotificationUnparented))
-        {
-            base.OnNotification(what);
-            return;
-        }
-        if (ServerState is { } state) state.ParentAssigned = false;
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        try { if (what == NotificationParented) NotifyLocalTransformChanged(); else PropagateGlobalTransformChanged(); }
-        catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Canvas lifecycle callbacks failed.", errors);
     }
 
     private bool _inCanvas;

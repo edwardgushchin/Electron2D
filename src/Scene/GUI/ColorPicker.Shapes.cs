@@ -93,10 +93,14 @@ public partial class ColorPicker
         }
         protected override void OnNotification(int what)
         {
-            base.OnNotification(what);
+            var reversed = IsNotificationReversed;
+
+            if (!reversed) base.OnNotification(what);
             if (what == NotificationInternalProcess && _keyDirection != Vector2.Zero) { _repeat -= ProcessDeltaTime; if (_repeat <= 0) { _repeat += .05; KeyMove(_keyDirection); } }
             if (what is NotificationExitTree or NotificationFocusExit || what == NotificationVisibilityChanged && !IsVisibleInTree) CancelGesture();
             if (what is NotificationFocusEnter or NotificationFocusExit) QueueRedraw();
+
+            if (reversed) base.OnNotification(what);
         }
         private Color Surface(float x, float y)
         {

@@ -138,7 +138,9 @@ public partial class TouchScreenButton : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        var reversed = IsNotificationReversed;
+
+        List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) try
             {
                 if (what == NotificationEnterTree) { InputEnabled = true; RetainTextures(); }
@@ -157,6 +159,8 @@ public partial class TouchScreenButton : Entity
             }
             catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Touch button notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings()

@@ -119,10 +119,14 @@ public class RemoteTransform : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if ((_useGlobalCoordinates && what == NotificationTransformChanged) ||
             (!_useGlobalCoordinates && what == NotificationLocalTransformChanged))
             UpdateRemote();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
+
+        if (reversed) base.OnNotification(what);
     }
 
     private void UpdateCache()

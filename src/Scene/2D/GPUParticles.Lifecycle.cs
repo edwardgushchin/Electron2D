@@ -6,34 +6,42 @@ public partial class GPUParticles
     /// <param name="what">The inherited notification identity.</param>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what); if (IsDisposed) return;
-        if (what == NotificationEnterTree && IsInsideTree)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            if (_oneShot && _emitting && (!_sceneStarted || _server is not null && !ReferenceEquals(_server, RenderingServer.Service))) BeginCycle();
-            _sceneStarted = true;
-            _previousPosition = GetGlobalTransform().Origin; _previousVelocity = Vector2.Zero;
-            SetInternalProcessing(true, true); if (NativeLive) { BindSubEmitter(_subEmitter); RenderingServer.ParticlesSetSpeedScale(_particles, CanProcess() ? (float)_speedScale : 0); }
-        }
-        else if (what == NotificationExitTree) { if (NativeLive) RenderingServer.ParticlesSetSubemitter(_particles, default); }
-        else if (what == NotificationTransformChanged) { if (NativeLive && !_localCoords && _server!.CanChangeParticleSceneState) { _appliedEmission = GetGlobalTransform(); RenderingServer.ParticlesSetEmissionTransform(_particles, _appliedEmission); } }
-        else if (what is NotificationPaused or NotificationUnpaused)
-        { if (NativeLive && IsInsideTree) { RenderingServer.NotifyRenderMutation(); if (_server!.CanChangeParticleSceneState) { _appliedSpeed = CanProcess() ? (float)_speedScale : 0; RenderingServer.ParticlesSetSpeedScale(_particles, _appliedSpeed); } } }
-        else if (what == NotificationInternalPhysicsProcess && IsInsideTree)
-        {
-            var position = GetGlobalTransform().Origin; var delta = PhysicsProcessDeltaTime;
-            var velocity = delta > 0 ? (position - _previousPosition) / (float)delta : Vector2.Zero;
-            if (!velocity.IsFinite()) throw new InvalidOperationException("Particle emitter velocity exceeds finite storage.");
-            if (NativeLive && velocity != _previousVelocity) RenderingServer.ParticlesSetEmitterVelocity(_particles, velocity);
-            _previousVelocity = velocity; _previousPosition = position;
-        }
-        else if (what == NotificationInternalProcess && IsInsideTree && _oneShot)
-        {
-            _time += ProcessDeltaTime;
-            if (_time > _emissionTime) _emitting = false;
-            var finished = _time > _activeTime && _active && !_signalCanceled;
-            if (_time > _activeTime) _active = false;
-            if (!_emitting && !_active) SetInternalProcessing(false, true);
-            if (finished) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            if (what == NotificationEnterTree && IsInsideTree)
+            {
+                if (_oneShot && _emitting && (!_sceneStarted || _server is not null && !ReferenceEquals(_server, RenderingServer.Service))) BeginCycle();
+                _sceneStarted = true;
+                _previousPosition = GetGlobalTransform().Origin; _previousVelocity = Vector2.Zero;
+                SetInternalProcessing(true, true); if (NativeLive) { BindSubEmitter(_subEmitter); RenderingServer.ParticlesSetSpeedScale(_particles, CanProcess() ? (float)_speedScale : 0); }
+            }
+            else if (what == NotificationExitTree) { if (NativeLive) RenderingServer.ParticlesSetSubemitter(_particles, default); }
+            else if (what == NotificationTransformChanged) { if (NativeLive && !_localCoords && _server!.CanChangeParticleSceneState) { _appliedEmission = GetGlobalTransform(); RenderingServer.ParticlesSetEmissionTransform(_particles, _appliedEmission); } }
+            else if (what is NotificationPaused or NotificationUnpaused)
+            { if (NativeLive && IsInsideTree) { RenderingServer.NotifyRenderMutation(); if (_server!.CanChangeParticleSceneState) { _appliedSpeed = CanProcess() ? (float)_speedScale : 0; RenderingServer.ParticlesSetSpeedScale(_particles, _appliedSpeed); } } }
+            else if (what == NotificationInternalPhysicsProcess && IsInsideTree)
+            {
+                var position = GetGlobalTransform().Origin; var delta = PhysicsProcessDeltaTime;
+                var velocity = delta > 0 ? (position - _previousPosition) / (float)delta : Vector2.Zero;
+                if (!velocity.IsFinite()) throw new InvalidOperationException("Particle emitter velocity exceeds finite storage.");
+                if (NativeLive && velocity != _previousVelocity) RenderingServer.ParticlesSetEmitterVelocity(_particles, velocity);
+                _previousVelocity = velocity; _previousPosition = position;
+            }
+            else if (what == NotificationInternalProcess && IsInsideTree && _oneShot)
+            {
+                _time += ProcessDeltaTime;
+                if (_time > _emissionTime) _emitting = false;
+                var finished = _time > _activeTime && _active && !_signalCanceled;
+                if (_time > _activeTime) _active = false;
+                if (!_emitting && !_active) SetInternalProcessing(false, true);
+                if (finished) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
+            }
+
         }
     }
     /// <summary>Reports invalid child routing and missing particle process configuration.</summary>

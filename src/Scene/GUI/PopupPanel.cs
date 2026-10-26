@@ -78,7 +78,15 @@ public class PopupPanel : Popup
         base.HandlePopupInput(input);
     }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (what is NotificationThemeChanged or Control.NotificationLayoutDirectionChanged or Control.NotificationTranslationChanged) Arrange(); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (what is NotificationThemeChanged or Control.NotificationLayoutDirectionChanged or Control.NotificationTranslationChanged) Arrange();
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(PopupPanel) ? CreatePopupPanel : base.CreateSceneInstanceFactory();
     private static Node CreatePopupPanel() => new PopupPanel();

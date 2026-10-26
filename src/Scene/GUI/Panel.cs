@@ -11,8 +11,12 @@ public class Panel : Control
     /// <exception cref="InvalidOperationException">Theme lookup supplies no panel style.</exception>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationDraw) DrawStyleBox(GetThemeStyleBox("panel") ?? throw new InvalidOperationException("Panel drawing requires a panel style."), new(Vector2.Zero, Size));
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Panel) ? CreatePanel : base.CreateSceneInstanceFactory();
@@ -83,9 +87,13 @@ public class PanelContainer : Container
     /// <exception cref="InvalidOperationException">Theme lookup supplies no panel style during drawing.</exception>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren) Arrange();
         else if (what == NotificationDraw) DrawStyleBox(GetThemeStyleBox("panel") ?? throw new InvalidOperationException("Panel container drawing requires a panel style."), new(Vector2.Zero, Size));
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override SizeFlags[] GetAllowedSizeFlagsHorizontal() => [SizeFlags.Fill, SizeFlags.ShrinkBegin, SizeFlags.ShrinkCenter, SizeFlags.ShrinkEnd];

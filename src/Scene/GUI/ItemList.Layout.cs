@@ -283,11 +283,15 @@ public partial class ItemList
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationMouseExit && _hovered != -1) { _hovered = -1; QueueRedraw(); }
         if (what is NotificationResized or NotificationThemeChanged or NotificationLayoutDirectionChanged or NotificationTranslationChanged)
             InvalidateListLayout();
         if (what == NotificationDraw) DrawList();
+
+        if (reversed) base.OnNotification(what);
     }
 
     private void DrawList()

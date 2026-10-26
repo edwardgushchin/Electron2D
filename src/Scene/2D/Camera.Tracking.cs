@@ -35,18 +35,25 @@ public partial class Camera
     /// notifications, owns viewport registration.</remarks>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what == NotificationResetPhysicsInterpolation)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            UpdateProcessing();
-            _viewport?.ResetCanvasInterpolationSnapshot();
+            if (!reversed) base.OnNotification(what);
+            if (what == NotificationResetPhysicsInterpolation)
+            {
+                UpdateProcessing();
+                _viewport?.ResetCanvasInterpolationSnapshot();
+            }
+            if (IsDisposed || _viewport is null) return;
+            var interpolating = IsPhysicsInterpolatedAndEnabled();
+            if (what == NotificationInternalProcess && _processCallback == ProcessPhase.Idle && !interpolating ||
+                what == NotificationInternalPhysicsProcess && (_processCallback == ProcessPhase.Physics || interpolating) ||
+                what == NotificationTransformChanged && !_positionSmoothingEnabled)
+                UpdateScroll();
+
         }
-        if (IsDisposed || _viewport is null) return;
-        var interpolating = IsPhysicsInterpolatedAndEnabled();
-        if (what == NotificationInternalProcess && _processCallback == ProcessPhase.Idle && !interpolating ||
-            what == NotificationInternalPhysicsProcess && (_processCallback == ProcessPhase.Physics || interpolating) ||
-            what == NotificationTransformChanged && !_positionSmoothingEnabled)
-            UpdateScroll();
     }
 
     private void UpdateProcessing()

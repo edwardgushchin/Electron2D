@@ -214,7 +214,15 @@ public partial class AnimationTree : AnimationMixer
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)
-    { if (what == NotificationEnterTree) { _graphTree = Tree; if (_graphTree is not null) _graphTree.TreeChanged += SceneChanged; } else if (what == NotificationExitTree) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; } if (what is NotificationEnterTree or NotificationReady) { _playerDirty = true; ReconcilePlayer(); } base.OnNotification(what); }
+    {
+        var reversed = IsNotificationReversed;
+
+        if (what == NotificationEnterTree) { _graphTree = Tree; if (_graphTree is not null) _graphTree.TreeChanged += SceneChanged; } else if (what == NotificationExitTree) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; }
+        if (what is NotificationEnterTree or NotificationReady) { _playerDirty = true; ReconcilePlayer(); }
+        if (!reversed) base.OnNotification(what);
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     { if (disposing) { if (_graphTree is not null) _graphTree.TreeChanged -= SceneChanged; _graphTree = null; UnsubscribeRoot(); _root = null; _fileParameterValues.Clear(); _fileParameterSchemas = null; DetachPlayer(); foreach (var playback in _playbacks) playback.Dispose(); _playbacks.Clear(); _instances.Clear(); _clipMaps.Clear(); _frames.Clear(); _frameWeights.Clear(); _notices.Clear(); _publisherAnimationPlayerChanged.Handlers = null; } base.Dispose(disposing); }

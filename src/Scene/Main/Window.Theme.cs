@@ -255,12 +255,16 @@ public partial class Window
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationVPMouseEnter && !_mouseInContent) { _mouseInContent = true; EmitWindowSignal(BeginEventEmission(_publisherMouseEntered.Handlers)); }
         else if (what == NotificationVPMouseExit && _mouseInContent) { _mouseInContent = false; EmitWindowSignal(BeginEventEmission(_publisherMouseExited.Handlers)); }
         else if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();
         else if (what == NotificationVisibilityChanged && _unparentWhenInvisible && !_visible) Parent?.RemoveChild(this);
+
+        if (reversed) base.OnNotification(what);
     }
 }

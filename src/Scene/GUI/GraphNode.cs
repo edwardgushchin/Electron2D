@@ -229,24 +229,31 @@ public partial class GraphNode : GraphElement
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what != NotificationDraw || _titlebar is null) return;
-        GraphDrawing = true; try
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            var titleHeight = TitleHeight;
-            if (GetThemeStyleBox(Selected ? "panel_selected" : "panel") is { } panel) DrawStyleBox(panel, new(new(0, titleHeight), new(Size.X, Math.Max(0, Size.Y - titleHeight))));
-            if (GetThemeStyleBox(Selected ? "titlebar_selected" : "titlebar") is { } title) DrawStyleBox(title, new(Vector2.Zero, new(Size.X, titleHeight)));
-            if (HasFocus() && GetThemeStyleBox("panel_focus") is { } focus) DrawStyleBox(focus, new(Vector2.Zero, Size));
-            var index = 0;
-            for (var i = 0; i < GetChildCount(); i++) if (GetChild(i) is Control child && Sortable(child))
-                {
-                    if (IsSlotDrawStylebox(index) && GetThemeStyleBox(index == _selectedSlot ? "slot_selected" : "slot") is { } style) DrawStyleBox(style, child.GetRect().GrowIndividual(style.GetMargin(Side.Left), style.GetMargin(Side.Top), style.GetMargin(Side.Right), style.GetMargin(Side.Bottom)));
-                    if (_slots.TryGetValue(index, out var slot)) { var y = (int)(child.Position.Y + child.Size.Y / 2); if (slot.Left) OnDrawPort(index, new(GetThemeConstant("port_h_offset"), y), true, slot.LeftColor); if (slot.Right) OnDrawPort(index, new((int)Size.X - GetThemeConstant("port_h_offset"), y), false, slot.RightColor); }
-                    index++;
-                }
-            if (CanResize && GetThemeIcon("resizer") is { } icon) DrawTexture(icon, Size - icon.GetSize(), GetThemeColor("resizer_color"));
+            if (!reversed) base.OnNotification(what);
+            if (what != NotificationDraw || _titlebar is null) return;
+            GraphDrawing = true; try
+            {
+                var titleHeight = TitleHeight;
+                if (GetThemeStyleBox(Selected ? "panel_selected" : "panel") is { } panel) DrawStyleBox(panel, new(new(0, titleHeight), new(Size.X, Math.Max(0, Size.Y - titleHeight))));
+                if (GetThemeStyleBox(Selected ? "titlebar_selected" : "titlebar") is { } title) DrawStyleBox(title, new(Vector2.Zero, new(Size.X, titleHeight)));
+                if (HasFocus() && GetThemeStyleBox("panel_focus") is { } focus) DrawStyleBox(focus, new(Vector2.Zero, Size));
+                var index = 0;
+                for (var i = 0; i < GetChildCount(); i++) if (GetChild(i) is Control child && Sortable(child))
+                    {
+                        if (IsSlotDrawStylebox(index) && GetThemeStyleBox(index == _selectedSlot ? "slot_selected" : "slot") is { } style) DrawStyleBox(style, child.GetRect().GrowIndividual(style.GetMargin(Side.Left), style.GetMargin(Side.Top), style.GetMargin(Side.Right), style.GetMargin(Side.Bottom)));
+                        if (_slots.TryGetValue(index, out var slot)) { var y = (int)(child.Position.Y + child.Size.Y / 2); if (slot.Left) OnDrawPort(index, new(GetThemeConstant("port_h_offset"), y), true, slot.LeftColor); if (slot.Right) OnDrawPort(index, new((int)Size.X - GetThemeConstant("port_h_offset"), y), false, slot.RightColor); }
+                        index++;
+                    }
+                if (CanResize && GetThemeIcon("resizer") is { } icon) DrawTexture(icon, Size - icon.GetSize(), GetThemeColor("resizer_color"));
+            }
+            finally { GraphDrawing = false; }
+
         }
-        finally { GraphDrawing = false; }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(GraphNode) ? CreateGraphNode : base.CreateSceneInstanceFactory();

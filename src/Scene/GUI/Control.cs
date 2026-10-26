@@ -712,16 +712,21 @@ public partial class Control : CanvasItem
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if (what == NotificationExitTree || what == NotificationVisibilityChanged && !IsVisibleInTree)
         {
             List<Exception>? errors = null;
-            try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
             try { Tree?.ReleaseGUIFocus(this); } catch (Exception error) { CollectException(ref errors, error); }
             try { Tree?.ReleaseGUIHover(this); } catch (Exception error) { CollectException(ref errors, error); }
             try { Tree?.ReleaseGUIDrag(this); } catch (Exception error) { CollectException(ref errors, error); }
             ThrowCollected("Control visibility callbacks failed.", errors);
         }
-        else base.OnNotification(what);
+        else
+        {
+            if (!reversed) base.OnNotification(what);
+        }
         if (what == NotificationEnterTree) ThemeOwner.NotifySelf();
         else if (what is NotificationParented or NotificationUnparented) ThemeOwner.ParentChanged();
         else if (what == NotificationThemeChanged) ProcessThemeNotification();
@@ -743,6 +748,8 @@ public partial class Control : CanvasItem
         else if (what == NotificationVisibilityChanged && IsVisibleInTree) { UpdateMinimumSize(); UpdateMaximumSize(); }
         else if (what is NotificationLayoutDirectionChanged or NotificationTranslationChanged) Reflow();
         else if (what == NotificationResized) BeginEventEmission(_publisherResized.Handlers)?.Invoke();
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

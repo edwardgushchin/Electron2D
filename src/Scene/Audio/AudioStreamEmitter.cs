@@ -178,7 +178,9 @@ public sealed class AudioStreamEmitter : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationEnterTree)
         {
             _autoplayPending = _autoplay;
@@ -190,6 +192,8 @@ public sealed class AudioStreamEmitter : Entity
             RefreshSpatial(queryArea: true);
             if (_autoplayPending) { _autoplayPending = false; _player.Play(); }
         }
+
+        if (reversed) base.OnNotification(what);
     }
 
     private static readonly PropertyDescriptor[] SpatialProperties =

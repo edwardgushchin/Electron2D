@@ -165,14 +165,21 @@ public class Parallax : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what != NotificationInternalProcess || !IsInsideTree) return;
-        var offset = _scrollOffset + _autoscroll * (float)ProcessDeltaTime;
-        if (!offset.IsFinite()) throw new InvalidOperationException("Parallax automatic scroll overflowed finite coordinates.");
-        if (_repeatSize.X != 0) offset.X = Mathf.PosMod(offset.X, _repeatSize.X);
-        if (_repeatSize.Y != 0) offset.Y = Mathf.PosMod(offset.Y, _repeatSize.Y);
-        _scrollOffset = offset;
-        UpdateScroll();
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (what != NotificationInternalProcess || !IsInsideTree) return;
+            var offset = _scrollOffset + _autoscroll * (float)ProcessDeltaTime;
+            if (!offset.IsFinite()) throw new InvalidOperationException("Parallax automatic scroll overflowed finite coordinates.");
+            if (_repeatSize.X != 0) offset.X = Mathf.PosMod(offset.X, _repeatSize.X);
+            if (_repeatSize.Y != 0) offset.Y = Mathf.PosMod(offset.Y, _repeatSize.Y);
+            _scrollOffset = offset;
+            UpdateScroll();
+
+        }
     }
 
     /// <inheritdoc />

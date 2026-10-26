@@ -104478,6 +104478,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ElectronObject.Notify(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "Notify",
+    "signature": "public System.Void Notify(System.Int32 what, System.Boolean reversed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "reversed",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ElectronObject.NotifyPropertyListChanged()",
     "kind": "method",
     "declaringType": "Electron2D.ElectronObject",
@@ -250530,6 +250554,19 @@
     "name": "IsDisposed",
     "signature": "public System.Boolean IsDisposed { get;  }",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ElectronObject.IsNotificationReversed()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "IsNotificationReversed",
+    "signature": "protected System.Boolean IsNotificationReversed { get;  }",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],

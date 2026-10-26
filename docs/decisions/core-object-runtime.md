@@ -61,7 +61,7 @@ The base uses atomic state transitions so concurrent disposal runs cleanup at mo
 <a id="adr-0005"></a>
 ## ADR 0005: Use numeric notifications and typed property descriptors
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
 
 - Status: Accepted
 - Scope: Engine lifecycle notifications and tooling property exposure
@@ -73,7 +73,9 @@ Godot's `Object` exposes numeric notifications plus Variant-based property disco
 ### Decision
 
 - Engine lifecycle notifications keep stable Godot-compatible numeric IDs where a corresponding Electron2D lifecycle exists.
-- `ElectronObject.Notify(int)` synchronously invokes the protected `OnNotification(int)` override.
+- `ElectronObject.Notify(int)` synchronously invokes the protected `OnNotification(int)` override through the ordinary C# path. The complete `Notify(int, bool reversed)` overload adds derived-first delivery without removing that existing signature. False retains the established explicit base-call points, including handler-local cleanup and aggregation. True makes each first-party override complete its local handling before forwarding to its base. This is a typed C# projection; it does not invoke reflected nonvirtual method bodies or introduce a dynamic notification registry.
+- Custom overrides keep ordinary C# control of base calls, including intentional suppression. `IsNotificationReversed` is a protected, readonly dispatch context: a cooperative override calls base before local handling for normal delivery and after local handling for reversed delivery. The context belongs to this object's current invocation on the current thread, restores across nested calls and errors, and does not flow to asynchronous continuations. A callback's unhandled exception stops the unvisited chain and propagates unchanged; existing handler-local aggregation is preserved. Numeric notifications remain independent of signal blocking and do not bypass scene, processing-group, physics-borrow or disposal guards.
+- Automatic pre-delete uses the reversed direction. The ordinary internal frame/lifecycle producers keep their existing normal path. The prepared normal and reversed paths must allocate zero managed bytes; no receiver or context object is retained after a top-level call.
 - Pre-delete notification `1` is automatic. Post-initialization notification `0` is only reserved because a base constructor cannot safely call virtual members.
 - Tooling properties use immutable `PropertyDescriptor<TOwner, TValue>` instances with typed delegates.
 - Discovery returns heterogeneous descriptors through the non-generic `PropertyDescriptor` base, but value access remains generic and typed.

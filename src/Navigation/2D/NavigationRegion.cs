@@ -92,7 +92,14 @@ public sealed partial class NavigationRegion : Entity
     protected override void OnExitTree() { try { NavigationServer.RegionSetMap(_rid, default); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
     protected override void OnNotification(int what)
-    { base.OnNotification(what); if (IsInsideTree && what == NotificationWorldChanged) Publish(); else if (IsInsideTree && what == NotificationTransformChanged) NavigationServer.RegionSetTransform(_rid, GlobalTransform); }
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (IsInsideTree && what == NotificationWorldChanged) Publish(); else if (IsInsideTree && what == NotificationTransformChanged) NavigationServer.RegionSetTransform(_rid, GlobalTransform);
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
     /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>

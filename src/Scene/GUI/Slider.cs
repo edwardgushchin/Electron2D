@@ -250,25 +250,32 @@ public abstract class Slider : Range
     /// <exception cref="AggregateException">Theme, lifecycle or repeated-value callbacks fail after required phases are attempted.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawSlider(); return; }
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed)
-            try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawSlider(); return; }
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed)
+                try
                 {
-                    case NotificationInternalProcess: ProcessRepeat(); break;
-                    case NotificationMouseEnter: _mouseInside = true; QueueRedraw(); break;
-                    case NotificationMouseExit: _mouseInside = false; QueueRedraw(); break;
-                    case NotificationFocusEnter: QueueRedraw(); break;
-                    case NotificationFocusExit: StopRepeat(); QueueRedraw(); break;
-                    case NotificationVisibilityChanged:
-                    case NotificationExitTree: CancelInteraction(); break;
+                    switch (what)
+                    {
+                        case NotificationInternalProcess: ProcessRepeat(); break;
+                        case NotificationMouseEnter: _mouseInside = true; QueueRedraw(); break;
+                        case NotificationMouseExit: _mouseInside = false; QueueRedraw(); break;
+                        case NotificationFocusEnter: QueueRedraw(); break;
+                        case NotificationFocusExit: StopRepeat(); QueueRedraw(); break;
+                        case NotificationVisibilityChanged:
+                        case NotificationExitTree: CancelInteraction(); break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Slider notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Slider notification callbacks failed.", errors);
+
+        }
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {

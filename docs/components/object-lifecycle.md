@@ -1,6 +1,6 @@
 # Object lifecycle component
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 [Object lifetime monitors](object-lifetime-monitors.md) share the base construction identity without owning objects or changing disposal/factory provenance.
 
@@ -25,7 +25,7 @@ The component uses .NET threading and exception-dispatch primitives. Its `Tr`/`T
 
 ## Runtime behavior
 
-Each instance receives a non-zero process-local `ulong InstanceID` from a static counter using `Interlocked.Increment`. `ClassName` exposes `GetType().Name`; `ToString()` returns `<ClassName>#<InstanceID>`. `Notify(int)` dispatches to `OnNotification(int)`. IDs 0 and 1 are reserved for post-initialization and pre-delete notifications; disposal sends pre-delete before resource cleanup.
+Each instance receives a non-zero process-local `ulong InstanceID` from a static counter using `Interlocked.Increment`. `ClassName` exposes `GetType().Name`; `ToString()` returns `<ClassName>#<InstanceID>`. `Notify(int)` dispatches to `OnNotification(int)` with ordinary direction. `Notify(int, bool reversed)` selects derived-first delivery; [ElectronObject.Notifications.cs](../../src/Core/Object/ElectronObject.Notifications.cs) owns its thread-local invocation context. IDs 0 and 1 are reserved for post-initialization and pre-delete notifications. Disposal sends pre-delete with reversed direction before resource cleanup; post-initialization 0 is not automatically emitted.
 
 Lifetime follows this state transition:
 
@@ -61,6 +61,20 @@ Object iteration uses the existing C# compiler/BCL protocol under ADR 0005. A co
 
 `ObjectIterationTests` is shared with the public-only registered-backend consumer. It checks empty/repeated/nested/explicit cursors, typed object identity, BCL interface consumers, early break, construction/move/current/cleanup/body errors and caller-owned lifetime guards. Real force and state callbacks enumerate a physical-body subtype and a borrowed typed owner during complete moving frames. All 18 final profiles pass: six managed and six strict NativeAOT public-consumer profiles, both complete default consumer regressions, and four CPU/GPU owner/separate root profiles. Sixteen 128-frame brackets measure 2048 complete moving intervals at 0/0 owner/all-thread managed bytes. Seven exact portable-PDB proofs match 2273 runtime, 166 consumer and 756 root documents; 3189 unique authored inputs are retained. Evidence: bin/physics-object-iteration/2026-10-18/validation.json; SHA-256 0c8e5b533fc235f2b1aced4cbed5b6536f10af6ab3b3f27a546f6b83273b7e6a. Initial fixture errors (invalid Action expression and an incorrect assumption of unwrapped callback errors) and a rejected wrapper selecting the older host are retained separately; they are not numerical runtime failures or accepted final evidence. This verifies the exercised C# projection; user collection concurrency and arbitrary cursor implementations retain their own policies.
 
+## Notification direction
+
+All 95 built-in overrides preserve their original normal base-call points, early returns and local exception aggregation. Reversed delivery completes local handling before forwarding to the base. A direct local function retains early-return boundaries where needed; handlers without such exits keep their ordinary method body. No reflection, dynamic code, callback registry or per-call delegate is added. Custom C# overrides use protected `IsNotificationReversed` and explicit base calls, as shown in the [class reference](../classes/ElectronObject.md#p-electron2d-electronobject-isnotificationreversed). Intentionally suppressing the base retains ordinary C# meaning.
+
+Direction belongs to the current object, invocation and thread. Nested normal/reversed calls, calls on another object and failures restore the outer context; asynchronous work does not inherit it. An unhandled error stops unvisited ancestors without replacing the original exception. Existing handler-local aggregation remains intact. Numeric notifications remain independent of ordinary signal blocking, and direction does not relax disposal, owner-thread, solver or borrowed-state guards. Completed calls retain no target in thread-local state.
+
+`tests/ObjectNotifications.Consumer` uses only public/protected runtime API and shares its checks with the root suite. It verifies custom two-level RigidBody ordering, the actual Node physics callback, Label invalidation versus Control.Resized, nested/concurrent/failing calls, cancelled/terminal pre-delete and weak collection. Complete physical frames alternate normal/reversed velocity mutations while preserving RID and advancing actual CPU/GPU motion. The fixture compares velocity and displacement within 0.0001 scene units, covering float accumulation over the short measured interval; identity, order, counts and allocation gates are exact. Eight public CPU/no-device and NVIDIA GPU owner/separate CLR/strict full-trim NativeAOT profiles pass, each with 128 active and 128 idle measured full frames at strict 0/0 owner/all-thread managed bytes (2048 total). Both GPU runtimes map the NVIDIA driver without software Vulkan; no new kernel Xid or payload mutation is observed. Evidence: `bin/physics-notification-direction/2026-10-26/`. Native heap, foreign platforms, full-suite/numerical/network/performance and human acceptance remain separate.
+
+### Directional qualification on 2026-10-26
+
+The final cohort has 19 successful immutable-payload processes: eight public CLR/strict NativeAOT backend/thread combinations, two root directional checks and nine existing loop, CPU/GPU scene physics, camera/navigation, button, viewport/input, animation, particle and audio regressions. The ten directional runs retain 128 active plus 128 idle measured frames each (2560 total), all at strict 0/0 owner/all-thread managed bytes. Existing normal-path physics regressions retain their numerical/contact/lifetime/allocation assertions. Five assembly/PDB identity and SHA checks match 2611 runtime, two public-consumer and 981 root authored source documents, with the CLR runtime identical in public/root payloads.
+
+Receipts: `bin/physics-notification-direction/2026-10-26/validation.json` and `source-proof-final.json`. Runtime SHA-256: `392723d715291fd03253f5839881a3597a06e1221501e7d6c8ab145882023286`; public consumer: `8a4e0b1ae2c72778ddd9de8c679ef49a0cbf6c7466f523ce05b1dcfd5a1036fa`; root tests: `e0936520afb6e5e5eb0285db4516f94f27f00268bc74cdc040e4cc41dd94eb61`; NativeAOT executable: `cc19d8e297ba72894787b07ab24de0f0b1c8e4e88e2f0b895bf2cfb5032ce865`. Initial consumer compile mistakes, the earlier active-only cohort and the coverage test's stale Partial expectation are retained separately; the final cohort includes idle work and keeps automatic post-initialization explicitly Partial. No complete-suite, native-heap, foreign-platform, full numerical/network/performance or human acceptance is claimed.
+
 ## Threading
 
 - Instance ID allocation is safe under concurrent construction.
@@ -95,7 +109,7 @@ The executable check in `tests/Electron2D.Tests/Program.cs` covers:
 - per-object translation flags and domains through the Localization domain.
 - disposal precondition rejection before the disposed state begins, through Scene tests.
 
-Release build and executable checks pass on .NET SDK 10.0.101 targeting .NET 8.
+The current directional qualification uses .NET SDK 10.0.101 targeting .NET 10; these focused runs do not establish a complete-suite pass.
 
 Typed property inspection uses the exact teardown-thread exception from ADR 0009: GetValue, TryGetRevertValue and CanRevert remain usable in pre-delete/cleanup on that thread; foreign-thread and terminal access fail. SetValue and Revert reject once disposal starts. TryGetRevertValue reports factory presence even for a null or unchanged default, while CanRevert and PropertyCanRevert retain the current value-difference policy. Factories run on each request; their results follow delegate ownership with no implicit copy. Validators reject before the setter, and an exception after a setter commits does not undo that write. Ordinary owner setters and getters retain thread, capture and numerical-phase rules.
 

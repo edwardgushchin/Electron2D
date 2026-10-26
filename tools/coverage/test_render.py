@@ -68,7 +68,11 @@ def check_physics_report(pages):
     assert len(permission) == 1 and " | Implemented | " in permission[0] and "native-permission-results" in permission[0]
     assert "MainLoop::signal:on_request_permissions_result(String:,bool:)" not in expected
     assert expected["class:MainLoop"] == "Partial", "Native permission results must not close the inherited class audit"
-    assert expected["Object::method:notification(int:,bool:)"] == "Partial", "Tree traversal must not hide per-class notification ordering gaps"
+    notification = [row for row in object_page.splitlines() if row.startswith("| [`method notification(")]
+    assert len(notification) == 1 and " | Implemented | " in notification[0] and "Notify(System.Int32 what, System.Boolean reversed)" in notification[0]
+    assert "Object::method:notification(int:,bool:)" not in expected
+    assert expected["Object::method:_notification(int:)"] == "Partial", "Direction must not hide missing automatic post-initialization"
+    assert expected["class:Object"] == "Partial", "Directional dispatch does not complete the inherited object class"
     resource_page = pages[CLASS_PAGES / "Resource.md"]
     for method in ("copy_from_resource", "duplicate", "duplicate_deep"):
         rows = [row for row in resource_page.splitlines() if row.startswith("| [`method " + method + "(")]

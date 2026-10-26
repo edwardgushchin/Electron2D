@@ -73,18 +73,25 @@ public class GraphFrame : GraphElement
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what == NotificationThemeChanged) RefreshTint();
-        if (what != NotificationDraw || _titlebar is null) return;
-        GraphDrawing = true; try
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            var body = new Rect2(new(0, GraphTitleHeight), new(Size.X, Math.Max(0, Size.Y - GraphTitleHeight)));
-            var panel = (_tintEnabled ? Selected ? _tintedSelected : _tintedPanel : null) ?? GetThemeStyleBox(Selected ? "panel_selected" : "panel");
-            if (panel != null) DrawStyleBox(panel, body);
-            if (GetThemeStyleBox(Selected ? "titlebar_selected" : "titlebar") is { } title) DrawStyleBox(title, new(Vector2.Zero, new(Size.X, GraphTitleHeight)));
-            if (CanResize && GetThemeIcon("resizer") is { } icon) DrawTexture(icon, Size - icon.GetSize(), GetThemeColor("resizer_color"));
+            if (!reversed) base.OnNotification(what);
+            if (what == NotificationThemeChanged) RefreshTint();
+            if (what != NotificationDraw || _titlebar is null) return;
+            GraphDrawing = true; try
+            {
+                var body = new Rect2(new(0, GraphTitleHeight), new(Size.X, Math.Max(0, Size.Y - GraphTitleHeight)));
+                var panel = (_tintEnabled ? Selected ? _tintedSelected : _tintedPanel : null) ?? GetThemeStyleBox(Selected ? "panel_selected" : "panel");
+                if (panel != null) DrawStyleBox(panel, body);
+                if (GetThemeStyleBox(Selected ? "titlebar_selected" : "titlebar") is { } title) DrawStyleBox(title, new(Vector2.Zero, new(Size.X, GraphTitleHeight)));
+                if (CanResize && GetThemeIcon("resizer") is { } icon) DrawTexture(icon, Size - icon.GetSize(), GetThemeColor("resizer_color"));
+            }
+            finally { GraphDrawing = false; }
+
         }
-        finally { GraphDrawing = false; }
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()

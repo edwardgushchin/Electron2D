@@ -71,25 +71,32 @@ public partial class SpinBox
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); RefreshText(true); ComputeSizes(); DrawArrows(); return; }
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed && _line != null) try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); RefreshText(true); ComputeSizes(); DrawArrows(); return; }
+            List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed && _line != null) try
                 {
-                    case NotificationEnterTree: ComputeSizes(); RefreshText(); break;
-                    case NotificationExitTree: EndInteraction(); break;
-                    case NotificationVisibilityChanged: if (!IsVisibleInTree) EndInteraction(); break;
-                    case NotificationMouseExit: _upHover = _downHover = false; QueueRedraw(); break;
-                    case NotificationInternalProcess: Repeat(); break;
-                    case NotificationResized: ComputeSizes(); break;
-                    case NotificationThemeChanged: ClearTextCache(); ComputeSizes(); _line.UpdateMinimumSize(); UpdateMinimumSize(); QueueRedraw(); break;
-                    case NotificationLayoutDirectionChanged: ComputeSizes(); QueueRedraw(); break;
-                    case NotificationTranslationChanged: ClearTextCache(); RefreshText(); break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree: ComputeSizes(); RefreshText(); break;
+                        case NotificationExitTree: EndInteraction(); break;
+                        case NotificationVisibilityChanged: if (!IsVisibleInTree) EndInteraction(); break;
+                        case NotificationMouseExit: _upHover = _downHover = false; QueueRedraw(); break;
+                        case NotificationInternalProcess: Repeat(); break;
+                        case NotificationResized: ComputeSizes(); break;
+                        case NotificationThemeChanged: ClearTextCache(); ComputeSizes(); _line.UpdateMinimumSize(); UpdateMinimumSize(); QueueRedraw(); break;
+                        case NotificationLayoutDirectionChanged: ComputeSizes(); QueueRedraw(); break;
+                        case NotificationTranslationChanged: ClearTextCache(); RefreshText(); break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("SpinBox notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("SpinBox notification callbacks failed.", errors);
+
+        }
     }
     private void ComputeSizes()
     {

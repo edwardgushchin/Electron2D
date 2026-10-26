@@ -236,7 +236,15 @@ public partial class AnimationPlayer : AnimationMixer
     private static double BoundEnd(Animation animation, double end) => end < 0 ? animation.Length : Math.Min(end, animation.Length);
     private static void ValidateSection(Animation animation, double start, double end) { Animation.Finite(start); Animation.Finite(end); if (BoundStart(start) >= BoundEnd(animation, end)) throw new ArgumentException("Section start must precede its end within the animation."); }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (!IsDisposed && what == NotificationReady && _autoplay.Length != 0 && HasAnimation(_autoplay)) Play(_autoplay); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (!IsDisposed && what == NotificationReady && _autoplay.Length != 0 && HasAnimation(_autoplay)) Play(_autoplay);
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { _queue.Clear(); _next.Clear(); _blendClips.Clear(); _mixFrames.Clear(); _blendTimes.Clear(); _publisherAnimationChanged.Handlers = null; _publisherCurrentAnimationChanged.Handlers = null; } base.Dispose(disposing); }
     /// <inheritdoc />

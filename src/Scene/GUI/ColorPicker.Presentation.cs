@@ -6,7 +6,15 @@ public partial class ColorPicker
     {
         private Vector2 Inset => Vector2.One * owner.GetThemeConstant("margin");
         protected override Vector2 OnGetMinimumSize() => owner._content is { } content ? content.GetBoundMinimumSize() + Inset * 2 : Vector2.Zero;
-        protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationSortChildren && owner._content != null) FitChildInRect(owner._content, new(Inset, (Size - Inset * 2).Max(Vector2.Zero))); }
+        protected override void OnNotification(int what)
+        {
+            var reversed = IsNotificationReversed;
+
+            if (!reversed) base.OnNotification(what);
+            if (what == NotificationSortChildren && owner._content != null) FitChildInRect(owner._content, new(Inset, (Size - Inset * 2).Max(Vector2.Zero)));
+
+            if (reversed) base.OnNotification(what);
+        }
     }
     private readonly (Color Color, bool Alpha, bool Constructor, string Text)[] _textCache = new (Color, bool, bool, string)[64];
     private int _textCacheCount, _textCacheNext;

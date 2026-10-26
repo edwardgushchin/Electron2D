@@ -55,10 +55,18 @@ public partial class CPUParticles
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what); if (IsDisposed) return;
-        if (what == NotificationEnterTree) { SetInternalProcessing(_emitting || _active, false); _followCurrent = _followPrevious = GetGlobalTransform(); _followValid = true; }
-        else if (what == NotificationResetPhysicsInterpolation) { _followCurrent = _followPrevious = GetGlobalTransform(); _followValid = true; }
-        else if (what == NotificationInternalProcess && IsVisibleInTree) RunUpdate(ProcessDeltaTime, 0, 0);
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            if (what == NotificationEnterTree) { SetInternalProcessing(_emitting || _active, false); _followCurrent = _followPrevious = GetGlobalTransform(); _followValid = true; }
+            else if (what == NotificationResetPhysicsInterpolation) { _followCurrent = _followPrevious = GetGlobalTransform(); _followValid = true; }
+            else if (what == NotificationInternalProcess && IsVisibleInTree) RunUpdate(ProcessDeltaTime, 0, 0);
+
+        }
     }
     internal override void BeginPhysicsInterpolationTick()
     {

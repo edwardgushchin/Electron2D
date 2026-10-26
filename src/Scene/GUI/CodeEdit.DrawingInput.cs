@@ -115,5 +115,15 @@ public partial class CodeEdit
     }
     /// <inheritdoc />
     protected override void OnNotification(int what)
-    { if (what == NotificationDraw) { EnsureCodeLayout(); base.OnNotification(what); DrawCodeOverlay(); return; } base.OnNotification(what); if (IsDisposed) return; switch (what) { case NotificationThemeChanged: case NotificationResized: case NotificationTranslationChanged: case NotificationLayoutDirectionChanged: _codeDirty = true; break; case NotificationReady: _symbolTimer.WaitTime = Math.Max(.000001, ProjectSettings.Get(ProjectSettings.TooltipDelaySeconds)); break; case NotificationFocusExit: CancelCodeCompletion(); _hint = ""; _symbolTimer?.Stop(); break; } }
+    {
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { EnsureCodeLayout(); if (!reversed) base.OnNotification(what); DrawCodeOverlay(); return; }
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return; switch (what) { case NotificationThemeChanged: case NotificationResized: case NotificationTranslationChanged: case NotificationLayoutDirectionChanged: _codeDirty = true; break; case NotificationReady: _symbolTimer.WaitTime = Math.Max(.000001, ProjectSettings.Get(ProjectSettings.TooltipDelaySeconds)); break; case NotificationFocusExit: CancelCodeCompletion(); _hint = ""; _symbolTimer?.Stop(); break; }
+        }
+    }
 }

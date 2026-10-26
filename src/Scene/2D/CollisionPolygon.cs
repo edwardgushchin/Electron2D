@@ -168,8 +168,10 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     /// <remarks>Parent and unparent notifications require the scene owner before changing canvas or geometry ownership.</remarks>
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if (what is NotificationParented or NotificationUnparented) Tree?.EnsureOwnerThread();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this))
         {
             var color = Tree!.DebugCollisionsColor;
@@ -184,6 +186,8 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
         {
             _owner = null; previous.DetachShape(this);
         }
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

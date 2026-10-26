@@ -173,7 +173,9 @@ public partial class FoldableContainer
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        var reversed = IsNotificationReversed;
+
+        List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) try
             {
                 if (what == NotificationDraw) DrawFoldable();
@@ -187,5 +189,7 @@ public partial class FoldableContainer
             }
             catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Foldable notifications failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
 }

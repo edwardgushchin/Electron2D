@@ -104,7 +104,17 @@ public sealed class NavigationLink : Entity
     /// <inheritdoc />
     protected override void OnExitTree() { try { NavigationServer.LinkSetMap(_rid, default); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (!IsInsideTree) return; if (what == NotificationWorldChanged) Publish(); else if (what == NotificationTransformChanged) PublishEndpoints(); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (!IsInsideTree) return; if (what == NotificationWorldChanged) Publish(); else if (what == NotificationTransformChanged) PublishEndpoints();
+        }
+    }
     /// <inheritdoc />
     /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
     /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>

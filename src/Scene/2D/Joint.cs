@@ -285,7 +285,15 @@ public abstract class Joint : Entity
 
     /// <inheritdoc />
     /// <remarks>Records local pin, groove or spring anchor markers when scene collision diagnostics are enabled.</remarks>
-    protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationDraw) PhysicsDebugDrawing.Joint(this); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (what == NotificationDraw) PhysicsDebugDrawing.Joint(this);
+
+        if (reversed) base.OnNotification(what);
+    }
 
     /// <summary>Checks scene and dependent joint world ownership before beginning disposal.</summary>
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping.</exception>

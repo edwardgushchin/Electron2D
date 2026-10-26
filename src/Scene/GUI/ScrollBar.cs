@@ -228,28 +228,35 @@ public abstract class ScrollBar : Range
     /// <exception cref="AggregateException">Inherited notifications or required lifecycle phases fail.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawScrollBar(); return; }
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
-        if (!IsDisposed) try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawScrollBar(); return; }
+            List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
+            if (!IsDisposed) try
                 {
-                    case NotificationEnterTree: PollResources(); SetInternalProcessing(true, false); break;
-                    case NotificationExitTree: CancelInteraction(); _highlight = Highlight.None; ReleaseResidency(); _states.Clear(); SetInternalProcessing(false, false); break;
-                    case NotificationThemeChanged: PollResources(); break;
-                    case NotificationInternalProcess:
-                        PollResources(); if (_minimumDirty) { _minimumDirty = false; UpdateMinimumSize(); QueueRedraw(); }
-                        break;
-                    case NotificationVisibilityChanged: if (!IsVisibleInTree) CancelInteraction(); break;
-                    case NotificationPaused:
-                    case NotificationDisabled: if (!CanProcess()) CancelInteraction(); break;
-                    case NotificationMouseExit: _highlight = Highlight.None; QueueRedraw(); break;
-                    case NotificationFocusEnter:
-                    case NotificationFocusExit: QueueRedraw(); break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree: PollResources(); SetInternalProcessing(true, false); break;
+                        case NotificationExitTree: CancelInteraction(); _highlight = Highlight.None; ReleaseResidency(); _states.Clear(); SetInternalProcessing(false, false); break;
+                        case NotificationThemeChanged: PollResources(); break;
+                        case NotificationInternalProcess:
+                            PollResources(); if (_minimumDirty) { _minimumDirty = false; UpdateMinimumSize(); QueueRedraw(); }
+                            break;
+                        case NotificationVisibilityChanged: if (!IsVisibleInTree) CancelInteraction(); break;
+                        case NotificationPaused:
+                        case NotificationDisabled: if (!CanProcess()) CancelInteraction(); break;
+                        case NotificationMouseExit: _highlight = Highlight.None; QueueRedraw(); break;
+                        case NotificationFocusEnter:
+                        case NotificationFocusExit: QueueRedraw(); break;
+                    }
                 }
-            }
-            catch (Exception e) { CollectException(ref errors, e); }
-        ThrowCollected("Scroll bar notification callbacks failed.", errors);
+                catch (Exception e) { CollectException(ref errors, e); }
+            ThrowCollected("Scroll bar notification callbacks failed.", errors);
+
+        }
     }
     internal override void OnTreeMembershipChanged(bool entering)
     {

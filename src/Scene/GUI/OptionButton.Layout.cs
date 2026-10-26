@@ -31,13 +31,21 @@ public partial class OptionButton
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what); if (_popup is null || IsDisposed) return;
-        if (what == NotificationDraw && Arrow() is { } arrow)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            var color = Colors.White; if (GetThemeConstant("modulate_arrow") != 0) { var key = GetDrawMode() switch { DrawMode.Pressed => "font_pressed_color", DrawMode.Hover => "font_hover_color", DrawMode.HoverPressed => "font_hover_pressed_color", DrawMode.Disabled => "font_disabled_color", _ => HasFocus(true) ? "font_focus_color" : "font_color" }; color = GetThemeColor(key); }
-            var x = IsLayoutRTL() ? GetThemeConstant("arrow_margin") : Size.X - arrow.GetWidth() - GetThemeConstant("arrow_margin"); var y = MathF.Truncate(MathF.Abs((Size.Y - arrow.GetHeight()) / 2)); DrawTextureRect(arrow, new(x, y, arrow.GetWidth(), arrow.GetHeight()), false, color);
+            if (!reversed) base.OnNotification(what);
+            if (_popup is null || IsDisposed) return;
+            if (what == NotificationDraw && Arrow() is { } arrow)
+            {
+                var color = Colors.White; if (GetThemeConstant("modulate_arrow") != 0) { var key = GetDrawMode() switch { DrawMode.Pressed => "font_pressed_color", DrawMode.Hover => "font_hover_color", DrawMode.HoverPressed => "font_hover_pressed_color", DrawMode.Disabled => "font_disabled_color", _ => HasFocus(true) ? "font_focus_color" : "font_color" }; color = GetThemeColor(key); }
+                var x = IsLayoutRTL() ? GetThemeConstant("arrow_margin") : Size.X - arrow.GetWidth() - GetThemeConstant("arrow_margin"); var y = MathF.Truncate(MathF.Abs((Size.Y - arrow.GetHeight()) / 2)); DrawTextureRect(arrow, new(x, y, arrow.GetWidth(), arrow.GetHeight()), false, color);
+            }
+            else if (what is NotificationThemeChanged or NotificationLayoutDirectionChanged or NotificationTranslationChanged) { _popup.LayoutDirection = LayoutDirection; Reconcile(); UpdateMinimumSize(); }
+            else if (what == NotificationVisibilityChanged && !IsVisibleInTree) _popup.Hide();
+
         }
-        else if (what is NotificationThemeChanged or NotificationLayoutDirectionChanged or NotificationTranslationChanged) { _popup.LayoutDirection = LayoutDirection; Reconcile(); UpdateMinimumSize(); }
-        else if (what == NotificationVisibilityChanged && !IsVisibleInTree) _popup.Hide();
     }
 }

@@ -54,8 +54,12 @@ public abstract partial class Viewport
     /// <remarks>Also resets camera presentation history on the inherited physics-interpolation reset notification.</remarks>
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if (what == NotificationVPMouseEnter) _mouseInViewport = true; else if (what == NotificationVPMouseExit) _mouseInViewport = false;
         if (what == NotificationResetPhysicsInterpolation) ResetCanvasInterpolationSnapshot();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
+
+        if (reversed) base.OnNotification(what);
     }
 }

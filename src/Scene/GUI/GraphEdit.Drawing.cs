@@ -90,25 +90,32 @@ public partial class GraphEdit
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what is NotificationResized or NotificationEnterTree) { _lines.Size = _overlay.Size = Size; ChangedGraph(); }
-        else if (what == NotificationThemeChanged) { RefreshMenu(); ChangedGraph(); }
-        else if (what == NotificationFocusExit) CancelInteraction();
-        else if (what == NotificationDraw)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            if (GetThemeStyleBox("panel") is { } panel) DrawStyleBox(panel, new(Vector2.Zero, Size));
-            if (HasFocus() && GetThemeStyleBox("panel_focus") is { } focus) DrawStyleBox(focus, new(Vector2.Zero, Size));
-            if (_showGrid)
+            if (!reversed) base.OnNotification(what);
+            if (what is NotificationResized or NotificationEnterTree) { _lines.Size = _overlay.Size = Size; ChangedGraph(); }
+            else if (what == NotificationThemeChanged) { RefreshMenu(); ChangedGraph(); }
+            else if (what == NotificationFocusExit) CancelInteraction();
+            else if (what == NotificationDraw)
             {
-                var spacing = _snapDistance * _zoom;
-                if (spacing <= 0 || !float.IsFinite(spacing)) return;
-                spacing *= MathF.Max(1, MathF.Ceiling(8 / spacing));
-                var left = MathF.Floor(_scroll.X / spacing); var top = MathF.Floor(_scroll.Y / spacing);
-                var startX = -_scroll.X + left * spacing; var startY = -_scroll.Y + top * spacing;
-                var columns = Math.Min(2048, (int)Math.Ceiling(Size.X / spacing) + 1); var rows = Math.Min(2048, (int)Math.Ceiling(Size.Y / spacing) + 1);
-                for (var x = 0; x < columns; x++) { var px = startX + x * spacing; var color = GetThemeColor(((int)left + x) % 10 == 0 ? "grid_major" : "grid_minor"); if (_gridPattern == GridPatternMode.Lines) DrawLine(new(px, 0), new(px, Size.Y), color); else for (var y = 0; y < rows; y++) DrawCircle(new(px, startY + y * spacing), 1, color); }
-                if (_gridPattern == GridPatternMode.Lines) for (var y = 0; y < rows; y++) { var py = startY + y * spacing; DrawLine(new(0, py), new(Size.X, py), GetThemeColor(((int)top + y) % 10 == 0 ? "grid_major" : "grid_minor")); }
+                if (GetThemeStyleBox("panel") is { } panel) DrawStyleBox(panel, new(Vector2.Zero, Size));
+                if (HasFocus() && GetThemeStyleBox("panel_focus") is { } focus) DrawStyleBox(focus, new(Vector2.Zero, Size));
+                if (_showGrid)
+                {
+                    var spacing = _snapDistance * _zoom;
+                    if (spacing <= 0 || !float.IsFinite(spacing)) return;
+                    spacing *= MathF.Max(1, MathF.Ceiling(8 / spacing));
+                    var left = MathF.Floor(_scroll.X / spacing); var top = MathF.Floor(_scroll.Y / spacing);
+                    var startX = -_scroll.X + left * spacing; var startY = -_scroll.Y + top * spacing;
+                    var columns = Math.Min(2048, (int)Math.Ceiling(Size.X / spacing) + 1); var rows = Math.Min(2048, (int)Math.Ceiling(Size.Y / spacing) + 1);
+                    for (var x = 0; x < columns; x++) { var px = startX + x * spacing; var color = GetThemeColor(((int)left + x) % 10 == 0 ? "grid_major" : "grid_minor"); if (_gridPattern == GridPatternMode.Lines) DrawLine(new(px, 0), new(px, Size.Y), color); else for (var y = 0; y < rows; y++) DrawCircle(new(px, startY + y * spacing), 1, color); }
+                    if (_gridPattern == GridPatternMode.Lines) for (var y = 0; y < rows; y++) { var py = startY + y * spacing; DrawLine(new(0, py), new(Size.X, py), GetThemeColor(((int)top + y) % 10 == 0 ? "grid_major" : "grid_minor")); }
+                }
             }
+
         }
     }
 }

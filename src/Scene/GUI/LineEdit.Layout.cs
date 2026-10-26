@@ -135,30 +135,37 @@ public partial class LineEdit
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawField(); return; }
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed) try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawField(); return; }
+            List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed) try
                 {
-                    case NotificationEnterTree: SetInternalProcessing(true, false); Invalidate(); break;
-                    case NotificationDragEnd: FinishTextDrag(); break;
-                    case NotificationExitTree: ReleaseIconResidency(); _selectAllOnRelease = false; _editing = false; _pointerSelecting = false; _ime = ""; SetInternalProcessing(false, false); break;
-                    case NotificationFocusEnter: var was = _editing; Edit(); if (was != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); break;
-                    case NotificationFocusExit: var editing = _editing; Unedit(); _pointerSelecting = false; if (editing != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); break;
-                    case NotificationResized: _dirty = true; FitCaret(); break;
-                    case NotificationThemeChanged:
-                    case NotificationTranslationChanged:
-                    case NotificationLayoutDirectionChanged: Invalidate(); break;
-                    case NotificationInternalProcess:
-                        if (Interlocked.Exchange(ref _resourcePending, 0) != 0) Invalidate();
-                        if (_font is { IsDisposed: false } && _font.GetContentGeneration() != _fontGeneration) Invalidate();
-                        if (_caretBlink && _editing) { _blinkTime += (float)ProcessDeltaTime; if (_blinkTime >= _caretBlinkInterval) { _blinkTime = (float)(_blinkTime % _caretBlinkInterval); _caretVisible = !_caretVisible; QueueRedraw(); } }
-                        if (_editing) UpdateIMEPosition(); break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree: SetInternalProcessing(true, false); Invalidate(); break;
+                        case NotificationDragEnd: FinishTextDrag(); break;
+                        case NotificationExitTree: ReleaseIconResidency(); _selectAllOnRelease = false; _editing = false; _pointerSelecting = false; _ime = ""; SetInternalProcessing(false, false); break;
+                        case NotificationFocusEnter: var was = _editing; Edit(); if (was != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); break;
+                        case NotificationFocusExit: var editing = _editing; Unedit(); _pointerSelecting = false; if (editing != _editing) BeginEventEmission(_publisherEditingToggled.Handlers)?.Invoke(_editing); break;
+                        case NotificationResized: _dirty = true; FitCaret(); break;
+                        case NotificationThemeChanged:
+                        case NotificationTranslationChanged:
+                        case NotificationLayoutDirectionChanged: Invalidate(); break;
+                        case NotificationInternalProcess:
+                            if (Interlocked.Exchange(ref _resourcePending, 0) != 0) Invalidate();
+                            if (_font is { IsDisposed: false } && _font.GetContentGeneration() != _fontGeneration) Invalidate();
+                            if (_caretBlink && _editing) { _blinkTime += (float)ProcessDeltaTime; if (_blinkTime >= _caretBlinkInterval) { _blinkTime = (float)(_blinkTime % _caretBlinkInterval); _caretVisible = !_caretVisible; QueueRedraw(); } }
+                            if (_editing) UpdateIMEPosition(); break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("LineEdit notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("LineEdit notification callbacks failed.", errors);
+
+        }
     }
     private void UpdateIMEPosition()
     {

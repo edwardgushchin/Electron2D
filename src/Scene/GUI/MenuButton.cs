@@ -97,7 +97,9 @@ public partial class MenuButton : Button
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
+        var reversed = IsNotificationReversed;
+
+        List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception e) { CollectException(ref errors, e); }
         if (!IsDisposed && _popup != null && !_popup.IsDisposed)
             try
             {
@@ -107,6 +109,8 @@ public partial class MenuButton : Button
             }
             catch (Exception e) { CollectException(ref errors, e); }
         ThrowCollected("Menu button notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings() { var own = base.GetConfigurationWarnings(); var popup = _popup.GetConfigurationWarnings(); return own.Length == 0 ? popup : popup.Length == 0 ? own : [.. own, .. popup]; }

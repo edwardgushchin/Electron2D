@@ -96,11 +96,15 @@ public class SubViewportContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationResized) RecalculateSizes();
         else if (what is NotificationEnterTree or NotificationVisibilityChanged) RefreshChildren();
         else if (what == NotificationFocusEnter) { InputEnabled = true; UnhandledInputEnabled = false; }
         else if (what == NotificationFocusExit) { InputEnabled = false; UnhandledInputEnabled = true; }
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override SizeFlags[] GetAllowedSizeFlagsHorizontal() => [];

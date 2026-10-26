@@ -156,8 +156,10 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     /// <remarks>Parent and unparent notifications require the scene owner before changing canvas or geometry ownership.</remarks>
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if (what is NotificationParented or NotificationUnparented) Tree?.EnsureOwnerThread();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this) && _shape is { IsDisposed: false })
         {
             _shape.DrawToCanvas(this, _disabled ? PhysicsDebugDrawing.Disabled(_debugColor, true) : _debugColor);
@@ -171,6 +173,8 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
         {
             _owner = null; previous.DetachShape(this);
         }
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

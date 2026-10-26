@@ -45,6 +45,8 @@ public class CanvasModulate : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         List<Exception>? errors = null;
         try
         {
@@ -52,8 +54,10 @@ public class CanvasModulate : Entity
                 ReconcileCanvas();
         }
         catch (Exception error) { CollectException(ref errors, error); }
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Canvas modulation lifecycle callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
 
     private void ReconcileCanvas()

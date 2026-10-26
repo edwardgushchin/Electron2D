@@ -93,12 +93,28 @@ public partial class GraphEdit : Control
     {
         protected override bool HasPoint(Vector2 point) => overlay && owner.OverlayHit(point);
         protected override void OnGUIInput(InputEvent inputEvent) { owner.OnGUIInput(inputEvent); }
-        protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationDraw) { owner._drawingEdit = true; try { if (overlay) owner.DrawOverlay(this); else owner.DrawConnections(this); } finally { owner._drawingEdit = false; } } }
+        protected override void OnNotification(int what)
+        {
+            var reversed = IsNotificationReversed;
+
+            if (!reversed) base.OnNotification(what);
+            if (what == NotificationDraw) { owner._drawingEdit = true; try { if (overlay) owner.DrawOverlay(this); else owner.DrawConnections(this); } finally { owner._drawingEdit = false; } }
+
+            if (reversed) base.OnNotification(what);
+        }
         protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._releasing) throw new InvalidOperationException("GraphEdit owns its drawing layers."); base.ValidateDisposal(); }
     }
     private sealed class OwnedMenu(GraphEdit owner) : HBoxContainer
     {
-        protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationDraw && owner.GetThemeStyleBox("menu_panel") is { } style) DrawStyleBox(style, new(-style.GetOffset(), Size + style.GetMinimumSize())); }
+        protected override void OnNotification(int what)
+        {
+            var reversed = IsNotificationReversed;
+
+            if (!reversed) base.OnNotification(what);
+            if (what == NotificationDraw && owner.GetThemeStyleBox("menu_panel") is { } style) DrawStyleBox(style, new(-style.GetOffset(), Size + style.GetMinimumSize()));
+
+            if (reversed) base.OnNotification(what);
+        }
         protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._releasing) throw new InvalidOperationException("GraphEdit owns its menu."); base.ValidateDisposal(); }
     }
     /// <summary>Returns the borrowed menu container for application controls.</summary><returns>The owned horizontal menu.</returns>

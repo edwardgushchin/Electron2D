@@ -268,13 +268,17 @@ public sealed class RayCast : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         if (what == NotificationInternalPhysicsProcess && _enabled) ForceRaycastUpdate();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this))
         {
             var color = _collided ? new Color(1, .01f, 0) : Tree!.DebugCollisionsColor;
             PhysicsDebugDrawing.Arrow(this, _targetPosition, _enabled ? color : PhysicsDebugDrawing.Disabled(color));
         }
+
+        if (reversed) base.OnNotification(what);
     }
 
     private void EnsureOptionsMutable() { EnsureProcessingAccess(); RenderingServer.NotifyRenderMutation(); }

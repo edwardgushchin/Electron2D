@@ -48,14 +48,21 @@ public class CheckButton : Button
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what != NotificationDraw || IsDisposed) return;
-        var texture = GetThemeIcon(IndicatorName(ButtonPressed)) ?? throw new InvalidOperationException("A check button requires its indicator icon.");
-        var size = IndicatorSize(); var style = GetThemeStyleBox("normal") ?? throw new InvalidOperationException("A check button requires its normal style.");
-        var x = IsLayoutRTL() ? style.GetMargin(Side.Left) : Size.X - size.X - style.GetMargin(Side.Right);
-        var y = (Size.Y - size.Y) / 2 + GetThemeConstant("check_v_offset");
-        DrawTextureRect(texture, new(new(x, y), FitButtonIcon(texture.GetSize())), false,
-            GetThemeColor(ButtonPressed ? "button_checked_color" : "button_unchecked_color"));
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (what != NotificationDraw || IsDisposed) return;
+            var texture = GetThemeIcon(IndicatorName(ButtonPressed)) ?? throw new InvalidOperationException("A check button requires its indicator icon.");
+            var size = IndicatorSize(); var style = GetThemeStyleBox("normal") ?? throw new InvalidOperationException("A check button requires its normal style.");
+            var x = IsLayoutRTL() ? style.GetMargin(Side.Left) : Size.X - size.X - style.GetMargin(Side.Right);
+            var y = (Size.Y - size.Y) / 2 + GetThemeConstant("check_v_offset");
+            DrawTextureRect(texture, new(new(x, y), FitButtonIcon(texture.GetSize())), false,
+                GetThemeColor(ButtonPressed ? "button_checked_color" : "button_unchecked_color"));
+
+        }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(CheckButton) ? CreateCheckButton : base.CreateSceneInstanceFactory();

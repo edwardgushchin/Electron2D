@@ -40,6 +40,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MATRIX_CODEC") == "1") {
 
 if (args.Length == 3 && args[0] == "--point-context-lifetime") { PhysicsAllocationTrace.VerifyContextLifetime(args[1], args[2]); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_NOTIFICATIONS") is { } notificationProfile) { NotificationChecks.Run(notificationProfile.StartsWith("gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, notificationProfile.Contains("threaded", StringComparison.Ordinal)); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_CENSUS") == "1") { ObjectCensusChecks.Run(args); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HOST_PLATFORM") == "1") { HostPlatformTests.Run(); HostPlatformChecks.Run(args); return; }
@@ -2025,6 +2027,8 @@ ObjectIterationTests.Run(PhysicsServer.Backend.CPU, false); ObjectIterationTests
 ObjectPropertyTests.Run(PhysicsServer.Backend.CPU); ObjectPropertyTests.Run(PhysicsServer.Backend.GPU);
 WeakRefTests.Run();
 VerifyNotificationsAndProperties();
+NotificationChecks.Run(PhysicsServer.Backend.CPU, false);
+NotificationChecks.Run(PhysicsServer.Backend.GPU, false);
 VerifyEventConnections();
 ObjectSignalBlockingTests.Run();
 ObjectDisposalRegistryTests.Run();

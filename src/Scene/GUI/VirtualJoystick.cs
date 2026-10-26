@@ -132,7 +132,9 @@ public partial class VirtualJoystick : Control
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        List<Exception>? errors = null; try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        var reversed = IsNotificationReversed;
+
+        List<Exception>? errors = null; try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) try
             {
                 if (what is NotificationEnterTree or NotificationResized) Reset();
@@ -147,6 +149,8 @@ public partial class VirtualJoystick : Control
             }
             catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Joystick notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings()

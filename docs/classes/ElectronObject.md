@@ -1,12 +1,12 @@
 # ElectronObject
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 **Inherits:** —
 
 **Inherited By:** [IP](IP.md), [ThemeDB](ThemeDB.md), [ConfigFile](ConfigFile.md), [DirAccess](DirAccess.md), [DisplayServer](DisplayServer.md), [Engine](Engine.md), [FileAccess](FileAccess.md), [Input](Input.md), [InputMap](InputMap.md), [MainLoop](MainLoop.md), [Node](Node.md), [ProjectSettingsRegistry](ProjectSettingsRegistry.md), [Resource](Resource.md), [SceneState](SceneState.md), [SceneTreeTimer](SceneTreeTimer.md), [Tween](Tween.md), [Tweener](Tweener.md)
 
-- **Source:** [`src/Core/Object/ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs)
+- **Source:** [`src/Core/Object/ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs); [notification direction](../../src/Core/Object/ElectronObject.Notifications.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class ElectronObject`
 
@@ -74,6 +74,7 @@ Console.WriteLine(value.InstanceID);
 
 | Member | Description |
 | --- | --- |
+| [`protected bool IsNotificationReversed`](#p-electron2d-electronobject-isnotificationreversed) | Reads direction for this object's current invocation on this thread. |
 | [`public ulong InstanceID { get; }`](#p-electron2d-electronobject-instanceid) | Gets this object's process-local instance identifier. |
 | [`public string ClassName { get; }`](#p-electron2d-electronobject-classname) | Gets the unqualified runtime class name. |
 | [`public bool IsDisposed { get; }`](#p-electron2d-electronobject-isdisposed) | Gets whether deterministic disposal has started. |
@@ -111,6 +112,7 @@ sealed class Meter : ElectronObject
 | [`protected TDelegate? BeginEventEmission<TDelegate>(TDelegate? handlers) where TDelegate : Delegate`](#m-electron2d-electronobject-begineventemission) | Selects the typed snapshot once for a custom publisher. |
 | [`public bool IsClass(string className)`](#m-electron2d-electronobject-isclass-system-string) | Tests the actual compiled class and engine base-class names. |
 | [`public void Notify(int what)`](#m-electron2d-electronobject-notify-system-int32) | Synchronously delivers a numeric engine notification to this object. |
+| [`public void Notify(int what, bool reversed)`](#m-electron2d-electronobject-notify-system-int32-system-boolean) | Selects ordinary or derived-first numeric delivery. |
 | [`public IReadOnlyList<PropertyDescriptor> GetPropertyList()`](#m-electron2d-electronobject-getpropertylist) | Builds the current validated list of typed properties exposed to tooling. |
 | [`public bool PropertyCanRevert(PropertyDescriptor property)`](#m-electron2d-electronobject-propertycanrevert-electron2d-propertydescriptor) | Reports whether a tooling property currently differs from its revert value. |
 | [`public void RevertProperty(PropertyDescriptor property)`](#m-electron2d-electronobject-revertproperty-electron2d-propertydescriptor) | Restores a tooling property to its current typed revert value. |
@@ -274,7 +276,29 @@ Synchronously delivers a numeric engine notification to this object.
 - `Exception`: [`ElectronObject.OnNotification(Int32)`](ElectronObject.md#m-electron2d-electronobject-onnotification-system-int32) throws.
 
 **Remarks:** Delivery uses normal C# virtual dispatch. An override of [`ElectronObject.OnNotification(Int32)`](ElectronObject.md#m-electron2d-electronobject-onnotification-system-int32) is responsible for calling
-its base implementation when inherited behavior is required.
+its base implementation when inherited behavior is required. This overload selects the ordinary direction.
+
+<a id="m-electron2d-electronobject-notify-system-int32-system-boolean"></a>
+### `public void Notify(int what, bool reversed)`
+
+Synchronously delivers `what`. With `reversed: true`, each built-in handler finishes its local handling before calling its base. False retains the existing base-call points, including handler-local error aggregation and cleanup. An unhandled exception stops the unvisited chain and propagates unchanged. Numeric delivery remains independent of signal blocking and retains existing lifetime and owner guards.
+
+<a id="p-electron2d-electronobject-isnotificationreversed"></a>
+### `protected bool IsNotificationReversed`
+
+True only inside this object's active reversed invocation on the current thread. Nested calls on the same or another object restore the prior context even after failure. Concurrent threads have independent contexts; the value does not flow through asynchronous continuations. Custom compiled subclasses follow the [notification decision](../decisions/core-object-runtime.md#adr-0005) by choosing where to call their base:
+
+```csharp
+protected override void OnNotification(int what)
+{
+    bool reversed = IsNotificationReversed;
+    if (!reversed) base.OnNotification(what);
+    HandleLocalNotification(what);
+    if (reversed) base.OnNotification(what);
+}
+```
+
+Intentionally omitting a base call suppresses inherited handling, as in ordinary C#. Automatic pre-delete uses reversed delivery; ordinary scene/frame producers use normal delivery. Post-initialization 0 remains reserved and is not emitted automatically.
 
 <a id="m-electron2d-electronobject-getpropertylist"></a>
 ### `public IReadOnlyList<PropertyDescriptor> GetPropertyList()`
@@ -392,7 +416,7 @@ Handles an engine notification delivered to this object.
 
 - `what`: The notification identifier.
 
-**Remarks:** Derived overrides should call the base implementation unless they intentionally suppress inherited handling.
+**Remarks:** Derived overrides should call the base implementation unless they intentionally suppress inherited handling. Use `IsNotificationReversed` to put the base call after local handling for derived-first delivery. Automatic pre-delete is reversed; other automatic notifications retain their ordinary direction.
 
 <a id="m-electron2d-electronobject-validatemutation"></a>
 ### `protected virtual void ValidateMutation()`
@@ -535,7 +559,7 @@ Identifies the notification delivered immediately before owned resources are rel
 
 ## Lifecycle contract
 
-`Dispose()` first returns when disposal has already started, then calls `ValidateDisposal()` before that caller attempts the atomic transition from alive to disposing. The winning caller records its thread and sends notification `1`. A veto restores live state after notification without invoking cleanup; otherwise it calls `Dispose(bool)`, publishes the final disposed state, clears the `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. Concurrent calls that reach the transition after another caller return without repeating work.
+`Dispose()` first returns when disposal has already started, then calls `ValidateDisposal()` before that caller attempts the atomic transition from alive to disposing. The winning caller records its thread and sends notification `1` with reversed delivery. A veto restores live state after notification without invoking cleanup; otherwise it calls `Dispose(bool)`, publishes the final disposed state, clears the `Disposed`, `PropertyListChanged`, and `ScriptChanged` subscriber lists, and suppresses finalization. Concurrent calls that reach the transition after another caller return without repeating work.
 
 `IsDisposed` is already `true` during notification and cleanup. `ThrowIfDisposed()` nevertheless permits the recorded disposing thread to inspect guarded state so pre-delete and derived teardown callbacks can identify and detach the object. Other threads are rejected as soon as disposal starts; after final publication every thread, including the former disposing thread, is rejected.
 

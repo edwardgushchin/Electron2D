@@ -211,11 +211,15 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationWorldChanged && IsInsideTree) { MoveWorld(); MoveNavigationWorld(); }
         else if (what == NotificationTransformChanged && IsInsideTree) PublishSceneTransform();
         else if (what == NotificationVisibilityChanged) MarkAll(scenes: false);
         else if (what is NotificationEnterCanvas or NotificationExitCanvas) UpdateCanvas(what == NotificationExitCanvas ? 0 : GetCanvasLayerNode()?.InstanceID ?? 0);
+
+        if (reversed) base.OnNotification(what);
     }
     internal void PublishSceneTransform()
     {

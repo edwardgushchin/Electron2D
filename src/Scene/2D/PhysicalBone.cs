@@ -161,11 +161,19 @@ public class PhysicalBone : RigidBody
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        Tree?.EnsureProcessingAccess(this);
-        if (what == NotificationChildOrderChanged) lock (_bindingGate) { _joint = null; _jointRevision = ulong.MaxValue; }
-        base.OnNotification(what); if (IsDisposed) return;
-        if (what is NotificationReady or NotificationInternalPhysicsProcess) Reconcile();
-        else if (what == NotificationInternalProcess && (!_active || _follow)) Reconcile();
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            Tree?.EnsureProcessingAccess(this);
+            if (what == NotificationChildOrderChanged) lock (_bindingGate) { _joint = null; _jointRevision = ulong.MaxValue; }
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            if (what is NotificationReady or NotificationInternalPhysicsProcess) Reconcile();
+            else if (what == NotificationInternalProcess && (!_active || _follow)) Reconcile();
+
+        }
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings()

@@ -36,8 +36,16 @@ public partial class RichTextLabel
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { EnsureRichLayout(); DrawRichDocument(); return; }
-        base.OnNotification(what); if (IsDisposed) return; switch (what) { case NotificationMouseExit: var old = _hoverMeta; _hoverMeta = null; _hoverHint = ""; if (old != null) BeginEventEmission(_publisherMetaHoverEnded.Handlers)?.Invoke(old); if (!IsDisposed) QueueRedraw(); break; case NotificationEnterTree: SetInternalProcessing(true, false); break; case NotificationInternalProcess: _elapsed += ProcessDeltaTime; ObserveWorker(); if (_selecting && _scrollActive && _selectionPointer.Y < _textRect.Position.Y || _selecting && _scrollActive && _selectionPointer.Y > _textRect.End.Y) { var distance = _selectionPointer.Y < _textRect.Position.Y ? _selectionPointer.Y - _textRect.Position.Y : _selectionPointer.Y - _textRect.End.Y; _scroll.Value += distance * ProcessDeltaTime * 10; var hit = HitRich(_selectionPointer, true); if (hit.Global >= 0) { _selectionFrom = Math.Min(_selectionAnchor, hit.Global); _selectionTo = Math.Max(_selectionAnchor, hit.Global); QueueRedraw(); } } if (_hasFX || !_finished) QueueRedraw(); break; case NotificationThemeChanged: case NotificationResized: case NotificationLayoutDirectionChanged: _dirty = true; QueueRedraw(); break; case NotificationTranslationChanged: if (!_externalStack) { if (_bbcode) ParseBBCode(Atr(_text)); else { Clear(); AddText(Atr(_text)); } _externalStack = false; } break; case NotificationFocusExit: if (_deselectFocus && !_menu.Visible) Deselect(); break; }
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { EnsureRichLayout(); DrawRichDocument(); return; }
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return; switch (what) { case NotificationMouseExit: var old = _hoverMeta; _hoverMeta = null; _hoverHint = ""; if (old != null) BeginEventEmission(_publisherMetaHoverEnded.Handlers)?.Invoke(old); if (!IsDisposed) QueueRedraw(); break; case NotificationEnterTree: SetInternalProcessing(true, false); break; case NotificationInternalProcess: _elapsed += ProcessDeltaTime; ObserveWorker(); if (_selecting && _scrollActive && _selectionPointer.Y < _textRect.Position.Y || _selecting && _scrollActive && _selectionPointer.Y > _textRect.End.Y) { var distance = _selectionPointer.Y < _textRect.Position.Y ? _selectionPointer.Y - _textRect.Position.Y : _selectionPointer.Y - _textRect.End.Y; _scroll.Value += distance * ProcessDeltaTime * 10; var hit = HitRich(_selectionPointer, true); if (hit.Global >= 0) { _selectionFrom = Math.Min(_selectionAnchor, hit.Global); _selectionTo = Math.Max(_selectionAnchor, hit.Global); QueueRedraw(); } } if (_hasFX || !_finished) QueueRedraw(); break; case NotificationThemeChanged: case NotificationResized: case NotificationLayoutDirectionChanged: _dirty = true; QueueRedraw(); break; case NotificationTranslationChanged: if (!_externalStack) { if (_bbcode) ParseBBCode(Atr(_text)); else { Clear(); AddText(Atr(_text)); } _externalStack = false; } break; case NotificationFocusExit: if (_deselectFocus && !_menu.Visible) Deselect(); break; }
+
+        }
     }
     /// <inheritdoc />
     protected override Vector2 OnGetMinimumSize() { if (!_fitContent) return Vector2.Zero; if (_building || _publishing) return _content; EnsureRichLayout(); var margin = _themeValues?.Normal?.GetMinimumSize() ?? Vector2.Zero; return _content + margin; }

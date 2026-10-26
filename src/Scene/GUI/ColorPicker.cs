@@ -263,7 +263,15 @@ public partial class ColorPicker : VBoxContainer
     internal void FocusEditor() { if (_hexVisible) _text.GrabFocus(); else if (_shape != PickerShapeType.None) _surface.GrabFocus(); }
     private static readonly string[] RGBLabels = ["R", "G", "B"];
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (what is NotificationEnterTree or NotificationThemeChanged or NotificationTranslationChanged) Refresh(); if (what is NotificationExitTree or NotificationVisibilityChanged && !IsVisibleInTree) { _surface?.CancelGesture(); _bar?.CancelGesture(); _dragging = false; } }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (what is NotificationEnterTree or NotificationThemeChanged or NotificationTranslationChanged) Refresh(); if (what is NotificationExitTree or NotificationVisibilityChanged && !IsVisibleInTree) { _surface?.CancelGesture(); _bar?.CancelGesture(); _dragging = false; }
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(ColorPicker) ? CreateColorPicker : base.CreateSceneInstanceFactory();
     private static Node CreateColorPicker() => new ColorPicker();

@@ -226,8 +226,10 @@ public class TextureRect : Control
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+        try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
         if (!IsDisposed) try
             {
                 if (what == NotificationEnterTree)
@@ -241,6 +243,8 @@ public class TextureRect : Control
             }
             catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Texture rectangle notification callbacks failed.", errors);
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Where(p => p.Name != nameof(MouseFilter)).Concat(TextureProperties);

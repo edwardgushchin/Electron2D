@@ -319,11 +319,19 @@ public class AnimatedSprite : Entity
     /// <remarks>Handles resource reconciliation, ready-time autoplay and internal idle playback after inherited handling.</remarks>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what); if (IsDisposed) return;
-        if (what is NotificationEnterTree or NotificationReady or NotificationInternalProcess or NotificationDraw) RefreshFramesIfOwner();
-        if (IsDisposed) return;
-        if (what == NotificationReady && _frames?.HasAnimation(_autoplay) == true) Play(_autoplay);
-        else if (what == NotificationInternalProcess && _playing) Advance(ProcessDeltaTime);
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            if (what is NotificationEnterTree or NotificationReady or NotificationInternalProcess or NotificationDraw) RefreshFramesIfOwner();
+            if (IsDisposed) return;
+            if (what == NotificationReady && _frames?.HasAnimation(_autoplay) == true) Play(_autoplay);
+            else if (what == NotificationInternalProcess && _playing) Advance(ProcessDeltaTime);
+
+        }
     }
 
     private void Advance(double remaining)

@@ -164,12 +164,16 @@ public class GridContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren)
         {
             try { Arrange(); }
             finally { if (!IsDisposed && IsInsideTree) UpdateMinimumSize(); }
         }
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GridProperties);

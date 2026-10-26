@@ -75,7 +75,9 @@ public partial class TabContainer
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationEnterTree) { SyncPages(); for (var i = 0; i < _pages.Count; i++) _bar.SetTabTitle(i, _pages[i].Title ?? _pages[i].Control.Name); if (_setupCurrent >= -1) { var current = _setupCurrent; _setupCurrent = -2; _bar.CurrentTab = current; } Paint(); }
         else if (what == NotificationSortChildren || what == NotificationVisibilityChanged && IsVisibleInTree) Paint();
         else if (what is NotificationThemeChanged or NotificationLayoutDirectionChanged or NotificationTranslationChanged) { _themeDirty = true; LayoutChanged(); }
@@ -85,6 +87,8 @@ public partial class TabContainer
             if (_tabsVisible && _headerStyle is not null) DrawStyleBox(_headerStyle, new(0, y, Size.X, header));
             if (_panelStyle is not null) DrawStyleBox(_panelStyle, new(0, _position == BarPosition.Top ? header : 0, Size.X, MathF.Max(0, Size.Y - header)));
         }
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override SizeFlags[] GetAllowedSizeFlagsHorizontal() => [];

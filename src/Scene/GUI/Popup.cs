@@ -37,7 +37,15 @@ public class Popup : Window
         Size = size; Position = position;
     }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (what == NotificationApplicationFocusOut && PopupWindow) ClosePopup(); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (what == NotificationApplicationFocusOut && PopupWindow) ClosePopup();
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Popup) ? CreatePopup : base.CreateSceneInstanceFactory();
     private static Node CreatePopup() => new Popup();

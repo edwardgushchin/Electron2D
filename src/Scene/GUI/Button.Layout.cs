@@ -301,32 +301,39 @@ public partial class Button
     /// <exception cref="Exception">A resource, layout, drawing or inherited notification callback fails.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawButton(); return; }
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed)
-            try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawButton(); return; }
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed)
+                try
                 {
-                    case NotificationEnterTree: EnterResourceTree(); break;
-                    case NotificationExitTree:
-                        _residencyAttached = false; ReleaseButtonTextureResidency();
-                        _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0);
-                        SetButtonResourceProcessing(false); break;
-                    case NotificationThemeChanged:
-                    case NotificationLayoutDirectionChanged:
-                        ReleaseButtonTextureResidency(); _themeDirty = true; Invalidate(); break;
-                    case NotificationTranslationChanged: _translatedText = TranslateButtonText(_text); Invalidate(); break;
-                    case NotificationResized: if (_autowrapMode != TextAutowrapMode.Off) Invalidate(); break;
-                    case NotificationInternalProcess:
-                        ReadTheme(); CheckFont(); PollIcon();
-                        if (_dirty || _minimumPending) { _minimumPending = false; QueueRedraw(); UpdateMinimumSize(); }
-                        break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree: EnterResourceTree(); break;
+                        case NotificationExitTree:
+                            _residencyAttached = false; ReleaseButtonTextureResidency();
+                            _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0);
+                            SetButtonResourceProcessing(false); break;
+                        case NotificationThemeChanged:
+                        case NotificationLayoutDirectionChanged:
+                            ReleaseButtonTextureResidency(); _themeDirty = true; Invalidate(); break;
+                        case NotificationTranslationChanged: _translatedText = TranslateButtonText(_text); Invalidate(); break;
+                        case NotificationResized: if (_autowrapMode != TextAutowrapMode.Off) Invalidate(); break;
+                        case NotificationInternalProcess:
+                            ReadTheme(); CheckFont(); PollIcon();
+                            if (_dirty || _minimumPending) { _minimumPending = false; QueueRedraw(); UpdateMinimumSize(); }
+                            break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Button notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Button notification callbacks failed.", errors);
+
+        }
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

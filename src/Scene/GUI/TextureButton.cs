@@ -357,26 +357,33 @@ public class TextureButton : BaseButton
     /// <exception cref="Exception">Inherited notifications or borrowed texture drawing fail.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawButtonTextures(); return; }
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed)
-            try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawButtonTextures(); return; }
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed)
+                try
                 {
-                    case NotificationEnterTree: EnterResourceTree(); break;
-                    case NotificationExitTree:
-                        _treeGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0);
-                        ReleaseResidency(); _resourceStates.Clear(); SetButtonResourceProcessing(false); break;
-                    case NotificationInternalProcess: FlushResources(); break;
-                    case NotificationResized:
-                    case NotificationFocusEnter:
-                    case NotificationFocusExit: InvalidateState(false); break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree: EnterResourceTree(); break;
+                        case NotificationExitTree:
+                            _treeGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0);
+                            ReleaseResidency(); _resourceStates.Clear(); SetButtonResourceProcessing(false); break;
+                        case NotificationInternalProcess: FlushResources(); break;
+                        case NotificationResized:
+                        case NotificationFocusEnter:
+                        case NotificationFocusExit: InvalidateState(false); break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Texture-button notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Texture-button notification callbacks failed.", errors);
+
+        }
     }
 
     /// <inheritdoc />

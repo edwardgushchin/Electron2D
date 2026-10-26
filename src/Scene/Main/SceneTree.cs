@@ -1053,36 +1053,43 @@ public sealed partial class SceneTree : MainLoop
     /// </remarks>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-
-        if (!IsSystemNotification(what) || Root.IsDisposed || !ReferenceEquals(Root.Tree, this))
-            return;
-
-        EnsureOwnerThread();
-        var depth = _systemNotificationDepth;
-        if (depth == _systemNotificationBatches.Count) _systemNotificationBatches.Add(new());
-        var batch = _systemNotificationBatches[depth];
-        _systemNotificationDepth++;
-        try
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            batch.Pending.Add(Root);
-            while (batch.Pending.Count != 0)
-            {
-                var last = batch.Pending.Count - 1;
-                var node = batch.Pending[last]; batch.Pending.RemoveAt(last);
-                batch.Snapshot.Add(node); node.AppendChildrenReversed(batch.Pending);
-            }
+            if (!reversed) base.OnNotification(what);
 
-            List<Exception>? errors = null;
-            foreach (var node in batch.Snapshot)
+            if (!IsSystemNotification(what) || Root.IsDisposed || !ReferenceEquals(Root.Tree, this))
+                return;
+
+            EnsureOwnerThread();
+            var depth = _systemNotificationDepth;
+            if (depth == _systemNotificationBatches.Count) _systemNotificationBatches.Add(new());
+            var batch = _systemNotificationBatches[depth];
+            _systemNotificationDepth++;
+            try
             {
-                if (node.IsDisposed || !ReferenceEquals(node.Tree, this)) continue;
-                try { node.DispatchNotification(what); }
-                catch (Exception error) { CollectException(ref errors, error); }
+                batch.Pending.Add(Root);
+                while (batch.Pending.Count != 0)
+                {
+                    var last = batch.Pending.Count - 1;
+                    var node = batch.Pending[last]; batch.Pending.RemoveAt(last);
+                    batch.Snapshot.Add(node); node.AppendChildrenReversed(batch.Pending);
+                }
+
+                List<Exception>? errors = null;
+                foreach (var node in batch.Snapshot)
+                {
+                    if (node.IsDisposed || !ReferenceEquals(node.Tree, this)) continue;
+                    try { node.DispatchNotification(what); }
+                    catch (Exception error) { CollectException(ref errors, error); }
+                }
+                ThrowCollected("One or more system notifications failed.", errors);
             }
-            ThrowCollected("One or more system notifications failed.", errors);
+            finally { batch.Pending.Clear(); batch.Snapshot.Clear(); _systemNotificationDepth--; }
+
         }
-        finally { batch.Pending.Clear(); batch.Snapshot.Clear(); _systemNotificationDepth--; }
     }
 
     /// <inheritdoc />

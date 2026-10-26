@@ -87,8 +87,12 @@ public class MarginContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren) Arrange();
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />
@@ -174,8 +178,12 @@ public class CenterContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren) Arrange();
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />
@@ -317,8 +325,12 @@ public class AspectRatioContainer : Container
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationSortChildren) Arrange();
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

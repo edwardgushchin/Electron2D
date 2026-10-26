@@ -83,14 +83,21 @@ public class HTTPRequest : Node
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what == NotificationExitTree) { CancelRequest(); return; }
-        if (what != NotificationInternalProcess || _operation is null) return;
-        var operation = _operation; _elapsed += ProcessDeltaTime;
-        if (_activeTimeout > 0 && _elapsed >= _activeTimeout) { CancelRequest(); BeginEventEmission(_publisherRequestCompleted.Handlers)?.Invoke(HTTPRequestResult.Timeout, 0, [], []); return; }
-        if (!_threads) operation.Step();
-        if (!operation.IsDone || _threads && Volatile.Read(ref operation.WorkerStopped) == 0) return;
-        var result = operation.Result; var code = operation.Code; var headers = operation.ResponseHeaders; var data = operation.ResponseBody; CancelRequest(); BeginEventEmission(_publisherRequestCompleted.Handlers)?.Invoke(result, code, headers, data);
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (what == NotificationExitTree) { CancelRequest(); return; }
+            if (what != NotificationInternalProcess || _operation is null) return;
+            var operation = _operation; _elapsed += ProcessDeltaTime;
+            if (_activeTimeout > 0 && _elapsed >= _activeTimeout) { CancelRequest(); BeginEventEmission(_publisherRequestCompleted.Handlers)?.Invoke(HTTPRequestResult.Timeout, 0, [], []); return; }
+            if (!_threads) operation.Step();
+            if (!operation.IsDone || _threads && Volatile.Read(ref operation.WorkerStopped) == 0) return;
+            var result = operation.Result; var code = operation.Code; var headers = operation.ResponseHeaders; var data = operation.ResponseBody; CancelRequest(); BeginEventEmission(_publisherRequestCompleted.Handlers)?.Invoke(result, code, headers, data);
+
+        }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(HTTPRequest) ? CreateRequestNode : base.CreateSceneInstanceFactory();

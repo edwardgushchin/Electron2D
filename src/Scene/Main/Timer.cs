@@ -309,7 +309,9 @@ public class Timer : Node
     /// <remarks>Runs autostart after inherited ready handling and consumes internal process notifications.</remarks>
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
 
         switch (what)
         {
@@ -324,6 +326,8 @@ public class Timer : Node
                 AdvanceTimer(physics: true);
                 break;
         }
+
+        if (reversed) base.OnNotification(what);
     }
 
     /// <inheritdoc />

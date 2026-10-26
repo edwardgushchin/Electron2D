@@ -115,29 +115,36 @@ public partial class LinkButton
     /// <exception cref="Exception">Inherited, resource, layout or drawing callbacks fail.</exception>
     protected override void OnNotification(int what)
     {
-        if (what == NotificationDraw) { base.OnNotification(what); DrawLink(); return; }
-        List<Exception>? errors = null;
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        if (!IsDisposed)
-            try
-            {
-                switch (what)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (what == NotificationDraw) { if (!reversed) base.OnNotification(what); DrawLink(); return; }
+            List<Exception>? errors = null;
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            if (!IsDisposed)
+                try
                 {
-                    case NotificationEnterTree: EnterResourceTree(); break;
-                    case NotificationExitTree:
-                        _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0); SetButtonResourceProcessing(false); break;
-                    case NotificationThemeChanged:
-                    case NotificationLayoutDirectionChanged: InvalidateLink(); break;
-                    case NotificationTranslationChanged: _translatedText = Atr(_text); InvalidateLink(); break;
-                    case NotificationResized: if (_overrun != global::Electron2D.TextOverrunBehavior.NoTrimming) InvalidateLink(); break;
-                    case NotificationInternalProcess:
-                        PollFont();
-                        if (_dirty || _minimumPending) { _minimumPending = false; QueueRedraw(); UpdateMinimumSize(); }
-                        break;
+                    switch (what)
+                    {
+                        case NotificationEnterTree: EnterResourceTree(); break;
+                        case NotificationExitTree:
+                            _entryGeneration++; _resourceTree = null; _resourceDispatch = null; Interlocked.Exchange(ref _resourcePending, 0); SetButtonResourceProcessing(false); break;
+                        case NotificationThemeChanged:
+                        case NotificationLayoutDirectionChanged: InvalidateLink(); break;
+                        case NotificationTranslationChanged: _translatedText = Atr(_text); InvalidateLink(); break;
+                        case NotificationResized: if (_overrun != global::Electron2D.TextOverrunBehavior.NoTrimming) InvalidateLink(); break;
+                        case NotificationInternalProcess:
+                            PollFont();
+                            if (_dirty || _minimumPending) { _minimumPending = false; QueueRedraw(); UpdateMinimumSize(); }
+                            break;
+                    }
                 }
-            }
-            catch (Exception error) { CollectException(ref errors, error); }
-        ThrowCollected("Link notification callbacks failed.", errors);
+                catch (Exception error) { CollectException(ref errors, error); }
+            ThrowCollected("Link notification callbacks failed.", errors);
+
+        }
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

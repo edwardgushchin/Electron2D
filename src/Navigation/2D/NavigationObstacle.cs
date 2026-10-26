@@ -82,7 +82,17 @@ public sealed class NavigationObstacle : Entity
     /// <inheritdoc />
     protected override void OnExitTree() { try { NavigationServer.ObstacleSetMap(_rid, default); _published = false; _scenePaused = false; _mapBeforePause = default; } finally { base.OnExitTree(); } }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (!IsInsideTree) return; if (what == NotificationWorldChanged) { PublishMap(); _published = false; PublishGeometry(); } else if (what == NotificationTransformChanged) PublishGeometry(); else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) UpdatePause(); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (!IsInsideTree) return; if (what == NotificationWorldChanged) { PublishMap(); _published = false; PublishGeometry(); } else if (what == NotificationTransformChanged) PublishGeometry(); else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) UpdatePause();
+        }
+    }
     /// <inheritdoc />
     /// <remarks>Exits scene membership before retiring the node-owned navigation identity. Every cleanup stage is attempted.</remarks>
     /// <exception cref="AggregateException">Scene observers or owned cleanup fail; all failures are retained after cleanup.</exception>

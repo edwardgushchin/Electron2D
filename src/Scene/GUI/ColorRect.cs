@@ -22,8 +22,12 @@ public class ColorRect : Control
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationDraw) DrawRect(new(Vector2.Zero, Size), _color);
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(ColorRect) ? CreateRectangle : base.CreateSceneInstanceFactory();

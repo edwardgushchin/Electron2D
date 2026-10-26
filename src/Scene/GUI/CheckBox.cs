@@ -46,18 +46,25 @@ public class CheckBox : Button
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
-        if (what != NotificationDraw || IsDisposed) return;
-        var radio = ButtonGroup is not null;
-        var name = radio
-            ? Disabled ? ButtonPressed ? "radio_checked_disabled" : "radio_unchecked_disabled" : ButtonPressed ? "radio_checked" : "radio_unchecked"
-            : Disabled ? ButtonPressed ? "checked_disabled" : "unchecked_disabled" : ButtonPressed ? "checked" : "unchecked";
-        var texture = GetThemeIcon(name) ?? throw new InvalidOperationException("A checkbox requires its indicator icon.");
-        var size = IndicatorSize(); var style = GetThemeStyleBox("normal") ?? throw new InvalidOperationException("A checkbox requires its normal style.");
-        var x = IsLayoutRTL() ? Size.X - style.GetMargin(Side.Right) - size.X : style.GetMargin(Side.Left);
-        var y = checked((int)((Size.Y - size.Y) / 2)) + GetThemeConstant("check_v_offset");
-        DrawTextureRect(texture, new(new(x, y), FitButtonIcon(texture.GetSize())), false,
-            GetThemeColor(ButtonPressed ? "checkbox_checked_color" : "checkbox_unchecked_color"));
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (what != NotificationDraw || IsDisposed) return;
+            var radio = ButtonGroup is not null;
+            var name = radio
+                ? Disabled ? ButtonPressed ? "radio_checked_disabled" : "radio_unchecked_disabled" : ButtonPressed ? "radio_checked" : "radio_unchecked"
+                : Disabled ? ButtonPressed ? "checked_disabled" : "unchecked_disabled" : ButtonPressed ? "checked" : "unchecked";
+            var texture = GetThemeIcon(name) ?? throw new InvalidOperationException("A checkbox requires its indicator icon.");
+            var size = IndicatorSize(); var style = GetThemeStyleBox("normal") ?? throw new InvalidOperationException("A checkbox requires its normal style.");
+            var x = IsLayoutRTL() ? Size.X - style.GetMargin(Side.Right) - size.X : style.GetMargin(Side.Left);
+            var y = checked((int)((Size.Y - size.Y) / 2)) + GetThemeConstant("check_v_offset");
+            DrawTextureRect(texture, new(new(x, y), FitButtonIcon(texture.GetSize())), false,
+                GetThemeColor(ButtonPressed ? "checkbox_checked_color" : "checkbox_unchecked_color"));
+
+        }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(CheckBox) ? CreateCheckBox : base.CreateSceneInstanceFactory();

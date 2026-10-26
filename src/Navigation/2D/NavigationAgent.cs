@@ -257,7 +257,15 @@ public sealed partial class NavigationAgent : Node
     /// <inheritdoc />
     protected override void OnExitTree() { try { NavigationServer.AgentSetMap(_rid, default); if (_submitted) Repath(); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (IsInsideTree && what == CanvasItem.NotificationWorldChanged) PublishMap(); else if (IsInsideTree && what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) NavigationServer.AgentSetPaused(_rid, Parent is not Entity parent || !parent.CanProcess()); }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (IsInsideTree && what == CanvasItem.NotificationWorldChanged) PublishMap(); else if (IsInsideTree && what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) NavigationServer.AgentSetPaused(_rid, Parent is not Entity parent || !parent.CanProcess());
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override void ValidateMutation() { base.ValidateMutation(); if (_updating) throw new InvalidOperationException("Agent mutation cannot occur during navigation delivery."); }
     /// <inheritdoc />

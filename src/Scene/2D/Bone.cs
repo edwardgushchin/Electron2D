@@ -68,11 +68,15 @@ public class Bone : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
+        var reversed = IsNotificationReversed;
+
         Tree?.EnsureProcessingAccess(this);
         if (what == NotificationLocalTransformChanged && _copyPose) AuthoredPose = Transform;
         if (what == NotificationChildOrderChanged) SkeletonOwner?.InvalidateSetup();
-        base.OnNotification(what);
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationReady && _auto) Calculate();
+
+        if (reversed) base.OnNotification(what);
     }
     /// <inheritdoc />
     public override string[] GetConfigurationWarnings()

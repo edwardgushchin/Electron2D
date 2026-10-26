@@ -163,11 +163,19 @@ public partial class AnimationMixer : Node
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what); if (IsDisposed) return;
-        if (what == NotificationEnterTree) { _observedTree = Tree; if (_observedTree is not null) _observedTree.TreeChanged += TreeMutated; InvalidateBindings(); }
-        else if (what == NotificationExitTree) { if (_observedTree is not null) _observedTree.TreeChanged -= TreeMutated; _observedTree = null; InvalidateBindings(); }
-        else if (what == NotificationInternalProcess) Advance(ProcessDeltaTime);
-        else if (what == NotificationInternalPhysicsProcess) Advance(PhysicsProcessDeltaTime);
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            if (what == NotificationEnterTree) { _observedTree = Tree; if (_observedTree is not null) _observedTree.TreeChanged += TreeMutated; InvalidateBindings(); }
+            else if (what == NotificationExitTree) { if (_observedTree is not null) _observedTree.TreeChanged -= TreeMutated; _observedTree = null; InvalidateBindings(); }
+            else if (what == NotificationInternalProcess) Advance(ProcessDeltaTime);
+            else if (what == NotificationInternalPhysicsProcess) Advance(PhysicsProcessDeltaTime);
+
+        }
     }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

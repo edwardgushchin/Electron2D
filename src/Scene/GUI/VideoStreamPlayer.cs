@@ -295,45 +295,52 @@ public sealed class VideoStreamPlayer : Control
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        List<Exception>? errors = null;
-        if (what == NotificationEnterTree) _playback?.BindOwner(this);
-        try { base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
-        var finished = false;
-        if (!IsDisposed)
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
         {
-            if (what == NotificationDraw)
+            List<Exception>? errors = null;
+            if (what == NotificationEnterTree) _playback?.BindOwner(this);
+            try { if (!reversed) base.OnNotification(what); } catch (Exception error) { CollectException(ref errors, error); }
+            var finished = false;
+            if (!IsDisposed)
             {
-                try
+                if (what == NotificationDraw)
                 {
-                    var (texture, natural) = Query(static p => { var texture = p.GetTexture(); return (texture, NaturalSize(texture)); }, ((Texture?)null, Vector2.Zero));
-                    if (texture is not null && natural.X > 0 && natural.Y > 0) DrawTextureRect(texture, new(Vector2.Zero, _expand ? Size : natural), false);
-                }
-                catch (Exception error) { CollectException(ref errors, error); }
-            }
-            else
-            {
-                var previous = _operating; _operating = true;
-                try
-                {
-                    if (what == NotificationEnterTree)
+                    try
                     {
-                        _ownMutation = true; try { SetInternalProcessing(true, false); } finally { _ownMutation = false; }
-                        if (_autoplay) PlayCore(); else RefreshPause();
+                        var (texture, natural) = Query(static p => { var texture = p.GetTexture(); return (texture, NaturalSize(texture)); }, ((Texture?)null, Vector2.Zero));
+                        if (texture is not null && natural.X > 0 && natural.Y > 0) DrawTextureRect(texture, new(Vector2.Zero, _expand ? Size : natural), false);
                     }
-                    else if (what == NotificationExitTree) StopCore();
-                    else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) RefreshPause();
-                    else if (what == NotificationInternalProcess) finished = TickVideo();
+                    catch (Exception error) { CollectException(ref errors, error); }
                 }
-                catch (Exception error)
+                else
                 {
-                    CollectException(ref errors, error);
-                    try { StopCore(); } catch (Exception cleanup) { CollectException(ref errors, cleanup); }
+                    var previous = _operating; _operating = true;
+                    try
+                    {
+                        if (what == NotificationEnterTree)
+                        {
+                            _ownMutation = true; try { SetInternalProcessing(true, false); } finally { _ownMutation = false; }
+                            if (_autoplay) PlayCore(); else RefreshPause();
+                        }
+                        else if (what == NotificationExitTree) StopCore();
+                        else if (what is NotificationPaused or NotificationUnpaused or NotificationDisabled or NotificationEnabled) RefreshPause();
+                        else if (what == NotificationInternalProcess) finished = TickVideo();
+                    }
+                    catch (Exception error)
+                    {
+                        CollectException(ref errors, error);
+                        try { StopCore(); } catch (Exception cleanup) { CollectException(ref errors, cleanup); }
+                    }
+                    finally { _operating = previous; }
                 }
-                finally { _operating = previous; }
             }
+            ThrowCollected("Video notification callbacks failed.", errors);
+            if (finished) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
+
         }
-        ThrowCollected("Video notification callbacks failed.", errors);
-        if (finished) BeginEventEmission(_publisherFinished.Handlers)?.Invoke();
     }
     /// <inheritdoc />
     protected override void ValidateMutation() { base.ValidateMutation(); if (_operating && !_ownMutation) throw new InvalidOperationException("Video decoder callbacks cannot mutate their player."); }

@@ -146,12 +146,20 @@ public class Skeleton : Entity
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        Tree?.EnsureProcessingAccess(this);
-        if (what == NotificationChildOrderChanged) InvalidateSetup();
-        base.OnNotification(what); if (IsDisposed) return;
-        if (what is NotificationReady or NotificationPostEnterTree) { EnsureSetup(); _stack?.Bind(this); }
-        else if (what == NotificationInternalProcess) ExecuteModifications(ProcessDeltaTime, ProcessPhase.Idle);
-        else if (what == NotificationInternalPhysicsProcess) ExecuteModifications(PhysicsProcessDeltaTime, ProcessPhase.Physics);
+        var reversed = IsNotificationReversed;
+        HandleNotification();
+        if (reversed) base.OnNotification(what);
+        void HandleNotification()
+        {
+            Tree?.EnsureProcessingAccess(this);
+            if (what == NotificationChildOrderChanged) InvalidateSetup();
+            if (!reversed) base.OnNotification(what);
+            if (IsDisposed) return;
+            if (what is NotificationReady or NotificationPostEnterTree) { EnsureSetup(); _stack?.Bind(this); }
+            else if (what == NotificationInternalProcess) ExecuteModifications(ProcessDeltaTime, ProcessPhase.Idle);
+            else if (what == NotificationInternalPhysicsProcess) ExecuteModifications(PhysicsProcessDeltaTime, ProcessPhase.Physics);
+
+        }
     }
     private static readonly PropertyDescriptor[] SkeletonProperties =
     [new PropertyDescriptor<Skeleton, SkeletonModificationStack?>("_modification_stack", s => s.GetModificationStack(), (s, v) => s.SetModificationStack(v), _ => null, stored: true) { AlwaysDuplicateResource = true }];

@@ -218,7 +218,15 @@ public partial class FileDialog
     internal override void PreparePopup() { RefreshBrowser(); RefreshOptions(); base.PreparePopup(); }
     internal override void AfterVisibilityChanged(bool visible) { if (_vbox != null && visible) { _dirty = true; RefreshBrowser(); RefreshOptions(); } base.AfterVisibilityChanged(visible); }
     /// <inheritdoc />
-    protected override void OnNotification(int what) { base.OnNotification(what); if (_files != null && !IsDisposed && what is NotificationThemeChanged or Control.NotificationLayoutDirectionChanged) { ApplyFeatures(); Invalidate(); } }
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
+        if (_files != null && !IsDisposed && what is NotificationThemeChanged or Control.NotificationLayoutDirectionChanged) { ApplyFeatures(); Invalidate(); }
+
+        if (reversed) base.OnNotification(what);
+    }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(FileDialog) ? CreateFileDialog : base.CreateSceneInstanceFactory();
     private static Node CreateFileDialog() => new FileDialog();

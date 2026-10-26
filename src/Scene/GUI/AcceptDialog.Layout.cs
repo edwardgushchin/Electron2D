@@ -46,8 +46,12 @@ public partial class AcceptDialog
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        base.OnNotification(what);
+        var reversed = IsNotificationReversed;
+
+        if (!reversed) base.OnNotification(what);
         if (what == NotificationExitTree) UnwatchParent();
         if (what is NotificationReady or NotificationThemeChanged or Control.NotificationLayoutDirectionChanged or Control.NotificationTranslationChanged or NotificationChildOrderChanged) Arrange();
+
+        if (reversed) base.OnNotification(what);
     }
 }
