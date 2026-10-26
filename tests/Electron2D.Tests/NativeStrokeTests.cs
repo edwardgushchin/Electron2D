@@ -21,7 +21,7 @@ internal static partial class NativeStrokeTests
             DrawPrimitive([new(0, 20)], [Colors.Yellow], []);
         }
     }
-    private sealed record Case(string Name, Vector2[] Points, Color[] Colors, bool Connected, Action<Painter> Draw, bool VertexColors = false, Vector2[]? UVs = null);
+    private sealed record Case(string Name, Vector2[] Points, Color[] Colors, bool Connected, Action<Painter> Draw, bool VertexColors = false, Vector2[]? UVs = null, Color? ShaderColor = null);
     internal static void Managed()
     {
         CanvasStrokeTests.Run();
@@ -71,7 +71,7 @@ internal static partial class NativeStrokeTests
         using var stream = typeof(NativeStrokeTests).Assembly.GetManifestResourceStream("Electron2D.Device." + name)!;
         using var memory = new MemoryStream(); stream.CopyTo(memory); return memory.ToArray();
     }
-    private static Case[] Cases()
+    private static Case[] Cases(Texture pointTexture, Texture pointAtlas)
     {
         Vector2[] line = [new(8.25f, 9.5f), new(53.75f, 49.25f)];
         Vector2[] strip = [new(7.25f, 12.5f), new(50.5f, 24.75f), new(11.5f, 49.5f)];
@@ -93,6 +93,11 @@ internal static partial class NativeStrokeTests
         return [
             new("server primitive integer point", [new(16, 12)], [Colors.Cyan], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), [new(16, 12)], [Colors.Cyan], [], default)),
             new("primitive fractional point", [new(16.25f, 12.5f)], [Colors.Yellow], false, n => n.DrawPrimitive([new(16.25f, 12.5f)], [Colors.Yellow], [])),
+            new("textured integer point", [new(16, 12)], [Colors.Red], false, n => n.DrawPrimitive([new(16, 12)], [Colors.White], [new(.25f, .25f)], pointTexture), UVs: [new(.25f, .25f)], ShaderColor: Colors.White),
+            new("textured fractional point", [new(16.25f, 12.5f)], [new(0, 1, 0)], false, n => n.DrawPrimitive([new(16.25f, 12.5f)], [Colors.White], [new(.75f, .25f)], pointTexture), UVs: [new(.75f, .25f)], ShaderColor: Colors.White),
+            new("server textured point", [new(16.75f, 12.25f)], [Colors.Blue], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), [new(16.75f, 12.25f)], [Colors.White], [new(.25f, .75f)], pointTexture.GetRID()), UVs: [new(.25f, .75f)], ShaderColor: Colors.White),
+            new("translucent textured point", [new(16.5f, 12.75f)], [new(.4f, .8f, 1, 64f / 255)], false, n => n.DrawPrimitive([new(16.5f, 12.75f)], [new(.4f, .8f, 1, .5f)], [new(.75f, .75f)], pointTexture), UVs: [new(.75f, .75f)], ShaderColor: new(.4f, .8f, 1, .5f)),
+            new("atlas point", [new(16.25f, 12.75f)], [Colors.Blue], false, n => n.DrawPrimitive([new(16.25f, 12.75f)], [Colors.White], [new(.25f, .75f)], pointAtlas), UVs: [new(.25f, .75f)], ShaderColor: Colors.White),
             new("primitive line", line, [Colors.Red, Colors.Blue], false, n => n.DrawPrimitive(line, [Colors.Red, Colors.Blue], []), true),
             new("primitive UV line", line, [Colors.Cyan, Colors.Magenta], false, n => RenderingServer.CanvasItemAddPrimitive(n.GetCanvasItem(), line, [Colors.Cyan, Colors.Magenta], primitiveLineUVs, default), true, primitiveLineUVs),
             new("line", line, [Colors.White], false, n => n.DrawLine(line[0], line[1], Colors.White)),
@@ -119,8 +124,12 @@ internal static partial class NativeStrokeTests
         ProjectSettings.Set(ProjectSettings.RenderingMethod, gpu ? "gpu" : "compatibility"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         ProjectSettings.Set(ProjectSettings.SnapVerticesToPixel, snap); ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, profile.Contains("separate", StringComparison.Ordinal)); Engine.MaxFPS = 120;
         using var world = new World(profile.Contains("physics-gpu", StringComparison.Ordinal) ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
-        var cases = Cases(); var height = ((cases.Length + 3) / 4) * 160 + 64;
-        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
+        using var pointImage = Image.CreateFromData(2, 2, false, Image.Format.Rgba8,
+            [255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 128]);
+        using var pointTexture = ImageTexture.CreateFromImage(pointImage);
+        using var pointAtlas = new AtlasTexture { Atlas = pointTexture, Region = new(1, 0, 1, 1) };
+        var cases = Cases(pointTexture, pointAtlas); var height = ((cases.Length + 3) / 4) * 160 + 64;
+        using var window = new Window { Size = new(768, height), World = world, UseHDR2D = hdr, CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest, MSAA2D = profile.Contains("msaa", StringComparison.Ordinal) ? Viewport.MSAA.Samples4X : Viewport.MSAA.Disabled };
         var customVertex = profile.Contains("vertex", StringComparison.Ordinal);
         using var fragment = gpu && (profile.Contains("material", StringComparison.Ordinal) || customVertex) ? customVertex
             ? Shader.CreateFromSPIRV(Module($"DeviceNative{(profile.Contains("declared", StringComparison.Ordinal) ? "Stroke" : "Primitive")}{language}.vert.spv"), Module($"DeviceNativeStroke{language}.frag.spv"))
@@ -247,6 +256,8 @@ internal static partial class NativeStrokeTests
             {
                 var point = pose * definition.Points[i]; if (snap) point = (point + new Vector2(.5f, .5f)).Floor();
                 var tint = definition.Colors[definition.VertexColors ? i < definition.Colors.Length ? i : 0 : Math.Min(definition.Colors.Length - 1, definition.Connected ? i : i / 2)];
+                // The authored probe fragments read color/UV and do not sample the bound texture.
+                if (shaderMode != 0 && definition.ShaderColor is { } sourceColor) tint = sourceColor;
                 if (hdr) tint = tint.SRGBToLinear();
                 data[i * 8] = point.X; data[i * 8 + 1] = point.Y;
                 if (definition.UVs is { } uvs) { data[i * 8 + 6] = uvs[i].X; data[i * 8 + 7] = uvs[i].Y; }

@@ -278,7 +278,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         }
     }
 
-    private static int DrawPoints(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, bool splitTriangles)
+    private int DrawPoints(nint renderer, nint texture, ReadOnlySpan<SDL.Vertex> vertices, bool splitTriangles)
     {
         var calls = 0;
         Span<SDL.Vertex> quad = stackalloc SDL.Vertex[6];
@@ -291,9 +291,17 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                 calls++;
                 continue;
             }
+            var origin = Driver switch
+            {
+                "software" => new SDL.FPoint { X = MathF.Truncate(center.Position.X), Y = MathF.Truncate(center.Position.Y) },
+                "opengl" => LinePoint(center.Position, true),
+                "opengles2" => center.Position,
+                // shortcut: retain centered coverage on other drivers until their native point oracles execute.
+                _ => new SDL.FPoint { X = center.Position.X - .5f, Y = center.Position.Y - .5f }
+            };
             quad.Fill(center);
             for (var j = 0; j < quad.Length; j++)
-                quad[j].Position = new() { X = center.Position.X + (j is 0 or 1 or 3 ? .5f : -.5f), Y = center.Position.Y + (j is 0 or 3 or 5 ? -.5f : .5f) };
+                quad[j].Position = new() { X = origin.X + (j is 0 or 1 or 3 ? 1 : 0), Y = origin.Y + (j is 0 or 3 or 5 ? 0 : 1) };
             var step = splitTriangles ? 3 : 6;
             for (var first = 0; first < quad.Length; first += step)
             {
