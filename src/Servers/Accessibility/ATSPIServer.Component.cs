@@ -10,6 +10,7 @@ internal sealed unsafe partial class ATSPIServer
     {
         if (e.TextSource is { IsDisposed: false, IsInsideTree: true } source)
         {
+            if (source is TextEdit edit && (uint)e.TextLine >= (uint)edit.GetLineCount()) return default;
             var local = source is LineEdit line ? line.AccessibilityLineRect() : ((TextEdit)source).AccessibilityLineRect(e.TextLine);
             return (source.GetViewport()!.GetScreenTransform() * source.GetGlobalTransformWithCanvas()) * local;
         }
@@ -26,7 +27,7 @@ internal sealed unsafe partial class ATSPIServer
         if (kind != 0) throw new InvalidRequestException("The coordinate type is not supported.");
         return root is { ScreenOriginKnown: true } ? e.IsWindow ? root.OuterRect : new(rect.Position + root.InnerRect.Position, rect.Size) : new(new Vector2(int.MinValue, int.MinValue), rect.Size);
     }
-    private static bool Showing(Element e)
+    private static bool Visible(Element e)
     {
         var connected = false;
         for (var p = e; p is not null; p = p.Parent)
@@ -37,10 +38,37 @@ internal sealed unsafe partial class ATSPIServer
         }
         return connected;
     }
+    private static Rect2 ClipBounds(Element e)
+    {
+        if (e.Source is CanvasItem canvas && (!e.SourcePrepared || e.Bounds == e.SourceBounds) && canvas.RenderClip is { } clip)
+            return (e.Transform * canvas.GetViewport()!.GetScreenTransform() * canvas.GetGlobalTransformWithCanvas()) * clip;
+        return Bounds(e);
+    }
+    private static bool InheritsClip(Element target, Element parent)
+    {
+        if (parent.Source is not CanvasItem owner || (target.Source ?? target.TextSource) is not CanvasItem item) return true;
+        for (var child = item; child is not null; child = child.RenderParent) if (child == owner) return true;
+        return false;
+    }
+    private static bool Showing(Element e)
+    {
+        if (!Visible(e)) return false; if (e.IsApplication) return true;
+        var rect = Bounds(e); if (rect.Size.X <= 0 || rect.Size.Y <= 0) return false;
+        for (var p = e.Parent; p is not null; p = p.Parent)
+        {
+            if (!p.Flag(AFlag.ClipsChildren) || !InheritsClip(e, p)) continue;
+            var clip = ClipBounds(p);
+            rect = rect.Intersection(clip); if (rect.Size.X <= 0 || rect.Size.Y <= 0) return false;
+        }
+        return true;
+    }
     private static bool Contains(Element e, int x, int y, uint kind)
     {
-        if (!Showing(e) || kind == 0 && WindowRoot(e) is not { ScreenOriginKnown: true }) return false;
-        return Coordinates(e, kind).HasPoint(new(x, y));
+        var coordinates = Coordinates(e, kind);
+        if (!Visible(e) || kind == 0 && WindowRoot(e) is not { ScreenOriginKnown: true } || !coordinates.HasPoint(new(x, y))) return false;
+        var windowPoint = new Vector2(x, y) - coordinates.Position + Bounds(e).Position;
+        for (var p = e.Parent; p is not null; p = p.Parent) if (p.Flag(AFlag.ClipsChildren) && InheritsClip(e, p) && !ClipBounds(p).HasPoint(windowPoint)) return false;
+        return true;
     }
     private static int Pixel(double value) => (int)Math.Clamp(value, int.MinValue, int.MaxValue);
     private static nint RectValue(Rect2 rect)
@@ -52,13 +80,14 @@ internal sealed unsafe partial class ATSPIServer
     }
     private nint Hit(Element e, int x, int y, uint kind)
     {
+        _ = Coordinates(e, kind);
         var todo = new Stack<(Element Node, bool After)>(); todo.Push((e, false));
         while (todo.Count != 0)
         {
-            var (node, after) = todo.Pop(); if (!Showing(node)) continue;
+            var (node, after) = todo.Pop(); if (!Visible(node)) continue;
             var inside = Contains(node, x, y, kind);
             if (after) { if (inside && !node.Flag(AFlag.TouchPassthrough)) return ObjectRef(node); continue; }
-            if (!inside && node.Flag(AFlag.ClipsChildren)) continue;
+            if (!inside && node.Flag(AFlag.ClipsChildren) && node.Source is null) continue;
             todo.Push((node, true));
             foreach (var child in node.Children) todo.Push((child, false));
         }
@@ -77,9 +106,16 @@ internal sealed unsafe partial class ATSPIServer
             case "GetMDIZOrder": return Tuple([g_variant_new_int16(0)]);
             case "GrabFocus": return Tuple([B(Invoke(e, AAction.Focus))]);
             case "GetAlpha": return Tuple([g_variant_new_double(1)]);
-            case "SetExtents": case "SetPosition": case "SetSize": case "ScrollTo": case "ScrollToPoint": return Tuple([B(false)]);
+            case "ScrollTo": return Tuple([B(ScrollTo(e, UIntArg(args, 0), null))]);
+            case "ScrollToPoint": { var point = ScrollWindowPoint(e, UIntArg(args, 0), IntArg(args, 1), IntArg(args, 2)); return Tuple([B(point is { } value && ScrollTo(e, 6, value))]); }
+            case "SetExtents": case "SetPosition": case "SetSize": return Tuple([B(false)]);
             default: throw new InvalidOperationException("Unknown component method.");
         }
     }
-    internal void BoundsChanged(Element e) => Emit(e.Path, "org.a11y.atspi.Event.Object", "BoundsChanged", Event("", 0, 0, RectValue(Coordinates(e, 0)), e));
+    internal void BoundsChanged(Element e)
+    {
+        Emit(e.Path, "org.a11y.atspi.Event.Object", "BoundsChanged", Event("", 0, 0, RectValue(Coordinates(e, 0)), e));
+        if (e.Flag(AFlag.ClipsChildren) || e.IsTextLine) VisibilityChanged(e);
+        else { StateChanged(e, "visible", Visible(e)); StateChanged(e, "showing", Showing(e)); }
+    }
 }

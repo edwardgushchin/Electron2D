@@ -83,7 +83,11 @@ public partial class TextEdit
     /// <inheritdoc />
     protected override void OnIMECompositionChanged(string text, Vector2i selection)
     {
-        if (!_editable || !HasFocus()) return; if (text.Length > 0 && HasSelection()) DeleteSelection(); _ime = Normalize(text); var count = CountScalars(_ime.AsSpan()); _imeSelection = new(Math.Clamp(selection.X, 0, count), Math.Clamp(selection.Y, 0, count - Math.Clamp(selection.X, 0, count))); if (_highlighter is { IsDisposed: false }) _highlighter.ClearHighlightingCache(); InvalidateTextLayout(); AdjustViewportToCaret(); ResetBlink();
+        if (!_editable || !HasFocus()) return;
+        text = Normalize(text); var count = CountScalars(text.AsSpan()); var normalizedSelection = new Vector2i(Math.Clamp(selection.X, 0, count), Math.Clamp(selection.Y, 0, count - Math.Clamp(selection.X, 0, count)));
+        if (_ime == text && _imeSelection == normalizedSelection) return;
+        if (text.Length > 0 && HasSelection()) DeleteSelection(); _ime = text; _imeSelection = normalizedSelection;
+        if (_highlighter is { IsDisposed: false }) _highlighter.ClearHighlightingCache(); InvalidateTextLayout(); AdjustViewportToCaret(); ResetBlink();
     }
     private bool Action(InputEvent input, string action) => InputMap.HasAction(action) && input.IsActionPressed(action, allowEcho: true, exactMatch: true);
     private void MoveCaretTo(int index, Vector2i target, bool extend)

@@ -133,3 +133,5 @@ Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress
 Semantic relationships now connect stored Control paths and live radio groups to native direct/reciprocal links, validation errors, virtual descendant focus and internal hyperlink anchors. Ownership and exercised limits are in [native accessibility](../components/accessibility.md#semantic-relationships).
 
 Native accessibility now includes [text and editing](../classes/AccessibilityServer.md#native-text) for LineEdit/TextEdit/CodeEdit, with typed manual producers and copied shaped text. The owning reference records exact native, allocation and platform limits.
+
+Native accessibility scrolling now connects existing scrollable GUI sources to AT-SPI placement and typed actions. [The service contract](../classes/AccessibilityServer.md#native-scrolling) owns coordinate, clipping, lifetime and verification boundaries.

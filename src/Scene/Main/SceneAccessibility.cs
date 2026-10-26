@@ -67,12 +67,13 @@ internal sealed class SceneAccessibility(SceneTree tree)
             var description = node is Control c2 ? c2.AccessibleDescription : "";
             var role = RoleFor(node); var flags = 0UL;
             if (node is LineEdit or TextEdit) AccessibilityServer.UpdateSourceText(e);
+            if (node is Control scrollSource) AccessibilityServer.UpdateSourceScroll(e, scrollSource);
             var visible = node is not CanvasItem canvas || canvas.IsVisibleInTree;
             if (node is Window win) visible = win.Visible;
             if (!visible) flags |= 1UL << (int)Flag.Hidden;
             if (node is Range rangeFlags && !AccessibilityServer.NumericEditable(rangeFlags)) flags |= 1UL << (int)Flag.ReadOnly;
             if (node is BaseButton { Disabled: true }) flags |= 1UL << (int)Flag.Disabled;
-            if (node is Window or Control { ClipContents: true }) flags |= 1UL << (int)Flag.ClipsChildren;
+            if (node is Window || node is Control { RenderClip: not null }) flags |= 1UL << (int)Flag.ClipsChildren;
             var isChecked = node is BaseButton { ToggleMode: true, ButtonPressed: true };
             var bounds = node switch
             {
@@ -170,6 +171,11 @@ internal sealed class SceneAccessibility(SceneTree tree)
         Label => Role.StaticText,
         LineEdit => Role.TextField,
         TextEdit => Role.MultilineTextField,
+        ScrollContainer or GraphEdit => Role.ScrollView,
+        ItemList => Role.ListBox,
+        Tree => Role.Tree,
+        TabBar => Role.TabBar,
+        RichTextLabel => Role.StaticText,
         Slider => Role.Slider,
         ScrollBar => Role.ScrollBar,
         ProgressBar or TextureProgressBar => Role.ProgressIndicator,

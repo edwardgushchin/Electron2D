@@ -101,7 +101,8 @@ public partial class LineEdit
     /// <summary>Returns the following shaped-grapheme boundary.</summary><param name="column">Scalar column, clamped to Text.</param><returns>A scalar boundary.</returns>
     public int GetNextCompositeCharacterColumn(int column) { CheckLineEdit(); var count = ScalarCount(_text); column = Math.Clamp(column, 0, count); if (column == count) return count; EnsureLayout(); return _sourceLayout.NextGrapheme(column); }
     /// <summary>Returns the horizontal text offset in pixels; scrolling is negative.</summary><returns>The current shaped-line offset.</returns>
-    public float GetScrollOffset() { CheckLineEdit(); FitCaret(); return _scroll; }
+    /// <remarks>Reads the retained offset without moving the viewport toward the caret.</remarks>
+    public float GetScrollOffset() { CheckLineEdit(); return _scroll; }
     /// <summary>Returns whether undo has an earlier text state.</summary><returns>True when an earlier history entry exists.</returns>
     public bool HasUndo() { CheckLineEdit(); return _historyPosition > 0; }
     /// <summary>Returns whether redo has a later text state.</summary><returns>True when a later history entry exists.</returns>

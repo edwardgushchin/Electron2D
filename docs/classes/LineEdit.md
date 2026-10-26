@@ -396,7 +396,7 @@ System.ArgumentOutOfRangeException: The value is outside minus one through three
 | `public System.Int32 GetNextCompositeCharacterColumn(System.Int32 column)` | Returns the following shaped-grapheme boundary. |
 | `public System.Int32 GetPreviousCompositeCharacterColumn(System.Int32 column)` | Returns the preceding shaped-grapheme boundary. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Returns the typed properties exposed to tooling before validation. |
-| `public System.Single GetScrollOffset()` | Returns the horizontal text offset in pixels; scrolling is negative. |
+| `public System.Single GetScrollOffset()` | Returns the retained horizontal text offset in pixels; scrolling is negative. Reading it does not move the view toward the caret. |
 | `public System.String GetSelectedText()` | Returns the selected source text, including password text when called programmatically. |
 | `public System.Int32 GetSelectionFromColumn()` | Returns the selection start or minus one when absent. |
 | `public System.Int32 GetSelectionToColumn()` | Returns the selection end or minus one when absent. |
@@ -544,7 +544,7 @@ Remarks: Appends this class's typed hierarchy, ownership, processing, and automa
 
 `public System.Single GetScrollOffset()`
 
-Returns the horizontal text offset in pixels; scrolling is negative.
+Returns the retained horizontal text offset in pixels; scrolling is negative. Reading it does not move the view toward the caret.
 
 Returns: The current shaped-line offset.
 
@@ -811,3 +811,7 @@ Visual selection adjacency uses a fixed .001 logical-pixel tolerance in the shar
 Glyph direction is retained from the actual resolved shaping run, including line-ending whitespace resets. Caret, selection, scalar hits and rich glyph flags share that retained metadata across wrapped lines and BIDI override contexts.
 
 Native Text/EditableText output uses this control's existing document, caret/selection and ordinary editing path. Unicode offsets, password/length/read-only policies, scrolling and verification limits follow the [native text service contract](AccessibilityServer.md#native-text). Semantic line identities are runtime-owned and are not stored in scenes.
+
+Native scrolling publishes positive document offsets while the public GetScrollOffset retains its negative text-translation convention. Independent panning and reading that offset preserve caret, selection and focus. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
+
+Repeated identical IME composition updates preserve an independently scrolled view; changed composition still updates caret visibility.

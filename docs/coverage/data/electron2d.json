@@ -201,6 +201,42 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "kind": "type",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "AccessibilityScrollHint",
+    "signature": "public enum Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "kind": "type",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "name": "AccessibilityScrollUnit",
+    "signature": "public enum Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.AccessibilitySupport",
     "kind": "type",
     "declaringType": "Electron2D.AccessibilitySupport",
@@ -29942,6 +29978,123 @@
     "value": "10"
   },
   {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollBackward()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollBackward",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollBackward = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollDown()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollDown",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollDown = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollForward()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollForward",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollForward = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollIntoView()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollIntoView",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollIntoView = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "17"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollLeft",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollLeft = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollRight",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollRight = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollToPoint()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollToPoint",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollToPoint = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "18"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollUp()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "ScrollUp",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction ScrollUp = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.SetScrollOffset()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "name": "SetScrollOffset",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityAction SetScrollOffset = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityAction",
+    "value": "19"
+  },
+  {
     "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.SetTextSelection()",
     "kind": "enumValue",
     "declaringType": "Electron2D.AccessibilityServer.AccessibilityAction",
@@ -30720,6 +30873,110 @@
     "parameters": [],
     "returnType": "Electron2D.AccessibilityServer.AccessibilityRole",
     "value": "42"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.BottomEdge()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "BottomEdge",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollHint BottomEdge = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.BottomRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "BottomRight",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollHint BottomRight = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.LeftEdge()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "LeftEdge",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollHint LeftEdge = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.RightEdge()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "RightEdge",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollHint RightEdge = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.TopEdge()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "TopEdge",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollHint TopEdge = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.TopLeft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "name": "TopLeft",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollHint TopLeft = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollHint",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollUnit.Item()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "name": "Item",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollUnit Item = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollUnit.Page()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "name": "Page",
+    "signature": "public const Electron2D.AccessibilityServer.AccessibilityScrollUnit Page = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.AccessibilitySupport.Always()",
@@ -70844,6 +71101,64 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action\u003CElectron2D.AccessibilityServer.AccessibilityScrollHint\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddAction",
+    "signature": "public static System.Void UpdateAddAction(Electron2D.RID id, Electron2D.AccessibilityServer.AccessibilityAction action, System.Action\u003CElectron2D.AccessibilityServer.AccessibilityScrollHint\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "action",
+        "type": "Electron2D.AccessibilityServer.AccessibilityAction",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.AccessibilityServer.AccessibilityScrollHint\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action\u003CElectron2D.AccessibilityServer.AccessibilityScrollUnit\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddAction",
+    "signature": "public static System.Void UpdateAddAction(Electron2D.RID id, Electron2D.AccessibilityServer.AccessibilityAction action, System.Action\u003CElectron2D.AccessibilityServer.AccessibilityScrollUnit\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "action",
+        "type": "Electron2D.AccessibilityServer.AccessibilityAction",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.AccessibilityServer.AccessibilityScrollUnit\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action\u003CElectron2D.RID, System.Int32, Electron2D.RID, System.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.AccessibilityServer",
@@ -70866,6 +71181,35 @@
       {
         "name": "callback",
         "type": "System.Action\u003CElectron2D.RID, System.Int32, Electron2D.RID, System.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateAddAction",
+    "signature": "public static System.Void UpdateAddAction(Electron2D.RID id, Electron2D.AccessibilityServer.AccessibilityAction action, System.Action\u003CElectron2D.Vector2\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "action",
+        "type": "Electron2D.AccessibilityServer.AccessibilityAction",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.Vector2\u003E",
         "default": null
       }
     ],
@@ -71601,6 +71945,112 @@
       {
         "name": "role",
         "type": "Electron2D.AccessibilityServer.AccessibilityRole",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetScrollX(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetScrollX",
+    "signature": "public static System.Void UpdateSetScrollX(Electron2D.RID id, System.Single position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetScrollXRange(Electron2D.RID,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetScrollXRange",
+    "signature": "public static System.Void UpdateSetScrollXRange(Electron2D.RID id, System.Single min, System.Single max)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "min",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "max",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetScrollY(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetScrollY",
+    "signature": "public static System.Void UpdateSetScrollY(Electron2D.RID id, System.Single position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.AccessibilityServer.UpdateSetScrollYRange(Electron2D.RID,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.AccessibilityServer",
+    "name": "UpdateSetScrollYRange",
+    "signature": "public static System.Void UpdateSetScrollYRange(Electron2D.RID id, System.Single min, System.Single max)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "min",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "max",
+        "type": "System.Single",
         "default": null
       }
     ],

@@ -1,5 +1,7 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · Português (BR)</p>
 
+A rolagem nativa aceita passos, páginas e exibição de elementos fora da área visível, preservando foco e seleção. Veja o [contrato](docs/classes/AccessibilityServer.md#native-scrolling).
+
 A acessibilidade nativa no Linux publica nomes, papéis, estados, ações de botões e foco e valores numéricos de Range via AT-SPI. Slider, ScrollBar e SpinBox editáveis aceitam solicitações numéricas; indicadores de progresso são somente leitura. Defina `ProjectSettings.AccessibilitySupport` antes de abrir uma janela; os protocolos de tabelas e os adaptadores de outras plataformas continuam em desenvolvimento. AT-SPI também publica relações de rótulos, descrições e controles, grupos de rádio, erros de validação, descendentes ativos e links internos. As relações acompanham os caminhos e a vida útil dos destinos.
 
 Text/EditableText nativos leem e editam LineEdit/TextEdit/CodeEdit, com seleção Unicode, geometria do texto e senhas mascaradas. Veja o [contrato de acessibilidade](docs/classes/AccessibilityServer.md#native-text).

@@ -27,8 +27,10 @@ public partial class LineEdit
     protected override void OnIMECompositionChanged(string text, Vector2i selection)
     {
         if (!_editing || !_editable) return;
+        var count = ScalarCount(text); var normalizedSelection = new Vector2i(Math.Clamp(selection.X, 0, count), Math.Clamp(selection.Y, 0, count - Math.Clamp(selection.X, 0, count)));
+        if (_ime == text && _imeSelection == normalizedSelection) return;
         var changed = text.Length > 0 && _selecting; if (changed) DeleteRange(_selectionFrom, _selectionTo);
-        _ime = text; var count = ScalarCount(text); _imeSelection = new(Math.Clamp(selection.X, 0, count), Math.Clamp(selection.Y, 0, count - Math.Clamp(selection.X, 0, count)));
+        _ime = text; _imeSelection = normalizedSelection;
         Invalidate(); FitCaret(); ResetBlink(); if (changed) ChangedByUser();
     }
     private bool Action(InputEvent input, string action) => InputMap.HasAction(action) && input.IsActionPressed(action, allowEcho: true, exactMatch: true);

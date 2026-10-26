@@ -951,3 +951,5 @@ Column titles and noneditable inherited-policy cells use [Control.TranslationCon
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+Native scrolling projects the mirrored horizontal axis and visible row heights to local pixels. It reuses existing bars without selecting, collapsing or resizing items; owned native row/cell identities remain part of the collection slice. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.

@@ -3,7 +3,7 @@
 Last updated: 2026-10-26
 
 - Declaration: `public sealed partial class AccessibilityServer : ElectronObject`
-- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs)
+- Source: [AccessibilityServer.cs](../../src/Servers/Accessibility/AccessibilityServer.cs), [scroll API](../../src/Servers/Accessibility/AccessibilityServer.Scroll.cs), [scroll sources](../../src/Servers/Accessibility/AccessibilityServer.ScrollSources.cs)
 - Inherits: [ElectronObject](ElectronObject.md); no derived types or public constructor.
 - Component: [Native accessibility](../components/accessibility.md)
 
@@ -80,13 +80,23 @@ A custom producer can create an element, set its name/bounds, register an Action
 | `public static void UpdateSetNextOnLine(RID id, RID otherID)` | [UpdateSetNextOnLine](#updatesetnextonline) |
 | `public static void UpdateSetPreviousOnLine(RID id, RID otherID)` | [UpdateSetPreviousOnLine](#updatesetpreviousonline) |
 
+| `public static void UpdateSetScrollX(RID id, float position)` | [UpdateSetScrollX](#updatesetscrollx) |
+| `public static void UpdateSetScrollXRange(RID id, float min, float max)` | [UpdateSetScrollXRange](#updatesetscrollxrange) |
+| `public static void UpdateSetScrollY(RID id, float position)` | [UpdateSetScrollY](#updatesetscrolly) |
+| `public static void UpdateSetScrollYRange(RID id, float min, float max)` | [UpdateSetScrollYRange](#updatesetscrollyrange) |
+| `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<AccessibilityScrollUnit> callback)` | [Scroll callbacks](#scroll-callbacks) |
+| `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<AccessibilityScrollHint> callback)` | [Scroll callbacks](#scroll-callbacks) |
+| `public static void UpdateAddAction(RID id, AccessibilityAction action, Action<Vector2> callback)` | [Scroll callbacks](#scroll-callbacks) |
+
 ## Enumerations
 
 | Type | Contract |
 | --- | --- |
 | [AccessibilityRole](AccessibilityServer.AccessibilityRole.md) | All 48 semantic role selectors and native role projections. |
 | [AccessibilityFlags](AccessibilityServer.AccessibilityFlags.md) | Ten independent state/geometry selectors. |
-| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Click/Focus/Blur, numeric requests, directed scalar selection and selected-text replacement; other payload families remain incomplete. |
+| [AccessibilityAction](AccessibilityServer.AccessibilityAction.md) | Activation/focus, numeric/text and typed scroll requests; other payload families remain incomplete. |
+| [AccessibilityScrollUnit](AccessibilityServer.AccessibilityScrollUnit.md) | Item and page scroll amounts. |
+| [AccessibilityScrollHint](AccessibilityServer.AccessibilityScrollHint.md) | Six preferred reveal edges. |
 
 ## Method descriptions
 
@@ -193,7 +203,7 @@ Sets the affine transform applied to the element's bounds. The matrix and result
 
 `public static void UpdateAddAction(RID id, AccessibilityAction action, Action callback)`
 
-Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Decrement or Increment. The Action<double> overload accepts numeric SetValue only. The four-argument RID/scalar overload accepts SetTextSelection; the string overload accepts ReplaceSelectedText. Their producer and source rules are specified in [Native text](#native-text). Other payload signatures await their real native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
+Registers or replaces a borrowed compiled Action for Click, Focus, Blur, Decrement, Increment, ScrollBackward or ScrollForward. The Action<double> overload accepts numeric SetValue only. The four-argument RID/scalar overload accepts SetTextSelection; the string overload accepts ReplaceSelectedText. Their producer and source rules are specified in [Native text](#native-text). Unit/hint/point/offset overloads are specified in [Native scrolling](#native-scrolling). Remaining value/custom/popup payload families await their native consumers. Native requests run during the display owner's event pump. Hidden, disabled, detached, departing, queued and disposed scene controls reject activation; callback exceptions return a native failure and aggregate after the pump.
 
 <a id="updatesetfocus"></a>
 ### UpdateSetFocus
@@ -397,3 +407,54 @@ Sets a non-owning same-window next text neighbor; an empty RID clears it. Native
 `public static void UpdateSetPreviousOnLine(RID id, RID otherID)`
 
 Sets a non-owning same-window previous text neighbor; an empty RID clears it. Native visual-line boundary queries join adjacent linked fragments even when their local baselines differ. Literal LF remains a mandatory boundary. Links never reorder hierarchy or recurse; retiring either target removes its references and notifies affected text readers.
+
+## Native scrolling
+
+Scroll state is independent of numeric Value and editable text. Producers publish actual finite local offsets with optional finite ordered bounds. Publication never moves content, clamps the authored offset or invokes callbacks. Native Accessible attributes expose `scroll-x`, `scroll-y` and the corresponding `-min`/`-max` keys only after publication; attribute/visible-data events announce changes. Unbounded GraphEdit panning publishes offsets without invented finite endpoints.
+
+Native Action exposes item/page directions, no-argument sequential requests and `scroll-to-start`/`scroll-to-end` for known minimum/maximum offsets. These endpoint names refer to published coordinate bounds, including negative RTL ranges. A request calls the producer; the producer owns clamping, mutation and publication. The native Component protocol reveals descendants through all scrollable ancestors or moves their top-left toward a window-client point. Source and generic ancestors reuse the typed absolute-offset callback. Bounds constrain placement; oversized targets retain their size and receive the largest attainable exposure. A custom target reveal/point callback can consume the request directly.
+
+Window/parent coordinates project to window-client coordinates before point dispatch. Unknown screen origin rejects screen-point requests rather than fabricating placement. Invalid coordinate/reveal selectors produce wire argument errors. Singular or unrepresentable automatic ancestor projections return false. Hidden, disabled, detached, queued or retired targets reject requests. Clipping alone does not disable interaction or text editing: native visible and showing states are distinct, and hit tests respect actual rendered clips. Geometry-free grouping elements do not hide their unclipped descendants. Internal scroll bars retain their own exposure outside a content viewport and do not pan that content when revealed. Independent canvas roots do not inherit their former content clip or scroll displacement.
+
+ScrollContainer, ItemList, Tree, TextEdit/CodeEdit, RichTextLabel, LineEdit, TabBar/owned TabContainer strips and GraphEdit supply automatic scroll state/actions. Published source offsets use local rendered pixels: visual text rows, negative LineEdit translation, RTL tree/list coordinates and quantized tab prefixes are projected to this space. Item steps use row, tab, font or configured small-step metrics; pages use the current viewport. TextEdit retains its ordinary smooth-scroll target accumulation. Scrolling preserves caret, selection and GUI focus and remains available in a read-only editor. `LineEdit.GetScrollOffset()` reads its retained negative text translation without refitting the caret.
+
+Default source callbacks are retained when the source binds; explicit overrides last until the source policy changes. Unchanged publication and warmed active scrolling reuse prepared state. Cold native queries, topology/layout changes and callback work may allocate. [The public scene](../../tests/Electron2D.Tests/AccessibilityScrollTests.cs) and [independent client](../../tests/AccessibilityClient/scroll.py) exercise this contract on both current software-native canvas backends; native heap, physical devices, foreign adapters, human reader and release-package acceptance are separate gates.
+
+<a id="updatesetscrollx"></a>
+### UpdateSetScrollX
+
+`public static void UpdateSetScrollX(RID id, float position)`
+
+Publishes a finite horizontal local offset. Equal prepared updates are silent. It does not clamp to the declared range. The producer must publish the coordinates it actually uses; this method does not mutate its GUI or invoke a registered action.
+
+<a id="updatesetscrollxrange"></a>
+### UpdateSetScrollXRange
+
+`public static void UpdateSetScrollXRange(RID id, float min, float max)`
+
+Publishes inclusive finite horizontal bounds with `min <= max`. It leaves the current offset untouched. With SetScrollOffset, known bounds participate in native endpoint actions and ancestor placement clamping.
+
+<a id="updatesetscrolly"></a>
+### UpdateSetScrollY
+
+`public static void UpdateSetScrollY(RID id, float position)`
+
+Publishes the actual finite vertical local offset with the same publication-only and equal-update behavior as UpdateSetScrollX.
+
+<a id="updatesetscrollyrange"></a>
+### UpdateSetScrollYRange
+
+`public static void UpdateSetScrollYRange(RID id, float min, float max)`
+
+Publishes inclusive finite vertical bounds with `min <= max`, independently of the horizontal axis and current value. Equal prepared ranges are silent.
+
+<a id="scroll-callbacks"></a>
+### UpdateAddAction: scroll callbacks
+
+| Signature | Accepted selector and payload |
+| --- | --- |
+| `UpdateAddAction(RID id, AccessibilityAction action, Action<AccessibilityScrollUnit> callback)` | ScrollUp/Down/Left/Right: Item or Page. |
+| `UpdateAddAction(RID id, AccessibilityAction action, Action<AccessibilityScrollHint> callback)` | ScrollIntoView: preferred target edge. Native anywhere placement chooses a supported edge for a custom callback. |
+| `UpdateAddAction(RID id, AccessibilityAction action, Action<Vector2> callback)` | ScrollToPoint: finite window-client point; SetScrollOffset: finite absolute local offset. |
+
+Callbacks are borrowed, replaced by another registration for that selector and released with the element. They execute on the display owner. Native failures reply with Failed and aggregate on that owner; callbacks may retire their producer and owned subtree. No exception crosses the unmanaged ABI. Null callbacks throw ArgumentNullException and mismatched selectors throw ArgumentOutOfRangeException. Like the four setters, these methods require a supported display, owner-thread access and a live same-service RID; unavailable support throws NotSupportedException, ownership violations InvalidOperationException and unknown/foreign/retired identities KeyNotFoundException. Nonfinite offsets and nonfinite/reversed ranges throw ArgumentOutOfRangeException before publication.

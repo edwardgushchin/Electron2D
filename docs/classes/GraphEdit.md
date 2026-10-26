@@ -986,3 +986,5 @@ Gets or sets the graph ZoomStep policy.
 Initially 1.2f.
 
 Connection-curve override detection uses a bound typed virtual delegate. Inherited overrides participate; hidden non-virtual methods preserve the ordinary curve. Public curve results remain copied.
+
+Native scrolling exposes current local pan offsets and grid/page actions through the ordinary user-scroll event path. Free panning has no fabricated finite endpoints. Ancestor point placement moves the view while preserving graph selection. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.

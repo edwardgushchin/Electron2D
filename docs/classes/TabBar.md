@@ -780,3 +780,5 @@ Native accessibility roles/actions and editor tab authoring still require those 
 [TabContainer](TabContainer.md) now owns a stable borrowed internal strip for actual Control pages. Page count and order belong to its scene children. Internal record sharing retains exact metadata and configuration during page transfer; the public TabBar API is unchanged.
 
 Tab titles use [Control.TranslationContext](Control.md#automatic-translation-context) when automatic translation supplies no explicit context. Set it before assigning text; changing the context alone preserves prepared text until a translation-change notification or another layout invalidation.
+
+Native scrolling uses cached visible-tab pixel prefixes, quantized offsets and RTL bounds. Item/page/endpoint requests preserve CurrentTab and hidden-tab rules. Owned TabContainer strips use the same producer. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.

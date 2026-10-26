@@ -333,7 +333,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             {
                 "GetName" or "GetLocalizedName" or "GetDescription" => Tuple([S(ActionName(action))]),
                 "GetKeyBinding" => Tuple([S("")]),
-                "DoAction" => Tuple([B(action.Jump == 0 ? Invoke(e, action.Action) : InvokeValue(e, e.NumericValue + action.Jump * e.NumericJump))]),
+                "DoAction" => Tuple([B(InvokeRequest(e, action))]),
                 _ => throw new InvalidOperationException("Unknown action method.")
             };
         }
@@ -342,18 +342,56 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         throw new InvalidOperationException("Unknown accessibility interface.");
     }
     private static bool HasPageActions(Element e) => e.HasNumericValue && e.NumericJump > 0 && e.SetValueAction is not null && !e.Flag(AFlag.ReadOnly);
-    private static int ActionCount(Element e) => e.Actions.Count + (HasPageActions(e) ? 2 : 0);
+    private static bool HasOffsetActions(Element e) => e.SetScrollOffsetAction is not null && (e.ScrollMask & 12) != 0;
+    private static int ActionCount(Element e) => e.Actions.Count + (HasPageActions(e) ? 2 : 0) + 2 * (e.ScrollUnitActions?.Count ?? 0) + (HasOffsetActions(e) ? 2 : 0);
     private static (AAction Action, int Jump) ActionAt(Element e, int index)
     {
         if (index < 0) throw new InvalidRequestException("The action index is outside the supported action list.");
-        for (var action = AAction.Click; action <= AAction.Increment; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return (action, 0);
-        if (HasPageActions(e) && index is 0 or 1) return (AAction.SetValue, index == 0 ? -1 : 1);
+        for (var action = AAction.Click; action <= AAction.SetValue; action++) if (e.Actions.ContainsKey(action) && index-- == 0) return (action, 0);
+        if (HasPageActions(e)) { if (index is 0 or 1) return (AAction.SetValue, index == 0 ? -1 : 1); index -= 2; }
+        for (var action = AAction.ScrollDown; action <= AAction.ScrollUp; action++)
+            if (e.ScrollUnitActions?.ContainsKey(action) == true) { if (index is 0 or 1) return (action, index); index -= 2; }
+        if (HasOffsetActions(e) && index is 0 or 1) return (AAction.SetScrollOffset, index == 0 ? -1 : 1);
         throw new InvalidRequestException("The action index is outside the supported action list.");
     }
-    private static string ActionName((AAction Action, int Jump) request) => request.Jump != 0 ? (request.Jump < 0 ? "page-decrement" : "page-increment") : request.Action switch { AAction.Click => "click", AAction.Focus => "focus", AAction.Blur => "blur", AAction.Decrement => "decrement", AAction.Increment => "increment", _ => throw new ArgumentOutOfRangeException(nameof(request)) };
+    private static string ActionName((AAction Action, int Jump) request) => request.Action switch
+    {
+        AAction.SetValue => request.Jump < 0 ? "page-decrement" : "page-increment",
+        AAction.SetScrollOffset => request.Jump < 0 ? "scroll-to-start" : "scroll-to-end",
+        AAction.ScrollUp => request.Jump == 0 ? "scroll-up" : "scroll-page-up",
+        AAction.ScrollDown => request.Jump == 0 ? "scroll-down" : "scroll-page-down",
+        AAction.ScrollLeft => request.Jump == 0 ? "scroll-left" : "scroll-page-left",
+        AAction.ScrollRight => request.Jump == 0 ? "scroll-right" : "scroll-page-right",
+        AAction.ScrollBackward => "scroll-backward",
+        AAction.ScrollForward => "scroll-forward",
+        AAction.Click => "click",
+        AAction.Focus => "focus",
+        AAction.Blur => "blur",
+        AAction.Decrement => "decrement",
+        AAction.Increment => "increment",
+        _ => throw new ArgumentOutOfRangeException(nameof(request)),
+    };
+    private static bool InvokeRequest(Element e, (AAction Action, int Jump) request)
+    {
+        if (request.Action == AAction.SetValue) return InvokeValue(e, e.NumericValue + request.Jump * e.NumericJump);
+        if (request.Action == AAction.SetScrollOffset)
+        {
+            var target = e.ScrollOffset;
+            if ((e.ScrollMask & 4) != 0) target.X = request.Jump < 0 ? e.ScrollMinimum.X : e.ScrollMaximum.X;
+            if ((e.ScrollMask & 8) != 0) target.Y = request.Jump < 0 ? e.ScrollMinimum.Y : e.ScrollMaximum.Y;
+            return InvokeScrollPoint(e, target, false);
+        }
+        if (e.ScrollUnitActions?.TryGetValue(request.Action, out var callback) == true)
+        {
+            if (!CanInvoke(e)) return false;
+            try { callback((AccessibilityServer.AccessibilityScrollUnit)request.Jump); } catch (Exception error) { throw new CallbackException(error); }
+            return true;
+        }
+        return Invoke(e, request.Action);
+    }
     private static bool CanInvoke(Element e)
     {
-        if (e.Retired || !Showing(e) || e.Flag(AFlag.Disabled)) return false;
+        if (e.Retired || !Visible(e) || e.Flag(AFlag.Disabled)) return false;
         if (e.Source is { } source && (source.IsDisposed || !source.IsInsideTree || source.IsDepartingTree || source.IsQueuedForDeletion || source is BaseButton { Disabled: true } || source is CanvasItem { IsVisibleInTree: false } || source is Window { Visible: false })) return false;
         for (var p = e; p is not null; p = p.Parent) if (p.Flag(AFlag.Hidden) || p.Source is Window { Visible: false }) return false;
         return true;
@@ -416,7 +454,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         }
         if (_nodeInfo != 0) { g_dbus_node_info_unref(_nodeInfo); _nodeInfo = 0; }
         if (_context != 0) { g_main_context_unref(_context); _context = 0; }
-        NativeMemory.Free(_vtable); _vtable = null;
+        NativeMemory.Free(_vtable); _vtable = null; _visibilityNodes.Clear();
         if (retirementError is not null) throw retirementError;
     }
 }

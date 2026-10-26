@@ -761,6 +761,144 @@
       "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ReplaceSelectedText()",
       "state": "Implemented",
       "reason": "ADR 0114: executable native Text/EditableText, Unicode scalar selection and typed replacement callbacks; copied shaped geometry/font metadata, inherited attributes and same-line links feed real native consumers. Automatic LineEdit/TextEdit/CodeEdit preserve editing/history/read-only/length/password policy. Independent wire/libatspi clients, lifetime/failure, source scrolling and prepared-frame checks define the verified profile; native heap, physical devices, foreign adapters and human-reader acceptance remain separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityScrollHint",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityScrollHint",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum:AccessibilityScrollUnit",
+      "electron2d": "T:Electron2D.AccessibilityServer.AccessibilityScrollUnit",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_BACKWARD",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollBackward()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_DOWN",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollDown()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_FORWARD",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollForward()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_INTO_VIEW",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollIntoView()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_LEFT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollLeft()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_RIGHT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollRight()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_TO_POINT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollToPoint()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_UP",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.ScrollUp()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_SCROLL_OFFSET",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityAction.SetScrollOffset()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_EDGE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.BottomEdge()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_RIGHT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.BottomRight()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_LEFT_EDGE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.LeftEdge()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_RIGHT_EDGE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.RightEdge()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_EDGE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.TopEdge()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_LEFT",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollHint.TopLeft()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_ITEM",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollUnit.Item()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_PAGE",
+      "electron2d": "enumValue:Electron2D.AccessibilityServer.AccessibilityScrollUnit.Page()",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_scroll_x(RID:,float:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetScrollX(Electron2D.RID,System.Single)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_scroll_x_range(RID:,float:,float:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetScrollXRange(Electron2D.RID,System.Single,System.Single)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_scroll_y(RID:,float:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetScrollY(Electron2D.RID,System.Single)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
+    },
+    {
+      "godot": "AccessibilityServer::method:update_set_scroll_y_range(RID:,float:,float:)",
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateSetScrollYRange(Electron2D.RID,System.Single,System.Single)",
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate."
     }
   ],
   "extras": [
@@ -799,12 +937,24 @@
     {
       "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<System.String>)",
       "reason": "ADR 0114: compiled text payload overload; four RID/scalar arguments request directed selection and string requests selected-text replacement. The original Callable row remains Partial for remaining action signatures."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.AccessibilityServer.AccessibilityScrollUnit>)",
+      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for custom and remaining value payload signatures."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.AccessibilityServer.AccessibilityScrollHint>)",
+      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for custom and remaining value payload signatures."
+    },
+    {
+      "electron2d": "method:Electron2D.AccessibilityServer.UpdateAddAction(Electron2D.RID,Electron2D.AccessibilityServer.AccessibilityAction,System.Action<Electron2D.Vector2>)",
+      "reason": "ADR 0114: compiled scroll payload overload with a real native unit/hint/point/offset consumer. The original Callable row stays Partial for custom and remaining value payload signatures."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Complete color/table/announcement and remaining payload-action families retain exact row triggers.",
+      "reason": "ADR 0114/0095: real Linux AT-SPI service, typed RID ownership/tree and native role/state/geometry/focus/action/cache protocols execute on the display owner. Independent gdbus clients exercise discovery, live state/events, reentrant retirement and invalid requests; managed/fresh-file/native software GPU/Compatibility checks cover metadata, lifetime and warmed zero owner allocations. Human reader, native heap, physical devices and foreign adapters are separate gates. Numeric values and semantic relationships execute. Text/EditableText execute for typed producers and LineEdit/TextEdit/CodeEdit. Native scrolling executes across eight source families. Complete color/table/announcement and remaining payload-action/content-producer families retain their row triggers.",
       "godot": [
         "class:AccessibilityServer"
       ]
@@ -835,37 +985,14 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "ADR 0114: core tree/native bridge prerequisite is implemented. Next executable slice: native Table/TableCell/Selection or scroll interface, source collection/index/selection/scroll state and typed payload dispatch. Do not add inert metadata or unsupported action selectors.",
+      "reason": "ADR 0114: native scrolling and typed scroll payloads execute. Remaining collection metadata enters the native Selection/Table/TableCell slice with owned row/cell identities, index/selection/expanded state and actual ItemList/Tree/TabBar consumers; assigning a role is insufficient.",
       "godot": [
-        "AccessibilityServer::enum:AccessibilityScrollHint",
-        "AccessibilityServer::enum:AccessibilityScrollUnit",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_BACKWARD",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_DOWN",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_FORWARD",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_INTO_VIEW",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_LEFT",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_RIGHT",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_TO_POINT",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_UP",
-        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_SCROLL_OFFSET",
-        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_EDGE",
-        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_RIGHT",
-        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_LEFT_EDGE",
-        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_RIGHT_EDGE",
-        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_EDGE",
-        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_LEFT",
-        "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_ITEM",
-        "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_PAGE",
         "AccessibilityServer::method:update_set_list_item_count(RID:,int:)",
         "AccessibilityServer::method:update_set_list_item_expanded(RID:,bool:)",
         "AccessibilityServer::method:update_set_list_item_index(RID:,int:)",
         "AccessibilityServer::method:update_set_list_item_level(RID:,int:)",
         "AccessibilityServer::method:update_set_list_item_selected(RID:,bool:)",
         "AccessibilityServer::method:update_set_list_orientation(RID:,bool:)",
-        "AccessibilityServer::method:update_set_scroll_x(RID:,float:)",
-        "AccessibilityServer::method:update_set_scroll_x_range(RID:,float:,float:)",
-        "AccessibilityServer::method:update_set_scroll_y(RID:,float:)",
-        "AccessibilityServer::method:update_set_scroll_y_range(RID:,float:,float:)",
         "AccessibilityServer::method:update_set_table_cell_position(RID:,int:,int:)",
         "AccessibilityServer::method:update_set_table_cell_span(RID:,int:,int:)",
         "AccessibilityServer::method:update_set_table_column_count(RID:,int:)",
@@ -1076,14 +1203,14 @@
     },
     {
       "state": "Partial",
-      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Remaining custom/color/scroll/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
+      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Typed scroll payloads and native placement execute. Remaining custom/color/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
       "godot": [
         "AccessibilityServer::enum:AccessibilityAction"
       ]
     },
     {
       "state": "Partial",
-      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Remaining custom/color/scroll/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
+      "reason": "ADR 0114: native no-argument activation/focus/numeric, double SetValue, RID/scalar selection and string replacement requests execute. Typed scroll payloads and native placement execute. Remaining custom/color/popup payload and source integrations retain their exact slices; unsupported signatures reject.",
       "godot": [
         "AccessibilityServer::method:update_add_action(RID:,int:AccessibilityServer.AccessibilityAction,Callable:)"
       ]
@@ -1159,6 +1286,35 @@
         "AccessibilityServer::method:update_set_text_orientation(RID:,bool:)",
         "AccessibilityServer::method:update_set_text_selection(RID:,RID:,int:,RID:,int:)",
         "AccessibilityServer::method:update_set_value(RID:,String:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0114: native Component placement, item/page/sequential and finite-endpoint actions, typed unit/hint/point/offset callbacks and observable offset/range attributes/events execute. Eight source families preserve ordinary scrolling, focus and selection, normalize line/RTL/tab units and retain unbounded graph panning. Independent wire/libatspi clients and prepared software-native frames cover both canvas backends; hardware, native heap, human and foreign-platform acceptance are separate.",
+      "godot": [
+        "AccessibilityServer::enum:AccessibilityScrollHint",
+        "AccessibilityServer::enum:AccessibilityScrollUnit",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_BACKWARD",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_DOWN",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_FORWARD",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_INTO_VIEW",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_LEFT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_RIGHT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_TO_POINT",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SCROLL_UP",
+        "AccessibilityServer::enum_value:AccessibilityAction.ACTION_SET_SCROLL_OFFSET",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_BOTTOM_RIGHT",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_LEFT_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_RIGHT_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_EDGE",
+        "AccessibilityServer::enum_value:AccessibilityScrollHint.SCROLL_HINT_TOP_LEFT",
+        "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_ITEM",
+        "AccessibilityServer::enum_value:AccessibilityScrollUnit.SCROLL_UNIT_PAGE",
+        "AccessibilityServer::method:update_set_scroll_x(RID:,float:)",
+        "AccessibilityServer::method:update_set_scroll_x_range(RID:,float:,float:)",
+        "AccessibilityServer::method:update_set_scroll_y(RID:,float:)",
+        "AccessibilityServer::method:update_set_scroll_y_range(RID:,float:,float:)"
       ]
     }
   ]

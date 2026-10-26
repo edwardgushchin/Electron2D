@@ -9,7 +9,7 @@ internal sealed unsafe partial class ATSPIServer
     private static nint AccessibleAttributes(Element e)
     {
         var builder = Builder("a{ss}");
-        try { g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("toolkit"), S("Electron2D"))); if (e.TextValue is { } text) g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("valuetext"), S(text))); return g_variant_builder_end(builder); }
+        try { g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("toolkit"), S("Electron2D"))); if (e.TextValue is { } text) g_variant_builder_add_value(builder, g_variant_new_dict_entry(S("valuetext"), S(text))); AddScrollAttributes(builder, e); return g_variant_builder_end(builder); }
         finally { g_variant_builder_unref(builder); }
     }
     internal void InterfacesChanged(Element e) { if (e.Parent is not null || e.IsApplication) Emit(CachePath, Cache, "AddAccessible", Tuple([CacheItem(e)])); }
@@ -146,7 +146,7 @@ internal sealed unsafe partial class ATSPIServer
     }
     private static bool TextRequestAllowed(Element e, bool edit)
     {
-        if (!Showing(e)) return false;
+        if (!Visible(e)) return false;
         for (var p = e; p is not null; p = p.Parent) if (p.Flag(Flag.Disabled) || edit && p.Flag(Flag.ReadOnly)) return false;
         return !edit || e.Source switch { LineEdit line => line.Editable, TextEdit text => text.Editable, _ => true };
     }

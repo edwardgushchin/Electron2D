@@ -1,5 +1,7 @@
 <p align="right"><a href="README.md">English</a> · Русский · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
+Нативная прокрутка связывает существующие GUI-контролы с запросами шага, страницы и вывода элемента в viewport, сохраняя фокус и выделение. См. [контракт прокрутки](docs/classes/AccessibilityServer.md#native-scrolling).
+
 Нативная доступность в Linux передаёт имена, роли, состояния, действия кнопок и фокуса, а также числовые значения Range через AT-SPI. Редактируемые Slider, ScrollBar и SpinBox принимают нативные числовые запросы; индикаторы прогресса доступны для чтения. Задайте `ProjectSettings.AccessibilitySupport` перед открытием окна; протоколы таблиц, а также адаптеры других платформ ещё разрабатываются. AT-SPI также передаёт сохраняемые связи подписей, описаний и управляемых контролов, радиогруппы, ошибки проверки, активных потомков и внутренние ссылки. Связи обновляются при изменении путей и времени жизни целей.
 
 Нативные Text/EditableText читают и редактируют LineEdit/TextEdit/CodeEdit: Unicode-выделения, геометрия shaping и маскирование паролей. Контракт и границы проверок описаны в [AccessibilityServer](docs/classes/AccessibilityServer.md#native-text).

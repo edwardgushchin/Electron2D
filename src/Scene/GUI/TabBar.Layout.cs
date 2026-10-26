@@ -99,6 +99,7 @@ public partial class TabBar
     private float WidthFrom(int index) { var width = 0f; var count = 0; for (var i = index; i < _tabs.Count; i++) if (!_tabs[i].Hidden) { if (count++ > 0) width += _tabSeparation; width += _tabs[i].Width; } return width; }
     private void PlaceTabs()
     {
+        _accessibilityScrollVersion++;
         foreach (var tab in _tabs) { tab.Offset = 0; tab.Rect = tab.ButtonRect = tab.CloseRect = default; }
         var arrows = _decrement.GetWidth() + _increment.GetWidth(); var limit = Size.X;
         var rest = WidthFrom(_offset); _buttonsVisible = _clipTabs && (_offset > 0 || rest > limit); var available = _buttonsVisible ? Math.Max(0, limit - arrows) : limit;

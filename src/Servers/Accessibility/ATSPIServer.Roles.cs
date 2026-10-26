@@ -119,10 +119,10 @@ internal sealed unsafe partial class ATSPIServer
         Set(6, e.Retired);
         Set(8, !e.Flag(Flag.Disabled));
         Set(24, !e.Flag(Flag.Disabled));
-        Set(30, showing);
+        Set(30, Visible(e));
         Set(25, showing);
         Set(11, e.Actions.ContainsKey(AccessibilityServer.AccessibilityAction.Focus) && !e.Flag(Flag.Disabled));
-        Set(12, e.Focused && showing && WindowRoot(e) is { WindowFocused: true });
+        Set(12, e.Focused && Visible(e) && WindowRoot(e) is { WindowFocused: true });
         Set(4, e.Checked);
         Set(41, e.Role is Role.CheckBox or Role.CheckButton or Role.RadioButton or Role.MenuItemCheckBox or Role.MenuItemRadio);
         Set(3, e.Flag(Flag.Busy));
@@ -140,11 +140,22 @@ internal sealed unsafe partial class ATSPIServer
         Set(39, e.Role == Role.DefaultButton);
         return Array("u", [g_variant_new_uint32((uint)bits), g_variant_new_uint32((uint)(bits >> 32))]);
     }
+    private readonly List<AccessibilityServer.Element> _visibilityNodes = [];
     private void VisibilityChanged(AccessibilityServer.Element e)
     {
-        var showing = Showing(e); StateChanged(e, "visible", showing); StateChanged(e, "showing", showing);
-        foreach (var child in e.Children) VisibilityChanged(child);
+        var start = _visibilityNodes.Count;
+        try
+        {
+            _visibilityNodes.Add(e);
+            for (var index = start; index < _visibilityNodes.Count; index++)
+            {
+                var node = _visibilityNodes[index]; StateChanged(node, "visible", Visible(node)); StateChanged(node, "showing", Showing(node));
+                foreach (var child in node.Children) _visibilityNodes.Add(child);
+            }
+        }
+        finally { _visibilityNodes.RemoveRange(start, _visibilityNodes.Count - start); }
     }
+
     internal void StateChanged(AccessibilityServer.Element e, Flag flag, bool value)
     {
         if (flag == Flag.Hidden) { VisibilityChanged(e); return; }

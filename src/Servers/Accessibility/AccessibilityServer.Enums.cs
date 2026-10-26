@@ -147,5 +147,49 @@ public sealed partial class AccessibilityServer
         SetTextSelection = 9,
         /// <summary>Replaces the current selection through a string callback.</summary>
         ReplaceSelectedText = 10,
+        /// <summary>Scrolls backward through a no-argument callback.</summary>
+        ScrollBackward = 11,
+        /// <summary>Scrolls down by an item or page.</summary>
+        ScrollDown = 12,
+        /// <summary>Scrolls forward through a no-argument callback.</summary>
+        ScrollForward = 13,
+        /// <summary>Scrolls left by an item or page.</summary>
+        ScrollLeft = 14,
+        /// <summary>Scrolls right by an item or page.</summary>
+        ScrollRight = 15,
+        /// <summary>Scrolls up by an item or page.</summary>
+        ScrollUp = 16,
+        /// <summary>Reveals the element using a preferred viewport edge.</summary>
+        ScrollIntoView = 17,
+        /// <summary>Moves the element's top-left to a point relative to its native window by scrolling ancestors.</summary>
+        ScrollToPoint = 18,
+        /// <summary>Requests an absolute offset in the scrollable element's local coordinate space.</summary>
+        SetScrollOffset = 19,
+
+    }
+
+    /// <summary>Selects a semantic item step or one viewport page.</summary>
+    public enum AccessibilityScrollUnit
+    {
+        /// <summary>Scrolls one item, text line or source-defined small step.</summary>
+        Item = 0,
+        /// <summary>Scrolls one viewport page.</summary>
+        Page = 1,
+    }
+    /// <summary>Suggests the target element's placement within its scrollable viewport.</summary>
+    public enum AccessibilityScrollHint
+    {
+        /// <summary>Aligns the top and left edges.</summary>
+        TopLeft = 0,
+        /// <summary>Aligns the bottom and right edges.</summary>
+        BottomRight = 1,
+        /// <summary>Aligns the top edge.</summary>
+        TopEdge = 2,
+        /// <summary>Aligns the bottom edge.</summary>
+        BottomEdge = 3,
+        /// <summary>Aligns the left edge.</summary>
+        LeftEdge = 4,
+        /// <summary>Aligns the right edge.</summary>
+        RightEdge = 5,
     }
 }

@@ -1335,3 +1335,5 @@ Completion-filter override detection uses a bound typed virtual delegate. Inheri
 Built-in gutter text/icons, CodeEdit line numbers and marker/folding icons now clip partial rows to the text content viewport. Fully invisible gutter rows skip recording. Typed custom callbacks retain their explicit drawing responsibility. [Native workspace regression](../../tests/ProjectWorkspace/Program.cs) checks that line numbers do not escape below a resized source control on both native backends. This does not change public declarations or broader semantic-service/IME/platform acceptance.
 
 Native Text/EditableText output uses this control's existing document, caret/selection and ordinary editing path. Unicode offsets, password/length/read-only policies, scrolling and verification limits follow the [native text service contract](AccessibilityServer.md#native-text). Semantic line identities are runtime-owned and are not stored in scenes.
+
+Native scrolling inherits TextEdit visual-row/pixel projection and preserves carets, selections and editing history. See [native scrolling](AccessibilityServer.md#native-scrolling) for payload, units, ownership and verification limits.
