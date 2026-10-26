@@ -1,3 +1,17 @@
+[Current-main mass and window verification](gpu-demand-publication.md#current-main-mass-and-window-verification-2026-10-26)
+at `cc29a550c` passes public CPU/GPU populations through 65536 circles, a reverse
+large-pair repetition, four actual Wayland windows and the formerly failed
+resident-solver selector. The large reverse-pair step medians are
+312.8152/57.4284 ms CPU/GPU; actual large-window FPS is 2.7335/9.5014.
+The [populated monitor refresh](physics-scene-performance.md#current-main-populated-monitor-refresh-2026-10-26)
+retains all 16384 scene bodies, eight-contact caps and interpolation at
+109.8554/87.3295 ms p50, with a worse GPU p99. All public measured physics and
+window brackets retain strict 0/0 managed bytes. Shared-workstation load and
+unqualified network/native-allocation/foreign/full-contract gates remain explicit.
+No runtime API or declaration state changes in this refresh: **1338/1369
+(97.74%)**, **31 open** (17 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded.
+Earlier checkpoint counts below describe their recorded source cohorts.
+
 [The complete common-body contract](physics-body-contract.md) qualifies the existing PhysicsBody declaration family through public CPU/GPU/registered execution. The class row becomes Implemented; its seven member states remain unchanged. Physics API: **1337/1369 (97.66%)**, **32 open** (18 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded. General inherited capabilities and complete numerical/network/native/platform/performance acceptance remain open. Earlier counts below describe their checkpoints.
 
 [Committed processing-group role metadata](scene-tree.md#committed-group-role-metadata) completes the inherited Node `ProcessThreadGroup` property: attached changes publish the property-list event after rebinding, with silent detached/equal writes and coherent error/reentry behavior. Twelve public CLR/strict NativeAOT CPU/no-device, NVIDIA GPU and registered ordinary/separate consumers exercise all roles across eight Node branches, worker-message ownership and actual physical/query identity. The unchanged prepared processing test retains 0/0 owner/all-thread managed bytes. This promotes one property row: **1307/1369 Implemented (95.47%)**, with **62 open** (48 Partial, 11 Blocked, 3 Unimplemented) and 92 Excluded. Other worker operations, the shared base-class audit and complete numerical/network/native/platform/performance acceptance remain open. Evidence: `bin/physics-group-roles/2026-10-25/`. Earlier figures below describe their recorded checkpoints.
@@ -94,7 +108,7 @@ The axis-velocity checkpoint recorded 1266/1369 Implemented (92.4763%), with
 
 [Collider creation operation audit](physics-registered-adapter.md#collider-creation-operation-audit) completes detached Body/Area identity, deferred selected factories, permanent attachment claims and actual scene activation/error/retry behavior.
 
-Last updated: 2026-10-22
+Last updated: 2026-10-26
 
 [Failed initial attachment state](physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now retains public pose, motion and sleep instead of sampling incomplete selected state during cleanup. Ordinary retirement still preserves actual accepted impulses.
 

@@ -2,7 +2,7 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 The authorized [2026-10-20 RTX baseline](physics-rtx-current.md) adds physical
 GPU monitored-scene measurements and calibrated native request counts. Its 16,384-body scene medians were close with worse GPU tails. The later
@@ -15,6 +15,57 @@ The [scoped allocator profile](#scoped-native-allocation-profiling-2026-10-14)
 adds all-thread libc request accounting to the complete monitored scene, with
 separate ordinary timing and software-driver limits. Older trials below keep
 their own revisions and workloads.
+
+## Current-main populated monitor refresh (2026-10-26)
+
+The retained payload source-qualified against
+`cc29a550ca4d1f979b4403dd744a80bef9d995c1` also executes the complete existing `PhysicsPipelinePerformance` scene on both backends. This
+is a distinct workload from the [raw mass and real-window profiles](gpu-demand-publication.md#current-main-mass-and-window-verification-2026-10-26),
+with **16384 RigidBody nodes**, four walls, enabled contact monitoring, the
+unchanged eight-contact cap, interpolation, disabled sleeping and the owner
+numerical lane. Both run 1600 warm and 128 measured complete SceneTree frames at
+144 Hz, four substeps and sixteen iterations. The same materials, geometry,
+initial states and public state/contact invariants remain active.
+
+| Physics | Complete step mean / p50 / p95 / p99 / max, ms | Final reported contacts | Managed owner / all threads |
+| --- | --- | ---: | --- |
+| CPU | 110.2433 / 109.8554 / 119.5170 / 122.7891 / 128.7017 | 86303 | 0 / 0 |
+| GPU | 89.7780 / 87.3295 / 116.7830 / 127.5806 / 133.6437 | 90401 | 0 / 0 |
+
+GPU p50 is 1.26 times faster in this pair; its p99 and maximum remain
+worse. This is a shared-workstation observation with host/GPU activity receipts,
+not isolated repeated statistical or all-workload performance acceptance. No
+runtime/test change is attributed to these later numbers. Different final
+contact counts and state fingerprints are not cross-backend equality gates.
+
+Both complete physical and outer loop brackets allocate exactly zero owner and
+all-thread managed bytes. Every requested body remains awake and finite, every
+step advances one tick, public scene/direct-state values agree, contact count
+agrees with the unchanged cap and all collider references/contact values remain
+valid. Escape, penetration, speed and energy gates pass. BodyEntered/BodyExited
+totals over warmup plus measurement are 156928/70625 CPU and
+169180/78779 GPU; final sampled contact counts are 86303 and 90401.
+
+The GPU observer workload uploads 459088.00 buffer bytes, downloads
+8444547.00 and pushes 56577.75 uniform bytes per tick, with
+13.015625 store submissions. Recorded wait p50/p95/p99 is
+17.2473/39.9679/49.9866 ms. The three completion subphases
+(pose/motion/fields, contact capture/monitoring, extension/events) average
+8.5795/18.4220/3.3120 ms CPU and
+16.9174/10.2288/3.3825 ms GPU. Populated observers require much more
+publication than the raw unobserved mass case; that cost must remain visible.
+Reducing it must preserve current-frame contact fields, identities, callbacks
+and the eight-contact contract.
+
+Reports, lifecycle records, source/payload hashes and process/kernel/NVML
+receipts are retained under `bin/physics-mass-current/2026-10-26/scene-*-16384/`.
+The exact selector is `ELECTRON2D_TEST_PHYSICS_PERFORMANCE=1`, with
+`ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND=cpu|gpu`, `..._COUNT=16384`,
+`..._WARMUP=1600`, `..._SAMPLES=128`, `..._THREADED=0` and a fresh `..._OUTPUT`
+directory. This headless scene pair does not qualify a monitored-scene window,
+networking, a registered provider, native allocator totals, foreign platforms or
+strict NativeAOT. Physics declaration coverage remains 1338/1369 (97.74%), with
+31 open and 92 Excluded.
 
 ## Contact publication workers, 2026-10-20
 

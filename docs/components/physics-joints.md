@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-21
+Last updated: 2026-10-26
 
 ## Lifecycle request ownership
 
@@ -402,3 +402,10 @@ the receipt does not establish the cause. The failure remains open, and the
 successful bounded fixtures do not replace that hardware gate. Paired payloads,
 all eight timing receipts, numerical/transfer results, source proofs and the
 failed regression are retained under `bin/physics-joint-degree/2026-10-21/`.
+
+A later [current-main mass verification](gpu-demand-publication.md#current-main-mass-and-window-verification-2026-10-26)
+at `cc29a550c` completes this exact resident-solver selector, including 65536
+circles, and public CPU/GPU mass and real-window profiles. That source/driver
+cohort has no Xid/fallen-off entries in its recorded intervals. It supersedes the
+pending rerun for that bounded workload; it does not relabel the earlier failure
+or establish its cause, arbitrary coupled acceptance or general hardware health.

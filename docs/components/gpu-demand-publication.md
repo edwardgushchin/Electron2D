@@ -1,6 +1,6 @@
 # GPU publication for current consumers
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 [The 2026-10-11 paired trial](physics-current-performance.md) verifies complete
 headless and real-window paths on one main revision with freshly built assemblies.
@@ -8,6 +8,99 @@ It records source and
 assembly digests, full latency distributions, phase means, transfers/waits,
 allocation and physical gates. Measurements later in this page are the historical
 2026-10-10 trials and retain their small-world GPU disadvantage.
+
+## Current-main mass and window verification (2026-10-26)
+
+All trials use the same retained Linux x64 Release runtime and root-test payload
+whose authored source matches `cc29a550ca4d1f979b4403dd744a80bef9d995c1`.
+This reuses the preceding permission-result cohort, including its pre-commit
+build/source proof. Authored inputs and every payload file are hash checked; no
+runtime or test edits accompany this refresh and binaries do not change between
+measurements.
+The host is .NET 10.0.1, RTX 3090 Ti, NVIDIA 615.71.09 and Vulkan. CPU headless
+processes disable GPU discovery and map no NVIDIA library. GPU and native-window
+processes map NVIDIA and no software Vulkan driver.
+
+The existing `PhysicsMassPerformance` public RID workload retains all requested
+circles plus three static walls, gravity 980, radius 4, friction .3, disabled
+sleeping, four substeps and sixteen iterations at 1/60 s. Every process warms
+240 ticks and measures 128. After timing, the complete population must remain
+awake, finite, contained, below the velocity/energy bounds and within twice the
+configured .3 contact tolerance plus .001. It checks physical bounds rather than
+requiring equal CPU/GPU states, pair order or fingerprints.
+
+| Circles | CPU whole-step p50 / p95 / p99, ms | GPU whole-step p50 / p95 / p99, ms | CPU/GPU p50 |
+| ---: | --- | --- | ---: |
+| 4096 | 15.8550 / 18.4792 / 19.6764 | 8.5217 / 9.7524 / 10.2711 | 1.86x |
+| 16384 | 62.3422 / 67.5268 / 69.3536 | 16.0105 / 18.1019 / 18.8579 | 3.89x |
+| 65536, first | 314.9791 / 339.9547 / 359.9492 | 55.9256 / 58.9491 / 60.2248 | 5.63x |
+| 65536, reverse repeat | 312.8152 / 359.4984 / 379.5140 | 57.4284 / 60.1828 / 62.6461 | 5.45x |
+
+These are complete `PhysicsServer.SpaceStep` intervals. The raw headless path has
+no scene-state or render-pose consumer. Every measured public physics interval
+allocates exactly **0 owner / 0 all-thread managed bytes**. GPU buffer transfers,
+uniform traffic and mean completion wait per measured tick are:
+
+| Circles | Buffer upload / readback B | Uniform B | Submissions | Mean wait, ms |
+| ---: | --- | ---: | ---: | ---: |
+| 4096 | 232.00 / 752.00 | 55784.00 | 13.0000 | 4.2863 |
+| 16384 | 232.00 / 756.50 | 56382.75 | 13.0312 | 7.5459 |
+| 65536 | 232.00 / 956.75 | 65184.75 | 14.4219 | 20.5484 |
+
+The real Wayland window uses the same physics population and a GPU renderer for
+both selected numerical backends. It reads all body poses through the public
+batch API and renders every circle through the same MultiMesh. Captured
+1152x800 images pass pixel checks and were inspected. Actual VSync is Enabled
+after the Disabled request; these are observed presentation rates under that
+policy. Each measured interval advances the same 128 physical ticks; extra idle
+render frames remain part of the full-frame allocation/FPS bracket.
+
+| Circles | Physics | Step p50 / p95, ms | Actual FPS | Frame p50 / p95, ms | Pose publication p50, ms |
+| ---: | --- | --- | ---: | --- | ---: |
+| 4096 | CPU | 14.4273 / 16.7124 | 58.5599 | 16.8941 / 19.2318 | 1.3693 |
+| 4096 | GPU | 8.8844 / 9.7926 | 143.2408 | 6.9035 / 11.8804 | 1.0117 |
+| 65536 | CPU | 328.5580 / 368.3843 | 2.7335 | 364.5993 / 405.7642 | 30.2541 |
+| 65536 | GPU | 70.0891 / 73.2382 | 9.5014 | 104.7096 / 109.7848 | 28.9822 |
+
+At 65536 circles, GPU window FPS is 3.48 times the CPU observation,
+but both are below the configured 60 physical ticks/s. Complete measured physics
+and window intervals retain **0/0 managed bytes**. This does not promise 60 Hz at
+the maximum population.
+
+The GPU window's explicit all-body pose demand costs 1048816.00 buffer
+upload and 1049504.75 readback bytes per physical tick, with
+15.1719 store submissions and 31.0446 ms mean store wait across the full
+frame. This includes the numerical step and selected pose gather. The roughly
+one-MiB pose response is required by this renderer consumer; it is absent from
+the raw headless path. Both backends also fill the same retained 3145728-byte
+visual instance buffer per tick. GPU-store counters exclude renderer-owned
+uploads; the report separately records those caller-authored visual bytes.
+Publication time includes validation, pose conversion and instance-buffer work,
+so it must not be equated with the device wait alone.
+
+The separate unchanged resident-solver regression also completes its 4096 and
+65536-circle profiles, including the latter's 384 warm/256 measured intervals,
+full-pit/energy checks and zero owner-thread bytes. It does not measure the
+all-thread counter for that private residency interval. The former device-loss
+receipt remains historical failure evidence; this later pass does not identify
+its cause or certify general hardware health.
+
+The live workstation runs browsers and intermittent external builds. The first
+large GPU trial overlaps a compiler, and all host CPU/GPU activity is retained.
+The reverse pair confirms a repeated bounded observation, not dedicated-host
+statistical isolation. Other geometries, arbitrary coupled graphs, networking, native allocation totals
+and foreign platforms retain their own acceptance work. The separate
+[populated monitor refresh](physics-scene-performance.md#current-main-populated-monitor-refresh-2026-10-26)
+retains 16384 scene bodies and eight-contact caps; its GPU p99 remains worse. This refresh changes no declaration state: physics API
+coverage remains **1338/1369 (97.74%)**, **31 open**, 92 Excluded.
+
+Reproduce the existing headless workload using
+`ELECTRON2D_TEST_PHYSICS_MASS=headless`, `ELECTRON2D_MASS_BACKEND=cpu|gpu`,
+`ELECTRON2D_MASS_COUNT=4096|16384|65536`, `ELECTRON2D_MASS_WARMUP=240`,
+`ELECTRON2D_MASS_SAMPLES=128` and a fresh `ELECTRON2D_MASS_OUTPUT` directory.
+Use `ELECTRON2D_TEST_PHYSICS_MASS=window` with the real Wayland driver for the
+windowed case. Detailed reports, commands, payload/source hashes, kernel/NVML
+receipts and captures are retained in `bin/physics-mass-current/2026-10-26/`.
 
 ## Scope and runtime flow
 
