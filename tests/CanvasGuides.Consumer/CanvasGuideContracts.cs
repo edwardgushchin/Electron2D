@@ -60,14 +60,34 @@ internal static class CanvasGuideContracts
             root.AddChild(probe); probe.Owner = root;
             using (var captured = new PackedScene()) captured.Pack(root);
             Check(probe.Checked, "Scene capture rejects every new authored setter");
+            EditorRole();
             using var tree = new SceneTree(root);
             Check(Task.Run(() => ReadMarker()).GetAwaiter().GetResult() is InvalidOperationException, "Attached reads require scene owner");
             Check(Task.Run(() => MutateBorder()).GetAwaiter().GetResult() is InvalidOperationException, "Attached writes require scene owner");
             marker.Dispose(); border.Dispose(); notifier.Dispose();
             Reject<ObjectDisposedException>(() => marker.GizmoExtents = 1); Reject<ObjectDisposedException>(() => _ = border.EditorOnly); Reject<ObjectDisposedException>(() => notifier.ShowRect = true);
-            Console.WriteLine("Canvas guides: defaults, signed extents, clamp, nonfinite rejection, metadata, duplication, packing/file reload, owner and disposed checks passed.");
+            Console.WriteLine("Canvas guides: defaults, signed extents, clamp, nonfinite rejection, metadata, duplication, packing/file reload, editor target/path guards and reentry, owner and disposed checks passed.");
             Exception? ReadMarker() { try { _ = marker.GizmoExtents; return null; } catch (Exception error) { return error; } }
             Exception? MutateBorder() { try { border.BorderWidth = 9; return null; } catch (Exception error) { return error; } }
+        }
+        void EditorRole()
+        {
+            var hint = Engine.IsEditorHint; Engine.IsEditorHint = true;
+            try
+            {
+                using var root = new Node();
+                var target = new Node { Name = "Target", ProcessMode = ProcessMode.Always }; root.AddChild(target);
+                var enabler = new VisibleOnScreenEnabler { EnableNodePath = "../Target" }; root.AddChild(enabler);
+                using var tree = new SceneTree(root);
+                Check(target.ProcessMode == ProcessMode.Always, "Authoring tree entry preserves target processing");
+                enabler.EnableNodePath = "../MissingEditorTarget"; enabler.EnableMode = ScreenEnableMode.WhenPaused;
+                Check(target.ProcessMode == ProcessMode.Always && !enabler.IsOnScreen(), "Authoring properties neither resolve paths nor sample screen state");
+                Engine.IsEditorHint = false;
+                Check(target.ProcessMode == ProcessMode.Always, "Role switches do not invent target bindings");
+                root.RemoveChild(enabler); enabler.EnableNodePath = "../Target"; root.AddChild(enabler);
+                Check(target.ProcessMode == ProcessMode.Disabled, "Real runtime reentry binds and disables the target");
+            }
+            finally { Engine.IsEditorHint = hint; }
         }
         void VerifyScene()
         {
@@ -90,6 +110,13 @@ internal static class CanvasGuideContracts
             var border = new ReferenceRect { Position = new(96, 32), Size = new(40, 32), BorderWidth = 4 };
             var notifier = new VisibleOnScreenNotifier { Position = new(176, 48), Rect = new(-12, -10, 24, 20) };
             window.AddChild(marker); window.AddChild(border); window.AddChild(notifier);
+            var editorTarget = new Node { Name = "EditorTarget", ProcessMode = ProcessMode.Always }; window.AddChild(editorTarget);
+            using var authoring = new VisibleOnScreenEnabler { EnableNodePath = "../EditorTarget", Position = new(208, 112) };
+            var editorEntries = 0; var editorExits = 0; var deliveredEntries = 0;
+            var late = new VisibleOnScreenNotifier { Position = new(220, 160), ShowRect = false }; window.AddChild(late);
+            Action entered = () => { deliveredEntries++; Engine.IsEditorHint = true; };
+            notifier.ScreenEntered += entered; late.ScreenEntered += entered;
+            authoring.ScreenEntered += () => editorEntries++; authoring.ScreenExited += () => editorExits++;
             var frame = 0; var complete = false; Exception? failure = null; var draws = 0; var quietDraws = 0; long allocatedBefore = 0;
             marker.Draw += _ => draws++; border.Draw += _ => draws++; notifier.Draw += _ => draws++;
             window.Ready += _ => { RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += Drawn; };
@@ -108,20 +135,33 @@ internal static class CanvasGuideContracts
                         switch (frame)
                         {
                             case 1:
+                                Check(deliveredEntries == 1 && notifier.IsOnScreen() && late.IsOnScreen(),
+                                    "A callback entering authoring suppresses later delivery while preserving precommitted samples");
                                 Pixel(image, 56, 48, Colors.Black); Pixel(image, 96, 48, Colors.Black); Pixel(image, 176, 48, Colors.Black);
                                 Check(notifier.IsOnScreen(), "Runtime detection works without guide pixels");
-                                Engine.IsEditorHint = true; break;
+                                Engine.IsEditorHint = true; window.AddChild(authoring);
+                                Check(editorTarget.ProcessMode == ProcessMode.Always, "Editor entry must not disable an enabler target");
+                                authoring.EnableNodePath = "../MissingEditorTarget"; authoring.EnableMode = ScreenEnableMode.WhenPaused;
+                                Check(editorTarget.ProcessMode == ProcessMode.Always, "Editor path/mode edits leave gameplay targets alone"); break;
                             case 2:
+                                Check(!authoring.IsOnScreen() && editorEntries == 0 && editorExits == 0 && editorTarget.ProcessMode == ProcessMode.Always,
+                                    "Editor submission suppresses notifier sampling callbacks and enabler processing");
                                 Near(image, 56, 48, new(.96f, .2f, .32f)); Near(image, 40, 48, new(.48f, .1f, .16f));
                                 Near(image, 48, 56, new(.53f, .84f, .01f)); Near(image, 48, 40, new(.265f, .42f, .005f));
                                 Pixel(image, 96, 48, Colors.Red); Pixel(image, 116, 48, Colors.Black); Pixel(image, 176, 48, new(.2f, .1f, .2f));
                                 image.SavePNG(IOPath.Combine(output, renderer + "-editor.png"));
                                 notifier.ShowRect = false; border.EditorOnly = false; Engine.IsEditorHint = false; break;
                             case 3:
+                                Check(authoring.IsOnScreen() && editorEntries == 1 && editorTarget.ProcessMode == ProcessMode.Always,
+                                    "Runtime sampling resumes without inventing an editor-skipped target binding");
+                                authoring.EnableNodePath = "../EditorTarget"; Check(editorTarget.ProcessMode == ProcessMode.WhenPaused, "Runtime path edit binds the sampled target");
+                                authoring.EnableMode = ScreenEnableMode.Always; authoring.Position = new(400, 400);
                                 Pixel(image, 56, 48, Colors.Black); Pixel(image, 96, 48, Colors.Red); Pixel(image, 176, 48, Colors.Black);
                                 Check(notifier.IsOnScreen(), "ShowRect has no effect on detection");
                                 Engine.IsEditorHint = true; marker.GizmoExtents = 0; border.BorderWidth = 0; break;
                             case 4:
+                                Check(authoring.IsOnScreen() && editorEntries == 1 && editorExits == 0 && editorTarget.ProcessMode == ProcessMode.Always,
+                                    "Editor role retains the preceding runtime sample without delivering exits or changing its target");
                                 Pixel(image, 56, 48, Colors.Black); Pixel(image, 96, 48, Colors.Black); Pixel(image, 176, 48, Colors.Black);
                                 marker.GizmoExtents = -16; border.BorderWidth = 6; border.BorderColor = Colors.Cyan; border.Size = new(56, 32);
                                 notifier.ShowRect = true; notifier.Rect = new(12, 10, -24, -20); notifier.SelfModulate = new(.5f, 1, 1, .5f); break;
@@ -130,6 +170,8 @@ internal static class CanvasGuideContracts
                                 Pixel(image, 152, 48, Colors.Cyan); Pixel(image, 176, 48, new(.05f, .05f, .1f));
                                 border.EditorOnly = true; marker.Hide(); border.Hide(); notifier.Hide(); Engine.IsEditorHint = false; break;
                             case 6:
+                                Check(!authoring.IsOnScreen() && editorExits == 1 && editorTarget.ProcessMode == ProcessMode.Disabled,
+                                    "A resumed runtime frame commits current visibility and disables the cached target");
                                 Pixel(image, 40, 48, Colors.Black); Pixel(image, 152, 48, Colors.Black); Pixel(image, 176, 48, Colors.Black);
                                 marker.Show(); border.Show(); notifier.Show(); break;
                             case 7:

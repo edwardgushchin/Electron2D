@@ -12,7 +12,7 @@ public enum ScreenEnableMode
 }
 
 /// <summary>Enables a borrowed node while this rectangle participates in render visibility.</summary>
-/// <remarks>Entry and path changes cache the target weakly. Off-screen targets use ProcessMode.Disabled.
+/// <remarks>Runtime entry and path changes cache the target weakly. Editor entry does not bind or disable a target. Off-screen targets use ProcessMode.Disabled.
 /// Clearing/changing the path or exiting does not restore the old target's processing policy.</remarks>
 public class VisibleOnScreenEnabler : VisibleOnScreenNotifier
 {
@@ -50,8 +50,10 @@ public class VisibleOnScreenEnabler : VisibleOnScreenNotifier
 
     /// <summary>Gets or sets the relative path of the weakly cached processing target.</summary>
     /// <value>".." initially; empty disables targeting.</value>
-    /// <remarks>A changed nonempty path resolves once while attached. An unresolved path throws after committing
-    /// the path and clearing the cache. The old target's mode is not restored; equal paths do not rebind.</remarks>
+    /// <remarks>A changed nonempty path resolves once while attached in the runtime role. An unresolved runtime path
+    /// throws after committing the path and clearing the cache. Authoring path edits do not bind a target;
+    /// an existing runtime cache survives nonempty authoring edits. Empty paths clear it in either role.
+    /// The old target's mode is not restored; equal paths do not rebind.</remarks>
     /// <exception cref="ArgumentNullException">The path is null.</exception>
     /// <exception cref="InvalidOperationException">The path cannot resolve or scene/target mutation is unavailable.</exception>
     /// <exception cref="ObjectDisposedException">The enabler is disposed.</exception>
@@ -62,8 +64,9 @@ public class VisibleOnScreenEnabler : VisibleOnScreenNotifier
         {
             EnsureMutable(); ArgumentNullException.ThrowIfNull(value);
             if (_enableNodePath == value) return;
-            _enableNodePath = value; _target = null;
-            if (IsInsideTree) { CacheTarget(); ApplyScreenState(); }
+            _enableNodePath = value;
+            if (value.Length == 0) { _target = null; return; }
+            if (IsInsideTree && !Engine.IsEditorHint) { CacheTarget(); ApplyScreenState(); }
         }
     }
 
@@ -90,7 +93,7 @@ public class VisibleOnScreenEnabler : VisibleOnScreenNotifier
     {
         _target = null;
         base.OnTreeMembershipChanged(entering);
-        if (entering && !IsDisposed && IsInsideTree) { CacheTarget(); ApplyScreenState(); }
+        if (entering && !Engine.IsEditorHint && !IsDisposed && IsInsideTree) { CacheTarget(); ApplyScreenState(); }
     }
 
     /// <inheritdoc />

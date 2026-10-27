@@ -10658,21 +10658,21 @@
         "class:VisibleOnScreenEnabler2D"
       ],
       "state": "Implemented",
-      "reason": "ADR 0078: current root-window retained render culling drives conservative screen regions, inclusive borders, inherited alpha threshold, mask/layer/transform/repeated-copy selection and queued committed transitions. Enabler weakly caches a node and projects all three enabled ProcessMode policies, with entry disable/path/lifetime semantics. ScreenVisibilityTests and native compatibility/GPU Wayland tests cover defaults, packing, actual physics membership, callbacks/reentry/failure and zero warmed active allocations."
+      "reason": "ADR 0078: current root-window retained render culling drives conservative screen regions, inclusive borders, inherited alpha threshold, mask/layer/transform/repeated-copy selection and queued committed transitions. Enabler weakly caches a node and projects all three enabled ProcessMode policies, with entry disable/path/lifetime semantics. ScreenVisibilityTests and native compatibility/GPU Wayland tests cover defaults, packing, actual physics membership, callbacks/reentry/failure and zero warmed active allocations. Editor-role frames suppress scene screen publication/delivery; editor entry and nonempty path edits do not bind processing targets. Existing runtime samples/cache and explicit mode writes retain their lifecycle. See docs/components/editor-canvas-guides.md."
     },
     {
       "godot": [
         "class:VisibleOnScreenNotifier2D"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md. Editor-role frames suppress scene screen publication/delivery; editor entry and nonempty path edits do not bind processing targets. Existing runtime samples/cache and explicit mode writes retain their lifecycle. See docs/components/editor-canvas-guides.md."
     },
     {
       "godot": [
         "VisibleOnScreenNotifier2D::property:show_rect"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md. Editor-role frames suppress scene screen publication/delivery; editor entry and nonempty path edits do not bind processing targets. Existing runtime samples/cache and explicit mode writes retain their lifecycle. See docs/components/editor-canvas-guides.md."
     },
     {
       "godot": [

@@ -1,6 +1,6 @@
 # VisibleOnScreenEnabler
 
-Last updated: 2026-09-26
+Last updated: 2026-10-27
 
 **Inherits:** [VisibleOnScreenNotifier](VisibleOnScreenNotifier.md), Entity, CanvasItem, Node, ElectronObject
 
@@ -8,9 +8,9 @@ Last updated: 2026-09-26
 
 ## Description
 
-Uses its inherited screen rectangle to control a borrowed Node's ProcessMode. Entry weakly caches the target and disables it before the first render sample. Screen entry writes the selected enabled policy, screen exit writes Disabled; rendering remains independent of ordinary processing. Event callbacks observe committed screen state before the target policy update. The update is still attempted after a failing handler, unless removal/disposal has cleared the binding.
+Uses its inherited screen rectangle to control a borrowed Node's ProcessMode. Runtime entry weakly caches the target and disables it before the first render sample. Screen entry writes the selected enabled policy, screen exit writes Disabled; rendering remains independent of ordinary processing. Event callbacks observe committed screen state before the target policy update. The update is still attempted after a failing handler, unless removal/disposal has cleared the binding.
 
-Cache identity survives target moves and does not automatically switch to a replacement at the same path. Entry or a changed nonempty path resolves again; an equal path does not. A disposed target is ignored. Empty paths, changed targets and exit clear the cache without restoring the old target's mode. Target setters retain their owner, capture and physics participation guards.
+Cache identity survives target moves and does not automatically switch to a replacement at the same path. Runtime entry or a changed nonempty runtime path resolves again; an equal path does not. A disposed target is ignored. Empty paths, changed targets and exit clear the cache without restoring the old target's mode. Target setters retain their owner, capture and physics participation guards.
 
 ## Example
 
@@ -47,3 +47,7 @@ aiNode.AddChild(enabler);
 Inherits notifier render sampling, silent exit/reset, queued event errors and entity ownership. PackedScene stores rectangle/mode/path and exact type; it stores neither weak target nor screen state. Node.ProcessMode supplies enabled/disabled notifications and CollisionObject.DisableMode effects, so a default Remove body actually detaches/reenters physics. A MakeStatic policy retains its backend role according to the physics contract. Cached depth-specific Node snapshots preserve reentrant transitions without warmed dictionary allocations.
 
 [ScreenVisibilityTests](../../tests/Electron2D.Tests/ScreenVisibilityTests.cs) checks all policies, path cache identity/errors, disposal, packing and nested snapshots. [Native tests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs) verify actual physics participation and 64 warmed active neutral-target transitions with zero managed bytes on both Linux Wayland backends. Explicit physics resource remove/reentry may allocate during those lifecycle transitions; no zero-allocation claim covers that resource creation. Native allocator counts, other platforms and owner acceptance remain unverified. See [ADR 0078](../decisions/rendering.md#adr-0078).
+
+## Editor role
+
+Editor entry neither resolves the target nor disables its processing. Nonempty authoring path edits retain an existing runtime cache without resolving the new path; empty paths clear it. Explicit EnableMode assignments still apply to an existing cache. Role changes do not bind a skipped target or reset the inherited last runtime sample. Editor frames suppress screen publication and events; the next runtime frame resumes sampling. See [editor canvas guides](../components/editor-canvas-guides.md) for callback-batch and native regression checks.

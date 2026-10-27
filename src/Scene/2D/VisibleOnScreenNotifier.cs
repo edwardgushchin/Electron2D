@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Reports whether a local rectangle participates in the current rendered viewport.</summary>
 /// <remarks>Detection uses conservative transformed bounds, visibility and viewport culling; it does not test
-/// occlusion by other drawing. State is false until the first submitted canvas frame. Tree exit clears it silently.</remarks>
+/// occlusion by other drawing. Editor-role frames retain the last runtime sample without delivering screen events.
+/// State is false until the first runtime canvas frame. Tree exit clears it silently.</remarks>
 public class VisibleOnScreenNotifier : Entity
 {
     private Rect2 _rect = new(-10, -10, 20, 20);
@@ -23,7 +24,7 @@ public class VisibleOnScreenNotifier : Entity
 
     /// <summary>Gets or sets the local rectangle used by render visibility detection.</summary>
     /// <value>(-10, -10, 20, 20) initially; finite negative extents are normalized for culling.</value>
-    /// <remarks>Changes affect the next submitted canvas frame. Borders, lines and points participate in conservative culling; local bounds include the node origin.</remarks>
+    /// <remarks>Detection changes affect the next submitted runtime canvas frame. Borders, lines and points participate in conservative culling; local bounds include the node origin.</remarks>
     /// <exception cref="ArgumentException">The rectangle or its endpoint is nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
     /// <exception cref="ObjectDisposedException">The notifier is disposed.</exception>
@@ -59,31 +60,32 @@ public class VisibleOnScreenNotifier : Entity
         if (reversed) base.OnNotification(what);
     }
 
-    /// <summary>Returns the visibility state committed by the last submitted canvas frame.</summary>
-    /// <returns>False before the first frame or while detached; otherwise the sampled screen state.</returns>
+    /// <summary>Returns the visibility state committed by the last submitted runtime canvas frame.</summary>
+    /// <returns>False before the first runtime frame or while detached; otherwise the sampled screen state.</returns>
     /// <exception cref="InvalidOperationException">An attached query is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">The notifier is disposed.</exception>
     public bool IsOnScreen() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _onScreen; }
 
-    /// <summary>Occurs after this rectangle first participates in a submitted canvas frame.</summary>
+    /// <summary>Occurs after this rectangle first participates in a submitted runtime canvas frame.</summary>
     /// <remarks>State is committed before delivery. Runs on the scene owner thread before FramePostDraw;
-    /// later queued notifiers are attempted after a handler fails.</remarks>
+    /// later queued notifiers are attempted after a handler fails. Entering the editor role suppresses later queued delivery without replay.</remarks>
     public event Action? ScreenEntered { add => _publisherScreenEntered.Add(value); remove => _publisherScreenEntered.Remove(value); }
     private EventPublisher<Action> _publisherScreenEntered;
-    /// <summary>Occurs when a rendered frame no longer contains any visible part of this rectangle.</summary>
-    /// <remarks>Tree exit clears state without this event. Hidden or stopped render loops retain the last sample.</remarks>
+    /// <summary>Occurs when a runtime frame no longer contains any visible part of this rectangle.</summary>
+    /// <remarks>Tree exit clears state without this event. Hidden or stopped render loops and editor-role frames retain the last sample.</remarks>
     public event Action? ScreenExited { add => _publisherScreenExited.Add(value); remove => _publisherScreenExited.Remove(value); }
     private EventPublisher<Action> _publisherScreenExited;
 
     internal bool CommitScreenState()
     {
-        if (_onScreen == ScreenCandidate) return false;
+        if (Engine.IsEditorHint || _onScreen == ScreenCandidate) return false;
         _onScreen = ScreenCandidate;
         return true;
     }
 
     internal void RaiseScreenChange()
     {
+        if (Engine.IsEditorHint) return;
         List<Exception>? errors = null;
         try { if (_onScreen) BeginEventEmission(_publisherScreenEntered.Handlers)?.Invoke(); else BeginEventEmission(_publisherScreenExited.Handlers)?.Invoke(); }
         catch (Exception error) { CollectException(ref errors, error); }
