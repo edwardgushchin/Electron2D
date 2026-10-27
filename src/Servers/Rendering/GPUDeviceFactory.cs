@@ -9,6 +9,16 @@ internal static unsafe class GPUDeviceFactory
 
     internal static RenderMemorySnapshot ReadMemory(RenderHandle lease) => Volatile.Read(ref _shared)?.ReadMemory(lease) ?? default;
 
+    internal static RenderFormatSupport ReadFormatSupport(RenderHandle lease)
+    {
+        lock (Gate)
+        {
+            var shared = _shared;
+            if (lease.IsClosed || shared is null || shared.Handle.DangerousGetHandle() != lease.DangerousGetHandle()) throw new ObjectDisposedException(nameof(lease));
+            return shared.FormatSupport ??= new RenderFormatSupport(shared.Handle.DangerousGetHandle());
+        }
+    }
+
     /// <summary>Retains the active native device without retaining another consumer or its window.</summary>
     internal static (RenderHandle Handle, bool Relaxed, bool SizedPoints) Acquire(bool allowAndroidRelaxation)
     {
@@ -34,6 +44,7 @@ internal static unsafe class GPUDeviceFactory
         internal readonly RenderHandle Handle;
         internal readonly bool Relaxed, SizedPoints;
         internal int Leases;
+        internal RenderFormatSupport? FormatSupport;
         private int _memoryReaders, _retiring;
 
         internal RenderMemorySnapshot ReadMemory(RenderHandle lease)

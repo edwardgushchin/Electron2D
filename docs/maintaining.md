@@ -566,3 +566,5 @@ After changing native sampler creation or copied sampler settings, follow [nativ
 When changing sampler coordinates, run [the coordinate consumers](components/sampler-coordinates.md#executable-checks), including operation failures and derived shader checks; preserve reading both older metadata versions and validate the actual bound view. Match the complete private render ABI in produced bundles.
 
 After changing device limit production or validation, run the public `tests/DeviceLimits.Consumer` native consumer, related compute/graphics regressions, native bridge check and package export tests; preserve the distinct logical-set/profile/native boundaries in [device limits](components/device-limits.md).
+
+After changing format-filter queries or configured sampling, run [native format checks](components/format-filter-support.md#executable-checks) in ordinary and controlled masked children, plus connected sampler consumers. Keep the immutable cache within the physical-device lease and match all six private render exports in produced bundles.

@@ -4,7 +4,7 @@ using static Electron2D.RenderingDevice;
 
 internal static partial class ShaderSamplerChecks
 {
-    private static void BorderDepth()
+    private static void BorderDepth(bool linearFilter = false)
     {
         using var device = RenderingServer.CreateLocalRenderingDevice();
         using var code = new RDShaderSPIRV { BytecodeCompute = File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", "Device", "border-depth.comp.glsl.spv")) };
@@ -16,7 +16,7 @@ internal static partial class ShaderSamplerChecks
         foreach (var color in new[] { SamplerBorderColor.FloatTransparentBlack, SamplerBorderColor.FloatOpaqueBlack, SamplerBorderColor.FloatOpaqueWhite })
             foreach (var compare in new[] { CompareOperator.Less, CompareOperator.Greater })
             {
-                using var state = new RDSamplerState { EnableCompare = true, CompareOp = compare, BorderColor = color, RepeatU = SamplerRepeatMode.ClampToBorder, RepeatV = SamplerRepeatMode.ClampToBorder };
+                using var state = new RDSamplerState { MinFilter = linearFilter ? SamplerFilter.Linear : SamplerFilter.Nearest, MagFilter = linearFilter ? SamplerFilter.Linear : SamplerFilter.Nearest, EnableCompare = true, CompareOp = compare, BorderColor = color, RepeatU = SamplerRepeatMode.ClampToBorder, RepeatV = SamplerRepeatMode.ClampToBorder };
                 var sampler = device.SamplerCreate(state);
                 using var source = new RDUniform { Binding = 0, UniformType = UniformType.SamplerWithTexture }; source.AddID(sampler); source.AddID(image); var sources = device.UniformSetCreate([source], shader, 0);
                 var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline); device.ComputeListBindUniformSet(list, sources, 0); device.ComputeListBindUniformSet(list, targets, 1); device.ComputeListDispatch(list, 1, 1, 1); device.ComputeListEnd();

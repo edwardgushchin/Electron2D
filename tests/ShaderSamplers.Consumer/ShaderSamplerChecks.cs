@@ -4,6 +4,8 @@ internal static partial class ShaderSamplerChecks
 {
     internal static void Run(string[] args)
     {
+        if (args.Length > 0 && args[0] == "formats") { Formats(args.Contains("masked")); return; }
+        if (args.Length > 0 && args[0] == "formats-canvas") { FormatsCanvas(args.Contains("masked")); return; }
         if (args.Length > 0 && args[0] == "coordinates-glyph") { CoordinatesGlyphGuard(); return; }
         if (args.Length > 0 && args[0] == "coordinates") { Coordinates(); return; }
         if (args.Length > 0 && args[0] == "coordinates-canvas") { CoordinatesCanvas(); return; }

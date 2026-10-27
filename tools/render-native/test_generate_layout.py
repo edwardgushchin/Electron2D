@@ -10,6 +10,11 @@ class LayoutTests(unittest.TestCase):
         source = "prefix; typedef struct A { union { int x; float y; }; int z; } A; suffix;"
         self.assertEqual(generate_layout.block(source, "typedef struct A"), source[8:-8])
 
+    def test_format_table_is_bounded(self):
+        source = "prefix; static VkFormat Formats[] = { VK_FORMAT_UNDEFINED, VK_FORMAT_R8_UNORM }; trailing;"
+        self.assertEqual(generate_layout.block(source, "static VkFormat Formats[]"),
+                         "static VkFormat Formats[] = { VK_FORMAT_UNDEFINED, VK_FORMAT_R8_UNORM };")
+
     def test_truncated_declaration_rejects(self):
         with self.assertRaises(ValueError):
             generate_layout.block("struct A { union { int x; };", "struct A")

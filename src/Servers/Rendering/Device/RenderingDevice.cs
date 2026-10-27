@@ -73,7 +73,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal TextureInfo? Texture;
         internal bool? IntegerBorder;
         internal bool UnnormalizedSampling;
-        internal bool CompareSampling, LinearSampling, GraphicsStorage, RestartIndices;
+        internal bool CompareSampling, LinearSampling, LinearFormatSampling, GraphicsStorage, RestartIndices;
         internal IndexBufferFormat IndexFormat;
         internal VertexArray? Vertices;
         internal IndexArray? Indices;

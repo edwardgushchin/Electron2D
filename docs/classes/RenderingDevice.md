@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 Compute storage-array lengths use each actual bound byte range, including
 different bindings across dispatches in one submission. The internal
@@ -1409,3 +1409,7 @@ See [native render memory](../components/render-memory.md) for actual allocation
 ## LimitGet
 
 `public long LimitGet(RenderingDevice.Limit limit)` reads a cached effective native limit under ordinary device owner/lifetime guards. Undefined values reject; unsupported cores/drivers fail explicitly. It does not submit or wait. [The canonical component](../components/device-limits.md) defines each resource/profile constraint, sparse logical set count, combined stage budgets and the executable consumer. [Limit](RenderingDevice.Limit.md) lists the 34 implemented selectors.
+
+## SamplerIsFormatSupportedForFilter
+
+`public bool SamplerIsFormatSupportedForFilter(DataFormat format, SamplerFilter samplerFilter)` reads the shared native format feature snapshot without image allocation or GPU submission. Undefined arguments and Max reject; mapped unsupported and unmapped formats return false. Owner/lifetime guards remain active. The current query adapter requires pinned SDL 3.4.18 Vulkan. [Native format filter support](../components/format-filter-support.md) owns capability meanings, configured binding validation, lifetime and verification limits.

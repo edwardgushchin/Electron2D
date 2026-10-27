@@ -174104,6 +174104,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.SamplerIsFormatSupportedForFilter(Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.SamplerFilter)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "SamplerIsFormatSupportedForFilter",
+    "signature": "public System.Boolean SamplerIsFormatSupportedForFilter(Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.SamplerFilter samplerFilter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "format",
+        "type": "Electron2D.RenderingDevice.DataFormat",
+        "default": null
+      },
+      {
+        "name": "samplerFilter",
+        "type": "Electron2D.RenderingDevice.SamplerFilter",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.ScreenGetFramebufferFormat(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",

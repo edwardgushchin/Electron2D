@@ -356,7 +356,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                         else if (image.IsCanvasTexture) samplers[i] = CanvasBinding(batch);
                         else if (image.IsNormalTexture || image.IsSpecularTexture) samplers[i] = ChannelBinding(batch, image.IsNormalTexture);
                         if (configured != 0) samplers[i].Sampler = configured;
-                        if (textured.Samplers[i] is { UnnormalizedUVW: true } && NativeSamplerUsed(textured, i, GlyphCode(batch), VertexCode(batch))) SamplerConfiguration.RequireUnnormalizedView(Device, samplers[i].Texture);
+                        if (textured.Samplers[i] is { } configuration && NativeSamplerUsed(textured, i, GlyphCode(batch), VertexCode(batch))) ValidateConfiguredSampling(samplers[i].Texture, configuration);
                     }
                     if (VertexCode(batch) is not null)
                     {

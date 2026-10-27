@@ -39,6 +39,7 @@ public sealed unsafe partial class RenderingDevice
         {
             var sampler = Get(ids[0], Kind.Sampler); if ((texture.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("Texture lacks the sampling role.", nameof(ids));
             if (binding.Native >= 0 && (sampler.CompareSampling != binding.Depth || binding.Depth && !DepthFormat(texture.Format))) throw new ArgumentException("Comparison samplers require a depth image and a depth-comparison shader descriptor.", nameof(ids));
+            if (binding.Native >= 0 && binding.UsesSampler) ValidateFormatFilter(Get(ids[1], Kind.Texture).NativeHandle, sampler.LinearFormatSampling, sampler.CompareSampling);
             if (binding.Native >= 0 && binding.UsesSampler && sampler.UnnormalizedSampling) SamplerConfiguration.RequireUnnormalizedView(Device, Get(ids[1], Kind.Texture).NativeHandle, binding.UnnormalizedUnsafe);
             if (binding.Native >= 0 && sampler.IntegerBorder is { } integer && integer != (binding.PixelType != 0)) throw new ArgumentException("The sampler border color must match the image sampling type.", nameof(ids));
             if (binding.Native >= 0 && binding.PixelType != 0 && sampler.LinearSampling) throw new ArgumentException("Integer textures require nearest filtering without anisotropy.", nameof(ids));
@@ -325,6 +326,6 @@ public sealed unsafe partial class RenderingDevice
         IdleList(); ArgumentNullException.ThrowIfNull(state);
         var configuration = SamplerConfiguration.Capture(state);
         var driver = SDL.GetGPUDeviceDriver(Device) ?? throw GPUPhysicsDevice.Failure("query GPU sampler driver");
-        return Add(new Entry { Kind = Kind.Sampler, UnnormalizedSampling = configuration.UnnormalizedUVW, CompareSampling = configuration.EnableCompare, LinearSampling = configuration.Linear, IntegerBorder = configuration.IntegerBorder, Handle = new(configuration.Create(Device, driver), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
+        return Add(new Entry { Kind = Kind.Sampler, UnnormalizedSampling = configuration.UnnormalizedUVW, CompareSampling = configuration.EnableCompare, LinearSampling = configuration.Linear, LinearFormatSampling = configuration.LinearFilter, IntegerBorder = configuration.IntegerBorder, Handle = new(configuration.Create(Device, driver), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
     }
 }

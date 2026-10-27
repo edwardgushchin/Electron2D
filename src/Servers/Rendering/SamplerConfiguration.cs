@@ -14,8 +14,9 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
     internal bool HasBorder => RepeatU == RenderingDevice.SamplerRepeatMode.ClampToBorder || RepeatV == RenderingDevice.SamplerRepeatMode.ClampToBorder;
     internal bool? IntegerBorder => HasBorder ? ((int)BorderColor & 1) != 0 : null;
     internal bool Anisotropic => UseAnisotropy && AnisotropyMax > 1;
-    internal bool Linear => MinFilter == RenderingDevice.SamplerFilter.Linear ||
-        MagFilter == RenderingDevice.SamplerFilter.Linear || MIPFilter == RenderingDevice.SamplerFilter.Linear || Anisotropic;
+    internal bool LinearFilter => MinFilter == RenderingDevice.SamplerFilter.Linear ||
+        MagFilter == RenderingDevice.SamplerFilter.Linear || MIPFilter == RenderingDevice.SamplerFilter.Linear;
+    internal bool Linear => LinearFilter || Anisotropic;
 
     internal static SamplerConfiguration Capture(RDSamplerState state)
     {

@@ -562,3 +562,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Sampler texel coordinates](../components/sampler-coordinates.md) connect UnnormalizedUVW to native filtering, copied Shader metadata, sampled-pair operation constraints and actual native view validation across device, canvas, particle and GPU drawable consumers.
 
 [Effective device limits](../components/device-limits.md) connect native/profile capacities to public compute/resource/vertex/framebuffer validation and adaptive application algorithms.
+
+[Native format filter support](../components/format-filter-support.md) connects shared physical-device capabilities to adaptive filter choice and explicit configured device/canvas/particle/blit bindings.

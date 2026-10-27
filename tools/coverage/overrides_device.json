@@ -3715,6 +3715,11 @@
       "godot": "RDSamplerState::property:unnormalized_uvw",
       "electron2d": "property:Electron2D.RDSamplerState.UnnormalizedUVW()",
       "reason": "ADR 0028: executable native texel-coordinate sampling with copied UnnormalizedUVW, version-three metadata and older-version reads, equal-filter/LOD/address/aniso/compare guards, static shader pair and final derived canvas constraints, and actual native ordinary single-layer/single-mip view validation. Public device/canvas consumers cover positions, formats, filtering, borders, helper offsets, descriptor arrays and stage sharing; foreign-platform/presentation/native-allocation acceptance remains separate."
+    },
+    {
+      "godot": "RenderingDevice::method:sampler_is_format_supported_for_filter(int:RenderingDevice.DataFormat,int:RenderingDevice.SamplerFilter)",
+      "electron2d": "method:Electron2D.RenderingDevice.SamplerIsFormatSupportedForFilter(Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.SamplerFilter)",
+      "reason": "ADR 0028: native optimal-tiling sampled/linear features and enabled sampling roles, one immutable table per shared physical-device lifetime, configured image/filter validation and explicit comparison/anisotropy distinctions. See docs/components/format-filter-support.md; foreign drivers and platform/hardware acceptance remain separate."
     }
   ],
   "extras": [
@@ -4206,11 +4211,11 @@
       "reason": "ADR 0028: attachment recording and multisample/transient/resolve lifetimes are missing; include these operations with that prerequisite slice."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "RenderingDevice::method:sampler_is_format_supported_for_filter(int:RenderingDevice.DataFormat,int:RenderingDevice.SamplerFilter)"
       ],
-      "reason": "ADR 0028: backend-specific format filter-feature queries are not exposed by the native portable API; requires a verified feature query/adapter rather than a guess from scalar type."
+      "reason": "ADR 0028: native optimal-tiling sampled/linear features and enabled sampling roles, one immutable table per shared physical-device lifetime, configured image/filter validation and explicit comparison/anisotropy distinctions. See docs/components/format-filter-support.md; foreign drivers and platform/hardware acceptance remain separate."
     },
     {
       "state": "Implemented",

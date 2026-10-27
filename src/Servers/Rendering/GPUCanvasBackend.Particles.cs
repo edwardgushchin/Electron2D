@@ -157,13 +157,13 @@ internal sealed unsafe partial class GPUCanvasBackend
                     sizes[1] = checked(((uint)gpu.OutgoingCapacity + 1) * 96);
                     var program = _particlePrograms[ParticleCode(process)];
                     program.PrepareBufferSizes(command, ReadOnlySpan<uint>.Empty, sizes[..process.Program.ParticleStorageBuffers]);
+                    var samplers = TextureBindings(process);
+                    for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = process.Samplers[i].HasValue ? samplers[i].Sampler : Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
+                    for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].UsesSampler && process.Samplers[i] is { } configuration) ValidateConfiguredSampling(samplers[i].Texture, configuration);
                     pass = SDL.BeginGPUComputePass(command, 0, 0, (nint)writable, (uint)process.Program.ParticleStorageBuffers); if (pass == 0) throw Failure("begin particle process");
                     SDL.BindGPUComputePipeline(pass, program.DangerousGetHandle()); program.BindBufferSizes(pass);
-                    if (process.Textures.Length != 0)
+                    if (samplers.Length != 0)
                     {
-                        var samplers = TextureBindings(process);
-                        for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].IsSDFTexture) samplers[i] = new() { Texture = _sdfTarget!.DangerousGetHandle(), Sampler = process.Samplers[i].HasValue ? samplers[i].Sampler : Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
-                        for (var i = 0; i < samplers.Length; i++) if (process.Program.Textures[i].UsesSampler && process.Samplers[i] is { UnnormalizedUVW: true }) SamplerConfiguration.RequireUnnormalizedView(Device, samplers[i].Texture);
                         fixed (SDL.GPUTextureSamplerBinding* pointer = samplers) SDL.BindGPUComputeSamplers(pass, 0, (nint)pointer, (uint)samplers.Length);
                     }
                     SDL.DispatchGPUCompute(pass, groups.Width, groups.Height, 1); SDL.EndGPUComputePass(pass);

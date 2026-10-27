@@ -2,8 +2,12 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "memory-layout.h"
+#include <SDL3/SDL_vulkan.h>
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
+extern int e2d_render_filter_support(SDL_GPUDevice *, uint32_t, uint8_t *, uint32_t);
+extern int e2d_render_texture_format(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
 extern int e2d_render_limits(SDL_GPUDevice *, uint32_t, uint64_t *, uint32_t);
 extern int e2d_render_memory(SDL_GPUDevice *, uint32_t, Memory *);
 extern int e2d_render_sampler_view(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
@@ -32,6 +36,15 @@ static int reader(void *device)
 }
 int main(int argc, char **argv)
 {
+    enum { FILTER_COUNT = SDL_GPU_TEXTUREFORMAT_ASTC_12x12_FLOAT + 1 };
+    uint8_t filters[FILTER_COUNT]; SDL_memset(filters, 0xA5, sizeof(filters));
+    require(e2d_render_filter_support(NULL, 1, filters, FILTER_COUNT) == -1);
+    require(e2d_render_filter_support((SDL_GPUDevice *)(uintptr_t)1, 0, filters, FILTER_COUNT) == -1);
+    require(e2d_render_filter_support((SDL_GPUDevice *)(uintptr_t)1, 1, filters, FILTER_COUNT - 1) == -1);
+    require(e2d_render_filter_support((SDL_GPUDevice *)(uintptr_t)1, 1, NULL, FILTER_COUNT) == -1);
+    for (uint32_t i = 0; i < FILTER_COUNT; ++i) require(filters[i] == 0xA5);
+    require(e2d_render_texture_format(NULL, 1, NULL) == -1);
+    require(e2d_render_texture_format((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUTexture *)(uintptr_t)1) == -1);
     uint64_t limits[37] = {0};
     require(e2d_render_limits(NULL, 1, limits, 37) == -1);
     require(e2d_render_limits((SDL_GPUDevice *)(uintptr_t)1, 0, limits, 37) == -1);
@@ -50,12 +63,46 @@ int main(int argc, char **argv)
         require(e2d_render_sampler((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 3, 2, 2, 0) == NULL);
         require(e2d_render_sampler_view((SDL_GPUDevice *)(uintptr_t)1, 1, (SDL_GPUTexture *)(uintptr_t)1) == -1);
         require(e2d_render_limits((SDL_GPUDevice *)(uintptr_t)1, 1, limits, 37) == 0);
+        require(e2d_render_filter_support((SDL_GPUDevice *)(uintptr_t)1, 1, filters, FILTER_COUNT) == 0);
+        for (uint32_t i = 0; i < FILTER_COUNT; ++i) require(filters[i] == 0xA5);
+        require(e2d_render_texture_format((SDL_GPUDevice *)(uintptr_t)1, 1, (SDL_GPUTexture *)(uintptr_t)1) == -1);
         puts("Unsupported native core rejected before opaque-device access.");
         return 0;
     }
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, "vulkan");
     require(device != NULL);
+    require(e2d_render_filter_support(device, 1, filters, FILTER_COUNT) == 1);
+    require(filters[SDL_GPU_TEXTUREFORMAT_INVALID] == 0);
+    require(filters[SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM] == 3);
+    require(filters[SDL_GPU_TEXTUREFORMAT_R32_UINT] == 1);
+    for (uint32_t i = 0; i < FILTER_COUNT; ++i) require(filters[i] == 0 || filters[i] == 1 || filters[i] == 3);
+    const VulkanRenderer *filter_renderer = (const VulkanRenderer *)device->driverData;
+    PFN_vkGetInstanceProcAddr instance_proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    PFN_vkGetPhysicalDeviceFormatProperties format_properties = (PFN_vkGetPhysicalDeviceFormatProperties)instance_proc(filter_renderer->instance, "vkGetPhysicalDeviceFormatProperties");
+    require(format_properties != NULL);
+    const struct { SDL_GPUTextureFormat sdl; VkFormat vk; SDL_GPUTextureUsageFlags usage; } oracle[] = {
+        {SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, SDL_GPU_TEXTUREUSAGE_SAMPLER},
+        {SDL_GPU_TEXTUREFORMAT_R32_UINT, VK_FORMAT_R32_UINT, SDL_GPU_TEXTUREUSAGE_SAMPLER},
+        {SDL_GPU_TEXTUREFORMAT_R32G32B32A32_FLOAT, VK_FORMAT_R32G32B32A32_SFLOAT, SDL_GPU_TEXTUREUSAGE_SAMPLER},
+        {SDL_GPU_TEXTUREFORMAT_D32_FLOAT, VK_FORMAT_D32_SFLOAT, SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET}
+    };
+    for (uint32_t i = 0; i < SDL_arraysize(oracle); ++i) {
+        VkFormatProperties props = {0}; format_properties(filter_renderer->physicalDevice, oracle[i].vk, &props);
+        uint8_t expected = 0;
+        if ((props.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) != 0 && SDL_GPUTextureSupportsFormat(device, oracle[i].sdl, SDL_GPU_TEXTURETYPE_2D, oracle[i].usage))
+            expected = 1 | ((props.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT) != 0 ? 2 : 0);
+        require(filters[oracle[i].sdl] == expected);
+        if (expected != 0) {
+            SDL_GPUTextureCreateInfo info = {.type=SDL_GPU_TEXTURETYPE_2D, .format=oracle[i].sdl, .usage=oracle[i].usage, .width=1, .height=1, .layer_count_or_depth=1, .num_levels=1, .sample_count=SDL_GPU_SAMPLECOUNT_1};
+            SDL_GPUTexture *texture = SDL_CreateGPUTexture(device, &info); require(texture != NULL);
+            require(e2d_render_texture_format(device, 1, texture) == (int)oracle[i].sdl);
+            SDL_ReleaseGPUTexture(device, texture);
+        }
+    }
+    uint8_t filter_again[FILTER_COUNT]; require(e2d_render_filter_support(device, 1, filter_again, FILTER_COUNT) == 1);
+    require(SDL_memcmp(filters, filter_again, sizeof(filters)) == 0);
+
     require(e2d_render_limits(device, 1, limits, 37) == 1);
     for (uint32_t i = 0; i < 37; ++i) require((i == 11 || i == 13 || i == 14) ? limits[i] == 0 : limits[i] > 0);
     uint64_t again[37]; require(e2d_render_limits(device, 1, again, 37) == 1);

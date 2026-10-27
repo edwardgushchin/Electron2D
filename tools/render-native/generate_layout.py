@@ -47,6 +47,7 @@ def generate(source):
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
         "typedef struct VulkanFenceHandle VulkanFenceHandle;",
         vulkan[vulkan.index("typedef struct VulkanMemoryFreeRegion"):vulkan.index("// Memory structures")],
+        "#ifdef E2D_RENDER_FILTERING", block(vulkan, "static VkFormat SDLToVK_TextureFormat[]"), "#endif",
         block(vulkan, "typedef struct VulkanSampler"),
         block(vulkan, "typedef struct VulkanExtensions"), block(vulkan, "typedef struct VulkanFencePool"),
         forward, renderer, "typedef struct VulkanRenderer VulkanRenderer;", "",

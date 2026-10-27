@@ -273,3 +273,5 @@ See [canvas light graphs](../components/canvas-light-graphs.md) for the executin
 [Canvas fragment surfaces](../components/canvas-surfaces.md) execute fragment normal/map/depth and independent light/shadow positions through the existing retained material and scene-light path. Renderer-owned original model/canvas normal bases are excluded from material properties. Point-size/coordinate producers retain their separate dependencies.
 
 [Canvas command metadata](../components/canvas-command-metadata.md) supplies read-only fragment regions and initial-UV specular values through the same retained program. See its geometry conventions, ownership, typed sampler boundary and verification limits.
+
+Explicit GPU sampler configurations validate min/mag/mip support against the actual bound native format when consumed. Samplerless operations skip filter checks; depth comparison and integer sampling retain their separate rules. See [native format filter support](../components/format-filter-support.md).
