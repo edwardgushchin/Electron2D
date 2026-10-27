@@ -2,7 +2,7 @@
 
 Registered extension instances receive `NotificationExtensionReloaded` (2) only after every surviving binding and compatible stored value has been restored. Ordinary CLR updates do not produce this event. Their deterministic disposal follows manager-thread admission, pre-delete veto, binding retirement and owner cleanup; errors preserve committed cleanup. See [module lifetime](../components/extensions.md).
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 **Inherits:** —
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-27
 - **Declaration:** `public partial class ElectronObject`
 
 > Provides the common identity, notification, property, localization, and lifetime contract for engine objects.
+
+Plain project subclasses can use [Script.RegisterObject](Script.md#plain-object-sources) for checked compiled source metadata and typed construction. The owner keeps its ordinary fields, notifications and weak physical identity; this adds no live script reassignment.
 
 ## Custom typed iteration
 

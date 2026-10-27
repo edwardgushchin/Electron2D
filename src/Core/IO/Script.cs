@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Electron2D;
 
-/// <summary>Describes a registered compiled C# Node or Resource and its source, typed schema and construction factory.</summary>
+/// <summary>Describes a registered compiled C# engine object and its source, typed schema and construction factory.</summary>
 /// <remarks>Project code remains in the consumer assembly and executes ordinary typed callbacks. Source edits do not
 /// replace CLR classes. Loading validates compiler source checksums; build/restart and live reassignment remain explicit.
 /// Ordinary nested resource duplication preserves this shared asset. Explicit root/force copies have
@@ -39,7 +39,7 @@ public sealed partial class Script : Resource
     public Type? GetInstanceBaseType() { var type = CompiledType?.BaseType; while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) type = type.BaseType; return type; }
     /// <summary>Loads the directly inherited registered script asset, when the project base class has one.</summary><returns>Borrowed cached base Script, or null for a native/unregistered base.</returns>
     public Script? GetBaseScript() { var type = CompiledType?.BaseType; var record = type == null ? null : FindType(type); return record == null ? null : ResourceLoader.Load<Script>(record.Path); }
-    /// <summary>Creates a caller-owned instance through the registered exact factory.</summary><typeparam name="T">Expected compiled Node/Resource role.</typeparam><returns>The actual project class instance.</returns>
+    /// <summary>Creates a caller-owned instance through the registered exact factory.</summary><typeparam name="T">Expected compiled engine-object role.</typeparam><returns>The actual project class instance.</returns>
     /// <remarks>The registered factory must construct its result within this call's execution context or engine worker tasks.
     /// Matching construction exposes this asset through ElectronObject.GetScript before the derived constructor runs.
     /// Nested script factories retain their innermost source. Pre-existing objects are never acquired or cleaned up.</remarks>

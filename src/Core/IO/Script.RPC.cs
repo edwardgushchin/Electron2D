@@ -45,7 +45,7 @@ public sealed partial class Script
     }
 
     /// <summary>Returns the compiled class's effective typed RPC declarations without constructing an instance.</summary>
-    /// <returns>A caller-owned snapshot of shared immutable method tokens and copied policies; empty for unbound or Resource roles.</returns>
+    /// <returns>A caller-owned snapshot of shared immutable method tokens and copied policies; empty for unbound or non-Node roles.</returns>
     /// <remarks>Most-derived declarations come first, followed by unshadowed registered bases in declaration order.
     /// Instance RPCConfig overrides/removals affect only that Node. Editable source text does not change compiled declarations.</remarks>
     /// <exception cref="ObjectDisposedException">This script resource is disposed.</exception>

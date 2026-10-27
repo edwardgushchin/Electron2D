@@ -2,13 +2,13 @@
 
 Registered extension shells form native bases for script metadata and construction. Their properties/methods are separate from Script declarations; `GetInstanceBaseType` returns the shell, and an unavailable shell makes `CanInstantiate` false. Validated `New`, copy and file factories bind that ancestor while preserving the exact Script association. See [extension class binding](../components/extensions.md#typed-class-binding).
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 **Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
 **Declaration:** `public sealed partial class Script : Resource` · **Source:** [Script.cs](../../src/Core/IO/Script.cs), [Script.Catalog.cs](../../src/Core/IO/Script.Catalog.cs), [Script.RPC.cs](../../src/Core/IO/Script.RPC.cs) · **Component:** [Scripting](../components/scripting.md)
 
-A compiled C# source asset for a registered project Node/Resource class. The host supplies stable identity, an optional static exact default factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
+A compiled C# source asset for a registered project ElectronObject, Node or Resource class. The host supplies stable identity, an optional static exact default factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
 
 ```csharp
 // At project startup; sourcePath belongs to the compiled project class:
@@ -22,6 +22,10 @@ Constructed owners expose this exact borrowed asset through [ElectronObject.GetS
 
 [Compiled initialization](../components/scripting.md#compiled-c-initialization) uses ordinary C# constructors once, before schema/state restoration. Classes with required arguments may register a null default factory and use `New(() => new Player(arguments))`; implicit creation and absent reconstruction factories reject. Constructor exceptions retain their identity and ordinary C# partial-construction ownership.
 
+## Plain object sources
+
+RegisterObject covers compiled project classes directly based on ElectronObject and their project bases. Their ordinary methods/notifications, typed descriptors and initial GetScript identity use the same construction path. RegisterAbstract also accepts those bases. Node/Resource classes must use their dedicated registration methods so their file/scene factories are retained. Plain owners acquire no scene, Resource persistence or RPC role; their Script asset can still be copied or archived and create fresh owners. [The plain-object contract](../components/scripting.md#plain-object-sources) keeps live SetScript and source-free NativeAOT prerequisites separate.
+
 ## API summary
 
 | Signature | Contract |
@@ -29,7 +33,8 @@ Constructed owners expose this exact borrowed asset through [ElectronObject.GetS
 | `public Script()` | Unbound source asset; text initially empty. |
 | `public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode>? factory, params PropertyDescriptor[] properties) where TNode : Node` | Registers source/schema; a null default factory requires explicit typed construction. |
 | `public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource>? factory, params PropertyDescriptor[] properties) where TResource : Resource` | Same nullable default-factory contract for Resource/effect classes. |
-| `public static void RegisterAbstract<T>(string id, string sourcePath, params PropertyDescriptor[] properties) where T : ElectronObject` | Abstract project Node/Resource metadata without a factory. |
+| `public static void RegisterObject<TObject>(string id, string sourcePath, Func<TObject>? factory, params PropertyDescriptor[] properties) where TObject : ElectronObject` | Plain project objects outside Node/Resource; same source/schema/constructor policy, without an owner archive factory. |
+| `public static void RegisterAbstract<T>(string id, string sourcePath, params PropertyDescriptor[] properties) where T : ElectronObject` | Abstract project engine-object metadata without a factory. |
 | `public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode>? factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Copies validated class RPC defaults with the existing exact source/factory registration. |
 | `public static void RegisterAbstractWithRPC<TNode>(string id, string sourcePath, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Abstract Node source and inherited RPC defaults without a factory. |
 | `public RPCRegistration[] GetRPCConfig()` | Effective most-derived class declarations followed by unshadowed registered bases; caller-owned snapshot. |
@@ -71,7 +76,7 @@ Ordinary nested Resource copies retain this same Script instance for all deep mo
 
 [ScriptTests](../../tests/Electron2D.Tests/ScriptTests.cs) is the executable source/type/factory/storage scenario; [Scripting](../components/scripting.md) records native, allocation and platform limits.
 
-RegisterNode, RegisterResource and RegisterAbstract declare their file-backed assembly/PDB and untrimmed metadata prerequisites. Registration captures complete project methods, events and literal fields once; queries copy that retained metadata. Source association in embedded NativeAOT assemblies remains unavailable. Static scene factories do not require source registration.
+RegisterObject, RegisterNode, RegisterResource and RegisterAbstract declare their file-backed assembly/PDB and untrimmed metadata prerequisites. Registration captures complete project methods, events and literal fields once; queries copy that retained metadata. Source association in embedded NativeAOT assemblies remains unavailable. Static scene factories do not require source registration.
 
 [Factory result ownership](../components/scripting.md#factory-result-ownership) protects borrowed physical/script resources and live nodes from invalid Script.New and file-factory results. CLR source-asset checks retain actual CPU/software-GPU/registered simulation and zero warmed managed bytes; NativeAOT source registration and full live-script/duplication acceptance remain open.
 

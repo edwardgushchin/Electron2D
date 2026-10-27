@@ -51,10 +51,28 @@ public sealed partial class Script
         Register(typeof(TResource), id, sourcePath, factory is null ? null : () => factory(), properties,
             factory is null ? null : () => ResourceFileTypes.RegisterResource(id, factory), factory?.Target);
     }
+    /// <summary>Registers a compiled C# source for a project object outside the Node and Resource branches.</summary>
+    /// <typeparam name="TObject">Project ElectronObject role.</typeparam><param name="id">Stable portable script identity.</param>
+    /// <param name="sourcePath">Source path proven by the compiled portable PDB.</param><param name="factory">Static exact default constructor, or null to require explicit typed construction.</param>
+    /// <param name="properties">Copied user-defined typed property schema.</param>
+    /// <remarks>Uses the same source, metadata, construction provenance and borrowed asset lifetime as the other registration roles.
+    /// It installs no scene/resource file factory. Node and Resource classes require their role-specific registration methods.
+    /// Registration requires a file-backed assembly, matching portable PDB and complete untrimmed project declarations.</remarks>
+    /// <exception cref="ArgumentException">The role, factory, source or schema is invalid.</exception>
+    /// <exception cref="InvalidOperationException">The identity, type or primary source is already registered.</exception>
+    /// <exception cref="NotSupportedException">Matching compiled assembly and portable source symbols are unavailable.</exception>
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
+    public static void RegisterObject<TObject>(string id, string sourcePath, Func<TObject>? factory, params PropertyDescriptor[] properties) where TObject : ElectronObject
+    {
+        if (typeof(Node).IsAssignableFrom(typeof(TObject)) || typeof(Resource).IsAssignableFrom(typeof(TObject)))
+            throw new ArgumentException("Node and Resource classes require their role-specific script registrations.");
+        Register(typeof(TObject), id, sourcePath, factory is null ? null : () => factory(), properties, null, factory?.Target);
+    }
     /// <summary>Registers an abstract project type for inherited source/metadata discovery without a construction factory.</summary>
-    /// <typeparam name="T">Abstract project Node or Resource type.</typeparam><param name="id">Stable script identity.</param>
+    /// <typeparam name="T">Abstract project ElectronObject type.</typeparam><param name="id">Stable script identity.</param>
     /// <param name="sourcePath">Portable-PDB source path.</param><param name="properties">User-defined typed schema.</param>
-    /// <exception cref="ArgumentException">The type is concrete or does not derive from Node/Resource.</exception>
+    /// <exception cref="ArgumentException">The type is concrete, open, engine-owned or an extension shell, or its source/schema is invalid.</exception>
     /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.</remarks>
     [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
     [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
@@ -68,7 +86,7 @@ public sealed partial class Script
     private static void Register(Type type, string id, string path, Func<ElectronObject>? factory, PropertyDescriptor[] properties, Action? registerFileType, object? factoryTarget, ReadOnlySpan<RPCRegistration> rpc = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id); ArgumentNullException.ThrowIfNull(properties);
-        if (type.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(type) || type.ContainsGenericParameters || !typeof(Node).IsAssignableFrom(type) && !typeof(Resource).IsAssignableFrom(type)) throw new ArgumentException("Scripts require a closed project Node or Resource type outside extension class shells.");
+        if (type.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(type) || type.ContainsGenericParameters || !typeof(ElectronObject).IsAssignableFrom(type)) throw new ArgumentException("Scripts require a closed project ElectronObject type outside extension class shells.");
         if (id.Length > 256 || id.Any(char.IsControl) || factoryTarget != null) throw new ArgumentException("Script identities must be portable and file factories static.");
         path = System.IO.Path.GetFullPath(ResourceArchive.Absolute(path));
         if (!System.IO.Path.GetExtension(path).Equals(".cs", StringComparison.OrdinalIgnoreCase) || type.IsAbstract && factory != null) throw new ArgumentException("Registration requires C# source and an appropriate concrete/abstract factory.");

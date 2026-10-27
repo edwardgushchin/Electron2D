@@ -190167,6 +190167,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Script.RegisterObject\u00601(System.String,System.String,Func\u003CTObject\u003E,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterObject",
+    "signature": "public static System.Void RegisterObject\u003CTObject\u003E(System.String id, System.String sourcePath, Func\u003CTObject\u003E factory, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTObject\u003E",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Script.RegisterResource\u00601(System.String,System.String,Func\u003CTResource\u003E,Electron2D.PropertyDescriptor[])",
     "kind": "method",
     "declaringType": "Electron2D.Script",

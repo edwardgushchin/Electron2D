@@ -1167,6 +1167,17 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_SUPPORT") == "1") {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_CHILD") is { } fontCachePath) { FontCacheTests.RunChild(fontCachePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_HOST") == "1") { FontCacheTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE") == "1") { FontCacheTests.Run(); return; }
+if (args.Length == 2 && args[0] == "--plain-script-child") { ScriptObjectTests.Child(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_OBJECTS") is { } objectScriptProfile)
+{
+    ScriptObjectTests.Run(objectScriptProfile switch
+    {
+        "cpu" => PhysicsServer.Backend.CPU,
+        "gpu" => PhysicsServer.Backend.GPU,
+        _ => throw new ArgumentException("Use cpu or gpu for compiled plain objects.")
+    });
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_CHILD") is { } scriptPath) { ScriptTests.RunChild(scriptPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_HOST") == "1") { ScriptTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_INITIALIZATION") is { } initializationBackend)
@@ -1929,6 +1940,7 @@ CodeEditTests.Run();
 RichTextTests.Run();
 FontVariationTests.Run();
 ScriptTests.Run();
+ScriptObjectTests.Run(PhysicsServer.Backend.CPU); ScriptObjectTests.Run(PhysicsServer.Backend.GPU);
 ExtensionSourceTests.Run();
 foreach (var backend in new PhysicsServer.Backend?[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU, null })
     foreach (var threaded in new[] { false, true }) PhysicsScriptFactoryTests.Run(backend, threaded);
