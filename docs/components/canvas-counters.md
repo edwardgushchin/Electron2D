@@ -47,7 +47,7 @@ this capability. Local RenderingDevice graphics, compute and physics pipelines,
 source import and driver-internal cache/compiler activity are outside the canvas
 producer. This counts successful native pipeline creation requests; it does not
 claim exact driver compilation events, latency or retained device bytes. Other
-pipeline source categories remain open rather than receiving constant adapters.
+pipeline source categories are pinned 3D scene-renderer sources, excluded under ADR 0004 without constant adapters. See the [producer audit](../coverage/performance-producers.md).
 
 The pinned [renderer aggregate](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/rendering_server_default.cpp)
 and [canvas pipeline source](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/rendering/renderer_rd/renderer_canvas_render_rd.cpp)

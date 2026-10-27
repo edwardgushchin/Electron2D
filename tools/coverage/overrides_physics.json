@@ -7383,7 +7383,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Live timing/object/canvas/physics/navigation/audio/deferred-memory and canvas pipeline sources execute, together with real native texture/buffer/committed render allocation memory. Current/peak runtime managed/native allocation memory and four other pipeline sources remain open; GetMonitor and its enum stay Partial. See docs/components/render-memory.md."
+      "reason": "Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Coherent current/peak runtime managed/native allocation producers remain open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md."
     },
     {
       "godot": [
@@ -7469,16 +7469,6 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: strictly two-dimensional engine; no 3D physics or navigation diagnostic producer."
-    },
-    {
-      "godot": [
-        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_DRAW",
-        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_MESH",
-        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SPECIALIZATION",
-        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SURFACE"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: renderer-owned frame submission, pipeline compilation and device-memory accounting with backend capability semantics, then expose the corresponding Performance producers in that integration."
     },
     {
       "godot": [
@@ -8110,6 +8100,24 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0028/0016: cumulative successful engine-owned SDL GPU canvas graphics-pipeline creations during the active renderer session. Cache hits do not increment; cache retirement and failed later frames retain successful work. Initialization contributes before first frame; closure returns zero and a new session starts afresh. Compatibility owns no such pipeline objects and returns zero. Atomic managed reads do not create/synchronize native state; local-device graphics, compute/physics, import and driver-internal compilation are separate. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_DRAW",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_MESH",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SPECIALIZATION",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SURFACE",
+        "RenderingServer::enum_value:PipelineSource.PIPELINE_SOURCE_DRAW",
+        "RenderingServer::enum_value:PipelineSource.PIPELINE_SOURCE_MESH",
+        "RenderingServer::enum_value:PipelineSource.PIPELINE_SOURCE_SPECIALIZATION",
+        "RenderingServer::enum_value:PipelineSource.PIPELINE_SOURCE_SURFACE",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_PIPELINE_COMPILATIONS_DRAW",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_PIPELINE_COMPILATIONS_MESH",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_PIPELINE_COMPILATIONS_SPECIALIZATION",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_PIPELINE_COMPILATIONS_SURFACE"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned 3D scene-renderer pipeline sources. The default server sums canvas slots for MESH/DRAW/SPECIALIZATION, but the pinned RD canvas producer only passes PIPELINE_SOURCE_CANVAS; its other slots remain empty and GLES reports no pipeline objects. Non-canvas writes occur in Forward Mobile/Clustered mesh generation, surface-cache preparation, scene draw and background scene specialization. Applicable planar mesh/material pipelines remain under the executing canvas counter in ADR 0028. Exclude all Performance/RenderingInfo/PipelineSource identities without zero-return public mirrors. Exact pinned paths and producer traces: docs/coverage/performance-producers.md."
     }
   ]
 }

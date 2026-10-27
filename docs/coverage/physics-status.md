@@ -106,7 +106,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
-| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live timing/object/canvas/physics/navigation/audio/deferred-memory and canvas pipeline sources execute, together with real native texture/buffer/committed render allocation memory. Current/peak runtime managed/native allocation memory and four other pipeline sources remain open; GetMonitor and its enum stay Partial. See docs/components/render-memory.md. |
+| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Coherent current/peak runtime managed/native allocation producers remain open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md. |
 
 
 The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)

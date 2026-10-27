@@ -21,6 +21,9 @@ Last updated: 2026-10-27
 | RenderTotalObjectsInFrame | 11 | Completed renderer-frame logical canvas drawing records |
 | RenderTotalPrimitivesInFrame | 12 | Submitted topology/instance budgets |
 | RenderTotalDrawCallsInFrame | 13 | Native canvas geometry calls |
+| RenderVideoMemUsed | 14 | Committed native render allocation, including retained free reservation |
+| RenderTextureMemUsed | 15 | Native texture allocation bytes |
+| RenderBufferMemUsed | 16 | Native buffer allocation bytes, including uniform/transfer storage |
 | PhysicsActiveObjects | 17 | PhysicsServer.ProcessInfo.ActiveObjects |
 | PhysicsCollisionPairs | 18 | PhysicsServer.ProcessInfo.CollisionPairs |
 | PhysicsIslandCount | 19 | PhysicsServer.ProcessInfo.IslandCount |
@@ -58,3 +61,5 @@ The three canvas counts follow [completed canvas counters](../components/canvas-
 Navigation aggregates and planar selectors share one committed snapshot. Audio diagnostics use the active output's managed sample without initializing audio or invoking native code. See [server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots).
 
 RenderVideoMemUsed=14, RenderTextureMemUsed=15 and RenderBufferMemUsed=16 read the native renderer sources; see [native render memory](../components/render-memory.md).
+
+Current/peak runtime allocation selectors remain absent. The [producer audit](../coverage/performance-producers.md) records their remaining contract and excludes the four pinned 3D compilation categories without public zero-value mirrors.

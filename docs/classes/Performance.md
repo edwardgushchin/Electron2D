@@ -30,7 +30,7 @@ double pairs = Performance.GetMonitor(Performance.Monitor.PhysicsCollisionPairs)
 double islands = Performance.GetMonitor(Performance.Monitor.PhysicsIslandCount);
 ```
 
-[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) add all ten aggregate and ten planar navigation counts plus cached audio output latency. [Deferred message memory](../components/runtime-diagnostics.md#deferred-message-memory) adds a process-lifetime peak of actual reserved scene message storage. [Canvas pipeline compilation](../components/canvas-counters.md#canvas-pipeline-compilation) now counts cumulative successful native canvas creations. Total current/peak memory, renderer memory and other compilation sources remain unimplemented. Custom monitor registration/lifecycle now executes through typed handles. No unsupported selector or constant-return placeholder is exposed.
+[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) add all ten aggregate and ten planar navigation counts plus cached audio output latency. [Deferred message memory](../components/runtime-diagnostics.md#deferred-message-memory) adds a process-lifetime peak of actual reserved scene message storage. [Canvas pipeline compilation](../components/canvas-counters.md#canvas-pipeline-compilation) now counts cumulative successful native canvas creations. [Native renderer memory](../components/render-memory.md) also executes. Total current/peak managed/native allocation producers remain unimplemented; the pinned 3D compilation categories are excluded under ADR 0004. See the [producer audit](../coverage/performance-producers.md). Custom monitor registration/lifecycle now executes through typed handles. No unsupported selector or constant-return placeholder is exposed.
 See the component for sample lifetime, verification and platform limits.
 
 ## Custom monitors
@@ -95,4 +95,4 @@ Requires an application integer actorCount value. [CustomMonitorTests](../../tes
 
 ## Native render allocation memory
 
-See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
+See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-allocation gaps; [source ownership](../coverage/performance-producers.md) records the excluded 3D compilation categories.

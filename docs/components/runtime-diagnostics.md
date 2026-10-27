@@ -50,7 +50,7 @@ adds the session-cumulative successful canvas graphics-pipeline creation count,
 independently of completed-frame statistics and their publication window.
 Performance and RenderingServer share the same atomic producer, including
 initialization, cache hits/retirement, error and teardown semantics. Other source
-categories and total/device memory retain their separate prerequisites.
+categories are pinned 3D scene-renderer sources excluded by ADR 0004; current/peak runtime allocation memory remains open. See the [producer audit](../coverage/performance-producers.md).
 
 ## Scope and owned types
 
@@ -82,7 +82,7 @@ monitor introduces no periodic sampler or stale-value cache of its own.
 
 Both families permit prepared reads on any thread with no managed allocation.
 First use may initialize managed service metadata; it opens no native device.
-These selectors do not complete current/peak runtime allocation memory or the other pipeline-compilation sources. Native render memory has its own [executing producer](render-memory.md). Performance/GetMonitor and
+These selectors do not complete current/peak runtime allocation memory. The other pinned pipeline categories belong to excluded 3D scene producers, as traced in the [producer audit](../coverage/performance-producers.md). Native render memory has its own [executing producer](render-memory.md). Performance/GetMonitor and
 its enum remain Partial in the full declaration audit.
 
 The source reference is pinned [Performance.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Performance.xml).
@@ -134,4 +134,4 @@ Other built-in producers remain separate coverage dependencies. No debugger char
 
 ## Native render allocation memory
 
-See [native render memory](render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
+See [native render memory](render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-allocation gaps; the [producer audit](../coverage/performance-producers.md) distinguishes excluded 3D compilation sources.
