@@ -1,5 +1,7 @@
 # Maintaining the Electron2D contract
 
+For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and run the [public consumer](components/extensions.md). Keep typed module initialization/unloading separate from class registration, state rebinding and reload acceptance; storage must never serialize/activate entry callbacks.
+
 Last updated: 2026-10-27
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.

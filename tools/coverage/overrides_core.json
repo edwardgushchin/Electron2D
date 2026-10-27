@@ -2582,6 +2582,6 @@
         "Engine::method:is_editor_hint()"
       ]
     },
-    {"godot": ["Object::constant:NOTIFICATION_EXTENSION_RELOADED"], "state": "Blocked", "reason": "Trigger: accepted typed extension-module/class registration, instance rebinding and state-restoration lifecycle, then its executable reload producer. The pinned GDExtension::finish_reload resets tracked extension instances, restores all state and only then notifies surviving instances; ordinary C# script classes are not that registry. CLR MetadataUpdateHandler updates alone and manual numeric delivery do not implement this producer. See docs/components/scripting.md#native-extension-reload-boundary."}
+    {"godot": ["Object::constant:NOTIFICATION_EXTENSION_RELOADED"], "state": "Blocked", "reason": "Trigger: registered extension-class binding/rebinding and state restoration, then the executable reload producer. ADR 0116 now supplies function-loaded module initialization/unloading, without class replacement. The pinned GDExtension::finish_reload resets tracked extension instances, restores all state and only then notifies surviving instances; ordinary C# script classes are not that registry. CLR MetadataUpdateHandler updates alone and manual numeric delivery do not implement this producer. See docs/components/scripting.md#native-extension-reload-boundary."}
   ]
 }

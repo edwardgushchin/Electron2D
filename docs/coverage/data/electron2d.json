@@ -4601,6 +4601,85 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Extension",
+    "kind": "type",
+    "declaringType": "Electron2D.Extension",
+    "name": "Extension",
+    "signature": "public class Electron2D.Extension",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ExtensionInitialization",
+    "kind": "type",
+    "declaringType": "Electron2D.ExtensionInitialization",
+    "name": "ExtensionInitialization",
+    "signature": "public struct Electron2D.ExtensionInitialization",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ExtensionInitializationLevel",
+    "kind": "type",
+    "declaringType": "Electron2D.ExtensionInitializationLevel",
+    "name": "ExtensionInitializationLevel",
+    "signature": "public enum Electron2D.ExtensionInitializationLevel",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ExtensionManager",
+    "kind": "type",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ExtensionManager",
+    "signature": "public sealed class Electron2D.ExtensionManager",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ExtensionManager.LoadStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.ExtensionManager.LoadStatus",
+    "name": "LoadStatus",
+    "signature": "public enum Electron2D.ExtensionManager.LoadStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.FastNoiseLite",
     "kind": "type",
     "declaringType": "Electron2D.FastNoiseLite",
@@ -21973,6 +22052,48 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Extension..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Extension",
+    "name": ".ctor",
+    "signature": "public Extension()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ExtensionInitialization..ctor(Electron2D.ExtensionInitializationLevel,System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E,System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ExtensionInitialization",
+    "name": ".ctor",
+    "signature": "public ExtensionInitialization(Electron2D.ExtensionInitializationLevel minimumLevel, System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E initialize, System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E deinitialize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "minimumLevel",
+        "type": "Electron2D.ExtensionInitializationLevel",
+        "default": null
+      },
+      {
+        "name": "initialize",
+        "type": "System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E",
+        "default": null
+      },
+      {
+        "name": "deinitialize",
+        "type": "System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.FastNoiseLite..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.FastNoiseLite",
@@ -37200,6 +37321,123 @@
     "parameters": [],
     "returnType": "Electron2D.ENetPeerStatistic",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionInitializationLevel.Core()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionInitializationLevel",
+    "name": "Core",
+    "signature": "public const Electron2D.ExtensionInitializationLevel Core = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionInitializationLevel",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionInitializationLevel.Editor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionInitializationLevel",
+    "name": "Editor",
+    "signature": "public const Electron2D.ExtensionInitializationLevel Editor = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionInitializationLevel",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionInitializationLevel.Scene()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionInitializationLevel",
+    "name": "Scene",
+    "signature": "public const Electron2D.ExtensionInitializationLevel Scene = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionInitializationLevel",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionInitializationLevel.Servers()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionInitializationLevel",
+    "name": "Servers",
+    "signature": "public const Electron2D.ExtensionInitializationLevel Servers = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionInitializationLevel",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionManager.LoadStatus.AlreadyLoaded()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionManager.LoadStatus",
+    "name": "AlreadyLoaded",
+    "signature": "public const Electron2D.ExtensionManager.LoadStatus AlreadyLoaded = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionManager.LoadStatus.Failed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionManager.LoadStatus",
+    "name": "Failed",
+    "signature": "public const Electron2D.ExtensionManager.LoadStatus Failed = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionManager.LoadStatus.NeedsRestart()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionManager.LoadStatus",
+    "name": "NeedsRestart",
+    "signature": "public const Electron2D.ExtensionManager.LoadStatus NeedsRestart = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionManager.LoadStatus.NotLoaded()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionManager.LoadStatus",
+    "name": "NotLoaded",
+    "signature": "public const Electron2D.ExtensionManager.LoadStatus NotLoaded = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.ExtensionManager.LoadStatus.Ok()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ExtensionManager.LoadStatus",
+    "name": "Ok",
+    "signature": "public const Electron2D.ExtensionManager.LoadStatus Ok = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.FileAccessModeFlags.Read()",
@@ -67749,6 +67987,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.ElectronObject\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ExtensionManager.ExtensionLoaded()",
+    "kind": "event",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ExtensionLoaded",
+    "signature": "public static event System.Action\u003CElectron2D.Extension\u003E ExtensionLoaded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Extension\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.ExtensionManager.ExtensionUnloading()",
+    "kind": "event",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ExtensionUnloading",
+    "signature": "public static event System.Action\u003CElectron2D.Extension\u003E ExtensionUnloading",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Extension\u003E",
     "value": null
   },
   {
@@ -113153,6 +113417,223 @@
       }
     ],
     "returnType": "Electron2D.EventConnection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.GetMinimumLibraryInitializationLevel()",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "GetMinimumLibraryInitializationLevel",
+    "signature": "public Electron2D.ExtensionInitializationLevel GetMinimumLibraryInitializationLevel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionInitializationLevel",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.IsLibraryOpen()",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "IsLibraryOpen",
+    "signature": "public System.Boolean IsLibraryOpen()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.GetExtension(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "GetExtension",
+    "signature": "public static Electron2D.Extension GetExtension(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Extension",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.GetLoadedExtensions()",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "GetLoadedExtensions",
+    "signature": "public static System.String[] GetLoadedExtensions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.IsExtensionLoaded(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "IsExtensionLoaded",
+    "signature": "public static System.Boolean IsExtensionLoaded(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.LoadExtensionFromFunction(System.String,System.Func\u003CElectron2D.Extension, System.Nullable\u003CElectron2D.ExtensionInitialization\u003E\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "LoadExtensionFromFunction",
+    "signature": "public static Electron2D.ExtensionManager.LoadStatus LoadExtensionFromFunction(System.String path, System.Func\u003CElectron2D.Extension, System.Nullable\u003CElectron2D.ExtensionInitialization\u003E\u003E initialize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "initialize",
+        "type": "System.Func\u003CElectron2D.Extension, System.Nullable\u003CElectron2D.ExtensionInitialization\u003E\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.UnloadExtension(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "UnloadExtension",
+    "signature": "public static Electron2D.ExtensionManager.LoadStatus UnloadExtension(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -259304,6 +259785,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ExtensionInitialization.Deinitialize()",
+    "kind": "property",
+    "declaringType": "Electron2D.ExtensionInitialization",
+    "name": "Deinitialize",
+    "signature": "public System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E Deinitialize { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ExtensionInitialization.Initialize()",
+    "kind": "property",
+    "declaringType": "Electron2D.ExtensionInitialization",
+    "name": "Initialize",
+    "signature": "public System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E Initialize { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.ExtensionInitializationLevel\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ExtensionInitialization.MinimumLevel()",
+    "kind": "property",
+    "declaringType": "Electron2D.ExtensionInitialization",
+    "name": "MinimumLevel",
+    "signature": "public Electron2D.ExtensionInitializationLevel MinimumLevel { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ExtensionInitializationLevel",
     "value": null
   },
   {

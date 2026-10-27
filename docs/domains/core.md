@@ -1,5 +1,7 @@
 [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) supports explicitly supplied constructor arguments without inventing a default factory, with ordinary constructor ordering and failures. Live assignment/change/reload remain open.
 
+[Function-loaded extension modules](../components/extensions.md) execute typed entry/lifecycle callbacks through ExtensionManager and closed Resource copy/storage through Extension. Class registration and live reload remain open.
+
 [Binary buffers](../components/byte-buffers.md) expose span-based numeric/text conversion and shared file-container compression through ByteBuffer.
 
 [Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) now exposes the borrowed Script through ElectronObject.GetScript, including constructor, copy, file and scene-local paths. [Source-publication notifications](../components/scripting.md#source-publication-notifications) report file/remapping changes; initialization uses typed project constructors. Live assignment remains open.

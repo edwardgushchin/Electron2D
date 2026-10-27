@@ -166,6 +166,8 @@ public sealed partial class ThemeDB
         ["ElectronObject"] = ["ElectronObject"],
         ["Engine"] = ["Engine", "ElectronObject"],
         ["Entity"] = ["Entity", "CanvasItem", "Node", "ElectronObject"],
+        ["Extension"] = ["Extension", "Resource", "ElectronObject"],
+        ["ExtensionManager"] = ["ExtensionManager", "ElectronObject"],
         ["FastNoiseLite"] = ["FastNoiseLite", "Noise", "Resource", "ElectronObject"],
         ["FileAccess"] = ["FileAccess", "ElectronObject"],
         ["FileDialog"] = ["FileDialog", "ConfirmationDialog", "AcceptDialog", "Window", "Viewport", "Node", "ElectronObject"],

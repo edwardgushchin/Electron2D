@@ -14,6 +14,7 @@ public static partial class ResourceFileTypes
     private static Dictionary<Type, ResourceArrayCodec> ResourceArrays => ResourceLoader.Runtime.FileTypes.ResourceArrays;
     private static InstancePlaceholder CreateInstancePlaceholder() => new();
     private static MissingNode CreateMissingNode() => new();
+    private static Extension CreateExtension() => new();
     static ResourceFileTypes()
     {
         RegisterNode("Node", CreateNode);
@@ -68,6 +69,7 @@ public static partial class ResourceFileTypes
         RegisterResource("FontVariation", CreateFontVariation);
         RegisterResource("DPITexture", CreateDPITexture);
         RegisterResource("Script", CreateScript);
+        RegisterResource("Extension", CreateExtension);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
         RegisterResource("TileSet", CreateTileSet);
         RegisterResource("TileMapPattern", CreateTileMapPattern);

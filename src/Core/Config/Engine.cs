@@ -112,6 +112,8 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(ResourceSaver));
         _singletons.Add(nameof(ResourceUID), ResourceUID.Runtime);
         _singletonNames.Add(nameof(ResourceUID));
+        _singletons.Add(nameof(ExtensionManager), ExtensionManager.Service);
+        _singletonNames.Add(nameof(ExtensionManager));
         _singletons.Add(nameof(NavigationServer), NavigationServer.Service);
         _singletonNames.Add(nameof(NavigationServer));
         _singletons.Add(nameof(CameraServer), CameraServer.Service);
@@ -372,6 +374,7 @@ public sealed partial class Engine : ElectronObject
             string.Equals(name, nameof(InputMap), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceLoader), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceSaver), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(ExtensionManager), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceUID), StringComparison.Ordinal) ||
             string.Equals(name, nameof(CameraServer), StringComparison.Ordinal) ||
             string.Equals(name, nameof(AudioServer), StringComparison.Ordinal) ||

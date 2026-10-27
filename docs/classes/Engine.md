@@ -1,5 +1,7 @@
 # Engine
 
+[ExtensionManager](ExtensionManager.md) has one permanent reserved service identity in the built-in singleton registry. Its public module operations stay static; borrowed service disposal/unregistration reject.
+
 Last updated: 2026-10-27
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.

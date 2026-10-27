@@ -1,0 +1,211 @@
+{
+  "mappings": [
+    {
+      "godot": "class:GDExtension",
+      "electron2d": "T:Electron2D.Extension",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "class:GDExtensionManager",
+      "electron2d": "T:Electron2D.ExtensionManager",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::enum:InitializationLevel",
+      "electron2d": "T:Electron2D.ExtensionInitializationLevel",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_CORE",
+      "electron2d": "enumValue:Electron2D.ExtensionInitializationLevel.Core()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_SERVERS",
+      "electron2d": "enumValue:Electron2D.ExtensionInitializationLevel.Servers()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_SCENE",
+      "electron2d": "enumValue:Electron2D.ExtensionInitializationLevel.Scene()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_EDITOR",
+      "electron2d": "enumValue:Electron2D.ExtensionInitializationLevel.Editor()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::enum:LoadStatus",
+      "electron2d": "T:Electron2D.ExtensionManager.LoadStatus",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_OK",
+      "electron2d": "enumValue:Electron2D.ExtensionManager.LoadStatus.Ok()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_FAILED",
+      "electron2d": "enumValue:Electron2D.ExtensionManager.LoadStatus.Failed()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_ALREADY_LOADED",
+      "electron2d": "enumValue:Electron2D.ExtensionManager.LoadStatus.AlreadyLoaded()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_NOT_LOADED",
+      "electron2d": "enumValue:Electron2D.ExtensionManager.LoadStatus.NotLoaded()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_NEEDS_RESTART",
+      "electron2d": "enumValue:Electron2D.ExtensionManager.LoadStatus.NeedsRestart()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::method:get_minimum_library_initialization_level()",
+      "electron2d": "method:Electron2D.Extension.GetMinimumLibraryInitializationLevel()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtension::method:is_library_open()",
+      "electron2d": "method:Electron2D.Extension.IsLibraryOpen()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::method:get_extension(String:)",
+      "electron2d": "method:Electron2D.ExtensionManager.GetExtension(System.String)",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::method:get_loaded_extensions()",
+      "electron2d": "method:Electron2D.ExtensionManager.GetLoadedExtensions()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::method:is_extension_loaded(String:)",
+      "electron2d": "method:Electron2D.ExtensionManager.IsExtensionLoaded(System.String)",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::method:unload_extension(String:)",
+      "electron2d": "method:Electron2D.ExtensionManager.UnloadExtension(System.String)",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::method:load_extension_from_function(String:,const GDExtensionInitializationFunction*:)",
+      "electron2d": "method:Electron2D.ExtensionManager.LoadExtensionFromFunction(System.String,System.Func<Electron2D.Extension, System.Nullable<Electron2D.ExtensionInitialization>>)",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::signal:extension_loaded(GDExtension:)",
+      "electron2d": "event:Electron2D.ExtensionManager.ExtensionLoaded()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": "GDExtensionManager::signal:extension_unloading(GDExtension:)",
+      "electron2d": "event:Electron2D.ExtensionManager.ExtensionUnloading()",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.ExtensionInitialization",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "constructor:Electron2D.Extension..ctor()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ExtensionInitialization..ctor(Electron2D.ExtensionInitializationLevel,System.Action<Electron2D.ExtensionInitializationLevel>,System.Action<Electron2D.ExtensionInitializationLevel>)",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "method:Electron2D.Extension.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "method:Electron2D.Extension.CreateDuplicateInstance()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "method:Electron2D.Extension.Dispose(System.Boolean)",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "method:Electron2D.Extension.ValidateDisposal()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "method:Electron2D.ExtensionManager.ValidateDisposal()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "property:Electron2D.ExtensionInitialization.Deinitialize()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "property:Electron2D.ExtensionInitialization.Initialize()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    },
+    {
+      "electron2d": "property:Electron2D.ExtensionInitialization.MinimumLevel()",
+      "reason": "ADRs 0003/0013/0116: typed C# counterpart of the module initialization record/callback userdata and Resource construction, copying, disposal guards. Executable module state never copies into storage; manager lifetime is process-owned. This support surface adds no independent scripting or module-replacement capability. See docs/components/extensions.md."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "GDExtension::enum:InitializationLevel",
+        "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_CORE",
+        "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_SERVERS",
+        "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_SCENE",
+        "GDExtension::enum_value:InitializationLevel.INITIALIZATION_LEVEL_EDITOR",
+        "GDExtensionManager::enum:LoadStatus",
+        "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_OK",
+        "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_FAILED",
+        "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_ALREADY_LOADED",
+        "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_NOT_LOADED",
+        "GDExtensionManager::enum_value:LoadStatus.LOAD_STATUS_NEEDS_RESTART",
+        "GDExtension::method:get_minimum_library_initialization_level()",
+        "GDExtension::method:is_library_open()",
+        "GDExtensionManager::method:get_extension(String:)",
+        "GDExtensionManager::method:get_loaded_extensions()",
+        "GDExtensionManager::method:is_extension_loaded(String:)",
+        "GDExtensionManager::method:unload_extension(String:)",
+        "GDExtensionManager::method:load_extension_from_function(String:,const GDExtensionInitializationFunction*:)",
+        "GDExtensionManager::signal:extension_loaded(GDExtension:)",
+        "GDExtensionManager::signal:extension_unloading(GDExtension:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": [
+        "class:GDExtension",
+        "class:GDExtensionManager"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0116: typed function-entry module lifecycle, current-level ascending initialization, reverse cleanup/rollback, retained resource identity and owner-thread registry. Public CLR/strict NativeAOT consumer exercises real selected CPU/GPU module worlds, storage, errors and zero warm physical allocations; see docs/components/extensions.md. File loading, registered-class rebinding and live reload remain open."
+    },
+    {
+      "godot": [
+        "GDExtensionManager::method:load_extension(String:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: file/module discovery and typed loader activation beyond the executable function entry of ADR 0116; no inert file-loading operation is exposed. See docs/components/extensions.md."
+    },
+    {
+      "godot": [
+        "GDExtensionManager::method:reload_extension(String:)",
+        "GDExtensionManager::signal:extensions_reloaded()"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: registered extension class/instance rebinding, state restoration, removed-class/method policy and replacement failure handling under ADR 0116, followed by the actual reload consumer. Function initialization/unloading does not implement replacement. See docs/components/extensions.md."
+    }
+  ]
+}

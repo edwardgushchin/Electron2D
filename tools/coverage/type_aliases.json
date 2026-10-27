@@ -138,7 +138,9 @@
     "VisualShaderNodeParticleOutput": "VisualShaderNodeParticleOutput",
     "VisualShaderNodeParticleRandomness": "VisualShaderNodeParticleRandomness",
     "VisualShaderNodeParticleRingEmitter": "VisualShaderNodeParticleRingEmitter",
-    "VisualShaderNodeParticleSphereEmitter": "VisualShaderNodeParticleSphereEmitter"
+    "VisualShaderNodeParticleSphereEmitter": "VisualShaderNodeParticleSphereEmitter",
+    "GDExtension": "Extension",
+    "GDExtensionManager": "ExtensionManager"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
@@ -284,6 +286,7 @@
     "VisualShaderNodeUVFunc.Function": "VisualShaderNodeUVFunc.FunctionEnum",
     "VisualShaderNodeParticleRandomness.OpType": "VisualShaderFloatOpType",
     "VisualShaderNodeParticleEmit.EmitFlags": "ParticlesEmitFlags",
-    "VisualShaderNodeParticleAccelerator.Mode": "VisualShaderNodeParticleAccelerator.ModeEnum"
+    "VisualShaderNodeParticleAccelerator.Mode": "VisualShaderNodeParticleAccelerator.ModeEnum",
+    "GDExtension.InitializationLevel": "ExtensionInitializationLevel"
   }
 }

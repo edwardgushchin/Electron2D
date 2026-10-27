@@ -243,7 +243,7 @@ public sealed partial class Engine
     /// <remarks>
     /// Registration retains a managed reference but does not transfer disposal ownership. Disposing an object does not
     /// remove its registration; the registering component must unregister it during teardown. The name <c>Engine</c>,
-    /// <c>ProjectSettings</c>, <c>Input</c>, <c>InputMap</c>, <c>CameraServer</c>, and <c>AudioServer</c> are already occupied by built-in process singletons.
+    /// <c>ProjectSettings</c>, <c>Input</c>, <c>InputMap</c>, <c>ExtensionManager</c>, <c>CameraServer</c>, and <c>AudioServer</c> are already occupied by built-in process singletons.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="name"/> or <paramref name="instance"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="name"/> is empty or consists only of whitespace.</exception>

@@ -128,6 +128,8 @@ CPU runs exclude device discovery; GPU runs map NVIDIA Vulkan with software impl
 
 ## Native extension reload boundary
 
+[The function-loaded lifecycle](extensions.md) now executes under ADR 0116. Registered class/instance rebinding and restoration remain the missing producer boundary.
+
 `Object.NOTIFICATION_EXTENSION_RELOADED` is an open extension-host dependency.
 The pinned [Object constant](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml#L1022)
 applies to extension classes and their descendants. Its automatic producer is

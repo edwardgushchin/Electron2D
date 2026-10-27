@@ -1,3 +1,5 @@
+[Function-loaded module lifecycle](extensions.md) implements the first real extension-host prerequisite with typed initialization, ordered cleanup and selected CPU/GPU numerical worlds. Registered-class restoration and reload notification remain open; physics declaration coverage stays **1362/1369 (99.49%)**, seven open and 92 Excluded.
+
 [The extension-reload producer audit](scripting.md#native-extension-reload-boundary) identifies the registered module/instance restoration prerequisite and rejects a successful CLR-wide Hot Reload prototype with different event semantics. Declaration coverage stays **1362/1369 (99.49%)**, seven open (five Partial, two Blocked), 92 Excluded; no runtime implementation or promotion is claimed.
 
 [Direct GPU attachment lookup](physics-backends.md#direct-native-attachment-lookup-2026-10-27) removes the repeated native-table search for built-in attachments, retaining wrapped-provider and lifetime checks. The measured 65,536-body preparation stage improves at zero managed allocations/readback; full-step/FPS acceptance and the seven open API declarations remain unchanged.

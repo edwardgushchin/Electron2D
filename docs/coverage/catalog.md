@@ -305,8 +305,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [FontFile](classes/FontFile.md) | Font | Partial | 89 |
 | [FontVariation](classes/FontVariation.md) | Font | Implemented | 14 |
 | [FramebufferCacheRD](classes/FramebufferCacheRD.md) | Object | Implemented | 1 |
-| [GDExtension](classes/GDExtension.md) | Resource | Blocked | 7 |
-| [GDExtensionManager](classes/GDExtensionManager.md) | Object | Blocked | 16 |
+| [GDExtension](classes/GDExtension.md) | Resource | Partial | 7 |
+| [GDExtensionManager](classes/GDExtensionManager.md) | Object | Partial | 16 |
 | [GDScript](classes/GDScript.md) | Script | Excluded | 1 |
 | [GDScriptLanguageProtocol](classes/GDScriptLanguageProtocol.md) | JSONRPC | Excluded | 9 |
 | [GDScriptSyntaxHighlighter](classes/GDScriptSyntaxHighlighter.md) | EditorSyntaxHighlighter | Excluded | 0 |
