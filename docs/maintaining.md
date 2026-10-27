@@ -577,3 +577,5 @@ HDR metadata, actual native formats and physical HDR-display acceptance remain
 separate; see [native output](components/native-hdr-output.md).
 
 For native alerts or message-box marshalling, run [the public managed/failure/native consumers](components/native-alerts.md#executable-checks) in CLR and strict NativeAOT. Preserve the -1 sentinel when a native provider leaves selection unwritten, owner-thread guards, NUL validation and partial-marshalling cleanup; inspect native text pixels separately from callback success.
+
+For native mirror-clamp addressing, run the public `mirror` and `mirror-canvas` sampler consumer profiles in CLR and strict NativeAOT, then repeat with the SDL3_DYNAMIC_API failure shim and `unavailable`. Require observed extension refusal, working ordinary sampling and recovery after failed configured preparation. [The mirror-clamp contract](components/sampler-mirror-clamp.md#executable-checks) owns reproduction and qualification limits.

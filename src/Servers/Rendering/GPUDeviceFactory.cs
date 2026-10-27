@@ -4,6 +4,7 @@ namespace Electron2D;
 
 internal static unsafe class GPUDeviceFactory
 {
+    internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
     private static readonly object Gate = new();
     private static SharedDevice? _shared;
 
@@ -84,7 +85,7 @@ internal static unsafe class GPUDeviceFactory
     {
         var formats = ShaderCompiler.GetFormats();
         var device = Attempt(formats, true, false); var sized = device != 0;
-        if (device == 0) device = SDL.CreateGPUDevice(formats, false, null);
+        if (device == 0) device = Attempt(formats, false, false);
         var relaxed = false;
         if (device == 0 && allowAndroidRelaxation && OperatingSystem.IsAndroid() && (formats & SDL.GPUShaderFormat.SPIRV) != 0)
         {
@@ -113,14 +114,28 @@ internal static unsafe class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            if (!sizedPoints) return SDL.CreateGPUDeviceWithProperties(props);
             // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints is field 16.
-            Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = 1;
+            Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
             fixed (uint* pointer = features)
+            fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
             {
-                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = 1u << 22, Vulkan10PhysicalDeviceFeatures = (nint)pointer };
+                var extension = (nint)extensionName;
+                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = 1u << 22, Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
-                    throw new InvalidOperationException("GPU point capabilities could not be requested: " + SDL.GetError());
+                    throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
+                var device = SDL.CreateGPUDeviceWithProperties(props);
+                if (device != 0)
+                {
+                    if (SDL.GetGPUDeviceDriver(device) == "vulkan" && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true))
+                    {
+                        var error = SDL.GetError();
+                        SDL.DestroyGPUDevice(device);
+                        throw new InvalidOperationException("GPU sampler capabilities could not be retained: " + error);
+                    }
+                    return device;
+                }
+                // An optional sampler extension must not prevent ordinary device creation.
+                options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0;
                 return SDL.CreateGPUDeviceWithProperties(props);
             }
         }

@@ -10,7 +10,7 @@ Last updated: 2026-10-27
 
 Describes filtering, normalized or texel-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.
 
-The current profile supports repeat, mirrored repeat, clamp-to-edge and Vulkan clamp-to-border. Other addressing modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
+The current profile supports repeat, mirrored repeat, clamp-to-edge, native Vulkan clamp-to-border and negotiated [mirror-clamp](../components/sampler-mirror-clamp.md). Unsupported native capabilities fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
 
 `BorderColor` selects one of six predefined [floating-point or integer colors](RenderingDevice.SamplerBorderColor.md), initially FloatOpaqueBlack. It is copied with the rest of the configuration, appears in typed property descriptors and is ignored when neither axis uses ClampToBorder. The color scalar class must match the sampled image. See [native border sampling](../components/sampler-borders.md).
 

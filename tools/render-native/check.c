@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     SDL_GPUSamplerCreateInfo sampler_info = {.min_filter = SDL_GPU_FILTER_NEAREST, .mag_filter = SDL_GPU_FILTER_NEAREST, .mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST, .address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .compare_op = SDL_GPU_COMPAREOP_ALWAYS, .max_lod = 1};
     require(e2d_render_sampler(NULL, 1, &sampler_info, 3, 2, 2, 0) == NULL);
     require(e2d_render_sampler((SDL_GPUDevice *)(uintptr_t)1, 0, &sampler_info, 3, 2, 2, 0) == NULL);
-    require(e2d_render_sampler((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 4, 2, 2, 0) == NULL);
+    require(e2d_render_sampler((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 5, 2, 2, 0) == NULL);
     require(e2d_render_sampler((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 3, 2, 6, 0) == NULL);
     require(e2d_render_memory(NULL, 1, &memory) == -1);
     require(e2d_render_memory((SDL_GPUDevice *)(uintptr_t)1, 0, &memory) == -1);
@@ -72,6 +72,8 @@ int main(int argc, char **argv)
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, "vulkan");
     require(device != NULL);
+    require(e2d_render_sampler(device, 1, &sampler_info, 4, 2, 2, 0) == NULL);
+    require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
     require(e2d_render_filter_support(device, 1, filters, FILTER_COUNT) == 1);
     require(filters[SDL_GPU_TEXTUREFORMAT_INVALID] == 0);
     require(filters[SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM] == 3);

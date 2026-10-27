@@ -538,7 +538,7 @@ public sealed unsafe partial class RenderingDevice
         Max = 5,
         /// <summary>Repeats the image with alternating mirrored intervals.</summary>
         MirroredRepeat = 1,
-        /// <summary>Requires mirror-clamp shader integration; creation currently rejects it.</summary>
+        /// <summary>Mirrors negative normalized coordinates once, then clamps; requires the enabled native Vulkan extension.</summary>
         MirrorClampToEdge = 4,
         /// <summary>Repeats the image in every normalized coordinate interval.</summary>
         Repeat = 0,

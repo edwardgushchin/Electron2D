@@ -4,6 +4,8 @@ internal static partial class ShaderSamplerChecks
 {
     internal static void Run(string[] args)
     {
+        if (args.Length > 0 && args[0] == "mirror") { MirrorClamp(args.Contains("unavailable")); return; }
+        if (args.Length > 0 && args[0] == "mirror-canvas") { MirrorClampCanvas(args.Contains("unavailable")); return; }
         if (args.Length > 0 && args[0] == "formats") { Formats(args.Contains("masked")); return; }
         if (args.Length > 0 && args[0] == "formats-canvas") { FormatsCanvas(args.Contains("masked")); return; }
         if (args.Length > 0 && args[0] == "coordinates-glyph") { CoordinatesGlyphGuard(); return; }
@@ -56,7 +58,15 @@ internal static partial class ShaderSamplerChecks
         using var invalid = new RDSamplerState { MaxLOD = -1 };
         Reject<ArgumentException>(() => shader.SetTextureSamplerState("TEXTURE", invalid));
         invalid.MaxLOD = 1; invalid.RepeatU = RenderingDevice.SamplerRepeatMode.MirrorClampToEdge;
-        Reject<NotSupportedException>(() => shader.SetTextureSamplerState("TEXTURE", invalid));
+        using (var mirror = (Shader)shader.Duplicate())
+        {
+            mirror.SetTextureSamplerState("TEXTURE", invalid);
+            using var copied = mirror.GetTextureSamplerState("TEXTURE")!;
+            Check(copied.RepeatU == RenderingDevice.SamplerRepeatMode.MirrorClampToEdge, "Mirror-clamp configuration survives copied authoring.");
+            var packed = (PropertyDescriptor<Shader, byte[]>)mirror.GetPropertyList().Single(p => p.Name == "SamplerSettings");
+            using var mirrorRestored = (Shader)restored.Duplicate(); target.SetValue(mirrorRestored, packed.GetValue(mirror)); using var unpacked = mirrorRestored.GetTextureSamplerState("TEXTURE")!;
+            Check(unpacked.RepeatU == RenderingDevice.SamplerRepeatMode.MirrorClampToEdge, "Mirror-clamp metadata roundtrip retains its numeric identity.");
+        }
         invalid.RepeatU = RenderingDevice.SamplerRepeatMode.ClampToEdge; invalid.EnableCompare = true;
         Reject<NotSupportedException>(() => shader.SetTextureSamplerState("TEXTURE", invalid));
         Reject<ArgumentException>(() => shader.SetTextureSamplerState("absent", null));

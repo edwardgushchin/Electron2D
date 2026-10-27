@@ -15,10 +15,11 @@ public partial class Shader
     /// the image bound by a material or default. They persist and copy with it. Compatible program replacement retains
     /// them; removed or differently typed bindings lose them. Native sampler creation occurs during renderer preparation.
     /// Compatibility cannot execute custom shader programs. Nonzero LOD bias remains unavailable on Metal; relaxed
-    /// devices can reject anisotropy. Configure the input state without concurrent mutation.</remarks>
+    /// devices can reject anisotropy. Mirror-clamp native preparation requires its negotiated Vulkan extension.
+    /// Configure the input state without concurrent mutation.</remarks>
     /// <exception cref="ArgumentException">The name is absent, the LOD interval is invalid, or an integer image requests linear filtering.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The element or a configuration value is invalid.</exception>
-    /// <exception cref="NotSupportedException">Border/mirror-clamp addressing or comparison sampling requires another shader capability.</exception>
+    /// <exception cref="NotSupportedException">Comparison sampling is unavailable for this shader binding.</exception>
     /// <exception cref="ObjectDisposedException">This shader or the supplied state is disposed.</exception>
     public void SetTextureSamplerState(string name, RDSamplerState? state, int index = 0)
     {

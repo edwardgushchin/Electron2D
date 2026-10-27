@@ -1,12 +1,12 @@
 # RenderingDevice.SamplerRepeatMode
 
-Last updated: 2026-10-11
+Last updated: 2026-10-27
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.SamplerRepeatMode`. **Source:** [RenderingDevice.TextureEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.TextureEnums.cs). **Component:** [Local compute](../components/local-compute.md).
 
 ## Description
 
-Normalized-coordinate addressing. Repeat wraps each interval; MirroredRepeat alternates its direction; ClampToEdge selects the nearest edge texel. ClampToBorder and MirrorClampToEdge require a shader adapter and are rejected at creation. Max cannot be selected.
+Normalized-coordinate addressing. Repeat wraps each interval; MirroredRepeat alternates its direction; ClampToEdge selects the nearest edge texel. ClampToBorder uses the native Vulkan adapter. MirrorClampToEdge mirrors negative coordinates once, then clamps; it requires the enabled native extension. See [mirror-clamp sampling](../components/sampler-mirror-clamp.md). Max cannot be selected.
 
 ## Example
 
@@ -23,7 +23,7 @@ var selection = RenderingDevice.SamplerRepeatMode.ClampToBorder;
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode ClampToBorder = 3` | Uses the configured border color outside the image; requires the native Vulkan sampler adapter. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode ClampToEdge = 2` | Uses the closest edge texel outside the image. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode Max = 5` | Nonselectable upper bound. |
-| `public const Electron2D.RenderingDevice.SamplerRepeatMode MirrorClampToEdge = 4` | Requires mirror-clamp shader integration; creation currently rejects it. |
+| `public const Electron2D.RenderingDevice.SamplerRepeatMode MirrorClampToEdge = 4` | Mirrors negative coordinates once, then clamps; requires the negotiated Vulkan mirror-clamp extension. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode MirroredRepeat = 1` | Repeats the image with alternating mirrored intervals. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode Repeat = 0` | Repeats the image in every normalized coordinate interval. |
 
@@ -63,7 +63,7 @@ Nonselectable upper bound.
 public const Electron2D.RenderingDevice.SamplerRepeatMode MirrorClampToEdge = 4
 ```
 
-Requires mirror-clamp shader integration; creation currently rejects it.
+Mirrors negative coordinates once, then clamps; requires the negotiated Vulkan mirror-clamp extension.
 
 <a id="member-9698d5250477"></a>
 ### MirroredRepeat

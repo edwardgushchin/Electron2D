@@ -11,7 +11,7 @@
 E2D_EXPORT SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *device, uint32_t abi,
     const SDL_GPUSamplerCreateInfo *info, uint32_t u, uint32_t v, uint32_t border, uint32_t unnormalized)
 {
-    if (!device || !info || abi != 1 || u > 3 || v > 3 || border > 5 || unnormalized > 1) {
+    if (!device || !info || abi != 1 || u > 4 || v > 4 || border > 5 || unnormalized > 1) {
         SDL_SetError("Invalid native sampler arguments");
         return NULL;
     }
@@ -22,8 +22,12 @@ E2D_EXPORT SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *device, uint32_t ab
         return NULL;
     }
     VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
+    if ((u == 4 || v == 4) && !SDL_GetBooleanProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.sampler_mirror_clamp", false)) {
+        SDL_SetError("Mirror-clamp sampling was not enabled for this native device");
+        return NULL;
+    }
     if (unnormalized && (info->min_filter != info->mag_filter || info->mipmap_mode != SDL_GPU_SAMPLERMIPMAPMODE_NEAREST ||
-        info->min_lod != 0 || info->max_lod != 0 || info->enable_anisotropy || info->enable_compare || u < 2 || v < 2)) {
+        info->min_lod != 0 || info->max_lod != 0 || info->enable_anisotropy || info->enable_compare || u < 2 || v < 2 || u > 3 || v > 3)) {
         SDL_SetError("Invalid unnormalized sampler state");
         return NULL;
     }
@@ -36,7 +40,7 @@ E2D_EXPORT SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *device, uint32_t ab
         SDL_SetError("Sampler LOD bias exceeds the native device limit");
         return NULL;
     }
-    if (!unnormalized && u != 3 && v != 3) return SDL_CreateGPUSampler(device, info);
+    if (!unnormalized && u < 3 && v < 3) return SDL_CreateGPUSampler(device, info);
 
     PFN_vkGetInstanceProcAddr instance_proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetDeviceProcAddr device_proc = instance_proc ? (PFN_vkGetDeviceProcAddr)instance_proc(renderer->instance, "vkGetDeviceProcAddr") : NULL;

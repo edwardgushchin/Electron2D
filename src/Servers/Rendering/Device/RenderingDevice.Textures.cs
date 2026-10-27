@@ -320,7 +320,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Creates a device-owned sampler from copied filtering, addressing and LOD state.</summary>
     /// <param name="state">Caller-owned sampler configuration.</param>
     /// <returns>An owned sampler identity.</returns>
-    /// <exception cref="NotSupportedException">Border and unnormalized sampling require the pinned Vulkan adapter; mirror-clamp requires its native capability.</exception>
+    /// <exception cref="NotSupportedException">Extended addressing requires the pinned Vulkan adapter; mirror-clamp also requires its negotiated device extension.</exception>
     public RID SamplerCreate(RDSamplerState state)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(state);

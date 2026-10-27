@@ -17,10 +17,10 @@ bounded extraction and modified-source rejection. Runtime acceptance requires
 the selected matching core; a successful compilation alone does not qualify it.
 
 `e2d_render_sampler` uses ABI 1, copies the SDL sampler fields, normalized
-U/V address identities (0..3), border color (0..5), and a zero/one unnormalized
+U/V address identities (0..4), border color (0..5), and a zero/one unnormalized
 flag. It validates the pinned Vulkan core, physical LOD-bias bounds and the
 unnormalized filter/mip/LOD/address/anisotropy/compare restrictions. Ordinary
-normalized samplers then use SDL creation directly. Extended states replace the
+normalized samplers without border/mirror-clamp use SDL creation directly. Extended states replace the
 unpublished Vulkan handle while SDL retains command references and deferred
 release. Failure returns null with SDL_GetError.
 
@@ -32,6 +32,13 @@ binding owner validates shader operations and lifetime before native sampling.
 
 The public sampler consumers check real normalized and texel-coordinate
 float/integer/depth pixels, descriptor arrays, mixed/filtering modes and
-operation/view rejection. Mirror-clamp remains a separate native capability.
+operation/view rejection. Mirror-clamp requires the private device capability
+recorded only after successful VK_KHR_sampler_mirror_clamp_to_edge negotiation.
+The factory retries creation without this optional extension on failure, retaining
+the existing point and relaxation policy. Raw samplers without that capability
+reject mirror-clamp; unnormalized coordinates still allow only addresses 2/3.
+The Linux test_mirror_mask.c SDL3_DYNAMIC_API shim refuses extension requests
+through the pinned dynapi table, leaving all ordinary native operations intact.
+It is test-only and is not linked into this producer.
 
 `e2d_render_limits` uses ABI 1 and exactly 37 uint64 output elements. It reads the immutable selected Vulkan physical-device limits without allocation, submission or waiting. Invalid pointers/count/ABI return -1; unsupported core/revision/driver returns 0; success returns 1. Failure leaves output untouched. Slots 11/13/14 are zero for excluded image roles. Managed code applies the executing profile and logical descriptor remapping; packages must carry this export with the existing three exports.

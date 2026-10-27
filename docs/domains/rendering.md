@@ -564,3 +564,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Effective device limits](../components/device-limits.md) connect native/profile capacities to public compute/resource/vertex/framebuffer validation and adaptive application algorithms.
 
 [Native format filter support](../components/format-filter-support.md) connects shared physical-device capabilities to adaptive filter choice and explicit configured device/canvas/particle/blit bindings.
+
+[Native mirror-clamp](../components/sampler-mirror-clamp.md) adds negotiated per-axis addressing to the shared device/canvas sampler path, with ordinary-device fallback and explicit unsupported-capability failures.

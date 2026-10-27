@@ -12,6 +12,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
     RenderingDevice.SamplerBorderColor BorderColor, bool UnnormalizedUVW)
 {
     internal bool HasBorder => RepeatU == RenderingDevice.SamplerRepeatMode.ClampToBorder || RepeatV == RenderingDevice.SamplerRepeatMode.ClampToBorder;
+    internal bool HasMirrorClamp => RepeatU == RenderingDevice.SamplerRepeatMode.MirrorClampToEdge || RepeatV == RenderingDevice.SamplerRepeatMode.MirrorClampToEdge;
     internal bool? IntegerBorder => HasBorder ? ((int)BorderColor & 1) != 0 : null;
     internal bool Anisotropic => UseAnisotropy && AnisotropyMax > 1;
     internal bool LinearFilter => MinFilter == RenderingDevice.SamplerFilter.Linear ||
@@ -63,7 +64,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
 
     internal SDL.GPUSamplerCreateInfo Native(string driver, bool anisotropyAvailable = true)
     {
-        if ((HasBorder || UnnormalizedUVW) && driver != "vulkan") throw new NotSupportedException("Border and unnormalized sampling require the native Vulkan sampler adapter.");
+        if ((HasBorder || HasMirrorClamp || UnnormalizedUVW) && driver != "vulkan") throw new NotSupportedException("Extended addressing requires the native Vulkan sampler adapter.");
         if (LODBias != 0 && driver == "metal") throw new NotSupportedException("This backend requires shader-applied LOD bias.");
         if (Anisotropic && !anisotropyAvailable) throw new NotSupportedException("Anisotropic filtering is unavailable on this GPU device.");
         return new()
@@ -87,6 +88,8 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
     internal nint Create(nint device, string driver, bool anisotropyAvailable = true)
     {
         var info = Native(driver, anisotropyAvailable);
+        if (HasMirrorClamp && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MirrorClampProperty, false))
+            throw new NotSupportedException("Mirror-clamp sampling is unavailable on this GPU device.");
         return driver == "vulkan" ? CreateNative(device, 1, in info, (uint)RepeatU, (uint)RepeatV, (uint)BorderColor, UnnormalizedUVW ? 1u : 0u) : SDL.CreateGPUSampler(device, in info);
     }
 
@@ -121,6 +124,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
         RenderingDevice.SamplerRepeatMode.MirroredRepeat => SDL.GPUSamplerAddressMode.MirroredRepeat,
         RenderingDevice.SamplerRepeatMode.ClampToEdge => SDL.GPUSamplerAddressMode.ClampToEdge,
         RenderingDevice.SamplerRepeatMode.ClampToBorder => SDL.GPUSamplerAddressMode.ClampToEdge,
-        _ => throw new NotSupportedException("The native sampler has no mirror-clamp mode.")
+        RenderingDevice.SamplerRepeatMode.MirrorClampToEdge => SDL.GPUSamplerAddressMode.ClampToEdge,
+        _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
 }

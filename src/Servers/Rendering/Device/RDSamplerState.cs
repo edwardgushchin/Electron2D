@@ -1,8 +1,9 @@
 namespace Electron2D;
 
 /// <summary>Describes filtering, normalized or texel-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.</summary>
-/// <remarks>The current profile supports repeat, mirrored repeat, clamp-to-edge and Vulkan clamp-to-border. Other addressing
-/// modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy. A limit of one disables anisotropy.
+/// <remarks>The current profile supports repeat, mirrored repeat and clamp-to-edge. The Vulkan profile also supports
+/// clamp-to-border and negotiated mirror-clamp. Unsupported native capabilities fail during creation.
+/// Integer image sampling requires nearest filters without effective anisotropy. A limit of one disables anisotropy.
 /// Nonzero LOD bias fails on a backend that cannot apply it.</remarks>
 public sealed class RDSamplerState : ElectronObject
 {

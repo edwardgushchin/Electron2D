@@ -34,7 +34,10 @@ internal static class SamplerConfigurationTests
         Reject<ArgumentOutOfRangeException>(() => state.BorderColor = RenderingDevice.SamplerBorderColor.Max);
         Reject<ArgumentOutOfRangeException>(() => state.BorderColor = (RenderingDevice.SamplerBorderColor)(-1));
         state.Dispose(); Reject<ObjectDisposedException>(() => _ = state.BorderColor); Reject<ObjectDisposedException>(() => state.BorderColor = RenderingDevice.SamplerBorderColor.FloatOpaqueBlack);
-        using var mirrored = new RDSamplerState(); mirrored.RepeatU = RenderingDevice.SamplerRepeatMode.MirrorClampToEdge; Reject<NotSupportedException>(() => SamplerConfiguration.Capture(mirrored));
+        using var mirrored = new RDSamplerState(); mirrored.RepeatU = RenderingDevice.SamplerRepeatMode.MirrorClampToEdge;
+        var mirror = SamplerConfiguration.Capture(mirrored); Check(mirror.HasMirrorClamp && mirror.Native("vulkan").AddressModeU == SDL.GPUSamplerAddressMode.ClampToEdge, "Mirror-clamp authoring uses an unpublished native placeholder.");
+        Reject<NotSupportedException>(() => mirror.Native("metal"));
+        mirrored.UnnormalizedUVW = true; mirrored.MaxLOD = 0; Reject<ArgumentException>(() => SamplerConfiguration.Capture(mirrored));
         using var coordinates = new RDSamplerState { UnnormalizedUVW = true, MaxLOD = 0 };
         var coordinateDescriptor = coordinates.GetPropertyList().OfType<PropertyDescriptor<RDSamplerState, bool>>().Single(p => p.Name == nameof(RDSamplerState.UnnormalizedUVW));
         Check(coordinateDescriptor.GetValue(coordinates), "The typed coordinate descriptor preserves the authored mode.");
