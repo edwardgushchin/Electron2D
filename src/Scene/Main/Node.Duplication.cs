@@ -30,7 +30,8 @@ public partial class Node
     /// external references and ordinary resources stay borrowed. Owned resource/file leases remain valid after
     /// source disposal. Always-duplicate resource properties receive independent shallow copies. Signals copies
     /// registered authored subscriptions, preserving external receivers; ordinary CLR subscriptions remain local.
-    /// Without Scripts, freshly constructed nodes use their nearest constructible runtime or registered extension base. A linked
+    /// Without Scripts, live-bound owners retain their stable CLR role with no installed binding; fixed compiled project
+    /// classes use their nearest constructible runtime or registered extension base. A linked
     /// template retains its own compiled types unless Scripts replaces them with the source types. Derived
     /// classes require static CreateSceneInstanceFactory hooks. Source mutation/reentry is rejected while copying.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">Flags contain an unknown bit.</exception>
@@ -187,7 +188,7 @@ public partial class Node
         private Node Fresh(Node original, bool script)
         {
             Type type = original.GetType();
-            if (!script) while (type.Assembly != typeof(Node).Assembly && (!ExtensionBindings.IsExtensionRole(type) || type.IsAbstract)) type = type.BaseType!;
+            if (!script && !original.HasLiveScriptBinding) while (type.Assembly != typeof(Node).Assembly && (!ExtensionBindings.IsExtensionRole(type) || type.IsAbstract)) type = type.BaseType!;
             var expected = type;
             using var extensionConstruction = ExtensionBindings.BeginConstruction(expected);
             var factory = script || type == original.GetType() ? original.CaptureSceneInstanceFactory() : () => (Node)ResourceFileTypes.Get(expected).Factory();

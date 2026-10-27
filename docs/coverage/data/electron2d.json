@@ -112287,6 +112287,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ElectronObject.SetScript(Electron2D.Script)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "SetScript",
+    "signature": "public System.Void SetScript(Electron2D.Script script)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "script",
+        "type": "Electron2D.Script",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ElectronObject.ThrowIfDisposed()",
     "kind": "method",
     "declaringType": "Electron2D.ElectronObject",
@@ -190082,6 +190101,50 @@
       {
         "name": "sourcePath",
         "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "properties",
+        "type": "Electron2D.PropertyDescriptor[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Script.RegisterBinding\u00602(System.String,System.String,Func\u003CTOwner\u003E,Action\u003CTOwner\u003E,Action\u003CTOwner\u003E,Electron2D.PropertyDescriptor[])",
+    "kind": "method",
+    "declaringType": "Electron2D.Script",
+    "name": "RegisterBinding",
+    "signature": "public static System.Void RegisterBinding\u003CTOwner, TCode\u003E(System.String id, System.String sourcePath, Func\u003CTOwner\u003E factory, Action\u003CTOwner\u003E bind, Action\u003CTOwner\u003E clear, Electron2D.PropertyDescriptor[] properties)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "sourcePath",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CTOwner\u003E",
+        "default": null
+      },
+      {
+        "name": "bind",
+        "type": "Action\u003CTOwner\u003E",
+        "default": null
+      },
+      {
+        "name": "clear",
+        "type": "Action\u003CTOwner\u003E",
         "default": null
       },
       {

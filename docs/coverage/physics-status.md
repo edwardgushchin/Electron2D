@@ -71,11 +71,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 18 | 0 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 212 | 1 | 0 | 0 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 42 | 2 | 1 | 0 | 29 |
+| [Object](classes/Object.md) | — | 42 | 3 | 0 | 0 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
-| **Total** | | 449 | 4 | 1 | 0 | 37 |
+| **Total** | | 449 | 5 | 0 | 0 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -83,8 +83,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | --- |
 | [`class:Node`](classes/Node.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`class:Object`](classes/Object.md) | Partial | The concrete C# root now supports direct public construction, independent identity, typed properties/events, weak raw physics association and deterministic disposal without a required empty subclass. Pinned register_core_types.cpp registers Object concretely; ObjectIdentityTests, PhysicsObjectBindingTests and ObjectCensusChecks exercise the actual role. Live SetScript/complete ScriptChanged and remaining whole-class acceptance remain open; docs/components/object-lifecycle.md#direct-root-construction. |
-| [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |
-| [`Object::signal:script_changed()`](classes/Object.md) | Partial | ADR 0091: trusted file replacement and prepared remapping commit source identity and resource ownership before PropertyListChanged then ScriptChanged; file copies finish with Changed. Equality/reuse, public data copying, initial construction and source editing/disposal add no script signal. ScriptTests.SourceChanges verifies blocking, original observer errors, committed state, callback retirement and threaded remapping. Live SetScript assignment/detachment remains absent, so this complete workflow is Partial. See docs/components/scripting.md#source-publication-notifications. |
+| [`Object::method:set_script(Variant:)`](classes/Object.md) | Partial | ADR 0091: live typed bind/clear changes installed code and state on a stable non-Resource owner; prevalidation, partial-bind cleanup, notifications, cancellation and committed retirement execute. Native roles without authored slots, fixed CLR class replacement, Resource and RPC migration remain open. See docs/components/scripting.md#live-typed-bindings. |
+| [`Object::signal:script_changed()`](classes/Object.md) | Partial | ADR 0091: trusted file replacement and prepared remapping commit source identity and resource ownership before PropertyListChanged then ScriptChanged; file copies finish with Changed. Equality/reuse, public data copying, initial construction and source editing/disposal add no script signal. ScriptTests.SourceChanges verifies blocking, original observer errors, committed state, callback retirement and threaded remapping. Live typed assignment/detachment now shares that publication order, including committed failures and disposal; fixed CLR/Resource/callback/RPC replacement remains open, so this complete workflow stays Partial. See docs/components/scripting.md#source-publication-notifications. |
 | [`class:Resource`](classes/Resource.md) | Partial | Typed managed resource lifecycle, paths, IDs, local scenes, RID dispatch and copy/duplication operations execute under ADR 0013. See docs/components/resources.md#copy-and-duplicate-contract for the completed generic copy family and physical resource consumers. Full inherited Object live-script reassignment/change/reload and class acceptance remain open on their declaring rows; these are not missing duplication-session behavior. |
 
 ## Cross-domain physics consumers

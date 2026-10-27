@@ -1,3 +1,5 @@
+Live [typed Script bindings](../components/scripting.md#live-typed-bindings) switch installed functions/state on a stable non-Resource owner through ordinary C# callbacks. The complete live-assignment family remains Partial.
+
 Plain compiled object sources use Script.RegisterObject and the existing identity/schema/constructor/lifetime path. The source asset can be archived while the owner retains its ordinary non-scene role. See [plain object sources](../components/scripting.md#plain-object-sources).
 
 Direct `ElectronObject` construction provides the concrete root role through the existing identity, typed metadata and lifetime path, including weak raw physics associations. See [direct root construction](../components/object-lifecycle.md#direct-root-construction); live script reassignment remains separate.

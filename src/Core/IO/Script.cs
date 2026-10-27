@@ -26,7 +26,7 @@ public sealed partial class Script : Resource
     /// <summary>Gets the selected compiled CLR type without constructing an instance.</summary><value>Null when unbound.</value>
     public Type? CompiledType { get { lock (_gate) { ThrowIfDisposed(); return _registration?.Type; } } }
     /// <summary>Reports whether this asset describes a concrete compiled class with its native extension base available.</summary><returns>False for unbound/abstract assets or an unavailable native base. Required constructor arguments may still be needed.</returns>
-    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false } record && ExtensionBindings.CanConstruct(record.Type); } }
+    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false } record && ExtensionBindings.CanConstruct(record.InstanceType); } }
     /// <summary>Reports whether source text is nonempty.</summary><returns>Whether SourceCode contains text.</returns>
     public bool HasSourceCode() => SourceCode.Length > 0;
     /// <summary>Reports whether the associated compiled class is abstract.</summary><returns>False when unbound.</returns>
@@ -35,8 +35,8 @@ public sealed partial class Script : Resource
     public bool IsTool() => CompiledType?.IsDefined(typeof(ToolAttribute), inherit: true) ?? false;
     /// <summary>Returns the declared global class name.</summary><returns>The CLR class name with GlobalClassAttribute, or empty.</returns>
     public string GetGlobalName() { var type = CompiledType; return type?.IsDefined(typeof(GlobalClassAttribute), inherit: false) == true ? type.Name : ""; }
-    /// <summary>Returns the first runtime or registered extension shell inherited by the compiled script class.</summary><returns>Native CLR base role, or null when unbound.</returns>
-    public Type? GetInstanceBaseType() { var type = CompiledType?.BaseType; while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) type = type.BaseType; return type; }
+    /// <summary>Returns the native base of a fixed class, or the declared stable owner role of a live binding.</summary><returns>Owner CLR role, or null when unbound.</returns>
+    public Type? GetInstanceBaseType() { lock (_gate) { ThrowIfDisposed(); if (_registration?.BindingOwner is { } owner) return owner; } var type = CompiledType?.BaseType; while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) type = type.BaseType; return type; }
     /// <summary>Loads the directly inherited registered script asset, when the project base class has one.</summary><returns>Borrowed cached base Script, or null for a native/unregistered base.</returns>
     public Script? GetBaseScript() { var type = CompiledType?.BaseType; var record = type == null ? null : FindType(type); return record == null ? null : ResourceLoader.Load<Script>(record.Path); }
     /// <summary>Creates a caller-owned instance through the registered exact factory.</summary><typeparam name="T">Expected compiled engine-object role.</typeparam><returns>The actual project class instance.</returns>
@@ -59,18 +59,18 @@ public sealed partial class Script : Resource
     public T New<T>(Func<T>? constructor) where T : ElectronObject
     {
         ScriptRegistration record; lock (_gate) { ThrowIfDisposed(); record = _registration ?? throw new InvalidOperationException("The script is unbound."); }
-        if (!typeof(T).IsAssignableFrom(record.Type) || record.Type.IsAbstract || constructor == null && record.Factory == null) throw new InvalidOperationException("The script cannot construct the expected role.");
-        using var extensionConstruction = ExtensionBindings.BeginConstruction(record.Type);
+        if (!typeof(T).IsAssignableFrom(record.InstanceType) || record.InstanceType.IsAbstract || constructor == null && record.Factory == null) throw new InvalidOperationException("The script cannot construct the expected role.");
+        using var extensionConstruction = ExtensionBindings.BeginConstruction(record.InstanceType);
         var instance = InvokeConstructionFactory(() => constructor != null ? constructor() : record.Factory!(), out var created,
-            script: (this, record.Type));
+            script: (this, record.InstanceType));
         if (instance is not null && !created)
             throw new InvalidOperationException("A script factory returned a pre-existing instance.");
         try
         {
-            if (instance == null || instance.IsDisposed || instance.GetType() != record.Type) throw new InvalidOperationException("Script factory must return a live exact class instance.");
+            if (instance == null || instance.IsDisposed || instance.GetType() != record.InstanceType) throw new InvalidOperationException("Script factory must return a live exact class instance.");
             ExtensionBindings.AttachConstructed(instance);
-            var actual = instance.GetPropertyList().Where(p => p.OwnerType.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(p.OwnerType)).ToArray(); var schema = Properties(record);
-            if (actual.Length != schema.Length || actual.Any(p => !schema.Any(s => s.Name == p.Name && s.OwnerType == p.OwnerType && s.ValueType == p.ValueType && s.IsStored == p.IsStored && s.IsReadOnly == p.IsReadOnly))) throw new InvalidOperationException("Constructed script property schema differs from registration.");
+            instance.InitializeScriptBinding();
+            if (record.BindingOwner is null) ValidateSchema(record, instance);
             return (T)instance;
         }
         catch (Exception error)
@@ -79,6 +79,14 @@ public sealed partial class Script : Resource
             throw;
         }
     }
+    internal static void ValidateSchema(ScriptRegistration record, ElectronObject instance)
+    {
+        var actual = instance.GetPropertyList().Where(p => p.OwnerType.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(p.OwnerType)).ToArray(); var schema = Properties(record);
+        if (actual.Length != schema.Length || actual.Any(p => !schema.Any(s => s.Name == p.Name && s.OwnerType == p.OwnerType && s.ValueType == p.ValueType && s.IsStored == p.IsStored && s.IsReadOnly == p.IsReadOnly))) throw new InvalidOperationException("Constructed script property schema differs from registration.");
+    }
+    internal ScriptRegistration? GetBindingRegistration(bool requireLive)
+    { lock (_gate) { if (requireLive) ThrowIfDisposed(); return _registration?.BindingOwner is null ? null : _registration; } }
+    internal bool MatchesConstructionType(Type type) { lock (_gate) { ThrowIfDisposed(); return _registration is { } record && (record.BindingOwner is { } owner ? !typeof(Resource).IsAssignableFrom(type) && owner.IsAssignableFrom(type) : record.Type == type); } }
     private static PropertyDescriptor[] Properties(ScriptRegistration record)
     {
         var properties = new List<PropertyDescriptor>(); var type = record.Type;
@@ -94,7 +102,8 @@ public sealed partial class Script : Resource
     public TValue GetPropertyDefaultValue<TOwner, TValue>(PropertyDescriptor<TOwner, TValue> property, TOwner owner) where TOwner : ElectronObject
     {
         ArgumentNullException.ThrowIfNull(property); ArgumentNullException.ThrowIfNull(owner);
-        if (CompiledType?.IsInstanceOfType(owner) != true || !GetScriptPropertyList().Contains(property)) throw new ArgumentException("Default query requires a registered descriptor and compatible owner.");
+        ScriptRegistration? record; lock (_gate) { ThrowIfDisposed(); record = _registration; }
+        if (record?.InstanceType.IsInstanceOfType(owner) != true || !GetScriptPropertyList().Contains(property)) throw new ArgumentException("Default query requires a registered descriptor and compatible owner.");
         if (!property.TryGetRevertValue(owner, out var value)) throw new InvalidOperationException("The property has no declared default."); return value;
     }
     /// <summary>Returns declared project methods and inherited project methods without invoking them.</summary><returns>Copied registration-time CLR method metadata, ordered by name/signature.</returns>

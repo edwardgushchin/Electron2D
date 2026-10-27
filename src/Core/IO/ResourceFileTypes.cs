@@ -368,7 +368,7 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
             try { value.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
             throw error;
         }
-        try { ExtensionBindings.AttachConstructed(value); }
+        try { ExtensionBindings.AttachConstructed(value); value.InitializeScriptBinding(); }
         catch (Exception error)
         {
             try { value.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }

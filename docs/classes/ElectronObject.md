@@ -16,6 +16,8 @@ Last updated: 2026-10-28
 
 Plain project subclasses can use [Script.RegisterObject](Script.md#plain-object-sources) for checked compiled source metadata and typed construction. The owner keeps its ordinary fields, notifications and weak physical identity; this adds no live script reassignment.
 
+`SetScript(Script? script)` installs, replaces or detaches a [live typed binding](../components/scripting.md#live-typed-bindings) without replacing this owner. Prevalidation preserves the old state; a callback installation/retirement failure leaves the owner unbound and reports its source change. PropertyListChanged precedes ScriptChanged after commitment. Initial construction binds without these assignment notifications. Fixed CLR source classes and Resource live replacement remain unsupported.
+
 ## Custom typed iteration
 
 Compiled subclasses can supply ordinary C# `GetEnumerator()`/`MoveNext()`/`Current` and optionally `IEnumerable<T>`, retaining their existing object, Resource or Node/body inheritance. The cursor owns its traversal state; acquire a fresh cursor for each independent or nested loop. `foreach` handles ordinary disposal on completion, early exit and exceptions. Use a struct-pattern cursor for allocation-sensitive loops; interface conversion can box that cursor. This is the [typed iteration projection](../decisions/core-object-runtime.md#adr-0005), with no universal element type or dynamic dispatcher on ElectronObject.
@@ -224,10 +226,17 @@ Gets or sets the translation domain used by this object.
 <a id="m-electron2d-electronobject-getscript"></a>
 ### `public Script? GetScript()`
 
-Returns the exact borrowed source asset selected for this owner's compiled construction, or null when none was selected. The association is available during Script.New's derived constructor and survives source edits, memory copies and version-nine scene/resource reconstruction. PackedScene uses the ordinary shared or scene-local resource policy. Earlier archives retain their unrecorded null association.
+Returns the exact borrowed source selected by compiled construction or live typed binding, or null when none is installed. The association is available during Script.New's derived constructor and survives source edits, memory copies and version-nine scene/resource reconstruction. PackedScene uses the ordinary shared or scene-local resource policy. Earlier archives retain their unrecorded null association.
 
 Reads require no metadata discovery, native device, callbacks or managed allocation. Cancelled disposal preserves the source; committed disposal releases it. Explicitly disposing the borrowed asset does not stop compiled execution and the returned asset may be disposed. The owner never owns that asset. Foreign-thread disposal and completed disposal reject with ObjectDisposedException.
 
+
+<a id="m-electron2d-electronobject-setscript-electron2d-script"></a>
+### `public void SetScript(Script? script)`
+
+Installs, replaces or detaches a registered [live typed binding](../components/scripting.md#live-typed-bindings) on this same owner. Null detaches; an equal source does nothing. The borrowed asset does not own the owner, and owner disposal does not dispose that asset.
+
+Prevalidation retains the old binding. Once retirement begins, a clear/bind failure leaves the owner unbound and preserves operation/cleanup/observer errors. PropertyListChanged precedes ScriptChanged after commitment. A callback cannot reenter a binding/disposal transition; post-commit observers can. Fixed CLR source classes and live Resource/cache/RPC replacement remain open.
 
 <a id="m-electron2d-electronobject-canceldisposal"></a>
 ### `public void CancelDisposal()`
@@ -618,7 +627,7 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 ## Deliberate omissions
 
 - No `Variant`, `dynamic`, string-based `Get`, `Set`, or `Call`.
-- No metadata bag, live script attachment or generic signal registry. Compiled C# Script assets and ordinary constructed callbacks execute independently. `ScriptChanged` reports trusted file/remapping source changes; live assignment/detachment remains unimplemented.
+- No metadata bag or generic signal registry. Live attachment currently requires an explicitly registered typed binding and authored owner slots. Replacing fixed CLR source classes, Resource live bindings and the complete callback/RPC family remain open.
 - Arbitrary CLR delegate subscribers are omitted from packed scenes. Authored persistent connections use registered typed SceneConnectionBinding factories under ADR 0010.
 - No public object lookup by `InstanceID`.
 - Deletion is scheduled by Node.QueueFree or SceneTree.QueueDelete. ElectronObject.IsQueuedForDeletion observes an accepted or executing request for this object; it does not schedule one.

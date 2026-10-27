@@ -2278,6 +2278,12 @@ public partial class Node : ElectronObject
         ArgumentNullException.ThrowIfNull(factory);
         var node = InvokeConstructionFactory(factory, out var created, scene: true, script: script);
         if (node is not null && !created) throw new InvalidOperationException("A scene factory returned a borrowed node.");
+        try { node?.InitializeScriptBinding(); }
+        catch (Exception error)
+        {
+            try { node?.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
+            throw;
+        }
         return node!;
     }
 

@@ -10,10 +10,41 @@ namespace Electron2D;
 internal sealed record ScriptDocument(string Path, Guid Algorithm, byte[] Hash);
 internal sealed record ScriptRegistration(string ID, Type Type, string Path, Guid Module, ScriptDocument[] Documents,
     Func<ElectronObject>? Factory, PropertyDescriptor[] Properties, MethodInfo[] Methods, EventInfo[] Events, FieldInfo[] Constants,
-    Dictionary<uint, RPCRegistration> RPC);
+    Dictionary<uint, RPCRegistration> RPC, Type? BindingOwner = null, Action<ElectronObject>? Bind = null, Action<ElectronObject>? Clear = null)
+{
+    internal Type InstanceType => BindingOwner ?? Type;
+}
 
 public sealed partial class Script
 {
+    /// <summary>Registers compiled code that installs and retires typed functions on an existing owner role.</summary>
+    /// <typeparam name="TOwner">Stable owner role with ordinary typed callback slots and properties.</typeparam>
+    /// <typeparam name="TCode">Project code declaration containing the binding implementation.</typeparam>
+    /// <param name="id">Portable source identity.</param><param name="sourcePath">Compiled code's checked source document.</param>
+    /// <param name="factory">Static fresh exact owner constructor, or null for attachment/explicit construction only.</param>
+    /// <param name="bind">Static callback installing fresh per-owner state and typed functions.</param>
+    /// <param name="clear">Static callback retiring all installed functions and state, including after a partial bind.</param>
+    /// <param name="properties">The owner's typed project schema.</param>
+    /// <remarks>Uses the owner's existing virtual callbacks; no frame traversal or script base class is added.
+    /// Binding follows the complete owner constructor. Callbacks own their side effects and must retire functions
+    /// before reporting cleanup errors. Resource owners and replacement of fixed CLR source classes remain unsupported.</remarks>
+    /// <exception cref="ArgumentException">Code, owner, source, factory or schema is invalid, or a callback captures state.</exception>
+    /// <exception cref="ArgumentNullException">A required callback is null.</exception>
+    /// <exception cref="InvalidOperationException">Identity, code type or source is already registered.</exception>
+    /// <exception cref="NotSupportedException">Matching assembly and portable source symbols are unavailable.</exception>
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
+    public static void RegisterBinding<TOwner, TCode>(string id, string sourcePath, Func<TOwner>? factory, Action<TOwner> bind, Action<TOwner> clear,
+        params PropertyDescriptor[] properties) where TOwner : ElectronObject where TCode : class
+    {
+        ArgumentNullException.ThrowIfNull(bind); ArgumentNullException.ThrowIfNull(clear);
+        if (typeof(Resource).IsAssignableFrom(typeof(TOwner)) || typeof(TCode).IsAbstract || typeof(ElectronObject).IsAssignableFrom(typeof(TCode)) ||
+            bind.Target is not null || clear.Target is not null || bind.Method.DeclaringType?.IsAssignableFrom(typeof(TCode)) != true ||
+            clear.Method.DeclaringType?.IsAssignableFrom(typeof(TCode)) != true)
+            throw new ArgumentException("Live bindings require concrete project code, a non-Resource owner and static bind/clear callbacks.");
+        Register(typeof(TCode), id, sourcePath, factory is null ? null : () => factory(), properties, null, factory?.Target,
+            bindingOwner: typeof(TOwner), bind: owner => bind((TOwner)owner), clear: owner => clear((TOwner)owner));
+    }
     private static readonly object CatalogGate = new();
     private static readonly Dictionary<string, ScriptRegistration> ByID = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, ScriptRegistration> ByPath = new(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
@@ -83,15 +114,16 @@ public sealed partial class Script
     }
     [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
     [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
-    private static void Register(Type type, string id, string path, Func<ElectronObject>? factory, PropertyDescriptor[] properties, Action? registerFileType, object? factoryTarget, ReadOnlySpan<RPCRegistration> rpc = default)
+    private static void Register(Type type, string id, string path, Func<ElectronObject>? factory, PropertyDescriptor[] properties, Action? registerFileType, object? factoryTarget, ReadOnlySpan<RPCRegistration> rpc = default,
+        Type? bindingOwner = null, Action<ElectronObject>? bind = null, Action<ElectronObject>? clear = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id); ArgumentNullException.ThrowIfNull(properties);
-        if (type.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(type) || type.ContainsGenericParameters || !typeof(ElectronObject).IsAssignableFrom(type)) throw new ArgumentException("Scripts require a closed project ElectronObject type outside extension class shells.");
+        if (type.Assembly == typeof(Script).Assembly || type.Assembly == typeof(object).Assembly || ExtensionBindings.IsExtensionRole(type) || type.ContainsGenericParameters || bindingOwner is null && !typeof(ElectronObject).IsAssignableFrom(type)) throw new ArgumentException("Scripts require a closed project declaration outside extension class shells.");
         if (id.Length > 256 || id.Any(char.IsControl) || factoryTarget != null) throw new ArgumentException("Script identities must be portable and file factories static.");
         path = System.IO.Path.GetFullPath(ResourceArchive.Absolute(path));
         if (!System.IO.Path.GetExtension(path).Equals(".cs", StringComparison.OrdinalIgnoreCase) || type.IsAbstract && factory != null) throw new ArgumentException("Registration requires C# source and an appropriate concrete/abstract factory.");
         var copy = (PropertyDescriptor[])properties.Clone(); var names = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var property in copy) if (property == null || property.OwnerType.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(property.OwnerType) || !property.OwnerType.IsAssignableFrom(type) || !names.Add(property.Name)) throw new ArgumentException("Invalid script property schema.", nameof(properties));
+        foreach (var property in copy) if (property == null || property.OwnerType.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(property.OwnerType) || !property.OwnerType.IsAssignableFrom(bindingOwner ?? type) || !names.Add(property.Name)) throw new ArgumentException("Invalid script property schema.", nameof(properties));
         if (rpc.Length > 65536) throw new ArgumentException("Script RPC declarations exceed the method budget.", nameof(rpc));
         var declarations = new Dictionary<uint, RPCRegistration>(rpc.Length);
         foreach (var entry in rpc)
@@ -100,12 +132,12 @@ public sealed partial class Script
         var documents = ReadDocuments(type);
         if (!documents.Any(d => ByPath.Comparer.Equals(d.Path, path))) throw new ArgumentException("The compiled type does not belong to this source document.", nameof(path));
         var projectTypes = new List<Type>();
-        for (var current = type; current is not null && current.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(current); current = current.BaseType) projectTypes.Add(current);
+        for (var current = type; current is not null && current != typeof(object) && current.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(current); current = current.BaseType) projectTypes.Add(current);
         const BindingFlags members = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
         var methods = projectTypes.SelectMany(t => t.GetMethods(members)).Where(m => !m.IsSpecialName && !m.IsDefined(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute))).OrderBy(m => m.Name, StringComparer.Ordinal).ThenBy(m => m.ToString(), StringComparer.Ordinal).ToArray();
         var events = projectTypes.SelectMany(t => t.GetEvents(members)).OrderBy(e => e.Name, StringComparer.Ordinal).ToArray();
         var constants = projectTypes.SelectMany(t => t.GetFields(members)).Where(f => f.IsLiteral).ToArray();
-        var record = new ScriptRegistration(id, type, path, type.Module.ModuleVersionId, documents, factory, copy, methods, events, constants, declarations);
+        var record = new ScriptRegistration(id, type, path, type.Module.ModuleVersionId, documents, factory, copy, methods, events, constants, declarations, bindingOwner, bind, clear);
         lock (CatalogGate)
         {
             if (ByID.ContainsKey(id) || ByType.ContainsKey(type) || ByPath.ContainsKey(path)) throw new InvalidOperationException("Script ID, type or primary source is already registered.");

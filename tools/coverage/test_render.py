@@ -57,7 +57,9 @@ def check_physics_report(pages):
     source_rows = [row for row in object_page.splitlines() if row.startswith("| [`method get_script(")]
     assert len(source_rows) == 1 and " | Implemented | " in source_rows[0] and "public Electron2D.Script GetScript()" in source_rows[0]
     assert "Object::method:get_script()" not in expected, "Qualified source identity must not remain open"
-    assert expected["Object::method:set_script(Variant:)"] == "Blocked", "Source observation must not close live reassignment"
+    assert expected["Object::method:set_script(Variant:)"] == "Partial", "The first executable binding slice must retain the complete live-reassignment gap"
+    binding_rows = [row for row in object_page.splitlines() if row.startswith("| [`method set_script(")]
+    assert len(binding_rows) == 1 and "SetScript(" in binding_rows[0] and "live-typed-bindings" in binding_rows[0]
     for cache in ("UniformSetCacheRD", "FramebufferCacheRD"):
         rows = [row for row in pages[CLASS_PAGES / (cache + ".md")].splitlines() if row.startswith("| [`")]
         assert len(rows) == 2 and all(" | Implemented | " in row for row in rows)

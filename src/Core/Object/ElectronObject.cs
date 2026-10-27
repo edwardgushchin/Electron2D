@@ -180,7 +180,8 @@ public partial class ElectronObject : IDisposable
     /// <remarks>
     /// Trusted file replacement and prepared-reference remapping notify after committing a different source identity,
     /// following PropertyListChanged and before a resource copy's final Changed event. Equal references do not notify.
-    /// Initial construction, source text edits and disposal do not synthesize this event. Live reassignment is a separate workflow.
+    /// Live typed assignment/detachment follows the same order after commitment. Initial construction, source text edits
+    /// and disposal do not synthesize this event. The complete fixed-class/Resource/RPC replacement family remains separate.
     /// </remarks>
     public event Action<ElectronObject>? ScriptChanged { add => _publisherScriptChanged.Add(value); remove => _publisherScriptChanged.Remove(value); }
     private EventPublisher<Action<ElectronObject>> _publisherScriptChanged;
@@ -332,6 +333,8 @@ public partial class ElectronObject : IDisposable
         if (Volatile.Read(ref _disposeState) != Alive)
             return;
 
+        if (!TryBeginScriptDisposal(out var scriptOperation)) return;
+        using var scriptDisposal = scriptOperation;
         using var extensionDisposal = ExtensionBindings.BeginDisposal(this);
         ValidateDisposal();
 
@@ -360,7 +363,9 @@ public partial class ElectronObject : IDisposable
             if (!canceled)
             {
                 if (this is Node || this is Resource and not Image) RenderingServer.NotifyRenderMutation();
-                disposalError = ExtensionBindings.Detach(this);
+                disposalError = RetireScriptBinding();
+                var extensionError = ExtensionBindings.Detach(this);
+                if (extensionError is not null) disposalError = disposalError is null ? extensionError : new AggregateException(disposalError, extensionError);
                 try
                 {
                     Dispose(disposing: true);

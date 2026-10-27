@@ -8,7 +8,7 @@ Last updated: 2026-10-28
 
 **Declaration:** `public sealed partial class Script : Resource` · **Source:** [Script.cs](../../src/Core/IO/Script.cs), [Script.Catalog.cs](../../src/Core/IO/Script.Catalog.cs), [Script.RPC.cs](../../src/Core/IO/Script.RPC.cs) · **Component:** [Scripting](../components/scripting.md)
 
-A compiled C# source asset for a registered project ElectronObject, Node or Resource class. The host supplies stable identity, an optional static exact default factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
+A compiled C# source asset for a registered project engine-object class or a live typed-binding code declaration. The host supplies stable identity, an optional static exact default factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
 
 ```csharp
 // At project startup; sourcePath belongs to the compiled project class:
@@ -34,6 +34,7 @@ RegisterObject covers compiled project classes directly based on ElectronObject 
 | `public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode>? factory, params PropertyDescriptor[] properties) where TNode : Node` | Registers source/schema; a null default factory requires explicit typed construction. |
 | `public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource>? factory, params PropertyDescriptor[] properties) where TResource : Resource` | Same nullable default-factory contract for Resource/effect classes. |
 | `public static void RegisterObject<TObject>(string id, string sourcePath, Func<TObject>? factory, params PropertyDescriptor[] properties) where TObject : ElectronObject` | Plain project objects outside Node/Resource; same source/schema/constructor policy, without an owner archive factory. |
+| `public static void RegisterBinding<TOwner, TCode>(string id, string sourcePath, Func<TOwner>? factory, Action<TOwner> bind, Action<TOwner> clear, params PropertyDescriptor[] properties) where TOwner : ElectronObject where TCode : class` | Checked project code installs/retires typed functions on a stable non-Resource owner. Its code type and owner type are separate; file factories remain explicit. |
 | `public static void RegisterAbstract<T>(string id, string sourcePath, params PropertyDescriptor[] properties) where T : ElectronObject` | Abstract project engine-object metadata without a factory. |
 | `public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode>? factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Copies validated class RPC defaults with the existing exact source/factory registration. |
 | `public static void RegisterAbstractWithRPC<TNode>(string id, string sourcePath, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Abstract Node source and inherited RPC defaults without a factory. |

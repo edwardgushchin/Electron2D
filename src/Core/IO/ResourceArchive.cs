@@ -646,7 +646,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
     private Script? ConstructionScript(int reference, Type ownerType)
     {
         if (reference == -1) return null;
-        if (reference < 0 || reference >= _resources.Length || _resources[reference] is not Script script || script.CompiledType != ownerType)
+        if (reference < 0 || reference >= _resources.Length || _resources[reference] is not Script script || !script.MatchesConstructionType(ownerType))
             throw new InvalidDataException("Compiled source does not match its exact owner type.");
         return script;
     }
