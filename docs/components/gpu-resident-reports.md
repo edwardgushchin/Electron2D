@@ -16,6 +16,38 @@ adapter resolves them to retained common identities and logical shape indices,
 applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
 
+## Window device isolation trial (2026-10-27)
+
+The 2026-10-27 trial on `72a772ec27ce598884b234eddfb328098fced6f8` made
+physics create its own SDL GPU device while preserving explicit renderer-device
+borrowing for RenderingDevice. This was an experiment and was reverted. The
+retained baseline and candidate have identical benchmark/consumer sources and
+all 231 embedded offline shader modules; their runtime sources differ only in
+GPUPhysicsDevice and the RenderingDevice constructor call.
+
+On Linux/Wayland, RTX 3090 Ti and driver 615.71.09, the complete 16,384-body
+window fixture used 1600 warmup ticks and 128 samples at 144 Hz, four substeps,
+16 solver iterations, eight monitored contacts and interpolation. The candidate
+reported 180.7781 ms mean physics time, 347.9445 ms p95 and 2.9280 window FPS.
+Physical invariants and zero owner/all-thread physical allocations passed, but
+the process exited with SIGSEGV after recording cleanup. These are failed-run
+diagnostics, not qualified performance or lifecycle results. Requested disabled
+VSync resolved to enabled; external CPU activity and GPU clocks were sampled.
+
+The same failure reproduced with 64 bodies and 64 warmup/sample intervals.
+GDB stopped at a null call in the NVIDIA driver reached from SDL's
+`VULKAN_ReleaseWindow`; this locates the failure without identifying its root
+cause. The unchanged baseline completed that small profile with exit code zero.
+The small candidate reported 3.2594 ms mean physics time and 143.7394 FPS versus
+12.9569 ms and 63.1480 FPS in the baseline. These single uncontrolled runs retain
+a queue-isolation signal for investigation; the candidate's failed retirement
+prevents accepting that apparent gain.
+No new Xid was recorded. Evidence, source/assembly hashes, the reverted patch,
+terminal receipts and stack are retained in
+`bin/physics-device-queue/2026-10-27/`. NativeAOT qualification was not attempted
+after the CLR lifecycle failure. The current device-sharing implementation stays
+in place; queue isolation and full-window GPU advantage remain unqualified.
+
 ## Packed selected result layout
 
 Each selected result uses a 68-byte scalar wire record: four shape index/generation
