@@ -171,7 +171,7 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
         }
         foreach (var child in entry.Dependencies) Publish(child);
         var source = entry.Prepared!;
-        if (entry.Archive is { } archive) archive.RedirectResources(Redirect); else source.RemapPreparedReferences(Redirect);
+        Resource[] changedSources = entry.Archive is { } archive ? archive.RedirectResources(Redirect) : source.RemapPreparedReferences(Redirect) ? [source] : [];
         var ownedChildren = new List<ResourceFileOwnership>();
         foreach (var child in entry.Dependencies) if (child.Publish && ReferenceEquals(child.Final, child.Prepared))
             {
@@ -183,6 +183,11 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
             source = context.ReleaseRoot(); entry.Archive = null;
         }
         source.AppendFileOwnerships(ownedChildren.ToArray());
+        foreach (var changed in changedSources)
+        {
+            changed.NotifyConstructionScriptChanged();
+            ObjectDisposedException.ThrowIf(changed.IsDisposed, changed);
+        }
         if (!ReferenceEquals(entry.Final, source))
         {
             try { entry.Final!.CopyFileState(source); }

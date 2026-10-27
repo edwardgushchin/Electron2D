@@ -17,11 +17,25 @@ public abstract partial class ElectronObject
     internal (Script Asset, Type Type)? ConstructionScript =>
         _constructionScript is { } script ? (script, GetType()) : null;
 
-    internal void RemapConstructionScript(Func<Resource, Resource> remap)
+    internal bool RemapConstructionScript(Func<Resource, Resource> remap)
     {
         if (_constructionScript is { } script)
-            _constructionScript = remap(script) as Script ?? throw new InvalidOperationException("A compiled source reference must remain a Script.");
+            return ReplaceConstructionScript(remap(script) as Script ?? throw new InvalidOperationException("A compiled source reference must remain a Script."));
+        return false;
     }
 
-    internal void CopyConstructionScript(ElectronObject source) => _constructionScript = source._constructionScript;
+    internal bool CopyConstructionScript(ElectronObject source) => ReplaceConstructionScript(source._constructionScript);
+
+    private bool ReplaceConstructionScript(Script? source)
+    {
+        if (ReferenceEquals(_constructionScript, source)) return false;
+        Volatile.Write(ref _constructionScript, source);
+        return true;
+    }
+
+    internal void NotifyConstructionScriptChanged()
+    {
+        NotifyPropertyListChanged();
+        if (!IsDisposed) NotifyScriptChanged();
+    }
 }

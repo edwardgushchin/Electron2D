@@ -173,10 +173,11 @@ public abstract partial class ElectronObject : IDisposable
     public event Action<ElectronObject>? PropertyListChanged { add => _publisherPropertyListChanged.Add(value); remove => _publisherPropertyListChanged.Remove(value); }
     private EventPublisher<Action<ElectronObject>> _publisherPropertyListChanged;
 
-    /// <summary>Occurs when a derived scripting component reports that this object's script attachment changed.</summary>
+    /// <summary>Occurs when source publication or a derived scripting component reports a changed script association.</summary>
     /// <remarks>
-    /// Initial compiled construction may retain a source asset. The event reserves the typed notification contract for a
-    /// future live script-assignment workflow and is currently raised only through <see cref="NotifyScriptChanged"/>.
+    /// Trusted file replacement and prepared-reference remapping notify after committing a different source identity,
+    /// following PropertyListChanged and before a resource copy's final Changed event. Equal references do not notify.
+    /// Initial construction, source text edits and disposal do not synthesize this event. Live reassignment is a separate workflow.
     /// </remarks>
     public event Action<ElectronObject>? ScriptChanged { add => _publisherScriptChanged.Add(value); remove => _publisherScriptChanged.Remove(value); }
     private EventPublisher<Action<ElectronObject>> _publisherScriptChanged;
@@ -436,7 +437,7 @@ public abstract partial class ElectronObject : IDisposable
     }
 
     /// <summary>Synchronously raises <see cref="ScriptChanged"/>.</summary>
-    /// <remarks>A future live script-assignment workflow should call this when its script reference changes.</remarks>
+    /// <remarks>Publishes the current typed notification without changing the source reference. Signal blocking suppresses delivery.</remarks>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="Exception">An event handler throws.</exception>
     protected void NotifyScriptChanged()

@@ -1,6 +1,6 @@
 # Compiled C# source assets
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 [Script](../classes/Script.md) describes a compiled project Node or Resource and its source/type/schema association under [ADR 0091](../decisions/scripting.md#adr-0091). C# callbacks execute directly on the constructed project class. Source text and shared resource metadata remain separate from the state of a player or effect instance.
 
@@ -22,7 +22,15 @@ Node copies retain the source when the Scripts flag is present. Resource copies 
 
 The owner retains the source through cancelled disposal and releases it on committed disposal. It never disposes the borrowed asset. Explicit source disposal leaves compiled callbacks executing and GetScript may return that disposed identity. Source edits do not replace the class or association. Persistent saving or scene duplication requires live resource references, as with other borrowed resources.
 
-The getter does not implement live SetScript replacement, automatic ScriptChanged or extension reload. Their coverage rows remain open. Compiled C# initialization follows the constructor contract below; no additional initializer runs from a base constructor.
+Live SetScript replacement and extension reload remain open. Source-publication notifications below implement only the existing file/remapping paths; the complete ScriptChanged row remains Partial. Compiled C# initialization follows the constructor contract below; no additional initializer runs from a base constructor.
+
+## Source publication notifications
+
+File replacement and prepared graph publication report a changed source identity after acquiring its file-resource ownership. Equal identities and cache reuse emit nothing. PropertyListChanged precedes ScriptChanged; file copying follows with its final coalesced Resource.Changed. Public CopyFromResource copies data while retaining its existing source, so it adds no script notification. Initial construction, source text editing and explicit asset disposal also add no signal.
+
+Each emission observes the ordinary signal-blocking state. Observer failures propagate after the source change is committed; a file-copy operation error and final Changed error retain their original identities in an ordered AggregateException. Retirement during the first source notification suppresses subsequent source delivery and rejects publication of the retired result. Resource batching accepts committed disposal without manufacturing an unbalanced-batch failure. Prepared graphs transfer dependency ownership before notifying; a callback that retires a prepared owner rejects that graph and preserves borrowed cached dependencies.
+
+[Script source-publication checks](../../tests/Electron2D.Tests/ScriptTests.SourceChanges.cs) exercise these paths through actual compiled source assets and threaded loaders. The public notification consumer separately exercises reset/copy retirement without requiring source-symbol discovery. Live assignment/detachment remains the missing producer for the complete signal contract under [ADR 0091](../decisions/scripting.md#source-publication-notifications).
 
 ## Compiled C# initialization
 
@@ -109,3 +117,10 @@ Four CLR and four strict NativeAOT public profiles use CPU without GPU discovery
 `bin/script-initialization/2026-10-27/` retains the pinned constructor bridge/source hashes, source-bound CLR and strict NativeAOT cohorts, manifests and checks. Fourteen CLR profiles cover full script/source/required-argument/copy/archive/fresh-process behavior, the existing compiled RPC fresh-process suite, and CPU/NVIDIA GPU owner/separate initialization, factory and public construction/notification consumers. Four strict NativeAOT public profiles verify ordinary compiled construction and reconstruction on CPU/no-device and NVIDIA GPU in both numerical lanes. Positive registered source construction remains the desktop portable-PDB capability; NativeAOT/source-free registration is not inferred.
 
 The twelve CLR physical profiles and four native controls execute 3,072 complete measured frames, each interval requiring zero owner/all-thread managed bytes. Required constructor state drives actual movement and point queries after explicit source disposal, with the same RID and one initialization. These are functional/allocation checks; they do not certify broad networking, native retained memory, foreign platforms or mass-scene/window performance. The nullable factory input does not add a new dispatcher, per-frame wrapper or reflected constructor invocation.
+
+
+## Source publication qualification, 2026-10-27
+
+`bin/script-change-publication/2026-10-27/validation.json` retains eighteen accepted CLR profiles and four strict NativeAOT public controls. Actual source assets exercise equality/cache reuse, ordinary data-copy preservation, source/property/final-resource event ordering, blocked signals, exact combined observer failures, committed ownership, callback retirement and threaded remapping. Resource base, scene/local, archive and locale suites verify the affected copy/publication paths; compiled RPC, initialization and factory controls retain their existing behavior.
+
+CPU runs exclude device discovery; GPU runs map NVIDIA Vulkan with software implementations excluded. Owner/separate profiles execute 3,072 complete measured physical frames at zero owner/all-thread managed bytes. Native controls cover ordinary compiled notifications and reset/copy retirement; positive registered source behavior remains the portable-PDB desktop capability. Source proofs bind 2,693 runtime documents, 1,024 root-test documents and both public-consumer files to the retained CLR binaries, with separate proofs for native inputs. The complete ScriptChanged row remains Partial; these functional/allocation checks do not qualify live assignment/detachment, mass-scene performance, broad networking or foreign platforms.

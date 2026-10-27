@@ -131,10 +131,12 @@ public class Resource : ElectronObject
     }
     internal virtual void ValidateFileState() { }
 
-    internal void RemapPreparedReferences(Func<Resource, Resource> remap)
+    internal bool RemapPreparedReferences(Func<Resource, Resource> remap)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(remap);
-        RemapConstructionScript(remap); RemapResourceReferences(remap);
+        var scriptChanged = RemapConstructionScript(remap);
+        RemapResourceReferences(remap);
+        return scriptChanged;
     }
     /// <summary>Remaps resource references in freshly prepared data before cache publication.</summary>
     /// <param name="remap">Selects the final live identity for each borrowed or prepared resource reference.</param>
@@ -342,7 +344,11 @@ public class Resource : ElectronObject
     /// <exception cref="Exception">A reset, copy, setter, or final change handler fails.</exception>
     public void CopyFromResource(Resource source) => CopyStateFrom(source, copyConstructionScript: false);
 
-    internal void CopyFileState(Resource source) => CopyStateFrom(source, copyConstructionScript: true);
+    internal void CopyFileState(Resource source)
+    {
+        CopyStateFrom(source, copyConstructionScript: true);
+        ThrowIfDisposed();
+    }
 
     private void CopyStateFrom(Resource source, bool copyConstructionScript)
     {
@@ -364,6 +370,7 @@ public class Resource : ElectronObject
                 () =>
                 {
                     var copied = false;
+                    var scriptChanged = false;
                     try
                     {
                         source.ThrowIfDisposed();
@@ -371,7 +378,7 @@ public class Resource : ElectronObject
                         EmitChanged(); ThrowIfDisposed(); OnResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
                         CanTranslateMessages = canTranslateMessages; TranslationDomain = translationDomain;
                         source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
-                        if (copyConstructionScript) CopyConstructionScript(source);
+                        if (copyConstructionScript) scriptChanged = CopyConstructionScript(source);
                         copied = true;
                     }
                     finally
@@ -379,6 +386,7 @@ public class Resource : ElectronObject
                         if (copied) { var transfer = retention; retention = null; AdoptFileOwnership(transfer); }
                         else if (retention is not null) { var previous = _fileOwnership; _fileOwnership = previous is null ? retention : new ResourceFileOwnership([], [previous, retention]); retention = null; OnFileOwnershipChanged(); }
                     }
+                    if (scriptChanged) NotifyConstructionScriptChanged();
                 }, emitAtEnd: true);
         }
         finally { retention?.ReleaseOwner(); }
@@ -861,6 +869,7 @@ public class Resource : ElectronObject
 
         lock (_stateGate)
         {
+            if (_changeBlockDepth == 0 && IsDisposalCommitted) return;
             if (_changeBlockDepth <= 0)
                 throw new InvalidOperationException("Resource change batching is unbalanced.");
 

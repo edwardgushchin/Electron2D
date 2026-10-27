@@ -47,7 +47,7 @@ Provides the common identity, notification, property, localization, and lifetime
 The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
 registration, and live script reassignment. Instances have deterministic `IDisposable` lifetime.
 
-The concrete [Script](Script.md) asset/catalog constructs ordinary CLR Node/Resource instances and retains their selected source through GetScript. [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) uses the project constructor/base chain with typed arguments and stable identity. Live assignment, automatic change delivery and extension reload remain open under [ADR 0091](../decisions/scripting.md#adr-0091).
+The concrete [Script](Script.md) asset/catalog constructs ordinary CLR Node/Resource instances and retains their selected source through GetScript. [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) uses the project constructor/base chain with typed arguments and stable identity. [Source-publication notifications](../components/scripting.md#source-publication-notifications) report actual file/remapping changes. Live assignment and extension reload remain open under [ADR 0091](../decisions/scripting.md#adr-0091).
 
 There is no engine-owned method/event name registry, connection-flags enum, or dictionary of incoming/outgoing callable connections. Consumer tooling can inspect ordinary CLR type metadata. Typed event accessors, owned `EventConnection` tokens and registered persistent scene bindings retain their separate contracts under [ADRs 0002/0010](../decisions/core-object-runtime.md#adr-0010).
 
@@ -138,7 +138,7 @@ sealed class Meter : ElectronObject
 | --- | --- |
 | [`public event Action<ElectronObject> Disposed`](#e-electron2d-electronobject-disposed) | Occurs once after the object's owned resources have been released successfully. |
 | [`public event Action<ElectronObject> PropertyListChanged`](#e-electron2d-electronobject-propertylistchanged) | Occurs when [`ElectronObject.NotifyPropertyListChanged`](ElectronObject.md#m-electron2d-electronobject-notifypropertylistchanged) reports that the tooling property list changed. |
-| [`public event Action<ElectronObject> ScriptChanged`](#e-electron2d-electronobject-scriptchanged) | Occurs when a derived scripting component reports that this object's script attachment changed. |
+| [`public event Action<ElectronObject> ScriptChanged`](#e-electron2d-electronobject-scriptchanged) | Occurs when source publication or a derived scripting component reports a changed script association. |
 
 ## Constants
 
@@ -486,6 +486,8 @@ Synchronously raises [`ElectronObject.PropertyListChanged`](ElectronObject.md#e-
 
 Synchronously raises [`ElectronObject.ScriptChanged`](ElectronObject.md#e-electron2d-electronobject-scriptchanged).
 
+**Remarks:** Publishes the typed notification without changing the source reference. Signal blocking suppresses delivery.
+
 **Exceptions**
 
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
@@ -548,10 +550,9 @@ Occurs when [`ElectronObject.NotifyPropertyListChanged`](ElectronObject.md#m-ele
 <a id="e-electron2d-electronobject-scriptchanged"></a>
 ### `public event Action<ElectronObject> ScriptChanged`
 
-Occurs when a derived scripting component reports that this object's script attachment changed.
+Occurs when source publication or a derived scripting component reports a changed script association.
 
-**Remarks:** Initial compiled construction retains a source association. The event reserves the typed notification contract for a
-future live script-assignment workflow and is currently raised only through [`ElectronObject.NotifyScriptChanged`](ElectronObject.md#m-electron2d-electronobject-notifyscriptchanged).
+**Remarks:** Trusted file replacement and prepared-reference remapping notify after committing a different source identity and its ownership. PropertyListChanged precedes this event; a resource copy follows with its final Changed. Equal references, initial construction, source text editing and disposal add no signal. [Live assignment](../decisions/scripting.md#live-attachment-and-rebuild-boundaries) remains open.
 
 ## Constant Descriptions
 
@@ -609,7 +610,7 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 ## Deliberate omissions
 
 - No `Variant`, `dynamic`, string-based `Get`, `Set`, or `Call`.
-- No metadata bag, live script attachment or generic signal registry. Compiled C# Script assets and ordinary constructed callbacks execute independently. `ScriptChanged` reserves the typed live-assignment notification; no engine-owned assignment producer raises it automatically yet.
+- No metadata bag, live script attachment or generic signal registry. Compiled C# Script assets and ordinary constructed callbacks execute independently. `ScriptChanged` reports trusted file/remapping source changes; live assignment/detachment remains unimplemented.
 - Arbitrary CLR delegate subscribers are omitted from packed scenes. Authored persistent connections use registered typed SceneConnectionBinding factories under ADR 0010.
 - No public object lookup by `InstanceID`.
 - Deletion is scheduled by Node.QueueFree or SceneTree.QueueDelete. ElectronObject.IsQueuedForDeletion observes an accepted or executing request for this object; it does not schedule one.

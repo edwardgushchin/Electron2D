@@ -6,7 +6,7 @@ internal static class NotificationChecks
     private const int Adjust = 47001, Trace = 47002, Nested = 47003, ConcurrentNormal = 47004, ConcurrentReverse = 47005;
     internal static void Run(PhysicsServer.Backend backend, bool threaded)
     {
-        VerifyConstruction(); VerifyCalls(); VerifyConcurrency(); VerifyLifetime(); VerifyBuiltInGUI();
+        VerifyConstruction(); VerifyCalls(); VerifyConcurrency(); VerifyLifetime(); VerifyCopyRetirement(); VerifyBuiltInGUI();
         var old = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try { VerifyPhysicalFrames(backend); }
@@ -106,6 +106,14 @@ internal static class NotificationChecks
     {
         var target = new Probe { Callback = static (_, what) => { if (what == Trace) throw new ApplicationException("ephemeral"); } };
         Reject<ApplicationException>(() => target.Notify(Trace, true)); target.Dispose(); return new(target);
+    }
+
+    private static void VerifyCopyRetirement()
+    {
+        using var source = new RetiringResource(); using var target = new RetiringResource { RetireOnReset = true };
+        var changes = 0; target.Changed += _ => changes++;
+        Reject<ObjectDisposedException>(() => target.CopyFromResource(source));
+        Check(target.IsDisposed && !source.IsDisposed && changes == 0, "Copy retirement preserves the original disposed error without a spurious batch failure or final emission");
     }
 
     private static void VerifyBuiltInGUI()
@@ -249,6 +257,11 @@ internal static class NotificationChecks
             if (what == NotificationPostInitialize) { Check(Constructed, "Resource callbacks require completed construction"); PostInitializations++; }
             Callback?.Invoke(this, what);
         }
+    }
+    private sealed class RetiringResource : Resource
+    {
+        internal bool RetireOnReset;
+        protected override void OnResetState() { base.OnResetState(); if (RetireOnReset) Dispose(); }
     }
     private sealed class CountingFont : FontFile
     {

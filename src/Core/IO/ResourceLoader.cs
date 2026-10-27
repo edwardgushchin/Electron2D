@@ -235,7 +235,13 @@ public sealed partial class ResourceLoader : ElectronObject
                 using var context = ResourceArchive.Decode(path, cacheMode); var parsed = context.Root; if (expectedType is not null && !expectedType.IsInstanceOfType(parsed)) throw new InvalidDataException("File resource does not match requested type.");
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == parsed.GetType())
                 {
-                    context.RedirectRoot(cached); using var source = context.ReleaseRoot(); cached.CopyFileState(source);
+                    var changedSources = context.RedirectRoot(cached); using var source = context.ReleaseRoot();
+                    foreach (var changed in changedSources)
+                    {
+                        changed.NotifyConstructionScriptChanged();
+                        ObjectDisposedException.ThrowIf(changed.IsDisposed, changed);
+                    }
+                    cached.CopyFileState(source);
                     ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return cached;
                 }
                 var loaded = context.ReleaseRoot(); try { if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else if (cached is not null) loaded.TakeOverPath(path); else loaded.ResourcePath = path; ResourceUID.SetID(ResourceArchive.ReadUID(path), path); owned = true; return loaded; } catch { loaded.Dispose(); throw; }

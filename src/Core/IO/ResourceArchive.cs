@@ -828,13 +828,18 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         }
         return new(nodes, connections.Where(connection => !missingAbsent[connection.PublisherIndex] && !missingAbsent[connection.SubscriberIndex]).ToArray());
     }
-    internal void RedirectRoot(Resource replacement)
+    internal Resource[] RedirectRoot(Resource replacement)
     {
         var original = Root;
         Resource Redirect(Resource resource) => ReferenceEquals(resource, original) ? replacement : resource;
-        RedirectResources(Redirect);
+        return RedirectResources(Redirect);
     }
-    internal void RedirectResources(Func<Resource, Resource> redirect) { foreach (var resource in Owned) resource.RemapPreparedReferences(redirect); }
+    internal Resource[] RedirectResources(Func<Resource, Resource> redirect)
+    {
+        List<Resource>? changed = null;
+        foreach (var resource in Owned) if (resource.RemapPreparedReferences(redirect)) (changed ??= []).Add(resource);
+        return changed?.ToArray() ?? [];
+    }
     internal Resource ReleaseRoot()
     {
         var root = Root;

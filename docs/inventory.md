@@ -1,3 +1,5 @@
+[Source-publication notifications](components/scripting.md#source-publication-notifications) connect existing ElectronObject events to resource replacement/remapping and reject callback-retired file results. No public runtime type or signature is added.
+
 [Compiled C# initialization](components/scripting.md#compiled-c-initialization) adds argument-only source registrations for Node, Resource and RPC-enabled Node classes through the existing typed construction path.
 
 [Compiled owner source identity](components/scripting.md#compiled-owner-source-identity) adds ElectronObject.GetScript with typed construction provenance, copy/file retention and scene-local resource ownership.

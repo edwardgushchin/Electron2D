@@ -37,6 +37,7 @@ internal static partial class ScriptTests
         Check(ReferenceEquals(actor.GetScript(), script) && ReferenceEquals(actor.ConstructorScript, script), "exact source identity is available in the derived constructor");
         Identity(script);
         Initialization(script);
+        SourceChanges();
         using var args = script.New(static () => new ScriptActor(9)); Check(args.Count == 9, "typed constructor arguments");
         Reject<InvalidOperationException>(() => script.New<RichTextEffect>()); Reject<InvalidOperationException>(() => basis.New<Node>()); Reject<ArgumentException>(() => script.GetScriptConstantMap<object>());
         using var copy = (Script)script.Duplicate(); Check(copy.CompiledType == script.CompiledType && copy.SourceCode == script.SourceCode, "resource duplicate association");

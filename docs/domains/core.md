@@ -2,7 +2,7 @@
 
 [Binary buffers](../components/byte-buffers.md) expose span-based numeric/text conversion and shared file-container compression through ByteBuffer.
 
-[Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) now exposes the borrowed Script through ElectronObject.GetScript, including constructor, copy, file and scene-local paths. Live assignment and initialization remain separate open contracts.
+[Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) now exposes the borrowed Script through ElectronObject.GetScript, including constructor, copy, file and scene-local paths. [Source-publication notifications](../components/scripting.md#source-publication-notifications) report file/remapping changes; initialization uses typed project constructors. Live assignment remains open.
 
 [CameraServer](../classes/CameraServer.md) joins the retained Engine service registry and native teardown through the [camera pixel-feed component](../components/camera-feeds.md). Discovery and capture remain opt-in; resource views never serialize activation.
 
@@ -169,7 +169,7 @@ Production types are [`ElectronObject`](../classes/ElectronObject.md), [`WeakRef
 - No untyped metadata store.
 - No reflection-based property or method invocation.
 - No 3D rectangle, transform, node, renderer, or physics type. Three- and four-component vectors are numeric values, not scene types.
-- User C# Node subclasses execute ordinary callbacks and registered source assets reconstruct actual project classes through typed scene files. [ADR 0091](../decisions/scripting.md#adr-0091) uses one concrete Script resource for C# source/type/schema metadata and typed factories. Live script attachment/replacement, editor application and implementation reload remain absent; ScriptChanged retains its reserved binding notification role.
+- User C# Node subclasses execute ordinary callbacks and registered source assets reconstruct actual project classes through typed scene files. [ADR 0091](../decisions/scripting.md#adr-0091) uses one concrete Script resource for C# source/type/schema metadata and typed factories. Live script attachment/replacement, editor application and implementation reload remain absent; ScriptChanged reports trusted file/remapping source changes while live assignment/detachment remains open.
 - No persistent event connections; in-memory packed scenes intentionally omit subscribers, and persistence requires a typed stable endpoint identity/binding schema.
 - Engine.Run now owns windowed application startup, event pumping, monotonic MaxFPS pacing, SceneTree.Quit exit codes and cleanup. Root-window canvas rendering runs after scene processing. Permission requests and remaining mobile/browser integrations are absent.
 - The repository has an 18-RID automated build/package/test matrix and RID-selected CharacterMovement desktop, Android/Android TV, UIKit and browser hosts. CharacterMovement was executed on Linux Wayland, one Android phone, one Android TV and Chrome; Windows/macOS/iOS/tvOS execution and store signing remain unverified for this example. Browser storage and complete production lifecycle acceptance remain separate work. See the platform report for exact scope.
