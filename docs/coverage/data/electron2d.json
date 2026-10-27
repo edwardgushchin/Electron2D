@@ -8144,6 +8144,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.OSMemoryInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.OSMemoryInfo",
+    "name": "OSMemoryInfo",
+    "signature": "public struct Electron2D.OSMemoryInfo",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.OccluderCullMode",
     "kind": "type",
     "declaringType": "Electron2D.OccluderCullMode",
@@ -148207,6 +148220,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.GetMemoryInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetMemoryInfo",
+    "signature": "public static Electron2D.OSMemoryInfo GetMemoryInfo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.OSMemoryInfo",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.GetName()",
     "kind": "method",
     "declaringType": "Electron2D.OS",
@@ -267130,6 +267156,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OSMemoryInfo.Available()",
+    "kind": "property",
+    "declaringType": "Electron2D.OSMemoryInfo",
+    "name": "Available",
+    "signature": "public System.Int64 Available { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OSMemoryInfo.Free()",
+    "kind": "property",
+    "declaringType": "Electron2D.OSMemoryInfo",
+    "name": "Free",
+    "signature": "public System.Int64 Free { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OSMemoryInfo.Physical()",
+    "kind": "property",
+    "declaringType": "Electron2D.OSMemoryInfo",
+    "name": "Physical",
+    "signature": "public System.Int64 Physical { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.OSMemoryInfo.Stack()",
+    "kind": "property",
+    "declaringType": "Electron2D.OSMemoryInfo",
+    "name": "Stack",
+    "signature": "public System.Int64 Stack { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
     "value": null
   },
   {

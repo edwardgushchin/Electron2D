@@ -544,3 +544,13 @@ selected versus overridden cycles, callback count and disconnected providers in
 the other stage; ordinary graph and provider traversal must select the same edges.
 
 For material placeholders and recovery, run `ELECTRON2D_TEST_MATERIAL_PLACEHOLDER=managed`, `gpu` and `compatibility` with the Release runner. Managed verification includes a fresh-process restoration child, all source material kinds, worker policy capture, shallow/deep/local graph identity, missing-payload bundles/external revival, cache rollback/replacement, concrete subtype rejection and known versions 1–7. Run missing-texture, missing-resource, resource-archive, deferred-scene and resource-base profiles after archive role changes. Native profiles require missing/restored pixels and 64 prepared material RID switches; use `ELECTRON2D_CAPTURE_DIR` to retain images. Zero owner-thread managed bytes do not establish native-heap, physical GPU or foreign acceptance.
+
+Native host-memory changes use `ELECTRON2D_TEST_HOST_MEMORY=1` and the public-only
+`tests/HostMemory.Consumer` contract, also included in the aggregate root suite.
+Run finite/unlimited RLIMIT_STACK child profiles and strict full-trim NativeAOT.
+The optional Linux C fixture in `Fixtures/OSMemory.c` denies sysinfo or prlimit64
+only on disposable test threads; `ELECTRON2D_MEMORY_FIXTURE` selects its absolute
+shared-library path in a separate root-test process. Independent fields must
+survive native failures, and zero/overflow arithmetic must retain its sentinel
+contract. See [host memory](components/host-memory.md) for exact platform meanings
+and qualification limits.

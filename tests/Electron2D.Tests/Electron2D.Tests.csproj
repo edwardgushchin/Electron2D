@@ -30,6 +30,7 @@
     <Compile Include="../CanvasGuides.Consumer/CanvasGuideContracts.cs" Link="Consumers/CanvasGuideContracts.cs" />
     <Compile Include="../ObjectCensus.Consumer/ObjectCensusChecks.cs" Link="Consumers/ObjectCensusChecks.cs" />
     <Compile Include="../ObjectNotifications.Consumer/NotificationChecks.cs" Link="Consumers/NotificationChecks.cs" />
+    <Compile Include="../HostMemory.Consumer/HostMemoryChecks.cs" Link="Consumers/HostMemoryChecks.cs" />
     <Compile Include="../HostPlatform.Consumer/HostPlatformChecks.cs" Link="Consumers/HostPlatformChecks.cs" />
     <Compile Include="../ResourceLocales.Consumer/ResourceLocaleChecks*.cs" Link="Consumers/%(Filename)%(Extension)" />
     <EmbeddedResource Include="../../editor/Assets/IBMPlexSans-Regular.ttf" LogicalName="Locale.Regular.ttf" />

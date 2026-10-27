@@ -342,3 +342,10 @@ string hostLanguage = OS.GetLocaleLanguage();
 ```
 
 See [host query lifecycle and executable consumers](../components/host-platform.md) and [ADR0113](../decisions/host-platform.md#adr-0113). Linux JIT/AOT/native evidence does not establish detailed foreign adapters, native allocation, editor or human acceptance.
+
+## Native host memory
+
+`public static OSMemoryInfo GetMemoryInfo()` queries an independent immutable snapshot
+without an Engine lifecycle or renderer, including from worker threads. Each signed
+byte field is -1 when unavailable. See [OSMemoryInfo](OSMemoryInfo.md) and
+[host memory](../components/host-memory.md) for platform-specific meanings and checks.

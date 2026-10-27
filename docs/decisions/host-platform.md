@@ -8,7 +8,7 @@ Last updated: 2026-10-27
 Last updated: 2026-10-27
 
 - Status: Accepted
-- Scope: OS platform/CPU/locale/sandbox queries, thread identities/native naming, typed project host tags and renderer feature observations
+- Scope: OS native memory, platform/CPU/locale/sandbox queries, thread identities/native naming, typed project host tags and renderer feature observations
 - Preserves: [0004](product.md#adr-0004), [0019](core-data-io.md#adr-0019), [0021](product.md#adr-0021), [0028](rendering.md#adr-0028), [0095](singleton-services.md#adr-0095)
 
 ### Context
@@ -44,6 +44,33 @@ length limits are preserved without truncation and missing adapters fail explici
 See [thread identity and naming](../components/os-thread-identity.md) for ownership
 and executable verification boundaries.
 
+### Native memory snapshots
+
+OS.GetMemoryInfo returns an immutable OSMemoryInfo value with signed byte counts
+and an independent -1 sentinel for each unknown or unrepresentable result. It
+queries the host on each call without initializing SDL, a window or a renderer;
+concurrent callers do not share mutable output. Host totals do not represent a
+container quota, the managed heap or a reservation.
+
+Linux/Android use sysinfo totalram, freeram and freeswap with mem_unit. This is
+the kernel source of the pinned proc memory fields: Available is Free plus free
+swap, without adding reclaimable cache or MemAvailable. Windows uses
+GetPerformanceInfo: PhysicalTotal, PhysicalAvailable and CommitLimit multiplied
+by PageSize. Its Available includes existing commitments, preserving the native
+commit-limit contract rather than claiming a remaining allocation guarantee.
+Apple uses hw.memsize and host_statistics64 with the pinned used-page formula;
+macOS adds vm.swapusage available bytes, while mobile/TV has no swap contribution.
+The permanent service retains one Apple host-port send right for process lifetime.
+
+Stack preserves the native implementations: Unix reports the process soft
+RLIMIT_STACK (including on worker threads); Windows reports the calling thread's
+GetCurrentThreadStackLimits range. Unlimited limits become -1. Known zero budgets
+remain zero, a deliberate correction to truthiness-based sentinel assignment.
+Native failures preserve other independent fields. Multiplication, addition and
+Apple page subtraction reject overflow or inconsistent readings as unknown.
+Platforms without an adapter fail explicitly. See [host memory](../components/host-memory.md)
+for the public fields, independent native checks and platform qualification limits.
+
 ### Verification and remaining gates
 
 The public HostPlatform.Consumer checks host metadata, shared and custom tags, typed override selection/save/load, live locale/environment isolation, sandbox boundaries and prepared queries. Its native modes select an actual compressed or fallback texture, draw and capture pixels on each claimed backend/display pair. Root checks cover metadata parsing and related project/environment/process/font/movie contracts. Strict NativeAOT is a separate executable gate. Foreign detailed version/model/sandbox and simulator/browser feature adapters, native allocations, physical GPU, editor and human acceptance remain distinct from the exercised Linux profile.
@@ -55,3 +82,7 @@ and [POSIX name submission](https://github.com/godotengine/godot/blob/ed1daf0bf0
 retain logical identities and native naming failures as distinct contracts.
 
 The pinned [OS feature dispatch](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/os/os.cpp#L471-L644), [Linux metadata and sandbox queries](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/linuxbsd/os_linuxbsd.cpp#L211-L344) and [Unix locale query](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/unix/os_unix.cpp#L1031-L1042) define the applicable behavior. Exact metadata key parsing avoids matching VERSION_ID or PRETTY_NAME when another field was requested. No comparison engine identity enters production source, XML or the public wiki.
+
+The pinned [Unix memory query](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/unix/os_unix.cpp#L406-L607)
+and [Windows memory query](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/windows/os_windows.cpp#L1249-L1302)
+define memory sources and platform-specific budget meanings.

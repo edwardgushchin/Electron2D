@@ -364,7 +364,7 @@ The typed project schema includes ordered LocaleResourceRemaps with compiled JSO
 
 ## Host platform integration
 
-OS now exposes actual host platform/distribution/version, native logical CPU count and available model, live system locale and Linux sandbox observations. Shared host features drive typed project overrides; OS also observes current movie/font/rendering capabilities without opening a graphics device. See [host identity and features](../components/host-platform.md).
+OS now exposes actual host platform/distribution/version, native logical CPU count and available model, live system locale and Linux sandbox observations. Shared host features drive typed project overrides; OS also observes current movie/font/rendering capabilities without opening a graphics device. See [host identity and features](../components/host-platform.md). Static `OS.GetMemoryInfo` also queries immutable native physical/free/available/stack budgets without an active lifecycle; platform meanings and independent native verification are in [host memory](../components/host-memory.md).
 
 Typed property discovery also carries immutable [advisory hints](../components/editor-properties.md#advisory-hints), consumed by imported numeric shader descriptors without a universal value accessor or runtime clamping.
 

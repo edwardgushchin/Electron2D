@@ -2321,3 +2321,15 @@ AccessibilityServer.Metadata adds generic per-element producer model access with
 The [navigation diagnostics component](components/navigation-diagnostics.md) adds private [NavigationDebugCanvas](classes/NavigationDebugCanvas.md), [NavigationDebugData](classes/NavigationDebugData.md) and [NavigationGeometryDebugSettings](classes/NavigationGeometryDebugSettings.md). Existing NavigationServer, four scene navigation sources, SceneTree, CanvasItem and ProjectSettings/Registry supply controls, prepared lifetime, boundary events and concrete drawing.
 
 [Device resource caches](components/device-resource-caches.md) add public static [UniformSetCacheRD](classes/UniformSetCacheRD.md) and [FramebufferCacheRD](classes/FramebufferCacheRD.md) facades with private retained objects; [RenderingDevice.Caches.cs](../src/Servers/Rendering/Device/RenderingDevice.Caches.cs) connects their existing device lifetime and dependency retirement.
+
+## Native host memory snapshots
+
+| Domain | Component | Types | Source | Status | Contract |
+| --- | --- | --- | --- | --- | --- |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OSMemoryInfo](classes/OSMemoryInfo.md), [OS](classes/OS.md#native-host-memory) | [value](../src/Core/OS/OSMemoryInfo.cs), [native queries](../src/Core/OS/OS.Memory.cs) | Current | Static physical/free/available/stack snapshots, independent unknown fields and checked byte arithmetic; no native engine packages or renderer required. |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.LinuxMemoryStatus](classes/OS.LinuxMemoryStatus.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.ResourceLimit](classes/OS.ResourceLimit.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.WindowsMemoryStatus](classes/OS.WindowsMemoryStatus.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.AppleMemoryStatus](classes/OS.AppleMemoryStatus.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.AppleSwapStatus](classes/OS.AppleSwapStatus.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
+| [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.AppleMemoryHost](classes/OS.AppleMemoryHost.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
