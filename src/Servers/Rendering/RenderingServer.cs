@@ -60,12 +60,6 @@ public sealed partial class RenderingServer : ElectronObject
     internal bool SupportsSizedPoints => _backend is GPUCanvasBackend gpu && gpu.SupportsSizedPoints;
     internal bool NativePoints => _backend is GPUCanvasBackend;
 
-    internal RenderHandle? RetainComputeDevice()
-    {
-        EnsureOwner();
-        return (_backend as GPUCanvasBackend)?.RetainComputeDevice();
-    }
-
     internal bool RenderLoopEnabledCore
     {
         get { EnsureOwner(); return _renderLoopEnabled; }

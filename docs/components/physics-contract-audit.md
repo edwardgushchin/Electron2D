@@ -1,4 +1,4 @@
-[GPU device/window lifetime](gpu-device-lifetime.md) has a confirmed open native gate: on the measured NVIDIA/Wayland profile, freeing a GPU space started before the renderer crashes later window retirement. Source-bound native and public controls retain the failed profiles; declaration counts below remain separate.
+[GPU device/window lifetime](gpu-device-lifetime.md) now uses process-local device leases independent of startup order. All 16 current CLR public profiles pass, including the two former NVIDIA/Wayland crashes. Historical two-device native controls remain red; broader native/platform and performance acceptance stays open. Declaration counts below remain separate.
 
 [Skeletal editor drawing](skeletal-editor-gizmos.md) closes three inherited editor methods and the modification class audit. Physics declaration coverage is **1358/1369 (99.20%)**, with **11 open** (6 Partial, 2 Blocked, 3 Unimplemented) and 92 Excluded. Real custom/built-in guides and the shared unsaved editor preview execute; wider numerical/network/native-heap/platform/performance acceptance remains open. Earlier figures below are preceding checkpoints.
 

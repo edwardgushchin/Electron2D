@@ -2,8 +2,22 @@ using Electron2D;
 
 internal static class DeviceWindowLifetimeChecks
 {
-    internal static void Run(bool renderFirst, bool renderRetiresFirst, bool threaded)
+    internal static void Run(bool renderFirst, bool renderRetiresFirst, bool threaded, bool churn = false)
     {
+        if (churn)
+        {
+            using var local = RenderingServer.CreateLocalRenderingDevice();
+            var buffer = local.StorageBufferCreate(4, new byte[] { 1, 2, 3, 4 });
+            for (var cycle = 0; cycle < 3; cycle++)
+            {
+                Run(renderFirst, renderRetiresFirst, threaded);
+                if (!local.BufferGetData(buffer).SequenceEqual(new byte[] { 1, 2, 3, 4 }))
+                    throw new InvalidOperationException("Native window retirement changed the retained local device buffer.");
+            }
+            local.FreeRID(buffer);
+            Console.WriteLine("Three native window lifetimes preserve local device resources.");
+            return;
+        }
         var rendering = ProjectSettings.Get(ProjectSettings.RenderingMethod);
         var fallback = ProjectSettings.Get(ProjectSettings.RenderingFallback);
         var separate = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);

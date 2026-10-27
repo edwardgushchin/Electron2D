@@ -4,7 +4,54 @@ namespace Electron2D;
 
 internal static unsafe class GPUDeviceFactory
 {
-    internal static (nint Device, bool Relaxed, bool SizedPoints) Create(bool allowAndroidRelaxation)
+    private static readonly object Gate = new();
+    private static SharedDevice? _shared;
+
+    /// <summary>Retains the active native device without retaining another consumer or its window.</summary>
+    internal static (RenderHandle Handle, bool Relaxed, bool SizedPoints) Acquire(bool allowAndroidRelaxation)
+    {
+        lock (Gate)
+        {
+            var shared = _shared ??= new SharedDevice(allowAndroidRelaxation);
+            try
+            {
+                var lease = new RenderHandle(shared.Handle.DangerousGetHandle(), shared.Release);
+                shared.Leases++;
+                return (lease, shared.Relaxed, shared.SizedPoints);
+            }
+            catch
+            {
+                if (shared.Leases == 0) { shared.Handle.Dispose(); _shared = null; }
+                throw;
+            }
+        }
+    }
+
+    private sealed class SharedDevice
+    {
+        internal readonly RenderHandle Handle;
+        internal readonly bool Relaxed, SizedPoints;
+        internal int Leases;
+
+        internal SharedDevice(bool allowAndroidRelaxation)
+        {
+            var created = Create(allowAndroidRelaxation);
+            Handle = new RenderHandle(created.Device, SDL.DestroyGPUDevice);
+            Relaxed = created.Relaxed; SizedPoints = created.SizedPoints;
+        }
+
+        internal void Release(nint unused)
+        {
+            lock (Gate)
+            {
+                if (--Leases != 0) return;
+                // Complete instance retirement before another acquisition can create a Wayland device.
+                Handle.Dispose(); _shared = null;
+            }
+        }
+    }
+
+    private static (nint Device, bool Relaxed, bool SizedPoints) Create(bool allowAndroidRelaxation)
     {
         var formats = ShaderCompiler.GetFormats();
         var device = Attempt(formats, true, false); var sized = device != 0;

@@ -1,13 +1,13 @@
 # Physics world backend decisions
 
-Last updated: 2026-10-22
+Last updated: 2026-10-27
 
 [The decision index](index.md) routes body, shape, query and extension decisions.
 
 <a id="adr-0054"></a>
 ## ADR 0054: CPU compatibility and GPU physics worlds
 
-Last updated: 2026-10-22
+Last updated: 2026-10-27
 
 - Status: Accepted
 - Scope: Scene/server physics world backends, body integration and collision shapes
@@ -19,12 +19,25 @@ ADR 0012 selected vendored managed Box2D.NET for CPU physics. Scene/server bodie
 
 ### Decision
 
+- Active built-in GPU consumers share one process-local SDL device, independent
+  of renderer/space startup order. Each world, local RenderingDevice and canvas
+  owns a separate disposable device lease; resource identities and resident
+  numerical state remain local to their owners. The first lease negotiates the
+  existing driver/features, retained unchanged until the last resource releases
+  its lease. Changing native driver hints requires retiring all GPU consumers.
+  Acquisition and final native destruction are serialized; no idle device cache
+  or retired-device queue is retained. Canvas resources retain their window
+  separately; compute leases never retain a canvas or native window. This avoids
+  retiring a Vulkan instance beneath another live Wayland swapchain. Shared
+  command scheduling remains a performance constraint to measure, not a claim
+  of independent hardware queues. CPU-only startup acquires no GPU lease.
+
 - Physics2DRunOnSeparateThread projects physics/2d/run_on_separate_thread, false
   by default. Each World runtime captures its feature-aware value before lazy
   startup; raw spaces capture it at creation. A true value retains one numerical
   solver thread for that world. Owner preparation completes before dispatch;
   the numerical interval joins before synchronization, scene/contact publication,
-  queries and physical gameplay callbacks. Device creation/retirement and native authored edits
+  queries and physical gameplay callbacks. Per-world device leases, resource creation/retirement and native authored edits
   remain on the original owner; scene pose metadata follows the stage boundary below. Only that exact solver thread borrows device
   state during its interval, with command acquisition/use/submission on the same
   thread. The independent GPU still owns numerical state; no host solver/mirror

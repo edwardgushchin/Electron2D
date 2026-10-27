@@ -1,9 +1,27 @@
 # GPUDeviceFactory
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 Source: [GPUDeviceFactory.cs](../../src/Servers/Rendering/GPUDeviceFactory.cs).
 
-Internal runtime helper. Creates the retained canvas or local-compute device with optional Vulkan sized points, preserves the core fallback and the existing Android relaxation policy. SizedPoints records successful feature negotiation; Metal uses its native point support. Debug mode remains disabled, matching the prior constructor. Each synchronous create owns and releases its temporary property set; callers retain native device ownership.
+Internal runtime helper. Acquire returns an independent RenderHandle lease on the
+active process-local SDL GPU device. First acquisition negotiates optional Vulkan
+sized points, the core fallback and the existing Android relaxation policy.
+SizedPoints and Relaxed stay fixed for that device lifetime; Metal uses native
+point support. Debug mode remains disabled. Temporary native properties are
+released after negotiation. CPU-only selection never calls this helper.
+
+## Shared device owner
+
+The private SharedDevice owns the canonical SafeHandle, capabilities and lease
+count. Acquisition and final native destruction share one cold-operation gate.
+Every lease calls this owner directly; it does not retain an earlier lease or
+window. Native resources retain their own lease through ordinary RenderHandle
+ownership. Final resource retirement disposes the canonical device and clears
+the active owner, with no idle cache. SafeHandle fallback also releases leases.
+Changing native driver hints takes effect after all active consumers retire.
+
+See [device/window lifetime](../components/gpu-device-lifetime.md) and
+[ADR 0054](../decisions/physics-backends.md#adr-0054).
 
 Contract and verification: [canvas point programs](../components/canvas-points.md).

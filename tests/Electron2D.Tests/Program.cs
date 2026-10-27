@@ -1,6 +1,7 @@
 using Mathf = Electron2D.Mathf;
 using IOPath = System.IO.Path;
 using Electron2D;
+
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -12,6 +13,8 @@ using EngineTimer = Electron2D.Timer;
 // Prepare the traced one-time CoreCLR lock delegate before strict warmed allocation intervals.
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_THREADS") is { } threadProfile) { OSThreadTests.Run(threadProfile); return; }
 

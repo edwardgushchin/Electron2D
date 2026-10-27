@@ -2299,3 +2299,5 @@ Engine adds the transient IsEditorHint host property and retained descriptor, se
 
 
 AccessibilityServer.Metadata adds generic per-element producer model access within the existing Element owner. Native action callbacks retrieve the current model by RID; references retire with element identity and never enter scene storage. AccessibilityModelTests and tests/AccessibilityClient/models.py exercise typed values, reference release and actual native action dispatch without a new production type or dependency.
+
+| [Rendering](domains/rendering.md) | [GPU device lifetime](components/gpu-device-lifetime.md) | [GPUDeviceFactory.SharedDevice](classes/GPUDeviceFactory.md#shared-device-owner) | [GPUDeviceFactory.cs](../src/Servers/Rendering/GPUDeviceFactory.cs) | Internal | Canonical native GPU payload, immutable capabilities and independent SafeHandle leases; serialized final destruction with no idle device cache. |

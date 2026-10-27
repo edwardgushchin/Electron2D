@@ -45,17 +45,15 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal bool SupportsSizedPoints { get; }
     private nint Device => _device.DangerousGetHandle();
 
-    internal RenderHandle RetainComputeDevice() => new(Device, static _ => { }, _device);
-
     internal GPUCanvasBackend(SafeHandle window)
     {
         if ((SDL.GetWindowFlags(window.DangerousGetHandle()) & SDL.WindowFlags.Transparent) != 0)
             throw new NotSupportedException("The SDL GPU API cannot present transparent native windows; use compatibility rendering.");
         _window = window.DangerousGetHandle();
-        var (device, relaxed, sizedPoints) = GPUDeviceFactory.Create(true);
+        var (device, relaxed, sizedPoints) = GPUDeviceFactory.Acquire(true);
         _relaxedAndroidDevice = relaxed;
         SupportsSizedPoints = sizedPoints;
-        _device = new RenderHandle(device, SDL.DestroyGPUDevice, window);
+        _device = new RenderHandle(device.DangerousGetHandle(), _ => device.Dispose(), window);
         var claimed = false;
         RenderHandle? vertex = null, instancedVertex = null, lightingVertex = null, lightingInstanced = null;
         try
