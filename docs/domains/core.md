@@ -1,3 +1,5 @@
+[Live canvas callbacks](../components/scripting.md#live-canvas-recording) record on native canvas/physical owners through the existing typed binding and retained drawing scope.
+
 Standard Node/CollisionObject/RigidBody roles now accept [typed native Script callbacks](../components/scripting.md#standard-node-callbacks) through their existing dispatch paths and automatic retirement. The complete assignment family remains Partial.
 
 Live [typed Script bindings](../components/scripting.md#live-typed-bindings) switch installed functions/state on a stable ElectronObject/Node/Resource owner through ordinary C# callbacks. Resource copying/cache replacement follow the [resource binding contract](../components/scripting.md#resource-bindings). The complete live-assignment family remains Partial.

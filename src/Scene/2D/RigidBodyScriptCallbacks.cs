@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <typeparam name="TBody">Compatible rigid-body receiver.</typeparam>
 public sealed class RigidBodyScriptCallbacks<TBody> : CollisionObjectScriptCallbacks<TBody> where TBody : RigidBody
 {
-    /// <summary>Creates an unused node/picking/integration callback set.</summary>
+    /// <summary>Creates an unused node/canvas/picking/integration callback set.</summary>
     public RigidBodyScriptCallbacks() { }
     /// <summary>Runs on the ordinary owner integration lane with its borrowed solved body/contact state.</summary>
     /// <remarks>Uses the same lifetime, mutation and error policy as the native protected integration hook.</remarks>

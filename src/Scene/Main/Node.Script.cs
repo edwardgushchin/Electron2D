@@ -7,7 +7,7 @@ public partial class Node
 
     /// <summary>Installs a fresh typed callback set during this owner's registered live Script Bind.</summary>
     /// <typeparam name="TNode">Compatible receiver type.</typeparam><param name="callbacks">Single-use callbacks and their state-retirement function.</param>
-    /// <remarks>Uses existing tree, frame, input, picking and integration dispatch. Successful installation transfers the
+    /// <remarks>Uses existing tree, frame, input, canvas recording, picking and integration dispatch. Successful installation transfers the
     /// callback targets' retirement to this binding; project Clear precedes automatic slot removal and Retired.
     /// Ready enables present frame/input slots before its callback. Installation after readiness enables them without
     /// rerunning Ready. Later explicit switch changes remain authoritative; retirement does not reset those switches.
@@ -23,6 +23,7 @@ public partial class Node
         if (ScriptCallbacks is not null) throw new InvalidOperationException("This binding already has a callback set.");
         callbacks.Issue(); var binding = new NodeScriptBinding(); callbacks.Populate(binding, owner);
         ScriptCallbacks = binding; BoundScriptNotification = binding.Notification;
+        if (binding.Draw is not null && this is CanvasItem item) item.InvalidateCanvas();
         if (IsNodeReady) EnableScriptCallbacks();
     }
 
@@ -40,6 +41,7 @@ public partial class Node
     internal Exception? RetireScriptCallbacks()
     {
         var callbacks = ScriptCallbacks; ScriptCallbacks = null; BoundScriptNotification = null;
+        if (callbacks?.Draw is not null && !IsDisposed && this is CanvasItem item) item.InvalidateCanvas();
         try { callbacks?.Retired?.Invoke(); return null; }
         catch (Exception error) { return error; }
     }

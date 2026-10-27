@@ -46,6 +46,14 @@ NativeCallbackTests covers actual native Node/RigidBody types, typed input and o
 
 Fixed CLR reassignment, RPC migration, remaining native callback roles and source-free NativeAOT registration remain open. This slice does not promote SetScript, ScriptChanged or the shared class rows.
 
+## Live canvas recording
+
+CanvasItemScriptCallbacks adds a typed Draw delegate to the existing single-use Node callback data. Physical CollisionObject/RigidBody sets inherit this capability. During recording, the installed callback follows NotificationDraw, synchronous Draw handlers and native OnDraw in the same drawing scope and command list. Signal blocking preserves the direct callback. Retained replay, hidden/detached items, scope/thread guards and failed-recording retry retain the ordinary [canvas contract](canvas-rendering.md#draw-callback-recording).
+
+Installation/removal invalidates the retained command list. A binding change inside Draw lets the active C# invocation finish and schedules the new binding for the next recording. Partial-bind/clear failure also invalidates retired geometry. Copies and file owners bind independent state through the existing source/graph machinery; no per-frame source query, extra traversal or render pass is added. Remaining native callback roles, fixed CLR reassignment, RPC migration and source-free NativeAOT registration remain open; no physics declaration is promoted.
+
+ScriptDrawTests executes actual native Entity/RigidBody receivers, recording order including a native override, retained replay, hidden/detached state, partial draw/bind/clear failures, copied owners and fresh-process bundled scene reconstruction. Replacement inside Draw invalidates the next recording; detachment retires old geometry. Eight Linux Wayland profiles independently select CPU/GPU physics, GPU/compatibility rendering and owner/separate physics; each parent and child measures 64 explicit redraws and 64 retained render intervals at strict 0/0 owner/all-thread managed bytes, totaling 2048 measured intervals. Real red/blue/retired pixel readback uses 0.05 absolute channel tolerance; PNGs and source-bound receipts are under `bin/script-canvas-callbacks/2026-10-28/qualified/`. These render intervals do not measure physical-step allocation, native heap, window FPS, mass throughput or foreign-platform/human acceptance.
+
 ## Resource bindings
 
 RegisterBinding and SetScript admit native and project Resource roles with the same typed functions, owner-local state and retirement rules. The sealed scalar-only Script source asset cannot own another source association. Standard Resource duplication, project copy hooks and file factories initialize the binding after construction and before stored restoration. Each copied owner has independent runtime state while Script sharing and scene-local/forced edges retain the ordinary resource graph policy.

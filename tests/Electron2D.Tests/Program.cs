@@ -976,6 +976,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is
     PhysicalBoneTests.RunChild(physicalChild, PhysicalBoneTests.SelectedBackend()); return;
 }
 // Focused script routes precede the shared-collider shorthand, which also consumes the threaded flag.
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_DRAW") is { } scriptDraw)
+{
+    ScriptDrawTests.Run(scriptDraw switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for live Script drawing.") },
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_DRAW_RENDERER") ?? "gpu", Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1",
+        args.Length == 2 && args[0] == "--script-draw-child" ? args[1] : null); return;
+}
 if (args.Length == 2 && args[0] == "--resource-binding-child") { ResourceBindingTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_SCRIPT_BINDING") is { } resourceScriptBinding)
 {

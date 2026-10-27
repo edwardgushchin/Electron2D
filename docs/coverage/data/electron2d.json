@@ -3031,6 +3031,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E",
+    "name": "CanvasItemScriptCallbacks\u00601",
+    "signature": "public class Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E",
+    "visibility": "public",
+    "baseType": "NodeScriptCallbacks\u003CTItem\u003E",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasLayer",
     "kind": "type",
     "declaringType": "Electron2D.CanvasLayer",
@@ -3497,7 +3510,7 @@
     "name": "CollisionObjectScriptCallbacks\u00601",
     "signature": "public class Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
     "visibility": "public",
-    "baseType": "NodeScriptCallbacks\u003CTObject\u003E",
+    "baseType": "CanvasItemScriptCallbacks\u003CTObject\u003E",
     "interfaces": [],
     "parameters": null,
     "returnType": null,
@@ -21159,6 +21172,19 @@
     "declaringType": "Electron2D.CanvasItemMaterial",
     "name": ".ctor",
     "signature": "public CanvasItemMaterial()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E",
+    "name": ".ctor",
+    "signature": "public CanvasItemScriptCallbacks()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -254389,6 +254415,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E.Draw()",
+    "kind": "property",
+    "declaringType": "Electron2D.CanvasItemScriptCallbacks\u003CTItem\u003E",
+    "name": "Draw",
+    "signature": "public Action\u003CTItem\u003E Draw { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTItem\u003E",
     "value": null
   },
   {

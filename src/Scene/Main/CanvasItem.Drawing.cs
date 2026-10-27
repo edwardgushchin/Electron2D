@@ -287,6 +287,7 @@ public abstract partial class CanvasItem
     /// Recording starts with an empty command list shared by all three stages. Repeated redraw requests coalesce;
     /// an in-scope request belongs to the current recording. A failed stage discards partial commands and retains
     /// a pending retry. Hidden items do not record; showing or reattaching requests a fresh recording.
+    /// An installed live Script draw callback follows the native hook in this same recording scope.
     /// Transform and interval state start fresh on each replay.</remarks>
     protected virtual void OnDraw() { }
 
@@ -316,6 +317,7 @@ public abstract partial class CanvasItem
             if (IsDisposed) return;
             BeginEventEmission(_publisherDraw.Handlers)?.Invoke(this);
             if (!IsDisposed) OnDraw();
+            if (!IsDisposed) ScriptCallbacks?.Draw?.Invoke();
         }
         catch
         {

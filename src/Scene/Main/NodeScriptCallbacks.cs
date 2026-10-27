@@ -57,7 +57,7 @@ public class NodeScriptCallbacks<TNode> where TNode : Node
 
 internal sealed class NodeScriptBinding
 {
-    internal Action? EnterTree, ExitTree, Ready, Retired, MouseEnter, MouseExit;
+    internal Action? EnterTree, ExitTree, Ready, Retired, MouseEnter, MouseExit, Draw;
     internal Action<double>? Process, PhysicsProcess;
     internal Action<InputEvent>? Input, ShortcutInput, UnhandledInput;
     internal Action<InputEventKey>? UnhandledKeyInput;

@@ -2,9 +2,9 @@ namespace Electron2D;
 
 /// <summary>Adds typed physical picking callbacks to a live node Script callback set.</summary>
 /// <typeparam name="TObject">Compatible collision-object receiver.</typeparam>
-public class CollisionObjectScriptCallbacks<TObject> : NodeScriptCallbacks<TObject> where TObject : CollisionObject
+public class CollisionObjectScriptCallbacks<TObject> : CanvasItemScriptCallbacks<TObject> where TObject : CollisionObject
 {
-    /// <summary>Creates an unused node/picking callback set.</summary>
+    /// <summary>Creates an unused node/canvas/picking callback set.</summary>
     public CollisionObjectScriptCallbacks() { }
     /// <summary>Receives an unhandled picked event with its viewport and global logical shape index.</summary>
     public Action<TObject, Viewport, InputEvent, int>? InputEvent { get; init; }
