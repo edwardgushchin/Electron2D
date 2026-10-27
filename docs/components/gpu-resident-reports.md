@@ -1,6 +1,6 @@
 # Resident GPU contact publication
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 ## Boundary
 
@@ -9,12 +9,91 @@ CPU solver world or downloading all manifolds. CaptureContactReports defaults to
 false. ReadContactReports takes retained caller spans of body handles, per-body
 limits and destinations. The [shared public GPU adapter](physics-backends.md) now uses these reports for direct-state contacts and queued scene/server callbacks. Portable snapshots consume this projection; full numerical, network/platform and performance acceptance remain open.
 
-Reports carry observed shape/body indices and generations, world positions,
+Selected reports carry observed shape indices and generations, world positions,
 receiver-facing normal, world-axis impulse, final point velocities and greatest
 observed depth. These local identities are not wire IDs or public RIDs. The public
 adapter resolves them to retained common identities and logical shape indices,
 applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
+
+## Packed selected result layout
+
+Each selected result uses a 68-byte scalar wire record: four shape index/generation
+words, depth, both positions, receiver-facing normal, complete world-axis impulse
+and both final point velocities. The preceding record used 80 bytes, including
+redundant collider body index/generation and alignment padding. Public projection
+already resolves both bodies through the retained shape-owner table and checks
+both shape generations before creating immutable contacts. Removed or reused
+shape identities therefore retain the same rejection behavior.
+
+The device's 128-byte accumulated FrameContact, incidence/history, cap selection,
+solver and public PhysicsBodyContact stay under their existing contracts. Only
+the selected transfer/result buffer layout changes. C# uses explicit four-byte
+packing and the shader uses scalar members; tests check the exact stride and
+numeric field offsets. No numeric precision, body, contact, field, iteration or
+wait is omitted. Readback/capacity accounting continues to use the actual record
+size, and the existing snapshot copy uses the same typed host record.
+
+The selected-result counter isolates requested buffer payload bytes from body
+state, request/count/status traffic. These are SDL download sizes, not measured
+PCIe bus transactions. At 16,384 bodies the headless GPU trial reads 6,183,988
+selected-result bytes per tick; those same record slots require 7,275,280 bytes
+at the preceding stride, a reduction of **1,091,292 bytes per tick**. The 128-byte
+device history and all public values retain their original precision.
+
+### Packed-layout qualification (2026-10-27)
+
+The [validation manifest](../../bin/physics-mass-refresh/2026-10-27/validation.json)
+accepts 28 complete profiles: 22 functional profiles and six complete massive
+scene/window measurements. Functional coverage includes the resident report and
+dense joint-degree suites; public CPU/GPU contact frames and populated/empty
+checkpoint projection in owner/separate numerical modes; and portable CPU-to-GPU
+contact snapshots. Twelve CLR and ten strict full-trim NativeAOT functional
+profiles pass. Existing momentum, transient/CCD, depth/cap, generation/reuse,
+point-velocity, snapshot, error and strict warm-allocation checks remain active.
+
+Portable PDB/source checks match 2,677 runtime, 1,004 root-test and 292 public
+consumer authored files. The baseline is verified against committed 17b240f89;
+the candidate and actual Native compiler inputs match the changed sources. Of
+231 CLR-embedded shader modules, only PhysicsResidentReports changes. Its exact
+validated 68-byte module is present in the CLR assembly and Native executable;
+all 17 scalar member offsets match the generated SPIR-V layout.
+
+Every massive trial uses 16,384 awake bodies plus four walls, the same authored
+scene/materials/forces, 144 Hz fixed ticks, four substeps, 16 solver iterations,
+contact monitoring with cap eight, interpolation, 1,600 warmup and 128 measured
+frames. Backend fallback is disabled. CPU headless processes have no usable
+GPU ICD or loaded hardware driver. GPU profiles use NVIDIA without software
+Vulkan. The two windows use the same GPU renderer and actual native event pump,
+scene pose publication, processing and presentation. Requested disabled VSync
+reports **Enabled** on this Wayland host; the table records actual window FPS.
+
+| Frozen profile | Complete physics mean / p95, ms | Window FPS | Physics GPU readback, bytes/tick |
+| --- | ---: | ---: | ---: |
+| Before: CPU headless | 109.913 / 117.888 | — | 0.00 |
+| Before: GPU headless | 261.762 / 388.149 | — | 8,530,078.25 |
+| Packed: CPU headless | 115.052 / 130.123 | — | 0.00 |
+| Packed: GPU headless | 106.761 / 115.409 | — | 7,364,704.25 |
+| Packed: CPU physics + GPU window | 120.318 / 130.093 | 4.912 | 0.00 |
+| Packed: GPU physics + GPU window | 148.811 / 158.893 | 4.313 | 7,404,640.94 |
+
+All six physics brackets require exactly zero owner/all-thread managed bytes.
+Both windows allocate 47,104 managed bytes in injected native input pumping over
+128 frames; process/publication/render lanes remain zero. Full-window allocation
+acceptance is therefore open. Captured CPU and GPU frames are retained and
+inspected; the rendered body count is unchanged.
+
+These are single fresh-process trials under uncontrolled desktop load. Even the
+unchanged preparation phase moves from 16.547 to 6.331 ms between GPU trials;
+the wall-time difference cannot be attributed to packing. The window GPU trial
+is slower than CPU, so the goal of a stable complete-path GPU advantage remains
+open. Its solver/wait phase is 75.836 ms versus 37.705 ms headless; queue,
+presentation and competing-load costs need further investigation. Readback
+reduction does not close that requirement. Native allocator traffic, device
+hardware timestamps, broader network/platform and owner acceptance remain open.
+API declaration coverage stays **1358/1369 (99.20%)**, with 11 open declarations.
+Earlier dated measurements below retain their original 80-byte result layout,
+source identity and verification scope.
 
 ## Final publication in the numerical command (2026-10-25)
 

@@ -8,7 +8,13 @@
 layout(local_size_x=64) in;
 struct FrameContact { uvec4 pair; uvec4 features; uvec4 owners; uvec4 links; vec4 positions; vec4 normalDepth; vec4 impulse; vec4 velocities; };
 struct ReportRequest { uint body; uint generation; uint limit; };
-struct Report { uvec4 shapes; uvec2 collider; float depth; uint padding; vec4 positions; vec4 normalImpulse; vec4 velocities; };
+struct Report {
+    uint shape; uint shapeGeneration; uint colliderShape; uint colliderShapeGeneration;
+    float depth;
+    float positionX; float positionY; float colliderPositionX; float colliderPositionY;
+    float normalX; float normalY; float impulseX; float impulseY;
+    float velocityX; float velocityY; float colliderVelocityX; float colliderVelocityY;
+};
 layout(std430,set=0,binding=0) readonly buffer Points { ContactPoint points[]; };
 layout(std430,set=0,binding=1) readonly buffer Shapes { Shape shapes[]; };
 layout(std430,set=0,binding=2) readonly buffer Bodies { ResidentBody bodies[]; };
@@ -139,8 +145,13 @@ void main()
             }
             else selected++;
             float sign=second?1:-1;
-            results[first+target]=Report(second?r.pair.ywxz:r.pair.xzyw,second?r.owners.xz:r.owners.yw,r.normalDepth.z,0u,
-                second?r.positions.zwxy:r.positions,vec4(sign*r.normalDepth.xy,sign*r.impulse.xy),second?r.velocities.zwxy:r.velocities);
+            uvec4 shapes=second?r.pair.ywxz:r.pair.xzyw;
+            vec4 positions=second?r.positions.zwxy:r.positions;
+            vec4 response=vec4(sign*r.normalDepth.xy,sign*r.impulse.xy);
+            vec4 motion=second?r.velocities.zwxy:r.velocities;
+            results[first+target]=Report(shapes.x,shapes.y,shapes.z,shapes.w,r.normalDepth.z,
+                positions.x,positions.y,positions.z,positions.w,response.x,response.y,response.z,response.w,
+                motion.x,motion.y,motion.z,motion.w);
         }
         if(selected!=available){fail();return;}
         counts[i]=uvec2(selected,first);return;

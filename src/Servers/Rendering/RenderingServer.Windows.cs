@@ -38,9 +38,10 @@ public sealed partial class RenderingServer
                 display.ApplyVSyncPolicy(compatibility);
             }
             var surface = new NativeWindowSurface(window, display, compatibility ?? _backend, presentation);
+            // Native policy preparation can fail before the surface is published.
+            display.SetGraphicsHandleQuery(surface.Backend.GetNativeHandle);
             _nativeWindows.Add(display.WindowID, surface);
             if (_serverViewports.TryGetValue(window, out var state)) state.Screen = null;
-            display.SetGraphicsHandleQuery(surface.Backend.GetNativeHandle);
             MarkChanged();
         }
         catch

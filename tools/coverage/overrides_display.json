@@ -569,32 +569,32 @@
     },
     {
       "electron2d": "T:Electron2D.DisplayWindowEvents",
-      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
     },
     {
       "electron2d": "property:Electron2D.DisplayWindowEvents.WindowID()",
-      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
     },
     {
       "electron2d": "method:Electron2D.DisplayServer.GetWindowEvents(System.Int32)",
-      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
     },
     {
       "electron2d": "method:Electron2D.DisplayWindowEvents.ValidateDisposal()",
-      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
     },
     {
       "electron2d": "method:Electron2D.DisplayWindowEvents.Dispose(System.Boolean)",
-      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
     },
     {
       "electron2d": "method:Electron2D.DisplayWindowEvents.GetPropertyDescriptors()",
-      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers."
+      "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
     }
   ],
@@ -1610,7 +1610,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified.",
       "godot": [
         "DisplayServer::enum:VSyncMode",
         "DisplayServer::method:window_get_vsync_mode(int:)",
@@ -1623,7 +1623,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate."
+      "reason": "ADRs 0038/0040/0095: public native relationship control uses existing per-window owners, actual SDL parent/modal requests and typed scene instance identities. Pending exclusivity, complete cycle checks, fullscreen restrictions, native rollback/dual failure, fixed-popup input and ordinary/popup retirement execute. Runtime edits preserve stored scene policies; existing independent ordinary-window lifetimes are retained. DisplayServerRelationsTests verifies dummy/native contracts and Linux Wayland/X11 software GPU/compatibility pixels, key/text/IME suppression and 64 prepared owner intervals. Native allocator, foreign-platform, physical focus and owner acceptance remain separate.",
       "godot": [
         "DisplayServer::method:window_get_attached_instance_id(int:)",
         "DisplayServer::method:window_set_exclusive(int:,bool:)",
@@ -1632,7 +1632,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate."
+      "reason": "ADRs 0038/0040/0095: real parent-relative native popup lifetimes, opening-order queries and global safe rectangles; control anchors use actual root-client areas. Native popup-done force-hides before Window.VisibilityChanged/PopupHide and does not emit a user CloseRequested. NativePopupWindowTests covers real GPU/compatibility output, nested retirement, outside/safe input, owner/ID guards and callback failure on Linux Wayland/X11 software backends. Wayland global safe areas reject explicitly; physical compositor and other-platform acceptance remain separate.",
       "godot": [
         "DisplayServer::method:window_get_active_popup()",
         "DisplayServer::method:window_get_popup_safe_rect(int:)",

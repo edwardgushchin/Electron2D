@@ -18,6 +18,8 @@ The static WindowGetFlag/WindowSetFlag family shares the native boolean policy.
 Off-owner calls, retired identities and nonfinite vertices fail before publication.
 An unsupported driver rejects effective requests. Native requests and border
 changes preserve the previous policy on failure; a failed rollback is aggregated.
+Renderer attachment reapplies the policy before publishing the native surface;
+failed preparation retires its rendering lease without leaving a registered surface.
 
 ## Native adapters and ownership
 

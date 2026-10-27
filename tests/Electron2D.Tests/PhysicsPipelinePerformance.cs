@@ -116,6 +116,7 @@ internal static partial class PhysicsPipelinePerformance
             for (var i = 0; i < warmup; i++) { display?.Pump(tree); tree.PhysicsFrame(delta); display?.Draw(tree, bodies, delta); }
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
             var upload = gpu?.UploadBytes ?? 0; var readback = gpu?.ReadbackBytes ?? 0;
+            var reportReadback = gpu?.ReportResultReadbackBytes ?? 0;
             var submissions = gpu?.SubmissionCount ?? 0; var uniform = gpu?.UniformBytes ?? 0;
             var tick = PhysicsServer.SpaceGetTick(world.Space);
             var total = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread();
@@ -160,6 +161,7 @@ internal static partial class PhysicsPipelinePerformance
             var frameSeconds = Stopwatch.GetElapsedTime(frameStart).TotalSeconds;
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; total = GC.GetTotalAllocatedBytes(true) - total;
             upload = (gpu?.UploadBytes ?? 0) - upload; readback = (gpu?.ReadbackBytes ?? 0) - readback;
+            reportReadback = (gpu?.ReportResultReadbackBytes ?? 0) - reportReadback;
             submissions = (gpu?.SubmissionCount ?? 0) - submissions; uniform = (gpu?.UniformBytes ?? 0) - uniform;
             Check(PhysicsServer.SpaceGetTick(world.Space) == tick + (ulong)samples, "Each complete scene frame advances exactly one fixed physical tick");
             Check(PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects) == count, "Every requested rigid body remains awake and simulated");
@@ -258,6 +260,7 @@ internal static partial class PhysicsPipelinePerformance
                 completionPhaseMeanMS = completionPhases.Select(value => value / samples).ToArray(),
                 uploadBytesPerTick = (double)upload / samples,
                 readbackBytesPerTick = (double)readback / samples,
+                contactResultReadbackBytesPerTick = (double)reportReadback / samples,
                 uniformBytesPerTick = (double)uniform / samples,
                 submissionsPerTick = (double)submissions / samples,
                 finalContactColors = gpu?.ContactColorCount,

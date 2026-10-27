@@ -7,13 +7,12 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     /// <summary>One receiver's completed-tick contact, in scene/world units; identities retain the observed generations.</summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     internal struct ContactReport
     {
         internal uint Shape, ShapeGeneration, ColliderShape, ColliderShapeGeneration;
-        internal uint ColliderBody, ColliderGeneration;
         internal float Depth;
-        internal uint Padding;
+        // Collider ownership resolves through the retained shape generation; the scalar wire stride is 68 bytes.
         internal Float4 Positions, NormalImpulse, Velocities;
         internal readonly Vector2 Position => new(Positions.X, Positions.Y);
         internal readonly Vector2 ColliderPosition => new(Positions.Z, Positions.W);
@@ -43,6 +42,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     internal long ReportPublicationCount { get; private set; }
     internal long ReportReadCount { get; private set; }
+    internal long ReportResultReadbackBytes { get; private set; }
     internal long ReportDeviceCapacityBytes => (long)_reportRecordCapacity * 128 + ((long)_reportTableCapacity + _reportPointHeadCapacity) * 4 +
         (long)_reportPointLinkCapacity * 8 + (long)_reportBodyHeadCapacity * 4 + (long)_reportResultCapacity * sizeof(ContactReport) +
         (long)_reportRequestCapacity * sizeof(ReportRequest) + (long)_reportCountCapacity * 8 + (_reportSummary is null ? 0 : 8);
@@ -230,6 +230,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (resultCount == 0) { counts[..bodies.Length].Clear(); return; }
         var countBytes = checked(bodies.Length * 8);
         UploadBytes += 8 + bodies.Length * sizeof(ReportRequest); ReadbackBytes += 8 + countBytes + resultCount * sizeof(ContactReport); ReportReadCount++;
+        ReportResultReadbackBytes += (long)resultCount * sizeof(ContactReport);
         var mapped = SDL.MapGPUTransferBuffer(Device, _reportDownload!.DangerousGetHandle(), false);
         if (mapped == 0) throw GPUPhysicsDevice.Failure("map selected contact results");
         try

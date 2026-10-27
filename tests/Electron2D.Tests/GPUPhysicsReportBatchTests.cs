@@ -51,7 +51,7 @@ internal static class GPUPhysicsReportBatchTests
                 {
                     var report = reports[i]; total += report.Impulse;
                     Check(report.Shape == bodyShape.Index && report.ShapeGeneration == bodyShape.Generation &&
-                        report.ColliderShape == floorShape.Index && report.ColliderBody == floor.Index,
+                        report.ColliderShape == floorShape.Index && report.ColliderShapeGeneration == floorShape.Generation,
                         "Completed contacts retain receiver/collider generations and identities");
                     Check(report.Velocity.DistanceTo(velocity) < .001f && report.ColliderVelocity == Vector2.Zero,
                         "Final point velocities follow the locked body's completed state within .001 scene units/second");

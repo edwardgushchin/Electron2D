@@ -1,5 +1,7 @@
 # GPUPhysicsBodyStore
 
+[Selected contact records](../components/gpu-resident-reports.md#packed-selected-result-layout) use a 68-byte scalar transfer layout while retaining shape generations and all public numerical values.
+
 [Final contact publication](../components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) now shares the last numerical completion, using the current device record count before publishing validated frozen point velocities. Idle and explicit separate controls retain their existing contract.
 
 [Shared swept-pair/CCD completion](../components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25)

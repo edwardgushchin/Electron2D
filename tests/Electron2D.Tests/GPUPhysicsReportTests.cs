@@ -7,6 +7,11 @@ internal static class GPUPhysicsReportTests
 {
     internal static void Run()
     {
+        Check(System.Runtime.CompilerServices.Unsafe.SizeOf<Store.ContactReport>() == 68 &&
+            System.Runtime.InteropServices.Marshal.OffsetOf<Store.ContactReport>(nameof(Store.ContactReport.Positions)).ToInt32() == 20 &&
+            System.Runtime.InteropServices.Marshal.OffsetOf<Store.ContactReport>(nameof(Store.ContactReport.NormalImpulse)).ToInt32() == 36 &&
+            System.Runtime.InteropServices.Marshal.OffsetOf<Store.ContactReport>(nameof(Store.ContactReport.Velocities)).ToInt32() == 52,
+            "Contact result wire layout retains every numeric field in a 68-byte scalar record");
         foreach (var steps in new[] { 1, 4, 8 }) { Momentum(steps); Transient(steps); }
         WarmHistory(); Rotating(); Selection(); Sleeping(); SurfaceAndSensors(); Proximity(); Lifetime(); PackedSelection(); Completion(); Measure(); GPUPhysicsReportBatchTests.Run();
         Console.WriteLine("Resident contact reports: complete impulses, transient/CCD contacts, caps, snapshots, sleep, lifecycle and warmed allocation passed.");
@@ -34,7 +39,7 @@ internal static class GPUPhysicsReportTests
         Check(total.X < -1 && total.Y < -1, "Both impulse channels contribute.");
         for (var i = 0; i < count; i++)
         {
-            var r = reports[i]; Check(r.Shape == bs.Index && r.ShapeGeneration == bs.Generation && r.ColliderShape == fs.Index && r.ColliderBody == floor.Index, "Receiver/shape identities.");
+            var r = reports[i]; Check(r.Shape == bs.Index && r.ShapeGeneration == bs.Generation && r.ColliderShape == fs.Index && r.ColliderShapeGeneration == fs.Generation, "Receiver/collider shape identities and generations.");
             Near(r.Velocity, Linear(state), .001f, "Locked body's final point velocity"); Near(r.ColliderVelocity, Vector2.Zero, 0, "Static point velocity");
             Check(r.Normal.Y < -.99f, "Receiver normal faces from floor.");
         }
@@ -319,7 +324,7 @@ internal static class GPUPhysicsReportTests
             readUploads += s.UploadBytes - beforeUpload; readDownloads += s.ReadbackBytes - beforeDownload; readWaits += s.WaitMS - beforeWait;
         }
         bytes = GC.GetAllocatedBytesForCurrentThread() - bytes; Check(bytes == 0, "Warmed simulation/publication/readback allocate zero owner-thread managed bytes.");
-        for (var i = 0; i < population; i++) { Check(counts[i] == 2, $"All requested bodies retain both contact points: receiver={i}, count={counts[i]}, first other={reports[i * 4].ColliderBody}, last other={reports[i * 4 + counts[i] - 1].ColliderBody}."); Near(Sum(reports.AsSpan(i * 4, counts[i])), new(0, -20f / 120), .003f, "No dropped population/impulses in batched read"); }
+        for (var i = 0; i < population; i++) { Check(counts[i] == 2, $"All requested bodies retain both contact points: receiver={i}, count={counts[i]}, first other={reports[i * 4].ColliderShape}, last other={reports[i * 4 + counts[i] - 1].ColliderShape}."); Near(Sum(reports.AsSpan(i * 4, counts[i])), new(0, -20f / 120), .003f, "No dropped population/impulses in batched read"); }
         Array.Sort(samples); Array.Sort(reads);
         Console.WriteLine($"Resident reports: {population} active boxes + floors, 4 substeps/4 iterations, 96 warmup/64 samples; tick p50/p95/p99={samples[32]:F4}/{samples[60]:F4}/{samples[63]:F4} ms; batch read p50/p95/p99={reads[32]:F4}/{reads[60]:F4}/{reads[63]:F4} ms; mean waits={(s.WaitMS - wait) / 64:F4} ms, upload={(s.UploadBytes - upload) / 64}, readback={(s.ReadbackBytes - download) / 64} B/tick+read; {bytes} managed B; {s.Driver}, {s.DeviceName}.");
         Console.WriteLine($"Resident report batch only: wait={readWaits / 64:F4} ms; upload={readUploads / 64}, readback={readDownloads / 64} B/read; retained device={s.ReportDeviceCapacityBytes}, transfer={s.ReportTransferCapacityBytes} B.");
