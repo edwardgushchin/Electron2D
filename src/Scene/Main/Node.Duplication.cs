@@ -190,7 +190,7 @@ public partial class Node
             if (!script) while (type.Assembly != typeof(Node).Assembly) type = type.BaseType!;
             var expected = type;
             var factory = script || type == original.GetType() ? original.CaptureSceneInstanceFactory() : () => (Node)ResourceFileTypes.Get(expected).Factory();
-            var node = InvokeSceneInstanceFactory(factory) ?? throw new InvalidOperationException("A node duplication factory returned null.");
+            var node = InvokeSceneInstanceFactory(factory, script ? original.ConstructionScript : null) ?? throw new InvalidOperationException("A node duplication factory returned null.");
             if (_sources.Contains(node) || _created.Contains(node)) throw new InvalidOperationException("A node duplication factory reused a borrowed or issued node.");
             if (node.Parent is not null || node.Tree is not null || node.Owner is not null) throw new InvalidOperationException("A node duplication factory returned an attached node.");
             Own(node);

@@ -1,0 +1,27 @@
+namespace Electron2D;
+
+public abstract partial class ElectronObject
+{
+    private Script? _constructionScript;
+
+    /// <summary>Gets the borrowed source asset associated with this instance's compiled construction.</summary>
+    /// <returns>The exact source asset, or null when construction had no Script association.</returns>
+    /// <remarks>The association is available during the derived constructor and does not change when source text changes.
+    /// Disposing the borrowed asset does not stop compiled callbacks; the returned identity may then be disposed.
+    /// Copies and version-nine scene/resource archives retain the association through their resource ownership policy.
+    /// Earlier archives retain null when no association was recorded. Live reassignment is a separate workflow.
+    /// Prepared reads require no metadata discovery, native device, callback or managed allocation.</remarks>
+    /// <exception cref="ObjectDisposedException">This owner is disposing on another thread or has finished disposing.</exception>
+    public Script? GetScript() { ThrowIfDisposed(); return Volatile.Read(ref _constructionScript); }
+
+    internal (Script Asset, Type Type)? ConstructionScript =>
+        _constructionScript is { } script ? (script, GetType()) : null;
+
+    internal void RemapConstructionScript(Func<Resource, Resource> remap)
+    {
+        if (_constructionScript is { } script)
+            _constructionScript = remap(script) as Script ?? throw new InvalidOperationException("A compiled source reference must remain a Script.");
+    }
+
+    internal void CopyConstructionScript(ElectronObject source) => _constructionScript = source._constructionScript;
+}

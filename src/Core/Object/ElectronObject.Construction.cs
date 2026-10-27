@@ -15,15 +15,25 @@ public abstract partial class ElectronObject
     }
 
     // Closed scopes may outlive their invocation in captured contexts; release every recorded object.
-    internal sealed class ConstructionScope(ConstructionScope? parent, bool scene)
+    internal sealed class ConstructionScope(ConstructionScope? parent, bool scene, (Script Asset, Type Type)? script)
     {
         internal readonly ConstructionScope? Parent = parent;
         internal readonly bool Scene = scene;
         private HashSet<ElectronObject>? _created = new(ReferenceEqualityComparer.Instance);
-        internal void Register(ElectronObject value) { lock (this) _created?.Add(value); }
+        private (Script Asset, Type Type)? _script = script;
+        internal void Register(ElectronObject value)
+        {
+            lock (this)
+            {
+                if (_created is null) return;
+                _created.Add(value);
+                if (_script is { } source && value.GetType() == source.Type)
+                    value._constructionScript ??= source.Asset;
+            }
+        }
         internal bool Contains(ElectronObject? value) { lock (this) return value is not null && _created?.Contains(value) == true; }
         internal bool IsActive { get { lock (this) return _created is not null; } }
-        internal void Close() { lock (this) _created = null; }
+        internal void Close() { lock (this) { _created = null; _script = null; } }
     }
 
     internal static ConstructionScope? ConstructionContext
@@ -42,10 +52,11 @@ public abstract partial class ElectronObject
         }
     }
 
-    internal static T InvokeConstructionFactory<T>(Func<T> factory, out bool created, bool scene = false) where T : ElectronObject
+    internal static T InvokeConstructionFactory<T>(Func<T> factory, out bool created, bool scene = false,
+        (Script Asset, Type Type)? script = null) where T : ElectronObject
     {
         var previous = ConstructionContext;
-        var scope = new ConstructionScope(previous, scene);
+        var scope = new ConstructionScope(previous, scene, script);
         ConstructionContext = scope;
         try
         {

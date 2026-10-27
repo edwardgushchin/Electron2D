@@ -52,7 +52,10 @@ def check_physics_report(pages):
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "C# " + projection in rows[0], "Iteration must name its actual typed C# protocol"
         assert not any(key.startswith("Object::method:" + method + "(") for key in expected), "Verified iteration must not remain open"
     assert expected["Object::method:_init()"] == "Unimplemented", "The enumeration projection must not hide script initialization"
-    assert expected["Object::method:get_script()"] == "Blocked", "Enumeration must not close live script binding"
+    source_rows = [row for row in object_page.splitlines() if row.startswith("| [`method get_script(")]
+    assert len(source_rows) == 1 and " | Implemented | " in source_rows[0] and "public Electron2D.Script GetScript()" in source_rows[0]
+    assert "Object::method:get_script()" not in expected, "Qualified source identity must not remain open"
+    assert expected["Object::method:set_script(Variant:)"] == "Blocked", "Source observation must not close live reassignment"
     node_page = pages[CLASS_PAGES / "Node.md"]
     for method in ("call_thread_safe", "set_thread_safe", "notify_thread_safe",
                    "call_deferred_thread_group", "set_deferred_thread_group", "notify_deferred_thread_group"):

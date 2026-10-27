@@ -131,7 +131,11 @@ public class Resource : ElectronObject
     }
     internal virtual void ValidateFileState() { }
 
-    internal void RemapPreparedReferences(Func<Resource, Resource> remap) => RemapResourceReferences(remap);
+    internal void RemapPreparedReferences(Func<Resource, Resource> remap)
+    {
+        ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(remap);
+        RemapConstructionScript(remap); RemapResourceReferences(remap);
+    }
     /// <summary>Remaps resource references in freshly prepared data before cache publication.</summary>
     /// <param name="remap">Selects the final live identity for each borrowed or prepared resource reference.</param>
     /// <remarks>The default follows stored property descriptors. Override for opaque reference storage, and call
@@ -336,7 +340,11 @@ public class Resource : ElectronObject
     /// <exception cref="ObjectDisposedException">Either resource is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">An engine resource's current authoring policy rejects the copy before any state or notification changes.</exception>
     /// <exception cref="Exception">A reset, copy, setter, or final change handler fails.</exception>
-    public void CopyFromResource(Resource source)
+    public void CopyFromResource(Resource source) => CopyStateFrom(source, copyConstructionScript: false);
+
+    internal void CopyFileState(Resource source) => CopyStateFrom(source, copyConstructionScript: true);
+
+    private void CopyStateFrom(Resource source, bool copyConstructionScript)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(source);
@@ -363,6 +371,7 @@ public class Resource : ElectronObject
                         EmitChanged(); ThrowIfDisposed(); OnResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
                         CanTranslateMessages = canTranslateMessages; TranslationDomain = translationDomain;
                         source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
+                        if (copyConstructionScript) CopyConstructionScript(source);
                         copied = true;
                     }
                     finally
@@ -1035,7 +1044,9 @@ public class Resource : ElectronObject
             if (_duplicates.TryGetValue(source, out var existing))
                 return existing;
 
-            var target = InvokeConstructionFactory(source.CreateDuplicateInstance, out var created);
+            var association = source.ConstructionScript;
+            if (association is { } sourceScript) association = ((Script)Duplicate(sourceScript.Asset), sourceScript.Type);
+            var target = InvokeConstructionFactory(source.CreateDuplicateInstance, out var created, script: association);
             if (target is not null && !created)
                 throw new InvalidOperationException("A resource duplication factory returned a pre-existing instance.");
             if (target is not null && !ReferenceEquals(source, target))

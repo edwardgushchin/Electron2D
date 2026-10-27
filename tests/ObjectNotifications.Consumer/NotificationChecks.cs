@@ -172,6 +172,7 @@ internal static class NotificationChecks
         Console.WriteLine($"Notification-idle {backend}: 128 complete frames, owner/all={owner}/{all} B.");
         void IdleFrame(int i)
         {
+            Check(body.GetScript() is null, "A plain compiled physical owner has no implicit source asset");
             body.Notify(Node.NotificationPhysicsProcess, (i & 1) != 0); tree.PhysicsFrame(.01);
             Check(body.GetRID() == identity && body.Position == idlePosition && !body.Direction,
                 "Idle directional callbacks preserve exact RID/pose and release invocation context");
@@ -179,6 +180,7 @@ internal static class NotificationChecks
 
         void Frame(int i)
         {
+            Check(body.GetScript() is null, "Prepared source inspection requires no native or metadata discovery");
             var reversed = (i & 1) != 0; body.LinearVelocity = new(1, 0); var position = body.Position.X;
             body.Notify(Adjust, reversed); tree.PhysicsFrame(.01);
             var expected = reversed ? 4 : 3;

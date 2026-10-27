@@ -2270,10 +2270,10 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("A node cannot become a scene-tree root before packed-scene instantiation completes.");
     }
 
-    internal static Node InvokeSceneInstanceFactory(Func<Node> factory)
+    internal static Node InvokeSceneInstanceFactory(Func<Node> factory, (Script Asset, Type Type)? script = null)
     {
         ArgumentNullException.ThrowIfNull(factory);
-        var node = InvokeConstructionFactory(factory, out var created, scene: true);
+        var node = InvokeConstructionFactory(factory, out var created, scene: true, script: script);
         if (node is not null && !created) throw new InvalidOperationException("A scene factory returned a borrowed node.");
         return node!;
     }

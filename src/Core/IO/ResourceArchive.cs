@@ -45,7 +45,7 @@ internal static partial class ResourceArchive
         if (uid == ResourceUID.InvalidID) uid = ResourceUID.CreateID();
         var file = new byte[checked(64 + encoded.Length)];
         "E2DASSET"u8.CopyTo(file);
-        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 8);
+        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 9);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(12), (int)flags);
         BinaryPrimitives.WriteInt64LittleEndian(file.AsSpan(16), uid);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(24), payload.Length);
@@ -64,7 +64,7 @@ internal static partial class ResourceArchive
         using var stream = ResourcePacks.OpenRead(path);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
-        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
+        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
         var id = BinaryPrimitives.ReadInt64LittleEndian(header[16..]);
         return id >= 0 ? id : throw new InvalidDataException("Invalid resource UID.");
     }
@@ -83,7 +83,7 @@ internal static partial class ResourceArchive
         var length = FileAccess.GetSize(path);
         if (length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
         var bytes = FileAccess.GetFileAsBytes(path);
-        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8)) throw new InvalidDataException("Unsupported resource archive version.");
+        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
     }
@@ -151,8 +151,15 @@ internal static partial class ResourceArchive
         if (count is < 1 or > 65536) throw new InvalidDataException("Invalid resource table.");
         var definitions = new ArchiveDefinition[count];
         for (var i = 0; i < count; i++) definitions[i] = ReadDefinition(stream, version, ResourceLoader.AbortOnMissingResources);
+        ValidateScriptReferences(definitions);
         if (stream.GetAvailableBytes() != 0 || definitions[0].Path.Length != 0) throw new InvalidDataException("Invalid archive metadata root or trailing bytes.");
         return definitions;
+    }
+    internal static void ValidateScriptReferences(ArchiveDefinition[] definitions)
+    {
+        foreach (var definition in definitions)
+            if (definition.Script >= definitions.Length || definition.Script >= 0 && definitions[definition.Script].Type.Type != typeof(Script))
+                throw new InvalidDataException("Invalid compiled source reference.");
     }
     internal static void RewriteDependencies(string path, IReadOnlyDictionary<string, string> renames)
     {
@@ -185,6 +192,7 @@ internal static partial class ResourceArchive
             ResourceArchiveStrings.Write(output, d.SceneID);
             ResourceArchiveStrings.Write(output, target);
             output.Put64(uid);
+            if (version >= 9) output.Put32(d.Script);
             output.Put32(d.Payload.Length);
             output.PutData(d.Payload);
         }
@@ -227,6 +235,7 @@ internal static partial class ResourceArchive
             _ = ResourceArchiveStrings.Read(stream);
             var dependency = ResourceArchiveStrings.Read(stream);
             var uid = stream.Get64();
+            if (version >= 9) _ = stream.Get32();
             var size = stream.Get32();
             if (size < 0 || size > stream.GetAvailableBytes() || uid < -1 || dependency.Length != 0 && (size != 0 || i == 0 || metadata.MissingPayload)) throw new InvalidDataException("Invalid resource payload size.");
             stream.Seek(checked(stream.GetPosition() + size));
@@ -243,7 +252,7 @@ internal static partial class ResourceArchive
     internal static string ResolveDependencyPath(string source, string target) => !target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target) ? ResourcePacks.CombineRelative(source, target) : target;
 
 }
-internal sealed record ArchiveDefinition(ResourceFileType Type, string Name, bool Local, string SceneID, string Path, long UID, byte[] Payload, ResourceArchiveRole Role = ResourceArchiveRole.Resource, Rect2 Bounds = default, bool MissingPayload = false);
+internal sealed record ArchiveDefinition(ResourceFileType Type, string Name, bool Local, string SceneID, string Path, long UID, byte[] Payload, ResourceArchiveRole Role = ResourceArchiveRole.Resource, Rect2 Bounds = default, bool MissingPayload = false, int Script = -1);
 internal sealed partial class ResourceArchiveWrite(Resource root, string path, SaverFlags flags)
 {
     private readonly Dictionary<Resource, int> _ids = new(ReferenceEqualityComparer.Instance);
@@ -321,7 +330,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             _internal.Add(resource);
             var sceneID = resource.ResourceSceneUniqueID;
             _sceneIDs.Add(resource, sceneID);
-            definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, sceneID, "", -1, stream.DataArray, role, bounds, missingPayload));
+            definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, sceneID, "", -1, stream.DataArray, role, bounds, missingPayload, Reference(resource.GetScript())));
         }
         var reservedIDs = definitions.Skip(1).Where(d => d.Path.Length == 0 && d.SceneID.Length != 0).Select(d => d.SceneID).ToHashSet(StringComparer.Ordinal);
         var assignedIDs = new HashSet<string>(StringComparer.Ordinal);
@@ -349,6 +358,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             ResourceArchiveStrings.Write(output, d.SceneID);
             ResourceArchiveStrings.Write(output, d.Path);
             output.Put64(d.UID);
+            output.Put32(d.Script);
             output.Put32(d.Payload.Length);
             output.PutData(d.Payload);
             if (output.GetSize() > ResourceArchive.Limit) throw new InvalidDataException("Archive byte budget exceeded.");
@@ -415,6 +425,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
             var typeID = recovering && node.Factory.OriginalScene.Length == 0 ? node.Factory.OriginalClass : type.ID;
             if (string.IsNullOrWhiteSpace(typeID) || typeID.Length > 256 || typeID.Any(char.IsControl)) throw new InvalidDataException("A recovered class requires a valid original factory identity.");
             ResourceArchiveStrings.Write(stream, typeID);
+            stream.Put32(Reference(node.Factory.Script));
             ResourceArchiveStrings.Write(stream, node.Name);
             stream.Put32(node.ParentIndex);
             stream.Put32(node.OwnerIndex);
@@ -435,7 +446,7 @@ internal sealed partial class ResourceArchiveWrite(Resource root, string path, S
                 foreach (var property in node.Properties) fields.Put(property.Value.CaptureField(property.Name));
                 WriteMissing(stream, fields); stream.Put32(0); continue;
             }
-            var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory());
+            var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory(node.Factory.Script));
             try
             {
                 var properties = recovering ? node.Properties.Where(property => temporary.GetPropertyList().Any(descriptor =>
@@ -499,6 +510,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
         _resources = new Resource?[count];
         _definitions = new ArchiveDefinition[count];
         for (var i = 0; i < count; i++) _definitions[i] = ResourceArchive.ReadDefinition(stream, version, abortOnMissing);
+        ResourceArchive.ValidateScriptReferences(_definitions);
         if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing archive payload.");
         var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
         for (var i = 1; i < _definitions.Length; i++)
@@ -535,24 +547,34 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             }
             else
             {
-                var created = d.Type.Factory() as Resource ?? throw new InvalidDataException("Resource factory returned a node.");
+                var created = d.Type.Factory(ConstructionScript(d.Script, d.Type.Type)) as Resource ?? throw new InvalidDataException("Resource factory returned a node.");
                 Owned.Add(created);
                 if (created.IsDisposed || created.GetType() != d.Type.Type) throw new InvalidDataException("Resource factory returned an invalid identity.");
                 _resources[i] = created;
             }
         }
+        // Script is sealed and stores scalar metadata only; prepare it before invoking any compiled owner constructor.
+        for (var i = 0; i < count; i++) if (_definitions[i].Type.Type == typeof(Script))
+            {
+                if (_definitions[i].Script != -1) throw new InvalidDataException("A source asset cannot have a compiled owner association.");
+                LoadIdentity(i); RestoreIdentity(i);
+            }
         if (ResourceLoadGraph.Current is { } loadGraph)
         {
-            for (var i = 0; i < count; i++) if (_definitions[i].Path.Length == 0) LoadIdentity(i);
-            var dependencies = Enumerable.Range(0, count).Where(i => _definitions[i].Path.Length != 0).ToArray();
+            for (var i = 0; i < count; i++) if (_definitions[i].Path.Length == 0 && _resources[i] is null) LoadIdentity(i);
+            var dependencies = Enumerable.Range(0, count).Where(i => _definitions[i].Path.Length != 0 && _resources[i] is null).ToArray();
             loadGraph.LoadDependencies(dependencies.Length, index => LoadIdentity(dependencies[index]));
         }
-        else for (var i = 0; i < count; i++) LoadIdentity(i);
+        else for (var i = 0; i < count; i++) if (_resources[i] is null) LoadIdentity(i);
         // Validate scene references against prepared root metadata, independent of archive table order.
         foreach (var i in Enumerable.Range(0, count).OrderBy(index => _resources[index] is PackedScene ? 0 : _resources[index] is Shader ? 1 : 2))
+            if (_definitions[i].Type.Type != typeof(Script)) RestoreIdentity(i);
+        foreach (var resource in Owned) resource.ValidateFileState();
+
+        void RestoreIdentity(int i)
         {
             var d = _definitions[i];
-            if (d.Path.Length != 0) continue;
+            if (d.Path.Length != 0) return;
             var resource = _resources[i]!;
             resource.ResourceName = d.Name;
             resource.ResourceLocalToScene = d.Local;
@@ -620,7 +642,13 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             else _ = ReadProperties(value, resource);
             if (value.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing resource bytes.");
         }
-        foreach (var resource in Owned) resource.ValidateFileState();
+    }
+    private Script? ConstructionScript(int reference, Type ownerType)
+    {
+        if (reference == -1) return null;
+        if (reference < 0 || reference >= _resources.Length || _resources[reference] is not Script script || script.CompiledType != ownerType)
+            throw new InvalidDataException("Compiled source does not match its exact owner type.");
+        return script;
     }
     private static void ReadImage(StreamPeerBuffer stream, Image image)
     {
@@ -689,6 +717,7 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             if (type is null && abortOnMissing) throw new InvalidDataException("Unknown node factory ID.");
             type ??= new ResourceFileType(typeID, typeof(MissingNode), static () => new MissingNode());
             if (!typeof(Node).IsAssignableFrom(type.Type)) throw new InvalidDataException("Scene table includes a resource.");
+            var source = ConstructionScript(version >= 9 ? stream.Get32() : -1, type.Type);
             var name = ResourceArchiveStrings.Read(stream);
             if (!Node.IsValidStoredNodeName(name)) throw new InvalidDataException("Invalid scene node name.");
             var parent = stream.Get32();
@@ -725,14 +754,14 @@ internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.Ca
             }
             else
             {
-                var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory());
+                var temporary = Node.InvokeSceneInstanceFactory(() => (Node)type.Factory(source));
                 try { properties = ReadProperties(stream, temporary).Select(p => new ScenePropertyData(p.Descriptor.Name, p.Value)).ToArray(); }
                 finally { temporary.Dispose(); }
                 if (version >= 6 && Count(stream) != 0) throw new InvalidDataException("An ordinary node cannot contain deferred fields.");
             }
             var nodePath = i == 0 ? "." : parent == 0 ? name : nodes[parent].Path + "/" + name;
             var factory = new SceneFactoryData(() => (Node)type.Factory(), type.Type, 0,
-                type.Type == typeof(MissingNode) && missingScene.Length == 0 ? typeID : "", missingScene);
+                type.Type == typeof(MissingNode) && missingScene.Length == 0 ? typeID : "", missingScene, source);
             nodes[i] = new(factory, name, parent, owner, sibling, nodePath, parent < 0 ? "." : nodes[parent].Path, owner < 0 ? "" : owner == 0 ? "." : "", groups, properties, (PackedScene?)instance, link.Placeholder, instanceRoot, instancePath, deferred);
         }
         if (count == 0)

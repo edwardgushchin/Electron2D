@@ -36,9 +36,12 @@ internal static partial class ResourceArchive
         if (version == 1) role = RoleFor(ResourceFileTypes.Get(id).Type, version);
         var type = ResolveType(id, role, version == 1 || abort, missing, version);
         var name = ResourceArchiveStrings.Read(stream); var marker = stream.GetU8(); if (marker > 1) throw new InvalidDataException("Invalid resource metadata flag.");
-        var sceneID = ResourceArchiveStrings.Read(stream); var path = ResourceArchiveStrings.Read(stream); var uid = stream.Get64(); var size = stream.Get32();
+        var sceneID = ResourceArchiveStrings.Read(stream); var path = ResourceArchiveStrings.Read(stream); var uid = stream.Get64();
+        var script = version >= 9 ? stream.Get32() : -1;
+        var size = stream.Get32();
         if (size < 0 || size > Limit || size > stream.GetAvailableBytes() || uid < -1 || path.Length != 0 && (size != 0 || missing)) throw new InvalidDataException("Invalid resource definition.");
-        return new(type, name, marker == 1, sceneID, path, uid, stream.GetData(size), role, bounds, missing);
+        if (script < -1 || path.Length != 0 && script != -1) throw new InvalidDataException("Invalid compiled source reference.");
+        return new(type, name, marker == 1, sceneID, path, uid, stream.GetData(size), role, bounds, missing, script);
     }
     internal static (ResourceArchiveRole Role, Rect2 Bounds, bool MissingPayload) ReadRoleMetadata(StreamPeerBuffer stream, int version)
     {

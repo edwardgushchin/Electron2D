@@ -34,6 +34,12 @@ internal sealed class ResourceArchiveLoader : ResourceFormatLoader
             for (var i = 0; i < count; i++)
             {
                 types.Add(ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream)).Type);
+                if (version >= 9)
+                {
+                    var script = stream.Get32();
+                    if (script < -1 || script >= definitions.Length || script >= 0 && definitions[script].Type.Type != typeof(Script))
+                        throw new InvalidDataException("Invalid compiled source reference.");
+                }
                 _ = ResourceArchiveStrings.Read(stream);
                 _ = stream.Get32();
                 _ = stream.Get32();

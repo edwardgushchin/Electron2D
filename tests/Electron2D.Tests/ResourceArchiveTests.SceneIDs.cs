@@ -46,7 +46,7 @@ internal static partial class ResourceArchiveTests
             ResourceArchiveStrings.Write(output, d.Type.ID); ResourceArchive.WriteRole(output, d, version);
             ResourceArchiveStrings.Write(output, d.Name); output.PutU8(d.Local ? (byte)1 : (byte)0);
             ResourceArchiveStrings.Write(output, d.SceneID); ResourceArchiveStrings.Write(output, d.Path);
-            output.Put64(d.UID); output.Put32(d.Payload.Length); output.PutData(d.Payload);
+            output.Put64(d.UID); if (version >= 9) output.Put32(d.Script); output.Put32(d.Payload.Length); output.PutData(d.Payload);
         }
         var raw = output.DataArray; var original = System.IO.File.ReadAllBytes(path); var invalid = new byte[64 + raw.Length];
         original.AsSpan(0, 64).CopyTo(invalid); raw.CopyTo(invalid, 64);

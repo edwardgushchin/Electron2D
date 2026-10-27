@@ -127,7 +127,7 @@ public sealed partial class ResourceLoader : ElectronObject
                         try
                         {
                             if (!requestedType.IsInstanceOfType(loaded) || loaded.IsDisposed) throw new InvalidDataException("Format loader returned an incompatible resource.");
-                            if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == loaded.GetType()) { cached.CopyFromResource(loaded); loaded.Dispose(); return cached; }
+                            if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == loaded.GetType()) { cached.CopyFileState(loaded); loaded.Dispose(); return cached; }
                             if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else loaded.TakeOverPath(path); owned = true; return loaded;
                         }
                         catch { loaded.Dispose(); throw; }
@@ -235,7 +235,7 @@ public sealed partial class ResourceLoader : ElectronObject
                 using var context = ResourceArchive.Decode(path, cacheMode); var parsed = context.Root; if (expectedType is not null && !expectedType.IsInstanceOfType(parsed)) throw new InvalidDataException("File resource does not match requested type.");
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == parsed.GetType())
                 {
-                    context.RedirectRoot(cached); using var source = context.ReleaseRoot(); cached.CopyFromResource(source);
+                    context.RedirectRoot(cached); using var source = context.ReleaseRoot(); cached.CopyFileState(source);
                     ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return cached;
                 }
                 var loaded = context.ReleaseRoot(); try { if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else if (cached is not null) loaded.TakeOverPath(path); else loaded.ResourcePath = path; ResourceUID.SetID(ResourceArchive.ReadUID(path), path); owned = true; return loaded; } catch { loaded.Dispose(); throw; }

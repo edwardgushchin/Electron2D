@@ -353,9 +353,11 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
     private readonly System.Runtime.CompilerServices.ConditionalWeakTable<ElectronObject, object> _issued = new();
     internal string ID => id;
     internal Type Type => type;
-    internal ElectronObject Factory()
+    internal ElectronObject Factory() => Factory(null);
+    internal ElectronObject Factory(Script? script)
     {
-        var value = ElectronObject.InvokeConstructionFactory(create, out var created) ?? throw new InvalidOperationException("File factory returned null.");
+        var value = ElectronObject.InvokeConstructionFactory(create, out var created,
+            script: script is null ? null : (script, type)) ?? throw new InvalidOperationException("File factory returned null.");
         if (!created) throw new InvalidOperationException("File factory returned a pre-existing instance.");
         if (!_issued.TryAdd(value, new object())) throw new InvalidOperationException("File factory reused an issued object.");
         if (value.IsDisposed) throw new InvalidOperationException("File factory returned a disposed identity.");

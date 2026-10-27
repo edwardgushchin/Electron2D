@@ -1,3 +1,5 @@
+[Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) closes the inherited GetScript row with actual constructor, copy, archive, scene-local and cache-publication behavior. Physics declaration coverage is **1360/1369 (99.34%)**, with **9 open** (5 Partial, 1 Blocked, 3 Unimplemented) and 92 Excluded. Live reassignment/initialization/reload, HDR, remaining monitors and broader backend/network/platform/performance acceptance remain open. Earlier records below describe their checkpoints.
+
 [Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) connect all navigation counts and cached audio latency. Physics declaration coverage remains 1358/1369 (99.20%); the complete GetMonitor instrumentation remains open.
 
 [GPU device/window lifetime](../components/gpu-device-lifetime.md) uses process-local device leases independent of renderer startup order. The current public CLR matrix passes all 16 profiles; declaration coverage remains 1358/1369 (99.20%), with 11 open. Broader native/platform and performance acceptance stays open.

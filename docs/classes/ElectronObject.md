@@ -113,6 +113,7 @@ sealed class Meter : ElectronObject
 | [`public bool IsClass(string className)`](#m-electron2d-electronobject-isclass-system-string) | Tests the actual compiled class and engine base-class names. |
 | [`public void Notify(int what)`](#m-electron2d-electronobject-notify-system-int32) | Synchronously delivers a numeric engine notification to this object. |
 | [`public void Notify(int what, bool reversed)`](#m-electron2d-electronobject-notify-system-int32-system-boolean) | Selects ordinary or derived-first numeric delivery. |
+| [`public Script? GetScript()`](#m-electron2d-electronobject-getscript) | Gets the borrowed compiled source association. |
 | [`public IReadOnlyList<PropertyDescriptor> GetPropertyList()`](#m-electron2d-electronobject-getpropertylist) | Builds the current validated list of typed properties exposed to tooling. |
 | [`public bool PropertyCanRevert(PropertyDescriptor property)`](#m-electron2d-electronobject-propertycanrevert-electron2d-propertydescriptor) | Reports whether a tooling property currently differs from its revert value. |
 | [`public void RevertProperty(PropertyDescriptor property)`](#m-electron2d-electronobject-revertproperty-electron2d-propertydescriptor) | Restores a tooling property to its current typed revert value. |
@@ -209,6 +210,14 @@ Gets or sets the translation domain used by this object.
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
 
 ## Method Descriptions
+
+<a id="m-electron2d-electronobject-getscript"></a>
+### `public Script? GetScript()`
+
+Returns the exact borrowed source asset selected for this owner's compiled construction, or null when none was selected. The association is available during Script.New's derived constructor and survives source edits, memory copies and version-nine scene/resource reconstruction. PackedScene uses the ordinary shared or scene-local resource policy. Earlier archives retain their unrecorded null association.
+
+Reads require no metadata discovery, native device, callbacks or managed allocation. Cancelled disposal preserves the source; committed disposal releases it. Explicitly disposing the borrowed asset does not stop compiled execution and the returned asset may be disposed. The owner never owns that asset. Foreign-thread disposal and completed disposal reject with ObjectDisposedException.
+
 
 <a id="m-electron2d-electronobject-canceldisposal"></a>
 ### `public void CancelDisposal()`
@@ -539,7 +548,7 @@ Occurs when [`ElectronObject.NotifyPropertyListChanged`](ElectronObject.md#m-ele
 
 Occurs when a derived scripting component reports that this object's script attachment changed.
 
-**Remarks:** Electron2D does not yet provide a script attachment. The event reserves the typed notification contract for a
+**Remarks:** Initial compiled construction retains a source association. The event reserves the typed notification contract for a
 future live script-assignment workflow and is currently raised only through [`ElectronObject.NotifyScriptChanged`](ElectronObject.md#m-electron2d-electronobject-notifyscriptchanged).
 
 ## Constant Descriptions
@@ -629,4 +638,4 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 
 ## Factory construction provenance
 
-The protected constructor keeps the existing process-local identity and records this reference in active internal factory scopes. Resource copies, compiled scripts, file factories and scene factories validate against those scopes before acquiring their result. A later global instance number does not prove ownership. The internal nested ConstructionScope uses transient reference-identity sets; closing releases their contents even if an execution context escapes. Ordinary context flow and the engine worker pool carry this capability. Suppressed flow and unrelated threads cannot produce an accepted factory result. See [ADR 0013](../decisions/resources.md#adr-0013). This cold mechanism adds no retained field to each object.
+The protected constructor keeps the existing process-local identity and records this reference in active internal factory scopes. Resource copies, compiled scripts, file factories and scene factories validate against those scopes before acquiring their result. A later global instance number does not prove ownership. The internal nested ConstructionScope uses transient reference-identity sets; closing releases their contents even if an execution context escapes. Ordinary context flow and the engine worker pool carry this capability. Suppressed flow and unrelated threads cannot produce an accepted factory result. See [ADR 0013](../decisions/resources.md#adr-0013). Its closed context retains no recorded objects or sources; an associated owner retains one nullable source reference.

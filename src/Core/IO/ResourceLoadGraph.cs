@@ -185,7 +185,7 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
         source.AppendFileOwnerships(ownedChildren.ToArray());
         if (!ReferenceEquals(entry.Final, source))
         {
-            try { entry.Final!.CopyFromResource(source); }
+            try { entry.Final!.CopyFileState(source); }
             finally { entry.Released = true; source.Dispose(); }
         }
         else

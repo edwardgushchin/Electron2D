@@ -16,6 +16,8 @@ using Player player = script.New<Player>();
 // The player uses ordinary Node lifecycle and its declared C# fields/methods.
 ```
 
+Constructed owners expose this exact borrowed asset through [ElectronObject.GetScript](ElectronObject.md#m-electron2d-electronobject-getscript), including inside their derived constructor. Copies and file scenes retain the source under [the compiled owner contract](../components/scripting.md#compiled-owner-source-identity).
+
 ## API summary
 
 | Signature | Contract |

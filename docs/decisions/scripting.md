@@ -1,6 +1,6 @@
 # C# scripting decisions
 
-Last updated: 2026-10-14
+Last updated: 2026-10-27
 
 This bounded document owns the C# execution model and script-resource identity. [The decision index](index.md) routes other work; implemented behavior remains in class/component/domain documents and [coverage](../coverage/index.md).
 
@@ -9,7 +9,7 @@ Decisions in this log: [0091](#adr-0091).
 <a id="adr-0091"></a>
 ## ADR 0091: Use compiled C# nodes and one concrete Script resource
 
-Last updated: 2026-10-14
+Last updated: 2026-10-27
 
 - Status: Accepted by the user on 2026-10-01.
 - Scope: C# gameplay code, script resource naming/roles, project/editor integration and reference API adaptation.
@@ -58,8 +58,12 @@ Actual project Node instances resolve class defaults by CLR identity, including 
 
 #### Live attachment and rebuild boundaries
 
+- Initial construction records the concrete source Script on an exact compiled owner before its derived constructor runs. `GetScript()` returns this borrowed asset identity, or null for construction without a Script asset. The existing invocation construction scope supplies the asset and exact CLR type; only matching newly constructed objects acquire it. Nested Script construction uses the innermost matching active scope. Closed/captured scopes release their asset reference and cannot bind later objects. No project callback runs from the base constructor.
+- The owner retains the association through ordinary execution and a cancelled disposal, then releases it on committed disposal or failed-construction completion. It does not own or dispose the Script asset. Explicit asset disposal leaves the existing compiled class executing; its borrowed association may identify that disposed asset. Source text edits do not replace the association or compiled class. An explicit constructor expression keeps its actual nested construction provenance.
+- Exact-type Node and Resource copies retain this initial association; omitting Node.Duplicate's Scripts flag drops it with the project role. PackedScene uses its existing resource scope to share ordinary source assets and acquire one scene-local source per instance, including aliases across owners. Version-9 resource definitions and node records encode a nullable Script table reference. Prepare sealed scalar-only Script assets before invoking compiled owner factories; reject mismatched exact types and malformed references before acquiring that owner. Existing archive versions retain their absent association rather than inferring one from a CLR type. Cache publication remaps the source with other resource identities; same-type file replacement adopts the restored association through the existing resource change batch. This initial association adds no public setter, second gameplay object or per-frame wrapper.
+
 - A CLR instance does not change its runtime type when a script is selected. A scene loader may construct a `Player` from the selected identity; it must not claim that an existing CharacterBody object became that CLR subtype while keeping the same managed instance.
-- This decision does not settle live GetScript/SetScript semantics, script-instance ownership/identity, replacement, callbacks or failure rollback. Their applicable reference obligations remain in coverage. Before implementing live attachment, define a typed instance/lifetime contract that preserves the required behavior, or obtain an explicit bounded ADR adaptation; do not expose inert setters, silently replace identity or mark these operations Excluded because Node subclassing exists.
+- This decision settles the initial construction association above, but not live SetScript replacement, mutable script-instance ownership, callbacks or failure rollback. Their applicable reference obligations remain in coverage. Before implementing live attachment, define a typed instance/lifetime contract that preserves the required behavior, or obtain an explicit bounded ADR adaptation; do not expose inert setters, silently replace identity or mark these operations Excluded because Node subclassing exists.
 - Rebuild and restart is the initial project/scenario workflow. Hot reload and migration of live nodes, fields, subscriptions, pending work and compiled-type lifetimes require a separate executable contract and verification. No transparent assembly unloading or state preservation is claimed here.
 
 Script.New and registered file factories use the invocation construction provenance under [ADR 0013](resources.md#adr-0013), including ordinary execution-context flow and engine worker jobs. Unrelated concurrent results reject before schema callbacks, ownership or cleanup; newly owned invalid results retain the existing failure cleanup.
@@ -74,7 +78,7 @@ The Script resource enters a real code-as-asset consumer: source/compiled-type a
 
 The compiled-source asset slice now provides a concrete Script resource, explicit project Node/Resource registrations, portable-PDB source association, typed metadata/defaults/factories, `.cs` loading/atomic saving and archive identity. It creates actual user classes through existing file factories and ordinary callbacks; RichTextLabel consumes compiled effect resources. Checks and platform limits are recorded in [the scripting component](../components/scripting.md).
 
-Node.Duplicate projects its Scripts flag through fresh exact compiled-type construction and, for linked template overlays, detached role replacement under ADR 0023. Omitting the flag selects the nearest engine base through its registered concrete factory for freshly created nodes; a linked template keeps its own compiled types. This never mutates CLR identity or implements live script binding. Live GetScript/SetScript binding/replacement, implementation Reload and keep-state migration remain unimplemented obligations. Compiled class RPC defaults execute through the typed scene multiplayer contract. Deprecated instance_has is excluded with its pinned replacement evidence under ADR 0004. No alternate CSharpScript production type or per-frame wrapper is introduced.
+Node.Duplicate projects its Scripts flag through fresh exact compiled-type construction and, for linked template overlays, detached role replacement under ADR 0023. Omitting the flag selects the nearest engine base through its registered concrete factory for freshly created nodes; a linked template keeps its own compiled types. Initial construction retains source identity for GetScript through exact copies, version-9 file reconstruction, scene-local instancing and cache publication. This never mutates CLR identity or implements live SetScript binding/replacement, implementation Reload or keep-state migration. Compiled class RPC defaults execute through the typed scene multiplayer contract. Deprecated instance_has is excluded with its pinned replacement evidence under ADR 0004. No alternate CSharpScript production type or per-frame wrapper is introduced.
 
 ### Consequences
 

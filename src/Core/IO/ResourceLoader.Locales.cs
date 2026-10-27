@@ -106,7 +106,7 @@ public sealed partial class ResourceLoader
                             graph.Prepare(path, CacheMode.IgnoreDeep, resource.GetType());
                             if (!graph.LocaleIsCurrent) { graph.DisposeUnused(); break; }
                             using var prepared = graph.Commit();
-                            if (LocalizedAlive(resource, path)) resource.CopyFromResource(prepared);
+                            if (LocalizedAlive(resource, path)) resource.CopyFileState(prepared);
                             pair.Value.Active = map.Contains(path);
                         }
                         catch (Exception error)

@@ -40,7 +40,9 @@ public sealed partial class Script : Resource
     /// <summary>Loads the directly inherited registered script asset, when the project base class has one.</summary><returns>Borrowed cached base Script, or null for a native/unregistered base.</returns>
     public Script? GetBaseScript() { var type = CompiledType?.BaseType; var record = type == null ? null : FindType(type); return record == null ? null : ResourceLoader.Load<Script>(record.Path); }
     /// <summary>Creates a caller-owned instance through the registered exact factory.</summary><typeparam name="T">Expected compiled Node/Resource role.</typeparam><returns>The actual project class instance.</returns>
-    /// <remarks>The registered factory must construct its result within this call's execution context or engine worker tasks. Pre-existing objects are never acquired or cleaned up.</remarks>
+    /// <remarks>The registered factory must construct its result within this call's execution context or engine worker tasks.
+    /// Matching construction exposes this asset through ElectronObject.GetScript before the derived constructor runs.
+    /// Nested script factories retain their innermost source. Pre-existing objects are never acquired or cleaned up.</remarks>
     /// <exception cref="InvalidOperationException">No factory exists, the expected role is incompatible or the result is invalid or pre-existing.</exception>
     /// <exception cref="AggregateException">Both result validation and cleanup fail.</exception>
     /// <exception cref="Exception">The project constructor/schema hook fails.</exception>
@@ -56,7 +58,8 @@ public sealed partial class Script : Resource
     {
         ScriptRegistration record; lock (_gate) { ThrowIfDisposed(); record = _registration ?? throw new InvalidOperationException("The script is unbound."); }
         if (!typeof(T).IsAssignableFrom(record.Type) || record.Type.IsAbstract || constructor == null && record.Factory == null) throw new InvalidOperationException("The script cannot construct the expected role.");
-        var instance = InvokeConstructionFactory(() => constructor != null ? constructor() : record.Factory!(), out var created);
+        var instance = InvokeConstructionFactory(() => constructor != null ? constructor() : record.Factory!(), out var created,
+            script: (this, record.Type));
         if (instance is not null && !created)
             throw new InvalidOperationException("A script factory returned a pre-existing instance.");
         try

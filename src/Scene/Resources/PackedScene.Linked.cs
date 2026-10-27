@@ -89,7 +89,7 @@ public sealed partial class PackedScene
                 }
                 else
                 {
-                    node = stored.Factory.Create(); created.Add(node); node.BeginSceneInstantiation();
+                    node = stored.Factory.Create(resources); created.Add(node); node.BeginSceneInstantiation();
                     ValidateFactoryResult(stored, node); topology.Track(node);
                 }
                 nodes[i] = node;

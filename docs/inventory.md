@@ -1,3 +1,5 @@
+[Compiled owner source identity](components/scripting.md#compiled-owner-source-identity) adds ElectronObject.GetScript with typed construction provenance, copy/file retention and scene-local resource ownership.
+
 [The common-body audit](components/physics-body-contract.md) qualifies the existing PhysicsBody declaration family through a public CPU/GPU/registered consumer. No runtime type or public signature is added.
 
 [Canvas command metadata](components/canvas-command-metadata.md) connects existing input/expression/custom/material families to retained source rectangles and specular channels. No public production type is added.

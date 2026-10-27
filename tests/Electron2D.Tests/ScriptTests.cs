@@ -1,6 +1,6 @@
 using Electron2D;
 using Path = System.IO.Path;
-internal static class ScriptTests
+internal static partial class ScriptTests
 {
     private static bool _registered;
     internal static ScriptActor? ActorFactoryTarget;
@@ -31,16 +31,69 @@ internal static class ScriptTests
         Check(script.GetScriptConstantMap<int>()["Limit"] == 12 && script.GetScriptConstantMap<string>()["Category"] == "Actor" && script.GetScriptPropertyList().Length == 3, "typed constants and explicit inherited schema");
         var basis = script.GetBaseScript()!; Check(basis.IsAbstract() && !basis.CanInstantiate(), "abstract source association");
         using var actor = script.New<ScriptActor>(); Check(actor.Count == 3 && script.GetPropertyDefaultValue(ScriptActor.CountProperty, actor) == 3, "typed factory/default");
+        Check(ReferenceEquals(actor.GetScript(), script) && ReferenceEquals(actor.ConstructorScript, script), "exact source identity is available in the derived constructor");
+        Identity(script);
         using var args = script.New(static () => new ScriptActor(9)); Check(args.Count == 9, "typed constructor arguments");
         Reject<InvalidOperationException>(() => script.New<RichTextEffect>()); Reject<InvalidOperationException>(() => basis.New<Node>()); Reject<ArgumentException>(() => script.GetScriptConstantMap<object>());
         using var copy = (Script)script.Duplicate(); Check(copy.CompiledType == script.CompiledType && copy.SourceCode == script.SourceCode, "resource duplicate association");
         using var ignore = ResourceLoader.Load<Script>(ScriptActor.SourcePath, ResourceLoader.CacheMode.Ignore); Check(!ReferenceEquals(ignore, script), "source ignore identity");
         Check(ResourceLoader.GetRecognizedExtensionsForType<Script>().Contains("cs") && ResourceLoader.GetClassesUsed(ScriptActor.SourcePath).Contains(typeof(ScriptActor)), "loader source/compiled class discovery");
         using var tree = new SceneTree(actor); tree.ProcessFrame(.01); Check(actor.ReadyCalls == 1 && actor.Frames > 0, "ordinary typed callbacks");
-        var frames = actor.Frames; script.Dispose(); tree.ProcessFrame(.01); Check(actor.Frames > frames, "source resource disposal leaves constructed CLR execution alive"); Reject<ObjectDisposedException>(() => script.New<Node>());
+        var frames = actor.Frames; script.Dispose(); tree.ProcessFrame(.01); Check(actor.Frames > frames && ReferenceEquals(actor.GetScript(), script), "source resource disposal leaves compiled execution and borrowed identity alive"); Reject<ObjectDisposedException>(() => script.New<Node>());
         using var failing = copy.New<ScriptActor>(); failing.FailReady = true; Reject<AggregateException>(() => new SceneTree(failing)); Check(failing.Tree == null, "failed script activation rolls back");
-        using var effectScript = ResourceLoader.Load<Script>(ScriptPaintEffect.SourcePath); using var rich = new RichTextLabel { BBCodeEnabled = true, Text = "[compiled_paint]typed[/compiled_paint]", Size = new(250, 100) }; var effect = rich.InstallEffect(effectScript); Check(effect is ScriptPaintEffect && rich.GetParsedText() == "typed", "source effect installation"); using var effectCopy = (ScriptPaintEffect)effect.Duplicate(); Check(effectCopy.BBCode == "compiled_paint", "compiled effect duplicate"); rich.CustomEffects = []; Check(effect.IsDisposed, "removed label-owned script effect retirement");
+        using var effectScript = ResourceLoader.Load<Script>(ScriptPaintEffect.SourcePath); using var rich = new RichTextLabel { BBCodeEnabled = true, Text = "[compiled_paint]typed[/compiled_paint]", Size = new(250, 100) }; var effect = rich.InstallEffect(effectScript); Check(effect is ScriptPaintEffect && rich.GetParsedText() == "typed", "source effect installation"); using var effectCopy = (ScriptPaintEffect)effect.Duplicate(); Check(effectCopy.BBCode == "compiled_paint" && ReferenceEquals(effect.GetScript(), effectScript) && ReferenceEquals(effectCopy.GetScript(), effectScript), "compiled effect duplicate and source identity"); rich.CustomEffects = []; Check(effect.IsDisposed, "removed label-owned script effect retirement");
         Edges(copy); Stored(copy); Console.WriteLine("Compiled C# script source/type/schema/factories, callbacks and fresh-process scene storage passed.");
+    }
+    private static void Identity(Script script)
+    {
+        using var plain = new ScriptActor();
+        Check(plain.GetScript() is null && plain.ConstructorScript is null, "ordinary compiled construction has no implicit asset");
+        using var node = script.New<ScriptActor>();
+        using var duplicate = (ScriptActor)node.Duplicate();
+        Check(ReferenceEquals(duplicate.GetScript(), script) && ReferenceEquals(duplicate.ConstructorScript, script), "exact node duplication retains constructor source");
+        using var native = node.Duplicate(0);
+        Check(native.GetType() == typeof(Node) && native.GetScript() is null, "dropping the script role drops its source association");
+        using var scene = new PackedScene(); scene.Pack(node);
+        using var instance = (ScriptActor)scene.Instantiate();
+        Check(ReferenceEquals(instance.GetScript(), script) && ReferenceEquals(instance.ConstructorScript, script), "memory scene construction retains source identity");
+        using var local = (Script)script.Duplicate(); local.ResourceLocalToScene = true;
+        using var localOwner = local.New<ScriptActor>();
+        var localChild = local.New<ScriptActor>(); localChild.Name = "SharedSource"; localOwner.AddChild(localChild); localChild.Owner = localOwner;
+        using var localScene = new PackedScene(); localScene.Pack(localOwner);
+        using var first = (ScriptActor)localScene.Instantiate(); using var second = (ScriptActor)localScene.Instantiate();
+        Check(first.GetScript() != local && second.GetScript() != local && first.GetScript() != second.GetScript() &&
+            first.GetScript()!.GetLocalScene() == first && second.GetScript()!.GetLocalScene() == second &&
+            first.ConstructorScript == first.GetScript() && second.ConstructorScript == second.GetScript(), "scene-local constructor sources are unique, assigned and owned per instance");
+        Check(first.GetNode<ScriptActor>("SharedSource").GetScript() == first.GetScript() && second.GetNode<ScriptActor>("SharedSource").GetScript() == second.GetScript(), "scene-local source aliases use one wrapper for all compiled owners");
+        using var nested = (Script)script.Duplicate();
+        using var nestedOwner = script.New(() => nested.New<ScriptActor>());
+        Check(ReferenceEquals(nestedOwner.GetScript(), nested), "nested construction retains the innermost actual source");
+        using var worker = script.New(() => Task.Run(() => new ScriptActor()).GetAwaiter().GetResult());
+        Check(ReferenceEquals(worker.GetScript(), script) && ReferenceEquals(worker.ConstructorScript, script), "constructor provenance flows to worker code");
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 256; i++) Check(ReferenceEquals(node.GetScript(), script), "prepared source observation");
+        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all, "prepared source reads allocate nothing");
+        var retired = script.New<ScriptActor>(); retired.VetoDisposal = true; retired.Dispose();
+        Check(!retired.IsDisposed && ReferenceEquals(retired.GetScript(), script), "cancelled disposal preserves association");
+        retired.Dispose();
+        Reject<ObjectDisposedException>(() => retired.GetScript());
+        var (context, weak) = CaptureClosedSource(script);
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        Check(!weak.IsAlive, "closed factory contexts release their source asset");
+        ExecutionContext.Run(context, _ =>
+        {
+            using var late = new ScriptActor();
+            Check(late.GetScript() is null, "a captured closed scope cannot bind later construction");
+        }, null);
+        Console.WriteLine("Script construction identity, memory copies, nested/worker provenance and zero-byte reads passed.");
+    }
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static (ExecutionContext Context, WeakReference Source) CaptureClosedSource(Script source)
+    {
+        var script = (Script)source.Duplicate(); ExecutionContext? context = null;
+        var instance = script.New(() => { context = ExecutionContext.Capture(); return new ScriptActor(); });
+        instance.ConstructorScript = null; instance.Dispose();
+        return (context!, new WeakReference(script));
     }
     private static void Edges(Script script)
     {
@@ -80,6 +133,18 @@ internal static class ScriptTests
             var resourcePath = Path.Combine(folder, "script.e2dres"); ResourceSaver.Save(script, resourcePath); using var restored = ResourceLoader.Load<Script>(resourcePath, ResourceLoader.CacheMode.Ignore); using var created = restored.New<ScriptActor>(); Check(created.Power == 7 && restored.CompiledTypeID == "ScriptTest.Actor", "stored association factory");
             var root = restored.New<ScriptActor>(); root.Name = "Root"; root.Count = 6; var peer = new Node { Name = "Peer" }; root.AddChild(peer); peer.Owner = root; root.Peer = peer; using var packed = new PackedScene(); packed.Pack(root); root.Dispose();
             var scenePath = Path.Combine(folder, "script.e2dscene"); ResourceSaver.Save(packed, scenePath);
+            using var loaded = ResourceLoader.Load<PackedScene>(scenePath, ResourceLoader.CacheMode.Ignore);
+            using var loadedActor = (ScriptActor)loaded.Instantiate();
+            Check(loadedActor.GetScript() is { CompiledTypeID: "ScriptTest.Actor" } loadedSource && loadedSource.SourceCode == restored.SourceCode &&
+                loadedActor.ConstructorScript == loadedSource, "file scene preserves its concrete source and constructor association");
+            using var effects = ResourceLoader.Load<Script>(ScriptPaintEffect.SourcePath);
+            using var effect = effects.New<ScriptPaintEffect>(); var effectPath = Path.Combine(folder, "effect.e2dres"); ResourceSaver.Save(effect, effectPath, SaverFlags.BundleResources);
+            using var loadedEffect = ResourceLoader.Load<ScriptPaintEffect>(effectPath);
+            Check(loadedEffect.GetScript() is { CompiledTypeID: "ScriptTest.Paint" } effectSource && loadedEffect.ConstructorScript == effectSource && effectSource.SourceCode == effects.SourceCode,
+                "file resource restores the ready source before its exact constructor");
+            using var replacement = ResourceLoader.Load<ScriptPaintEffect>(effectPath, ResourceLoader.CacheMode.ReplaceDeep);
+            Check(replacement == loadedEffect && replacement.GetScript() is { IsDisposed: false, CompiledTypeID: "ScriptTest.Paint" }, "deep cache replacement keeps owner identity and a live remapped source");
+            ArchiveSourceEdges(effectPath, loadedEffect, resourcePath);
             var start = new System.Diagnostics.ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(ScriptTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_SCRIPT"); start.Environment.Remove("ELECTRON2D_TEST_SCRIPT_HOST"); start.Environment["ELECTRON2D_TEST_SCRIPT_CHILD"] = scenePath;
             using var child = System.Diagnostics.Process.Start(start)!; var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("script scene"); }
             Check(child.ExitCode == 0 && output.GetAwaiter().GetResult().Contains("Fresh script scene passed"), error.GetAwaiter().GetResult());
@@ -88,7 +153,8 @@ internal static class ScriptTests
     }
     internal static void RunChild(string path)
     {
-        Register(); using var packed = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); var actor = (ScriptActor)packed.Instantiate(); using var tree = new SceneTree(actor); tree.ProcessFrame(.01); Check(actor.Count == 6 && actor.Power == 7 && ReferenceEquals(actor.Peer, actor.GetNode<Node>("Peer")) && actor.ReadyCalls == 1 && actor.Frames > 0, "fresh exact compiled callbacks/state/references"); Console.WriteLine("Fresh script scene passed");
+        Register(); using var packed = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); var actor = (ScriptActor)packed.Instantiate(); using var tree = new SceneTree(actor); tree.ProcessFrame(.01); Check(actor.Count == 6 && actor.Power == 7 && ReferenceEquals(actor.Peer, actor.GetNode<Node>("Peer")) && actor.ReadyCalls == 1 && actor.Frames > 0, "fresh exact compiled callbacks/state/references");
+        Check(actor.GetScript() is { CompiledTypeID: "ScriptTest.Actor" } source && actor.ConstructorScript == source && source.SourceCode.Contains("class ScriptActor"), "fresh process restores exact compiled source identity before construction"); Console.WriteLine("Fresh script scene passed");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

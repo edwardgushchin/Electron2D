@@ -158,15 +158,15 @@ internal static partial class DeferredSceneTests
     {
         var source = At(folder, "plain.e2dscene");
         var payload = ResourceArchive.ReadPayload(source, out var bigEndian, out var version);
-        Check(!bigEndian && version == 8, "Malformed-field fixture uses the plain current archive layout.");
+        Check(!bigEndian && version == 9, "Malformed-field fixture uses the plain current archive layout.");
         using var scan = new StreamPeerBuffer { DataArray = payload };
         _ = scan.Get32(); ResourceArchiveStrings.Read(scan); ResourceArchive.ReadRoleMetadata(scan, version);
-        ResourceArchiveStrings.Read(scan); scan.GetU8(); ResourceArchiveStrings.Read(scan); ResourceArchiveStrings.Read(scan); scan.Get64(); scan.Get32();
+        ResourceArchiveStrings.Read(scan); scan.GetU8(); ResourceArchiveStrings.Read(scan); ResourceArchiveStrings.Read(scan); scan.Get64(); if (version >= 9) scan.Get32(); scan.Get32();
         var nodes = scan.Get32(); var linked = new bool[nodes];
         var fields = new Dictionary<string, (int Role, int Endian, int Value, int Size)>();
         for (var index = 0; index < 2; index++)
         {
-            ResourceArchiveStrings.Read(scan); ResourceArchiveStrings.Read(scan); scan.Get32(); scan.Get32(); scan.Get32();
+            ResourceArchiveStrings.Read(scan); if (version >= 9) scan.Get32(); ResourceArchiveStrings.Read(scan); scan.Get32(); scan.Get32(); scan.Get32();
             ResourceArchive.ReadSceneLink(scan, version, index, linked, 65536);
             var groups = scan.Get32(); for (var i = 0; i < groups; i++) ResourceArchiveStrings.Read(scan);
             SkipFields(false); SkipFields(index == 1);

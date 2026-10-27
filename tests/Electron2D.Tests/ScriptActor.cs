@@ -11,12 +11,19 @@ internal sealed class ScriptActor : ScriptBaseActor
     public event Action<int>? Pulse;
     internal int ReadyCalls, Frames;
     internal bool FailReady;
+    internal bool VetoDisposal;
     internal Exception? PropertyFailure, CleanupFailure;
-    public ScriptActor() { ProcessEnabled = true; }
+    internal Script? ConstructorScript;
+    public ScriptActor() { ConstructorScript = GetScript(); ProcessEnabled = true; }
     public ScriptActor(int count) : this() { Count = count; }
     public void Ping() => Pulse?.Invoke(Count);
     protected override void OnReady() { ReadyCalls++; if (FailReady) throw new InvalidOperationException("script activation"); }
     protected override void OnProcess(double delta) { Frames++; }
+    protected override void OnNotification(int what)
+    {
+        base.OnNotification(what);
+        if (what == NotificationPreDelete && VetoDisposal) { VetoDisposal = false; CancelDisposal(); }
+    }
     private static Node CreateActor() => new ScriptActor();
     protected override Func<Node> CreateSceneInstanceFactory() => CreateActor;
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()

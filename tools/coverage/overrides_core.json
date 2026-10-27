@@ -1,5 +1,6 @@
 {
   "mappings": [
+    {"godot": "Object::method:get_script()", "electron2d": "method:Electron2D.ElectronObject.GetScript()", "reason": "ADR 0091: ElectronObject.GetScript returns the exact borrowed compiled source selected by typed construction, available before the derived constructor. Exact copies, version-9 file reconstruction, alias-preserving scene-local ownership and cache publication retain/remap the source. Legacy unrecorded construction returns null. Cancelled disposal preserves the association; committed disposal releases it without disposing the asset. Source disposal does not stop compiled callbacks. Prepared reads allocate nothing. Live SetScript and automatic initialization/change/reload remain separate open rows."},
     {"godot": "OS::method:get_main_thread_id()", "electron2d": "method:Electron2D.OS.GetMainThreadID()", "reason": "ADRs0004/0016/0095/0113: retained OS thread diagnostics use distinct process-local engine caller identities and an actual Engine lifecycle main-owner role. Worker-first/concurrent callers, sequential owners, manual/native startup and normal/failing retirement are exercised by OSThreads.Consumer; IDs grant no access rights. SetThreadName submits to the actual caller native thread, preserving platform UTF-8 limits and errors. Linux proc-thread name oracle verifies repeated Unicode/empty edits, byte boundaries and preserved state on failure. Foreign execution/native heap/package/performance acceptance remain separate."},
     {"godot": "OS::method:get_thread_caller_id()", "electron2d": "method:Electron2D.OS.GetThreadCallerID()", "reason": "ADRs0004/0016/0095/0113: retained OS thread diagnostics use distinct process-local engine caller identities and an actual Engine lifecycle main-owner role. Worker-first/concurrent callers, sequential owners, manual/native startup and normal/failing retirement are exercised by OSThreads.Consumer; IDs grant no access rights. SetThreadName submits to the actual caller native thread, preserving platform UTF-8 limits and errors. Linux proc-thread name oracle verifies repeated Unicode/empty edits, byte boundaries and preserved state on failure. Foreign execution/native heap/package/performance acceptance remain separate."},
     {"godot": "OS::method:set_thread_name(String:)", "electron2d": "method:Electron2D.OS.SetThreadName(System.String)", "reason": "ADRs0004/0016/0095/0113: retained OS thread diagnostics use distinct process-local engine caller identities and an actual Engine lifecycle main-owner role. Worker-first/concurrent callers, sequential owners, manual/native startup and normal/failing retirement are exercised by OSThreads.Consumer; IDs grant no access rights. SetThreadName submits to the actual caller native thread, preserving platform UTF-8 limits and errors. Linux proc-thread name oracle verifies repeated Unicode/empty edits, byte boundaries and preserved state on failure. Foreign execution/native heap/package/performance acceptance remain separate."},
@@ -1796,8 +1797,8 @@
       "godot": [
         "Object::method:get_script()"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: accepted typed owner-to-Script association and its executable identity/lifetime/initialization contract under ADR 0091. The concrete Script resource, source/type catalog and typed New construction already execute. Script.New creates an exact CLR instance without retaining a per-owner Script association; GetScript remains absent. Compiled type metadata or a reserved ScriptChanged event does not establish that binding."
+      "state": "Implemented",
+      "reason": "ADR 0091: ElectronObject.GetScript returns the exact borrowed compiled source selected by typed construction, available before the derived constructor. Exact copies, version-9 file reconstruction, alias-preserving scene-local ownership and cache publication retain/remap the source. Legacy unrecorded construction returns null. Cancelled disposal preserves the association; committed disposal releases it without disposing the asset. Source disposal does not stop compiled callbacks. Prepared reads allocate nothing. Live SetScript and automatic initialization/change/reload remain separate open rows."
     },
     {
       "godot": [
@@ -2321,7 +2322,7 @@
         "Script::method:instance_has(Object:)"
       ],
       "state": "Excluded",
-      "reason": "ADR 0004: pinned Script.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares instance_has deprecated=\"Compare this script with [method Object.get_script] instead.\" Do not expose a deprecated mirror. Modern typed object-script identity remains the explicit live binding dependency under ADR 0091."
+      "reason": "ADR 0004: pinned Script.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares instance_has deprecated=\"Compare this script with [method Object.get_script] instead.\" Do not expose a deprecated mirror. Modern typed object-script identity uses ElectronObject.GetScript under ADR 0091; live reassignment remains separate."
     },
     {
       "godot": [

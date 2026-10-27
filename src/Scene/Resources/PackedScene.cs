@@ -125,7 +125,7 @@ public sealed partial class PackedScene : Resource
             for (var index = 0; index < data.Nodes.Length; index++)
             {
                 var stored = data.Nodes[index];
-                var node = stored.Factory.Create();
+                var node = stored.Factory.Create(resources);
                 nodes[index] = node;
                 createdCount = index + 1;
                 node.BeginSceneInstantiation();
@@ -399,7 +399,7 @@ public sealed partial class PackedScene : Resource
             if (node is MissingNode recoveredNode) properties = recoveredNode.CaptureRecoveryProperties(properties);
             nodes[index] = new SceneNodeData(
                 new SceneFactoryData(node.CaptureSceneInstanceFactory(), node.GetType(), node.InstanceID,
-                    node is MissingNode recovered ? recovered.OriginalClass : "", node is MissingNode recoveredScene ? recoveredScene.OriginalScene : ""),
+                    node is MissingNode recovered ? recovered.OriginalClass : "", node is MissingNode recoveredScene ? recoveredScene.OriginalScene : "", node.GetScript()),
                 node.Name,
                 parentIndex,
                 ownerIndex,

@@ -168,7 +168,7 @@ Mounted res:// resources now share [resource pack resolution](resource-packs.md)
 
 ## Version 5 linked scene records
 
-Version 5 introduced linked scene headers; the current writer uses version 8 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
+Version 5 introduced linked scene headers; the current writer uses version 9 as described below. Resource definitions retain version-4 role/provenance layout. Each scene node adds its PackedScene resource reference, source-root record index and original relative path after the sibling index; -1 denotes an absent reference/index. Ordinary versions 1–4 remain readable. The shared metadata reader validates the same header for class discovery and decoding; linked graphs validate before publication and construction. See [linked runtime scenes](linked-scenes.md#file-layout).
 
 ## Version 6 deferred scene records
 
@@ -201,3 +201,7 @@ Derivative graph definitions register the same typed resource factory and preser
 Version 8 adds Material as resource role 3, without bounds; resource provenance/field records and version-7 scene/connection tables retain their layouts. Known versions 1–7 remain readable using their original role validation. Unknown legacy generic definitions cannot be inferred to be materials. Metadata, UID rewriting and discovery use the same bounded reader as loading.
 
 [Material placeholders](material-placeholders.md) retain unknown factory fields, aliases/cycles, scene-local ownership and missing external payload provenance through copies, bundles and threaded loading. Strict mode remains the default; unavailable concrete subtypes, corrupt role/schema/provenance and factory failures still reject before cache publication. A returned factory restores retained fields in a fresh process; an unbundled external dependency can revive when its file returns.
+
+## Version 9 compiled owner sources
+
+Version 9 adds a signed resource-table index after each resource definition UID and after each scene node type ID. Minus one records no association. A nonnegative index must identify a Script whose compiled type exactly matches its owner. The writer includes source edges in the ordinary resource table, preserving aliases, source text and shared/bundled/external policy. Loading prepares sealed scalar-only Script assets before invoking compiled owner constructors. Scene-local instantiation and cache publication remap these edges through their existing resource scopes. Same-type resource replacement retains the owner and adopts the restored source in its change batch. Metadata, dependency rewriting and class inspection preserve the new fields. Versions 1–8 remain readable with their original absent source association; no class-name inference occurs. See [the compiled owner contract](scripting.md#compiled-owner-source-identity).

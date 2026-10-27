@@ -92,8 +92,8 @@ internal static partial class LinkedSceneTests
     private static void CorruptLinks(string folder)
     {
         var source = At(folder, "external.e2dscene"); var payload = ResourceArchive.ReadPayload(source, out var endian, out var version);
-        using var stream = new StreamPeerBuffer { DataArray = payload, BigEndian = endian }; stream.Get32(); ResourceArchiveStrings.Read(stream); ResourceArchive.ReadRoleMetadata(stream, version); ResourceArchiveStrings.Read(stream); stream.GetU8(); ResourceArchiveStrings.Read(stream); ResourceArchiveStrings.Read(stream); stream.Get64(); stream.Get32();
-        stream.Get32(); ResourceArchiveStrings.Read(stream); ResourceArchiveStrings.Read(stream); stream.Get32(); stream.Get32(); stream.Get32(); var link = stream.GetPosition();
+        using var stream = new StreamPeerBuffer { DataArray = payload, BigEndian = endian }; stream.Get32(); ResourceArchiveStrings.Read(stream); ResourceArchive.ReadRoleMetadata(stream, version); ResourceArchiveStrings.Read(stream); stream.GetU8(); ResourceArchiveStrings.Read(stream); ResourceArchiveStrings.Read(stream); stream.Get64(); if (version >= 9) stream.Get32(); stream.Get32();
+        stream.Get32(); ResourceArchiveStrings.Read(stream); if (version >= 9) stream.Get32(); ResourceArchiveStrings.Read(stream); stream.Get32(); stream.Get32(); stream.Get32(); var link = stream.GetPosition();
         foreach (var bad in new[] { "root-link", "reference-budget", "negative-root" })
         {
             using var invalid = new StreamPeerBuffer { DataArray = payload, BigEndian = endian }; invalid.Seek(link + (bad == "negative-root" ? 4 : 0)); invalid.Put32(bad == "root-link" ? 0 : bad == "negative-root" ? -2 : 65536);

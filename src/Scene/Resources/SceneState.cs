@@ -283,6 +283,7 @@ internal sealed record PackedSceneData(SceneNodeData[] Nodes, SceneConnectionDat
         return new PackedSceneData(
             Nodes.Select(node => node with
             {
+                Factory = node.Factory.TransformResources(transform),
                 Instance = node.Instance is { } instance ? transform(instance) as PackedScene ?? throw new InvalidOperationException("A linked scene reference must remain a PackedScene.") : null,
                 DeferredProperties = node.DeferredProperties?.Copy(resource => resource is null ? null : transform(resource)),
                 Properties = node.Properties
@@ -321,18 +322,24 @@ internal sealed record SceneNodeData(
 
 internal sealed record ScenePropertyData(string Name, StoredPropertyValue Value);
 
-internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulong sourceInstanceId, string originalClass = "", string originalScene = "")
+internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulong sourceInstanceId, string originalClass = "", string originalScene = "", Script? script = null)
 {
     private readonly ConditionalWeakTable<Node, object> _issued = new();
 
     internal Type RuntimeType { get; } = runtimeType;
     internal string OriginalClass { get; } = originalClass;
     internal string OriginalScene { get; } = originalScene;
+    internal Script? Script { get; } = script;
     internal ulong SourceInstanceID => sourceInstanceId;
 
-    internal Node Create()
+    internal SceneFactoryData TransformResources(Func<Resource, Resource> transform) => Script is null ? this :
+        new(create, RuntimeType, sourceInstanceId, OriginalClass, OriginalScene,
+            transform(Script) as Script ?? throw new InvalidOperationException("A compiled source reference must remain a Script."));
+
+    internal Node Create(Resource.SceneDuplicationScope resources)
     {
-        var node = Node.InvokeSceneInstanceFactory(create) ??
+        var source = Script is null ? null : (Script)resources.Resolve(Script);
+        var node = Node.InvokeSceneInstanceFactory(create, source is null ? null : (source, RuntimeType)) ??
                    throw new InvalidOperationException("A scene instance factory returned null.");
 
         if (node.InstanceID == sourceInstanceId || !_issued.TryAdd(node, new object()))

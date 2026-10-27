@@ -6,7 +6,8 @@ namespace Electron2D;
 /// <summary>Provides the common identity, notification, property, localization, and lifetime contract for engine objects.</summary>
 /// <remarks>
 /// The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
-/// registration, and script storage. Instances have deterministic <see cref="IDisposable"/> lifetime.
+/// registration, and live script reassignment. Compiled construction may retain a borrowed source asset through
+/// <see cref="GetScript"/>. Instances have deterministic <see cref="IDisposable"/> lifetime.
 /// Compiled subclasses provide custom typed iteration through the ordinary C# enumeration pattern or
 /// <see cref="System.Collections.Generic.IEnumerable{T}"/>; each cursor owns its traversal state and normal lifetime guards.
 /// </remarks>
@@ -377,6 +378,7 @@ public abstract partial class ElectronObject : IDisposable
                 _publisherDisposed.Handlers = null;
                 _publisherPropertyListChanged.Handlers = null;
                 _publisherScriptChanged.Handlers = null;
+                Volatile.Write(ref _constructionScript, null);
                 GC.SuppressFinalize(this);
             }
         }
@@ -474,6 +476,7 @@ public abstract partial class ElectronObject : IDisposable
         _publisherDisposed.Handlers = null;
         _publisherPropertyListChanged.Handlers = null;
         _publisherScriptChanged.Handlers = null;
+        Volatile.Write(ref _constructionScript, null);
         GC.SuppressFinalize(this);
     }
 
