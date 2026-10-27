@@ -1,6 +1,6 @@
 # Contacts without impulse response
 
-Last updated: 2026-10-10
+Last updated: 2026-10-27
 
 ## Contract
 
@@ -127,3 +127,7 @@ belong to CPUPhysicsWorldBackend. Its selected checkpoint restores these counter
 with contact data immediately after rewind. PhysicsReportOnlyTests.Replay runs the
 same separated/rewound scene on CPU/GPU and measures 64 warmed capture/restore/read
 cycles at zero owner/all-thread bytes. Shared public caps, IDs and events are unchanged.
+
+## Initial GPU report policy
+
+The [authored report-policy path](gpu-resident-reports.md#authored-report-policy-publication-2026-10-27) initializes the native flag during collider registration, before the first step. PhysicsReportOnlyTests.ConfiguredScene uses an exact frozen RigidBody with a pre-attachment positive cap and no integration/sync callback; first contact, owner identity, live disable/enable and reattachment execute on CPU/GPU. Later receiver selection does not repeat native flag assignment for every body.

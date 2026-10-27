@@ -49,7 +49,7 @@ internal static class PhysicsReportOnlyTests
                         PhysicsServer.BodyAddShape(body, shape.GetRID());
                     }
                 }
-        Replay(backend); Lifecycle(backend); Geometry(backend); Sweep(backend); Scene(backend); DynamicSleep(backend, true); DynamicSleep(backend, false); Measure(backend);
+        Replay(backend); Lifecycle(backend); Geometry(backend); Sweep(backend); ConfiguredScene(backend); Scene(backend); DynamicSleep(backend, true); DynamicSleep(backend, false); Measure(backend);
         Console.WriteLine($"Report-only body role/receiver, lifecycle and scene checks passed on {backend}.");
     }
     private static void Replay(PhysicsServer.Backend backend)
@@ -172,6 +172,27 @@ internal static class PhysicsReportOnlyTests
         }
         finally { PhysicsServer.FreeRID(a); PhysicsServer.FreeRID(b); PhysicsServer.FreeRID(space); }
     }
+    private static void ConfiguredScene(PhysicsServer.Backend backend)
+    {
+        using var shape = new CircleShape { Radius = 10 };
+        using var world = new World(backend);
+        using var root = new SubViewport { World = world };
+        var body = new RigidBody { Freeze = true, FreezeMode = RigidFreezeMode.Kinematic, ContactMonitor = true, MaxContactsReported = 2 };
+        var other = new StaticBody { Position = new(18, 0) };
+        body.AddChild(new CollisionShape { Shape = shape }); other.AddChild(new CollisionShape { Shape = shape });
+        root.AddChild(body); root.AddChild(other);
+        using var tree = new SceneTree(root);
+        var entered = 0; body.BodyEntered += node => { Check(node == other, "Configured report owner identity"); entered++; };
+        tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() > 0 && entered == 1, "An exact frozen RigidBody reports its pre-attachment policy without an integration/sync callback");
+        body.MaxContactsReported = 0; tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() == 0, "A live reporting disable takes effect at the next step");
+        body.MaxContactsReported = 2; tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() > 0 && entered == 2, "A live reporting enable restores the real contact");
+        root.RemoveChild(body); root.AddChild(body); tree.PhysicsFrame(1d / 60);
+        Check(body.GetContactCount() > 0, "Reattachment publishes the retained report policy to the fresh native body");
+    }
+
     private static void Scene(PhysicsServer.Backend backend)
     {
         using var shape = new RectangleShape { Size = new(20, 20) }; using var world = new World(backend); using var root = new SubViewport { World = world };

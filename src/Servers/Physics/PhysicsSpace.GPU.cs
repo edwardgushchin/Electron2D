@@ -52,6 +52,9 @@ internal sealed partial class PhysicsSpace
         _gpuRIDColliders.Add((ulong)backend.RID.GetID(), backend);
         _backend.InvalidateCollisionExceptions(backend);
         GPUStore!.SetCollisionPriority(GPUCollider(backend).GPUHandle, backend.CollisionPriority);
+        if (PhysicsServer.Service.TryResolveBodyOwners(backend.RID, out var owners))
+            GPUStore.SetContactReporting(GPUCollider(backend).GPUHandle,
+                (owners.Scene?.Runtime ?? owners.Server!.Runtime).ContactLimit > 0);
         PrepareGPUCapacity();
     }
     internal void UnregisterGPUCollider(PhysicsColliderBackend backend)
@@ -189,6 +192,7 @@ internal sealed partial class PhysicsSpace
 
     internal void PrepareGPUReports()
     {
+        // Attachment, limit edits and replay already publish report flags; only pack receiver demand here.
         _gpuReportBodyCount = 0; var contacts = 0;
         foreach (var body in _bodies) Add(body.Backend, body.Runtime);
         foreach (var body in _serverColliders)
@@ -197,7 +201,6 @@ internal sealed partial class PhysicsSpace
         void Add(PhysicsColliderBackend backend, PhysicsBodyRuntime runtime)
         {
             var limit = runtime.ContactLimit;
-            backend.SetContactReporting(limit > 0);
             if (limit == 0) return;
             _gpuReportBodies[_gpuReportBodyCount] = GPUCollider(backend).GPUHandle;
             _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);

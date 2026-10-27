@@ -16,6 +16,56 @@ adapter resolves them to retained common identities and logical shape indices,
 applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
 
+## Authored report policy publication (2026-10-27)
+
+GPU collider registration now publishes the body's initial contact-reporting flag.
+Live scene/server limit assignments, the existing integration preparation and replay
+retain their publication paths. PrepareGPUReports only packs current receiver
+identities/limits and selects capture; it no longer revalidates and reassigns the
+same native flag for every body on every step. Sensor registration creates no body
+runtime. Numerical kernels, source population, contact caps and report selection
+rules are unchanged.
+
+Removing the per-step call alone was incomplete: an exact frozen RigidBody with a
+positive cap authored before attachment has no integration/sync callback to
+publish its initial flag. The added PhysicsReportOnlyTests.ConfiguredScene case
+passes on the original runtime, fails on that partial change and passes with
+registration publication. It checks the first real kinematic/static contact,
+owner identity, live disable/enable and reattachment to a fresh native body.
+Existing body, dense publication and checkpoint selectors retain their own checks.
+
+The first source-qualified raw public 65,536-body closed-pile controls each run
+240 warmup plus 240 measured 1/60-second steps, four walls, four substeps, sixteen
+iterations and disabled sleeping. The candidate CPU control has an unavailable
+Vulkan ICD; the GPU control uses the physical RTX 3090 Ti. Both retain all 65,536
+active bodies, no escape, accepted energy/penetration and zero owner/all-thread
+managed bytes. These are functional controls on a shared desktop. Baseline GPU
+mean/p95 is 52.411/56.442 ms; candidate GPU is 81.296/137.454 ms and candidate CPU
+348.266/730.735 ms. External load rises materially during the candidate series.
+These values establish neither a whole-step improvement nor the 60 Hz/window gate.
+The first dummy-video GPU startup failed before simulation; the corrected headless
+control uses Wayland's Vulkan device support without creating a renderer/window.
+
+A separate 65,536-body probe invokes the actual baseline/candidate receiver
+preparation methods, without a physical step. After 32 warmups, 64 calls have
+zero owner/all-thread managed bytes. Calibrated Linux owner-CPU means for zero
+receivers are 3.078/1.928 ms. With every body requesting two rows, the first pair
+is 4.271/5.017 ms. A disassembly-observed control gives 4.150/4.180 ms; both methods
+retain their local helper call (497-byte outer loop, helper 251/215 bytes), so a
+changed inlining decision is not the cause. Preserve both observations: there is
+no established improvement for the fully selected case or the full physical step.
+Do not substitute this selection-only probe for numerical or throughput acceptance.
+
+Immutable cohorts, compiler/PDB source checks (2714 runtime and 1034 test inputs),
+unchanged hashes of all 44 physical shaders, partial-change RED, baseline/new-test
+control, focused receipts, raw reports, telemetry and probe source/disassembly are
+under `bin/physics-mass-65536/2026-10-27/`. The strict quiet-host comparison,
+65,536-body window/FPS target, native allocations and foreign platforms remain
+open. This changes no declaration state: physics stays 1362/1369 (99.49%), with
+seven open declarations and 92 Excluded.
+
+After native-alert main commit `c7bf9901b4364255be2745fad5e1ccfbeba34ff8`, a fresh integration payload also passes the CPU body contract with no GPU, GPU report-only contract and separate GPU numerical-thread checks. Compiler/PDB checks cover 2715 runtime and 1034 test inputs; changed inputs since the measured candidate are confined to the alert/display slice. These checks do not refresh the mass timings above.
+
 ## Window device isolation trial (2026-10-27)
 
 The 2026-10-27 trial on `72a772ec27ce598884b234eddfb328098fced6f8` made
