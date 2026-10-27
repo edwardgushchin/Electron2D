@@ -568,3 +568,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Native mirror-clamp](../components/sampler-mirror-clamp.md) adds negotiated per-axis addressing to the shared device/canvas sampler path, with ordinary-device fallback and explicit unsupported-capability failures.
 
 [Native FP64 arithmetic and data](../components/local-compute.md#native-fp64-arithmetic-and-data) now connect double compute/vertex/fragment work, raw buffers, original push layouts and typed specialization to optional Vulkan feature negotiation. The public API family remains unchanged; unsupported feature requests preserve ordinary device creation. Compiler, format and platform limits remain explicit.
+
+[Wide integer GPU execution](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) now supplies signed/unsigned Int64 arithmetic, raw buffers/push layouts, typed specialization, wide interstage graphics data and independent optional precision negotiation. Existing public type families are extended; compiler, format and platform boundaries remain explicit.

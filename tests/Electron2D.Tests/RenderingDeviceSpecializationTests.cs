@@ -35,14 +35,19 @@ internal static class RenderingDeviceSpecializationTests
     }
     private static void RunManaged()
     {
-        Expressions(); Float64Expressions();
-        var parser = typeof(RenderingDevice).Assembly.GetType("Electron2D.ShaderPrecision")!.GetMethod("RequiresFloat64", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
-        bool Precision(params uint[] instructions)
+        Expressions(); Float64Expressions(); Integer64Expressions();
+        var parser = typeof(RenderingDevice).Assembly.GetType("Electron2D.ShaderPrecision")!.GetMethod("ReadRequirements", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        (bool Float64, bool Int64) Requirements(params uint[] instructions)
         {
             var code = MemoryMarshal.AsBytes(new uint[] { 0x07230203, 0x10000, 0, 100, 0 }.Concat(instructions).ToArray().AsSpan()).ToArray();
-            try { return (bool)parser.Invoke(null, [code])!; }
+            try { return ((bool, bool))parser.Invoke(null, [code])!; }
             catch (System.Reflection.TargetInvocationException error) when (error.InnerException is not null) { System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
         }
+        bool Precision(params uint[] instructions) => Requirements(instructions).Float64;
+        Check(Requirements(2u << 16 | 17, 11, 4u << 16 | 21, 1, 64, 0) == (false, true), "Int64 has an independent native requirement.");
+        Check(Requirements(2u << 16 | 17, 11) == (false, true), "Unused Int64 declarations still require native opt-in.");
+        Check(Requirements(2u << 16 | 17, 10, 2u << 16 | 17, 11) == (true, true), "Mixed precision requires both independent features.");
+        Reject<NotSupportedException>(() => Requirements(2u << 16 | 17, 11, 2u << 16 | 17, 12));
         Check(!Precision(3u << 16 | 22, 1, 32), "Ordinary precision needs no FP64 feature.");
         Check(Precision(2u << 16 | 17, 10, 3u << 16 | 22, 1, 64), "FP64 type and declaration require native opt-in.");
         Check(Precision(2u << 16 | 17, 10), "Even unused declared FP64 requires native opt-in.");
@@ -50,10 +55,50 @@ internal static class RenderingDeviceSpecializationTests
         Reject<ArgumentException>(() => Precision(0)); Reject<ArgumentException>(() => Precision(3u << 16 | 22, 1));
         Reject<ArgumentException>(() => Precision(2u << 16 | 22, 1)); Reject<ArgumentException>(() => Precision(3u << 16 | 17, 10, 0));
         Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 32, 2));
-        foreach (var capability in new uint[] { 8, 9, 11, 12, 22 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
+        foreach (var capability in new uint[] { 8, 9, 12, 22 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
         foreach (var width in new uint[] { 16, 128 }) Reject<NotSupportedException>(() => Precision(3u << 16 | 22, 1, width));
-        Reject<NotSupportedException>(() => Precision(4u << 16 | 21, 1, 64, 0));
+        Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 64, 0));
         Console.WriteLine("PASS precision capability/type and malformed/truncated instruction guards.");
+    }
+    private static void Integer64Expressions()
+    {
+        var words = new List<uint> { 0x07230203, 0x10000, 0, 1000, 0 }; uint next = 20;
+        void Emit(uint op, params uint[] args) { words.Add((uint)(args.Length + 1) << 16 | op); words.AddRange(args); }
+        Emit(17, 11); Emit(20, 1); Emit(21, 2, 32, 1); Emit(21, 3, 32, 0); Emit(21, 4, 64, 1); Emit(21, 5, 64, 0); Emit(23, 6, 5, 2); Emit(23, 7, 1, 2);
+        uint Constant(uint type, ulong value)
+        { var id = next++; if (type == 1) Emit(value == 0 ? 49u : 48u, type, id); else if (type is 4 or 5) Emit(50, type, id, (uint)value, (uint)(value >> 32)); else Emit(50, type, id, (uint)value); return id; }
+        var a = Constant(4, unchecked((ulong)-4294967303L)); var b = Constant(4, 3); var maximum = Constant(5, ulong.MaxValue); var u = Constant(5, 0x123456789abcdef0); var low = Constant(5, 0x9abcdef0); var shift = Constant(3, 40); var small = Constant(2, unchecked((uint)-7)); var yes = Constant(1, 1); var no = Constant(1, 0);
+        var expected = new Dictionary<uint, ulong>();
+        uint Operation(uint type, uint op, ulong value, params uint[] args) { var id = next++; Emit(52, [type, id, op, .. args]); expected.Add(id, value); return id; }
+        Operation(4, 128, unchecked((ulong)-4294967300L), a, b); Operation(4, 130, unchecked((ulong)-4294967306L), a, b); Operation(4, 132, unchecked((ulong)-12884901909L), a, b);
+        Operation(4, 135, unchecked((ulong)-1431655767L), a, b); Operation(4, 138, unchecked((ulong)-2L), a, b); Operation(4, 139, 1, a, b);
+        Operation(5, 134, 6148914691236517205, maximum, b); Operation(5, 137, 0, maximum, b); Operation(5, 128, 0, maximum, Constant(5, 1)); Operation(5, 130, ulong.MaxValue, Constant(5, 0), Constant(5, 1));
+        Operation(5, 194, 0x123456, u, shift); Operation(4, 195, ulong.MaxValue, a, shift); Operation(5, 196, 0xbcdef00000000000, u, shift);
+        Operation(5, 197, ulong.MaxValue, u, maximum); Operation(5, 198, 0xedcba9876543210f, u, maximum); Operation(5, 199, 0x123456789abcdef0, u, maximum); Operation(5, 200, 0xedcba9876543210f, u); Operation(4, 126, 4294967303, a);
+        Operation(1, 170, 0, u, low); Operation(1, 171, 1, u, low); Operation(1, 172, 1, u, low); Operation(1, 173, 0, a, b); Operation(1, 174, 1, u, u); Operation(1, 175, 1, b, a); Operation(1, 176, 0, u, low); Operation(1, 177, 1, a, b); Operation(1, 178, 1, u, u); Operation(1, 179, 0, b, a);
+        Operation(5, 113, 0xfffffff9, small); Operation(4, 114, 0xfffffffffffffff9, small); Operation(3, 113, 0x9abcdef0, u); Operation(2, 114, 0xfffffff9, a);
+        var vector = next++; Emit(51, 6, vector, u, maximum); var condition = next++; Emit(51, 7, condition, yes, no); var reverse = next++; Emit(51, 6, reverse, maximum, u); var selected = next++; Emit(52, 6, selected, 169, condition, vector, reverse); Operation(5, 81, 0x123456789abcdef0, selected, 0); Operation(5, 81, 0x123456789abcdef0, selected, 1);
+        var count = Constant(5, 2); Emit(28, 8, 5, count); var array = next++; Emit(51, 8, array, u, maximum); Operation(5, 81, ulong.MaxValue, array, 1);
+        byte[] Bytes() => MemoryMarshal.AsBytes(words.ToArray().AsSpan()).ToArray();
+        var verifiedResults = expected.Count; var frozen = MemoryMarshal.Cast<byte, uint>(Freeze(Bytes()).AsSpan()); var actual = new Dictionary<uint, ulong>(); var types = new Dictionary<uint, uint[]>(); uint length = 0;
+        for (var at = 5; at < frozen.Length; at += (int)(frozen[at] >> 16))
+        {
+            var op = frozen[at] & 65535; var size = (int)(frozen[at] >> 16);
+            if (op == 21) types[frozen[at + 1]] = frozen[at..(at + size)].ToArray();
+            if (op == 28 && frozen[at + 1] == 8) length = frozen[at + 3];
+            if (op is 41 or 42 or 43) actual[frozen[at + 2]] = op == 41 ? 1ul : op == 42 ? 0ul : frozen[at + 3] | (size == 5 ? (ulong)frozen[at + 4] << 32 : 0);
+        }
+        foreach (var pair in expected) Check(actual[pair.Key] == pair.Value, "Wide specialization expression " + pair.Key);
+        Check(length != count && actual[length] == 2, "Wide array count lowers to bounded native layout metadata.");
+        var undefined = Constant(5, 0); var start = words.Count; Operation(5, 134, 0, u, undefined); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(start, words.Count - start);
+        var minimum = Constant(4, 0x8000000000000000); var negative = Constant(4, ulong.MaxValue); start = words.Count; Operation(4, 135, 0, minimum, negative); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(start, words.Count - start);
+        foreach (var amount in new ulong[] { 64, ulong.MaxValue, 0x100000001 })
+        { var index = Constant(5, amount); start = words.Count; Operation(5, 194, 0, u, index); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(start, words.Count - start); }
+        start = words.Count; Emit(50, 4, next++, 0); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(start, words.Count - start);
+        foreach (var invalidCount in new ulong[] { 0, 0x100000000, ulong.MaxValue })
+        { start = words.Count; Emit(28, next++, 5, Constant(5, invalidCount)); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(start, words.Count - start); }
+        start = words.Count; Emit(331, 999, 38, count, count, count); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(start, words.Count - start);
+        Console.WriteLine("PASS " + verifiedResults + " wide scalar/vector arithmetic, conversions, comparisons, array layout and undefined/malformed guards.");
     }
     private static void Float64Expressions()
     {
@@ -121,7 +166,7 @@ internal static class RenderingDeviceSpecializationTests
         using var empty = new RDPipelineSpecializationConstant<int>(); Check(empty.Value is null && empty.ConstantID == 0, "Typed specialization preserves unassigned value and identifier defaults.");
         var property = (PropertyDescriptor<RDPipelineSpecializationConstant<int>, int?>)empty.GetPropertyList().Single(p => p.Name == "Value"); empty.Value = 7; Check(property.GetValue(empty) == 7 && empty.PropertyCanRevert(property), "Nullable scalar metadata exposes assigned value."); empty.RevertProperty(property); Check(empty.Value is null, "Metadata reverts to unassigned value.");
         Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [empty]));
-        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<long>());
+        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<byte>());
         Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias, bias]));
         bias.ConstantID = 3; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias])); bias.ConstantID = -1; Reject<ArgumentOutOfRangeException>(() => device.ComputePipelineCreate(shader, [bias])); bias.ConstantID = 90; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias]));
         group.Value = 0; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [group])); group.Value = 1025; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [group]));

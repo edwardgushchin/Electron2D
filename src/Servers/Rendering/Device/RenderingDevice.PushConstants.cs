@@ -31,7 +31,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="computeList">The active owner-thread compute list.</param>
     /// <param name="buffer">At least sizeBytes source bytes; the selected prefix is copied before returning.</param>
     /// <param name="sizeBytes">Exact size of the shader's reflected push block, or zero for a shader without one.</param>
-    /// <remarks>The original SPIR-V member offsets and array/matrix strides determine the byte layout. Native uniform translation preserves those bytes. Blocks are limited to 128 bytes and 32-bit scalar data or enabled native FP64 data. Bind a pipeline before setting data; changing pipeline or beginning another list requires another set. Recorded dispatches retain their own snapshot.</remarks>
+    /// <remarks>The original SPIR-V member offsets and array/matrix strides determine the byte layout. Native uniform translation preserves those bytes. Blocks are limited to 128 bytes and 32-bit scalar data or enabled native FP64/Int64 data. Bind a pipeline before setting data; changing pipeline or beginning another list requires another set. Recorded dispatches retain their own snapshot.</remarks>
     /// <exception cref="ArgumentException">The list, byte count or source capacity is invalid.</exception>
     /// <exception cref="InvalidOperationException">No pipeline is selected or the creating thread/device state is invalid.</exception>
     public void ComputeListSetPushConstant(long computeList, ReadOnlySpan<byte> buffer, uint sizeBytes)

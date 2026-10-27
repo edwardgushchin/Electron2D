@@ -6,7 +6,7 @@ Source: [GPUDeviceFactory.cs](../../src/Servers/Rendering/GPUDeviceFactory.cs).
 
 Internal runtime helper. Acquire returns an independent RenderHandle lease on the
 active process-local SDL GPU device. First acquisition negotiates optional Vulkan
-sized points, optional FP64 and mirror-clamp, the core fallback and the existing Android relaxation policy.
+sized points, independent optional FP64/Int64 and mirror-clamp, the core fallback and the existing Android relaxation policy.
 SizedPoints and Relaxed stay fixed for that device lifetime; Metal uses native
 point support. Debug mode remains disabled. Temporary native properties are
 released after negotiation. CPU-only selection never calls this helper.
@@ -29,3 +29,5 @@ Contract and verification: [canvas point programs](../components/canvas-points.m
 Native memory diagnostics use lightweight admission/counting to retain physical lifetime independently of the creation monitor. Final release closes admission and joins these readers before destruction; no user callbacks occur in native reads. See [native render memory](../components/render-memory.md).
 
 The [FP64 contract](../components/local-compute.md#native-fp64-arithmetic-and-data) records Vulkan feature opt-in and fallback; retained private device properties identify successful feature negotiation.
+
+The [wide integer profile](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) tries both, either and neither precision feature, preserving ordinary creation and each available capability.

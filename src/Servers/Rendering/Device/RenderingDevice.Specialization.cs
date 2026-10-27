@@ -54,7 +54,8 @@ public sealed unsafe partial class RenderingDevice
         private int Kind(uint type)
         {
             var t = Type(type); if (Op(t) == 20) return 0;
-            if (Op(t) == 21 && t.Length == 4 && t[2] == 32 && t[3] <= 1) return t[3] == 1 ? 1 : 2;
+            if (Op(t) == 21 && t.Length == 4 && t[3] <= 1)
+            { if (t[2] == 32) return t[3] == 1 ? 1 : 2; if (t[2] == 64) return t[3] == 1 ? 5 : 6; }
             if (Op(t) == 22 && t.Length == 3 && t[2] == 32) return 3;
             if (Op(t) == 22 && t.Length == 3 && t[2] == 64) return 4;
             throw new NotSupportedException("Specialization scalar precision requires its native shader adapter.");
@@ -69,8 +70,8 @@ public sealed unsafe partial class RenderingDevice
                 var op = Op(ins); var type = ins[1];
                 if (op is 41 or 42 or 43 or 48 or 49 or 50)
                 {
-                    var kind = Kind(type); if (ins.Length != (kind == 0 ? 3 : kind == 4 ? 5 : 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
-                    ulong bits = op is 41 or 48 ? 1ul : op is 42 or 49 ? 0ul : ins[3] | (kind == 4 ? (ulong)ins[4] << 32 : 0);
+                    var kind = Kind(type); if (ins.Length != (kind == 0 ? 3 : kind >= 4 ? 5 : 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
+                    ulong bits = op is 41 or 48 ? 1ul : op is 42 or 49 ? 0ul : ins[3] | (kind >= 4 ? (ulong)ins[4] << 32 : 0);
                     if (op is 48 or 49 or 50 && _specIDs.TryGetValue(id, out var external) && _overrides.TryGetValue(external, out var replacement))
                     { if (replacement.Kind != kind) throw new ArgumentException("Specialization value type does not match its module declaration."); bits = replacement.Bits; _used.Add(external); }
                     value = new(type, bits);
@@ -99,7 +100,7 @@ public sealed unsafe partial class RenderingDevice
                 return t[2..];
             }
             if (Op(t) is not (23 or 24 or 28) || t.Length != 4) throw new ArgumentException("A specialization aggregate requires a bounded element type.");
-            var count = Op(t) == 28 ? Word(Evaluate(t[3])) : t[3];
+            var count = Op(t) == 28 ? ArrayLength(Evaluate(t[3])) : t[3];
             if (count is 0 or > 1_048_576 || (_aggregateValues += checked((int)count)) > 1_048_576) throw new ArgumentException("Specialization aggregates exceed the module value bound.");
             return Enumerable.Repeat(t[2], (int)count).ToArray();
         }
@@ -148,25 +149,28 @@ public sealed unsafe partial class RenderingDevice
                 };
                 return new(type, converted);
             }
-            if (Kind(type) == 4)
+            if (op == 169) return new(type, operands[0].Bits != 0 ? operands[1].Bits : operands[2].Bits);
+            if (Kind(type) == 4) throw new NotSupportedException("This double specialization operation is outside the Shader profile.");
+            ulong A(int n) => n < operands.Length && operands[n].Elements is null ? operands[n].Bits : throw new ArgumentException("Invalid specialization scalar operands.");
+            var width = Kind(operands[0].Type) is 5 or 6 ? 64 : 32; var mask = width == 64 ? ulong.MaxValue : uint.MaxValue;
+            var a = A(0) & mask; ulong B() => A(1) & mask; ulong Bool(bool x) => x ? 1ul : 0ul;
+            long Signed(ulong bits) => width == 64 ? unchecked((long)bits) : unchecked((int)(uint)bits);
+            if (op is 113 or 114)
             {
-                if (op == 169) return new(type, operands[0].Bits != 0 ? operands[1].Bits : operands[2].Bits);
-                throw new NotSupportedException("This double specialization operation is outside the Shader profile.");
+                var kind = Kind(type); if (kind is not (1 or 2 or 5 or 6) || Kind(operands[0].Type) is not (1 or 2 or 5 or 6)) throw new NotSupportedException("Integer conversion requires supported integer types.");
+                return new(type, (op == 114 ? unchecked((ulong)Signed(a)) : a) & (kind is 5 or 6 ? ulong.MaxValue : uint.MaxValue));
             }
-            uint A(int n) => n < operands.Length && operands[n].Elements is null ? checked((uint)operands[n].Bits) : throw new ArgumentException("Invalid specialization scalar operands.");
-            var a = A(0); uint B() => A(1); uint C() => A(2); uint Bool(bool x) => x ? 1u : 0u;
-            uint Shift() { var n = B(); if (n >= 32) throw new ArgumentException("Specialization shift exceeds the scalar width."); return n; }
-            uint Div(bool signed, bool remainder, bool modulo)
+            uint Shift() { var n = A(1); if (n >= (uint)width) throw new ArgumentException("Specialization shift exceeds the scalar width."); return (uint)n; }
+            ulong Div(bool signed, bool remainder, bool modulo)
             {
-                var b = B(); if (b == 0 || signed && a == 0x80000000 && b == uint.MaxValue) throw new ArgumentException("Specialization division is undefined.");
+                var b = B(); if (b == 0 || signed && a == (1ul << (width - 1)) && b == mask) throw new ArgumentException("Specialization division is undefined.");
                 if (!signed) return remainder ? a % b : a / b;
-                var x = (int)a; var y = (int)b; var r = x % y; if (modulo && r != 0 && (r < 0) != (y < 0)) r += y; return unchecked((uint)(remainder ? r : x / y));
+                var x = Signed(a); var y = Signed(b); var r = x % y; if (modulo && r != 0 && (r < 0) != (y < 0)) r += y; return unchecked((ulong)(remainder ? r : x / y));
             }
             var bits = op switch
             {
-                113 or 114 => a,
-                116 => BitConverter.SingleToUInt32Bits((float)(Half)BitConverter.UInt32BitsToSingle(a)),
-                126 => unchecked(0u - a),
+                116 => BitConverter.SingleToUInt32Bits((float)(Half)BitConverter.UInt32BitsToSingle((uint)a)),
+                126 => unchecked(0ul - a),
                 128 => unchecked(a + B()),
                 130 => unchecked(a - B()),
                 132 => unchecked(a * B()),
@@ -180,17 +184,16 @@ public sealed unsafe partial class RenderingDevice
                 166 => Bool(a != 0 || B() != 0),
                 167 => Bool(a != 0 && B() != 0),
                 168 => Bool(a == 0),
-                169 => a != 0 ? B() : C(),
                 172 => Bool(a > B()),
-                173 => Bool((int)a > (int)B()),
+                173 => Bool(Signed(a) > Signed(B())),
                 174 => Bool(a >= B()),
-                175 => Bool((int)a >= (int)B()),
+                175 => Bool(Signed(a) >= Signed(B())),
                 176 => Bool(a < B()),
-                177 => Bool((int)a < (int)B()),
+                177 => Bool(Signed(a) < Signed(B())),
                 178 => Bool(a <= B()),
-                179 => Bool((int)a <= (int)B()),
+                179 => Bool(Signed(a) <= Signed(B())),
                 194 => a >> (int)Shift(),
-                195 => unchecked((uint)((int)a >> (int)Shift())),
+                195 => unchecked((ulong)(Signed(a) >> (int)Shift())),
                 196 => a << (int)Shift(),
                 197 => a | B(),
                 198 => a ^ B(),
@@ -198,9 +201,14 @@ public sealed unsafe partial class RenderingDevice
                 200 => ~a,
                 _ => throw new NotSupportedException("The specialization operation requires its shader capability adapter.")
             };
-            Kind(type); return new(type, bits);
+            Kind(type); return new(type, bits & mask);
         }
         private uint Fresh() => _next < 1_048_576 ? _next++ : throw new ArgumentException("Specialized module identities exceed the payload bound.");
+        private uint ArrayLength(Value value)
+        {
+            if (Kind(value.Type) is not (1 or 2 or 5 or 6) || value.Bits is 0 or > uint.MaxValue) throw new ArgumentException("An array extent requires a positive bounded integer constant.");
+            return (uint)value.Bits;
+        }
         private uint Word(Value value)
         {
             if (Kind(value.Type) is not (1 or 2) || value.Bits > uint.MaxValue) throw new ArgumentException("A module dimension requires a 32-bit integer constant.");
@@ -216,18 +224,35 @@ public sealed unsafe partial class RenderingDevice
                 Emit(output, 44, [value.Type, id, .. ids]);
             }
             else if (Kind(value.Type) == 0) Emit(output, value.Bits != 0 ? 41u : 42u, value.Type, id);
-            else if (Kind(value.Type) == 4) Emit(output, 43, value.Type, id, (uint)value.Bits, (uint)(value.Bits >> 32));
+            else if (Kind(value.Type) >= 4) Emit(output, 43, value.Type, id, (uint)value.Bits, (uint)(value.Bits >> 32));
             else Emit(output, 43, value.Type, id, (uint)value.Bits);
         }
         internal byte[] Freeze()
         {
             var output = new List<uint>();
+            var lengths = new Dictionary<uint, uint>(); var declarations = new List<uint>(); uint lengthType = 0;
+            foreach (var array in _instructions.Where(i => Op(i) == 28))
+            {
+                if (array.Length != 4) throw new ArgumentException("An array type requires an element type and integer extent.");
+                var value = Evaluate(array[3]); if (Kind(value.Type) is not (5 or 6)) continue;
+                if (value.Bits is 0 or > uint.MaxValue) throw new ArgumentException("An array extent exceeds the device layout bound.");
+                if (lengths.ContainsKey(array[3])) continue;
+                if (lengthType == 0)
+                {
+                    lengthType = _types.Values.FirstOrDefault(t => Op(t) == 21 && t.Length == 4 && t[2] == 32 && t[3] == 0)?[1] ?? Fresh();
+                    Emit(declarations, 21, lengthType, 32, 0);
+                }
+                var id = Fresh(); Emit(declarations, 43, lengthType, id, (uint)value.Bits); lengths.Add(array[3], id);
+            }
             var hasSpecializedWorkgroup = _constants.TryGetValue(_workgroup, out var workgroupConstant) && Op(workgroupConstant) is >= 48 and <= 52;
             var workgroup = hasSpecializedWorkgroup ? Evaluate(_workgroup).Elements : null;
             if (hasSpecializedWorkgroup && workgroup is not { Length: 3 }) throw new ArgumentException("Workgroup size requires three scalar dimensions.");
             foreach (var ins in _instructions)
             {
                 var op = Op(ins);
+                if (declarations.Count != 0 && op is >= 19 and <= 39) { output.AddRange(declarations); declarations.Clear(); }
+                if (op == 21 && ins[1] == lengthType) continue;
+                if (op == 28 && lengths.TryGetValue(ins[3], out var length)) { Emit(output, 28, ins[1], ins[2], length); continue; }
                 if (op == 71 && ins.Length == 4 && ins[2] == 1) continue;
                 if (op is >= 48 and <= 52) { EmitValue(output, ins[2], Evaluate(ins[2])); continue; }
                 if (op == 16 && ins.Length == 6 && ins[2] == 17 && workgroup is not null) { Emit(output, 16, ins[1], 17, Word(workgroup[0]), Word(workgroup[1]), Word(workgroup[2])); continue; }

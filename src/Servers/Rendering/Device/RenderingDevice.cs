@@ -234,7 +234,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or both vertex and fragment.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
-    /// <remarks>FP64 modules require an enabled native Vulkan shaderFloat64 feature, including symbolic templates. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
+    /// <remarks>FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); var program = CaptureDeviceProgram(spirvData, name);

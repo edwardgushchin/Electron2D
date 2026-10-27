@@ -103,3 +103,5 @@ Authored light programs retain validated function/state IDs, full validation cod
 See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.
 
 Native creation checks [ShaderPrecision](ShaderPrecision.md) before shadercross translation, including the specialized Metal buffer-size path; FP64 requires an actually enabled Vulkan feature.
+
+Device graphics matches 32/64-bit interstage scalar/vector types, including complete two-location footprints for wide vec3/vec4. Native vertex/color encodings retain the 32-bit format boundary. [Wide integer execution](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) records feature checks and actual pixel consumers.

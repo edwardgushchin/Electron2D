@@ -44,7 +44,7 @@ public sealed unsafe partial class RenderingDevice
             {
                 var t = Type(type);
                 if (Op(t) is 23 or 24 or 28) { type = t[2]; continue; }
-                return Op(t) == 22 && t[2] == 64 ? 8u : 4u;
+                return Op(t) is 21 or 22 && t[2] == 64 ? 8u : 4u;
             }
             throw new ArgumentException("Push element nesting exceeds the module depth.");
         }
@@ -65,7 +65,7 @@ public sealed unsafe partial class RenderingDevice
                 {
                     case 20: size = 4; break;
                     case 21:
-                        if (t[2] != 32) throw new NotSupportedException("Push integers require the 32-bit shader profile."); size = 4; break;
+                        if (t[2] is not (32 or 64)) throw new NotSupportedException("Push integer precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 22:
                         if (t[2] is not (32 or 64)) throw new NotSupportedException("Push floating-point precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 23: if (t[3] is < 2 or > 4) throw new ArgumentException("Invalid push vector width."); size = checked(Size(t[2]) * t[3]); break;
@@ -105,7 +105,7 @@ public sealed unsafe partial class RenderingDevice
             if (Op(t) is 20 or 21 or 22)
             {
                 var value = LoadWord(address);
-                if (Op(t) == 22 && t[2] == 64)
+                if (Op(t) is 21 or 22 && t[2] == 64)
                 {
                     if (_wordPair == 0)
                     {
@@ -143,8 +143,9 @@ public sealed unsafe partial class RenderingDevice
                 else
                 {
                     if (!_valueTypes.TryGetValue(index, out var indexType)) throw new ArgumentException("A push array index has an unknown type.");
-                    var scalar = Type(indexType); if (Op(scalar) != 21 || scalar[2] != 32) throw new NotSupportedException("Push indices require 32-bit integers.");
-                    if (indexType != _uint) index = Instruction(124, _uint, index);
+                    var scalar = Type(indexType); if (Op(scalar) != 21 || scalar[2] is not (32 or 64)) throw new NotSupportedException("Push indices require supported integers.");
+                    if (scalar[2] == 64) index = Instruction(113, _uint, index);
+                    else if (indexType != _uint) index = Instruction(124, _uint, index);
                     if (Op(t) == 28) { address = Offset(address, index, Constant(Decoration(type, 6))); type = t[2]; }
                     else if (Op(t) == 24) { address = Offset(address, index, column); vectorStride = row; type = t[2]; }
                     else if (Op(t) == 23) { address = Offset(address, index, vectorStride); type = t[2]; }

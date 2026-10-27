@@ -1234,7 +1234,7 @@ public System.Void ComputeListSetPushConstant(System.Int64 computeList, System.R
 
 Copies binary push data for subsequent dispatches in the selected compute pipeline.
 
-The original SPIR-V member offsets and array/matrix strides determine the byte layout. Native uniform translation preserves those bytes. Blocks are limited to 128 bytes and 32-bit scalar data or enabled native FP64 data. Bind a pipeline before setting data; changing pipeline or beginning another list requires another set. Recorded dispatches retain their own snapshot.
+The original SPIR-V member offsets and array/matrix strides determine the byte layout. Native uniform translation preserves those bytes. Blocks are limited to 128 bytes and 32-bit scalar data or enabled native FP64/Int64 data. Bind a pipeline before setting data; changing pipeline or beginning another list requires another set. Recorded dispatches retain their own snapshot.
 
 | Parameter | Contract |
 | --- | --- |
@@ -1269,7 +1269,7 @@ Both stages consume the same source bytes through their own original SPIR-V layo
 
 ## Binary push recording
 
-[Binary push parameters](../components/local-compute.md#binary-push-parameters) preserve original 32-bit and enabled FP64 compact layouts through a private uniform block, including arrays, matrix orientation and nested structs. Select a pipeline, copy its exact reflected block size (at most 128 bytes), then issue draw/dispatch work. Pipeline changes and new lists require another setter. Source span mutation and later setters cannot replace prior recorded snapshots. Push storage uses one of four native uniform slots per used stage; logical RDUniform bindings stay independent. Half/integer precision and pointer address/arithmetic require their native shader adapters. [Native FP64](../components/local-compute.md#native-fp64-arithmetic-and-data) supplies double arithmetic, raw data and typed specialization when the device feature is enabled. See [the executable consumer](../../tests/Electron2D.Tests/RenderingDevicePushTests.cs) for paired language data, real pixels and verified allocation limits.
+[Binary push parameters](../components/local-compute.md#binary-push-parameters) preserve original 32-bit and enabled FP64/Int64 compact layouts through a private uniform block, including arrays, matrix orientation and nested structs. Select a pipeline, copy its exact reflected block size (at most 128 bytes), then issue draw/dispatch work. Pipeline changes and new lists require another setter. Source span mutation and later setters cannot replace prior recorded snapshots. Push storage uses one of four native uniform slots per used stage; logical RDUniform bindings stay independent. Half/narrow-integer precision, 64-bit atomics and pointer address/arithmetic require their native shader adapters. [Native FP64](../components/local-compute.md#native-fp64-arithmetic-and-data) supplies double arithmetic, raw data and typed specialization when the device feature is enabled. See [the executable consumer](../../tests/Electron2D.Tests/RenderingDevicePushTests.cs) for paired language data, real pixels and verified allocation limits.
 
 ## Pipeline specialization
 
@@ -1420,3 +1420,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 ## SamplerIsFormatSupportedForFilter
 
 `public bool SamplerIsFormatSupportedForFilter(DataFormat format, SamplerFilter samplerFilter)` reads the shared native format feature snapshot without image allocation or GPU submission. Undefined arguments and Max reject; mapped unsupported and unmapped formats return false. Owner/lifetime guards remain active. The current query adapter requires pinned SDL 3.4.18 Vulkan. [Native format filter support](../components/format-filter-support.md) owns capability meanings, configured binding validation, lifetime and verification limits.
+
+[Native 64-bit integer execution](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) connects raw buffers, original push data, typed overrides and wide graphics varyings, with independent feature fallback and explicit format/compiler limits.

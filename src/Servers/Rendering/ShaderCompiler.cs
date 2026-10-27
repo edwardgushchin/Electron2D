@@ -130,7 +130,7 @@ internal static unsafe partial class ShaderCompiler
         return count;
     }
 
-    internal readonly record struct DeviceIO(uint Location, int Type, uint Width);
+    internal readonly record struct DeviceIO(uint Location, int Type, uint Width, uint BitWidth = 32);
     internal static (DeviceIO[] Inputs, DeviceIO[] Outputs) ValidateDeviceGraphics(byte[] vertex, byte[] fragment) => Run(() =>
     {
         (DeviceIO[] Inputs, DeviceIO[] Outputs) Reflect(byte[] code)
@@ -152,9 +152,21 @@ internal static unsafe partial class ShaderCompiler
                         for (var i = 0; i < count; i++)
                         {
                             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(fields + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-                            var type = field.VectorType switch { ShaderCross.IOVarType.Float32 => 0, ShaderCross.IOVarType.Int32 => 1, ShaderCross.IOVarType.UInt32 => 2, _ => throw new NotSupportedException("Graphics interfaces require 32-bit scalar or vector fields.") };
-                            if (field.Location >= 16 || field.VectorSize is < 1 or > 4 || (mask & (1u << (int)field.Location)) != 0) throw new ArgumentException("Invalid or duplicate graphics interface location.");
-                            mask |= 1u << (int)field.Location; result[i] = new(field.Location, type, field.VectorSize);
+                            var (type, bits) = field.VectorType switch
+                            {
+                                ShaderCross.IOVarType.Float32 => (0, 32u),
+                                ShaderCross.IOVarType.Int32 => (1, 32u),
+                                ShaderCross.IOVarType.UInt32 => (2, 32u),
+                                ShaderCross.IOVarType.Float64 => (0, 64u),
+                                ShaderCross.IOVarType.Int64 => (1, 64u),
+                                ShaderCross.IOVarType.UInt64 => (2, 64u),
+                                _ => throw new NotSupportedException("Graphics interfaces require supported scalar or vector fields.")
+                            };
+                            var locations = bits == 64 && field.VectorSize > 2 ? 2u : 1u;
+                            if (field.Location > 16 - locations || field.VectorSize is < 1 or > 4) throw new ArgumentException("Invalid graphics interface location.");
+                            var occupied = ((1u << (int)locations) - 1) << (int)field.Location;
+                            if ((mask & occupied) != 0) throw new ArgumentException("Graphics interface locations overlap.");
+                            mask |= occupied; result[i] = new(field.Location, type, field.VectorSize, bits);
                         }
                         return result;
                     }
@@ -164,6 +176,7 @@ internal static unsafe partial class ShaderCompiler
             }
         }
         var v = Reflect(vertex); var f = Reflect(fragment);
+        if (v.Inputs.Any(i => i.BitWidth != 32) || f.Outputs.Any(i => i.BitWidth != 32)) throw new NotSupportedException("Wide vertex attributes and color outputs require their native format adapters.");
         foreach (var input in f.Inputs)
             if (!v.Outputs.Contains(input)) throw new ArgumentException("Fragment inputs require matching vertex outputs.");
         return (v.Inputs, f.Outputs);

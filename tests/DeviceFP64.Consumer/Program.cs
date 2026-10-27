@@ -40,7 +40,7 @@ internal static partial class FP64
             Check(BitConverter.DoubleToUInt64Bits(descriptor.GetValue(value)!.Value) == bits, "Typed metadata retains all double bits.");
         }
         value.RevertProperty(descriptor); Check(value.Value is null, "Double metadata reverts to unassigned.");
-        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<long>());
+        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<byte>());
         value.Dispose(); Reject<ObjectDisposedException>(() => _ = value.Value);
         Console.WriteLine("PASS Double metadata, signed zero/NaN/infinity bits and lifecycle.");
     }
