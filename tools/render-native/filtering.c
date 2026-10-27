@@ -51,7 +51,7 @@ E2D_EXPORT int e2d_render_texture_format(SDL_GPUDevice *device, uint32_t abi, SD
 
 E2D_EXPORT int e2d_render_shader16_support(SDL_GPUDevice *device, uint32_t abi)
 {
-    if (!device || abi != 1) return -1;
+    if (!device || (abi != 1 && abi != 2)) return -1;
     if (!compatible(device)) return 0;
     const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
     if (renderer->physicalDeviceProperties.properties.apiVersion < VK_API_VERSION_1_2) return 0;
@@ -64,5 +64,5 @@ E2D_EXPORT int e2d_render_shader16_support(SDL_GPUDevice *device, uint32_t abi)
     VkPhysicalDeviceFeatures2 features = {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = &f11};
     query(renderer->physicalDevice, &features);
     return (f11.storageBuffer16BitAccess ? 1 : 0) | (f11.uniformAndStorageBuffer16BitAccess ? 2 : 0) |
-        (f11.storagePushConstant16 ? 4 : 0) | (f11.storageInputOutput16 ? 8 : 0) | (f12.shaderFloat16 ? 16 : 0);
+        (f11.storagePushConstant16 ? 4 : 0) | (f11.storageInputOutput16 ? 8 : 0) | (f12.shaderFloat16 ? 16 : 0) | (abi == 2 && features.features.shaderInt16 ? 32 : 0);
 }

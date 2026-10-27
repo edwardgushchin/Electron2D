@@ -171,7 +171,7 @@ public static class ShaderImportApplication
             {
                 var code = ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory, allowNative16: deviceImport);
                 // Scalar programs retain the established import payload; descriptor arrays preserve their source shape.
-                if (!ShaderSourceTypes.HasDescriptorArrays(code) && !Electron2D.MaterialLightingProgram.Module.Read(code).Any(i => Electron2D.MaterialLightingProgram.Op(i) == 22 && i[2] == 16)) code = CompileDeviceHLSL(source, stage, includeDirectory);
+                if (!ShaderSourceTypes.HasDescriptorArrays(code) && !Electron2D.MaterialLightingProgram.Module.Read(code).Any(i => Electron2D.MaterialLightingProgram.Op(i) is 21 or 22 && i[2] == 16)) code = CompileDeviceHLSL(source, stage, includeDirectory);
                 types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code, particleImport);
                 return code;
             }

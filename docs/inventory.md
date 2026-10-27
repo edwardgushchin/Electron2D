@@ -2360,3 +2360,5 @@ Internal [RenderMemory](classes/RenderMemory.md), [RenderMemorySnapshot](classes
 [Wide compute atomics](components/local-compute.md#native-64-bit-buffer-and-workgroup-atomics) extend the existing RenderingDevice/RDShaderSPIRV/RDShaderSource families with native buffer/workgroup operations and independent feature refusal.
 
 [Native Half data](components/local-compute.md#native-half-arithmetic-and-packed-data) extends RenderingDevice, RDShaderSPIRV/RDShaderSource and typed specialization with packed arithmetic, buffer/uniform/push layouts and independent native capability guards.
+
+Native Int16/UInt16 shader execution extends RenderingDevice, RDShaderSPIRV, RDShaderSource and the typed short/ushort specialization family; [behavior and verification](components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data).

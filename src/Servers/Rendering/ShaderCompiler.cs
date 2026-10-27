@@ -155,6 +155,8 @@ internal static unsafe partial class ShaderCompiler
                             var (type, bits) = field.VectorType switch
                             {
                                 ShaderCross.IOVarType.Float16 => (0, 16u),
+                                ShaderCross.IOVarType.Int16 => (1, 16u),
+                                ShaderCross.IOVarType.UInt16 => (2, 16u),
                                 ShaderCross.IOVarType.Float32 => (0, 32u),
                                 ShaderCross.IOVarType.Int32 => (1, 32u),
                                 ShaderCross.IOVarType.UInt32 => (2, 32u),

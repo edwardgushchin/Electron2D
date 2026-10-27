@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Electron2DShaderImportTool>../../tools/shaders/bin/$(Configuration)/net10.0/Electron2D.ShaderImport</Electron2DShaderImportTool>
+  </PropertyGroup>
+  <ItemGroup><None Update="Shaders/*.glsl;Shaders/*.hlsl" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
+  <ItemGroup>
+    <Electron2DShader Include="Shaders/*.comp.glsl;Shaders/*.comp.hlsl" Stage="compute" Profile="device" />
+    <Electron2DShader Include="Shaders/*.vert.glsl;Shaders/*.vert.hlsl" Stage="vertex" Profile="device" />
+    <Electron2DShader Include="Shaders/*.frag.glsl;Shaders/*.frag.hlsl" Stage="fragment" Profile="device" />
+  </ItemGroup>
+  <Import Project="../../tools/shaders/Electron2D.Shaders.targets" />
+  <Target Name="BuildInt16ImportTool" BeforeTargets="_CompileElectron2DShaders">
+    <MSBuild Projects="../../tools/shaders/ShaderImport.csproj" Targets="Restore;Build"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=$(NETCoreSdkRuntimeIdentifier)"
+             RemoveProperties="PublishAot;PublishTrimmed;TrimMode;SelfContained;IlcTreatWarningsAsErrors;ILLinkTreatWarningsAsErrors" />
+  </Target>
+</Project>

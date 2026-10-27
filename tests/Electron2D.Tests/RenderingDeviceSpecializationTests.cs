@@ -35,7 +35,7 @@ internal static partial class RenderingDeviceSpecializationTests
     }
     private static void RunManaged()
     {
-        Expressions(); Float64Expressions(); Integer64Expressions(); HalfExpressions(); Atomic64Requirements(); NarrowRequirements();
+        Expressions(); Float64Expressions(); Integer64Expressions(); HalfExpressions(); Integer16Expressions(); Atomic64Requirements(); NarrowRequirements();
         var parser = typeof(RenderingDevice).Assembly.GetType("Electron2D.ShaderPrecision")!.GetMethod("ReadRequirements", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         (bool Float64, bool Int64) Requirements(params uint[] instructions)
         {
@@ -55,7 +55,7 @@ internal static partial class RenderingDeviceSpecializationTests
         Reject<ArgumentException>(() => Precision(0)); Reject<ArgumentException>(() => Precision(3u << 16 | 22, 1));
         Reject<ArgumentException>(() => Precision(2u << 16 | 22, 1)); Reject<ArgumentException>(() => Precision(3u << 16 | 17, 10, 0));
         Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 32, 2));
-        foreach (var capability in new uint[] { 8, 22 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
+        foreach (var capability in new uint[] { 8 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
         foreach (var width in new uint[] { 128 }) Reject<NotSupportedException>(() => Precision(3u << 16 | 22, 1, width));
         Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 64, 0));
         Console.WriteLine("PASS precision capability/type and malformed/truncated instruction guards.");

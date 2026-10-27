@@ -121,8 +121,8 @@ internal static unsafe partial class GPUDeviceFactory
     {
         try
         {
-            var available = ReadShader16(device, 1);
-            if (available is < 0 or > 31) throw new InvalidOperationException("Native 16-bit shader features could not be queried.");
+            var available = ReadShader16(device, 2);
+            if (available is < 0 or > 63) throw new InvalidOperationException("Native 16-bit shader features could not be queried.");
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
@@ -179,9 +179,9 @@ internal static unsafe partial class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64/int64 are fields 16/39/40.
+            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64/int64 are fields 16/39/40/41 (including int16).
             Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
-            features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u;
+            features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
             // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
             var storage16 = new Vulkan11Features { Type = 49 };
             for (var i = 0; i < 4; i++) storage16.Flags[i] = ((uint)narrow >> i) & 1;

@@ -19,6 +19,7 @@ public sealed unsafe partial class RenderingDevice
         private uint _next, _uint, _vector, _wordPair, _halfPair, _scalarPointer, _raw, _root, _block;
         private readonly uint[] _header;
         private int _depth;
+        private bool _integer16;
         private uint Fresh() => _next < 1_048_576 ? _next++ : throw new ArgumentException("Translated shader identities exceed the module limit.");
         private static uint Op(uint[] instruction) => instruction[0] & 65535;
         private static void Emit(List<uint> output, uint op, params uint[] operands) { output.Add((uint)(operands.Length + 1) << 16 | op); output.AddRange(operands); }
@@ -51,7 +52,7 @@ public sealed unsafe partial class RenderingDevice
         private uint Alignment(uint type)
         {
             var t = Type(type);
-            return Op(t) switch { 22 when t[2] == 16 => 2, 23 or 24 or 28 => Alignment(t[2]), 30 => t.Skip(2).Select(Alignment).DefaultIfEmpty(4u).Max(), _ => 4 };
+            return Op(t) switch { 21 or 22 when t[2] == 16 => 2, 23 or 24 or 28 => Alignment(t[2]), 30 => t.Skip(2).Select(Alignment).DefaultIfEmpty(4u).Max(), _ => 4 };
         }
         private (uint Column, uint Row) Matrix(uint type, uint member)
         {
@@ -70,7 +71,7 @@ public sealed unsafe partial class RenderingDevice
                 {
                     case 20: size = 4; break;
                     case 21:
-                        if (t[2] is not (32 or 64)) throw new NotSupportedException("Push integer precision requires its native shader adapter."); size = t[2] / 8; break;
+                        if (t[2] is not (16 or 32 or 64)) throw new NotSupportedException("Push integer precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 22:
                         if (t[2] is not (16 or 32 or 64)) throw new NotSupportedException("Push floating-point precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 23: if (t[3] is < 2 or > 4) throw new ArgumentException("Invalid push vector width."); size = checked(Size(t[2]) * t[3]); break;
@@ -110,6 +111,12 @@ public sealed unsafe partial class RenderingDevice
             if (Op(t) is 20 or 21 or 22)
             {
                 var value = LoadWord(address);
+                if (Op(t) == 21 && t[2] == 16)
+                {
+                    _integer16 = true;
+                    var shift = Instruction(132, _uint, Instruction(199, _uint, address, Constant(2)), Constant(8));
+                    return Instruction(t[3] == 1 ? 114u : 113u, type, Instruction(194, _uint, value, shift));
+                }
                 if (Op(t) == 22 && t[2] == 16)
                 {
                     if (_halfPair == 0)
@@ -158,8 +165,8 @@ public sealed unsafe partial class RenderingDevice
                 else
                 {
                     if (!_valueTypes.TryGetValue(index, out var indexType)) throw new ArgumentException("A push array index has an unknown type.");
-                    var scalar = Type(indexType); if (Op(scalar) != 21 || scalar[2] is not (32 or 64)) throw new NotSupportedException("Push indices require supported integers.");
-                    if (scalar[2] == 64) index = Instruction(113, _uint, index);
+                    var scalar = Type(indexType); if (Op(scalar) != 21 || scalar[2] is not (16 or 32 or 64)) throw new NotSupportedException("Push indices require supported integers.");
+                    if (scalar[2] != 32) index = Instruction(113, _uint, index);
                     else if (indexType != _uint) index = Instruction(124, _uint, index);
                     if (Op(t) == 28) { address = Offset(address, index, Constant(Decoration(type, 6))); type = t[2]; }
                     else if (Op(t) == 24) { address = Offset(address, index, column); vectorStride = row; type = t[2]; }
@@ -239,6 +246,7 @@ public sealed unsafe partial class RenderingDevice
             var usedSets = _decorations.Where(d => d.Key.Item2 == 34).Select(d => d.Value).ToHashSet(); var privateSet = uint.MaxValue; while (usedSets.Contains(privateSet)) privateSet--;
             var annotations = new List<uint>(); Emit(annotations, 71, array, 6, 16); Emit(annotations, 71, structure, 2); Emit(annotations, 72, structure, 0, 35, 0); Emit(annotations, 71, _raw, 34, privateSet); Emit(annotations, 71, _raw, 33, 0);
             var translated = new List<uint>();
+            if (_integer16 && !_instructions.Any(i => Op(i) == 17 && i[1] == 22)) Emit(translated, 17, 22);
             if (_halfPair != 0 && !_instructions.Any(i => Op(i) == 17 && i[1] == 9)) Emit(translated, 17, 9);
             var addedAnnotations = false; var addedGlobals = false;
             for (var i = 0; i < _functions.Count;)

@@ -5,7 +5,7 @@ SHA-256 pinned in CMakeLists.txt. It does not build or replace SDL. The selected
 target's SDL core is supplied through SDL3_LIBRARIES. The generated declarations
 retain SDL's notice; the platform package includes licence/SDL-LICENSE.txt.
 
-e2d_render_memory uses ABI 1 and returns 1 for a coherent native snapshot, 0 for
+e2d_render_memory preserves ABI 1 and returns 1 for a coherent native snapshot, 0 for
 an unsupported core/revision/driver, and -1 for invalid arguments or inconsistent
 allocator data. Output contains three uint64 fields: textures, buffers and total.
 The current native adapter is Vulkan. It locks the native allocator without
@@ -49,6 +49,6 @@ The Linux test_int64_mask.c development shim selects int64/fp64/both through ELE
 
 The Linux test_atomic64_mask.c development shim selects buffer/shared/both/api through ELECTRON2D_TEST_MASK_ATOMIC64. DeviceAtomic64.Consumer checks independent storage fallback and rejection before shader/binary publication. The api profile refuses Vulkan 1.2 requests. This shim is excluded from runtime packaging.
 
-`e2d_render_shader16_support` uses ABI 1 and returns the selected Vulkan 1.2 physical device's supported buffer/uniform/push/input-output storage bits (0..3) and Float16 arithmetic bit (4). Zero means no supported narrow profile; invalid arguments return -1. The mask describes support before optional device creation, not enabled device features. The managed factory retires the unpublished probe before creating a final device and retains the accepted mask privately. The export is included in all three export lists and the native package closure.
+`e2d_render_shader16_support` preserves ABI 1 and returns the selected Vulkan 1.2 physical device's supported buffer/uniform/push/input-output storage bits (0..3) and Float16 arithmetic bit (4). ABI 2 additionally returns core Int16 arithmetic in bit 5; ABI 1 remains unchanged. Zero means no supported narrow profile; invalid arguments return -1. The mask describes support before optional device creation, not enabled device features. The managed factory retires the unpublished probe before creating a final device and retains the accepted mask privately. The export is included in all three export lists and the native package closure.
 
-The Linux test_shader16_mask.c development shim selects arithmetic/buffer/uniform/push/io/all/api through ELECTRON2D_TEST_MASK_SHADER16. DeviceFP16.Consumer verifies retained sibling profiles, original-module/binary refusal and legacy HLSL. Never package this shim.
+The Linux test_shader16_mask.c development shim selects integer/arithmetic/buffer/uniform/push/io/all/api through ELECTRON2D_TEST_MASK_SHADER16. DeviceFP16.Consumer and DeviceInt16.Consumer verify retained sibling profiles, original-module/binary refusal and legacy HLSL. Never package this shim.

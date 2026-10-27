@@ -230,3 +230,5 @@ Specialization declarations retain copied symbolic templates until pipeline crea
 [RDShaderFile](RDShaderFile.md) borrows these resources under named versions and preserves aliases, copied stage bytecode and diagnostics in saved graphs. Selecting a file version supplies this same module to the ordinary device factories; replacing a version does not dispose its predecessor.
 
 [Half modules](../components/local-compute.md#native-half-arithmetic-and-packed-data) use independently enabled native arithmetic/storage and the existing device execution path. Direct HLSL Half specialization retains the pinned frontend prerequisite.
+
+[Native Int16/UInt16 execution](../components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data) connects packed data, typed specialization and compute/graphics arithmetic with independently enabled storage and exact push reconstruction.
