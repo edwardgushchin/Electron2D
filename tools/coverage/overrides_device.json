@@ -436,61 +436,61 @@
       "godot": "RDSamplerState::property:anisotropy_max",
       "electron2d": "property:Electron2D.RDSamplerState.AnisotropyMax()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:lod_bias",
       "electron2d": "property:Electron2D.RDSamplerState.LODBias()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:mag_filter",
       "electron2d": "property:Electron2D.RDSamplerState.MagFilter()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:max_lod",
       "electron2d": "property:Electron2D.RDSamplerState.MaxLOD()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:min_filter",
       "electron2d": "property:Electron2D.RDSamplerState.MinFilter()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:min_lod",
       "electron2d": "property:Electron2D.RDSamplerState.MinLOD()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:mip_filter",
       "electron2d": "property:Electron2D.RDSamplerState.MIPFilter()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:repeat_u",
       "electron2d": "property:Electron2D.RDSamplerState.RepeatU()",
       "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Sampled component maps execute through derived native modules. Alternate native format views and border/mirror-clamp shader addressing retain their separate view/shader adapters and fail explicitly. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Sampled component maps execute through derived native modules. Alternate native format views and border/mirror-clamp shader addressing retain their separate view/shader adapters and fail explicitly. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:repeat_v",
       "electron2d": "property:Electron2D.RDSamplerState.RepeatV()",
       "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Sampled component maps execute through derived native modules. Alternate native format views and border/mirror-clamp shader addressing retain their separate view/shader adapters and fail explicitly. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Sampled component maps execute through derived native modules. Alternate native format views and border/mirror-clamp shader addressing retain their separate view/shader adapters and fail explicitly. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:use_anisotropy",
       "electron2d": "property:Electron2D.RDSamplerState.UseAnisotropy()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RenderingDevice::enum:DataFormat",
@@ -2074,7 +2074,7 @@
       "godot": "RenderingDevice::enum_value:SamplerRepeatMode.SAMPLER_REPEAT_MODE_CLAMP_TO_BORDER",
       "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerRepeatMode.ClampToBorder()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Numeric format/selector identity; allocation capability is queried or rejected explicitly rather than claimed universally supported."
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
     },
     {
       "godot": "RenderingDevice::enum_value:SamplerRepeatMode.SAMPLER_REPEAT_MODE_CLAMP_TO_EDGE",
@@ -3365,13 +3365,13 @@
       "godot": "RDSamplerState::property:compare_op",
       "electron2d": "property:Electron2D.RDSamplerState.CompareOp()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "RDSamplerState::property:enable_compare",
       "electron2d": "property:Electron2D.RDSamplerState.EnableCompare()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Existing border/mirror-clamp and Metal-bias limits remain explicit."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Shared native projection now also drives high-level copied Shader sampler settings. Anisotropy maximum one disables effective anisotropy; nearest integer and relaxed-device paths remain valid. Native field/capability guards and real software canvas/particle/blit consumers are checked. Normalized Vulkan border sampling executes through its native sampler adapter; mirror-clamp and Metal-bias limits remain explicit."
     },
     {
       "godot": "class:RDFramebufferPass",
@@ -3656,6 +3656,60 @@
       "godot": "RenderingDevice::method:screen_get_height(int:)",
       "electron2d": "method:Electron2D.RenderingDevice.ScreenGetHeight(System.Int32)",
       "reason": "ADR 0028: renderer-owned screen lists use actual native main/child pixel dimensions and single-color/sample formats, existing graphics pipelines and ordered GPU-only presentation. Canvas viewport images remain independent; post-draw work waits for the following frame and ForceDraw(false) preserves pending output. Resize reuses matching formats; native retirement validates active lists before window state changes, and shutdown/activation rollback cancel interrupted passes. Local devices return InvalidID. Native screen probes verify final presentation versus canvas, clears/alpha/scissor, per-window isolation, stale IDs, compatible resize, forced presentation and warmed allocations; physical GPU, native heap and other-platform acceptance remain separate."
+    },
+    {
+      "godot": "RDSamplerState::property:border_color",
+      "electron2d": "property:Electron2D.RDSamplerState.BorderColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.FloatTransparentBlack()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_INT_TRANSPARENT_BLACK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.IntTransparentBlack()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_BLACK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.FloatOpaqueBlack()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_INT_OPAQUE_BLACK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.IntOpaqueBlack()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_WHITE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.FloatOpaqueWhite()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_INT_OPAQUE_WHITE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.IntOpaqueWhite()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.Max()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RenderingDevice::enum:SamplerBorderColor",
+      "electron2d": "T:Electron2D.RenderingDevice.SamplerBorderColor",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
     }
   ],
   "extras": [
@@ -4075,13 +4129,6 @@
       "reason": "ADRs 0004/0028: all image storage is two-dimensional; volume depth and the W sampling axis do not enter this image family."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "RDSamplerState::property:border_color"
-      ],
-      "reason": "ADR 0028: requires border/unnormalized-coordinate shader sampling integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
-    },
-    {
       "state": "Excluded",
       "godot": [
         "RDSamplerState::property:repeat_w"
@@ -4093,7 +4140,7 @@
       "godot": [
         "RDSamplerState::property:unnormalized_uvw"
       ],
-      "reason": "ADR 0028: requires border/unnormalized-coordinate shader sampling integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
+      "reason": "ADR 0028: requires sampler min/mag/mip/LOD/anisotropy/compare restrictions, single-layer/single-mip image views and SPIR-V validation of explicit-LOD nonprojective operations without offsets/gathers. Normalized border sampling does not satisfy these operation restrictions; no inert flag is exposed."
     },
     {
       "state": "Excluded",
@@ -5079,6 +5126,21 @@
         "RDTextureView::property:format_override"
       ],
       "reason": "Max and the allocation format execute. Alternate format reinterpretation requires shared native format/subresource views with distinct lifetime ownership; creation explicitly rejects it."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDSamplerState::property:border_color",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_INT_TRANSPARENT_BLACK",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_BLACK",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_INT_OPAQUE_BLACK",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_FLOAT_OPAQUE_WHITE",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_INT_OPAQUE_WHITE",
+        "RenderingDevice::enum_value:SamplerBorderColor.SAMPLER_BORDER_COLOR_MAX",
+        "RenderingDevice::enum:SamplerBorderColor"
+      ],
+      "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
     }
   ]
 }

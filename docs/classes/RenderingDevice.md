@@ -450,7 +450,7 @@ An owned sampler identity.
 | --- | --- |
 | `state` | Caller-owned sampler configuration. |
 
-- `T:System.NotSupportedException`: Border, mirror-clamp or unnormalized sampling requires a shader adapter.
+- `T:System.NotSupportedException`: Border sampling requires the pinned Vulkan adapter; mirror-clamp and unnormalized sampling require their native/shader adapters.
 <a id="member-e8e129d5af5f"></a>
 ### TextureCreate(Electron2D.RDTextureFormat, Electron2D.RDTextureView, System.ReadOnlySpan<System.Byte[]>)
 

@@ -25,7 +25,7 @@ internal static partial class ShaderSamplerChecks
     {
         using var shader = ResourceLoader.Load<Shader>(path, ResourceLoader.CacheMode.IgnoreDeep);
         using var state = shader.GetTextureSamplerState("TEXTURE")!;
-        Check(state.MinLOD == 1 && state.MaxLOD == 2 && state.LODBias == .5f && state.RepeatU == RenderingDevice.SamplerRepeatMode.MirroredRepeat && state.UseAnisotropy && state.AnisotropyMax == 4, "Physical shader archive restores sampler metadata after its program.");
+        Check(state.MinLOD == 1 && state.MaxLOD == 2 && state.LODBias == .5f && state.RepeatU == RenderingDevice.SamplerRepeatMode.MirroredRepeat && state.UseAnisotropy && state.AnisotropyMax == 4 && state.BorderColor == RenderingDevice.SamplerBorderColor.FloatOpaqueWhite, "Physical shader archive restores sampler metadata after its program.");
         Console.WriteLine("Fresh sampler archive restored.");
     }
 }

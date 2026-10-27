@@ -560,3 +560,5 @@ private Mutter `run_native.py` producer/reader driver. Exercise all MIME roles,
 preferred-format failures, absent/file-list/empty/oversize offers, copied ownership,
 predicate retirement and actual image-to-texture pixels on each claimed renderer.
 Use strict full-trim NativeAOT separately. See [clipboard image reproduction](components/clipboard-images.md#verification-and-reproduction).
+
+After changing native sampler creation or copied sampler settings, follow [native sampler border checks](components/sampler-borders.md#executable-checks), preserve version-one shader metadata reading, and rerun native layout pin checks plus the public CLR/AOT consumers. Window presentation and foreign-platform execution remain independent gates.

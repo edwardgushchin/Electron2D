@@ -554,6 +554,7 @@ Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress
 
 [Device resource caches](../components/device-resource-caches.md) add retained UniformSetCacheRD and FramebufferCacheRD services over the active GPU device, with copied keys, safe dependency eviction and device-owned lifetime.
 
+[Native sampler borders](../components/sampler-borders.md) connect copied BorderColor settings and normalized ClampToBorder addressing to local device and high-level GPU shader consumers. The pinned Vulkan adapter retains SDL sampler lifetime; other drivers and unnormalized-coordinate operation validation retain explicit prerequisites.
 ## Native render allocation memory
 
 See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.

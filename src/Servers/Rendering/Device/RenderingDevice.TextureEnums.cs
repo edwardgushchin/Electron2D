@@ -530,11 +530,11 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Addressing outside the normalized zero-to-one coordinate interval.</summary>
     public enum SamplerRepeatMode
     {
-        /// <summary>Requires border sampling shader integration; creation currently rejects it.</summary>
+        /// <summary>Uses the configured border color outside the image; requires the native Vulkan sampler adapter.</summary>
         ClampToBorder = 3,
         /// <summary>Uses the closest edge texel outside the image.</summary>
         ClampToEdge = 2,
-        /// <summary>Nonselectable upper bound; DataFormat.Max also means no view override.</summary>
+        /// <summary>Nonselectable upper bound.</summary>
         Max = 5,
         /// <summary>Repeats the image with alternating mirrored intervals.</summary>
         MirroredRepeat = 1,
@@ -542,6 +542,24 @@ public sealed unsafe partial class RenderingDevice
         MirrorClampToEdge = 4,
         /// <summary>Repeats the image in every normalized coordinate interval.</summary>
         Repeat = 0,
+    }
+    /// <summary>Predefined colors returned by clamp-to-border sampling.</summary>
+    public enum SamplerBorderColor
+    {
+        /// <summary>Floating-point transparent black (0, 0, 0, 0).</summary>
+        FloatTransparentBlack = 0,
+        /// <summary>Integer transparent black (0, 0, 0, 0).</summary>
+        IntTransparentBlack = 1,
+        /// <summary>Floating-point opaque black (0, 0, 0, 1).</summary>
+        FloatOpaqueBlack = 2,
+        /// <summary>Integer opaque black (0, 0, 0, 1).</summary>
+        IntOpaqueBlack = 3,
+        /// <summary>Floating-point opaque white (1, 1, 1, 1).</summary>
+        FloatOpaqueWhite = 4,
+        /// <summary>Integer opaque white (1, 1, 1, 1).</summary>
+        IntOpaqueWhite = 5,
+        /// <summary>Nonselectable upper bound.</summary>
+        Max = 6
     }
     /// <summary>Two-dimensional texture storage roles.</summary>
     public enum TextureType

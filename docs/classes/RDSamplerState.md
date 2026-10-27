@@ -1,6 +1,6 @@
 # RDSamplerState
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDSamplerState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDSamplerState.cs](../../src/Servers/Rendering/Device/RDSamplerState.cs).
 
@@ -10,7 +10,9 @@ Last updated: 2026-10-21
 
 Describes filtering, normalized-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.
 
-The current profile supports repeat, mirrored repeat and clamp-to-edge. Other addressing modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
+The current profile supports repeat, mirrored repeat, clamp-to-edge and Vulkan clamp-to-border. Other addressing modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
+
+`BorderColor` selects one of six predefined [floating-point or integer colors](RenderingDevice.SamplerBorderColor.md), initially FloatOpaqueBlack. It is copied with the rest of the configuration, appears in typed property descriptors and is ignored when neither axis uses ClampToBorder. The color scalar class must match the sampled image. See [native border sampling](../components/sampler-borders.md).
 
 ## Example
 
@@ -24,6 +26,7 @@ using var sampler = new RDSamplerState { EnableCompare = true, CompareOp = Rende
 
 | Declaration | Contract |
 | --- | --- |
+| [`public Electron2D.RenderingDevice.SamplerBorderColor BorderColor { get; set; }`](#border-color) | Selects the clamp-to-border color; initially FloatOpaqueBlack. |
 | [`public RDSamplerState()`](#member-a8bd01fce139) | Creates the default SamplerState configuration. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-6b12dd7b8fb0) |  |
 | [`public System.Single AnisotropyMax { get; set; }`](#member-6985464d4589) | Gets or sets the anisotropic filtering limit from one through sixteen. |
@@ -188,6 +191,15 @@ public System.Boolean UseAnisotropy { get; set; }
 Gets or sets whether the sampler uses anisotropic filtering.
 
 Initially false; copied when a device sampler or shader binding is configured.
+
+<a id="border-color"></a>
+### BorderColor
+
+```csharp
+public Electron2D.RenderingDevice.SamplerBorderColor BorderColor { get; set; }
+```
+
+Gets or sets the color used by clamp-to-border axes. Undefined values and Max reject immediately. Creation copies the value. Disposed configuration access throws ObjectDisposedException. Floating-point variants apply to normalized, floating-point and depth images; integer variants apply to signed and unsigned integer images. Shader authoring and device binding reject a mismatched scalar class before native sampling.
 
 ## Lifecycle, errors and verification
 

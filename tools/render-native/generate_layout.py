@@ -1,4 +1,4 @@
-"""Compile only the memory-query ABI of the pinned SDL GPU implementation."""
+"""Compile only the allocator and sampler ABI of the pinned SDL GPU implementation."""
 
 import argparse
 import hashlib
@@ -46,6 +46,7 @@ def generate(source):
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
         "typedef struct VulkanFenceHandle VulkanFenceHandle;",
         vulkan[vulkan.index("typedef struct VulkanMemoryFreeRegion"):vulkan.index("// Memory structures")],
+        block(vulkan, "typedef struct VulkanSampler"),
         block(vulkan, "typedef struct VulkanExtensions"), block(vulkan, "typedef struct VulkanFencePool"),
         forward, renderer, "typedef struct VulkanRenderer VulkanRenderer;", "",
     ])

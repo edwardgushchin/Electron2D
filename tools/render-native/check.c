@@ -5,6 +5,7 @@
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
 extern int e2d_render_memory(SDL_GPUDevice *, uint32_t, Memory *);
+extern SDL_GPUSampler *e2d_render_sampler_border(SDL_GPUDevice *, uint32_t, const SDL_GPUSamplerCreateInfo *, uint32_t, uint32_t, uint32_t);
 
 static void require(bool valid)
 {
@@ -30,16 +31,27 @@ static int reader(void *device)
 int main(int argc, char **argv)
 {
     Memory memory = {0};
+    SDL_GPUSamplerCreateInfo sampler_info = {.min_filter = SDL_GPU_FILTER_NEAREST, .mag_filter = SDL_GPU_FILTER_NEAREST, .mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST, .address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .compare_op = SDL_GPU_COMPAREOP_ALWAYS, .max_lod = 1};
+    require(e2d_render_sampler_border(NULL, 1, &sampler_info, 3, 2, 2) == NULL);
+    require(e2d_render_sampler_border((SDL_GPUDevice *)(uintptr_t)1, 0, &sampler_info, 3, 2, 2) == NULL);
+    require(e2d_render_sampler_border((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 2, 2, 2) == NULL);
+    require(e2d_render_sampler_border((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 3, 2, 6) == NULL);
     require(e2d_render_memory(NULL, 1, &memory) == -1);
     require(e2d_render_memory((SDL_GPUDevice *)(uintptr_t)1, 0, &memory) == -1);
     if (argc == 2 && SDL_strcmp(argv[1], "--unsupported-version") == 0) {
         require(e2d_render_memory((SDL_GPUDevice *)(uintptr_t)1, 1, &memory) == 0);
+        require(e2d_render_sampler_border((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 3, 2, 2) == NULL);
         puts("Unsupported native core rejected before opaque-device access.");
         return 0;
     }
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, "vulkan");
     require(device != NULL);
+    for (uint32_t color = 0; color < 6; ++color) {
+        SDL_GPUSampler *sampler = e2d_render_sampler_border(device, 1, &sampler_info, 3, 2, color);
+        require(sampler != NULL); SDL_ReleaseGPUSampler(device, sampler);
+    }
+    require(SDL_WaitForGPUIdle(device));
     Memory initial = read_memory(device);
     SDL_Thread *thread = SDL_CreateThread(reader, "render-memory-reader", device);
     require(thread != NULL);

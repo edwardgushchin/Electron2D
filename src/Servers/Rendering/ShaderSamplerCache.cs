@@ -11,8 +11,7 @@ internal sealed class ShaderSamplerCache(RenderHandle device, string driver, boo
     {
         if (!_samplers.TryGetValue(configuration, out var sampler))
         {
-            var info = configuration.Native(driver, anisotropyAvailable);
-            sampler = new(SDL.CreateGPUSampler(device.DangerousGetHandle(), in info),
+            sampler = new(configuration.Create(device.DangerousGetHandle(), driver, anisotropyAvailable),
                 h => SDL.ReleaseGPUSampler(device.DangerousGetHandle(), h), device);
             _samplers.Add(configuration, sampler);
         }

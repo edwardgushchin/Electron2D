@@ -10700,6 +10700,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.SamplerBorderColor",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "SamplerBorderColor",
+    "signature": "public enum Electron2D.RenderingDevice.SamplerBorderColor",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.SamplerFilter",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.SamplerFilter",
@@ -53700,6 +53718,97 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
     "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.FloatOpaqueBlack()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "FloatOpaqueBlack",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor FloatOpaqueBlack = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.FloatOpaqueWhite()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "FloatOpaqueWhite",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor FloatOpaqueWhite = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.FloatTransparentBlack()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "FloatTransparentBlack",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor FloatTransparentBlack = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.IntOpaqueBlack()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "IntOpaqueBlack",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor IntOpaqueBlack = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.IntOpaqueWhite()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "IntOpaqueWhite",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor IntOpaqueWhite = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.IntTransparentBlack()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "IntTransparentBlack",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor IntTransparentBlack = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.SamplerBorderColor.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.SamplerBorderColor Max = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
+    "value": "6"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.SamplerFilter.Linear()",
@@ -275968,6 +276077,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDSamplerState.BorderColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDSamplerState",
+    "name": "BorderColor",
+    "signature": "public Electron2D.RenderingDevice.SamplerBorderColor BorderColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.SamplerBorderColor",
     "value": null
   },
   {

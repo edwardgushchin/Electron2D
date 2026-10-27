@@ -72,6 +72,7 @@ public sealed unsafe partial class RenderingDevice
         {
             var entry = Get(LinkedSource(source)[source.Element * ResourceWidth(source.Type)], Kind.Sampler); sampler = entry.NativeHandle;
             if (entry.CompareSampling != link.Native.Depth || link.Native.Depth && !DepthFormat(image.Texture!.Format)) throw new ArgumentException("A comparison sampler requires a matching depth image and shader role.");
+            if (entry.IntegerBorder is { } integer && integer != (link.Native.PixelType != 0)) throw new ArgumentException("The sampler border color must match the image sampling type.");
             if (link.Native.PixelType != 0 && entry.LinearSampling) throw new ArgumentException("Integer textures require nearest filtering without anisotropy.");
         }
         else sampler = _fetchSampler!.DangerousGetHandle();

@@ -20,9 +20,9 @@ var selection = RenderingDevice.SamplerRepeatMode.ClampToBorder;
 
 | Declaration | Contract |
 | --- | --- |
-| `public const Electron2D.RenderingDevice.SamplerRepeatMode ClampToBorder = 3` | Requires border sampling shader integration; creation currently rejects it. |
+| `public const Electron2D.RenderingDevice.SamplerRepeatMode ClampToBorder = 3` | Uses the configured border color outside the image; requires the native Vulkan sampler adapter. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode ClampToEdge = 2` | Uses the closest edge texel outside the image. |
-| `public const Electron2D.RenderingDevice.SamplerRepeatMode Max = 5` | Nonselectable upper bound; DataFormat.Max also means no view override. |
+| `public const Electron2D.RenderingDevice.SamplerRepeatMode Max = 5` | Nonselectable upper bound. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode MirrorClampToEdge = 4` | Requires mirror-clamp shader integration; creation currently rejects it. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode MirroredRepeat = 1` | Repeats the image with alternating mirrored intervals. |
 | `public const Electron2D.RenderingDevice.SamplerRepeatMode Repeat = 0` | Repeats the image in every normalized coordinate interval. |
@@ -36,7 +36,7 @@ var selection = RenderingDevice.SamplerRepeatMode.ClampToBorder;
 public const Electron2D.RenderingDevice.SamplerRepeatMode ClampToBorder = 3
 ```
 
-Requires border sampling shader integration; creation currently rejects it.
+Uses the configured border color outside the image; requires the native Vulkan sampler adapter.
 
 <a id="member-4c0b98d709ef"></a>
 ### ClampToEdge
@@ -54,7 +54,7 @@ Uses the closest edge texel outside the image.
 public const Electron2D.RenderingDevice.SamplerRepeatMode Max = 5
 ```
 
-Nonselectable upper bound; DataFormat.Max also means no view override.
+Nonselectable upper bound.
 
 <a id="member-b4e2a386c052"></a>
 ### MirrorClampToEdge

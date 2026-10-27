@@ -4,6 +4,8 @@ internal static partial class ShaderSamplerChecks
 {
     internal static void Run(string[] args)
     {
+        if (args.Length > 0 && args[0] == "borders-canvas") { BordersCanvas(); return; }
+        if (args.Length > 0 && args[0] == "borders") { Borders(); return; }
         if (args.Length > 0 && args[0] == "swizzles-canvas") { SwizzleCanvas(args); return; }
         if (args.Length > 0 && args[0] == "swizzles-device") { TextureSwizzleRuntimeChecks.Run(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", "Device")); return; }
         if (args.Length > 0 && args[0] == "compatibility") { Compatibility(); return; }
@@ -14,6 +16,7 @@ internal static partial class ShaderSamplerChecks
         Check(shader.GetTextureSamplerState("TEXTURE") is null, "Unset binding retains its original policy.");
         using var state = new RDSamplerState
         {
+            BorderColor = RenderingDevice.SamplerBorderColor.FloatOpaqueWhite,
             RepeatU = RenderingDevice.SamplerRepeatMode.MirroredRepeat,
             RepeatV = RenderingDevice.SamplerRepeatMode.Repeat,
             MinFilter = RenderingDevice.SamplerFilter.Linear,
@@ -38,7 +41,7 @@ internal static partial class ShaderSamplerChecks
         var bytes = descriptor.GetValue(shader); using var restored = new Shader();
         var target = (PropertyDescriptor<Shader, byte[]>)restored.GetPropertyList().Single(p => p.Name == "SamplerSettings");
         target.SetValue(restored, bytes); using var roundtrip = restored.GetTextureSamplerState("TEXTURE")!;
-        Check(roundtrip.MinLOD == 1 && roundtrip.LODBias == .5f && roundtrip.MaxLOD == 2 && roundtrip.MIPFilter == RenderingDevice.SamplerFilter.Linear && roundtrip.MinFilter == RenderingDevice.SamplerFilter.Linear && roundtrip.MagFilter == RenderingDevice.SamplerFilter.Nearest && roundtrip.RepeatV == RenderingDevice.SamplerRepeatMode.Repeat && roundtrip.UseAnisotropy && roundtrip.AnisotropyMax == 4 && !roundtrip.EnableCompare && roundtrip.CompareOp == RenderingDevice.CompareOperator.Greater, "Typed stored metadata roundtrip.");
+        Check(roundtrip.MinLOD == 1 && roundtrip.LODBias == .5f && roundtrip.MaxLOD == 2 && roundtrip.MIPFilter == RenderingDevice.SamplerFilter.Linear && roundtrip.MinFilter == RenderingDevice.SamplerFilter.Linear && roundtrip.MagFilter == RenderingDevice.SamplerFilter.Nearest && roundtrip.RepeatV == RenderingDevice.SamplerRepeatMode.Repeat && roundtrip.UseAnisotropy && roundtrip.AnisotropyMax == 4 && !roundtrip.EnableCompare && roundtrip.CompareOp == RenderingDevice.CompareOperator.Greater && roundtrip.BorderColor == RenderingDevice.SamplerBorderColor.FloatOpaqueWhite, "Typed stored metadata roundtrip.");
         for (var i = 1; i < bytes.Length; i++)
         {
             var truncated = bytes.AsSpan(0, i).ToArray(); Reject<Exception>(() => target.SetValue(restored, truncated));
@@ -47,7 +50,7 @@ internal static partial class ShaderSamplerChecks
         using var unchanged = restored.GetTextureSamplerState("TEXTURE")!; Check(unchanged.MinLOD == 1, "Malformed metadata preserves the previous table.");
         using var invalid = new RDSamplerState { MaxLOD = -1 };
         Reject<ArgumentException>(() => shader.SetTextureSamplerState("TEXTURE", invalid));
-        invalid.MaxLOD = 1; invalid.RepeatU = RenderingDevice.SamplerRepeatMode.ClampToBorder;
+        invalid.MaxLOD = 1; invalid.RepeatU = RenderingDevice.SamplerRepeatMode.MirrorClampToEdge;
         Reject<NotSupportedException>(() => shader.SetTextureSamplerState("TEXTURE", invalid));
         invalid.RepeatU = RenderingDevice.SamplerRepeatMode.ClampToEdge; invalid.EnableCompare = true;
         Reject<NotSupportedException>(() => shader.SetTextureSamplerState("TEXTURE", invalid));

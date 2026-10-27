@@ -67,7 +67,8 @@ internal static class RenderingDeviceTextureTests
         Reject<ArgumentException>(() => device.TextureUpdate(texture, 0, new byte[9]));
         Reject<ArgumentException>(() => device.TextureCreate(format, view, [a]));
         view.SwizzleR = RenderingDevice.TextureSwizzle.B; var mapped = device.TextureCreate(format, view, [a, b]); Check(device.TextureGetData(mapped, 0).SequenceEqual(a), "Component views preserve stored pixels."); device.FreeRID(mapped); view.SwizzleR = RenderingDevice.TextureSwizzle.R;
-        using var sampler = new RDSamplerState { RepeatU = RenderingDevice.SamplerRepeatMode.ClampToBorder }; Reject<NotSupportedException>(() => device.SamplerCreate(sampler));
+        using var sampler = new RDSamplerState { RepeatU = RenderingDevice.SamplerRepeatMode.ClampToBorder }; var border = device.SamplerCreate(sampler); device.FreeRID(border);
+        sampler.RepeatU = RenderingDevice.SamplerRepeatMode.MirrorClampToEdge; Reject<NotSupportedException>(() => device.SamplerCreate(sampler));
 
         device.ComputeListBegin(); Reject<InvalidOperationException>(() => device.TextureUpdate(texture, 0, a)); device.ComputeListEnd();
         using (var other = RenderingServer.CreateLocalRenderingDevice()) Reject<ArgumentException>(() => other.TextureGetData(texture, 0));
