@@ -42,3 +42,5 @@ through the pinned dynapi table, leaving all ordinary native operations intact.
 It is test-only and is not linked into this producer.
 
 `e2d_render_limits` uses ABI 1 and exactly 37 uint64 output elements. It reads the immutable selected Vulkan physical-device limits without allocation, submission or waiting. Invalid pointers/count/ABI return -1; unsupported core/revision/driver returns 0; success returns 1. Failure leaves output untouched. Slots 11/13/14 are zero for excluded image roles. Managed code applies the executing profile and logical descriptor remapping; packages must carry this export with the existing three exports.
+
+The Linux test_fp64_mask.c SDL3_DYNAMIC_API shim refuses shaderFloat64 feature requests while delegating ordinary device creation. DeviceFP64.Consumer unavailable verifies explicit FP64 refusal and executing float32 fallback. It is a development fixture, never packaged with the runtime. See the [FP64 contract](../../docs/components/local-compute.md#native-fp64-arithmetic-and-data).

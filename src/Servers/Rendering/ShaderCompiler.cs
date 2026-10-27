@@ -24,6 +24,7 @@ internal static unsafe partial class ShaderCompiler
 
     internal static nint CreateComputePipeline(nint device, byte[] code) => Run(() =>
     {
+        ShaderPrecision.ValidateNative(device, code);
         if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.MSL) != 0 && NeedsBufferSizes(code))
             throw new NotSupportedException("This compute consumer must bind its physical buffer-size table.");
         fixed (byte* pointer = code)
@@ -75,6 +76,7 @@ internal static unsafe partial class ShaderCompiler
 
     internal static nint CreateShader(nint device, byte[] code, bool fragment, bool sizedPoints = false) => Run(() =>
     {
+        ShaderPrecision.ValidateNative(device, code);
         CanvasPointProgram.ValidateNative(code, fragment, SDL.GetGPUDeviceDriver(device) ?? "", sizedPoints);
         fixed (byte* pointer = code)
         {

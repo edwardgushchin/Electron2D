@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Specialization(int Kind, uint Bits);
+    private readonly record struct Specialization(int Kind, ulong Bits);
     private static Dictionary<uint, Specialization> CaptureSpecialization(ReadOnlySpan<RDPipelineSpecializationConstant> constants)
     {
         var result = new Dictionary<uint, Specialization>();
@@ -18,7 +18,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private sealed class SpecializationModule
     {
-        private sealed record Value(uint Type, uint Bits, Value[]? Elements = null);
+        private sealed record Value(uint Type, ulong Bits, Value[]? Elements = null);
         private readonly List<uint[]> _instructions = [];
         private readonly Dictionary<uint, uint[]> _types = [], _constants = [];
         private readonly Dictionary<uint, uint> _specIDs = [];
@@ -56,6 +56,7 @@ public sealed unsafe partial class RenderingDevice
             var t = Type(type); if (Op(t) == 20) return 0;
             if (Op(t) == 21 && t.Length == 4 && t[2] == 32 && t[3] <= 1) return t[3] == 1 ? 1 : 2;
             if (Op(t) == 22 && t.Length == 3 && t[2] == 32) return 3;
+            if (Op(t) == 22 && t.Length == 3 && t[2] == 64) return 4;
             throw new NotSupportedException("Specialization scalar precision requires its native shader adapter.");
         }
         private Value Evaluate(uint id)
@@ -68,8 +69,8 @@ public sealed unsafe partial class RenderingDevice
                 var op = Op(ins); var type = ins[1];
                 if (op is 41 or 42 or 43 or 48 or 49 or 50)
                 {
-                    var kind = Kind(type); if ((kind == 0 ? ins.Length != 3 : ins.Length != 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
-                    uint bits = op is 41 or 48 ? 1u : op is 42 or 49 ? 0u : ins[3];
+                    var kind = Kind(type); if (ins.Length != (kind == 0 ? 3 : kind == 4 ? 5 : 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
+                    ulong bits = op is 41 or 48 ? 1ul : op is 42 or 49 ? 0ul : ins[3] | (kind == 4 ? (ulong)ins[4] << 32 : 0);
                     if (op is 48 or 49 or 50 && _specIDs.TryGetValue(id, out var external) && _overrides.TryGetValue(external, out var replacement))
                     { if (replacement.Kind != kind) throw new ArgumentException("Specialization value type does not match its module declaration."); bits = replacement.Bits; _used.Add(external); }
                     value = new(type, bits);
@@ -98,7 +99,7 @@ public sealed unsafe partial class RenderingDevice
                 return t[2..];
             }
             if (Op(t) is not (23 or 24 or 28) || t.Length != 4) throw new ArgumentException("A specialization aggregate requires a bounded element type.");
-            var count = Op(t) == 28 ? Evaluate(t[3]).Bits : t[3];
+            var count = Op(t) == 28 ? Word(Evaluate(t[3])) : t[3];
             if (count is 0 or > 1_048_576 || (_aggregateValues += checked((int)count)) > 1_048_576) throw new ArgumentException("Specialization aggregates exceed the module value bound.");
             return Enumerable.Repeat(t[2], (int)count).ToArray();
         }
@@ -135,7 +136,24 @@ public sealed unsafe partial class RenderingDevice
         }
         private Value Scalar(uint type, uint op, Value[] operands)
         {
-            uint A(int n) => n < operands.Length && operands[n].Elements is null ? operands[n].Bits : throw new ArgumentException("Invalid specialization scalar operands.");
+            if (op == 115)
+            {
+                var sourceKind = Kind(operands[0].Type); var resultKind = Kind(type); var sourceBits = operands[0].Bits;
+                var converted = (sourceKind, resultKind) switch
+                {
+                    (3, 3) or (4, 4) => sourceBits,
+                    (3, 4) => BitConverter.DoubleToUInt64Bits(BitConverter.UInt32BitsToSingle((uint)sourceBits)),
+                    (4, 3) => BitConverter.SingleToUInt32Bits((float)BitConverter.UInt64BitsToDouble(sourceBits)),
+                    _ => throw new NotSupportedException("Specialization conversion requires supported floating-point types.")
+                };
+                return new(type, converted);
+            }
+            if (Kind(type) == 4)
+            {
+                if (op == 169) return new(type, operands[0].Bits != 0 ? operands[1].Bits : operands[2].Bits);
+                throw new NotSupportedException("This double specialization operation is outside the Shader profile.");
+            }
+            uint A(int n) => n < operands.Length && operands[n].Elements is null ? checked((uint)operands[n].Bits) : throw new ArgumentException("Invalid specialization scalar operands.");
             var a = A(0); uint B() => A(1); uint C() => A(2); uint Bool(bool x) => x ? 1u : 0u;
             uint Shift() { var n = B(); if (n >= 32) throw new ArgumentException("Specialization shift exceeds the scalar width."); return n; }
             uint Div(bool signed, bool remainder, bool modulo)
@@ -147,7 +165,6 @@ public sealed unsafe partial class RenderingDevice
             var bits = op switch
             {
                 113 or 114 => a,
-                115 when Kind(operands[0].Type) == Kind(type) => a,
                 116 => BitConverter.SingleToUInt32Bits((float)(Half)BitConverter.UInt32BitsToSingle(a)),
                 126 => unchecked(0u - a),
                 128 => unchecked(a + B()),
@@ -184,6 +201,11 @@ public sealed unsafe partial class RenderingDevice
             Kind(type); return new(type, bits);
         }
         private uint Fresh() => _next < 1_048_576 ? _next++ : throw new ArgumentException("Specialized module identities exceed the payload bound.");
+        private uint Word(Value value)
+        {
+            if (Kind(value.Type) is not (1 or 2) || value.Bits > uint.MaxValue) throw new ArgumentException("A module dimension requires a 32-bit integer constant.");
+            return (uint)value.Bits;
+        }
         private static void Emit(List<uint> output, uint op, params uint[] operands) { output.Add((uint)(operands.Length + 1) << 16 | op); output.AddRange(operands); }
         private void EmitValue(List<uint> output, uint id, Value value, int depth = 0)
         {
@@ -194,7 +216,8 @@ public sealed unsafe partial class RenderingDevice
                 Emit(output, 44, [value.Type, id, .. ids]);
             }
             else if (Kind(value.Type) == 0) Emit(output, value.Bits != 0 ? 41u : 42u, value.Type, id);
-            else Emit(output, 43, value.Type, id, value.Bits);
+            else if (Kind(value.Type) == 4) Emit(output, 43, value.Type, id, (uint)value.Bits, (uint)(value.Bits >> 32));
+            else Emit(output, 43, value.Type, id, (uint)value.Bits);
         }
         internal byte[] Freeze()
         {
@@ -207,8 +230,8 @@ public sealed unsafe partial class RenderingDevice
                 var op = Op(ins);
                 if (op == 71 && ins.Length == 4 && ins[2] == 1) continue;
                 if (op is >= 48 and <= 52) { EmitValue(output, ins[2], Evaluate(ins[2])); continue; }
-                if (op == 16 && ins.Length == 6 && ins[2] == 17 && workgroup is not null) { Emit(output, 16, ins[1], 17, workgroup[0].Bits, workgroup[1].Bits, workgroup[2].Bits); continue; }
-                if (op == 331 && ins.Length == 6 && ins[2] == 38) { Emit(output, 16, ins[1], 17, Evaluate(ins[3]).Bits, Evaluate(ins[4]).Bits, Evaluate(ins[5]).Bits); continue; }
+                if (op == 16 && ins.Length == 6 && ins[2] == 17 && workgroup is not null) { Emit(output, 16, ins[1], 17, Word(workgroup[0]), Word(workgroup[1]), Word(workgroup[2])); continue; }
+                if (op == 331 && ins.Length == 6 && ins[2] == 38) { Emit(output, 16, ins[1], 17, Word(Evaluate(ins[3])), Word(Evaluate(ins[4])), Word(Evaluate(ins[5]))); continue; }
                 output.AddRange(ins);
             }
             var words = _header.Concat(output).ToArray(); words[3] = _next; return MemoryMarshal.AsBytes(words.AsSpan()).ToArray();

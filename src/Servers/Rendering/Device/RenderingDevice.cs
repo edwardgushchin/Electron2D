@@ -234,7 +234,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or both vertex and fragment.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
-    /// <remarks>Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
+    /// <remarks>FP64 modules require an enabled native Vulkan shaderFloat64 feature, including symbolic templates. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); var program = CaptureDeviceProgram(spirvData, name);
@@ -248,6 +248,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (compute.Length != 0 && (vertex.Length != 0 || fragment.Length != 0)) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
         if (compute.Length != 0 ? spirvData.CompileErrorCompute.Length != 0 : vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0) throw new ArgumentException("Supply successful compute or paired graphics modules.", nameof(spirvData));
         byte[][] sources = compute.Length != 0 ? [compute] : [vertex, fragment];
+        foreach (var source in sources) ShaderPrecision.ValidateNative(Device, source);
         var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
         var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return program;
     }

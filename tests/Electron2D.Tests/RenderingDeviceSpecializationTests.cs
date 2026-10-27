@@ -13,15 +13,15 @@ internal static class RenderingDeviceSpecializationTests
     internal static void Run()
     {
         using var device = RenderingServer.CreateLocalRenderingDevice();
-        Expressions(); ComputeVariants(device); Layout(device); Graphics(device); Canvas();
+        RunManaged(); ComputeVariants(device); Layout(device); Graphics(device); Canvas();
         Console.WriteLine("Native specialization: typed values, dependent constants, workgroups, array layouts, pipeline ownership and zero-allocation recording passed on " + device.GetDeviceName());
     }
-    private static byte[] Freeze(byte[] bytes, Dictionary<uint, (int Kind, uint Bits)>? overrides = null)
+    private static byte[] Freeze(byte[] bytes, Dictionary<uint, (int Kind, ulong Bits)>? overrides = null)
     {
         const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
         var scalar = typeof(RenderingDevice).GetNestedType("Specialization", System.Reflection.BindingFlags.NonPublic)!;
         var dictionary = (System.Collections.IDictionary)Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(typeof(uint), scalar))!;
-        foreach (var pair in overrides ?? []) dictionary.Add(pair.Key, Activator.CreateInstance(scalar, flags, null, [pair.Value.Kind, pair.Value.Bits], null));
+        foreach (var pair in overrides ?? []) dictionary.Add(pair.Key, Activator.CreateInstance(scalar, flags, null, [pair.Value.Kind, (ulong)pair.Value.Bits], null));
         var type = typeof(RenderingDevice).GetNestedType("SpecializationModule", System.Reflection.BindingFlags.NonPublic)!;
         try { var module = Activator.CreateInstance(type, flags, null, [bytes, dictionary, new HashSet<uint>()], null)!; return (byte[])type.GetMethod("Freeze", flags)!.Invoke(module, null)!; }
         catch (System.Reflection.TargetInvocationException error) when (error.InnerException is not null) { System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
@@ -29,9 +29,56 @@ internal static class RenderingDeviceSpecializationTests
     private static void Export(byte[] bytes, ShaderStage stage, string name, Dictionary<uint, (int, uint)> overrides)
     {
         var directory = Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_SPECIALIZATION_OUTPUT"); if (directory is null) return; Directory.CreateDirectory(directory);
-        var frozen = Freeze(bytes, overrides); File.WriteAllBytes(System.IO.Path.Combine(directory, name + "-frozen.spv"), frozen);
+        var frozen = Freeze(bytes, overrides.ToDictionary(p => p.Key, p => (p.Value.Item1, (ulong)p.Value.Item2))); File.WriteAllBytes(System.IO.Path.Combine(directory, name + "-frozen.spv"), frozen);
         var remap = typeof(RenderingDevice).GetMethod("Remap", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         var translated = remap.Invoke(null, [frozen, stage])!; File.WriteAllBytes(System.IO.Path.Combine(directory, name + "-translated.spv"), (byte[])translated.GetType().GetField("Item1")!.GetValue(translated)!);
+    }
+    private static void RunManaged()
+    {
+        Expressions(); Float64Expressions();
+        var parser = typeof(RenderingDevice).Assembly.GetType("Electron2D.ShaderPrecision")!.GetMethod("RequiresFloat64", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        bool Precision(params uint[] instructions)
+        {
+            var code = MemoryMarshal.AsBytes(new uint[] { 0x07230203, 0x10000, 0, 100, 0 }.Concat(instructions).ToArray().AsSpan()).ToArray();
+            try { return (bool)parser.Invoke(null, [code])!; }
+            catch (System.Reflection.TargetInvocationException error) when (error.InnerException is not null) { System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
+        }
+        Check(!Precision(3u << 16 | 22, 1, 32), "Ordinary precision needs no FP64 feature.");
+        Check(Precision(2u << 16 | 17, 10, 3u << 16 | 22, 1, 64), "FP64 type and declaration require native opt-in.");
+        Check(Precision(2u << 16 | 17, 10), "Even unused declared FP64 requires native opt-in.");
+        Reject<ArgumentException>(() => Precision(3u << 16 | 22, 1, 64));
+        Reject<ArgumentException>(() => Precision(0)); Reject<ArgumentException>(() => Precision(3u << 16 | 22, 1));
+        Reject<ArgumentException>(() => Precision(2u << 16 | 22, 1)); Reject<ArgumentException>(() => Precision(3u << 16 | 17, 10, 0));
+        Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 32, 2));
+        foreach (var capability in new uint[] { 8, 9, 11, 12, 22 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
+        foreach (var width in new uint[] { 16, 128 }) Reject<NotSupportedException>(() => Precision(3u << 16 | 22, 1, width));
+        Reject<NotSupportedException>(() => Precision(4u << 16 | 21, 1, 64, 0));
+        Console.WriteLine("PASS precision capability/type and malformed/truncated instruction guards.");
+    }
+    private static void Float64Expressions()
+    {
+        var words = new List<uint> { 0x07230203, 0x10000, 0, 1000, 0 };
+        void Emit(uint op, params uint[] args) { words.Add((uint)(args.Length + 1) << 16 | op); words.AddRange(args); }
+        Emit(17, 10); Emit(20, 1); Emit(22, 2, 32); Emit(22, 3, 64); Emit(23, 4, 3, 2);
+        Emit(71, 10, 1, 7); Emit(50, 3, 10, 1, 0x3ff00000); Emit(48, 1, 11); Emit(50, 2, 12, BitConverter.SingleToUInt32Bits(1.25f));
+        Emit(52, 3, 13, 115, 12); Emit(52, 2, 14, 115, 10); Emit(52, 3, 15, 169, 11, 10, 13);
+        Emit(51, 4, 16, 10, 13); Emit(52, 3, 17, 81, 16, 1); Emit(52, 4, 18, 169, 11, 16, 16); Emit(52, 3, 19, 81, 18, 0);
+        byte[] Bytes() => MemoryMarshal.AsBytes(words.ToArray().AsSpan()).ToArray();
+        Dictionary<uint, ulong> Results(byte[] code)
+        {
+            var data = MemoryMarshal.Cast<byte, uint>(code.AsSpan()); var result = new Dictionary<uint, ulong>();
+            for (var at = 5; at < data.Length; at += (int)(data[at] >> 16)) if ((data[at] & 65535) == 43) result[data[at + 2]] = data[at + 3] | ((data[at] >> 16) == 5 ? (ulong)data[at + 4] << 32 : 0);
+            return result;
+        }
+        var normal = Results(Freeze(Bytes())); Check(normal[10] == 0x3ff0000000000001 && normal[13] == BitConverter.DoubleToUInt64Bits(1.25) && normal[14] == BitConverter.SingleToUInt32Bits(1) && normal[15] == normal[10] && normal[17] == normal[13] && normal[19] == normal[10], "Double defaults, float conversions, vector composites/extraction and selection freeze exactly.");
+        foreach (var bits in new ulong[] { 0, 0x8000000000000000, 0x3ff0000000000001, 0x7ff0000000000000, 0xfff0000000000000, 0x7ff8123456789abc })
+        {
+            var result = Results(Freeze(Bytes(), new() { [7] = (4, bits) })); Check(result[10] == bits && result[15] == bits && result[19] == bits, "Double overrides preserve both words, signed zero and NaN payload through selection/composites.");
+        }
+        Reject<ArgumentException>(() => Freeze(Bytes(), new() { [7] = (3, 0) }));
+        Emit(50, 3, 20, 0); Reject<ArgumentException>(() => Freeze(Bytes())); words.RemoveRange(words.Count - 4, 4);
+        Emit(50, 3, 20, 0, 0, 0); Reject<ArgumentException>(() => Freeze(Bytes()));
+        Console.WriteLine("PASS double scalar/composite constants, bidirectional float conversion, exact overrides and malformed literal widths.");
     }
     private static void Expressions()
     {
@@ -74,7 +121,7 @@ internal static class RenderingDeviceSpecializationTests
         using var empty = new RDPipelineSpecializationConstant<int>(); Check(empty.Value is null && empty.ConstantID == 0, "Typed specialization preserves unassigned value and identifier defaults.");
         var property = (PropertyDescriptor<RDPipelineSpecializationConstant<int>, int?>)empty.GetPropertyList().Single(p => p.Name == "Value"); empty.Value = 7; Check(property.GetValue(empty) == 7 && empty.PropertyCanRevert(property), "Nullable scalar metadata exposes assigned value."); empty.RevertProperty(property); Check(empty.Value is null, "Metadata reverts to unassigned value.");
         Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [empty]));
-        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<double>());
+        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<long>());
         Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias, bias]));
         bias.ConstantID = 3; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias])); bias.ConstantID = -1; Reject<ArgumentOutOfRangeException>(() => device.ComputePipelineCreate(shader, [bias])); bias.ConstantID = 90; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias]));
         group.Value = 0; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [group])); group.Value = 1025; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [group]));

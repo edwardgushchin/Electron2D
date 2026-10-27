@@ -28,6 +28,7 @@ internal static unsafe partial class ShaderCompiler
     {
         if ((SDL.GetGPUShaderFormats(device) & SDL.GPUShaderFormat.MSL) == 0 || !NeedsBufferSizes(code))
             return (CreateComputePipeline(device, code), default);
+        ShaderPrecision.ValidateNative(device, code);
         var translated = PrepareComputeMSL(code);
         var bytes = Encoding.UTF8.GetBytes(translated.Source);
         fixed (byte* source = bytes)

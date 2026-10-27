@@ -566,3 +566,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Native format filter support](../components/format-filter-support.md) connects shared physical-device capabilities to adaptive filter choice and explicit configured device/canvas/particle/blit bindings.
 
 [Native mirror-clamp](../components/sampler-mirror-clamp.md) adds negotiated per-axis addressing to the shared device/canvas sampler path, with ordinary-device fallback and explicit unsupported-capability failures.
+
+[Native FP64 arithmetic and data](../components/local-compute.md#native-fp64-arithmetic-and-data) now connect double compute/vertex/fragment work, raw buffers, original push layouts and typed specialization to optional Vulkan feature negotiation. The public API family remains unchanged; unsupported feature requests preserve ordinary device creation. Compiler, format and platform limits remain explicit.

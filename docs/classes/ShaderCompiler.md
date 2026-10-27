@@ -1,6 +1,6 @@
 # ShaderCompiler
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 - Declaration: `internal static unsafe class ShaderCompiler`
 - Source: [ShaderCompiler.cs](../../src/Servers/Rendering/ShaderCompiler.cs)
@@ -101,3 +101,5 @@ Authored light programs retain validated function/state IDs, full validation cod
 ## Canvas point integration
 
 See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.
+
+Native creation checks [ShaderPrecision](ShaderPrecision.md) before shadercross translation, including the specialized Metal buffer-size path; FP64 requires an actually enabled Vulkan feature.

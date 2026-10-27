@@ -5,6 +5,7 @@ namespace Electron2D;
 internal static unsafe class GPUDeviceFactory
 {
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
+    internal const string Float64Property = "Electron2D.gpu.shader_float64";
     private static readonly object Gate = new();
     private static SharedDevice? _shared;
 
@@ -96,7 +97,7 @@ internal static unsafe class GPUDeviceFactory
         return (device, relaxed, driver == "metal" || driver == "vulkan" && sized);
     }
 
-    private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed)
+    private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed, bool float64 = true)
     {
         var props = SDL.CreateProperties();
         if (props == 0) throw new InvalidOperationException("GPU device properties could not be created: " + SDL.GetError());
@@ -114,8 +115,9 @@ internal static unsafe class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints is field 16.
+            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64 are fields 16/39.
             Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
+            features[39] = float64 ? 1u : 0u;
             fixed (uint* pointer = features)
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
             {
@@ -123,20 +125,22 @@ internal static unsafe class GPUDeviceFactory
                 var options = new SDL.GPUVulkanOptions { VulkanApiVersion = 1u << 22, Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
                     throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
-                var device = SDL.CreateGPUDeviceWithProperties(props);
-                if (device != 0)
+                var device = SDL.CreateGPUDeviceWithProperties(props); var mirror = device != 0;
+                if (device == 0)
                 {
-                    if (SDL.GetGPUDeviceDriver(device) == "vulkan" && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true))
-                    {
-                        var error = SDL.GetError();
-                        SDL.DestroyGPUDevice(device);
-                        throw new InvalidOperationException("GPU sampler capabilities could not be retained: " + error);
-                    }
-                    return device;
+                    // Optional features must not prevent ordinary device creation.
+                    options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0;
+                    device = SDL.CreateGPUDeviceWithProperties(props);
                 }
-                // An optional sampler extension must not prevent ordinary device creation.
-                options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0;
-                return SDL.CreateGPUDeviceWithProperties(props);
+                if (device == 0) return float64 ? Attempt(formats, sizedPoints, relaxed, false) : 0;
+                if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
+                    (mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
+                     float64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Float64Property, true)))
+                {
+                    var error = SDL.GetError(); SDL.DestroyGPUDevice(device);
+                    throw new InvalidOperationException("GPU capabilities could not be retained: " + error);
+                }
+                return device;
             }
         }
         finally { SDL.DestroyProperties(props); }
