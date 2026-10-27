@@ -107,3 +107,7 @@ EngineBeforeFrameTests verifies all six new overloads on real local GPU/Compatib
 [Host delta smoothing](host-delta-smoothing.md) connects OS/project policy and effective native VSync to the ordinary owned clock before fixed-step synchronization. Manual and fixed movie input remain explicit; FPS, diagnostics and pacing use measured time.
 
 [Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.
+
+The existing lifecycle owner now publishes and retires the diagnostic main-thread
+role observed by OS.GetThreadCallerID, including failed startup and finalization.
+See [thread identities and native names](os-thread-identity.md) for identity and access boundaries.

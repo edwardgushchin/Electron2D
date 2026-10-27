@@ -1,14 +1,14 @@
 # Host platform queries
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 <a id="adr-0113"></a>
 ## ADR 0113: Retained host identity and feature queries
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 - Status: Accepted
-- Scope: OS platform/CPU/locale/sandbox queries, typed project host tags and renderer feature observations
+- Scope: OS platform/CPU/locale/sandbox queries, thread identities/native naming, typed project host tags and renderer feature observations
 - Preserves: [0004](product.md#adr-0004), [0019](core-data-io.md#adr-0019), [0021](product.md#adr-0021), [0028](rendering.md#adr-0028), [0095](singleton-services.md#adr-0095)
 
 ### Context
@@ -25,10 +25,33 @@ OS and ProjectSettings share normalized, case-insensitive host/build/architectur
 
 RenderingServer.HasOSFeature reports the active ordinary native-image upload profile. Each GPU backend captures complete BC family support after creating its already selected device; compatibility has no native compressed-upload family. Queries reuse immutable session data, require no new device and can run across threads. OS returns false for renderer tags without a published service; the renderer's public operation retains its ordinary active-service requirement. Native capability data retires with the session. CPU decompression support and unrelated SDL device-only image roles do not advertise ordinary canvas native upload support.
 
+### Thread identities and names
+
+OS.GetThreadCallerID exposes process-local engine identity, not a native kernel
+thread number. Ordinary threads have stable distinct identities; the reserved
+main identity is assigned to the actual Engine lifecycle owner before startup
+callbacks. Manual and owned-window hosts share this role. Failed or normal
+retirement clears it before another lifecycle starts; first-use workers and
+rejected competing hosts cannot capture it. Retained native-service owner restrictions
+remain in force across lifecycle changes. Identity grants no additional scene,
+processing-group or native permission. Thread start/join/priority and the unresolved
+thread-safety override remain separate under ADR 0104.
+
+OS.SetThreadName submits the caller's native name through pthread naming on
+Linux/Android/Apple and SetThreadDescription on Windows. Typed exceptions replace
+native error sentinels. Null/embedded NUL input rejects before submission, native
+length limits are preserved without truncation and missing adapters fail explicitly.
+See [thread identity and naming](../components/os-thread-identity.md) for ownership
+and executable verification boundaries.
+
 ### Verification and remaining gates
 
 The public HostPlatform.Consumer checks host metadata, shared and custom tags, typed override selection/save/load, live locale/environment isolation, sandbox boundaries and prepared queries. Its native modes select an actual compressed or fallback texture, draw and capture pixels on each claimed backend/display pair. Root checks cover metadata parsing and related project/environment/process/font/movie contracts. Strict NativeAOT is a separate executable gate. Foreign detailed version/model/sandbox and simulator/browser feature adapters, native allocations, physical GPU, editor and human acceptance remain distinct from the exercised Linux profile.
 
 ### Reference evidence
+
+The pinned [thread identity and main-role implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/os/thread.cpp)
+and [POSIX name submission](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/unix/thread_posix.cpp)
+retain logical identities and native naming failures as distinct contracts.
 
 The pinned [OS feature dispatch](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/os/os.cpp#L471-L644), [Linux metadata and sandbox queries](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/platform/linuxbsd/os_linuxbsd.cpp#L211-L344) and [Unix locale query](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/drivers/unix/os_unix.cpp#L1031-L1042) define the applicable behavior. Exact metadata key parsing avoids matching VERSION_ID or PRETTY_NAME when another field was requested. No comparison engine identity enters production source, XML or the public wiki.

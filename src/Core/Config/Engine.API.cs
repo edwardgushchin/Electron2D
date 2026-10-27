@@ -197,7 +197,8 @@ public sealed partial class Engine
     /// <summary>Attaches and, when necessary, initializes one application loop.</summary>
     /// <param name="mainLoop">The live loop to own until <see cref="Stop"/> completes.</param>
     /// <remarks>
-    /// The calling thread becomes the runtime owner. An uninitialized loop is initialized; an already running loop,
+    /// The calling thread becomes the runtime owner and observes OS.GetMainThreadID through OS.GetThreadCallerID.
+    /// An uninitialized loop is initialized; an already running loop,
     /// including a newly constructed <see cref="SceneTree"/>, is attached without a second initialization. The loop
     /// is not disposed by the engine. During its initialization, <see cref="MainLoop"/> already returns
     /// <paramref name="mainLoop"/>. Active project locale and pseudolocalization settings are sampled before loop attachment;
@@ -229,6 +230,7 @@ public sealed partial class Engine
     /// The loop becomes unavailable through <see cref="MainLoop"/> after finalization returns or throws. The engine
     /// returns to its idle state and may start a different loop. Native audio output and player voice slots are closed even
     /// after finalization fails. The detached loop and borrowed streams are not disposed.
+    /// The caller's ordinary OS thread identity is restored after cleanup, including failed finalization.
     /// </remarks>
     /// <exception cref="InvalidOperationException">The runtime is not running, the caller is not its owner thread, or the call occurs during a frame or lifecycle transition.</exception>
     /// <exception cref="Exception">Loop finalization or audio cleanup throws. Detachment still completes.</exception>

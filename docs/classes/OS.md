@@ -263,6 +263,21 @@ Changes the next measured sample in Engine.Run/RunAsync. Stable effective classi
 
 Thread-safely selects staging for subsequent exact write-only FileAccess opens; false is the process default. Existing streams capture their selection. Flush persists staging, while Close/disposal publishes it. Mixed modes, pipes and independent transformed/configuration commits retain their contracts. See [file save and swap](../components/file-save-and-swap.md) for symlinks, permissions, temporary files, failures and recovery. This is blocking filesystem work.
 
+## Thread identities and names
+
+| Method | Behavior |
+| --- | --- |
+| `public static ulong GetMainThreadID()` | Reserved engine main identity, also available outside an active lifecycle. |
+| `public static ulong GetThreadCallerID()` | Actual lifecycle owner's main identity, otherwise the caller's distinct ordinary identity. |
+| `public static void SetThreadName(string name)` | Submits a native name for the caller; null/NUL and native rejection throw. |
+
+These process-local IDs are opaque engine values and grant no access permission.
+First use on a worker cannot choose the main owner. Manual and windowed Engine
+startup/cleanup publish and retire the role, including failed initialization or
+finalization. Native naming changes no managed Thread.Name and does not truncate
+overlong UTF-8 input. Unsupported profiles fail explicitly. See the
+[complete behavior and verification](../components/os-thread-identity.md).
+
 ## Host identity and feature queries
 
 Sources: [OS.Host.cs](../../src/Core/OS/OS.Host.cs), [OS.Features.cs](../../src/Core/OS/OS.Features.cs). All operations are static on the retained process service.

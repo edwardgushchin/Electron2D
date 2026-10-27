@@ -73,6 +73,7 @@ public sealed partial class Engine
     {
         Volatile.Write(ref _writeMoviePath, "");
         Volatile.Write(ref _mainLoop, null);
+        OS.SetMainThreadOwner(0);
         Volatile.Write(ref _runtimeOwnerThreadId, 0);
         Volatile.Write(ref _applicationRun, 0);
         Volatile.Write(ref _runtimeState, RuntimeIdle);
@@ -87,6 +88,7 @@ public sealed partial class Engine
         }
         if (Interlocked.CompareExchange(ref _runtimeOwnerThreadId, Environment.CurrentManagedThreadId, 0) != 0)
             throw new InvalidOperationException("The window run already has an owner thread.");
+        OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
         Volatile.Write(ref _writeMoviePath, moviePath ?? "");
         SceneTree? tree = null;
         MovieRecording? movie = null;

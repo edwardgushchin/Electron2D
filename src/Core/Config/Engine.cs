@@ -185,6 +185,7 @@ public sealed partial class Engine : ElectronObject
             throw new InvalidOperationException("The engine already has an active MainLoop lifecycle.");
 
         Volatile.Write(ref _runtimeOwnerThreadId, Environment.CurrentManagedThreadId);
+        OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
         Volatile.Write(ref _mainLoop, mainLoop);
 
         try
@@ -200,6 +201,7 @@ public sealed partial class Engine : ElectronObject
         {
             if (Volatile.Read(ref _applicationRun) == 0) RuntimeDiagnostics.Instance.ReportException(error);
             Volatile.Write(ref _mainLoop, null);
+            OS.SetMainThreadOwner(0);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
             Volatile.Write(ref _runtimeState, RuntimeIdle);
             throw;
@@ -328,6 +330,7 @@ public sealed partial class Engine : ElectronObject
         finally
         {
             Volatile.Write(ref _mainLoop, null);
+            OS.SetMainThreadOwner(0);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
             Volatile.Write(ref _runtimeState, RuntimeIdle);
         }

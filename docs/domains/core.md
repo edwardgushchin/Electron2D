@@ -264,6 +264,13 @@ Engine.GetFramesDrawn now accounts for completed [native canvas intervals](../co
 
 OS restart-on-exit configuration is a process-wide, desktop-only request with a copied literal argument list. SetRestartOnExit atomically replaces both values; IsRestartOnExitSet reads the flag and GetRestartOnExitArguments returns an independent array, including while disabled. Invalid Unicode, NUL or null elements fail before publication. A single normal managed process-shutdown handler captures the final request and uses CreateInstance. A standalone host must finish its loop cleanup and return; stopping a borrowed loop or returning from Engine.Run alone does not exit its host. The replacement process starts with disabled restart state. Failed native launch reports to standard error and preserves the original exit code; crashes and forced termination do not guarantee shutdown callbacks.
 
+## Thread diagnostic identity
+
+[OS thread identities and names](../components/os-thread-identity.md) connect the
+actual Engine lifecycle owner and ordinary worker callers to process-local IDs.
+Native naming targets only the caller. Identity and diagnostic metadata grant no
+scene access; the separate Thread execution/safety contract remains pending.
+
 ## Managed synchronization
 
 [Mutex](../classes/Mutex.md) and [Semaphore](../classes/Semaphore.md) are caller-owned synchronization primitives over the worker foundation. Their recursive critical sections, counted signals, typed failures and joined cleanup support actual worker-to-scene publication; they grant no thread-affine scene or renderer access. See [synchronization](../components/synchronization.md) and ADR 0104.
