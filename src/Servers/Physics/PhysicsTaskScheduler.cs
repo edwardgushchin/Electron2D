@@ -14,6 +14,8 @@ internal sealed class PhysicsTaskScheduler : IDisposable
     private readonly record struct Work(b2TaskCallback Callback, object Context, int Start, int End, Job Parent);
     private Job[] _jobs = [];
     private Queue<Work>[] _queues = [];
+    // A first contended monitor can allocate after otherwise completed warmup.
+    private SpinLock[] _queueGates = [];
     private AutoResetEvent[] _wake = [];
     private Thread[] _threads = [];
     private B2World? _world;
@@ -31,9 +33,10 @@ internal sealed class PhysicsTaskScheduler : IDisposable
     private void StartWorkers()
     {
         if (_threads.Length != 0) return;
-        // ponytail: 64 retained handles cover the backend task graph; increase after a measured exhaustion.
+        // shortcut: 64 retained jobs bound the task graph; grow after a measured exhaustion.
         _jobs = Enumerable.Range(0, 64).Select(_ => new Job()).ToArray();
-        _queues = Enumerable.Range(0, WorkerCount).Select(_ => new Queue<Work>(16)).ToArray();
+        _queues = Enumerable.Range(0, WorkerCount).Select(_ => new Queue<Work>(_jobs.Length)).ToArray();
+        _queueGates = Enumerable.Range(0, WorkerCount).Select(_ => new SpinLock(false)).ToArray();
         _wake = Enumerable.Range(0, WorkerCount).Select(_ => new AutoResetEvent(false)).ToArray();
         _threads = new Thread[WorkerCount];
         for (int i = 0; i < WorkerCount; ++i)
@@ -64,7 +67,9 @@ internal sealed class PhysicsTaskScheduler : IDisposable
         {
             int index = (queue + i) % WorkerCount;
             var work = new Work(task, taskContext, itemCount * i / parts, itemCount * (i + 1) / parts, job);
-            lock (_queues[index]) _queues[index].Enqueue(work);
+            bool taken = false;
+            try { _queueGates[index].Enter(ref taken); _queues[index].Enqueue(work); }
+            finally { if (taken) _queueGates[index].Exit(); }
             _wake[index].Set();
         }
         return job;
@@ -111,7 +116,9 @@ internal sealed class PhysicsTaskScheduler : IDisposable
             while (true)
             {
                 Work work;
-                lock (_queues[index]) if (!_queues[index].TryDequeue(out work)) break;
+                bool taken = false;
+                try { _queueGates[index].Enter(ref taken); if (!_queues[index].TryDequeue(out work)) break; }
+                finally { if (taken) _queueGates[index].Exit(); }
                 try { work.Callback(work.Start, work.End, (uint)index, work.Context); }
                 catch (Exception ex)
                 {

@@ -7,7 +7,7 @@ internal static class PhysicsParallelTests
 {
     internal static void Run()
     {
-        if (!OperatingSystem.IsBrowser()) { VerifyScheduler(); VerifyUnboundRanges(); }
+        RunScheduler();
         var owner = Environment.CurrentManagedThreadId;
         using var circle = new CircleShape { Radius = 6 };
         using var floorShape = new RectangleShape { Size = new(800, 18) };
@@ -35,6 +35,82 @@ internal static class PhysicsParallelTests
         foreach (var body in bodies) body.Freeze = false;
         tree.PhysicsFrame(1d / 144);
         Check(world.workerCount == (OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount)), "Wakeup restores parallel solving.");
+    }
+
+    internal static void RunScheduler()
+    {
+        if (OperatingSystem.IsBrowser()) return;
+        VerifyLateQueueContention(); VerifyQueueCapacity(); VerifyScheduler(); VerifyUnboundRanges();
+    }
+
+    private static void VerifyQueueCapacity()
+    {
+        using var scheduler = new PhysicsTaskScheduler(3); using var release = new ManualResetEvent(false);
+        int started = 0, completed = 0;
+        b2TaskCallback callback = (_, _, _, _) => { Interlocked.Increment(ref started); release.WaitOne(); Interlocked.Increment(ref completed); };
+        var jobs = new object[64]; jobs[0] = scheduler.Enqueue(callback, 3, 1, scheduler, null!);
+        var threads = (Thread[])typeof(PhysicsTaskScheduler).GetField("_threads", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(scheduler)!;
+        try
+        {
+            Check(SpinWait.SpinUntil(() => Volatile.Read(ref started) == 3 && threads.All(thread => (thread.ThreadState & System.Threading.ThreadState.WaitSleepJoin) != 0), 10000), "Each worker is held outside its queue gate before saturation.");
+            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 1; i < jobs.Length; i++) jobs[i] = scheduler.Enqueue(callback, 3, 1, scheduler, null!);
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(owner == 0 && all == 0, $"A full retained task graph allocates {owner}/{all} bytes while enqueueing.");
+            try { scheduler.Enqueue(callback, 3, 1, scheduler, null!); throw new Exception("Task exhaustion was ignored."); }
+            catch (InvalidOperationException error) when (error.Message == "Physics task storage exhausted.") { }
+            release.Set(); foreach (var job in jobs) scheduler.Finish(job, null!);
+            Check(completed == 192, "Every saturated range completes once after the queue is released.");
+            scheduler.Finish(scheduler.Enqueue(callback, 3, 1, scheduler, null!), null!);
+            Check(completed == 195, "Exhausted task storage remains reusable after the complete join.");
+            Console.WriteLine("All 64 retained task slots enqueue without queue growth or managed allocation.");
+        }
+        finally { release.Set(); scheduler.Drain(); }
+    }
+
+    private static void VerifyLateQueueContention()
+    {
+        _ = AppContext.BaseDirectory;
+        using var scheduler = new PhysicsTaskScheduler(3);
+        const System.Reflection.BindingFlags fields = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+        typeof(PhysicsTaskScheduler).GetMethod("StartWorkers", fields)!.Invoke(scheduler, null);
+        typeof(PhysicsTaskScheduler).GetField("_nextQueue", fields)!.SetValue(scheduler, 1);
+        var gates = (SpinLock[])typeof(PhysicsTaskScheduler).GetField("_queueGates", fields)!.GetValue(scheduler)!;
+        var threads = (Thread[])typeof(PhysicsTaskScheduler).GetField("_threads", fields)!.GetValue(scheduler)!;
+        b2TaskCallback callback = static (_, _, _, state) => Interlocked.Increment(ref ((int[])state)[0]);
+        var values = new int[1];
+        // Prepare callback state without touching the first queue's gate.
+        for (var i = 0; i < 2; i++) scheduler.Finish(scheduler.Enqueue(callback, 1, 1, values, null!), null!);
+        Check(SpinWait.SpinUntil(() => threads.All(thread => (thread.ThreadState & System.Threading.ThreadState.WaitSleepJoin) != 0), 10000), "Scheduler workers park before delayed contention.");
+        var ownerThread = Thread.CurrentThread; int held = 0, armed = 0, finished = 0, timedOut = 0;
+        var holder = new Thread(() =>
+        {
+            var limit = System.Diagnostics.Stopwatch.GetTimestamp() + System.Diagnostics.Stopwatch.Frequency * 10;
+            bool taken = false;
+            try
+            {
+                gates[0].Enter(ref taken); Volatile.Write(ref held, 1);
+                while (Volatile.Read(ref finished) == 0 && (Volatile.Read(ref armed) == 0 || (ownerThread.ThreadState & System.Threading.ThreadState.WaitSleepJoin) == 0))
+                {
+                    if (System.Diagnostics.Stopwatch.GetTimestamp() >= limit) { Volatile.Write(ref timedOut, 1); break; }
+                    Thread.SpinWait(1);
+                }
+            }
+            finally { if (taken) gates[0].Exit(); }
+            while (Volatile.Read(ref finished) == 0) Thread.SpinWait(1);
+        });
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); GC.WaitForPendingFinalizers();
+        long owner = 0, all = 0; holder.Start();
+        try
+        {
+            Check(SpinWait.SpinUntil(() => Volatile.Read(ref held) != 0, 10000), "A delayed worker owns the fresh queue gate.");
+            owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+            Volatile.Write(ref armed, 1); scheduler.Finish(scheduler.Enqueue(callback, 1, 1, values, null!), null!);
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        }
+        finally { Volatile.Write(ref finished, 1); holder.Join(); }
+        Console.WriteLine($"First contended scheduler enqueue: {owner}/{all} B.");
+        Check(timedOut == 0 && values[0] == 3 && owner == 0 && all == 0, "A preempted worker causes no first-contention allocation and all queued work still completes.");
     }
 
     private static void VerifyScheduler()

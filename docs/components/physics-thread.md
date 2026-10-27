@@ -40,6 +40,10 @@ locks/arenas/context are released, and further queries or steps reject. Validati
 before native solving retains its existing correction/retry semantics. Disposal
 joins the numerical thread before retiring solver attachments, even after failure.
 
+## Retained worker queue gates
+
+The CPU solver and GPU host contact decoder share [PhysicsTaskScheduler](../classes/PhysicsTaskScheduler.md). Its internal worker count and the separate numerical-thread setting retain their existing meanings. Each retained job contributes at most one queued record to each worker, so queues reserve the job-pool capacity before dispatch. Enqueue/dequeue use short SpinLock gates; callbacks and all waits run outside them. Delayed contention therefore adds no monitor-inflation allocation after an uncontended warmup. Range partitioning, worker identities, cancellation, joined failures and disposal retain their existing contract. See [causal allocation evidence](physics-allocation-measurement.md#late-worker-queue-contention-2026-10-27).
+
 ## Verification and remaining gates
 
 ### Complete setting contract, 2026-10-21

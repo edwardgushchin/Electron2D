@@ -468,7 +468,10 @@ chain with 184/184 owner/all-thread bytes after four zero-byte cases. Its CPU
 solver was unchanged. This interval remains unaccepted and unattributed; the
 separate-lane full suite and focused owner accuracy pair passed, but do not
 explain or erase that failure. The frozen executable and receipt remain under
-`native-final/` and `native-full-cpu/` in the evidence directory below.
+`native-final/` and `native-full-cpu/` in the evidence directory below. The later
+[controlled worker-queue attribution](physics-allocation-measurement.md#late-worker-queue-contention-2026-10-27)
+reproduces a matching first-contention producer and removes it without rewriting
+this historical failed interval.
 
 Source snapshots, embedded SPIR-V hashes, the intentional regression failure and
 immutable runtime cohorts are retained under ignored
