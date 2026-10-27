@@ -1,5 +1,7 @@
 # Maintaining the Electron2D contract
 
+For registered extension-class changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and [the module component](components/extensions.md). Keep factory/source/copy/disposal families coherent, run the public reload consumer on CPU/GPU and the CLR source/native-base check, and distinguish single-load events from batch completion. Compilation alone does not qualify state restoration or the automatic notification.
+
 For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and run the [public consumer](components/extensions.md). Keep typed module initialization/unloading separate from class registration, state rebinding and reload acceptance; storage must never serialize/activate entry callbacks.
 
 Last updated: 2026-10-27

@@ -1170,6 +1170,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_FACTORIES") is { 
     PhysicsScriptFactoryTests.Run(factoryBackend == "gpu" ? PhysicsServer.Backend.GPU : factoryBackend == "cpu" ? PhysicsServer.Backend.CPU : null,
         Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_FACTORIES_THREADED") == "1"); return;
 }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EXTENSION_SOURCE") == "1") { ExtensionSourceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT") == "1") { ScriptTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_VARIATION_CHILD") is { } variationPath) { FontVariationTests.RunChild(variationPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_VARIATION_HOST") == "1") { FontVariationTests.RunHost(); return; }
@@ -1919,6 +1920,7 @@ CodeEditTests.Run();
 RichTextTests.Run();
 FontVariationTests.Run();
 ScriptTests.Run();
+ExtensionSourceTests.Run();
 foreach (var backend in new PhysicsServer.Backend?[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU, null })
     foreach (var threaded in new[] { false, true }) PhysicsScriptFactoryTests.Run(backend, threaded);
 GraphTests.Run();

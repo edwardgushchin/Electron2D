@@ -1054,6 +1054,7 @@ public class Resource : ElectronObject
                 return existing;
 
             var association = source.ConstructionScript;
+            using var extensionConstruction = ExtensionBindings.BeginConstruction(source.GetType());
             if (association is { } sourceScript) association = ((Script)Duplicate(sourceScript.Asset), sourceScript.Type);
             var target = InvokeConstructionFactory(source.CreateDuplicateInstance, out var created, script: association);
             if (target is not null && !created)
@@ -1062,6 +1063,7 @@ public class Resource : ElectronObject
                 _created.Add(target);
 
             target = ValidateTarget(source, target);
+            ExtensionBindings.AttachConstructed(target);
             _duplicates.Add(source, target);
 
             if (source.ResourceLocalToScene)

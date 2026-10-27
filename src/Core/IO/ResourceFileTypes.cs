@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Registration is allocating setup. IDs are ordinal and immutable; file data never loads assemblies,
 /// invokes reflected members or constructs arbitrary CLR types. Register the same schemas before saving and in
 /// every loading process. Factories are direct static delegates and must return fresh exact-type instances.
-/// Threaded loading may invoke factories/codecs concurrently; their preparation must be thread-safe.</remarks>
+/// Threaded loading may invoke ordinary factories/codecs concurrently; their preparation must be thread-safe.
+/// Factories with a registered extension-class dependency require its manager thread and reject worker construction.</remarks>
 public static partial class ResourceFileTypes
 {
     private static object Gate => ResourceLoader.Runtime.FileTypes.Gate;
@@ -267,13 +268,8 @@ public static partial class ResourceFileTypes
         ArgumentNullException.ThrowIfNull(factory);
         if (id.Length > 256 || id.Any(c => char.IsControl(c))) throw new ArgumentException("Type ID is not a portable token.", nameof(id));
         if (factory.Target is not null) throw new ArgumentException("File factories must be static.", nameof(factory));
-        lock (Gate)
-        {
-            if (ByID.ContainsKey(id) || ByType.ContainsKey(typeof(T))) throw new InvalidOperationException("Type or ID is already registered.");
-            var type = new ResourceFileType(id, typeof(T), () => factory());
-            ByID.Add(id, type);
-            ByType.Add(typeof(T), type);
-        }
+        if (ExtensionBindings.IsExtensionRole(typeof(T))) throw new InvalidOperationException("Register extension class shells through their module.");
+        RegisterFactory(new ResourceFileType(id, typeof(T), () => factory()));
     }
     /// <summary>Registers explicit portable encoding for a concrete stored value type.</summary><typeparam name="TValue">Concrete scalar/math/array value type; no delegate, native pointer, node or resource.</typeparam><param name="write">Direct value writer; observes the stream's endian setting.</param><param name="read">Direct value reader with validation.</param><remarks>Built-in codecs cannot be replaced. Application codecs are part of the agreed file schema.</remarks>
     public static void RegisterValueCodec<TValue>(Action<StreamPeerBuffer, TValue> write, Func<StreamPeerBuffer, TValue> read)
@@ -352,12 +348,14 @@ public static partial class ResourceFileTypes
 }
 internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject> create)
 {
+    internal ExtensionClass? ExtensionClass;
     private readonly System.Runtime.CompilerServices.ConditionalWeakTable<ElectronObject, object> _issued = new();
     internal string ID => id;
     internal Type Type => type;
     internal ElectronObject Factory() => Factory(null);
     internal ElectronObject Factory(Script? script)
     {
+        using var creation = ExtensionBindings.BeginConstruction(type);
         var value = ElectronObject.InvokeConstructionFactory(create, out var created,
             script: script is null ? null : (script, type)) ?? throw new InvalidOperationException("File factory returned null.");
         if (!created) throw new InvalidOperationException("File factory returned a pre-existing instance.");
@@ -369,6 +367,12 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
             var error = new InvalidOperationException("File factory must return a fresh exact default type.");
             try { value.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
             throw error;
+        }
+        try { ExtensionBindings.AttachConstructed(value); }
+        catch (Exception error)
+        {
+            try { value.Dispose(); } catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
+            throw;
         }
         return value;
     }

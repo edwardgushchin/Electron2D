@@ -1,5 +1,7 @@
 # Resource
 
+Validated duplication factories also bind registered extension ancestors before copying stored state; executable module captures are recreated by binding and are never copied as ordinary resource state. See [module lifetime](../components/extensions.md).
+
 [Performance.ObjectResourceCount](Performance.Monitor.md) counts current live registered path owners, excluding uncached resources and unregistered aliases.
 
 Last updated: 2026-10-21

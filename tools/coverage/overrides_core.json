@@ -1086,7 +1086,8 @@
       "godot": "Engine::method:is_editor_hint()",
       "electron2d": "property:Electron2D.Engine.IsEditorHint()",
       "reason": "ADR 0015/0090: typed transient IsEditorHint host property, initially false and selected by the actual editor entry point. Atomic configuration/descriptor access, separately launched runtime defaults, five autoplay source families, scoped edited-scene timers and explicit previews execute. Native Stream/Sample PCM and Theora pixels, prepared owner frames, real editor startup and strict source NativeAOT retain hardware, listening, foreign-platform, native-heap and package gates."
-    }
+    },
+    {"godot": "Object::constant:NOTIFICATION_EXTENSION_RELOADED", "electron2d": "constant:Electron2D.ElectronObject.NotificationExtensionReloaded()", "reason": "ADR 0116 registered-class replacement producer restores all surviving state before numeric notification 2; see docs/components/extensions.md."}
   ],
   "extras": [
     {"electron2d": "T:Electron2D.OSMemoryInfo", "reason": "ADR0113: immutable signed byte-valued native host-memory result replaces an untyped result bag; independent unknown fields and native platform semantics are documented.", "adr": "adr-0113"},
@@ -2582,6 +2583,6 @@
         "Engine::method:is_editor_hint()"
       ]
     },
-    {"godot": ["Object::constant:NOTIFICATION_EXTENSION_RELOADED"], "state": "Blocked", "reason": "Trigger: registered extension-class binding/rebinding and state restoration, then the executable reload producer. ADR 0116 now supplies function-loaded module initialization/unloading, without class replacement. The pinned GDExtension::finish_reload resets tracked extension instances, restores all state and only then notifies surviving instances; ordinary C# script classes are not that registry. CLR MetadataUpdateHandler updates alone and manual numeric delivery do not implement this producer. See docs/components/scripting.md#native-extension-reload-boundary."}
+    {"godot": ["Object::constant:NOTIFICATION_EXTENSION_RELOADED"], "state": "Implemented", "reason": "ADR 0116: NotificationExtensionReloaded = 2 is emitted automatically for surviving factory-admitted extension class instances and descendants only after all class bindings and compatible nondefault stored values restore. Weak identities skip removed/disposed owners; ordinary CLR/source updates emit nothing. Public CPU/GPU CLR/NativeAOT physical controls and CLR source/native-base checks exercise the actual producer; docs/components/extensions.md."}
   ]
 }

@@ -24,6 +24,9 @@ public abstract partial class ElectronObject : IDisposable
     /// <summary>Identifies the notification delivered immediately before owned resources are released.</summary>
     public const int NotificationPreDelete = 1;
 
+    /// <summary>Sent after surviving registered extension instances have all been rebound and their stored state restored.</summary>
+    public const int NotificationExtensionReloaded = 2;
+
     private const int Alive = 0;
     private const int Disposing = 1;
     private const int DisposedState = 2;
@@ -315,6 +318,7 @@ public abstract partial class ElectronObject : IDisposable
     /// may access guarded state during pre-delete and cleanup callbacks; every other thread is rejected after disposal starts.
     /// CancelDisposal during automatic pre-delete skips cleanup and restores live state after notification returns.
     /// A later call may retry a vetoed attempt; notification errors still propagate without forcing cleanup.
+    /// Admitted extension instances require the manager thread; their binding clears after veto admission and before owner cleanup.
     /// </remarks>
     /// <exception cref="AggregateException">Both notification delivery and derived cleanup fail.</exception>
     /// <exception cref="Exception">
@@ -328,6 +332,7 @@ public abstract partial class ElectronObject : IDisposable
         if (Volatile.Read(ref _disposeState) != Alive)
             return;
 
+        using var extensionDisposal = ExtensionBindings.BeginDisposal(this);
         ValidateDisposal();
 
         if (Interlocked.CompareExchange(ref _disposeState, PreDeleting, Alive) != Alive)
@@ -355,13 +360,14 @@ public abstract partial class ElectronObject : IDisposable
             if (!canceled)
             {
                 if (this is Node || this is Resource and not Image) RenderingServer.NotifyRenderMutation();
+                disposalError = ExtensionBindings.Detach(this);
                 try
                 {
                     Dispose(disposing: true);
                 }
                 catch (Exception error)
                 {
-                    disposalError = error;
+                    disposalError = disposalError is null ? error : new AggregateException(disposalError, error);
                 }
             }
         }

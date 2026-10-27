@@ -338,6 +338,7 @@ internal sealed class SceneFactoryData(Func<Node> create, Type runtimeType, ulon
 
     internal Node Create(Resource.SceneDuplicationScope resources)
     {
+        using var extensionConstruction = ExtensionBindings.BeginConstruction(RuntimeType);
         var source = Script is null ? null : (Script)resources.Resolve(Script);
         var node = Node.InvokeSceneInstanceFactory(create, source is null ? null : (source, RuntimeType)) ??
                    throw new InvalidOperationException("A scene instance factory returned null.");

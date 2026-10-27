@@ -25,8 +25,8 @@ public sealed partial class Script : Resource
     public string CompiledTypeID { get { lock (_gate) { ThrowIfDisposed(); return _registration?.ID ?? ""; } } }
     /// <summary>Gets the selected compiled CLR type without constructing an instance.</summary><value>Null when unbound.</value>
     public Type? CompiledType { get { lock (_gate) { ThrowIfDisposed(); return _registration?.Type; } } }
-    /// <summary>Reports whether this asset describes an instantiable concrete compiled class.</summary><returns>False for unbound or abstract assets. Required constructor arguments may still be needed.</returns>
-    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false }; } }
+    /// <summary>Reports whether this asset describes a concrete compiled class with its native extension base available.</summary><returns>False for unbound/abstract assets or an unavailable native base. Required constructor arguments may still be needed.</returns>
+    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false } record && ExtensionBindings.CanConstruct(record.Type); } }
     /// <summary>Reports whether source text is nonempty.</summary><returns>Whether SourceCode contains text.</returns>
     public bool HasSourceCode() => SourceCode.Length > 0;
     /// <summary>Reports whether the associated compiled class is abstract.</summary><returns>False when unbound.</returns>
@@ -35,8 +35,8 @@ public sealed partial class Script : Resource
     public bool IsTool() => CompiledType?.IsDefined(typeof(ToolAttribute), inherit: true) ?? false;
     /// <summary>Returns the declared global class name.</summary><returns>The CLR class name with GlobalClassAttribute, or empty.</returns>
     public string GetGlobalName() { var type = CompiledType; return type?.IsDefined(typeof(GlobalClassAttribute), inherit: false) == true ? type.Name : ""; }
-    /// <summary>Returns the first native engine class inherited by the compiled project class.</summary><returns>Native CLR base type, or null when unbound.</returns>
-    public Type? GetInstanceBaseType() { var type = CompiledType?.BaseType; while (type != null && type.Assembly != typeof(Script).Assembly) type = type.BaseType; return type; }
+    /// <summary>Returns the first runtime or registered extension shell inherited by the compiled script class.</summary><returns>Native CLR base role, or null when unbound.</returns>
+    public Type? GetInstanceBaseType() { var type = CompiledType?.BaseType; while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) type = type.BaseType; return type; }
     /// <summary>Loads the directly inherited registered script asset, when the project base class has one.</summary><returns>Borrowed cached base Script, or null for a native/unregistered base.</returns>
     public Script? GetBaseScript() { var type = CompiledType?.BaseType; var record = type == null ? null : FindType(type); return record == null ? null : ResourceLoader.Load<Script>(record.Path); }
     /// <summary>Creates a caller-owned instance through the registered exact factory.</summary><typeparam name="T">Expected compiled Node/Resource role.</typeparam><returns>The actual project class instance.</returns>
@@ -60,6 +60,7 @@ public sealed partial class Script : Resource
     {
         ScriptRegistration record; lock (_gate) { ThrowIfDisposed(); record = _registration ?? throw new InvalidOperationException("The script is unbound."); }
         if (!typeof(T).IsAssignableFrom(record.Type) || record.Type.IsAbstract || constructor == null && record.Factory == null) throw new InvalidOperationException("The script cannot construct the expected role.");
+        using var extensionConstruction = ExtensionBindings.BeginConstruction(record.Type);
         var instance = InvokeConstructionFactory(() => constructor != null ? constructor() : record.Factory!(), out var created,
             script: (this, record.Type));
         if (instance is not null && !created)
@@ -67,7 +68,8 @@ public sealed partial class Script : Resource
         try
         {
             if (instance == null || instance.IsDisposed || instance.GetType() != record.Type) throw new InvalidOperationException("Script factory must return a live exact class instance.");
-            var actual = instance.GetPropertyList().Where(p => p.OwnerType.Assembly != typeof(Script).Assembly).ToArray(); var schema = Properties(record);
+            ExtensionBindings.AttachConstructed(instance);
+            var actual = instance.GetPropertyList().Where(p => p.OwnerType.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(p.OwnerType)).ToArray(); var schema = Properties(record);
             if (actual.Length != schema.Length || actual.Any(p => !schema.Any(s => s.Name == p.Name && s.OwnerType == p.OwnerType && s.ValueType == p.ValueType && s.IsStored == p.IsStored && s.IsReadOnly == p.IsReadOnly))) throw new InvalidOperationException("Constructed script property schema differs from registration.");
             return (T)instance;
         }
@@ -80,7 +82,7 @@ public sealed partial class Script : Resource
     private static PropertyDescriptor[] Properties(ScriptRegistration record)
     {
         var properties = new List<PropertyDescriptor>(); var type = record.Type;
-        while (type != null && type.Assembly != typeof(Script).Assembly) { if (FindType(type) is { } entry) foreach (var property in entry.Properties) if (!properties.Any(p => p.Name == property.Name)) properties.Add(property); type = type.BaseType; }
+        while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) { if (FindType(type) is { } entry) foreach (var property in entry.Properties) if (!properties.Any(p => p.Name == property.Name)) properties.Add(property); type = type.BaseType; }
         return properties.ToArray();
     }
     /// <summary>Returns copied typed project property metadata, including registered script bases.</summary><returns>Descriptors with no untyped access channel.</returns>

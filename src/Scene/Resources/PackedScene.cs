@@ -474,6 +474,7 @@ public sealed partial class PackedScene : Resource
             throw new InvalidOperationException(
                 $"Factory for {stored.Factory.RuntimeType.Name} must return a live default detached node.");
         }
+        ExtensionBindings.AttachConstructed(node);
     }
 
     internal static void RestoreProperties(

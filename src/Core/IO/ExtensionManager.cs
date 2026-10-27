@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <remarks>Mutation belongs to the first mutating caller. Reads use synchronized access and independent address snapshots.
 /// Library-host runtime services are ready through Scene; a load captures Editor when the host's editor hint is set.
 /// Registered-class replacement and file-based module loading are separate workflows.</remarks>
-public sealed class ExtensionManager : ElectronObject
+public sealed partial class ExtensionManager : ElectronObject
 {
     /// <summary>Reports the outcome of an extension registry operation.</summary>
     public enum LoadStatus
@@ -31,8 +31,10 @@ public sealed class ExtensionManager : ElectronObject
     private ExtensionManager() { }
     /// <inheritdoc />
     protected override void ValidateDisposal() => throw new InvalidOperationException("The extension manager has permanent process lifetime.");
-    /// <summary>Occurs after initialization, before path/registry publication.</summary>
-    /// <remarks>Observer failures propagate after publication. A handler can load another path; reentrant mutation of the same path rejects.</remarks>
+    /// <summary>Occurs after initial module setup or completed class replacement.</summary>
+    /// <remarks>First loading precedes path/registry publication. Replacement retains that registration and restores all
+    /// surviving instances before this event. Observer failures propagate after publication. A handler can load another path;
+    /// reentrant mutation of the same path rejects.</remarks>
     public static event Action<Extension>? ExtensionLoaded { add => Service._loaded.Add(value); remove => Service._loaded.Remove(value); }
     /// <summary>Occurs before reverse deinitialization while the module is still registered.</summary>
     /// <remarks>Observer failures do not skip deinitialization or registry retirement.</remarks>
@@ -62,13 +64,12 @@ public sealed class ExtensionManager : ElectronObject
         var published = false; List<Exception>? errors = null;
         try
         {
-            extension = new Extension { Managed = true };
+            extension = new Extension { Managed = true, Entry = initialize };
             var entry = initialize(extension);
             if (entry is null) return LoadStatus.Failed;
             extension.Open(entry.Value);
             extension.InitializeTo(highestLevel);
-            var handlers = owner.BeginEventEmission(owner._loaded.Handlers);
-            try { handlers?.Invoke(extension); } catch (Exception error) { (errors ??= []).Add(error); }
+            EmitLoaded(extension, ref errors);
             extension.ResourcePath = path;
             lock (owner._gate) owner._modules.Add(path, extension);
             published = true;
@@ -118,31 +119,43 @@ public sealed class ExtensionManager : ElectronObject
         {
             if (owner._pending.Contains(path)) throw new InvalidOperationException("The extension address is already transitioning.");
             if (!owner._modules.TryGetValue(path, out extension!)) return LoadStatus.NotLoaded;
+            extension.EnsureNoClassCreation();
+            ExtensionBindings.EnsureRetirement(extension, 0);
             owner._pending.Add(path);
         }
         List<Exception>? errors = null;
         try
         {
-            var handlers = owner.BeginEventEmission(owner._unloading.Handlers);
-            try { handlers?.Invoke(extension); } catch (Exception error) { (errors ??= []).Add(error); }
+            EmitUnloading(extension, ref errors);
             extension.Deinitialize(ref errors);
         }
         finally
         {
             lock (owner._gate) { owner._modules.Remove(path); owner._pending.Remove(path); }
             Volatile.Write(ref extension.Managed, false);
+            extension.DiscardReplacement();
         }
         ThrowErrors(errors); return LoadStatus.Ok;
     }
-    private void EnsureOwner()
+    internal void EnsureOwner()
     {
         var caller = Environment.CurrentManagedThreadId;
         if (Interlocked.CompareExchange(ref _owner, caller, 0) is var previous && previous != 0 && previous != caller)
             throw new InvalidOperationException("Extension mutation requires its loading thread.");
     }
-    private static void ThrowErrors(List<Exception>? errors)
+    internal static void ThrowErrors(List<Exception>? errors)
     {
         if (errors is { Count: 1 }) ExceptionDispatchInfo.Capture(errors[0]).Throw();
         if (errors is not null) throw new AggregateException("Extension lifecycle callbacks failed.", errors);
+    }
+    internal static void EmitLoaded(Extension extension, ref List<Exception>? errors)
+    {
+        try { Service.BeginEventEmission(Service._loaded.Handlers)?.Invoke(extension); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+    }
+    internal static void EmitUnloading(Extension extension, ref List<Exception>? errors)
+    {
+        try { Service.BeginEventEmission(Service._unloading.Handlers)?.Invoke(extension); }
+        catch (Exception error) { (errors ??= []).Add(error); }
     }
 }

@@ -93,11 +93,15 @@ public abstract partial class PropertyDescriptor
     public abstract void Revert(ElectronObject owner);
 
     internal virtual bool ShouldStore(ElectronObject owner) => IsStored;
+    internal virtual bool HasRevertValue => false;
 
     internal virtual Resource? ReadResource(ElectronObject owner) => throw new NotSupportedException($"Property descriptor '{Name}' has no typed resource accessor.");
 
     internal virtual StoredPropertyValue CaptureStoredValue(ElectronObject owner) =>
         throw new NotSupportedException($"Property descriptor '{Name}' does not support scene storage.");
+
+    internal virtual StoredPropertyValue CaptureReloadValue(ElectronObject owner) => CaptureStoredValue(owner);
+    internal virtual bool MatchesStoredValue(ElectronObject owner, StoredPropertyValue value) => false;
 
     internal virtual void RestoreStoredValue(
         ElectronObject owner,
@@ -145,6 +149,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private readonly Func<TOwner, TValue>? _revertValue;
     private readonly Func<TOwner, TValue, bool>? _validator;
     internal Func<TOwner, bool>? StoreCondition { get; init; }
+    internal override bool HasRevertValue => _revertValue is not null;
     internal override bool ShouldStore(ElectronObject owner) => IsStored && (StoreCondition?.Invoke((TOwner)owner) ?? true);
     internal Func<TOwner, TValue>? StoredGetter { get; init; }
     internal Action<TOwner, TValue>? StoredSetter { get; init; }
@@ -260,6 +265,18 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         SetValue(typedOwner, value);
     }
 
+    internal override StoredPropertyValue CaptureReloadValue(ElectronObject owner) =>
+        typeof(Node).IsAssignableFrom(typeof(TValue))
+            ? new StoredLiveNodeReferenceValue(typeof(TValue), (StoredGetter ?? _getter)(GetOwner(owner)) as Node)
+            : CaptureStoredValue(owner);
+
+    internal override bool MatchesStoredValue(ElectronObject owner, StoredPropertyValue value)
+    {
+        var current = (StoredGetter ?? _getter)(GetOwner(owner));
+        if (value is StoredPropertyValue<TValue> typed) return ValuesEqual(current, typed.Value);
+        return value is StoredLiveNodeReferenceValue live && live.TryGetValue<TValue>(out var target) && ValuesEqual(current, target);
+    }
+
     internal override StoredPropertyValue CaptureStoredValue(ElectronObject owner)
     {
         var typedOwner = GetOwner(owner);
@@ -301,6 +318,13 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     {
         ArgumentNullException.ThrowIfNull(value);
         ArgumentNullException.ThrowIfNull(resolveResource);
+
+        if (value is StoredLiveNodeReferenceValue live && live.ValueType == typeof(TValue))
+        {
+            live.TryGetValue<TValue>(out var liveTarget);
+            if (StoredSetter is { } liveSetter) liveSetter(GetOwner(owner), liveTarget); else SetValue(GetOwner(owner), liveTarget);
+            return;
+        }
 
         if (value is StoredNodeReferenceValue reference && reference.ValueType == typeof(TValue) && owner is Node node)
         {
@@ -418,6 +442,20 @@ internal sealed class StoredNodeReferenceValue(Type type, string? path) : Stored
         using var stream = new StreamPeerBuffer(); ResourceFileTypes.Codec<string>().Write(stream, Path!);
         return new(name, ResourceFileTypes.ValueID(ValueType), ResourceFieldRole.Node, false, stream.DataArray, [], false);
     }
+}
+
+internal sealed class StoredLiveNodeReferenceValue(Type type, Node? node) : StoredPropertyValue
+{
+    private readonly WeakReference<Node>? _node = node is null ? null : new(node);
+    internal override Type ValueType => type;
+    internal override bool TryGetValue<TValue>(out TValue value)
+    {
+        var target = _node is not null && _node.TryGetTarget(out var candidate) && !candidate.IsDisposed ? candidate : null;
+        if (target is TValue typed) { value = typed; return true; }
+        value = default!; return target is null && typeof(TValue) == type;
+    }
+    internal override StoredPropertyValue TransformResources(Func<Resource, Resource> transform) => this;
+    internal override MissingResourceData.Field CaptureField(string name) => throw new InvalidOperationException("Live instance references cannot be persisted.");
 }
 
 internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredPropertyValue

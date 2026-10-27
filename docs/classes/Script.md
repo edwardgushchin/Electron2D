@@ -1,5 +1,7 @@
 # Script
 
+Registered extension shells form native bases for script metadata and construction. Their properties/methods are separate from Script declarations; `GetInstanceBaseType` returns the shell, and an unavailable shell makes `CanInstantiate` false. Validated `New`, copy and file factories bind that ancestor while preserving the exact Script association. See [extension class binding](../components/extensions.md#typed-class-binding).
+
 Last updated: 2026-10-27
 
 **Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** —

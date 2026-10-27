@@ -52,16 +52,80 @@ may keep its entry open until ordinary Dispose; no implicit CLR assembly unload 
 claimed. Duplication and files copy only Resource metadata into a closed resource,
 never executable callbacks or a numerical world.
 
+### Registered class binding and replacement
+
+The executable continuation uses typed `RegisterClass<T>` factories plus bind/clear
+callbacks. It reuses ResourceFileTypes identity and fresh exact construction,
+ElectronObject's weak lifetime and PropertyDescriptor storage. A class has one
+module owner; its registered CLR ancestors bind first and clear last. Abstract
+registered parents provide binding without an instantiation factory. Direct CLR
+construction alone does not establish an extension instance. Explicit New and resource/scene factories reuse the same exact-construction
+validation; copy and Script factories also admit registered native ancestors. Registration
+belongs to initialization; factories and replacement belong to the manager owner.
+
+The CLR type is a stable ABI shell. Binding installs typed module functions in
+that shell; clearing retires those functions. This is an explicit extension role,
+separate from ordinary Script classes, and adds no per-frame dispatcher. Replacing
+the CLR type itself requires a restart; source text or ordinary assembly metadata
+changes do not implicitly rebind extension instances. Project callbacks own their
+side effects and must clear every module capture they install.
+
+Replacement reuses the original function loader and Extension resource. It first
+captures nondefault stored properties of affected live instances, including
+registered descendants in other modules. Replacement clears old instance bindings and deinitializes every initialized
+level before reopening the entry. The reopened minimum controls initialization;
+a minimum earlier than the available Scene stage returns NeedsRestart with an
+open but uninitialized entry and retained retry state. Only levels actually
+initialized are later deinitialized. The host availability captured by the first
+load remains independent of this initialized-level set. All surviving class bindings are installed before any
+state restoration; all compatible stored state is restored before notifications.
+Node references use live weak identities, independent of temporary names or
+hierarchy paths; file storage keeps its separate path-based representation.
+Removed classes, IDs transferred to another module, or descendants with missing parents remain cleared and receive
+no reload notification. Removed property names/types are discarded; newly
+introduced/default properties retain the new binding's defaults. Disposed or
+collected owners are skipped at every phase; newly created instances are not old
+instance reload recipients.
+
+Capture failure leaves the old module untouched. A failure after retirement
+attempts cleanup of the replacement and leaves a closed registered resource for
+an explicit retry; it sends no successful reload notification. Arbitrary callback
+side effects are not transactions. Notification/observer failures occur after
+the restored replacement commits and do not revert it. Retry preserves captured
+state. Explicit unloading discards pending replacement state and retires classes.
+The single replacement sends ExtensionUnloading before clearing/deinitialization
+and ExtensionLoaded after successful instance notification. ExtensionsReloaded
+belongs to the explicit host-supplied changed-address batch, once after all
+attempts, including failed/restart-required entries. The batch does not install a
+file watcher or reload ordinary CLR scripts. Attached instance replacement and
+unloading reject during scene lifecycle execution or borrowed physical hooks.
+
 ### Boundaries and continuation
 
-This first executable lifecycle does not implement file/native-library discovery,
-extension class registration/rebinding, live module replacement or reload events.
-Their public operations are absent and their coverage obligations remain open.
-In particular, no NotificationExtensionReloaded is exposed/emitted by ordinary
-C# code updates. The [producer audit](../components/scripting.md#native-extension-reload-boundary)
-still requires class-bound instance restoration before notification. New class
-binding must reuse typed factory/property/identity lifetime mechanisms and define
-removed classes/methods, stale callbacks and partial replacement failure together.
+File/native-library discovery and actual CLR assembly unloading remain absent.
+The typed function loader, stable class shells, instance restoration and reload
+producer execute independently of those file/ABI hosts. Ordinary source edits or
+CLR metadata updates do not automatically send NotificationExtensionReloaded.
+A compiled Script descendant constructed through a validated factory participates
+through its registered extension base; an unrelated CLR instance does not.
+
+Factories bind only after exact fresh construction succeeds, before storage/copy
+restoration or scene activation. Source association still precedes the derived
+constructor; module functions become available when that factory completes.
+Script metadata stops at the native shell and keeps its own source/schema role.
+Removing Node's Scripts flag retains the nearest constructible native shell.
+Weak type-role metadata remembers an unloaded native shell without retaining its
+module/callbacks; missing native bases reject new construction before constructors.
+
+Deterministic disposal of admitted instances uses the manager thread. Validation
+and pre-delete veto precede binding retirement. Committed cleanup clears the
+binding once, even if owner cleanup later fails; clear errors do not skip owner
+cleanup. Collection retains no process-wide strong owner or module capture and
+adds no managed callback on the finalizer thread. Module callbacks remain trusted
+code responsible for native ownership and their own thread/side-effect policy.
+Participating modules cannot retire recursively during capture, rebinding,
+restoration, instance notification or deterministic disposal. Class construction
+rejects during capture/retirement; initialization may construct new instances.
 
 ### Verification
 

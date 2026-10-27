@@ -1112,6 +1112,14 @@ public sealed partial class SceneTree : MainLoop
         base.ValidateFinalization();
     }
 
+    internal void EnsureExtensionReplacement()
+    {
+        EnsureOwnerThread();
+        if (!_constructionComplete || _activeExecution != 0 || _lifecycleExecutionDepth != 0 || _isChangingPause || _sceneChangePreparing)
+            throw new InvalidOperationException("Extension classes can only be replaced between scene lifecycle operations.");
+        EnsureExtensionHierarchyChange();
+    }
+
     /// <inheritdoc />
     /// <remarks>Requires the owner thread and rejects disposal re-entered from a frame, input, flush, lifecycle, pause, scene-change callback or a borrowed physics implementation hook.</remarks>
     /// <exception cref="InvalidOperationException">The caller is not the owner thread, execution is active or a physics implementation borrows the tree.</exception>

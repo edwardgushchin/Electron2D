@@ -128,16 +128,16 @@ CPU runs exclude device discovery; GPU runs map NVIDIA Vulkan with software impl
 
 ## Native extension reload boundary
 
-[The function-loaded lifecycle](extensions.md) now executes under ADR 0116. Registered class/instance rebinding and restoration remain the missing producer boundary.
+[Typed module class registration and replacement](extensions.md) now execute under ADR 0116, including restoration before the automatic extension notification. The rejected CLR-wide experiment below is historical evidence for why that separate producer was required.
 
-`Object.NOTIFICATION_EXTENSION_RELOADED` is an open extension-host dependency.
+`Object.NOTIFICATION_EXTENSION_RELOADED` now has the typed registered-class producer under ADR 0116.
 The pinned [Object constant](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml#L1022)
 applies to extension classes and their descendants. Its automatic producer is
 [GDExtension.finish_reload](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/extension/gdextension.cpp#L925),
 with instances tracked by registered extension class, independently of an attached
 C# Script. The [extension module](../coverage/classes/GDExtension.md) and
-[manager](../coverage/classes/GDExtensionManager.md) remain Blocked on their own
-coverage pages; this inherited notification has the same concrete prerequisite.
+[manager](../coverage/classes/GDExtensionManager.md) retain their separate file-host
+gaps; their typed class replacement now supplies this inherited producer.
 
 Reload invalidates removed method bindings/classes, rebinds surviving instances,
 restores every retained instance's stored state and then sends notification 2.
@@ -166,8 +166,9 @@ source directory used verbose watcher output and a later edit, and succeeded.
 Those outcomes are retained separately; they do not establish why the first edit
 was missed. Only the successful second run proves actual code replacement.
 
-This audit changes the inherited row from Unimplemented to Blocked with the
-specific extension-host trigger. It neither excludes it nor promotes it to
-Implemented. Live SetScript/ScriptChanged and Script implementation reload remain
-distinct open workflows under ADR 0091. The current physics ledger remains
-1362/1369 (99.49%), seven open (five Partial, two Blocked), 92 Excluded.
+The historical audit first changed this row from Unimplemented to Blocked.
+The [executable typed extension slice](extensions.md) now implements the required
+producer and promotes the row. Live SetScript/ScriptChanged and Script
+implementation reload remain distinct open workflows under ADR 0091. Physics
+declaration coverage is 1363/1369 (99.56%), six open (five Partial, one Blocked),
+92 Excluded. Full numerical/network/window/performance acceptance is separate.

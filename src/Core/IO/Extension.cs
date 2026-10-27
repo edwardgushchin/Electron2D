@@ -43,12 +43,15 @@ public readonly struct ExtensionInitialization
 /// <summary>Retains the executable entry and initialization state of one extension module.</summary>
 /// <remarks>The manager owns a registered module. After unloading, a retained resource remains open until disposed;
 /// duplication and archive construction create a closed resource and never copy executable callbacks.</remarks>
-public class Extension : Resource
+public partial class Extension : Resource
 {
     private Action<ExtensionInitializationLevel>? _initialize, _deinitialize;
     private ExtensionInitializationLevel _minimum;
     private bool _open;
     private int _highest = -1;
+    private int _availableLevel = -1;
+    private int _initializedLevels;
+    private int _registeringLevel = -1;
     internal bool Managed;
     /// <summary>Creates a closed extension resource without invoking a module entry.</summary>
     public Extension() { }
@@ -74,22 +77,33 @@ public class Extension : Resource
         _initialize = initialization.Initialize; _deinitialize = initialization.Deinitialize;
         Volatile.Write(ref _open, true);
     }
-    internal void InitializeTo(ExtensionInitializationLevel level)
+    internal void InitializeTo(ExtensionInitializationLevel level, int minimum = 0)
     {
-        for (var next = 0; next <= (int)level; next++)
+        _availableLevel = (int)level;
+        for (var next = minimum; next <= (int)level; next++)
         {
-            _highest = next;
-            _initialize!((ExtensionInitializationLevel)next);
+            _highest = Math.Max(_highest, next); _initializedLevels |= 1 << next;
+            _registeringLevel = next;
+            try { _initialize!((ExtensionInitializationLevel)next); }
+            finally { _registeringLevel = -1; }
         }
     }
-    internal void Deinitialize(ref List<Exception>? errors)
+    internal void Deinitialize(ref List<Exception>? errors, int minimum = 0)
     {
-        while (_highest >= 0)
+        _retiring = true;
+        try
         {
-            var level = (ExtensionInitializationLevel)_highest--;
-            try { _deinitialize!(level); }
-            catch (Exception error) { (errors ??= []).Add(error); }
+            for (var index = _highest; index >= minimum; index--)
+            {
+                if ((_initializedLevels & (1 << index)) == 0) continue;
+                _initializedLevels &= ~(1 << index);
+                try { _deinitialize!((ExtensionInitializationLevel)index); }
+                catch (Exception error) { (errors ??= []).Add(error); }
+                RetireClasses(index, ref errors);
+            }
+            while (_highest >= 0 && (_initializedLevels & (1 << _highest)) == 0) _highest--;
         }
+        finally { _retiring = false; }
     }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance()
@@ -114,6 +128,7 @@ public class Extension : Resource
     protected override void Dispose(bool disposing)
     {
         Volatile.Write(ref _open, false); _initialize = _deinitialize = null;
+        Entry = null; _replacementState = null;
         base.Dispose(disposing);
     }
 }

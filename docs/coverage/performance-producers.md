@@ -5,8 +5,9 @@ Last updated: 2026-10-27
 This audit follows reference `4.7.2-stable` at
 `ed1daf0bf001b61586d9930840f2f1394092c079`. It separates executable planar
 diagnostics from 3D-only source categories and the remaining allocation work.
-It changes no runtime API or producer. Physics declaration coverage remains
-**1362/1369 (99.49%)**, with seven open declarations and 92 Excluded.
+This allocator audit changes no runtime producer. The later [registered extension
+replacement](../components/extensions.md) closes a different inherited row; current
+physics declaration coverage is **1363/1369 (99.56%)**, six open, 92 Excluded.
 
 ## Pipeline source ownership
 

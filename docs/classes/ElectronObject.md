@@ -1,5 +1,7 @@
 # ElectronObject
 
+Registered extension instances receive `NotificationExtensionReloaded` (2) only after every surviving binding and compatible stored value has been restored. Ordinary CLR updates do not produce this event. Their deterministic disposal follows manager-thread admission, pre-delete veto, binding retirement and owner cleanup; errors preserve committed cleanup. See [module lifetime](../components/extensions.md).
+
 [Extension reload](../components/scripting.md#native-extension-reload-boundary) remains a blocked registered-module/instance restoration producer. Ordinary C# metadata updates do not add automatic notifications to every project class.
 
 Last updated: 2026-10-26

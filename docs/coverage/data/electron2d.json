@@ -18186,6 +18186,19 @@
     "value": "32"
   },
   {
+    "id": "constant:Electron2D.ElectronObject.NotificationExtensionReloaded()",
+    "kind": "constant",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "NotificationExtensionReloaded",
+    "signature": "public const System.Int32 NotificationExtensionReloaded = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "2"
+  },
+  {
     "id": "constant:Electron2D.ElectronObject.NotificationPostInitialize()",
     "kind": "constant",
     "declaringType": "Electron2D.ElectronObject",
@@ -68016,6 +68029,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.ExtensionManager.ExtensionsReloaded()",
+    "kind": "event",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ExtensionsReloaded",
+    "signature": "public static event System.Action ExtensionsReloaded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.FileDialog.DirSelected()",
     "kind": "event",
     "declaringType": "Electron2D.FileDialog",
@@ -113517,6 +113543,59 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Extension.New\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "New",
+    "signature": "public T New\u003CT\u003E(System.String classID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "classID",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Extension.RegisterClass\u00601(System.String,Func\u003CT\u003E,Action\u003CT\u003E,Action\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Extension",
+    "name": "RegisterClass",
+    "signature": "public System.Void RegisterClass\u003CT\u003E(System.String classID, Func\u003CT\u003E factory, Action\u003CT\u003E bind, Action\u003CT\u003E clear)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "classID",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "factory",
+        "type": "Func\u003CT\u003E",
+        "default": null
+      },
+      {
+        "name": "bind",
+        "type": "Action\u003CT\u003E",
+        "default": null
+      },
+      {
+        "name": "clear",
+        "type": "Action\u003CT\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Extension.ValidateDisposal()",
     "kind": "method",
     "declaringType": "Electron2D.Extension",
@@ -113602,6 +113681,44 @@
       }
     ],
     "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.ReloadExtension(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ReloadExtension",
+    "signature": "public static Electron2D.ExtensionManager.LoadStatus ReloadExtension(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ExtensionManager.LoadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ExtensionManager.ReloadExtensions(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ExtensionManager",
+    "name": "ReloadExtensions",
+    "signature": "public static System.Collections.Generic.Dictionary\u003CSystem.String, Electron2D.ExtensionManager.LoadStatus\u003E ReloadExtensions(System.Collections.Generic.IEnumerable\u003CSystem.String\u003E paths)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paths",
+        "type": "System.Collections.Generic.IEnumerable\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, Electron2D.ExtensionManager.LoadStatus\u003E",
     "value": null
   },
   {

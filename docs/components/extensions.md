@@ -2,77 +2,131 @@
 
 Last updated: 2026-10-27
 
-[ADR 0116](../decisions/extensions.md#adr-0116) owns the library-host projection.
-This is the first executing module lifecycle prerequisite for the
-[extension-reload producer](scripting.md#native-extension-reload-boundary).
+[ADR 0116](../decisions/extensions.md#adr-0116) owns the typed library-host contract.
+The public-only [reload consumer](../../tests/ExtensionReload.Consumer/Program.cs)
+and [source/factory checks](../../tests/Electron2D.Tests/ExtensionSourceTests.cs)
+exercise the class-bound producer, separately from ordinary compiled source updates.
 
-## Executable boundary
+## Module entry and levels
 
-`ExtensionManager.LoadExtensionFromFunction` accepts an ordinal address and a typed
-entry receiving its fresh closed `Extension` resource. A nullable
-`ExtensionInitialization` result can decline loading. A valid result supplies two
-callbacks and one shared `ExtensionInitializationLevel` value contract. First load
-calls Core, Servers and Scene, plus Editor when captured from the host hint. The
-minimum level remains readable replacement metadata; first loading does not skip
-earlier levels. The reference
-[function loader and manager](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/extension/gdextension_manager.cpp#L125)
-provide this entry/lifecycle concept without requiring an address to name a file.
+`ExtensionManager.LoadExtensionFromFunction` takes an ordinal address and a typed
+entry receiving its fresh closed `Extension`. Null declines loading; a valid
+`ExtensionInitialization` supplies minimum-level metadata and ascending/descending
+callbacks. First load calls Core, Servers and Scene, plus Editor captured from the
+host hint. Its minimum does not skip earlier first-load callbacks. Addresses do
+not identify a file or choose a CLR type through reflection.
 
-Loaded notification follows initialization and precedes resource-path/registry
-publication. Its observer errors propagate after publication. Unloading notification
-runs while lookup still resolves the same resource, before reverse deinitialization
-and retirement. Initialization failure unwinds the failed level and every earlier
-initialized level. Cleanup continues across errors and preserves the original
-single exception or an ordered aggregate. Different-address dependency loading is
-allowed; the currently transitioning address cannot mutate recursively. Caller
-callback side effects and independently loaded dependencies are not general
-transactions.
+Loaded notification follows initialization. On first load it precedes resource
+path/registry publication; on replacement the same registered resource already
+exists and all surviving instance state precedes delivery. Observer failures on
+a successful load/replacement propagate after publication. Unloading notification
+runs before reverse cleanup while lookup still resolves the resource. Cleanup
+attempts every initialized level and preserves original errors/ordered aggregates.
+The first mutating caller owns registry mutation and admitted class factories.
+Reads use synchronized borrowed lookup and independent address snapshots.
 
-The registry captures its first mutating caller as owner. Reads return borrowed
-resources or independent address snapshots. The manager is a permanent reserved
-Engine singleton with static operations; its ordinary events use the shared
-publisher/membership and signal-blocking contract. A registered resource cannot be
-explicitly disposed. Unloading retires module initialization but an external
-resource reference can retain its open callbacks until Dispose, matching the
-separate resource lifetime. Duplication and resource files preserve base metadata
-in a closed resource and never copy/activate executable callbacks or a physical
-world. Project-derived resources still need their own exact construction/copy
-implementation.
+Initialized levels are tracked independently from the host's available level.
+Replacement deinitializes every initialized level, reopens the same retained
+function entry, then initializes from the reopened minimum through the available
+level. An earlier-than-Scene minimum returns NeedsRestart with an open, uninitialized
+entry and retained retry state. A higher minimum can leave initialization holes;
+those levels are not spuriously deinitialized later. The source
+[manager](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/extension/gdextension_manager.cpp#L41)
+owns the first-load/replacement and individual/batch event distinctions.
 
-## Public consumer and verification
+The manager is a permanent reserved Engine singleton with static operations and
+shared EventPublisher membership/signal blocking. Managed resource disposal
+rejects before mutation. Unload removes registration but an external resource
+reference can keep its open entry until Dispose. Duplication/archive restoration
+produce closed resources without executable callbacks, factories or worlds.
 
-[ExtensionLifecycle.Consumer](../../tests/ExtensionLifecycle.Consumer/Program.cs)
-uses only public runtime APIs. Its external entry actually creates an awake circular
-body and selected raw CPU/GPU space at Scene, then retires them at reverse Scene.
-The example explicitly activates raw spaces; creation alone is not a solved tick.
-After 128 warm steps, 128 measured complete step/getter intervals require 0/0
-owner/all-thread managed bytes. A 60-unit/s body travels 128 ± .01 scene units over
-128 ticks at 1/60 second; this bound allows accumulated single-precision position
-rounding and does not relax collision/solver tolerances.
+## Typed class binding
 
-Six CLR and the same six strict NativeAOT profiles pass: CPU/no-GPU and GPU with ordinary/editor levels, plus each
-backend with a separate numerical thread. CPU profiles use dummy video and invalid
-Vulkan ICD paths. NativeAOT publication treats compiler and trimming warnings as errors. All selected backends/fallback identities are asserted. The same
-consumer verifies entry decline, invalid data, original callback errors, failure
-after real numerical-world creation, failed-level rollback, observer error commit,
-continued cleanup, nested different-address loads, same-address recursion, foreign
-mutations, registry reads, signal suppression and exact EventConnection membership
-retirement. Duplication/archive checks restore closed resources; no callback is
-replayed by storage. Receipts, source/binary identities and outputs remain under
-`bin/extension-lifecycle/2026-10-27/`.
+`Extension.RegisterClass<T>` installs one unique portable class ID through existing
+ResourceFileTypes. A concrete class supplies a static method-group constructor;
+a null factory is reserved for an abstract parent. Registered project ancestors
+must precede descendants; built-in engine types cannot be redefined. Bind callbacks
+install module functions/defaults in a stable CLR shell; clear callbacks retire
+those functions, including partially failed binds. Parent bindings run first and
+clear in reverse. There is no second per-frame dispatcher or untyped call channel.
+Changing the CLR shell itself requires a new host cohort rather than retyping an
+existing object.
 
-Initial candidates exposed one real missing resource-copy override. After its fix,
-the fixture's wrong file suffix and missing raw-space activation were corrected;
-those latter failures were fixture omissions, not changes to storage or physics
-semantics. The early failed receipts remain alongside the successful matrix.
+`Extension.New<T>` and ordinary validated file/scene/copy/Script factories admit
+instances, including CLR descendants of registered shells. Direct CLR construction
+alone does not establish that role. Exact fresh-result and borrowed-result guards
+run before binding. Constructor/binding scopes prevent participating modules from
+retiring recursively. Script source identity remains available during construction;
+module functions are installed after the constructor. Script metadata excludes
+native-shell declarations and reports that shell as the instance base. The Scripts
+flag removes script descendants while retaining a constructible native shell.
+A removed native base makes dependent Script.CanInstantiate false and rejects
+new construction before constructors.
 
-## Open work
+Admitted instances use weak lifetime tracking. Their deterministic Dispose runs
+on the manager thread; pre-delete veto preserves binding and owner identity.
+Committed cleanup clears once and unregisters before owner cleanup, retaining both
+errors if necessary. GC adds no arbitrary managed finalizer callback. Project
+callbacks still own their native resources and side effects. Ordinary factories
+without a module dependency retain their existing concurrency contract; module
+factories reject worker-thread construction, including temporary archive factories.
 
-File/native-library discovery, extension class registration/rebinding, state
-restoration and live module replacement remain absent. There is no inert file-load
-or reload operation and no ordinary-CLR-wide reload notification. The applicable
-coverage rows remain open. This lifecycle does not close inherited live SetScript,
-ScriptChanged, current/peak allocation producers or the three base-class audits.
-Physics declaration coverage stays 1362/1369 (99.49%), seven open, 92 Excluded.
-Native-heap, foreign-platform, arbitrary module code and full-goal numerical/network/
-window/performance acceptance remain separate.
+## Replacement and stored state
+
+`ReloadExtension` captures affected live instances, including registered descendants
+in other modules, then clears old bindings and retires initialization. All surviving
+class bindings finish before any stored state is restored. All compatible stored
+values finish before automatic `ElectronObject.NotificationExtensionReloaded` (2).
+Disposed/collected owners and removed classes are skipped. Newly created instances
+from reinitialization are not old reload recipients. Reusing a removed class ID in another module does not adopt old instances.
+Missing registered parents leave descendants cleared and reject further construction.
+
+Existing PropertyDescriptor storage supplies typed scalar/resource/array snapshots.
+Old defaults are omitted so newly bound defaults take effect; nondefault values
+restore by exact compatible property name/type. Removed properties are discarded.
+Live node references use weak identities, including across temporary renames;
+file storage retains its separate path-based representation. Equal current values
+skip their setters, preserving unchanged contact, sleeping and joint state.
+
+Capture failure leaves the old generation running. Failures after retirement
+attempt all replacement cleanup and leave a closed registered resource with the
+original state retained for explicit retry. A CLR ABI mismatch follows this error
+path. NeedsRestart is the separate open-but-uninitialized outcome. Unloading clears
+pending state. Arbitrary callback effects and independent dependency loads are not
+transactions. Attached owners require a quiescent scene lifecycle; participating
+module retirement cannot reenter capture, binding, restoration or notification.
+
+Successful individual replacement sends ExtensionLoaded after instance notices.
+`ReloadExtensions(changedAddresses)` snapshots/validates the host's changed set,
+deduplicates addresses, attempts each loaded entry and then sends ExtensionsReloaded
+once, including failed or restart-required attempts. Unknown addresses return
+NotLoaded; empty/unknown-only sets send nothing. Batch failures do not skip later
+entries and propagate after completion. The host owns change detection. No file
+watcher or ordinary CLR-wide reload notification is installed.
+
+## Verification and limits
+
+The reload consumer keeps actual scene bodies, contacts, sleeping state and a pin
+joint on the explicitly selected CPU/GPU world. It checks stable object IDs/RIDs,
+pose/velocity, nondefault/default state, array/resource/node identities, real changed
+physics callbacks and zero managed owner/all-thread bytes over 128 complete physical
+frames after 128 warm frames. A 60-unit/s body travels 128 +/- .02 scene units in
+128 ticks at 1/60 s; the bound covers accumulated float position rounding. Every
+notification verifies the other instances are already restored. Archive factories
+execute in a fresh process. Ordinary unadmitted CLR instances receive no automatic
+extension notification.
+
+Failure cases cover capture, binding, restoration, deinitialization, declined entry,
+ABI mismatch, explicit retry, removed classes/parents, new/dead owners, foreign
+mutation, recursive disposal/factory operations, signal blocking, batch completion
+and released callback/module captures. The CLR source check additionally exercises
+Script metadata/source identity, script stripping, resource duplication and
+pre-delete veto/error/foreign-disposal behavior. Receipts and immutable cohorts
+live under `bin/extension-reload/2026-10-27/`; prior lifecycle-only receipts remain
+under `bin/extension-lifecycle/2026-10-27/`.
+
+File/native discovery, real assembly unloading, arbitrary native-module code,
+foreign platforms and native heap costs remain separate qualifications. These
+functional/allocation checks do not certify mass-scene throughput, full networking,
+window FPS or the complete physics goal. Live SetScript/ScriptChanged and the
+current/peak total-allocation producers retain their independent open contracts.
