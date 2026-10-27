@@ -12,7 +12,6 @@ public sealed unsafe partial class RenderingDevice
         foreach (var binding in layout)
         {
             if (!binding.Writable || binding.Stage == ShaderStage.Compute) continue;
-            if (binding.Type != UniformType.StorageBuffer) throw new NotSupportedException("Writable graphics texel buffers require their format-store adapter.");
             var feature = binding.Stage == ShaderStage.Vertex ? 1 : 2;
             if ((enabled & feature) == 0) throw new NotSupportedException($"Writable {binding.Stage} storage buffers require an enabled native graphics-storage feature.");
         }

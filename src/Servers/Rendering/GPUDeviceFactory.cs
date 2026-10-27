@@ -189,10 +189,11 @@ internal static unsafe partial class GPUDeviceFactory
             features[25] = ((uint)narrow >> 10) & 1; features[26] = ((uint)narrow >> 11) & 1;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
             // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
+            var precision = narrow & 1023;
             var storage16 = new Vulkan11Features { Type = 49 };
             for (var i = 0; i < 4; i++) storage16.Flags[i] = ((uint)narrow >> i) & 1;
             var advanced = new Vulkan12Features { Type = 51 };
-            if (narrow != 0) advanced.Next = (nint)(&storage16);
+            if (precision != 0) advanced.Next = (nint)(&storage16);
             advanced.Flags[7] = ((uint)narrow >> 4) & 1; advanced.Flags[8] = ((uint)narrow >> 6) & 1;
             for (var i = 0; i < 3; i++) advanced.Flags[i + 1] = ((uint)narrow >> (i + 7)) & 1;
             advanced.Flags[0] = 1; advanced.Flags[5] = (uint)atomics & 1; advanced.Flags[6] = ((uint)atomics >> 1) & 1;
@@ -200,7 +201,7 @@ internal static unsafe partial class GPUDeviceFactory
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
             {
                 var extension = (nint)extensionName;
-                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | ((atomics | narrow) == 0 ? 0u : 2u << 12), FeatureList = (atomics | narrow) == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
+                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | ((atomics | precision) == 0 ? 0u : 2u << 12), FeatureList = (atomics | precision) == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
                     throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
                 var device = SDL.CreateGPUDeviceWithProperties(props); var mirror = device != 0;
@@ -217,7 +218,7 @@ internal static unsafe partial class GPUDeviceFactory
                      int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true) ||
                      (atomics & 1) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), BufferAtomic64Property, true) ||
                      (atomics & 2) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), SharedAtomic64Property, true) ||
-                     narrow != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow & 1023) ||
+                     precision != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow & 1023) ||
                      (narrow >> 10) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), GraphicsStorageProperty, narrow >> 10)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);

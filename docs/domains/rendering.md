@@ -578,3 +578,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Native Int8/UInt8 shader execution](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) adds one-byte compute/graphics data, typed specialization and mixed narrow layouts with independent arithmetic/storage features.
 
 Ordinary writable graphics storage now connects vertex/fragment producers to ordered draw, indirect, compute, copy/readback and retained canvas consumers; see [the storage contract](../components/local-compute.md#writable-graphics-storage-buffers).
+
+Formatted graphics producers now store encoded ImageBuffer elements and execute R32 atomics before sampled draw, compute/readback and retained canvas consumption. [Contract and limits](../components/local-compute.md#writable-formatted-graphics-producers).

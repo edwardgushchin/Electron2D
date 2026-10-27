@@ -11,7 +11,7 @@ internal static partial class RenderingDeviceTexelTests
         using var device = RenderingServer.CreateLocalRenderingDevice();
         foreach (var language in new[] { ShaderLanguage.GLSL, ShaderLanguage.HLSL }) { Basic(device, language); Writes(device, language); Formats(device, language); Graphics(device, language); }
         Transfers(device);
-        NativeFormatParity(device); Atomics(device);
+        NativeFormatParity(device); Atomics(device); DerivedCapabilities(device);
         Capacity(device); Specialization(device);
         Graphics(device, ShaderLanguage.GLSL, true); Graphics(device, ShaderLanguage.GLSL, storage: true);
         Console.WriteLine((Environment.GetEnvironmentVariable("ELECTRON2D_TEXEL_EXPORT_ONLY") == "1" ? "Texel modules exported on " : "Formatted texel buffers passed on ") + device.GetDeviceName());

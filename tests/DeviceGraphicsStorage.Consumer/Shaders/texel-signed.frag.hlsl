@@ -1,0 +1,1 @@
+[[vk::binding(7,3)]]RWBuffer<int4> texels;struct Push{int4 value;};[[vk::push_constant]]ConstantBuffer<Push> pc;float4 main(float4 position:SV_Position):SV_Target0{uint i=uint(position.x)+uint(position.y)*4;texels[4+i]=pc.value;return 1;}

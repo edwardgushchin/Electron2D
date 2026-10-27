@@ -1,0 +1,1 @@
+[[vk::binding(7,3)]]RWBuffer<uint4> texels;struct Push{uint4 value;};[[vk::push_constant]]ConstantBuffer<Push> pc;float4 main(uint id:SV_VertexID):SV_Position{texels[id]=pc.value;float2 p=float2((id<<1)&2,id&2);return float4(p*2-1,0,1);}

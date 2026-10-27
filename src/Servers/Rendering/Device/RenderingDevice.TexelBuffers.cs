@@ -53,7 +53,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="format">Uncompressed color encoding with at most 32 bits per component.</param>
     /// <param name="data">Empty, or exactly the complete encoded element data; copied before returning.</param>
     /// <returns>A device-owned buffer identity usable by typed shader descriptors and ordinary buffer transfers.</returns>
-    /// <remarks>Indexed shader reads and compute writes share the original encoded bytes. Internal format metadata is excluded
+    /// <remarks>Indexed shader reads and compute/vertex/fragment stores and supported R32 atomics share the original encoded bytes. Each writing graphics stage requires its independently enabled native storage feature. Internal format metadata is excluded
     /// from public byte offsets and readback. Creation is cold owner-thread work; end an active command list first.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The format value, element count or encoded capacity is invalid.</exception>
     /// <exception cref="ArgumentException">Nonempty data does not cover the complete formatted buffer.</exception>

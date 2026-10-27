@@ -1,0 +1,7 @@
+#version 450
+layout(constant_id=0)const int imageCount=2;
+layout(set=3,binding=1,r32ui)uniform coherent uimageBuffer unsignedValues[imageCount];
+layout(set=3,binding=2,r32i)uniform coherent iimageBuffer signedValues[imageCount];
+layout(set=4,binding=0,std430)buffer Reports{uint reports[];};
+layout(push_constant)uniform Push{uint slot;}pc;
+layout(location=0)out vec4 color;void main(){if(all(lessThan(gl_FragCoord.xy,vec2(1)))){int lane=1;uint base=16;reports[base+0]=uint(imageAtomicExchange(unsignedValues[pc.slot],lane,100u));reports[base+1]=uint(imageAtomicAdd(unsignedValues[pc.slot],lane,7u));reports[base+2]=uint(imageAtomicMin(unsignedValues[pc.slot],lane,50u));reports[base+3]=uint(imageAtomicMax(unsignedValues[pc.slot],lane,75u));reports[base+4]=uint(imageAtomicAnd(unsignedValues[pc.slot],lane,63u));reports[base+5]=uint(imageAtomicOr(unsignedValues[pc.slot],lane,128u));reports[base+6]=uint(imageAtomicXor(unsignedValues[pc.slot],lane,3u));reports[base+7]=uint(imageAtomicCompSwap(unsignedValues[pc.slot],lane,136u,99u));reports[base+8]=uint(imageAtomicExchange(unsignedValues[pc.slot],lane,11u));reports[base+9]=uint(imageAtomicExchange(signedValues[pc.slot],lane,-100));reports[base+10]=uint(imageAtomicMin(signedValues[pc.slot],lane,-200));reports[base+11]=uint(imageAtomicMax(signedValues[pc.slot],lane,-150));reports[base+12]=uint(imageAtomicAdd(signedValues[pc.slot],lane,20));reports[base+13]=uint(imageAtomicCompSwap(signedValues[pc.slot],lane,-130,-2));}color=vec4(1);}

@@ -198,11 +198,19 @@ internal static partial class TexelBufferProgram
             var value = source.FirstOrDefault(i => Op(i) == 43 && i[2] == id);
             return value is not null && (value[3] & 2048) != 0 ? Constant(value[3] | 64) : id;
         }
+        // Derived buffers no longer need native image-format or texel-array features.
+        var storageImages = types.Values.Where(i => Op(i) == 25 && i[3] != 5 && i[7] == 2).ToArray();
+        var formatlessImages = storageImages.Any(i => i[8] == 0);
+        var otherIndexing = source.Any(i => Op(i) == 17 && i[1] is >= 5302 and <= 5310 && i[1] is not (5304 or 5305));
+        bool RemovedCapability(uint capability) => capability is 46 or 47 or 5304 or 5305 or 5311 or 5312 || !otherIndexing && capability == 5301 || storageImages.Length == 0 && capability == 49 || !formatlessImages && capability is 55 or 56;
+        var descriptorIndexing = source.Any(i => Op(i) == 17 && i[1] is >= 5301 and <= 5312 && !RemovedCapability(i[1]));
         foreach (var original in source)
         {
             var i = (uint[])original.Clone(); var op = Op(i); if (op == 54) inFunction = true;
             var output = inFunction ? functions : originals;
-            if (op is >= 19 and <= 39 && Opaque(i[1]) || op == 33 && functionAliases.ContainsKey(i[1]) || op == 59 && ids.Contains(i[2]) || op is 5 or 71 && (ids.Contains(i[1]) || Opaque(i[1])) || op == 17 && i[1] is 46 or 47) continue;
+            if (op is >= 19 and <= 39 && Opaque(i[1]) || op == 33 && functionAliases.ContainsKey(i[1]) || op == 59 && ids.Contains(i[2]) || op is 5 or 71 && (ids.Contains(i[1]) || Opaque(i[1])) || op == 17 && RemovedCapability(i[1])) continue;
+            if (op == 71 && i[2] == 5300 && !otherIndexing) continue;
+            if (op == 10 && !descriptorIndexing && Encoding.UTF8.GetString(MemoryMarshal.AsBytes(i.AsSpan(1))).TrimEnd('\0') == "SPV_EXT_descriptor_indexing") continue;
             if (op == 15)
             {
                 var end = StringEnd(i, 3); var io = i.AsSpan(end).ToArray().Where(id => !ids.Contains(id));

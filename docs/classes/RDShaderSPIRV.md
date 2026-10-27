@@ -1,6 +1,6 @@
 # RDShaderSPIRV
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSPIRV`. **Source:** [RDShaderSPIRV.cs](../../src/Servers/Rendering/Device/RDShaderSPIRV.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -235,4 +235,6 @@ Specialization declarations retain copied symbolic templates until pipeline crea
 
 [Native byte shaders](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) execute packed data, specialization and compute/graphics arithmetic through independent features. Native8 GLSL uses the Vulkan 1.2 producer; the pinned HLSL native8 type remains a frontend dependency.
 
-Ordinary writable vertex/fragment storage buffers execute with independently enabled native stage features and ordered pass-boundary dependencies. Shared descriptors, AsStorage vertex/index buffers, GPU-produced indirect commands and following compute/readback use the existing API. See [writable graphics storage](../components/local-compute.md#writable-graphics-storage-buffers) for ownership, synchronization and remaining adapters.
+Ordinary writable vertex/fragment storage and formatted ImageBuffer resources execute with independently enabled native stage features and ordered pass-boundary dependencies. Shared descriptors, AsStorage vertex/index buffers, GPU-produced indirect commands and following compute/readback use the existing API. See [writable graphics storage](../components/local-compute.md#writable-graphics-storage-buffers) for ownership, synchronization and remaining adapters.
+
+Formatted ImageBuffer stores and signed/unsigned R32 atomics now execute in independently enabled vertex/fragment stages, using the same encoded allocation as compute and sampled reads. See [formatted graphics producers](../components/local-compute.md#writable-formatted-graphics-producers) for format, array, synchronization, HLSL frontend and verification boundaries.
