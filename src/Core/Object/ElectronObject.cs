@@ -363,7 +363,10 @@ public partial class ElectronObject : IDisposable
             if (!canceled)
             {
                 if (this is Node || this is Resource and not Image) RenderingServer.NotifyRenderMutation();
-                disposalError = RetireScriptBinding();
+                if (this is Node { ScriptCallbacks: not null } scriptNode)
+                    try { scriptNode.PrepareScriptCallbackDisposal(); } catch (Exception error) { disposalError = error; }
+                var scriptError = RetireScriptBinding();
+                if (scriptError is not null) disposalError = disposalError is null ? scriptError : new AggregateException(disposalError, scriptError);
                 var extensionError = ExtensionBindings.Detach(this);
                 if (extensionError is not null) disposalError = disposalError is null ? extensionError : new AggregateException(disposalError, extensionError);
                 try

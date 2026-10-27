@@ -1,5 +1,7 @@
 # RigidBody
 
+Native Script integration callbacks use the same owner/post-solver direct-state path as the protected IntegrateForces hook. Exact RigidBody instances with an installed callback participate in existing state-demand publication and dispatch; see [standard script callbacks](../components/scripting.md#standard-node-callbacks).
+
 [Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
 
 [Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.

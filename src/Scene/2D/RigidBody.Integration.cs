@@ -28,5 +28,6 @@ public partial class RigidBody
     /// integration alike. An exception is collected without replaying committed edits or skipping other body callbacks.</remarks>
     protected virtual void IntegrateForces(PhysicsDirectBodyState state) { }
 
-    internal void InvokeIntegration(PhysicsDirectBodyState state) => IntegrateForces(state);
+    internal bool HasIntegrationCallback => GetType() != typeof(RigidBody) || ScriptCallbacks?.IntegrateForces is not null;
+    internal void InvokeIntegration(PhysicsDirectBodyState state) { IntegrateForces(state); ScriptCallbacks?.IntegrateForces?.Invoke(state); }
 }

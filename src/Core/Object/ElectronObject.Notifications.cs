@@ -37,13 +37,19 @@ public partial class ElectronObject
         if (!reversed && previousOwner is null)
         {
             OnNotification(what);
+            BoundScriptNotification?.Invoke(what, false);
             return;
         }
 
         var previousDirection = _notificationReversed;
         _notificationOwner = this;
         _notificationReversed = reversed;
-        try { OnNotification(what); }
+        try
+        {
+            if (reversed) BoundScriptNotification?.Invoke(what, true);
+            OnNotification(what);
+            if (!reversed) BoundScriptNotification?.Invoke(what, false);
+        }
         finally
         {
             _notificationOwner = previousOwner;

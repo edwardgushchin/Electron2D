@@ -1,5 +1,7 @@
 # CollisionObject
 
+Native Script picking callbacks use the existing pointer/object/shape hook points before ordinary signals, including signal blocking and error aggregation; see [standard script callbacks](../components/scripting.md#standard-node-callbacks).
+
 Last updated: 2026-10-26
 
 ## Disabled body role recovery

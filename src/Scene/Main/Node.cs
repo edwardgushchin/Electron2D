@@ -1987,13 +1987,17 @@ public partial class Node : ElectronObject
         {
             case NotificationReady:
                 EnableOverriddenCallbacks();
+                EnableScriptCallbacks();
                 OnReady();
+                ScriptCallbacks?.Ready?.Invoke();
                 break;
             case NotificationProcess:
                 OnProcess(ProcessDeltaTime);
+                ScriptCallbacks?.Process?.Invoke(ProcessDeltaTime);
                 break;
             case NotificationPhysicsProcess:
                 OnPhysicsProcess(PhysicsProcessDeltaTime);
+                ScriptCallbacks?.PhysicsProcess?.Invoke(PhysicsProcessDeltaTime);
                 break;
             case NotificationPaused:
             case NotificationApplicationPaused:
@@ -2059,22 +2063,7 @@ public partial class Node : ElectronObject
 
         if (disposing)
         {
-            try { DisposeSceneConnections(); } catch (Exception error) { (errors ??= []).Add(error); }
-            ReleaseOwnedNodes();
-            SetSceneOwner(null);
-            Interlocked.Or(ref _queuedForDeletion, 4);
-
-            try
-            {
-                if (Parent is not null)
-                    Parent.RemoveChildCore(this);
-                else
-                    Tree?.DetachSubtree(this);
-            }
-            catch (Exception error)
-            {
-                CollectException(ref errors, error);
-            }
+            if (!_scriptDisposalPrepared) PrepareNodeDisposal(ref errors);
 
             foreach (var child in _children.ToArray())
             {
@@ -2456,6 +2445,8 @@ public partial class Node : ElectronObject
 
         try { OnEnterTree(); }
         catch (Exception error) { CollectException(ref errors, error); }
+        try { ScriptCallbacks?.EnterTree?.Invoke(); }
+        catch (Exception error) { CollectException(ref errors, error); }
 
         if (CanAutoTranslate())
         {
@@ -2618,6 +2609,8 @@ public partial class Node : ElectronObject
 
             try { OnExitTree(); }
             catch (Exception error) { CollectException(ref errors, error); }
+            try { ScriptCallbacks?.ExitTree?.Invoke(); }
+            catch (Exception error) { CollectException(ref errors, error); }
             try { BeginEventEmission(_publisherTreeExiting.Handlers)?.Invoke(this); }
             catch (Exception error) { CollectException(ref errors, error); }
             try { DispatchNotification(NotificationExitTree); }
@@ -2679,13 +2672,13 @@ public partial class Node : ElectronObject
 
     internal void ResetReadyAfterFailedActivation() => _readyCalled = false;
 
-    internal void DispatchInput(InputEvent @event) => OnInput(@event);
+    internal void DispatchInput(InputEvent @event) { OnInput(@event); ScriptCallbacks?.Input?.Invoke(@event); }
 
-    internal void DispatchShortcutInput(InputEvent @event) => OnShortcutInput(@event);
+    internal void DispatchShortcutInput(InputEvent @event) { OnShortcutInput(@event); ScriptCallbacks?.ShortcutInput?.Invoke(@event); }
 
-    internal void DispatchUnhandledKeyInput(InputEventKey @event) => OnUnhandledKeyInput(@event);
+    internal void DispatchUnhandledKeyInput(InputEventKey @event) { OnUnhandledKeyInput(@event); ScriptCallbacks?.UnhandledKeyInput?.Invoke(@event); }
 
-    internal void DispatchUnhandledInput(InputEvent @event) => OnUnhandledInput(@event);
+    internal void DispatchUnhandledInput(InputEvent @event) { OnUnhandledInput(@event); ScriptCallbacks?.UnhandledInput?.Invoke(@event); }
 
     internal static bool IsValidStoredNodeName(string? value) =>
         !string.IsNullOrWhiteSpace(value) && value.AsSpan().IndexOfAny(".:/\"%") < 0;

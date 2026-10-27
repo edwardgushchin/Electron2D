@@ -1,5 +1,7 @@
 # Node
 
+`SetScriptCallbacks<TNode>(NodeScriptCallbacks<TNode> callbacks)` installs native typed script callbacks only within the current synchronous Bind. [Standard node callbacks](../components/scripting.md#standard-node-callbacks) covers the receiver/single-use guard, automatic retirement, ready/frame/input ordering and disposal.
+
 A [live typed Script binding](../components/scripting.md#live-typed-bindings) installs after construction and before copy/file stored restoration. Omitting Duplicate.Scripts retains this binding's stable owner CLR role with no installed functions; fixed compiled source classes retain their existing stripping policy.
 
 Without `DuplicateFlags.Scripts`, fresh copies keep the nearest constructible runtime or registered extension base, including its typed state and binding. Registered source descendants retain their independent Script role when copied with Scripts. See [module factories](../components/extensions.md#typed-class-binding).

@@ -78,11 +78,11 @@ public abstract partial class CollisionObject
         {
             switch (kind)
             {
-                case 0: OnInputEvent(viewport, input!, shape); break;
-                case 1: OnMouseEnter(); break;
-                case 2: OnMouseExit(); break;
-                case 3: OnMouseShapeEnter(shape); break;
-                case 4: OnMouseShapeExit(shape); break;
+                case 0: OnInputEvent(viewport, input!, shape); ScriptCallbacks?.InputEvent?.Invoke(viewport, input!, shape); break;
+                case 1: OnMouseEnter(); ScriptCallbacks?.MouseEnter?.Invoke(); break;
+                case 2: OnMouseExit(); ScriptCallbacks?.MouseExit?.Invoke(); break;
+                case 3: OnMouseShapeEnter(shape); ScriptCallbacks?.MouseShapeEnter?.Invoke(shape); break;
+                case 4: OnMouseShapeExit(shape); ScriptCallbacks?.MouseShapeExit?.Invoke(shape); break;
             }
         }
         catch (Exception error) { CollectException(ref errors, error); }

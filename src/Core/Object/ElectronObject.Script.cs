@@ -5,6 +5,8 @@ public partial class ElectronObject
     private Script? _constructionScript;
     private ScriptRegistration? _scriptBinding;
     private int _scriptLifetimeOperation;
+    [ThreadStatic] private static ElectronObject? _scriptCallbackOwner;
+    internal Action<int, bool>? BoundScriptNotification;
     internal bool HasLiveScriptBinding => _scriptBinding is not null;
 
     /// <summary>Installs, replaces or detaches a registered live typed script binding on this existing owner.</summary>
@@ -32,14 +34,12 @@ public partial class ElectronObject
             if (registration is not null && this is Resource) throw new NotSupportedException("Live Resource binding requires its separate copy/cache lifetime contract.");
             if (registration is not null && !registration.InstanceType.IsInstanceOfType(this)) throw new ArgumentException("The binding requires another owner role.", nameof(script));
             if (_constructionScript is not null && _scriptBinding is null) throw new NotSupportedException("Replacing a fixed CLR source class requires a restart.");
-            var old = _scriptBinding; _scriptBinding = null;
-            try { old?.Clear!(this); }
-            catch (Exception error) { (errors ??= []).Add(error); }
-            Volatile.Write(ref _constructionScript, null);
+            var retirement = RetireScriptBinding();
+            if (retirement is not null) (errors ??= []).Add(retirement);
             if (errors is null && registration is not null)
             {
                 _scriptBinding = registration; Volatile.Write(ref _constructionScript, script);
-                try { registration.Bind!(this); Script.ValidateSchema(registration, this); }
+                try { InvokeScriptBind(registration); Script.ValidateSchema(registration, this); }
                 catch (Exception error)
                 {
                     (errors ??= []).Add(error);
@@ -57,7 +57,7 @@ public partial class ElectronObject
         if (_scriptBinding is not null || _constructionScript?.GetBindingRegistration(requireLive: false) is not { } registration) return;
         using var operation = BeginScriptLifetimeOperation();
         _scriptBinding = registration;
-        try { registration.Bind!(this); Script.ValidateSchema(registration, this); }
+        try { InvokeScriptBind(registration); Script.ValidateSchema(registration, this); }
         catch (Exception error)
         {
             var cleanup = RetireScriptBinding();
@@ -70,9 +70,27 @@ public partial class ElectronObject
     {
         var old = _scriptBinding; _scriptBinding = null;
         if (old is null) return null;
-        try { old?.Clear!(this); return null; }
-        catch (Exception error) { return error; }
+        Exception? error = null;
+        try
+        {
+            try { old.Clear!(this); } catch (Exception failure) { error = failure; }
+            var native = this is Node node ? node.RetireScriptCallbacks() : null;
+            return error is null ? native : native is null ? error : new AggregateException(error, native);
+        }
         finally { Volatile.Write(ref _constructionScript, null); }
+    }
+
+    private void InvokeScriptBind(ScriptRegistration registration)
+    {
+        var previous = _scriptCallbackOwner; _scriptCallbackOwner = this;
+        try { registration.Bind!(this); }
+        finally { _scriptCallbackOwner = previous; }
+    }
+    internal void EnsureScriptCallbackInstallation()
+    {
+        ThrowIfDisposed();
+        if (!ReferenceEquals(_scriptCallbackOwner, this) || _scriptBinding is null || _scriptLifetimeOperation != 1)
+            throw new InvalidOperationException("Script callbacks install only in this owner's synchronous Bind callback.");
     }
 
     private static void ThrowScriptErrors(List<Exception>? errors)

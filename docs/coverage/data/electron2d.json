@@ -3491,6 +3491,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "CollisionObjectScriptCallbacks\u00601",
+    "signature": "public class Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "visibility": "public",
+    "baseType": "NodeScriptCallbacks\u003CTObject\u003E",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CollisionPolygon",
     "kind": "type",
     "declaringType": "Electron2D.CollisionPolygon",
@@ -8124,6 +8137,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "NodeScriptCallbacks\u00601",
+    "signature": "public class Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Noise",
     "kind": "type",
     "declaringType": "Electron2D.Noise",
@@ -11593,6 +11619,19 @@
       "System.IFormattable",
       "System.ISpanFormattable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E",
+    "name": "RigidBodyScriptCallbacks\u00601",
+    "signature": "public sealed class Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E",
+    "visibility": "public",
+    "baseType": "CollisionObjectScriptCallbacks\u003CTBody\u003E",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -21379,6 +21418,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": ".ctor",
+    "signature": "public CollisionObjectScriptCallbacks()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CollisionPolygon..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CollisionPolygon",
@@ -23797,6 +23849,19 @@
     "declaringType": "Electron2D.Node",
     "name": ".ctor",
     "signature": "public Node()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NodeScriptCallbacks\u003CTNode\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": ".ctor",
+    "signature": "public NodeScriptCallbacks()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -26624,6 +26689,19 @@
     "declaringType": "Electron2D.RigidBody",
     "name": ".ctor",
     "signature": "public RigidBody()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E",
+    "name": ".ctor",
+    "signature": "public RigidBodyScriptCallbacks()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -149148,6 +149226,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Node.SetScriptCallbacks\u00601(NodeScriptCallbacks\u003CTNode\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Node",
+    "name": "SetScriptCallbacks",
+    "signature": "public System.Void SetScriptCallbacks\u003CTNode\u003E(NodeScriptCallbacks\u003CTNode\u003E callbacks)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callbacks",
+        "type": "NodeScriptCallbacks\u003CTNode\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Node.SetThreadSafe\u00602(Action\u003CTNode, TValue\u003E,TValue)",
     "kind": "method",
     "declaringType": "Electron2D.Node",
@@ -255478,6 +255575,71 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E.InputEvent()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "InputEvent",
+    "signature": "public Action\u003CTObject, Electron2D.Viewport, Electron2D.InputEvent, System.Int32\u003E InputEvent { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject, Electron2D.Viewport, Electron2D.InputEvent, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E.MouseEnter()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "MouseEnter",
+    "signature": "public Action\u003CTObject\u003E MouseEnter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E.MouseExit()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "MouseExit",
+    "signature": "public Action\u003CTObject\u003E MouseExit { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E.MouseShapeEnter()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "MouseShapeEnter",
+    "signature": "public Action\u003CTObject, System.Int32\u003E MouseShapeEnter { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E.MouseShapeExit()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "MouseShapeExit",
+    "signature": "public Action\u003CTObject, System.Int32\u003E MouseShapeExit { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject, System.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CollisionPolygon.BuildMode()",
     "kind": "property",
     "declaringType": "Electron2D.CollisionPolygon",
@@ -268790,6 +268952,149 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.EnterTree()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "EnterTree",
+    "signature": "public Action\u003CTNode\u003E EnterTree { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.ExitTree()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "ExitTree",
+    "signature": "public Action\u003CTNode\u003E ExitTree { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Input()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "Input",
+    "signature": "public Action\u003CTNode, Electron2D.InputEvent\u003E Input { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, Electron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Notification()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "Notification",
+    "signature": "public Action\u003CTNode, System.Int32, System.Boolean\u003E Notification { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, System.Int32, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.PhysicsProcess()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "PhysicsProcess",
+    "signature": "public Action\u003CTNode, System.Double\u003E PhysicsProcess { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, System.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Process()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "Process",
+    "signature": "public Action\u003CTNode, System.Double\u003E Process { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, System.Double\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Ready()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "Ready",
+    "signature": "public Action\u003CTNode\u003E Ready { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Retired()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "Retired",
+    "signature": "public Action\u003CTNode\u003E Retired { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.ShortcutInput()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "ShortcutInput",
+    "signature": "public Action\u003CTNode, Electron2D.InputEvent\u003E ShortcutInput { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, Electron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.UnhandledInput()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "UnhandledInput",
+    "signature": "public Action\u003CTNode, Electron2D.InputEvent\u003E UnhandledInput { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, Electron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.UnhandledKeyInput()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "UnhandledKeyInput",
+    "signature": "public Action\u003CTNode, Electron2D.InputEventKey\u003E UnhandledKeyInput { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTNode, Electron2D.InputEventKey\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.NoiseTexture.AsNormalMap()",
     "kind": "property",
     "declaringType": "Electron2D.NoiseTexture",
@@ -279759,6 +280064,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E.IntegrateForces()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBodyScriptCallbacks\u003CTBody\u003E",
+    "name": "IntegrateForces",
+    "signature": "public Action\u003CTBody, Electron2D.PhysicsDirectBodyState\u003E IntegrateForces { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTBody, Electron2D.PhysicsDirectBodyState\u003E",
     "value": null
   },
   {

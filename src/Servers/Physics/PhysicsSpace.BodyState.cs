@@ -37,7 +37,7 @@ internal sealed partial class PhysicsSpace
 
     internal static bool RequiresBodySnapshot(PhysicsBodyRuntime runtime, PhysicsBody? scene) =>
         runtime.ForceCallback is not null || runtime.SyncCallback is not null ||
-        (scene is RigidBody ? scene.GetType() != typeof(RigidBody) : runtime.MaxContacts > 0 || runtime.View is { IsDisposed: false, HasCapturedContacts: true });
+        (scene is RigidBody rigid ? rigid.HasIntegrationCallback : runtime.MaxContacts > 0 || runtime.View is { IsDisposed: false, HasCapturedContacts: true });
 
     private bool Current(CallbackBody body)
     {
@@ -76,7 +76,7 @@ internal sealed partial class PhysicsSpace
             {
                 var owner = body.Scene;
                 if (body.Runtime.ForceCallback is null && body.Runtime.SyncCallback is null &&
-                    (owner is not RigidBody || owner.GetType() == typeof(RigidBody))) continue;
+                    (owner is not RigidBody receiver || !receiver.HasIntegrationCallback)) continue;
                 if (!Current(body)) continue;
                 if (body.Backend.HasMotionMode(PhysicsServer.BodyMode.Static) ||
                     !body.Runtime.ActiveBeforeStep && !body.Backend.IsAwake) continue;
