@@ -576,3 +576,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Native Int16/UInt16 shader execution](../components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data) adds packed integer compute/graphics data, copied typed specialization and independently negotiated arithmetic/storage.
 
 [Native Int8/UInt8 shader execution](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) adds one-byte compute/graphics data, typed specialization and mixed narrow layouts with independent arithmetic/storage features.
+
+Ordinary writable graphics storage now connects vertex/fragment producers to ordered draw, indirect, compute, copy/readback and retained canvas consumers; see [the storage contract](../components/local-compute.md#writable-graphics-storage-buffers).

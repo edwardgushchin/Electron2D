@@ -1430,3 +1430,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Native Int16/UInt16 execution](../components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data) connects packed data, typed specialization and compute/graphics arithmetic with independently enabled storage and exact push reconstruction.
 
 [Native byte shaders](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) execute packed data, specialization and compute/graphics arithmetic through independent features. Native8 GLSL uses the Vulkan 1.2 producer; the pinned HLSL native8 type remains a frontend dependency.
+
+Ordinary writable vertex/fragment storage buffers execute with independently enabled native stage features and ordered pass-boundary dependencies. Shared descriptors, AsStorage vertex/index buffers, GPU-produced indirect commands and following compute/readback use the existing API. See [writable graphics storage](../components/local-compute.md#writable-graphics-storage-buffers) for ownership, synchronization and remaining adapters.

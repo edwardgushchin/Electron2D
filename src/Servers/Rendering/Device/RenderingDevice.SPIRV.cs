@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false, bool UnnormalizedUnsafe = false, bool UsesSampler = true);
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false, bool UnnormalizedUnsafe = false, bool UsesSampler = true, bool Writable = false);
     private static int ResourceWidth(UniformType type) => type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1;
     private static int ResourceID(Binding binding, int lane = 0) => binding.Element * ResourceWidth(binding.Type) + lane;
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) { var result = RemapCore(code, stage, false); return (result.Code, result.Layout, result.Push); }
@@ -130,14 +130,13 @@ public sealed unsafe partial class RenderingDevice
             if (variable.Storage is not (2 or 12)) continue;
             if (!sets.TryGetValue(variable.ID, out var setOffset) || !slots.TryGetValue(variable.ID, out var slotOffset) || !pointers.TryGetValue(variable.Type, out var block)) throw new ArgumentException("A buffer is missing its descriptor layout.", nameof(code));
             var isStorage = variable.Storage == 12 || bufferBlocks.Contains(block);
-            if (!compute && isStorage && !readOnly.Contains(variable.ID) && !readOnly.Contains(block)) throw new NotSupportedException("Graphics storage buffers require readonly declarations.");
             var native = isStorage ? storage++ : uniform++;
             if (storage > 8 || uniform > 4) throw new NotSupportedException("Local compute supports eight storage buffers and four uniform buffers per shader.");
             if (push?.Variable == variable.ID)
             {
                 push = push with { Native = native }; words[setOffset] = compute ? 2u : nativeSet + 1; words[slotOffset] = (uint)native; continue;
             }
-            var binding = new Binding(words[setOffset], checked((int)words[slotOffset]), isStorage ? UniformType.StorageBuffer : UniformType.UniformBuffer, native, Stage: stage, MinimumSize: isStorage ? 0 : minimumSizes.GetValueOrDefault((words[setOffset], checked((int)words[slotOffset]))));
+            var binding = new Binding(words[setOffset], checked((int)words[slotOffset]), isStorage ? UniformType.StorageBuffer : UniformType.UniformBuffer, native, Stage: stage, Writable: isStorage && !readOnly.Contains(variable.ID) && !readOnly.Contains(block), MinimumSize: isStorage ? 0 : minimumSizes.GetValueOrDefault((words[setOffset], checked((int)words[slotOffset]))));
             if (layout.Any(b => b.Set == binding.Set && b.Slot == binding.Slot)) throw new ArgumentException("Duplicate shader descriptor binding.", nameof(code));
             layout.Add(binding); words[setOffset] = compute ? isStorage ? 1u : 2u : isStorage ? nativeSet : nativeSet + 1; words[slotOffset] = (uint)native;
         }

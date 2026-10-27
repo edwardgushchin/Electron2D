@@ -18,7 +18,7 @@ set(kind SHARED)
 if(ELECTRON2D_STATIC_NATIVE)
     set(kind STATIC)
 endif()
-add_library(Electron2DRender ${kind} bridge.c sampler.c limits.c filtering.c "${layout}")
+add_library(Electron2DRender ${kind} bridge.c sampler.c limits.c filtering.c storage.c "${layout}")
 target_compile_features(Electron2DRender PRIVATE c_std_11)
 target_include_directories(Electron2DRender PRIVATE "${CMAKE_CURRENT_BINARY_DIR}"
     "${sdlmemory_SOURCE_DIR}/include" "${sdlmemory_SOURCE_DIR}/src/video/khronos")

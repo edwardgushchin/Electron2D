@@ -6,6 +6,8 @@
 #include <SDL3/SDL_vulkan.h>
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
+extern int e2d_render_graphics_storage_support(SDL_GPUDevice *, uint32_t);
+extern int e2d_render_storage_barrier(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *);
 extern int e2d_render_shader16_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_filter_support(SDL_GPUDevice *, uint32_t, uint8_t *, uint32_t);
 extern int e2d_render_texture_format(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
@@ -14,10 +16,11 @@ extern int e2d_render_memory(SDL_GPUDevice *, uint32_t, Memory *);
 extern int e2d_render_sampler_view(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
 extern SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *, uint32_t, const SDL_GPUSamplerCreateInfo *, uint32_t, uint32_t, uint32_t, uint32_t);
 
-static void require(bool valid)
+static void require_at(bool valid, int line)
 {
-    if (!valid) { fprintf(stderr, "Native render memory check failed: %s\n", SDL_GetError()); exit(1); }
+    if (!valid) { fprintf(stderr, "Native render check failed at line %d: %s\n", line, SDL_GetError()); exit(1); }
 }
+#define require(valid) require_at((valid), __LINE__)
 static Memory read_memory(SDL_GPUDevice *device)
 {
     Memory memory = {0};
@@ -37,6 +40,10 @@ static int reader(void *device)
 }
 int main(int argc, char **argv)
 {
+    require(e2d_render_graphics_storage_support(NULL, 1) == -1);
+    require(e2d_render_graphics_storage_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_storage_barrier(NULL, 1, NULL) == -1);
+    require(e2d_render_storage_barrier((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1) == -1);
     require(e2d_render_shader16_support(NULL, 1) == -1);
     require(e2d_render_shader16_support(NULL, 2) == -1);
     require(e2d_render_shader16_support(NULL, 3) == -1);
@@ -76,10 +83,19 @@ int main(int argc, char **argv)
         return 0;
     }
     require(SDL_Init(SDL_INIT_VIDEO));
-    SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, "vulkan");
+    SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 4, 2, 2, 0) == NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
+    int graphics_storage = e2d_render_graphics_storage_support(device, 1); require(graphics_storage >= 0 && graphics_storage <= 3);
+    SDL_GPUCommandBuffer *storage_commands = SDL_AcquireGPUCommandBuffer(device); require(storage_commands != NULL);
+    require(e2d_render_storage_barrier(device, 1, storage_commands) == 1);
+    SDL_GPUCopyPass *storage_copy = SDL_BeginGPUCopyPass(storage_commands); require(storage_copy != NULL);
+    require(e2d_render_storage_barrier(device, 1, storage_commands) == -1);
+    SDL_EndGPUCopyPass(storage_copy);
+    require(e2d_render_storage_barrier(device, 1, storage_commands) == 1);
+    require(SDL_CancelGPUCommandBuffer(storage_commands));
+    printf("Native graphics storage support mask=%d and idle/pass barrier guards passed\n", graphics_storage);
     int shader16 = e2d_render_shader16_support(device, 1); require(shader16 >= 0 && shader16 <= 31);
     int shader16_v2 = e2d_render_shader16_support(device, 2); require(shader16_v2 >= 0 && shader16_v2 <= 63 && (shader16_v2 & 31) == shader16);
     int narrow_v3 = e2d_render_shader16_support(device, 3); require(narrow_v3 >= 0 && narrow_v3 <= 1023 && (narrow_v3 & 63) == shader16_v2);

@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Describes caller-owned vertex, fragment and compute sources for explicit shader authoring.</summary>
-/// <remarks>Compilation uses the separately installed import tool. Pipelines consume the resulting RDShaderSPIRV through the ordinary validated device path. Native Half and Int8/UInt8/Int16/UInt16 data require independently enabled arithmetic/storage; compact push reconstruction also requires matching arithmetic.</remarks>
+/// <remarks>Compilation uses the separately installed import tool. Pipelines consume the resulting RDShaderSPIRV through the ordinary validated device path. Native Half and Int8/UInt8/Int16/UInt16 data require independently enabled arithmetic/storage; compact push reconstruction also requires matching arithmetic. Ordinary graphics storage-buffer writes require an independently enabled native feature for each writing stage.</remarks>
 public sealed class RDShaderSource : ElectronObject
 {
     /// <summary>Creates empty GLSL stage descriptions.</summary>

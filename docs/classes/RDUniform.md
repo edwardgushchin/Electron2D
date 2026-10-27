@@ -118,3 +118,5 @@ Fixed arrays also cover formatted buffers and framebuffer inputs. Combined sampl
 Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.
 
 The internal [device cache](../components/device-resource-caches.md) readers borrow validated description spans for key comparisons. Copied cache keys never retain these description objects or expose their mutable storage.
+
+Ordinary writable vertex/fragment storage buffers execute with independently enabled native stage features and ordered pass-boundary dependencies. Shared descriptors, AsStorage vertex/index buffers, GPU-produced indirect commands and following compute/readback use the existing API. See [writable graphics storage](../components/local-compute.md#writable-graphics-storage-buffers) for ownership, synchronization and remaining adapters.

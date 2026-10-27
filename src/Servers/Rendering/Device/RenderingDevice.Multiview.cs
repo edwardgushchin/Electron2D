@@ -61,7 +61,7 @@ public sealed unsafe partial class RenderingDevice
     private void SelectDrawView(int view)
     {
         if (_drawView == view) return;
-        SDL.EndGPURenderPass(_drawPass); _drawPass = 0; _drawView = view;
+        EndDrawPass(); _drawView = view;
         try { BeginDrawPass(false); }
         catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _sets.Clear(); ResetPush(); throw; }
     }

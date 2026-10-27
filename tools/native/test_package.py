@@ -150,6 +150,17 @@ endif()
             self.assertIn(symbol + ";", (native / "exports.map").read_text())
             self.assertIn("_" + symbol + "\n", (native / "exports-macos.txt").read_text())
 
+    def test_graphics_storage_private_exports(self):
+        additions = {"e2d_render_graphics_storage_support", "e2d_render_storage_barrier"}
+        native = package.ROOT / "tools/render-native"
+        for profile in ("Linux", "MacOS", "Windows", "iOS"):
+            name = next(name for name in package.LIBRARIES[profile] if "Electron2DRender" in name)
+            self.assertTrue(additions <= package.required_exports(name))
+        for symbol in additions:
+            self.assertIn(symbol + ";", (native / "exports.map").read_text())
+            self.assertIn("_" + symbol + "\n", (native / "exports.macos").read_text())
+            self.assertIn("    " + symbol + "\n", (native / "exports.def").read_text())
+
     def test_regex_private_sources_and_symbols(self):
         import subprocess
         subprocess.run(["python3", "-B", str(package.ROOT / "tools/update-pcre2.py"), "--check"], check=True)

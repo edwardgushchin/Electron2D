@@ -2364,3 +2364,5 @@ Internal [RenderMemory](classes/RenderMemory.md), [RenderMemorySnapshot](classes
 Native Int16/UInt16 shader execution extends RenderingDevice, RDShaderSPIRV, RDShaderSource and the typed short/ushort specialization family; [behavior and verification](components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data).
 
 Native Int8/UInt8 execution extends RenderingDevice, RDShaderSPIRV, RDShaderSource and typed sbyte/byte specialization; [behavior and verification](components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data).
+
+Writable graphics storage: `RenderingDevice.GraphicsStorage` owns stage-feature validation, shared draw-pass closure and external memory dependencies; `GPUDeviceFactory` retains separately enabled vertex/fragment write bits. The pinned render bridge adds physical feature queries and command barriers; no public type or native handle is added. [Contract](components/local-compute.md#writable-graphics-storage-buffers).

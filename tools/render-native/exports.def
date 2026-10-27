@@ -7,3 +7,5 @@ EXPORTS
     e2d_render_sampler
     e2d_render_sampler_view
     e2d_render_shader16_support
+    e2d_render_graphics_storage_support
+    e2d_render_storage_barrier

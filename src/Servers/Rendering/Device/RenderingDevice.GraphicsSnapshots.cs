@@ -22,7 +22,7 @@ public sealed unsafe partial class RenderingDevice
                 if (NeedsGraphicsSnapshot(entry) && !_graphicsSnapshots.Contains(entry)) _graphicsSnapshots.Add(entry);
             }
             if (_graphicsSnapshots.Count == 0) return false;
-            SDL.EndGPURenderPass(_drawPass); _drawPass = 0;
+            EndDrawPass();
             try
             {
                 foreach (var entry in _graphicsSnapshots)

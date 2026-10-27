@@ -6,6 +6,7 @@ namespace Electron2D;
 internal static unsafe partial class GPUDeviceFactory
 {
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
+    internal const string GraphicsStorageProperty = "Electron2D.gpu.graphics_storage";
     internal const string NarrowProperty = "Electron2D.gpu.narrow_features";
     internal const string Float64Property = "Electron2D.gpu.shader_float64";
     internal const string Int64Property = "Electron2D.gpu.shader_int64";
@@ -112,17 +113,18 @@ internal static unsafe partial class GPUDeviceFactory
             relaxed = true; device = Attempt(formats, true, true); sized = device != 0;
             if (device == 0) device = Attempt(formats, false, true);
         }
-        if (device != 0 && SDL.GetGPUDeviceDriver(device) == "vulkan") device = UpgradeNarrow(device, formats, sized, relaxed);
+        if (device != 0 && SDL.GetGPUDeviceDriver(device) == "vulkan") device = UpgradeFeatures(device, formats, sized, relaxed);
         var driver = device == 0 ? "" : SDL.GetGPUDeviceDriver(device);
         return (device, relaxed, driver == "metal" || driver == "vulkan" && sized);
     }
 
-    private static nint UpgradeNarrow(nint device, SDL.GPUShaderFormat formats, bool sized, bool relaxed)
+    private static nint UpgradeFeatures(nint device, SDL.GPUShaderFormat formats, bool sized, bool relaxed)
     {
         try
         {
-            var available = ReadNarrow(device, 3);
-            if (available is < 0 or > 1023) throw new InvalidOperationException("Native narrow shader features could not be queried.");
+            var available = ReadNarrow(device, 3); var graphics = ReadGraphicsStorage(device, 1);
+            if (available is < 0 or > 1023 || graphics is < 0 or > 3) throw new InvalidOperationException("Native optional shader features could not be queried.");
+            available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
@@ -145,6 +147,9 @@ internal static unsafe partial class GPUDeviceFactory
     [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_shader16_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadNarrow(nint device, uint abi);
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_graphics_storage_support")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial int ReadGraphicsStorage(nint device, uint abi);
 
     private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed)
     {
@@ -179,8 +184,9 @@ internal static unsafe partial class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64/int64/int16 are fields 16/39/40/41.
+            // VkPhysicalDeviceFeatures: largePoints=16, vertex/fragment stores=25/26, float64/int64/int16=39/40/41.
             Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
+            features[25] = ((uint)narrow >> 10) & 1; features[26] = ((uint)narrow >> 11) & 1;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
             // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
             var storage16 = new Vulkan11Features { Type = 49 };
@@ -211,7 +217,8 @@ internal static unsafe partial class GPUDeviceFactory
                      int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true) ||
                      (atomics & 1) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), BufferAtomic64Property, true) ||
                      (atomics & 2) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), SharedAtomic64Property, true) ||
-                     narrow != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow)))
+                     narrow != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow & 1023) ||
+                     (narrow >> 10) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), GraphicsStorageProperty, narrow >> 10)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);
                     throw new InvalidOperationException("GPU capabilities could not be retained: " + error);

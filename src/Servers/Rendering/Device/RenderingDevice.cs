@@ -138,6 +138,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="data">Optional initial prefix; remaining bytes are zero.</param>
     /// <param name="usage">Optional indirect-dispatch role.</param>
     /// <returns>A device-owned buffer identity.</returns>
+    /// <remarks>Compute and independently enabled vertex/fragment stages may write this buffer. Draw boundaries order later graphics, compute and transfers; invocations within one draw own race freedom.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The size, data length or usage flags are invalid.</exception>
     public RID StorageBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default, StorageBufferUsage usage = 0)
     {
@@ -234,7 +235,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or both vertex and fragment.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
-    /// <remarks>FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
+    /// <remarks>FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable ordinary graphics storage buffers require the enabled native feature of each writing stage; unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); var program = CaptureDeviceProgram(spirvData, name);
@@ -268,6 +269,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
         { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || !b.DynamicCount && !first.DynamicCount && b.Count != first.Count || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
+        ValidateGraphicsStorage(layout);
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         entry.Sources = sources; entry.Constants = constants; entry.OutputSlots = outputSlots; entry.ViewIndex = viewIndex;
         if (template) return entry;

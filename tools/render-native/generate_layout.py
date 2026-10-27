@@ -1,4 +1,4 @@
-"""Compile only the allocator and sampler ABI of the pinned SDL GPU implementation."""
+"""Compile the bounded private ABI of the pinned SDL GPU implementation."""
 
 import argparse
 import hashlib
@@ -42,6 +42,7 @@ def generate(source):
         '#include "vulkan/vulkan.h"',
         "typedef struct SDL_GPURenderer SDL_GPURenderer;",
         block(gpu, "struct SDL_GPUDevice\n{"),
+        gpu[gpu.index("#define MAX_TEXTURE_SAMPLERS_PER_STAGE"):gpu.index("typedef struct TextureCommonHeader")],
         block(gpu, "typedef struct TextureCommonHeader"),
         "typedef struct VulkanBuffer VulkanBuffer;", "typedef struct VulkanTexture VulkanTexture;",
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
@@ -50,7 +51,8 @@ def generate(source):
         "#ifdef E2D_RENDER_FILTERING", block(vulkan, "static VkFormat SDLToVK_TextureFormat[]"), "#endif",
         block(vulkan, "typedef struct VulkanSampler"),
         block(vulkan, "typedef struct VulkanExtensions"), block(vulkan, "typedef struct VulkanFencePool"),
-        forward, renderer, "typedef struct VulkanRenderer VulkanRenderer;", "",
+        forward, renderer, "typedef struct VulkanRenderer VulkanRenderer;",
+        vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    VkCommandBuffer commandBuffer;") + len("    VkCommandBuffer commandBuffer;")] + "\n} VulkanCommandBuffer;", "",
     ])
 
 
