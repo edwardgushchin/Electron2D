@@ -1,5 +1,10 @@
 # GPUPhysicsColliderImplementation
 
+[Direct native attachment lookup](../components/physics-backends.md#direct-native-attachment-lookup-2026-10-27)
+uses the current concrete built-in attachment after store/handle qualification.
+Wrapped implementations retain the store-owned table and retirement guards; no
+numerical state mirror or additional transfer is introduced.
+
 Scalar linear/angular reads share the observed snapshot with a separate velocity
 qualifier. Queued waking preserves those values; targeted writes retire their
 collider, while numerical/structural changes retire all velocity observations.
@@ -7,7 +12,7 @@ Full-state, sleep-clock and activity reads retain their own freshness checks.
 Private and portable restoration preserve or invalidate the corresponding state.
 See [velocity observation policy](../components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25).
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 Mode publication keeps its retained surface cache aligned with the resident store: only entry from a fixed role into a dynamic role consumes and clears virtual surface motion. Fixed-to-fixed and unchanged-mode requests retain it until explicit surface publication. This uses retained role metadata and adds no device readback; the common scene-role fixture checks direct surface clearing, shape rebuilds and fixed/dynamic transitions.
 

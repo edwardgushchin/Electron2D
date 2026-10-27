@@ -3,8 +3,12 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     private readonly Dictionary<PhysicsColliderBackend, GPUPhysicsColliderImplementation> _colliders = [];
-    internal GPUPhysicsColliderImplementation NativeCollider(PhysicsColliderBackend collider) =>
-        _colliders.TryGetValue(collider, out var value) ? value : throw new InvalidOperationException("The collider has no attachment owned by this GPU store.");
+    internal GPUPhysicsColliderImplementation NativeCollider(PhysicsColliderBackend collider)
+    {
+        if (!_disposed && collider.Implementation is GPUPhysicsColliderImplementation direct && direct.IsAttachedTo(this)) return direct;
+        // Registered implementations may wrap their native attachment.
+        return _colliders.TryGetValue(collider, out var value) ? value : throw new InvalidOperationException("The collider has no attachment owned by this GPU store.");
+    }
     internal PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider, PhysicsSpace space)
     {
         var implementation = new GPUPhysicsColliderImplementation(collider, space, this);

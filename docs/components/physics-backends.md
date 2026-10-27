@@ -9,7 +9,7 @@
 
 [Polygon point containment](physics-point-containment.md) corrects CPU GJK false-inside observations across points, ray origins, Area audio and directed proxy regions. CPU/GPU tests use equal authored poses and independent geometric controls.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 ## Cold body-view preparation
 
@@ -1463,3 +1463,47 @@ hardware performance remain separate acceptance gates.
 General notification traversal now runs immediately in the owner/current processing group, including physical descendants, and preserves foreign-branch errors, callback reentry and protected geometry ownership. Reserved physics/GUI consumer effects retain their independent guards and open coverage. See [verification](scene-hierarchy.md#general-notification-traversal-from-processing-groups).
 
 [Indexed contact observations](physics-space-checkpoints.md#indexed-gpu-contact-projection) use retained body-slot high-water storage through publication and local checkpoints. Sparse slots and empty restoration preserve the same scene/server contact API and native ownership.
+
+
+## Direct native attachment lookup (2026-10-27)
+
+Built-in resident GPU operations resolve the facade's current concrete attachment
+before consulting the store's native lookup table. The direct path requires the
+same retained store, a live body handle and a store that has not been disposed.
+Registered implementations can wrap their native attachment, so their table lookup
+and conditional retirement remain in place. Transfer, failed creation, detach and
+repeated retirement retain their existing ownership rules. No body state is cached
+or read back by this lookup; integration invalidation, policy, callbacks, contact
+selection and solver kernels are unchanged.
+
+`PhysicsBackendOwnershipTests.GPUColliders` checks detached/current/foreign lookup,
+transfer between two GPU worlds, fresh reattachment, repeated retirement and lookup
+after store disposal. The existing wrapped-view tests independently exercise the
+table path and replacement lifetime. The complete selected GPU ownership runner
+also verifies scene/raw bodies, Areas, queries, joint/force/contact dispatch,
+checkpoint/view lifetime and 512-body full steps with 64 measured warm intervals
+at 0/0 owner/all-thread managed bytes.
+
+The retained `bin/physics-native-lookup/2026-10-27/probe/` calls the actual
+`GPUPhysicsWorldBackend.PrepareWorld` with 65,536 raw bodies, 32 warm calls and
+64 samples. One probe DLL runs against immutable baseline and candidate runtimes
+in baseline/candidate/candidate/baseline order. Calibrated thread CPU-time mean /
+median in milliseconds:
+
+| Runtime / order | Mean | Median |
+| --- | ---: | ---: |
+| Baseline 1 | 4.29196 | 4.18082 |
+| Candidate 1 | 2.90414 | 2.84961 |
+| Candidate 2 | 2.83607 | 2.81149 |
+| Baseline 2 | 4.26568 | 4.23065 |
+
+Every interval has 0/0 owner/all-thread managed bytes, zero readback and zero
+submissions. These measurements cover preparation with unchanged integration
+settings and no callbacks or pending forces. They exclude solving, scene authoring,
+contact publication and window rendering; they establish no whole-step speed ratio,
+60 Hz or FPS acceptance. Baseline runtime SHA-256 is
+`8a45c9a08f744fac5028e1609f8550259377bbf60d70ff4ebc542947df1bd054`;
+candidate is `f7d342126effac05cd2b7e594ac1e80482968b39dd8a74407db3fc528c76c785`.
+Manifests, compiler/PDB source proof, commands and all raw samples remain in that
+artifact directory. Declaration coverage remains 1362/1369 (99.49%), seven open;
+this internal lookup adds no public API or coverage promotion.
