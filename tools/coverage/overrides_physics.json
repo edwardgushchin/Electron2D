@@ -3019,6 +3019,11 @@
       "godot": "Performance::enum_value:Monitor.MEMORY_MESSAGE_BUFFER_MAX",
       "electron2d": "enumValue:Electron2D.Performance.Monitor.MemoryMessageBufferMax()",
       "reason": "ADR 0016: actual managed allocation instrumentation for retained SceneTree deferred queue arrays and typed invocation objects/delegates, including captured/spare buffers, independent live trees and processing groups. Process-lifetime high-water publication excludes retired groups and disposed/collected owners from subsequent totals without retaining targets. Caller-owned graphs and pool bookkeeping are excluded. Public DeferredMemoryContract exercises growth/replacement, FIFO/error/worker delivery, lifetime and 256 zero owner/all-thread allocation cycles. See docs/components/runtime-diagnostics.md#deferred-message-memory."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_CANVAS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.PipelineCompilationsCanvas()",
+      "reason": "ADR 0028/0016: cumulative successful engine-owned SDL GPU canvas graphics-pipeline creations during the active renderer session. Cache hits do not increment; cache retirement and failed later frames retain successful work. Initialization contributes before first frame; closure returns zero and a new session starts afresh. Compatibility owns no such pipeline objects and returns zero. Atomic managed reads do not create/synchronize native state; local-device graphics, compute/physics, import and driver-internal compilation are separate. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
     }
   ],
   "extras": [
@@ -7378,7 +7383,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency, deferred message storage peak and typed custom monitors execute. Memory current/peak and renderer device-memory/pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+      "reason": "Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency, deferred message storage peak, cumulative canvas pipeline creations and typed custom monitors execute. Memory current/peak and renderer device-memory/other pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
     },
     {
       "godot": [
@@ -7467,7 +7472,6 @@
     },
     {
       "godot": [
-        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_CANVAS",
         "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_DRAW",
         "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_MESH",
         "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SPECIALIZATION",
@@ -8102,6 +8106,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0016: actual managed allocation instrumentation for retained SceneTree deferred queue arrays and typed invocation objects/delegates, including captured/spare buffers, independent live trees and processing groups. Process-lifetime high-water publication excludes retired groups and disposed/collected owners from subsequent totals without retaining targets. Caller-owned graphs and pool bookkeeping are excluded. Public DeferredMemoryContract exercises growth/replacement, FIFO/error/worker delivery, lifetime and 256 zero owner/all-thread allocation cycles. See docs/components/runtime-diagnostics.md#deferred-message-memory."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_CANVAS"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028/0016: cumulative successful engine-owned SDL GPU canvas graphics-pipeline creations during the active renderer session. Cache hits do not increment; cache retirement and failed later frames retain successful work. Initialization contributes before first frame; closure returns zero and a new session starts afresh. Compatibility owns no such pipeline objects and returns zero. Atomic managed reads do not create/synchronize native state; local-device graphics, compute/physics, import and driver-internal compilation are separate. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
     }
   ]
 }

@@ -1873,7 +1873,7 @@ Native thin-stroke batch bounds include half-pixel coverage and an additional ha
 
 | Signature | Contract |
 | --- | --- |
-| `public static long GetRenderingInfo(RenderingInfo info)` | Allocation-free, any-thread aggregate observation; zero without a native session. |
+| `public static long GetRenderingInfo(RenderingInfo info)` | Allocation-free, any-thread completed canvas totals or cumulative canvas pipeline creations; zero without a native session. See [canvas counters](../components/canvas-counters.md#canvas-pipeline-compilation). |
 | `public static long ViewportGetRenderInfo(RID viewport, ViewportRenderInfoType type, ViewportRenderInfo info)` | Same per-viewport fields through a live scene or server-owned RID; native owner required. |
 
 ## Native OS feature query

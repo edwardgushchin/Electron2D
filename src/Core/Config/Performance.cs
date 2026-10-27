@@ -62,6 +62,8 @@ public sealed partial class Performance : ElectronObject
         NavigationEdgeFreeCount = 32,
         /// <summary>Committed obstacles belonging to active navigation maps.</summary>
         NavigationObstacleCount = 33,
+        /// <summary>Successfully created canvas graphics pipelines during the active renderer session.</summary>
+        PipelineCompilationsCanvas = 34,
         /// <summary>Committed active planar navigation maps.</summary>
         Navigation2DActiveMaps = 39,
         /// <summary>Committed regions belonging to active planar maps.</summary>
@@ -101,6 +103,8 @@ public sealed partial class Performance : ElectronObject
     /// Audio reads the active output's last valid latency without initializing the service/device or calling its owner.
     /// It returns zero before output initialization, during offline recording and after output closes. Concurrent output
     /// replacement/retirement may yield the prior snapshot; it never accesses a retired native handle.
+    /// Canvas pipeline compilations read RenderingServer.GetRenderingInfo's cumulative successful native creation count,
+    /// independently of completed-frame publication. The value resets with the renderer and is zero for compatibility.
     /// Deferred memory counts retained queue backing arrays and engine-owned typed invocation objects/delegates across
     /// live trees, including independent trees and processing groups. It retains the process peak after drain or teardown.
     /// Growth measures actual managed allocations; caller callbacks, referenced payload graphs and pool bookkeeping are
@@ -118,6 +122,7 @@ public sealed partial class Performance : ElectronObject
         Monitor.TimePhysicsProcess => AtomicFloatingPoint.Read(ref _physicsTime),
         Monitor.TimeNavigationProcess => AtomicFloatingPoint.Read(ref _navigationTime),
         Monitor.MemoryMessageBufferMax => ObjectCensus.DeferredStoragePeak,
+        Monitor.PipelineCompilationsCanvas => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.PipelineCompilationsCanvas),
         Monitor.ObjectCount or Monitor.ObjectNodeCount or Monitor.ObjectOrphanNodeCount => ObjectCensus.Count(monitor),
         Monitor.ObjectResourceCount => Resource.CountCachedResources(),
         Monitor.RenderTotalObjectsInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalObjectsInFrame),

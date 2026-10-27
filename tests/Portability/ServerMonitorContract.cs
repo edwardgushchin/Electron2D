@@ -60,7 +60,7 @@ internal static class ServerMonitorContract
             NavigationServer.FreeRID(first); NavigationServer.FreeRID(second); NavigationServer.FreeRID(map); NavigationServer.Synchronize();
         }
         Counts(baseline);
-        foreach (var invalid in new[] { -1, 4, 34, 49, 59, int.MaxValue })
+        foreach (var invalid in new[] { -1, 4, 35, 49, 59, int.MaxValue })
         {
             try { Performance.GetMonitor((Monitor)invalid); throw new InvalidOperationException("Undefined monitor accepted."); }
             catch (ArgumentOutOfRangeException) { }

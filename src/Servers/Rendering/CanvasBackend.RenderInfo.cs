@@ -3,6 +3,9 @@ namespace Electron2D;
 internal abstract partial class CanvasBackend
 {
     internal long RenderObjects, RenderPrimitives, RenderDrawCalls;
+    private long _canvasPipelineCompilations;
+    internal long CanvasPipelineCompilations => Interlocked.Read(ref _canvasPipelineCompilations);
+    protected void RecordCanvasPipelineCompilation() => Interlocked.Increment(ref _canvasPipelineCompilations);
     protected void ResetRenderInfo() => RenderObjects = RenderPrimitives = RenderDrawCalls = 0;
     protected void RecordCanvasDraw(CanvasBatch batch, long calls = 1)
     {

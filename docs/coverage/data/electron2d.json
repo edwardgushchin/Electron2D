@@ -47815,6 +47815,19 @@
     "value": "19"
   },
   {
+    "id": "enumValue:Electron2D.Performance.Monitor.PipelineCompilationsCanvas()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "PipelineCompilationsCanvas",
+    "signature": "public const Electron2D.Performance.Monitor PipelineCompilationsCanvas = 34",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "34"
+  },
+  {
     "id": "enumValue:Electron2D.Performance.Monitor.RenderTotalDrawCallsInFrame()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Performance.Monitor",
@@ -54469,6 +54482,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.ParticlesTransformAlignAxis",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.PipelineCompilationsCanvas()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.RenderingInfo",
+    "name": "PipelineCompilationsCanvas",
+    "signature": "public const Electron2D.RenderingServer.RenderingInfo PipelineCompilationsCanvas = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.RenderingInfo",
+    "value": "6"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.TotalDrawCallsInFrame()",

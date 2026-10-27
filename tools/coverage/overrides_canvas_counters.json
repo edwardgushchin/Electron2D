@@ -18,7 +18,7 @@
     {
       "godot": "RenderingServer::enum:RenderingInfo",
       "electron2d": "T:Electron2D.RenderingServer.RenderingInfo",
-      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate. Cumulative successful canvas pipeline creation now has its own session lifetime and any-thread cached producer; device memory and other compilation sources remain open."
     },
     {
       "godot": "RenderingServer::enum:ViewportRenderInfo",
@@ -78,7 +78,7 @@
     {
       "godot": "RenderingServer::method:get_rendering_info(int:RenderingServer.RenderingInfo)",
       "electron2d": "method:Electron2D.RenderingServer.GetRenderingInfo(Electron2D.RenderingServer.RenderingInfo)",
-      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate. Cumulative successful canvas pipeline creation now has its own session lifetime and any-thread cached producer; device memory and other compilation sources remain open."
     },
     {
       "godot": "RenderingServer::method:viewport_get_render_info(RID:,int:RenderingServer.ViewportRenderInfoType,int:RenderingServer.ViewportRenderInfo)",
@@ -129,6 +129,11 @@
       "godot": "Viewport::method:get_render_info(int:Viewport.RenderInfoType,int:Viewport.RenderInfo)",
       "electron2d": "method:Electron2D.Viewport.GetRenderInfo(Electron2D.ViewportRenderInfoType,Electron2D.ViewportRenderInfo)",
       "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_PIPELINE_COMPILATIONS_CANVAS",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.PipelineCompilationsCanvas()",
+      "reason": "ADR 0028/0016: cumulative successful engine-owned SDL GPU canvas graphics-pipeline creations during the active renderer session. Cache hits do not increment; cache retirement and failed later frames retain successful work. Initialization contributes before first frame; closure returns zero and a new session starts afresh. Compatibility owns no such pipeline objects and returns zero. Atomic managed reads do not create/synchronize native state; local-device graphics, compute/physics, import and driver-internal compilation are separate. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
     }
   ],
   "extras": [],
@@ -179,7 +184,14 @@
         "RenderingServer::method:get_rendering_info(int:RenderingServer.RenderingInfo)"
       ],
       "state": "Partial",
-      "reason": "Canvas submission totals now execute. Device texture/buffer/video-memory and pipeline compilation counters still need their actual backend allocation/compilation accounting producers; no constant-return members are exposed."
+      "reason": "Canvas submission totals and cumulative successful native canvas pipeline creations execute. Device texture/buffer/video-memory and other pipeline source counters still require actual producers; no constant-return placeholders are exposed. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
+    },
+    {
+      "godot": [
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_PIPELINE_COMPILATIONS_CANVAS"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028/0016: cumulative successful engine-owned SDL GPU canvas graphics-pipeline creations during the active renderer session. Cache hits do not increment; cache retirement and failed later frames retain successful work. Initialization contributes before first frame; closure returns zero and a new session starts afresh. Compatibility owns no such pipeline objects and returns zero. Atomic managed reads do not create/synchronize native state; local-device graphics, compute/physics, import and driver-internal compilation are separate. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
     }
   ]
 }

@@ -43,6 +43,15 @@ cover the complete runtime inputs and actual test consumers. See the local
 [validation receipt](../../bin/deferred-memory/2026-10-27/validation.json).
 Foreign-platform and total native-memory acceptance remain separate.
 
+## Canvas pipeline diagnostics
+
+[Canvas pipeline compilation](canvas-counters.md#canvas-pipeline-compilation)
+adds the session-cumulative successful canvas graphics-pipeline creation count,
+independently of completed-frame statistics and their publication window.
+Performance and RenderingServer share the same atomic producer, including
+initialization, cache hits/retirement, error and teardown semantics. Other source
+categories and total/device memory retain their separate prerequisites.
+
 ## Scope and owned types
 
 [Performance](../classes/Performance.md) is the retained process-wide diagnostics service under [ADR 0095](../decisions/singleton-services.md#adr-0095). Its existing built-in [physics statistics](physics-statistics.md) read completed producer snapshots. Custom monitors supply application-defined values through direct typed callbacks; [Performance.CustomMonitor](../classes/Performance.CustomMonitor.Generic.md) identifies one registration and [MonitorType](../classes/Performance.MonitorType.md) describes presentation units.

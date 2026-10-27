@@ -30,7 +30,7 @@ double pairs = Performance.GetMonitor(Performance.Monitor.PhysicsCollisionPairs)
 double islands = Performance.GetMonitor(Performance.Monitor.PhysicsIslandCount);
 ```
 
-[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) add all ten aggregate and ten planar navigation counts plus cached audio output latency. [Deferred message memory](../components/runtime-diagnostics.md#deferred-message-memory) adds a process-lifetime peak of actual reserved scene message storage. Total current/peak memory and renderer memory/compilation producers remain unimplemented. Custom monitor registration/lifecycle now executes through typed handles. No unsupported selector or constant-return placeholder is exposed.
+[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) add all ten aggregate and ten planar navigation counts plus cached audio output latency. [Deferred message memory](../components/runtime-diagnostics.md#deferred-message-memory) adds a process-lifetime peak of actual reserved scene message storage. [Canvas pipeline compilation](../components/canvas-counters.md#canvas-pipeline-compilation) now counts cumulative successful native canvas creations. Total current/peak memory, renderer memory and other compilation sources remain unimplemented. Custom monitor registration/lifecycle now executes through typed handles. No unsupported selector or constant-return placeholder is exposed.
 See the component for sample lifetime, verification and platform limits.
 
 ## Custom monitors

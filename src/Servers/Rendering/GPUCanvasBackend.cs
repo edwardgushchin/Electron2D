@@ -144,7 +144,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             VertexInputState = new() { VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = instanced ? 2u : 1u, VertexAttributes = (nint)attributes, NumVertexAttributes = instanced ? 16u : 13u },
             TargetInfo = new() { ColorTargetDescriptions = (nint)(&color), NumColorTargets = 1 }
         };
-        return new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);
+        var pipeline = new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);
+        RecordCanvasPipelineCompilation();
+        return pipeline;
     }
 
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default)

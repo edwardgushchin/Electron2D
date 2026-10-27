@@ -35,6 +35,7 @@ Last updated: 2026-10-27
 | NavigationEdgeConnectionCount | 31 | Committed NavigationServer.ProcessInfo.EdgeConnectionCount |
 | NavigationEdgeFreeCount | 32 | Committed NavigationServer.ProcessInfo.EdgeFreeCount |
 | NavigationObstacleCount | 33 | Committed NavigationServer.ProcessInfo.ObstacleCount |
+| PipelineCompilationsCanvas | 34 | Cumulative successful canvas graphics-pipeline creations in the active renderer session |
 | Navigation2DActiveMaps | 39 | Committed NavigationServer.ProcessInfo.ActiveMaps |
 | Navigation2DRegionCount | 40 | Committed NavigationServer.ProcessInfo.RegionCount |
 | Navigation2DAgentCount | 41 | Committed NavigationServer.ProcessInfo.AgentCount |
