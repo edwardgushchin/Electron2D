@@ -16,6 +16,7 @@ System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_MONITORS") == "1") { ServerMonitorContract.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_MEMORY") == "1") { DeferredMemoryContract.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_MONITORS") == "1") { AudioOutputTests.Run(); AudioOutputTests.RunOfflineMonitor(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GUIDES") is { } guideProfile) { CanvasGuideContracts.Run(guideProfile); if (guideProfile == "managed") { ScreenVisibilityTests.Run(); EditorHintTests.Managed(); } return; }

@@ -16,7 +16,7 @@ unregistration throws without changing its identity. Construction is private.
 
 | Signature | Contract |
 | --- | --- |
-| `public static double GetMonitor(Performance.Monitor monitor)` | Read the selected current object population, completed frame rate, duration or physical count as a double. |
+| `public static double GetMonitor(Performance.Monitor monitor)` | Read the selected object population, reserved-byte peak, completed frame rate, duration or physical count as a double. |
 | `protected override void ValidateDisposal()` | Reject consumer disposal of the permanent service. |
 
 The [Monitor](Performance.Monitor.md) enum exposes timing, object population, canvas, physics, navigation and audio producers. Prepared reads may run on any thread without advancing simulation, synchronizing a device or allocating managed memory. Physical selectors share [PhysicsServer.GetProcessInfo](PhysicsServer.md#statistics) snapshots; object selectors perform current weak/cache population scans under the [object lifetime contract](../components/object-lifetime-monitors.md). Undefined monitor values throw ArgumentOutOfRangeException. Aggregate physical integer overflow throws OverflowException.
@@ -30,7 +30,7 @@ double pairs = Performance.GetMonitor(Performance.Monitor.PhysicsCollisionPairs)
 double islands = Performance.GetMonitor(Performance.Monitor.PhysicsIslandCount);
 ```
 
-[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) add all ten aggregate and ten planar navigation counts plus cached audio output latency. Other built-in memory and renderer-compilation producers remain unimplemented. Custom monitor registration/lifecycle now executes through typed handles. No unsupported selector or constant-return placeholder is exposed.
+[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) add all ten aggregate and ten planar navigation counts plus cached audio output latency. [Deferred message memory](../components/runtime-diagnostics.md#deferred-message-memory) adds a process-lifetime peak of actual reserved scene message storage. Total current/peak memory and renderer memory/compilation producers remain unimplemented. Custom monitor registration/lifecycle now executes through typed handles. No unsupported selector or constant-return placeholder is exposed.
 See the component for sample lifetime, verification and platform limits.
 
 ## Custom monitors

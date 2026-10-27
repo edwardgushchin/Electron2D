@@ -13,6 +13,7 @@ Last updated: 2026-10-27
 | TimeProcess | 1 | Largest completed process-frame duration; owned Window presentation included |
 | TimePhysicsProcess | 2 | Largest individual fixed-step duration |
 | TimeNavigationProcess | 3 | Largest synchronization/avoidance duration within a fixed step |
+| MemoryMessageBufferMax | 6 | Process-lifetime peak retained deferred-message arrays and typed invocation storage in managed bytes |
 | ObjectCount | 7 | Reachable engine objects before committed disposal |
 | ObjectResourceCount | 8 | Live owners registered in the resource path cache |
 | ObjectNodeCount | 9 | Live nodes inside the attached Engine SceneTree |

@@ -6,6 +6,43 @@ Last updated: 2026-10-27
 
 [Frame timing monitors](frame-monitors.md) add four actual Engine producers: FPS and per-window peak process, physics-step and navigation durations. They retain independent cached reads and explicit reset, error, presentation and direct-host boundaries.
 
+## Deferred message memory
+
+MemoryMessageBufferMax (identity 6) is the process-lifetime peak sum of reserved
+SceneTree deferred-message storage in bytes. Both ordinary enqueue/captured arrays,
+all processing-group message arrays and pooled typed invocation objects with their
+cached delegates contribute across live independent and Engine-owned trees.
+Draining retains prepared storage and the published peak. Retiring a group releases
+its empty queue array; its typed slots stay available to the tree. Disposal or actual
+collection removes a tree from subsequent totals. The peak never resets on Engine
+attachment, drain, teardown or collection.
+
+Growth brackets only the actual queue allocation or typed invocation constructor
+with GC.GetAllocatedBytesForCurrentThread. A replacement array replaces its prior
+contribution; this is reserved live capacity rather than cumulative allocation or
+pending-message count. Measured managed headers/alignment are included. Caller
+callbacks and referenced payload graphs, dictionary/free-list bookkeeping, deletion
+requests and unrelated engine queues are excluded. No object-layout constants,
+GC heap estimate or process RSS stand in for the producer. The existing weak
+object census serializes growth accounting without taking another tree's work gate.
+Queries read one cached atomic integer, allocate nothing after preparation and
+never collect, initialize a device or invoke a callback.
+
+This adapts the pinned [retained message pages](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/message_queue.cpp)
+to managed scene-owned queues; it does not establish total current/peak memory.
+[DeferredMemoryContract](../../tests/Portability/DeferredMemoryContract.cs), selected
+by public `--deferred-memory` or root `ELECTRON2D_TEST_DEFERRED_MEMORY=1`, checks
+actual first/replacement allocation sizes, both buffers, typed/group capacity,
+worker delivery through callback failures, retirement and disposed/collected trees,
+independent live-tree aggregation, inline 2 KiB payloads, exclusion of a caller-owned
+1 MiB graph and 256 prepared enqueue/drain/read cycles with zero owner/all-thread
+managed bytes. Linux CLR root/public and strict NativeAOT public profiles pass the
+same contract with a 262,192-byte peak; the seven CLR and two NativeAOT
+profiles retain deferred delivery and existing diagnostics. Source/PDB proofs
+cover the complete runtime inputs and actual test consumers. See the local
+[validation receipt](../../bin/deferred-memory/2026-10-27/validation.json).
+Foreign-platform and total native-memory acceptance remain separate.
+
 ## Scope and owned types
 
 [Performance](../classes/Performance.md) is the retained process-wide diagnostics service under [ADR 0095](../decisions/singleton-services.md#adr-0095). Its existing built-in [physics statistics](physics-statistics.md) read completed producer snapshots. Custom monitors supply application-defined values through direct typed callbacks; [Performance.CustomMonitor](../classes/Performance.CustomMonitor.Generic.md) identifies one registration and [MonitorType](../classes/Performance.MonitorType.md) describes presentation units.
@@ -36,7 +73,7 @@ monitor introduces no periodic sampler or stale-value cache of its own.
 
 Both families permit prepared reads on any thread with no managed allocation.
 First use may initialize managed service metadata; it opens no native device.
-These selectors do not complete the remaining allocation-memory, deferred-buffer,
+These selectors do not complete the remaining allocation-memory,
 video-memory or pipeline-compilation instrumentation. Performance/GetMonitor and
 its enum remain Partial in the full declaration audit.
 

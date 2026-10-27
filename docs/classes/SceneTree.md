@@ -285,7 +285,7 @@ Thread-safely queues an action for a future deferred flush while the tree remain
 
 **Remarks:** Actions queued by deferred callbacks run in FIFO order during the same flush until the queue is empty. A continually self-enqueuing callback can prevent completion. Queue acceptance is atomic with the
 start of tree finalization: a successful call is either captured by a future flush or intentionally discarded by
-later finalization; a call that loses that race throws and does not enqueue.
+later finalization; a call that loses that race throws and does not enqueue. The enqueue/captured buffers and pooled typed invocations feed the process-lifetime [deferred message memory peak](../components/runtime-diagnostics.md#deferred-message-memory). Typed submission selects its receiving buffer under the same work lock as enqueue, including concurrent flushes.
 
 <a id="m-electron2d-scenetree-setdeferred-1-system-action-0-0"></a>
 ### `public void SetDeferred<T>(Action<T> setter, T value)`

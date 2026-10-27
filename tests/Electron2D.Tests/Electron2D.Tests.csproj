@@ -32,6 +32,7 @@
     <EmbeddedResource Include="../../editor/Assets/IBMPlexSans-SemiBold.ttf" LogicalName="Locale.SemiBold.ttf" />
     <Compile Include="../Portability/FrameMonitorContract.cs" Link="FrameMonitorContract.cs" />
     <Compile Include="../Portability/ServerMonitorContract.cs" Link="ServerMonitorContract.cs" />
+    <Compile Include="../Portability/DeferredMemoryContract.cs" Link="DeferredMemoryContract.cs" />
     <Compile Include="../Portability/SystemBackContract.cs" Link="SystemBackContract.cs" />
     <Compile Include="../Portability/JoyMotionContract.cs" Link="JoyMotionContract.cs" />
     <Compile Include="../Portability/DeviceSensorContract.cs" Link="DeviceSensorContract.cs" />

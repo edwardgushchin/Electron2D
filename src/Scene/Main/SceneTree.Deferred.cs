@@ -3,6 +3,31 @@ namespace Electron2D;
 public partial class SceneTree
 {
     private readonly DeferredScheduler _typedDeferredScheduler;
+    internal long DeferredStorageBytes;
+
+    internal sealed class DeferredQueue(SceneTree tree)
+    {
+        private readonly Queue<Action> _actions = new();
+        private long _storageBytes;
+        internal int Count => _actions.Count;
+        internal bool TryDequeue(out Action action) => _actions.TryDequeue(out action!);
+        internal void Enqueue(Action action)
+        {
+            if (_actions.Count < _actions.EnsureCapacity(0)) { _actions.Enqueue(action); return; }
+            // Only the replacement backing array is allocated inside this growth boundary.
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            _actions.Enqueue(action);
+            var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+            ObjectCensus.ChangeDeferredStorage(tree, bytes - _storageBytes);
+            _storageBytes = bytes;
+        }
+        internal void ReleaseStorage()
+        {
+            _actions.TrimExcess();
+            ObjectCensus.ChangeDeferredStorage(tree, -_storageBytes);
+            _storageBytes = 0;
+        }
+    }
 
     private sealed class DeferredScheduler : IDeferredScheduler
     {
@@ -20,9 +45,11 @@ public partial class SceneTree
         }
 
         public void Enqueue<T>(Action<T> callback, T value)
-            => Enqueue(callback, value, _tree._deferred);
+        {
+            lock (_tree._workGate) Enqueue(callback, value, _tree._deferred);
+        }
 
-        internal void Enqueue<T>(Action<T> callback, T value, Queue<Action> queue)
+        internal void Enqueue<T>(Action<T> callback, T value, DeferredQueue queue)
         {
             lock (_tree._workGate)
             {
@@ -52,7 +79,15 @@ public partial class SceneTree
         internal int CreatedCount => _created;
         internal void Prepare() { _reservations++; if (_created < _reservations) _free.Push(Create()); }
         internal void Release() => _reservations--;
-        private DeferredInvocation<T> Create() { _created++; return new(this); }
+        private DeferredInvocation<T> Create()
+        {
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            var slot = new DeferredInvocation<T>(this);
+            var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+            ObjectCensus.ChangeDeferredStorage(tree, bytes);
+            _created++;
+            return slot;
+        }
         internal DeferredInvocation<T> Rent(Action<T> callback, T value)
         {
             var slot = _free.TryPop(out var ready) ? ready : Create();
@@ -81,7 +116,7 @@ public partial class SceneTree
         }
     }
 
-    private static void DiscardDeferred(Queue<Action> queue)
+    private static void DiscardDeferred(DeferredQueue queue)
     {
         while (queue.TryDequeue(out var action))
             if (action.Target is IDeferredInvocation invocation) invocation.Discard();

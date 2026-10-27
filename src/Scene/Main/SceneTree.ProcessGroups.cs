@@ -103,7 +103,7 @@ public partial class SceneTree
     {
         internal readonly SceneTree Tree = tree;
         internal readonly ObjectIdentity Owner = owner;
-        internal readonly Queue<Action> Messages = [];
+        internal readonly DeferredQueue Messages = new(tree);
         internal readonly List<Node> Members = [];
         internal readonly List<ScheduledNode> IdleSchedule = [], PhysicsSchedule = [];
         internal ulong IdleRevision = ulong.MaxValue, PhysicsRevision = ulong.MaxValue;
@@ -155,6 +155,7 @@ public partial class SceneTree
     private void RetireProcessingGroup(ProcessingGroup group)
     {
         group.Removed = true; DiscardDeferred(group.Messages); group.Members.Clear();
+        group.Messages.ReleaseStorage();
         _processingGroups.Remove(group.Owner.ID);
     }
     internal void RebindProcessingGroups(Node node)

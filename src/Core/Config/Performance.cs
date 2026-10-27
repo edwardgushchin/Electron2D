@@ -18,6 +18,8 @@ public sealed partial class Performance : ElectronObject
         TimePhysicsProcess = 2,
         /// <summary>Largest navigation synchronization and avoidance duration within one physics step in the last sampling window, in seconds.</summary>
         TimeNavigationProcess = 3,
+        /// <summary>Process-lifetime peak reserved SceneTree deferred queue arrays and typed invocation storage, in managed bytes.</summary>
+        MemoryMessageBufferMax = 6,
         /// <summary>Weakly reachable engine objects whose disposal has not committed.</summary>
         ObjectCount = 7,
         /// <summary>Live resources registered in the process-wide path cache; uncached resources are excluded.</summary>
@@ -84,7 +86,7 @@ public sealed partial class Performance : ElectronObject
 
     /// <summary>Reads the latest published value of a runtime monitor.</summary>
     /// <param name="monitor">An implemented monitor selector.</param>
-    /// <returns>A current object population, frame rate, duration in seconds, canvas submission count or physical count selected by the monitor.</returns>
+    /// <returns>The selected population, byte peak, frame rate, duration in seconds or submission/physical count.</returns>
     /// <remarks>Safe on any thread. Does not synchronize a device, invoke callbacks or allocate.
     /// Object selectors scan weak registrations or the path cache on demand, without forcing collection or taking
     /// scene ownership. They include queued and cancellation-pending objects until disposal commits; unreachable
@@ -99,6 +101,10 @@ public sealed partial class Performance : ElectronObject
     /// Audio reads the active output's last valid latency without initializing the service/device or calling its owner.
     /// It returns zero before output initialization, during offline recording and after output closes. Concurrent output
     /// replacement/retirement may yield the prior snapshot; it never accesses a retired native handle.
+    /// Deferred memory counts retained queue backing arrays and engine-owned typed invocation objects/delegates across
+    /// live trees, including independent trees and processing groups. It retains the process peak after drain or teardown.
+    /// Growth measures actual managed allocations; caller callbacks, referenced payload graphs and pool bookkeeping are
+    /// excluded. Unreachable or disposed trees do not contribute to subsequent peaks; reads never force collection.
     /// Canvas counts publish after completed native rendering and follow RenderingServer.GetRenderingInfo, including
     /// GPU-authored capacity budgets and zero without an active renderer. Several reads do not form an atomic snapshot. Durations measure owner-side wall time, not device timestamps.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The monitor is undefined.</exception>
@@ -111,6 +117,7 @@ public sealed partial class Performance : ElectronObject
         Monitor.TimeProcess => AtomicFloatingPoint.Read(ref _processTime),
         Monitor.TimePhysicsProcess => AtomicFloatingPoint.Read(ref _physicsTime),
         Monitor.TimeNavigationProcess => AtomicFloatingPoint.Read(ref _navigationTime),
+        Monitor.MemoryMessageBufferMax => ObjectCensus.DeferredStoragePeak,
         Monitor.ObjectCount or Monitor.ObjectNodeCount or Monitor.ObjectOrphanNodeCount => ObjectCensus.Count(monitor),
         Monitor.ObjectResourceCount => Resource.CountCachedResources(),
         Monitor.RenderTotalObjectsInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalObjectsInFrame),

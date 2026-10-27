@@ -47451,6 +47451,19 @@
     "value": "23"
   },
   {
+    "id": "enumValue:Electron2D.Performance.Monitor.MemoryMessageBufferMax()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "MemoryMessageBufferMax",
+    "signature": "public const Electron2D.Performance.Monitor MemoryMessageBufferMax = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "6"
+  },
+  {
     "id": "enumValue:Electron2D.Performance.Monitor.Navigation2DActiveMaps()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Performance.Monitor",

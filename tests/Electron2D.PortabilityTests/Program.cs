@@ -1,3 +1,4 @@
+if (args is ["--deferred-memory"]) { DeferredMemoryContract.Run(); return; }
 if (args is ["--low-processor"]) { LowProcessorContract.Run(); return; }
 if (args is ["--server-monitors"]) { ServerMonitorContract.Run(); return; }
 if (args is ["--server-monitors-audio"]) { ServerMonitorContract.RunAudio(); return; }

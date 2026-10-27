@@ -247,8 +247,7 @@ NativeLibraries resolves the packaged SPIRV-Cross shared library directly for co
 [Performance](../classes/Performance.md) is a permanent retained Engine service with
 static GetMonitor access. Its physical producers read completed CPU/GPU
 [physics statistics](../components/physics-statistics.md) on any thread without
-allocating or synchronizing devices. Other built-in producers and custom monitors
-remain open coverage obligations.
+allocating or synchronizing devices. [Deferred message memory](../components/runtime-diagnostics.md#deferred-message-memory) instruments actual retained queue/typed-slot growth and publishes a process-lifetime peak. Total current/peak memory and renderer memory/compilation remain open coverage obligations; typed custom monitors execute separately.
 
 WorkerThreadPool schedules synchronized or independently owned data computations. It does not grant scene/render thread access: the executable WorkerRoutes consumer publishes through SceneTree.Defer. Threaded ResourceLoader, asynchronous baking and their ownership/cancellation contracts remain separate consumers under ADR 0104.
 

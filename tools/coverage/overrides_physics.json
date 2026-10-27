@@ -3014,6 +3014,11 @@
       "godot": "Performance::enum_value:Monitor.AUDIO_OUTPUT_LATENCY",
       "electron2d": "enumValue:Electron2D.Performance.Monitor.AudioOutputLatency()",
       "reason": "ADR 0016: any-thread active AudioServer managed output-latency snapshot in seconds, zero before initialization/after closure/offline recording, without service/device preparation or native calls. Actual native output changes, worker/retirement races, offline context and zero warmed reads execute in AudioOutputTests. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.MEMORY_MESSAGE_BUFFER_MAX",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.MemoryMessageBufferMax()",
+      "reason": "ADR 0016: actual managed allocation instrumentation for retained SceneTree deferred queue arrays and typed invocation objects/delegates, including captured/spare buffers, independent live trees and processing groups. Process-lifetime high-water publication excludes retired groups and disposed/collected owners from subsequent totals without retaining targets. Caller-owned graphs and pool bookkeeping are excluded. Public DeferredMemoryContract exercises growth/replacement, FIFO/error/worker delivery, lifetime and 256 zero owner/all-thread allocation cycles. See docs/components/runtime-diagnostics.md#deferred-message-memory."
     }
   ],
   "extras": [
@@ -7373,7 +7378,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency and typed custom monitors execute. Memory current/peak/deferred buffers and renderer device-memory/pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+      "reason": "Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency, deferred message storage peak and typed custom monitors execute. Memory current/peak and renderer device-memory/pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
     },
     {
       "godot": [
@@ -7402,12 +7407,11 @@
     },
     {
       "godot": [
-        "Performance::enum_value:Monitor.MEMORY_MESSAGE_BUFFER_MAX",
         "Performance::enum_value:Monitor.MEMORY_STATIC",
         "Performance::enum_value:Monitor.MEMORY_STATIC_MAX"
       ],
       "state": "Unimplemented",
-      "reason": "Trigger: actual coherent managed/native current and peak allocation producers plus deferred-message buffer capacity instrumentation, with explicit sample lifetime. Live object/cache/node populations now execute separately; managed GC heap size or process RSS alone does not establish these byte-count semantics. No constant-return counters."
+      "reason": "Trigger: actual coherent managed/native current and peak allocation producers with explicit lifetime. Deferred-message retained capacity now executes independently; managed GC heap size or process RSS alone does not establish the two total-byte semantics."
     },
     {
       "godot": [
@@ -8091,6 +8095,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0103: the engine assigns a registered immutable RID before a fresh selected factory initializes its inactive context; public SpaceCreate overloads and lazy World aliases retain captured registration/thread policy. Public-only JIT/strict NativeAOT CPU/no-device, software-GPU and registered owner/separate checks execute all three overload families, DEFAULT capture, six readonly initialization queries, initial mutation guards, actual scene/raw motion and point queries, 14 factory/init/secondary-cleanup failures, stale-view retirement and retained worker join. GPU startup rejection and explicit observable CPU fallback execute real CPU motion without a graphics device. Twelve shared profiles measure 7680 complete frames and 9216 owner callbacks at zero owner/all-thread managed bytes; root CPU/GPU/no-device checks verify failed native cleanup. Only this creation operation closes; body creation, complete numerical/custom-geometry/inherited/network/native-memory/platform and target-GPU/window performance acceptance remain open."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.MEMORY_MESSAGE_BUFFER_MAX"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0016: actual managed allocation instrumentation for retained SceneTree deferred queue arrays and typed invocation objects/delegates, including captured/spare buffers, independent live trees and processing groups. Process-lifetime high-water publication excludes retired groups and disposed/collected owners from subsequent totals without retaining targets. Caller-owned graphs and pool bookkeeping are excluded. Public DeferredMemoryContract exercises growth/replacement, FIFO/error/worker delivery, lifetime and 256 zero owner/all-thread allocation cycles. See docs/components/runtime-diagnostics.md#deferred-message-memory."
     }
   ]
 }

@@ -5,6 +5,23 @@ internal static class ObjectCensus
     private static readonly object Gate = new();
     private static readonly List<WeakReference<ElectronObject>> Objects = [];
     private static int _untilCompaction;
+    private static long _deferredStoragePeak;
+
+    internal static long DeferredStoragePeak => Interlocked.Read(ref _deferredStoragePeak);
+
+    internal static void ChangeDeferredStorage(SceneTree owner, long bytes)
+    {
+        lock (Gate)
+        {
+            owner.DeferredStorageBytes += bytes;
+            if (bytes <= 0) return;
+            long total = 0;
+            foreach (var reference in Objects)
+                if (reference.TryGetTarget(out var value) && value is SceneTree tree && !tree.IsDisposalCommitted)
+                    total = checked(total + tree.DeferredStorageBytes);
+            if (total > _deferredStoragePeak) Interlocked.Exchange(ref _deferredStoragePeak, total);
+        }
+    }
 
     internal static void Register(WeakReference<ElectronObject> reference)
     {

@@ -62,8 +62,8 @@ public sealed partial class SceneTree : MainLoop
     private readonly List<Tween> _tweens = [];
     private readonly LinkedList<CanvasItem> _transformChanges = new();
     private LinkedListNode<CanvasItem>? _nextTransformNotification;
-    private Queue<Action> _deferred = new();
-    private Queue<Action>? _deferredSpare = new();
+    private DeferredQueue _deferred;
+    private DeferredQueue? _deferredSpare;
     private ConcurrentQueue<DeletionRequest> _deletions = new();
     private ConcurrentQueue<DeletionRequest>? _deletionsSpare = new();
     private List<Node>? _activationReadied;
@@ -129,6 +129,8 @@ public sealed partial class SceneTree : MainLoop
             throw new ArgumentException("A SceneTree root cannot be queued for deletion.", nameof(root));
 
         Root = root;
+        _deferred = new(this);
+        _deferredSpare = new(this);
         _typedDeferredScheduler = new DeferredScheduler(this);
         DeferredSchedulerRegistry.Register(_typedDeferredScheduler);
         _gui.Section = _gui;
@@ -1825,7 +1827,7 @@ public sealed partial class SceneTree : MainLoop
     {
         while (true)
         {
-            Queue<Action> actions;
+            DeferredQueue actions;
             lock (_workGate)
             {
                 if (_deferred.Count == 0) break;
