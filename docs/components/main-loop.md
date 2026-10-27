@@ -155,8 +155,9 @@ driver; none of these hosts creates a window or renderer. Original Android dialo
 evidence remains in the native-result section above.
 
 The class row now records the complete functional contract of this type.
-Object's automatic post-initialization, script initialization/attachment and
-extension reload remain open in the inherited physics census. This audit adds no
+Object's script initialization/attachment and extension reload remain open in the
+inherited physics census. The [compiled construction boundary](object-lifecycle.md#compiled-construction-notification-boundary)
+does not require an automatic project notification 0. This audit adds no
 runtime API and does not close native heap, foreign-platform, numerical/network,
 GPU performance or real-window allocation acceptance. In particular, the separate
 [32-byte canvas frame observation](physics-allocation-measurement.md) remains open.

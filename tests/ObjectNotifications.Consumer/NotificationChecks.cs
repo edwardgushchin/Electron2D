@@ -6,12 +6,44 @@ internal static class NotificationChecks
     private const int Adjust = 47001, Trace = 47002, Nested = 47003, ConcurrentNormal = 47004, ConcurrentReverse = 47005;
     internal static void Run(PhysicsServer.Backend backend, bool threaded)
     {
-        VerifyCalls(); VerifyConcurrency(); VerifyLifetime(); VerifyBuiltInGUI();
+        VerifyConstruction(); VerifyCalls(); VerifyConcurrency(); VerifyLifetime(); VerifyBuiltInGUI();
         var old = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try { VerifyPhysicalFrames(backend); }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, old); }
         Console.WriteLine($"Notification direction: {backend}/{threaded}, nested/error/lifetime/concurrent/GUI and complete physics passed.");
+    }
+
+    private static void VerifyConstruction()
+    {
+        using var source = new ConstructionNode();
+        var identity = source.InstanceID;
+        Check(source.Constructed && source.PostInitializations == 0, "Construction never invokes a project notification override");
+        source.Notify(ElectronObject.NotificationPostInitialize);
+        source.Notify(ElectronObject.NotificationPostInitialize, true);
+        Check(source.PostInitializations == 2 && source.LastDirection && source.InstanceID == identity,
+            "Explicit zero notifications use the completed object and ordinary directional dispatch");
+
+        using var duplicate = (ConstructionNode)source.Duplicate();
+        Check(duplicate.Constructed && duplicate.PostInitializations == 0 && duplicate.InstanceID != identity,
+            "Duplication constructs a fresh exact project type without synthesizing a project initialization callback");
+        using var packed = new PackedScene(); packed.Pack(source);
+        using var restored = (ConstructionNode)packed.Instantiate();
+        Check(restored.Constructed && restored.PostInitializations == 0 && restored.InstanceID != identity,
+            "PackedScene construction keeps the same compiled callback boundary");
+        restored.Notify(ElectronObject.NotificationPostInitialize);
+        Check(restored.PostInitializations == 1 && !restored.LastDirection, "A restored object's explicit callback executes normally");
+
+        using var resource = new Probe();
+        Check(resource.Constructed && resource.PostInitializations == 0, "Resource construction has the same project callback boundary");
+        var error = new ApplicationException("explicit-initialization");
+        resource.Callback = (_, what) => { if (what == ElectronObject.NotificationPostInitialize) throw error; };
+        try { resource.Notify(ElectronObject.NotificationPostInitialize, true); throw new InvalidOperationException("Missing handler failure"); }
+        catch (ApplicationException actual) { Check(ReferenceEquals(actual, error), "An explicit zero callback preserves its original exception"); }
+        Check(resource.PostInitializations == 1 && !resource.Direction && !resource.IsDisposed,
+            "A failed explicit callback restores context without changing object lifetime");
+        resource.Callback = null;
+        Console.WriteLine("Compiled construction: direct Node/Resource, duplicate, PackedScene and explicit zero callback boundaries passed.");
     }
 
     private static void VerifyCalls()
@@ -184,11 +216,35 @@ internal static class NotificationChecks
             if (reverse) base.OnNotification(what);
         }
     }
+    private sealed class ConstructionNode : Node
+    {
+        internal bool Constructed;
+        internal int PostInitializations;
+        internal bool LastDirection;
+        public ConstructionNode() { Constructed = true; }
+        protected override Func<Node> CreateSceneInstanceFactory() => Create;
+        private static Node Create() => new ConstructionNode();
+        protected override void OnNotification(int what)
+        {
+            base.OnNotification(what);
+            if (what != NotificationPostInitialize) return;
+            Check(Constructed, "Project callbacks cannot observe an incomplete constructor");
+            PostInitializations++; LastDirection = IsNotificationReversed;
+        }
+    }
     private sealed class Probe : Resource
     {
+        internal bool Constructed;
+        internal int PostInitializations;
         internal Action<Probe, int>? Callback;
         internal bool Direction => IsNotificationReversed;
-        protected override void OnNotification(int what) { base.OnNotification(what); Callback?.Invoke(this, what); }
+        public Probe() { Constructed = true; }
+        protected override void OnNotification(int what)
+        {
+            base.OnNotification(what);
+            if (what == NotificationPostInitialize) { Check(Constructed, "Resource callbacks require completed construction"); PostInitializations++; }
+            Callback?.Invoke(this, what);
+        }
     }
     private sealed class CountingFont : FontFile
     {

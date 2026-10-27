@@ -143,7 +143,7 @@ sealed class Meter : ElectronObject
 
 | Member | Description |
 | --- | --- |
-| [`public const int NotificationPostInitialize = 0`](#f-electron2d-electronobject-notificationpostinitialize) | Identifies the post-initialization notification. |
+| [`public const int NotificationPostInitialize = 0`](#f-electron2d-electronobject-notificationpostinitialize) | Identifies the internal initialization boundary before project callbacks are attached. |
 | [`public const int NotificationPreDelete = 1`](#f-electron2d-electronobject-notificationpredelete) | Identifies the notification delivered immediately before owned resources are released. |
 
 ## Constructor Descriptions
@@ -547,10 +547,12 @@ future live script-assignment workflow and is currently raised only through [`El
 <a id="f-electron2d-electronobject-notificationpostinitialize"></a>
 ### `public const int NotificationPostInitialize = 0`
 
-Identifies the post-initialization notification.
+Identifies the internal initialization boundary before project callbacks are attached.
 
-**Remarks:** Electron2D does not dispatch this notification from the base constructor because invoking virtual members during
-construction is unsafe; a host may dispatch it explicitly after construction.
+**Remarks:** Ordinary C# construction initializes engine state without invoking project notification overrides. This identifier
+is not emitted automatically to compiled project classes. A host may explicitly send it after construction through
+Notify(int) or Notify(int, bool) with their ordinary dispatch and error semantics. See the
+[compiled construction boundary](../components/object-lifecycle.md#compiled-construction-notification-boundary).
 
 <a id="f-electron2d-electronobject-notificationpredelete"></a>
 ### `public const int NotificationPreDelete = 1`

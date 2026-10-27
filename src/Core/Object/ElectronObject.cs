@@ -12,10 +12,11 @@ namespace Electron2D;
 /// </remarks>
 public abstract partial class ElectronObject : IDisposable
 {
-    /// <summary>Identifies the post-initialization notification.</summary>
+    /// <summary>Identifies the internal initialization boundary before project callbacks are attached.</summary>
     /// <remarks>
-    /// Electron2D does not dispatch this notification from the base constructor because invoking virtual members during
-    /// construction is unsafe; a host may dispatch it explicitly after construction.
+    /// Ordinary C# construction initializes engine state without invoking project notification overrides. This identifier
+    /// is not emitted automatically to compiled project classes. A host may explicitly send it after construction through
+    /// <see cref="Notify(int)"/> or <see cref="Notify(int, bool)"/> with their ordinary dispatch and error semantics.
     /// </remarks>
     public const int NotificationPostInitialize = 0;
 

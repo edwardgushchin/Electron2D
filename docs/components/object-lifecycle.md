@@ -1,6 +1,6 @@
 # Object lifecycle component
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 [Object lifetime monitors](object-lifetime-monitors.md) share the base construction identity without owning objects or changing disposal/factory provenance.
 
@@ -63,6 +63,10 @@ Object iteration uses the existing C# compiler/BCL protocol under ADR 0005. A co
 
 ## Notification direction
 
+The [compiled construction boundary](#compiled-construction-notification-boundary)
+clarifies why identity 0 is not an automatic project callback. Ordinary/reversed
+delivery and the lifecycle checks below keep their existing behavior.
+
 All 95 built-in overrides preserve their original normal base-call points, early returns and local exception aggregation. Reversed delivery completes local handling before forwarding to the base. A direct local function retains early-return boundaries where needed; handlers without such exits keep their ordinary method body. No reflection, dynamic code, callback registry or per-call delegate is added. Custom C# overrides use protected `IsNotificationReversed` and explicit base calls, as shown in the [class reference](../classes/ElectronObject.md#p-electron2d-electronobject-isnotificationreversed). Intentionally suppressing the base retains ordinary C# meaning.
 
 Direction belongs to the current object, invocation and thread. Nested normal/reversed calls, calls on another object and failures restore the outer context; asynchronous work does not inherit it. An unhandled error stops unvisited ancestors without replacing the original exception. Existing handler-local aggregation remains intact. Numeric notifications remain independent of ordinary signal blocking, and direction does not relax disposal, owner-thread, solver or borrowed-state guards. Completed calls retain no target in thread-local state.
@@ -74,6 +78,53 @@ Direction belongs to the current object, invocation and thread. Nested normal/re
 The final cohort has 19 successful immutable-payload processes: eight public CLR/strict NativeAOT backend/thread combinations, two root directional checks and nine existing loop, CPU/GPU scene physics, camera/navigation, button, viewport/input, animation, particle and audio regressions. The ten directional runs retain 128 active plus 128 idle measured frames each (2560 total), all at strict 0/0 owner/all-thread managed bytes. Existing normal-path physics regressions retain their numerical/contact/lifetime/allocation assertions. Five assembly/PDB identity and SHA checks match 2611 runtime, two public-consumer and 981 root authored source documents, with the CLR runtime identical in public/root payloads.
 
 Receipts: `bin/physics-notification-direction/2026-10-26/validation.json` and `source-proof-final.json`. Runtime SHA-256: `392723d715291fd03253f5839881a3597a06e1221501e7d6c8ab145882023286`; public consumer: `8a4e0b1ae2c72778ddd9de8c679ef49a0cbf6c7466f523ce05b1dcfd5a1036fa`; root tests: `e0936520afb6e5e5eb0285db4516f94f27f00268bc74cdc040e4cc41dd94eb61`; NativeAOT executable: `cc19d8e297ba72894787b07ab24de0f0b1c8e4e88e2f0b895bf2cfb5032ce865`. Initial consumer compile mistakes, the earlier active-only cohort and the coverage test's stale Partial expectation are retained separately; the final cohort includes idle work and keeps automatic post-initialization explicitly Partial. No complete-suite, native-heap, foreign-platform, full numerical/network/performance or human acceptance is claimed.
+
+## Compiled construction notification boundary
+
+`NotificationPostInitialize` identifies the internal initialization boundary before
+project code is attached. It is not an automatic post-constructor invocation of
+compiled `OnNotification` overrides. Ordinary C# constructors establish engine
+state without calling those overrides. Direct Node/Resource construction,
+Node.Duplicate and PackedScene.Instantiate keep this boundary. An explicit
+`Notify(0)` after construction remains supported, including reversed dispatch,
+the original callback exception, context restoration and unchanged instance ID.
+
+The pinned [Object.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml)
+places identity 0 before script attachment. The
+[C# construction bridge](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/mono/glue/GodotSharp/GodotSharp/Core/GodotObject.base.cs)
+requests native post-initialization before `TieManagedToUnmanaged`; the
+[native dispatcher](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/object/object.cpp)
+only forwards to a script when one is attached. The earlier callback audit
+incorrectly required a later project-visible initialization event. This corrects
+that requirement under [ADR 0005](../decisions/core-object-runtime.md#adr-0005);
+it adds no constructor-time virtual call or implicit factory callback. Script
+`_init`, live attachment/replacement and extension reload remain separate missing
+capabilities under ADR 0091.
+
+NotificationChecks now exercises direct construction, exact project-type
+duplication, in-memory PackedScene construction and explicit zero callback errors
+alongside its existing directional, concurrent, lifetime, GUI and full-frame
+physics checks. A constructor-complete sentinel rejects premature virtual calls.
+These checks do not establish live script attachment, hot reload or full physics
+acceptance.
+
+The source-bound 2026-10-27 cohort passes eight public CLR/strict NativeAOT
+CPU/GPU owner/separate profiles and two root profiles. Each executes construction
+checks plus 128 active and 128 idle measured complete physical frames: 2,560
+frames at strict 0/0 owner/all-thread managed bytes. GPU maps confirm NVIDIA
+without software Vulkan; CPU processes forbid GPU discovery and load no GPU
+driver, and native processes have no CoreCLR mapping. PDB checks match 2,684
+runtime, two public-consumer and 1,014 root authored C# documents; native compiler
+inputs remain unchanged during publication. The initial static-lambda fixture
+was rejected by the existing no-captured-target factory guard and was corrected
+to a named static method, without changing that guard. Receipts and pinned source
+hashes are under `bin/object-notification-contract/2026-10-27/`.
+
+Only the `_notification` callback row changes to Implemented. Physics declarations
+are **1359/1369 (99.27%)**, with **10 open** and 92 Excluded. Class-wide script
+requirements, HDR, remaining diagnostics, the earlier native allocation
+observations and complete numerical/network/platform/performance acceptance stay
+open.
 
 ## Threading
 

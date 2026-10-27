@@ -78,7 +78,9 @@ def check_physics_report(pages):
     notification = [row for row in object_page.splitlines() if row.startswith("| [`method notification(")]
     assert len(notification) == 1 and " | Implemented | " in notification[0] and "Notify(System.Int32 what, System.Boolean reversed)" in notification[0]
     assert "Object::method:notification(int:,bool:)" not in expected
-    assert expected["Object::method:_notification(int:)"] == "Partial", "Direction must not hide missing automatic post-initialization"
+    callback = [row for row in object_page.splitlines() if row.startswith("| [`method _notification(")]
+    assert len(callback) == 1 and " | Implemented | " in callback[0] and "compiled-construction-notification-boundary" in callback[0]
+    assert "Object::method:_notification(int:)" not in expected, "The compiled callback must not require a later native-only construction event"
     assert expected["class:Object"] == "Partial", "Directional dispatch does not complete the inherited object class"
     resource_page = pages[CLASS_PAGES / "Resource.md"]
     for method in ("copy_from_resource", "duplicate", "duplicate_deep"):

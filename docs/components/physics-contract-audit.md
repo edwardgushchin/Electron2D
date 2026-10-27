@@ -1,3 +1,5 @@
+[The compiled construction notification audit](object-lifecycle.md#compiled-construction-notification-boundary) closes the inherited callback row after correcting an unsupported requirement for an automatic project `OnNotification(0)`. The pinned C# bridge performs native initialization before project script binding; direct/factory reconstruction and explicit zero callbacks are verified separately. Physical API coverage is **1359/1369 (99.27%)**, with **10 open** (5 Partial, 2 Blocked, 3 Unimplemented) and 92 Excluded. Script initialization/attachment/reload, HDR, remaining monitors and broader physics acceptance stay open. Earlier records below retain their source checkpoints.
+
 [The common pin reaction point](physics-joint-policies.md#common-pin-reaction-point-2026-10-27) reduces resident GPU angular error in the coupled impact and strengthens its default-iteration regression bound. No declaration is promoted: physical API coverage remains **1358/1369 (99.20%)**, with **11 open** (6 Partial, 2 Blocked, 3 Unimplemented) and 92 Excluded. Broader physics acceptance remains open.
 
 [Server monitor snapshots](runtime-diagnostics.md#server-monitor-snapshots) add 21 executable navigation/audio selector declarations. Performance.GetMonitor remains Partial for its allocation/renderer instrumentation, so physics coverage stays 1358/1369 (99.20%), with 11 open.
@@ -38,7 +40,9 @@ compiled C# body classes. Eight public CPU/no-device and NVIDIA GPU owner/separa
 CLR/strict full-trim NativeAOT profiles retain 2048 complete active/idle physical frames
 at strict 0/0 managed bytes. One method row becomes Implemented: **1339/1369
 (97.81%)**, **30 open** (16 Partial, 11 Blocked, 3 Unimplemented), 92 Excluded.
-Automatic post-initialization 0 remains an explicit Partial callback capability;
+That checkpoint retained a Partial callback for initialization 0; the later
+[compiled construction audit](object-lifecycle.md#compiled-construction-notification-boundary)
+corrects the project-callback requirement from the pinned C# bridge.
 whole-contract numerical/network/performance/native/platform acceptance stays open.
 Earlier counts below are preceding source checkpoints.
 
@@ -1520,7 +1524,7 @@ remain separate gates.
 
 [EventConnectionPhysicsTests](../../tests/Electron2D.Tests/EventConnectionPhysicsTests.cs) verifies all five prepared immediate arities and full selected CPU/GPU frames: 128 warm/128 measured frames, strict zero owner/all-thread managed bytes, 128 emissions of each arity and 64 Area body enters/exits. Identity, disposed subscriptions and collected callback-error recovery remain observable. Cold two-argument deferred/one-shot checks cover value capture, ordering, cancellation and recursion; the existing EventConnection suite retains concurrency, accessor rollback/removal/scheduler errors and all overloads. GPU execution uses CPU-only Vulkan; hardware/native/network/performance acceptance stays open.
 
-At this earlier checkpoint notification and _notification were Partial. Selectable direction now closes the method row, while the callback stays Partial for automatic post-initialization 0; see the current [notification contract](object-lifecycle.md#notification-direction). EventConnection.IsConnected now maps the existing logical token capability as Partial; independently cleared publisher lists and arbitrary publisher/handler inspection remain absent. This audit keeps those concrete gaps open. Deferred/one-shot capture allocations also remain outside the immediate-path zero-byte proof.
+At this earlier checkpoint notification and _notification were Partial. Selectable direction closes the method row, and the later [compiled construction audit](object-lifecycle.md#compiled-construction-notification-boundary) closes the callback after correcting its initialization requirement. EventConnection.IsConnected then mapped the logical token capability as Partial; its later [publisher-membership audit](event-connections.md#ordinary-engine-publisher-qualification-2026-10-26) supplies current evidence. Historical deferred/one-shot allocation observations retain their original scope.
 
 [Extended event arities](../classes/EventConnection.md) cover current 3-argument picking and 4-argument body/Area shape signatures under ADR 0010 without altering event payloads. The shared physics fixture now retains 128 measured emissions of each arity, 64 body and 64 shape enters/exits and exact RID/owner/disabled-first shape indices at strict 0/0 warm bytes on selected CPU/GPU serial/separate profiles. Deferred/one-shot calls retain their separate capture allocation paths.
 

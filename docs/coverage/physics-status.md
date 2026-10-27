@@ -71,11 +71,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 18 | 0 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 211 | 1 | 0 | 1 | 1 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
-| [Object](classes/Object.md) | — | 38 | 3 | 2 | 2 | 29 |
+| [Object](classes/Object.md) | — | 39 | 2 | 2 | 2 | 29 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 26 | 1 | 0 | 0 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
-| **Total** | | 444 | 5 | 2 | 3 | 37 |
+| **Total** | | 445 | 4 | 2 | 3 | 37 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -86,7 +86,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`class:Object`](classes/Object.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
 | [`Object::constant:NOTIFICATION_EXTENSION_RELOADED`](classes/Object.md) | Unimplemented | No mapped C# declaration; trigger: next complete Object API slice. |
 | [`Object::method:_init()`](classes/Object.md) | Unimplemented | The pinned callback initializes an instantiated owner Script, potentially after owner construction; it is not only CLR base construction. Ordinary C# constructors and Script.New already execute. A typed owner/script initialization projection with argument, scene/duplication, identity, callback-order and failure behavior remains required under ADR 0091. Do not dispatch a virtual initializer from ElectronObject construction. |
-| [`Object::method:_notification(int:)`](classes/Object.md) | Partial | ADR 0005 implements selectable normal/reversed delivery through cooperative compiled C# overrides, including reverse automatic pre-delete. Reserved post-initialization 0 is still not automatically emitted after complete construction. Keep this inherited callback row Partial until a safe construction/factory boundary delivers it exactly once; numeric/manual declarations and directional execution alone do not close that lifecycle capability. |
 | [`Object::method:get_script()`](classes/Object.md) | Blocked | Trigger: accepted typed owner-to-Script association and its executable identity/lifetime/initialization contract under ADR 0091. The concrete Script resource, source/type catalog and typed New construction already execute. Script.New creates an exact CLR instance without retaining a per-owner Script association; GetScript remains absent. Compiled type metadata or a reserved ScriptChanged event does not establish that binding. |
 | [`Object::method:set_script(Variant:)`](classes/Object.md) | Blocked | Trigger: accepted typed live script-attachment contract for owner identity, instance ownership, replacement, callback ordering and failure rollback, followed by its first executable binding slice under ADR 0091. A factory-created CLR subtype does not change the type of an existing owner. Applicable behavior remains pending; no inert setter or implicit exclusion is accepted. |
 | [`Object::signal:script_changed()`](classes/Object.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
