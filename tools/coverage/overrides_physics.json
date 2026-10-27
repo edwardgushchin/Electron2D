@@ -2909,6 +2909,111 @@
       "godot": "Performance::enum_value:Monitor.TIME_NAVIGATION_PROCESS",
       "electron2d": "enumValue:Electron2D.Performance.Monitor.TimeNavigationProcess()",
       "reason": "ADR 0016: completed Engine sampling windows expose existing FPS and peak process, individual physics-step and navigation update/avoidance wall-clock durations. Owned presentation is included; waits/movie encoding and independent direct hosts are excluded. Successful attachment resets; stop and failed frames retain completed samples. Headless/public JIT/NativeAOT, exact windows, native GPU/Compatibility and warmed owner/all-thread allocation checks belong to the connected frame-monitor slice; hardware/device-time, native allocations and foreign acceptance remain separate."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_ACTIVE_MAPS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationActiveMaps()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_REGION_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationRegionCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_AGENT_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationAgentCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_LINK_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationLinkCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_POLYGON_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationPolygonCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_EDGE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationEdgeCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_EDGE_MERGE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationEdgeMergeCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_EDGE_CONNECTION_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationEdgeConnectionCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_EDGE_FREE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationEdgeFreeCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_OBSTACLE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.NavigationObstacleCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_ACTIVE_MAPS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DActiveMaps()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_REGION_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DRegionCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_AGENT_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DAgentCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_LINK_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DLinkCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_POLYGON_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DPolygonCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DEdgeCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_MERGE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DEdgeMergeCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_CONNECTION_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DEdgeConnectionCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_FREE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DEdgeFreeCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.NAVIGATION_2D_OBSTACLE_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.Navigation2DObstacleCount()",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.AUDIO_OUTPUT_LATENCY",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.AudioOutputLatency()",
+      "reason": "ADR 0016: any-thread active AudioServer managed output-latency snapshot in seconds, zero before initialization/after closure/offline recording, without service/device preparation or native calls. Actual native output changes, worker/retirement races, offline context and zero warmed reads execute in AudioOutputTests. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
     }
   ],
   "extras": [
@@ -7268,7 +7373,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Live weak object/cache/Engine-tree populations, completed Engine timing windows, three physical producers and the complete typed custom-monitor lifecycle execute. Other built-in selectors retain their exact instrumentation, counter or native diagnostic prerequisite. The frame-monitor component defines clock, publication, headless/direct-host and presentation boundaries; native allocation totals, hardware/device timing and foreign acceptance remain separate."
+      "reason": "Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency and typed custom monitors execute. Memory current/peak/deferred buffers and renderer device-memory/pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
     },
     {
       "godot": [
@@ -7292,8 +7397,8 @@
       "godot": [
         "Performance::enum_value:Monitor.AUDIO_OUTPUT_LATENCY"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: adapt the existing AudioServer latency producer to Performance without opening a device or crossing its owner thread during diagnostic reads."
+      "state": "Implemented",
+      "reason": "ADR 0016: any-thread active AudioServer managed output-latency snapshot in seconds, zero before initialization/after closure/offline recording, without service/device preparation or native calls. Actual native output changes, worker/retirement races, offline context and zero warmed reads execute in AudioOutputTests. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
     },
     {
       "godot": [
@@ -7334,8 +7439,8 @@
         "Performance::enum_value:Monitor.NAVIGATION_POLYGON_COUNT",
         "Performance::enum_value:Monitor.NAVIGATION_REGION_COUNT"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: complete NavigationServer topology/agent process-statistics snapshot under ADR 0097, then integrate the navigation and aggregate diagnostic selectors in its first Performance slice."
+      "state": "Implemented",
+      "reason": "ADR 0016/0097: all ten aggregate and ten planar selectors preserve numeric identities and read the same complete committed NavigationServer counters. Staged changes, disabled geometry, active-map membership, retirement, any-thread reads and 256 prepared zero-managed-allocation batches execute in public ServerMonitorContract; no synchronization or native device is triggered. See docs/components/runtime-diagnostics.md#server-monitor-snapshots."
     },
     {
       "godot": [

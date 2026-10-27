@@ -37,7 +37,49 @@ public sealed partial class Performance : ElectronObject
         /// <summary>Backend collision candidates, including sensors.</summary>
         PhysicsCollisionPairs = 18,
         /// <summary>Active dynamic constraint islands.</summary>
-        PhysicsIslandCount = 19
+        PhysicsIslandCount = 19,
+        /// <summary>Last valid native output-buffer latency in seconds; zero without active audio output.</summary>
+        AudioOutputLatency = 23,
+        /// <summary>Committed active navigation maps across the engine's navigation domains.</summary>
+        NavigationActiveMaps = 24,
+        /// <summary>Committed regions belonging to active navigation maps.</summary>
+        NavigationRegionCount = 25,
+        /// <summary>Committed agents belonging to active navigation maps.</summary>
+        NavigationAgentCount = 26,
+        /// <summary>Committed links belonging to active navigation maps.</summary>
+        NavigationLinkCount = 27,
+        /// <summary>Committed authored navigation polygons, excluding synthetic link polygons.</summary>
+        NavigationPolygonCount = 28,
+        /// <summary>Committed distinct raster edge keys within navigation regions.</summary>
+        NavigationEdgeCount = 29,
+        /// <summary>Committed paired raster edges within navigation regions.</summary>
+        NavigationEdgeMergeCount = 30,
+        /// <summary>Committed interregion raster pairs and directed margin connections.</summary>
+        NavigationEdgeConnectionCount = 31,
+        /// <summary>Committed external navigation edges eligible for margin matching.</summary>
+        NavigationEdgeFreeCount = 32,
+        /// <summary>Committed obstacles belonging to active navigation maps.</summary>
+        NavigationObstacleCount = 33,
+        /// <summary>Committed active planar navigation maps.</summary>
+        Navigation2DActiveMaps = 39,
+        /// <summary>Committed regions belonging to active planar maps.</summary>
+        Navigation2DRegionCount = 40,
+        /// <summary>Committed agents belonging to active planar maps.</summary>
+        Navigation2DAgentCount = 41,
+        /// <summary>Committed links belonging to active planar maps.</summary>
+        Navigation2DLinkCount = 42,
+        /// <summary>Committed authored planar polygons, excluding synthetic link polygons.</summary>
+        Navigation2DPolygonCount = 43,
+        /// <summary>Committed distinct raster edge keys within planar regions.</summary>
+        Navigation2DEdgeCount = 44,
+        /// <summary>Committed paired raster edges within planar regions.</summary>
+        Navigation2DEdgeMergeCount = 45,
+        /// <summary>Committed planar interregion raster pairs and directed margin connections.</summary>
+        Navigation2DEdgeConnectionCount = 46,
+        /// <summary>Committed external planar edges eligible for margin matching.</summary>
+        Navigation2DEdgeFreeCount = 47,
+        /// <summary>Committed obstacles belonging to active planar maps.</summary>
+        Navigation2DObstacleCount = 48
     }
 
     /// <summary>Reads the latest published value of a runtime monitor.</summary>
@@ -52,6 +94,11 @@ public sealed partial class Performance : ElectronObject
     /// Timing durations publish maxima once per completed unscaled Engine host-second window. Successful
     /// attachment resets samples; stop and failed frames retain completed values. Owned Window presentation
     /// contributes to process timing, while independent direct hosts do not publish Engine timing windows.
+    /// Navigation counts read the last successful NavigationServer synchronization, including disabled members of active
+    /// maps. Aggregate and planar selectors share that snapshot in this planar engine. Reads never synchronize navigation.
+    /// Audio reads the active output's last valid latency without initializing the service/device or calling its owner.
+    /// It returns zero before output initialization, during offline recording and after output closes. Concurrent output
+    /// replacement/retirement may yield the prior snapshot; it never accesses a retired native handle.
     /// Canvas counts publish after completed native rendering and follow RenderingServer.GetRenderingInfo, including
     /// GPU-authored capacity budgets and zero without an active renderer. Several reads do not form an atomic snapshot. Durations measure owner-side wall time, not device timestamps.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The monitor is undefined.</exception>
@@ -72,6 +119,17 @@ public sealed partial class Performance : ElectronObject
         Monitor.PhysicsActiveObjects => PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects),
         Monitor.PhysicsCollisionPairs => PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.CollisionPairs),
         Monitor.PhysicsIslandCount => PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.IslandCount),
+        Monitor.AudioOutputLatency => AudioServer.OutputLatencySnapshot,
+        Monitor.NavigationActiveMaps or Monitor.Navigation2DActiveMaps => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.ActiveMaps),
+        Monitor.NavigationRegionCount or Monitor.Navigation2DRegionCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.RegionCount),
+        Monitor.NavigationAgentCount or Monitor.Navigation2DAgentCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.AgentCount),
+        Monitor.NavigationLinkCount or Monitor.Navigation2DLinkCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.LinkCount),
+        Monitor.NavigationPolygonCount or Monitor.Navigation2DPolygonCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.PolygonCount),
+        Monitor.NavigationEdgeCount or Monitor.Navigation2DEdgeCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.EdgeCount),
+        Monitor.NavigationEdgeMergeCount or Monitor.Navigation2DEdgeMergeCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.EdgeMergeCount),
+        Monitor.NavigationEdgeConnectionCount or Monitor.Navigation2DEdgeConnectionCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.EdgeConnectionCount),
+        Monitor.NavigationEdgeFreeCount or Monitor.Navigation2DEdgeFreeCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.EdgeFreeCount),
+        Monitor.NavigationObstacleCount or Monitor.Navigation2DObstacleCount => NavigationServer.GetProcessInfo(NavigationServer.ProcessInfo.ObstacleCount),
         _ => throw new ArgumentOutOfRangeException(nameof(monitor))
     };
 

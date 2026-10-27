@@ -285,6 +285,17 @@ Performance object-population selectors use base-construction weak identities, r
 
 Performance timing observes completed Engine frames over the same unscaled host clock. Once per host-second window it publishes peak process, individual physics-step and owner-side navigation update/avoidance durations in seconds. Owned Run/RunAsync process timing includes Window presentation but excludes movie encoding and frame-limit waits. Manual embedding adds no implicit presentation. Successful attachment resets the current-run samples; failed frames do not consume their timing window, while Stop retains completed values. Direct independent MainLoop/SceneTree/navigation calls do not impersonate Engine samples. Cross-thread reads use integer-backed floating-point atomics and do not drive a producer.
 
+Performance navigation selectors read the latest complete NavigationServer
+synchronization under ADR 0097. Aggregate and explicitly planar identities keep
+their pinned numeric values and return the same counts in this planar engine.
+Reads do not synchronize or drive avoidance. AudioOutputLatency reads only the
+active AudioServer output's atomically published managed latency snapshot; it
+never creates the audio service/device, crosses the audio owner or calls native
+code. Before initialization, offline recording and completed output teardown read
+zero. Concurrent replacement or retirement may yield the preceding valid sample.
+These prepared reads are available on any thread without allocation. Remaining
+memory and renderer-compilation producers require their actual instrumentation.
+
 The reference singleton registry is adapted to ordinal string names and `ElectronObject`, with a generic typed lookup. It starts with a permanent self-registration named `Engine`; ADR 0019 adds the permanent `ProjectSettings` entry and project-backed timing values. The registry is thread-safe and treats user entries as explicitly non-owning. Untyped dictionaries are not introduced: assembly version data uses immutable `EngineVersionInfo`.
 
 The owned window loop now consumes OS.LowProcessorUsageMode and its nonnegative microsecond wait, initialized from the two typed application/run settings before readiness. RenderingServer.HasChanged receives conservative node/resource/retained/device/configuration/native-event producers and time-consumer reporting. Static output skips submission while process/physics/input continue; movie capture bypasses both skipping and the extra wait. Successful presented frames acknowledge captured changes before completion observers; failure and later changes remain pending. Existing MaxFPS, manual embedding and owner-context rules remain in effect. See [low-processor rendering](../components/low-processor-rendering.md).

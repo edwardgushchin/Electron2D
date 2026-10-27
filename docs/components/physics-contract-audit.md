@@ -1,3 +1,5 @@
+[Server monitor snapshots](runtime-diagnostics.md#server-monitor-snapshots) add 21 executable navigation/audio selector declarations. Performance.GetMonitor remains Partial for its allocation/renderer instrumentation, so physics coverage stays 1358/1369 (99.20%), with 11 open.
+
 [GPU device/window lifetime](gpu-device-lifetime.md) now uses process-local device leases independent of startup order. All 16 current CLR public profiles pass, including the two former NVIDIA/Wayland crashes. Historical two-device native controls remain red; broader native/platform and performance acceptance stays open. Declaration counts below remain separate.
 
 [Skeletal editor drawing](skeletal-editor-gizmos.md) closes three inherited editor methods and the modification class audit. Physics declaration coverage is **1358/1369 (99.20%)**, with **11 open** (6 Partial, 2 Blocked, 3 Unimplemented) and 92 Excluded. Real custom/built-in guides and the shared unsaved editor preview execute; wider numerical/network/native-heap/platform/performance acceptance remains open. Earlier figures below are preceding checkpoints.

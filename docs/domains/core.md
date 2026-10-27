@@ -245,7 +245,7 @@ NativeLibraries resolves the packaged SPIRV-Cross shared library directly for co
 ## Physics diagnostic service
 
 [Performance](../classes/Performance.md) is a permanent retained Engine service with
-static GetMonitor access. Its three current producers read completed CPU/GPU
+static GetMonitor access. Its physical producers read completed CPU/GPU
 [physics statistics](../components/physics-statistics.md) on any thread without
 allocating or synchronizing devices. Other built-in producers and custom monitors
 remain open coverage obligations.
@@ -364,3 +364,5 @@ Typed property discovery also carries immutable [advisory hints](../components/e
 Standard-handle and managed process-termination helpers reject unsupported Apple mobile/TV and browser operations before reaching platform-specific BCL calls. The headless Linux CI profile supplies configured XDG desktop directory roles; standard-handle tests exercise unavailable-adapter errors on other hosts.
 
 [Ordinary engine publisher membership](../components/event-connections.md#ordinary-engine-publisher-qualification-2026-10-26) uses lazy typed delegate stores alongside the existing prepared physical buffers. Tokens observe actual engine attachment without reflected invocation or emission captures; arbitrary opaque custom accessors retain logical token observations.
+
+[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) connect the retained Performance service to committed navigation counters and active audio output latency with independent read/lifecycle semantics. Memory and renderer instrumentation remain open.

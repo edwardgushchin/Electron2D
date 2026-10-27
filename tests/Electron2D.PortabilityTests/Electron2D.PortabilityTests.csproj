@@ -12,6 +12,7 @@
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
     <Compile Include="../Portability/FrameMonitorContract.cs" Link="FrameMonitorContract.cs" />
+    <Compile Include="../Portability/ServerMonitorContract.cs" Link="ServerMonitorContract.cs" />
     <Compile Include="../Portability/JoyMotionContract.cs" Link="JoyMotionContract.cs" />
     <Compile Include="../Portability/DeviceSensorContract.cs" Link="DeviceSensorContract.cs" />
     <Compile Include="../Portability/LowProcessorContract.cs" Link="LowProcessorContract.cs" />

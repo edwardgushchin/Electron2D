@@ -1,3 +1,5 @@
+[Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) connect all navigation counts and cached audio latency. Physics declaration coverage remains 1358/1369 (99.20%); the complete GetMonitor instrumentation remains open.
+
 [GPU device/window lifetime](../components/gpu-device-lifetime.md) uses process-local device leases independent of renderer startup order. The current public CLR matrix passes all 16 profiles; declaration coverage remains 1358/1369 (99.20%), with 11 open. Broader native/platform and performance acceptance stays open.
 
 [Skeletal editor drawing](../components/skeletal-editor-gizmos.md) closes three inherited editor methods and the modification class audit. Physics declaration coverage is **1358/1369 (99.20%)**, with **11 open** (6 Partial, 2 Blocked, 3 Unimplemented) and 92 Excluded. Real custom/built-in guides and the shared unsaved editor preview execute; wider numerical/network/native-heap/platform/performance acceptance remains open. Earlier figures below are preceding checkpoints.

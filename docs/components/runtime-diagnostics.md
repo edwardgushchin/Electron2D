@@ -2,13 +2,68 @@
 
 [Object lifetime monitors](object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 [Frame timing monitors](frame-monitors.md) add four actual Engine producers: FPS and per-window peak process, physics-step and navigation durations. They retain independent cached reads and explicit reset, error, presentation and direct-host boundaries.
 
 ## Scope and owned types
 
 [Performance](../classes/Performance.md) is the retained process-wide diagnostics service under [ADR 0095](../decisions/singleton-services.md#adr-0095). Its existing built-in [physics statistics](physics-statistics.md) read completed producer snapshots. Custom monitors supply application-defined values through direct typed callbacks; [Performance.CustomMonitor](../classes/Performance.CustomMonitor.Generic.md) identifies one registration and [MonitorType](../classes/Performance.MonitorType.md) describes presentation units.
+
+## Server monitor snapshots
+
+Performance.Monitor retains all ten aggregate navigation identities 24–33 and
+all ten planar identities 39–48. Both groups read the same committed
+NavigationServer.ProcessInfo counters in this planar engine. Reads acquire the
+existing server gate, never synchronize, schedule avoidance or flush staged
+changes. Geometry, membership, disabled regions, active maps and retirement use
+exactly the producer's semantics under [ADR 0097](../decisions/navigation.md#adr-0097).
+Disabled regions and their authored geometry remain counted until their geometry
+or active-map membership changes. Each read is a nearby snapshot; several reads
+are not an atomic group under concurrent synchronization.
+
+AudioOutputLatency retains identity 23 and returns seconds from the active
+AudioServer context's last valid output-buffer sample. Reading it does not create
+the lazy audio service, claim its configuration owner, open an output device or
+call a native audio function. It returns zero before output initialization, after
+completed closure and for an active offline recording graph. Output creation and
+retirement publish the context reference with release/acquire semantics; latency
+uses its existing atomic floating-point storage. A reader racing replacement or
+closure can observe the preceding valid sample or zero. It never dereferences a
+retired native handle. AudioServer.GetOutputLatency keeps its separate owner-only
+explicit preparation behavior. Device changes and the existing mix callback update the native producer; the
+monitor introduces no periodic sampler or stale-value cache of its own.
+
+Both families permit prepared reads on any thread with no managed allocation.
+First use may initialize managed service metadata; it opens no native device.
+These selectors do not complete the remaining allocation-memory, deferred-buffer,
+video-memory or pipeline-compilation instrumentation. Performance/GetMonitor and
+its enum remain Partial in the full declaration audit.
+
+The source reference is pinned [Performance.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Performance.xml).
+The public-only [ServerMonitorContract](../../tests/Portability/ServerMonitorContract.cs)
+checks exact identities and nonzero topology/member counts, staged publication,
+disabled geometry, map activity/retirement, worker reads, undefined selectors and
+256 prepared batches with zero owner/all-thread managed bytes. It runs through
+both the root suite and standalone portability consumer (`--server-monitors`).
+`--server-monitors-audio` adds a public native window/audio lifecycle with a silent
+loop, actual positive output-buffer latency, a paused-producer worker comparison,
+256 zero-owner-byte reads and zero after Engine teardown.
+[AudioOutputTests](../../tests/Electron2D.Tests/AudioOutputTests.cs) additionally
+checks real native output-buffer data, selected-device changes, exact worker
+reads while the mix producer is paused, repeated closure/reopen, a concurrent diagnostic reader during teardown,
+offline recording and warmed cached reads. Native profiles must identify the
+actual driver; a dummy-output run does not establish physical-device latency or
+foreign-platform acceptance.
+
+The Linux CLR and strict NativeAOT public profiles pass for both headless
+navigation reads and active dummy-output audio. The final eight-profile cohort
+also includes root audio teardown/offline checks plus frame/custom-monitor
+regressions. Source/PDB fingerprints match the authored C# sources. Receipts are
+retained under `bin/server-monitors/2026-10-27/validation.json`; native/compiler
+inputs and explicit allocation boundaries remain separate from hardware/native
+heap qualification. Physics declaration coverage remains 1358/1369 (99.20%),
+with 11 open; 21 newly implemented selector rows are in the broader API audit.
 
 ## Runtime flow
 

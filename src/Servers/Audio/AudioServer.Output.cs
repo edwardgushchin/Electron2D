@@ -3,6 +3,7 @@ namespace Electron2D;
 public sealed partial class AudioServer
 {
     private string _outputDevice = "Default";
+    internal static double OutputLatencySnapshot => Singleton.IsValueCreated ? Volatile.Read(ref Singleton.Value._native)?.BufferedOutputLatency ?? 0 : 0;
     internal string OutputDeviceCore
     {
         get { Check(); return _outputDevice; }

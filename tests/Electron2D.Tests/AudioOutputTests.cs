@@ -6,6 +6,7 @@ internal static class AudioOutputTests
     internal static void Run()
     {
         var server = AudioServer.Service; server.CloseNative(); AudioServer.BusCount = 1;
+        Check(Performance.GetMonitor(Performance.Monitor.AudioOutputLatency) == 0, "Cold latency monitor does not open output.");
         Check(AudioServer.OutputDevice == "Default", "Default output selector."); Reject<ArgumentNullException>(() => AudioServer.OutputDevice = null!);
         using var stream = AudioEffectTests.Constant(); using var effect = new AudioEffectAmplify { VolumeDB = -6 };
         var root = new Node(); var player = new AudioStreamPlayer { Stream = stream }; root.AddChild(player); using var tree = new SceneTree(root);
@@ -17,6 +18,15 @@ internal static class AudioOutputTests
             var rate = AudioServer.GetMixRate(); var channels = AudioServer.GetBusChannels(0); var latency = AudioServer.GetOutputLatency(); Check(latency > 0 && double.IsFinite(latency), "Actual driver buffer/queue snapshot is finite and positive.");
             Reject<ArgumentException>(() => AudioServer.OutputDevice = "Missing Electron2D output fixture"); Check(AudioServer.OutputDevice == "Default" && player.IsPlaying(), "Unavailable selector preserves output/name/playback.");
             Task.Run(() => Reject<InvalidOperationException>(() => AudioServer.OutputDevice = selected)).GetAwaiter().GetResult();
+            AudioServer.Lock();
+            try
+            {
+                latency = AudioServer.GetOutputLatency();
+                Check(Performance.GetMonitor(Performance.Monitor.AudioOutputLatency) == latency &&
+                    Task.Run(() => Performance.GetMonitor(Performance.Monitor.AudioOutputLatency)).GetAwaiter().GetResult() == latency,
+                    "Owner and worker diagnostics read the exact paused-producer snapshot without crossing the configuration owner.");
+            }
+            finally { AudioServer.Unlock(); }
             for (var run = 0; run < 3; run++)
             {
                 AudioServer.Lock(); try { AudioServer.OutputDevice = selected; Check(AudioServer.GetOutputLatency() > 0, "Lock-held selection/query completes without callback lock inversion."); } finally { AudioServer.Unlock(); }
@@ -26,12 +36,44 @@ internal static class AudioOutputTests
             }
             player.PlaybackType = AudioServer.PlaybackType.Sample; player.Play(); AudioEffectTests.Wait(native, 20); AudioServer.OutputDevice = selected; AudioEffectTests.Wait(native, 12); AudioEffectTests.CheckOutput(native, new Vector2(.2f, -.3f) * Mathf.DBToLinear(-6)); Check(player.IsPlaying(), "Native sample transport survives selected-device switch.");
             var bytes = native.MixManagedBytes; var calls = FAudioContext.AllocationCalls; AudioEffectTests.Wait(native, 64); Check(native.MixManagedBytes == bytes && FAudioContext.AllocationCalls == calls, "64 warmed switched native passes allocate zero measured bytes/calls.");
-            bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 128; i++) _ = AudioServer.GetOutputLatency(); Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Cached live latency queries allocate zero bytes.");
-            server.CloseNative(); Check(AudioServer.OutputDevice == selected && instance.IsDisposed, "Selected preference survives closure and prior processing state invalidates.");
+            bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 128; i++) { _ = AudioServer.GetOutputLatency(); _ = Performance.GetMonitor(Performance.Monitor.AudioOutputLatency); }
+            Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Cached live latency queries allocate zero bytes.");
+            CloseDuringMonitorReads(server); Check(AudioServer.OutputDevice == selected && instance.IsDisposed, "Selected preference survives closure and prior processing state invalidates.");
+            Check(Performance.GetMonitor(Performance.Monitor.AudioOutputLatency) == 0, "Closed output diagnostics do not reopen the selected device.");
             Check(AudioServer.GetOutputLatency() > 0 && AudioServer.OutputDevice == selected, "Cold output query reapplies selected preference.");
             Console.WriteLine(JsonSerializer.Serialize(new { scenario = "output-device", rate, channels, latency, selected, preserved = true }));
         }
         finally { tree.Dispose(); AudioServer.OutputDevice = "Default"; server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); }
+    }
+    internal static void RunOfflineMonitor()
+    {
+        var server = AudioServer.Service;
+        try
+        {
+            server.PrepareMovie(48000, 2);
+            server.ReadMoviePCM(new int[960]);
+            Check(AudioServer.GetOutputLatency() == 0 &&
+                Task.Run(() => Performance.GetMonitor(Performance.Monitor.AudioOutputLatency)).GetAwaiter().GetResult() == 0,
+                "An active offline audio graph has no output-device latency.");
+        }
+        finally { AudioServer.CloseForEngine(); }
+        Check(Performance.GetMonitor(Performance.Monitor.AudioOutputLatency) == 0, "Offline teardown leaves a cold diagnostic snapshot.");
+    }
+    private static void CloseDuringMonitorReads(AudioServer server)
+    {
+        using var started = new ManualResetEventSlim(); using var stop = new ManualResetEventSlim();
+        var reader = Task.Run(() =>
+        {
+            try { Read(); } finally { started.Set(); }
+            while (!stop.IsSet) Read();
+            void Read()
+            {
+                var value = Performance.GetMonitor(Performance.Monitor.AudioOutputLatency);
+                Check(double.IsFinite(value) && value >= 0, "Concurrent output retirement reads valid managed samples while the mix producer continues updating.");
+            }
+        });
+        try { started.Wait(); server.CloseNative(); }
+        finally { stop.Set(); reader.GetAwaiter().GetResult(); }
     }
     internal static void RunHost()
     {

@@ -110,7 +110,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
-| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live weak object/cache/Engine-tree populations, completed Engine timing windows, three physical producers and the complete typed custom-monitor lifecycle execute. Other built-in selectors retain their exact instrumentation, counter or native diagnostic prerequisite. The frame-monitor component defines clock, publication, headless/direct-host and presentation boundaries; native allocation totals, hardware/device timing and foreign acceptance remain separate. |
+| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency and typed custom monitors execute. Memory current/peak/deferred buffers and renderer device-memory/pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots. |
 
 
 The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)
