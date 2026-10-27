@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Identifies the codec used by a compressed <see cref="FileAccess"/> container.</summary>
+/// <summary>Identifies the codec used by a compressed <see cref="FileAccess"/> or <see cref="ByteBuffer"/> container.</summary>
 public enum FileCompressionMode
 {
     /// <summary>Uses the native FastLZ codec in bounded checksummed file blocks.</summary>

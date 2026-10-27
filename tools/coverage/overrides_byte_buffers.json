@@ -1,0 +1,330 @@
+{
+  "mappings": [
+    {
+      "godot": "PackedByteArray::method:bswap16(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.BSwap16(System.Span<System.Byte>,System.Int32,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:bswap32(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.BSwap32(System.Span<System.Byte>,System.Int32,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:bswap64(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.BSwap64(System.Span<System.Byte>,System.Int32,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:compress(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.Compress(System.ReadOnlySpan<System.Byte>,Electron2D.FileCompressionMode)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_double(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeDouble(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_float(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeFloat(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_half(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeHalf(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_s16(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeS16(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_s32(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeS32(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_s64(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeS64(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_s8(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeS8(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_u16(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeU16(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_u32(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeU32(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_u64(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeU64(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decode_u8(int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecodeU8(System.ReadOnlySpan<System.Byte>,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decompress(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.Decompress(System.ReadOnlySpan<System.Byte>,System.Int32,Electron2D.FileCompressionMode)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:decompress_dynamic(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.DecompressDynamic(System.ReadOnlySpan<System.Byte>,System.Int32,Electron2D.FileCompressionMode)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_double(int:,float:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeDouble(System.Span<System.Byte>,System.Int32,System.Double)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_float(int:,float:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeFloat(System.Span<System.Byte>,System.Int32,System.Single)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_half(int:,float:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeHalf(System.Span<System.Byte>,System.Int32,System.Single)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_s16(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeS16(System.Span<System.Byte>,System.Int32,System.Int16)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_s32(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeS32(System.Span<System.Byte>,System.Int32,System.Int32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_s64(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeS64(System.Span<System.Byte>,System.Int32,System.Int64)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_s8(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeS8(System.Span<System.Byte>,System.Int32,System.SByte)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_u16(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeU16(System.Span<System.Byte>,System.Int32,System.UInt16)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_u32(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeU32(System.Span<System.Byte>,System.Int32,System.UInt32)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_u64(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeU64(System.Span<System.Byte>,System.Int32,System.UInt64)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:encode_u8(int:,int:)",
+      "electron2d": "method:Electron2D.ByteBuffer.EncodeU8(System.Span<System.Byte>,System.Int32,System.Byte)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:get_string_from_ascii()",
+      "electron2d": "method:Electron2D.ByteBuffer.GetStringFromASCII(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:get_string_from_multibyte_char(String:)",
+      "electron2d": "method:Electron2D.ByteBuffer.GetStringFromMultibyteChar(System.ReadOnlySpan<System.Byte>,System.String)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:get_string_from_utf16()",
+      "electron2d": "method:Electron2D.ByteBuffer.GetStringFromUTF16(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:get_string_from_utf32()",
+      "electron2d": "method:Electron2D.ByteBuffer.GetStringFromUTF32(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:get_string_from_utf8()",
+      "electron2d": "method:Electron2D.ByteBuffer.GetStringFromUTF8(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:get_string_from_wchar()",
+      "electron2d": "method:Electron2D.ByteBuffer.GetStringFromWChar(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:hex_encode()",
+      "electron2d": "method:Electron2D.ByteBuffer.HexEncode(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_color_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToColorArray(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_float32_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToFloat32Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_float64_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToFloat64Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_int32_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToInt32Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_int64_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToInt64Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_vector2_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToVector2Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_vector3_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToVector3Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedByteArray::method:to_vector4_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToVector4Array(System.ReadOnlySpan<System.Byte>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedInt32Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<System.Int32>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedInt64Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<System.Int64>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedFloat32Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<System.Single>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedFloat64Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<System.Double>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedVector2Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedVector3Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<Electron2D.Vector3>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedVector4Array::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<Electron2D.Vector4>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedColorArray::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<Electron2D.Color>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    },
+    {
+      "godot": "PackedStringArray::method:to_byte_array()",
+      "electron2d": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan<System.String>)",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.ByteBuffer",
+      "reason": "ADR 0001/0020 static typed C# projection of the 43 mapped PackedByteArray byte-utility operations and nine reverse array encodings; arrays/spans remain the collection boundary. No owned container or independent capability is added."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "PackedByteArray::method:bswap16(int:,int:)",
+        "PackedByteArray::method:bswap32(int:,int:)",
+        "PackedByteArray::method:bswap64(int:,int:)",
+        "PackedByteArray::method:compress(int:)",
+        "PackedByteArray::method:decode_double(int:)",
+        "PackedByteArray::method:decode_float(int:)",
+        "PackedByteArray::method:decode_half(int:)",
+        "PackedByteArray::method:decode_s16(int:)",
+        "PackedByteArray::method:decode_s32(int:)",
+        "PackedByteArray::method:decode_s64(int:)",
+        "PackedByteArray::method:decode_s8(int:)",
+        "PackedByteArray::method:decode_u16(int:)",
+        "PackedByteArray::method:decode_u32(int:)",
+        "PackedByteArray::method:decode_u64(int:)",
+        "PackedByteArray::method:decode_u8(int:)",
+        "PackedByteArray::method:decompress(int:,int:)",
+        "PackedByteArray::method:decompress_dynamic(int:,int:)",
+        "PackedByteArray::method:encode_double(int:,float:)",
+        "PackedByteArray::method:encode_float(int:,float:)",
+        "PackedByteArray::method:encode_half(int:,float:)",
+        "PackedByteArray::method:encode_s16(int:,int:)",
+        "PackedByteArray::method:encode_s32(int:,int:)",
+        "PackedByteArray::method:encode_s64(int:,int:)",
+        "PackedByteArray::method:encode_s8(int:,int:)",
+        "PackedByteArray::method:encode_u16(int:,int:)",
+        "PackedByteArray::method:encode_u32(int:,int:)",
+        "PackedByteArray::method:encode_u64(int:,int:)",
+        "PackedByteArray::method:encode_u8(int:,int:)",
+        "PackedByteArray::method:get_string_from_ascii()",
+        "PackedByteArray::method:get_string_from_multibyte_char(String:)",
+        "PackedByteArray::method:get_string_from_utf16()",
+        "PackedByteArray::method:get_string_from_utf32()",
+        "PackedByteArray::method:get_string_from_utf8()",
+        "PackedByteArray::method:get_string_from_wchar()",
+        "PackedByteArray::method:hex_encode()",
+        "PackedByteArray::method:to_color_array()",
+        "PackedByteArray::method:to_float32_array()",
+        "PackedByteArray::method:to_float64_array()",
+        "PackedByteArray::method:to_int32_array()",
+        "PackedByteArray::method:to_int64_array()",
+        "PackedByteArray::method:to_vector2_array()",
+        "PackedByteArray::method:to_vector3_array()",
+        "PackedByteArray::method:to_vector4_array()",
+        "PackedInt32Array::method:to_byte_array()",
+        "PackedInt64Array::method:to_byte_array()",
+        "PackedFloat32Array::method:to_byte_array()",
+        "PackedFloat64Array::method:to_byte_array()",
+        "PackedVector2Array::method:to_byte_array()",
+        "PackedVector3Array::method:to_byte_array()",
+        "PackedVector4Array::method:to_byte_array()",
+        "PackedColorArray::method:to_byte_array()",
+        "PackedStringArray::method:to_byte_array()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0020: executable caller-owned ByteBuffer spans, little-endian fixed-width/IEEE values and copied typed arrays, bounded atomic swaps, strict managed Unicode/code-page projection and shared E2DCMP file-container compression. ByteBuffers.Consumer exercises all 52 operations, failed ranges, ownership, every codec/block boundary, actual files/UDP and prepared zero-owner-byte scalar/swap intervals. Allocating preparation; raw codec/reference-format compatibility and foreign-host acceptance are not claimed."
+    }
+  ]
+}

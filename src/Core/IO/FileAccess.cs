@@ -1361,7 +1361,7 @@ public sealed partial class FileAccess : ElectronObject
         return stream;
     }
 
-    private static byte[] DecodeCompressed(ReadOnlySpan<byte> envelope, FileCompressionMode mode)
+    internal static byte[] DecodeCompressed(ReadOnlySpan<byte> envelope, FileCompressionMode mode, int maxOutputSize = int.MaxValue)
     {
         var minimum = CompressionMagic.Length + 1 + 1 + sizeof(long);
         if (envelope.Length < minimum || !envelope.StartsWith(CompressionMagic))
@@ -1372,7 +1372,7 @@ public sealed partial class FileAccess : ElectronObject
         if (envelope[offset++] != (byte)mode)
             throw new InvalidDataException("The compressed file uses a different codec.");
         var expectedLength = BinaryPrimitives.ReadInt64LittleEndian(envelope.Slice(offset, sizeof(long)));
-        if (expectedLength < 0 || expectedLength > int.MaxValue)
+        if (expectedLength < 0 || expectedLength > Array.MaxLength || expectedLength > maxOutputSize)
             throw new InvalidDataException("The decoded length is outside the supported managed range.");
         offset += sizeof(long);
 
@@ -1394,7 +1394,7 @@ public sealed partial class FileAccess : ElectronObject
         HashAlgorithmName.SHA256,
         EncryptionKeySize);
 
-    private static byte[] EncodeCompressed(ReadOnlySpan<byte> data, FileCompressionMode mode)
+    internal static byte[] EncodeCompressed(ReadOnlySpan<byte> data, FileCompressionMode mode)
     {
         ValidateCompressionMode(mode);
         using var output = new MemoryStream();

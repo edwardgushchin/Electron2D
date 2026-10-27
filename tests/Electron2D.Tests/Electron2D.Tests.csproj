@@ -22,6 +22,7 @@
     <EmbeddedResource Include="TestData/Noise/rgba-reference.json" LogicalName="TestNoise.rgba-reference.json" />
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />
     <ProjectReference Include="../../Electron2D.csproj" />
+    <Compile Include="../ByteBuffers.Consumer/ByteBufferTests.cs" Link="Consumers/ByteBufferTests.cs" />
     <Compile Include="../VisualShader.Custom/CustomNodes.cs" Link="CustomNodes.cs" />
     <Compile Include="../CameraFeeds.Consumer/CameraFeedContracts.cs" Link="Consumers/CameraFeedContracts.cs" />
     <Compile Include="../CanvasGuides.Consumer/CanvasGuideContracts.cs" Link="Consumers/CanvasGuideContracts.cs" />

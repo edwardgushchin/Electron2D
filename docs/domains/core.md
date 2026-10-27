@@ -1,3 +1,5 @@
+[Binary buffers](../components/byte-buffers.md) expose span-based numeric/text conversion and shared file-container compression through ByteBuffer.
+
 [Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) now exposes the borrowed Script through ElectronObject.GetScript, including constructor, copy, file and scene-local paths. Live assignment and initialization remain separate open contracts.
 
 [CameraServer](../classes/CameraServer.md) joins the retained Engine service registry and native teardown through the [camera pixel-feed component](../components/camera-feeds.md). Discovery and capture remain opt-in; resource views never serialize activation.

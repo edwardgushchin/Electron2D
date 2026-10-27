@@ -2724,6 +2724,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ByteBuffer",
+    "kind": "type",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ByteBuffer",
+    "signature": "public static class Electron2D.ByteBuffer",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CCDMode",
     "kind": "type",
     "declaringType": "Electron2D.CCDMode",
@@ -91626,6 +91639,1219 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.BSwap16(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "BSwap16",
+    "signature": "public static System.Void BSwap16(System.Span\u003CSystem.Byte\u003E data, System.Int32 offset = 0, System.Int32 count = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.BSwap32(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "BSwap32",
+    "signature": "public static System.Void BSwap32(System.Span\u003CSystem.Byte\u003E data, System.Int32 offset = 0, System.Int32 count = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.BSwap64(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "BSwap64",
+    "signature": "public static System.Void BSwap64(System.Span\u003CSystem.Byte\u003E data, System.Int32 offset = 0, System.Int32 count = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "count",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.Compress(System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.FileCompressionMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "Compress",
+    "signature": "public static System.Byte[] Compress(System.ReadOnlySpan\u003CSystem.Byte\u003E data, Electron2D.FileCompressionMode compressionMode = FastLz)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "compressionMode",
+        "type": "Electron2D.FileCompressionMode",
+        "default": "FastLz"
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeDouble(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeDouble",
+    "signature": "public static System.Double DecodeDouble(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeFloat(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeFloat",
+    "signature": "public static System.Single DecodeFloat(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeHalf(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeHalf",
+    "signature": "public static System.Single DecodeHalf(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeS16(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeS16",
+    "signature": "public static System.Int16 DecodeS16(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int16",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeS32(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeS32",
+    "signature": "public static System.Int32 DecodeS32(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeS64(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeS64",
+    "signature": "public static System.Int64 DecodeS64(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeS8(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeS8",
+    "signature": "public static System.SByte DecodeS8(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.SByte",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeU16(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeU16",
+    "signature": "public static System.UInt16 DecodeU16(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt16",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeU32(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeU32",
+    "signature": "public static System.UInt32 DecodeU32(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeU64(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeU64",
+    "signature": "public static System.UInt64 DecodeU64(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecodeU8(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecodeU8",
+    "signature": "public static System.Byte DecodeU8(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 byteOffset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.Decompress(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32,Electron2D.FileCompressionMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "Decompress",
+    "signature": "public static System.Byte[] Decompress(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 bufferSize, Electron2D.FileCompressionMode compressionMode = FastLz)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "bufferSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "compressionMode",
+        "type": "Electron2D.FileCompressionMode",
+        "default": "FastLz"
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.DecompressDynamic(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Int32,Electron2D.FileCompressionMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "DecompressDynamic",
+    "signature": "public static System.Byte[] DecompressDynamic(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.Int32 maxOutputSize, Electron2D.FileCompressionMode compressionMode = FastLz)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "maxOutputSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "compressionMode",
+        "type": "Electron2D.FileCompressionMode",
+        "default": "FastLz"
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeDouble(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeDouble",
+    "signature": "public static System.Void EncodeDouble(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Double value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeFloat(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeFloat",
+    "signature": "public static System.Void EncodeFloat(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeHalf(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeHalf",
+    "signature": "public static System.Void EncodeHalf(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeS16(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Int16)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeS16",
+    "signature": "public static System.Void EncodeS16(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Int16 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int16",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeS32(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeS32",
+    "signature": "public static System.Void EncodeS32(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeS64(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeS64",
+    "signature": "public static System.Void EncodeS64(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Int64 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeS8(System.Span\u003CSystem.Byte\u003E,System.Int32,System.SByte)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeS8",
+    "signature": "public static System.Void EncodeS8(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.SByte value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.SByte",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeU16(System.Span\u003CSystem.Byte\u003E,System.Int32,System.UInt16)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeU16",
+    "signature": "public static System.Void EncodeU16(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.UInt16 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.UInt16",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeU32(System.Span\u003CSystem.Byte\u003E,System.Int32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeU32",
+    "signature": "public static System.Void EncodeU32(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.UInt32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeU64(System.Span\u003CSystem.Byte\u003E,System.Int32,System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeU64",
+    "signature": "public static System.Void EncodeU64(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.UInt64 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.EncodeU8(System.Span\u003CSystem.Byte\u003E,System.Int32,System.Byte)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "EncodeU8",
+    "signature": "public static System.Void EncodeU8(System.Span\u003CSystem.Byte\u003E data, System.Int32 byteOffset, System.Byte value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "byteOffset",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Byte",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.GetStringFromASCII(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "GetStringFromASCII",
+    "signature": "public static System.String GetStringFromASCII(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.GetStringFromMultibyteChar(System.ReadOnlySpan\u003CSystem.Byte\u003E,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "GetStringFromMultibyteChar",
+    "signature": "public static System.String GetStringFromMultibyteChar(System.ReadOnlySpan\u003CSystem.Byte\u003E data, System.String encoding = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "encoding",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.GetStringFromUTF16(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "GetStringFromUTF16",
+    "signature": "public static System.String GetStringFromUTF16(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.GetStringFromUTF32(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "GetStringFromUTF32",
+    "signature": "public static System.String GetStringFromUTF32(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.GetStringFromUTF8(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "GetStringFromUTF8",
+    "signature": "public static System.String GetStringFromUTF8(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.GetStringFromWChar(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "GetStringFromWChar",
+    "signature": "public static System.String GetStringFromWChar(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.HexEncode(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "HexEncode",
+    "signature": "public static System.String HexEncode(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CElectron2D.Color\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CElectron2D.Vector3\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CElectron2D.Vector3\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector3\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CElectron2D.Vector4\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CElectron2D.Vector4\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector4\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CSystem.Double\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CSystem.Double\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Double\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CSystem.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CSystem.Int32\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CSystem.Int64\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CSystem.Int64\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Int64\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CSystem.Single\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToByteArray(System.ReadOnlySpan\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToByteArray",
+    "signature": "public static System.Byte[] ToByteArray(System.ReadOnlySpan\u003CSystem.String\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToColorArray(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToColorArray",
+    "signature": "public static Electron2D.Color[] ToColorArray(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToFloat32Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToFloat32Array",
+    "signature": "public static System.Single[] ToFloat32Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToFloat64Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToFloat64Array",
+    "signature": "public static System.Double[] ToFloat64Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToInt32Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToInt32Array",
+    "signature": "public static System.Int32[] ToInt32Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToInt64Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToInt64Array",
+    "signature": "public static System.Int64[] ToInt64Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToVector2Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToVector2Array",
+    "signature": "public static Electron2D.Vector2[] ToVector2Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToVector3Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToVector3Array",
+    "signature": "public static Electron2D.Vector3[] ToVector3Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector3[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ByteBuffer.ToVector4Array(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ByteBuffer",
+    "name": "ToVector4Array",
+    "signature": "public static Electron2D.Vector4[] ToVector4Array(System.ReadOnlySpan\u003CSystem.Byte\u003E data)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector4[]",
     "value": null
   },
   {

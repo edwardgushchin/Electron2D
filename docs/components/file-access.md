@@ -6,6 +6,8 @@ Last updated: 2026-10-21
 
 This Core component owns blocking seekable file I/O, scoped directory access, directory-backed virtual paths, typed binary/text encoding, physical file metadata, Linux/macOS/Windows extended attributes, temporary file/directory ownership, content hashes, compression, and authenticated encryption.
 
+[Caller-owned binary buffers](byte-buffers.md) share numeric conventions and the compressed container without creating a file session.
+
 ## Owned types
 
 | Type | Role |

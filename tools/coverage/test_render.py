@@ -905,11 +905,19 @@ def main():
         assert "dynamic/untyped" not in content and "ADR 0001/0002" not in content, name
     packed = pages[CLASS_PAGES / "PackedColorArray.md"]
     assert "Color[]" in packed and "ReadOnlySpan<Color>" in packed
-    assert " | Blocked | " in next(line for line in packed.splitlines()
+    assert " | Implemented | " in next(line for line in packed.splitlines()
                                   if line.startswith("| [`method to_byte_array("))
     byte_array = pages[CLASS_PAGES / "PackedByteArray.md"]
-    assert " | Blocked | " in next(line for line in byte_array.splitlines()
+    assert " | Implemented | " in next(line for line in byte_array.splitlines()
                                   if line.startswith("| [`method compress("))
+    byte_utilities = [line for line in byte_array.splitlines() if " | Implemented | " in line]
+    assert len(byte_utilities) == 43 and all("ByteBuffer.md" in line for line in byte_utilities)
+    for name in packed_types:
+        if name == "PackedByteArray":
+            continue
+        row = next(line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines()
+                   if line.startswith("| [`method to_byte_array("))
+        assert " | Implemented | " in row and "ByteBuffer.md" in row, name
     assert " | Excluded | " in next(line for line in byte_array.splitlines()
                                    if line.startswith("| [`method decode_var("))
     assert " | Partial | " in class_rows["RenderingDevice"]

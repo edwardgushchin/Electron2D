@@ -1,6 +1,8 @@
 # FileCompressionMode
 
-Last updated: 2026-10-13
+Last updated: 2026-10-27
+
+Used by both [FileAccess](FileAccess.md) and [ByteBuffer](ByteBuffer.md) compressed containers.
 
 **Inherits:** —
 
@@ -10,7 +12,7 @@ Last updated: 2026-10-13
 - **Namespace:** `Electron2D`
 - **Declaration:** `public enum FileCompressionMode`
 
-> Identifies the codec used by a compressed [`FileAccess`](FileAccess.md) container.
+> Identifies the codec used by a compressed FileAccess or ByteBuffer container.
 
 ## Description
 

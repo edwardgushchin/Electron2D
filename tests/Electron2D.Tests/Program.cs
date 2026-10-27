@@ -14,6 +14,8 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") { ByteBufferTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_ENGINE") == "1") { VerifyEngine(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_FEEDS") is { } cameraProfile) { if (cameraProfile == "boundary") CameraFeedNativeTests.Run(); else CameraFeedContracts.Run(cameraProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }
@@ -2114,6 +2116,7 @@ VerifyRectangles();
 VerifyIntegerRectangles();
 VerifyTransforms();
 VerifyConfigFiles();
+ByteBufferTests.Run();
 VerifyFileAccess();
 VerifyDirAccess();
 VerifyProjectSettings();
