@@ -1,5 +1,10 @@
 # GPUPhysicsBodyStore
 
+[Direct native attachment lookup](../components/physics-backends.md#direct-native-attachment-lookup-2026-10-27)
+uses the current concrete built-in attachment after store/handle qualification.
+Wrapped implementations retain the store-owned table and retirement guards; no
+numerical state mirror or additional transfer is introduced.
+
 [Selected contact records](../components/gpu-resident-reports.md#packed-selected-result-layout) use a 68-byte scalar transfer layout while retaining shape generations and all public numerical values.
 
 [Final contact publication](../components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) now shares the last numerical completion, using the current device record count before publishing validated frozen point velocities. Idle and explicit separate controls retain their existing contract.
@@ -98,7 +103,7 @@ failed with device loss and remains open.
 
 [Buffer memory observations](../components/gpu-memory.md) are implemented in [GPUPhysicsBodyStore.Memory.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.Memory.cs). They track all requested storage/transfer resources, growth overlap and checkpoint copies through native release, without a simulation mirror or extra GPU work. Complete driver/native and managed memory remains outside this counter.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 [Resident Area sorting](../components/physics-areas.md#resident-area-sorting-in-nativeaot) now uses one cached explicit comparison over the existing active prefix. This removes a reproduced 48-byte NativeAOT allocation per dirty-profile sort while retaining priority/traversal order, buffers and transfer/wait policy. The full changed-parameter fixture keeps a strict zero managed-byte gate; native allocation and target GPU performance remain separate.
 

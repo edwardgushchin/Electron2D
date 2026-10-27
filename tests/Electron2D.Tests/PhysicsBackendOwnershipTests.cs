@@ -26,6 +26,7 @@ internal static partial class PhysicsBackendOwnershipTests
         WorldPolicy(backend);
         JointAttachment(backend);
         ColliderAttachment(backend);
+        if (backend == PhysicsServer.Backend.GPU) GPUColliderLookup();
         QueryOwnership(backend);
         MotionOwnership(backend);
         MotionPublication(backend);

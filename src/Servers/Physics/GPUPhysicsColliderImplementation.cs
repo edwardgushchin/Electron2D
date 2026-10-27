@@ -12,6 +12,7 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     private GPUPhysicsBodyStore.QueryGeometry?[] _sensorQueries = [];
     internal override int ShapeCount => GPUShapes.Count;
     private GPUPhysicsBodyStore GPU => store;
+    internal bool IsAttachedTo(GPUPhysicsBodyStore owner) => ReferenceEquals(store, owner) && GPUHandle.Generation != 0;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
     /// <summary>Estimates motion from the last observation solely to choose a readback strategy; it never establishes current state.</summary>
     internal bool GPUChangeLikely => _gpuState.Mode != PhysicsServer.BodyMode.Static && !_gpuState.Sleeping &&
