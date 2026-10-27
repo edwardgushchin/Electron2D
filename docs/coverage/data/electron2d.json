@@ -148910,6 +148910,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.OS.Alert(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "Alert",
+    "signature": "public static System.Void Alert(System.String text, System.String title = \u0022Alert!\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": "\u0022Alert!\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.OS.CreateInstance(System.ReadOnlySpan\u003CSystem.String\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.OS",

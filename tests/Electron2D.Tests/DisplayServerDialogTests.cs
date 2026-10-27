@@ -57,7 +57,20 @@ internal static class DisplayServerDialogTests
     private static void VerifyFileDialogNativeLifecycle()
     {
         using var temp = DirAccess.CreateTemp("electron2d-native-picker"); var root = new SubViewport { Size = new(800, 600), GUIEmbedSubwindows = true }; var dialog = new FileDialog { Access = FileDialogAccess.FileSystem, CurrentDir = temp.GetCurrentDir(), FileMode = FileDialogMode.OpenAny, UseNativeDialog = true }; root.AddChild(dialog); using var tree = new SceneTree(root);
-        Expect<NotSupportedException>(() => dialog.Visible = true); Expect<NotSupportedException>(() => dialog.PopupCentered()); Expect<NotSupportedException>(() => dialog.PopupCenteredRatio(.5f)); Expect<NotSupportedException>(() => dialog.PopupCenteredClamped(new(400, 250))); Expect<NotSupportedException>(() => dialog.Popup(new Rect2i(new(10, 10), new(400, 250)))); Expect<NotSupportedException>(dialog.PopupFileDialog); Check(!dialog.Visible, "Unsupported native mode leaves custom visibility uncommitted across every presentation path.");
+        var nativeAvailable = DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFile);
+        Present(() => dialog.Visible = true); Present(() => dialog.PopupCentered()); Present(() => dialog.PopupCenteredRatio(.5f)); Present(() => dialog.PopupCenteredClamped(new(400, 250))); Present(() => dialog.Popup(new Rect2i(new(10, 10), new(400, 250)))); Present(dialog.PopupFileDialog);
+        void Present(Action show)
+        {
+            if (nativeAvailable)
+            {
+                Expect<NotSupportedException>(show);
+                Check(!dialog.Visible, "Unsupported native mode leaves custom visibility uncommitted.");
+            }
+            else
+            {
+                show(); Check(dialog.Visible, "A host without native choosers uses the custom browser."); dialog.Hide();
+            }
+        }
         dialog.AddOption("Custom", [], 1); dialog.PopupFileDialog(); Check(dialog.Visible, "Native-file-extra absence selects the executable custom-option fallback."); dialog.Hide(); dialog.OptionCount = 0; dialog.UseNativeDialog = false;
         var type = typeof(FileDialog); var pending = type.GetField("_nativePending", BindingFlags.NonPublic | BindingFlags.Instance)!; var completed = type.GetMethod("NativeCompleted", BindingFlags.NonPublic | BindingFlags.Instance)!.CreateDelegate<Action<FileDialogMode, bool, IReadOnlyList<string>, int, string[]>>(dialog); var canceled = 0; dialog.Canceled += () => canceled++; dialog.CurrentFile = "old.txt"; pending.SetValue(dialog, true); Expect<InvalidOperationException>(dialog.Dispose); completed(FileDialogMode.OpenFile, false, [], -1, []); Check(canceled == 1 && dialog.CurrentFile.Length == 0, "Copied native cancellation clears filename, releases pending ownership and emits cancel.");
         var paths = new[] { System.IO.Path.Combine(temp.GetCurrentDir(), "a.txt"), System.IO.Path.Combine(temp.GetCurrentDir(), "b.txt") }; IReadOnlyList<string>? result = null; dialog.FilesSelected += value => result = value; pending.SetValue(dialog, true); completed(FileDialogMode.OpenFiles, true, paths, -1, []); paths[0] = "mutated"; Check(result != null && result[0].EndsWith("a.txt", StringComparison.Ordinal) && dialog.CurrentFile == "a.txt", "Copied native completion projects current path and owned multi-result snapshot.");

@@ -33,8 +33,8 @@ public sealed partial class DisplayServer
     /// <param name="title">Dialog title.</param>
     /// <param name="description">Dialog body text.</param>
     /// <param name="buttons">One or more nonempty button labels.</param>
-    /// <param name="callback">Receives the zero-based index reported by the native dialog. Dismissal without a button has platform-specific reporting.</param>
-    /// <remarks>The native message box blocks the owner thread; the callback runs on that thread before this method returns. Native appearance, button placement, and dismissal reporting depend on the operating system. On the verified Linux Wayland host, closing a one-button dialog reports button index zero.</remarks>
+    /// <param name="callback">Receives the zero-based index reported by the native dialog. An unreported selection retains -1; explicit native button indices are preserved.</param>
+    /// <remarks>Title, body and labels reject embedded null characters. The native message box blocks the owner thread; the callback runs on that thread before this method returns. Native appearance and button placement depend on the operating system. A provider that leaves the selection unwritten on dismissal reports -1; explicit native selection values are preserved.</remarks>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
     /// <exception cref="ArgumentException">No valid button label was supplied.</exception>
     /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>

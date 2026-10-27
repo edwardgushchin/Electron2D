@@ -575,3 +575,5 @@ scene, transfer/screen pixels and native CPU/GPU/compatibility profiles. Build t
 matching native render bridge when current main changes its exports. Controlled
 HDR metadata, actual native formats and physical HDR-display acceptance remain
 separate; see [native output](components/native-hdr-output.md).
+
+For native alerts or message-box marshalling, run [the public managed/failure/native consumers](components/native-alerts.md#executable-checks) in CLR and strict NativeAOT. Preserve the -1 sentinel when a native provider leaves selection unwritten, owner-thread guards, NUL validation and partial-marshalling cleanup; inspect native text pixels separately from callback success.

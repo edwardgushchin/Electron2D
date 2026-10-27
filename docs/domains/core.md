@@ -373,3 +373,5 @@ Standard-handle and managed process-termination helpers reject unsupported Apple
 [Ordinary engine publisher membership](../components/event-connections.md#ordinary-engine-publisher-qualification-2026-10-26) uses lazy typed delegate stores alongside the existing prepared physical buffers. Tokens observe actual engine attachment without reflected invocation or emission captures; arbitrary opaque custom accessors retain logical token observations.
 
 [Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) connect the retained Performance service to committed navigation counters and active audio output latency with independent read/lifecycle semantics. Memory and renderer instrumentation remain open.
+
+[Native modal alerts](../components/native-alerts.md) add OS.Alert before startup and after shutdown, with active lifecycle/display owner checks and explicit native failure.

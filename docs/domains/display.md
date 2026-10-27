@@ -160,3 +160,5 @@ MIME offers to existing owned Image decoders and ImageTexture consumers. The
 [component](../components/clipboard-images.md) defines selection order, nullable
 results, cold predicate decoding, data budgets, precision and owner/lifetime rules.
 Native Wayland verification uses an isolated compositor and external producer.
+
+[Native modal alerts](../components/native-alerts.md) share native-text validation with DialogShow and preserve unreported cancellation as -1; owned callbacks can show a nested alert.

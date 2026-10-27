@@ -18,11 +18,17 @@ public sealed partial class DisplayServer
     internal bool HasPendingNativeDialogs => Volatile.Read(ref _pendingNativeDialogs) != 0;
     private bool _dialogsDisposed;
 
+    internal nint GetAlertParentWindow()
+    {
+        EnsureOwner();
+        return GetWindow(MainWindowId);
+    }
+
     internal void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
     {
         EnsureOwner();
-        ArgumentNullException.ThrowIfNull(title);
-        ArgumentNullException.ThrowIfNull(description);
+        OS.ValidateNativeMessage(title, nameof(title));
+        OS.ValidateNativeMessage(description, nameof(description));
         ArgumentNullException.ThrowIfNull(buttons);
         ArgumentNullException.ThrowIfNull(callback);
         if (buttons.Count == 0)
@@ -38,6 +44,7 @@ public sealed partial class DisplayServer
                 var label = buttons[index];
                 if (string.IsNullOrEmpty(label))
                     throw new ArgumentException("Button labels must be nonempty.", nameof(buttons));
+                OS.ValidateNativeMessage(label, nameof(buttons));
                 var button = new SDL.MessageBoxButtonData { ButtonID = index, Text = label };
                 Marshal.StructureToPtr(button, nativeButtons + index * buttonSize, false);
                 written++;
@@ -52,7 +59,9 @@ public sealed partial class DisplayServer
                 NumButtons = buttons.Count,
                 Buttons = nativeButtons,
             };
-            if (!SDL.ShowMessageBox(in message, out var selected))
+            // Some native providers leave the result untouched when the window is closed.
+            var selected = -1;
+            if (!SDL.ShowMessageBox(in message, out selected))
                 throw SDLFailure("show a native message dialog");
             callback(selected);
         }

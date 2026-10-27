@@ -625,7 +625,7 @@
     },
     {
       "state": "Implemented",
-      "reason": "A real Linux Wayland message box selected button index one, invoked the callback on the owner thread before return, and closed through the title bar. SDL reported zero for closing a one-button dialog, which the native toolkit cannot distinguish from choosing that button; the pinned reference does not specify a close-without-selection result and its Wayland backend does not offer dialog_show. Invalid arguments and owner-thread rejection have executable dummy checks; typed exceptions replace the upstream Error return (ADR 0040).",
+      "reason": "Real native message boxes execute ordered choices and display-owner callbacks. Unwritten native selection on close retains -1; explicit native indices remain unchanged. Shared title/body/label NUL validation and partial-marshaling cleanup reject invalid data. NativeAlerts.Consumer exercises real close/callback/nested modal lifetimes and UTF-8 system-provider pixels in CLR/NativeAOT; native fonts/providers, native heap and foreign profiles remain separate. Typed exceptions replace the reference Error return under ADR 0040.",
       "godot": [
         "DisplayServer::method:dialog_show(String:,String:,PackedStringArray:,Callable:)"
       ]

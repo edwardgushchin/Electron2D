@@ -42,3 +42,5 @@ Owned public types: [FileDialog](../classes/FileDialog.md), [FileDialogAccess](.
 ## Native popup integration
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
+
+Native message boxes and pre-startup OS.Alert use [the native alert contract](native-alerts.md); chooser callbacks and lifetimes remain the asynchronous path described here.

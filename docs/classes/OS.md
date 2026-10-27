@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -349,3 +349,7 @@ See [host query lifecycle and executable consumers](../components/host-platform.
 without an Engine lifecycle or renderer, including from worker threads. Each signed
 byte field is -1 when unavailable. See [OSMemoryInfo](OSMemoryInfo.md) and
 [host memory](../components/host-memory.md) for platform-specific meanings and checks.
+
+## Alert
+
+`public static void Alert(string text, string title = "Alert!")` displays a blocking native acknowledgement message before startup, during a lifecycle or after shutdown. Empty strings are accepted; null/NUL values reject. The active Engine/display owner rules apply; otherwise use the host main thread. Native failure throws InvalidOperationException. A main window is supplied as an optional native parent when available. This does not create engine/display/renderer services. [Native modal alerts](../components/native-alerts.md) owns presentation, lifetime and verification limits.
