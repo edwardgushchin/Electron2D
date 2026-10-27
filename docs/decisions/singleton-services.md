@@ -39,6 +39,8 @@ Implementation and full extension-family acceptance remain open.
 - Time follows this same retained-object rule under [ADR 0111](time.md#adr-0111), including permanent Engine registry identity and rejected disposal; its public service operations are static.
 - TextServerManager follows the permanent static service rule. Its TextServer interfaces are explicit implementation objects under [ADR 0107](text-objects.md#adr-0107), so their buffer operations are instance operations on that exact owner; they do not introduce a public Instance accessor.
 
+- UniformSetCacheRD and FramebufferCacheRD follow this static facade/private retained-object convention. Their objects belong to the exact active GPU RenderingDevice, reject caller disposal and retire with its rendering session. Static access does not open a renderer or select a local device; absent/Compatibility GPU capability fails explicitly.
+
 ### Consequences
 
 Ordinary code uses Engine.Run(window), Input.IsActionPressed(action) and ProjectSettings.Get(setting). State and native ownership still live on objects. Operation names, overloads, defaults, validation, event payloads, ordering and execution behavior remain intact. Property descriptors inspect the same retained state.

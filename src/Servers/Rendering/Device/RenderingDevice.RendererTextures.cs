@@ -59,12 +59,14 @@ public sealed unsafe partial class RenderingDevice
     private void RetireRendererTextures()
     {
         if (_command != 0 || _fence != 0 || _recordedReadbacks.Count != 0) return;
+        var retired = false;
         foreach (var pair in _entries)
         {
             var entry = pair.Value; if (entry.Borrowed is not { } borrow || borrow.Alive) continue;
             if (_rendererTextures.GetValueOrDefault(borrow.Source) == pair.Key) _rendererTextures.Remove(borrow.Source);
-            entry.Expired = true; entry.Borrowed = null; borrow.Dispose();
+            entry.Expired = true; entry.Borrowed = null; borrow.Dispose(); retired = true;
         }
+        if (retired) EvictResourceCaches();
     }
     private void CommitRendererUploads() { foreach (var pixels in _rendererUploads) pixels.CommitUpload(); _rendererUploads.Clear(); }
     private void CancelRendererUploads() { foreach (var pixels in _rendererUploads) pixels.CancelUpload(); _rendererUploads.Clear(); }

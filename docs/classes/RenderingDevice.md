@@ -942,7 +942,7 @@ A framebuffer invalidated when any borrowed image is freed.
 
 | Parameter | Contract |
 | --- | --- |
-| `textures` | Distinct single-mip images with matching dimensions and enough layers for every view. |
+| `textures` | Distinct single-mip images with matching dimensions and enough layers for every view; empty RID slots remain unused by every pass. |
 | `validateWithFormat` | An existing matching layout including resolve roles, or -1 for an implicit render-only pass. |
 | `viewCount` | One through 256 ordered views, each targeting its corresponding attachment layer; an explicit format must agree. |
 <a id="member-8709272c4e6f"></a>
@@ -1169,7 +1169,7 @@ A framebuffer borrowing all images used by its ordered passes.
 
 | Parameter | Contract |
 | --- | --- |
-| `textures` | Render, marked resolve and input images in caller-defined attachment order. |
+| `textures` | Render, marked resolve and input images in caller-defined attachment order; empty RID slots remain unused by every pass. |
 | `passes` | One or more ordered color/depth/resolve/input/preservation passes. |
 | `validateWithFormat` | An existing matching layout, or -1 to create its copied format. |
 | `viewCount` | One through 256 ordered views, each targeting its corresponding attachment layer; an explicit format must agree. |
@@ -1397,3 +1397,5 @@ The clear appears once in the native main window. Later canvas output resumes un
 ## Canvas point integration
 
 See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.
+
+[Device resource caches](../components/device-resource-caches.md) add retained UniformSetCacheRD and FramebufferCacheRD services over the active GPU device, with copied keys, safe dependency eviction and device-owned lifetime.

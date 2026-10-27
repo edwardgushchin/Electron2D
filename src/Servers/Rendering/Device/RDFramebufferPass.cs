@@ -27,6 +27,10 @@ public sealed class RDFramebufferPass : ElectronObject
     /// <summary>Selects inactive attachments whose contents must survive this pass.</summary>
     /// <value>Initially empty. Reads and writes copy; indices refer to the framebuffer attachment array.</value>
     public int[] PreserveAttachments { get { ThrowIfDisposed(); return _preserveAttachments.ToArray(); } set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _preserveAttachments = value.ToArray(); } }
+    internal ReadOnlySpan<int> BorrowColors { get { ThrowIfDisposed(); return _colorAttachments; } }
+    internal ReadOnlySpan<int> BorrowResolves { get { ThrowIfDisposed(); return _resolveAttachments; } }
+    internal ReadOnlySpan<int> BorrowInputs { get { ThrowIfDisposed(); return _inputAttachments; } }
+    internal ReadOnlySpan<int> BorrowPreserves { get { ThrowIfDisposed(); return _preserveAttachments; } }
     /// <summary>Projects inherited metadata followed by the executing configuration fields.</summary>
     /// <returns>Typed configuration descriptors with their default values.</returns>
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(

@@ -94,6 +94,7 @@ public sealed unsafe partial class RenderingDevice
         var layout = FramebufferFormat(target.Format); var slot = 0;
         for (var i = 0; i < target.Textures.Length; i++)
         {
+            if (!target.Textures[i].IsValid()) continue;
             var image = Get(target.Textures[i], Kind.Texture);
             if ((layout.Usage[i] & TextureUsageBits.ColorAttachment) != 0)
             {

@@ -1,0 +1,44 @@
+{
+  "mappings": [
+    {
+      "godot": "UniformSetCacheRD::method:get_cache(RID:,int:,RDUniform[]:)",
+      "electron2d": "method:Electron2D.UniformSetCacheRD.GetCache(Electron2D.RID,System.UInt32,System.ReadOnlySpan<Electron2D.RDUniform>)",
+      "reason": "ADRs 0028/0095: complete copied-key resource caches execute on the active retained GPU device, with content comparison, compute/graphics/multipass/MSAA/multiview consumers, automatic dependency retirement, explicit-free eviction and independent session lifetime. Local-device, absent/Compatibility, owner/list and invalid-description guards reject. Prepared cache pairs and native frames require their recorded managed-allocation receipts; native heap, large-cache/free workloads and foreign targets remain separate gates. See docs/components/device-resource-caches.md."
+    },
+    {
+      "godot": "FramebufferCacheRD::method:get_cache_multipass(RID[]:,RDFramebufferPass[]:,int:)",
+      "electron2d": "method:Electron2D.FramebufferCacheRD.GetCacheMultipass(System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>,System.Int32)",
+      "reason": "ADRs 0028/0095: complete copied-key resource caches execute on the active retained GPU device, with content comparison, compute/graphics/multipass/MSAA/multiview consumers, automatic dependency retirement, explicit-free eviction and independent session lifetime. Local-device, absent/Compatibility, owner/list and invalid-description guards reject. Prepared cache pairs and native frames require their recorded managed-allocation receipts; native heap, large-cache/free workloads and foreign targets remain separate gates. See docs/components/device-resource-caches.md."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:UniformSetCacheRD",
+        "UniformSetCacheRD::method:get_cache(RID:,int:,RDUniform[]:)",
+        "class:FramebufferCacheRD",
+        "FramebufferCacheRD::method:get_cache_multipass(RID[]:,RDFramebufferPass[]:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: complete copied-key resource caches execute on the active retained GPU device, with content comparison, compute/graphics/multipass/MSAA/multiview consumers, automatic dependency retirement, explicit-free eviction and independent session lifetime. Local-device, absent/Compatibility, owner/list and invalid-description guards reject. Prepared cache pairs and native frames require their recorded managed-allocation receipts; native heap, large-cache/free workloads and foreign targets remain separate gates. See docs/components/device-resource-caches.md."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "method:Electron2D.UniformSetCacheRD.Dispose(System.Boolean)",
+      "reason": "ADRs 0009/0028/0095: inherited disposal hooks reject caller retirement of a retained device cache and clear copied cache metadata when its exact renderer device closes. Not a separate reference operation."
+    },
+    {
+      "electron2d": "method:Electron2D.UniformSetCacheRD.ValidateDisposal()",
+      "reason": "ADRs 0009/0028/0095: inherited disposal hooks reject caller retirement of a retained device cache and clear copied cache metadata when its exact renderer device closes. Not a separate reference operation."
+    },
+    {
+      "electron2d": "method:Electron2D.FramebufferCacheRD.Dispose(System.Boolean)",
+      "reason": "ADRs 0009/0028/0095: inherited disposal hooks reject caller retirement of a retained device cache and clear copied cache metadata when its exact renderer device closes. Not a separate reference operation."
+    },
+    {
+      "electron2d": "method:Electron2D.FramebufferCacheRD.ValidateDisposal()",
+      "reason": "ADRs 0009/0028/0095: inherited disposal hooks reject caller retirement of a retained device cache and clear copied cache metadata when its exact renderer device closes. Not a separate reference operation."
+    }
+  ]
+}

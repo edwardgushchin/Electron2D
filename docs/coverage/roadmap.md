@@ -99,7 +99,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | ADR 0046/0107: built-in buffers and service-owned fonts/caches now execute. Requires constructible external TextServerExtension virtual/callback dispatch for the complete family, provider-owned source/cache lifetimes, callback errors/reentry, retirement and public provider registration/replacement integration. This member enters that external implementation/dispatch slice. | 4 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 3 |
-| Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 3 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
@@ -111,6 +110,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 1 |
+| Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 
 Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.

@@ -38,7 +38,21 @@ public sealed unsafe partial class RenderingDevice
             if (!TextureIsFormatSupportedForUsage(formats[i], samples[i] != TextureSamples.Samples1 ? usage[i] & ~(TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo) : usage[i])) throw new NotSupportedException("Unsupported attachment format/usage.");
             ExactSamples(formats[i], samples[i]);
         }
-        var layout = AttachmentLayouts(formats, usage, samples, passes, viewCount); var id = NextFormatID(ref _nextGraphicsFormat); _framebufferFormats.Add(id, layout); return id;
+        return RetainFramebufferFormat(AttachmentLayouts(formats, usage, samples, passes, viewCount));
+    }
+    private int RetainFramebufferFormat(FramebufferLayout layout)
+    {
+        foreach (var pair in _framebufferFormats)
+        {
+            var prior = pair.Value;
+            if (prior.ViewCount != layout.ViewCount || prior.Passes.Length != layout.Passes.Length) continue;
+            var a = prior.Passes[0]; var b = layout.Passes[0];
+            if (!a.Formats.AsSpan().SequenceEqual(b.Formats) || !a.Usage.AsSpan().SequenceEqual(b.Usage) || !a.AttachmentSamples.AsSpan().SequenceEqual(b.AttachmentSamples)) continue;
+            var same = true;
+            for (var i = 0; i < prior.Passes.Length; i++) if (!SamePass(prior.Passes[i], layout.Passes[i])) { same = false; break; }
+            if (same) return pair.Key;
+        }
+        var id = NextFormatID(ref _nextGraphicsFormat); _framebufferFormats.Add(id, layout); return id;
     }
     private static FramebufferPassLayout AttachmentLayout(DataFormat[] formats, TextureUsageBits[] usage, TextureSamples[] samples, RDFramebufferPass? pass)
     {
@@ -47,7 +61,7 @@ public sealed unsafe partial class RenderingDevice
         {
             var indices = new List<int>();
             for (var i = 0; i < formats.Length; i++)
-                if (DepthFormat(formats[i])) { if (depth >= 0) throw new ArgumentException("Provide at most one depth/stencil target."); depth = i; } else indices.Add(i);
+                if (DepthFormat(formats[i])) { if (depth >= 0) throw new ArgumentException("Provide at most one depth/stencil target."); depth = i; } else if ((usage[i] & TextureUsageBits.ColorAttachment) != 0) indices.Add(i);
             colors = indices.ToArray(); resolves = new int[colors.Length]; Array.Fill(resolves, RDFramebufferPass.AttachmentUnused);
         }
         else
@@ -102,7 +116,8 @@ public sealed unsafe partial class RenderingDevice
             foreach (var resolve in pass.Resolves) if (resolve >= 0) used.Add(resolve);
             foreach (var input in pass.Inputs) if (input >= 0) used.Add(input);
         }
-        if (used.Count != formats.Length) throw new ArgumentException("Every attachment must have an executing render, resolve or input role.");
+        for (var i = 0; i < formats.Length; i++)
+            if (formats[i] != DataFormat.Max && !used.Contains(i)) throw new ArgumentException("Every live attachment must have an executing render, resolve or input role.");
         return new(passes, viewCount);
     }
     private FramebufferPassLayout FramebufferFormat(int format, uint renderPass = 0)
@@ -116,14 +131,14 @@ public sealed unsafe partial class RenderingDevice
     public TextureSamples FramebufferFormatGetTextureSamples(int framebufferFormat, uint renderPass = 0)
     { Access(); return FramebufferFormat(framebufferFormat, renderPass).Samples; }
     /// <summary>Creates a framebuffer borrowing device-owned color and depth/stencil images.</summary>
-    /// <param name="textures">Distinct single-mip images with enough layers for all views with matching dimensions.</param>
+    /// <param name="textures">Distinct single-mip images with enough layers for all views with matching dimensions; empty RID slots must remain unused by every pass.</param>
     /// <param name="validateWithFormat">An existing matching layout including resolve roles, or -1 for an implicit render-only pass.</param>
     /// <param name="viewCount">One through 256 views; attachments must supply at least that many layers.</param>
     /// <returns>A framebuffer invalidated when any borrowed image is freed.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The view count is outside one through 256.</exception>
     public RID FramebufferCreate(ReadOnlySpan<RID> textures, int validateWithFormat = -1, int viewCount = 1) => CreateFramebuffer(textures, default, validateWithFormat, viewCount);
     /// <summary>Creates a framebuffer borrowing the images selected by ordered copied passes.</summary>
-    /// <param name="textures">Render, marked resolve and input images in caller-defined attachment order.</param>
+    /// <param name="textures">Render, marked resolve and input images in caller-defined attachment order; empty RID slots must remain unused by every pass.</param>
     /// <param name="passes">One or more ordered executable passes.</param>
     /// <param name="validateWithFormat">An existing matching layout, or -1 to create its copied format.</param>
     /// <param name="viewCount">One through 256 views, matching any explicitly selected format.</param>
@@ -139,14 +154,16 @@ public sealed unsafe partial class RenderingDevice
         var formats = new DataFormat[textures.Length]; var usage = new TextureUsageBits[textures.Length]; var samples = new TextureSamples[textures.Length]; var unique = new HashSet<nint>(); Vector2i size = default;
         for (var i = 0; i < textures.Length; i++)
         {
+            if (!textures[i].IsValid()) { formats[i] = DataFormat.Max; continue; }
             var image = Get(textures[i], Kind.Texture); var info = image.Texture!;
             if (info.Swizzle != 0) throw new ArgumentException("Framebuffer attachments require identity component mappings.", nameof(textures));
             if (!unique.Add(image.NativeHandle) || info.Layers < viewCount || info.Mips != 1) throw new ArgumentException("Framebuffer images require distinct single-mip targets with enough layers for every view.", nameof(textures));
-            var current = new Vector2i(checked((int)info.Width), checked((int)info.Height)); if (i == 0) size = current; else if (size != current) throw new ArgumentException("Attachment dimensions must match.", nameof(textures));
+            var current = new Vector2i(checked((int)info.Width), checked((int)info.Height)); if (size == default) size = current; else if (size != current) throw new ArgumentException("Attachment dimensions must match.", nameof(textures));
             formats[i] = info.Format; usage[i] = info.Usage; samples[i] = info.Samples;
         }
+        if (size == default) throw new ArgumentException("Provide at least one live attachment.", nameof(textures));
         var format = validateWithFormat; FramebufferLayout layout;
-        if (format == -1) { layout = AttachmentLayouts(formats, usage, samples, passes, viewCount); format = NextFormatID(ref _nextGraphicsFormat); }
+        if (format == -1) layout = AttachmentLayouts(formats, usage, samples, passes, viewCount);
         else
         {
             layout = FramebufferLayouts(format); if (layout.ViewCount != viewCount) throw new ArgumentException("Framebuffer view counts must match.", nameof(viewCount)); var first = layout.Passes[0];
@@ -159,11 +176,12 @@ public sealed unsafe partial class RenderingDevice
         }
         foreach (var pass in layout.Passes)
         {
+            foreach (var preserved in pass.Preserves) Get(textures[preserved], Kind.Texture);
             for (var i = 0; i < pass.Resolves.Length; i++)
                 if (pass.Resolves[i] >= 0) ResolvePair(Get(textures[pass.Colors[i]], Kind.Texture).Texture!, Get(textures[pass.Resolves[i]], Kind.Texture).Texture!);
             foreach (var color in pass.Colors) if (color >= 0 && Get(textures[color], Kind.Texture).Texture!.Resolve) throw new ArgumentException("Marked resolve images must occupy resolve slots, not render slots.", nameof(textures));
         }
-        if (validateWithFormat == -1) _framebufferFormats.Add(format, layout);
+        if (validateWithFormat == -1) format = RetainFramebufferFormat(layout);
         return Add(new Entry { Kind = Kind.Framebuffer, Target = new(textures.ToArray(), format, size) { Touched = new bool[checked(textures.Length * viewCount)], Visited = new bool[viewCount] } });
     }
     private static bool SameRasterLayout(FramebufferPassLayout a, FramebufferPassLayout b)
@@ -182,14 +200,18 @@ public sealed unsafe partial class RenderingDevice
     /// <returns>True for a live framebuffer with intact dependencies on this device.</returns>
     public bool FramebufferIsValid(RID framebuffer)
     {
-        Access(); if (!_entries.TryGetValue(framebuffer, out var entry) || entry.Kind != Kind.Framebuffer) return false;
-        foreach (var image in entry.Target!.Textures) if (!_entries.TryGetValue(image, out var texture) || !texture.Alive) return false;
+        Access(); return CachedFramebufferIsValid(framebuffer);
+    }
+    internal bool CachedFramebufferIsValid(RID framebuffer)
+    {
+        if (!_entries.TryGetValue(framebuffer, out var entry) || entry.Kind != Kind.Framebuffer) return false;
+        foreach (var image in entry.Target!.Textures) if (image.IsValid() && (!_entries.TryGetValue(image, out var texture) || !texture.Alive)) return false;
         return true;
     }
     private Framebuffer GetFramebuffer(RID rid)
     {
         var target = Get(rid, Kind.Framebuffer).Target!;
-        foreach (var image in target.Textures) Get(image, Kind.Texture);
+        foreach (var image in target.Textures) if (image.IsValid()) Get(image, Kind.Texture);
         return target;
     }
 }

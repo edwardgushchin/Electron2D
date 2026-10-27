@@ -1,3 +1,5 @@
+[Device resource caches](../components/device-resource-caches.md) add copied-key descriptor-set and multipass framebuffer reuse on the active GPU device, with dependency eviction, stable format identity and native compute/graphics consumers. Four Blocked declarations become Implemented. Current coverage is **13,218/18,872 (70.04%)**, with 1,102 Partial, 481 Unimplemented, 4,071 Blocked, 8,421 Excluded and zero unmapped.
+
 [Navigation controls and diagnostics](../components/navigation-diagnostics.md) add avoidance suspension, copied obstacle membership, boundary events and real retained scene drawing. Twenty-six blocked operations/settings become Implemented. Current declaration coverage is **13,214/18,872 (70.02%)**, with 1,102 Partial, 481 Unimplemented, 4,075 Blocked, 8,421 Excluded and zero unmapped.
 
 [Binary buffers](../components/byte-buffers.md) implement all 52 applicable byte and array conversion operations through caller-owned spans and the shared compressed-file container. Current declaration coverage is **13,187/18,872 (69.88%)**, with 1,102 Partial, 482 Unimplemented, 4,101 Blocked, 8,421 Excluded and zero unmapped.

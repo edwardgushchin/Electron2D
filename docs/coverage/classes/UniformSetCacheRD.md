@@ -1,14 +1,14 @@
 # UniformSetCacheRD API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-10-27
 
 Godot source: [doc/classes/UniformSetCacheRD.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/UniformSetCacheRD.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
-Godot base: [Object](Object.md). Electron2D type: —.
+Godot base: [Object](Object.md). Electron2D type: [`public sealed class Electron2D.UniformSetCacheRD`](../../classes/UniformSetCacheRD.md).
 
 Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class UniformSetCacheRD`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/UniformSetCacheRD.xml) | — | Blocked | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. |
-| [`method get_cache(RID shader, int set, RDUniform[] uniforms) -> RID`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/UniformSetCacheRD.xml) | — | Blocked | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. |
+| [`class UniformSetCacheRD`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/UniformSetCacheRD.xml) | [`public sealed class Electron2D.UniformSetCacheRD`](../../classes/UniformSetCacheRD.md) | Implemented | ADRs 0028/0095: complete copied-key resource caches execute on the active retained GPU device, with content comparison, compute/graphics/multipass/MSAA/multiview consumers, automatic dependency retirement, explicit-free eviction and independent session lifetime. Local-device, absent/Compatibility, owner/list and invalid-description guards reject. Prepared cache pairs and native frames require their recorded managed-allocation receipts; native heap, large-cache/free workloads and foreign targets remain separate gates. See docs/components/device-resource-caches.md. |
+| [`method get_cache(RID shader, int set, RDUniform[] uniforms) -> RID`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/UniformSetCacheRD.xml) | [`public static Electron2D.RID GetCache(Electron2D.RID shader, System.UInt32 set, System.ReadOnlySpan<Electron2D.RDUniform> uniforms)`](../../classes/UniformSetCacheRD.md) | Implemented | ADRs 0028/0095: complete copied-key resource caches execute on the active retained GPU device, with content comparison, compute/graphics/multipass/MSAA/multiview consumers, automatic dependency retirement, explicit-free eviction and independent session lifetime. Local-device, absent/Compatibility, owner/list and invalid-description guards reject. Prepared cache pairs and native frames require their recorded managed-allocation receipts; native heap, large-cache/free workloads and foreign targets remain separate gates. See docs/components/device-resource-caches.md. |

@@ -18,6 +18,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_GLOBAL_SETTIN
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_DIAGNOSTICS") is { } navigationProfile) { NavigationDiagnosticsChecks.Run(navigationProfile); if (navigationProfile == "managed") NavigationGlobalDebugTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_CACHES") is { } cacheProfile) { DeviceResourceCacheChecks.Run(cacheProfile); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") { ByteBufferTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_ENGINE") == "1") { VerifyEngine(); return; }

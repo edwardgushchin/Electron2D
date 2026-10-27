@@ -116,3 +116,5 @@ The image category initially; set a supported buffer category before creating a 
 Fixed arrays also cover formatted buffers and framebuffer inputs. Combined sampled buffers repeat sampler/buffer pairs. Ordinary uniform/storage buffers borrow one identity. Counts resolve with pipeline specialization; see [the descriptor-array contract](../components/local-compute.md#fixed-device-descriptor-arrays).
 
 Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.
+
+The internal [device cache](../components/device-resource-caches.md) readers borrow validated description spans for key comparisons. Copied cache keys never retain these description objects or expose their mutable storage.

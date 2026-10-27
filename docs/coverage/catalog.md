@@ -304,7 +304,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Font](classes/Font.md) | Resource | Partial | 36 |
 | [FontFile](classes/FontFile.md) | Font | Partial | 89 |
 | [FontVariation](classes/FontVariation.md) | Font | Implemented | 14 |
-| [FramebufferCacheRD](classes/FramebufferCacheRD.md) | Object | Blocked | 1 |
+| [FramebufferCacheRD](classes/FramebufferCacheRD.md) | Object | Implemented | 1 |
 | [GDExtension](classes/GDExtension.md) | Resource | Blocked | 7 |
 | [GDExtensionManager](classes/GDExtensionManager.md) | Object | Blocked | 16 |
 | [GDScript](classes/GDScript.md) | Script | Excluded | 1 |
@@ -900,7 +900,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [UPNP](classes/UPNP.md) | RefCounted | Implemented | 44 |
 | [UPNPDevice](classes/UPNPDevice.md) | RefCounted | Implemented | 21 |
 | [UndoRedo](classes/UndoRedo.md) | Object | Implemented | 27 |
-| [UniformSetCacheRD](classes/UniformSetCacheRD.md) | Object | Blocked | 1 |
+| [UniformSetCacheRD](classes/UniformSetCacheRD.md) | Object | Implemented | 1 |
 | [VBoxContainer](classes/VBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [VFlowContainer](classes/VFlowContainer.md) | FlowContainer | Implemented | 0 |
 | [VScrollBar](classes/VScrollBar.md) | ScrollBar | Implemented | 4 |

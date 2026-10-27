@@ -342,7 +342,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <returns>True for an intact set of this device.</returns>
     public bool UniformSetIsValid(RID uniformSet)
     {
-        Access();
+        Access(); return CachedUniformIsValid(uniformSet);
+    }
+    internal bool CachedUniformIsValid(RID uniformSet)
+    {
         if (!_entries.TryGetValue(uniformSet, out var e) || e.Kind != Kind.Set || !_entries.ContainsKey(e.Shader)) return false;
         foreach (var ids in e.Bindings.Values) foreach (var rid in ids) if (!_entries.TryGetValue(rid, out var resource) || !resource.Alive) return false;
         return true;
@@ -465,7 +468,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
         _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
-        DeliverReadbacks();
+        EvictResourceCaches(rid); DeliverReadbacks();
     }
     /// <inheritdoc />
     protected override void ValidateDisposal() { if (_serverOwner is not null && !_serverOwner.DeviceClosing) throw new InvalidOperationException("The renderer owns this device lifetime."); Access(); if (_activeList != 0 && _serverOwner is null) throw new InvalidOperationException("End the command list before disposing the device."); base.ValidateDisposal(); }
@@ -478,7 +481,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_drawPass != 0) { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
-            CancelRendererUploads(); ReleaseDrawablePipelines();
+            CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }

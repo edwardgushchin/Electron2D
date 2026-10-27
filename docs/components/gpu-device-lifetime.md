@@ -114,3 +114,5 @@ and observes exactly one SDL_DestroyGPUDevice and three SDL_DestroyWindow calls;
 no destroy is skipped. Receipts are `shared-internal-ready-*/check.json` and
 `shared-retirement-trace-fixed/runner.log`. These observations establish the
 exercised release path, not a general native-heap leak proof.
+
+[Device resource caches](device-resource-caches.md) borrow this exact renderer device and retire with it. Cache eviction releases only descriptor-set/framebuffer metadata after the existing safe dependency boundary.

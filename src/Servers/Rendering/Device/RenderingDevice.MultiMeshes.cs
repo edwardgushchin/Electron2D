@@ -32,7 +32,7 @@ public sealed unsafe partial class RenderingDevice
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin instance history copy");
         SDL.CopyGPUBufferToBuffer(pass, new() { Buffer = _entries[source].NativeHandle, Offset = offset }, new() { Buffer = _entries[target].NativeHandle, Offset = offset }, count, false); SDL.EndGPUCopyPass(pass);
     }
-    internal void ExpireMultiMeshBuffer(RID rid) { if (_entries.TryGetValue(rid, out var entry)) entry.Expired = true; }
+    internal void ExpireMultiMeshBuffer(RID rid) { if (_entries.TryGetValue(rid, out var entry)) { entry.Expired = true; EvictResourceCaches(); } }
     internal nint MultiMeshHandle(RID rid, nint device)
     {
         Access(true); if (Device != device) throw new InvalidOperationException("Instance data belongs to another native device.");
@@ -42,12 +42,13 @@ public sealed unsafe partial class RenderingDevice
     private void RetireMultiMeshBuffers()
     {
         if (_command != 0 || _fence != 0 || _recordedReadbacks.Count != 0) return;
+        var retired = false;
         foreach (var (rid, entry) in _entries)
         {
             if (entry.MeshOwner is null || entry.Alive) continue;
             if (!entry.MeshExported) _retiredMultiMeshBuffers.Add(rid);
-            entry.Expired = true; entry.MeshOwner = null; entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.Handle = entry.Upload = entry.Download = null;
+            retired = true; entry.Expired = true; entry.MeshOwner = null; entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.Handle = entry.Upload = entry.Download = null;
         }
-        foreach (var rid in _retiredMultiMeshBuffers) _entries.Remove(rid); _retiredMultiMeshBuffers.Clear();
+        foreach (var rid in _retiredMultiMeshBuffers) _entries.Remove(rid); _retiredMultiMeshBuffers.Clear(); if (retired) EvictResourceCaches();
     }
 }

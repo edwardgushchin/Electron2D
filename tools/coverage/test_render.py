@@ -58,6 +58,10 @@ def check_physics_report(pages):
     assert len(source_rows) == 1 and " | Implemented | " in source_rows[0] and "public Electron2D.Script GetScript()" in source_rows[0]
     assert "Object::method:get_script()" not in expected, "Qualified source identity must not remain open"
     assert expected["Object::method:set_script(Variant:)"] == "Blocked", "Source observation must not close live reassignment"
+    for cache in ("UniformSetCacheRD", "FramebufferCacheRD"):
+        rows = [row for row in pages[CLASS_PAGES / (cache + ".md")].splitlines() if row.startswith("| [`")]
+        assert len(rows) == 2 and all(" | Implemented | " in row for row in rows)
+        assert all("device-resource-caches.md" in row for row in rows)
     node_page = pages[CLASS_PAGES / "Node.md"]
     for method in ("call_thread_safe", "set_thread_safe", "notify_thread_safe",
                    "call_deferred_thread_group", "set_deferred_thread_group", "notify_deferred_thread_group"):
@@ -930,7 +934,7 @@ def main():
     assert " | Excluded | " in next(line for line in byte_array.splitlines()
                                    if line.startswith("| [`method decode_var("))
     assert " | Partial | " in class_rows["RenderingDevice"]
-    assert " | Blocked | " in class_rows["FramebufferCacheRD"]
+    assert " | Implemented | " in class_rows["FramebufferCacheRD"]
     for name in ("BoxMesh", "RefCounted", "GDScriptLanguageProtocol", "EditorNode3DGizmo",
                  "LightmapperRD", "RDAccelerationStructureGeometry", "RDAccelerationStructureInstance",
                  "RDHitGroup", "RenderDataRD", "RenderSceneBuffersRD", "RenderSceneDataRD",

@@ -22,6 +22,7 @@ public sealed class RDUniform : ElectronObject
     /// <summary>Copies the binding's resource identities.</summary>
     /// <returns>An independent array in insertion order.</returns>
     public RID[] GetIDs() { ThrowIfDisposed(); return _ids.ToArray(); }
+    internal ReadOnlySpan<RID> BorrowIDs { get { ThrowIfDisposed(); return System.Runtime.InteropServices.CollectionsMarshal.AsSpan(_ids); } }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [new PropertyDescriptor<RDUniform, int>(nameof(Binding), p => p.Binding, (p, v) => p.Binding = v, _ => 0),
