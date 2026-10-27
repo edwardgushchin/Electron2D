@@ -1,3 +1,5 @@
+if (args is ["--render-memory", var renderMode, "gpu"]) { RenderMemoryContract.Run(renderMode, Electron2D.PhysicsServer.Backend.GPU); return; }
+if (args is ["--render-memory", var mode]) { if (mode == "managed") RenderMemoryContract.RunManaged(); else if (mode == "local") RenderMemoryContract.RunLocal(); else RenderMemoryContract.Run(mode, Electron2D.PhysicsServer.Backend.CPU); return; }
 if (args is ["--canvas-pipelines", var renderer]) { if (renderer == "managed") CanvasPipelineContract.RunManaged(); else CanvasPipelineContract.Run(renderer); return; }
 if (args is ["--deferred-memory"]) { DeferredMemoryContract.Run(); return; }
 if (args is ["--low-processor"]) { LowProcessorContract.Run(); return; }

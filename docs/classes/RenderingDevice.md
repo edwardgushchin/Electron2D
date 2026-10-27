@@ -1399,3 +1399,9 @@ The clear appears once in the native main window. Later canvas output resumes un
 See [canvas point programs](../components/canvas-points.md) for native topology, the shared sized-point device capability and cold program validation. Authored sizes are preserved after the one-pixel default initialization; optional capabilities retain explicit rejection and device fallback.
 
 [Device resource caches](../components/device-resource-caches.md) add retained UniformSetCacheRD and FramebufferCacheRD services over the active GPU device, with copied keys, safe dependency eviction and device-owned lifetime.
+
+## Native render allocation memory
+
+See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
+
+`public long GetMemoryUsage(MemoryType type)` returns checked native byte counts under ordinary device owner/lifetime guards. [MemoryType](RenderingDevice.MemoryType.md) selects Textures=0, Buffers=1 or Total=2.

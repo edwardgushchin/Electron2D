@@ -5,6 +5,8 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 {
+    internal override RenderMemorySnapshot ReadMemory() => GPUDeviceFactory.ReadMemory(_device);
+
     private readonly RenderHandle _device;
     private readonly nint _window;
     private readonly RenderHandle _vertexShader, _instancedVertexShader, _lightingVertexShader, _lightingInstancedVertexShader;

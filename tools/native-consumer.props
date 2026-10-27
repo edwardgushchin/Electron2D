@@ -22,6 +22,15 @@
     <ProjectReference Remove="$(MSBuildThisFileDirectory)../Electron2D.csproj" />
     <PackageReference Include="Electron2D" Version="[$(Electron2DVersion)]" />
   </ItemGroup>
+  <Target Name="CopyElectron2DConsumerRenderOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DRenderNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <PropertyGroup>
+      <_Electron2DConsumerRenderName>libElectron2DRender.so</_Electron2DConsumerRenderName>
+      <_Electron2DConsumerRenderName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DRender.dylib</_Electron2DConsumerRenderName>
+      <_Electron2DConsumerRenderName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DRender.dll</_Electron2DConsumerRenderName>
+    </PropertyGroup>
+    <Copy SourceFiles="$(Electron2DRenderNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerRenderName)" />
+    <Copy SourceFiles="$(Electron2DRenderNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerRenderName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
   <Target Name="CopyElectron2DConsumerAudioOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DAudioNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
     <PropertyGroup>
       <_Electron2DConsumerAudioName>libFAudio.so.0</_Electron2DConsumerAudioName>

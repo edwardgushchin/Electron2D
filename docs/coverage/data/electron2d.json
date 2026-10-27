@@ -10610,6 +10610,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.MemoryType",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.MemoryType",
+    "name": "MemoryType",
+    "signature": "public enum Electron2D.RenderingDevice.MemoryType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.PipelineDynamicStateFlags",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
@@ -48276,6 +48294,32 @@
     "value": "34"
   },
   {
+    "id": "enumValue:Electron2D.Performance.Monitor.RenderBufferMemUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "RenderBufferMemUsed",
+    "signature": "public const Electron2D.Performance.Monitor RenderBufferMemUsed = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.RenderTextureMemUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "RenderTextureMemUsed",
+    "signature": "public const Electron2D.Performance.Monitor RenderTextureMemUsed = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "15"
+  },
+  {
     "id": "enumValue:Electron2D.Performance.Monitor.RenderTotalDrawCallsInFrame()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Performance.Monitor",
@@ -48313,6 +48357,19 @@
     "parameters": [],
     "returnType": "Electron2D.Performance.Monitor",
     "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.RenderVideoMemUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "RenderVideoMemUsed",
+    "signature": "public const Electron2D.Performance.Monitor RenderVideoMemUsed = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "14"
   },
   {
     "id": "enumValue:Electron2D.Performance.Monitor.TimeFPS()",
@@ -53437,6 +53494,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.MemoryType.Buffers()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.MemoryType",
+    "name": "Buffers",
+    "signature": "public const Electron2D.RenderingDevice.MemoryType Buffers = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.MemoryType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.MemoryType.Textures()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.MemoryType",
+    "name": "Textures",
+    "signature": "public const Electron2D.RenderingDevice.MemoryType Textures = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.MemoryType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.MemoryType.Total()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.MemoryType",
+    "name": "Total",
+    "signature": "public const Electron2D.RenderingDevice.MemoryType Total = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.MemoryType",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.BlendConstants()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
@@ -54932,6 +55028,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.BufferMemUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.RenderingInfo",
+    "name": "BufferMemUsed",
+    "signature": "public const Electron2D.RenderingServer.RenderingInfo BufferMemUsed = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.RenderingInfo",
+    "value": "4"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.PipelineCompilationsCanvas()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingServer.RenderingInfo",
@@ -54943,6 +55052,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.RenderingInfo",
     "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.TextureMemUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.RenderingInfo",
+    "name": "TextureMemUsed",
+    "signature": "public const Electron2D.RenderingServer.RenderingInfo TextureMemUsed = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.RenderingInfo",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.TotalDrawCallsInFrame()",
@@ -54982,6 +55104,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingServer.RenderingInfo",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingServer.RenderingInfo.VideoMemUsed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingServer.RenderingInfo",
+    "name": "VideoMemUsed",
+    "signature": "public const Electron2D.RenderingServer.RenderingInfo VideoMemUsed = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingServer.RenderingInfo",
+    "value": "5"
   },
   {
     "id": "enumValue:Electron2D.RenderingServer.SplashStretchMode.Cover()",
@@ -173184,6 +173319,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetMemoryUsage(Electron2D.RenderingDevice.MemoryType)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetMemoryUsage",
+    "signature": "public System.Int64 GetMemoryUsage(Electron2D.RenderingDevice.MemoryType type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "type",
+        "type": "Electron2D.RenderingDevice.MemoryType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int64",
     "value": null
   },
   {

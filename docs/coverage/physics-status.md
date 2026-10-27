@@ -107,7 +107,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
-| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live object/cache/tree populations, completed Engine timings, canvas/physics counters, all aggregate/planar navigation counters, active audio latency, deferred message storage peak, cumulative canvas pipeline creations and typed custom monitors execute. Memory current/peak and renderer device-memory/other pipeline-compilation families still require their own real producers; GetMonitor and its enum remain Partial. See docs/components/runtime-diagnostics.md#server-monitor-snapshots. |
+| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live timing/object/canvas/physics/navigation/audio/deferred-memory and canvas pipeline sources execute, together with real native texture/buffer/committed render allocation memory. Current/peak runtime managed/native allocation memory and four other pipeline sources remain open; GetMonitor and its enum stay Partial. See docs/components/render-memory.md. |
 
 
 The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)

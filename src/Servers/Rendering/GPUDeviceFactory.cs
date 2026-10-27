@@ -7,6 +7,8 @@ internal static unsafe class GPUDeviceFactory
     private static readonly object Gate = new();
     private static SharedDevice? _shared;
 
+    internal static RenderMemorySnapshot ReadMemory(RenderHandle lease) => Volatile.Read(ref _shared)?.ReadMemory(lease) ?? default;
+
     /// <summary>Retains the active native device without retaining another consumer or its window.</summary>
     internal static (RenderHandle Handle, bool Relaxed, bool SizedPoints) Acquire(bool allowAndroidRelaxation)
     {
@@ -32,6 +34,19 @@ internal static unsafe class GPUDeviceFactory
         internal readonly RenderHandle Handle;
         internal readonly bool Relaxed, SizedPoints;
         internal int Leases;
+        private int _memoryReaders, _retiring;
+
+        internal RenderMemorySnapshot ReadMemory(RenderHandle lease)
+        {
+            if (lease.IsClosed || Volatile.Read(ref _retiring) != 0) return default;
+            Interlocked.Increment(ref _memoryReaders);
+            try
+            {
+                if (lease.IsClosed || Volatile.Read(ref _retiring) != 0) return default;
+                return RenderMemory.Read(Handle.DangerousGetHandle());
+            }
+            finally { Interlocked.Decrement(ref _memoryReaders); }
+        }
 
         internal SharedDevice(bool allowAndroidRelaxation)
         {
@@ -45,6 +60,9 @@ internal static unsafe class GPUDeviceFactory
             lock (Gate)
             {
                 if (--Leases != 0) return;
+                Volatile.Write(ref _retiring, 1);
+                var wait = new SpinWait();
+                while (Volatile.Read(ref _memoryReaders) != 0) wait.SpinOnce();
                 // Complete instance retirement before another acquisition can create a Wayland device.
                 Handle.Dispose(); _shared = null;
             }

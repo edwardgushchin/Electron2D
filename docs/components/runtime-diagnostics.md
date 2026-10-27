@@ -82,8 +82,7 @@ monitor introduces no periodic sampler or stale-value cache of its own.
 
 Both families permit prepared reads on any thread with no managed allocation.
 First use may initialize managed service metadata; it opens no native device.
-These selectors do not complete the remaining allocation-memory,
-video-memory or pipeline-compilation instrumentation. Performance/GetMonitor and
+These selectors do not complete current/peak runtime allocation memory or the other pipeline-compilation sources. Native render memory has its own [executing producer](render-memory.md). Performance/GetMonitor and
 its enum remain Partial in the full declaration audit.
 
 The source reference is pinned [Performance.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Performance.xml).
@@ -132,3 +131,7 @@ Modification time starts at zero and records successful add/remove ticks in micr
 [CustomMonitorTests](../../tests/Electron2D.Tests/CustomMonitorTests.cs) exercises exact Int64 and raw typed/reference values, capture arguments, units, order, copied containers, modification ticks, invalid input, stale handles, failure recovery, recursive and nested reads, in-flight removal/replacement, self-removal, captured receiver collection and zero warmed managed bytes. The public native host reads live scene position monitors and checks actual pixels and permanent service/registry identity across Linux Wayland GPU and compatibility sessions.
 
 Other built-in producers remain separate coverage dependencies. No debugger chart UI, persistence or foreign-platform execution is supplied by the custom-monitor API. Native/driver allocations and human acceptance remain unverified.
+
+## Native render allocation memory
+
+See [native render memory](render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.

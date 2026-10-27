@@ -46,6 +46,7 @@ internal abstract partial class CanvasBackend : IDisposable
     internal abstract void SetVSync(DisplayServer.VSyncMode mode);
     internal abstract string Method { get; }
     internal abstract string Driver { get; }
+    internal abstract RenderMemorySnapshot ReadMemory();
     internal abstract Vector2i GetPixelSize();
     private readonly Dictionary<Viewport, CanvasRenderTarget> _targets = new(ReferenceEqualityComparer.Instance);
     internal abstract RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false, bool HDR = false);
@@ -111,14 +112,18 @@ internal sealed class RenderHandle : SafeHandleZeroOrMinusOneIsInvalid
 {
     private readonly Action<nint> _release;
     private readonly SafeHandle? _owner;
+    private readonly RenderTextureMemory? _textureMemory;
+    private readonly long _textureBytes;
 
-    internal RenderHandle(nint value, Action<nint> release, SafeHandle? owner = null) : base(true)
+    internal RenderHandle(nint value, Action<nint> release, SafeHandle? owner = null, RenderTextureMemory? textureMemory = null, long textureBytes = 0) : base(true)
     {
         if (value == 0) throw CanvasBackend.Failure("create a native graphics resource");
         _release = release;
         _owner = owner;
+        _textureMemory = textureMemory;
+        _textureBytes = textureBytes;
         var retained = false;
-        try { owner?.DangerousAddRef(ref retained); SetHandle(value); }
+        try { owner?.DangerousAddRef(ref retained); SetHandle(value); textureMemory?.Add(textureBytes); }
         catch { release(value); throw; }
     }
 
@@ -141,7 +146,7 @@ internal sealed class RenderHandle : SafeHandleZeroOrMinusOneIsInvalid
     protected override bool ReleaseHandle()
     {
         try { _release(handle); }
-        finally { _owner?.DangerousRelease(); }
+        finally { _textureMemory?.Add(-_textureBytes); _owner?.DangerousRelease(); }
         return true;
     }
 }

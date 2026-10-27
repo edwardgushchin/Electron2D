@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DRenderNativeRID Condition="'$(Electron2DRenderNativeRID)' == ''">$(_Electron2DPrivateNativeRID)</Electron2DRenderNativeRID>
+    <_Electron2DRenderName>libElectron2DRender.so</_Electron2DRenderName>
+    <_Electron2DRenderName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DRender.dylib</_Electron2DRenderName>
+    <_Electron2DRenderName Condition="'$(Electron2DNativePlatform)' == 'Windows'">Electron2DRender.dll</_Electron2DRenderName>
+    <_Electron2DRenderSDL>$(PkgSDL3-CS_Linux)/runtimes/$(Electron2DRenderNativeRID)/native/libSDL3.so.0</_Electron2DRenderSDL>
+    <_Electron2DRenderSDL Condition="'$(Electron2DNativePlatform)' == 'MacOS'">$(PkgSDL3-CS_MacOS)/runtimes/$(Electron2DRenderNativeRID)/native/libSDL3.0.dylib</_Electron2DRenderSDL>
+    <_Electron2DRenderBuild>$(MSBuildThisFileDirectory)../obj/render-native/$(Electron2DRenderNativeRID)</_Electron2DRenderBuild>
+    <_Electron2DRenderLibrary>$(_Electron2DRenderBuild)/$(_Electron2DRenderName)</_Electron2DRenderLibrary>
+    <_Electron2DRenderLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DRenderNativeRID)/native/$(_Electron2DRenderName)</_Electron2DRenderLibrary>
+    <_Electron2DRenderLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DRenderNativeRID)/native/$(_Electron2DRenderName)</_Electron2DRenderLibrary>
+    <_Electron2DRenderLibrary Condition="'$(Electron2DRenderNativeLibrary)' != ''">$(Electron2DRenderNativeLibrary)</_Electron2DRenderLibrary>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DRenderInput Include="$(MSBuildThisFileDirectory)render-native/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DRenderLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS') and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DRenderLibrary)'))" Link="runtimes/$(Electron2DRenderNativeRID)/native/$(_Electron2DRenderName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DRenderNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DRenderNativeLibrary)' == '' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')" Inputs="@(_Electron2DRenderInput)" Outputs="$(_Electron2DRenderLibrary)">
+    <Error Condition="'$(Electron2DRenderNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private mesh compilation requires the matching target host; foreign profiles use the native bundle producers." />
+    <Exec Command="cmake -S &quot;$(MSBuildThisFileDirectory)render-native&quot; -B &quot;$(_Electron2DRenderBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release -DSDL3_LIBRARIES=&quot;$(_Electron2DRenderSDL)&quot;" />
+    <Exec Command="cmake --build &quot;$(_Electron2DRenderBuild)&quot; --target Electron2DRender --parallel 2" />
+  </Target>
+</Project>

@@ -1,0 +1,78 @@
+{
+  "mappings": [
+    {
+      "godot": "RenderingDevice::enum:MemoryType",
+      "electron2d": "T:Electron2D.RenderingDevice.MemoryType",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingDevice::method:get_memory_usage(int:RenderingDevice.MemoryType)",
+      "electron2d": "method:Electron2D.RenderingDevice.GetMemoryUsage(Electron2D.RenderingDevice.MemoryType)",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:MemoryType.MEMORY_TEXTURES",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.MemoryType.Textures()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:MemoryType.MEMORY_BUFFERS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.MemoryType.Buffers()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:MemoryType.MEMORY_TOTAL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.MemoryType.Total()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TEXTURE_MEM_USED",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.TextureMemUsed()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_BUFFER_MEM_USED",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.BufferMemUsed()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_VIDEO_MEM_USED",
+      "electron2d": "enumValue:Electron2D.RenderingServer.RenderingInfo.VideoMemUsed()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.RENDER_TEXTURE_MEM_USED",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.RenderTextureMemUsed()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.RENDER_BUFFER_MEM_USED",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.RenderBufferMemUsed()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.RENDER_VIDEO_MEM_USED",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.RenderVideoMemUsed()",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "RenderingDevice::enum:MemoryType",
+        "RenderingDevice::method:get_memory_usage(int:RenderingDevice.MemoryType)",
+        "RenderingDevice::enum_value:MemoryType.MEMORY_TEXTURES",
+        "RenderingDevice::enum_value:MemoryType.MEMORY_BUFFERS",
+        "RenderingDevice::enum_value:MemoryType.MEMORY_TOTAL",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_TEXTURE_MEM_USED",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_BUFFER_MEM_USED",
+        "RenderingServer::enum_value:RenderingInfo.RENDERING_INFO_VIDEO_MEM_USED",
+        "Performance::enum_value:Monitor.RENDER_TEXTURE_MEM_USED",
+        "Performance::enum_value:Monitor.RENDER_BUFFER_MEM_USED",
+        "Performance::enum_value:Monitor.RENDER_VIDEO_MEM_USED"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028/0054: actual pinned SDL Vulkan allocation regions and committed blocks, including reservation, cycling, transfers, support images and shared renderer/compute/physics leases. Compatibility tracks owned native texture payload lifetime. Guarded diagnostics do not submit/wait for GPU work; unsupported cores/drivers reject. Public RenderMemoryContract and native concurrent allocation/retirement controls qualify the local Linux profiles; foreign/native-heap/package/full-goal gates remain separate. See docs/components/render-memory.md."
+    }
+  ]
+}

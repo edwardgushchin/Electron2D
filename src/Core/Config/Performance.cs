@@ -34,6 +34,12 @@ public sealed partial class Performance : ElectronObject
         RenderTotalPrimitivesInFrame = 12,
         /// <summary>Canvas geometry draw calls issued by the native backend in that frame.</summary>
         RenderTotalDrawCallsInFrame = 13,
+        /// <summary>Committed native render allocation bytes, including retained free GPU reservation.</summary>
+        RenderVideoMemUsed = 14,
+        /// <summary>Native texture allocation bytes in the active renderer payload.</summary>
+        RenderTextureMemUsed = 15,
+        /// <summary>Native render buffer allocation bytes, including GPU uniform and transfer storage.</summary>
+        RenderBufferMemUsed = 16,
         /// <summary>Awake nonstatic bodies in active physics spaces.</summary>
         PhysicsActiveObjects = 17,
         /// <summary>Backend collision candidates, including sensors.</summary>
@@ -105,6 +111,9 @@ public sealed partial class Performance : ElectronObject
     /// replacement/retirement may yield the prior snapshot; it never accesses a retired native handle.
     /// Canvas pipeline compilations read RenderingServer.GetRenderingInfo's cumulative successful native creation count,
     /// independently of completed-frame publication. The value resets with the renderer and is zero for compatibility.
+    /// Render memory reads the same native allocation sources as RenderingServer, including shared GPU leases,
+    /// deferred retirement and free reservation. Queries lock the allocator without submitting or waiting for GPU work.
+    /// Compatibility reports owned texture payloads. A GPU driver/core without an adapter rejects explicitly.
     /// Deferred memory counts retained queue backing arrays and engine-owned typed invocation objects/delegates across
     /// live trees, including independent trees and processing groups. It retains the process peak after drain or teardown.
     /// Growth measures actual managed allocations; caller callbacks, referenced payload graphs and pool bookkeeping are
@@ -112,6 +121,7 @@ public sealed partial class Performance : ElectronObject
     /// Canvas counts publish after completed native rendering and follow RenderingServer.GetRenderingInfo, including
     /// GPU-authored capacity budgets and zero without an active renderer. Several reads do not form an atomic snapshot. Durations measure owner-side wall time, not device timestamps.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The monitor is undefined.</exception>
+    /// <exception cref="NotSupportedException">A render-memory query has no compatible native driver/core adapter.</exception>
     /// <exception cref="OverflowException">The aggregate exceeds the supported signed count range.</exception>
     public static double GetMonitor(Monitor monitor) => Service.GetMonitorCore(monitor);
 
@@ -128,6 +138,9 @@ public sealed partial class Performance : ElectronObject
         Monitor.RenderTotalObjectsInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalObjectsInFrame),
         Monitor.RenderTotalPrimitivesInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalPrimitivesInFrame),
         Monitor.RenderTotalDrawCallsInFrame => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TotalDrawCallsInFrame),
+        Monitor.RenderVideoMemUsed => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.VideoMemUsed),
+        Monitor.RenderTextureMemUsed => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.TextureMemUsed),
+        Monitor.RenderBufferMemUsed => RenderingServer.GetRenderingInfo(RenderingServer.RenderingInfo.BufferMemUsed),
         Monitor.PhysicsActiveObjects => PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects),
         Monitor.PhysicsCollisionPairs => PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.CollisionPairs),
         Monitor.PhysicsIslandCount => PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.IslandCount),

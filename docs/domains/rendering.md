@@ -553,3 +553,7 @@ Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress
 [Editor canvas guides](../components/editor-canvas-guides.md) connect spatial Marker anchors, ReferenceRect UI borders and notifier ShowRect regions to the actual passive editor preview and ordinary retained drawing.
 
 [Device resource caches](../components/device-resource-caches.md) add retained UniformSetCacheRD and FramebufferCacheRD services over the active GPU device, with copied keys, safe dependency eviction and device-owned lifetime.
+
+## Native render allocation memory
+
+See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.

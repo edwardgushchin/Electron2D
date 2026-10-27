@@ -56,3 +56,5 @@ The three durations use seconds and publish maxima once per completed one-second
 The three canvas counts follow [completed canvas counters](../components/canvas-counters.md). They publish on completed native frames and return zero without an active renderer; they do not use the one-second timing window.
 
 Navigation aggregates and planar selectors share one committed snapshot. Audio diagnostics use the active output's managed sample without initializing audio or invoking native code. See [server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots).
+
+RenderVideoMemUsed=14, RenderTextureMemUsed=15 and RenderBufferMemUsed=16 read the native renderer sources; see [native render memory](../components/render-memory.md).

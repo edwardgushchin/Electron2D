@@ -5,6 +5,9 @@ namespace Electron2D;
 
 internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
 {
+    private readonly RenderTextureMemory _textureMemory = new();
+    internal override RenderMemorySnapshot ReadMemory() => _textureMemory.Read();
+
     private readonly RenderHandle _renderer;
     private SDL.Vertex[] _vertices = [];
     private SDL.FPoint[] _linePoints = [];
@@ -531,7 +534,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
     {
         ValidateHDR(HDR);
         if (mipmaps) throw new NotSupportedException("The compatibility renderer cannot generate canvas backbuffer mipmaps.");
-        var renderer = _renderer.DangerousGetHandle(); var target = new RenderHandle(SDL.CreateTexture(renderer, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer);
+        var renderer = _renderer.DangerousGetHandle(); var target = new RenderHandle(SDL.CreateTexture(renderer, BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888, SDL.TextureAccess.Target, size.X, size.Y), SDL.DestroyTexture, _renderer, _textureMemory, checked((long)size.X * size.Y * 4));
         try
         {
             Check(SDL.SetTextureBlendMode(target.DangerousGetHandle(), SDL.BlendMode.None), "set framebuffer copy blending"); Check(SDL.SetRenderTarget(renderer, target.DangerousGetHandle()), "initialize canvas target"); Check(SDL.SetRenderClipRect(renderer, 0), "clear initial target clipping"); Check(SDL.SetRenderDrawColorFloat(renderer, clear.R, clear.G, clear.B, clear.A), "set initial target color"); Check(SDL.RenderClear(renderer), "clear initial canvas target"); return target;
@@ -576,7 +579,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 if (*formats == 0) throw new NotSupportedException("This compatibility driver cannot retain HDR texture precision; use GPU rendering.");
             }
             handle = new RenderHandle(SDL.CreateTexture(_renderer.DangerousGetHandle(), format, SDL.TextureAccess.Static,
-                pixels.Upload.Width, pixels.Upload.Height), SDL.DestroyTexture, _renderer);
+                pixels.Upload.Width, pixels.Upload.Height), SDL.DestroyTexture, _renderer, _textureMemory, checked((long)pixels.Upload.Width * pixels.Upload.Height * pixels.BytesPerPixel));
         }
         try
         {

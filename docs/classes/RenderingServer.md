@@ -1873,7 +1873,7 @@ Native thin-stroke batch bounds include half-pixel coverage and an additional ha
 
 | Signature | Contract |
 | --- | --- |
-| `public static long GetRenderingInfo(RenderingInfo info)` | Allocation-free, any-thread completed canvas totals or cumulative canvas pipeline creations; zero without a native session. See [canvas counters](../components/canvas-counters.md#canvas-pipeline-compilation). |
+| `public static long GetRenderingInfo(RenderingInfo info)` | Allocation-free, any-thread canvas totals, native allocation bytes or cumulative canvas pipeline creations; zero without a native session. See [canvas counters](../components/canvas-counters.md#canvas-pipeline-compilation). |
 | `public static long ViewportGetRenderInfo(RID viewport, ViewportRenderInfoType type, ViewportRenderInfo info)` | Same per-viewport fields through a live scene or server-owned RID; native owner required. |
 
 ## Native OS feature query
@@ -1931,3 +1931,7 @@ Sets an independent session-only limit on a live scene or caller-owned viewport.
 ## Low-level screen output
 
 The retained device from GetRenderingDevice records [native screen lists](RenderingDevice.md#native-window-drawing) for main and child windows. Completed lists replace one final window presentation without changing viewport texture output. ForceSync and ForceDraw(false) preserve pending presentation; FramePostDraw authoring appears in the following frame. Native retirement and hierarchy changes validate active lists before changing window state; tree rollback and renderer shutdown retain responsibility for unfinished lists.
+
+## Native render allocation memory
+
+See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.

@@ -29,6 +29,7 @@ def build(rid, sdl, artifacts):
             ("tools/ogv-native", "Electron2DOGV", "Electron2DOGV.dll", []),
             ("tools/webp-native", "Electron2DWebP", "Electron2DWebP.dll", []),
             ("tools/mesh-native", "Electron2DMesh", "Electron2DMesh.dll", []),
+            ("tools/render-native", "Electron2DRender", "Electron2DRender.dll", ["-DSDL3_LIBRARIES=" + str(output / "sdl/SDL3.lib")]),
             ("tools/font-native", "freetype", "Electron2DFreeType.dll", [])):
         directory = output / target
         subprocess.run(["cmake", "-S", str(root / source), "-B", str(directory), "-G", "Ninja",

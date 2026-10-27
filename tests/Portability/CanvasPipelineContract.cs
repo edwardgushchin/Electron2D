@@ -15,7 +15,7 @@ internal static class CanvasPipelineContract
         Check((int)Info.PipelineCompilationsCanvas == 6 && (int)Monitor.PipelineCompilationsCanvas == 34, "Pinned selector identities.");
         Check(!RenderingServer.IsAvailable && Read() == 0, "Cold queries do not create a renderer.");
         Task.Run(() => Check(Read() == 0, "Cold worker reads need no owner/device.")).GetAwaiter().GetResult();
-        foreach (var value in new[] { -1, 3, 4, 5, 7, int.MaxValue }) Reject<ArgumentOutOfRangeException>(() => RenderingServer.GetRenderingInfo((Info)value));
+        foreach (var value in new[] { -1, 7, int.MaxValue }) Reject<ArgumentOutOfRangeException>(() => RenderingServer.GetRenderingInfo((Info)value));
         foreach (var value in new[] { -1, 4, 5, 35, 36, 37, 38, int.MaxValue }) Reject<ArgumentOutOfRangeException>(() => Performance.GetMonitor((Monitor)value));
         for (var i = 0; i < 128; i++) _ = Read();
         var before = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);

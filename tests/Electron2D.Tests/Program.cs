@@ -27,6 +27,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_FEEDS") is { } ca
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_MONITORS") == "1") { ServerMonitorContract.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_MEMORY") == "1") { DeferredMemoryContract.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDER_MEMORY") is { } memoryMode) { if (memoryMode == "managed") RenderMemoryContract.RunManaged(); else if (memoryMode == "local") RenderMemoryLifetimeTests.Run(); else RenderMemoryContract.Run(memoryMode, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MEMORY_PHYSICS") == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_PIPELINES") is { } pipelineProfile) { if (pipelineProfile == "managed") CanvasPipelineContract.RunManaged(); else CanvasPipelineFaultTests.Run(pipelineProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_MONITORS") == "1") { AudioOutputTests.Run(); AudioOutputTests.RunOfflineMonitor(); return; }
 

@@ -27,7 +27,7 @@ public static partial class BackendChecks
                 PhysicsServer.AreaSetGravity(world.Space, 0);
                 foreach (var selector in new[] { -1, 3, int.MinValue, int.MaxValue })
                     Reject<ArgumentOutOfRangeException>(() => PhysicsServer.GetProcessInfo((PhysicsServer.ProcessInfo)selector));
-                Reject<ArgumentOutOfRangeException>(() => Performance.GetMonitor((Performance.Monitor)16));
+                Check(Performance.GetMonitor(Performance.Monitor.RenderBufferMemUsed) == 0, "Headless statistics do not initialize a renderer.");
                 Reject<ArgumentOutOfRangeException>(() => Performance.GetMonitor((Performance.Monitor)20));
                 PhysicsServer.BodyAddShape(raw, circle.GetRID()); PhysicsServer.BodySetGravityScale(raw, 0);
                 PhysicsServer.BodySetCanSleep(raw, false); PhysicsServer.BodySetTransform(raw, new(0, new Vector2(20, -4)));

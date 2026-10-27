@@ -18,7 +18,7 @@
     {
       "godot": "RenderingServer::enum:RenderingInfo",
       "electron2d": "T:Electron2D.RenderingServer.RenderingInfo",
-      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate. Cumulative successful canvas pipeline creation now has its own session lifetime and any-thread cached producer; device memory and other compilation sources remain open."
+      "reason": "Canvas submission totals, cumulative canvas pipeline creations and native texture/buffer/committed render memory execute. Other pipeline-source counters retain their real producer prerequisites. See docs/components/render-memory.md and docs/components/canvas-counters.md#canvas-pipeline-compilation."
     },
     {
       "godot": "RenderingServer::enum:ViewportRenderInfo",
@@ -78,7 +78,7 @@
     {
       "godot": "RenderingServer::method:get_rendering_info(int:RenderingServer.RenderingInfo)",
       "electron2d": "method:Electron2D.RenderingServer.GetRenderingInfo(Electron2D.RenderingServer.RenderingInfo)",
-      "reason": "ADR 0028/0095: completed native canvas submission publishes per-viewport and aggregate logical records, topology/instance primitive budgets and native geometry calls through shared typed selectors, including Performance. Successful empty frames reset; skipped/failed frames retain prior values. GPU-authored indirect activity/LOD uses explicit capacity/base-geometry budgets without readback; internal passes and native surface replay are excluded. CanvasCounterTests covers public scene/RID/monitor paths, actual pixels, ownership, failure/completion and prepared allocation on GPU/Compatibility; foreign/hardware/native allocation acceptance is separate. Cumulative successful canvas pipeline creation now has its own session lifetime and any-thread cached producer; device memory and other compilation sources remain open."
+      "reason": "Canvas submission totals, cumulative canvas pipeline creations and native texture/buffer/committed render memory execute. Other pipeline-source counters retain their real producer prerequisites. See docs/components/render-memory.md and docs/components/canvas-counters.md#canvas-pipeline-compilation."
     },
     {
       "godot": "RenderingServer::method:viewport_get_render_info(RID:,int:RenderingServer.ViewportRenderInfoType,int:RenderingServer.ViewportRenderInfo)",
@@ -184,7 +184,7 @@
         "RenderingServer::method:get_rendering_info(int:RenderingServer.RenderingInfo)"
       ],
       "state": "Partial",
-      "reason": "Canvas submission totals and cumulative successful native canvas pipeline creations execute. Device texture/buffer/video-memory and other pipeline source counters still require actual producers; no constant-return placeholders are exposed. See docs/components/canvas-counters.md#canvas-pipeline-compilation."
+      "reason": "Canvas submission totals, cumulative canvas pipeline creations and native texture/buffer/committed render memory execute. Other pipeline-source counters retain their real producer prerequisites. See docs/components/render-memory.md and docs/components/canvas-counters.md#canvas-pipeline-compilation."
     },
     {
       "godot": [

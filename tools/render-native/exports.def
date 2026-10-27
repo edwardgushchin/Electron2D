@@ -1,0 +1,3 @@
+LIBRARY Electron2DRender
+EXPORTS
+    e2d_render_memory

@@ -15,11 +15,11 @@ internal sealed partial class CompatibilityCanvasBackend
         if (_lineCoverage is not null && _lineTargetSize.X >= size.X && _lineTargetSize.Y >= size.Y) return;
         var capacity = new Vector2i(Math.Max(size.X, _lineTargetSize.X), Math.Max(size.Y, _lineTargetSize.Y));
         var format = BitConverter.IsLittleEndian ? SDL.PixelFormat.ABGR8888 : SDL.PixelFormat.RGBA8888;
-        var coverage = new RenderHandle(SDL.CreateTexture(renderer, format, SDL.TextureAccess.Target, capacity.X, capacity.Y), SDL.DestroyTexture, _renderer);
+        var coverage = new RenderHandle(SDL.CreateTexture(renderer, format, SDL.TextureAccess.Target, capacity.X, capacity.Y), SDL.DestroyTexture, _renderer, _textureMemory, checked((long)capacity.X * capacity.Y * 4));
         RenderHandle? composite = null;
         try
         {
-            composite = new RenderHandle(SDL.CreateTexture(renderer, format, SDL.TextureAccess.Target, capacity.X, capacity.Y), SDL.DestroyTexture, _renderer);
+            composite = new RenderHandle(SDL.CreateTexture(renderer, format, SDL.TextureAccess.Target, capacity.X, capacity.Y), SDL.DestroyTexture, _renderer, _textureMemory, checked((long)capacity.X * capacity.Y * 4));
             Check(SDL.SetTextureBlendMode(coverage.DangerousGetHandle(), SDL.BlendMode.None), "set native line coverage copy");
             Check(SDL.SetTextureColorModFloat(coverage.DangerousGetHandle(), 255f / 32, 255f / 32, 255f / 32) && SDL.SetTextureAlphaModFloat(coverage.DangerousGetHandle(), 255f / 32), "normalize native line coverage");
             Check(SDL.SetTextureScaleMode(coverage.DangerousGetHandle(), SDL.ScaleMode.Nearest) && SDL.SetTextureScaleMode(composite.DangerousGetHandle(), SDL.ScaleMode.Nearest), "set native line target sampling");

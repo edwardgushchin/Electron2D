@@ -25,3 +25,5 @@ See [device/window lifetime](../components/gpu-device-lifetime.md) and
 [ADR 0054](../decisions/physics-backends.md#adr-0054).
 
 Contract and verification: [canvas point programs](../components/canvas-points.md).
+
+Native memory diagnostics use lightweight admission/counting to retain physical lifetime independently of the creation monitor. Final release closes admission and joins these readers before destruction; no user callbacks occur in native reads. See [native render memory](../components/render-memory.md).

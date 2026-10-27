@@ -22,7 +22,7 @@ NATIVE_GROUPS = {
     "dotnet": ("createdump", "libSystem.*.so", "libclrgc.so", "libclrjit.so",
                "libclrgcexp.so", "libcoreclr.so", "libcoreclrtraceptprovider.so", "libhostfxr.so",
                "libhostpolicy.so", "libmscordaccore.so", "libmscordbi.so"),
-    "SDL": ("libSDL3.so*",),
+    "SDL": ("libSDL3.so*", "libElectron2DRender.so"),
     "SDL_image": ("libSDL3_image.so*",),
     "FreeType": ("libfreetype.so",),
     "HarfBuzz": ("libHarfBuzzSharp.so",),
@@ -59,7 +59,7 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 73, f"Expected 73 audited ELF files, found {len(elf)}"
+    assert len(elf) == 74, f"Expected 74 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()

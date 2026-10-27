@@ -1,0 +1,1 @@
+{ global: e2d_render_memory; local: *; };
