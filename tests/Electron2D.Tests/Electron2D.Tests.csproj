@@ -23,6 +23,7 @@
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../VisualShader.Custom/CustomNodes.cs" Link="CustomNodes.cs" />
+    <Compile Include="../CanvasGuides.Consumer/CanvasGuideContracts.cs" Link="Consumers/CanvasGuideContracts.cs" />
     <Compile Include="../ObjectCensus.Consumer/ObjectCensusChecks.cs" Link="Consumers/ObjectCensusChecks.cs" />
     <Compile Include="../ObjectNotifications.Consumer/NotificationChecks.cs" Link="Consumers/NotificationChecks.cs" />
     <Compile Include="../HostPlatform.Consumer/HostPlatformChecks.cs" Link="Consumers/HostPlatformChecks.cs" />

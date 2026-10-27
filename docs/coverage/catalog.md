@@ -438,7 +438,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [LookAtModifier3D](classes/LookAtModifier3D.md) | SkeletonModifier3D | Excluded | 37 |
 | [MainLoop](classes/MainLoop.md) | Object | Implemented | 17 |
 | [MarginContainer](classes/MarginContainer.md) | Container | Implemented | 4 |
-| [Marker2D](classes/Marker2D.md) | Node2D | Blocked | 1 |
+| [Marker2D](classes/Marker2D.md) | Node2D | Implemented | 1 |
 | [Marker3D](classes/Marker3D.md) | Node3D | Excluded | 1 |
 | [Marshalls](classes/Marshalls.md) | Object | Excluded | 6 |
 | [Material](classes/Material.md) | Resource | Implemented | 10 |
@@ -696,7 +696,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Rect2i](classes/Rect2i.md) | — | Implemented | 23 |
 | [RectangleShape2D](classes/RectangleShape2D.md) | Shape2D | Implemented | 1 |
 | [RefCounted](classes/RefCounted.md) | Object | Excluded | 4 |
-| [ReferenceRect](classes/ReferenceRect.md) | Control | Blocked | 3 |
+| [ReferenceRect](classes/ReferenceRect.md) | Control | Implemented | 3 |
 | [ReflectionProbe](classes/ReflectionProbe.md) | VisualInstance3D | Excluded | 22 |
 | [RegEx](classes/RegEx.md) | RefCounted | Implemented | 10 |
 | [RegExMatch](classes/RegExMatch.md) | RefCounted | Implemented | 7 |
@@ -925,7 +925,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [VirtualJoystick](classes/VirtualJoystick.md) | Control | Implemented | 27 |
 | [VisibleOnScreenEnabler2D](classes/VisibleOnScreenEnabler2D.md) | VisibleOnScreenNotifier2D | Implemented | 6 |
 | [VisibleOnScreenEnabler3D](classes/VisibleOnScreenEnabler3D.md) | VisibleOnScreenNotifier3D | Excluded | 6 |
-| [VisibleOnScreenNotifier2D](classes/VisibleOnScreenNotifier2D.md) | Node2D | Partial | 5 |
+| [VisibleOnScreenNotifier2D](classes/VisibleOnScreenNotifier2D.md) | Node2D | Implemented | 5 |
 | [VisibleOnScreenNotifier3D](classes/VisibleOnScreenNotifier3D.md) | VisualInstance3D | Excluded | 4 |
 | [VisualInstance3D](classes/VisualInstance3D.md) | Node3D | Excluded | 10 |
 | [VisualShader](classes/VisualShader.md) | Shader | Partial | 50 |

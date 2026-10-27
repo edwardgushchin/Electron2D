@@ -86,7 +86,7 @@ foreign-platform, large-rig performance and owner visual acceptance remain separ
 
 ## Qualified Linux x64 cohort
 
-Evidence: [validation manifest](../../bin/physics-editor-gizmos/2026-10-27/validation.json)
+Historical evidence location: `bin/physics-editor-gizmos/2026-10-27/validation.json` (ignored local cache, currently absent). The fixture commands above recreate the exercised checks; the connected workspace fixtures are also rerun with canvas guides.
 and its per-process check/log, payload hashes, mapped driver identities, kernel
 samples and captured pixels. Each core profile selects CPU or resident GPU
 physics, compatibility or GPU rendering, and ordinary or separate numerical
@@ -118,3 +118,5 @@ The declared SkeletonModification family now has all 12 rows Implemented.
 Three editor methods and its class row raise physics declarations from
 1354/1369 (98.90%) to **1358/1369 (99.20%)**, leaving 11 open and 92 Excluded.
 These are declaration counts; they do not certify the broader goal.
+
+[Canvas guides](editor-canvas-guides.md) extend the trusted passive projection with Marker, ReferenceRect and VisibleOnScreenNotifier; skeletal callback and EditedSceneRoot restrictions remain specific to this component.

@@ -2,6 +2,7 @@ namespace Electron2D;
 
 public abstract partial class CanvasItem
 {
+    private bool _canvasEditorHint;
     private void EnsureCanvasMetadataMutable()
     {
         EnsureProcessingAccess();
@@ -295,6 +296,11 @@ public abstract partial class CanvasItem
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
         SyncItemRasterScale();
         PhysicsDebugDrawing.Refresh(this);
+        if (this is Marker or ReferenceRect or VisibleOnScreenNotifier)
+        {
+            var editorHint = Engine.IsEditorHint;
+            if (_canvasEditorHint != editorHint) { _canvasEditorHint = editorHint; QueueRedraw(); }
+        }
         if (this is Skeleton skeleton) skeleton.RefreshEditorGizmos();
         if (this is NavigationAgentDebugCanvas navigationDebug) navigationDebug.Refresh();
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;

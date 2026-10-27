@@ -7,12 +7,15 @@ public class VisibleOnScreenNotifier : Entity
 {
     private Rect2 _rect = new(-10, -10, 20, 20);
     private bool _onScreen;
+    private bool _showRect = true;
     internal bool ScreenCandidate;
     internal ulong ScreenGeneration;
     private static readonly PropertyDescriptor[] ScreenProperties =
     [
         new PropertyDescriptor<VisibleOnScreenNotifier, Rect2>(nameof(Rect), node => node.Rect, (node, value) => node.Rect = value,
-            _ => new(-10, -10, 20, 20), stored: true)
+            _ => new(-10, -10, 20, 20), stored: true),
+        new PropertyDescriptor<VisibleOnScreenNotifier, bool>(nameof(ShowRect), node => node.ShowRect, (node, value) => node.ShowRect = value,
+            _ => true, stored: true)
     ];
 
     /// <summary>Creates an initially off-screen notifier with a centered 20 by 20 rectangle.</summary>
@@ -31,8 +34,29 @@ public class VisibleOnScreenNotifier : Entity
         {
             EnsureMutable();
             if (!value.IsFinite() || !value.End.IsFinite()) throw new ArgumentException("Screen bounds must be finite.", nameof(value));
-            _rect = value;
+            _rect = value; QueueRedraw();
         }
+    }
+
+    /// <summary>Gets or sets whether the editor draws the local detection rectangle.</summary>
+    /// <value>True initially. Drawing requires <see cref="Engine.IsEditorHint"/> and uses translucent magenta.</value>
+    /// <remarks>This affects drawing only; detection bounds and screen events are independent of the flag.
+    /// Inherited canvas transforms, visibility and modulation apply to the fill.</remarks>
+    /// <exception cref="InvalidOperationException">Mutation is off-owner or during scene capture.</exception>
+    /// <exception cref="ObjectDisposedException">The notifier is disposed.</exception>
+    public bool ShowRect
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _showRect; }
+        set { EnsureMutable(); if (_showRect == value) return; _showRect = value; QueueRedraw(); }
+    }
+
+    /// <inheritdoc />
+    protected override void OnNotification(int what)
+    {
+        var reversed = IsNotificationReversed;
+        if (!reversed) base.OnNotification(what);
+        if (what == NotificationDraw && _showRect && Engine.IsEditorHint) DrawRect(_rect, new(1, .5f, 1, .2f));
+        if (reversed) base.OnNotification(what);
     }
 
     /// <summary>Returns the visibility state committed by the last submitted canvas frame.</summary>

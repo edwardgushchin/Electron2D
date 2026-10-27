@@ -1,6 +1,6 @@
 # VisibleOnScreenNotifier
 
-Last updated: 2026-09-26
+Last updated: 2026-10-27
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [VisibleOnScreenEnabler](VisibleOnScreenEnabler.md)
 
@@ -8,7 +8,7 @@ Last updated: 2026-09-26
 
 ## Description
 
-A local rectangular region with no runtime drawing. Actual retained render frames determine whether its conservative transformed bounds participate in the current viewport. Detection uses viewport/layer transforms, interpolation, masks, inherited visibility and alpha, clipping and repeated copies; it does not test visual occlusion by other drawing. Local bounds include the node origin and any retained drawing emitted by this item and intersect inclusively, so a border, line or point can enter. Finite negative extents normalize for culling. SelfModulate alpha does not gate detection; inherited Modulate alpha below 0.007 does. Independent offscreen viewport rendering is not integrated.
+A local rectangular region with no runtime drawing. Actual retained render frames determine whether its conservative transformed bounds participate in the current viewport. Detection uses viewport/layer transforms, interpolation, masks, inherited visibility and alpha, clipping and repeated copies; it does not test visual occlusion by other drawing. Local bounds include the node origin and any retained drawing emitted by this item and intersect inclusively, so a border, line or point can enter. Finite negative extents normalize for culling. SelfModulate alpha does not gate detection; inherited Modulate alpha below 0.007 does. Single-layer SubViewport rendering participates through the same retained canvas pipeline, including the actual editor preview.
 
 State is false until the first submitted frame. A hidden window or disabled RenderLoopEnabled retains the last sample. All notifier states commit before events, delivered before RenderingServer.FramePostDraw. Callback mutation takes effect on the next frame; actual removal/reentry invalidates stale pending delivery. Tree departure silently clears state without ScreenExited. Failed callbacks do not replay committed transitions; later queued notifiers run before an aggregate error reaches the host.
 
@@ -28,6 +28,7 @@ region.ScreenExited += () => Console.WriteLine("Left viewport");
 | --- | --- |
 | `public VisibleOnScreenNotifier()` | Initially off-screen, centered 20 by 20 rectangle. |
 | `public Rect2 Rect { get; set; }` | Local bounds, default (-10,-10,20,20). |
+| `public bool ShowRect { get; set; }` | Editor detection-area fill, default true. |
 | `public bool IsOnScreen()` | Last submitted-frame state, false while detached. |
 | `public event Action? ScreenEntered` | Off-screen to on-screen transition. |
 | `public event Action? ScreenExited` | On-screen to off-screen rendered transition. |
@@ -46,4 +47,8 @@ region.ScreenExited += () => Console.WriteLine("Left viewport");
 
 ## Lifecycle, errors and verification
 
-Entity transform/visibility/owner/capture behavior is inherited. Attached queries/mutation enforce owner thread; disposal rejects later use and releases subscriptions. PackedScene retains exact type and rectangle, while sampled state is reset. [ScreenVisibilityTests](../../tests/Electron2D.Tests/ScreenVisibilityTests.cs) and [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs) verify managed behavior, both Linux Wayland native backends, masks/layers/borders/alpha/physics integration, failure/reentry and zero managed bytes over 64 warmed active transitions. Native allocation, other platforms and owner visual acceptance remain unverified. Editor ShowRect is still Blocked in [coverage](../coverage/classes/VisibleOnScreenNotifier2D.md), with its exact editor gizmo trigger in [ADR 0078](../decisions/rendering.md#adr-0078).
+Entity transform/visibility/owner/capture behavior is inherited. Attached queries/mutation enforce owner thread; disposal rejects later use and releases subscriptions. PackedScene retains exact type and rectangle, while sampled state is reset. [ScreenVisibilityTests](../../tests/Electron2D.Tests/ScreenVisibilityTests.cs) and [ScreenVisibilityRenderingTests](../../tests/Electron2D.Tests/ScreenVisibilityRenderingTests.cs) verify managed behavior, both Linux Wayland native backends, masks/layers/borders/alpha/physics integration, failure/reentry and zero managed bytes over 64 warmed active transitions. Native allocation, other platforms and owner visual acceptance remain unverified. The editor rectangle now executes through [editor canvas guides](../components/editor-canvas-guides.md), including actual workspace preview and role-change redraw.
+
+## ShowRect
+
+`public bool ShowRect { get; set; }` defaults to true. In the editor role it fills `Rect` with translucent magenta `(1, 0.5, 1, 0.2)` through ordinary canvas transform, modulation and clipping. It draws nothing during gameplay. The flag affects drawing only, persists in scenes and is inherited by VisibleOnScreenEnabler. Changed flag/rectangle values and editor-role transitions invalidate retained drawing. The same owner, capture and disposal guards apply as for Rect. See [editor canvas guides](../components/editor-canvas-guides.md) for exact integration and tests.

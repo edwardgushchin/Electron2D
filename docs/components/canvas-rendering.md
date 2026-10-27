@@ -1390,3 +1390,5 @@ Consuming retained batches capture the complete rectangle/nine-patch source regi
 [The complete type audit](canvas-item-contract.md) records current-group frontend metadata authoring, coordinated logical identities, composed CPU/GPU physical queries, actual worker-driven pixels and complete frame allocation brackets. Per-material CPU scratch survives one-frame culling through weak keys; native pipeline eviction remains separate. The audit retains explicit software PremultAlpha capability rejection and the individual drawing-method qualifications above.
 
 SpriteFrames retains uploaded frame-texture cache residency across animation switches, releasing it with membership or library lifetime without disposing borrowed textures. This removes repeated upload/cache-allocation churn in rendered AnimatedSprite previews; [the resource contract](../classes/SpriteFrames.md) covers copying, retirement and callback errors.
+
+[Editor canvas guides](editor-canvas-guides.md) connect spatial Marker anchors, ReferenceRect UI borders and notifier ShowRect regions to the actual passive editor preview and ordinary retained drawing.

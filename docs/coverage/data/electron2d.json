@@ -6943,6 +6943,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Marker",
+    "kind": "type",
+    "declaringType": "Electron2D.Marker",
+    "name": "Marker",
+    "signature": "public class Electron2D.Marker",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Material",
     "kind": "type",
     "declaringType": "Electron2D.Material",
@@ -10215,6 +10230,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ReferenceRect",
+    "kind": "type",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "ReferenceRect",
+    "signature": "public class Electron2D.ReferenceRect",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -22877,6 +22907,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.Marker..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.Marker",
+    "name": ".ctor",
+    "signature": "public Marker()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.MenuBar..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.MenuBar",
@@ -25850,6 +25893,19 @@
     "declaringType": "Electron2D.RectangleShape",
     "name": ".ctor",
     "signature": "public RectangleShape()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ReferenceRect..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": ".ctor",
+    "signature": "public ReferenceRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -130596,6 +130652,51 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Marker.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.Marker",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Marker.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Marker",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Marker.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.Marker",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Material.CreatePlaceholder()",
     "kind": "method",
     "declaringType": "Electron2D.Material",
@@ -168930,6 +169031,51 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ReferenceRect.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ReferenceRect.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ReferenceRect.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -229572,6 +229718,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.VisibleOnScreenNotifier.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.VisualShader.AddNode(Electron2D.VisualShader.Type,Electron2D.VisualShaderNode,Electron2D.Vector2,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.VisualShader",
@@ -261237,6 +261402,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Marker.GizmoExtents()",
+    "kind": "property",
+    "declaringType": "Electron2D.Marker",
+    "name": "GizmoExtents",
+    "signature": "public System.Single GizmoExtents { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.MenuBar.Flat()",
     "kind": "property",
     "declaringType": "Electron2D.MenuBar",
@@ -273431,6 +273609,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ReferenceRect.BorderColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "BorderColor",
+    "signature": "public Electron2D.Color BorderColor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ReferenceRect.BorderWidth()",
+    "kind": "property",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "BorderWidth",
+    "signature": "public System.Single BorderWidth { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ReferenceRect.EditorOnly()",
+    "kind": "property",
+    "declaringType": "Electron2D.ReferenceRect",
+    "name": "EditorOnly",
+    "signature": "public System.Boolean EditorOnly { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RegEx.GroupCount()",
     "kind": "property",
     "declaringType": "Electron2D.RegEx",
@@ -281852,6 +282069,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.VisibleOnScreenNotifier.ShowRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.VisibleOnScreenNotifier",
+    "name": "ShowRect",
+    "signature": "public System.Boolean ShowRect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

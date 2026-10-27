@@ -535,10 +535,7 @@ def main():
     patch_rows = [row for row in pages[CLASS_PAGES / "NinePatchRect.md"].splitlines() if row.startswith("| [`")]
     assert len(patch_rows) == 18 and all(" | Implemented | " in row for row in patch_rows)
     screen_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenNotifier2D.md"].splitlines() if row.startswith("| [`")]
-    assert len(screen_rows) == 6
-    assert all(" | Implemented | " in row for row in screen_rows if not any(name in row for name in ("class VisibleOnScreenNotifier2D", "property bool show_rect")))
-    assert " | Partial | " in next(row for row in screen_rows if "class VisibleOnScreenNotifier2D" in row)
-    assert " | Blocked | " in next(row for row in screen_rows if "property bool show_rect" in row)
+    assert len(screen_rows) == 6 and all(" | Implemented | " in row for row in screen_rows)
     enabler_rows = [row for row in pages[CLASS_PAGES / "VisibleOnScreenEnabler2D.md"].splitlines() if row.startswith("| [`")]
     assert len(enabler_rows) == 7 and all(" | Implemented | " in row for row in enabler_rows)
     modification_rows = [row for row in pages[CLASS_PAGES / "SkeletonModification2D.md"].splitlines()

@@ -16,4 +16,4 @@ GUIPrimitivesRenderingTests loads an authored compressed big-endian Window scene
 
 ## Dependencies and remaining families
 
-These consumers use ADRs 0008, 0023, 0028 and 0083. ReferenceRect remains blocked on a real editor-context producer/Engine.IsEditorHint under ADR 0027; no constant hint or inert EditorOnly substitute is added. [DPITexture](scalable-svg.md) now supplies paint remapping and retained viewport raster variants. TextLine/TextParagraph need their full typed builder, inline objects/metadata and shaped handle contract; these controls do not stand in for that API.
+[ReferenceRect](../classes/ReferenceRect.md) now supplies editor/runtime border drawing through [editor canvas guides](editor-canvas-guides.md). These consumers use the existing Control/canvas pipeline and ADRs 0008, 0023, 0028 and 0083. [DPITexture](scalable-svg.md) now supplies paint remapping and retained viewport raster variants. TextLine/TextParagraph need their full typed builder, inline objects/metadata and shaped handle contract; these controls do not stand in for that API.

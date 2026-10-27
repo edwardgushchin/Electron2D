@@ -547,3 +547,5 @@ Authored canvas light graphs replace each real light contribution through the ex
 [Material placeholders](../components/material-placeholders.md) use ordinary canvas color drawing through loaded scene resources and direct borrowed material RID bindings. Returned materials restore their actual blend behavior; particle compute rejects the canvas-only fallback. Current native evidence covers Linux software GPU/Compatibility; physical GPU, native-heap, foreign and owner gates remain distinct.
 
 Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress state, typed numeric writes and small/page actions. Requests reuse ordinary Range mutation and shared notifications; progress displays and non-editable inputs are read-only. See [ADR 0114](../decisions/accessibility.md#adr-0114) and [the accessibility component](../components/accessibility.md) for exact protocol and verification limits.
+
+[Editor canvas guides](../components/editor-canvas-guides.md) connect spatial Marker anchors, ReferenceRect UI borders and notifier ShowRect regions to the actual passive editor preview and ordinary retained drawing.

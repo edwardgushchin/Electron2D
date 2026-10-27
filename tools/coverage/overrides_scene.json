@@ -6053,6 +6053,21 @@
       "godot": "Window::property:mouse_passthrough_polygon",
       "state": "Implemented",
       "reason": "ADR 0040: copied authored Window policy plus native X11/Windows/macOS input regions and full passthrough override; Wayland rejects effective requests. Actual X11 CLR/strict NativeAOT GPU/compatibility routing and prepared owner-frame 0/0 checks: docs/components/window-input-region.md. Windows/macOS execution remains unverified."
+    },
+    {
+      "godot": "class:Marker2D",
+      "electron2d": "T:Electron2D.Marker",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+    },
+    {
+      "godot": "Marker2D::property:gizmo_extents",
+      "electron2d": "property:Electron2D.Marker.GizmoExtents()",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+    },
+    {
+      "godot": "VisibleOnScreenNotifier2D::property:show_rect",
+      "electron2d": "property:Electron2D.VisibleOnScreenNotifier.ShowRect()",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
     }
   ],
   "extras": [
@@ -8566,6 +8581,31 @@
       "state": "Implemented",
       "reason": "ADR 0016 / ADR 0090: explicit library-host input boundary over the ordinary owned native lifecycle; runs after readiness and event pumping before the first and every pending scheduler iteration, preserving fixed recording cadence, cleanup and original entry points. Linux software GPU/Compatibility checks cover all six overloads and zero warmed owner-thread bytes; other-platform/native-allocation acceptance remains separate.",
       "adr": "docs/decisions/core-object-runtime.md#adr-0016"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Marker..ctor()",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.Marker.OnNotification(System.Int32)",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.Marker.CreateSceneInstanceFactory()",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.Marker.GetPropertyDescriptors()",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.VisibleOnScreenNotifier.OnNotification(System.Int32)",
+      "reason": "Inherited drawing hook for the editor detection-area fill.",
+      "adr": "ADRs 0078/0027"
     }
   ],
   "statusGroups": [
@@ -9833,8 +9873,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet.",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md.",
       "godot": [
         "class:Marker2D",
         "Marker2D::property:gizmo_extents"
@@ -10624,15 +10664,15 @@
       "godot": [
         "class:VisibleOnScreenNotifier2D"
       ],
-      "state": "Partial",
-      "reason": "ADR 0078: the complete runtime screen detector executes on the current retained canvases; editor-only ShowRect remains Blocked until self-hosted editor canvas gizmo drawing. Single-layer offscreen viewport support now executes through SubViewportTests; multiview and editor checks retain separate gates."
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
     },
     {
       "godot": [
         "VisibleOnScreenNotifier2D::property:show_rect"
       ],
-      "state": "Blocked",
-      "reason": "ADR 0078/0027: ShowRect draws a translucent magenta rectangle only when editor hint is active in the pinned source. Trigger: first self-hosted editor canvas gizmo drawing slice; add and test the flag and fill in that slice. No inert runtime bool is shipped."
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
     },
     {
       "godot": [

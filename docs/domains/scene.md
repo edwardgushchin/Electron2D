@@ -535,3 +535,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Native hyperlink destinations](../classes/AccessibilityServer.md#native-hyperlinks) connect LinkButton URI authoring and generic producers to external AT-SPI consumers, retaining internal targets and the existing activation pipeline.
 
 [Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.
+
+[Editor canvas guides](../components/editor-canvas-guides.md) connect spatial Marker anchors, ReferenceRect UI borders and notifier ShowRect regions to the actual passive editor preview and ordinary retained drawing.

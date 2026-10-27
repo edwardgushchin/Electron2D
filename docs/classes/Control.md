@@ -4,7 +4,7 @@ Last updated: 2026-10-27
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
-**Inherited By:** [Label](Label.md), [Panel](Panel.md), [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md), [ItemList](ItemList.md), [TextureRect](TextureRect.md). BaseButton, buttons, scroll bars and ScrollContainer are current consumers.
+**Inherited By:** [ReferenceRect](ReferenceRect.md), [Label](Label.md), [Panel](Panel.md), [Container](Container.md), [Range](Range.md), [NinePatchRect](NinePatchRect.md), [ItemList](ItemList.md), [TextureRect](TextureRect.md). BaseButton, buttons, scroll bars and ScrollContainer are current consumers.
 
 - **Source:** [Control.cs](../../src/Scene/GUI/Control.cs), [Control.Input.cs](../../src/Scene/GUI/Control.Input.cs), [Control.TextInput.cs](../../src/Scene/GUI/Control.TextInput.cs), [Control.Drag.cs](../../src/Scene/GUI/Control.Drag.cs), [Control.Focus.cs](../../src/Scene/GUI/Control.Focus.cs), [Control.SizeFlags.cs](../../src/Scene/GUI/Control.SizeFlags.cs), [Control.Translation.cs](../../src/Scene/GUI/Control.Translation.cs)
 - **Namespace:** `Electron2D`

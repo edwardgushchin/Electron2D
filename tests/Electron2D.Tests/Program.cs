@@ -18,6 +18,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") ==
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_MONITORS") == "1") { ServerMonitorContract.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUDIO_MONITORS") == "1") { AudioOutputTests.Run(); AudioOutputTests.RunOfflineMonitor(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_GUIDES") is { } guideProfile) { CanvasGuideContracts.Run(guideProfile); if (guideProfile == "managed") { ScreenVisibilityTests.Run(); EditorHintTests.Managed(); } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_FOCUS") is { } focusProfile) { ControlFocusContracts.Run(focusProfile); if (focusProfile == "managed") { ControlFocusNavigationTests.Run(); ControlInputTests.Run(); ControlRecursiveBehaviorTests.Run(); SubViewportContainerTests.Run(); ScrollContainerTests.Run(); } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_THREADS") is { } threadProfile) { OSThreadTests.Run(threadProfile); return; }
 
@@ -1848,6 +1849,7 @@ AreaTests.Run(PhysicsServer.Backend.CPU); AreaTests.Run(PhysicsServer.Backend.GP
 PhysicsAreaFieldTests.Run(); PhysicsAreaFieldTests.Run(PhysicsServer.Backend.GPU);
 PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.CPU); PhysicsPointGravityRangeTests.Run(PhysicsServer.Backend.GPU);
 PhysicsServerAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU);
+CanvasGuideContracts.Run("managed");
 ScreenVisibilityTests.Run();
 NinePatchTests.Run();
 ResourcePreloaderTests.Run(); JSONRPCTests.Run(); IPTests.Run(); TouchControlTests.RunManaged(); ZIPTests.RunManaged(); RangeProgressTests.Run(); ProgressBarTests.RunManaged(); ProjectThemeTests.RunManaged(); FoldableTests.RunManaged();

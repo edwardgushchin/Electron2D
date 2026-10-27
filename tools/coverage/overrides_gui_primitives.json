@@ -34,6 +34,26 @@
       "godot": "class:VSeparator",
       "electron2d": "T:Electron2D.VSeparator",
       "reason": "ADRs 0008/0023/0083: concrete color backgrounds and abstract/fixed-axis themed separators execute typed scene/file factories, live authored/borrowed theme drawing, exact truncated integer centering, inherited layout/input and GPU/compatibility pixels. Warm managed frame/recording checks execute; native allocator, accessibility, other-platform and owner acceptance remain separate."
+    },
+    {
+      "godot": "class:ReferenceRect",
+      "electron2d": "T:Electron2D.ReferenceRect",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+    },
+    {
+      "godot": "ReferenceRect::property:border_color",
+      "electron2d": "property:Electron2D.ReferenceRect.BorderColor()",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+    },
+    {
+      "godot": "ReferenceRect::property:border_width",
+      "electron2d": "property:Electron2D.ReferenceRect.BorderWidth()",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+    },
+    {
+      "godot": "ReferenceRect::property:editor_only",
+      "electron2d": "property:Electron2D.ReferenceRect.EditorOnly()",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
     }
   ],
   "extras": [
@@ -91,6 +111,26 @@
       "electron2d": "method:Electron2D.VSeparator.CreateSceneInstanceFactory()",
       "reason": "Typed construction, immutable separator axis and inherited scene/drawing/property hooks for the concrete GUI primitive family.",
       "adr": "ADRs 0008/0023/0083"
+    },
+    {
+      "electron2d": "constructor:Electron2D.ReferenceRect..ctor()",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.ReferenceRect.OnNotification(System.Int32)",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.ReferenceRect.CreateSceneInstanceFactory()",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
+    },
+    {
+      "electron2d": "method:Electron2D.ReferenceRect.GetPropertyDescriptors()",
+      "reason": "Typed construction and inherited drawing/property/factory hooks for stored canvas authoring guides.",
+      "adr": "ADRs 0004/0008/0023/0027"
     }
   ],
   "statusGroups": [
@@ -114,8 +154,8 @@
         "ReferenceRect::property:border_width",
         "ReferenceRect::property:editor_only"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: actual editor execution-context reporting through Engine.IsEditorHint and editor/runtime border drawing under ADRs 0015/0027/0090. The current runtime has no editor-context producer; do not introduce a constant hint or inert EditorOnly switch."
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
     }
   ]
 }

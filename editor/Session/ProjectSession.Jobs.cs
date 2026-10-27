@@ -82,7 +82,8 @@ public sealed partial class ProjectSession
             Expected(SessionDocumentKind.Scene, expectedSceneRevision);
             using var source = Decode(_storage, _state.Scene, PathFor(SessionDocumentKind.Scene), _state.Nodes);
             foreach (var node in Flatten(source))
-                if (node.GetType() != typeof(Node) && node.GetType() != typeof(Entity) && node.GetType() != typeof(Polygon) && node.GetType() != typeof(Line) && node.GetType() != typeof(Sprite) && node.GetType() != typeof(Skeleton) && node.GetType() != typeof(Bone))
+                if (node.GetType() != typeof(Node) && node.GetType() != typeof(Entity) && node.GetType() != typeof(Polygon) && node.GetType() != typeof(Line) && node.GetType() != typeof(Sprite) && node.GetType() != typeof(Skeleton) && node.GetType() != typeof(Bone)
+                    && node.GetType() != typeof(Marker) && node.GetType() != typeof(ReferenceRect) && node.GetType() != typeof(VisibleOnScreenNotifier))
                     throw new NotSupportedException($"Authoring preview has no passive projection for {node.GetType().Name}; run the frozen snapshot for actual gameplay output.");
                 else if (node is Skeleton skeleton) ValidatePreviewStack(skeleton.GetModificationStack(), 0, []);
             // Static built-in drawing only: no project classes, event connections or active gameplay node roles.
@@ -90,7 +91,7 @@ public sealed partial class ProjectSession
             try
             {
                 SceneOverlay.Apply(copy, _state.Nodes);
-                foreach (var node in Flatten(copy)) if (node is Skeleton) node.ProcessMode = ProcessMode.Disabled;
+                foreach (var node in Flatten(copy)) if (node is Skeleton or Marker or ReferenceRect or VisibleOnScreenNotifier) node.ProcessMode = ProcessMode.Disabled;
                 return copy;
             }
             catch { copy.Dispose(); throw; }
