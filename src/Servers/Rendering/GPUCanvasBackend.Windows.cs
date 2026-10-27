@@ -14,6 +14,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         private bool _retained, _claimed;
         internal CanvasRenderTarget? Target;
         internal DisplayServer.VSyncMode VSync;
+        internal SDL.GPUSwapchainComposition Composition;
+        internal CanvasOutput Output;
         internal nint Window => _window.DangerousGetHandle();
 
         internal ChildPresentation(GPUCanvasBackend backend, SafeHandle window)
@@ -30,7 +32,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             _backend._childPresentations.Add(this);
         }
 
-        internal void SetVSync(DisplayServer.VSyncMode mode) => VSync = _backend.ApplyVSync(Window, mode);
+        internal void SetVSync(DisplayServer.VSyncMode mode) => VSync = _backend.ApplyVSync(Window, mode, Composition);
 
         public void Dispose()
         {
@@ -51,10 +53,10 @@ internal sealed unsafe partial class GPUCanvasBackend
         catch { presentation.Dispose(); throw; }
     }
 
-    internal bool Present(ChildPresentation child, ReadOnlySpan<CanvasPresentation> viewports, nint screen = 0, Vector2i screenSize = default)
+    internal bool Present(ChildPresentation child, ReadOnlySpan<CanvasPresentation> viewports, nint screen = 0, Vector2i screenSize = default, bool screenHDR = false)
     {
         Check(SDL.GetWindowSizeInPixels(child.Window, out var width, out var height), "query child presentation size");
-        var target = PreparePresentation(new(width, height), ref child.Target);
-        return PresentToWindow(child.Window, target, viewports, root: false, screen, screenSize);
+        var target = PreparePresentation(new(width, height), ref child.Target, child.Output.Enabled);
+        return PresentToWindow(child.Window, target, viewports, root: false, screen, child.Output, child.Composition, screenHDR);
     }
 }

@@ -461,6 +461,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_ITEM_CONTRACT") i
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_INTERPOLATION") is { } canvasInterpolationBackend) { if (canvasInterpolationBackend == "managed") CanvasItemInterpolationTests.RunManaged(); else CanvasItemInterpolationTests.RunNative(canvasInterpolationBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA_OWNED") == "1") { ProjectSettings.Set(ProjectSettings.MSAA2D, Viewport.MSAA.Samples4X); RenderingCanvasTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSAA") is { } msaaBackend) { if (msaaBackend == "managed") CanvasMSAATests.RunManaged(); else CanvasMSAATests.RunNative(msaaBackend); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR_OUTPUT") is { } outputMode) { WindowOutputTests.Run(outputMode); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "managed") { CanvasHDRTests.RunManaged(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is "glyph" or "glyph-msaa" && Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") is { } hdrGlyph) { CanvasGlyphTests.RunNative(hdrGlyph == "glyph" ? "hdr" : "hdr-msaa"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HDR") == "modulation") { CanvasHDRTests.RunModulation(); return; }

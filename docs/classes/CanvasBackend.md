@@ -1,6 +1,6 @@
 # CanvasBackend
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 - Declaration: `internal abstract class CanvasBackend : IDisposable`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -103,7 +103,7 @@ CreateTarget accepts optional native mip-level storage; BackBuffer lazily alloca
 
 ClipChildren uses the shared screen backbuffer. Hardware compatibility lazily creates a reusable MaskBuffer owned by CanvasRenderTarget; no new public low-level handles or CPU pixel bridge are exposed.
 
-Target identity includes HDR and MSAA as well as dimensions. Optional half-float storage flows through native pipeline selection, backbuffers, resolves and explicit readback. PreparePresentation retains SDR byte storage and creates a separate output for every HDR root. ValidateHDR rejects unsupported backends before target publication. [HDR canvas targets](../components/hdr-canvas.md) describes color views, linear readback and transfer boundaries.
+Target identity includes HDR and MSAA as well as dimensions. Optional half-float storage flows through native pipeline selection, backbuffers, resolves and explicit readback. PreparePresentation uses byte SDR or linear half-float native-HDR storage independently for each output. ConfigureOutput validates/applies that policy before publishing its CanvasOutput snapshot. ValidateHDR rejects unsupported backends before target publication. [HDR canvas targets](../components/hdr-canvas.md) and [native output](../components/native-hdr-output.md) describe the transfer boundaries.
 
 `internal abstract void Present(ReadOnlySpan<CanvasPresentation> viewports)` composes completed native images at clipped client rectangles after drawing, replacing destination RGBA and clearing uncovered pixels black. The shared contract declares this operation abstract. An empty list clears the implicit zero-raster root presentation. ReadbackScreen returns the latest completed composition independently of source texture updates. See [screen attachment](../components/canvas-rendering.md#viewport-screen-attachment).
 

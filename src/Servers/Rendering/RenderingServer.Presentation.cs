@@ -83,8 +83,8 @@ public sealed partial class RenderingServer
             try
             {
                 var presented = true;
-                if (presentation is not null) presented = ((GPUCanvasBackend)_backend).Present(presentation, CollectionsMarshal.AsSpan(_presentations), screen.Texture, screen.Size);
-                else if (backend is GPUCanvasBackend gpu) presented = gpu.Present(CollectionsMarshal.AsSpan(_presentations), screen.Texture, screen.Size);
+                if (presentation is not null) presented = ((GPUCanvasBackend)_backend).Present(presentation, CollectionsMarshal.AsSpan(_presentations), screen.Texture, screen.Size, screen.HDR);
+                else if (backend is GPUCanvasBackend gpu) presented = gpu.Present(CollectionsMarshal.AsSpan(_presentations), screen.Texture, screen.Size, screen.HDR);
                 else backend.Present(CollectionsMarshal.AsSpan(_presentations));
                 if (presented) { _presentedWindows.Add(windowID); _renderingDevice?.ScreenPresented(windowID); }
             }

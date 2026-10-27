@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-27
 
+[Native HDR output](../components/native-hdr-output.md) now provides stored
+HDROutputRequested, GetOutputMaxLinearValue() and the typed
+OutputMaxLinearValueChanged(float) event. The request forces effective linear
+canvas storage while preserving UseHDR2D authoring. Native children own independent
+outputs; embedded windows observe their container. Queries follow scene ownership.
+The component defines luminance, event order, failure/reentry and verification limits.
+
 **Inherits:** [Viewport](Viewport.md)
 
 **Inherited By:** [Popup](Popup.md), [AcceptDialog](AcceptDialog.md)

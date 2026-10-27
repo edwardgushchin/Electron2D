@@ -105,6 +105,7 @@ public sealed partial class RenderingServer : ElectronObject
         try
         {
             DisplayServer.Service?.ApplyVSyncPolicy(backend);
+            DisplayServer.Service?.AttachOutputPolicy(backend);
             var server = new RenderingServer(window, backend);
             Volatile.Write(ref _instance, server);
             return server;

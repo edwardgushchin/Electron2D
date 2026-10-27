@@ -35,12 +35,12 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private DisplayServer.VSyncMode _vSync = DisplayServer.VSyncMode.Enabled;
     internal override DisplayServer.VSyncMode VSync => _vSync;
     internal override void SetVSync(DisplayServer.VSyncMode mode)
-        => _vSync = ApplyVSync(_window, mode);
-    private DisplayServer.VSyncMode ApplyVSync(nint window, DisplayServer.VSyncMode mode)
+        => _vSync = ApplyVSync(_window, mode, _outputComposition);
+    private DisplayServer.VSyncMode ApplyVSync(nint window, DisplayServer.VSyncMode mode, SDL.GPUSwapchainComposition composition = SDL.GPUSwapchainComposition.SDR)
     {
         var native = mode switch { DisplayServer.VSyncMode.Disabled => SDL.GPUPresentMode.Immediate, DisplayServer.VSyncMode.Mailbox => SDL.GPUPresentMode.Mailbox, _ => SDL.GPUPresentMode.VSync };
         if (!SDL.WindowSupportsGPUPresentMode(Device, window, native)) native = SDL.GPUPresentMode.VSync;
-        Check(SDL.SetGPUSwapchainParameters(Device, window, SDL.GPUSwapchainComposition.SDR, native), "set GPU presentation policy");
+        Check(SDL.SetGPUSwapchainParameters(Device, window, composition, native), "set GPU presentation policy");
         return native switch { SDL.GPUPresentMode.Immediate => DisplayServer.VSyncMode.Disabled, SDL.GPUPresentMode.Mailbox => DisplayServer.VSyncMode.Mailbox, _ => DisplayServer.VSyncMode.Enabled };
     }
     internal override string Method => "gpu";
@@ -619,6 +619,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if (_windowClaimed) { _ = ScreenInfo(null); SDL.ReleaseWindowFromGPUDevice(Device, _window); _windowClaimed = false; }
         display.SetWindowVisible(visible);
         if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; SetVSync(_vSync); }
+        display.RefreshOutput();
     }
     internal override void Sync(CanvasRenderTarget? target) => Check(SDL.WaitForGPUIdle(Device), "synchronize canvas GPU");
 

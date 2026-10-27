@@ -22,6 +22,11 @@ internal sealed unsafe partial class GPUCanvasBackend
         var window = child?.Window ?? _window;
         Check(SDL.GetWindowSizeInPixels(window, out var width, out var height), "query graphics screen size");
         if (child is null && !_windowClaimed && _screenFormat is { } retained) return (new(width, height), retained);
+        if ((child?.Output ?? _output).Enabled)
+        {
+            if (child is null) _screenFormat = RenderingDevice.DataFormat.R16G16B16A16SFLOAT;
+            return (new(width, height), RenderingDevice.DataFormat.R16G16B16A16SFLOAT);
+        }
         var format = SDL.GetGPUSwapchainTextureFormat(Device, window) switch
         {
             SDL.GPUTextureFormat.R8G8B8A8Unorm => RenderingDevice.DataFormat.R8G8B8A8UNORM,

@@ -1,5 +1,12 @@
 # RenderingDevice
 
+[Native HDR output](../components/native-hdr-output.md) selects a linear half-float
+screen stage while active. ScreenGetFramebufferFormat identifies that engine-owned
+stage rather than the private final HDR10/extended-linear swapchain. Pending screen
+contents retain their recorded encoding across output changes and transfer on GPU;
+new screen lists use the current format. Existing owner/list/window lifetime guards
+and framebuffer-format identities remain in effect.
+
 Last updated: 2026-10-27
 
 Compute storage-array lengths use each actual bound byte range, including

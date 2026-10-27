@@ -29,7 +29,8 @@ public abstract partial class Viewport
             EnsureMutable(); RenderingOwner?.EnsureViewportMutation();
             var previous = RenderingOwner?.ViewportHDR(this) ?? _hdr;
             _hdr = value; _hdrAssigned = true; RenderingOwner?.PublishViewportHDR(this);
-            if (previous != value) TextureSizeChanged();
+            var current = RenderingOwner?.ViewportHDR(this) ?? (_hdr || this is Window { HDROutputRequested: true });
+            if (previous != current) TextureSizeChanged();
         }
     }
 

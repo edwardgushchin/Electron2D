@@ -18,6 +18,7 @@ public sealed class DisplayWindowEvents : ElectronObject
     private EventPublisher<Action<string, Vector2i>> _textEditing;
     private EventPublisher<Action> _closeRequested, _forceCloseRequested, _goBackRequested, _mouseEntered, _mouseExited, _dpiChanged;
     private EventPublisher<Action<bool>> _focusChanged;
+    private EventPublisher<Action<float>> _outputChanged;
     private EventPublisher<Action<Rect2i>> _rectChanged;
     private EventPublisher<Action<IReadOnlyList<string>>> _filesDropped;
     internal DisplayWindowEvents(DisplayServer owner, int windowID) { _owner = owner; WindowID = windowID; }
@@ -56,6 +57,9 @@ public sealed class DisplayWindowEvents : ElectronObject
     /// <summary>Occurs when this window's native display content scale changes.</summary>
     /// <remarks>This reports content scale, not a physical DPI measurement.</remarks>
     public event Action? DPIChanged { add => Add(ref _dpiChanged, value); remove => Remove(ref _dpiChanged, value); }
+
+    /// <summary>Occurs after the active output's maximum linear color value changes and scene recipients run.</summary>
+    public event Action<float>? OutputMaxLinearValueChanged { add => Add(ref _outputChanged, value); remove => Remove(ref _outputChanged, value); }
     /// <summary>Occurs when this window gains or loses keyboard focus, before the application notification.</summary>
     public event Action<bool>? FocusChanged { add => Add(ref _focusChanged, value); remove => Remove(ref _focusChanged, value); }
     /// <summary>Occurs after an effective native move or resize commits its complete client rectangle.</summary>
@@ -78,6 +82,7 @@ public sealed class DisplayWindowEvents : ElectronObject
     internal Action? EnterHandlers => Available ? BeginEventEmission(_mouseEntered.Handlers) : null;
     internal Action? ExitHandlers => Available ? BeginEventEmission(_mouseExited.Handlers) : null;
     internal Action? DPIHandlers => Available ? BeginEventEmission(_dpiChanged.Handlers) : null;
+    internal Action<float>? OutputHandlers => Available ? BeginEventEmission(_outputChanged.Handlers) : null;
     internal Action<bool>? FocusHandlers => Available ? BeginEventEmission(_focusChanged.Handlers) : null;
     internal Action<Rect2i>? RectHandlers => Available ? BeginEventEmission(_rectChanged.Handlers) : null;
     internal Action<string>? TextHandlers => Available ? BeginEventEmission(_textInput.Handlers) : null;
@@ -94,6 +99,7 @@ public sealed class DisplayWindowEvents : ElectronObject
         if (disposing)
         {
             var owner = _owner; _owner = null;
+            _outputChanged.Handlers = null;
             _input.Handlers = null; _textInput.Handlers = null; _textEditing.Handlers = null; _focusChanged.Handlers = null; _rectChanged.Handlers = null; _filesDropped.Handlers = null;
             _closeRequested.Handlers = _forceCloseRequested.Handlers = _goBackRequested.Handlers = _mouseEntered.Handlers = _mouseExited.Handlers = _dpiChanged.Handlers = null;
             owner?.RefreshWindowInputSources();

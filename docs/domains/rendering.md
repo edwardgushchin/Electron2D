@@ -367,7 +367,7 @@ Renderer-session overrides preserve authored properties and input coordinates. M
 
 ## Linear HDR canvas output
 
-Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root project setting select actual linear half-float targets. The same format flows through composition, MSAA, device exports and explicit readback; byte color sampling converts before filtering and native writes remain visible. Root presentation and movie output apply the SDR transfer. [HDR canvas targets](../components/hdr-canvas.md) records role-specific colors, verified pixels, warm allocation intervals and backend/platform limits.
+Stored Viewport.UseHDR2D, a static RenderingServer override and the typed root project setting select actual linear half-float targets. The same format flows through composition, MSAA, device exports and explicit readback; byte color sampling converts before filtering and native writes remain visible. Root presentation follows the selected [native HDR output](../components/native-hdr-output.md) or SDR policy; movie output applies the SDR transfer. [HDR canvas targets](../components/hdr-canvas.md) records role-specific colors, verified pixels, warm allocation intervals and backend/platform limits.
 
 ## Canvas multisample antialiasing
 

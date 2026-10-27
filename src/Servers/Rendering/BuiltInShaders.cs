@@ -14,6 +14,7 @@ internal static class BuiltInShaders
     internal static readonly byte[] Fragment = Read("Canvas.frag.spv");
     internal static readonly byte[] ColorArrayFragment = Read("CanvasColorArray.frag.spv");
     internal static readonly byte[] ColorFragment = Read("CanvasColor.frag.spv");
+    internal static readonly byte[] OutputFragment = Read("CanvasOutput.frag.spv");
 
     internal static readonly byte[] SDF = Read("SDF.frag.spv");
 

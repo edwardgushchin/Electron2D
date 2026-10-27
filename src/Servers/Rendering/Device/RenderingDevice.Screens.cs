@@ -4,11 +4,12 @@ public sealed unsafe partial class RenderingDevice
 {
     /// <summary>The unavailable screen or command-list identity.</summary>
     public const int InvalidID = -1;
-    private sealed class ScreenTarget(RID texture, RID framebuffer, Vector2i size, int format)
+    private sealed class ScreenTarget(RID texture, RID framebuffer, Vector2i size, int format, bool hdr)
     {
         internal readonly RID Texture = texture, Framebuffer = framebuffer;
         internal readonly Vector2i Size = size;
         internal readonly int Format = format;
+        internal readonly bool HDR = hdr;
         internal bool Pending;
     }
     private readonly Dictionary<int, ScreenTarget> _screens = [];
@@ -68,14 +69,14 @@ public sealed unsafe partial class RenderingDevice
             };
             using var view = new RDTextureView(); var texture = TextureCreate(description, view); RID framebuffer;
             try { framebuffer = FramebufferCreate([texture], format); } catch { FreeRID(texture); throw; }
-            var replacement = new ScreenTarget(texture, framebuffer, info.Size, format);
+            var replacement = new ScreenTarget(texture, framebuffer, info.Size, format, info.Format == DataFormat.R16G16B16A16SFLOAT);
             try { ReleaseScreen(screen); } catch { try { FreeRID(framebuffer); } finally { FreeRID(texture); } throw; }
             _screens[screen] = target = replacement;
         }
         var list = DrawListBegin(target.Framebuffer, DrawFlags.ClearColor0, [color]); _screenDraw = target; return list;
     }
-    internal (nint Texture, Vector2i Size) ScreenPresentation(int screen)
-        => _screens.TryGetValue(screen, out var target) && target.Pending ? (_entries[target.Texture].NativeHandle, target.Size) : default;
+    internal (nint Texture, Vector2i Size, bool HDR) ScreenPresentation(int screen)
+        => _screens.TryGetValue(screen, out var target) && target.Pending ? (_entries[target.Texture].NativeHandle, target.Size, target.HDR) : default;
     internal void ScreenPresented(int screen) { if (_screens.TryGetValue(screen, out var target)) target.Pending = false; }
     internal bool HasPendingScreens
     {

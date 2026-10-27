@@ -1470,3 +1470,18 @@ unretrievable data. A positive predicate cannot reserve a later selection. Both
 methods require the live display owner; unavailable/off-owner calls fail. Wayland
 requires a current offer delivered to a keyboard-focused client. See [clipboard
 images](../components/clipboard-images.md) for native proof and platform boundaries.
+
+## Native HDR output
+
+[The native output contract](../components/native-hdr-output.md) supplies the
+complete per-window request, capability, luminance and output-event family:
+WindowRequestHDROutput, WindowIsHDROutputRequested/Supported/Enabled,
+WindowSetHDROutputReferenceLuminance/MaxLuminance,
+WindowGetHDROutputReferenceLuminance/MaxLuminance,
+WindowGetHDROutputCurrentReferenceLuminance/CurrentMaxLuminance and
+WindowGetOutputMaxLinearValue. Every method accepts an active window ID, default
+zero, and requires the display owner. GetWindowEvents(id) publishes
+OutputMaxLinearValueChanged after scene recipients. Feature.HdrOutput retains its
+existing identity 35 and reports integrated composition availability. Requested,
+supported and enabled states remain distinct; unsupported compatibility requests
+reject. See the component for native/observer failures and qualification limits.

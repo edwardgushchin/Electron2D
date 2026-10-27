@@ -1026,6 +1026,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [ComputePipeline](classes/ComputePipeline.md), `ComputePipeline.BufferLayout` | [ComputePipeline.cs](../src/Servers/Rendering/ComputePipeline.cs) | [local-compute](components/local-compute.md#metal-storage-buffer-lengths) |
 | [CanvasGeometry](classes/CanvasGeometry.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasPresentation](classes/CanvasPresentation.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [CanvasOutput](classes/CanvasOutput.md) | [CanvasOutput.cs](../src/Servers/Rendering/CanvasOutput.cs) | [native HDR output](components/native-hdr-output.md) |
 | [CanvasBackend](classes/CanvasBackend.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [RenderHandle](classes/RenderHandle.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [GPUCanvasBackend](classes/GPUCanvasBackend.md) | [GPUCanvasBackend.cs](../src/Servers/Rendering/GPUCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |

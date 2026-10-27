@@ -1,7 +1,15 @@
 {
   "mappings": [
-    {"godot": "DisplayServer::method:clipboard_get_image()", "electron2d": "method:Electron2D.DisplayServer.ClipboardGetImage()", "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md."},
-    {"godot": "DisplayServer::method:clipboard_has_image()", "electron2d": "method:Electron2D.DisplayServer.ClipboardHasImage()", "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md."},
+    {
+      "godot": "DisplayServer::method:clipboard_get_image()",
+      "electron2d": "method:Electron2D.DisplayServer.ClipboardGetImage()",
+      "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md."
+    },
+    {
+      "godot": "DisplayServer::method:clipboard_has_image()",
+      "electron2d": "method:Electron2D.DisplayServer.ClipboardHasImage()",
+      "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md."
+    },
     {
       "electron2d": "T:Electron2D.WindowFlag",
       "godot": "DisplayServer::enum:WindowFlags",
@@ -980,23 +988,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: Separately accepted HDR output/presentation capability after the first 2D renderer. Its first executable slice must probe backend and compositor support, own requested versus effective HDR state, and report measured luminance values (ADR 0028).",
-      "godot": [
-        "DisplayServer::method:window_get_hdr_output_current_max_luminance(int:)",
-        "DisplayServer::method:window_get_hdr_output_current_reference_luminance(int:)",
-        "DisplayServer::method:window_get_hdr_output_max_luminance(int:)",
-        "DisplayServer::method:window_get_hdr_output_reference_luminance(int:)",
-        "DisplayServer::method:window_get_output_max_linear_value(int:)",
-        "DisplayServer::method:window_is_hdr_output_enabled(int:)",
-        "DisplayServer::method:window_is_hdr_output_requested(int:)",
-        "DisplayServer::method:window_is_hdr_output_supported(int:)",
-        "DisplayServer::method:window_request_hdr_output(bool:,int:)",
-        "DisplayServer::method:window_set_hdr_output_max_luminance(float:,int:)",
-        "DisplayServer::method:window_set_hdr_output_reference_luminance(float:,int:)"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Pinned doc/classes/DisplayServer.xml explicitly limits window_set_color to Android. Exact prerequisite: the Android application-host background-color bridge and native root-surface lifecycle; implement in its first executing host slice (ADRs 0021/0040). Desktop popup safe areas do not supply this Android-only producer.",
       "godot": [
         "DisplayServer::method:window_set_color(Color:)"
@@ -1329,7 +1320,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Typed C# lifecycle events replace the numeric WindowEvent vocabulary. Android system back and native popup FORCE_CLOSE execute through their actual host producers. The aggregate still waits for HDR OUTPUT_MAX_LINEAR_VALUE_CHANGED and native title-bar TITLEBAR_CHANGE producers under ADR 0040.",
+      "reason": "Typed C# lifecycle events replace the numeric WindowEvent vocabulary. Native HDR output changes now execute through the per-window typed publisher; native title-bar TITLEBAR_CHANGE remains the aggregate producer dependency under ADR 0040.",
       "godot": [
         "DisplayServer::enum:WindowEvent"
       ]
@@ -1350,13 +1341,6 @@
       "reason": "ADR 0044: typed WindowDpiChanged shares the existing main-window publisher with Window; per-window publishers retain independently routed identity. Window-scale changes do not measure physical DPI. Sixteen fresh CoreCLR/strict full-trim NativeAOT Linux/Wayland profiles pass real 1 -> 1.25 -> 1 scale transitions in independent root/child windows with CPU/GPU physics, GPU/compatibility rendering and owner/separate threads. They verify committed viewport dimensions, owner/parent-first physical descendants, nested boundaries, one signal, unchanged immediate poses/RIDs, continued motion/query identity and actual pixels. Default FIFO presentation is retained on the owned Mutter Devkit output; the standalone C control additionally requires eight acquired-texture submissions per window after each scale event. Source/PDB, frozen native inputs, payload/maps and process-retirement receipts: bin/dpi-devkit/2026-10-26/validation.json. The separate standalone headless FIFO acquisition failure remains unresolved. Foreign targets, native allocation, performance and owner acceptance remain separate under ADR 0021. See docs/components/window-runtime.md#native-dpi-scale-reproduction.",
       "godot": [
         "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "The complete native HDR output family must execute per-window request/support/enabled states, luminance policy, HDR presentation/transfer and observed value-before-notification/signal delivery. SDL format support and headroom metadata alone do not provide that workflow. See docs/components/hdr-canvas.md#native-output-prerequisite; the native probe retains this event as open.",
-      "godot": [
-        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED"
       ]
     },
     {

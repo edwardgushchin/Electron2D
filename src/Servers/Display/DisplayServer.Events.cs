@@ -292,6 +292,9 @@ public sealed partial class DisplayServer
                     PublishWindow(BeginEventEmission(_publisherWindowMouseExitedCore.Handlers), _windowEvents?.ExitHandlers);
                 }
                 break;
+            case SDL.EventType.WindowHDRStateChanged:
+                RefreshOutput();
+                break;
             case SDL.EventType.WindowDisplayScaleChanged:
                 RefreshMouseInputRegion();
                 RenderingServer.NotifyRenderMutation();

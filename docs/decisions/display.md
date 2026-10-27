@@ -68,7 +68,7 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 - Android system back uses the production activity's framework callback: OnBackInvokedCallback on API 33 and later, and OnBackPressed on earlier hosts. On pre-33 hosts the native non-mouse BACK key is intercepted before SDL consumes it: down/repeated-down do not emit, an uncanceled up invokes OnBackPressed, and other keys retain SDL dispatch. The activity retains/unregisters its callback with its own lifetime and preserves SDL lifecycle overrides. A retained count on the active display transfers requests from the UI thread to the owner after native/buffered input drain, including the drop-input pump. Each captured request delivers once; callback-submitted requests wait for the next pump, failures preserve later requests, and retirement discards pending work. Ordinary keyboard back keys on other hosts are not system navigation.
 - The initial policy family uses registered typed ProjectSettings.AutoAcceptQuit and QuitOnGoBack descriptors (`application/config/auto_accept_quit` and `application/config/quit_on_go_back`, both true). Each tree samples feature overrides before scene activation; later registry edits affect subsequent trees, and runtime policy setters remain independent. This follows the typed registry/constructor model under ADR 0019.
 - A system back request propagates Node.NotificationWmGoBackRequest (1007) parent-first within its containing Window, stopping at nested windows. For the root, SceneTree.QuitOnGoBack (true initially, independent of AutoAcceptQuit) evaluates after notifications and before public Window.GoBackRequested subscribers. Blocking root signals suppresses that policy and its signal while retaining notifications. Child requests do not implicitly quit. A notification can cancel the current policy; a signal subscriber can choose a subsequent explicit exit code. Manually notifying a node does not create a host request.
-- A visible Wayland compositor session delivered a real close request to the typed callback without destroying the window, plus native focus gain/loss and pointer enter/exit notifications. Native popup FORCE_CLOSE now executes through forced hidden state and its typed visibility events; ordinary native readiness-timeout/forced-invalidation observation remains a separate lifecycle producer. The remaining `WindowEvent` identities depend on HDR output and macOS title-bar integration; the aggregate vocabulary is blocked until those owners exist.
+- A visible Wayland compositor session delivered a real close request to the typed callback without destroying the window, plus native focus gain/loss and pointer enter/exit notifications. Native popup FORCE_CLOSE now executes through forced hidden state and its typed visibility events; ordinary native readiness-timeout/forced-invalidation observation remains a separate lifecycle producer. The remaining `WindowEvent` aggregate depends on macOS title-bar integration; the aggregate vocabulary is blocked until those owners exist.
 - Desktop hit testing uses the main window's client rectangle on X11, excluding the native border and title bar. Other desktop drivers retain decorated-bounds approximation until native topmost hit testing exists; Wayland continues to reject unavailable global-position lookup. The SDL resizable flag is only a partial answer to whether the native window manager permits maximization; current fullscreen mode is not a permanent prohibition. A future SDL-owned Wayland capability bridge must observe xdg_toplevel wm_capabilities and integrate MaximizeDisabled.
 - Native SDL ownership uses private `SafeHandle` wrappers and deterministic disposal. SDL thread-affine handles must not be released by a finalizer thread; the owning `DisplayServer` must be explicitly disposed.
 - SDL3-CS core source is compiled internally into `Electron2D.dll` and refreshed by release tag with `tools/update-sdl3-cs.sh`. The Linux x64 example packages native SDL beside its executable; other target packages remain unverified under ADR 0021.
@@ -206,7 +206,7 @@ Applications can observe SDL's reported light/dark preference and react to repor
 <a id="adr-0044"></a>
 ## ADR 0044: Window notifications and event failure completeness
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 ### Status
 
@@ -225,6 +225,30 @@ The pinned display reference includes a window DPI-change notification and requi
 - Normalize an unspecified, nonpositive, or nonfinite SDL display-mode refresh rate to `-1.0` in `ScreenGetRefreshRate`, preserving positive finite hertz values. This corrects the already documented fallback without adding a new public API.
 - Deliver both axes of a single SDL wheel event even when one axis's callback fails. Preserve both failures for the existing event-pump aggregation policy; a pressed wheel button is still released when its press callback fails.
 - Expose one typed `WindowRectChanged` event carrying a complete main-window client `Rect2i` after each effective native move or resize, in event-queue order. Cache the rectangle, update it from each SDL event payload before callbacks, and suppress unchanged notifications. On Wayland, the event position is the documented `(0, 0)` convention, not an authoritative global desktop position; ADR 0040's global-position operations remain unsupported there. Retain owner-thread delivery, foreign-window filtering, callback-failure aggregation, and re-entry rules. This single event adapts callback registration; no parallel split or inert registration API remains. Classify parity as partial pending native X11 and Wayland checks of compositor event coverage and ordering.
+
+### Native HDR output
+
+The complete native output family distinguishes the retained request, current
+window/renderer support and active HDR presentation. GPU output selects extended
+linear sRGB when available, otherwise BT.2020 ST2084. SDL's per-window HDR state,
+SDR-white scale and headroom supply current proportional luminance; an SDR-white
+unit is 80 nits. Negative authored luminance selects this native policy; finite
+positive overrides select explicit reference/max nits. Zero and nonfinite values
+reject before mutation. Output transfer uses the selected luminance and actual
+swapchain format, preserving the VSync policy. SDR presentation remains the
+default. Compatibility rejects an HDR request explicitly.
+
+An HDR request forces the containing Window's canvas to linear half-float storage,
+without changing independent SubViewports. Unavailable native HDR retains the
+request and presents SDR until a native capability change enables it. A native
+mode failure preserves the prior request, luminance and output. Committed output
+values precede Node notification 1013, Window's typed value signal and the
+per-window display signal. Unchanged values suppress delivery; blocked signals do
+not block notifications. Callback failures preserve committed state and independent
+recipients. Embedded windows observe their containing output; native children own
+independent requests and swapchains. Teardown releases backend associations before
+native handles retire. Controlled native-metadata tests qualify transfer and
+lifecycle behavior separately from an actual HDR display or foreign platform.
 
 ### Consequences
 

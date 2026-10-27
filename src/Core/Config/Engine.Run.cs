@@ -105,6 +105,7 @@ public sealed partial class Engine
             OS.DeltaSmoothing = ProjectSettings.GetWithOverride(ProjectSettings.DeltaSmoothing);
             OS.LowProcessorUsageMode = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorMode);
             OS.LowProcessorUsageModeSleepUsec = ProjectSettings.GetWithOverride(ProjectSettings.LowProcessorModeSleepUsec);
+            window.ApplyProjectHDROutput();
             window.OpenNative(movieDisableVSync);
             window.ApplyProjectMSAA();
             window.ApplyProjectHDR();

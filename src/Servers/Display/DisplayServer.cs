@@ -595,6 +595,7 @@ public sealed partial class DisplayServer : ElectronObject
             _publisherQuitRequestedCore.Handlers = _publisherSystemThemeChangedCore.Handlers = _publisherCloseRequestedCore.Handlers = null;
             _publisherWindowMouseEnteredCore.Handlers = _publisherWindowMouseExitedCore.Handlers = _publisherWindowDpiChangedCore.Handlers = _publisherGoBackRequestedCore.Handlers = null;
             _publisherWindowRectChangedCore.Handlers = null; _publisherWindowFocusChangedCore.Handlers = null;
+            _publisherOutputChanged.Handlers = null;
             _publisherTextInputCore.Handlers = null; _publisherTextEditingCore.Handlers = null; _publisherFilesDroppedCore.Handlers = null;
             if (_rootDisplay is { } root)
             {
@@ -686,7 +687,7 @@ public sealed partial class DisplayServer : ElectronObject
         ApplyMouseInputRegion(_mousePassthrough, _mouseInputPolygon);
     }
 
-    internal void ReleaseRenderingWindow() { EnsureOwner(); _graphicsHandleQuery = null; _renderingAttached = false; }
+    internal void ReleaseRenderingWindow() { EnsureOwner(); _graphicsHandleQuery = null; _renderingAttached = false; _outputBackend = null; _outputChild = null; _output = default; }
 
     private nint GetWindow(int windowId)
     {

@@ -60,7 +60,7 @@ public sealed class ViewportTexture : Texture
         get
         {
             ThrowIfDisposed(); if (Bound is not { } view) return Image.Format.Rgba8;
-            var authored = view.UseHDR2D;
+            var authored = view.UseHDR2D || view is Window { HDROutputRequested: true };
             return (view.RenderingOwner?.ViewportHDR(view) ?? authored) ? Image.Format.Rgbah : Image.Format.Rgba8;
         }
     }

@@ -1799,6 +1799,7 @@ delivery; manual DispatchNotification does not create a native event.
 | [`public const int NotificationWmGoBackRequest`](#notificationwmgobackrequest) | 1007 | Android system back; containing-window subtree, stopping before nested windows. |
 | [`public const int NotificationWmSizeChanged`](#notificationwmsizechanged) | 1008 | Owning Window only. |
 | [`public const int NotificationWmDpiChange`](#notificationwmdpichange) | 1009 | Containing-window subtree, stopping before nested windows. |
+| `public const int NotificationWmOutputMaxLinearValueChanged` | 1013 | Committed native output range, before Window's value signal; independent window boundaries retained. |
 | [`public const int NotificationWmPositionChanged`](#notificationwmpositionchanged) | 1012 | Containing-window subtree, stopping before nested windows. |
 
 ### NotificationWmMouseEnter

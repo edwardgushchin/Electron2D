@@ -19056,6 +19056,19 @@
     "value": "1003"
   },
   {
+    "id": "constant:Electron2D.Node.NotificationWmOutputMaxLinearValueChanged()",
+    "kind": "constant",
+    "declaringType": "Electron2D.Node",
+    "name": "NotificationWmOutputMaxLinearValueChanged",
+    "signature": "public const System.Int32 NotificationWmOutputMaxLinearValueChanged = 1013",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "1013"
+  },
+  {
     "id": "constant:Electron2D.Node.NotificationWmPositionChanged()",
     "kind": "constant",
     "declaringType": "Electron2D.Node",
@@ -67648,6 +67661,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.DisplayWindowEvents.OutputMaxLinearValueChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.DisplayWindowEvents",
+    "name": "OutputMaxLinearValueChanged",
+    "signature": "public event System.Action\u003CSystem.Single\u003E OutputMaxLinearValueChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.DisplayWindowEvents.RectChanged()",
     "kind": "event",
     "declaringType": "Electron2D.DisplayWindowEvents",
@@ -70427,6 +70453,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.InputEvent\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.Window.OutputMaxLinearValueChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.Window",
+    "name": "OutputMaxLinearValueChanged",
+    "signature": "public event System.Action\u003CSystem.Single\u003E OutputMaxLinearValueChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Single\u003E",
     "value": null
   },
   {
@@ -108923,6 +108962,82 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowGetHDROutputCurrentMaxLuminance(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetHDROutputCurrentMaxLuminance",
+    "signature": "public static System.Single WindowGetHDROutputCurrentMaxLuminance(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetHDROutputCurrentReferenceLuminance(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetHDROutputCurrentReferenceLuminance",
+    "signature": "public static System.Single WindowGetHDROutputCurrentReferenceLuminance(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetHDROutputMaxLuminance(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetHDROutputMaxLuminance",
+    "signature": "public static System.Single WindowGetHDROutputMaxLuminance(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetHDROutputReferenceLuminance(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetHDROutputReferenceLuminance",
+    "signature": "public static System.Single WindowGetHDROutputReferenceLuminance(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowGetMaxSize(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -109001,6 +109116,25 @@
       }
     ],
     "returnType": "System.IntPtr",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowGetOutputMaxLinearValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetOutputMaxLinearValue",
+    "signature": "public static System.Single WindowGetOutputMaxLinearValue(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Single",
     "value": null
   },
   {
@@ -109137,6 +109271,63 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowIsHDROutputEnabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowIsHDROutputEnabled",
+    "signature": "public static System.Boolean WindowIsHDROutputEnabled(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowIsHDROutputRequested(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowIsHDROutputRequested",
+    "signature": "public static System.Boolean WindowIsHDROutputRequested(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowIsHDROutputSupported(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowIsHDROutputSupported",
+    "signature": "public static System.Boolean WindowIsHDROutputSupported(System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowIsMaximizeAllowed(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -109186,6 +109377,30 @@
     "parameters": [
       {
         "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowRequestHDROutput(System.Boolean,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowRequestHDROutput",
+    "signature": "public static System.Void WindowRequestHDROutput(System.Boolean enable, System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "enable",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "windowID",
         "type": "System.Int32",
         "default": "0"
       }
@@ -109263,6 +109478,54 @@
       },
       {
         "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetHDROutputMaxLuminance(System.Single,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetHDROutputMaxLuminance",
+    "signature": "public static System.Void WindowSetHDROutputMaxLuminance(System.Single maxLuminance, System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxLuminance",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "windowID",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetHDROutputReferenceLuminance(System.Single,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetHDROutputReferenceLuminance",
+    "signature": "public static System.Void WindowSetHDROutputReferenceLuminance(System.Single referenceLuminance, System.Int32 windowID = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "referenceLuminance",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "windowID",
         "type": "System.Int32",
         "default": "0"
       }
@@ -239566,6 +239829,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Window.GetOutputMaxLinearValue()",
+    "kind": "method",
+    "declaringType": "Electron2D.Window",
+    "name": "GetOutputMaxLinearValue",
+    "signature": "public System.Single GetOutputMaxLinearValue()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Window.GetPositionWithDecorations()",
     "kind": "method",
     "declaringType": "Electron2D.Window",
@@ -273736,6 +274012,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.HDROutputRequested()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "HDROutputRequested",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E HDROutputRequested { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -287924,6 +288213,19 @@
     "declaringType": "Electron2D.Window",
     "name": "ForceNative",
     "signature": "public System.Boolean ForceNative { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Window.HDROutputRequested()",
+    "kind": "property",
+    "declaringType": "Electron2D.Window",
+    "name": "HDROutputRequested",
+    "signature": "public System.Boolean HDROutputRequested { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -568,3 +568,10 @@ When changing sampler coordinates, run [the coordinate consumers](components/sam
 After changing device limit production or validation, run the public `tests/DeviceLimits.Consumer` native consumer, related compute/graphics regressions, native bridge check and package export tests; preserve the distinct logical-set/profile/native boundaries in [device limits](components/device-limits.md).
 
 After changing format-filter queries or configured sampling, run [native format checks](components/format-filter-support.md#executable-checks) in ordinary and controlled masked children, plus connected sampler consumers. Keep the immutable cache within the physical-device lease and match all six private render exports in produced bundles.
+
+Native HDR output checks share `tests/Electron2D.Tests/WindowOutputTests*.cs` with
+`tests/WindowOutput.Tests`. Select `ELECTRON2D_TEST_HDR_OUTPUT` for managed/fresh
+scene, transfer/screen pixels and native CPU/GPU/compatibility profiles. Build the
+matching native render bridge when current main changes its exports. Controlled
+HDR metadata, actual native formats and physical HDR-display acceptance remain
+separate; see [native output](components/native-hdr-output.md).

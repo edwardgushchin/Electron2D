@@ -159,6 +159,9 @@ public partial class Node : ElectronObject
     /// <summary>Identifies the notification sent when the containing window reports a display content-scale change.</summary>
     public const int NotificationWmDpiChange = 1009;
 
+    /// <summary>Identifies a change to the containing native output's maximum linear color value.</summary>
+    public const int NotificationWmOutputMaxLinearValueChanged = 1013;
+
     /// <summary>Identifies the notification sent when the containing window changes client position.</summary>
     /// <remarks>A confirmed native move reaches the containing subtree after position commit. A placement request alone does not emit it.</remarks>
     public const int NotificationWmPositionChanged = 1012;

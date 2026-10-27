@@ -22,14 +22,14 @@ internal abstract partial class CanvasBackend : IDisposable
 {
     internal virtual bool HasOSFeature(string feature) => false;
     private CanvasRenderTarget? _presentation;
-    protected CanvasRenderTarget PreparePresentation() => PreparePresentation(GetPixelSize(), ref _presentation);
-    protected CanvasRenderTarget PreparePresentation(Vector2i size, ref CanvasRenderTarget? storage)
+    protected CanvasRenderTarget PreparePresentation(bool HDR = false) => PreparePresentation(GetPixelSize(), ref _presentation, HDR);
+    protected CanvasRenderTarget PreparePresentation(Vector2i size, ref CanvasRenderTarget? storage, bool HDR = false)
     {
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Presentation targets require 1..16384 pixels per axis on this backend profile.");
-        if (storage?.Size == size) return storage;
-        var current = CreateTarget(size, Colors.Black); RenderHandle next;
-        try { next = CreateTarget(size, Colors.Black); } catch { current.Dispose(); throw; }
-        var replacement = new CanvasRenderTarget(current, next, size);
+        if (storage?.Size == size && storage.HDR == HDR) return storage;
+        var current = CreateTarget(size, Colors.Black, HDR: HDR); RenderHandle next;
+        try { next = CreateTarget(size, Colors.Black, HDR: HDR); } catch { current.Dispose(); throw; }
+        var replacement = new CanvasRenderTarget(current, next, size) { HDR = HDR };
         storage?.Dispose(); return storage = replacement;
     }
     internal Image ReadbackScreen(CanvasRenderTarget? content) => Readback(_presentation is { HasFrame: true } ? _presentation : content ?? throw new InvalidOperationException("No canvas frame has completed."));
@@ -44,6 +44,11 @@ internal abstract partial class CanvasBackend : IDisposable
     }
     internal abstract DisplayServer.VSyncMode VSync { get; }
     internal abstract void SetVSync(DisplayServer.VSyncMode mode);
+    internal virtual CanvasOutput ConfigureOutput(bool requested, float reference, float maximum)
+    {
+        if (requested) throw new NotSupportedException("HDR output requires GPU rendering.");
+        return default;
+    }
     internal abstract string Method { get; }
     internal abstract string Driver { get; }
     internal abstract RenderMemorySnapshot ReadMemory();

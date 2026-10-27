@@ -377,6 +377,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <remarks>Offscreen viewports retain their authored selections. Enabled HDR requires GPU rendering and supported half-float color targets.</remarks>
     public static ProjectSetting<bool> HDR2D { get; } = new("rendering/viewport/hdr_2d", false);
 
+    /// <summary>Requests native HDR output for an unassigned root window at startup.</summary>
+    /// <value>display/window/hdr/request_hdr_output; false initially.</value>
+    /// <remarks>Explicit Window authoring takes precedence. Native display support determines the active output;
+    /// requested windows use effective linear half-float canvases while independent SubViewports retain their policy.</remarks>
+    public static ProjectSetting<bool> HDROutputRequested { get; } = new("display/window/hdr/request_hdr_output", false);
+
     /// <summary>Selects HDR root screen dithering at engine startup.</summary>
     /// <value>rendering/anti_aliasing/quality/use_debanding; false initially.</value>
     /// <remarks>An explicit root assignment wins. Only root HDR screen presentation uses this GPU effect;

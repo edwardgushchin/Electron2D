@@ -1,0 +1,121 @@
+{
+  "mappings": [
+    {
+      "godot": "DisplayServer::enum_value:Feature.FEATURE_HDR_OUTPUT",
+      "electron2d": "enumValue:Electron2D.DisplayServer.Feature.HdrOutput()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED",
+      "electron2d": "event:Electron2D.DisplayWindowEvents.OutputMaxLinearValueChanged()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_hdr_output_current_max_luminance(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetHDROutputCurrentMaxLuminance(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_hdr_output_current_reference_luminance(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetHDROutputCurrentReferenceLuminance(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_hdr_output_max_luminance(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetHDROutputMaxLuminance(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_hdr_output_reference_luminance(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetHDROutputReferenceLuminance(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_output_max_linear_value(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetOutputMaxLinearValue(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_is_hdr_output_enabled(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowIsHDROutputEnabled(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_is_hdr_output_requested(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowIsHDROutputRequested(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_is_hdr_output_supported(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowIsHDROutputSupported(System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_request_hdr_output(bool:,int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowRequestHDROutput(System.Boolean,System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_set_hdr_output_max_luminance(float:,int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowSetHDROutputMaxLuminance(System.Single,System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "DisplayServer::method:window_set_hdr_output_reference_luminance(float:,int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowSetHDROutputReferenceLuminance(System.Single,System.Int32)",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED",
+      "electron2d": "constant:Electron2D.Node.NotificationWmOutputMaxLinearValueChanged()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "ProjectSettings::property:display/window/hdr/request_hdr_output",
+      "electron2d": "property:Electron2D.ProjectSettings.HDROutputRequested()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "Window::method:get_output_max_linear_value()",
+      "electron2d": "method:Electron2D.Window.GetOutputMaxLinearValue()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "Window::property:hdr_output_requested",
+      "electron2d": "property:Electron2D.Window.HDROutputRequested()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    },
+    {
+      "godot": "Window::signal:output_max_linear_value_changed(float:)",
+      "electron2d": "event:Electron2D.Window.OutputMaxLinearValueChanged()",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "godot": [
+        "DisplayServer::enum_value:Feature.FEATURE_HDR_OUTPUT",
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED",
+        "DisplayServer::method:window_get_hdr_output_current_max_luminance(int:)",
+        "DisplayServer::method:window_get_hdr_output_current_reference_luminance(int:)",
+        "DisplayServer::method:window_get_hdr_output_max_luminance(int:)",
+        "DisplayServer::method:window_get_hdr_output_reference_luminance(int:)",
+        "DisplayServer::method:window_get_output_max_linear_value(int:)",
+        "DisplayServer::method:window_is_hdr_output_enabled(int:)",
+        "DisplayServer::method:window_is_hdr_output_requested(int:)",
+        "DisplayServer::method:window_is_hdr_output_supported(int:)",
+        "DisplayServer::method:window_request_hdr_output(bool:,int:)",
+        "DisplayServer::method:window_set_hdr_output_max_luminance(float:,int:)",
+        "DisplayServer::method:window_set_hdr_output_reference_luminance(float:,int:)",
+        "Node::constant:NOTIFICATION_WM_OUTPUT_MAX_LINEAR_VALUE_CHANGED",
+        "ProjectSettings::property:display/window/hdr/request_hdr_output",
+        "Window::method:get_output_max_linear_value()",
+        "Window::property:hdr_output_requested",
+        "Window::signal:output_max_linear_value_changed(float:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0044: complete native HDR request/support/enabled, proportional luminance, extended-linear/BT.2020 ST2084 transfer, forced effective Window canvas storage, independent native/embedded outputs, value-before-1013/signal delivery, native failure rollback, observer commitment/reentry and retirement. Shared source Linux Wayland CLR/strict full-trim NativeAOT profiles execute real pixels, full CPU/GPU physics without fallback, stable RIDs and 32+64 prepared frames at 0/0 owner/all-thread managed bytes. Positive HDR metadata is controlled; actual HDR display, physical nits, foreign/native-heap/performance/owner acceptance remain separate. See docs/components/native-hdr-output.md."
+    }
+  ]
+}

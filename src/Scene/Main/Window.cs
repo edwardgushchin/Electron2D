@@ -270,7 +270,7 @@ public partial class Window : Viewport
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(InputProperties).Concat(ContentProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(WindowProperties).Concat(OutputProperties).Concat(InputProperties).Concat(ContentProperties).Concat(PopupProperties).Concat(ThemeProperties).Concat(ThemeOwner.Properties<Window>());
 
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(Window)
@@ -297,6 +297,7 @@ public partial class Window : Viewport
             _publisherMouseEntered.Handlers = null;
             _publisherMouseExited.Handlers = null;
             _publisherDpiChanged.Handlers = null;
+            _publisherOutputMaxLinearValueChanged.Handlers = null;
             _publisherFilesDropped.Handlers = null;
         }
         base.Dispose(disposing);
@@ -318,6 +319,7 @@ public partial class Window : Viewport
     {
         if (_keepTitleVisible) throw new NotSupportedException("Native title measurement is unavailable.");
         var display = _display ?? throw new InvalidOperationException("The native window is absent.");
+        display.SetHDROutputRequestCore(_hdrOutputRequested);
         _observedNativePosition = display.ObservedWindowPosition;
         if (OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser())
         {
@@ -348,6 +350,7 @@ public partial class Window : Viewport
         display.WindowMouseEnteredCore += HandleMouseEntered;
         display.WindowMouseExitedCore += HandleMouseExited;
         display.WindowDpiChangedCore += HandleDPIChanged;
+        display.OutputChangedCore += HandleOutputChanged;
         display.TextInputCore += HandleTextInput;
         display.TextEditingCore += HandleTextEditing;
         display.FilesDroppedCore += HandleFilesDropped;
@@ -402,6 +405,7 @@ public partial class Window : Viewport
         display.WindowMouseEnteredCore -= HandleMouseEntered;
         display.WindowMouseExitedCore -= HandleMouseExited;
         display.WindowDpiChangedCore -= HandleDPIChanged;
+        display.OutputChangedCore -= HandleOutputChanged;
         display.TextInputCore -= HandleTextInput;
         display.TextEditingCore -= HandleTextEditing;
         display.FilesDroppedCore -= HandleFilesDropped;

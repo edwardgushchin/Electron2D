@@ -90,6 +90,7 @@ internal sealed unsafe partial class GPUCanvasBackend
 
     private void DisposeColorViews()
     {
+        DisposeOutput();
         DisposeArrayColorViews();
         foreach (var view in _linearViews.Values) view.View.Dispose();
         _linearViews.Clear(); _linearSources.Clear(); _usedLinearViews.Clear();
