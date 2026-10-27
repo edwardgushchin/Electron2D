@@ -3710,6 +3710,11 @@
       "electron2d": "T:Electron2D.RenderingDevice.SamplerBorderColor",
       "state": "Implemented",
       "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": "RDSamplerState::property:unnormalized_uvw",
+      "electron2d": "property:Electron2D.RDSamplerState.UnnormalizedUVW()",
+      "reason": "ADR 0028: executable native texel-coordinate sampling with copied UnnormalizedUVW, version-three metadata and older-version reads, equal-filter/LOD/address/aniso/compare guards, static shader pair and final derived canvas constraints, and actual native ordinary single-layer/single-mip view validation. Public device/canvas consumers cover positions, formats, filtering, borders, helper offsets, descriptor arrays and stage sharing; foreign-platform/presentation/native-allocation acceptance remains separate."
     }
   ],
   "extras": [
@@ -4136,11 +4141,11 @@
       "reason": "ADRs 0004/0028: all image storage is two-dimensional; volume depth and the W sampling axis do not enter this image family."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "RDSamplerState::property:unnormalized_uvw"
       ],
-      "reason": "ADR 0028: requires sampler min/mag/mip/LOD/anisotropy/compare restrictions, single-layer/single-mip image views and SPIR-V validation of explicit-LOD nonprojective operations without offsets/gathers. Normalized border sampling does not satisfy these operation restrictions; no inert flag is exposed."
+      "reason": "ADR 0028: executable native texel-coordinate sampling with copied UnnormalizedUVW, version-three metadata and older-version reads, equal-filter/LOD/address/aniso/compare guards, static shader pair and final derived canvas constraints, and actual native ordinary single-layer/single-mip view validation. Public device/canvas consumers cover positions, formats, filtering, borders, helper offsets, descriptor arrays and stage sharing; foreign-platform/presentation/native-allocation acceptance remains separate."
     },
     {
       "state": "Excluded",

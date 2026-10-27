@@ -54,6 +54,8 @@ internal sealed partial class ShaderProgram(byte[] code, int[] bufferSizes, Dict
 
 internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0, int ArrayLength = 0, int Element = 0, bool BlitSource = false)
 {
+    internal bool UnnormalizedUnsafe { get; init; } = true;
+    internal bool UsesSampler { get; init; } = true;
     internal ShaderImagePolicy? ImagePolicy { get; init; }
     internal string NativeName { get; init; } = Name;
     private readonly string _legacyGlobalName = Name.StartsWith("GLOBAL_", StringComparison.Ordinal) ? Name[7..] : string.Empty;

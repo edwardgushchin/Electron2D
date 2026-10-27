@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false);
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false, bool UnnormalizedUnsafe = false, bool UsesSampler = true);
     private static int ResourceWidth(UniformType type) => type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1;
     private static int ResourceID(Binding binding, int lane = 0) => binding.Element * ResourceWidth(binding.Type) + lane;
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) { var result = RemapCore(code, stage, false); return (result.Code, result.Layout, result.Push); }
@@ -14,6 +14,7 @@ public sealed unsafe partial class RenderingDevice
         var imageArrays = DeviceImageArrays.Lower(code, template); code = imageArrays.Code;
         var texelTranslation = TexelBufferProgram.Lower(code, template); code = texelTranslation.Code;
         var samplerTranslation = CanvasSamplerArrays.LowerDevice(code, template, swizzles); code = samplerTranslation.Code;
+        var unnormalizedUnsafe = CanvasSamplerArrays.CoordinateSamplingRequirements(code);
         var inputTranslation = LowerInputAttachments(code, stage); code = inputTranslation.Code;
         var readonlyTranslation = LowerReadOnlyImages(code, stage); code = readonlyTranslation.Code;
         (byte[] Code, uint Variable, uint Size) translated;
@@ -152,6 +153,7 @@ public sealed unsafe partial class RenderingDevice
         {
             var cleaned = new MaterialLightingProgram.Module(code); cleaned.Instructions.RemoveAll(i => MaterialLightingProgram.Op(i) == 0); code = cleaned.Write();
         }
+        for (var i = 0; i < layout.Count; i++) layout[i] = layout[i] with { UnnormalizedUnsafe = unnormalizedUnsafe.GetValueOrDefault((layout[i].Set, layout[i].Slot)), UsesSampler = unnormalizedUnsafe.ContainsKey((layout[i].Set, layout[i].Slot)) };
         var restored = RestoreSamplerLayout(layout, samplerTranslation.Plan, stage);
         var texelSources = texelTranslation.Sources.ToDictionary(s => (s.NativeSet, s.NativeBinding));
         var finalLayout = restored.Layout.Select(b => texelSources.TryGetValue((b.Set, b.Slot), out var s) ? b with { Set = s.Set, Slot = s.Binding, Type = s.Type, ImageFormat = s.Format, PixelType = s.PixelType, Count = s.Count, Element = s.Element, DynamicCount = s.DynamicCount } : b).ToArray();

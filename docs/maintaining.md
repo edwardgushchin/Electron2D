@@ -562,3 +562,5 @@ predicate retirement and actual image-to-texture pixels on each claimed renderer
 Use strict full-trim NativeAOT separately. See [clipboard image reproduction](components/clipboard-images.md#verification-and-reproduction).
 
 After changing native sampler creation or copied sampler settings, follow [native sampler border checks](components/sampler-borders.md#executable-checks), preserve version-one shader metadata reading, and rerun native layout pin checks plus the public CLR/AOT consumers. Window presentation and foreign-platform execution remain independent gates.
+
+When changing sampler coordinates, run [the coordinate consumers](components/sampler-coordinates.md#executable-checks), including operation failures and derived shader checks; preserve reading both older metadata versions and validate the actual bound view. Match the complete private render ABI in produced bundles.

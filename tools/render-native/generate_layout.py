@@ -42,6 +42,7 @@ def generate(source):
         '#include "vulkan/vulkan.h"',
         "typedef struct SDL_GPURenderer SDL_GPURenderer;",
         block(gpu, "struct SDL_GPUDevice\n{"),
+        block(gpu, "typedef struct TextureCommonHeader"),
         "typedef struct VulkanBuffer VulkanBuffer;", "typedef struct VulkanTexture VulkanTexture;",
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
         "typedef struct VulkanFenceHandle VulkanFenceHandle;",

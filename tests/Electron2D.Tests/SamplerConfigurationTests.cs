@@ -35,6 +35,17 @@ internal static class SamplerConfigurationTests
         Reject<ArgumentOutOfRangeException>(() => state.BorderColor = (RenderingDevice.SamplerBorderColor)(-1));
         state.Dispose(); Reject<ObjectDisposedException>(() => _ = state.BorderColor); Reject<ObjectDisposedException>(() => state.BorderColor = RenderingDevice.SamplerBorderColor.FloatOpaqueBlack);
         using var mirrored = new RDSamplerState(); mirrored.RepeatU = RenderingDevice.SamplerRepeatMode.MirrorClampToEdge; Reject<NotSupportedException>(() => SamplerConfiguration.Capture(mirrored));
+        using var coordinates = new RDSamplerState { UnnormalizedUVW = true, MaxLOD = 0 };
+        var coordinateDescriptor = coordinates.GetPropertyList().OfType<PropertyDescriptor<RDSamplerState, bool>>().Single(p => p.Name == nameof(RDSamplerState.UnnormalizedUVW));
+        Check(coordinateDescriptor.GetValue(coordinates), "The typed coordinate descriptor preserves the authored mode.");
+        var captured = SamplerConfiguration.Capture(coordinates); using (var copied = captured.CreateState()) Check(copied.UnnormalizedUVW && copied.MaxLOD == 0, "Coordinate state copies without a borrowed description.");
+        _ = captured.Native("vulkan"); Reject<NotSupportedException>(() => captured.Native("metal"));
+        foreach (var change in new Action<RDSamplerState>[] { p => p.MinFilter = RenderingDevice.SamplerFilter.Linear, p => p.MIPFilter = RenderingDevice.SamplerFilter.Linear, p => p.MinLOD = -1, p => p.MaxLOD = 1, p => p.RepeatU = RenderingDevice.SamplerRepeatMode.Repeat, p => p.RepeatV = RenderingDevice.SamplerRepeatMode.MirroredRepeat, p => p.EnableCompare = true, p => { p.UseAnisotropy = true; p.AnisotropyMax = 2; } })
+        {
+            using var invalidCoordinate = captured.CreateState(); change(invalidCoordinate); Reject<ArgumentException>(() => SamplerConfiguration.Capture(invalidCoordinate));
+        }
+        coordinates.UseAnisotropy = true; Check(!SamplerConfiguration.Capture(coordinates).Anisotropic, "A limit of one remains disabled in texel-coordinate mode.");
+        coordinates.Dispose(); Reject<ObjectDisposedException>(() => coordinateDescriptor.GetValue(coordinates)); Reject<ObjectDisposedException>(() => coordinateDescriptor.SetValue(coordinates, false));
         Console.WriteLine("Sampler configuration: complete native field projection, effective anisotropy, relaxed-device and Metal/address guards passed without creating a device.");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

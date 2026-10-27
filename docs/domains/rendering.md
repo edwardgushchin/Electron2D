@@ -558,3 +558,5 @@ Native numeric accessibility now publishes Slider/ScrollBar/SpinBox and progress
 ## Native render allocation memory
 
 See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
+
+[Sampler texel coordinates](../components/sampler-coordinates.md) connect UnnormalizedUVW to native filtering, copied Shader metadata, sampled-pair operation constraints and actual native view validation across device, canvas, particle and GPU drawable consumers.

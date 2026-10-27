@@ -8,11 +8,13 @@ Last updated: 2026-10-27
 
 ## Description
 
-Describes filtering, normalized-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.
+Describes filtering, normalized or texel-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.
 
 The current profile supports repeat, mirrored repeat, clamp-to-edge and Vulkan clamp-to-border. Other addressing modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy; a maximum of one disables anisotropy. Nonzero LOD bias fails on a backend that cannot apply it.
 
 `BorderColor` selects one of six predefined [floating-point or integer colors](RenderingDevice.SamplerBorderColor.md), initially FloatOpaqueBlack. It is copied with the rest of the configuration, appears in typed property descriptors and is ignored when neither axis uses ClampToBorder. The color scalar class must match the sampled image. See [native border sampling](../components/sampler-borders.md).
+
+`UnnormalizedUVW` selects native texel coordinates, initially false. See [sampler coordinates](../components/sampler-coordinates.md) for the complete state, operation and actual-view requirements. Shader descriptions copy this flag; archives preserve it without retaining the configuration object.
 
 ## Example
 
@@ -26,6 +28,7 @@ using var sampler = new RDSamplerState { EnableCompare = true, CompareOp = Rende
 
 | Declaration | Contract |
 | --- | --- |
+| [`public System.Boolean UnnormalizedUVW { get; set; }`](#unnormalized-coordinates) | Selects texel coordinates; initially false. |
 | [`public Electron2D.RenderingDevice.SamplerBorderColor BorderColor { get; set; }`](#border-color) | Selects the clamp-to-border color; initially FloatOpaqueBlack. |
 | [`public RDSamplerState()`](#member-a8bd01fce139) | Creates the default SamplerState configuration. |
 | [`protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()`](#member-6b12dd7b8fb0) |  |
@@ -38,8 +41,8 @@ using var sampler = new RDSamplerState { EnableCompare = true, CompareOp = Rende
 | [`public Electron2D.RenderingDevice.SamplerFilter MinFilter { get; set; }`](#member-642eaeb354fb) | Gets or sets the within-mip filter used for minification. |
 | [`public System.Single MinLOD { get; set; }`](#member-a252f84f2d08) | Gets or sets the minimum mip level, with zero identifying the base level. |
 | [`public Electron2D.RenderingDevice.SamplerFilter MIPFilter { get; set; }`](#member-a549b7947f32) | Gets or sets how adjacent mip levels are selected or blended. |
-| [`public Electron2D.RenderingDevice.SamplerRepeatMode RepeatU { get; set; }`](#member-8e24410bc722) | Gets or sets horizontal normalized-coordinate addressing. |
-| [`public Electron2D.RenderingDevice.SamplerRepeatMode RepeatV { get; set; }`](#member-3c8621061881) | Gets or sets vertical normalized-coordinate addressing. |
+| [`public Electron2D.RenderingDevice.SamplerRepeatMode RepeatU { get; set; }`](#member-8e24410bc722) | Gets or sets horizontal coordinate addressing. |
+| [`public Electron2D.RenderingDevice.SamplerRepeatMode RepeatV { get; set; }`](#member-3c8621061881) | Gets or sets vertical coordinate addressing. |
 | [`public System.Boolean UseAnisotropy { get; set; }`](#member-685ce1197486) | Gets or sets whether the sampler uses anisotropic filtering. |
 
 ## Member descriptions
@@ -166,7 +169,7 @@ Initially RenderingDevice.SamplerFilter.Nearest; copied when a device sampler or
 public Electron2D.RenderingDevice.SamplerRepeatMode RepeatU { get; set; }
 ```
 
-Gets or sets horizontal normalized-coordinate addressing.
+Gets or sets horizontal coordinate addressing.
 
 Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sampler or shader binding is configured.
 
@@ -177,7 +180,7 @@ Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sa
 public Electron2D.RenderingDevice.SamplerRepeatMode RepeatV { get; set; }
 ```
 
-Gets or sets vertical normalized-coordinate addressing.
+Gets or sets vertical coordinate addressing.
 
 Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sampler or shader binding is configured.
 
@@ -200,6 +203,15 @@ public Electron2D.RenderingDevice.SamplerBorderColor BorderColor { get; set; }
 ```
 
 Gets or sets the color used by clamp-to-border axes. Undefined values and Max reject immediately. Creation copies the value. Disposed configuration access throws ObjectDisposedException. Floating-point variants apply to normalized, floating-point and depth images; integer variants apply to signed and unsigned integer images. Shader authoring and device binding reject a mismatched scalar class before native sampling.
+
+<a id="unnormalized-coordinates"></a>
+### UnnormalizedUVW
+
+```csharp
+public System.Boolean UnnormalizedUVW { get; set; }
+```
+
+Selects texel coordinates without changing other description fields. Creation/Shader authoring require equal min/mag filters, nearest mip selection, zero MinLOD/MaxLOD, clamp-to-edge/border U/V, disabled effective anisotropy and disabled comparison. Supported native bindings have one ordinary layer and one mip level. Illegal state combinations and shader/view roles reject before native sampling. Disposed access throws ObjectDisposedException. The getter, typed descriptor, copied state and shader metadata preserve the authored flag.
 
 ## Lifecycle, errors and verification
 

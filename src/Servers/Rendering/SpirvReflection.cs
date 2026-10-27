@@ -186,6 +186,7 @@ internal static unsafe partial class SpirvReflection
         if (textureCount > 16)
             throw new NotSupportedException("Each canvas stage supports at most sixteen sampled image bindings.");
         var textures = new ShaderTexture[(int)textureCount];
+        var unnormalizedUnsafe = CanvasSamplerArrays.CoordinateSamplingRequirements(code);
         uint TextureBinding(ReflectedResource resource)
         {
             if (HasDecoration(compiler, resource.Id, DescriptorSet) == 0 || HasDecoration(compiler, resource.Id, Binding) == 0 ||
@@ -221,7 +222,7 @@ internal static unsafe partial class SpirvReflection
                 throw new NotSupportedException("Renderer-owned and global images require scalar descriptor bindings.");
             var blitSource = blit && name is "SOURCE_TEXTURE0" or "SOURCE_TEXTURE1" or "SOURCE_TEXTURE2" or "SOURCE_TEXTURE3";
             if (blitSource && (array || length != 0 || GetBaseType(sampleType) != 13)) throw new NotSupportedException("Blit source samplers require scalar float 2D images.");
-            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 }, length, BlitSource: blitSource);
+            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 }, length, BlitSource: blitSource) { UnnormalizedUnsafe = unnormalizedUnsafe.GetValueOrDefault((particles ? 0u : fragment ? 2u : 0u, (int)slot)), UsesSampler = unnormalizedUnsafe.ContainsKey((particles ? 0u : fragment ? 2u : 0u, (int)slot)) };
         }
         if ((!fragment || blit || particles) && textures.Any(t => t.IsNormalTexture || t.IsSpecularTexture))
             throw new NotSupportedException("Canvas normal and specular images require the canvas fragment stage.");

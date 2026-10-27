@@ -16,12 +16,20 @@ concurrency/allocation check. Run test_generate_layout.py with Python -B for
 bounded extraction and modified-source rejection. Runtime acceptance requires
 the selected matching core; a successful compilation alone does not qualify it.
 
-`e2d_render_sampler_border` uses ABI 1, copies the SDL sampler creation fields,
-and selects normalized U/V address modes (0..3) plus border color (0..5).
-At least one axis must clamp to the border. It requires the same pinned Vulkan
-core and returns an SDL-owned sampler or null with SDL_GetError. A normal SDL
-wrapper receives the new Vulkan handle before publication; SDL retains command
-references and deferred destruction. No native driver handles leave the module.
-The public sampler consumer checks actual float/integer/depth pixels, array
-images and mixed/filtering modes. Unnormalized coordinates and mirror-clamp
-are separate capability/operation-validation prerequisites.
+`e2d_render_sampler` uses ABI 1, copies the SDL sampler fields, normalized
+U/V address identities (0..3), border color (0..5), and a zero/one unnormalized
+flag. It validates the pinned Vulkan core, physical LOD-bias bounds and the
+unnormalized filter/mip/LOD/address/anisotropy/compare restrictions. Ordinary
+normalized samplers then use SDL creation directly. Extended states replace the
+unpublished Vulkan handle while SDL retains command references and deferred
+release. Failure returns null with SDL_GetError.
+
+`e2d_render_sampler_view` uses ABI 1 and the pinned TextureCommonHeader. It
+returns 1 only for an ordinary single-layer/single-level/single-sample native
+texture, 0 for an incompatible view and -1 for an invalid/unsupported call.
+It records no commands and invokes no application callbacks. The managed
+binding owner validates shader operations and lifetime before native sampling.
+
+The public sampler consumers check real normalized and texel-coordinate
+float/integer/depth pixels, descriptor arrays, mixed/filtering modes and
+operation/view rejection. Mirror-clamp remains a separate native capability.

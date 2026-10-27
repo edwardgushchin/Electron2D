@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Describes filtering, normalized-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.</summary>
+/// <summary>Describes filtering, normalized or texel-coordinate addressing and mip selection for device-owned samplers and copied shader bindings.</summary>
 /// <remarks>The current profile supports repeat, mirrored repeat, clamp-to-edge and Vulkan clamp-to-border. Other addressing
 /// modes fail during creation. Integer image sampling requires nearest filters without effective anisotropy. A limit of one disables anisotropy.
 /// Nonzero LOD bias fails on a backend that cannot apply it.</remarks>
@@ -21,13 +21,17 @@ public sealed class RDSamplerState : ElectronObject
     /// <value>Initially RenderingDevice.SamplerFilter.Nearest; copied when a device sampler or shader binding is configured.</value>
     public RenderingDevice.SamplerFilter MIPFilter { get { ThrowIfDisposed(); return _mipFilter; } set { ThrowIfDisposed(); _mipFilter = RDTextureConfiguration.Filter(value); } }
     private RenderingDevice.SamplerRepeatMode _repeatU = RenderingDevice.SamplerRepeatMode.ClampToEdge;
-    /// <summary>Gets or sets horizontal normalized-coordinate addressing.</summary>
+    /// <summary>Gets or sets horizontal coordinate addressing.</summary>
     /// <value>Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sampler or shader binding is configured.</value>
     public RenderingDevice.SamplerRepeatMode RepeatU { get { ThrowIfDisposed(); return _repeatU; } set { ThrowIfDisposed(); _repeatU = RDTextureConfiguration.Repeat(value); } }
     private RenderingDevice.SamplerRepeatMode _repeatV = RenderingDevice.SamplerRepeatMode.ClampToEdge;
-    /// <summary>Gets or sets vertical normalized-coordinate addressing.</summary>
+    /// <summary>Gets or sets vertical coordinate addressing.</summary>
     /// <value>Initially RenderingDevice.SamplerRepeatMode.ClampToEdge; copied when a device sampler or shader binding is configured.</value>
     public RenderingDevice.SamplerRepeatMode RepeatV { get { ThrowIfDisposed(); return _repeatV; } set { ThrowIfDisposed(); _repeatV = RDTextureConfiguration.Repeat(value); } }
+    private bool _unnormalizedUVW;
+    /// <summary>Gets or sets whether sampling coordinates identify texels instead of normalized positions.</summary>
+    /// <value>Initially false. Requires equal min/mag filters, nearest mip selection, zero LOD bounds, clamp-to-edge/border axes, no effective anisotropy or comparison, a single-mip ordinary image and supported shader operations.</value>
+    public bool UnnormalizedUVW { get { ThrowIfDisposed(); return _unnormalizedUVW; } set { ThrowIfDisposed(); _unnormalizedUVW = value; } }
     private RenderingDevice.SamplerBorderColor _borderColor = RenderingDevice.SamplerBorderColor.FloatOpaqueBlack;
     /// <summary>Gets or sets the color used by clamp-to-border axes.</summary>
     /// <value>Initially FloatOpaqueBlack. Integer variants require integer images; floating-point variants require normalized, floating-point or depth images. Ignored when no axis clamps to the border.</value>
@@ -71,6 +75,7 @@ public sealed class RDSamplerState : ElectronObject
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MIPFilter), p => p.MIPFilter, (p, v) => p.MIPFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerRepeatMode>(nameof(RepeatU), p => p.RepeatU, (p, v) => p.RepeatU = v, _ => RenderingDevice.SamplerRepeatMode.ClampToEdge),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerRepeatMode>(nameof(RepeatV), p => p.RepeatV, (p, v) => p.RepeatV = v, _ => RenderingDevice.SamplerRepeatMode.ClampToEdge),
+            new PropertyDescriptor<RDSamplerState, bool>(nameof(UnnormalizedUVW), p => p.UnnormalizedUVW, (p, v) => p.UnnormalizedUVW = v, _ => false),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerBorderColor>(nameof(BorderColor), p => p.BorderColor, (p, v) => p.BorderColor = v, _ => RenderingDevice.SamplerBorderColor.FloatOpaqueBlack),
             new PropertyDescriptor<RDSamplerState, float>(nameof(LODBias), p => p.LODBias, (p, v) => p.LODBias = v, _ => 0),
             new PropertyDescriptor<RDSamplerState, float>(nameof(MinLOD), p => p.MinLOD, (p, v) => p.MinLOD = v, _ => 0),

@@ -22,6 +22,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private readonly Resource?[] _textureScratch = new Resource?[32];
     private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
     private ShaderSamplerCache? _shaderSamplers;
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<byte[], Dictionary<(uint Set, int Binding), bool>> _coordinateSamplingRequirements = new();
     private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMIPMapFilter);
     private ImageTexture? _whiteTexture;
     private readonly RenderHandle?[,] _clearPipelines = new RenderHandle?[2, 4];
@@ -176,7 +177,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 PrepareTextures(material, batch.MaxAnisotropy);
                 PrepareGraphChannels(batch);
             }
-            var code = GlyphCode(batch); var vertexCode = VertexCode(batch); var effectiveBlend = batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend; var key = (code, vertexCode, effectiveBlend, batch.InstanceCount > 0, samples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive);
+            var code = GlyphCode(batch); var vertexCode = VertexCode(batch);
+            if (batch.Material is { } sampledMaterial)
+            {
+                ValidateUnnormalizedProgram(sampledMaterial, code, 2);
+                if (vertexCode is not null) ValidateUnnormalizedProgram(sampledMaterial, vertexCode, 0, sampledMaterial.Program.VertexTextureIndices);
+            }
+            var effectiveBlend = batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend; var key = (code, vertexCode, effectiveBlend, batch.InstanceCount > 0, samples, batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format, batch.Primitive);
             _usedPrograms.Add(key);
             if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, effectiveBlend, instanced: batch.InstanceCount > 0, lighting: batch.Lighting is not null && batch.Material is not null && !batch.MaskShader && !batch.GroupShader, samples: samples, lcd: batch.Glyph.Mode == CanvasGlyphMode.LCD && !batch.MaskShader && !batch.GroupShader, format: format, vertexCode: vertexCode, primitive: batch.Primitive));
             if (batch.MaskShader) _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
@@ -349,6 +356,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                         else if (image.IsCanvasTexture) samplers[i] = CanvasBinding(batch);
                         else if (image.IsNormalTexture || image.IsSpecularTexture) samplers[i] = ChannelBinding(batch, image.IsNormalTexture);
                         if (configured != 0) samplers[i].Sampler = configured;
+                        if (textured.Samplers[i] is { UnnormalizedUVW: true } && NativeSamplerUsed(textured, i, GlyphCode(batch), VertexCode(batch))) SamplerConfiguration.RequireUnnormalizedView(Device, samplers[i].Texture);
                     }
                     if (VertexCode(batch) is not null)
                     {
@@ -543,6 +551,28 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     }
 
     private byte[]? VertexCode(CanvasBatch batch) => SwizzledVertex(batch);
+
+    private bool NativeSamplerUsed(MaterialState material, int index, byte[] fragment, byte[]? vertex)
+    {
+        if (index < material.Program.FragmentTextureCount && _coordinateSamplingRequirements.GetValue(fragment, static code => CanvasSamplerArrays.CoordinateSamplingRequirements(code)).ContainsKey((2u, index))) return true;
+        if (vertex is null) return false;
+        var indices = material.Program.VertexTextureIndices;
+        for (var i = 0; i < indices.Length; i++)
+            if (indices[i] == index && _coordinateSamplingRequirements.GetValue(vertex, static code => CanvasSamplerArrays.CoordinateSamplingRequirements(code)).ContainsKey((0u, i))) return true;
+        return false;
+    }
+
+    private void ValidateUnnormalizedProgram(MaterialState material, byte[] code, uint set, int[]? indices = null)
+    {
+        Dictionary<(uint Set, int Binding), bool>? unsafeBindings = null;
+        var count = indices?.Length ?? material.Program.FragmentTextureCount;
+        for (var i = 0; i < count; i++)
+            if (material.Samplers[indices?[i] ?? i] is { UnnormalizedUVW: true })
+            {
+                unsafeBindings ??= _coordinateSamplingRequirements.GetValue(code, static current => CanvasSamplerArrays.CoordinateSamplingRequirements(current));
+                if (unsafeBindings.GetValueOrDefault((set, i))) throw new ArgumentException("The derived native shader binding cannot use unnormalized sampling operations.");
+            }
+    }
 
     private SDL.GPUTextureSamplerBinding[] TextureBindings(MaterialState material) =>
         _textureBindings.GetValue(material, static current => new SDL.GPUTextureSamplerBinding[current.Textures.Length]);

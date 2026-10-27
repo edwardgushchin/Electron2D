@@ -35,6 +35,7 @@ public sealed unsafe partial class RenderingDevice
             var descriptor = material?.Program.Textures[i];
             if (PixelType(sample.Texture!.Format) != (descriptor?.PixelType ?? 0) || (sample.Texture.Type == TextureType.TextureArray) != (descriptor?.IsArray ?? false))
                 throw new ArgumentException("A blit image does not match its sampled scalar type or shape.");
+            if (descriptor is { UsesSampler: true } && material?.Samplers[i] is { UnnormalizedUVW: true }) SamplerConfiguration.RequireUnnormalizedView(Device, sample.NativeHandle);
             var integer = PixelType(sample.Texture.Format) != 0;
             swizzles[i] = sample.Texture.Swizzle; mapped |= swizzles[i] != 0;
             bindings[i] = new()

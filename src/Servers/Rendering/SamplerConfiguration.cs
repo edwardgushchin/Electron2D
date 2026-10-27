@@ -9,7 +9,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
     RenderingDevice.SamplerRepeatMode RepeatU, RenderingDevice.SamplerRepeatMode RepeatV,
     float LODBias, float MinLOD, float MaxLOD, float AnisotropyMax, bool UseAnisotropy,
     bool EnableCompare, RenderingDevice.CompareOperator CompareOp,
-    RenderingDevice.SamplerBorderColor BorderColor)
+    RenderingDevice.SamplerBorderColor BorderColor, bool UnnormalizedUVW)
 {
     internal bool HasBorder => RepeatU == RenderingDevice.SamplerRepeatMode.ClampToBorder || RepeatV == RenderingDevice.SamplerRepeatMode.ClampToBorder;
     internal bool? IntegerBorder => HasBorder ? ((int)BorderColor & 1) != 0 : null;
@@ -22,7 +22,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
         ArgumentNullException.ThrowIfNull(state);
         var result = new SamplerConfiguration(state.MinFilter, state.MagFilter, state.MIPFilter,
             state.RepeatU, state.RepeatV, state.LODBias, state.MinLOD, state.MaxLOD,
-            state.AnisotropyMax, state.UseAnisotropy, state.EnableCompare, state.CompareOp, state.BorderColor);
+            state.AnisotropyMax, state.UseAnisotropy, state.EnableCompare, state.CompareOp, state.BorderColor, state.UnnormalizedUVW);
         result.Validate();
         return result;
     }
@@ -36,6 +36,9 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
         if (MinLOD < 0 || MaxLOD < MinLOD) throw new ArgumentException("Invalid sampler LOD interval.");
         if (CompareOp is < RenderingDevice.CompareOperator.Never or >= RenderingDevice.CompareOperator.Max)
             throw new ArgumentOutOfRangeException(nameof(CompareOp));
+        if (UnnormalizedUVW && (MinFilter != MagFilter || MIPFilter != RenderingDevice.SamplerFilter.Nearest || MinLOD != 0 || MaxLOD != 0 || Anisotropic || EnableCompare ||
+            RepeatU is not (RenderingDevice.SamplerRepeatMode.ClampToEdge or RenderingDevice.SamplerRepeatMode.ClampToBorder) || RepeatV is not (RenderingDevice.SamplerRepeatMode.ClampToEdge or RenderingDevice.SamplerRepeatMode.ClampToBorder)))
+            throw new ArgumentException("Unnormalized sampling requires matching filters, nearest mip selection, zero LOD bounds, clamp addressing and no anisotropy or comparison.");
         _ = Address(RepeatU); _ = Address(RepeatV); _ = Border(BorderColor);
     }
 
@@ -53,12 +56,13 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
         UseAnisotropy = UseAnisotropy,
         EnableCompare = EnableCompare,
         CompareOp = CompareOp,
-        BorderColor = BorderColor
+        BorderColor = BorderColor,
+        UnnormalizedUVW = UnnormalizedUVW
     };
 
     internal SDL.GPUSamplerCreateInfo Native(string driver, bool anisotropyAvailable = true)
     {
-        if (HasBorder && driver != "vulkan") throw new NotSupportedException("Border sampling requires the native Vulkan sampler adapter.");
+        if ((HasBorder || UnnormalizedUVW) && driver != "vulkan") throw new NotSupportedException("Border and unnormalized sampling require the native Vulkan sampler adapter.");
         if (LODBias != 0 && driver == "metal") throw new NotSupportedException("This backend requires shader-applied LOD bias.");
         if (Anisotropic && !anisotropyAvailable) throw new NotSupportedException("Anisotropic filtering is unavailable on this GPU device.");
         return new()
@@ -82,7 +86,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
     internal nint Create(nint device, string driver, bool anisotropyAvailable = true)
     {
         var info = Native(driver, anisotropyAvailable);
-        return HasBorder ? CreateBorder(device, 1, in info, (uint)RepeatU, (uint)RepeatV, (uint)BorderColor) : SDL.CreateGPUSampler(device, in info);
+        return driver == "vulkan" ? CreateNative(device, 1, in info, (uint)RepeatU, (uint)RepeatV, (uint)BorderColor, UnnormalizedUVW ? 1u : 0u) : SDL.CreateGPUSampler(device, in info);
     }
 
     internal static RenderingDevice.SamplerBorderColor Border(RenderingDevice.SamplerBorderColor value) =>
@@ -94,9 +98,21 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
             throw new ArgumentException("The sampler border color must match the image's integer or floating-point sampling type.");
     }
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_sampler_border")]
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_sampler")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    private static partial nint CreateBorder(nint device, uint abi, in SDL.GPUSamplerCreateInfo info, uint u, uint v, uint border);
+    private static partial nint CreateNative(nint device, uint abi, in SDL.GPUSamplerCreateInfo info, uint u, uint v, uint border, uint unnormalized);
+
+    internal static void RequireUnnormalizedView(nint device, nint texture, bool unsafeOperations = false)
+    {
+        if (unsafeOperations) throw new ArgumentException("Unnormalized sampling cannot use implicit LOD, projection, comparison, bias or offsets.");
+        var compatible = CheckView(device, 1, texture);
+        if (compatible < 0) throw new NotSupportedException("Unnormalized image validation requires the pinned Vulkan adapter.");
+        if (compatible == 0) throw new ArgumentException("Unnormalized sampling requires a single-mip, single-layer ordinary image view.");
+    }
+
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_sampler_view")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int CheckView(nint device, uint abi, nint texture);
 
     private static SDL.GPUSamplerAddressMode Address(RenderingDevice.SamplerRepeatMode value) => value switch
     {

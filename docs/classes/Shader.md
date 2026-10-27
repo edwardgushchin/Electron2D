@@ -242,7 +242,7 @@ Source: [Shader.Samplers.cs](../../src/Scene/Resources/Shader.Samplers.cs). See 
 
 ### GetTextureSamplerState
 
-Name/index validation matches the setter. The query allocates a new independent RDSamplerState for an explicit setting; dispose the returned object. Editing it does not edit the shader. Disposed shaders reject. Duplication, versioned storage and compatible program replacement preserve copied settings; a removed/differently typed binding retires them. A built-in Shader is stored using an eight-byte versioned identity; public GetSPIRV still exports its fragment module, and current legacy raw built-in archives remain readable.
+Name/index validation matches the setter. The query allocates a new independent RDSamplerState for an explicit setting; dispose the returned object. Editing it does not edit the shader. Disposed shaders reject. Duplication, versioned storage and compatible program replacement preserve copied settings; a removed/differently typed binding or a newly incompatible sampling operation retires them. [Texel-coordinate samplers](../components/sampler-coordinates.md) additionally validate actual image views and final derived shader operations before native drawing. A built-in Shader is stored using an eight-byte versioned identity; public GetSPIRV still exports its fragment module, and current legacy raw built-in archives remain readable.
 
 Partial authoring snippet for an already loaded `shader` with a reflected `pixels` image:
 

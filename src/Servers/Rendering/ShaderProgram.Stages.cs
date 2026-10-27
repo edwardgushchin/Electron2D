@@ -71,6 +71,8 @@ internal sealed partial class ShaderProgram
             var index = samplers.FindIndex(t => t.Name == sampler.Name && t.Element == sampler.Element);
             if (index < 0) { index = samplers.Count; samplers.Add(sampler); }
             else if (!samplers[index].SameType(sampler) || samplers[index].ImagePolicy != sampler.ImagePolicy) throw new ArgumentException($"Sampled image '{sampler.Name}' has different types across stages.");
+            if (sampler.UnnormalizedUnsafe && !samplers[index].UnnormalizedUnsafe) samplers[index] = samplers[index] with { UnnormalizedUnsafe = true };
+            if (sampler.UsesSampler && !samplers[index].UsesSampler) samplers[index] = samplers[index] with { UsesSampler = true };
             textureIndices[i] = index;
         }
         ShaderUniform? Builtin(ShaderUniform? first, ShaderUniform? second)

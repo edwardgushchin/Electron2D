@@ -32,6 +32,8 @@ Queue/transfer preparation must cover the largest range and peak concurrent requ
 
 ## Device images and samplers
 
+[Sampler texel coordinates](sampler-coordinates.md) add copied UnnormalizedUVW settings with native state/operation/view validation, including independent sampler bindings and GPU drawable consumers.
+
 [Native border sampling](sampler-borders.md) adds six copied floating-point/integer border colors and independent normalized U/V ClampToBorder addressing through the pinned Vulkan sampler adapter. Integer/floating-point binding roles are validated before sampling.
 
 `RDTextureFormat`, `RDTextureView` and `RDSamplerState` are caller-owned ElectronObject descriptions. Creation copies their values; later edits/disposal do not change existing RIDs. Ordinary images have one layer. TextureArray stores independent 2D layers. Each layer contains mip zero followed by progressively halved dimensions, clamped to one texel; block-compressed levels round up to complete format blocks. Supply exactly one tightly packed byte chain per layer, or omit initial data for zero encoded bytes. Updates replace one complete layer and require CanUpdate. Native mip offsets are separately aligned and never appear in public data. Sizes are checked with wide arithmetic before native allocation; oversized transfers fail before 32-bit native size arithmetic can wrap.

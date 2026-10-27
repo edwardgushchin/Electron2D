@@ -8,9 +8,9 @@ Floating-point border variants serve normalized/floating-point/depth sampling; i
 
 The private Electron2DRender adapter uses the SHA-pinned SDL 3.4.18 declarations and rejects another SDL core/revision or a non-Vulkan driver before opaque native access. It creates a normal SDL sampler, creates the requested Vulkan sampler and replaces its handle before publishing the wrapper. SDL retains wrapper reference counting, command retention and deferred destruction. Failure releases the unpublished wrapper. There are no public native handles, vendored implementation edits or shader source rewrites. Metal and other drivers reject border sampling explicitly; mirror-clamp still requires its native capability/adapter.
 
-Shader sampler archives write metadata version two including the color. Version-one payloads remain readable with the original FloatOpaqueBlack default. Parsing validates a complete replacement before publication; malformed/truncated/duplicate metadata preserves the previous table. Copied shader settings use the existing bounded native sampler cache and its two-epoch retirement.
+Shader sampler archives write metadata version three including the coordinate flag and color. Versions one/two remain readable with normalized coordinates; version one retains its original FloatOpaqueBlack default. Parsing validates a complete replacement before publication; malformed/truncated/duplicate metadata preserves the previous table. Copied shader settings use the existing bounded native sampler cache and its two-epoch retirement.
 
-Unnormalized coordinates remain Blocked: they require constrained sampler state, a single-layer/single-mip image view and validation of explicit-LOD nonprojective sampling operations without offsets or gathers. A stored flag alone cannot satisfy this contract. The Vulkan restrictions are specified by [VkSamplerCreateInfo](https://registry.khronos.org/vulkan/specs/latest/man/html/VkSamplerCreateInfo.html).
+[Unnormalized texel coordinates](sampler-coordinates.md) now execute through the same private native adapter with explicit sampler, operation and actual image-view validation.
 
 ## Executable checks
 

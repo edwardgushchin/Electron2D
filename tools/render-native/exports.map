@@ -1,1 +1,1 @@
-{ global: e2d_render_memory; e2d_render_sampler_border; local: *; };
+{ global: e2d_render_memory; e2d_render_sampler; e2d_render_sampler_view; local: *; };

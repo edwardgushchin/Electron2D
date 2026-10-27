@@ -1,4 +1,5 @@
 LIBRARY Electron2DRender
 EXPORTS
     e2d_render_memory
-    e2d_render_sampler_border
+    e2d_render_sampler
+    e2d_render_sampler_view

@@ -276223,6 +276223,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDSamplerState.UnnormalizedUVW()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDSamplerState",
+    "name": "UnnormalizedUVW",
+    "signature": "public System.Boolean UnnormalizedUVW { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDSamplerState.UseAnisotropy()",
     "kind": "property",
     "declaringType": "Electron2D.RDSamplerState",

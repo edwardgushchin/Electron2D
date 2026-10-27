@@ -4,7 +4,7 @@ namespace Electron2D;
 
 internal static partial class CanvasSamplerArrays
 {
-    private enum PairUse { Construction, Sampling, Comparison, Ordinary }
+    private enum PairUse { Construction, Sampling, Comparison, Ordinary, UnnormalizedUnsafe }
     // Keep symbolic pairs through reusable helpers, returns and control flow until the entry point resolves them.
     private static HashSet<(uint Image, uint Sampler)> FindPairs(List<uint[]> source, HashSet<uint> resources, Func<uint, bool> opaque, PairUse use = PairUse.Construction, bool queries = false)
     {
@@ -58,9 +58,9 @@ internal static partial class CanvasSamplerArrays
                         Copy(instruction[2], produced);
                         if (use == PairUse.Construction) foreach (var pair in produced) changed |= Constraint(body.Key, pair);
                     }
-                    var comparison = op is 89 or 90 or 93 or 94 or 97;
-                    var ordinary = op is 87 or 88 or 91 or 92 or 96 or 105;
-                    if (use == PairUse.Sampling && (comparison || ordinary) || use == PairUse.Comparison && comparison || use == PairUse.Ordinary && ordinary)
+                    var comparison = op is 89 or 90 or 93 or 94 or 97 or 307 or 308 or 311 or 312 or 315;
+                    var ordinary = op is 87 or 88 or 91 or 92 or 96 or 105 or 305 or 306 or 309 or 310 or 314;
+                    if (use == PairUse.Sampling && (comparison || ordinary) || use == PairUse.Comparison && comparison || use == PairUse.Ordinary && ordinary || use == PairUse.UnnormalizedUnsafe && UnnormalizedUnsafe(instruction))
                         foreach (var pair in Read(instruction[3])) changed |= Constraint(body.Key, pair);
                     if (queries && op is 95 or 101 or 102 or 103 or 104 or 106 or 107)
                         foreach (var image in Read(instruction[3])) changed |= Constraint(body.Key, (image.Image, 0));
