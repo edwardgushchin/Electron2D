@@ -3,7 +3,7 @@ using Electron2D;
 using static TextureArrayTests;
 using static Electron2D.RenderingDevice;
 
-internal static class RenderingDeviceSpecializationTests
+internal static partial class RenderingDeviceSpecializationTests
 {
     private static RDShaderSPIRV Compute(string name)
     {
@@ -35,7 +35,7 @@ internal static class RenderingDeviceSpecializationTests
     }
     private static void RunManaged()
     {
-        Expressions(); Float64Expressions(); Integer64Expressions();
+        Expressions(); Float64Expressions(); Integer64Expressions(); Atomic64Requirements();
         var parser = typeof(RenderingDevice).Assembly.GetType("Electron2D.ShaderPrecision")!.GetMethod("ReadRequirements", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         (bool Float64, bool Int64) Requirements(params uint[] instructions)
         {
@@ -47,7 +47,7 @@ internal static class RenderingDeviceSpecializationTests
         Check(Requirements(2u << 16 | 17, 11, 4u << 16 | 21, 1, 64, 0) == (false, true), "Int64 has an independent native requirement.");
         Check(Requirements(2u << 16 | 17, 11) == (false, true), "Unused Int64 declarations still require native opt-in.");
         Check(Requirements(2u << 16 | 17, 10, 2u << 16 | 17, 11) == (true, true), "Mixed precision requires both independent features.");
-        Reject<NotSupportedException>(() => Requirements(2u << 16 | 17, 11, 2u << 16 | 17, 12));
+        Check(Requirements(2u << 16 | 17, 12, 4u << 16 | 21, 1, 64, 0) == (false, true), "Int64Atomics implies Int64 even without an explicit declaration.");
         Check(!Precision(3u << 16 | 22, 1, 32), "Ordinary precision needs no FP64 feature.");
         Check(Precision(2u << 16 | 17, 10, 3u << 16 | 22, 1, 64), "FP64 type and declaration require native opt-in.");
         Check(Precision(2u << 16 | 17, 10), "Even unused declared FP64 requires native opt-in.");
@@ -55,7 +55,7 @@ internal static class RenderingDeviceSpecializationTests
         Reject<ArgumentException>(() => Precision(0)); Reject<ArgumentException>(() => Precision(3u << 16 | 22, 1));
         Reject<ArgumentException>(() => Precision(2u << 16 | 22, 1)); Reject<ArgumentException>(() => Precision(3u << 16 | 17, 10, 0));
         Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 32, 2));
-        foreach (var capability in new uint[] { 8, 9, 12, 22 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
+        foreach (var capability in new uint[] { 8, 9, 22 }) Reject<NotSupportedException>(() => Precision(2u << 16 | 17, capability));
         foreach (var width in new uint[] { 16, 128 }) Reject<NotSupportedException>(() => Precision(3u << 16 | 22, 1, width));
         Reject<ArgumentException>(() => Precision(4u << 16 | 21, 1, 64, 0));
         Console.WriteLine("PASS precision capability/type and malformed/truncated instruction guards.");

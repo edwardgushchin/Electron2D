@@ -1,4 +1,5 @@
 using SDL3;
+using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
@@ -7,6 +8,15 @@ internal static unsafe class GPUDeviceFactory
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
     internal const string Float64Property = "Electron2D.gpu.shader_float64";
     internal const string Int64Property = "Electron2D.gpu.shader_int64";
+    internal const string BufferAtomic64Property = "Electron2D.gpu.buffer_int64_atomics";
+    internal const string SharedAtomic64Property = "Electron2D.gpu.shared_int64_atomics";
+    [StructLayout(LayoutKind.Sequential)]
+    private struct Vulkan12Features
+    {
+        internal uint Type;
+        internal nint Next;
+        internal fixed uint Flags[47];
+    }
     private static readonly object Gate = new();
     private static SharedDevice? _shared;
 
@@ -103,13 +113,17 @@ internal static unsafe class GPUDeviceFactory
         ReadOnlySpan<(bool Float64, bool Int64)> profiles = [(true, true), (true, false), (false, true), (false, false)];
         foreach (var profile in profiles)
         {
-            var device = Attempt(formats, sizedPoints, relaxed, profile.Float64, profile.Int64);
-            if (device != 0) return device;
+            ReadOnlySpan<int> atomicProfiles = profile.Int64 ? [3, 1, 2, 0] : [0];
+            foreach (var atomics in atomicProfiles)
+            {
+                var device = Attempt(formats, sizedPoints, relaxed, profile.Float64, profile.Int64, atomics);
+                if (device != 0) return device;
+            }
         }
         return 0;
     }
 
-    private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed, bool float64, bool int64)
+    private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed, bool float64, bool int64, int atomics)
     {
         var props = SDL.CreateProperties();
         if (props == 0) throw new InvalidOperationException("GPU device properties could not be created: " + SDL.GetError());
@@ -130,25 +144,30 @@ internal static unsafe class GPUDeviceFactory
             // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64/int64 are fields 16/39/40.
             Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u;
+            // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
+            var advanced = new Vulkan12Features { Type = 51 };
+            advanced.Flags[0] = 1; advanced.Flags[5] = (uint)atomics & 1; advanced.Flags[6] = ((uint)atomics >> 1) & 1;
             fixed (uint* pointer = features)
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
             {
                 var extension = (nint)extensionName;
-                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = 1u << 22, Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
+                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | (atomics == 0 ? 0u : 2u << 12), FeatureList = atomics == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
                     throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
                 var device = SDL.CreateGPUDeviceWithProperties(props); var mirror = device != 0;
                 if (device == 0)
                 {
                     // Optional features must not prevent ordinary device creation.
-                    options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0;
+                    options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0; advanced.Flags[0] = 0;
                     device = SDL.CreateGPUDeviceWithProperties(props);
                 }
                 if (device == 0) return 0;
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
                     (mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
                      float64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Float64Property, true) ||
-                     int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true)))
+                     int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true) ||
+                     (atomics & 1) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), BufferAtomic64Property, true) ||
+                     (atomics & 2) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), SharedAtomic64Property, true)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);
                     throw new InvalidOperationException("GPU capabilities could not be retained: " + error);

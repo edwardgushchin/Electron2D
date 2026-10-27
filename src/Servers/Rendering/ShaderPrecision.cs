@@ -3,7 +3,7 @@ using SDL3;
 
 namespace Electron2D;
 
-internal static class ShaderPrecision
+internal static partial class ShaderPrecision
 {
     internal static (bool Float64, bool Int64) ReadRequirements(byte[] code)
     {
@@ -19,8 +19,8 @@ internal static class ShaderPrecision
             if (op == 17)
             {
                 if (count != 2) throw new ArgumentException("Invalid shader capability.", nameof(code));
-                float64 |= words[at + 1] == 10; int64 |= words[at + 1] == 11;
-                if (words[at + 1] is 8 or 9 or 12 or 22) throw new NotSupportedException("This scalar precision requires its native shader adapter.");
+                float64 |= words[at + 1] == 10; int64 |= words[at + 1] is 11 or 12;
+                if (words[at + 1] is 8 or 9 or 22) throw new NotSupportedException("This scalar precision requires its native shader adapter.");
             }
             if (op == 22)
             {
@@ -50,5 +50,10 @@ internal static class ShaderPrecision
             throw new NotSupportedException("FP64 shaders require an enabled native Vulkan shaderFloat64 feature.");
         if (required.Int64 && (!vulkan || !SDL.GetBooleanProperty(properties, GPUDeviceFactory.Int64Property, false)))
             throw new NotSupportedException("64-bit integer shaders require an enabled native Vulkan shaderInt64 feature.");
+        var atomic = ReadAtomicRequirements(code);
+        var buffer = vulkan && SDL.GetBooleanProperty(properties, GPUDeviceFactory.BufferAtomic64Property, false);
+        var shared = vulkan && SDL.GetBooleanProperty(properties, GPUDeviceFactory.SharedAtomic64Property, false);
+        if (atomic.Declared && !buffer && !shared || atomic.Buffer && !buffer || atomic.Shared && !shared)
+            throw new NotSupportedException("64-bit integer atomics require the enabled native buffer/shared feature for their storage class.");
     }
 }
