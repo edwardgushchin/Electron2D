@@ -302,3 +302,5 @@ Detached global endpoint methods use local source coordinates; attached endpoint
 ## Scene identity teardown
 
 Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.
+
+The [global scene diagnostics](../components/navigation-diagnostics.md) prepare one separate constructor-owned internal canvas for this source. Its lifetime, storage exclusion, global/tree/editor enablement and world-space drawing are owned by ADR 0097.

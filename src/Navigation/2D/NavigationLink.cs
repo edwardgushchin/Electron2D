@@ -13,7 +13,7 @@ public sealed class NavigationLink : Entity
     private float _enterCost, _travelCost = 1;
     private Vector2 _start, _end;
     /// <summary>Creates an enabled bidirectional detached link with stable node-owned identity.</summary>
-    public NavigationLink() { _rid = NavigationServer.Service.CreateLink(this); NavigationServer.LinkSetOwnerID(_rid, InstanceID); NotifyTransformChanges = true; }
+    public NavigationLink() { _rid = NavigationServer.Service.CreateLink(this); NavigationServer.LinkSetOwnerID(_rid, InstanceID); NotifyTransformChanges = true; AddChild(new NavigationDebugCanvas(this, _rid), InternalMode.Back); }
     /// <summary>Returns the stable borrowed link RID.</summary>
     /// <returns>Identity valid until node disposal; consumer FreeRID rejects it.</returns>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>

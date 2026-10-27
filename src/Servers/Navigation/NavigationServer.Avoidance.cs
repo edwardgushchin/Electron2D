@@ -32,7 +32,9 @@ public sealed partial class NavigationServer
         Duration(delta); if (delta == 0) return;
         lock (_gate)
         {
-            if (_stepping || _synchronizing) throw new InvalidOperationException("Navigation stepping cannot be re-entered."); _stepping = true;
+            if (_stepping || _synchronizing || _debugDispatching) throw new InvalidOperationException("Navigation stepping cannot be re-entered.");
+            if (!_active) return;
+            _stepping = true;
             try
             {
                 _stepAgents.Clear();

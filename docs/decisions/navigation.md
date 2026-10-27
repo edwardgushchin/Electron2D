@@ -61,7 +61,7 @@ Games can query full or partial cell paths without constructing point-edge graph
 <a id="adr-0097"></a>
 ## ADR 0097: Typed planar navigation maps and authored region topology
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
 
 - Status: Accepted for the user-authorized full API implementation goal
 - Scope: Executable map/region/polygon/link/query/agent pathfinding backend, World registration and scene ownership
@@ -97,9 +97,21 @@ Last updated: 2026-10-18
 
 NavigationAgent exposes the complete five-property debug family with stored typed descriptors. An internal retained canvas reads immutable current result data, without querying or advancing navigation. It draws world positions on the parent canvas, honors parent visibility and canvas/layer transforms, avoids actor modulation/material inheritance and uses absolute overlay Z MaximumZIndex minus one. The helper is lazily created by explicit DebugEnabled and is transient in source archives. Negative line widths retain framebuffer-pixel semantics; line width always uses the custom field. Custom point size zero suppresses all waypoints; other point/color selection follows DebugUseCustom. Reject nonfinite values; negative point size clamps to zero.
 
-The service samples three typed debug/shapes/navigation/2d keys with feature overrides on first agent diagnostics use: enable_agent_paths=true, agent_path_color=red and agent_path_point_size=4. Retain that immutable configuration for the process lifetime so projects can load before the first consumer. The pinned agent producer does not depend on NavigationServer's global debug flag. Keep global region/link/avoidance drawing, enablement/event propagation and SceneTree hint integration as their own exact dependency; implementing an agent path does not authorize inert global flags.
+The service samples three typed debug/shapes/navigation/2d keys with feature overrides on first agent diagnostics use: enable_agent_paths=true, agent_path_color=red and agent_path_point_size=4. Retain that immutable configuration for the process lifetime so projects can load before the first consumer. The pinned agent producer does not depend on NavigationServer's global debug flag. The global producer below remains independent of explicit agent paths; its flag does not suppress them.
 
 Agent/Region/Link/Obstacle disposal must run scene exit before releasing the node-owned RID. The disposing thread can inspect that RID through exit callbacks and synchronization sweeps under ADR 0009; foreign disposal access and terminal identities reject. Every owned cleanup is attempted and observer failures aggregate. Agent query/result/debug helpers retire after scene membership and child teardown.
+
+### Global simulation and scene diagnostics
+
+`SetActive(bool)` controls subsequent avoidance steps process-wide, with true initially. Suspending retains maps, configured velocities, callbacks and query topology. Explicit and scene synchronization still publish staged geometry; a started step finishes its captured results and deliveries. Map activity remains separate. `MapGetObstacles` returns copied staged membership, including paused/disabled caller obstacles, excluding detached, retired and unavailable scene identities.
+
+`SetDebugEnabled`/`GetDebugEnabled` retain a process-wide drawing request in every build configuration. Changes coalesce until a navigation synchronization or scene process boundary; emit NavigationDebugChanged then AvoidanceDebugChanged outside the gate on that boundary thread. Attempt all captured listeners across both events, aggregate failures and reject recursive synchronization. Callback changes queue a later notification. Setting the same value does nothing. Each SceneTree.DebugNavigationHint and Engine.IsEditorHint independently requests its own scene diagnostics; neither changes the global flag. Explicit agent path drawing keeps its existing independent flag.
+
+Each scene Region, Link, Obstacle and Agent prepares one constructor-owned internal NavigationDebugCanvas. Ordinary child enumeration, hierarchy duplication and scene files omit it; source disposal owns its lifetime. Render refresh compares one immutable typed geometry snapshot with the retained previous value. It borrows immutable arrays and records world coordinates through the current canvas/layer/camera basis without an inverse transform, preserving zero/reflected/nonuniform source transforms and parent visibility. The diagnostic canvas avoids source material/modulation and uses absolute overlay Z MaximumZIndex minus two; explicit path overlays remain one level above. Standalone server RIDs retain their query/simulation roles and do not create a canvas or window.
+
+Regions draw authored convex faces/edge lines with enabled/disabled colors, deterministic per-polygon shade variation, committed margin pathways/half-margin arcs and their baking rectangle. Geometry edits can draw before topology synchronization; drawing never commits or queries a route. Links draw selected-map attachment circles and directional arrows, with a second arrow only for bidirectional travel. Participating scene agents draw their configured world radius. Obstacles draw maximum-axis scaled discs (minimum scale .001), local oriented contours, winding-selected push-in/push-out face/edge colors and transformed edge normals. A zero determinant needs no inverse. Two-point obstacles draw their supported wall segment and normal.
+
+Twenty additional typed debug/shapes/navigation/2d and debug/shapes/avoidance/2d keys supply the concrete face/edge/pathway/link/radius/static producers. Sample with feature overrides on first global geometry diagnostics use and retain the immutable configuration for process lifetime, independently of the three existing agent-path keys. Registry metadata requires restart to resample. Defaults and complete key ownership live in the [diagnostics component](../components/navigation-diagnostics.md); unsupported or nonfinite authored inputs keep their ordinary typed validation.
 
 ### Background region and map iterations
 

@@ -1408,6 +1408,7 @@ public sealed partial class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
 
+            if (!physics) try { NavigationServer.Service.PumpDebugChanges(); } catch (Exception error) { CollectException(ref errors, error); }
             if (physics) ProcessPhysicsPicking(ref errors);
             if (!physics) { PollMultiplayer(ref errors); FlushTransformNotifications(ref errors); }
             if (physics)

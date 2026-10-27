@@ -909,6 +909,13 @@ def main():
     assert "Color[]" in packed and "ReadOnlySpan<Color>" in packed
     assert " | Implemented | " in next(line for line in packed.splitlines()
                                   if line.startswith("| [`method to_byte_array("))
+    navigation_controls = pages[CLASS_PAGES / "NavigationServer2D.md"]
+    for prefix in ("get_debug_enabled(", "set_debug_enabled(", "set_active(", "map_get_obstacles("):
+        row = next(line for line in navigation_controls.splitlines() if line.startswith("| [`method " + prefix))
+        assert " | Implemented | " in row and "NavigationServer.md" in row, prefix
+    for name in ("navigation_debug_changed", "avoidance_debug_changed"):
+        row = next(line for line in navigation_controls.splitlines() if line.startswith("| [`signal " + name))
+        assert " | Implemented | " in row, name
     byte_array = pages[CLASS_PAGES / "PackedByteArray.md"]
     assert " | Implemented | " in next(line for line in byte_array.splitlines()
                                   if line.startswith("| [`method compress("))

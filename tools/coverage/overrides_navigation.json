@@ -1878,7 +1878,7 @@
       "godot": [
         "class:NavigationServer2D"
       ],
-      "reason": "ADR 0097 authored regions/maps/links, typed query controls, direct-parent agents and shared managed ORCA agent/obstacle avoidance execute. Remaining exact weighted search/tie/fallback equivalence, source parsing/baking, async work, debug drawing and global activation retain exact operation-specific producer dependencies."
+      "reason": "ADR 0097 authored maps/regions/links, typed query controls, direct-parent agents, managed ORCA avoidance, source parsing/baking, async iterations and global simulation/drawing controls execute. Comprehensive weighted search/cost/tie/budget/fallback equivalence and overlapping projection ownership remain Partial on their exact query rows. Native allocator, foreign targets and large-scene performance retain separate verification gates."
     },
     {
       "state": "Implemented",
@@ -1949,41 +1949,11 @@
       "reason": "Committed quantized two-owner topology and typed projection/paths execute, including twelve pinned-runtime counter/pathway/raw/funnel fixtures. Remaining query dependency: comprehensive weighted search/cost/tie/budget/fallback equivalence beyond these fixed corridors. Projection ownership under broader overlapping geometry retains its precise oracle acceptance trigger."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::signal:avoidance_debug_changed()"
-      ],
-      "reason": "ADR 0097 trigger: typed agent/obstacle storage and reciprocal-velocity avoidance simulation with physics-lane callback delivery. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:get_debug_enabled()",
-        "NavigationServer2D::method:set_debug_enabled(bool:)",
-        "NavigationServer2D::signal:navigation_debug_changed()"
-      ],
-      "reason": "ADR 0097 trigger: global region/link/avoidance geometry drawing, retained global enablement and change-event propagation including SceneTree hint integration. Explicit agent paths have their own independent producer and do not consume this flag in the pinned source."
-    },
-    {
       "state": "Excluded",
       "godot": [
         "NavigationServer2D::method:map_force_update(RID:)"
       ],
       "reason": "ADR 0004 pinned ed1daf0bf001b61586d9930840f2f1394092c079 deprecated metadata: This method is no longer supported, as it is incompatible with asynchronous updates. It can only be used in a single-threaded context, at your own risk. No implementation trigger or alias."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:map_get_obstacles(RID:)"
-      ],
-      "reason": "ADR 0097 trigger: operation-specific navigation kernel beyond authored map/region topology: map_get_obstacles. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:set_active(bool:)"
-      ],
-      "reason": "ADR 0097 trigger: process-wide simulation activation integrated with physics lane and retained map query state. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
     {
       "state": "Implemented",

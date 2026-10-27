@@ -12,7 +12,7 @@ public sealed partial class NavigationRegion : Entity
     private uint _layers = 1;
     private float _enterCost, _travelCost = 1;
     /// <summary>Creates an enabled detached region with stable borrowed RID identity.</summary>
-    public NavigationRegion() { _rid = NavigationServer.Service.CreateRegion(this); NotifyTransformChanges = true; }
+    public NavigationRegion() { _rid = NavigationServer.Service.CreateRegion(this); NotifyTransformChanges = true; AddChild(new NavigationDebugCanvas(this, _rid), InternalMode.Back); }
     /// <summary>Returns this node's stable borrowed region identity.</summary>
     /// <returns>Returns this node's stable borrowed region identity.</returns>
     /// <exception cref="ObjectDisposedException">This instance is disposed.</exception>

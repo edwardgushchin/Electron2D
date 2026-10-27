@@ -3,8 +3,9 @@ namespace Electron2D;
 public sealed partial class SceneTree
 {
     private bool _debugNavigationHint;
-    /// <summary>Gets or sets whether tile navigation polygons are drawn when their visibility mode is Default.</summary>
-    /// <remarks>Changes invalidate attached tile canvases. Ordinary visibility, transforms and clipping still apply.</remarks>
+    /// <summary>Gets or sets whether navigation regions, links, avoidance radii/contours and default-mode tile polygons are drawn.</summary>
+    /// <remarks>Changes invalidate attached tile canvases; retained navigation diagnostics observe this tree-local request at recording.
+    /// Does not change NavigationServer.GetDebugEnabled or explicit agent path requests. Canvas routing and visibility still apply.</remarks>
     public bool DebugNavigationHint
     {
         get { EnsureOwnerThread(); EnsureAcceptingWork(); return _debugNavigationHint; }

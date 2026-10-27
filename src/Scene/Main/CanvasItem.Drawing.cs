@@ -303,6 +303,7 @@ public abstract partial class CanvasItem
         }
         if (this is Skeleton skeleton) skeleton.RefreshEditorGizmos();
         if (this is NavigationAgentDebugCanvas navigationDebug) navigationDebug.Refresh();
+        if (this is NavigationDebugCanvas navigationGeometry) navigationGeometry.Refresh();
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         if (ServerState is { Commands: { } painter } state) { painter.Dispose(); state.Commands = null; }
         _canvasCommands?.Clear();
@@ -339,7 +340,7 @@ public abstract partial class CanvasItem
     {
         var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands;
         if (commands is null) return;
-        var color = RenderInheritedModulate * RenderSelfModulate;
+        var color = (this is NavigationAgentDebugCanvas or NavigationDebugCanvas ? RenderModulate : RenderInheritedModulate) * RenderSelfModulate;
         var viewport = renderViewport ?? ServerState?.Owner?.CurrentCanvasViewport ?? CanvasViewport;
         var linear = viewport is not null && (viewport.RenderingOwner?.ViewportHDR(viewport) ?? viewport.UseHDR2D);
         var filter = RenderFilter;

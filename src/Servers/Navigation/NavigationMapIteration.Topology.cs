@@ -14,6 +14,7 @@ internal sealed partial class NavigationMapIteration
     private sealed class Owners(Boundary first) { internal readonly Boundary First = first; internal Boundary? Second; }
     internal TopologyProfile Profile { get; private init; }
     private Dictionary<RID, (Vector2 Start, Vector2 End)[]> Connections { get; init; } = [];
+    internal (Vector2 Start, Vector2 End)[]? ConnectionsSnapshot(RID region) => Connections.GetValueOrDefault(region);
     internal int ConnectionCount(RID region) => Connections.TryGetValue(region, out var value) ? value.Length : 0;
     internal (Vector2 Start, Vector2 End) Connection(RID region, int index)
     {

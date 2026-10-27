@@ -1670,3 +1670,171 @@ Host feature tags now share OS.AddHostFeatures: platform and device family, poin
 ## Keyboard drag action
 
 `public static ProjectSetting<InputActionSettings> InputUIAccessibilityDragAndDrop { get; }` registers the permanent `input/ui_accessibility_drag_and_drop` definition with an empty initial binding list. Independent registries save/restore it through the existing version-one schema and cannot unregister the built-in key. Assign a typed binding and call InputMap.LoadFromProjectSettings to activate it. [Accessible drag](AccessibilityServer.md#custom-actions-and-accessible-drag) uses the focused control after ordinary unhandled GUI input.
+
+<a id="global-navigation-diagnostics"></a>
+## Global navigation diagnostics
+
+See the [simulation controls, producer settings and verification boundary](../components/navigation-diagnostics.md).
+
+| Declaration | Contract |
+| --- | --- |
+| [`public static Electron2D.ProjectSetting<System.Boolean> AvoidanceDebugAgentsRadius { get;  }`](#member-4e532c22cd03) | Configures enable agents radius for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugAgentsRadiusColor { get;  }`](#member-697ae336d48b) | Configures agents radius color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<System.Boolean> AvoidanceDebugObstaclesRadius { get;  }`](#member-612d0decd014) | Configures enable obstacles radius for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugObstaclesRadiusColor { get;  }`](#member-da01ce08a4db) | Configures obstacles radius color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<System.Boolean> AvoidanceDebugObstaclesStatic { get;  }`](#member-f12a343d9457) | Configures enable obstacles static for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticEdgePushInColor { get;  }`](#member-a63cec883f15) | Configures obstacles static edge pushin color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticEdgePushOutColor { get;  }`](#member-151dd5b30853) | Configures obstacles static edge pushout color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticFacePushInColor { get;  }`](#member-d427f3655131) | Configures obstacles static face pushin color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticFacePushOutColor { get;  }`](#member-56cca3b37f9d) | Configures obstacles static face pushout color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugEdgeConnectionColor { get;  }`](#member-ec4e3163b4f9) | Configures edge connection color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugEdgeConnections { get;  }`](#member-644d6a331641) | Configures enable edge connections for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugEdgeLines { get;  }`](#member-a06962b346fa) | Configures enable edge lines for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryEdgeColor { get;  }`](#member-71fc2b519647) | Configures geometry edge color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryEdgeDisabledColor { get;  }`](#member-19b5577a39bb) | Configures geometry edge disabled color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryFaceColor { get;  }`](#member-bf652e4e55ee) | Configures geometry face color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryFaceDisabledColor { get;  }`](#member-d178103f2ce7) | Configures geometry face disabled color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugGeometryFaceRandomColor { get;  }`](#member-0dc3c5dbec57) | Configures enable geometry face random color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugLinkConnectionColor { get;  }`](#member-16e391742935) | Configures link connection color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugLinkConnectionDisabledColor { get;  }`](#member-9e7560fe1a29) | Configures link connection disabled color for retained navigation diagnostics. |
+| [`public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugLinkConnections { get;  }`](#member-1d22f897e8cb) | Configures enable link connections for retained navigation diagnostics. |
+
+<a id="member-4e532c22cd03"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> AvoidanceDebugAgentsRadius { get;  }`
+
+Configures enable agents radius for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-697ae336d48b"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugAgentsRadiusColor { get;  }`
+
+Configures agents radius color for retained navigation diagnostics.
+
+RGBA new(1, 1, 0, .25f) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-612d0decd014"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> AvoidanceDebugObstaclesRadius { get;  }`
+
+Configures enable obstacles radius for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-da01ce08a4db"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugObstaclesRadiusColor { get;  }`
+
+Configures obstacles radius color for retained navigation diagnostics.
+
+RGBA new(1, .5f, 0, .25f) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-f12a343d9457"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> AvoidanceDebugObstaclesStatic { get;  }`
+
+Configures enable obstacles static for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-a63cec883f15"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticEdgePushInColor { get;  }`
+
+Configures obstacles static edge pushin color for retained navigation diagnostics.
+
+RGBA new(1, 0, 0, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-151dd5b30853"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticEdgePushOutColor { get;  }`
+
+Configures obstacles static edge pushout color for retained navigation diagnostics.
+
+RGBA new(1, 1, 0, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-d427f3655131"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticFacePushInColor { get;  }`
+
+Configures obstacles static face pushin color for retained navigation diagnostics.
+
+RGBA new(1, 0, 0, 0) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-56cca3b37f9d"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> AvoidanceDebugStaticFacePushOutColor { get;  }`
+
+Configures obstacles static face pushout color for retained navigation diagnostics.
+
+RGBA new(1, 1, 0, .5f) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-ec4e3163b4f9"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugEdgeConnectionColor { get;  }`
+
+Configures edge connection color for retained navigation diagnostics.
+
+RGBA new(1, 0, 1, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-644d6a331641"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugEdgeConnections { get;  }`
+
+Configures enable edge connections for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-a06962b346fa"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugEdgeLines { get;  }`
+
+Configures enable edge lines for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-71fc2b519647"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryEdgeColor { get;  }`
+
+Configures geometry edge color for retained navigation diagnostics.
+
+RGBA new(.5f, 1, 1, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-19b5577a39bb"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryEdgeDisabledColor { get;  }`
+
+Configures geometry edge disabled color for retained navigation diagnostics.
+
+RGBA new(.5f, .5f, .5f, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-bf652e4e55ee"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryFaceColor { get;  }`
+
+Configures geometry face color for retained navigation diagnostics.
+
+RGBA new(.5f, 1, 1, .4f) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-d178103f2ce7"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugGeometryFaceDisabledColor { get;  }`
+
+Configures geometry face disabled color for retained navigation diagnostics.
+
+RGBA new(.5f, .5f, .5f, .4f) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-0dc3c5dbec57"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugGeometryFaceRandomColor { get;  }`
+
+Configures enable geometry face random color for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-16e391742935"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugLinkConnectionColor { get;  }`
+
+Configures link connection color for retained navigation diagnostics.
+
+RGBA new(1, .5f, 1, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-9e7560fe1a29"></a>
+### `public static Electron2D.ProjectSetting<Electron2D.Color> NavigationDebugLinkConnectionDisabledColor { get;  }`
+
+Configures link connection disabled color for retained navigation diagnostics.
+
+RGBA new(.5f, .5f, .5f, 1) by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+<a id="member-1d22f897e8cb"></a>
+### `public static Electron2D.ProjectSetting<System.Boolean> NavigationDebugLinkConnections { get;  }`
+
+Configures enable link connections for retained navigation diagnostics.
+
+True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.

@@ -14,6 +14,10 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_GLOBAL_SETTINGS_CHILD") == "1") { NavigationGlobalDebugTests.SettingsChild(); return; }
+
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_DIAGNOSTICS") is { } navigationProfile) { NavigationDiagnosticsChecks.Run(navigationProfile); if (navigationProfile == "managed") NavigationGlobalDebugTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") { ByteBufferTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_ENGINE") == "1") { VerifyEngine(); return; }
@@ -1959,7 +1963,7 @@ ThreadedResourceLoaderTests.Run();
 NavigationTests.Run();
 NavigationLinkTests.Run();
 NavigationQueryTests.Run();
-NavigationAgentTests.Run(); NavigationDebugTests.Run();
+NavigationAgentTests.Run(); NavigationDebugTests.Run(); NavigationGlobalDebugTests.Run(); NavigationDiagnosticsChecks.Run("managed");
 NavigationAvoidanceTests.Run();
 WorldTests.Run(); WorldTests.Run(PhysicsServer.Backend.GPU);
 PhysicsBodyTransformTests.Run(PhysicsServer.Backend.CPU);

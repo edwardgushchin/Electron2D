@@ -1774,3 +1774,75 @@ Inherited [ordinary event blocking](../classes/ElectronObject.md#ordinary-event-
 Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.
 
 Equal RegionSetTransform assignments validate the RID and matrix, preserve existing pending geometry changes and avoid requesting a redundant topology iteration. Repeated camera/tile/physics notification consumers verify unchanged staged region identity/transform/iteration together with complete warmed physical frames; actual changed topology retains its separate iteration construction cost.
+
+<a id="global-navigation-diagnostics"></a>
+## Global navigation diagnostics
+
+See the [simulation controls, producer settings and verification boundary](../components/navigation-diagnostics.md).
+
+| Declaration | Contract |
+| --- | --- |
+| [`public static event System.Action AvoidanceDebugChanged`](#member-e0cf54065421) | Occurs with NavigationDebugChanged after global debug enablement changes. |
+| [`public static event System.Action NavigationDebugChanged`](#member-d7b5750c8db8) | Occurs at a navigation or scene process boundary after global debug enablement changes. |
+| [`public static System.Boolean GetDebugEnabled()`](#member-691eb870b636) | Returns process-wide navigation and avoidance drawing enablement. |
+| [`public static Electron2D.RID[] MapGetObstacles(Electron2D.RID map)`](#member-71782550847f) | Returns a copied snapshot of the map's staged obstacle membership. |
+| [`public static System.Void SetActive(System.Boolean active)`](#member-d65a6c86e7ea) | Enables or suspends process-wide reciprocal avoidance simulation. |
+| [`public static System.Void SetDebugEnabled(System.Boolean enabled)`](#member-6e83c2f5307d) | Enables retained scene-region, link, agent-radius and obstacle diagnostics. |
+
+<a id="member-e0cf54065421"></a>
+### `public static event System.Action AvoidanceDebugChanged`
+
+Occurs with NavigationDebugChanged after global debug enablement changes.
+
+Delivery is coalesced, outside the gate and in every build configuration, including a server host.
+
+<a id="member-d7b5750c8db8"></a>
+### `public static event System.Action NavigationDebugChanged`
+
+Occurs at a navigation or scene process boundary after global debug enablement changes.
+
+Callbacks run outside the service gate on the boundary thread. All listeners of both debug events are attempted; failures aggregate. Callback edits stage a later notification; recursive synchronization rejects.
+
+<a id="member-691eb870b636"></a>
+### `public static System.Boolean GetDebugEnabled()`
+
+Returns process-wide navigation and avoidance drawing enablement.
+
+False initially. Per-tree DebugNavigationHint and editor authoring can independently request drawing.
+
+<a id="member-71782550847f"></a>
+### `public static Electron2D.RID[] MapGetObstacles(Electron2D.RID map)`
+
+Returns a copied snapshot of the map's staged obstacle membership.
+
+Independent identities, including disabled/paused caller obstacles; detached and retired obstacles are absent.
+
+Parameters:
+
+- `map`: Live map identity.
+
+Errors:
+
+- `T:System.ArgumentException`: The map identity is absent, stale or of another kind.
+
+<a id="member-d65a6c86e7ea"></a>
+### `public static System.Void SetActive(System.Boolean active)`
+
+Enables or suspends process-wide reciprocal avoidance simulation.
+
+Retains maps, settings, velocities and query topology. Explicit/scene synchronization still commits staged geometry. An already started step completes its captured outputs and callback delivery.
+
+Parameters:
+
+- `active`: True initially; false suppresses following steps and their velocity callbacks.
+
+<a id="member-6e83c2f5307d"></a>
+### `public static System.Void SetDebugEnabled(System.Boolean enabled)`
+
+Enables retained scene-region, link, agent-radius and obstacle diagnostics.
+
+Works in every build configuration. Changes coalesce until the next navigation synchronization or scene process boundary, which delivers both debug-change events. Explicit agent path drawing is independent.
+
+Parameters:
+
+- `enabled`: New process-wide drawing request, independent of simulation activity.

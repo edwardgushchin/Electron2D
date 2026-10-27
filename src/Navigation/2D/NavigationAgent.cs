@@ -16,7 +16,7 @@ public sealed partial class NavigationAgent : Node
     private int _index;
     private float _pathDesiredDistance = 20, _targetDesiredDistance = 10, _pathMaxDistance = 100;
     /// <summary>Creates a detached agent with default path thresholds and all waypoint metadata enabled.</summary>
-    public NavigationAgent() { _result = new(this); _rid = NavigationServer.Service.CreateAgent(this); }
+    public NavigationAgent() { _result = new(this); _rid = NavigationServer.Service.CreateAgent(this); AddChild(new NavigationDebugCanvas(this, _rid), InternalMode.Back); }
     /// <summary>Occurs after a new path is published, including an empty path.</summary>
     public event Action? PathChanged { add => _publisherPathChanged.Add(value); remove => _publisherPathChanged.Remove(value); }
     private EventPublisher<Action> _publisherPathChanged;

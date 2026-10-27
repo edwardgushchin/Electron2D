@@ -121,6 +121,46 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
+        RegisterInternal(NavigationDebugEdgeConnectionColor, isBasic: false);
+        _settings[NavigationDebugEdgeConnectionColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugGeometryEdgeColor, isBasic: false);
+        _settings[NavigationDebugGeometryEdgeColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugGeometryFaceColor, isBasic: false);
+        _settings[NavigationDebugGeometryFaceColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugGeometryEdgeDisabledColor, isBasic: false);
+        _settings[NavigationDebugGeometryEdgeDisabledColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugGeometryFaceDisabledColor, isBasic: false);
+        _settings[NavigationDebugGeometryFaceDisabledColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugLinkConnectionColor, isBasic: false);
+        _settings[NavigationDebugLinkConnectionColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugLinkConnectionDisabledColor, isBasic: false);
+        _settings[NavigationDebugLinkConnectionDisabledColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugEdgeConnections, isBasic: false);
+        _settings[NavigationDebugEdgeConnections.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugEdgeLines, isBasic: false);
+        _settings[NavigationDebugEdgeLines.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugGeometryFaceRandomColor, isBasic: false);
+        _settings[NavigationDebugGeometryFaceRandomColor.Name].RestartIfChanged = true;
+        RegisterInternal(NavigationDebugLinkConnections, isBasic: false);
+        _settings[NavigationDebugLinkConnections.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugAgentsRadiusColor, isBasic: false);
+        _settings[AvoidanceDebugAgentsRadiusColor.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugObstaclesRadiusColor, isBasic: false);
+        _settings[AvoidanceDebugObstaclesRadiusColor.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugStaticFacePushInColor, isBasic: false);
+        _settings[AvoidanceDebugStaticFacePushInColor.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugStaticEdgePushInColor, isBasic: false);
+        _settings[AvoidanceDebugStaticEdgePushInColor.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugStaticFacePushOutColor, isBasic: false);
+        _settings[AvoidanceDebugStaticFacePushOutColor.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugStaticEdgePushOutColor, isBasic: false);
+        _settings[AvoidanceDebugStaticEdgePushOutColor.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugAgentsRadius, isBasic: false);
+        _settings[AvoidanceDebugAgentsRadius.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugObstaclesRadius, isBasic: false);
+        _settings[AvoidanceDebugObstaclesRadius.Name].RestartIfChanged = true;
+        RegisterInternal(AvoidanceDebugObstaclesStatic, isBasic: false);
+        _settings[AvoidanceDebugObstaclesStatic.Name].RestartIfChanged = true;
         RegisterInternal(NavigationDebugAgentPaths, isBasic: false);
         RegisterInternal(NavigationDebugAgentPathColor, isBasic: false);
         RegisterInternal(NavigationDebugAgentPathPointSize, isBasic: false);
@@ -1235,6 +1275,26 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
         ReferenceEquals(setting, DebugPathsColor) ||
+        ReferenceEquals(setting, NavigationDebugEdgeConnectionColor) ||
+        ReferenceEquals(setting, NavigationDebugGeometryEdgeColor) ||
+        ReferenceEquals(setting, NavigationDebugGeometryFaceColor) ||
+        ReferenceEquals(setting, NavigationDebugGeometryEdgeDisabledColor) ||
+        ReferenceEquals(setting, NavigationDebugGeometryFaceDisabledColor) ||
+        ReferenceEquals(setting, NavigationDebugLinkConnectionColor) ||
+        ReferenceEquals(setting, NavigationDebugLinkConnectionDisabledColor) ||
+        ReferenceEquals(setting, NavigationDebugEdgeConnections) ||
+        ReferenceEquals(setting, NavigationDebugEdgeLines) ||
+        ReferenceEquals(setting, NavigationDebugGeometryFaceRandomColor) ||
+        ReferenceEquals(setting, NavigationDebugLinkConnections) ||
+        ReferenceEquals(setting, AvoidanceDebugAgentsRadiusColor) ||
+        ReferenceEquals(setting, AvoidanceDebugObstaclesRadiusColor) ||
+        ReferenceEquals(setting, AvoidanceDebugStaticFacePushInColor) ||
+        ReferenceEquals(setting, AvoidanceDebugStaticEdgePushInColor) ||
+        ReferenceEquals(setting, AvoidanceDebugStaticFacePushOutColor) ||
+        ReferenceEquals(setting, AvoidanceDebugStaticEdgePushOutColor) ||
+        ReferenceEquals(setting, AvoidanceDebugAgentsRadius) ||
+        ReferenceEquals(setting, AvoidanceDebugObstaclesRadius) ||
+        ReferenceEquals(setting, AvoidanceDebugObstaclesStatic) ||
         ReferenceEquals(setting, NavigationDebugAgentPaths) ||
         ReferenceEquals(setting, NavigationDebugAgentPathColor) ||
         ReferenceEquals(setting, NavigationDebugAgentPathPointSize) ||

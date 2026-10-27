@@ -29,7 +29,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
 - Grid region and cell geometry are finite and bounded to managed arrays. Jumping intentionally ignores individual cell weights, matching its separate search mode. Both graph types reject search re-entry, mutation and disposal from callbacks.
-- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; global debug retains its exact prerequisite.
+- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; [global diagnostics](../components/navigation-diagnostics.md) use retained scene canvases.
 
 ## Verification and limits
 
@@ -47,23 +47,23 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 
 ## Executable authored maps and regions
 
-[Navigation maps](../components/navigation-maps.md) now supply real RID ownership, World maps, convex region topology, deferred publication, projection and copied routes with a native scene path-following consumer. Baking/async/debug capabilities remain exact separate dependencies.
+[Navigation maps](../components/navigation-maps.md) now supply real RID ownership, World maps, convex region topology, deferred publication, projection and copied routes with a native scene path-following consumer. Baking, async iterations and global scene diagnostics each have executing producers and separate verification boundaries.
 
 NavigationLink and owned server links now provide directed/bidirectional off-surface travel, finite strict-radius attachment and weighted routes. [The map contract](../components/navigation-maps.md#links-across-separated-surfaces) records transforms, source storage, publication, typed query metadata and remaining raster/search equivalence.
 
-[Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; agent diagnostics and baking use their connected producers; global diagnostics retain a separate prerequisite.
+[Typed query objects](../components/navigation-maps.md#typed-query-objects-and-transition-metadata) now supply copied filters, real search/output controls, transition provenance and completion. The native consumer performs a metadata-driven link action; agent diagnostics and baking use their connected producers; global diagnostics consume the current scene geometry.
 
-[NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from global map diagnostic prerequisites.
+[NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from independently requested global diagnostics.
 
-[Reciprocal avoidance](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) now connects NavigationAgent controls and typed velocity events, NavigationObstacle moving disc/oriented contour geometry, static server state and the physics lane. Managed/source/oracle/allocation and actual GPU/compatibility games are verified separately. Bake exclusion/carving and complete profiling/debug producers retain operation-specific dependencies.
+[Reciprocal avoidance](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) now connects NavigationAgent controls and typed velocity events, NavigationObstacle moving disc/oriented contour geometry, static server state and the physics lane. Managed/source/oracle/allocation and actual GPU/compatibility games are verified separately. Source bake exclusion/carving and global diagnostics have executing producers; wider profiling acceptance remains separate.
 
-Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) now provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Quantized ownership follows two-owner grouping; independent pinned-runtime fixtures and real GPU/compatibility actors verify the connected slice. Broad search-tie/fallback, async map iterations and debug/global activation remain separate obligations.
+Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) now provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Quantized ownership follows two-owner grouping; independent pinned-runtime fixtures and real GPU/compatibility actors verify the connected slice. Broad search-tie/fallback acceptance remains open; async map iterations and global controls/diagnostics have executing consumers.
 
 ## Source geometry producer
 
 [Navigation baking](../components/navigation-baking.md) now connects copied outline/source resources and registered schemas to actual clearance/carve/partition output, scene collection and owner-published worker results. NavigationRegion updates the same live map and emits completion. Separate-process BakedRoutes executes authored source geometry and rendered routes on Linux Wayland GPU/compatibility; remaining native/foreign/editor gates stay explicit.
 
-[Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.
+[Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. [Global navigation diagnostics](../components/navigation-diagnostics.md) share the ordinary scene canvas basis.
 
 [Background iterations](../components/navigation-maps.md#background-iterations) now rebuild region geometry and map topology through independently selected workers while keeping prior query snapshots usable. Explicit host Synchronize remains deterministic.
 
@@ -72,3 +72,5 @@ Committed [raster topology and surface sampling](../components/navigation-maps.m
 [Agent path diagnostics](../components/navigation-maps.md#agent-path-diagnostics) now draw current world paths through both retained rendering backends, with five stored source properties and three typed project defaults. Fresh-process authoring/configuration, teardown, actual local software-driver pixels and warmed managed allocation checks are distinct evidence. Global region/link/avoidance debug enablement and events still require their own producers.
 
 Equal RegionSetTransform assignments validate the RID and matrix, preserve existing pending geometry changes and avoid requesting a redundant topology iteration. Repeated camera/tile/physics notification consumers verify unchanged staged region identity/transform/iteration together with complete warmed physical frames; actual changed topology retains its separate iteration construction cost.
+
+[Navigation controls and diagnostics](../components/navigation-diagnostics.md) add process-wide avoidance suspension, copied obstacle membership and real retained scene geometry with global/tree/editor requests.

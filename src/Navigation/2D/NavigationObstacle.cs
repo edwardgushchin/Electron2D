@@ -13,11 +13,12 @@ public sealed class NavigationObstacle : Entity
     private float _radius;
     private Vector2 _velocity;
     private Vector2[] _vertices = [];
+    internal Vector2[] DebugVertices => _vertices;
     private Transform _publishedTransform;
     private bool _published, _scenePaused;
     private RID _mapBeforePause;
     /// <summary>Creates an enabled detached obstacle with zero radius and empty contour.</summary>
-    public NavigationObstacle() { _rid = NavigationServer.Service.CreateObstacle(this); NotifyTransformChanges = true; }
+    public NavigationObstacle() { _rid = NavigationServer.Service.CreateObstacle(this); NotifyTransformChanges = true; AddChild(new NavigationDebugCanvas(this, _rid), InternalMode.Back); }
     /// <summary>Gets or changes whether scene baking includes this obstacle.</summary><value>False initially.</value>
     public bool AffectNavigationMesh { get { ThrowIfDisposed(); return _affectNavigationMesh; } set { EnsureMutable(); _affectNavigationMesh = value; } }
     /// <summary>Gets or changes whether baked obstruction bypasses agent-radius expansion.</summary><value>False initially.</value>

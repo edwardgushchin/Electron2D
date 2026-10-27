@@ -67928,6 +67928,19 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.NavigationServer.AvoidanceDebugChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "AvoidanceDebugChanged",
+    "signature": "public static event System.Action AvoidanceDebugChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.NavigationServer.MapChanged()",
     "kind": "event",
     "declaringType": "Electron2D.NavigationServer",
@@ -67938,6 +67951,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.RID\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.NavigationServer.NavigationDebugChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "NavigationDebugChanged",
+    "signature": "public static event System.Action NavigationDebugChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -143368,6 +143394,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.GetDebugEnabled()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "GetDebugEnabled",
+    "signature": "public static System.Boolean GetDebugEnabled()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.GetMaps()",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -144029,6 +144068,25 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapGetObstacles(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetObstacles",
+    "signature": "public static Electron2D.RID[] MapGetObstacles(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID[]",
     "value": null
   },
   {
@@ -145360,6 +145418,44 @@
         "type": "Electron2D.RID",
         "default": null
       },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.SetActive(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "SetActive",
+    "signature": "public static System.Void SetActive(System.Boolean active)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "active",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.SetDebugEnabled(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "SetDebugEnabled",
+    "signature": "public static System.Void SetDebugEnabled(System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
       {
         "name": "enabled",
         "type": "System.Boolean",
@@ -272319,6 +272415,123 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugAgentsRadius()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugAgentsRadius",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AvoidanceDebugAgentsRadius { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugAgentsRadiusColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugAgentsRadiusColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E AvoidanceDebugAgentsRadiusColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugObstaclesRadius()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugObstaclesRadius",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AvoidanceDebugObstaclesRadius { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugObstaclesRadiusColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugObstaclesRadiusColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E AvoidanceDebugObstaclesRadiusColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugObstaclesStatic()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugObstaclesStatic",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AvoidanceDebugObstaclesStatic { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticEdgePushInColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugStaticEdgePushInColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E AvoidanceDebugStaticEdgePushInColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticEdgePushOutColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugStaticEdgePushOutColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E AvoidanceDebugStaticEdgePushOutColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticFacePushInColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugStaticFacePushInColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E AvoidanceDebugStaticFacePushInColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticFacePushOutColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AvoidanceDebugStaticFacePushOutColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E AvoidanceDebugStaticFacePushOutColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.ButtonShortcutFeedbackHighlightTime()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -273611,6 +273824,149 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "NavigationDebugAgentPaths",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E NavigationDebugAgentPaths { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugEdgeConnectionColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugEdgeConnectionColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugEdgeConnectionColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugEdgeConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugEdgeConnections",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E NavigationDebugEdgeConnections { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugEdgeLines()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugEdgeLines",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E NavigationDebugEdgeLines { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugGeometryEdgeColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugGeometryEdgeColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugGeometryEdgeColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugGeometryEdgeDisabledColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugGeometryEdgeDisabledColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugGeometryEdgeDisabledColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugGeometryFaceColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugGeometryFaceColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugGeometryFaceColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugGeometryFaceDisabledColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugGeometryFaceDisabledColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugGeometryFaceDisabledColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugGeometryFaceRandomColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugGeometryFaceRandomColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E NavigationDebugGeometryFaceRandomColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugLinkConnectionColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugLinkConnectionColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugLinkConnectionColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugLinkConnectionDisabledColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugLinkConnectionDisabledColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E NavigationDebugLinkConnectionDisabledColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.NavigationDebugLinkConnections()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "NavigationDebugLinkConnections",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E NavigationDebugLinkConnections { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

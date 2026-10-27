@@ -5,7 +5,7 @@ using static TextureArrayTests;
 internal static class NavigationDebugTests
 {
     private static NavigationAgent Agent() => new() { Name = "Agent", DebugEnabled = true, PathDesiredDistance = 1, TargetDesiredDistance = 1, TargetPosition = new(100, 30) };
-    private static NavigationAgentDebugCanvas Canvas(NavigationAgent agent) => (NavigationAgentDebugCanvas)agent.GetChild(0, includeInternal: true);
+    private static NavigationAgentDebugCanvas Canvas(NavigationAgent agent) => agent.GetChildren(includeInternal: true).OfType<NavigationAgentDebugCanvas>().Single();
     private static List<CanvasVertex> Draw(NavigationAgent agent)
     {
         var canvas = Canvas(agent); canvas.PrepareCanvas(); var vertices = new List<CanvasVertex>(); canvas.AppendCanvas(vertices, [], Transform.Identity); return vertices;
@@ -14,7 +14,7 @@ internal static class NavigationDebugTests
     {
         using var synchronous = new NavigationIterationTests.SynchronousDefaults();
         using var defaults = new NavigationAgent();
-        Check(!defaults.DebugEnabled && !defaults.DebugUseCustom && defaults.DebugPathCustomColor == Colors.White && defaults.DebugPathCustomLineWidth == -1 && defaults.DebugPathCustomPointSize == 4 && defaults.GetChildCount(includeInternal: true) == 0, "All five defaults and lazy canvas ownership.");
+        Check(!defaults.DebugEnabled && !defaults.DebugUseCustom && defaults.DebugPathCustomColor == Colors.White && defaults.DebugPathCustomLineWidth == -1 && defaults.DebugPathCustomPointSize == 4 && defaults.GetChildCount(includeInternal: true) == 1, "All five defaults and lazy canvas ownership.");
         defaults.DebugPathCustomPointSize = -5; Check(defaults.DebugPathCustomPointSize == 0, "Negative point sizes clamp.");
         Reject<ArgumentException>(() => defaults.DebugPathCustomColor = new(float.NaN, 0, 0)); Reject<ArgumentOutOfRangeException>(() => defaults.DebugPathCustomLineWidth = float.NaN); Reject<ArgumentOutOfRangeException>(() => defaults.DebugPathCustomPointSize = float.PositiveInfinity);
         using var polygon = NavigationTests.Rectangle(0, 0, 180, 100); using var root = new SubViewport { Size = new(180, 100) }; var region = new NavigationRegion { NavigationPolygon = polygon }; var actor = new Entity { Position = new(20, 30) }; var agent = Agent(); actor.AddChild(agent); root.AddChild(region); root.AddChild(actor); using var tree = new SceneTree(root);
@@ -24,6 +24,7 @@ internal static class NavigationDebugTests
         agent.DebugUseCustom = true; agent.DebugPathCustomColor = Colors.Blue; agent.DebugPathCustomLineWidth = 3; agent.DebugPathCustomPointSize = 8;
         vertices = Draw(agent); Check(vertices.All(v => v.Color == Colors.Blue) && vertices.Any(v => v.Position == new Vector2(104, 34)), "Custom color, line and square point geometry execute.");
         actor.Position = new(30, 70); Check(Draw(agent).Select(v => v.Position).SequenceEqual(vertices.Select(v => v.Position)), "Parent movement does not move the retained world path.");
+        actor.Modulate = new(.1f, .2f, .3f, .2f); Check(Draw(agent).All(v => v.Color == Colors.Blue), "Diagnostic path color does not inherit actor tint."); actor.Modulate = Colors.White;
         actor.Visible = false; Check(Draw(agent).Count == 0, "Parent hide clears path commands."); actor.Visible = true; Check(Draw(agent).Count > 0, "Parent show restores current path.");
         agent.DebugEnabled = false; Check(Draw(agent).Count == 0, "Disabled diagnostics retire commands."); agent.DebugEnabled = true;
         agent.GetCurrentNavigationResult().Path = [new(10, 60), new(90, 60)]; Check(Draw(agent).All(v => v.Position.Y >= 56), "A replaced current result is observed without a path query.");
@@ -55,8 +56,8 @@ internal static class NavigationDebugTests
         try { agent.DebugEnabled = true; throw new InvalidOperationException("Expected attachment failure."); }
         catch (AggregateException error) { var messages = error.Flatten().InnerExceptions.Select(e => e.Message).ToArray(); Check(messages.Contains("add observer") && messages.Contains("remove observer"), "Failed creation preserves both attachment and cleanup failures."); }
         tree.NodeAdded -= Added; tree.NodeRemoved -= Removed;
-        Check(!agent.DebugEnabled && agent.GetChildCount(includeInternal: true) == 0, "Failed creation leaves no retained helper or enabled flag.");
-        agent.DebugEnabled = true; Check(agent.GetChildCount(includeInternal: true) == 1, "A later enable recovers after failed creation.");
+        Check(!agent.DebugEnabled && agent.GetChildCount(includeInternal: true) == 1, "Failed creation leaves no retained helper or enabled flag.");
+        agent.DebugEnabled = true; Check(agent.GetChildCount(includeInternal: true) == 2, "A later enable recovers after failed creation.");
     }
     private static void Teardown()
     {
@@ -85,7 +86,7 @@ internal static class NavigationDebugTests
         }
         finally { File.Delete(path); }
     }
-    private static void RunChild(string flag, string path)
+    internal static void RunChild(string flag, string path)
     {
         var start = new ProcessStartInfo(Environment.ProcessPath!) { RedirectStandardOutput = true, RedirectStandardError = true }; if (System.IO.Path.GetFileNameWithoutExtension(start.FileName).Equals("dotnet", StringComparison.OrdinalIgnoreCase)) start.ArgumentList.Add(typeof(NavigationDebugTests).Assembly.Location); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION_DEBUG"); start.Environment.Remove("ELECTRON2D_TEST_NAVIGATION_DEBUG_NATIVE"); start.Environment[flag] = path;
         using var child = Process.Start(start)!; var stdout = child.StandardOutput.ReadToEndAsync(); var stderr = child.StandardError.ReadToEndAsync(); if (!child.WaitForExit(30000)) { child.Kill(true); throw new TimeoutException("Navigation debug child."); }
@@ -120,7 +121,7 @@ internal static class NavigationDebugTests
     internal static void Child(string path)
     {
         using var scene = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); using var actor = scene.Instantiate(); var agent = (NavigationAgent)actor.GetNode("Agent");
-        Check(agent.DebugEnabled && agent.DebugUseCustom && agent.DebugPathCustomColor == Colors.Green && agent.DebugPathCustomLineWidth == 5 && agent.DebugPathCustomPointSize == 7 && agent.GetChildCount() == 0 && agent.GetChildCount(includeInternal: true) == 1, "Fresh scene restores all properties and constructs one fresh transient canvas.");
+        Check(agent.DebugEnabled && agent.DebugUseCustom && agent.DebugPathCustomColor == Colors.Green && agent.DebugPathCustomLineWidth == 5 && agent.DebugPathCustomPointSize == 7 && agent.GetChildCount() == 0 && agent.GetChildCount(includeInternal: true) == 2, "Fresh scene restores all properties and constructs fresh independent path/global transient canvases.");
         Console.WriteLine("Fresh navigation diagnostics passed.");
     }
     internal static void Native(string backend)

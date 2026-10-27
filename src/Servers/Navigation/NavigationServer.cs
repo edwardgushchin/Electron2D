@@ -45,6 +45,7 @@ public sealed partial class NavigationServer : ElectronObject
     }
     internal void SynchronizeCore(bool forceSynchronous = false)
     {
+        PumpDebugChanges();
         BeginProcessingTiming();
         try { SynchronizeMeasured(forceSynchronous); }
         finally { EndProcessingTiming(); }
@@ -56,7 +57,7 @@ public sealed partial class NavigationServer : ElectronObject
         List<RID>? changed = null; Action<RID>? handlers;
         lock (_gate)
         {
-            if (_synchronizing || _stepping) throw new InvalidOperationException("Navigation synchronization cannot be re-entered."); _synchronizing = true;
+            if (_synchronizing || _stepping || _debugDispatching) throw new InvalidOperationException("Navigation synchronization cannot be re-entered."); _synchronizing = true;
             try
             {
                 // ponytail: sweep weak scene identities at the synchronization boundary; index only if measured host scale requires it.

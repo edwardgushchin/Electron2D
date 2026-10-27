@@ -218,7 +218,7 @@ The node caches source properties; direct server edits do not mutate those prope
 
 ## Verification and limits
 
-[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining async map iteration, debug/global activation and comprehensive weighted query acceptance prerequisites.
+[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining comprehensive weighted query acceptance prerequisites and the separate diagnostics verification boundary.
 
 Worker edits of the borrowed polygon stage server geometry immediately, while NavigationPolygonChanged delivery for an attached node returns to the scene owner queue. Queued delivery skips disposed or reparented-to-another-tree nodes.
 
@@ -260,3 +260,5 @@ Reports whether this region's current resource is still preparing or awaiting pu
 ## Scene identity teardown
 
 Scene-owned navigation identities stay registered through node exit on the disposing thread; exit clears map membership before TreeExiting. Synchronization during that callback preserves the identity. Node cleanup attempts exit/children before releasing the RID and aggregates failures without abandoning final cleanup. Other threads cannot access a disposing scene identity, and retired RIDs reject. NavigationDebugTests verifies Agent, Region, Link and Obstacle with a failing exit observer.
+
+The [global scene diagnostics](../components/navigation-diagnostics.md) prepare one separate constructor-owned internal canvas for this source. Its lifetime, storage exclusion, global/tree/editor enablement and world-space drawing are owned by ADR 0097.

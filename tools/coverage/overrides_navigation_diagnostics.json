@@ -1,0 +1,169 @@
+{
+  "mappings": [
+    {
+      "godot": "NavigationServer2D::method:get_debug_enabled()",
+      "electron2d": "method:Electron2D.NavigationServer.GetDebugEnabled()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_get_obstacles(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapGetObstacles(Electron2D.RID)",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "NavigationServer2D::method:set_active(bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.SetActive(System.Boolean)",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "NavigationServer2D::method:set_debug_enabled(bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.SetDebugEnabled(System.Boolean)",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "NavigationServer2D::signal:avoidance_debug_changed()",
+      "electron2d": "event:Electron2D.NavigationServer.AvoidanceDebugChanged()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "NavigationServer2D::signal:navigation_debug_changed()",
+      "electron2d": "event:Electron2D.NavigationServer.NavigationDebugChanged()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/edge_connection_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugEdgeConnectionColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/geometry_edge_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugGeometryEdgeColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/geometry_face_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugGeometryFaceColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/geometry_edge_disabled_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugGeometryEdgeDisabledColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/geometry_face_disabled_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugGeometryFaceDisabledColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/link_connection_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugLinkConnectionColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/link_connection_disabled_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugLinkConnectionDisabledColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/enable_edge_connections",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugEdgeConnections()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/enable_edge_lines",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugEdgeLines()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/enable_geometry_face_random_color",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugGeometryFaceRandomColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/navigation/2d/enable_link_connections",
+      "electron2d": "property:Electron2D.ProjectSettings.NavigationDebugLinkConnections()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/agents_radius_color",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugAgentsRadiusColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_radius_color",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugObstaclesRadiusColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_face_pushin_color",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticFacePushInColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_edge_pushin_color",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticEdgePushInColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_face_pushout_color",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticFacePushOutColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_edge_pushout_color",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugStaticEdgePushOutColor()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/enable_agents_radius",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugAgentsRadius()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/enable_obstacles_radius",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugObstaclesRadius()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/avoidance/2d/enable_obstacles_static",
+      "electron2d": "property:Electron2D.ProjectSettings.AvoidanceDebugObstaclesStatic()",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "godot": [
+        "NavigationServer2D::method:get_debug_enabled()",
+        "NavigationServer2D::method:map_get_obstacles(RID:)",
+        "NavigationServer2D::method:set_active(bool:)",
+        "NavigationServer2D::method:set_debug_enabled(bool:)",
+        "NavigationServer2D::signal:avoidance_debug_changed()",
+        "NavigationServer2D::signal:navigation_debug_changed()",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/agents_radius_color",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/enable_agents_radius",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/enable_obstacles_radius",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/enable_obstacles_static",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_radius_color",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_edge_pushin_color",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_edge_pushout_color",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_face_pushin_color",
+        "ProjectSettings::property:debug/shapes/avoidance/2d/obstacles_static_face_pushout_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/edge_connection_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/enable_edge_connections",
+        "ProjectSettings::property:debug/shapes/navigation/2d/enable_edge_lines",
+        "ProjectSettings::property:debug/shapes/navigation/2d/enable_geometry_face_random_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/enable_link_connections",
+        "ProjectSettings::property:debug/shapes/navigation/2d/geometry_edge_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/geometry_edge_disabled_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/geometry_face_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/geometry_face_disabled_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/link_connection_color",
+        "ProjectSettings::property:debug/shapes/navigation/2d/link_connection_disabled_color"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0097: executable global avoidance suspension, copied obstacle membership, coalesced boundary debug events and retained scene region/link/agent-radius/obstacle drawing with global/tree/editor enablement. Twenty typed settings drive real producers. Public CLR/strict NativeAOT, actual GPU/Compatibility pixels and prepared recording/frame allocation evidence are owned by docs/components/navigation-diagnostics.md; native allocator, foreign-host and large-scene performance acceptance remain separate."
+    }
+  ]
+}
