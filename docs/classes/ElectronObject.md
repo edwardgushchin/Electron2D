@@ -1,5 +1,7 @@
 # ElectronObject
 
+[Extension reload](../components/scripting.md#native-extension-reload-boundary) remains a blocked registered-module/instance restoration producer. Ordinary C# metadata updates do not add automatic notifications to every project class.
+
 Last updated: 2026-10-26
 
 **Inherits:** —

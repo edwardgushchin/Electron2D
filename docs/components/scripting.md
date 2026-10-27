@@ -124,3 +124,48 @@ The twelve CLR physical profiles and four native controls execute 3,072 complete
 `bin/script-change-publication/2026-10-27/validation.json` retains eighteen accepted CLR profiles and four strict NativeAOT public controls. Actual source assets exercise equality/cache reuse, ordinary data-copy preservation, source/property/final-resource event ordering, blocked signals, exact combined observer failures, committed ownership, callback retirement and threaded remapping. Resource base, scene/local, archive and locale suites verify the affected copy/publication paths; compiled RPC, initialization and factory controls retain their existing behavior.
 
 CPU runs exclude device discovery; GPU runs map NVIDIA Vulkan with software implementations excluded. Owner/separate profiles execute 3,072 complete measured physical frames at zero owner/all-thread managed bytes. Native controls cover ordinary compiled notifications and reset/copy retirement; positive registered source behavior remains the portable-PDB desktop capability. Source proofs bind 2,693 runtime documents, 1,024 root-test documents and both public-consumer files to the retained CLR binaries, with separate proofs for native inputs. The complete ScriptChanged row remains Partial; these functional/allocation checks do not qualify live assignment/detachment, mass-scene performance, broad networking or foreign platforms.
+
+
+## Native extension reload boundary
+
+`Object.NOTIFICATION_EXTENSION_RELOADED` is an open extension-host dependency.
+The pinned [Object constant](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml#L1022)
+applies to extension classes and their descendants. Its automatic producer is
+[GDExtension.finish_reload](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/extension/gdextension.cpp#L925),
+with instances tracked by registered extension class, independently of an attached
+C# Script. The [extension module](../coverage/classes/GDExtension.md) and
+[manager](../coverage/classes/GDExtensionManager.md) remain Blocked on their own
+coverage pages; this inherited notification has the same concrete prerequisite.
+
+Reload invalidates removed method bindings/classes, rebinds surviving instances,
+restores every retained instance's stored state and then sends notification 2.
+The producer re-resolves each object identity and skips deleted instances. Its
+saved instance state is cleared after notification. An implementation must define
+the typed equivalent of module/class registration, owner/base identity, instance
+construction/rebinding, stored state/references and those publication phases.
+Removed types/methods, stale delegates and failure during replacement also require
+an explicit lifecycle policy. A constant plus manual Notify does not supply it.
+
+A rejected 2026-10-27 experiment attached a .NET MetadataUpdateHandler to the
+existing weak ObjectCensus. A real `dotnet watch` edit changed a live CPU RigidBody's
+virtual method from 1 to 2; instance ID 5, RID 2, authored field 37 and owner thread
+1 survived. The host log shows its update handler, successful update batch and
+application exit 0. It demonstrates CLR method-code replacement. It does not
+register an extension module, replace an extension instance or restore module-owned
+state. Broadcasting that notification to ordinary compiled project classes would
+add events to the existing scripting contract. The candidate constant, handler,
+census snapshot and test consumer were removed from the production tree; its
+source, DLL/PDB, logs and raw receipts remain under
+`bin/compiled-class-reload/2026-10-27/`.
+
+The first probe reached its application timeout without a reload notification;
+its watcher did not report handling the edit. A second probe in a normal test
+source directory used verbose watcher output and a later edit, and succeeded.
+Those outcomes are retained separately; they do not establish why the first edit
+was missed. Only the successful second run proves actual code replacement.
+
+This audit changes the inherited row from Unimplemented to Blocked with the
+specific extension-host trigger. It neither excludes it nor promotes it to
+Implemented. Live SetScript/ScriptChanged and Script implementation reload remain
+distinct open workflows under ADR 0091. The current physics ledger remains
+1362/1369 (99.49%), seven open (five Partial, two Blocked), 92 Excluded.
