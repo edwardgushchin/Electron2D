@@ -178,7 +178,7 @@ Executable checks cover path ownership and races, event timing and failures, all
 <a id="adr-0014"></a>
 ## ADR 0014: Managed Resource lifetime and realtime allocation
 
-Last updated: 2026-10-13
+Last updated: 2026-10-27
 
 ### Status
 
@@ -199,6 +199,14 @@ Copying the reference engine's public `RefCounted` API would not remove Electron
 `ElectronObject` and `Resource` do not expose public manual reference counting. Managed object memory remains owned by the .NET runtime.
 
 `IDisposable` remains the deterministic contract for logical shutdown, event/cache detachment, owned child cleanup, and release of native resources. Native handles are wrapped in `SafeHandle`-derived types so forgotten disposal has a narrowly scoped fallback; ordinary engine objects do not gain finalizers.
+
+GPU device payloads use the concrete shared ownership policy in
+[ADR 0054](physics-backends.md#adr-0054): independent SafeHandle leases retain one
+canonical native payload until their last dependent resource retires. The final
+release destroys it synchronously under the acquisition gate, including through
+the SafeHandle fallback. Leases do not chain through earlier borrowers, retain
+closed windows or keep an unused native payload cached. Logical owner/thread and
+resource-namespace guards remain independent of this internal physical sharing.
 
 When the first concrete loader and native-backed asset establish real shared-ownership transitions, the Resources domain may add a resource manager with internal disposable leases. Acquiring a lease retains the manager-owned asset payload; disposing a lease releases that retention. Reaching zero leases makes the native payload eligible for deterministic release under the manager's cache policy. It does not force collection of the managed `Resource` wrapper and is not exposed as `Ref()`, `Unref()`, or a public counter on `Resource`.
 

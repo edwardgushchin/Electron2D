@@ -28,14 +28,8 @@ internal sealed class GPUPhysicsDevice : IDisposable
             {
                 DisplayServer.RestoreVideoEnvironment(previous); previous = null;
             }
-            var renderer = RenderingServer.Service;
-            var shared = renderer?.RetainComputeDevice();
-            if (shared is not null) { Handle = device = shared; SupportsSizedPoints = renderer!.SupportsSizedPoints; }
-            else
-            {
-                var created = GPUDeviceFactory.Create(false); SupportsSizedPoints = created.SizedPoints;
-                Handle = device = new RenderHandle(created.Device, SDL.DestroyGPUDevice);
-            }
+            var created = GPUDeviceFactory.Acquire(false);
+            Handle = device = created.Handle; SupportsSizedPoints = created.SizedPoints;
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
             DeviceName = SDL.GetStringProperty(SDL.GetGPUDeviceProperties(Device), SDL.Props.GPUDeviceNameString, "unknown") ?? "unknown";
         }

@@ -34,8 +34,12 @@ to start its explicit GPU space after native renderer startup, and
 SpaceStep and FreeRID with Engine.Run, verifies one-unit motion at 60 units/s
 over 1/60 second, and checks continued GPU execution after renderer retirement.
 Use the same fresh-process, ICD, video-driver, deadline and core-dump policy.
-This is a lifecycle regression profile; the documented failing cases remain
-failed rather than being accepted as a successful test suite.
+Add `--churn` to keep a local RenderingDevice buffer alive across three native
+window lifetimes. The current shared-device policy passes all 16 public CLR
+profiles. The historical two-device C controls still reproduce the native defect;
+see [the ownership contract](../../docs/components/gpu-device-lifetime.md).
+`ELECTRON2D_TEST_GPU_DEVICE_LIFETIME=1` selects the internal native window/RID,
+lease-finalizer and cross-owner checks.
 
 `native_allocations.c` is an optional test-only Linux/glibc allocator interposer.
 It does not enter the runtime or native packages. Build and calibrate it before

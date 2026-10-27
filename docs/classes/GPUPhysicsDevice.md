@@ -7,8 +7,9 @@ Last updated: 2026-10-27
 **Source:** [GPUPhysicsDevice.cs](../../src/Servers/Physics/GPUPhysicsDevice.cs)
 **Component:** [GPU physics](../components/gpu-physics.md)
 
-Retain the active GPU renderer's compute device or create an independent SDL GPU
-device. No window or renderer is created. SDL video lifetime remains retained for
+Retain the process-local SDL GPU device, creating it on the first active lease
+regardless of renderer startup order. No window or renderer is created or retained
+by a compute lease. SDL video lifetime remains retained for
 the device, because the current Vulkan loader uses it. The existing GPU stage host
 and independent resident body store share this device/pipeline ownership code.
 Pipelines load checked offline SPIR-V resources through ShaderCompiler.
@@ -37,9 +38,9 @@ resident-store creation also exercises the compute-only initialization path.
 
 The [window device isolation trial](../components/gpu-resident-reports.md#window-device-isolation-trial-2026-10-27)
 rejected unconditional separate physics devices after reproducible native window
-retirement failures. The current renderer-borrowing policy remains in place.
-The [native and public lifetime controls](../components/gpu-device-lifetime.md)
-also reproduce the failure for spaces created before renderer startup.
+retirement failures. The [shared device lifetime contract](../components/gpu-device-lifetime.md)
+now applies to spaces, local devices and rendering in either startup order;
+its historical controls retain the original failure evidence.
 
 ## Canvas point integration
 

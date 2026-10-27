@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-25
+Last updated: 2026-10-27
 
 Retained particle kernels and imported process programs own
 [ComputePipeline](ComputePipeline.md) resources. Metal array-length queries bind
@@ -19,7 +19,7 @@ pipeline retirement and renderer teardown release their tables together.
 
 Thin canvas strokes use existing native Lines/LineStrip pipelines. SnapNativeLines rounds original endpoints in the upload copy before the vertex program, without changing shared host geometry; HDR color conversion and canvas modulation keep their existing order.
 
-The SDL GPU implementation of CanvasBackend. Construction retains the display window, creates a device, claims the window, and builds the default pipeline. Construction failure unwinds the completed steps. The five built-in fragment/blend pipelines are retained after first use until backend disposal, so temporarily absent blend modes do not recreate pipelines on their next warmed frame. Unused custom shader pipelines retain the existing eviction policy. The backend owns RGBA8 target/vertex/upload buffers, shader pipelines, samplers and per-Texture GPU caches. All calls require the renderer owner thread. Eligible MultiMesh triangles bind a second per-instance input stream from the same retained upload/vertex buffer, with a distinct built-in vertex shader and pipeline key. Ordinary geometry, compositing and skinning retain their existing vertex layout.
+The SDL GPU implementation of CanvasBackend. Construction retains the display window, acquires a process GPU device lease, claims the window, and builds the default pipeline. Compute consumers acquire separate leases that never retain this window; final device destruction follows the last dependent resource. See [device/window lifetime](../components/gpu-device-lifetime.md). Construction failure unwinds the completed steps. The five built-in fragment/blend pipelines are retained after first use until backend disposal, so temporarily absent blend modes do not recreate pipelines on their next warmed frame. Unused custom shader pipelines retain the existing eviction policy. The backend owns RGBA8 target/vertex/upload buffers, shader pipelines, samplers and per-Texture GPU caches. All calls require the renderer owner thread. Eligible MultiMesh triangles bind a second per-instance input stream from the same retained upload/vertex buffer, with a distinct built-in vertex shader and pipeline key. Ordinary geometry, compositing and skinning retain their existing vertex layout.
 
 Per-MaterialState sampler-binding and swizzle scratch arrays use weak-key tables, preserving warmed storage across one-frame culling without retaining abandoned materials or native resources. Bindings are refilled before use, including particle compute. Native pipeline eviction remains unchanged; cold reconstruction may allocate. See [scratch lifetime and verification](../components/canvas-item-contract.md#material-scratch-lifetime).
 
