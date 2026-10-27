@@ -8,18 +8,24 @@ internal static class PhysicsJointEnergyTests
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, threaded);
         try
         {
-            foreach (var count in new[] { 65, 129, 257 })
-                foreach (var groove in new[] { false, true }) Verify(backend, threaded, count, groove);
-            Verify(backend, threaded, 129, false, true);
             (double Angular, float Gap) coarse = default;
-            foreach (var side in new[] { 4, 8, 16 })
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_JOINT_ENERGY_IMPACT_ONLY") == "1")
+                coarse = VerifyLattice(backend, threaded, 8, true);
+            else
             {
-                VerifyLattice(backend, threaded, side, false);
-                var response = VerifyLattice(backend, threaded, side, true);
-                if (side == 8) coarse = response;
+                foreach (var count in new[] { 65, 129, 257 })
+                    foreach (var groove in new[] { false, true }) Verify(backend, threaded, count, groove);
+                Verify(backend, threaded, 129, false, true);
+                foreach (var side in new[] { 4, 8, 16 })
+                {
+                    VerifyLattice(backend, threaded, side, false);
+                    var response = VerifyLattice(backend, threaded, side, true);
+                    if (side == 8) coarse = response;
+                }
+                VerifyLattice(backend, threaded, 8, false, mixed: true);
+                VerifyLattice(backend, threaded, 8, true, mixed: true);
             }
-            VerifyLattice(backend, threaded, 8, false, mixed: true);
-            VerifyLattice(backend, threaded, 8, true, mixed: true);
+            Check(coarse.Angular < .03, "Default-iteration pin impact retains the original angular-momentum bound");
             var refined = VerifyLattice(backend, threaded, 8, true, iterations: 64);
             Check(refined.Angular < .03 && refined.Angular < coarse.Angular * .75 + .0001 && refined.Gap < coarse.Gap * .75 + .00001,
                 "Additional requested iterations reduce angular and anchor error in the same coupled impact");

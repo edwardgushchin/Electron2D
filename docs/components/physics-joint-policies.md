@@ -1,6 +1,6 @@
 # Joint solver policies
 
-Last updated: 2026-10-23
+Last updated: 2026-10-27
 
 Collision-policy publication now retains the latest requested flag and complete
 common pair contribution through selected errors. Equal setters and world
@@ -408,6 +408,76 @@ promoted by these numerical checks; the 64-byte full-suite allocation and massiv
 GPU Xid/device-loss gates remain open.
 Receipts and frozen payloads are under `bin/physics-joint-recovery/2026-10-21/`.
 
+
+## Common pin reaction point (2026-10-27)
+
+For a pair of movable bodies, the resident GPU pin solver now applies its equal
+and opposite linear impulses at the midpoint of their current anchors. The two
+angular Jacobian arms reach that same world point from each body's center of
+mass. Previously the arms reached the two separated anchors,
+so their positional error could create an artificial net pair torque. The
+authored body-local anchors and their positional correction remain unchanged.
+If either endpoint has zero inverse mass, both authored torque arms retain
+their preceding behavior. Such an endpoint supplies an external reaction rather
+than conserving the movable pair's angular momentum. No extra row, pass,
+readback, buffer or public setting is added; softness,
+force/correction budgets, angular limits, motors and checkpoint layout retain
+their existing contract. CPU solving is unchanged.
+
+The unchanged 8x8 impact at 60 Hz reproduces the preceding boundary with the old
+embedded shader. The baseline control and final owner-lane suite record these
+maxima over the same 512 complete response steps:
+
+| GPU shader | Requested iterations | Angular-momentum error | Maximum anchor gap, scene units |
+| --- | ---: | ---: | ---: |
+| Previous | 16 | 0.0381906629 | 0.0046849134 |
+| Common point | 16 | 0.0012289248 | 0.0046823370 |
+| Previous | 64 | 0.0081304703 | 0.0011312350 |
+| Common point | 64 | 0.0007891841 | 0.0011312350 |
+
+An initial candidate also moved the reaction point for a fixed endpoint. The
+complete policy suite rejected it: the analytic default-bias correction differed
+by 0.0021410598 at the unchanged 0.002 tolerance. The final implementation retains
+the original fixed-endpoint arms; that failed candidate remains archived.
+
+This removes a source of angular error while retaining the measured anchor
+accuracy. Contacts, position recovery and finite precision still contribute
+error; this is not an exact conservation promise for arbitrary graphs. The
+permanent accuracy pair now requires the original 0.03 angular bound at **16**
+iterations as well as the existing stricter convergence comparison at 64.
+The old shader fails the new default-iteration assertion. No population, impulse,
+energy budget, gap bound or allocation budget is reduced. The test-only
+`ELECTRON2D_JOINT_ENERGY_IMPACT_ONLY=1` selector reproduces the accuracy pair;
+an ordinary invocation retains all sixteen chain/lattice cases.
+
+The final frozen CLR cohort passes all sixteen cases on CPU/GPU and owner/separate
+numerical lanes: 32,768 measured response steps at strict 0/0 managed bytes.
+The ten CPU/GPU policy, pin, groove, spring and server suites also pass. The final
+strict NativeAOT consumer checks the two accuracy cases on all four lanes,
+another 4,096 response steps at 0/0; this is a focused native qualification,
+not the full sixteen-case native matrix. GPU process maps confirm NVIDIA without
+software Vulkan, CPU profiles forbid GPU discovery, and NativeAOT maps have no
+CoreCLR. PDB proofs match 2,684 runtime, 1,014 root-test and 293 public-consumer
+source documents. Separate resource extraction matches the final shader in CLR
+and NativeAOT input assemblies; the latter inputs remain unchanged during native
+compilation. The receipts and aggregate `validation.json` are in the evidence
+directory below. No new kernel Xid/device-loss entry was observed in the interval.
+
+The first strict NativeAOT cohort's CPU owner profile aborted in the 257-body pin
+chain with 184/184 owner/all-thread bytes after four zero-byte cases. Its CPU
+solver was unchanged. This interval remains unaccepted and unattributed; the
+separate-lane full suite and focused owner accuracy pair passed, but do not
+explain or erase that failure. The frozen executable and receipt remain under
+`native-final/` and `native-full-cpu/` in the evidence directory below.
+
+Source snapshots, embedded SPIR-V hashes, the intentional regression failure and
+immutable runtime cohorts are retained under ignored
+`bin/physics-pin-momentum/2026-10-27/`. These are numerical functional controls,
+not hardware throughput measurements. Physical declaration coverage remains
+**1358/1369 (99.20%)**, with **11 open** and 92 Excluded. Scene/rendering,
+separate-process network, native heap, foreign-platform and complete-goal
+acceptance remain separate. The following October 22 evidence retains its
+original source and numerical boundary.
 
 ## Closed pin lattices and impact accuracy (2026-10-22)
 

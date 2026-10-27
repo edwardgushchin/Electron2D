@@ -129,10 +129,13 @@ void main()
     if(j.ids.y==0u)
     {
         vec2 correction=limitedCorrection(d,j);
+        // Movable pairs share a reaction point; fixed endpoints retain their authored torque arms.
+        vec2 pinA=ra,pinB=rb;
+        if(ma.x>0&&mb.x>0){pinA+=0.5*d;pinB-=0.5*d;}
         for(uint row=0u;row<2u;row++)
         {
             vec2 n=row==0u?vec2(1,0):vec2(0,1);
-            emitRow(base+row,j,ma,mb,n,cross2(ra,n),cross2(rb,n),0,correction[row],vec2(-maximum,maximum),savedImpulse(old,row,ratio),false);
+            emitRow(base+row,j,ma,mb,n,cross2(pinA,n),cross2(pinB,n),0,correction[row],vec2(-maximum,maximum),savedImpulse(old,row,ratio),false);
         }
         if((j.identity.z&1u)!=0u)
         {

@@ -1,5 +1,10 @@
 # PinJoint
 
+For movable body pairs, the resident GPU solver uses a [common pin reaction point](../components/physics-joint-policies.md#common-pin-reaction-point-2026-10-27)
+to reduce artificial pair torque while the configured anchors converge. The
+default-iteration impact check now enforces its original angular-error bound;
+this numerical fix changes no declaration state.
+
 [Networked crossed capsules and CPU wake preparation](../components/physics-network-example.md#crossed-capsule-correction-and-cpu-wake-preparation-2026-10-20) extend authoritative correction with complete angular/linear contact state and prepare joint storage before later replayed wake.
 
 Last updated: 2026-10-21

@@ -1,3 +1,5 @@
+[The common pin reaction point](physics-joint-policies.md#common-pin-reaction-point-2026-10-27) reduces resident GPU angular error in the coupled impact and strengthens its default-iteration regression bound. No declaration is promoted: physical API coverage remains **1358/1369 (99.20%)**, with **11 open** (6 Partial, 2 Blocked, 3 Unimplemented) and 92 Excluded. Broader physics acceptance remains open.
+
 [Server monitor snapshots](runtime-diagnostics.md#server-monitor-snapshots) add 21 executable navigation/audio selector declarations. Performance.GetMonitor remains Partial for its allocation/renderer instrumentation, so physics coverage stays 1358/1369 (99.20%), with 11 open.
 
 [GPU device/window lifetime](gpu-device-lifetime.md) now uses process-local device leases independent of startup order. All 16 current CLR public profiles pass, including the two former NVIDIA/Wayland crashes. Historical two-device native controls remain red; broader native/platform and performance acceptance stays open. Declaration counts below remain separate.

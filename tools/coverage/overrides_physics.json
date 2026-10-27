@@ -5822,7 +5822,7 @@
         "class:PinJoint2D"
       ],
       "state": "Implemented",
-      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families."
+      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families. Resident GPU movable pin pairs now share a world reaction point while authored anchors converge; PhysicsJointEnergyTests rejects the previous default-iteration angular error without relaxing energy, gap or allocation bounds. See [common pin reaction point](../../components/physics-joint-policies.md#common-pin-reaction-point-2026-10-27); declaration states are unchanged."
     },
     {
       "godot": [

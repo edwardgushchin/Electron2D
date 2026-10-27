@@ -12,6 +12,8 @@
 
 # Engine inventory
 
+Existing GPUPhysicsBodyStore movable pin pairs now use a [common world reaction point](components/physics-joint-policies.md#common-pin-reaction-point-2026-10-27), preserving authored anchors and solver policies without a new production type, row, resource or public declaration.
+
 Existing GPUPhysicsBodyStore now shares [final contact publication](components/gpu-resident-reports.md#final-publication-in-the-numerical-command-2026-10-25) with its last numerical command, without a new production type, buffer or public declaration.
 
 Existing GPUPhysicsBodyStore now shares [swept-pair/CCD completion](components/gpu-resident-bodies.md#shared-swept-pair-and-ccd-completion-2026-10-25), reusing the spatial summary without a new production type, buffer or public declaration.
