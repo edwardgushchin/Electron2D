@@ -1150,6 +1150,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_HOST") == "1"
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE") == "1") { FontCacheTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_CHILD") is { } scriptPath) { ScriptTests.RunChild(scriptPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_HOST") == "1") { ScriptTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_INITIALIZATION") is { } initializationBackend)
+{
+    PhysicsScriptInitializationTests.Run(initializationBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU,
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_INITIALIZATION_THREADED") == "1"); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_FACTORIES") is { } factoryBackend)
 {
     PhysicsScriptFactoryTests.Run(factoryBackend == "gpu" ? PhysicsServer.Backend.GPU : factoryBackend == "cpu" ? PhysicsServer.Backend.CPU : null,

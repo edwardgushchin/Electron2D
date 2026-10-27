@@ -25,8 +25,8 @@ public sealed partial class Script : Resource
     public string CompiledTypeID { get { lock (_gate) { ThrowIfDisposed(); return _registration?.ID ?? ""; } } }
     /// <summary>Gets the selected compiled CLR type without constructing an instance.</summary><value>Null when unbound.</value>
     public Type? CompiledType { get { lock (_gate) { ThrowIfDisposed(); return _registration?.Type; } } }
-    /// <summary>Reports whether a concrete exact construction factory is available.</summary><returns>False for unbound or abstract assets.</returns>
-    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration?.Factory != null; } }
+    /// <summary>Reports whether this asset describes an instantiable concrete compiled class.</summary><returns>False for unbound or abstract assets. Required constructor arguments may still be needed.</returns>
+    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false }; } }
     /// <summary>Reports whether source text is nonempty.</summary><returns>Whether SourceCode contains text.</returns>
     public bool HasSourceCode() => SourceCode.Length > 0;
     /// <summary>Reports whether the associated compiled class is abstract.</summary><returns>False when unbound.</returns>
@@ -50,6 +50,8 @@ public sealed partial class Script : Resource
     /// <summary>Creates a typed instance using a direct C# constructor expression, including constructor arguments.</summary>
     /// <typeparam name="T">Expected project object role.</typeparam><param name="constructor">Typed constructor, or null for the registered factory.</param><returns>Caller-owned exact compiled instance.</returns>
     /// <remarks>The constructor is an explicit cold operation. It does not introduce string invocation or a frame dispatcher.
+    /// A concrete registration without a default factory requires a non-null constructor here. Ordinary C# constructors
+    /// perform initialization once; their base chain sees the selected source and identity before derived constructor bodies.
     /// Construct the returned object within this invocation's execution context or engine worker tasks. Pre-existing results reject before metadata validation or ownership acquisition.
     /// Failure cleanup attempts only a newly constructed result; cleanup errors are retained alongside the original validation error.</remarks>
     /// <exception cref="InvalidOperationException">The class cannot instantiate the role, or the result is pre-existing, null, disposed, the wrong exact class or schema.</exception>

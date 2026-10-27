@@ -14,7 +14,9 @@ internal sealed class ScriptActor : ScriptBaseActor
     internal bool VetoDisposal;
     internal Exception? PropertyFailure, CleanupFailure;
     internal Script? ConstructorScript;
-    public ScriptActor() { ConstructorScript = GetScript(); ProcessEnabled = true; }
+    internal int Initializations;
+    internal readonly int ConstructorCount;
+    public ScriptActor() { Initializations++; ConstructorCount = Count; ConstructorScript = GetScript(); ProcessEnabled = true; }
     public ScriptActor(int count) : this() { Count = count; }
     public void Ping() => Pulse?.Invoke(Count);
     protected override void OnReady() { ReadyCalls++; if (FailReady) throw new InvalidOperationException("script activation"); }

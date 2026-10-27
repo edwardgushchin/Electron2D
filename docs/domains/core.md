@@ -1,3 +1,5 @@
+[Compiled C# initialization](../components/scripting.md#compiled-c-initialization) supports explicitly supplied constructor arguments without inventing a default factory, with ordinary constructor ordering and failures. Live assignment/change/reload remain open.
+
 [Binary buffers](../components/byte-buffers.md) expose span-based numeric/text conversion and shared file-container compression through ByteBuffer.
 
 [Compiled owner source identity](../components/scripting.md#compiled-owner-source-identity) now exposes the borrowed Script through ElectronObject.GetScript, including constructor, copy, file and scene-local paths. Live assignment and initialization remain separate open contracts.

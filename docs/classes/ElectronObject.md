@@ -45,9 +45,9 @@ Provides the common identity, notification, property, localization, and lifetime
 `ElectronObject` is the common base for engine-owned objects. It provides process-local identity, runtime diagnostics, numeric notification dispatch, deterministic cleanup, disposed-state protection, typed property exposure, per-object translation settings, queued-deletion observation, and lifecycle events. It does not emulate a universal-value dynamic API.
 
 The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
-registration, and script storage. Instances have deterministic `IDisposable` lifetime.
+registration, and live script reassignment. Instances have deterministic `IDisposable` lifetime.
 
-The concrete [Script](Script.md) source asset, compiled type catalog and typed construction already exist. They construct ordinary CLR Node/Resource instances; they do not retain a per-object Script association. The inherited script getter, assignment and associated initialization remain separate missing capabilities under [ADR 0091](../decisions/scripting.md#adr-0091). A CLR subtype or ScriptChanged event alone does not provide that live binding.
+The concrete [Script](Script.md) asset/catalog constructs ordinary CLR Node/Resource instances and retains their selected source through GetScript. [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) uses the project constructor/base chain with typed arguments and stable identity. Live assignment, automatic change delivery and extension reload remain open under [ADR 0091](../decisions/scripting.md#adr-0091).
 
 There is no engine-owned method/event name registry, connection-flags enum, or dictionary of incoming/outgoing callable connections. Consumer tooling can inspect ordinary CLR type metadata. Typed event accessors, owned `EventConnection` tokens and registered persistent scene bindings retain their separate contracts under [ADRs 0002/0010](../decisions/core-object-runtime.md#adr-0010).
 
@@ -208,6 +208,8 @@ Gets or sets the translation domain used by this object.
 
 - `ArgumentNullException`: The assigned value is `null`.
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.
+
+[Compiled C# initialization](../components/scripting.md#compiled-c-initialization) executes the project constructor/base chain with the stable identity and source association. No separate virtual initializer runs from ElectronObject construction.
 
 ## Method Descriptions
 

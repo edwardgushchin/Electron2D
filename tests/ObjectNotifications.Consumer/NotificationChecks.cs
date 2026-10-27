@@ -18,18 +18,18 @@ internal static class NotificationChecks
     {
         using var source = new ConstructionNode();
         var identity = source.InstanceID;
-        Check(source.Constructed && source.PostInitializations == 0, "Construction never invokes a project notification override");
+        Check(source.Constructed && source.PostInitializations == 0 && source.Initializations == 1 && source.ConstructorIdentity == identity, "Construction initializes once before any project notification override");
         source.Notify(ElectronObject.NotificationPostInitialize);
         source.Notify(ElectronObject.NotificationPostInitialize, true);
         Check(source.PostInitializations == 2 && source.LastDirection && source.InstanceID == identity,
             "Explicit zero notifications use the completed object and ordinary directional dispatch");
 
         using var duplicate = (ConstructionNode)source.Duplicate();
-        Check(duplicate.Constructed && duplicate.PostInitializations == 0 && duplicate.InstanceID != identity,
+        Check(duplicate.Constructed && duplicate.PostInitializations == 0 && duplicate.InstanceID != identity && duplicate.Initializations == 1 && duplicate.ConstructorIdentity == duplicate.InstanceID,
             "Duplication constructs a fresh exact project type without synthesizing a project initialization callback");
         using var packed = new PackedScene(); packed.Pack(source);
         using var restored = (ConstructionNode)packed.Instantiate();
-        Check(restored.Constructed && restored.PostInitializations == 0 && restored.InstanceID != identity,
+        Check(restored.Constructed && restored.PostInitializations == 0 && restored.InstanceID != identity && restored.Initializations == 1 && restored.ConstructorIdentity == restored.InstanceID,
             "PackedScene construction keeps the same compiled callback boundary");
         restored.Notify(ElectronObject.NotificationPostInitialize);
         Check(restored.PostInitializations == 1 && !restored.LastDirection, "A restored object's explicit callback executes normally");
@@ -221,9 +221,11 @@ internal static class NotificationChecks
     private sealed class ConstructionNode : Node
     {
         internal bool Constructed;
+        internal readonly ulong ConstructorIdentity;
+        internal int Initializations;
         internal int PostInitializations;
         internal bool LastDirection;
-        public ConstructionNode() { Constructed = true; }
+        public ConstructionNode() { Initializations++; ConstructorIdentity = InstanceID; Constructed = true; }
         protected override Func<Node> CreateSceneInstanceFactory() => Create;
         private static Node Create() => new ConstructionNode();
         protected override void OnNotification(int what)

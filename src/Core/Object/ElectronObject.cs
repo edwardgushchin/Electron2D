@@ -175,7 +175,7 @@ public abstract partial class ElectronObject : IDisposable
 
     /// <summary>Occurs when a derived scripting component reports that this object's script attachment changed.</summary>
     /// <remarks>
-    /// Electron2D does not yet provide a script attachment. The event reserves the typed notification contract for a
+    /// Initial compiled construction may retain a source asset. The event reserves the typed notification contract for a
     /// future live script-assignment workflow and is currently raised only through <see cref="NotifyScriptChanged"/>.
     /// </remarks>
     public event Action<ElectronObject>? ScriptChanged { add => _publisherScriptChanged.Add(value); remove => _publisherScriptChanged.Remove(value); }

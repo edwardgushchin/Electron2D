@@ -14,6 +14,9 @@ internal static partial class ScriptTests
         Script.RegisterAbstract<ScriptBaseActor>("ScriptTest.Base", ScriptBaseActor.SourcePath, ScriptBaseActor.PowerProperty);
         Script.RegisterNode("ScriptTest.Actor", ScriptActor.SourcePath, CreateActor, ScriptActor.CountProperty, ScriptActor.PeerProperty);
         Script.RegisterResource("ScriptTest.Paint", ScriptPaintEffect.SourcePath, CreatePaint);
+        Script.RegisterNode<RequiredScriptActor>("ScriptTest.Required", RequiredScriptActor.SourcePath, null);
+        Script.RegisterResource<RequiredScriptResource>("ScriptTest.RequiredResource", RequiredScriptResource.SourcePath, null);
+        Script.RegisterNodeWithRPC<RequiredScriptRPCActor>("ScriptTest.RequiredRPC", RequiredScriptRPCActor.SourcePath, null, []);
         _registered = true;
     }
     internal static void Run()
@@ -33,6 +36,7 @@ internal static partial class ScriptTests
         using var actor = script.New<ScriptActor>(); Check(actor.Count == 3 && script.GetPropertyDefaultValue(ScriptActor.CountProperty, actor) == 3, "typed factory/default");
         Check(ReferenceEquals(actor.GetScript(), script) && ReferenceEquals(actor.ConstructorScript, script), "exact source identity is available in the derived constructor");
         Identity(script);
+        Initialization(script);
         using var args = script.New(static () => new ScriptActor(9)); Check(args.Count == 9, "typed constructor arguments");
         Reject<InvalidOperationException>(() => script.New<RichTextEffect>()); Reject<InvalidOperationException>(() => basis.New<Node>()); Reject<ArgumentException>(() => script.GetScriptConstantMap<object>());
         using var copy = (Script)script.Duplicate(); Check(copy.CompiledType == script.CompiledType && copy.SourceCode == script.SourceCode, "resource duplicate association");
@@ -155,6 +159,8 @@ internal static partial class ScriptTests
     {
         Register(); using var packed = ResourceLoader.Load<PackedScene>(path, ResourceLoader.CacheMode.Ignore); var actor = (ScriptActor)packed.Instantiate(); using var tree = new SceneTree(actor); tree.ProcessFrame(.01); Check(actor.Count == 6 && actor.Power == 7 && ReferenceEquals(actor.Peer, actor.GetNode<Node>("Peer")) && actor.ReadyCalls == 1 && actor.Frames > 0, "fresh exact compiled callbacks/state/references");
         Check(actor.GetScript() is { CompiledTypeID: "ScriptTest.Actor" } source && actor.ConstructorScript == source && source.SourceCode.Contains("class ScriptActor"), "fresh process restores exact compiled source identity before construction"); Console.WriteLine("Fresh script scene passed");
+        Check(actor.Initializations == 1 && actor.BaseInitializations == 1 && actor.BaseConstructorSource == actor.GetScript() && actor.BaseConstructorIdentity == actor.InstanceID && actor.ConstructorCount == 3 && actor.Count == 6,
+            "fresh scene initializes each compiled constructor once before restoring stored values");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

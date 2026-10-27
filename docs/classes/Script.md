@@ -1,12 +1,12 @@
 # Script
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 **Inherits:** [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
 **Declaration:** `public sealed partial class Script : Resource` · **Source:** [Script.cs](../../src/Core/IO/Script.cs), [Script.Catalog.cs](../../src/Core/IO/Script.Catalog.cs), [Script.RPC.cs](../../src/Core/IO/Script.RPC.cs) · **Component:** [Scripting](../components/scripting.md)
 
-A compiled C# source asset for a registered project Node/Resource class. The host supplies stable identity, a static exact factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
+A compiled C# source asset for a registered project Node/Resource class. The host supplies stable identity, an optional static exact default factory and typed user property descriptors. Loading `.cs` verifies matching portable compiler symbols and source checksums. Project code remains in its assembly and executes normal typed callbacks.
 
 ```csharp
 // At project startup; sourcePath belongs to the compiled project class:
@@ -18,21 +18,23 @@ using Player player = script.New<Player>();
 
 Constructed owners expose this exact borrowed asset through [ElectronObject.GetScript](ElectronObject.md#m-electron2d-electronobject-getscript), including inside their derived constructor. Copies and file scenes retain the source under [the compiled owner contract](../components/scripting.md#compiled-owner-source-identity).
 
+[Compiled initialization](../components/scripting.md#compiled-c-initialization) uses ordinary C# constructors once, before schema/state restoration. Classes with required arguments may register a null default factory and use `New(() => new Player(arguments))`; implicit creation and absent reconstruction factories reject. Constructor exceptions retain their identity and ordinary C# partial-construction ownership.
+
 ## API summary
 
 | Signature | Contract |
 | --- | --- |
 | `public Script()` | Unbound source asset; text initially empty. |
-| `public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode> factory, params PropertyDescriptor[] properties) where TNode : Node` | Registers source association, static exact scene factory and user schema. |
-| `public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource> factory, params PropertyDescriptor[] properties) where TResource : Resource` | Same contract for archived Resource/effect instances. |
+| `public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode>? factory, params PropertyDescriptor[] properties) where TNode : Node` | Registers source/schema; a null default factory requires explicit typed construction. |
+| `public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource>? factory, params PropertyDescriptor[] properties) where TResource : Resource` | Same nullable default-factory contract for Resource/effect classes. |
 | `public static void RegisterAbstract<T>(string id, string sourcePath, params PropertyDescriptor[] properties) where T : ElectronObject` | Abstract project Node/Resource metadata without a factory. |
-| `public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode> factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Copies validated class RPC defaults with the existing exact source/factory registration. |
+| `public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode>? factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Copies validated class RPC defaults with the existing exact source/factory registration. |
 | `public static void RegisterAbstractWithRPC<TNode>(string id, string sourcePath, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node` | Abstract Node source and inherited RPC defaults without a factory. |
 | `public RPCRegistration[] GetRPCConfig()` | Effective most-derived class declarations followed by unshadowed registered bases; caller-owned snapshot. |
 | `public string SourceCode { get; set; }` | Editable text; does not reload compiled implementation; eight MiB UTF-8 budget. |
 | `public string CompiledTypeID { get; }` | Stable portable registration ID; empty when unbound. |
 | `public Type? CompiledType { get; }` | Associated CLR class; null when unbound. |
-| `public bool CanInstantiate()` | Concrete factory availability; constructor failure remains possible. |
+| `public bool CanInstantiate()` | Concrete compiled-class availability; required arguments may still need an explicit typed constructor. |
 | `public bool HasSourceCode()` | Nonempty resource text. |
 | `public bool IsAbstract()` | Compiled class abstract flag; false when unbound. |
 | `public bool IsTool()` | Inherited ToolAttribute declaration. |

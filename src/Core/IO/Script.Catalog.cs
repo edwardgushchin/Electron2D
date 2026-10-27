@@ -21,33 +21,35 @@ public sealed partial class Script
     private static readonly Guid TypeDocuments = new("932E74BC-DBA9-4478-8D46-0F32A7BAB3D3");
     private static readonly Guid SHA256ID = new("8829D00F-11B8-4213-878B-770E8597AC16");
     private static readonly Guid SHA1ID = new("FF1816EC-AA5E-4D10-87F7-6F4963833460");
-    /// <summary>Registers one compiled C# node/source association and its exact scene factory and user property schema.</summary>
+    /// <summary>Registers one compiled C# node/source association with optional default construction and its typed property schema.</summary>
     /// <typeparam name="TNode">Concrete project Node type.</typeparam><param name="id">Stable portable file type identity.</param>
-    /// <param name="sourcePath">Source path proven by the compiled portable PDB.</param><param name="factory">Static exact-type constructor.</param>
+    /// <param name="sourcePath">Source path proven by the compiled portable PDB.</param><param name="factory">Static exact default constructor, or null to require an explicit typed constructor at each New call.</param>
     /// <param name="properties">User-defined typed properties; native inherited properties are discovered separately.</param>
     /// <exception cref="ArgumentException">Factory or schema is invalid.</exception><exception cref="InvalidOperationException">Identity is already registered.</exception>
     /// <exception cref="NotSupportedException">Matching compiled assembly and portable source symbols are unavailable.</exception>
-    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.</remarks>
+    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.
+    /// A null factory registers metadata only and installs no archive factory; explicit typed New construction remains available for concrete types.</remarks>
     [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
     [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
-    public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode> factory, params PropertyDescriptor[] properties) where TNode : Node
+    public static void RegisterNode<TNode>(string id, string sourcePath, Func<TNode>? factory, params PropertyDescriptor[] properties) where TNode : Node
     {
-        ArgumentNullException.ThrowIfNull(factory);
-        Register(typeof(TNode), id, sourcePath, () => factory(), properties, () => ResourceFileTypes.RegisterNode(id, factory), factory.Target);
+        Register(typeof(TNode), id, sourcePath, factory is null ? null : () => factory(), properties,
+            factory is null ? null : () => ResourceFileTypes.RegisterNode(id, factory), factory?.Target);
     }
-    /// <summary>Registers one compiled C# resource/source association and its exact archive factory and user schema.</summary>
+    /// <summary>Registers one compiled C# resource/source association with optional default construction and its typed property schema.</summary>
     /// <typeparam name="TResource">Concrete project Resource type.</typeparam><param name="id">Stable portable file type identity.</param>
-    /// <param name="sourcePath">Source path proven by portable PDB.</param><param name="factory">Static exact-type constructor.</param>
+    /// <param name="sourcePath">Source path proven by portable PDB.</param><param name="factory">Static exact default constructor, or null to require an explicit typed constructor at each New call.</param>
     /// <param name="properties">User-defined typed property schema.</param>
     /// <exception cref="ArgumentException">Factory or schema is invalid.</exception><exception cref="InvalidOperationException">Identity is already registered.</exception>
     /// <exception cref="NotSupportedException">Matching assembly/source symbols are unavailable.</exception>
-    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.</remarks>
+    /// <remarks>Requires a file-backed assembly, matching portable PDB and untrimmed project declarations. Method, event and literal-field metadata is captured once during registration.
+    /// A null factory registers metadata only and installs no archive factory; explicit typed New construction remains available for concrete types.</remarks>
     [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
     [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
-    public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource> factory, params PropertyDescriptor[] properties) where TResource : Resource
+    public static void RegisterResource<TResource>(string id, string sourcePath, Func<TResource>? factory, params PropertyDescriptor[] properties) where TResource : Resource
     {
-        ArgumentNullException.ThrowIfNull(factory);
-        Register(typeof(TResource), id, sourcePath, () => factory(), properties, () => ResourceFileTypes.RegisterResource(id, factory), factory.Target);
+        Register(typeof(TResource), id, sourcePath, factory is null ? null : () => factory(), properties,
+            factory is null ? null : () => ResourceFileTypes.RegisterResource(id, factory), factory?.Target);
     }
     /// <summary>Registers an abstract project type for inherited source/metadata discovery without a construction factory.</summary>
     /// <typeparam name="T">Abstract project Node or Resource type.</typeparam><param name="id">Stable script identity.</param>

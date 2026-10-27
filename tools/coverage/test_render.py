@@ -51,7 +51,9 @@ def check_physics_report(pages):
         rows = [row for row in object_page.splitlines() if row.startswith("| [`method " + method + "(")]
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "C# " + projection in rows[0], "Iteration must name its actual typed C# protocol"
         assert not any(key.startswith("Object::method:" + method + "(") for key in expected), "Verified iteration must not remain open"
-    assert expected["Object::method:_init()"] == "Unimplemented", "The enumeration projection must not hide script initialization"
+    init_rows = [row for row in object_page.splitlines() if row.startswith("| [`method _init(")]
+    assert len(init_rows) == 1 and " | Implemented | " in init_rows[0] and "compiled-c-initialization" in init_rows[0]
+    assert "Object::method:_init()" not in expected, "Qualified typed constructor initialization must not remain open"
     source_rows = [row for row in object_page.splitlines() if row.startswith("| [`method get_script(")]
     assert len(source_rows) == 1 and " | Implemented | " in source_rows[0] and "public Electron2D.Script GetScript()" in source_rows[0]
     assert "Object::method:get_script()" not in expected, "Qualified source identity must not remain open"

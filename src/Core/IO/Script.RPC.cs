@@ -7,22 +7,23 @@ public sealed partial class Script
     /// <summary>Registers a compiled Node source with immutable class RPC declarations and its typed property schema.</summary>
     /// <typeparam name="TNode">Concrete project Node role.</typeparam>
     /// <param name="id">Stable portable class identity.</param><param name="sourcePath">Source path proven by the compiled portable PDB.</param>
-    /// <param name="factory">Static exact-type constructor.</param><param name="rpcConfiguration">Copied declarations with distinct IDs and compatible receiver roles.</param>
+    /// <param name="factory">Static exact default constructor, or null to require an explicit typed constructor at each New call.</param><param name="rpcConfiguration">Copied declarations with distinct IDs and compatible receiver roles.</param>
     /// <param name="properties">Copied user-defined typed property descriptors.</param>
     /// <remarks>Source/factory validation is identical to RegisterNode. Class declarations are inherited by actual Node
     /// instances and execute through their ordinary multiplayer interface without constructing metadata prototypes.
     /// Derived IDs override base declarations. Shared tokens and their captured state live with the compiled registration.
-    /// Source text edits do not alter this compiled configuration. Existing registration overloads remain unchanged.</remarks>
+    /// Source text edits do not alter this compiled configuration. A null factory registers metadata only;
+    /// explicit typed New construction remains available for concrete types.</remarks>
     /// <exception cref="ArgumentException">A factory, source, schema, declaration role, duplicate ID or method budget is invalid.</exception>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
     /// <exception cref="InvalidOperationException">The class identity/type/path is already registered.</exception>
     /// <exception cref="NotSupportedException">Matching compiled assembly and portable symbols are unavailable.</exception>
     [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
     [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
-    public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode> factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node
+    public static void RegisterNodeWithRPC<TNode>(string id, string sourcePath, Func<TNode>? factory, ReadOnlySpan<RPCRegistration> rpcConfiguration, params PropertyDescriptor[] properties) where TNode : Node
     {
-        ArgumentNullException.ThrowIfNull(factory);
-        Register(typeof(TNode), id, sourcePath, () => factory(), properties, () => ResourceFileTypes.RegisterNode(id, factory), factory.Target, rpcConfiguration);
+        Register(typeof(TNode), id, sourcePath, factory is null ? null : () => factory(), properties,
+            factory is null ? null : () => ResourceFileTypes.RegisterNode(id, factory), factory?.Target, rpcConfiguration);
     }
 
     /// <summary>Registers an abstract compiled Node source with inherited class RPC declarations and typed metadata.</summary>
