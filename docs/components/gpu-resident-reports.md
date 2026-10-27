@@ -48,6 +48,10 @@ terminal receipts and stack are retained in
 after the CLR lifecycle failure. The current device-sharing implementation stays
 in place; queue isolation and full-window GPU advantage remain unqualified.
 
+[Direct native and public lifetime controls](gpu-device-lifetime.md) now isolate
+the Wayland failure in both a standalone SDL probe and the current public engine
+workflow. That native gate remains open.
+
 ## Packed selected result layout
 
 Each selected result uses a 68-byte scalar wire record: four shape index/generation

@@ -37,6 +37,10 @@ preflight owner/borrow rejection preserves live resources. Scene-owned identitie
 remain with their owners. See [complete resource retirement operations](../components/physics-registered-adapter.md#complete-resource-retirement-operations)
 for actual coverage and remaining limits.
 
+The [public GPU/window retirement profile](../components/gpu-device-lifetime.md#public-space-and-window-retirement)
+retains an open Wayland native-lifetime failure when a space starts before the
+renderer and is freed while its window remains alive.
+
 ## Lifecycle request ownership
 
 After clear passes its access preflight, cleanup always commits Empty and forgets

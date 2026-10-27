@@ -38,6 +38,8 @@ resident-store creation also exercises the compute-only initialization path.
 The [window device isolation trial](../components/gpu-resident-reports.md#window-device-isolation-trial-2026-10-27)
 rejected unconditional separate physics devices after reproducible native window
 retirement failures. The current renderer-borrowing policy remains in place.
+The [native and public lifetime controls](../components/gpu-device-lifetime.md)
+also reproduce the failure for spaces created before renderer startup.
 
 ## Canvas point integration
 

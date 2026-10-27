@@ -1,5 +1,42 @@
 # Physics measurement helpers
 
+## Native GPU device retirement
+
+The standalone [SDL lifetime probe](../../tests/Electron2D.Tests/Native/GPUDeviceLifetime.c)
+uses two Vulkan GPU devices and one claimed window. It loads the exact SDL library
+supplied by the caller; no managed runtime, physics, shaders or frame submission
+is involved. Run each profile in a fresh process with a chosen ICD and video
+driver, a deadline and core dumps disabled:
+
+```bash
+mkdir -p bin/physics-device-lifetime/local
+cc -std=c11 -O0 -g -Wall -Wextra -Werror tests/Electron2D.Tests/Native/GPUDeviceLifetime.c -ldl -o bin/physics-device-lifetime/local/probe
+ulimit -c 0
+SDL_VIDEODRIVER=wayland GDK_BACKEND=wayland timeout -k 5s 90s bin/physics-device-lifetime/local/probe /absolute/path/to/libSDL3.so.0 0 0 0 1
+```
+
+The four trailing flags are `compute-first`, `render-retires-first`,
+`extra-loader-reference` and `extra-video-reference`, each exactly `0` or `1`.
+The probe prints the loaded SDL version/revision and each lifecycle stage. Its
+1.2-second delay lets an external sampler observe driver mappings; it is not a
+performance measurement. Zero means complete normal retirement; `2` reports an
+SDL operation failure and `3` rejects arguments or library/symbol loading.
+A signal termination remains a failed lifecycle profile. Compare both creation
+and retirement orders, then repeat with `SDL_VIDEODRIVER=x11` when available.
+The [native isolation evidence](../../docs/components/gpu-device-lifetime.md#direct-native-lifetime-control)
+records the current failing Wayland and passing X11 controls without qualifying
+the independent-device experiment.
+
+The public-only consumer selects `--device-window-lifetime`. Add `--render-first`
+to start its explicit GPU space after native renderer startup, and
+`--render-retire-first` to retire the renderer before freeing that space;
+`--threaded` selects the separate numerical thread. The fixture uses SpaceCreate,
+SpaceStep and FreeRID with Engine.Run, verifies one-unit motion at 60 units/s
+over 1/60 second, and checks continued GPU execution after renderer retirement.
+Use the same fresh-process, ICD, video-driver, deadline and core-dump policy.
+This is a lifecycle regression profile; the documented failing cases remain
+failed rather than being accepted as a successful test suite.
+
 `native_allocations.c` is an optional test-only Linux/glibc allocator interposer.
 It does not enter the runtime or native packages. Build and calibrate it before
 running the complete scene benchmark:
