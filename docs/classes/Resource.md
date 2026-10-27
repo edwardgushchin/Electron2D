@@ -34,7 +34,7 @@ Resource lifetime uses the managed runtime together with [`ElectronObject.Dispos
 counter is exposed. Base state is safe for concurrent reads and serialized writes, but derived resource state and
 callbacks have no implicit synchronization or thread affinity.
 
-[Source-publication notifications](../components/scripting.md#source-publication-notifications) report source changes from file replacement and prepared remapping after ownership transfer. PropertyListChanged precedes ScriptChanged and the file copy's final Changed. Public data copying retains the existing source. Callback retirement suppresses later source delivery and prevents returning a retired file result.
+[Source-publication notifications](../components/scripting.md#source-publication-notifications) report source changes from file replacement and prepared remapping after ownership transfer. PropertyListChanged precedes ScriptChanged and the file copy's final Changed. Public data copying retains the existing source and live binding. Prepared reference remapping retains installed code/state; file replacement switches to the prepared owner's binding before stored restoration. Callback retirement suppresses later source delivery and prevents returning a retired file result.
 
 Stored base state includes inherited `ElectronObject.CanTranslateMessages` and `TranslationDomain` together with resource name and locality. Shallow/deep duplicates, scene-local resource graphs and `CopyFromResource` retain that policy. A successful copy publishes its coalesced `Changed` event after inherited settings and custom stored state are applied. Path/scene identity and runtime subscribers retain their separate ownership rules.
 
@@ -464,7 +464,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 - A cycle remaps to an acquired duplicate only when that edge selects duplication. Shallow/None edges and external edges under Internal retain the original resource.
 - A failed duplication exposes no live partial result and disposes all created resources in reverse creation order.
 
-The [copy and duplicate contract audit](../components/resources.md#copy-and-duplicate-contract) covers the generic session, typed hooks, physical resource families and failure boundaries. Each derived type owns copying its stored fields; inherited live-script binding retains its separate acceptance requirements.
+The [copy and duplicate contract audit](../components/resources.md#copy-and-duplicate-contract) covers the generic session, typed hooks, physical resource families and failure boundaries. Each derived type owns copying its stored fields. [Live Script bindings](../components/scripting.md#resource-bindings) initialize independent state before stored restoration; public data copy retains the target binding and file/cache replacement adopts the prepared code before copying values.
 
 ## Scene-local lifecycle and ownership
 

@@ -31,14 +31,27 @@ public partial class ElectronObject
             if (ReferenceEquals(_constructionScript, script)) return;
             var registration = script?.GetBindingRegistration(requireLive: true);
             if (script is not null && registration is null) throw new NotSupportedException("The source does not declare a live typed binding.");
-            if (registration is not null && this is Resource) throw new NotSupportedException("Live Resource binding requires its separate copy/cache lifetime contract.");
+            if (registration is not null && this is Script) throw new NotSupportedException("A source asset cannot itself own a compiled script binding.");
             if (registration is not null && !registration.InstanceType.IsInstanceOfType(this)) throw new ArgumentException("The binding requires another owner role.", nameof(script));
             if (_constructionScript is not null && _scriptBinding is null) throw new NotSupportedException("Replacing a fixed CLR source class requires a restart.");
-            var retirement = RetireScriptBinding();
-            if (retirement is not null) (errors ??= []).Add(retirement);
-            if (errors is null && registration is not null)
+            errors = ChangeScriptBinding(script, registration);
+        }
+        try { NotifyConstructionScriptChanged(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+        ThrowScriptErrors(errors);
+    }
+
+    private List<Exception>? ChangeScriptBinding(Script? script, ScriptRegistration? registration)
+    {
+        List<Exception>? errors = null;
+        var retirement = RetireScriptBinding();
+        if (retirement is not null) (errors ??= []).Add(retirement);
+        if (errors is null)
+        {
+            Volatile.Write(ref _constructionScript, script);
+            if (registration is not null)
             {
-                _scriptBinding = registration; Volatile.Write(ref _constructionScript, script);
+                _scriptBinding = registration;
                 try { InvokeScriptBind(registration); Script.ValidateSchema(registration, this); }
                 catch (Exception error)
                 {
@@ -47,14 +60,13 @@ public partial class ElectronObject
                 }
             }
         }
-        try { NotifyConstructionScriptChanged(); }
-        catch (Exception error) { (errors ??= []).Add(error); }
-        ThrowScriptErrors(errors);
+        return errors;
     }
 
-    internal void InitializeScriptBinding()
+    internal void InitializeScriptBinding(ElectronObject? prototype = null)
     {
-        if (_scriptBinding is not null || _constructionScript?.GetBindingRegistration(requireLive: false) is not { } registration) return;
+        var registration = prototype is null ? _constructionScript?.GetBindingRegistration(requireLive: false) : prototype._scriptBinding;
+        if (_scriptBinding is not null || registration is null) return;
         using var operation = BeginScriptLifetimeOperation();
         _scriptBinding = registration;
         try { InvokeScriptBind(registration); Script.ValidateSchema(registration, this); }
@@ -135,11 +147,21 @@ public partial class ElectronObject
         return false;
     }
 
-    internal bool CopyConstructionScript(ElectronObject source) => ReplaceConstructionScript(source._constructionScript);
+    internal Exception? CopyConstructionScript(ElectronObject source, Script? script, out bool changed)
+    {
+        changed = false;
+        using var operation = BeginScriptLifetimeOperation();
+        ThrowIfDisposed(); source.ThrowIfDisposed();
+        if (ReferenceEquals(_constructionScript, script) && ReferenceEquals(_scriptBinding, source._scriptBinding)) return null;
+        changed = true;
+        var errors = ChangeScriptBinding(script, source._scriptBinding);
+        return errors is { Count: > 1 } ? new AggregateException(errors) : errors is { Count: 1 } ? errors[0] : null;
+    }
 
     private bool ReplaceConstructionScript(Script? source)
     {
         if (ReferenceEquals(_constructionScript, source)) return false;
+        // Publication redirects borrowed asset identity; the prepared immutable code binding remains installed.
         Volatile.Write(ref _constructionScript, source);
         return true;
     }

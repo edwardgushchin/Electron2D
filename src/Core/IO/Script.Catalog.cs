@@ -27,7 +27,8 @@ public sealed partial class Script
     /// <param name="properties">The owner's typed project schema.</param>
     /// <remarks>Uses the owner's existing virtual callbacks; no frame traversal or script base class is added.
     /// Binding follows the complete owner constructor. Callbacks own their side effects and must retire functions
-    /// before reporting cleanup errors. Resource owners and replacement of fixed CLR source classes remain unsupported.</remarks>
+    /// before reporting cleanup errors. Resource copies bind before stored restoration; source assets cannot own bindings.
+    /// Replacement of fixed CLR source classes remains unsupported.</remarks>
     /// <exception cref="ArgumentException">Code, owner, source, factory or schema is invalid, or a callback captures state.</exception>
     /// <exception cref="ArgumentNullException">A required callback is null.</exception>
     /// <exception cref="InvalidOperationException">Identity, code type or source is already registered.</exception>
@@ -38,10 +39,10 @@ public sealed partial class Script
         params PropertyDescriptor[] properties) where TOwner : ElectronObject where TCode : class
     {
         ArgumentNullException.ThrowIfNull(bind); ArgumentNullException.ThrowIfNull(clear);
-        if (typeof(Resource).IsAssignableFrom(typeof(TOwner)) || typeof(TCode).IsAbstract || typeof(ElectronObject).IsAssignableFrom(typeof(TCode)) ||
+        if (typeof(TOwner) == typeof(Script) || typeof(TCode).IsAbstract || typeof(ElectronObject).IsAssignableFrom(typeof(TCode)) ||
             bind.Target is not null || clear.Target is not null || bind.Method.DeclaringType?.IsAssignableFrom(typeof(TCode)) != true ||
             clear.Method.DeclaringType?.IsAssignableFrom(typeof(TCode)) != true)
-            throw new ArgumentException("Live bindings require concrete project code, a non-Resource owner and static bind/clear callbacks.");
+            throw new ArgumentException("Live bindings require concrete project code, an owner other than Script and static bind/clear callbacks.");
         Register(typeof(TCode), id, sourcePath, factory is null ? null : () => factory(), properties, null, factory?.Target,
             bindingOwner: typeof(TOwner), bind: owner => bind((TOwner)owner), clear: owner => clear((TOwner)owner));
     }

@@ -30,7 +30,7 @@ SetScript changes the actual binding on the same owner. Equality retains the cur
 
 LiveScriptBindingTests executes actual forward/reverse motion on the same Body/RID, assignment/detachment, equality and blocking, constructor/copy/fresh-process scene state, cancellation and committed retirement, partial-bind/clear/observer failures and a synchronized concurrent lifetime rejection. Four CPU/GPU owner/separate profiles each measure two 128-frame active intervals at strict 0/0 owner/all-thread managed bytes. Corrected focused selectors precede the generic threaded-collider shorthand and the launcher checks the actual backend/separate completion marker. The same frozen cohort passes four ordinary-object and four initialization profiles, registered-source extension checks and the 128-frame GPU script/effect host, including its inspected capture. Receipts are under `bin/script-live-binding/2026-10-28/verified/`.
 
-This is an executable first binding slice, not the complete SetScript family. The remaining native callback roles, fixed CLR class reassignment, Resource live replacement, RPC migration and cache-driven binding replacement remain open. SetScript is Partial; no physical declaration becomes Implemented from this slice. The physical census remains 1363/1369 (99.56%), six open, 92 Excluded.
+This is an executable first binding slice, not the complete SetScript family. The remaining native callback roles, fixed CLR class reassignment and RPC migration remain open. Resource/copy/cache behavior is specified below. SetScript is Partial; no physical declaration becomes Implemented from this slice. The physical census remains 1363/1369 (99.56%), six open, 92 Excluded.
 
 ## Standard node callbacks
 
@@ -44,7 +44,17 @@ Native integration participates in the existing snapshot-demand predicate and di
 
 NativeCallbackTests covers actual native Node/RigidBody types, typed input and object/shape picking with blocked signals, forward/reverse/nested notification order, live post-solver edits, source replacement and stable physical identity. The CPU/GPU owner/separate matrix includes cancellation, native subtree exit before state retirement, exit/clear/retired failures, foreign/worker/reused/duplicate installation rejection, copy and fresh-process scene construction. Each profile measures two 128-iteration complete process/physics pairs at strict zero owner/all-thread managed bytes. Receipts and regression results are retained under `bin/script-native-callbacks/2026-10-28/final/`.
 
-The complete fixed CLR/Resource/cache/RPC, remaining native callback roles and source-free NativeAOT registration remain open. This slice does not promote SetScript, ScriptChanged or the shared class rows.
+Fixed CLR reassignment, RPC migration, remaining native callback roles and source-free NativeAOT registration remain open. This slice does not promote SetScript, ScriptChanged or the shared class rows.
+
+## Resource bindings
+
+RegisterBinding and SetScript admit native and project Resource roles with the same typed functions, owner-local state and retirement rules. The sealed scalar-only Script source asset cannot own another source association. Standard Resource duplication, project copy hooks and file factories initialize the binding after construction and before stored restoration. Each copied owner has independent runtime state while Script sharing and scene-local/forced edges retain the ordinary resource graph policy.
+
+Public CopyFromResource retains the target's installed binding and shallow-copies stored data. File replacement and reused local-scene targets select the prepared owner's immutable binding before restoring stored values. They preserve target identity and retain the source graph on partial copy failure. PropertyListChanged then ScriptChanged report the committed result after ownership transfer and before Changed; clear/bind failure leaves the target unbound, while a later arbitrary stored-copy failure retains installed code and any committed values. Observer failures do not roll state back.
+
+Prepared cache publication remaps the borrowed Script identity without reinstalling code or resetting owner state. An asset can change metadata independently of installed immutable code; source edits alone are not reload. This slice leaves fixed CLR reassignment, remaining native callbacks, RPC migration and source-free NativeAOT registration open. Physics remains 1363/1369 (99.56%), six Partial, 92 Excluded.
+
+ResourceBindingTests executes standard Resource attachment and project owner functions, immutable-code retention after asset metadata edits, independent duplication, public data-copy retention, bundled/fresh-process archive construction, cache code replacement and partial clear/bind/copy/observer failures. Threaded publication preserves prepared state; linked scene overrides reuse local Resource identity with new code before stored values. Four Linux x64 CPU/NVIDIA GPU owner/separate profiles each measure two 128-iteration full process/physics pairs at strict 0/0 owner/all-thread managed bytes. The owned immutable cohort, raw logs and source/native receipts are under `bin/script-resource-binding/2026-10-28/`. This is bounded Resource/binding evidence; broader numerical/network/native/performance/window and foreign-platform qualification remains open.
 
 ## Compiled owner source identity
 
@@ -62,7 +72,7 @@ File replacement and prepared graph publication report a changed source identity
 
 Each emission observes the ordinary signal-blocking state. Observer failures propagate after the source change is committed; a file-copy operation error and final Changed error retain their original identities in an ordered AggregateException. Retirement during the first source notification suppresses subsequent source delivery and rejects publication of the retired result. Resource batching accepts committed disposal without manufacturing an unbalanced-batch failure. Prepared graphs transfer dependency ownership before notifying; a callback that retires a prepared owner rejects that graph and preserves borrowed cached dependencies.
 
-[Script source-publication checks](../../tests/Electron2D.Tests/ScriptTests.SourceChanges.cs) exercise these paths through actual compiled source assets and threaded loaders. The public notification consumer separately exercises reset/copy retirement without requiring source-symbol discovery. Live typed assignment/detachment adds a producer, while fixed CLR/Resource/callback/RPC replacement remains open for the complete signal contract under [ADR 0091](../decisions/scripting.md#source-publication-notifications).
+[Script source-publication checks](../../tests/Electron2D.Tests/ScriptTests.SourceChanges.cs) exercise these paths through actual compiled source assets and threaded loaders. The public notification consumer separately exercises reset/copy retirement without requiring source-symbol discovery. Live typed assignment/detachment adds a producer, while fixed CLR/callback/RPC replacement remains open for the complete signal contract under [ADR 0091](../decisions/scripting.md#source-publication-notifications).
 
 ## Compiled C# initialization
 

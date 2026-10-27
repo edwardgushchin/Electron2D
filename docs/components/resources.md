@@ -1,6 +1,6 @@
 # Resource base component
 
-Last updated: 2026-10-25
+Last updated: 2026-10-28
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
@@ -25,6 +25,10 @@ Both types are production members of `Electron2D.dll`.
    Both ordinary copying and duplication retain inherited translation enablement/domain alongside resource name/locality. These settings apply before custom copying and the final coalesced change notification; scene-local setup sees the completed inherited state.
 6. Packed-scene instantiation uses the same graph machinery to duplicate local resource graphs. It assigns the new scene root before setup, invokes setup once per local duplicate, and transfers every created resource to root ownership.
 7. Failure disposes every partial duplicate in reverse order; normal resource disposal unregisters its path, clears local-scene association, and clears subscribers.
+
+## Live script copy and cache behavior
+
+[Typed Resource bindings](scripting.md#resource-bindings) install independent runtime state on newly constructed duplicates and archive owners before stored restoration. Public CopyFromResource retains target code. File replacement and reused scene-local targets switch to the prepared binding before restoring values, preserving identity and retaining partially committed graph ownership on failure. Source notifications follow ownership commitment and precede the final coalesced Changed. Prepared Script reference remapping retains the already initialized binding/state. Source assets remain scalar-only and cannot own script bindings.
 
 ## Per-referrer path IDs
 

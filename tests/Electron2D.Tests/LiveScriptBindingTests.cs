@@ -25,7 +25,7 @@ internal sealed class LiveScriptBindingTests
     private static void Register()
     {
         if (_registered) return;
-        Reject<ArgumentException>(() => Script.RegisterBinding<Resource, LiveScriptForward>("Live.Invalid", LiveScriptForward.SourcePath, null, static _ => { }, static _ => { }));
+        Reject<ArgumentException>(() => Script.RegisterBinding<Script, LiveScriptForward>("Live.Invalid", LiveScriptForward.SourcePath, null, static _ => { }, static _ => { }));
         var captured = 0;
         Reject<ArgumentException>(() => Script.RegisterBinding<LiveScriptBody, LiveScriptForward>("Live.Capture", LiveScriptForward.SourcePath, null, _ => captured++, LiveScriptForward.Clear));
         Check(captured == 0, "Invalid registration does not execute a bind.");
@@ -44,7 +44,7 @@ internal sealed class LiveScriptBindingTests
         using var fault = ResourceLoader.Load<Script>(SourcePath);
         using var fixedSource = ResourceLoader.Load<Script>(LiveScriptBody.SourcePath); using var fixedOwner = fixedSource.New<LiveScriptBody>();
         Reject<NotSupportedException>(() => fixedOwner.SetScript(forward)); Check(fixedOwner.GetScript() == fixedSource && fixedOwner.Binds == 0, "Fixed CLR source reassignment remains explicitly unsupported and preserves its owner.");
-        using var resource = new Resource(); Reject<NotSupportedException>(() => resource.SetScript(forward));
+        using var resource = new Resource(); Reject<ArgumentException>(() => resource.SetScript(forward));
         Check(forward.CompiledType == typeof(LiveScriptForward) && forward.GetInstanceBaseType() == typeof(LiveScriptBody) && forward.CanInstantiate(), "Code and stable owner roles remain distinct metadata.");
         using (var fresh = forward.New<LiveScriptBody>())
         {

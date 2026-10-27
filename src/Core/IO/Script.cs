@@ -86,7 +86,7 @@ public sealed partial class Script : Resource
     }
     internal ScriptRegistration? GetBindingRegistration(bool requireLive)
     { lock (_gate) { if (requireLive) ThrowIfDisposed(); return _registration?.BindingOwner is null ? null : _registration; } }
-    internal bool MatchesConstructionType(Type type) { lock (_gate) { ThrowIfDisposed(); return _registration is { } record && (record.BindingOwner is { } owner ? !typeof(Resource).IsAssignableFrom(type) && owner.IsAssignableFrom(type) : record.Type == type); } }
+    internal bool MatchesConstructionType(Type type) { lock (_gate) { ThrowIfDisposed(); return _registration is { } record && (record.BindingOwner is { } owner ? type != typeof(Script) && owner.IsAssignableFrom(type) : record.Type == type); } }
     private static PropertyDescriptor[] Properties(ScriptRegistration record)
     {
         var properties = new List<PropertyDescriptor>(); var type = record.Type;

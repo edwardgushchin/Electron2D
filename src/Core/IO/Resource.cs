@@ -331,7 +331,8 @@ public class Resource : ElectronObject
     /// Copying is shallow: nested resources and collection instances remain shared unless a derived override explicitly
     /// defines other behavior. <see cref="ResetState"/> runs first. Change notifications raised while copying are
     /// coalesced into one final <see cref="Changed"/> event. Batches targeting the same resource are serialized, but
-    /// derived state still requires caller coordination. The operation is not transactional if a derived callback fails.
+    /// derived state still requires caller coordination. The target retains its current compiled source and live binding.
+    /// The operation is not transactional if a derived callback fails.
     /// A reset or copy failure still attempts one final change event. Operation and final handler failures are
     /// aggregated in that order. Nested batches publish at the outer boundary; a final handler may start a new batch.
     /// Stored base state includes inherited <see cref="ElectronObject.CanTranslateMessages"/> and
@@ -371,22 +372,28 @@ public class Resource : ElectronObject
                 {
                     var copied = false;
                     var scriptChanged = false;
+                    Exception? operationError = null;
                     try
                     {
                         source.ThrowIfDisposed();
                         var (name, localToScene, canTranslateMessages, translationDomain) = source.GetCopyableBaseState();
                         EmitChanged(); ThrowIfDisposed(); OnResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
                         CanTranslateMessages = canTranslateMessages; TranslationDomain = translationDomain;
+                        if (copyConstructionScript && CopyConstructionScript(source, source.GetScript(), out scriptChanged) is { } bindingError)
+                            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
                         source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
-                        if (copyConstructionScript) scriptChanged = CopyConstructionScript(source);
                         copied = true;
                     }
+                    catch (Exception error) { operationError = error; }
                     finally
                     {
                         if (copied) { var transfer = retention; retention = null; AdoptFileOwnership(transfer); }
                         else if (retention is not null) { var previous = _fileOwnership; _fileOwnership = previous is null ? retention : new ResourceFileOwnership([], [previous, retention]); retention = null; OnFileOwnershipChanged(); }
                     }
-                    if (scriptChanged) NotifyConstructionScriptChanged();
+                    Exception? notificationError = null;
+                    try { if (scriptChanged) NotifyConstructionScriptChanged(); }
+                    catch (Exception error) { notificationError = error; }
+                    ThrowCombined(operationError, notificationError);
                 }, emitAtEnd: true);
         }
         finally { retention?.ReleaseOwner(); }
@@ -1064,6 +1071,7 @@ public class Resource : ElectronObject
 
             target = ValidateTarget(source, target);
             ExtensionBindings.AttachConstructed(target);
+            target.InitializeScriptBinding(source);
             _duplicates.Add(source, target);
 
             if (source.ResourceLocalToScene)
@@ -1102,11 +1110,24 @@ public class Resource : ElectronObject
                 var (name, local, translate, domain) = from.GetCopyableBaseState();
                 to.ExecuteChangeBatch(() =>
                 {
-                    to.OnResetState(); to.ResourceName = name; to.ResourceLocalToScene = local;
-                    to.CanTranslateMessages = translate; to.TranslationDomain = domain;
-                    from.CopyCustomStateTo(to, deep: true, mode, r => r is null ? null : Duplicate(r), r => r is null ? null : Duplicate(r, force: true));
+                    var changed = false;
+                    Exception? operationError = null;
+                    try
+                    {
+                        to.OnResetState(); to.ResourceName = name; to.ResourceLocalToScene = local;
+                        to.CanTranslateMessages = translate; to.TranslationDomain = domain;
+                        var script = from.GetScript();
+                        if (to.CopyConstructionScript(from, script is null ? null : (Script)Duplicate(script), out changed) is { } bindingError)
+                            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
+                        from.CopyCustomStateTo(to, deep: true, mode, r => r is null ? null : Duplicate(r), r => r is null ? null : Duplicate(r, force: true));
+                        to.AdoptFileOwnership(from._fileOwnership?.RetainOwner());
+                    }
+                    catch (Exception error) { operationError = error; }
+                    Exception? notificationError = null;
+                    try { if (changed) to.NotifyConstructionScriptChanged(); }
+                    catch (Exception error) { notificationError = error; }
+                    ThrowCombined(operationError, notificationError);
                 }, emitAtEnd: true);
-                to.AdoptFileOwnership(from._fileOwnership?.RetainOwner());
             }
             void Reserve(Resource from, Resource to)
             {
