@@ -107312,6 +107312,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.ClipboardGetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardGetImage",
+    "signature": "public static Electron2D.Image ClipboardGetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.ClipboardGetPrimary()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -107330,6 +107343,19 @@
     "declaringType": "Electron2D.DisplayServer",
     "name": "ClipboardHas",
     "signature": "public static System.Boolean ClipboardHas()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.ClipboardHasImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "ClipboardHasImage",
+    "signature": "public static System.Boolean ClipboardHasImage()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

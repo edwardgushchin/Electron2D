@@ -106,3 +106,8 @@ The [EXR I/O slice](../components/image-exr.md) supplies precision-preserving HD
 [UInt16 image texture sources](integer-textures.md) now retain all four original layouts and mip chains, use raw unsigned RGBA16 GPU storage, validate ordinary/layered sampler scalars and reject unsupported integer drawing on Compatibility.
 
 Runtime [portable texture encoding](portable-textures.md) now supplies Image.Compress/CompressFromChannels for ETC1, ETC2/EAC and ASTC 4×4/8×8 LDR/HDR alongside S3TC/BPTC. All channel policies, complete mips and bounded atomic publication share the existing Image contract. Basis UASTC creation is exposed through PortableCompressedTexture.
+
+[Clipboard image ingestion](clipboard-images.md) uses these same buffer decoders
+and encoded-input limit. The native buffer retires after the independent Image
+copy; returned precision and layout follow the selected decoder. Clipboard queries
+remain cold display-owner operations and do not add a file-path interpretation.

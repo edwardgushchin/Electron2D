@@ -7,7 +7,7 @@ namespace Electron2D;
 
 public sealed partial class Image
 {
-    private const int MaximumEncodedBytes = 64 * 1024 * 1024;
+    internal const int MaximumEncodedBytes = 64 * 1024 * 1024;
 
     /// <summary>Replaces this image with decoded pixels from a file.</summary>
     /// <param name="path">An operating-system, res://, user:// or registered UID path to an image file.</param>

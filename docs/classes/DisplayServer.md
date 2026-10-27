@@ -180,6 +180,8 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void WindowSetPosition(Vector2i position, int windowId = MainWindowId)`](#method-windowsetposition) | Requests a global desktop position for the main window. |
 | [`public static bool ClipboardHas()`](#method-clipboardhas) | Gets whether the system clipboard currently contains text. |
 | [`public static string ClipboardGet()`](#method-clipboardget) | Gets text from the system clipboard. |
+| [`public static Image? ClipboardGetImage()`](#clipboard-images) | Decodes independent caller-owned clipboard image data, or returns null when absent. |
+| [`public static bool ClipboardHasImage()`](#clipboard-images) | Decodes and disposes a temporary image to test actual image availability. |
 | [`public static void ClipboardSet(string text)`](#method-clipboardset) | Replaces system clipboard text. |
 | [`public static string ClipboardGetPrimary()`](#method-clipboardgetprimary) | Gets text from the platform's primary selection. |
 | [`public static void ClipboardSetPrimary(string text)`](#method-clipboardsetprimary) | Replaces text in the platform's primary selection. |
@@ -1205,7 +1207,7 @@ Identifies a display-server capability for `HasFeature`.
 | `Touchscreen = 2` | Touchscreen input. |
 | `Mouse = 3` | Mouse input. |
 | `MouseWarp = 4` | Pointer warping. |
-| `Clipboard = 5` | Text clipboard access. |
+| `Clipboard = 5` | Text and supported image clipboard access. |
 | `VirtualKeyboard = 6` | An on-screen keyboard. |
 | `CursorShape = 7` | System cursor shapes. |
 | `CustomCursorShape = 8` | Image-backed custom cursors. |
@@ -1450,3 +1452,21 @@ Window.Transparent configured before Engine.Run is passed into native main-windo
 BootImageTests verifies real main-window alpha pixels, the native transparency flag, strict GPU failure cleanup, permitted fallback and live-change rollback on software Linux Wayland/X11. This does not establish physical compositor appearance, native GPU alpha or other-platform support.
 
 Accessibility keeps screen origin unavailable on Wayland and the SDL dummy driver. Automatic semantic synchronization still publishes window-relative geometry and does not query unsupported decorated-window positions on the dummy driver.
+
+## Clipboard images
+
+`public static Image? ClipboardGetImage()` returns an independent caller-owned Image
+from the ordinary selection, or null when no supported image MIME is offered. It
+accepts PNG, JPEG, WebP, SVG, BMP, both TGA aliases, KTX and EXR in that priority
+order; selected malformed data never falls through to a lower-priority encoding.
+The existing Image decoders retain alpha, precision, layouts/mips and their shared
+64 MiB encoded/decoded-dimension bounds. Dispose a successful result. File-manager
+paths and URI lists do not supply pixels. Invalid data raises InvalidDataException;
+failed native retrieval raises IOException.
+
+`public static bool ClipboardHasImage()` performs the same cold read/decoding and
+disposes its temporary result. It returns false for absent, invalid, oversize or
+unretrievable data. A positive predicate cannot reserve a later selection. Both
+methods require the live display owner; unavailable/off-owner calls fail. Wayland
+requires a current offer delivered to a keyboard-focused client. See [clipboard
+images](../components/clipboard-images.md) for native proof and platform boundaries.

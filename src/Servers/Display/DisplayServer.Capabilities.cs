@@ -15,7 +15,7 @@ public sealed partial class DisplayServer
         Mouse = 3,
         /// <summary>Pointer warping.</summary>
         MouseWarp = 4,
-        /// <summary>Text clipboard access.</summary>
+        /// <summary>Text and supported image clipboard access.</summary>
         Clipboard = 5,
         /// <summary>An on-screen keyboard.</summary>
         VirtualKeyboard = 6,

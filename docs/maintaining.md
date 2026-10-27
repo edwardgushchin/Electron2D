@@ -554,3 +554,9 @@ shared-library path in a separate root-test process. Independent fields must
 survive native failures, and zero/overflow arithmetic must retain its sentinel
 contract. See [host memory](components/host-memory.md) for exact platform meanings
 and qualification limits.
+
+Clipboard image changes use the public-only `ClipboardImages.Consumer` and its
+private Mutter `run_native.py` producer/reader driver. Exercise all MIME roles,
+preferred-format failures, absent/file-list/empty/oversize offers, copied ownership,
+predicate retirement and actual image-to-texture pixels on each claimed renderer.
+Use strict full-trim NativeAOT separately. See [clipboard image reproduction](components/clipboard-images.md#verification-and-reproduction).

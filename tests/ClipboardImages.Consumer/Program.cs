@@ -1,0 +1,1 @@
+ClipboardImageChecks.Run(args);

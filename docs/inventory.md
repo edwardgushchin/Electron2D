@@ -2333,3 +2333,9 @@ The [navigation diagnostics component](components/navigation-diagnostics.md) add
 | [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.AppleMemoryStatus](classes/OS.AppleMemoryStatus.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
 | [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.AppleSwapStatus](classes/OS.AppleSwapStatus.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
 | [Core](domains/core.md) | [Host memory](components/host-memory.md) | [OS.AppleMemoryHost](classes/OS.AppleMemoryHost.md) | [native queries](../src/Core/OS/OS.Memory.cs) | Internal | Native ABI storage or retained Apple host-port identity; never exposed to consumers. |
+
+## Clipboard image ingestion
+
+| Domain | Component | Types | Source | Status | Contract |
+| --- | --- | --- | --- | --- | --- |
+| [Display](domains/display.md) | [Clipboard images](components/clipboard-images.md) | [DisplayServer](classes/DisplayServer.md#clipboard-images), [Image](classes/Image.md) | [MIME/ownership bridge](../src/Servers/Display/DisplayServer.ClipboardImages.cs), [shared codec budget](../src/Core/IO/Image.Codecs.cs) | Current | Nine encoded MIME roles (including both TGA aliases) into independent owned images and native texture consumers, with data/owner/lifetime checks. Foreign native bitmap adapters remain separate. |

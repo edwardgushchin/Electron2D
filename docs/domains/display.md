@@ -152,3 +152,11 @@ Native accessibility scrolling now connects existing scrollable GUI sources to A
 
 
 [Producer models](../classes/AccessibilityServer.md#producer-models) let native action handlers resolve the current typed model by element RID. The slot follows native element lifetime and stays outside authored scene storage; the owning reference records release, type and verification contracts.
+
+## Clipboard images
+
+Static `DisplayServer.ClipboardGetImage` and `ClipboardHasImage` connect native
+MIME offers to existing owned Image decoders and ImageTexture consumers. The
+[component](../components/clipboard-images.md) defines selection order, nullable
+results, cold predicate decoding, data budgets, precision and owner/lifetime rules.
+Native Wayland verification uses an isolated compositor and external producer.

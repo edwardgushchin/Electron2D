@@ -6,7 +6,7 @@ Last updated: 2026-10-27
 
 ## Scope
 
-This component owns the native SDL video connection, one main window, display and system-theme queries, borrowed operating-system display/window and supported graphics-context identities, cursor and icon resources, clipboard text, IME state, and the event pump. It is the host-facing native boundary before Engine frame scheduling.
+This component owns the native SDL video connection, one main window, display and system-theme queries, borrowed operating-system display/window and supported graphics-context identities, cursor and icon resources, clipboard text and [image ingestion](clipboard-images.md), IME state, and the event pump. It is the host-facing native boundary before Engine frame scheduling.
 
 ## Owned types
 

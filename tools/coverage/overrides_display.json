@@ -1,5 +1,7 @@
 {
   "mappings": [
+    {"godot": "DisplayServer::method:clipboard_get_image()", "electron2d": "method:Electron2D.DisplayServer.ClipboardGetImage()", "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md."},
+    {"godot": "DisplayServer::method:clipboard_has_image()", "electron2d": "method:Electron2D.DisplayServer.ClipboardHasImage()", "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md."},
     {
       "electron2d": "T:Electron2D.WindowFlag",
       "godot": "DisplayServer::enum:WindowFlags",
@@ -1001,8 +1003,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: First clipboard image MIME/decoder integration using owned Image buffers; include in its first native image-I/O slice.",
+      "state": "Implemented",
+      "reason": "ADRs0004/0040/0095: retained static display image reads select PNG/JPEG/WebP/SVG/BMP/TGA aliases/KTX/EXR MIME data, preserve source alpha/precision, return independent owned Image values and deterministically free native buffers. The preferred format does not silently fall back after invalid data; shared image budgets apply. ClipboardHasImage decodes and retires its temporary result, reporting false for absent/invalid/unavailable data. Private input-capable Mutter Wayland producer/reader processes exercise all MIME roles, priority/empty/malformed/oversize/file-list cases, ownership/census/owner/lifecycle guards and actual GPU/Compatibility image-to-texture capture; strict NativeAOT and foreign native bitmap/driver/heap gates remain separately qualified. See docs/components/clipboard-images.md.",
       "godot": [
         "DisplayServer::method:clipboard_get_image()",
         "DisplayServer::method:clipboard_has_image()"
