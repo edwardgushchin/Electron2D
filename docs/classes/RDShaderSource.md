@@ -1,6 +1,6 @@
 # RDShaderSource
 
-Last updated: 2026-10-12
+Last updated: 2026-10-27
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSource`. **Component:** [Source authoring](../components/local-compute.md#source-authoring-and-build-imports).
 
@@ -146,3 +146,5 @@ Initially empty; null is invalid.
 ## Compilation, ownership and verification
 
 Descriptions are snapshotted at authoring; returned stage bytes are independent of descriptions, cache storage and later mutations/disposal. The compiler returns stage diagnostics and preserves successful siblings; native creation retains program-role/interface/capability checks. Source compilation is a cold operation through an optional installed tool and is not required by games loading compiled assets. [RenderingDeviceSourceTests](../../tests/Electron2D.Tests/RenderingDeviceSourceTests.cs) covers defaults, errors, copied/cache results, include changes, real GPU compute/graphics/canvas and prepared zero managed recording on Linux/Vulkan. See [the component contract](../components/local-compute.md#source-authoring-and-build-imports) for bounds, cache bypass, toolkit delivery and unverified platforms/native allocations.
+
+[Half modules](../components/local-compute.md#native-half-arithmetic-and-packed-data) use independently enabled native arithmetic/storage and the existing device execution path. Direct HLSL Half specialization retains the pinned frontend prerequisite.

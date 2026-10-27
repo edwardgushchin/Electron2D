@@ -6,3 +6,4 @@ EXPORTS
     e2d_render_memory
     e2d_render_sampler
     e2d_render_sampler_view
+    e2d_render_shader16_support

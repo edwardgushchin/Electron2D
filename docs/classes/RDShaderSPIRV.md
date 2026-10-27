@@ -1,6 +1,6 @@
 # RDShaderSPIRV
 
-Last updated: 2026-10-19
+Last updated: 2026-10-27
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSPIRV`. **Source:** [RDShaderSPIRV.cs](../../src/Servers/Rendering/Device/RDShaderSPIRV.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -228,3 +228,5 @@ Specialization declarations retain copied symbolic templates until pipeline crea
 [ShaderCompileSPIRVFromSource](RenderingDevice.md#source-authoring) returns an independent compiled resource with diagnostics per attempted stage. Failed stages stay empty while successful siblings survive. Descriptions and returned byte arrays never expose cache storage; native creation still uses the common device capability, lifetime and program-role checks.
 
 [RDShaderFile](RDShaderFile.md) borrows these resources under named versions and preserves aliases, copied stage bytecode and diagnostics in saved graphs. Selecting a file version supplies this same module to the ordinary device factories; replacing a version does not dispose its predecessor.
+
+[Half modules](../components/local-compute.md#native-half-arithmetic-and-packed-data) use independently enabled native arithmetic/storage and the existing device execution path. Direct HLSL Half specialization retains the pinned frontend prerequisite.

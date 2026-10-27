@@ -6,6 +6,7 @@
 #include <SDL3/SDL_vulkan.h>
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
+extern int e2d_render_shader16_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_filter_support(SDL_GPUDevice *, uint32_t, uint8_t *, uint32_t);
 extern int e2d_render_texture_format(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
 extern int e2d_render_limits(SDL_GPUDevice *, uint32_t, uint64_t *, uint32_t);
@@ -36,6 +37,8 @@ static int reader(void *device)
 }
 int main(int argc, char **argv)
 {
+    require(e2d_render_shader16_support(NULL, 1) == -1);
+    require(e2d_render_shader16_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     enum { FILTER_COUNT = SDL_GPU_TEXTUREFORMAT_ASTC_12x12_FLOAT + 1 };
     uint8_t filters[FILTER_COUNT]; SDL_memset(filters, 0xA5, sizeof(filters));
     require(e2d_render_filter_support(NULL, 1, filters, FILTER_COUNT) == -1);
@@ -74,6 +77,8 @@ int main(int argc, char **argv)
     require(device != NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 4, 2, 2, 0) == NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
+    int shader16 = e2d_render_shader16_support(device, 1); require(shader16 >= 0 && shader16 <= 31);
+    printf("Native 16-bit feature mask: %d\n", shader16);
     require(e2d_render_filter_support(device, 1, filters, FILTER_COUNT) == 1);
     require(filters[SDL_GPU_TEXTUREFORMAT_INVALID] == 0);
     require(filters[SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM] == 3);

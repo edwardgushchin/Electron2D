@@ -48,3 +48,21 @@ E2D_EXPORT int e2d_render_texture_format(SDL_GPUDevice *device, uint32_t abi, SD
     uint32_t format = header->info.format;
     return format > 0 && format < SDL_arraysize(SDLToVK_TextureFormat) ? (int)format : -1;
 }
+
+E2D_EXPORT int e2d_render_shader16_support(SDL_GPUDevice *device, uint32_t abi)
+{
+    if (!device || abi != 1) return -1;
+    if (!compatible(device)) return 0;
+    const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
+    if (renderer->physicalDeviceProperties.properties.apiVersion < VK_API_VERSION_1_2) return 0;
+    PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    PFN_vkGetPhysicalDeviceFeatures2 query = proc ? (PFN_vkGetPhysicalDeviceFeatures2)proc(renderer->instance, "vkGetPhysicalDeviceFeatures2") : NULL;
+    if (!query && proc) query = (PFN_vkGetPhysicalDeviceFeatures2)proc(renderer->instance, "vkGetPhysicalDeviceFeatures2KHR");
+    if (!query) return 0;
+    VkPhysicalDeviceVulkan12Features f12 = {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES};
+    VkPhysicalDeviceVulkan11Features f11 = {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES, .pNext = &f12};
+    VkPhysicalDeviceFeatures2 features = {.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, .pNext = &f11};
+    query(renderer->physicalDevice, &features);
+    return (f11.storageBuffer16BitAccess ? 1 : 0) | (f11.uniformAndStorageBuffer16BitAccess ? 2 : 0) |
+        (f11.storagePushConstant16 ? 4 : 0) | (f11.storageInputOutput16 ? 8 : 0) | (f12.shaderFloat16 ? 16 : 0);
+}

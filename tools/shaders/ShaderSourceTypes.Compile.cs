@@ -20,8 +20,15 @@ internal static unsafe partial class ShaderSourceTypes
         var pointers = instructions.Where(i => Electron2D.MaterialLightingProgram.Op(i) == 32 && i[2] == 0 && arrays.Contains(i[3])).Select(i => i[1]).ToHashSet();
         return instructions.Any(i => Electron2D.MaterialLightingProgram.Op(i) == 59 && pointers.Contains(i[1]));
     }
-    internal static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, bool preprocess = false, bool defaults = false)
+    internal static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, bool preprocess = false, bool defaults = false, bool allowNative16 = false)
     {
+        var native16 = false;
+        if (allowNative16)
+        {
+            var expanded = Encoding.UTF8.GetString(CompileHLSL(source, stage, includeDirectory, preprocess: true));
+            var body = string.Join('\n', expanded.Split('\n').Where(line => !line.TrimStart().StartsWith('#')));
+            native16 = System.Text.RegularExpressions.Regex.Matches(body, "\"(?:\\\\.|[^\"\\\\])*\"|\\b(?:float16_t|int16_t|uint16_t)\\b", System.Text.RegularExpressions.RegexOptions.CultureInvariant).Any(match => match.Value[0] != '"');
+        }
         nint compiler = 0, utilities = 0, include = 0, result = 0, errors = 0, output = 0;
         var strings = new List<nint>();
         try
@@ -32,7 +39,9 @@ internal static unsafe partial class ShaderSourceTypes
             Check(DxcCreateInstance(in utilsClass, in utilsInterface, out utilities));
             Check(((delegate* unmanaged<nint, nint*, int>)Slot(utilities, 9))(utilities, &include));
             var profile = stage == RenderingDevice.ShaderStage.Compute ? "cs_6_0" : stage == RenderingDevice.ShaderStage.Vertex ? "vs_6_0" : "ps_6_0";
+            if (native16) profile = profile[..3] + "6_2";
             var arguments = new List<string> { "-E", "main", "-T", profile, "-HV", "2021", "-spirv", "-fspv-preserve-bindings", "-fspv-preserve-interface", "-encoding", "utf8" };
+            if (native16) arguments.Add("-enable-16bit-types");
             if (preprocess) arguments.Add("-P");
             if (defaults) { arguments.Remove("-fspv-preserve-interface"); arguments.Remove("-fspv-preserve-bindings"); }
             if (includeDirectory is not null) { arguments.Add("-I"); arguments.Add(includeDirectory); }

@@ -2358,3 +2358,5 @@ Internal [RenderMemory](classes/RenderMemory.md), [RenderMemorySnapshot](classes
 [Wide integer GPU execution](components/local-compute.md#native-64-bit-integer-arithmetic-and-data) now supplies signed/unsigned Int64 arithmetic, raw buffers/push layouts, typed specialization, wide interstage graphics data and independent optional precision negotiation. Existing public type families are extended; compiler, format and platform boundaries remain explicit.
 
 [Wide compute atomics](components/local-compute.md#native-64-bit-buffer-and-workgroup-atomics) extend the existing RenderingDevice/RDShaderSPIRV/RDShaderSource families with native buffer/workgroup operations and independent feature refusal.
+
+[Native Half data](components/local-compute.md#native-half-arithmetic-and-packed-data) extends RenderingDevice, RDShaderSPIRV/RDShaderSource and typed specialization with packed arithmetic, buffer/uniform/push layouts and independent native capability guards.

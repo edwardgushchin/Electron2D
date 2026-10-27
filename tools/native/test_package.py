@@ -130,7 +130,7 @@ endif()
             subprocess.run([str(executable)], check=True)
 
     def test_private_codec_export_lists_match_the_required_abi(self):
-        for component, name in (("mesh-native", "libElectron2DMesh.so"), ("ktx-native", "libElectron2DKTX.so")):
+        for component, name in (("mesh-native", "libElectron2DMesh.so"), ("ktx-native", "libElectron2DKTX.so"), ("render-native", "libElectron2DRender.so")):
             directory = package.ROOT / "tools" / component
             expected = package.required_exports(name)
             for filename in ("exports.map", "exports.macos", "exports.def"):

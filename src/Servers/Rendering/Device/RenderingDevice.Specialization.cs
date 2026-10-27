@@ -58,6 +58,7 @@ public sealed unsafe partial class RenderingDevice
             { if (t[2] == 32) return t[3] == 1 ? 1 : 2; if (t[2] == 64) return t[3] == 1 ? 5 : 6; }
             if (Op(t) == 22 && t.Length == 3 && t[2] == 32) return 3;
             if (Op(t) == 22 && t.Length == 3 && t[2] == 64) return 4;
+            if (Op(t) == 22 && t.Length == 3 && t[2] == 16) return 7;
             throw new NotSupportedException("Specialization scalar precision requires its native shader adapter.");
         }
         private Value Evaluate(uint id)
@@ -70,10 +71,11 @@ public sealed unsafe partial class RenderingDevice
                 var op = Op(ins); var type = ins[1];
                 if (op is 41 or 42 or 43 or 48 or 49 or 50)
                 {
-                    var kind = Kind(type); if (ins.Length != (kind == 0 ? 3 : kind >= 4 ? 5 : 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
-                    ulong bits = op is 41 or 48 ? 1ul : op is 42 or 49 ? 0ul : ins[3] | (kind >= 4 ? (ulong)ins[4] << 32 : 0);
+                    var kind = Kind(type); if (ins.Length != (kind == 0 ? 3 : kind is 4 or 5 or 6 ? 5 : 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
+                    ulong bits = op is 41 or 48 ? 1ul : op is 42 or 49 ? 0ul : ins[3] | (kind is 4 or 5 or 6 ? (ulong)ins[4] << 32 : 0);
                     if (op is 48 or 49 or 50 && _specIDs.TryGetValue(id, out var external) && _overrides.TryGetValue(external, out var replacement))
                     { if (replacement.Kind != kind) throw new ArgumentException("Specialization value type does not match its module declaration."); bits = replacement.Bits; _used.Add(external); }
+                    if (kind == 7 && bits > ushort.MaxValue) throw new ArgumentException("A half constant has an invalid literal width.");
                     value = new(type, bits);
                 }
                 else if (op is 44 or 51)
@@ -140,17 +142,14 @@ public sealed unsafe partial class RenderingDevice
             if (op == 115)
             {
                 var sourceKind = Kind(operands[0].Type); var resultKind = Kind(type); var sourceBits = operands[0].Bits;
-                var converted = (sourceKind, resultKind) switch
-                {
-                    (3, 3) or (4, 4) => sourceBits,
-                    (3, 4) => BitConverter.DoubleToUInt64Bits(BitConverter.UInt32BitsToSingle((uint)sourceBits)),
-                    (4, 3) => BitConverter.SingleToUInt32Bits((float)BitConverter.UInt64BitsToDouble(sourceBits)),
-                    _ => throw new NotSupportedException("Specialization conversion requires supported floating-point types.")
-                };
+                if (sourceKind is not (3 or 4 or 7) || resultKind is not (3 or 4 or 7)) throw new NotSupportedException("Specialization conversion requires supported floating-point types.");
+                if (sourceKind == resultKind) return new(type, sourceBits);
+                var number = sourceKind == 7 ? (double)BitConverter.UInt16BitsToHalf((ushort)sourceBits) : sourceKind == 3 ? BitConverter.UInt32BitsToSingle((uint)sourceBits) : BitConverter.UInt64BitsToDouble(sourceBits);
+                ulong converted = resultKind == 7 ? BitConverter.HalfToUInt16Bits((Half)number) : resultKind == 3 ? BitConverter.SingleToUInt32Bits((float)number) : BitConverter.DoubleToUInt64Bits(number);
                 return new(type, converted);
             }
             if (op == 169) return new(type, operands[0].Bits != 0 ? operands[1].Bits : operands[2].Bits);
-            if (Kind(type) == 4) throw new NotSupportedException("This double specialization operation is outside the Shader profile.");
+            if (Kind(type) is 4 or 7) throw new NotSupportedException("This floating-point specialization operation is outside the Shader profile.");
             ulong A(int n) => n < operands.Length && operands[n].Elements is null ? operands[n].Bits : throw new ArgumentException("Invalid specialization scalar operands.");
             var width = Kind(operands[0].Type) is 5 or 6 ? 64 : 32; var mask = width == 64 ? ulong.MaxValue : uint.MaxValue;
             var a = A(0) & mask; ulong B() => A(1) & mask; ulong Bool(bool x) => x ? 1ul : 0ul;
@@ -224,7 +223,7 @@ public sealed unsafe partial class RenderingDevice
                 Emit(output, 44, [value.Type, id, .. ids]);
             }
             else if (Kind(value.Type) == 0) Emit(output, value.Bits != 0 ? 41u : 42u, value.Type, id);
-            else if (Kind(value.Type) >= 4) Emit(output, 43, value.Type, id, (uint)value.Bits, (uint)(value.Bits >> 32));
+            else if (Kind(value.Type) is 4 or 5 or 6) Emit(output, 43, value.Type, id, (uint)value.Bits, (uint)(value.Bits >> 32));
             else Emit(output, 43, value.Type, id, (uint)value.Bits);
         }
         internal byte[] Freeze()

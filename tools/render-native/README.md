@@ -48,3 +48,7 @@ The Linux test_fp64_mask.c SDL3_DYNAMIC_API shim refuses shaderFloat64 feature r
 The Linux test_int64_mask.c development shim selects int64/fp64/both through ELECTRON2D_TEST_MASK_PRECISION. DeviceInt64.Consumer verifies independent fallback and executing remaining precision; the fixture is excluded from runtime packaging.
 
 The Linux test_atomic64_mask.c development shim selects buffer/shared/both/api through ELECTRON2D_TEST_MASK_ATOMIC64. DeviceAtomic64.Consumer checks independent storage fallback and rejection before shader/binary publication. The api profile refuses Vulkan 1.2 requests. This shim is excluded from runtime packaging.
+
+`e2d_render_shader16_support` uses ABI 1 and returns the selected Vulkan 1.2 physical device's supported buffer/uniform/push/input-output storage bits (0..3) and Float16 arithmetic bit (4). Zero means no supported narrow profile; invalid arguments return -1. The mask describes support before optional device creation, not enabled device features. The managed factory retires the unpublished probe before creating a final device and retains the accepted mask privately. The export is included in all three export lists and the native package closure.
+
+The Linux test_shader16_mask.c development shim selects arithmetic/buffer/uniform/push/io/all/api through ELECTRON2D_TEST_MASK_SHADER16. DeviceFP16.Consumer verifies retained sibling profiles, original-module/binary refusal and legacy HLSL. Never package this shim.

@@ -16,7 +16,7 @@ public sealed unsafe partial class RenderingDevice
         private readonly Dictionary<uint, uint> _valueTypes = [];
         private readonly Dictionary<uint, uint> _uintConstants = [];
         private readonly List<uint> _constants = [], _functions = [];
-        private uint _next, _uint, _vector, _wordPair, _scalarPointer, _raw, _root, _block;
+        private uint _next, _uint, _vector, _wordPair, _halfPair, _scalarPointer, _raw, _root, _block;
         private readonly uint[] _header;
         private int _depth;
         private uint Fresh() => _next < 1_048_576 ? _next++ : throw new ArgumentException("Translated shader identities exceed the module limit.");
@@ -44,14 +44,19 @@ public sealed unsafe partial class RenderingDevice
             {
                 var t = Type(type);
                 if (Op(t) is 23 or 24 or 28) { type = t[2]; continue; }
-                return Op(t) is 21 or 22 && t[2] == 64 ? 8u : 4u;
+                return Op(t) is 21 or 22 ? t[2] / 8 : 4u;
             }
             throw new ArgumentException("Push element nesting exceeds the module depth.");
+        }
+        private uint Alignment(uint type)
+        {
+            var t = Type(type);
+            return Op(t) switch { 22 when t[2] == 16 => 2, 23 or 24 or 28 => Alignment(t[2]), 30 => t.Skip(2).Select(Alignment).DefaultIfEmpty(4u).Max(), _ => 4 };
         }
         private (uint Column, uint Row) Matrix(uint type, uint member)
         {
             if (!_members.TryGetValue((type, member, 7), out var stride)) return (0, 0);
-            if (stride == 0 || stride % 4 != 0 || _members.ContainsKey((type, member, 4)) == _members.ContainsKey((type, member, 5))) throw new ArgumentException("Invalid push matrix layout.");
+            if (stride == 0 || stride % CellBytes(Type(type)[member + 2]) != 0 || _members.ContainsKey((type, member, 4)) == _members.ContainsKey((type, member, 5))) throw new ArgumentException("Invalid push matrix layout.");
             var cell = CellBytes(Type(type)[member + 2]);
             return _members.ContainsKey((type, member, 4)) ? (cell, stride) : (stride, cell);
         }
@@ -67,7 +72,7 @@ public sealed unsafe partial class RenderingDevice
                     case 21:
                         if (t[2] is not (32 or 64)) throw new NotSupportedException("Push integer precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 22:
-                        if (t[2] is not (32 or 64)) throw new NotSupportedException("Push floating-point precision requires its native shader adapter."); size = t[2] / 8; break;
+                        if (t[2] is not (16 or 32 or 64)) throw new NotSupportedException("Push floating-point precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 23: if (t[3] is < 2 or > 4) throw new ArgumentException("Invalid push vector width."); size = checked(Size(t[2]) * t[3]); break;
                     case 24:
                         var vector = Type(t[2]); if (Op(vector) != 23 || vector.Length != 4 || vector[3] is < 2 or > 4 || t[3] is < 2 or > 4) throw new ArgumentException("Invalid push matrix type.");
@@ -76,13 +81,13 @@ public sealed unsafe partial class RenderingDevice
                         size = checked(column == cell ? row * vector[3] : column * t[3]); break;
                     case 28:
                         var count = Literal(t[3]); var stride = Decoration(id, 6);
-                        if (count == 0 || stride % 4 != 0 || stride < Size(t[2], column, row)) throw new ArgumentException("Invalid push array layout."); size = checked(stride * count); break;
+                        if (count == 0 || stride % Alignment(t[2]) != 0 || stride < Size(t[2], column, row)) throw new ArgumentException("Invalid push array layout."); size = checked(stride * count); break;
                     case 30:
                         size = 0; var spans = new List<(uint Start, uint End)>();
                         for (uint i = 0; i < t.Length - 2; i++)
                         {
                             var offset = Member(id, i, 35); var matrix = Matrix(id, i); var end = checked(offset + Size(t[i + 2], matrix.Column, matrix.Row));
-                            if (offset % 4 != 0 || spans.Any(s => offset < s.End && s.Start < end)) throw new ArgumentException("Push members overlap or are not word aligned.");
+                            if (offset % Alignment(t[i + 2]) != 0 || spans.Any(s => offset < s.End && s.Start < end)) throw new ArgumentException("Push members overlap or violate scalar alignment.");
                             spans.Add((offset, end)); size = Math.Max(size, end);
                         }
                         break;
@@ -105,6 +110,16 @@ public sealed unsafe partial class RenderingDevice
             if (Op(t) is 20 or 21 or 22)
             {
                 var value = LoadWord(address);
+                if (Op(t) == 22 && t[2] == 16)
+                {
+                    if (_halfPair == 0)
+                    {
+                        _halfPair = _types.Values.FirstOrDefault(v => Op(v) == 23 && v.Length == 4 && v[2] == type && v[3] == 2)?[1] ?? 0;
+                        if (_halfPair == 0) { _halfPair = Fresh(); Emit(_constants, 23, _halfPair, type, 2); }
+                    }
+                    var pair = Instruction(124, _halfPair, value);
+                    return Instruction(77, type, pair, Instruction(199, _uint, Instruction(194, _uint, address, Constant(1)), Constant(1)));
+                }
                 if (Op(t) is 21 or 22 && t[2] == 64)
                 {
                     if (_wordPair == 0)
@@ -223,7 +238,9 @@ public sealed unsafe partial class RenderingDevice
             Emit(globals, 59, pointer, _raw, 2); Emit(globals, 44, _vector, _root, zero, zero, zero, four);
             var usedSets = _decorations.Where(d => d.Key.Item2 == 34).Select(d => d.Value).ToHashSet(); var privateSet = uint.MaxValue; while (usedSets.Contains(privateSet)) privateSet--;
             var annotations = new List<uint>(); Emit(annotations, 71, array, 6, 16); Emit(annotations, 71, structure, 2); Emit(annotations, 72, structure, 0, 35, 0); Emit(annotations, 71, _raw, 34, privateSet); Emit(annotations, 71, _raw, 33, 0);
-            var translated = new List<uint>(); var addedAnnotations = false; var addedGlobals = false;
+            var translated = new List<uint>();
+            if (_halfPair != 0 && !_instructions.Any(i => Op(i) == 17 && i[1] == 9)) Emit(translated, 17, 9);
+            var addedAnnotations = false; var addedGlobals = false;
             for (var i = 0; i < _functions.Count;)
             {
                 var count = (int)(_functions[i] >> 16); var ins = _functions.GetRange(i, count).ToArray(); var op = Op(ins); i += count;

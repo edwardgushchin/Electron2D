@@ -169,9 +169,9 @@ public static class ShaderImportApplication
             if (!ShaderCross.Init()) throw new InvalidOperationException("Cannot initialize shadercross: " + SDL.GetError());
             try
             {
-                var code = ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory);
+                var code = ShaderSourceTypes.CompileHLSL(source, stage, includeDirectory, allowNative16: deviceImport);
                 // Scalar programs retain the established import payload; descriptor arrays preserve their source shape.
-                if (!ShaderSourceTypes.HasDescriptorArrays(code)) code = CompileDeviceHLSL(source, stage, includeDirectory);
+                if (!ShaderSourceTypes.HasDescriptorArrays(code) && !Electron2D.MaterialLightingProgram.Module.Read(code).Any(i => Electron2D.MaterialLightingProgram.Op(i) == 22 && i[2] == 16)) code = CompileDeviceHLSL(source, stage, includeDirectory);
                 types = deviceImport ? null : ShaderSourceTypes.HLSL(source, stage == RenderingDevice.ShaderStage.Fragment, includeDirectory, code, particleImport);
                 return code;
             }

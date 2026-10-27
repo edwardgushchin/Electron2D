@@ -4,3 +4,4 @@ _e2d_render_limits
 _e2d_render_memory
 _e2d_render_sampler
 _e2d_render_sampler_view
+_e2d_render_shader16_support

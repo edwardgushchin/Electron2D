@@ -12,7 +12,7 @@ Supplies a strongly typed scalar value for a pipeline specialization identifier.
 
 Value initially has no override, preserving an unassigned description. Assign a value before passing it to a pipeline; omitted descriptions leave the module's defaults.
 
-The identifier base permits a heterogeneous typed span. The sealed generic family selects bool, int, uint, long, ulong, float or double. ConstantID starts at zero; Value starts at null and must be assigned before pipeline consumption. Factories copy values and preserve their scalar bits. Subsequent mutation/disposal has no effect on existing variants. Invalid scalar types, unassigned/duplicate/unknown/negative identifiers and incompatible module types reject before native creation. Inherited owner lifetime and typed property reversion remain available.
+The identifier base permits a heterogeneous typed span. The sealed generic family selects bool, int, uint, long, ulong, Half, float or double. ConstantID starts at zero; Value starts at null and must be assigned before pipeline consumption. Factories copy values and preserve their scalar bits. Subsequent mutation/disposal has no effect on existing variants. Invalid scalar types, unassigned/duplicate/unknown/negative identifiers and incompatible module types reject before native creation. Inherited owner lifetime and typed property reversion remain available.
 
 ## Example
 
@@ -73,3 +73,5 @@ Scalar defaults/overrides and dependent expressions resolve before native creati
 Native Double values, conversions and exact literal bits execute with the enabled Vulkan FP64 feature; [the precision contract](../components/local-compute.md#native-fp64-arithmetic-and-data) records raw data/push layouts, native checks and the pinned HLSL compiler boundary.
 
 Native Int64/UInt64 values, width-correct operations and exact overrides use the enabled Vulkan integer feature. See [wide integer execution](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) for raw data, graphics transfer and compiler boundaries.
+
+[Native Half specialization](../components/local-compute.md#native-half-arithmetic-and-packed-data) preserves two-byte scalar bits, width-only conversions and explicit arithmetic/storage prerequisites.

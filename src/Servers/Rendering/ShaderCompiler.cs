@@ -154,6 +154,7 @@ internal static unsafe partial class ShaderCompiler
                             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(fields + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
                             var (type, bits) = field.VectorType switch
                             {
+                                ShaderCross.IOVarType.Float16 => (0, 16u),
                                 ShaderCross.IOVarType.Float32 => (0, 32u),
                                 ShaderCross.IOVarType.Int32 => (1, 32u),
                                 ShaderCross.IOVarType.UInt32 => (2, 32u),
@@ -176,7 +177,7 @@ internal static unsafe partial class ShaderCompiler
             }
         }
         var v = Reflect(vertex); var f = Reflect(fragment);
-        if (v.Inputs.Any(i => i.BitWidth != 32) || f.Outputs.Any(i => i.BitWidth != 32)) throw new NotSupportedException("Wide vertex attributes and color outputs require their native format adapters.");
+        if (v.Inputs.Any(i => i.BitWidth != 32) || f.Outputs.Any(i => i.BitWidth != 32)) throw new NotSupportedException("Non-32-bit vertex attributes and color outputs require their native format adapters.");
         foreach (var input in f.Inputs)
             if (!v.Outputs.Contains(input)) throw new ArgumentException("Fragment inputs require matching vertex outputs.");
         return (v.Inputs, f.Outputs);
