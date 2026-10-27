@@ -35,7 +35,7 @@ internal static partial class RenderingDeviceSpecializationTests
     }
     private static void RunManaged()
     {
-        Expressions(); Float64Expressions(); Integer64Expressions(); HalfExpressions(); Integer16Expressions(); Atomic64Requirements(); NarrowRequirements();
+        Expressions(); Float64Expressions(); Integer64Expressions(); HalfExpressions(); Integer16Expressions(); Integer8Expressions(); Atomic64Requirements(); NarrowRequirements();
         var parser = typeof(RenderingDevice).Assembly.GetType("Electron2D.ShaderPrecision")!.GetMethod("ReadRequirements", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         (bool Float64, bool Int64) Requirements(params uint[] instructions)
         {
@@ -166,7 +166,7 @@ internal static partial class RenderingDeviceSpecializationTests
         using var empty = new RDPipelineSpecializationConstant<int>(); Check(empty.Value is null && empty.ConstantID == 0, "Typed specialization preserves unassigned value and identifier defaults.");
         var property = (PropertyDescriptor<RDPipelineSpecializationConstant<int>, int?>)empty.GetPropertyList().Single(p => p.Name == "Value"); empty.Value = 7; Check(property.GetValue(empty) == 7 && empty.PropertyCanRevert(property), "Nullable scalar metadata exposes assigned value."); empty.RevertProperty(property); Check(empty.Value is null, "Metadata reverts to unassigned value.");
         Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [empty]));
-        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<byte>());
+        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<char>());
         Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias, bias]));
         bias.ConstantID = 3; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias])); bias.ConstantID = -1; Reject<ArgumentOutOfRangeException>(() => device.ComputePipelineCreate(shader, [bias])); bias.ConstantID = 90; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [bias]));
         group.Value = 0; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [group])); group.Value = 1025; Reject<ArgumentException>(() => device.ComputePipelineCreate(shader, [group]));

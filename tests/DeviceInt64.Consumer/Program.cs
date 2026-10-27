@@ -35,7 +35,7 @@ internal static partial class WideInteger
         foreach (var bits in new ulong[] { 0, 1, 0x8000000000000000, 0x8000000000000001, 0x123456789abcdef0, ulong.MaxValue })
         { s.SetValue(signed, unchecked((long)bits)); u.SetValue(unsigned, bits); Check(unchecked((ulong)s.GetValue(signed)!.Value) == bits && u.GetValue(unsigned) == bits, "Typed metadata preserves both words and signedness."); }
         signed.RevertProperty(s); unsigned.RevertProperty(u); Check(signed.Value is null && unsigned.Value is null, "Wide values revert to unassigned.");
-        signed.Dispose(); unsigned.Dispose(); Reject<ObjectDisposedException>(() => _ = signed.Value); Reject<ObjectDisposedException>(() => _ = unsigned.Value); Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<byte>());
+        signed.Dispose(); unsigned.Dispose(); Reject<ObjectDisposedException>(() => _ = signed.Value); Reject<ObjectDisposedException>(() => _ = unsigned.Value); Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<char>());
         Console.WriteLine("PASS Int64/UInt64 metadata, exact boundary bits and lifecycle.");
     }
     private static RDShaderSPIRV Code(string name) => new() { BytecodeCompute = File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + ".spv")) };

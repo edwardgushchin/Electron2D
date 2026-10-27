@@ -150,3 +150,5 @@ Descriptions are snapshotted at authoring; returned stage bytes are independent 
 [Half modules](../components/local-compute.md#native-half-arithmetic-and-packed-data) use independently enabled native arithmetic/storage and the existing device execution path. Direct HLSL Half specialization retains the pinned frontend prerequisite.
 
 [Native Int16/UInt16 execution](../components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data) connects packed data, typed specialization and compute/graphics arithmetic with independently enabled storage and exact push reconstruction.
+
+[Native byte shaders](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) execute packed data, specialization and compute/graphics arithmetic through independent features. Native8 GLSL uses the Vulkan 1.2 producer; the pinned HLSL native8 type remains a frontend dependency.

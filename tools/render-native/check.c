@@ -39,7 +39,8 @@ int main(int argc, char **argv)
 {
     require(e2d_render_shader16_support(NULL, 1) == -1);
     require(e2d_render_shader16_support(NULL, 2) == -1);
-    require(e2d_render_shader16_support((SDL_GPUDevice *)(uintptr_t)1, 3) == -1);
+    require(e2d_render_shader16_support(NULL, 3) == -1);
+    require(e2d_render_shader16_support((SDL_GPUDevice *)(uintptr_t)1, 4) == -1);
     require(e2d_render_shader16_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     enum { FILTER_COUNT = SDL_GPU_TEXTUREFORMAT_ASTC_12x12_FLOAT + 1 };
     uint8_t filters[FILTER_COUNT]; SDL_memset(filters, 0xA5, sizeof(filters));
@@ -81,7 +82,8 @@ int main(int argc, char **argv)
     require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
     int shader16 = e2d_render_shader16_support(device, 1); require(shader16 >= 0 && shader16 <= 31);
     int shader16_v2 = e2d_render_shader16_support(device, 2); require(shader16_v2 >= 0 && shader16_v2 <= 63 && (shader16_v2 & 31) == shader16);
-    printf("Native 16-bit feature masks ABI1=%d ABI2=%d\n", shader16, shader16_v2);
+    int narrow_v3 = e2d_render_shader16_support(device, 3); require(narrow_v3 >= 0 && narrow_v3 <= 1023 && (narrow_v3 & 63) == shader16_v2);
+    printf("Native narrow feature masks ABI1=%d ABI2=%d ABI3=%d\n", shader16, shader16_v2, narrow_v3);
     require(e2d_render_filter_support(device, 1, filters, FILTER_COUNT) == 1);
     require(filters[SDL_GPU_TEXTUREFORMAT_INVALID] == 0);
     require(filters[SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM] == 3);

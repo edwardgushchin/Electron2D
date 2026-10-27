@@ -24,7 +24,7 @@ internal static partial class NarrowInteger
         var b = unsigned.GetPropertyList().OfType<PropertyDescriptor<RDPipelineSpecializationConstant<ushort>, ushort?>>().Single(p => p.Name == "Value");
         for (var bits = 0; bits <= ushort.MaxValue; bits++) { a.SetValue(signed, unchecked((short)bits)); b.SetValue(unsigned, (ushort)bits); Check(unchecked((ushort)a.GetValue(signed)!.Value) == bits && b.GetValue(unsigned) == bits, "Typed nullable metadata preserves all Int16/UInt16 patterns."); }
         signed.RevertProperty(a); unsigned.RevertProperty(b); Check(signed.Value is null && unsigned.Value is null, "Int16 reverts to unassigned."); signed.Dispose(); Reject<ObjectDisposedException>(() => _ = signed.Value);
-        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<byte>()); Console.WriteLine("PASS all 65536 Int16/UInt16 metadata patterns, unassigned/reversion and disposal.");
+        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<char>()); Console.WriteLine("PASS all 65536 Int16/UInt16 metadata patterns, unassigned/reversion and disposal.");
     }
     private static RDShaderSPIRV Code(string name) => new() { BytecodeCompute = File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + ".spv")) };
     private static void Compute(RenderingDevice device, string name, bool authoring = false)

@@ -2362,3 +2362,5 @@ Internal [RenderMemory](classes/RenderMemory.md), [RenderMemorySnapshot](classes
 [Native Half data](components/local-compute.md#native-half-arithmetic-and-packed-data) extends RenderingDevice, RDShaderSPIRV/RDShaderSource and typed specialization with packed arithmetic, buffer/uniform/push layouts and independent native capability guards.
 
 Native Int16/UInt16 shader execution extends RenderingDevice, RDShaderSPIRV, RDShaderSource and the typed short/ushort specialization family; [behavior and verification](components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data).
+
+Native Int8/UInt8 execution extends RenderingDevice, RDShaderSPIRV, RDShaderSource and typed sbyte/byte specialization; [behavior and verification](components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data).

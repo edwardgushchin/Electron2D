@@ -73,6 +73,12 @@ public static class ShaderImportApplication
                     await RequireVersion("glslangValidator", "Glslang Version: 11:16.6.0");
                     Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
                         args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-o", temporary, input));
+                    if (deviceImport && HasByteTypes(File.ReadAllBytes(temporary)))
+                    {
+                        // Native byte storage needs modern storage classes to retain independent buffer/uniform features.
+                        Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.2", "-S",
+                            args[1] == "compute" ? "comp" : args[1] == "fragment" ? "frag" : "vert", "-I" + includeRoot, "-I" + builtIns!.DirectoryPath, "-e", "main", "-o", temporary, input));
+                    }
                     if (!deviceImport)
                     {
                         Console.Write(await Execute("glslangValidator", "-V", "--target-env", "vulkan1.0", "-S",
@@ -113,7 +119,7 @@ public static class ShaderImportApplication
                 }
                 File.WriteAllBytes(temporary, result);
             }
-            Console.Write(await Execute("spirv-val", "--target-env", "vulkan1.0", temporary));
+            Console.Write(await Execute("spirv-val", "--target-env", deviceImport && HasByteTypes(result) ? "vulkan1.2" : "vulkan1.0", temporary));
             if (deviceImport) RenderingDevice.ValidateSourceModule(result, stage);
             else ShaderCompiler.ValidateInterface(result, fragment: args[1] == "fragment", mode: particleImport ? Shader.Mode.Particles : blitImport ? Shader.Mode.TextureBlit : Shader.Mode.CanvasItem);
             if (File.Exists(output) && new FileInfo(output).Length == result.Length &&
@@ -157,6 +163,8 @@ public static class ShaderImportApplication
         if (process.ExitCode != 0) throw new InvalidOperationException($"{executable} failed ({process.ExitCode}):\n{diagnostic}");
         return diagnostic;
     }
+
+    static bool HasByteTypes(byte[] code) => Electron2D.MaterialLightingProgram.Module.Read(code).Any(i => Electron2D.MaterialLightingProgram.Op(i) == 21 && i[2] == 8);
 
     static byte[] CompileHLSL(string source, RenderingDevice.ShaderStage stage, string? includeDirectory, string builtInDirectory, bool deviceImport, bool particleImport,
         out Dictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? types)

@@ -55,14 +55,15 @@ public sealed unsafe partial class RenderingDevice
         {
             var t = Type(type); if (Op(t) == 20) return 0;
             if (Op(t) == 21 && t.Length == 4 && t[3] <= 1)
-            { if (t[2] == 16) return t[3] == 1 ? 8 : 9; if (t[2] == 32) return t[3] == 1 ? 1 : 2; if (t[2] == 64) return t[3] == 1 ? 5 : 6; }
+            { if (t[2] == 8) return t[3] == 1 ? 10 : 11; if (t[2] == 16) return t[3] == 1 ? 8 : 9; if (t[2] == 32) return t[3] == 1 ? 1 : 2; if (t[2] == 64) return t[3] == 1 ? 5 : 6; }
             if (Op(t) == 22 && t.Length == 3 && t[2] == 32) return 3;
             if (Op(t) == 22 && t.Length == 3 && t[2] == 64) return 4;
             if (Op(t) == 22 && t.Length == 3 && t[2] == 16) return 7;
             throw new NotSupportedException("Specialization scalar precision requires its native shader adapter.");
         }
-        private static int ScalarBits(int kind) => kind is 8 or 9 ? 16 : kind is 5 or 6 ? 64 : 32;
-        private static ulong IntegerMask(int kind) => kind is 8 or 9 ? ushort.MaxValue : kind is 5 or 6 ? ulong.MaxValue : uint.MaxValue;
+        private static int ScalarBits(int kind) => kind is 10 or 11 ? 8 : kind is 8 or 9 ? 16 : kind is 5 or 6 ? 64 : 32;
+        private static ulong IntegerMask(int kind) => kind is 10 or 11 ? byte.MaxValue : kind is 8 or 9 ? ushort.MaxValue : kind is 5 or 6 ? ulong.MaxValue : uint.MaxValue;
+        private static uint LiteralBits(int kind, ulong bits) => kind == 10 ? unchecked((uint)(int)(sbyte)(byte)bits) : kind == 8 ? unchecked((uint)(int)(short)(ushort)bits) : (uint)bits;
         private Value Evaluate(uint id)
         {
             if (_values.TryGetValue(id, out var value)) return value;
@@ -75,11 +76,11 @@ public sealed unsafe partial class RenderingDevice
                 {
                     var kind = Kind(type); if (ins.Length != (kind == 0 ? 3 : kind is 4 or 5 or 6 ? 5 : 4)) throw new ArgumentException("A scalar constant has an invalid payload.");
                     ulong bits = op is 41 or 48 ? 1ul : op is 42 or 49 ? 0ul : ins[3] | (kind is 4 or 5 or 6 ? (ulong)ins[4] << 32 : 0);
-                    if (kind == 8)
-                    { if ((uint)bits != unchecked((uint)(int)(short)(ushort)bits)) throw new ArgumentException("A signed 16-bit literal must be sign extended."); bits &= ushort.MaxValue; }
+                    if (kind is 8 or 10)
+                    { if ((uint)bits != LiteralBits(kind, bits)) throw new ArgumentException("A signed narrow literal must be sign extended."); bits &= IntegerMask(kind); }
                     if (op is 48 or 49 or 50 && _specIDs.TryGetValue(id, out var external) && _overrides.TryGetValue(external, out var replacement))
                     { if (replacement.Kind != kind) throw new ArgumentException("Specialization value type does not match its module declaration."); bits = replacement.Bits; _used.Add(external); }
-                    if (kind >= 7 && bits > ushort.MaxValue) throw new ArgumentException("A 16-bit constant has an invalid literal width.");
+                    if (kind >= 7 && bits > (kind >= 10 ? byte.MaxValue : ushort.MaxValue)) throw new ArgumentException("A narrow constant has an invalid literal width.");
                     value = new(type, bits);
                 }
                 else if (op is 44 or 51)
@@ -157,10 +158,10 @@ public sealed unsafe partial class RenderingDevice
             ulong A(int n) => n < operands.Length && operands[n].Elements is null ? operands[n].Bits : throw new ArgumentException("Invalid specialization scalar operands.");
             var width = ScalarBits(Kind(operands[0].Type)); var mask = IntegerMask(Kind(operands[0].Type));
             var a = A(0) & mask; ulong B() => A(1) & mask; ulong Bool(bool x) => x ? 1ul : 0ul;
-            long Signed(ulong bits) => width == 16 ? unchecked((short)(ushort)bits) : width == 64 ? unchecked((long)bits) : unchecked((int)(uint)bits);
+            long Signed(ulong bits) => width == 8 ? unchecked((sbyte)(byte)bits) : width == 16 ? unchecked((short)(ushort)bits) : width == 64 ? unchecked((long)bits) : unchecked((int)(uint)bits);
             if (op is 113 or 114)
             {
-                var kind = Kind(type); if (kind is not (1 or 2 or 5 or 6 or 8 or 9) || Kind(operands[0].Type) is not (1 or 2 or 5 or 6 or 8 or 9)) throw new NotSupportedException("Integer conversion requires supported integer types.");
+                var kind = Kind(type); if (kind is not (1 or 2 or 5 or 6 or 8 or 9 or 10 or 11) || Kind(operands[0].Type) is not (1 or 2 or 5 or 6 or 8 or 9 or 10 or 11)) throw new NotSupportedException("Integer conversion requires supported integer types.");
                 return new(type, (op == 114 ? unchecked((ulong)Signed(a)) : a) & IntegerMask(kind));
             }
             uint Shift() { var n = A(1); if (n >= (uint)width) throw new ArgumentException("Specialization shift exceeds the scalar width."); return (uint)n; }
@@ -210,7 +211,7 @@ public sealed unsafe partial class RenderingDevice
         private uint ArrayLength(Value value)
         {
             var kind = Kind(value.Type);
-            if (kind is not (1 or 2 or 5 or 6 or 8 or 9) || value.Bits is 0 or > uint.MaxValue || kind is 1 or 5 or 8 && (value.Bits & (1ul << (ScalarBits(kind) - 1))) != 0) throw new ArgumentException("An array extent requires a positive bounded integer constant.");
+            if (kind is not (1 or 2 or 5 or 6 or 8 or 9 or 10 or 11) || value.Bits is 0 or > uint.MaxValue || kind is 1 or 5 or 8 or 10 && (value.Bits & (1ul << (ScalarBits(kind) - 1))) != 0) throw new ArgumentException("An array extent requires a positive bounded integer constant.");
             return (uint)value.Bits;
         }
         private uint Word(Value value)
@@ -229,7 +230,7 @@ public sealed unsafe partial class RenderingDevice
             }
             else if (Kind(value.Type) == 0) Emit(output, value.Bits != 0 ? 41u : 42u, value.Type, id);
             else if (Kind(value.Type) is 4 or 5 or 6) Emit(output, 43, value.Type, id, (uint)value.Bits, (uint)(value.Bits >> 32));
-            else Emit(output, 43, value.Type, id, Kind(value.Type) == 8 ? unchecked((uint)(int)(short)(ushort)value.Bits) : (uint)value.Bits);
+            else Emit(output, 43, value.Type, id, LiteralBits(Kind(value.Type), value.Bits));
         }
         internal byte[] Freeze()
         {
@@ -238,7 +239,7 @@ public sealed unsafe partial class RenderingDevice
             foreach (var array in _instructions.Where(i => Op(i) == 28))
             {
                 if (array.Length != 4) throw new ArgumentException("An array type requires an element type and integer extent.");
-                var value = Evaluate(array[3]); if (Kind(value.Type) is not (5 or 6 or 8 or 9)) continue;
+                var value = Evaluate(array[3]); if (Kind(value.Type) is not (5 or 6 or 8 or 9 or 10 or 11)) continue;
                 var extent = ArrayLength(value);
                 if (lengths.ContainsKey(array[3])) continue;
                 if (lengthType == 0)

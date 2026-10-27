@@ -6,7 +6,7 @@ namespace Electron2D;
 internal static unsafe partial class GPUDeviceFactory
 {
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
-    internal const string Shader16Property = "Electron2D.gpu.shader16_features";
+    internal const string NarrowProperty = "Electron2D.gpu.narrow_features";
     internal const string Float64Property = "Electron2D.gpu.shader_float64";
     internal const string Int64Property = "Electron2D.gpu.shader_int64";
     internal const string BufferAtomic64Property = "Electron2D.gpu.buffer_int64_atomics";
@@ -112,17 +112,17 @@ internal static unsafe partial class GPUDeviceFactory
             relaxed = true; device = Attempt(formats, true, true); sized = device != 0;
             if (device == 0) device = Attempt(formats, false, true);
         }
-        if (device != 0 && SDL.GetGPUDeviceDriver(device) == "vulkan") device = Upgrade16(device, formats, sized, relaxed);
+        if (device != 0 && SDL.GetGPUDeviceDriver(device) == "vulkan") device = UpgradeNarrow(device, formats, sized, relaxed);
         var driver = device == 0 ? "" : SDL.GetGPUDeviceDriver(device);
         return (device, relaxed, driver == "metal" || driver == "vulkan" && sized);
     }
 
-    private static nint Upgrade16(nint device, SDL.GPUShaderFormat formats, bool sized, bool relaxed)
+    private static nint UpgradeNarrow(nint device, SDL.GPUShaderFormat formats, bool sized, bool relaxed)
     {
         try
         {
-            var available = ReadShader16(device, 2);
-            if (available is < 0 or > 63) throw new InvalidOperationException("Native 16-bit shader features could not be queried.");
+            var available = ReadNarrow(device, 3);
+            if (available is < 0 or > 1023) throw new InvalidOperationException("Native narrow shader features could not be queried.");
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
@@ -131,7 +131,7 @@ internal static unsafe partial class GPUDeviceFactory
             SDL.DestroyGPUDevice(device); device = 0;
             for (var requested = available; requested != 0; requested = (requested - 1) & available)
             {
-                if ((requested & 3) == 2) continue; // Uniform16 implicitly includes the buffer16 capability.
+                if ((requested & 3) == 2 || (requested & 384) == 256) continue; // Each uniform-storage capability includes its buffer capability.
                 var upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested);
                 if (upgraded == 0) continue;
                 return upgraded;
@@ -144,7 +144,7 @@ internal static unsafe partial class GPUDeviceFactory
     }
     [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_shader16_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
-    private static partial int ReadShader16(nint device, uint abi);
+    private static partial int ReadNarrow(nint device, uint abi);
 
     private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed)
     {
@@ -179,7 +179,7 @@ internal static unsafe partial class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64/int64 are fields 16/39/40/41 (including int16).
+            // VkPhysicalDeviceFeatures has 55 VkBool32 fields; largePoints/float64/int64/int16 are fields 16/39/40/41.
             Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
             // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
@@ -187,7 +187,8 @@ internal static unsafe partial class GPUDeviceFactory
             for (var i = 0; i < 4; i++) storage16.Flags[i] = ((uint)narrow >> i) & 1;
             var advanced = new Vulkan12Features { Type = 51 };
             if (narrow != 0) advanced.Next = (nint)(&storage16);
-            advanced.Flags[7] = ((uint)narrow >> 4) & 1;
+            advanced.Flags[7] = ((uint)narrow >> 4) & 1; advanced.Flags[8] = ((uint)narrow >> 6) & 1;
+            for (var i = 0; i < 3; i++) advanced.Flags[i + 1] = ((uint)narrow >> (i + 7)) & 1;
             advanced.Flags[0] = 1; advanced.Flags[5] = (uint)atomics & 1; advanced.Flags[6] = ((uint)atomics >> 1) & 1;
             fixed (uint* pointer = features)
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
@@ -210,7 +211,7 @@ internal static unsafe partial class GPUDeviceFactory
                      int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true) ||
                      (atomics & 1) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), BufferAtomic64Property, true) ||
                      (atomics & 2) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), SharedAtomic64Property, true) ||
-                     narrow != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), Shader16Property, narrow)))
+                     narrow != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);
                     throw new InvalidOperationException("GPU capabilities could not be retained: " + error);

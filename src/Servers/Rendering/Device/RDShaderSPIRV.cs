@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Owns copied vertex, fragment and compute bytecode with stage-specific compiler diagnostics.</summary>
-/// <remarks>Native Half and Int16/UInt16 data require independently enabled arithmetic/storage features. Compact push reconstruction also requires the matching arithmetic feature.</remarks>
+/// <remarks>Native Half and Int8/UInt8/Int16/UInt16 data require independently enabled arithmetic/storage features. Compact push reconstruction also requires the matching arithmetic feature.</remarks>
 public sealed class RDShaderSPIRV : Resource
 {
     /// <summary>Creates an empty compiled shader resource.</summary>

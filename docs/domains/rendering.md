@@ -574,3 +574,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 [Half shader execution](../components/local-compute.md#native-half-arithmetic-and-packed-data) extends the existing local device API with packed data, typed specialization and explicit optional native features.
 
 [Native Int16/UInt16 shader execution](../components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data) adds packed integer compute/graphics data, copied typed specialization and independently negotiated arithmetic/storage.
+
+[Native Int8/UInt8 shader execution](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) adds one-byte compute/graphics data, typed specialization and mixed narrow layouts with independent arithmetic/storage features.

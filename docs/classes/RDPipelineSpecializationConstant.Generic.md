@@ -12,7 +12,7 @@ Supplies a strongly typed scalar value for a pipeline specialization identifier.
 
 Value initially has no override, preserving an unassigned description. Assign a value before passing it to a pipeline; omitted descriptions leave the module's defaults.
 
-The identifier base permits a heterogeneous typed span. The sealed generic family selects bool, short, ushort, int, uint, long, ulong, Half, float or double. ConstantID starts at zero; Value starts at null and must be assigned before pipeline consumption. Factories copy values and preserve their scalar bits. Subsequent mutation/disposal has no effect on existing variants. Invalid scalar types, unassigned/duplicate/unknown/negative identifiers and incompatible module types reject before native creation. Inherited owner lifetime and typed property reversion remain available.
+The identifier base permits a heterogeneous typed span. The sealed generic family selects bool, sbyte, byte, short, ushort, int, uint, long, ulong, Half, float or double. ConstantID starts at zero; Value starts at null and must be assigned before pipeline consumption. Factories copy values and preserve their scalar bits. Subsequent mutation/disposal has no effect on existing variants. Invalid scalar types, unassigned/duplicate/unknown/negative identifiers and incompatible module types reject before native creation. Inherited owner lifetime and typed property reversion remain available.
 
 ## Example
 
@@ -77,3 +77,5 @@ Native Int64/UInt64 values, width-correct operations and exact overrides use the
 [Native Half specialization](../components/local-compute.md#native-half-arithmetic-and-packed-data) preserves two-byte scalar bits, width-only conversions and explicit arithmetic/storage prerequisites.
 
 [Native Int16/UInt16 specialization](../components/local-compute.md#native-int16-and-uint16-arithmetic-and-packed-data) preserves exact two-byte values, signed literal extension and width-correct integer operations/conversions.
+
+[Native byte specialization](../components/local-compute.md#native-int8-and-uint8-arithmetic-and-packed-data) preserves one-byte values, literal extension, width-correct operations and bounded layout extents.

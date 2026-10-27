@@ -22,7 +22,7 @@ internal static partial class NarrowFloat
         var descriptor = value.GetPropertyList().OfType<PropertyDescriptor<RDPipelineSpecializationConstant<Half>, Half?>>().Single(p => p.Name == "Value");
         for (var bits = 0; bits <= ushort.MaxValue; bits++) { descriptor.SetValue(value, BitConverter.UInt16BitsToHalf((ushort)bits)); Check(BitConverter.HalfToUInt16Bits(descriptor.GetValue(value)!.Value) == bits, "Typed nullable metadata preserves every half bit pattern."); }
         value.RevertProperty(descriptor); Check(value.Value is null, "Half reverts to unassigned."); value.Dispose(); Reject<ObjectDisposedException>(() => _ = value.Value);
-        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<byte>());
+        Reject<NotSupportedException>(() => new RDPipelineSpecializationConstant<char>());
         Console.WriteLine("PASS all 65536 Half metadata patterns, unassigned/reversion and disposal.");
     }
     private static RDShaderSPIRV Code(string name) => new() { BytecodeCompute = File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + ".spv")) };
