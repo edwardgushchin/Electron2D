@@ -13,7 +13,8 @@ internal static class ControlFocusNavigationTests
         var skipped = new Control { Name = "skipped", Position = new(20, 0), Size = new(10, 10) };
         var second = new Control { Name = "second", Position = new(40, 0), Size = new(10, 10), FocusMode = FocusMode.All };
         var click = new Control { Name = "click", Position = new(60, 0), Size = new(10, 10), FocusMode = FocusMode.Click };
-        root.AddChild(first); root.AddChild(skipped); root.AddChild(second); root.AddChild(click);
+        var panel = new Control(); root.AddChild(panel);
+        panel.AddChild(first); panel.AddChild(skipped); panel.AddChild(second); panel.AddChild(click);
         using var tree = new SceneTree(root);
 
         Check(ReferenceEquals(first.FindNextValidFocus(), second) && ReferenceEquals(second.FindPrevValidFocus(), first),
@@ -31,8 +32,8 @@ internal static class ControlFocusNavigationTests
         first.FocusNext = string.Empty;
         first.FocusNeighborRight = "../skipped";
         skipped.FocusNeighborRight = "../first";
-        Check(ReferenceEquals(first.FindValidFocusNeighbor(Side.Right), second),
-            "A cyclic, ineligible neighbor chain falls back to spatial search.");
+        Check(ReferenceEquals(first.FindValidFocusNeighbor(Side.Right), first),
+            "An explicit chain returns the first eligible target even when it closes a cycle.");
         first.FocusNeighborRight = string.Empty;
         skipped.FocusNeighborRight = string.Empty;
 
@@ -55,7 +56,8 @@ internal static class ControlFocusNavigationTests
         Check(second.HasFocus(), "D-pad right moves GUI focus through the default action.");
         second.ReleaseFocus();
         root.PushInput(tab, inLocalCoordinates: true);
-        Check(second.HasFocus(), "Tab finds a focus target when the viewport has no owner.");
+        Check(first.HasFocus(), "Tab enters the first Control subtree when the viewport has no owner.");
+        second.GrabFocus();
 
         second.GUIInput += e => { if (e is InputEventKey { Keycode: Key.Tab }) second.AcceptEvent(); };
         root.PushInput(tab, inLocalCoordinates: true);

@@ -34,8 +34,12 @@ public sealed partial class SceneTree
         if (!requested) return;
         if (next is not null)
         {
-            SetGUIFocus(next, hideFocus: false);
+            List<Exception>? errors = null;
+            if (!ReferenceEquals(from.GetViewport(), next.GetViewport()) && ReferenceEquals(_gui.GuiFocus, from))
+                try { ReleaseGUIFocus(from); } catch (Exception error) { CollectException(ref errors, error); }
+            try { SetGUIFocus(next, hideFocus: false); } catch (Exception error) { CollectException(ref errors, error); }
             SetInputAsHandled();
+            ThrowCollected("GUI focus navigation callbacks failed.", errors);
         }
         else if (_gui.GuiFocusHidden && _gui.GuiFocus is { } focused)
             SetGUIFocus(focused, hideFocus: false);

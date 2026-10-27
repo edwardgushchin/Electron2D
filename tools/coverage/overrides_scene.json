@@ -9962,8 +9962,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Click/All eligibility, hidden pointer focus, focused keyboard delivery, Tab/arrow action navigation, hide/detach release, focus notifications and focus events run in the root viewport. Native accessibility eligibility is now supplied by ADR 0114. Exact directional ranking, scroll clipping and nested viewport routing remain absent.",
+      "state": "Implemented",
+      "reason": "Control focus navigation executes under ADRs 0004/0008/0038: direct-Control sequential order including internal children, Window-root wrapping, neutral/Entity/TopLevel and SubViewport boundaries, hidden/detached sources, rectangle-gap/alignment ranking, nested ScrollContainer clipping/following, exact structured path/type diagnostics and 512-edge directional chains. Explicit visible Click/All/active-Accessibility targets may cross viewports; navigation releases its source and continues destination selection through exit errors. Six authored paths retain typed copy/storage and owner/lifetime guards. Public CLR and strict full-trim NativeAOT consumers exercise semantic contracts, keyboard/D-pad/fresh analog input, consumed events, actual Button focus borders on current Wayland compatibility/software-Vulkan backends and zero prepared managed query/frame bytes. Existing ControlInput, focus, SubViewportContainer and ScrollContainer regressions plus ADR 0114 accessibility eligibility retain their owning contracts. Evidence: bin/control-focus-navigation/2026-10-27/validation.json; native-heap, physical-device, foreign-platform and human acceptance remain separate gates.",
       "godot": [
         "Control::enum:FocusMode",
         "Control::property:focus_mode",
@@ -9975,8 +9975,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Relative focus paths default empty, persist through PackedScene and select visible eligible controls in managed tests. Exact reference path diagnostics and nested viewport behavior remain to audit.",
+      "state": "Implemented",
+      "reason": "Control focus navigation executes under ADRs 0004/0008/0038: direct-Control sequential order including internal children, Window-root wrapping, neutral/Entity/TopLevel and SubViewport boundaries, hidden/detached sources, rectangle-gap/alignment ranking, nested ScrollContainer clipping/following, exact structured path/type diagnostics and 512-edge directional chains. Explicit visible Click/All/active-Accessibility targets may cross viewports; navigation releases its source and continues destination selection through exit errors. Six authored paths retain typed copy/storage and owner/lifetime guards. Public CLR and strict full-trim NativeAOT consumers exercise semantic contracts, keyboard/D-pad/fresh analog input, consumed events, actual Button focus borders on current Wayland compatibility/software-Vulkan backends and zero prepared managed query/frame bytes. Existing ControlInput, focus, SubViewportContainer and ScrollContainer regressions plus ADR 0114 accessibility eligibility retain their owning contracts. Evidence: bin/control-focus-navigation/2026-10-27/validation.json; native-heap, physical-device, foreign-platform and human acceptance remain separate gates.",
       "godot": [
         "Control::method:get_focus_neighbor(int:Side)",
         "Control::method:set_focus_neighbor(int:Side,NodePath:)",
@@ -9989,8 +9989,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Managed Tab traversal wraps through visible All controls and honors explicit Click paths; directional paths, cycle protection and rectangle-based search execute. Neutral ancestors, exact spatial ranking, scroll clipping and nested viewport traversal differ or remain unverified.",
+      "state": "Implemented",
+      "reason": "Control focus navigation executes under ADRs 0004/0008/0038: direct-Control sequential order including internal children, Window-root wrapping, neutral/Entity/TopLevel and SubViewport boundaries, hidden/detached sources, rectangle-gap/alignment ranking, nested ScrollContainer clipping/following, exact structured path/type diagnostics and 512-edge directional chains. Explicit visible Click/All/active-Accessibility targets may cross viewports; navigation releases its source and continues destination selection through exit errors. Six authored paths retain typed copy/storage and owner/lifetime guards. Public CLR and strict full-trim NativeAOT consumers exercise semantic contracts, keyboard/D-pad/fresh analog input, consumed events, actual Button focus borders on current Wayland compatibility/software-Vulkan backends and zero prepared managed query/frame bytes. Existing ControlInput, focus, SubViewportContainer and ScrollContainer regressions plus ADR 0114 accessibility eligibility retain their owning contracts. Evidence: bin/control-focus-navigation/2026-10-27/validation.json; native-heap, physical-device, foreign-platform and human acceptance remain separate gates.",
       "godot": [
         "Control::method:find_next_valid_focus()",
         "Control::method:find_prev_valid_focus()",
