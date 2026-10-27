@@ -75,6 +75,7 @@ public sealed partial class DisplayServer
         {
             try { UpdateMouseInputRegions(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             try { AccessibilityServer.PumpNative(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
+            try { CameraServer.PumpIfOwned(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             DispatchPendingGamepadConnections(ref failures);
             if (dropInput)
             {

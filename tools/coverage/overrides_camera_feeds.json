@@ -1,0 +1,475 @@
+{
+  "mappings": [
+    {
+      "godot": "class:CameraFeed",
+      "electron2d": "T:Electron2D.CameraFeed",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum:FeedDataType",
+      "electron2d": "T:Electron2D.CameraFeed.FeedDataType",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum:FeedPosition",
+      "electron2d": "T:Electron2D.CameraFeed.FeedPosition",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedDataType.FEED_NOIMAGE",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedDataType.NoImage()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedDataType.FEED_RGB",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedDataType.RGB()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedDataType.FEED_YCBCR",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedDataType.YCBCR()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedDataType.FEED_YCBCR_SEP",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedDataType.YCBCRSeparate()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedPosition.FEED_BACK",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedPosition.Back()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedPosition.FEED_FRONT",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedPosition.Front()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::enum_value:FeedPosition.FEED_UNSPECIFIED",
+      "electron2d": "enumValue:Electron2D.CameraFeed.FeedPosition.Unspecified()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:_activate_feed()",
+      "electron2d": "method:Electron2D.CameraFeed.OnActivateFeed()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:_deactivate_feed()",
+      "electron2d": "method:Electron2D.CameraFeed.OnDeactivateFeed()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:_get_formats()",
+      "electron2d": "method:Electron2D.CameraFeed.OnGetFormats()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:_set_format(int:,Dictionary:)",
+      "electron2d": "method:Electron2D.CameraFeed.OnSetFormat(System.Int32,Electron2D.CameraFeedOutput)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:get_datatype()",
+      "electron2d": "method:Electron2D.CameraFeed.GetDatatype()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:get_id()",
+      "electron2d": "method:Electron2D.CameraFeed.GetID()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:get_name()",
+      "electron2d": "method:Electron2D.CameraFeed.GetName()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:get_position()",
+      "electron2d": "method:Electron2D.CameraFeed.GetPosition()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:set_format(int:,Dictionary:)",
+      "electron2d": "method:Electron2D.CameraFeed.SetFormat(System.Int32,Electron2D.CameraFeedOutput)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:set_name(String:)",
+      "electron2d": "method:Electron2D.CameraFeed.SetName(System.String)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:set_position(int:CameraFeed.FeedPosition)",
+      "electron2d": "method:Electron2D.CameraFeed.SetPosition(Electron2D.CameraFeed.FeedPosition)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:set_rgb_image(Image:)",
+      "electron2d": "method:Electron2D.CameraFeed.SetRGBImage(Electron2D.Image)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:set_ycbcr_image(Image:)",
+      "electron2d": "method:Electron2D.CameraFeed.SetYCBCRImage(Electron2D.Image)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::method:set_ycbcr_images(Image:,Image:)",
+      "electron2d": "method:Electron2D.CameraFeed.SetYCBCRImages(Electron2D.Image,Electron2D.Image)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::property:feed_is_active",
+      "electron2d": "property:Electron2D.CameraFeed.FeedIsActive()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::property:feed_transform",
+      "electron2d": "property:Electron2D.CameraFeed.FeedTransform()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::property:formats",
+      "electron2d": "property:Electron2D.CameraFeed.Formats()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::signal:format_changed()",
+      "electron2d": "event:Electron2D.CameraFeed.FormatChanged()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraFeed::signal:frame_changed()",
+      "electron2d": "event:Electron2D.CameraFeed.FrameChanged()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "class:CameraServer",
+      "electron2d": "T:Electron2D.CameraServer",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::enum:FeedImage",
+      "electron2d": "T:Electron2D.CameraServer.FeedImage",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::enum_value:FeedImage.FEED_CBCR_IMAGE",
+      "electron2d": "enumValue:Electron2D.CameraServer.FeedImage.CBCRImage()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::enum_value:FeedImage.FEED_RGBA_IMAGE",
+      "electron2d": "enumValue:Electron2D.CameraServer.FeedImage.RGBAImage()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::enum_value:FeedImage.FEED_YCBCR_IMAGE",
+      "electron2d": "enumValue:Electron2D.CameraServer.FeedImage.YCBCRImage()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::enum_value:FeedImage.FEED_Y_IMAGE",
+      "electron2d": "enumValue:Electron2D.CameraServer.FeedImage.YImage()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::method:add_feed(CameraFeed:)",
+      "electron2d": "method:Electron2D.CameraServer.AddFeed(Electron2D.CameraFeed)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::method:feeds()",
+      "electron2d": "method:Electron2D.CameraServer.Feeds()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::method:get_feed(int:)",
+      "electron2d": "method:Electron2D.CameraServer.GetFeed(System.Int32)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::method:get_feed_count()",
+      "electron2d": "method:Electron2D.CameraServer.GetFeedCount()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::method:remove_feed(CameraFeed:)",
+      "electron2d": "method:Electron2D.CameraServer.RemoveFeed(Electron2D.CameraFeed)",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::property:monitoring_feeds",
+      "electron2d": "property:Electron2D.CameraServer.MonitoringFeeds()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::signal:camera_feed_added(int:)",
+      "electron2d": "event:Electron2D.CameraServer.CameraFeedAdded()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::signal:camera_feed_removed(int:)",
+      "electron2d": "event:Electron2D.CameraServer.CameraFeedRemoved()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraServer::signal:camera_feeds_updated()",
+      "electron2d": "event:Electron2D.CameraServer.CameraFeedsUpdated()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "class:CameraTexture",
+      "electron2d": "T:Electron2D.CameraTexture",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraTexture::property:camera_feed_id",
+      "electron2d": "property:Electron2D.CameraTexture.CameraFeedID()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraTexture::property:camera_is_active",
+      "electron2d": "property:Electron2D.CameraTexture.CameraIsActive()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    },
+    {
+      "godot": "CameraTexture::property:which_feed",
+      "electron2d": "property:Electron2D.CameraTexture.WhichFeed()",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0115: executable native/custom pixel feeds, typed source hooks/formats/output, process registry ownership, coherent copied/prepared planes and CameraTexture integration with both renderers and ordinary resource files. Public CLR/strict NativeAOT, actual SDL surface conversion, owner/failure/lifetime, storage and prepared allocation receipts are in docs/components/camera-feeds.md. Physical capture, native allocator and foreign-platform acceptance remain separate.",
+      "godot": [
+        "CameraFeed::enum:FeedPosition",
+        "CameraFeed::enum_value:FeedDataType.FEED_NOIMAGE",
+        "CameraFeed::enum_value:FeedDataType.FEED_RGB",
+        "CameraFeed::enum_value:FeedDataType.FEED_YCBCR",
+        "CameraFeed::enum_value:FeedDataType.FEED_YCBCR_SEP",
+        "CameraFeed::enum_value:FeedPosition.FEED_BACK",
+        "CameraFeed::enum_value:FeedPosition.FEED_FRONT",
+        "CameraFeed::enum_value:FeedPosition.FEED_UNSPECIFIED",
+        "CameraFeed::method:_activate_feed()",
+        "CameraFeed::method:_deactivate_feed()",
+        "CameraFeed::method:_get_formats()",
+        "CameraFeed::method:_set_format(int:,Dictionary:)",
+        "CameraFeed::method:get_datatype()",
+        "CameraFeed::method:get_id()",
+        "CameraFeed::method:get_name()",
+        "CameraFeed::method:get_position()",
+        "CameraFeed::method:set_format(int:,Dictionary:)",
+        "CameraFeed::method:set_name(String:)",
+        "CameraFeed::method:set_position(int:CameraFeed.FeedPosition)",
+        "CameraFeed::method:set_rgb_image(Image:)",
+        "CameraFeed::method:set_ycbcr_image(Image:)",
+        "CameraFeed::method:set_ycbcr_images(Image:,Image:)",
+        "CameraFeed::property:feed_is_active",
+        "CameraFeed::property:feed_transform",
+        "CameraFeed::property:formats",
+        "CameraFeed::signal:format_changed()",
+        "CameraFeed::signal:frame_changed()",
+        "class:CameraServer",
+        "CameraServer::enum:FeedImage",
+        "CameraServer::enum_value:FeedImage.FEED_CBCR_IMAGE",
+        "CameraServer::enum_value:FeedImage.FEED_RGBA_IMAGE",
+        "CameraServer::enum_value:FeedImage.FEED_YCBCR_IMAGE",
+        "CameraServer::enum_value:FeedImage.FEED_Y_IMAGE",
+        "CameraServer::method:add_feed(CameraFeed:)",
+        "CameraServer::method:feeds()",
+        "CameraServer::method:get_feed(int:)",
+        "CameraServer::method:get_feed_count()",
+        "CameraServer::method:remove_feed(CameraFeed:)",
+        "CameraServer::property:monitoring_feeds",
+        "CameraServer::signal:camera_feed_added(int:)",
+        "CameraServer::signal:camera_feed_removed(int:)",
+        "CameraServer::signal:camera_feeds_updated()",
+        "class:CameraTexture",
+        "CameraTexture::property:camera_feed_id",
+        "CameraTexture::property:camera_is_active",
+        "CameraTexture::property:resource_local_to_scene",
+        "CameraTexture::property:which_feed"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0115: complete executable native/custom pixel-feed family; exactly three external native-image declarations remain blocked on the separately specified portable import/ownership prerequisite. See docs/components/camera-feeds.md.",
+      "godot": [
+        "class:CameraFeed",
+        "CameraFeed::enum:FeedDataType"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0115/0021/0028: requires the portable external-image ownership and native texture-import contract shared with ExternalTexture. A raw integer backend texture ID cannot represent both current rendering backends. Pixel feeds do not supply this path; no inert selector or SetExternal is exposed.",
+      "godot": [
+        "CameraFeed::enum_value:FeedDataType.FEED_EXTERNAL",
+        "CameraFeed::method:get_texture_tex_id(int:CameraServer.FeedImage)",
+        "CameraFeed::method:set_external(int:,int:)"
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.CameraFeedFormat",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "T:Electron2D.CameraFeedOutput",
+      "reason": "ADR 0115: Typed RGB/Separate/Grayscale/Copy selector replaces the defined source output strings."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CameraFeed..ctor()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CameraFeedFormat..ctor(System.Int32,System.Int32,System.String,System.Int32,System.Int32)",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CameraTexture..ctor()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.CameraFeedOutput.Copy()",
+      "reason": "ADR 0115: Typed RGB/Separate/Grayscale/Copy selector replaces the defined source output strings."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.CameraFeedOutput.Grayscale()",
+      "reason": "ADR 0115: Typed RGB/Separate/Grayscale/Copy selector replaces the defined source output strings."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.CameraFeedOutput.RGB()",
+      "reason": "ADR 0115: Typed RGB/Separate/Grayscale/Copy selector replaces the defined source output strings."
+    },
+    {
+      "electron2d": "enumValue:Electron2D.CameraFeedOutput.Separate()",
+      "reason": "ADR 0115: Typed RGB/Separate/Grayscale/Copy selector replaces the defined source output strings."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeed.Dispose(System.Boolean)",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeed.GetPropertyDescriptors()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeed.ValidateDisposal()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeed.ValidateMutation()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeedFormat.Deconstruct(ref System.Int32,ref System.Int32,ref System.String,ref System.Int32,ref System.Int32)",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeedFormat.Equals(Electron2D.CameraFeedFormat)",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeedFormat.Equals(System.Object)",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeedFormat.GetHashCode()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraFeedFormat.ToString()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraServer.GetPropertyDescriptors()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraServer.Process()",
+      "reason": "ADR 0115: Explicit standalone/headless camera pump; native display processing calls the same owner boundary."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraServer.ValidateDisposal()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraServer.ValidateMutation()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.CreateDuplicateInstance()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.Dispose(System.Boolean)",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.GetHeight()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.GetImage()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.GetPropertyDescriptors()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.GetSize()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "method:Electron2D.CameraTexture.GetWidth()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    },
+    {
+      "electron2d": "operator:Electron2D.CameraFeedFormat.op_Equality(Electron2D.CameraFeedFormat,Electron2D.CameraFeedFormat)",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "operator:Electron2D.CameraFeedFormat.op_Inequality(Electron2D.CameraFeedFormat,Electron2D.CameraFeedFormat)",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "property:Electron2D.CameraFeedFormat.FPSDenominator()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "property:Electron2D.CameraFeedFormat.FPSNumerator()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "property:Electron2D.CameraFeedFormat.Height()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "property:Electron2D.CameraFeedFormat.PixelFormat()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "property:Electron2D.CameraFeedFormat.Width()",
+      "reason": "ADR 0115: Typed immutable rational camera-format metadata replaces source dictionaries; record construction, copied fields, equality, deconstruction and formatting keep ordinary C# value semantics."
+    },
+    {
+      "electron2d": "property:Electron2D.CameraTexture.HasAlpha()",
+      "reason": "ADR 0115: Ordinary C# construction, inherited Texture/Resource projection, property descriptors, duplication and owner/lifetime guards for the mapped camera pixel family."
+    }
+  ]
+}

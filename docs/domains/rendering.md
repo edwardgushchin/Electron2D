@@ -1,3 +1,5 @@
+[Camera pixel feeds](../components/camera-feeds.md) connect opt-in native discovery/capture and caller-produced copied images to ordinary Texture views on both renderers. Source ownership, owner-delivered events, prepared conversion, resource storage and external-image limits follow [ADR 0115](../decisions/camera-feeds.md#adr-0115).
+
 [Texture drawing](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26) now has a current native contract across object/RID/direct virtual routes and moving CPU/GPU receivers. Named atlas sampling rejects missing backing storage before canvas/blit submission while cold authoring remains valid.
 
 [Canvas command metadata](../components/canvas-command-metadata.md) supplies retained region and initial-UV specular values to offline graphs and ordinary fragment materials across geometry families.
@@ -42,7 +44,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 [Integer material graphs](../components/visual-shaders.md#integer-arithmetic-and-bit-patterns) now execute exact signed/unsigned arithmetic, functions and bit masks through the existing archive/import/material path. Byte-encoded and UV-driven consumers observe precision before float conversion.
 

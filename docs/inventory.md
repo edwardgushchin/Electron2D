@@ -12,6 +12,7 @@
 
 # Engine inventory
 
+[Camera pixel feeds](components/camera-feeds.md) in the [rendering domain](domains/rendering.md) add [CameraServer](classes/CameraServer.md), [FeedImage](classes/CameraServer.FeedImage.md), [CameraFeed](classes/CameraFeed.md), [FeedDataType](classes/CameraFeed.FeedDataType.md), [FeedPosition](classes/CameraFeed.FeedPosition.md), [CameraFeedFormat](classes/CameraFeedFormat.md), [CameraFeedOutput](classes/CameraFeedOutput.md), [CameraTexture](classes/CameraTexture.md) and the private [NativeCameraFeed](classes/NativeCameraFeed.md). Existing Image/TexturePixels, Engine teardown, the display pump and resource-file factories deliver the executable pixel path. External native-image import retains its separate dependency.
 Existing ElectronObject notification handlers retain the [compiled construction boundary](components/object-lifecycle.md#compiled-construction-notification-boundary): constructors initialize engine state without automatically invoking project overrides with identity 0. No runtime type or public signature is added.
 
 Existing GPUPhysicsBodyStore movable pin pairs now use a [common world reaction point](components/physics-joint-policies.md#common-pin-reaction-point-2026-10-27), preserving authored anchors and solver policies without a new production type, row, resource or public declaration.

@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "diagnostics", "zip", "resource_packs", "jobs", "display", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "file_save_swap", "host_delta", "movie_writing", "video_playback", "camera_feeds", "diagnostics", "zip", "resource_packs", "jobs", "display", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "navigation", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -702,6 +702,8 @@ def render():
             updated = "2026-10-18"
         if name in {"RenderingServer", "ProjectSettings", "Viewport", "PhysicsServer2D", "PhysicsServer2DExtension", "Texture2D", "PlaceholderTexture2D"}:
             updated = "2026-10-17"
+        if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
+            updated = "2026-10-27"
         if name == "Object":
             updated = "2026-10-18"
         if name.startswith("WebRTC") or name == "WebSocketPeer":
@@ -852,7 +854,7 @@ def render():
         reason = f"Electron2D-specific: {extra['reason']} ({extra.get('adr', 'class reference')})." if extra else "Audit the corresponding type family; document a typed-C# rationale or link the exact upstream row."
         lines.append(f"| — | {engine_link(entry, from_class=False)} | {state} | {cell(reason)} |")
     page_text[COVERAGE / "electron2d-unmapped.md"] = "\n".join(lines) + "\n"
-    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-10-18", "",
+    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-10-27", "",
                f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.", "",
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
@@ -862,11 +864,12 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Reassess dependencies for " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " before selecting their slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-10-26", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-10-27", "",
             "Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Close {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
             "3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.", "",
+            "[External text providers](../components/text-server.md#external-provider-prerequisite) first require a provider-aware consumer layout/font-cache boundary, callback-safe read lifetimes, coherent glyph/run/paragraph metadata, primary-selection invalidation and real drawing. Registry methods and virtual facades alone do not supply those native consumers.", "",
             "## Live project and agent delivery", "",
             "[ADR 0090](../decisions/agent-native.md#delivery-and-acceptance) owns the complete live-session decision and acceptance gates. The [bounded no-UI session](../components/project-session.md) implements stage 1 for one typed scene and C# buffer. The [shared editor workflow](../components/project-jobs.md) implements bounded stage 2; [authenticated local operations and the real agent panel/executor](../components/project-agent.md) now exercise bounded stage 3. This tooling slice changes no runtime declaration states or totals.", "",
             "1. **Implemented bounded session foundation:** one existing typed scene and C# buffer, an exclusive owner lease, two local clients, typed operations, stable identities, unsaved documents, revisions/conflicts, events, persistence/recovery and guarded grouped history. Independent-process exclusion/crash recovery, failing mutations/saves, selective undo and fresh-process persistence execute in `tests/ProjectSession`. General project/resource operations remain separate extensions; local authenticated attach now consumes this owner.",

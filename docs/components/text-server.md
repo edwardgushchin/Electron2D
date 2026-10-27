@@ -1,6 +1,6 @@
 # Low-level shaped text buffers
 
-Last updated: 2026-10-21
+Last updated: 2026-10-27
 
 TextServerManager is a permanent static discovery service registered with Engine. Its primary TextServer is a retained implementation object over the existing FreeType/HarfBuzz/TextLayout foundation. Discovery does not initialize native fonts. Interface objects cannot be disposed; GetInterfaces returns an independent ordered array, and each element supplies its name. Provider replacement, extension dispatch and registration events require their own complete implementation slice.
 
@@ -177,3 +177,15 @@ GetSupportData returns independent exact copies of the embedded 4,811,936-byte T
 TextServerSecurityTests exercises exact data/hash copies and exports, file failures, skeleton order/canonical/multicharacter cases, malformed/NUL/supplementary input, independent syntax/security results, concurrency, limits and 128 warm zero-managed-byte cycles. Source-built Linux x64 execution and package contract checks do not establish independently repackaged, NativeAOT, foreign-platform, native allocator, hardware or owner acceptance.
 
 [Project line-breaking strictness](line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
+
+## External provider prerequisite
+
+The current Font/TextLine/TextParagraph/Label/RichText consumers still use native
+TextLayout and native font read/cache owners directly. An external provider requires
+a complete consumer layout boundary: typed provider font/cache projections, coherent
+callback-safe read lifetimes, glyph/run/paragraph metadata, primary-selection cache
+invalidation and real font/glyph drawing. Registry methods plus virtual facade
+operations alone do not change those consumers. A public TextLine width consumer
+reproduced this gap in `bin/text-server-providers/2026-10-27/dispatch-consumer.log`;
+the incomplete experiment was reverted. Registration/replacement/retirement and the
+extension callbacks remain in that full executable slice, not a completed provider.

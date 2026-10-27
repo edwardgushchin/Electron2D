@@ -114,6 +114,8 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(ResourceUID));
         _singletons.Add(nameof(NavigationServer), NavigationServer.Service);
         _singletonNames.Add(nameof(NavigationServer));
+        _singletons.Add(nameof(CameraServer), CameraServer.Service);
+        _singletonNames.Add(nameof(CameraServer));
         _singletons.Add(nameof(AudioServer), AudioServer.Service);
         _singletonNames.Add(nameof(AudioServer));
         _singletons.Add(nameof(PhysicsServer), PhysicsServer.Service);
@@ -325,6 +327,8 @@ public sealed partial class Engine : ElectronObject
         List<Exception>? errors = null;
         try { (Volatile.Read(ref _mainLoop) ?? throw new InvalidOperationException("The running engine has no MainLoop.")).FinalizeLoop(); }
         catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
+        try { CameraServer.CloseForEngine(); }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
         try { AudioServer.CloseForEngine(); }
         catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
         finally
@@ -369,6 +373,7 @@ public sealed partial class Engine : ElectronObject
             string.Equals(name, nameof(ResourceLoader), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceSaver), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceUID), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(CameraServer), StringComparison.Ordinal) ||
             string.Equals(name, nameof(AudioServer), StringComparison.Ordinal) ||
             string.Equals(name, nameof(PhysicsServer), StringComparison.Ordinal) ||
             string.Equals(name, nameof(Performance), StringComparison.Ordinal))

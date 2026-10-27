@@ -1,3 +1,5 @@
+[CameraServer](../classes/CameraServer.md) joins the retained Engine service registry and native teardown through the [camera pixel-feed component](../components/camera-feeds.md). Discovery and capture remain opt-in; resource views never serialize activation.
+
 # Core domain
 
 [Prepared publisher membership](../components/event-connections.md#current-prepared-publisher-membership) now lets EventConnection observe exact wrapper removal/clear and release publisher references on token retirement. Captured/deferred delivery and ordinary field-like fallback retain their contracts.

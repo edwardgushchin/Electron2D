@@ -14,6 +14,8 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_ENGINE") == "1") { VerifyEngine(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_FEEDS") is { } cameraProfile) { if (cameraProfile == "boundary") CameraFeedNativeTests.Run(); else CameraFeedContracts.Run(cameraProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_MONITORS") == "1") { ServerMonitorContract.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEFERRED_MEMORY") == "1") { DeferredMemoryContract.Run(); return; }
@@ -1910,6 +1912,8 @@ SceneMultiplayerTests.Run();
 SceneReplicationTests.Run();
 AnimationStateMachineTests.Run();
 AudioGeneratorTests.Run();
+CameraFeedContracts.Run("managed");
+CameraFeedNativeTests.Run();
 AudioInputTests.Run();
 AudioEffectTests.Run();
 AudioEffectLevelTests.Run();
@@ -9182,8 +9186,10 @@ static void VerifyEngine()
             ReferenceEquals(Engine.GetSingleton<InputMap>(nameof(InputMap)), InputMap.Service) &&
             ReferenceEquals(Engine.GetSingleton<AudioServer>(nameof(AudioServer)), AudioServer.Service) &&
             ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
         "All built-in process services must be present in the global singleton registry.");
+    Require(ReferenceEquals(Engine.GetSingleton<CameraServer>(nameof(CameraServer)), CameraServer.Service), "Camera service retains its registered process identity.");
+    Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(CameraServer)), "The built-in camera service cannot be unregistered.");
     Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(Engine)),
         "The built-in Engine registry entry must not be removable.");
     Expect<InvalidOperationException>(() => Engine.UnregisterSingleton(nameof(ProjectSettings)),
@@ -9235,7 +9241,7 @@ static void VerifyEngine()
                 ReferenceEquals(Engine.GetSingleton("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<TestObject>("tests.primary"), registered) &&
                 ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), "tests.primary"]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance), "tests.primary"]),
             "Engine singleton lookup must preserve identity, type, and registration order.");
         Expect<InvalidOperationException>(() => Engine.RegisterSingleton("tests.primary", registered),
             "Engine singleton names must be unique.");
@@ -9268,7 +9274,7 @@ static void VerifyEngine()
         instance.Dispose();
     });
     Require(ReferenceEquals(Engine.GetSingleton<OS>(nameof(OS)), OS.Service) &&
-            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
+            Engine.GetSingletonList().SequenceEqual([nameof(Engine), nameof(OS), nameof(TextServerManager), nameof(Electron2D.Time), nameof(WorkerThreadPool), nameof(ProjectSettings), nameof(IP), nameof(Input), nameof(InputMap), nameof(ResourceLoader), nameof(ResourceSaver), nameof(ResourceUID), nameof(NavigationServer), nameof(CameraServer), nameof(AudioServer), nameof(PhysicsServer), nameof(Performance)]),
         "Concurrent singleton removal must preserve only the built-in registry entries.");
 
     Engine.PhysicsTicksPerSecond = 10;

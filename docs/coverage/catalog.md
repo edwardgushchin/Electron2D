@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-10-18
+Last updated: 2026-10-27
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -151,9 +151,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CameraAttributes](classes/CameraAttributes.md) | Resource | Excluded | 5 |
 | [CameraAttributesPhysical](classes/CameraAttributesPhysical.md) | CameraAttributes | Excluded | 9 |
 | [CameraAttributesPractical](classes/CameraAttributesPractical.md) | CameraAttributes | Excluded | 9 |
-| [CameraFeed](classes/CameraFeed.md) | RefCounted | Blocked | 31 |
-| [CameraServer](classes/CameraServer.md) | Object | Blocked | 14 |
-| [CameraTexture](classes/CameraTexture.md) | Texture2D | Blocked | 4 |
+| [CameraFeed](classes/CameraFeed.md) | RefCounted | Partial | 31 |
+| [CameraServer](classes/CameraServer.md) | Object | Implemented | 14 |
+| [CameraTexture](classes/CameraTexture.md) | Texture2D | Implemented | 4 |
 | [CanvasGroup](classes/CanvasGroup.md) | Node2D | Implemented | 3 |
 | [CanvasItem](classes/CanvasItem.md) | Node | Implemented | 114 |
 | [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Implemented | 16 |

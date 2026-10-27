@@ -2841,6 +2841,138 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CameraFeed",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "CameraFeed",
+    "signature": "public class Electron2D.CameraFeed",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraFeed.FeedDataType",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraFeed.FeedDataType",
+    "name": "FeedDataType",
+    "signature": "public enum Electron2D.CameraFeed.FeedDataType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraFeed.FeedPosition",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraFeed.FeedPosition",
+    "name": "FeedPosition",
+    "signature": "public enum Electron2D.CameraFeed.FeedPosition",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraFeedFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "CameraFeedFormat",
+    "signature": "public struct Electron2D.CameraFeedFormat",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [
+      "System.IEquatable\u003CElectron2D.CameraFeedFormat\u003E"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraFeedOutput",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraFeedOutput",
+    "name": "CameraFeedOutput",
+    "signature": "public enum Electron2D.CameraFeedOutput",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraServer",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "CameraServer",
+    "signature": "public sealed class Electron2D.CameraServer",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraServer.FeedImage",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraServer.FeedImage",
+    "name": "FeedImage",
+    "signature": "public enum Electron2D.CameraServer.FeedImage",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.CameraTexture",
+    "kind": "type",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "CameraTexture",
+    "signature": "public sealed class Electron2D.CameraTexture",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CanvasGroup",
     "kind": "type",
     "declaringType": "Electron2D.CanvasGroup",
@@ -20677,6 +20809,71 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CameraFeed..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": ".ctor",
+    "signature": "public CameraFeed()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CameraFeedFormat..ctor(System.Int32,System.Int32,System.String,System.Int32,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": ".ctor",
+    "signature": "public CameraFeedFormat(System.Int32 Width, System.Int32 Height, System.String PixelFormat, System.Int32 FPSNumerator, System.Int32 FPSDenominator)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Width",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "Height",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "PixelFormat",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "FPSNumerator",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "FPSDenominator",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.CameraTexture..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": ".ctor",
+    "signature": "public CameraTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CanvasGroup..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CanvasGroup",
@@ -33695,6 +33892,201 @@
     "parameters": [],
     "returnType": "Electron2D.CPUParticles.ParticleFlags",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedDataType.NoImage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedDataType",
+    "name": "NoImage",
+    "signature": "public const Electron2D.CameraFeed.FeedDataType NoImage = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedDataType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedDataType.RGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedDataType",
+    "name": "RGB",
+    "signature": "public const Electron2D.CameraFeed.FeedDataType RGB = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedDataType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedDataType.YCBCR()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedDataType",
+    "name": "YCBCR",
+    "signature": "public const Electron2D.CameraFeed.FeedDataType YCBCR = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedDataType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedDataType.YCBCRSeparate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedDataType",
+    "name": "YCBCRSeparate",
+    "signature": "public const Electron2D.CameraFeed.FeedDataType YCBCRSeparate = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedDataType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedPosition.Back()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedPosition",
+    "name": "Back",
+    "signature": "public const Electron2D.CameraFeed.FeedPosition Back = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedPosition",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedPosition.Front()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedPosition",
+    "name": "Front",
+    "signature": "public const Electron2D.CameraFeed.FeedPosition Front = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedPosition",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeed.FeedPosition.Unspecified()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeed.FeedPosition",
+    "name": "Unspecified",
+    "signature": "public const Electron2D.CameraFeed.FeedPosition Unspecified = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedPosition",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeedOutput.Copy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeedOutput",
+    "name": "Copy",
+    "signature": "public const Electron2D.CameraFeedOutput Copy = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeedOutput",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeedOutput.Grayscale()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeedOutput",
+    "name": "Grayscale",
+    "signature": "public const Electron2D.CameraFeedOutput Grayscale = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeedOutput",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeedOutput.RGB()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeedOutput",
+    "name": "RGB",
+    "signature": "public const Electron2D.CameraFeedOutput RGB = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeedOutput",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraFeedOutput.Separate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraFeedOutput",
+    "name": "Separate",
+    "signature": "public const Electron2D.CameraFeedOutput Separate = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeedOutput",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraServer.FeedImage.CBCRImage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraServer.FeedImage",
+    "name": "CBCRImage",
+    "signature": "public const Electron2D.CameraServer.FeedImage CBCRImage = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraServer.FeedImage",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraServer.FeedImage.RGBAImage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraServer.FeedImage",
+    "name": "RGBAImage",
+    "signature": "public const Electron2D.CameraServer.FeedImage RGBAImage = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraServer.FeedImage",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraServer.FeedImage.YCBCRImage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraServer.FeedImage",
+    "name": "YCBCRImage",
+    "signature": "public const Electron2D.CameraServer.FeedImage YCBCRImage = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraServer.FeedImage",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CameraServer.FeedImage.YImage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CameraServer.FeedImage",
+    "name": "YImage",
+    "signature": "public const Electron2D.CameraServer.FeedImage YImage = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraServer.FeedImage",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.CanvasLightMode.Directional()",
@@ -65651,6 +66043,71 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.CameraFeed.FormatChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "FormatChanged",
+    "signature": "public event System.Action FormatChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CameraFeed.FrameChanged()",
+    "kind": "event",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "FrameChanged",
+    "signature": "public event System.Action FrameChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CameraServer.CameraFeedAdded()",
+    "kind": "event",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "CameraFeedAdded",
+    "signature": "public static event System.Action\u003CSystem.Int32\u003E CameraFeedAdded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CameraServer.CameraFeedRemoved()",
+    "kind": "event",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "CameraFeedRemoved",
+    "signature": "public static event System.Action\u003CSystem.Int32\u003E CameraFeedRemoved",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CameraServer.CameraFeedsUpdated()",
+    "kind": "event",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "CameraFeedsUpdated",
+    "signature": "public static event System.Action CameraFeedsUpdated",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.CanvasItem.Draw()",
     "kind": "event",
     "declaringType": "Electron2D.CanvasItem",
@@ -91766,6 +92223,677 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.GetDatatype()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "GetDatatype",
+    "signature": "public Electron2D.CameraFeed.FeedDataType GetDatatype()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedDataType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.GetID()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "GetID",
+    "signature": "public System.Int32 GetID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.GetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "GetName",
+    "signature": "public System.String GetName()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.GetPosition()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "GetPosition",
+    "signature": "public Electron2D.CameraFeed.FeedPosition GetPosition()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed.FeedPosition",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.OnActivateFeed()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "OnActivateFeed",
+    "signature": "protected virtual System.Boolean OnActivateFeed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.OnDeactivateFeed()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "OnDeactivateFeed",
+    "signature": "protected virtual System.Void OnDeactivateFeed()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.OnGetFormats()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "OnGetFormats",
+    "signature": "protected virtual Electron2D.CameraFeedFormat[] OnGetFormats()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeedFormat[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.OnSetFormat(System.Int32,Electron2D.CameraFeedOutput)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "OnSetFormat",
+    "signature": "protected virtual System.Boolean OnSetFormat(System.Int32 index, Electron2D.CameraFeedOutput output)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "output",
+        "type": "Electron2D.CameraFeedOutput",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.SetFormat(System.Int32,Electron2D.CameraFeedOutput)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "SetFormat",
+    "signature": "public System.Boolean SetFormat(System.Int32 index, Electron2D.CameraFeedOutput output = RGB)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "output",
+        "type": "Electron2D.CameraFeedOutput",
+        "default": "RGB"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.SetName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "SetName",
+    "signature": "public System.Void SetName(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.SetPosition(Electron2D.CameraFeed.FeedPosition)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "SetPosition",
+    "signature": "public System.Void SetPosition(Electron2D.CameraFeed.FeedPosition position)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.CameraFeed.FeedPosition",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.SetRGBImage(Electron2D.Image)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "SetRGBImage",
+    "signature": "public System.Void SetRGBImage(Electron2D.Image image)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.SetYCBCRImage(Electron2D.Image)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "SetYCBCRImage",
+    "signature": "public System.Void SetYCBCRImage(Electron2D.Image image)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.SetYCBCRImages(Electron2D.Image,Electron2D.Image)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "SetYCBCRImages",
+    "signature": "public System.Void SetYCBCRImages(Electron2D.Image yImage, Electron2D.Image cbcrImage)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "yImage",
+        "type": "Electron2D.Image",
+        "default": null
+      },
+      {
+        "name": "cbcrImage",
+        "type": "Electron2D.Image",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeed.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeedFormat.Deconstruct(ref System.Int32,ref System.Int32,ref System.String,ref System.Int32,ref System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "Deconstruct",
+    "signature": "public System.Void Deconstruct(out System.Int32 Width, out System.Int32 Height, out System.String PixelFormat, out System.Int32 FPSNumerator, out System.Int32 FPSDenominator)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "Width",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "Height",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "PixelFormat",
+        "type": "ref System.String",
+        "default": null
+      },
+      {
+        "name": "FPSNumerator",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "FPSDenominator",
+        "type": "ref System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeedFormat.Equals(Electron2D.CameraFeedFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "Equals",
+    "signature": "public virtual System.Boolean Equals(Electron2D.CameraFeedFormat other)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "other",
+        "type": "Electron2D.CameraFeedFormat",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeedFormat.Equals(System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "Equals",
+    "signature": "public override System.Boolean Equals(System.Object obj)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obj",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeedFormat.GetHashCode()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "GetHashCode",
+    "signature": "public override System.Int32 GetHashCode()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraFeedFormat.ToString()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "ToString",
+    "signature": "public override System.String ToString()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.AddFeed(Electron2D.CameraFeed)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "AddFeed",
+    "signature": "public static System.Void AddFeed(Electron2D.CameraFeed feed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "feed",
+        "type": "Electron2D.CameraFeed",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.Feeds()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "Feeds",
+    "signature": "public static Electron2D.CameraFeed[] Feeds()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeed[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.GetFeed(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "GetFeed",
+    "signature": "public static Electron2D.CameraFeed GetFeed(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CameraFeed",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.GetFeedCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "GetFeedCount",
+    "signature": "public static System.Int32 GetFeedCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.Process()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "Process",
+    "signature": "public static System.Void Process()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.RemoveFeed(Electron2D.CameraFeed)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "RemoveFeed",
+    "signature": "public static System.Void RemoveFeed(Electron2D.CameraFeed feed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "feed",
+        "type": "Electron2D.CameraFeed",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraServer.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "GetSize",
+    "signature": "public override Electron2D.Vector2 GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CameraTexture.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -238373,6 +239501,54 @@
     "value": null
   },
   {
+    "id": "operator:Electron2D.CameraFeedFormat.op_Equality(Electron2D.CameraFeedFormat,Electron2D.CameraFeedFormat)",
+    "kind": "operator",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "op_Equality",
+    "signature": "public static System.Boolean op_Equality(Electron2D.CameraFeedFormat left, Electron2D.CameraFeedFormat right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.CameraFeedFormat",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.CameraFeedFormat",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "operator:Electron2D.CameraFeedFormat.op_Inequality(Electron2D.CameraFeedFormat,Electron2D.CameraFeedFormat)",
+    "kind": "operator",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "op_Inequality",
+    "signature": "public static System.Boolean op_Inequality(Electron2D.CameraFeedFormat left, Electron2D.CameraFeedFormat right)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "left",
+        "type": "Electron2D.CameraFeedFormat",
+        "default": null
+      },
+      {
+        "name": "right",
+        "type": "Electron2D.CameraFeedFormat",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "operator:Electron2D.Color.op_Addition(Electron2D.Color,Electron2D.Color)",
     "kind": "operator",
     "declaringType": "Electron2D.Color",
@@ -249283,6 +250459,175 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeed.FeedIsActive()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "FeedIsActive",
+    "signature": "public System.Boolean FeedIsActive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeed.FeedTransform()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "FeedTransform",
+    "signature": "public Electron2D.Transform FeedTransform { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeed.Formats()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeed",
+    "name": "Formats",
+    "signature": "public Electron2D.CameraFeedFormat[] Formats { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraFeedFormat[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeedFormat.FPSDenominator()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "FPSDenominator",
+    "signature": "public System.Int32 FPSDenominator { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeedFormat.FPSNumerator()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "FPSNumerator",
+    "signature": "public System.Int32 FPSNumerator { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeedFormat.Height()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "Height",
+    "signature": "public System.Int32 Height { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeedFormat.PixelFormat()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "PixelFormat",
+    "signature": "public System.String PixelFormat { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraFeedFormat.Width()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraFeedFormat",
+    "name": "Width",
+    "signature": "public System.Int32 Width { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraServer.MonitoringFeeds()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraServer",
+    "name": "MonitoringFeeds",
+    "signature": "public static System.Boolean MonitoringFeeds { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraTexture.CameraFeedID()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "CameraFeedID",
+    "signature": "public System.Int32 CameraFeedID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraTexture.CameraIsActive()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "CameraIsActive",
+    "signature": "public System.Boolean CameraIsActive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraTexture.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CameraTexture.WhichFeed()",
+    "kind": "property",
+    "declaringType": "Electron2D.CameraTexture",
+    "name": "WhichFeed",
+    "signature": "public Electron2D.CameraServer.FeedImage WhichFeed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CameraServer.FeedImage",
     "value": null
   },
   {

@@ -247,7 +247,10 @@ internal sealed class TexturePixels
     }
 
     internal static TexturePixels PreparedRGBA(int width, int height) =>
-        new(new Image.State(width, height, Image.Format.Rgba8, false, new byte[checked(width * height * 4)])) { Mutable = true };
+        PreparedPlane(width, height, Image.Format.Rgba8);
+
+    internal static TexturePixels PreparedPlane(int width, int height, Image.Format format) =>
+        new(new Image.State(width, height, format, false, new byte[checked(width * height * Image.TexturePixelByteSize(format))])) { Mutable = true };
 
     internal TexturePixels CopySnapshot(bool mutable = false) => new(Source with { Data = (byte[])Source.Data.Clone() }) { Mutable = mutable };
 

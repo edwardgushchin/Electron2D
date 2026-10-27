@@ -15,6 +15,7 @@ This file routes architecture work to bounded domain decision documents. Start h
 | Process-wide service API | [singleton-services.md](singleton-services.md) | 0095 |
 | Non-real-time movie writing | [movie-writing.md](movie-writing.md) | 0109 |
 | Timed video playback | [video-playback.md](video-playback.md) | 0110 |
+| Camera pixel feeds | [camera-feeds.md](camera-feeds.md) | 0115 |
 | Runtime diagnostics and C# stack snapshots | [diagnostics.md](diagnostics.md) | 0108 |
 | Runtime undo history | [undo-history.md](undo-history.md) | 0105 |
 | Worker execution | [jobs.md](jobs.md) | 0104 |

@@ -22,7 +22,7 @@ Public operations and events use static access to the retained object under [ADR
 
 Coordinates process-wide frame scheduling, runtime metrics, and named engine singletons.
 
-`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), [`InputMap`](InputMap.md), and [`AudioServer`](AudioServer.md) entries.
+`Engine` is the non-disposable process-wide runtime coordinator. It reads/writes persisted timing configuration through [`ProjectSettings`](ProjectSettings.md), attaches one [`MainLoop`](MainLoop.md), converts host-supplied unscaled elapsed time into fixed and variable callbacks, publishes runtime metrics, and maintains a thread-safe registry of named non-owned `ElectronObject` instances. The registry is initialized with permanent `Engine`, `ProjectSettings`, [`Input`](Input.md), [`InputMap`](InputMap.md), [`CameraServer`](CameraServer.md), and [`AudioServer`](AudioServer.md) entries.
 
 Engine.Run(Window) owns the elapsed-time source, native event pump, waiting/frame pacing and final disposal for ordinary windowed scenes. Manual embedding retains caller ownership. `Engine.Stop()` finalizes and detaches the loop, closes native audio output and clears player slots, but deliberately does not dispose the loop. Finalization and native cleanup failures are collected after both stages. The registry retains references but never acquires disposal ownership.
 
@@ -603,3 +603,5 @@ EditorHintTests managed/native profiles exercise the host value and descriptor, 
 The existing lifecycle owner now publishes and retires the diagnostic main-thread
 role observed by OS.GetThreadCallerID, including failed startup and finalization.
 See [thread identities and native names](../components/os-thread-identity.md) for identity and access boundaries.
+
+Engine teardown on the camera owner also closes opt-in [camera monitoring](../components/camera-feeds.md), retiring native camera sources while leaving custom source ownership with callers. CameraServer is a permanent non-removable built-in service.
