@@ -1,3 +1,5 @@
+[Dense containment and retention](gpu-contact-colors.md#dense-retention-witness-2026-10-27) corrects the raw benchmark's open-top/bounded-field contradiction, adds a fourth wall and CPU/GPU geometry controls, and extends the retained-state witness to 64 steps. The production solver is unchanged. Declaration coverage stays **1361/1369 (99.42%)**, with **8 open** and 92 Excluded; complete numerical/performance acceptance remains separate.
+
 [Retained worker-queue gates](physics-allocation-measurement.md#late-worker-queue-contention-2026-10-27) remove late monitor-inflation allocation from CPU numerical tasks and GPU host contact publication. No declaration is promoted: coverage remains **1361/1369 (99.42%)**, with **8 open** and 92 Excluded. Full numerical/network/platform/performance acceptance remains separate.
 
 

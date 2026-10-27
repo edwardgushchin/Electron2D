@@ -44,31 +44,86 @@ internal static class PhysicsMassPerformance
     }
     internal static void VerifyDirtyBufferInitialization()
     {
+        VerifyOpenTopExit();
         var previous = GPUPhysicsBodyStore.BufferCreatedForTesting;
         try
         {
-            Action<nint, nint, uint>[] patterns = [GPUPhysicsBufferPoison.Fill, GPUPhysicsBufferPoison.FillFinite];
-            foreach (var fill in patterns)
+            Action<nint, nint, uint>?[] patterns = [previous, GPUPhysicsBufferPoison.Fill, GPUPhysicsBufferPoison.FillFinite];
+            for (var pattern = 0; pattern < patterns.Length; pattern++)
             {
-                GPUPhysicsBodyStore.BufferCreatedForTesting = fill;
+                Console.WriteLine($"Dense retention initialization {pattern}: 0 ordinary, 1 NaN, 2 finite.");
+                GPUPhysicsBodyStore.BufferCreatedForTesting = patterns[pattern];
                 using var pile = new Pile(PhysicsServer.Backend.GPU, 16384, 32, 32);
-                pile.Step();
                 var gpu = PhysicsServer.Service.GetSceneSpace(pile.Space).GPUStore!;
-                Check(gpu.ContactColorCount > 1 && gpu.ContactColorFallbacks == 0, "Dirty scratch retains a real conflict-free contact schedule");
-                PhysicsServer.BodyGetTransform(pile.Space, pile.Bodies, pile.Transforms);
                 const int columns = 157;
-                for (var i = 0; i < pile.Count; i++)
+                while (!pile.Complete)
                 {
-                    var expected = new Vector2(4 + i % columns * 8 + i / columns % 2 * 4, 4 + i / columns * 7);
-                    var velocity = PhysicsServer.BodyGetLinearVelocity(pile.Bodies[i]);
-                    var angular = PhysicsServer.BodyGetAngularVelocity(pile.Bodies[i]);
-                    Check(pile.Transforms[i].IsFinite() && pile.Transforms[i].Origin.DistanceTo(expected) < Pile.Radius &&
-                        velocity.IsFinite() && float.IsFinite(angular), "Every raw pile body is initialized before packed constraints consume it");
+                    pile.Step();
+                    Check(gpu.ContactColorCount > 1 && gpu.ContactColorFallbacks == 0, "Retained scratch keeps a real conflict-free contact schedule");
+                    PhysicsServer.BodyGetTransform(pile.Space, pile.Bodies, pile.Transforms);
+                    var escape = 0f; var worst = -1;
+                    for (var i = 0; i < pile.Count; i++)
+                    {
+                        var pose = pile.Transforms[i];
+                        Check(pose.IsFinite(), "Every retained body pose remains finite");
+                        if (pile.Tick == 1)
+                        {
+                            var expected = new Vector2(4 + i % columns * 8 + i / columns % 2 * 4, 4 + i / columns * 7);
+                            Check(pose.Origin.DistanceTo(expected) < Pile.Radius, "Every raw pile body is initialized before packed constraints consume it");
+                            var velocity = PhysicsServer.BodyGetLinearVelocity(pile.Bodies[i]);
+                            var angular = PhysicsServer.BodyGetAngularVelocity(pile.Bodies[i]);
+                            Check(velocity.IsFinite() && float.IsFinite(angular), "Every initialized body retains finite linear/angular velocity");
+                        }
+                        var outside = Math.Max(Math.Max(-pose.Origin.X, -pose.Origin.Y), Math.Max(pose.Origin.X - pile.Width, pose.Origin.Y - pile.Height));
+                        if (outside > escape) { escape = outside; worst = i; }
+                    }
+                    Check(escape < Pile.Radius, $"Retained dense pile escaped with pattern {pattern} at tick {pile.Tick}, body {worst}, distance {escape}, colors {gpu.ContactColorCount}, fallbacks {gpu.ContactColorFallbacks}");
                 }
+                pile.VerifyManagedMemory();
             }
         }
         finally { GPUPhysicsBodyStore.BufferCreatedForTesting = previous; }
-        Console.WriteLine("Resident solver: 16,384-body public first step passes with NaN/finite-filled new buffers and packed contacts/bodies.");
+        Console.WriteLine("Resident solver: 16,384 bodies retain bounded poses for 64 public steps with ordinary/NaN/finite-filled buffers and packed contacts/bodies.");
+    }
+
+    private static void VerifyOpenTopExit()
+    {
+        using var circle = new CircleShape { Radius = 4 };
+        using var side = new RectangleShape { Size = new(20, 100) };
+        foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+        {
+            var space = PhysicsServer.SpaceCreate(backend); RID wall = default, ball = default;
+            try
+            {
+                PhysicsServer.SpaceSetActive(space, true); PhysicsServer.AreaSetGravity(space, 0);
+                PhysicsServer.AreaSetLinearDamp(space, 0); PhysicsServer.AreaSetAngularDamp(space, 0);
+                PhysicsServer.SpaceSetSolverIterations(space, 16);
+                Check(PhysicsServer.SpaceGetBackend(space) == backend, "Both open-wall controls use the requested full backend");
+                wall = PhysicsServer.BodyCreate(); PhysicsServer.BodySetMode(wall, PhysicsServer.BodyMode.Static);
+                PhysicsServer.BodySetTransform(wall, new(0, new(110, 30)));
+                PhysicsServer.BodyAddShape(wall, side.GetRID()); PhysicsServer.BodySetSpace(wall, space);
+                ball = PhysicsServer.BodyCreate(); PhysicsServer.BodySetCanSleep(ball, false);
+                PhysicsServer.BodySetTransform(ball, new(0, new(95, -25)));
+                PhysicsServer.BodySetLinearVelocity(ball, new(600, 0));
+                PhysicsServer.BodyAddShape(ball, circle.GetRID()); PhysicsServer.BodySetSpace(ball, space);
+                PhysicsServer.SpaceStep(space, Delta);
+                var position = PhysicsServer.BodyGetTransform(ball).Origin;
+                Check(position.DistanceTo(new(105, -25)) < .001f && position.X - 100 > circle.Radius,
+                    "A circle above an open side wall can legitimately cross the horizontal field boundary");
+                PhysicsServer.BodySetTransform(ball, new(0, new(95, 0)));
+                PhysicsServer.BodySetLinearVelocity(ball, new(600, 0));
+                PhysicsServer.SpaceStep(space, Delta);
+                position = PhysicsServer.BodyGetTransform(ball).Origin;
+                Check(position.X <= 96 + PhysicsServer.SpaceGetContactMaxAllowedPenetration(space) + .001f,
+                    "The same side wall stops that movement below its upper edge");
+            }
+            finally
+            {
+                if (ball.IsValid()) PhysicsServer.FreeRID(ball);
+                if (wall.IsValid()) PhysicsServer.FreeRID(wall);
+                PhysicsServer.FreeRID(space);
+            }
+        }
     }
 
     private static int Read(string name, int fallback, int min, int max)
@@ -86,7 +141,7 @@ internal static class PhysicsMassPerformance
         internal readonly int Warmup, Samples;
         internal readonly float Width, Height;
         internal const float Radius = 4;
-        private readonly RID[] _walls = new RID[3];
+        private readonly RID[] _walls = new RID[4];
         private readonly CircleShape _particle = new() { Radius = Radius };
         private readonly RectangleShape _floor, _side;
         private readonly PhysicsSpace _data;
@@ -132,6 +187,7 @@ internal static class PhysicsMassPerformance
                 PhysicsServer.SpaceSetSolverIterations(Space, 16);
                 PhysicsServer.AreaSetLinearDamp(Space, .05f); PhysicsServer.AreaSetAngularDamp(Space, .05f);
                 Wall(0, _floor, new(Width / 2, Height + 10)); Wall(1, _side, new(-10, Height / 2)); Wall(2, _side, new(Width + 10, Height / 2));
+                Wall(3, _floor, new(Width / 2, -10));
                 for (var i = 0; i < count; i++)
                 {
                     var row = i / columns; var position = new Vector2(4 + i % columns * 8 + row % 2 * 4, 4 + row * 7);
@@ -176,13 +232,15 @@ internal static class PhysicsMassPerformance
         {
             Check(Complete && PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects) == Count, "The exact population remains awake and simulated");
             var positions = new Vector2[Count]; var grid = new Dictionary<(int X, int Y), List<int>>(); var index = 0;
+            var worstBody = -1;
             foreach (var body in Bodies)
             {
-                var pose = PhysicsServer.BodyGetTransform(body); var velocity = PhysicsServer.BodyGetLinearVelocity(body);
+                var pose = Transforms[index] = PhysicsServer.BodyGetTransform(body); var velocity = PhysicsServer.BodyGetLinearVelocity(body);
                 var angular = PhysicsServer.BodyGetAngularVelocity(body);
                 Check(pose.IsFinite() && velocity.IsFinite(), "No nonfinite state in the complete population");
                 MaxSpeed = Math.Max(MaxSpeed, velocity.Length());
-                MaxEscape = Math.Max(MaxEscape, Math.Max(-pose.Origin.X, Math.Max(pose.Origin.X - Width, pose.Origin.Y - Height)));
+                var escape = Math.Max(Math.Max(-pose.Origin.X, -pose.Origin.Y), Math.Max(pose.Origin.X - Width, pose.Origin.Y - Height));
+                if (escape > MaxEscape) { MaxEscape = escape; worstBody = index; }
                 Energy += .5 * velocity.LengthSquared() + .25 * Radius * Radius * angular * angular + 980 * Math.Max(0, Height - pose.Origin.Y);
                 var cell = ((int)MathF.Floor(pose.Origin.X / (2 * Radius)), (int)MathF.Floor(pose.Origin.Y / (2 * Radius)));
                 for (var y = -1; y <= 1; y++) for (var x = -1; x <= 1; x++)
@@ -196,7 +254,11 @@ internal static class PhysicsMassPerformance
                 if (!grid.TryGetValue(cell, out var bucket)) grid.Add(cell, bucket = []);
                 positions[index] = pose.Origin; bucket.Add(index++);
             }
-            Check(MaxEscape < Radius && MaxSpeed < 1000, $"No escaped particle or unbounded kinetic activity: escape={MaxEscape}, speed={MaxSpeed}");
+            var batched = new Transform[Count];
+            PhysicsServer.BodyGetTransform(Space, Bodies, batched);
+            for (var i = 0; i < Count; i++)
+                if (Transforms[i] != batched[i]) throw new InvalidOperationException($"Scalar/batched pose differs for {i}: {Transforms[i].Origin}/{batched[i].Origin}");
+            Check(MaxEscape < Radius && MaxSpeed < 1000, $"No escaped particle or unbounded kinetic activity: escape={MaxEscape}, speed={MaxSpeed}, body={worstBody}, pose={(worstBody >= 0 ? Transforms[worstBody].Origin : default)}, colors={_data.GPUStore?.ContactColorCount}, fallbacks={_data.GPUStore?.ContactColorFallbacks}");
             var penetrationLimit = 2 * PhysicsServer.SpaceGetContactMaxAllowedPenetration(Space) + .001f;
             Check(double.IsFinite(Energy) && Energy < InitialEnergy * 1.02 && MaxPenetration <= penetrationLimit,
                 $"Energy growth <=2% and penetration <={penetrationLimit}: energy={Energy}/{InitialEnergy}, penetration={MaxPenetration}");
@@ -205,14 +267,15 @@ internal static class PhysicsMassPerformance
         {
             var report = new
             {
-                Schema = 2,
+                Schema = 3,
                 SetupMS,
-                Scene = "dense-circle-pile",
+                Scene = "closed-circle-pile",
                 Backend = Backend.ToString(),
                 Rendered = rendered,
                 Renderer = rendered ? "gpu" : "none",
                 Count,
-                TotalBodies = Count + 3,
+                TotalBodies = Count + _walls.Length,
+                StaticWalls = _walls.Length,
                 Warmup,
                 Samples,
                 FixedStep = Delta,
@@ -281,9 +344,11 @@ internal static class PhysicsMassPerformance
             var text = JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true });
             var directory = System.IO.Path.GetFullPath(Environment.GetEnvironmentVariable("ELECTRON2D_MASS_OUTPUT") ?? "bin/physics-mass"); Directory.CreateDirectory(directory);
             File.WriteAllText(System.IO.Path.Combine(directory, $"{Backend}-{Count}-{(rendered ? "window" : "headless")}.json"), text); Console.WriteLine(text);
-            Check(_owner == 0 && _all == 0, $"Warmed public physics must allocate zero managed bytes: {_owner}/{_all}");
+            VerifyManagedMemory();
             if (rendered) Check(FrameOwner == 0 && FrameAll == 0, $"Warmed rendered frames must allocate zero managed bytes: {FrameOwner}/{FrameAll}");
         }
+        internal void VerifyManagedMemory() => Check(_owner == 0 && _all == 0, $"Warmed public physics must allocate zero managed bytes: {_owner}/{_all}");
+
         public void Dispose()
         {
             foreach (var body in Bodies) if (body.IsValid()) PhysicsServer.FreeRID(body);

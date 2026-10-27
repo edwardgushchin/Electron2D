@@ -1,6 +1,89 @@
 # Resident contact scheduling and dense-world verification
 
-Last updated: 2026-10-22
+Last updated: 2026-10-27
+
+## Dense retention witness, 2026-10-27
+
+The raw-server benchmark now closes its container with four static walls on both
+backends. Schema 3 reports identify `closed-circle-pile`, `StaticWalls = 4` and
+`TotalBodies = Count + 4`. The dynamic population, four substeps, sixteen sweeps,
+materials, gravity and disabled sleeping remain the same. Older three-wall
+measurements retain their original workload and cannot qualify this new scene.
+
+The former containment oracle was inconsistent with its open top. Its side walls
+ended at Y = -20, but the oracle rejected horizontal exits at every height. A
+native witness at tick 50 returned body 155 at (1268.8108, -24.085552), agreeing
+with the public pose. With radius 4 its entire circle was above the side-wall
+edge: Y + radius = -20.085552. Crossing that horizontal field boundary requires
+no wall collision. Earlier rejected 64/480-tick trials are retained as oracle
+failures; their assertions alone do not establish solver or driver corruption.
+The packing and cache hypotheses did not justify a production solver change.
+
+`VerifyOpenTopExit` independently exercises both full CPU/GPU backends. A radius-4
+circle moves from (95, -25) to (105, -25) above a wall whose upper edge is -20;
+the same prescribed movement below the edge must stop at the wall. This preserves
+legitimate free motion while demonstrating why an open container cannot use the
+old bounded-field predicate. The mass workload instead gains a ceiling and checks
+all four boundaries, including the previously unchecked upper boundary.
+
+The existing dirty-buffer check covers ordinary, NaN-filled and finite-filled
+closed worlds for 64 full public steps each. It preserves the first-step
+displacement and finite linear/angular velocity checks, then checks every body
+pose, containment and a real conflict-free contact schedule at each completed
+step. It requires zero owner/all-thread managed bytes in 32 measured steps after
+32 warmups. `ELECTRON2D_TEST_PHYSICS_MASS=retained` selects the witness directly;
+the resident solver suite also calls it. Extra pose reads occur outside the
+physical allocation bracket, so this is a functional witness rather than a pure
+throughput measurement. Raw-profile validation also compares scalar/batched poses
+and identifies the worst escaped body.
+
+Exploratory validation of the former workload used a local checksum-verified
+Khronos 1.4.363.0 layer, without installing a system package. Core, synchronization
+and active GPU-assisted checks reported no corresponding errors. The first
+GPU-assisted attempt disabled itself because the ordinary SDL path requests
+Vulkan 1.0; only the later temporary 1.2 diagnostic cohort enabled instrumentation
+through the [Khronos settings](https://github.com/KhronosGroup/Vulkan-ValidationLayers/blob/main/docs/updating_from_VK_EXT_validation_features.md).
+The version override and device-capture helper were removed from production
+sources. These controls do not qualify the changed four-wall workload.
+
+The corrected cohort passed the complete resident-solver selector, including
+its 65,536-body case and the three retained 16,384-body worlds. Same-cohort CPU/GPU
+headless and Wayland-window pairs each passed 240 warmup plus 240 measured ticks,
+with 16,384 awake bodies and four walls throughout. All physical intervals and
+both complete window-frame intervals retained zero owner/all-thread managed bytes.
+The CPU-only dummy-video control also passed with an unavailable Vulkan ICD.
+
+| Mode | Backend | Full step mean / p95, ms | Frame mean, ms | Actual FPS/ticks per second | Physics owner / all-thread bytes |
+| --- | --- | --- | ---: | ---: | --- |
+| headless | CPU | 55.833 / 58.452 | n/a | n/a | 0 / 0 |
+| headless | GPU | 16.793 / 33.057 | n/a | n/a | 0 / 0 |
+| window | CPU | 67.029 / 104.770 | 74.453 | 13.43 | 0 / 0 |
+| window | GPU | 17.444 / 29.033 | 25.464 | 39.27 | 0 / 0 |
+
+These are unisolated desktop observations, not a completed quiet-host performance
+gate. Both windows requested disabled VSync and observed Enabled. Internal output
+was 1152 x 800; observed client size was 1153 x 800. Captures contain the full
+particle field. Compiler/PDB source checks cover 2704 runtime and 1031 test
+inputs; all 44 physical shader module hashes are unchanged from the original
+cohort. The frozen runtime/test hashes are respectively
+`81b7ca975913af818813ae20d063bc03e205001b00e456feb5fc6d90759e5adb` and
+`86854b61a8b649db56f990badf175e5a345710208928ed26a37ac85b0a7e1280`.
+
+After the sampler changes on main `9387ae944e7a1ab5943a4bcd03237277b72a037d`,
+a fresh integration cohort passed the three retained worlds, the CPU-only
+unavailable-ICD control and a 64-body CPU/GPU Wayland pair (32 warmup plus 32
+measured ticks). Its compiler/PDB proof covers 2705 runtime and 1031 test inputs;
+physics inputs are unchanged. These integration checks do not refresh the
+16,384-body timings above. The integration runtime/test hashes are
+`48855a89d7ada868ca00aafbf9846824d3a006f268e693732f13319c454e710f` and
+`69c763538a066ed3d2112870fc05c65bc0e688add43ddd8d1b6ee2e817871f66`.
+
+Evidence is under `bin/physics-mass-current/2026-10-27/`: rejected oracle logs,
+native/source/shader witnesses, immutable cohort manifests and local validation
+receipts. Desktop trials did not pass the existing quiet-host admission protocol.
+Full numerical, ordinary mass/window, native/platform and complete-goal
+acceptance remain separate. Declaration coverage stays 1361/1369 (99.42%), with
+eight open declarations and 92 Excluded.
 
 ## Validated device color cache, 2026-10-18
 
@@ -531,12 +614,12 @@ lazy pipeline creation or scratch growth in these paths. This keeps resource
 initialization outside already-recorded constraint work and leaves the solve,
 packing, color counts, iterations and fallback equations unchanged.
 
-`PhysicsMassPerformance.VerifyDirtyBufferInitialization` fills every newly
-created resident storage buffer with NaN words and, in a separate world, finite
-nonzero words before first use, then advances
-16,384 overlapping circles through the packed contact/body path. It checks the
-complete population, finite motion, bounded displacement and a real conflict-free
-schedule. The displacement gate is one particle radius (4 scene units), above
+`PhysicsMassPerformance.VerifyDirtyBufferInitialization` now advances ordinary,
+NaN-filled and finite-nonzero-filled worlds through 64 full public steps. Every
+world contains 16,384 circles using the packed contact/body path. It checks the
+complete population, finite first-step velocities, every completed pose, field
+containment, a real conflict-free schedule and warmed managed allocation.
+The initial displacement gate is one particle radius (4 scene units), above
 the configured 200-unit/second correction integrated for 1/60 second plus gravity
 displacement; it detects corrupted first-step state without requiring a solver
 bit pattern. The internal allocation callback is restored after the check; ordinary

@@ -2,7 +2,14 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-27
+
+The [2026-10-27 containment correction](gpu-contact-colors.md#dense-retention-witness-2026-10-27)
+closes the raw benchmark with four walls and adds CPU/GPU open-wall controls. The
+former open-top scene could legitimately eject particles above its short side
+walls, contradicting its own bounded-field assertion. Schema 3 marks the changed
+workload; historical three-wall numbers and exploratory validation do not qualify
+it. The quiet-host admission requirement and declaration states are unchanged.
 
 ## Current comparison admission
 
