@@ -1,0 +1,252 @@
+{
+  "mappings": [
+    {
+      "godot": "RenderingDevice::enum:Limit",
+      "electron2d": "T:Electron2D.RenderingDevice.Limit",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::method:limit_get(int:RenderingDevice.Limit)",
+      "electron2d": "method:Electron2D.RenderingDevice.LimitGet(Electron2D.RenderingDevice.Limit)",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_BOUND_UNIFORM_SETS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxBoundUniformSets()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_SHARED_MEMORY_SIZE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeSharedMemorySize()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_X",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupCountX()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Y",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupCountY()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Z",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupCountZ()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_INVOCATIONS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupInvocations()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_X",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupSizeX()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Y",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupSizeY()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Z",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxComputeWorkgroupSizeZ()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_DRAW_INDEXED_INDEX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxDrawIndexedIndex()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_FRAMEBUFFER_COLOR_ATTACHMENTS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxFramebufferColorAttachments()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_FRAMEBUFFER_HEIGHT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxFramebufferHeight()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_FRAMEBUFFER_WIDTH",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxFramebufferWidth()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_PUSH_CONSTANT_SIZE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxPushConstantSize()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_SAMPLERS_PER_SHADER_STAGE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxSamplersPerShaderStage()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_SAMPLERS_PER_UNIFORM_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxSamplersPerUniformSet()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_BUFFERS_PER_SHADER_STAGE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxStorageBuffersPerShaderStage()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_BUFFERS_PER_UNIFORM_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxStorageBuffersPerUniformSet()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_IMAGES_PER_SHADER_STAGE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxStorageImagesPerShaderStage()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_IMAGES_PER_UNIFORM_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxStorageImagesPerUniformSet()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURES_PER_SHADER_STAGE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxTexturesPerShaderStage()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURES_PER_UNIFORM_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxTexturesPerUniformSet()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_ARRAY_LAYERS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxTextureArrayLayers()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_SIZE_2D",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxTextureSize2D()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_UNIFORM_BUFFERS_PER_SHADER_STAGE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxUniformBuffersPerShaderStage()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_UNIFORM_BUFFERS_PER_UNIFORM_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxUniformBuffersPerUniformSet()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_UNIFORM_BUFFER_SIZE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxUniformBufferSize()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_ATTRIBUTES",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxVertexInputAttributes()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_ATTRIBUTE_OFFSET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxVertexInputAttributeOffset()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_BINDINGS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxVertexInputBindings()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_BINDING_STRIDE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxVertexInputBindingStride()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_VIEWPORT_DIMENSIONS_X",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxViewportDimensionsX()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MAX_VIEWPORT_DIMENSIONS_Y",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MaxViewportDimensionsY()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:Limit.LIMIT_MIN_UNIFORM_BUFFER_OFFSET_ALIGNMENT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.Limit.MinUniformBufferOffsetAlignment()",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate."
+    }
+  ],
+  "extras": [],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executing effective native Vulkan device limits, descriptor remapping, cached owner/lifetime queries and validated compute/resource/vertex/framebuffer boundaries. DeviceLimits.Consumer exercises native boundary dispatch/shared storage, sparse logical sets, native image extents and graphics output. See docs/components/device-limits.md; foreign platforms, physical hardware and full-goal acceptance remain separate.",
+      "godot": [
+        "RenderingDevice::method:limit_get(int:RenderingDevice.Limit)",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_BOUND_UNIFORM_SETS",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_SHARED_MEMORY_SIZE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_X",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Y",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_COUNT_Z",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_INVOCATIONS",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_X",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Y",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Z",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_DRAW_INDEXED_INDEX",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_FRAMEBUFFER_COLOR_ATTACHMENTS",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_FRAMEBUFFER_HEIGHT",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_FRAMEBUFFER_WIDTH",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_PUSH_CONSTANT_SIZE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_SAMPLERS_PER_SHADER_STAGE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_SAMPLERS_PER_UNIFORM_SET",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_BUFFERS_PER_SHADER_STAGE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_BUFFERS_PER_UNIFORM_SET",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_IMAGES_PER_SHADER_STAGE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_STORAGE_IMAGES_PER_UNIFORM_SET",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURES_PER_SHADER_STAGE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURES_PER_UNIFORM_SET",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_ARRAY_LAYERS",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_SIZE_2D",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_UNIFORM_BUFFERS_PER_SHADER_STAGE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_UNIFORM_BUFFERS_PER_UNIFORM_SET",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_UNIFORM_BUFFER_SIZE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_ATTRIBUTES",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_ATTRIBUTE_OFFSET",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_BINDINGS",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_VERTEX_INPUT_BINDING_STRIDE",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_VIEWPORT_DIMENSIONS_X",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_VIEWPORT_DIMENSIONS_Y",
+        "RenderingDevice::enum_value:Limit.LIMIT_MIN_UNIFORM_BUFFER_OFFSET_ALIGNMENT"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: effective ordinary GPU limits execute; the two MetalFX temporal scale selectors require a real native MetalFX scaler and supported scale-range producer.",
+      "godot": [
+        "RenderingDevice::enum:Limit"
+      ]
+    },
+    {
+      "state": "Excluded",
+      "reason": "ADRs 0004/0028: these limits select the same excluded one-dimensional, volume and cube image roles as TextureType; the strictly two-dimensional image API has no such allocation or view.",
+      "godot": [
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_SIZE_1D",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_SIZE_3D",
+        "RenderingDevice::enum_value:Limit.LIMIT_MAX_TEXTURE_SIZE_CUBE"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: native MetalFX temporal scaler integration with owned temporal input/output textures, executing viewport consumer and actual supported minimum/maximum scale query. Vulkan physical-device limits do not supply that scaler range.",
+      "godot": [
+        "RenderingDevice::enum_value:Limit.LIMIT_METALFX_TEMPORAL_SCALER_MAX_SCALE",
+        "RenderingDevice::enum_value:Limit.LIMIT_METALFX_TEMPORAL_SCALER_MIN_SCALE"
+      ]
+    }
+  ]
+}

@@ -42,6 +42,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private int RetainFramebufferFormat(FramebufferLayout layout)
     {
+        if (ValidationLimits is { } limits && layout.Passes.Any(p => (ulong)p.ColorSlots.Length > limits[1])) throw new ArgumentException("Framebuffer color targets exceed device limits.");
         foreach (var pair in _framebufferFormats)
         {
             var prior = pair.Value;
@@ -162,6 +163,7 @@ public sealed unsafe partial class RenderingDevice
             formats[i] = info.Format; usage[i] = info.Usage; samples[i] = info.Samples;
         }
         if (size == default) throw new ArgumentException("Provide at least one live attachment.", nameof(textures));
+        if (ValidationLimits is { } limits && ((ulong)size.X > limits[9] || (ulong)size.Y > limits[8])) throw new ArgumentException("Framebuffer dimensions exceed device limits.", nameof(textures));
         var format = validateWithFormat; FramebufferLayout layout;
         if (format == -1) layout = AttachmentLayouts(formats, usage, samples, passes, viewCount);
         else

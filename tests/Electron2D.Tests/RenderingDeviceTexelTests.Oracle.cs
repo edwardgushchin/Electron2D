@@ -30,10 +30,23 @@ internal static partial class RenderingDeviceTexelTests
             var first = Set(device, shader, 3, 7, UniformType.ImageBuffer, texels); var second = Set(device, shader, 4, 8, UniformType.Image, image);
             var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline); device.ComputeListBindUniformSet(list, first, 3); device.ComputeListBindUniformSet(list, second, 4); device.ComputeListDispatch(list, 1, 1, 1); device.ComputeListEnd();
             var actual = device.BufferGetData(texels); var expected = device.TextureGetData(image, 0);
-            Check(actual.SequenceEqual(expected), "Native image-store parity for " + item.Layout + ": texel=" + Convert.ToHexString(actual) + " native=" + Convert.ToHexString(expected));
+            var normalized = item.Format is DataFormat.R8G8B8A8UNORM or DataFormat.R8G8B8A8SNORM or DataFormat.A2B10G10R10UNORMPACK32;
+            Check(normalized ? NormalizedStore(item.Format, actual) && NormalizedStore(item.Format, expected) : actual.SequenceEqual(expected), "Native image-store parity for " + item.Layout + ": texel=" + Convert.ToHexString(actual) + " native=" + Convert.ToHexString(expected));
             Console.WriteLine("Native store parity " + item.Layout + ": " + Convert.ToHexString(actual));
             foreach (var resource in new[] { first, second, pipeline, shader, texels, image }) device.FreeRID(resource);
         }
+    }
+
+    private static bool NormalizedStore(DataFormat format, ReadOnlySpan<byte> bytes)
+    {
+        // Native normalized conversion permits either adjacent integer; saturated endpoints stay exact.
+        if (bytes.Length != 4) return false;
+        if (format == DataFormat.R8G8B8A8UNORM)
+            return bytes[0] == 0 && bytes[1] is 127 or 128 && bytes[2] == 255 && bytes[3] is 63 or 64;
+        if (format == DataFormat.R8G8B8A8SNORM)
+            return bytes[0] == 129 && bytes[1] is 192 or 193 && bytes[2] is 63 or 64 && bytes[3] == 127;
+        var packed = System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(bytes);
+        return (packed & 1023) is 511 or 512 && ((packed >> 10) & 1023) == 1023 && ((packed >> 20) & 1023) == 0 && (packed >> 30) is 2 or 3;
     }
 
     private static void Atomics(RenderingDevice device)

@@ -33,3 +33,5 @@ binding owner validates shader operations and lifetime before native sampling.
 The public sampler consumers check real normalized and texel-coordinate
 float/integer/depth pixels, descriptor arrays, mixed/filtering modes and
 operation/view rejection. Mirror-clamp remains a separate native capability.
+
+`e2d_render_limits` uses ABI 1 and exactly 37 uint64 output elements. It reads the immutable selected Vulkan physical-device limits without allocation, submission or waiting. Invalid pointers/count/ABI return -1; unsupported core/revision/driver returns 0; success returns 1. Failure leaves output untouched. Slots 11/13/14 are zero for excluded image roles. Managed code applies the executing profile and logical descriptor remapping; packages must carry this export with the existing three exports.

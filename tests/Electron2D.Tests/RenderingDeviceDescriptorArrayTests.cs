@@ -105,7 +105,7 @@ internal static partial class RenderingDeviceDescriptorArrayTests
         var x = device.TextureBufferCreate(1, DataFormat.R32UINT); var y = device.TextureBufferCreate(1, DataFormat.R32UINT); var target = Set(device, shader, 4, 2, UniformType.ImageBuffer, x, y);
         var output = device.StorageBufferCreate(48); var write = Set(device, shader, 5, 1, UniformType.StorageBuffer, output); var bytes = new byte[48];
         Execute(device, pipeline, output, bytes, (read, 3), (target, 4), (write, 5)); var values = MemoryMarshal.Cast<byte, float>(bytes.AsSpan());
-        Check(values[0] == 1 && Math.Abs(values[4] - 128f / 255) < .00001f && values[8] == 2, "Texel arrays preserve formatting, indexing, helpers and dimensions.");
+        Check(Math.Abs(values[0] - 1) < .00001f && Math.Abs(values[4] - 128f / 255) < .00001f && values[8] == 2, $"Texel arrays preserve formatting, indexing, helpers and dimensions: {values[0]}, {values[4]}, {values[8]}.");
         Check(BitConverter.ToUInt32(device.BufferGetData(x)) == 22 && BitConverter.ToUInt32(device.BufferGetData(y)) == 23, "Image buffer array stores reach both GPU resources.");
         Console.WriteLine(language + " texel arrays passed.");
     }

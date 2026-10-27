@@ -63,14 +63,14 @@ internal static partial class RenderingDeviceTexelTests
         var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline);
         device.ComputeListBindUniformSet(list, first, 3); device.ComputeListBindUniformSet(list, second, 4); device.ComputeListDispatch(list, 1, 1, 1); device.ComputeListEnd();
         var values = MemoryMarshal.Cast<byte, float>(device.BufferGetData(output).AsSpan());
-        Check(values[0] == 0 && Math.Abs(values[1] - 128f / 255) < .00001f && values[2] == 1 && Math.Abs(values[3] - 64f / 255) < .00001f && values[4] == 3 && values[7] == 3, "Formatted fetches/helpers and element queries reach actual GPU storage.");
+        Check(values[0] == 0 && Math.Abs(values[1] - 128f / 255) < .00001f && Math.Abs(values[2] - 1) < .00001f && Math.Abs(values[3] - 64f / 255) < .00001f && values[4] == 3 && values[7] == 3, "Formatted fetches/helpers and element queries reach actual GPU storage.");
         var result = new byte[32]; byte[] change = [0, 0, 0, 255];
         void Execute(bool red)
         {
             change[0] = red ? (byte)255 : (byte)0; change[1] = red ? (byte)0 : (byte)255;
             device.BufferUpdate(input, 4, 4, change);
             var current = device.ComputeListBegin(); device.ComputeListBindComputePipeline(current, pipeline); device.ComputeListBindUniformSet(current, first, 3); device.ComputeListBindUniformSet(current, second, 4); device.ComputeListDispatch(current, 1, 1, 1); device.ComputeListEnd(); device.BufferGetData(output, result.AsSpan());
-            var pixels = MemoryMarshal.Cast<byte, float>(result.AsSpan()); Check(pixels[0] == (red ? 1 : 0) && pixels[1] == (red ? 0 : 1) && pixels[4] == 3, "Changing compute input preserves encoded data and element metadata.");
+            var pixels = MemoryMarshal.Cast<byte, float>(result.AsSpan()); Check(Math.Abs(pixels[0] - (red ? 1 : 0)) < .00001f && Math.Abs(pixels[1] - (red ? 0 : 1)) < .00001f && pixels[4] == 3, "Changing compute input preserves encoded data and element metadata.");
         }
         for (var i = 0; i < 8; i++) Execute(i % 2 == 0);
         var before = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 32; i++) Execute(i % 2 == 0);

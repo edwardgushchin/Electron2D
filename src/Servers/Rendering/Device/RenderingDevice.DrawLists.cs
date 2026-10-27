@@ -36,6 +36,7 @@ public sealed unsafe partial class RenderingDevice
     public long DrawListBegin(RID framebuffer, DrawFlags drawFlags = 0, ReadOnlySpan<Color> clearColorValues = default, Rect2 region = default, float clearDepthValue = 1, int clearStencilValue = 0)
     {
         IdleList(); var target = GetFramebuffer(framebuffer); var actual = DrawRegion(region, target.Size);
+        if (ValidationLimits is { } limits && (actual.Size.X > limits[35] || actual.Size.Y > limits[36])) throw new ArgumentOutOfRangeException(nameof(region), "Viewport dimensions exceed device limits.");
         var layout = FramebufferFormat(target.Format);
         if (!float.IsFinite(clearDepthValue) || clearDepthValue is < 0 or > 1 || clearStencilValue is < 0 or > 255) throw new ArgumentOutOfRangeException(nameof(clearDepthValue));
         if ((drawFlags & DrawFlags.ClearDepth) != 0 && (drawFlags & DrawFlags.IgnoreDepth) != 0 || (drawFlags & DrawFlags.ClearStencil) != 0 && (drawFlags & DrawFlags.IgnoreStencil) != 0) throw new ArgumentException("An aspect cannot both clear and discard.", nameof(drawFlags));

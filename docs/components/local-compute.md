@@ -300,6 +300,8 @@ The native slot order follows [SDL shader bindings](https://wiki.libsdl.org/SDL3
 
 ## Formatted texel buffers
 
+Normalized texel decoding executes shader floating-point arithmetic; numerical checks allow its bounded rounding, including values adjacent to one. Normalized stores also retain the native choice of adjacent encoded integers, with exact saturated endpoints; parity checks validate both encodings against that permitted conversion rather than requiring identical tie rounding. Integer stores/atomics and element counts remain exact. See [shader arithmetic precision](https://docs.vulkan.org/spec/latest/appendices/spirvenv.html#spirvenv-precision-operation).
+
 `RenderingDevice.TextureBufferCreate(uint sizeElements, DataFormat format, ReadOnlySpan<byte> data = default)` creates owned formatted GPU storage. The size counts elements. Its encoded byte capacity is count times element size; empty data initializes zeros, while nonempty data must cover the entire capacity. Format/count/overflow validation precedes allocation. The owner-thread, exclusive-list and local/retained-device lifetime contracts remain unchanged.
 
 | Descriptor | Borrowed identities | Executing role |
@@ -310,7 +312,7 @@ The native slot order follows [SDL shader bindings](https://wiki.libsdl.org/SDL3
 
 The shader scalar class must match. Sampled source format metadata does not force a storage encoding: one float-result pipeline can consume normalized, half/float, packed and sRGB buffers through different sets. A concrete writable image format must also match the buffer. Mixed combined/separate sampled-buffer declarations at the same logical location share a sampler-first set across graphics stages. Descriptions copy their ordered IDs; device/format/type/order mismatches reject, and retiring a sampler, buffer or shader invalidates dependent sets. Fixed descriptor arrays execute as described below; runtime/nested arrays and dynamic-buffer roles retain explicit prerequisites.
 
-Uncompressed color encodings with at most 32 bits per component retain their raw byte layouts: normalized/scaled/integer/float values, RGB/BGR channel order, packed channels, unsigned mini-floats, shared-exponent lookup and sRGB decoding. Missing RGB channels read zero and missing alpha reads one. Stores clamp normalized/integer ranges and encode floating/packed components; native image-store parity covers rounding and integer saturation independently. Compressed/depth/planar and wider-precision formats require their own adapters and reject. Ordinary buffer update/copy/clear, synchronous reads and queued snapshots address only encoded data. They preserve format/count metadata, exact non-word capacities and original bytes; storage-to-storage copies remain on the GPU timeline.
+Uncompressed color encodings with at most 32 bits per component retain their raw byte layouts: normalized/scaled/integer/float values, RGB/BGR channel order, packed channels, unsigned mini-floats, shared-exponent lookup and sRGB decoding. Missing RGB channels read zero and missing alpha reads one. Stores clamp normalized/integer ranges and encode floating/packed components; native image-store parity covers permitted normalized rounding and integer saturation independently. Compressed/depth/planar and wider-precision formats require their own adapters and reject. Ordinary buffer update/copy/clear, synchronous reads and queued snapshots address only encoded data. They preserve format/count metadata, exact non-word capacities and original bytes; storage-to-storage copies remain on the GPU timeline.
 
 ```csharp
 // The shader declares HLSL Buffer<float4> at set 3, binding 7.
@@ -419,3 +421,5 @@ The public-only DeviceScreen.Consumer passed CLR and strict full-trim, reflectio
 ## Native render allocation memory
 
 See [native render memory](render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
+
+[Effective device limits](device-limits.md) supply native/profile capacities for adaptive dispatch, workgroups, resource extents and graphics layouts. Sparse logical set IDs retain remapping; resolved native capacities validate before submission.

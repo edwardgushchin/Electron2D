@@ -832,6 +832,10 @@ The [IK slice](../components/skeletal-animation.md#executable-ik-solvers) connec
 
 Texel-coordinate sampling closes one Blocked declaration. Current coverage is **13,242/18,872 (70.17%)**, with 1,102 Partial, 465 Unimplemented, 4,063 Blocked, 8,421 Excluded and zero unmapped. Native compute/canvas readback, samplerless mip/array access and strict NativeAOT checks retain window-presentation, physical-hardware, foreign-platform and owner gates.
 
+## Effective native device limits
+
+[Device limits](../components/device-limits.md) add 34 selectors and LimitGet with native/profile capacities, sparse logical-set remapping and executing compute/resource/vertex/framebuffer validation. Thirty-five declarations become Implemented. The Limit enum retains exactly two MetalFX scaler dependencies; three image-role limits follow their existing TextureType exclusions. Current declaration coverage is **13,277/18,869 (70.36%)**, with 1,103 Partial, 435 Unimplemented, 4,054 Blocked, 8,424 Excluded and zero unmapped. Native CLR/AOT boundaries remain separate from hardware, foreign-platform, presentation and owner acceptance.
+
 ## Reference and scope
 
 Deprecated reference classes and declarations are permanently excluded by [ADR 0004](../decisions/product.md#adr-0004). They remain in the complete source census, but do not create implementation work or require a compatibility declaration. Their Electron2D counterpart is `—`; an exported deprecated mirror is an audit failure, not an implementation of an excluded row. For each affected row, record `Excluded`, the pinned source declaration/owner deprecation evidence and the modern replacement where one exists; otherwise state that no replacement API is needed. A deprecated class excludes its own declarations; inherited members remain accounted at their declaring types. The presence of a `deprecated` attribute is sufficient even with an empty reason; experimental status and age alone are not. Existing deprecated Electron2D declarations are removal obligations, not accepted compatibility exceptions, and must be reconciled with their consumers, storage/schema, XML and current-state docs in the owning slice.

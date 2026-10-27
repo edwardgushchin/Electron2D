@@ -49,9 +49,10 @@ public sealed unsafe partial class RenderingDevice
     /// <returns>A device-local format identifier.</returns>
     /// <exception cref="ArgumentException">Bindings, locations or ranges are inconsistent.</exception>
     /// <exception cref="NotSupportedException">An encoding is not supported.</exception>
+    /// <remarks>Effective native attribute, binding, byte-offset and stride limits also apply; query LimitGet before preparing adaptive layouts.</remarks>
     public int VertexFormatCreate(ReadOnlySpan<RDVertexAttribute> vertexDescriptions)
     {
-        IdleList(); if (vertexDescriptions.Length > 16) throw new ArgumentOutOfRangeException(nameof(vertexDescriptions));
+        IdleList(); var limits = ValidationLimits; if (vertexDescriptions.Length > 16 || limits is not null && (ulong)vertexDescriptions.Length > limits[23]) throw new ArgumentOutOfRangeException(nameof(vertexDescriptions));
         var attributes = new SDL.GPUVertexAttribute[vertexDescriptions.Length]; var descriptions = new Dictionary<uint, SDL.GPUVertexBufferDescription>(); var ends = new Dictionary<uint, uint>(); var locations = new HashSet<uint>();
         for (var i = 0; i < vertexDescriptions.Length; i++)
         {
@@ -59,6 +60,7 @@ public sealed unsafe partial class RenderingDevice
             var binding = source.Binding; var location = source.Location; var offset = source.Offset; var stride = source.Stride; var frequency = source.Frequency;
             var (format, bytes) = VertexEncoding(source.Format);
             if (binding >= 16 || location >= 16 || stride == 0 || stride > 2048 || offset > stride || bytes > stride - offset || !Enum.IsDefined(frequency) || !locations.Add(location)) throw new ArgumentException("Invalid vertex attribute layout.", nameof(vertexDescriptions));
+            if (limits is not null && (binding >= limits[24] || location >= limits[23] || offset > limits[22] || stride > limits[25])) throw new ArgumentException("Vertex input exceeds device limits.", nameof(vertexDescriptions));
             var descriptor = new SDL.GPUVertexBufferDescription { Slot = binding, Pitch = stride, InputRate = frequency == VertexFrequency.Instance ? SDL.GPUVertexInputRate.Instance : SDL.GPUVertexInputRate.Vertex };
             if (descriptions.TryGetValue(binding, out var prior) && (prior.Pitch != stride || prior.InputRate != descriptor.InputRate)) throw new ArgumentException("Attributes sharing a buffer require identical stride and frequency.", nameof(vertexDescriptions));
             descriptions[binding] = descriptor; ends[binding] = Math.Max(ends.GetValueOrDefault(binding), offset + bytes);

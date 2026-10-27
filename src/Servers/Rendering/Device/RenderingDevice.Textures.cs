@@ -155,11 +155,13 @@ public sealed unsafe partial class RenderingDevice
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
     /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Image extents or layers exceed the effective device limits.</exception>
     public RID TextureCreate(RDTextureFormat format, RDTextureView view, ReadOnlySpan<byte[]> data = default)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(format); ArgumentNullException.ThrowIfNull(view);
         var shareable = format.ShareableFormats;
         var kind = format.TextureType; var layers = format.ArrayLayers; var width = format.Width; var height = format.Height; var mips = format.MIPMaps; var pixelFormat = format.Format; var usage = format.UsageBits;
+        if (ValidationLimits is { } limits && (width > limits[12] || height > limits[12] || layers > limits[10])) throw new ArgumentOutOfRangeException(nameof(format), "Texture dimensions exceed device limits.");
         if (kind == TextureType.Texture && layers != 1) throw new ArgumentException("An ordinary image has one layer.", nameof(format));
         if (mips > 1 + System.Numerics.BitOperations.Log2(Math.Max(width, height))) throw new ArgumentException("The mip count exceeds this image.", nameof(format));
 

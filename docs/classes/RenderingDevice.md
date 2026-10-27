@@ -1405,3 +1405,7 @@ See [canvas point programs](../components/canvas-points.md) for native topology,
 See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
 
 `public long GetMemoryUsage(MemoryType type)` returns checked native byte counts under ordinary device owner/lifetime guards. [MemoryType](RenderingDevice.MemoryType.md) selects Textures=0, Buffers=1 or Total=2.
+
+## LimitGet
+
+`public long LimitGet(RenderingDevice.Limit limit)` reads a cached effective native limit under ordinary device owner/lifetime guards. Undefined values reject; unsupported cores/drivers fail explicitly. It does not submit or wait. [The canonical component](../components/device-limits.md) defines each resource/profile constraint, sparse logical set count, combined stage budgets and the executable consumer. [Limit](RenderingDevice.Limit.md) lists the 34 implemented selectors.

@@ -160,7 +160,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <returns>A device-owned buffer identity.</returns>
     public RID UniformBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default)
     {
-        Access(); if (sizeBytes == 0 || sizeBytes % 4 != 0 || sizeBytes > 16384 || data.Length > sizeBytes) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
+        Access(); if (sizeBytes == 0 || sizeBytes % 4 != 0 || sizeBytes > 16384 || ValidationLimits is { } limits && sizeBytes > limits[21] || data.Length > sizeBytes) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
         var entry = new Entry { Kind = Kind.Uniform, Size = sizeBytes, Data = new byte[sizeBytes] }; data.CopyTo(entry.Data); return Add(entry);
     }
 
@@ -270,6 +270,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         entry.Sources = sources; entry.Constants = constants; entry.OutputSlots = outputSlots; entry.ViewIndex = viewIndex;
         if (template) return entry;
+        ValidateShaderLimits(modules, entry);
         if (entry.Samplers.Any(s => s.Sampler is null)) PrepareFetchSampler();
         if (outputSlots is not null) modules[1] = RemapFragmentOutputs(modules[1], outputSlots, entry.Outputs);
         try
@@ -378,7 +379,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public void ComputeListDispatch(long computeList, uint xGroups, uint yGroups, uint zGroups)
     {
         List(computeList);
-        if (xGroups is 0 or > 65535 || yGroups is 0 or > 65535 || zGroups is 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(xGroups));
+        if (xGroups is 0 or > 65535 || yGroups is 0 or > 65535 || zGroups is 0 or > 65535 || ValidationLimits is { } limits && (xGroups > limits[28] || yGroups > limits[29] || zGroups > limits[30])) throw new ArgumentOutOfRangeException(nameof(xGroups));
         Dispatch(xGroups, yGroups, zGroups);
     }
     private void Dispatch(uint xGroups, uint yGroups, uint zGroups, Entry? indirect = null, uint offset = 0)

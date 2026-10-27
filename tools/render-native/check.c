@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
+extern int e2d_render_limits(SDL_GPUDevice *, uint32_t, uint64_t *, uint32_t);
 extern int e2d_render_memory(SDL_GPUDevice *, uint32_t, Memory *);
 extern int e2d_render_sampler_view(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
 extern SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *, uint32_t, const SDL_GPUSamplerCreateInfo *, uint32_t, uint32_t, uint32_t, uint32_t);
@@ -31,6 +32,11 @@ static int reader(void *device)
 }
 int main(int argc, char **argv)
 {
+    uint64_t limits[37] = {0};
+    require(e2d_render_limits(NULL, 1, limits, 37) == -1);
+    require(e2d_render_limits((SDL_GPUDevice *)(uintptr_t)1, 0, limits, 37) == -1);
+    require(e2d_render_limits((SDL_GPUDevice *)(uintptr_t)1, 1, limits, 36) == -1);
+    require(e2d_render_limits((SDL_GPUDevice *)(uintptr_t)1, 1, NULL, 37) == -1);
     Memory memory = {0};
     SDL_GPUSamplerCreateInfo sampler_info = {.min_filter = SDL_GPU_FILTER_NEAREST, .mag_filter = SDL_GPU_FILTER_NEAREST, .mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST, .address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE, .compare_op = SDL_GPU_COMPAREOP_ALWAYS, .max_lod = 1};
     require(e2d_render_sampler(NULL, 1, &sampler_info, 3, 2, 2, 0) == NULL);
@@ -43,12 +49,18 @@ int main(int argc, char **argv)
         require(e2d_render_memory((SDL_GPUDevice *)(uintptr_t)1, 1, &memory) == 0);
         require(e2d_render_sampler((SDL_GPUDevice *)(uintptr_t)1, 1, &sampler_info, 3, 2, 2, 0) == NULL);
         require(e2d_render_sampler_view((SDL_GPUDevice *)(uintptr_t)1, 1, (SDL_GPUTexture *)(uintptr_t)1) == -1);
+        require(e2d_render_limits((SDL_GPUDevice *)(uintptr_t)1, 1, limits, 37) == 0);
         puts("Unsupported native core rejected before opaque-device access.");
         return 0;
     }
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, "vulkan");
     require(device != NULL);
+    require(e2d_render_limits(device, 1, limits, 37) == 1);
+    for (uint32_t i = 0; i < 37; ++i) require((i == 11 || i == 13 || i == 14) ? limits[i] == 0 : limits[i] > 0);
+    uint64_t again[37]; require(e2d_render_limits(device, 1, again, 37) == 1);
+    require(SDL_memcmp(limits, again, sizeof(limits)) == 0);
+    require(limits[12] >= 4096 && limits[31] >= 128 && limits[26] > 0);
     for (uint32_t color = 0; color < 6; ++color) {
         SDL_GPUSampler *sampler = e2d_render_sampler(device, 1, &sampler_info, 3, 2, color, 0);
         require(sampler != NULL); SDL_ReleaseGPUSampler(device, sampler);
