@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public abstract partial class ElectronObject
+public partial class ElectronObject
 {
     [ThreadStatic] private static ElectronObject? _notificationOwner;
     [ThreadStatic] private static bool _notificationReversed;

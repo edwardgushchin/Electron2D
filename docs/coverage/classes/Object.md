@@ -4,13 +4,13 @@ Last updated: 2026-10-18
 
 Godot source: [doc/classes/Object.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
-Godot base: —. Electron2D type: [`public abstract class Electron2D.ElectronObject`](../../classes/ElectronObject.md).
+Godot base: —. Electron2D type: [`public class Electron2D.ElectronObject`](../../classes/ElectronObject.md).
 
 Inherited declarations are recorded on their declaring base-class pages; the base link above gives the complete chain.
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class Object`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) | [`public abstract class Electron2D.ElectronObject`](../../classes/ElectronObject.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |
+| [`class Object`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) | [`public class Electron2D.ElectronObject`](../../classes/ElectronObject.md) | Partial | The concrete C# root now supports direct public construction, independent identity, typed properties/events, weak raw physics association and deterministic disposal without a required empty subclass. Pinned register_core_types.cpp registers Object concretely; ObjectIdentityTests, PhysicsObjectBindingTests and ObjectCensusChecks exercise the actual role. Live SetScript/complete ScriptChanged and remaining whole-class acceptance remain open; docs/components/object-lifecycle.md#direct-root-construction. |
 | [`constant NOTIFICATION_EXTENSION_RELOADED = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) | [`public const System.Int32 NotificationExtensionReloaded = 2`](../../classes/ElectronObject.md) | Implemented | ADR 0116: NotificationExtensionReloaded = 2 is emitted automatically for surviving factory-admitted extension class instances and descendants only after all class bindings and compatible nondefault stored values restore. Weak identities skip removed/disposed owners; ordinary CLR/source updates emit nothing. Public CPU/GPU CLR/NativeAOT physical controls and CLR source/native-base checks exercise the actual producer; docs/components/extensions.md. |
 | [`constant NOTIFICATION_POSTINITIALIZE = 0`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) | [`public const System.Int32 NotificationPostInitialize = 0`](../../classes/ElectronObject.md) | Implemented | Numeric identity matches the compiled C# declaration.  |
 | [`constant NOTIFICATION_PREDELETE = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Object.xml) | [`public const System.Int32 NotificationPreDelete = 1`](../../classes/ElectronObject.md) | Implemented | Numeric identity matches the compiled C# declaration.  |

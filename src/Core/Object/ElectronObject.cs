@@ -11,7 +11,7 @@ namespace Electron2D;
 /// Compiled subclasses provide custom typed iteration through the ordinary C# enumeration pattern or
 /// <see cref="System.Collections.Generic.IEnumerable{T}"/>; each cursor owns its traversal state and normal lifetime guards.
 /// </remarks>
-public abstract partial class ElectronObject : IDisposable
+public partial class ElectronObject : IDisposable
 {
     /// <summary>Identifies the internal initialization boundary before project callbacks are attached.</summary>
     /// <remarks>

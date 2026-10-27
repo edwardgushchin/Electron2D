@@ -1,3 +1,5 @@
+Direct `ElectronObject` construction provides the concrete root role through the existing identity, typed metadata and lifetime path, including weak raw physics associations. See [direct root construction](../components/object-lifecycle.md#direct-root-construction); live script reassignment remains separate.
+
 [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) supports explicitly supplied constructor arguments without inventing a default factory, with ordinary constructor ordering and failures. Live assignment/change/reload remain open.
 
 [Function-loaded extension modules](../components/extensions.md) execute typed entry/lifecycle callbacks through ExtensionManager and closed Resource copy/storage through Extension. Class registration and live reload remain open.

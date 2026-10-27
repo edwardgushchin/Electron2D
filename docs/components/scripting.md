@@ -22,7 +22,7 @@ Node copies retain the source when the Scripts flag is present. Resource copies 
 
 The owner retains the source through cancelled disposal and releases it on committed disposal. It never disposes the borrowed asset. Explicit source disposal leaves compiled callbacks executing and GetScript may return that disposed identity. Source edits do not replace the class or association. Persistent saving or scene duplication requires live resource references, as with other borrowed resources.
 
-Live SetScript replacement and extension reload remain open. Source-publication notifications below implement only the existing file/remapping paths; the complete ScriptChanged row remains Partial. Compiled C# initialization follows the constructor contract below; no additional initializer runs from a base constructor.
+Live SetScript replacement and compiled implementation replacement remain open; registered extension classes now follow the separate [module replacement contract](extensions.md). Source-publication notifications below implement only the existing file/remapping paths; the complete ScriptChanged row remains Partial. Compiled C# initialization follows the constructor contract below; no additional initializer runs from a base constructor.
 
 ## Source publication notifications
 

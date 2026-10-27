@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public abstract partial class ElectronObject
+public partial class ElectronObject
 {
     private Script? _constructionScript;
 

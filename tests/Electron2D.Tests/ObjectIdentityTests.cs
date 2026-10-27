@@ -6,6 +6,22 @@ internal static class ObjectIdentityTests
     {
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread,
             Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1");
+        using var plain = new ElectronObject();
+        using var weak = new WeakRef<ElectronObject>(plain);
+        Check(plain.InstanceID != 0 && plain.ClassName == nameof(ElectronObject) &&
+            plain.IsClass(nameof(ElectronObject)) && !plain.IsClass(nameof(Node)) && plain.GetScript() is null,
+            "Direct root construction has its own native object role, identity and no compiled source.");
+        var properties = plain.GetPropertyList();
+        Check(properties.Count == 6 && plain.CanTranslateMessages && plain.TranslationDomain == "" &&
+            !plain.IsQueuedForDeletion && weak.GetRef() == plain, "Direct construction retains base property and weak-lifetime contracts.");
+        var changes = 0; var disposed = 0;
+        plain.PropertyListChanged += owner => { Check(owner == plain, "Root event sender identity."); changes++; };
+        plain.Disposed += owner => { Check(owner == plain, "Root disposal sender identity."); disposed++; };
+        plain.NotifyPropertyListChanged(); plain.SetBlockSignals(true); plain.NotifyPropertyListChanged();
+        var plainID = plain.InstanceID; plain.Dispose(); plain.Dispose();
+        Check(changes == 1 && disposed == 1 && weak.GetRef() is null && plain.InstanceID == plainID &&
+            plain.IsClass(nameof(ElectronObject)), "Direct root disposal commits once, clears weak resolution and preserves diagnostics despite signal blocking.");
+        Reject<ObjectDisposedException>(() => plain.GetPropertyList());
         using var generic = new GenericProbe<int>();
         Check(generic.IsClass(generic.ClassName) && generic.IsClass(nameof(ElectronObject)), "Constructed class names retain their engine base.");
         Check(!generic.IsClass(nameof(IDisposable)) && !generic.IsClass(nameof(Object)), "Interfaces and the CLR root are not engine classes.");

@@ -12,7 +12,7 @@ This Core component defines identity, diagnostics, notifications, translation ac
 
 | Type | Source | Role |
 | --- | --- | --- |
-| [`ElectronObject`](../classes/ElectronObject.md) | [`ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs) | Abstract base for engine objects |
+| [`ElectronObject`](../classes/ElectronObject.md) | [`ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs) | Concrete root and base for engine objects |
 | [`WeakRef<T>`](../classes/WeakRef.Generic.md) | [`WeakRef.cs`](../../src/Core/Object/WeakRef.cs) | Typed non-owning reference to a live engine object |
 
 ## Current implementation status
@@ -22,6 +22,12 @@ Implemented and covered by the executable checks. The component includes notific
 ## Dependencies
 
 The component uses .NET threading and exception-dispatch primitives. Its `Tr`/`TrN` entry points call the [Localization component](localization.md); it has no SDL3-CS dependency.
+
+## Direct root construction
+
+`ElectronObject` is concrete and its public parameterless constructor creates the ordinary root role directly. The pinned reference registers [Object as a concrete class](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/register_core_types.cpp#L138); a required application-only empty subclass was not an accepted adaptation. The constructor reuses existing identity, weak census and invocation provenance without a virtual call, script attachment, native device or independent native allocation. This is the same base initialization used by derived objects, not a new object factory or registry.
+
+The direct object exposes the six existing base descriptors, ordinary event blocking, deterministic idempotent disposal and post-disposal identity diagnostics. It remains a valid weak raw physics association: body/Area IDs, direct ray/point/shape/rest and motion results keep its sampled identity; disposal or collection removes resolution while the independently owned physics RID remains valid. ObjectIdentityTests and PhysicsObjectBindingTests exercise these paths on explicit CPU/GPU worlds. ObjectCensusChecks uses actual direct objects for managed/native census and concurrent retirement. The complete class stays Partial for the separate live-script obligations. Current evidence is retained in `bin/physics-current-suite/2026-10-27/`: four CLR CPU/GPU owner/separate identity profiles execute 128 measured complete frames at zero owner/all-thread bytes; the public census consumer passes CLR and strict trimmed NativeAOT without a GPU. Public raw binding, aggregate regression and final source identities have separate receipts there. These checks do not qualify live script reassignment, foreign platforms or mass-scene performance.
 
 ## Runtime behavior
 

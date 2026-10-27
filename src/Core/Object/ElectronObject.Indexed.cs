@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-public abstract partial class ElectronObject
+public partial class ElectronObject
 {
     /// <summary>Reads a property or composed component through its compiled typed descriptor.</summary>
     /// <typeparam name="TOwner">The compatible root owner type.</typeparam><typeparam name="TValue">The exact property value type.</typeparam>

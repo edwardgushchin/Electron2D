@@ -1,13 +1,13 @@
 namespace Electron2D;
 
-public abstract partial class ElectronObject
+public partial class ElectronObject
 {
     private static readonly AsyncLocal<ConstructionScope?> FactoryConstruction = new();
 
-    /// <summary>Initializes a new engine object with its independent process-local identity.</summary>
+    /// <summary>Creates an engine object with its independent process-local identity.</summary>
     /// <remarks>Allocates a shared weak identity for lifetime diagnostics without retaining this object or invoking
     /// derived code. Committed disposal or collection removes it from diagnostic counts.</remarks>
-    protected ElectronObject()
+    public ElectronObject()
     {
         _identityReference = new(this);
         ObjectCensus.Register(_identityReference);

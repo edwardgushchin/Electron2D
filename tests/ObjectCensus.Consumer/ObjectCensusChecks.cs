@@ -11,12 +11,12 @@ internal static class ObjectCensusChecks
     internal static void Run(string[] args)
     {
         if (args.Length > 0) { Native(args[0], args[1]); return; }
-        using (var warm = new Plain()) { _ = Objects; _ = Resources; _ = Nodes; _ = Orphans; }
+        using (var warm = new ElectronObject()) { _ = Objects; _ = Resources; _ = Nodes; _ = Orphans; }
         using (var warm = new Node()) { }
         using (var warm = new Resource()) { }
         Collect();
         var count = Objects;
-        var plain = new Plain(); Check(Objects == count + 1, "Construction publishes an object exactly once.");
+        var plain = new ElectronObject(); Check(Objects == count + 1, "Construction publishes an object exactly once.");
         plain.Dispose(); plain.Dispose(); Check(Objects == count, "Idempotent disposal excludes a retained object.");
         var canceled = new Canceling();
         canceled.Before = Objects;
@@ -45,7 +45,7 @@ internal static class ObjectCensusChecks
         var weak = Abandon(count, orphans);
         Collect(); Check(!Alive(weak) && Objects == count && Orphans == orphans, "Census never retains an abandoned graph or invokes cleanup.");
         var failed = Fail(); Collect(); Check(!Alive(failed) && Objects == count, "Failed external construction is reclaimed without finalization.");
-        for (var i = 0; i < 4096; i++) new Plain().Dispose();
+        for (var i = 0; i < 4096; i++) new ElectronObject().Dispose();
         Check(Objects == count, "Large disposed cohorts do not inflate counts.");
     }
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -103,7 +103,7 @@ internal static class ObjectCensusChecks
         Collect(); var count = Objects;
         var tasks = Enumerable.Range(0, 4).Select(_ => Task.Run(() =>
         {
-            for (var i = 0; i < 512; i++) { using var value = new Plain(); Check(Objects >= 1 && Resources >= 0, "Concurrent creation, retirement and scans."); }
+            for (var i = 0; i < 512; i++) { using var value = new ElectronObject(); Check(Objects >= 1 && Resources >= 0, "Concurrent creation, retirement and scans."); }
         })).ToArray();
         Task.WaitAll(tasks); Check(Objects == count, "Concurrent disposed cohorts retire exactly.");
     }
@@ -134,13 +134,12 @@ internal static class ObjectCensusChecks
         protected override void Dispose(bool disposing) { _box?.Dispose(); base.Dispose(disposing); }
     }
     private sealed class Box : Entity { protected override void OnDraw() => DrawRect(new(8, 8, 24, 24), Colors.Red); }
-    private class Plain : ElectronObject { }
-    private sealed class Canceling : Plain
+    private sealed class Canceling : ElectronObject
     {
         internal bool Cancel = true; internal double Before;
         protected override void OnNotification(int what) { if (what == NotificationPreDelete) { Check(Objects == Before, "Pending pre-delete remains counted."); if (Cancel) CancelDisposal(); } base.OnNotification(what); }
     }
-    private sealed class Throwing : Plain { protected override void Dispose(bool disposing) => throw new NotSupportedException(); }
-    private sealed class Failing : Plain { internal Failing(out WeakReference<ElectronObject> weak) { weak = new(this); throw new NotSupportedException(); } }
+    private sealed class Throwing : ElectronObject { protected override void Dispose(bool disposing) => throw new NotSupportedException(); }
+    private sealed class Failing : ElectronObject { internal Failing(out WeakReference<ElectronObject> weak) { weak = new(this); throw new NotSupportedException(); } }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
 }

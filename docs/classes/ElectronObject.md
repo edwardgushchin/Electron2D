@@ -2,9 +2,7 @@
 
 Registered extension instances receive `NotificationExtensionReloaded` (2) only after every surviving binding and compatible stored value has been restored. Ordinary CLR updates do not produce this event. Their deterministic disposal follows manager-thread admission, pre-delete veto, binding retirement and owner cleanup; errors preserve committed cleanup. See [module lifetime](../components/extensions.md).
 
-[Extension reload](../components/scripting.md#native-extension-reload-boundary) remains a blocked registered-module/instance restoration producer. Ordinary C# metadata updates do not add automatic notifications to every project class.
-
-Last updated: 2026-10-26
+Last updated: 2026-10-27
 
 **Inherits:** —
 
@@ -12,7 +10,7 @@ Last updated: 2026-10-26
 
 - **Source:** [`src/Core/Object/ElectronObject.cs`](../../src/Core/Object/ElectronObject.cs); [notification direction](../../src/Core/Object/ElectronObject.Notifications.cs)
 - **Namespace:** `Electron2D`
-- **Declaration:** `public abstract partial class ElectronObject`
+- **Declaration:** `public partial class ElectronObject`
 
 > Provides the common identity, notification, property, localization, and lifetime contract for engine objects.
 
@@ -51,7 +49,7 @@ Provides the common identity, notification, property, localization, and lifetime
 The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
 registration, and live script reassignment. Instances have deterministic `IDisposable` lifetime.
 
-The concrete [Script](Script.md) asset/catalog constructs ordinary CLR Node/Resource instances and retains their selected source through GetScript. [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) uses the project constructor/base chain with typed arguments and stable identity. [Source-publication notifications](../components/scripting.md#source-publication-notifications) report actual file/remapping changes. Live assignment and extension reload remain open under [ADR 0091](../decisions/scripting.md#adr-0091).
+The concrete [Script](Script.md) asset/catalog constructs ordinary CLR Node/Resource instances and retains their selected source through GetScript. [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) uses the project constructor/base chain with typed arguments and stable identity. [Source-publication notifications](../components/scripting.md#source-publication-notifications) report actual file/remapping changes. Live assignment and compiled implementation replacement remain open under [ADR 0091](../decisions/scripting.md#adr-0091); registered extension replacement follows its separate module contract above.
 
 There is no engine-owned method/event name registry, connection-flags enum, or dictionary of incoming/outgoing callable connections. Consumer tooling can inspect ordinary CLR type metadata. Typed event accessors, owned `EventConnection` tokens and registered persistent scene bindings retain their separate contracts under [ADRs 0002/0010](../decisions/core-object-runtime.md#adr-0010).
 
@@ -68,11 +66,15 @@ ElectronObject value = node;
 Console.WriteLine(value.InstanceID);
 ```
 
+## Direct construction
+
+`new ElectronObject()` creates a usable root object with independent identity, typed base properties, event/lifetime policy and no Script association. It can be a raw body/Area query target through `PhysicsServer.BodyAttachObject` and `AreaAttachObject`; direct results retain the sampled ID while resolving a live weak object. Disposal or collection invalidates that borrowed target without freeing its independent physics RID. Subclasses retain ordinary base construction. See [the construction contract](../components/object-lifecycle.md#direct-root-construction).
+
 ## Constructors
 
 | Member | Description |
 | --- | --- |
-| [`protected ElectronObject()`](#m-electron2d-electronobject-ctor) | Initializes an independent process identity, shared weak diagnostic registration and invocation-local factory provenance. |
+| [`public ElectronObject()`](#m-electron2d-electronobject-ctor) | Initializes an independent process identity, shared weak diagnostic registration and invocation-local factory provenance. |
 
 ## Properties
 
@@ -154,7 +156,7 @@ sealed class Meter : ElectronObject
 ## Constructor Descriptions
 
 <a id="m-electron2d-electronobject-ctor"></a>
-### `protected ElectronObject()`
+### `public ElectronObject()`
 
 Initializes an independent process identity, shared weak diagnostic registration and invocation-local factory provenance.
 
@@ -645,4 +647,4 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 
 ## Factory construction provenance
 
-The protected constructor keeps the existing process-local identity and records this reference in active internal factory scopes. Resource copies, compiled scripts, file factories and scene factories validate against those scopes before acquiring their result. A later global instance number does not prove ownership. The internal nested ConstructionScope uses transient reference-identity sets; closing releases their contents even if an execution context escapes. Ordinary context flow and the engine worker pool carry this capability. Suppressed flow and unrelated threads cannot produce an accepted factory result. See [ADR 0013](../decisions/resources.md#adr-0013). Its closed context retains no recorded objects or sources; an associated owner retains one nullable source reference.
+The public constructor keeps the existing process-local identity and records this reference in active internal factory scopes. Resource copies, compiled scripts, file factories and scene factories validate against those scopes before acquiring their result. A later global instance number does not prove ownership. The internal nested ConstructionScope uses transient reference-identity sets; closing releases their contents even if an execution context escapes. Ordinary context flow and the engine worker pool carry this capability. Suppressed flow and unrelated threads cannot produce an accepted factory result. See [ADR 0013](../decisions/resources.md#adr-0013). Its closed context retains no recorded objects or sources; an associated owner retains one nullable source reference.

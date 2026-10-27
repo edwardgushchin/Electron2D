@@ -5,7 +5,6 @@ using Store = Electron2D.GPUPhysicsBodyStore;
 
 internal static class PhysicsObjectBindingTests
 {
-    private sealed class Target : ElectronObject { }
     internal static void Run(bool gpu = false)
     {
         if (gpu) { GPU(); return; }
@@ -19,7 +18,7 @@ internal static class PhysicsObjectBindingTests
     private static void Queries(PhysicsServer.Backend backend)
     {
         using var shape = new CircleShape { Radius = 10 };
-        using var first = new Target(); using var second = new Target();
+        using var first = new ElectronObject(); using var second = new ElectronObject();
         var space = PhysicsServer.SpaceCreate(backend);
         Check(PhysicsServer.SpaceGetBackend(space) == backend, "Object association fixture uses the requested backend."); var body = PhysicsServer.BodyCreate(); var mover = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         using var point = new PhysicsPointQueryParameters(); using var ray = PhysicsRayQueryParameters.Create(new(-30, 0), new(30, 0));
@@ -72,7 +71,7 @@ internal static class PhysicsObjectBindingTests
     }
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static WeakReference<ElectronObject> BindTemporary(RID body)
-    { var target = new Target(); PhysicsServer.BodyAttachObject(body, target); return new(target); }
+    { var target = new ElectronObject(); PhysicsServer.BodyAttachObject(body, target); return new(target); }
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static bool Alive(WeakReference<ElectronObject> weak) => weak.TryGetTarget(out _);
 
