@@ -22,6 +22,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_CACHES") is { }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") { ByteBufferTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_SCALE") is { } scaleBackend) { RenderingRuntimeTests.RunCanvasScalePreview(scaleBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_PORTAL") is { } portalProfile) { PortalFileChooserTests.Run(portalProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_ENGINE") == "1") { VerifyEngine(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_FEEDS") is { } cameraProfile) { if (cameraProfile == "boundary") CameraFeedNativeTests.Run(); else CameraFeedContracts.Run(cameraProfile); return; }

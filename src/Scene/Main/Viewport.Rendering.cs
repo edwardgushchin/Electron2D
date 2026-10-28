@@ -18,7 +18,7 @@ public abstract partial class Viewport
         var local = layer?.Transform ?? cameraTransform;
         if (_snapTransformsToPixel) local.Origin = (local.Origin + snapOffset).Ceil();
         result *= local;
-        if (followScale != 1)
+        if (followScale != 1 && RenderingOwner?.CanvasScaleDisabled != true)
         {
             var pivot = (this is Window window ? (Vector2)window.ContentLayout.TargetSize : this is SubViewport sub ? sub.Size : size) * 0.5f;
             result = new Transform(0, pivot) * new Transform(0, Vector2.One * followScale, 0, Vector2.Zero) * new Transform(0, -pivot) * result;

@@ -1063,6 +1063,7 @@ See [canvas lifetime and replay contract](../components/canvas-rendering.md#call
 | `CanvasItemClear` | Clears retained native commands without freeing resources or the item. |
 | `CanvasItemAddMesh` | Appends a retained borrowed mesh command with identity transform and white tint by default. |
 | `CanvasItemAddMultiMesh` | Appends a retained borrowed repeated-mesh command, consuming live instance storage. |
+| [`CanvasSetDisableScale(bool disable)`](#canvas-follow-scale-preview) | Omits or restores viewport-follow scaling of rendered CanvasLayer canvases. |
 | `CanvasSetModulate` | Sets finite canvas-wide native modulation. |
 | `CanvasSetItemRepeat` | Repeats any live item and its render descendants in its local basis; nearest nested source overrides inherited repetition. |
 | `CanvasSetItemMirroring` | Validates direct canvas parentage and sets one repeat through the shared item state. |
@@ -1939,3 +1940,7 @@ The retained device from GetRenderingDevice records [native screen lists](Render
 ## Native render allocation memory
 
 See [native render memory](../components/render-memory.md) for actual allocation regions, retained physical reservation, shared compute/physics leases, compatibility ownership and explicit native-adapter limits. Performance.GetMonitor retains its separate current/peak runtime-memory and other pipeline-source gaps.
+
+## Canvas follow-scale preview
+
+`public static void CanvasSetDisableScale(bool disable)` selects render-session policy: false applies authored CanvasLayer.FollowViewportScale; true omits its final viewport-center scale while preserving the camera and each layer/item's own transform. The next submission uses the policy in every rendered viewport. Explicit attachment matrices retain their complete transform. Authored follow fields, logical transforms, input and PackedScene data do not change; parent snapping still uses authored follow-scale units. Calls require the live owner and reject active capture/submission or disposal; no active service throws InvalidOperationException. Each new renderer defaults to false. See [the connected behavior and checks](../components/canvas-rendering.md#canvas-follow-scale-preview).

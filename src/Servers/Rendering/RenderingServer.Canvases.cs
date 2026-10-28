@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public sealed partial class RenderingServer
 {
+    internal bool CanvasScaleDisabled { get; private set; }
+    internal void CanvasSetDisableScaleCore(bool disable) { EnsureServerViewportChange(); CanvasScaleDisabled = disable; }
     private readonly List<RID> _ownedCanvasRIDs = [];
     private readonly List<RenderingCanvasRuntime> _serverSceneCanvases = [];
     private readonly List<CanvasItem> _ownedCanvasItems = [];

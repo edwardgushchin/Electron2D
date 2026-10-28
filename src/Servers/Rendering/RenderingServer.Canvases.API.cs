@@ -118,6 +118,15 @@ public sealed partial class RenderingServer
     /// <exception cref="ArgumentException">An identity or typed value is invalid.</exception>
     /// <exception cref="InvalidOperationException">The service is unavailable or owner/capture/lifetime rules reject the operation.</exception>
     public static void CanvasItemAddMultiMesh(RID item, RID mesh, RID texture = default) => RequireService().CanvasItemAddMultiMeshCore(item, mesh, texture);
+    /// <summary>Sets whether rendering omits the viewport-follow scale of all canvas layers.</summary>
+    /// <param name="disable">True to ignore <see cref="CanvasLayer.FollowViewportScale"/> during rendering; false restores it.</param>
+    /// <remarks>False at each renderer startup. Applies to every rendered viewport on the next submission,
+    /// reusing retained commands. The camera and each layer's own transform remain active. Parent translation
+    /// snapping still uses the authored follow scale. Logical transforms, input coordinates and stored scene
+    /// properties are unchanged. Explicit viewport canvas-transform overrides retain their complete matrix.</remarks>
+    /// <exception cref="InvalidOperationException">The service is unavailable, the call is off-owner, or canvas capture/submission is active.</exception>
+    /// <exception cref="ObjectDisposedException">The renderer is disposed.</exception>
+    public static void CanvasSetDisableScale(bool disable) => RequireService().CanvasSetDisableScaleCore(disable);
     /// <summary>Sets finite canvas-wide native modulation.</summary>
     /// <param name="canvas">Live borrowed or caller-owned canvas identity.</param>
     /// <param name="color">Finite modulation color; null for mesh commands means opaque white.</param>

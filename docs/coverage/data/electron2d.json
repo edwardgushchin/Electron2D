@@ -179233,6 +179233,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasSetDisableScale(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasSetDisableScale",
+    "signature": "public static System.Void CanvasSetDisableScale(System.Boolean disable)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disable",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasSetItemMirroring(Electron2D.RID,Electron2D.RID,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",

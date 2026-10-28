@@ -5296,6 +5296,11 @@
       "godot": "RenderingServer::method:viewport_set_texture_mipmap_bias(RID:,float:)",
       "electron2d": "method:Electron2D.RenderingServer.ViewportSetTextureMIPMapBias(Electron2D.RID,System.Single)",
       "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_set_disable_scale(bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasSetDisableScale(System.Boolean)",
+      "reason": "ADRs 0028/0095: renderer-session CanvasSetDisableScale controls actual CanvasLayer viewport-follow scaling across the shared native canvas composition. It preserves camera/layer/item transforms, authored follow-unit snapping, logical input/storage and explicit attachment matrices; owner/capture guards and session reset remain enforced. CanvasScalePreviewTests verifies root/nested/RID pixels, zero/negative/fractional scales, snapping, restoration, failures and prepared frames on the current backends. See docs/components/canvas-rendering.md#canvas-follow-scale-preview for qualification limits."
     }
   ],
   "statusGroups": [
@@ -7421,6 +7426,20 @@
         "RenderingServer::method:viewport_set_texture_mipmap_bias(RID:,float:)"
       ],
       "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:canvas_set_disable_scale(bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: renderer-session CanvasSetDisableScale controls actual CanvasLayer viewport-follow scaling across the shared native canvas composition. It preserves camera/layer/item transforms, authored follow-unit snapping, logical input/storage and explicit attachment matrices; owner/capture guards and session reset remain enforced. CanvasScalePreviewTests verifies root/nested/RID pixels, zero/negative/fractional scales, snapping, restoration, failures and prepared frames on the current backends. See docs/components/canvas-rendering.md#canvas-follow-scale-preview for qualification limits."
+    },
+    {
+      "godot": [
+        "RenderingServer::method:canvas_set_shadow_texture_size(int:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: a complete native quantized canvas-shadow atlas producer and fragment consumer, including allocation/lifetime, sampling capacity and ordinary/authored-light shader composition. ADR 0028 currently executes direct contour visibility rather than a shadow atlas, so there is no texture whose resolution can be changed. Integrate the real atlas before exposing this control; do not store an ignored size or relabel direct-contour sampling as texture resolution."
     }
   ],
   "extras": [

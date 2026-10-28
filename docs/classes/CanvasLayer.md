@@ -342,3 +342,7 @@ CustomViewport can now target a live SubViewport in the same scene. Its canvas i
 ## Collapsed canvas picking
 
 Automatic physics picking ignores a canvas whose determinant is zero/nonfinite or whose inverse query position is nonfinite. Other canvases continue; mouse hover exits through normal object/shape cleanup and returns under a stationary pointer when the map becomes usable. Small finite and reflected transforms remain valid. This changes neither authored matrix storage nor explicit AffineInverse failure semantics, ordinary direct physics queries or collider ownership. See [the component contract and regression scope](../components/physics-picking.md#collapsed-canvas-mappings).
+
+## Renderer follow-scale preview
+
+[RenderingServer.CanvasSetDisableScale](RenderingServer.md#canvas-follow-scale-preview) can omit this layer's viewport-follow scale during rendering without changing FollowViewportScale, its own Transform or logical GetFinalTransform/input coordinates. Parent snapping still uses authored follow units. The renderer-session policy applies to all rendered layers, defaults to false and is not stored in PackedScene. See [canvas rendering](../components/canvas-rendering.md#canvas-follow-scale-preview) for native output and lifecycle checks.
