@@ -7,3 +7,7 @@ _e2d_render_sampler_view
 _e2d_render_shader16_support
 _e2d_render_graphics_storage_support
 _e2d_render_storage_barrier
+_e2d_render_empty_support
+_e2d_render_empty_create
+_e2d_render_empty_begin
+_e2d_render_empty_release

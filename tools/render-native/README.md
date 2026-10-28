@@ -56,3 +56,17 @@ The Linux test_shader16_mask.c development shim selects integer/arithmetic/buffe
 The private narrow feature property retains only successfully enabled features. The Linux test_shader8_mask.c fixture refuses byte arithmetic/buffer/uniform/push, Int16/Float16 arithmetic, all byte features or Vulkan 1.2. DeviceInt8.Consumer checks available siblings and pre-publication failures; never package the shim.
 
 `e2d_render_graphics_storage_support` ABI 1 returns physical vertex/fragment store-and-atomic support in bits 0/1 (zero on unsupported backends, -1 for invalid arguments). The factory requests those core features separately and retains only enabled bits. `e2d_render_storage_barrier` ABI 1 validates the pinned device/command ownership and records an all-command read/write memory dependency outside a pass; returns 1 on success or -1 on rejection. SDL only maintains pass/submission flags in debug mode, where the bridge checks them too; Release pass lifetime is enforced by the managed owner. The generated pinned command prefix ends at VkCommandBuffer, and both symbols enter every export list/package closure. `Electron2DRenderCheck` runs debug idle/pass guards; the public consumer runs ordinary Release devices. No vendored source is modified.
+
+The four `e2d_render_empty_*` ABI 1 exports implement explicit-extent attachmentless
+passes on the pinned Vulkan backend. `support` returns available 1/2/4/8 sample
+bits (zero for missing procedures/backend, -1 for invalid ABI/device). `create`
+returns a private owner object containing a zero-attachment render pass and
+framebuffer, or null; `begin` validates command/device/pass ownership and returns
+an ordinary SDL render-pass token after initializing dynamic state. End continues
+through SDL's existing pass cleanup. `release` destroys both native objects only
+after the managed owner completes or cancels all using commands. Failed creation
+retires a partially created render pass. No image or buffer is allocated, and no
+public native handle is exposed. The C check verifies debug guards and unchanged
+native image/buffer totals. Public CLR/NativeAOT consumers and `mask-empty.c`
+exercise storage effects, ordinary graphics/canvas, missing support and injected
+creation failure. Native/driver heap and foreign-backend qualification are separate.

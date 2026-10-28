@@ -8,7 +8,7 @@ public sealed unsafe partial class RenderingDevice
         int[] Colors, int[] ColorSlots, int DepthIndex, int[] Resolves, TextureSamples Samples, int[] Inputs, int[] Preserves);
     private sealed record FramebufferLayout(FramebufferPassLayout[] Passes, int ViewCount);
     private FramebufferLayout FramebufferLayouts(int format) => _framebufferFormats.TryGetValue(format, out var layout) ? layout : throw new ArgumentException("Unknown framebuffer format.", nameof(format));
-    private sealed record Framebuffer(RID[] Textures, int Format, Vector2i Size)
+    private sealed record Framebuffer(RID[] Textures, int Format, Vector2i Size, nint Empty = 0)
     { internal bool[] Touched = []; internal bool[] Visited = []; }
     private readonly Dictionary<int, FramebufferLayout> _framebufferFormats = [];
     /// <summary>Creates a copied single-pass color and depth/stencil attachment layout.</summary>
@@ -123,7 +123,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private FramebufferPassLayout FramebufferFormat(int format, uint renderPass = 0)
     { var passes = FramebufferLayouts(format).Passes; if (renderPass >= passes.Length) throw new ArgumentOutOfRangeException(nameof(renderPass)); return passes[renderPass]; }
-    private static bool SamePass(FramebufferPassLayout a, FramebufferPassLayout b) => a.DepthIndex == b.DepthIndex && a.Colors.AsSpan().SequenceEqual(b.Colors) && a.Resolves.AsSpan().SequenceEqual(b.Resolves) && a.Inputs.AsSpan().SequenceEqual(b.Inputs) && a.Preserves.AsSpan().SequenceEqual(b.Preserves);
+    private static bool SamePass(FramebufferPassLayout a, FramebufferPassLayout b) => a.Samples == b.Samples && a.DepthIndex == b.DepthIndex && a.Colors.AsSpan().SequenceEqual(b.Colors) && a.Resolves.AsSpan().SequenceEqual(b.Resolves) && a.Inputs.AsSpan().SequenceEqual(b.Inputs) && a.Preserves.AsSpan().SequenceEqual(b.Preserves);
 
     /// <summary>Reports the exact raster sample count of a framebuffer pass.</summary>
     /// <param name="framebufferFormat">A live framebuffer format identifier.</param>

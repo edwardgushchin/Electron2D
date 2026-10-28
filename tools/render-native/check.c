@@ -16,6 +16,11 @@ extern int e2d_render_memory(SDL_GPUDevice *, uint32_t, Memory *);
 extern int e2d_render_sampler_view(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
 extern SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *, uint32_t, const SDL_GPUSamplerCreateInfo *, uint32_t, uint32_t, uint32_t, uint32_t);
 
+extern int e2d_render_empty_support(SDL_GPUDevice *, uint32_t);
+extern void *e2d_render_empty_create(SDL_GPUDevice *, uint32_t, uint32_t, uint32_t, uint32_t);
+extern SDL_GPURenderPass *e2d_render_empty_begin(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, void *);
+extern void e2d_render_empty_release(SDL_GPUDevice *, uint32_t, void *);
+
 static void require_at(bool valid, int line)
 {
     if (!valid) { fprintf(stderr, "Native render check failed at line %d: %s\n", line, SDL_GetError()); exit(1); }
@@ -82,11 +87,31 @@ int main(int argc, char **argv)
         puts("Unsupported native core rejected before opaque-device access.");
         return 0;
     }
+    require(e2d_render_empty_support(NULL, 1) == -1);
+    require(e2d_render_empty_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_empty_create((SDL_GPUDevice *)(uintptr_t)1, 0, 7, 5, 0) == NULL);
+    require(e2d_render_empty_begin((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, (void *)(uintptr_t)1) == NULL);
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 4, 2, 2, 0) == NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
+    int empty_samples = e2d_render_empty_support(device, 1); require(empty_samples > 0 && empty_samples <= 15);
+    Memory empty_before = read_memory(device);
+    void *empty = e2d_render_empty_create(device, 1, 7, 5, 0); require(empty != NULL);
+    require(e2d_render_empty_create(device, 1, 0, 5, 0) == NULL);
+    require(e2d_render_empty_create(device, 1, UINT32_MAX, 5, 0) == NULL);
+    require(e2d_render_empty_create(device, 1, 7, 5, 4) == NULL);
+    Memory empty_after = read_memory(device);
+    require(empty_before.buffers == empty_after.buffers && empty_before.textures == empty_after.textures && empty_before.total == empty_after.total);
+    SDL_GPUCommandBuffer *empty_commands = SDL_AcquireGPUCommandBuffer(device); require(empty_commands != NULL);
+    SDL_GPUCopyPass *empty_copy = SDL_BeginGPUCopyPass(empty_commands); require(empty_copy != NULL);
+    require(e2d_render_empty_begin(device, 1, empty_commands, empty) == NULL); SDL_EndGPUCopyPass(empty_copy);
+    SDL_GPURenderPass *empty_pass = e2d_render_empty_begin(device, 1, empty_commands, empty); require(empty_pass != NULL);
+    require(e2d_render_empty_begin(device, 1, empty_commands, empty) == NULL);
+    SDL_EndGPURenderPass(empty_pass); require(SDL_SubmitGPUCommandBuffer(empty_commands)); require(SDL_WaitForGPUIdle(device));
+    e2d_render_empty_release(device, 1, empty);
+    printf("Native attachmentless sample mask=%d, ABI/pass/extent guards and zero image/buffer allocation passed\n", empty_samples);
     int graphics_storage = e2d_render_graphics_storage_support(device, 1); require(graphics_storage >= 0 && graphics_storage <= 3);
     SDL_GPUCommandBuffer *storage_commands = SDL_AcquireGPUCommandBuffer(device); require(storage_commands != NULL);
     require(e2d_render_storage_barrier(device, 1, storage_commands) == 1);

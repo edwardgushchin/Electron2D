@@ -3720,6 +3720,18 @@
       "godot": "RenderingDevice::method:sampler_is_format_supported_for_filter(int:RenderingDevice.DataFormat,int:RenderingDevice.SamplerFilter)",
       "electron2d": "method:Electron2D.RenderingDevice.SamplerIsFormatSupportedForFilter(Electron2D.RenderingDevice.DataFormat,Electron2D.RenderingDevice.SamplerFilter)",
       "reason": "ADR 0028: native optimal-tiling sampled/linear features and enabled sampling roles, one immutable table per shared physical-device lifetime, configured image/filter validation and explicit comparison/anisotropy distinctions. See docs/components/format-filter-support.md; foreign drivers and platform/hardware acceptance remain separate."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_create_empty(Vector2i:,int:RenderingDevice.TextureSamples,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreateEmpty(Electron2D.Vector2i,Electron2D.RenderingDevice.TextureSamples,System.Int32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: attachmentless single-pass formats and owned framebuffers execute on the pinned Vulkan extent adapter with no dummy images. Exact supported 1/2/4/8 sample counts, distinct format identities, positive native-limited extents, region/scissor, vertex/fragment storage effects, draw/pass dependencies, compute/copy/readback and pending-work retirement retain existing device guards. Public GLSL/HLSL CLR/AOT and retained canvas consumers qualify the profile; native ABI/pass/extent guards verify zero image/buffer allocations. Samples above the retained SDL pipeline range, raster discard, native allocation/throughput acceptance and foreign backends remain independent prerequisites; see docs/components/local-compute.md#attachmentless-graphics."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_format_create_empty(int:RenderingDevice.TextureSamples)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreateEmpty(Electron2D.RenderingDevice.TextureSamples)",
+      "state": "Implemented",
+      "reason": "ADR 0028: attachmentless single-pass formats and owned framebuffers execute on the pinned Vulkan extent adapter with no dummy images. Exact supported 1/2/4/8 sample counts, distinct format identities, positive native-limited extents, region/scissor, vertex/fragment storage effects, draw/pass dependencies, compute/copy/readback and pending-work retirement retain existing device guards. Public GLSL/HLSL CLR/AOT and retained canvas consumers qualify the profile; native ABI/pass/extent guards verify zero image/buffer allocations. Samples above the retained SDL pipeline range, raster discard, native allocation/throughput acceptance and foreign backends remain independent prerequisites; see docs/components/local-compute.md#attachmentless-graphics."
     }
   ],
   "extras": [
@@ -4536,12 +4548,12 @@
       "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "RenderingDevice::method:framebuffer_create_empty(Vector2i:,int:RenderingDevice.TextureSamples,int:)",
         "RenderingDevice::method:framebuffer_format_create_empty(int:RenderingDevice.TextureSamples)"
       ],
-      "reason": "Trigger: first native attachmentless render-pass and raster-discard support slice (ADR 0028)."
+      "reason": "ADR 0028: attachmentless single-pass formats and owned framebuffers execute on the pinned Vulkan extent adapter with no dummy images. Exact supported 1/2/4/8 sample counts, distinct format identities, positive native-limited extents, region/scissor, vertex/fragment storage effects, draw/pass dependencies, compute/copy/readback and pending-work retirement retain existing device guards. Public GLSL/HLSL CLR/AOT and retained canvas consumers qualify the profile; native ABI/pass/extent guards verify zero image/buffer allocations. Samples above the retained SDL pipeline range, raster discard, native allocation/throughput acceptance and foreign backends remain independent prerequisites; see docs/components/local-compute.md#attachmentless-graphics."
     },
     {
       "state": "Partial",

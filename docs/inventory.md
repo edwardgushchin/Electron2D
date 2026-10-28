@@ -2371,3 +2371,5 @@ Native Int8/UInt8 execution extends RenderingDevice, RDShaderSPIRV, RDShaderSour
 Writable graphics storage: `RenderingDevice.GraphicsStorage` owns stage-feature validation, shared draw-pass closure and external memory dependencies; `GPUDeviceFactory` retains separately enabled vertex/fragment write bits. The pinned render bridge adds physical feature queries and command barriers; no public type or native handle is added. [Contract](components/local-compute.md#writable-graphics-storage-buffers).
 
 Formatted graphics writes reuse `TexelBufferProgram`, `RenderingDevice.GraphicsStorage` and the existing encoded `TextureBufferCreate` allocation. The derived module drops texel-only native image requirements; `GPUDeviceFactory` keeps graphics-only requests independent of Vulkan 1.2. [Contract](components/local-compute.md#writable-formatted-graphics-producers).
+
+[Attachmentless framebuffers](components/local-compute.md#attachmentless-graphics) extend RenderingDevice with two executing factories. No additional public type is introduced; the native extent/lifetime adapter remains private.

@@ -580,3 +580,5 @@ See [native render memory](../components/render-memory.md) for actual allocation
 Ordinary writable graphics storage now connects vertex/fragment producers to ordered draw, indirect, compute, copy/readback and retained canvas consumers; see [the storage contract](../components/local-compute.md#writable-graphics-storage-buffers).
 
 Formatted graphics producers now store encoded ImageBuffer elements and execute R32 atomics before sampled draw, compute/readback and retained canvas consumption. [Contract and limits](../components/local-compute.md#writable-formatted-graphics-producers).
+
+[Attachmentless graphics](../components/local-compute.md#attachmentless-graphics) now executes explicit raster extents and exact available samples without dummy image attachments. Existing graphics storage writes feed following compute, ordinary graphics and canvas consumers; raster discard remains a separate state adapter.

@@ -9,3 +9,7 @@ EXPORTS
     e2d_render_shader16_support
     e2d_render_graphics_storage_support
     e2d_render_storage_barrier
+    e2d_render_empty_support
+    e2d_render_empty_create
+    e2d_render_empty_begin
+    e2d_render_empty_release
