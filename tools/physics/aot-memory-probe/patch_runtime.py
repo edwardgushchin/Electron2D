@@ -26,7 +26,42 @@ def patch(root, output):
         changed[name] = changed[name].replace(old, new)
 
     fast, helpers, collector, heap = pins
-    replace(fast, '#include "AsmMacros_Shared.h"', '#include "AsmMacros_Shared.h"\n.extern e2d_aot_allocated')
+    replace(fast, '#include "AsmMacros_Shared.h"', '''#include "AsmMacros_Shared.h"
+.extern e2d_aot_allocated
+.extern e2d_aot_begin_fast
+
+// Preserve every volatile GPR used by the surrounding fast allocation assembly.
+LEAF_ENTRY E2DMemoryBeginFast, _TEXT
+        push_nonvol_reg rax
+        push_nonvol_reg rcx
+        push_nonvol_reg rdx
+        push_nonvol_reg rdi
+        push_nonvol_reg rsi
+        push_nonvol_reg r8
+        push_nonvol_reg r9
+        push_nonvol_reg r10
+        push_nonvol_reg r11
+        call EXTERNAL_C_FUNC(e2d_aot_begin_fast)
+        pop_nonvol_reg r11
+        pop_nonvol_reg r10
+        pop_nonvol_reg r9
+        pop_nonvol_reg r8
+        pop_nonvol_reg rsi
+        pop_nonvol_reg rdi
+        pop_nonvol_reg rdx
+        pop_nonvol_reg rcx
+        pop_nonvol_reg rax
+        ret
+LEAF_END E2DMemoryBeginFast, _TEXT
+''')
+    replace(fast, '''        // Calculate the new alloc pointer to account for the allocation.
+        add         rdx, rsi''', '''        call        C_FUNC(E2DMemoryBeginFast)
+        // Calculate the new alloc pointer to account for the allocation.
+        add         rdx, rsi''')
+    replace(fast, '''        add         r13, rax
+        mov         [rax + OFFSETOF__Object__m_pEEType], rbx''', '''        call        C_FUNC(E2DMemoryBeginFast)
+        add         r13, rax
+        mov         [rax + OFFSETOF__Object__m_pEEType], rbx''')
     replace(fast, '        mov         rax, rsi\n\n        .cfi_remember_state', '''        // No GC or managed calls in this observer; allocation helpers use the standard caller-trash ABI.
         mov         rdi, rsi
         mov         rsi, rdx

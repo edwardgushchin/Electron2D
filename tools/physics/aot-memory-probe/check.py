@@ -90,7 +90,8 @@ def main():
              ('source-baseline', 'source-baseline', [], 132), ('sdk-baseline', 'sdk-baseline', [], 132),
              ('concurrent', 'concurrent', [], 135), ('invalid-watch', 'probe', ['--invalid-watch'], 132),
              ('invalid-snapshot', 'probe', ['--invalid-snapshot'], 132),
-             ('invalid-frozen', 'probe', ['--invalid-frozen'], 132)]
+             ('invalid-frozen', 'probe', ['--invalid-frozen'], 132),
+             ('invalid-native', 'probe', ['--invalid-native'], 132)]
     for label, image, arguments, expected in cases:
         executable = workspace / image / 'AOTMemoryProbe'
         command = [str(executable), *arguments]
@@ -122,7 +123,7 @@ def main():
         if expected:
             reason = ('hooks are absent' if 'baseline' in label else 'stopped EE and non-concurrent GC' if label == 'concurrent'
                       else 'invalid type watch' if label == 'invalid-watch' else 'invalid frozen resize' if label == 'invalid-frozen'
-                      else 'invalid snapshot')
+                      else 'invalid native allocation' if label == 'invalid-native' else 'invalid snapshot')
             assert ('aot-memory-producer: ' in text or 'aot-frozen-fixture: ' in text) and reason in text, label
             continue
         assert str(executable) in mappings and not any('libcoreclr' in path.lower() for path in mappings)
@@ -156,12 +157,27 @@ def main():
         assert phases['unobserved-frozen-peak']['Current'] == base['Current']
         assert phases['unobserved-frozen-peak']['Peak'] == base['Current'] + 2400000
         assert phases['disjoint-peak']['ManagedPeak'] < phases['disjoint-peak']['Peak'] + phases['disjoint-peak']['DynamicPeak']
+        process = report['Process']
+        assert process['MidpointCollection'] and process['InterleavedCollections'] > 0 and process['ReadBytes'] == 0
+        assert len(process['Rows']) == 14
+        assert all(row['Current'] == row['ManagedCurrent'] + row['NativeCurrent'] and row['Peak'] >= row['Current'] and
+                   row['Allocated'] - row['Retired'] == row['NativeCurrent'] for row in process['Rows'])
+        native = {row['Phase']: row for row in process['Rows']}
+        assert [native[name]['NativeCurrent'] for name in ['allocated', 'grown', 'shrunk', 'zero-size']] == [73, 4097, 7, 0]
+        assert native['worker-retired']['Allocated'] == native['failed-allocations']['Allocated'] + 5056
+        assert native['worker-retired']['Retired'] == native['worker-retired']['Allocated']
+        assert native['unobserved-native-peak']['NativePeak'] == 7000000
+        assert native['unobserved-native-peak']['NativeCurrent'] == 0
+        assert native['disjoint-process-peak']['Peak'] < native['disjoint-process-peak']['ManagedPeak'] + native['disjoint-process-peak']['NativePeak']
+        assert native['wide-allocation']['NativeCurrent'] == (1 << 32) + 17
+        assert native['wide-resize']['NativeCurrent'] == (1 << 32) + 33
+        assert native['wide-retired']['NativeCurrent'] == 0 and native['wide-retired']['Peak'] >= native['wide-resize']['Peak']
         reports[label] = report
     summary = {'reports': reports, 'runtimeInputs': runtime_inputs, 'bridgeSHA256': digest(workspace / 'producer.o'),
                'frozenFixtureSHA256': digest(workspace / 'frozen-fixture.o'),
                'sourceSHA256': {path.name: digest(path) for path in Path(__file__).parent.iterdir() if path.is_file()}}
     (output / 'checks.json').write_text(json.dumps(summary, indent=2) + '\n')
-    print('NativeAOT allocation/GC and frozen lifecycle, composed managed peak, failure and host controls passed.')
+    print('NativeAOT guarded fast/frozen/native ledger, composed witnesses, wide native sizes and host controls passed.')
 
 
 if __name__ == '__main__':

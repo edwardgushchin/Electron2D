@@ -535,9 +535,28 @@ and tracing configuration differ from the shipping SDK. Original allocation/GC
 receipts remain under `bin/aot-memory-producer/2026-10-29/`; extended frozen lifetime
 receipts are under `bin/aot-frozen-memory/2026-10-29/`.
 
+The composed fixture adds a native allocator under that same gate, covering the
+actual malloc/realloc/free operation and ledger publication without a managed
+callback. Fast object and shared string/array paths now acquire the gate before
+their allocation-pointer commit; a register-preserving native shim and a
+thread-local publication assertion retain the helper ABI and enforce the pairing.
+The fourteen new phases exercise requested/aligned/zeroed storage, resize content,
+failure preservation, a native worker alive at forced GC, an unseen 7000000-byte
+native peak, and disjoint/overlapping native and managed lifetimes. A sparse
+4294967313-byte native block grows to 4294967329 with preserved endpoint content;
+this qualifies width rather than a physical 4-GiB working set. The prepared native
+allocate/resize/free/read cycle also requires zero managed caller bytes.
+
+This closes the fast-path commit interval only in the instrumented single-image
+fixture. The common GC-capable allocator still notifies after returning, so its
+overlap with native ownership remains open; holding the observer gate across that
+allocator would block its own GC. The shipping C# allocator/native-library domains
+have not moved into this gate. Do not infer a complete process peak from the
+controlled compositions. Receipts are under `bin/aot-composed-memory/2026-10-29/`.
+
 Production integration still needs CoreCLR image/frozen accounting and actual
 engine/module-host acceptance, concurrent collector support, qualified large sizes
-and OS failures, the shared
+and OS failures, the complete shared
 native/managed publication boundary and complete native-library domains. The
 full walk adds O(total heap) work to each collection; neither its cost nor observer
 overhead is accepted for production by these correctness results. Other platforms,

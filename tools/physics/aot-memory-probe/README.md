@@ -18,6 +18,13 @@ A separate 13-phase frozen fixture checks registration failure, empty registrati
 growth/shrink, commit-only/no-op updates, actual object payloads, unregister, an
 unobserved peak and disjoint/overlapping dynamic/frozen peaks. Its 64-cycle worker
 keeps one segment live at the forced-GC midpoint.
+A further 14-phase native fixture shares the observer's native gate with managed
+and frozen publication. Native malloc/realloc/free and their ledger commit occur
+inside the same critical section, with no managed callbacks. Fast object and
+string/array paths acquire that gate before changing their allocation pointer;
+the successful observer releases it after publishing. A native assembly shim
+preserves the live volatile GPRs and stack alignment across acquisition. A
+thread-local assertion rejects a fast publication that missed this gate.
 
 Only the copied runtime is instrumented. The installed SDK, package archives and
 Electron2D runtime are unchanged. The patcher checks all four source hashes and
@@ -83,9 +90,9 @@ python3 -B tools/physics/aot-memory-probe/check.py "$probe_root" bin/aot-memory-
 rm -rf "$probe_root"
 ```
 
-Workstation and two-heap server GC use the same 29 dynamic and 13 frozen witness phases. Eight
+Workstation and two-heap server GC use the same 29 dynamic, 13 frozen and 14 native witness phases. Nine
 isolated children include the two uninstrumented runtime controls, concurrent-GC
-refusal, an invalid watch, an invalid snapshot and an invalid frozen resize. Each has a 90-second process-group
+refusal, an invalid watch, an invalid snapshot, an invalid frozen resize and an invalid native alignment. Each has a 90-second process-group
 deadline. The checker retains maps, actual link arguments and source/archive/binary
 hashes, and requires native execution without CoreCLR. Rebuilding from a fresh
 archive is required after changing the patcher; it intentionally refuses to patch
@@ -112,9 +119,29 @@ frozen region. The overlap must raise the combined peak and later retirement mus
 retain it. These are controlled object-footprint tests, not process RSS or native
 backing-storage qualification.
 
+The native fixture retains the existing owned allocator's requested-payload,
+32-byte private prefix, alignment, zero-size and failure-preservation semantics.
+It checks zero-filled payloads, grow/shrink content, all power-of-two alignments
+from 1 through 4096, rejected and actual allocator failures, plus 64 worker cycles
+overlapping forced GC. A 7000000-byte allocation disappears between reads and
+must still raise the combined peak. A later 7000024-byte managed array first
+occurs separately and then overlaps another native block. The aggregate peak
+must differ from the sum of separate domain peaks. A sparse native allocation of
+4294967313 bytes, grown to 4294967329, checks 64-bit accounting and endpoint
+content across resize; only endpoint pages are touched, so this is not a physical
+4-GiB working-set test. Twenty thousand prepared native allocation/resize/free/read
+cycles must allocate zero managed caller bytes.
+
+These are controlled single-image accounting domains. Common slow managed
+allocations still publish after the GC allocator returns: their native overlap
+window remains unqualified. Holding this gate across a GC-capable allocator would
+deadlock collection and is not an accepted fix. The shipping C# NativeAllocation
+and native-library callbacks have not been moved to this fixture's gate. No
+complete production managed/native peak is claimed.
+
 The full heap walk still requires non-concurrent GC. Its O(total heap) collection
 cost, native observer overhead and changed runtime build must be measured before
 production use. CoreCLR frozen/image integration, actual shared-module host/load
 acceptance, concurrent GC, over-4-GiB sizes, real OS exhaustion, other platforms
-and coherent production native/managed publication remain open. This fixture does
+and complete production native/managed publication remain open. This fixture does
 not wire a partial counter to GetMonitor. See [the audit](../../../docs/coverage/performance-producers.md#nativeaot-success-and-retirement-producer).
