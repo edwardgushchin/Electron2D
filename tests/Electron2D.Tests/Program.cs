@@ -155,6 +155,7 @@ if (args.Length == 2 && args[0] == "--window-chrome-archive") { try { WindowDeco
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") == "managed") { try { WindowDecorationTests.RunManaged(); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") is { } windowChromeProfile) { try { WindowDecorationTests.RunNative(windowChromeProfile); } catch (Exception error) { Console.Error.WriteLine(error); Environment.ExitCode = 1; } return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_SDF") == "1") { LightingTests.NativeSDF(); ParticleServerTests.Run("sdf"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_MIP_BIAS") is { } mipBias) { if (mipBias == "managed") ViewportMIPMapBiasTests.RunManaged(); else ViewportMIPMapBiasTests.RunNative(mipBias); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAMPLER_CONFIGURATION") == "1") { SamplerConfigurationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MULTIVIEW") is { } multiviewProfile) { if (multiviewProfile == "canvas") RenderingDeviceMultiviewTests.Canvas(); else RenderingDeviceMultiviewTests.Run(); return; }
@@ -2177,6 +2178,7 @@ CanvasLifecycleTests.Run();
 CanvasItemContractTests.Run(PhysicsServer.Backend.CPU, false);
 CanvasItemContractTests.Run(PhysicsServer.Backend.GPU, false);
 CanvasSamplingTests.Run();
+ViewportMIPMapBiasTests.RunManaged();
 CanvasPixelSnapTests.Run();
 CanvasCoordinateTests.Run();
 CameraTests.Run();

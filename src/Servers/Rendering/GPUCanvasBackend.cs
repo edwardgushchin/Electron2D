@@ -20,7 +20,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private readonly HashSet<Texture> _usedTextures = [];
     private readonly System.Runtime.CompilerServices.ConditionalWeakTable<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = new();
     private readonly Resource?[] _textureScratch = new Resource?[32];
-    private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
+    private float _textureMIPMapBias;
     private ShaderSamplerCache? _shaderSamplers;
     private readonly System.Runtime.CompilerServices.ConditionalWeakTable<byte[], Dictionary<(uint Set, int Binding), bool>> _coordinateSamplingRequirements = new();
     private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMIPMapFilter);
@@ -155,6 +155,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default)
     {
         ResetRenderInfo();
+        _textureMIPMapBias = output.TextureMIPMapBias;
         _currentHDR = output.HDR; _linearSources.Clear(); _linearArraySources.Clear();
         if (output.HDR) clear = LinearColor(clear);
         var samples = (SDL.GPUSampleCount)output.MSAA; var format = CanvasFormat(output.HDR);
@@ -174,7 +175,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
             if (batch.Material is { } material && material.Textures.Length != 0)
             {
-                PrepareTextures(material, batch.MaxAnisotropy);
+                PrepareTextures(material, batch.MaxAnisotropy, _textureMIPMapBias);
                 PrepareGraphChannels(batch);
             }
             var code = GlyphCode(batch); var vertexCode = VertexCode(batch);
@@ -434,39 +435,38 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         SDL.BlitGPUTexture(command, in blit);
     }
 
-    private nint Sampler(TextureFilter filter, TextureRepeat repeat, int anisotropy = 1, bool integer = false)
+    private nint Sampler(TextureFilter filter, TextureRepeat repeat, int anisotropy = 1, bool integer = false, float? bias = null)
     {
         if (integer && (filter is TextureFilter.Linear or TextureFilter.LinearWithMipmaps or TextureFilter.LinearWithMipmapsAnisotropic || filter >= TextureFilter.NearestWithMipmapsAnisotropic && anisotropy > 1)) throw new NotSupportedException("Integer canvas images require nearest filtering without anisotropy.");
         var nearestMipmaps = integer || _nearestMipmaps;
         var anisotropic = filter >= TextureFilter.NearestWithMipmapsAnisotropic && anisotropy > 1;
         if (_relaxedAndroidDevice && anisotropic)
             throw new NotSupportedException("Anisotropic texture filtering is unavailable on this Android GPU device.");
-        var key = (filter, repeat, anisotropic ? anisotropy : 1, nearestMipmaps);
-        if (!_samplers.TryGetValue(key, out var sampler))
+        var linear = filter is TextureFilter.Linear or TextureFilter.LinearWithMipmaps or TextureFilter.LinearWithMipmapsAnisotropic;
+        var address = repeat switch
         {
-            var linear = filter is TextureFilter.Linear or TextureFilter.LinearWithMipmaps or TextureFilter.LinearWithMipmapsAnisotropic;
-            var address = repeat switch
-            {
-                TextureRepeat.Enabled => SDL.GPUSamplerAddressMode.Repeat,
-                TextureRepeat.Mirror => SDL.GPUSamplerAddressMode.MirroredRepeat,
-                _ => SDL.GPUSamplerAddressMode.ClampToEdge,
-            };
-            var info = new SDL.GPUSamplerCreateInfo
-            {
-                MinFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
-                MagFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
-                MipmapMode = nearestMipmaps ? SDL.GPUSamplerMipmapMode.Nearest : SDL.GPUSamplerMipmapMode.Linear,
-                AddressModeU = address,
-                AddressModeV = address,
-                AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge,
-                MaxLod = filter >= TextureFilter.NearestWithMipmaps ? 1000 : 0,
-                EnableAnisotropy = anisotropic,
-                MaxAnisotropy = anisotropic ? anisotropy : 1,
-            };
-            sampler = new RenderHandle(SDL.CreateGPUSampler(Device, in info), h => SDL.ReleaseGPUSampler(Device, h), _device);
-            _samplers.Add(key, sampler);
-        }
-        return sampler.DangerousGetHandle();
+            TextureRepeat.Enabled => RenderingDevice.SamplerRepeatMode.Repeat,
+            TextureRepeat.Mirror => RenderingDevice.SamplerRepeatMode.MirroredRepeat,
+            _ => RenderingDevice.SamplerRepeatMode.ClampToEdge,
+        };
+        var configuration = new SamplerConfiguration(
+            linear ? RenderingDevice.SamplerFilter.Linear : RenderingDevice.SamplerFilter.Nearest,
+            linear ? RenderingDevice.SamplerFilter.Linear : RenderingDevice.SamplerFilter.Nearest,
+            nearestMipmaps ? RenderingDevice.SamplerFilter.Nearest : RenderingDevice.SamplerFilter.Linear,
+            address, address, 0, 0, filter >= TextureFilter.NearestWithMipmaps ? 1000 : 0,
+            anisotropic ? anisotropy : 1, anisotropic, false, RenderingDevice.CompareOperator.Always,
+            RenderingDevice.SamplerBorderColor.FloatTransparentBlack, false);
+        return GetCanvasSampler(configuration, bias ?? _textureMIPMapBias);
+    }
+
+    internal override void ValidateMIPMapBias(float bias)
+    { if (bias != 0 && Driver == "metal") throw new NotSupportedException("Metal canvas mipmap bias requires shader-applied sampling."); }
+
+    private nint GetCanvasSampler(SamplerConfiguration configuration, float bias)
+    {
+        if (configuration.MaxLOD > 0 && !configuration.UnnormalizedUVW)
+            configuration = configuration with { LODBias = (float)Math.Clamp((double)configuration.LODBias + bias, -float.MaxValue, float.MaxValue) };
+        return (_shaderSamplers ??= new(_device, Driver, !_relaxedAndroidDevice)).Get(configuration);
     }
 
     private static bool UsesCanvasTexture(CanvasBatch batch) => batch.Material is null ||
@@ -577,7 +577,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private SDL.GPUTextureSamplerBinding[] TextureBindings(MaterialState material) =>
         _textureBindings.GetValue(material, static current => new SDL.GPUTextureSamplerBinding[current.Textures.Length]);
 
-    private void PrepareTextures(MaterialState material, int anisotropy)
+    private void PrepareTextures(MaterialState material, int anisotropy, float bias = 0)
     {
         var bindings = TextureBindings(material);
         var maps = _materialSwizzles.GetValue(material, static current => new uint[current.Textures.Length]);
@@ -587,10 +587,10 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             for (var i = 0; i < bindings.Length; i++)
             {
                 var configured = material.Samplers[i] is { } configuration
-                    ? (_shaderSamplers ??= new(_device, Driver, !_relaxedAndroidDevice)).Get(configuration) : 0;
-                if (material.Program.Textures[i].IsEngineTexture) { if (configured == 0 && material.Program.Textures[i].ImagePolicy is { } enginePolicy) configured = ImageSampler(enginePolicy, anisotropy); bindings[i] = new() { Sampler = configured }; maps[i] = 0; continue; }
+                    ? GetCanvasSampler(configuration, bias) : 0;
+                if (material.Program.Textures[i].IsEngineTexture) { if (configured == 0 && material.Program.Textures[i].ImagePolicy is { } enginePolicy) configured = ImageSampler(enginePolicy, anisotropy, bias); bindings[i] = new() { Sampler = configured }; maps[i] = 0; continue; }
                 var descriptor = material.Program.Textures[i];
-                if (configured == 0 && descriptor.ImagePolicy is { } policy) configured = ImageSampler(policy, anisotropy);
+                if (configured == 0 && descriptor.ImagePolicy is { } policy) configured = ImageSampler(policy, anisotropy, bias);
                 var resource = ShaderTexture.Source(_textureScratch[i], requireAtlasSource: true) ?? (_textureScratch[i] is Texture ? RenderingTextureRegistry.PlaceholderTexture : _textureScratch[i]) ?? ImageFallback(descriptor.IsArray, descriptor.ImagePolicy!.Value.Fallback);
                 maps[i] = TextureSwizzles.Source(resource);
                 nint handle;
@@ -736,8 +736,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _layeredTextures.Clear(); _usedLayeredTextures.Clear();
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _materialSwizzles.Clear(); _sampledSwizzles.Clear();
         _shaderSamplers?.Dispose();
-        foreach (var sampler in _samplers.Values) sampler.Dispose();
-        _samplers.Clear(); DisposeColorViews(); DisposeImageFallbacks(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
+        DisposeColorViews(); DisposeImageFallbacks(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
         foreach (var pipeline in _lightMaskPipelines.Values) pipeline.Dispose(); _lightMaskPipelines.Clear(); _usedLightMaskPipelines.Clear(); _previousLightMaskPipelines.Clear();
         _sdfTarget?.Dispose(); _sdfPipeline?.Dispose(); ReleaseParticlePrograms(); ReleaseParticleVertices();
         _litPrograms.Clear(); _usedLitPrograms.Clear();

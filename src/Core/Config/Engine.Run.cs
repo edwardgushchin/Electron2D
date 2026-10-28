@@ -108,6 +108,7 @@ public sealed partial class Engine
             window.ApplyProjectHDROutput();
             window.OpenNative(movieDisableVSync);
             window.ApplyProjectMSAA();
+            window.ApplyProjectMIPMapBias();
             window.ApplyProjectHDR();
             window.ApplyProjectDebanding();
             if (moviePath is not null)

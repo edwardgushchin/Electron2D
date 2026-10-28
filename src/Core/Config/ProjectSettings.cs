@@ -443,6 +443,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<int> AnisotropicFilteringLevel { get; } =
         new("rendering/textures/default_filters/anisotropic_filtering_level", 2, value => value is >= 0 and <= 4);
 
+    /// <summary>Gets the root canvas mip-level offset sampled when an unassigned window starts.</summary>
+    /// <value>Zero by default; finite offsets require a supporting GPU sampler backend.</value>
+    public static ProjectSetting<float> TextureMIPMapBias { get; } =
+        new("rendering/textures/default_filters/texture_mipmap_bias", 0, float.IsFinite);
+
     /// <summary>Defines the finite initial root-framebuffer clear color.</summary>
     public static ProjectSetting<Color> DefaultClearColor { get; } =
         new("rendering/environment/defaults/default_clear_color", new Color(0.3f, 0.3f, 0.3f, 1f), value => value.IsFinite());

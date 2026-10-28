@@ -30,9 +30,9 @@ internal sealed unsafe partial class GPUCanvasBackend
         return _imageFallbacks[shape, kind] = ordinary;
     }
 
-    private nint ImageSampler(ShaderImagePolicy policy, int anisotropy) => Sampler(
+    private nint ImageSampler(ShaderImagePolicy policy, int anisotropy, float? bias = null) => Sampler(
         policy.Filter == 0 ? TextureFilter.Linear : (TextureFilter)policy.Filter,
-        policy.Repeat == 1 ? TextureRepeat.Enabled : TextureRepeat.Disabled, anisotropy);
+        policy.Repeat == 1 ? TextureRepeat.Enabled : TextureRepeat.Disabled, anisotropy, bias: bias);
 
     private SDL.GPUTextureSamplerBinding ChannelBinding(CanvasBatch batch, bool normal)
     {

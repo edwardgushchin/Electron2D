@@ -48,6 +48,8 @@
 
 Last updated: 2026-10-28
 
+[Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
+
 [Copied native depth/stencil state](../components/depth-stencil-state.md) executes stored-depth bounds and independent visible-face masks/reference across ordinary and derived graphics pipelines.
 
 [Integer material graphs](../components/visual-shaders.md#integer-arithmetic-and-bit-patterns) now execute exact signed/unsigned arithmetic, functions and bit masks through the existing archive/import/material path. Byte-encoded and UV-driven consumers observe precision before float conversion.

@@ -59,17 +59,20 @@ internal abstract partial class CanvasBackend : IDisposable
     internal virtual void ValidateDebanding(bool enabled) { if (enabled) throw new NotSupportedException("The compatibility renderer cannot dither HDR screen output."); }
     internal virtual void ValidateMSAA(Viewport.MSAA mode) { if (mode != Viewport.MSAA.Disabled) throw new NotSupportedException("The compatibility renderer cannot use canvas multisample antialiasing."); }
     internal virtual RenderHandle CreateMultisampleTarget(Vector2i size, Color clear, Viewport.MSAA mode, bool HDR = false) => throw new NotSupportedException("Multisample canvas targets require GPU rendering.");
+    internal virtual void ValidateMIPMapBias(float bias) { if (bias != 0) throw new NotSupportedException("Texture mipmap bias requires a supporting GPU sampler backend."); }
     internal CanvasRenderTarget Target(Viewport viewport, Vector2i size, Color clear)
     {
+        var bias = viewport.RenderingOwner?.ViewportMIPMapBias(viewport) ?? viewport.TextureMIPMapBias; ValidateMIPMapBias(bias);
         var mode = viewport.RenderingOwner?.ViewportMSAA(viewport) ?? viewport.MSAA2D; ValidateMSAA(mode);
         var hdr = viewport.RenderingOwner?.ViewportHDR(viewport) ?? viewport.UseHDR2D; ValidateHDR(hdr);
         ValidateDebanding(viewport.RenderingOwner?.ViewportDebanding(viewport) ?? viewport.UseDebanding);
-        if (_targets.TryGetValue(viewport, out var target) && target.Size == size && target.MSAA == mode && target.HDR == hdr) return target;
+        if (_targets.TryGetValue(viewport, out var target) && target.Size == size && target.MSAA == mode && target.HDR == hdr) { target.TextureMIPMapBias = bias; return target; }
         if (size.X is < 1 or > 16384 || size.Y is < 1 or > 16384) throw new NotSupportedException("Canvas targets require 1..16384 pixels per axis on this backend profile.");
         var current = CreateTarget(size, clear, HDR: hdr); RenderHandle next;
         try { next = CreateTarget(size, clear, HDR: hdr); } catch { current.Dispose(); throw; }
         var replacement = new CanvasRenderTarget(current, next, size) { MSAA = mode, HDR = hdr };
         try { if (mode != Viewport.MSAA.Disabled) replacement.Multisample = CreateMultisampleTarget(size, clear, mode, hdr); } catch { replacement.Dispose(); throw; }
+        replacement.TextureMIPMapBias = bias;
         target?.Dispose(); _targets[viewport] = replacement; return replacement;
     }
     internal RenderHandle BackBuffer(CanvasRenderTarget target, bool mipmaps)

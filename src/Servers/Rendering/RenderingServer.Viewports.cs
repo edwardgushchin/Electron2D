@@ -14,6 +14,7 @@ public sealed partial class RenderingServer
         internal TextureFilter? CanvasFilter;
         internal TextureRepeat? CanvasRepeat;
         internal AnisotropicFiltering? Anisotropy;
+        internal float? MIPMapBias;
         internal Viewport.MSAA? MSAA;
         internal bool? HDR, Debanding;
         internal int? Screen;
@@ -67,6 +68,21 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The renderer is unavailable, the viewport belongs to another session,
     /// or owner-thread/capture/submission guards reject mutation.</exception>
     public static void ViewportSetAnisotropicFilteringLevel(RID viewport, AnisotropicFiltering level) => RequireService().ViewportSetAnisotropicFilteringLevelCore(viewport, level);
+    internal float ViewportMIPMapBias(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.MIPMapBias is { } bias ? bias : view.TextureMIPMapBias;
+    internal void PublishViewportMIPMapBias(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.MIPMapBias = null; }
+    /// <summary>Sets the mip-level offset for the next image of a live scene or caller-owned viewport.</summary>
+    /// <param name="viewport">Live viewport identity of this rendering session.</param>
+    /// <param name="bias">Finite signed level offset; zero preserves authored sampler selection.</param>
+    /// <remarks>Uses Viewport.TextureMIPMapBias sampling and backend rules. This session override preserves
+    /// scene getters and packed values; a valid scene assignment republishes the authored policy.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The offset is not finite.</exception>
+    /// <exception cref="ArgumentException">The identity is invalid, retired or not a viewport.</exception>
+    /// <exception cref="InvalidOperationException">No renderer is active, ownership differs or mutation is guarded.</exception>
+    public static void ViewportSetTextureMIPMapBias(RID viewport, float bias)
+    {
+        if (!float.IsFinite(bias)) throw new ArgumentOutOfRangeException(nameof(bias));
+        RequireService().ChangeViewport(viewport, out _).MIPMapBias = bias;
+    }
     internal Viewport.MSAA ViewportMSAA(Viewport view) => _serverViewports.TryGetValue(view, out var state) && state.MSAA is { } mode ? mode : view.MSAA2D;
     internal void PublishViewportMSAA(Viewport view) { if (_serverViewports.TryGetValue(view, out var state)) state.MSAA = null; }
     private void ViewportSetMSAA2DCore(RID rid, Viewport.MSAA mode)
@@ -128,7 +144,7 @@ public sealed partial class RenderingServer
         if (view is SubViewport sub) sub.Submitted();
         else if (_serverViewports.TryGetValue(view, out var state)) { if (state.Update == ViewportUpdateMode.Once) state.Update = ViewportUpdateMode.Disabled; if (state.Clear == ViewportClearMode.Once) state.Clear = ViewportClearMode.Never; }
     }
-    private void EnsureServerViewportChange()
+    internal void EnsureServerViewportChange()
     { EnsureTextureChange(); if (_rendering && !_frameSubmitted && _activeFrames.Count != 0) throw new InvalidOperationException("Viewport resources cannot mutate during canvas capture or submission."); }
     private bool ReleaseViewportRID(RID rid)
     {

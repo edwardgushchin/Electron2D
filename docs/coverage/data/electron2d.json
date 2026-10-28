@@ -184180,6 +184180,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.ViewportSetTextureMIPMapBias(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "ViewportSetTextureMIPMapBias",
+    "signature": "public static System.Void ViewportSetTextureMIPMapBias(Electron2D.RID viewport, System.Single bias)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bias",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.ViewportSetTransparentBackground(Electron2D.RID,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -277727,6 +277751,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.TextureMIPMapBias()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TextureMIPMapBias",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E TextureMIPMapBias { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.TooltipDelaySeconds()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -288150,6 +288187,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.TextureMIPMapBias()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "TextureMIPMapBias",
+    "signature": "public System.Single TextureMIPMapBias { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

@@ -10,6 +10,10 @@ Last updated: 2026-10-26
 - **Namespace:** `Electron2D`
 - **Declaration:** `public abstract partial class Viewport : Node`
 
+## TextureMIPMapBias
+
+`public float TextureMIPMapBias { get; set; }` stores a finite signed native mip-level offset, default zero. An unassigned root window samples the project setting at startup. Positive offsets select coarser mip levels; negative offsets sharpen minification. Valid equal assignments republish renderer overrides. Base-level filters and unnormalized samplers preserve their policy; Metal and compatibility reject nonzero values. Native limits can reject combined explicit sampler offsets. See [complete sampling, ownership and verification](../components/viewport-mipmap-bias.md).
+
 ## HDR screen debanding
 
 | Property | Default | Meaning |

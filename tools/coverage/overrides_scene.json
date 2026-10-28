@@ -6068,6 +6068,16 @@
       "godot": "VisibleOnScreenNotifier2D::property:show_rect",
       "electron2d": "property:Electron2D.VisibleOnScreenNotifier.ShowRect()",
       "reason": "ADRs 0004/0008/0023/0027/0078/0090: typed canvas guides execute real editor-role drawing and passive workspace preview, retained clear/restore, inherited transforms/layout, scene/file factories and guarded stored settings. Public CLR/NativeAOT consumers and Linux Wayland GPU/compatibility pixels verify the connected behavior; native allocator, other platforms and owner acceptance remain separate. See docs/components/editor-canvas-guides.md."
+    },
+    {
+      "godot": "Viewport::property:texture_mipmap_bias",
+      "electron2d": "property:Electron2D.Viewport.TextureMIPMapBias()",
+      "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
+    },
+    {
+      "godot": "ProjectSettings::property:rendering/textures/default_filters/texture_mipmap_bias",
+      "electron2d": "property:Electron2D.ProjectSettings.TextureMIPMapBias()",
+      "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
     }
   ],
   "extras": [
@@ -10281,7 +10291,6 @@
         "Viewport::property:scaling_3d_mode",
         "Viewport::property:scaling_3d_scale",
         "Viewport::property:screen_space_aa",
-        "Viewport::property:texture_mipmap_bias",
         "Viewport::property:use_occlusion_culling",
         "Viewport::property:use_taa",
         "Viewport::property:use_xr",
@@ -12189,6 +12198,14 @@
         "Window::property:mouse_passthrough",
         "Window::property:mouse_passthrough_polygon"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "ProjectSettings::property:rendering/textures/default_filters/texture_mipmap_bias",
+        "Viewport::property:texture_mipmap_bias"
+      ],
+      "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
     }
   ]
 }

@@ -5,6 +5,7 @@ internal sealed class CanvasRenderTarget(RenderHandle current, RenderHandle next
     internal RenderHandle Current = current, Next = next;
     internal readonly Vector2i Size = size;
     internal bool HDR;
+    internal float TextureMIPMapBias;
     internal int BytesPerPixel => HDR ? 8 : 4;
     internal Image.Format ImageFormat => HDR ? Image.Format.Rgbah : Image.Format.Rgba8;
     internal Viewport.MSAA MSAA;

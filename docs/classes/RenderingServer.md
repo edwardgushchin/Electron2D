@@ -10,6 +10,10 @@ Last updated: 2026-10-25
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
 
+## ViewportSetTextureMIPMapBias
+
+`public static void ViewportSetTextureMIPMapBias(RID viewport, float bias)` changes the next canvas image of a live scene or caller-owned viewport. The offset must be finite. The override preserves scene getters and packed values; a valid scene assignment republishes authored state. Invalid or retired RIDs, foreign sessions, off-owner access and capture/submission mutation reject under the existing viewport contract. See [native sampler behavior and backend limits](../components/viewport-mipmap-bias.md).
+
 ## ViewportSetUseDebanding
 
 `public static void ViewportSetUseDebanding(RID viewport, bool enabled)` selects HDR screen dithering for a live scene or caller-owned viewport. The identity must belong to the active rendering session. Undefined/stale identities throw ArgumentException; foreign-session, off-owner, unavailable-service and active-capture/submission mutations throw InvalidOperationException.

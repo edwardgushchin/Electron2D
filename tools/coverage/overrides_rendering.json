@@ -5291,6 +5291,11 @@
       "godot": "RenderingServer::method:viewport_set_anisotropic_filtering_level(RID:,int:RenderingServer.ViewportAnisotropicFiltering)",
       "electron2d": "method:Electron2D.RenderingServer.ViewportSetAnisotropicFilteringLevel(Electron2D.RID,Electron2D.AnisotropicFiltering)",
       "reason": "ADRs 0028/0051/0095: shared AnisotropicFiltering domain executes independent next-frame limits for borrowed scene and owned RID viewports. Canvas items, CanvasTexture and material image policies consume effective renderer-session state; ordinary mip filters retain their policy. Authored getters/packed state are preserved and valid equal/changed scene assignments republish. RID/session/owner/capture guards and retirement apply; compatibility explicitly rejects anisotropic filters. Public ViewportSampling.Consumer covers native stripe contrast, all limits, stored/fresh-file values, retained commands and warmed allocations; physical GPU, foreign platforms and native heap remain separate gates."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_texture_mipmap_bias(RID:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetTextureMIPMapBias(Electron2D.RID,System.Single)",
+      "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
     }
   ],
   "statusGroups": [
@@ -7409,6 +7414,13 @@
         "RenderingDevice::method:get_captured_timestamps_count()",
         "RenderingDevice::method:get_captured_timestamps_frame()"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingServer::method:viewport_set_texture_mipmap_bias(RID:,float:)"
+      ],
+      "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
     }
   ],
   "extras": [
