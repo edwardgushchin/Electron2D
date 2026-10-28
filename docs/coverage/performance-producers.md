@@ -453,3 +453,67 @@ and managed peak if publication is delayed after an allocator commit. Do not
 wire these diagnostic snapshots to GetMonitor or treat separate domain peaks as
 a composition. The full exact contract remains accepted; physics coverage stays
 **1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
+
+## NativeAOT success and retirement producer
+
+The [source-runtime probe](../../tools/physics/aot-memory-probe/README.md) executes
+allocation/GC lifetime instrumentation in a separate v10.0.1 NativeAOT runtime
+copy on Linux x64. The installed SDK archives and production engine remain
+unchanged. Three pinned source edits observe successful ordinary and shared
+string/array fast paths, the common GcAllocInternal success path (including
+pinned/direct and finalizable objects), and stopped-EE GC completion. Helper entry
+attempts alone are no longer the measurement for this fixture.
+
+The fast paths preserve the returned object, callee-saved registers and existing
+slow/OOM frame paths; their [compiler kill set](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/jit/codegencommon.cpp#L705-L762)
+uses the standard caller-trash ABI. The common [allocator](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/nativeaot/Runtime/GCHelpers.cpp)
+notifies after a successful allocation and header/length initialization, never on
+a null return. A one-shot pre-allocation failure tests propagation and a clean
+retry without exhausting host RAM. At [GcDone](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/nativeaot/Runtime/gcenv.ee.cpp),
+DiagWalkHeap enumerates actual objects in SOH/LOH/POH with fixed allocation contexts;
+free objects are skipped. Summed aligned sizes rebase the dynamic ledger and
+retire the difference. This uses actual object sizes rather than the GC's
+ApproxTotalBytesInUse or a managed heap estimate. Cached reads never walk or
+collect the heap.
+
+Workstation and two-heap server GC exercise the same 29 numeric checks. The
+ordinary, string, pinned, large, finalizable, temporary-peak and worker byte
+oracles match the previous CLR lifetime witnesses. Each stress worker additionally
+commits/retires 32768 objects (786432 bytes), with its earlier retained 4096-object
+cohort giving a cumulative 884736 bytes. A midpoint barrier forces collection
+before either worker finishes its remaining 16 batches, independently of scheduling.
+Both retained worker payloads and final
+stress payloads are checked after collection. Twenty thousand prepared snapshot
+reads require zero managed caller bytes. The over-limit array publishes zero;
+the injected pinned allocation also publishes zero, then its successful retry
+publishes and later retires 123480 bytes exactly. This injection does not qualify
+real OS out-of-memory behavior.
+
+The source baseline and ordinary SDK hosts reject the absent hooks with exit 132.
+An enabled concurrent collector rejects the stopped-heap precondition with exit
+135; invalid-watch/snapshot children reject with exit 132. The checker retains
+process maps without CoreCLR, actual link inputs and source/archive/native image
+hashes. Changing NativeLibrary after SetupOSSpecificProps alone was insufficient:
+the linker arguments already contained the SDK archive. The final project changes
+both in their original link order and writes their actual identities. A mismatched
+source pin is rejected before mutation; a repeated patch is also rejected.
+
+The first full-heap walk exposed frozen/image objects in the same enumeration:
+these have no dynamic allocator publication. IsInFrozenSegment now classifies
+and counts their bytes separately. The dynamic callback ledger excludes them;
+a GC-time frozen census cannot establish their complete load lifetime or peak.
+The copied runtime keeps performance tracing enabled and disables the optional
+LTTng provider, whose development headers are absent on this host. Its configuration
+and compiler differ from the shipping SDK and remain part of the diagnostic
+boundary. Source build inputs, raw logs and qualification receipts live under
+`bin/aot-memory-producer/2026-10-29/`.
+
+Production integration still needs the full image/frozen ownership contract,
+concurrent collector support, qualified large sizes and OS failures, the shared
+native/managed publication boundary and complete native-library domains. The
+full walk adds O(total heap) work to each collection; neither its cost nor observer
+overhead is accepted for production by these correctness results. Other platforms,
+GPU physics, networking and real-window FPS are not qualified here. GetMonitor
+remains Partial; physics declarations remain **1365/1369 (99.71%)**, four Partial
+and 92 Excluded.

@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+"""Qualify source-instrumented NativeAOT allocation/GC lifetime in bounded child processes."""
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import resource
+import signal
+import subprocess
+import sys
+import tarfile
+import tempfile
+import time
+
+
+ARCHIVE_SHA256 = '4c0b3aa0fda67c304762a572d6172ca5b2d29bb62191cf7c0fcef40a15223092'
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def patch_controls(workspace, output):
+    script = Path(__file__).with_name('patch_runtime.py')
+    files = ['src/coreclr/runtime/amd64/AllocFast.S', 'src/coreclr/nativeaot/Runtime/GCHelpers.cpp',
+             'src/coreclr/nativeaot/Runtime/gcenv.ee.cpp']
+    assert digest(workspace / 'runtime.tar.gz') == ARCHIVE_SHA256
+    with tempfile.TemporaryDirectory(prefix='patch-control-', dir=workspace) as temporary:
+        root = Path(temporary)
+        with tarfile.open(workspace / 'runtime.tar.gz') as archive:
+            for name in files:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(archive.extractfile('runtime-10.0.1/' + name).read())
+        original = {name: (root / name).read_bytes() for name in files}
+        target = root / files[1]
+        target.write_bytes(original[files[1]] + b'// invalid pin\n')
+        before = {name: digest(root / name) for name in files}
+        rejected = subprocess.run([sys.executable, '-B', str(script), str(root), str(root / 'bad.patch')],
+                                  capture_output=True, text=True)
+        assert rejected.returncode != 0 and 'unmodified v10.0.1' in rejected.stderr
+        assert before == {name: digest(root / name) for name in files} and not (root / 'bad.patch').exists()
+        optimized = subprocess.run([sys.executable, '-O', '-B', str(script), str(root), str(root / 'optimized.patch')],
+                                   capture_output=True, text=True)
+        assert optimized.returncode != 0 and 'unmodified v10.0.1' in optimized.stderr
+        assert before == {name: digest(root / name) for name in files} and not (root / 'optimized.patch').exists()
+        target.write_bytes(original[files[1]])
+        accepted = subprocess.run([sys.executable, '-B', str(script), str(root), str(root / 'good.patch')],
+                                  capture_output=True, text=True)
+        assert accepted.returncode == 0, accepted.stderr
+        for name in files:
+            assert (root / name).read_bytes() == (workspace / 'runtime-10.0.1' / name).read_bytes(), name
+        applied = {name: digest(root / name) for name in files}
+        repeated = subprocess.run([sys.executable, '-B', str(script), str(root), str(root / 'again.patch')],
+                                  capture_output=True, text=True)
+        assert repeated.returncode != 0 and applied == {name: digest(root / name) for name in files}
+        receipt = {'archiveSHA256': ARCHIVE_SHA256, 'mismatchRejectedBeforeMutation': True,
+                   'optimizedMismatchRejected': True, 'reapplicationRejected': True, 'instrumentedSources': applied}
+        (output / 'patch-controls.json').write_text(json.dumps(receipt, indent=2) + '\n')
+
+
+def main():
+    if not __debug__:
+        raise SystemExit('Run this checker without Python optimization.')
+    if sys.platform != 'linux' or platform.machine() != 'x86_64':
+        raise SystemExit('This diagnostic requires Linux x64 and NativeAOT 10.0.1.')
+    workspace, output = [Path(arg).resolve() for arg in sys.argv[1:]]
+    output.mkdir(parents=True, exist_ok=False)
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    patch_controls(workspace, output)
+    native = workspace / 'runtime-10.0.1/artifacts/obj/coreclr/linux.x64.Release/nativeaot/Runtime/Full'
+    reports = {}
+    runtime_inputs = {}
+    for name in ['probe', 'server', 'source-baseline', 'sdk-baseline', 'concurrent']:
+        artifact = 'managed' if name == 'probe' else 'managed-' + name
+        link = workspace / artifact / 'obj/AOTMemoryProbe/release_linux-x64/native/e2d-runtime-inputs.txt'
+        paths = [Path(line.strip()) for line in link.read_text().splitlines()
+                 if line.strip().endswith(('WorkstationGC.a', 'ServerGC.a'))]
+        assert len(paths) == 1, (name, paths)
+        if name == 'source-baseline':
+            assert paths[0] == workspace / 'unmodified.WorkstationGC.a'
+        elif name == 'sdk-baseline':
+            assert '/microsoft.netcore.app.runtime.nativeaot.linux-x64/10.0.1/' in str(paths[0])
+        else:
+            assert paths[0] == native / ('libRuntime.ServerGC.a' if name == 'server' else 'libRuntime.WorkstationGC.a')
+        runtime_inputs[name] = {'path': str(paths[0]), 'sha256': digest(paths[0]), 'linkArguments': link.read_text().splitlines()}
+    environment = os.environ | {'DOTNET_PROCESSOR_COUNT': '2', 'DOTNET_GCHeapCount': '2'}
+    cases = [('workstation', 'probe', [], 0), ('server', 'server', [], 0),
+             ('source-baseline', 'source-baseline', [], 132), ('sdk-baseline', 'sdk-baseline', [], 132),
+             ('concurrent', 'concurrent', [], 135), ('invalid-watch', 'probe', ['--invalid-watch'], 132),
+             ('invalid-snapshot', 'probe', ['--invalid-snapshot'], 132)]
+    for label, image, arguments, expected in cases:
+        executable = workspace / image / 'AOTMemoryProbe'
+        command = [str(executable), *arguments]
+        started = time.monotonic()
+        mappings = set()
+        with (output / (label + '.log')).open('w') as log:
+            child = subprocess.Popen(command, env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            try:
+                while child.poll() is None:
+                    try:
+                        mappings.update(line.split()[-1] for line in Path(f'/proc/{child.pid}/maps').read_text().splitlines() if '/' in line)
+                    except OSError:
+                        pass
+                    if time.monotonic() - started > 90:
+                        raise TimeoutError(label)
+                    time.sleep(.001)
+            except BaseException:
+                try:
+                    os.killpg(child.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                child.wait()
+                raise
+        receipt = {'command': command, 'exit': child.returncode, 'seconds': time.monotonic() - started,
+                   'executableSHA256': digest(executable), 'mappings': sorted(mappings)}
+        (output / (label + '.json')).write_text(json.dumps(receipt, indent=2) + '\n')
+        assert child.returncode == expected, (label, child.returncode)
+        text = (output / (label + '.log')).read_text()
+        if expected:
+            reason = ('hooks are absent' if 'baseline' in label else 'stopped EE and non-concurrent GC' if label == 'concurrent'
+                      else 'invalid type watch' if label == 'invalid-watch' else 'invalid snapshot')
+            assert 'aot-memory-producer: ' in text and reason in text, label
+            continue
+        assert str(executable) in mappings and not any('libcoreclr' in path.lower() for path in mappings)
+        report = json.loads(text.splitlines()[-1])
+        assert report['Runtime'] == '.NET 10.0.1' and not report['DynamicCode']
+        assert report['ServerGC'] == (label == 'server') and report['ReadBytes'] == 0
+        assert report['Allocated'] - report['Retired'] == report['Current'] and report['Peak'] >= report['Current']
+        assert report['ConcurrentCollections'] > 0 and report['FrozenCount'] > 0 and report['FrozenBytes'] > 0
+        assert report['MidpointCollection'], 'The mutator midpoint must contain a collection before either worker completes'
+        assert len(report['Rows']) == 29
+        assert all(row['Allocated'] - row['Retired'] == row['Current'] for row in report['Rows'])
+        hidden = next(row for row in report['Rows'] if row['Phase'] == 'peak-between-reads')
+        rejected = next(row for row in report['Rows'] if row['Phase'] == 'rejected-array')
+        assert hidden['Current'] == 0 and hidden['Peak'] == 12288
+        assert rejected['Current'] == rejected['Peak'] == rejected['Allocated'] == 0
+        failed = next(row for row in report['Rows'] if row['Phase'] == 'injected-failure')
+        retry = next(row for row in report['Rows'] if row['Phase'] == 'retry-retired')
+        assert failed['Current'] == failed['Peak'] == failed['Allocated'] == 0 and failed['Failures'] == 1
+        assert retry['Current'] == 0 and retry['Allocated'] == retry['Retired'] == 123480 and retry['Failures'] == 1
+        reports[label] = report
+    summary = {'reports': reports, 'runtimeInputs': runtime_inputs, 'bridgeSHA256': digest(workspace / 'producer.o'),
+               'sourceSHA256': {path.name: digest(path) for path in Path(__file__).parent.iterdir() if path.is_file()}}
+    (output / 'checks.json').write_text(json.dumps(summary, indent=2) + '\n')
+    print('NativeAOT successful allocations, GC lifetime, unseen peak, rejected allocation and host controls passed.')
+
+
+if __name__ == '__main__':
+    main()
