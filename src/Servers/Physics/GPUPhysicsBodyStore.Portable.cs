@@ -38,6 +38,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         _oneWayHistoryCount = 0; _oneWayReadCapacity = 0; _sleepGraphBodies = _sleepEdgeCount = 0;
         _sleepBodyVersion = _sleepShapeVersion = -1; _wakeAllSleep = false; _publishedSlots = 0;
         _reportCount = 0; _reportReady = false; _reportInitialize = true;
+        InvalidateContactResults();
         _contactPairVersion = _pairBodyVersion = _boundsBodyVersion = -1;
         // Reusing the authoring upload path clears joint warm impulses without retaining foreign solver state.
         for (var i = 0; i < _jointHighWater; i++)

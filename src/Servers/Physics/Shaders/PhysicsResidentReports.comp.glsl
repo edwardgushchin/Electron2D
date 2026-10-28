@@ -157,4 +157,11 @@ void main()
         counts[i]=uvec2(selected,first);return;
     }
     if(stage==6u){records[i].impulse=vec4(0);records[i].velocities=vec4(0);}
+    if(stage==7u&&i<summary.y)
+    {
+        // The selection hash is no longer needed; full selected values remain frozen in results.
+        Report r=results[i];uint at=i*4u;
+        table[at]=r.shape;table[at+1u]=r.shapeGeneration;
+        table[at+2u]=r.colliderShape;table[at+3u]=r.colliderShapeGeneration;
+    }
 }

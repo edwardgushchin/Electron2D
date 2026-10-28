@@ -1,5 +1,7 @@
 # GPUPhysicsBodyStore
 
+[Compact monitor contacts](../components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28) retain sixteen-byte keys and full resident selections, preserving late reads after authoring. Raw/full consumers retain their numerical packets.
+
 [Direct native attachment lookup](../components/physics-backends.md#direct-native-attachment-lookup-2026-10-27)
 uses the current concrete built-in attachment after store/handle qualification.
 Wrapped implementations retain the store-owned table and retirement guards; no

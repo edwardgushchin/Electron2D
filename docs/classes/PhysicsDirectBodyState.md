@@ -1,5 +1,7 @@
 # PhysicsDirectBodyState
 
+GPU monitor identities can remain compact; the first numerical contact getter may synchronously read its frozen resident row. Sampled fields and identities survive later authoring. See [compact monitor contacts](../components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28).
+
 [Crossed capsule response](../components/physics-contact-policy.md#crossed-capsule-response-and-portable-contact-state) verifies complete paired impulses, off-centre rotation and silent portable contact state across scene/server bodies and selected numerical owners.
 
 Last updated: 2026-10-25

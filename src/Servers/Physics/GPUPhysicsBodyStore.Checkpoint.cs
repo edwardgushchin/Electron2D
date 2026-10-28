@@ -157,6 +157,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 s._checkpointRebuildHistory = true;
                 s._oneWayHistoryCount = _state.OneWay; s._oneWayReadCapacity = _state.OneWayTable;
                 s._reportCount = _state.Reports; s._publishedReportBodies = _state.ReportBodies; s._captureReports = _state.CaptureReports;
+                s.InvalidateContactResults();
                 s._reportReady = _state.ReportReady; s._reportInitialize = _state.ReportInitialize; s._reportOpen = false;
                 s._fieldEditsDirty = _state.FieldDirty; s._steppedDefaults = _state.Defaults; s._steppedFieldVersion = _state.SteppedFields;
                 s.ContactPointCount = _state.Contacts; s.PairCount = _state.Pairs; s.WarmStartedPointCount = _state.Warm;

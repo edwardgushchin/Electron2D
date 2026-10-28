@@ -6,7 +6,7 @@ internal sealed partial class PhysicsSpace
     internal GPUPhysicsColliderImplementation GPUCollider(PhysicsColliderBackend collider) => GPUStore!.NativeCollider(collider);
     internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
     // Diagnostic controls for comparing identical worlds with repeated policy checks and angle reconstruction.
-    internal bool ForceGPUParameterRefresh, DecodeGPUTransforms, ForceGPUStatePublication;
+    internal bool ForceGPUParameterRefresh, DecodeGPUTransforms, ForceGPUStatePublication, ForceFullGPUContactReports;
     private bool _gpuWakePending;
     internal long GPUStateEpoch { get; private set; }
     internal long GPUVelocityEpoch { get; private set; }
@@ -32,7 +32,7 @@ internal sealed partial class PhysicsSpace
     internal bool TryGetGPUShapeOwner(uint index, out (PhysicsColliderBackend Owner, uint Generation, int Slot) owner) => _gpuShapeOwners.TryGetValue(index, out owner);
     internal int GPUSensorShapeCount => _gpuSensorShapeCount;
     /// <summary>Invalidates every published contact range while retaining slot-indexed capacity.</summary>
-    internal void ClearGPUReports() => Array.Clear(_gpuReportRanges);
+    internal void ClearGPUReports() { Array.Clear(_gpuReportRanges); _gpuUseContactKeys = false; }
     internal bool TryGetGPUCollider(RID rid, out PhysicsColliderBackend collider) => _gpuRIDColliders.TryGetValue((ulong)rid.GetID(), out collider!);
     internal bool TryGetGPUCollider(int index, out PhysicsColliderBackend collider) => _gpuColliders.TryGetValue(index, out collider!);
     private GPUPhysicsBodyStore.BodyChange[] _gpuChanges = [];
@@ -87,6 +87,7 @@ internal sealed partial class PhysicsSpace
             var capacity = Math.Max(8, count * 2);
             Array.Resize(ref _gpuReportBodies, capacity); Array.Resize(ref _gpuReportLimits, capacity); Array.Resize(ref _gpuReportCounts, capacity);
             Array.Resize(ref _gpuReportRanges, capacity);
+            Array.Resize(ref _gpuReportSourceOffsets, capacity); Array.Resize(ref _gpuReportNativeOffsets, capacity);
         }
     }
     internal void PublishGPU()
@@ -126,12 +127,16 @@ internal sealed partial class PhysicsSpace
 
     internal void PublishGPUCompletion()
     {
-        PublishGPUCompletion(new(_gpuReportBodies.AsSpan(0, _gpuReportBodyCount), _gpuReportLimits.AsSpan(0, _gpuReportBodyCount), _gpuReportCounts, _gpuReports));
+        var bodies = _gpuReportBodies.AsSpan(0, _gpuReportBodyCount); var limits = _gpuReportLimits.AsSpan(0, _gpuReportBodyCount);
+        PublishGPUCompletion(_gpuUseContactKeys ? new(bodies, limits, _gpuReportCounts, _gpuReportIdentities, _gpuReportSourceOffsets) :
+            new(bodies, limits, _gpuReportCounts, _gpuReports));
+        _gpuContactResultVersion = GPUStore!.ContactResultVersion;
         Array.Clear(_gpuReportRanges);
         var offset = 0;
         for (var i = 0; i < _gpuReportBodyCount; i++)
         {
             _gpuReportRanges[_gpuReportBodies[i].Index] = (offset, _gpuReportCounts[i]);
+            _gpuReportNativeOffsets[_gpuReportBodies[i].Index] = _gpuReportSourceOffsets[i];
             offset += _gpuReportLimits[i];
         }
     }
@@ -193,6 +198,7 @@ internal sealed partial class PhysicsSpace
     internal void PrepareGPUReports()
     {
         // Attachment, limit edits and replay already publish report flags; only pack receiver demand here.
+        _gpuUseContactKeys = !ForceFullGPUContactReports && !_gpuFullContactsRequested; _gpuFullContactsRequested = false;
         _gpuReportBodyCount = 0; var contacts = 0;
         foreach (var body in _bodies) Add(body.Backend, body.Runtime);
         foreach (var body in _serverColliders)
@@ -202,10 +208,13 @@ internal sealed partial class PhysicsSpace
         {
             var limit = runtime.ContactLimit;
             if (limit == 0) return;
+            if (RequiresGPUContactDetails(runtime)) _gpuUseContactKeys = false;
+            if (_gpuContactScratch.Length < limit) Array.Resize(ref _gpuContactScratch, limit);
             _gpuReportBodies[_gpuReportBodyCount] = GPUCollider(backend).GPUHandle;
             _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);
         }
         if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, contacts * 2));
+        if (_gpuReportIdentities.Length < contacts) Array.Resize(ref _gpuReportIdentities, _gpuReports.Length);
         GPUStore!.CaptureContactReports = _gpuReportBodyCount > 0;
     }
     private void ReleaseGPUState()
@@ -213,6 +222,7 @@ internal sealed partial class PhysicsSpace
         _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = null; _gpuQueryShape = null;
         _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges = [];
         _gpuChanges = []; _gpuActivity = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
+        _gpuReportIdentities = []; _gpuReportSourceOffsets = []; _gpuReportNativeOffsets = []; _gpuContactScratch = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
         _gpuShapeQuery[0] = default;
     }
@@ -222,6 +232,23 @@ internal sealed partial class PhysicsSpace
         if ((uint)index >= (uint)_gpuReportRanges.Length) return;
         var range = _gpuReportRanges[index];
         if (range.Count == 0) return;
+        if (_gpuUseContactKeys)
+        {
+            view.BeginGPUContacts(_gpuContactResultVersion, _gpuReportNativeOffsets[index], range.Count);
+            for (var i = 0; i < range.Count; i++)
+            {
+                ref readonly var key = ref _gpuReportIdentities[range.Offset + i];
+                if (!_gpuShapeOwners.TryGetValue(key.Shape, out var own) || own.Generation != key.ShapeGeneration ||
+                    !_gpuShapeOwners.TryGetValue(key.ColliderShape, out var other) || other.Generation != key.ColliderShapeGeneration) continue;
+                var slot = view.SelectContactSlot(0, limit);
+                if (slot < 0) continue;
+                var identity = other.Owner.ObjectIdentity;
+                view.StoreContact(slot, new(other.Owner.RID, identity.ID, own.Slot, other.Slot, default, default,
+                    default, default, default, default, 0, other.Owner.SceneOwnerReference, identity));
+                view.SetGPUContactSource(slot, i);
+            }
+            return;
+        }
         foreach (ref readonly var contact in _gpuReports.AsSpan(range.Offset, range.Count))
         {
             if (!_gpuShapeOwners.TryGetValue(contact.Shape, out var own) || own.Generation != contact.ShapeGeneration ||

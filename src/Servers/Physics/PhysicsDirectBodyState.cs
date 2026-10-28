@@ -17,8 +17,9 @@ namespace Electron2D;
 /// unchanged by subsequent pose or fixture edits. Contact-limit assignment explicitly clears the retained point count.
 /// Retaining an invalid view does not extend registered callback-data lifetime after body release. Live field reads retain the attachment
 /// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Contact impulses include all solver intervals of the completed outer physics step. Factory-provided contact extensions
-/// publish their validated snapshot on the owner after native capture; cached contact getters retain those values through later edits.</remarks>
-public class PhysicsDirectBodyState : ElectronObject
+/// publish their validated snapshot on the owner after native capture; cached contact getters retain those values through later edits.
+/// GPU contact identity reads can use compact keys; the first numerical contact read may synchronously download its frozen row.</remarks>
+public partial class PhysicsDirectBodyState : ElectronObject
 {
     private readonly PhysicsBodyRuntime _runtime;
     private readonly PhysicsSpace _space;
@@ -42,8 +43,12 @@ public class PhysicsDirectBodyState : ElectronObject
         internal object? OtherSlotIdentity { get; init; }
         internal CollisionObject? SceneCollider => ColliderOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
     }
-    internal ReadOnlySpan<Contact> CapturedContacts => _readingBackendContacts
+    internal ReadOnlySpan<Contact> CapturedContactIdentities => _readingBackendContacts
         ? _backendContacts.AsSpan(0, _backendContactCount) : _contacts.AsSpan(0, _contactCount);
+    internal ReadOnlySpan<Contact> CapturedContacts
+    {
+        get { MaterializeGPUContacts(); return CapturedContactIdentities; }
+    }
 
     internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space)
     {
@@ -95,10 +100,11 @@ public class PhysicsDirectBodyState : ElectronObject
     }
     private static void Finite(float value) { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
     private static void Finite(Vector2 value) { if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); }
-    private Contact At(int index)
+    private Contact At(int index, bool details = true)
     {
         Access();
         if ((uint)index >= (uint)_contactCount) throw new ArgumentOutOfRangeException(nameof(index));
+        if (details) { _space.RequestGPUContactDetails(); MaterializeGPUContacts(); }
         return _contacts[index];
     }
 
@@ -203,25 +209,25 @@ public class PhysicsDirectBodyState : ElectronObject
     /// <param name="contactIndex">Zero-based retained contact index.</param>
     /// <returns>Gets the contact collider RID.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
-    public RID GetContactCollider(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).ColliderRID; return At(contactIndex).Collider; }
+    public RID GetContactCollider(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).ColliderRID; return At(contactIndex, details: false).Collider; }
 
     /// <summary>Gets the collider instance ID, or zero for a server-only collider.</summary>
     /// <param name="contactIndex">Zero-based retained contact index.</param>
     /// <returns>Gets the collider instance ID, or zero for a server-only collider.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
-    public ulong GetContactColliderID(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).ColliderID; return At(contactIndex).ColliderID; }
+    public ulong GetContactColliderID(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).ColliderID; return At(contactIndex, details: false).ColliderID; }
 
     /// <summary>Gets this body shape index.</summary>
     /// <param name="contactIndex">Zero-based retained contact index.</param>
     /// <returns>Gets this body shape index.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
-    public int GetContactLocalShape(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).LocalShape; return At(contactIndex).LocalShape; }
+    public int GetContactLocalShape(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).LocalShape; return At(contactIndex, details: false).LocalShape; }
 
     /// <summary>Gets the collider shape index.</summary>
     /// <param name="contactIndex">Zero-based retained contact index.</param>
     /// <returns>Gets the collider shape index.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
-    public int GetContactColliderShape(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).ColliderShape; return At(contactIndex).ColliderShape; }
+    public int GetContactColliderShape(int contactIndex) { if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadContact(contactIndex).ColliderShape; return At(contactIndex, details: false).ColliderShape; }
 
     /// <summary>Gets this body contact position in global scene coordinates.</summary>
     /// <param name="contactIndex">Zero-based retained contact index.</param>
@@ -265,13 +271,13 @@ public class PhysicsDirectBodyState : ElectronObject
     /// <param name="contactIndex">Zero-based retained contact index.</param>
     /// <returns>Gets a live scene collider, or null for a server-only or released object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
-    public CollisionObject? GetContactColliderObject(int contactIndex) { return PhysicsServer.Service.ResolveSceneObject(this is PhysicsDirectBodyStateExtension extension ? extension.ReadContact(contactIndex).ColliderRID : At(contactIndex).Collider); }
+    public CollisionObject? GetContactColliderObject(int contactIndex) { return PhysicsServer.Service.ResolveSceneObject(this is PhysicsDirectBodyStateExtension extension ? extension.ReadContact(contactIndex).ColliderRID : At(contactIndex, details: false).Collider); }
 
     /// <summary>Returns the sampled, weakly borrowed object association of a retained contact.</summary>
     /// <typeparam name="T">The desired engine-object type.</typeparam>
     /// <param name="contactIndex">Index in the completed contact snapshot.</param>
     /// <returns>The live assigned object of that type, or null if absent, incompatible, disposed or collected.</returns>
-    public T? GetContactColliderObject<T>(int contactIndex) where T : ElectronObject => (this is PhysicsDirectBodyStateExtension extension ? extension.ReadContact(contactIndex).ColliderObject : At(contactIndex).Identity.Target) as T;
+    public T? GetContactColliderObject<T>(int contactIndex) where T : ElectronObject => (this is PhysicsDirectBodyStateExtension extension ? extension.ReadContact(contactIndex).ColliderObject : At(contactIndex, details: false).Identity.Target) as T;
 
     /// <summary>Sets the persistent global force, replacing the previous value.</summary>
     /// <param name="force">Finite force in scene units times kilograms per squared second.</param>
@@ -352,6 +358,9 @@ public class PhysicsDirectBodyState : ElectronObject
     internal void PrepareContacts(int limit)
     {
         if (_contacts.Length < limit) Array.Resize(ref _contacts, limit);
+        if (_space.GPUStore is not null && this is not PhysicsDirectBodyStateExtension && _gpuContactSources.Length < limit)
+            Array.Resize(ref _gpuContactSources, limit);
+        _gpuContactsPending = false;
         if (this is PhysicsDirectBodyStateExtension)
         {
             if (_backendContacts.Length < limit) Array.Resize(ref _backendContacts, limit);
@@ -363,6 +372,7 @@ public class PhysicsDirectBodyState : ElectronObject
 
     internal void CaptureContacts()
     {
+        _gpuContactsPending = false;
         if (this is PhysicsDirectBodyStateExtension)
         {
             var previousCount = _contactCount;
@@ -394,7 +404,7 @@ public class PhysicsDirectBodyState : ElectronObject
             EndCallback(); _runtime.EndExtension(); _space.EndContactResultPublication();
         }
     }
-    internal void BeginContactSnapshot() { if (this is not PhysicsDirectBodyStateExtension) _contactCount = 0; }
+    internal void BeginContactSnapshot() { if (this is not PhysicsDirectBodyStateExtension) { _contactCount = 0; _gpuContactsPending = false; } }
     internal bool TryGetPublishedContactCount(out int count)
     {
         count = _contactCount;

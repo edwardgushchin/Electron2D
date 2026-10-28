@@ -24,7 +24,7 @@ internal sealed partial class PhysicsSpace
         protected internal override void Capture() { RequireAlive(); _kernel.Capture(); CaptureObservers(); }
         private void CaptureObservers()
         {
-            var s = _space;
+            var s = _space; s.MaterializeGPUContactReports();
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports);
             PhysicsReplayCopy.Buffer<(int Offset, int Count)>(s._gpuReportRanges, ref _ranges);
             _ranges.AsSpan(s._gpuReportRanges.Length).Clear();
@@ -39,7 +39,7 @@ internal sealed partial class PhysicsSpace
         protected internal override void ValidateRestore() { RequireAlive(); _kernel.ValidateRestore(); }
         protected internal override void Restore()
         {
-            ValidateRestore(); _kernel.Restore(); var s = _space;
+            ValidateRestore(); _kernel.Restore(); var s = _space; s._gpuUseContactKeys = false;
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports);
             PhysicsReplayCopy.Buffer<(int Offset, int Count)>(_ranges, ref s._gpuReportRanges);
             s._gpuReportRanges.AsSpan(_ranges.Length).Clear();

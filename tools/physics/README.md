@@ -1,5 +1,25 @@
 # Physics measurement helpers
 
+## Managed heap observations
+
+The standalone [managed-memory probe](managed-memory-probe/ManagedMemoryProbe.csproj)
+compares warmed snapshot-query allocations and a temporary 64 MiB managed peak,
+then observes native-runtime GC event delivery. It uses no Electron2D runtime,
+window or GPU. Its forced collections belong only to the counterexample and
+must not be copied into a monitor implementation.
+
+```bash
+dotnet run --project tools/physics/managed-memory-probe/ManagedMemoryProbe.csproj -c Release
+dotnet publish tools/physics/managed-memory-probe/ManagedMemoryProbe.csproj -c Release -r linux-x64 -p:PublishAot=true -p:TrimMode=full -o bin/managed-memory-probe
+bin/managed-memory-probe/ManagedMemoryProbe
+```
+
+Both hosts explicitly enable EventSource and use nonconcurrent workstation GC.
+The output is one JSON observation record; a missing transient-peak witness
+fails the process. Event callbacks and allocation ticks are observations, not
+an exact aggregate allocation/free producer. See the [source qualification](../../docs/coverage/performance-producers.md#managed-heap-source-qualification)
+for current evidence and its limits.
+
 ## Native GPU device retirement
 
 The standalone [SDL lifetime probe](../../tests/Electron2D.Tests/Native/GPUDeviceLifetime.c)
@@ -120,3 +140,22 @@ queries. Omitting the backend selects the registered provider. The root selector
 `ELECTRON2D_GROUP_COORDINATES_RENDERER=gpu|compatibility` selects rendering independently.
 The root native selector is `ELECTRON2D_TEST_NATIVE_GROUP_COORDINATES=cpu|gpu[-threaded]`.
 See [the coordinate contract](../../docs/components/canvas-rendering.md#coordinate-observation-from-processing-groups).
+
+## ENet native allocation source
+
+The private networking allocator source contributes to the remaining composed
+memory-monitor contract. Build and run its production-bridge failure oracle:
+
+```bash
+cmake -S tools/enet-native -B bin/enet-memory -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build bin/enet-memory --target Electron2DENet Electron2DENetMemory --parallel 4
+bin/enet-memory/Electron2DENetMemory
+python3 -B tools/enet-native/check_file_codecs.py bin/enet-memory/libElectron2DENet.so
+```
+
+The root fixture selects ELECTRON2D_TEST_ENET_ALLOCATION=1. The focused public/native
+route is `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -p:Electron2DENetNativeLibrary=/absolute/path/to/libElectron2DENet.so -- --enet-allocation`.
+Use the matching current bridge. The NativeAOT profile adds PublishAot=true and
+TrimMode=full when publishing that host; standalone native execution supplies the
+same selector. Neither ledger coverage nor zero managed bytes completes total
+current/peak memory or whole-physics performance acceptance.

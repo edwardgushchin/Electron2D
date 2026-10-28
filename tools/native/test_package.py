@@ -243,8 +243,8 @@ endif()
     def test_file_codec_exports_are_part_of_every_enet_payload(self):
         for name in ['libElectron2DENet.so', 'Electron2DENet.dll', 'libElectron2DENet.a']:
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 15)
-            self.assertTrue({'e2d_file_encode', 'e2d_file_decode'} <= exports)
+            self.assertEqual(len(exports), 16)
+            self.assertTrue({'e2d_enet_memory', 'e2d_enet_callbacks', 'e2d_file_encode', 'e2d_file_decode'} <= exports)
 
     def test_windows_producer_copies_tls_by_name_after_mesh_insertion(self):
         with patch.dict("sys.modules", {"windows": Mock()}):
