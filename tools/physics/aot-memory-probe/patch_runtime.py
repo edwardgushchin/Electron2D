@@ -10,7 +10,8 @@ def patch(root, output):
     pins = {
         'src/coreclr/runtime/amd64/AllocFast.S': '0e4fc5b3fe604baa8ccad94ade11a9b1251e06e4d2b48761e932291191ed8c25',
         'src/coreclr/nativeaot/Runtime/GCHelpers.cpp': '7c21403b38e035b712384917f198506cd15e15fbae0b18a15ea5ed7129abd226',
-        'src/coreclr/nativeaot/Runtime/gcenv.ee.cpp': '34a4106345051e0c58ed1a03dc124f64c66ce6037c6bea1ea2b5fd1bcae59550'}
+        'src/coreclr/nativeaot/Runtime/gcenv.ee.cpp': '34a4106345051e0c58ed1a03dc124f64c66ce6037c6bea1ea2b5fd1bcae59550',
+        'src/coreclr/gc/gc.cpp': '4d92ead47fc1472ea47f4c2c0b8d9246def3f49ac427f374703d1aadfe74de8c'}
     originals = {}
     for name, expected in pins.items():
         path = root / name
@@ -24,7 +25,7 @@ def patch(root, output):
             raise ValueError('Unexpected patch anchor: ' + name)
         changed[name] = changed[name].replace(old, new)
 
-    fast, helpers, collector = pins
+    fast, helpers, collector, heap = pins
     replace(fast, '#include "AsmMacros_Shared.h"', '#include "AsmMacros_Shared.h"\n.extern e2d_aot_allocated')
     replace(fast, '        mov         rax, rsi\n\n        .cfi_remember_state', '''        // No GC or managed calls in this observer; allocation helpers use the standard caller-trash ABI.
         mov         rdi, rsi
@@ -78,12 +79,60 @@ void GCToEEInterface::GcDone(int condemned)
     heap->DiagWalkHeap(E2DMemorySurvivor, nullptr, heap->GetMaxGeneration(), true);
     e2d_aot_gc_end();
 ''')
+    replace(heap, '#include "gceventstatus.h"', '''#include "gceventstatus.h"
+extern "C" bool e2d_aot_frozen_reject();
+extern "C" void e2d_aot_frozen_change(unsigned, void*, uintptr_t, uintptr_t, uintptr_t, uintptr_t);''')
+    replace(heap, '''    enter_spin_lock (&gc_heap::gc_lock);
+
+    if (!gc_heap::seg_table->ensure_space_for_insert ()''', '''    enter_spin_lock (&gc_heap::gc_lock);
+
+    if (e2d_aot_frozen_reject())
+    {
+        leave_spin_lock (&gc_heap::gc_lock);
+        return FALSE;
+    }
+    if (!gc_heap::seg_table->ensure_space_for_insert ()''')
+    replace(heap, '''    FIRE_EVENT(GCCreateSegment_V1, heap_segment_mem(seg), (size_t)(heap_segment_reserved (seg) - heap_segment_mem(seg)), gc_etw_segment_read_only_heap);
+
+    leave_spin_lock (&gc_heap::gc_lock);
+    return TRUE;
+}
+
+void gc_heap::update_ro_segment''', '''    // Publish while gc_lock still protects the registry from collection and competing changes.
+    e2d_aot_frozen_change(1, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)heap_segment_allocated(seg),
+        (uintptr_t)heap_segment_committed(seg), (uintptr_t)heap_segment_reserved(seg));
+    FIRE_EVENT(GCCreateSegment_V1, heap_segment_mem(seg), (size_t)(heap_segment_reserved (seg) - heap_segment_mem(seg)), gc_etw_segment_read_only_heap);
+    leave_spin_lock (&gc_heap::gc_lock);
+    return TRUE;
+}
+
+void gc_heap::update_ro_segment''')
+    replace(heap, '''    heap_segment_committed (seg) = committed;
+
+    leave_spin_lock (&gc_heap::gc_lock);
+}
+
+// No one is calling''', '''    heap_segment_committed (seg) = committed;
+
+    e2d_aot_frozen_change(2, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)allocated,
+        (uintptr_t)committed, (uintptr_t)heap_segment_reserved(seg));
+    leave_spin_lock (&gc_heap::gc_lock);
+}
+
+// No one is calling''')
+    replace(heap, '''        generation_start_segment (gen2) = heap_segment_next (curr_seg);
+
+    leave_spin_lock (&gc_heap::gc_lock);''', '''        generation_start_segment (gen2) = heap_segment_next (curr_seg);
+
+    e2d_aot_frozen_change(3, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)heap_segment_allocated(seg),
+        (uintptr_t)heap_segment_committed(seg), (uintptr_t)heap_segment_reserved(seg));
+    leave_spin_lock (&gc_heap::gc_lock);''')
     diff = ''.join(''.join(difflib.unified_diff(originals[name].splitlines(True), changed[name].splitlines(True),
                                              fromfile='a/' + name, tofile='b/' + name)) for name in pins)
     output.write_text(diff)
     for name in pins:
         (root / name).write_text(changed[name])
-    print('Instrumented successful fast/common allocations and stopped-EE GC retirement in three pinned source files.')
+    print('Instrumented successful allocations, GC retirement and frozen registry lifetime in four pinned source files.')
 
 
 if __name__ == '__main__':

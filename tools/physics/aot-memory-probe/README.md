@@ -14,9 +14,13 @@ one-shot injected failure before a pinned allocation: no publication on failure,
 a successful retry and complete later retirement. The injection exercises failure
 propagation without exhausting host memory; it does not qualify real OS exhaustion.
 Twenty thousand prepared reads must allocate zero managed bytes on the caller.
+A separate 13-phase frozen fixture checks registration failure, empty registration,
+growth/shrink, commit-only/no-op updates, actual object payloads, unregister, an
+unobserved peak and disjoint/overlapping dynamic/frozen peaks. Its 64-cycle worker
+keeps one segment live at the forced-GC midpoint.
 
 Only the copied runtime is instrumented. The installed SDK, package archives and
-Electron2D runtime are unchanged. The patcher checks all three source hashes and
+Electron2D runtime are unchanged. The patcher checks all four source hashes and
 replacement anchors before writing. Its checker also rejects a bad pin without
 partial writes and rejects reapplication. The consumer project replaces both the
 NativeLibrary input and its already-materialized linker argument in the original
@@ -26,7 +30,7 @@ alone leaves the original SDK archive linked and correctly fails the hook contro
 The [upstream runtime](https://github.com/dotnet/runtime/tree/v10.0.1) is MIT
 licensed. Its archive digest is
 `4c0b3aa0fda67c304762a572d6172ca5b2d29bb62191cf7c0fcef40a15223092`.
-The three original file pins remain in patch_runtime.py. Instrumentation preserves
+The four original file pins remain in patch_runtime.py. Instrumentation preserves
 the allocator's successful return value, callee-saved registers and slow/OOM frame
 paths. The [pinned helper kill set](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/jit/codegencommon.cpp#L705-L762)
 uses the standard caller-trash ABI for these allocation helpers. Observer calls
@@ -57,6 +61,8 @@ cmake --build "$runtime_root/artifacts/obj/coreclr/linux.x64.Release" \
   --target Runtime.WorkstationGC Runtime.ServerGC -j 4
 c++ -std=c++17 -O2 -Wall -Wextra -Werror -fPIC -pthread -c \
   tools/physics/aot-memory-probe/producer.cpp -o "$probe_root/producer.o"
+c++ -std=c++17 -O2 -Wall -Wextra -Werror -fPIC -c \
+  tools/physics/aot-memory-probe/frozen_fixture.cpp -o "$probe_root/frozen-fixture.o"
 for role in probe server source-baseline sdk-baseline concurrent; do
   server_gc=false; concurrent_gc=false; archive="$runtime_libs/libRuntime.WorkstationGC.a"
   artifact="managed-$role"
@@ -68,7 +74,8 @@ for role in probe server source-baseline sdk-baseline concurrent; do
     concurrent) concurrent_gc=true ;;
   esac
   dotnet publish tools/physics/aot-memory-probe/AOTMemoryProbe.csproj -c Release -r linux-x64 \
-    -p:ProbeNativeObject="$probe_root/producer.o" -p:ProbeRuntimeArchive="$archive" \
+    -p:ProbeNativeObject="$probe_root/producer.o" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
+    -p:ProbeRuntimeArchive="$archive" \
     -p:ServerGarbageCollection="$server_gc" -p:ConcurrentGarbageCollection="$concurrent_gc" \
     --artifacts-path "$probe_root/$artifact" -o "$probe_root/$role"
 done
@@ -76,23 +83,38 @@ python3 -B tools/physics/aot-memory-probe/check.py "$probe_root" bin/aot-memory-
 rm -rf "$probe_root"
 ```
 
-Workstation and two-heap server GC use the same 29 numeric witness checks. Seven
+Workstation and two-heap server GC use the same 29 dynamic and 13 frozen witness phases. Eight
 isolated children include the two uninstrumented runtime controls, concurrent-GC
-refusal, an invalid watch and an invalid snapshot. Each has a 90-second process-group
+refusal, an invalid watch, an invalid snapshot and an invalid frozen resize. Each has a 90-second process-group
 deadline. The checker retains maps, actual link arguments and source/archive/binary
 hashes, and requires native execution without CoreCLR. Rebuilding from a fresh
 archive is required after changing the patcher; it intentionally refuses to patch
 an already instrumented tree.
 
-The dynamic ledger explicitly excludes frozen/image objects. DiagWalkHeap also
-visits frozen segments, so each visit is classified with IsInFrozenSegment and
-reported separately. Those GC-time image censuses do not qualify allocation/load
-lifetime or a complete process peak. Reads retain a dynamic-heap high-water mark
-from successful allocation events rather than a maximum of sampled GC snapshots.
+Frozen/image bytes now have a lifecycle ledger alongside the dynamic ledger.
+The shared GC implementation publishes successful insertion, resize and removal
+before releasing gc_lock. The observer takes its own native gate in that order,
+never enters managed code and never takes gc_lock from a snapshot. Empty segments
+retain identity while contributing zero bytes. Active bytes are allocated minus
+first-object addresses; the extra header, unused committed/reserved storage and
+observer records are outside this managed-object footprint. This avoids reading
+partially initialized object lengths during a frozen-heap append. Each stopped-EE
+census independently checks the sum of aligned frozen object sizes against the
+lifecycle counter. The same gate publishes combined dynamic/frozen current and
+high-water values; it does not sum separate peaks.
 
-The full heap walk runs at every collection and requires non-concurrent GC. Its
-O(total heap) collection cost, native observer overhead and changed runtime build
-must be measured before production use. NativeAOT image/frozen ownership,
-concurrent GC, over-4-GiB allocation sizes, real OS exhaustion, other platforms and
-coherent production native/managed publication remain open. This fixture does not
-wire a partial counter to GetMonitor. See [the audit](../../../docs/coverage/performance-producers.md#nativeaot-success-and-retirement-producer).
+The frozen fixture allocates its own native mapping and constructs a 24-byte ordinary object
+with the verified runtime layout. C# verifies its actual field before/after GC, then drops
+that reference before shrinking or unregistering. A 100000-object region appears
+and disappears before any counter read; its 2400000-byte peak must survive. A
+later 2400024-byte dynamic array is first disjoint, then overlaps a second large
+frozen region. The overlap must raise the combined peak and later retirement must
+retain it. These are controlled object-footprint tests, not process RSS or native
+backing-storage qualification.
+
+The full heap walk still requires non-concurrent GC. Its O(total heap) collection
+cost, native observer overhead and changed runtime build must be measured before
+production use. CoreCLR frozen/image integration, actual shared-module host/load
+acceptance, concurrent GC, over-4-GiB sizes, real OS exhaustion, other platforms
+and coherent production native/managed publication remain open. This fixture does
+not wire a partial counter to GetMonitor. See [the audit](../../../docs/coverage/performance-producers.md#nativeaot-success-and-retirement-producer).

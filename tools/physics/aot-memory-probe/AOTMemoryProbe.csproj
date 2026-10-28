@@ -16,6 +16,7 @@
   <ItemGroup>
     <DirectPInvoke Include="Electron2DAOTMemory" />
     <NativeLibrary Include="$(ProbeNativeObject)" />
+    <NativeLibrary Include="$(ProbeFrozenObject)" />
   </ItemGroup>
   <Target Name="ReplaceDiagnosticRuntime" AfterTargets="SetupOSSpecificProps">
     <ItemGroup Condition="'$(ProbeRuntimeArchive)' != ''">

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-internal static class Program
+internal static partial class Program
 {
     [StructLayout(LayoutKind.Sequential)]
     private struct Counts
@@ -154,6 +154,7 @@ internal static class Program
         Watch(8, typeof(WorkerOne).TypeHandle.Value, -1);
         Watch(9, typeof(WorkerTwo).TypeHandle.Value, -1);
         Watch(10, typeof(byte[]).TypeHandle.Value, 123456);
+        Watch(11, typeof(byte[]).TypeHandle.Value, 2400000);
         if (args.Contains("--invalid-watch")) Watch(1, typeof(Ordinary).TypeHandle.Value, -1);
         Fill(roots);
         Require(Check("objects", 1, 24576, 24576, 1024).FastObjects > 0, "Missing object fast path");
@@ -235,6 +236,7 @@ internal static class Program
         Check("stress-1-retired", 8, 0, 884736, 0);
         Check("stress-2-retired", 9, 0, 884736, 0);
         Require(midpointCollection && concurrentCollections > 0, "No collection at the worker midpoint");
+        var frozen = RunFrozenChecks(args);
         Read(0); Read(1);
         long before = GC.GetAllocatedBytesForCurrentThread();
         for (int i = 0; i < 10000; ++i) { Read(0); Read(1); }
@@ -243,7 +245,7 @@ internal static class Program
         var all = Read(0);
         var report = new Report(RuntimeInformation.FrameworkDescription, RuntimeFeature.IsDynamicCodeSupported,
             System.Runtime.GCSettings.IsServerGC, readBytes, concurrentCollections, midpointCollection, all.Current, all.Peak,
-            all.Allocated, all.Retired, all.Collections, all.FrozenCount, all.FrozenBytes, rows.ToArray());
+            all.Allocated, all.Retired, all.Collections, all.FrozenCount, all.FrozenBytes, rows.ToArray(), frozen);
         Console.WriteLine(JsonSerializer.Serialize(report, JsonContext.Default.Report));
         GC.KeepAlive(roots);
     }
@@ -252,6 +254,6 @@ internal sealed record Row(string Phase, uint Tag, ulong Current, ulong Peak, ul
     ulong Count, ulong Collections, ulong FastObjects, ulong FastArrays, ulong Slow, ulong Failures);
 internal sealed record Report(string Runtime, bool DynamicCode, bool ServerGC, long ReadBytes,
     int ConcurrentCollections, bool MidpointCollection, ulong Current, ulong Peak, ulong Allocated, ulong Retired, ulong Collections,
-    ulong FrozenCount, ulong FrozenBytes, Row[] Rows);
+    ulong FrozenCount, ulong FrozenBytes, Row[] Rows, FrozenReport Frozen);
 [JsonSerializable(typeof(Report))]
 internal partial class JsonContext : JsonSerializerContext;

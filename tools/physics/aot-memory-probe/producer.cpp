@@ -8,10 +8,16 @@
 struct Counts { uint64_t current, peak, allocated, retired, count, collections, fastObjects, fastArrays, slow, frozenCount, frozenBytes, failures; };
 static_assert(sizeof(Counts) == 96 && sizeof(uintptr_t) == 8);
 struct Watch { uintptr_t type; int64_t length; Counts totals; uint64_t survivors, survivorCount; };
+struct FrozenCounts { uint64_t current, peak, allocated, retired, segments, registrations, updates, removals, failures, managedCurrent, managedPeak; };
+static_assert(sizeof(FrozenCounts) == 88);
+struct Segment { void *handle; uintptr_t start; uint64_t bytes; Segment *next; };
 static Watch watches[16];
+static FrozenCounts frozen;
+static Segment *segments;
 static pthread_mutex_t gate = PTHREAD_MUTEX_INITIALIZER;
 static bool collecting;
 static uint32_t rejectTag;
+static bool rejectFrozen;
 [[noreturn]] static void fail(const char *message, int code = 135) {
     std::fprintf(stderr, "aot-memory-producer: %s\n", message); _exit(code);
 }
@@ -22,6 +28,10 @@ static uint64_t add(uint64_t a, uint64_t b) {
     return a + b;
 }
 static uint64_t aligned(size_t size) { return add(size, 7) & ~uint64_t{7}; }
+static void publishManaged() {
+    frozen.managedCurrent = add(watches[0].totals.current, frozen.current);
+    if (frozen.managedCurrent > frozen.managedPeak) frozen.managedPeak = frozen.managedCurrent;
+}
 static bool matches(const Watch &watch, void *object) {
     return watch.type && watch.type == *static_cast<uintptr_t*>(object) &&
         (watch.length < 0 || watch.length == *reinterpret_cast<uint32_t*>(static_cast<char*>(object) + 8));
@@ -40,6 +50,7 @@ extern "C" void e2d_aot_allocated(void *object, size_t size, uint32_t route) {
     if (collecting || !object || !size) fail("invalid allocation interval");
     auto bytes = aligned(size);
     allocate(watches[0].totals, bytes, route);
+    publishManaged();
     for (unsigned i = 1; i < 16; ++i)
         if (matches(watches[i], object)) allocate(watches[i].totals, bytes, route);
     leave();
@@ -94,7 +105,65 @@ extern "C" void e2d_aot_gc_end() {
         c.retired = add(c.retired, c.current - w.survivors);
         c.current = w.survivors; c.count = w.survivorCount; ++c.collections;
     }
+    if (watches[0].totals.frozenBytes != frozen.current) {
+        std::fprintf(stderr, "frozen lifetime=%lu census=%lu\n", frozen.current, watches[0].totals.frozenBytes);
+        fail("frozen lifecycle/census mismatch");
+    }
+    publishManaged();
     collecting = false;
+    leave();
+}
+extern "C" bool e2d_aot_frozen_reject() {
+    enter();
+    bool reject = rejectFrozen;
+    if (reject) { rejectFrozen = false; ++frozen.failures; }
+    leave();
+    return reject;
+}
+extern "C" void e2d_aot_frozen_fail_next() {
+    enter();
+    if (rejectFrozen) fail("frozen failure already armed", 132);
+    rejectFrozen = true;
+    leave();
+}
+extern "C" void e2d_aot_frozen_change(unsigned event, void *handle, uintptr_t start,
+    uintptr_t allocated, uintptr_t committed, uintptr_t reserved) {
+    // The caller holds gc_lock. Neither this critical section nor snapshots enter the runtime.
+    enter();
+    if (collecting || !handle || allocated < start || committed < allocated || reserved < committed || (allocated - start) % 8)
+        fail("invalid frozen registry transition");
+    Segment **slot = &segments;
+    while (*slot && (*slot)->handle != handle) slot = &(*slot)->next;
+    if (event == 1) {
+        if (*slot) fail("duplicate frozen registration");
+        auto record = static_cast<Segment*>(std::malloc(sizeof(Segment)));
+        if (!record) fail("frozen observer storage exhausted");
+        *record = Segment{handle, start, 0, nullptr}; *slot = record;
+        ++frozen.segments; ++frozen.registrations;
+    } else if (!*slot || (*slot)->start != start) fail("unknown frozen registry handle");
+    auto record = *slot;
+    uint64_t bytes = event == 3 ? 0 : allocated - start;
+    if (bytes >= record->bytes) {
+        auto delta = bytes - record->bytes;
+        frozen.current = add(frozen.current, delta); frozen.allocated = add(frozen.allocated, delta);
+    } else {
+        auto delta = record->bytes - bytes;
+        if (frozen.current < delta) fail("frozen retirement underflow");
+        frozen.current -= delta; frozen.retired = add(frozen.retired, delta);
+    }
+    record->bytes = bytes;
+    if (frozen.current > frozen.peak) frozen.peak = frozen.current;
+    if (event == 2) ++frozen.updates;
+    else if (event == 3) {
+        *slot = record->next; std::free(record); --frozen.segments; ++frozen.removals;
+    } else if (event != 1) fail("invalid frozen event");
+    publishManaged();
+    leave();
+}
+extern "C" void e2d_aot_frozen_read(FrozenCounts *result) {
+    enter();
+    if (!result || !frozen.registrations) fail("frozen hooks are absent", 132);
+    *result = frozen;
     leave();
 }
 extern "C" void e2d_aot_watch(uint32_t tag, uintptr_t type, int64_t length) {

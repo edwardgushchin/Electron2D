@@ -447,7 +447,9 @@ The initial run also exposed non-GC frozen objects: GetObjectGeneration returns
 CORPROF_E_NOT_GC_OBJECT (0x80131389). This experiment excludes and counts those
 objects explicitly, and rejects frozen tagged witnesses. Their actual lifetime,
 image objects, NativeAOT, over-4-GiB sizing, failed-allocation behavior and the
-production managed/native shared commit boundary remain unqualified. In
+production managed/native shared commit boundary remain unqualified. The
+separate NativeAOT producer below now qualifies its selected frozen registry flow;
+this CLR profiler retains that ownership gap. In
 particular, callback-ledger peaks cannot establish an exact simultaneous native
 and managed peak if publication is delayed after an allocator commit. Do not
 wire these diagnostic snapshots to GetMonitor or treat separate domain peaks as
@@ -460,7 +462,7 @@ a composition. The full exact contract remains accepted; physics coverage stays
 The [source-runtime probe](../../tools/physics/aot-memory-probe/README.md) executes
 allocation/GC lifetime instrumentation in a separate v10.0.1 NativeAOT runtime
 copy on Linux x64. The installed SDK archives and production engine remain
-unchanged. Three pinned source edits observe successful ordinary and shared
+unchanged. Four pinned source edits observe successful ordinary and shared
 string/array fast paths, the common GcAllocInternal success path (including
 pinned/direct and finalizable objects), and stopped-EE GC completion. Helper entry
 attempts alone are no longer the measurement for this fixture.
@@ -499,18 +501,43 @@ the linker arguments already contained the SDK archive. The final project change
 both in their original link order and writes their actual identities. A mismatched
 source pin is rejected before mutation; a repeated patch is also rejected.
 
-The first full-heap walk exposed frozen/image objects in the same enumeration:
-these have no dynamic allocator publication. IsInFrozenSegment now classifies
-and counts their bytes separately. The dynamic callback ledger excludes them;
-a GC-time frozen census cannot establish their complete load lifetime or peak.
-The copied runtime keeps performance tracing enabled and disables the optional
-LTTng provider, whose development headers are absent on this host. Its configuration
-and compiler differ from the shipping SDK and remain part of the diagnostic
-boundary. Source build inputs, raw logs and qualification receipts live under
-`bin/aot-memory-producer/2026-10-29/`.
+Frozen/image bytes now use actual registration, update and removal events in the
+shared GC registry. All three callbacks run before releasing gc_lock; the native
+observer takes its bookkeeping gate afterward. The stopped-EE census holds the
+same outer GC lock, so it cannot observe an unpublished registry transition. The
+snapshot path acquires only the observer gate and never enters the runtime. This
+keeps a consistent lock order, including native callers that wait for collection
+while registering a segment.
 
-Production integration still needs the full image/frozen ownership contract,
-concurrent collector support, qualified large sizes and OS failures, the shared
+The registered footprint is allocated minus first-object address. It excludes the
+extra header and unused commit/reserve space, and handles empty identity, growth,
+shrink and removal without a collection or a heap walk. This does not inspect
+partially initialized array/string lengths at append time. The independent GC
+walk checks that aligned frozen object sizes equal that live footprint. The
+combined managed event ledger publishes dynamic plus frozen current and retains
+the maximum of those simultaneous totals under one gate.
+
+The same consumer now adds thirteen frozen phases: failed/empty registration,
+growth from zero to 48/120 bytes, shrink to 24, commit-only/no-op updates, actual
+ordinary-object field access before/after GC and complete retirement. A 64-cycle
+worker publishes/retires 7680 bytes, with a live segment at the mandatory GC
+midpoint. A 100000-object region contributes a 2400000-byte peak between reads.
+A later 2400024-byte dynamic array first occurs separately, then overlaps another
+large frozen region: the disjoint combined peak must be below the sum of domain
+peaks; the overlap raises it and retirement preserves it. Both cached query paths
+execute 20000 prepared reads with zero managed caller bytes. An invalid frozen
+resize adds an eighth isolated rejection child. These controlled cases qualify
+the object-footprint ledger, not all engine-host or native backing-storage domains.
+
+The copied runtime keeps performance tracing enabled and disables the optional
+LTTng provider, whose development headers are absent on this host. Its compiler
+and tracing configuration differ from the shipping SDK. Original allocation/GC
+receipts remain under `bin/aot-memory-producer/2026-10-29/`; extended frozen lifetime
+receipts are under `bin/aot-frozen-memory/2026-10-29/`.
+
+Production integration still needs CoreCLR image/frozen accounting and actual
+engine/module-host acceptance, concurrent collector support, qualified large sizes
+and OS failures, the shared
 native/managed publication boundary and complete native-library domains. The
 full walk adds O(total heap) work to each collection; neither its cost nor observer
 overhead is accepted for production by these correctness results. Other platforms,
