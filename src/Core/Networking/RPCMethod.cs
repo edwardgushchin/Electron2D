@@ -52,6 +52,7 @@ public abstract class RPCMethod
     internal abstract bool Accepts(Node node);
     internal abstract bool Accepts(Type type);
     internal abstract void Invoke(Node node, ReadOnlySpan<byte> arguments);
+    internal abstract void InvokeConfigured(Node node, ReadOnlySpan<byte> arguments, SceneMultiplayer multiplayer, RPCOptions options, int sender, long revision, byte[] path);
 }
 /// <summary>Pairs a strongly typed Node receiver and argument model with an explicit wire codec.</summary>
 /// <typeparam name="TNode">The receiver Node subtype.</typeparam><typeparam name="T">A concrete argument type; tuples/records model multiple arguments.</typeparam>
@@ -67,6 +68,14 @@ public sealed class RPCMethod<TNode, T> : RPCMethod where TNode : Node
     internal override bool Accepts(Node node) => node is TNode;
     internal override bool Accepts(Type type) => typeof(TNode).IsAssignableFrom(type);
     internal override void Invoke(Node node, ReadOnlySpan<byte> arguments) => _method((TNode)node, _decode(arguments));
+    internal override void InvokeConfigured(Node node, ReadOnlySpan<byte> arguments, SceneMultiplayer multiplayer, RPCOptions options, int sender, long revision, byte[] path)
+    {
+        ObjectDisposedException.ThrowIf(node.IsDisposed, node);
+        var decoded = _decode(arguments);
+        multiplayer.ValidateRPCState(node, this, options, revision, path, sender);
+        ObjectDisposedException.ThrowIf(node.IsDisposed, node);
+        _method((TNode)node, decoded);
+    }
     /// <summary>Invokes the direct typed callback without encoding.</summary><param name="node">Compatible live receiver.</param><param name="arguments">Concrete argument model.</param><remarks>The provider owns remote admission and sender scope.</remarks>
     public void Invoke(TNode node, T arguments) { ArgumentNullException.ThrowIfNull(node); ObjectDisposedException.ThrowIf(node.IsDisposed, node); node.Tree?.EnsureOwnerThread(); _method(node, arguments); }
     /// <summary>Decodes complete borrowed arguments for a custom provider.</summary><param name="source">Complete codec payload.</param><returns>The concrete decoded value.</returns>

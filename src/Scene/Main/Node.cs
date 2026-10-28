@@ -2112,7 +2112,7 @@ public partial class Node : ElectronObject
                 _ownedSceneResources = null;
             }
             SceneInstancePaths = null; SceneInstanceConnections = null; SpawnSceneIdentity = null;
-            _rpcMethods = null; _removedRPCMethods = null;
+            _rpcMethods = null; _removedRPCMethods = null; _rpcPolicies = null;
             try { AdoptSceneFileLease(null); } catch (Exception error) { CollectException(ref errors, error); }
 
             _publisherChildAdded.Handlers = null;

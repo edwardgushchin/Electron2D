@@ -1,5 +1,7 @@
 # SceneMultiplayer
 
+[Live Script RPC dispatch](../components/scripting.md#live-binding-rpc) rechecks binding revision, token/policy, authority and canonical route after user codecs. Changed configuration rejects before invocation; transport publication retains its existing partial-send failure semantics.
+
 Last updated: 2026-10-04
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.SceneMultiplayer`. **Source:** [SceneMultiplayer.cs](../../src/Core/Networking/SceneMultiplayer.cs).

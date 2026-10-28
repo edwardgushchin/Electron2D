@@ -38,12 +38,19 @@ public sealed partial class Script
     public static void RegisterBinding<TOwner, TCode>(string id, string sourcePath, Func<TOwner>? factory, Action<TOwner> bind, Action<TOwner> clear,
         params PropertyDescriptor[] properties) where TOwner : ElectronObject where TCode : class
     {
+        RegisterBindingCore<TOwner, TCode>(id, sourcePath, factory, bind, clear, default, properties);
+    }
+    [RequiresAssemblyFiles("Compiled source registration requires a file-backed assembly and matching portable PDB.")]
+    [RequiresUnreferencedCode("Compiled source registration inspects the complete project method, event and constant declarations.")]
+    private static void RegisterBindingCore<TOwner, TCode>(string id, string sourcePath, Func<TOwner>? factory, Action<TOwner> bind, Action<TOwner> clear,
+        ReadOnlySpan<RPCRegistration> rpcConfiguration, PropertyDescriptor[] properties) where TOwner : ElectronObject where TCode : class
+    {
         ArgumentNullException.ThrowIfNull(bind); ArgumentNullException.ThrowIfNull(clear);
         if (typeof(TOwner) == typeof(Script) || typeof(TCode).IsAbstract || typeof(ElectronObject).IsAssignableFrom(typeof(TCode)) ||
             bind.Target is not null || clear.Target is not null || bind.Method.DeclaringType?.IsAssignableFrom(typeof(TCode)) != true ||
             clear.Method.DeclaringType?.IsAssignableFrom(typeof(TCode)) != true)
             throw new ArgumentException("Live bindings require concrete project code, an owner other than Script and static bind/clear callbacks.");
-        Register(typeof(TCode), id, sourcePath, factory is null ? null : () => factory(), properties, null, factory?.Target,
+        Register(typeof(TCode), id, sourcePath, factory is null ? null : () => factory(), properties, null, factory?.Target, rpcConfiguration,
             bindingOwner: typeof(TOwner), bind: owner => bind((TOwner)owner), clear: owner => clear((TOwner)owner));
     }
     private static readonly object CatalogGate = new();
@@ -128,7 +135,7 @@ public sealed partial class Script
         if (rpc.Length > 65536) throw new ArgumentException("Script RPC declarations exceed the method budget.", nameof(rpc));
         var declarations = new Dictionary<uint, RPCRegistration>(rpc.Length);
         foreach (var entry in rpc)
-            if (entry.Method is null || !entry.Method.Accepts(type) || !declarations.TryAdd(entry.Method.ID, entry))
+            if (entry.Method is null || !entry.Method.Accepts(bindingOwner ?? type) || !declarations.TryAdd(entry.Method.ID, entry))
                 throw new ArgumentException("RPC declarations require distinct IDs and compatible Node receiver roles.", nameof(rpc));
         var documents = ReadDocuments(type);
         if (!documents.Any(d => ByPath.Comparer.Equals(d.Path, path))) throw new ArgumentException("The compiled type does not belong to this source document.", nameof(path));

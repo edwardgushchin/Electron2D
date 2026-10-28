@@ -246,20 +246,31 @@ public partial class SceneMultiplayer : MultiplayerAPI
     /// <inheritdoc />
     public override void RPC<TNode, T>(int peer, TNode node, RPCMethod<TNode, T> method, T arguments)
     {
-        ArgumentNullException.ThrowIfNull(node); ArgumentNullException.ThrowIfNull(method); BeginSend(); RPCOptions options; var localID = GetUniqueID(); Exception? sendError = null;
+        ArgumentNullException.ThrowIfNull(node); ArgumentNullException.ThrowIfNull(method); BeginSend(); RPCOptions options; var localID = GetUniqueID(); Exception? sendError = null; long revision; byte[] path;
         try
         {
             if (peer == int.MinValue) throw new ArgumentOutOfRangeException(nameof(peer)); var registration = node.RequireRPC(method.ID); if (!ReferenceEquals(registration.Method, method) || !method.Accepts(node)) throw new ArgumentException("RPC method token does not match node configuration."); options = registration.Options;
-            if (options.Mode == RPCMode.Disabled) throw new InvalidOperationException("RPC is disabled."); if (peer == localID && !options.CallLocal) throw new InvalidOperationException("This RPC does not permit a local-only call."); var path = PathFor(node);
+            if (options.Mode == RPCMode.Disabled) throw new InvalidOperationException("RPC is disabled."); if (peer == localID && !options.CallLocal) throw new InvalidOperationException("This RPC does not permit a local-only call."); revision = node.ScriptBindingRevision; path = PathFor(node); ValidateRPCState(node, method, options, revision, path);
             if (peer != localID && _connected.Count > 0)
             {
-                var count = method.GetEncodedSize(arguments); var total = checked(7 + path.Length + count); if (total > _send.Length) throw new ArgumentException("RPC arguments exceed prepared message storage."); _send[0] = 0; BinaryPrimitives.WriteUInt32LittleEndian(_send.AsSpan(1), method.ID); BinaryPrimitives.WriteUInt16LittleEndian(_send.AsSpan(5), (ushort)path.Length); path.CopyTo(_send.AsSpan(7)); method.Encode(arguments, _send.AsSpan(7 + path.Length, count)); try { SendRPCCommand(node, peer, _send.AsSpan(0, total), options.TransferMode, options.Channel); } catch (Exception error) { sendError = error; }
+                var count = method.GetEncodedSize(arguments); var total = checked(7 + path.Length + count); if (total > _send.Length) throw new ArgumentException("RPC arguments exceed prepared message storage."); _send[0] = 0; BinaryPrimitives.WriteUInt32LittleEndian(_send.AsSpan(1), method.ID); BinaryPrimitives.WriteUInt16LittleEndian(_send.AsSpan(5), (ushort)path.Length); path.CopyTo(_send.AsSpan(7)); method.Encode(arguments, _send.AsSpan(7 + path.Length, count)); ValidateRPCState(node, method, options, revision, path); try { SendRPCCommand(node, peer, _send.AsSpan(0, total), options.TransferMode, options.Channel); } catch (Exception error) { sendError = error; }
             }
             else if (peer > 0 && peer != localID) throw new ArgumentException("RPC target is not admitted.", nameof(peer));
         }
         finally { _sending = false; }
+        try { ValidateRPCState(node, method, options, revision, path); }
+        catch (Exception error) { if (sendError is not null) throw new AggregateException(sendError, error); throw; }
         if (options.CallLocal && (peer == 0 || peer == localID || peer < 0 && peer != -localID)) { var previous = _sender; _sender = localID; try { method.Invoke(node, arguments); } catch (Exception error) { if (sendError is not null) throw new AggregateException(sendError, error); throw; } finally { _sender = previous; } }
         if (sendError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(sendError).Throw();
+    }
+    internal void ValidateRPCState(Node node, RPCMethod method, RPCOptions options, long revision, ReadOnlySpan<byte> path, int sender = 0)
+    {
+        var currentPath = PathFor(node);
+        var current = node.RequireRPC(method.ID);
+        if (node.ScriptBindingRevision != revision || !ReferenceEquals(current.Method, method) || current.Options != options || !currentPath.AsSpan().SequenceEqual(path))
+            throw new InvalidOperationException("RPC binding, policy or route changed during a codec or transport callback.");
+        if (sender != 0 && (options.Mode == RPCMode.Disabled || options.Mode == RPCMode.Authority && node.GetMultiplayerAuthority() != sender))
+            throw new InvalidDataException("RPC sender is not authorized by the receiving node.");
     }
     private void ReceiveRPC(int sender, ReadOnlySpan<byte> packet)
     {
@@ -268,7 +279,7 @@ public partial class SceneMultiplayer : MultiplayerAPI
         {
             var tree = AttachedTree ?? throw new InvalidOperationException("RPC requires an assigned scene tree."); var text = new UTF8Encoding(false, true).GetString(path); if (text.StartsWith('/') || text.Contains('\0')) throw new InvalidDataException("RPC path must be a relative scene node path."); var root = tree.Root.GetNode(_rootPath); var node = root.GetNode(text); if (!ReferenceEquals(node.Multiplayer, this) || !ReferenceEquals(node, root) && !root.IsAncestorOf(node)) throw new InvalidDataException("RPC path escapes its configured scene branch."); route = new MultiplayerPathCache(node, path.ToArray()); _inPaths[hash] = route;
         }
-        var registration = route.Node.RequireRPC(methodID); if (registration.Options.Mode == RPCMode.Disabled || registration.Options.Mode == RPCMode.Authority && route.Node.GetMultiplayerAuthority() != sender) throw new InvalidDataException("RPC sender is not authorized by the receiving node."); registration.Method.InvokeEncoded(route.Node, packet[(7 + length)..]);
+        var registration = route.Node.RequireRPC(methodID); if (registration.Options.Mode == RPCMode.Disabled || registration.Options.Mode == RPCMode.Authority && route.Node.GetMultiplayerAuthority() != sender) throw new InvalidDataException("RPC sender is not authorized by the receiving node."); var revision = route.Node.ScriptBindingRevision; var canonicalPath = PathFor(route.Node); registration.Method.InvokeConfigured(route.Node, packet[(7 + length)..], this, registration.Options, sender, revision, canonicalPath);
     }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()

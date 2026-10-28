@@ -1,5 +1,7 @@
 # Node
 
+[Live Script RPC](../components/scripting.md#live-binding-rpc) selects active code declarations before CLR defaults. Policies on live defaults follow wire IDs across replacement; explicit/CLR-class tokens retain identity and suppression stays local by ID.
+
 `SetScriptCallbacks<TNode>(NodeScriptCallbacks<TNode> callbacks)` installs native typed script callbacks only within the current synchronous Bind. [Standard node callbacks](../components/scripting.md#standard-node-callbacks) covers the receiver/single-use guard, automatic retirement, ready/frame/input ordering and disposal.
 
 A [live typed Script binding](../components/scripting.md#live-typed-bindings) installs after construction and before copy/file stored restoration. Omitting Duplicate.Scripts retains this binding's stable owner CLR role with no installed functions; fixed compiled source classes retain their existing stripping policy.

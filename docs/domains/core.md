@@ -1,3 +1,5 @@
+[Live Script RPC declarations](../components/scripting.md#live-binding-rpc) switch handlers on stable Node roles while retaining ID policies and separating explicit token lifetime.
+
 [Live canvas callbacks](../components/scripting.md#live-canvas-recording) record on native canvas/physical owners through the existing typed binding and retained drawing scope.
 
 Standard Node/CollisionObject/RigidBody roles now accept [typed native Script callbacks](../components/scripting.md#standard-node-callbacks) through their existing dispatch paths and automatic retirement. The complete assignment family remains Partial.

@@ -1,5 +1,7 @@
 # Typed scene multiplayer
 
+[Live Script declarations](scripting.md#live-binding-rpc) participate in the same typed route/admission pipeline. Dispatch validates completed binding lifetime and rechecks codec-induced changes before packet publication or handler invocation. Existing custom-provider direct hooks remain provider-owned.
+
 Last updated: 2026-10-21
 
 Default construction derives the absolute root configuration from the known root name

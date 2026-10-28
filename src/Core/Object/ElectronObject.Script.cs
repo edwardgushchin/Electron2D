@@ -5,6 +5,11 @@ public partial class ElectronObject
     private Script? _constructionScript;
     private ScriptRegistration? _scriptBinding;
     private int _scriptLifetimeOperation;
+    private long _scriptBindingRevision;
+    internal ScriptRegistration? LiveScriptRegistration => _scriptBinding;
+    internal long ScriptBindingRevision => Volatile.Read(ref _scriptBindingRevision);
+    internal void EnsureScriptRPCReady()
+    { if (Volatile.Read(ref _scriptLifetimeOperation) == 1) throw new InvalidOperationException("RPC execution requires a completed script binding transition."); }
     [ThreadStatic] private static ElectronObject? _scriptCallbackOwner;
     internal Action<int, bool>? BoundScriptNotification;
     internal bool HasLiveScriptBinding => _scriptBinding is not null;
@@ -23,7 +28,8 @@ public partial class ElectronObject
     /// <exception cref="Exception">Binding, cleanup or a source-change observer fails.</exception>
     public void SetScript(Script? script)
     {
-        ThrowIfDisposed(); ValidateMutation();
+        ThrowIfDisposed();
+        if (this is Node node) node.ValidateNodeMutation(); else ValidateMutation();
         List<Exception>? errors = null;
         using (BeginScriptLifetimeOperation())
         {
@@ -51,7 +57,7 @@ public partial class ElectronObject
             Volatile.Write(ref _constructionScript, script);
             if (registration is not null)
             {
-                _scriptBinding = registration;
+                _scriptBinding = registration; Interlocked.Increment(ref _scriptBindingRevision);
                 try { InvokeScriptBind(registration); Script.ValidateSchema(registration, this); }
                 catch (Exception error)
                 {
@@ -68,7 +74,7 @@ public partial class ElectronObject
         var registration = prototype is null ? _constructionScript?.GetBindingRegistration(requireLive: false) : prototype._scriptBinding;
         if (_scriptBinding is not null || registration is null) return;
         using var operation = BeginScriptLifetimeOperation();
-        _scriptBinding = registration;
+        _scriptBinding = registration; Interlocked.Increment(ref _scriptBindingRevision);
         try { InvokeScriptBind(registration); Script.ValidateSchema(registration, this); }
         catch (Exception error)
         {
@@ -82,6 +88,7 @@ public partial class ElectronObject
     {
         var old = _scriptBinding; _scriptBinding = null;
         if (old is null) return null;
+        Interlocked.Increment(ref _scriptBindingRevision);
         Exception? error = null;
         try
         {

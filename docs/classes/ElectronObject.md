@@ -236,7 +236,7 @@ Reads require no metadata discovery, native device, callbacks or managed allocat
 
 Installs, replaces or detaches a registered [live typed binding](../components/scripting.md#live-typed-bindings) on this same owner. Null detaches; an equal source does nothing. The borrowed asset does not own the owner, and owner disposal does not dispose that asset.
 
-Prevalidation retains the old binding. Once retirement begins, a clear/bind failure leaves the owner unbound and preserves operation/cleanup/observer errors. PropertyListChanged precedes ScriptChanged after commitment. A callback cannot reenter a binding/disposal transition; post-commit observers can. Resource copies/cache replacement retain the [typed Resource contract](../components/scripting.md#resource-bindings). Fixed CLR source classes, remaining native callbacks and RPC migration remain open.
+Prevalidation retains the old binding. Once retirement begins, a clear/bind failure leaves the owner unbound and preserves operation/cleanup/observer errors. PropertyListChanged precedes ScriptChanged after commitment. A callback cannot reenter a binding/disposal transition; post-commit observers can. Resource copies/cache replacement retain the [typed Resource contract](../components/scripting.md#resource-bindings). Fixed CLR source classes and remaining native callbacks remain open.
 
 <a id="m-electron2d-electronobject-canceldisposal"></a>
 ### `public void CancelDisposal()`
@@ -627,7 +627,7 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 ## Deliberate omissions
 
 - No `Variant`, `dynamic`, string-based `Get`, `Set`, or `Call`.
-- No metadata bag or generic signal registry. Live attachment currently requires an explicitly registered typed binding and authored owner slots. Replacing fixed CLR source classes and the complete callback/RPC family remain open.
+- No metadata bag or generic signal registry. Live attachment currently requires an explicitly registered typed binding and authored owner slots. Replacing fixed CLR source classes and the complete native callback family remain open.
 - Arbitrary CLR delegate subscribers are omitted from packed scenes. Authored persistent connections use registered typed SceneConnectionBinding factories under ADR 0010.
 - No public object lookup by `InstanceID`.
 - Deletion is scheduled by Node.QueueFree or SceneTree.QueueDelete. ElectronObject.IsQueuedForDeletion observes an accepted or executing request for this object; it does not schedule one.

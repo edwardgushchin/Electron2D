@@ -976,6 +976,15 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is
     PhysicalBoneTests.RunChild(physicalChild, PhysicalBoneTests.SelectedBackend()); return;
 }
 // Focused script routes precede the shared-collider shorthand, which also consumes the threaded flag.
+if (args.Length == 7 && args[0] == "--live-rpc-worker")
+{
+    LiveRPCTests.Worker(args[1], int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture), args[3] == "enet", args[4] == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU, args[5] == "1", args[6]); return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LIVE_RPC") is { } liveRPC)
+{
+    LiveRPCTests.Run(liveRPC switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for live RPC.") }, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1"); return;
+}
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPILED_RPC") == "1") { ScriptRPCTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_RPC_PHASE") ?? "host"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_DRAW") is { } scriptDraw)
 {
     ScriptDrawTests.Run(scriptDraw switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for live Script drawing.") },
