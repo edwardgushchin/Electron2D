@@ -9,6 +9,7 @@ public sealed unsafe partial class RenderingDevice
     private static bool NeedsGraphicsSnapshot(Entry entry) => entry.Kind == Kind.Texture && entry.Texture is { Type: TextureType.Texture } info && (info.Usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage)) == (TextureUsageBits.Sampling | TextureUsageBits.Storage);
     private bool CaptureGraphicsImages()
     {
+        if (PipelineProgram(_graphicsPipeline!).GraphicsImages != 0) return CaptureNativeImages();
         if (_graphicsSnapshotCount == 0) return false;
         _graphicsSnapshots.Clear();
         try

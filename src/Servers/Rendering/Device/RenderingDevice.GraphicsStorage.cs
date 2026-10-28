@@ -11,9 +11,10 @@ public sealed unsafe partial class RenderingDevice
         var enabled = SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.GraphicsStorageProperty, 0);
         foreach (var binding in layout)
         {
+            if (binding.NativeImage && (_imageSupport ??= NativeImageSupport(Device, 1)) != 1) throw new NotSupportedException("Graphics storage images require the native descriptor/layout adapter.");
             if (!binding.Writable || binding.Stage == ShaderStage.Compute) continue;
             var feature = binding.Stage == ShaderStage.Vertex ? 1 : 2;
-            if ((enabled & feature) == 0) throw new NotSupportedException($"Writable {binding.Stage} storage buffers require an enabled native graphics-storage feature.");
+            if ((enabled & feature) == 0) throw new NotSupportedException($"Writable {binding.Stage} storage requires an enabled native graphics-storage feature.");
         }
     }
     private static bool WritesGraphicsStorage(Entry program)
@@ -30,7 +31,7 @@ public sealed unsafe partial class RenderingDevice
     {
         SDL.EndGPURenderPass(_drawPass); _drawPass = 0;
         var writes = _drawStorageWrites; _drawStorageWrites = false;
-        try { if (writes) StorageBarrier(); }
+        try { RestoreGraphicsImages(); if (writes) StorageBarrier(); }
         catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush(); throw; }
     }
     private void PrepareGraphicsStorage()

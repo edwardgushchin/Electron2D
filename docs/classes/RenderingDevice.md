@@ -28,7 +28,7 @@ An owner-thread graphics and compute device created locally by RenderingServer.C
 
 Layered framebuffers execute ordered native passes for each view, with vertex/fragment view indices, copied draw state, per-layer depth/resolve/input operations and untouched extra layers. See [layered multiview](../components/local-compute.md#layered-multiview) for ownership and verification limits.
 
-Readonly graphics storage images retain their Image role and current GPU contents across draws. Sampling/Storage combinations use a private GPU snapshot; see [image coherence](../components/local-compute.md#readonly-graphics-image-coherence).
+Ordinary graphics Image stores and signed/unsigned R32 atomics change the original base-mip allocation through the [native image adapter](../components/graphics-storage-images.md). Each writing stage requires its native feature. Pure readonly modules keep their [snapshot coherence path](../components/local-compute.md#readonly-graphics-image-coherence).
 
 Independent Texture and Sampler sets execute native compute and graphics through reusable pair bindings, including plain/array and signed/unsigned images, comparison sampling, fetch/query, helpers and control flow. Combined declarations retain sampler-first IDs. See [independent sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings) for validation timing, native capacity and verification.
 

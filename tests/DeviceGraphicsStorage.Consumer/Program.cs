@@ -9,6 +9,7 @@ internal static partial class GraphicsStorage
 {
     internal static void Run(string mode)
     {
+        if (mode.StartsWith("images", StringComparison.Ordinal)) { Images(mode); return; }
         if (mode.StartsWith("depth", StringComparison.Ordinal)) { Depth(mode); return; }
         if (mode.StartsWith("samples", StringComparison.Ordinal)) { Samples(mode); return; }
         if (mode.StartsWith("wide", StringComparison.Ordinal)) { Wide(mode); return; }
@@ -23,13 +24,13 @@ internal static partial class GraphicsStorage
     private static RDShaderSPIRV Code(string name, string language)
     {
         byte[] Read(string stage) => File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + "." + stage + "." + language + ".spv"));
-        return name is "chain" or "texel-chain" ? new() { BytecodeCompute = Read("comp") } : new() { BytecodeVertex = Read("vert"), BytecodeFragment = Read("frag") };
+        return name is "chain" or "texel-chain" or "image-chain" ? new() { BytecodeCompute = Read("comp") } : new() { BytecodeVertex = Read("vert"), BytecodeFragment = Read("frag") };
     }
     private static RID Shader(RenderingDevice device, string name, string language, bool authoring)
     {
         if (!authoring) { using var code = Code(name, language); return device.ShaderCreateFromBytecode(device.ShaderCompileBinaryFromSPIRV(code)); }
         string Read(string stage) => File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + "." + stage + "." + language));
-        using var source = new RDShaderSource { Language = language == "glsl" ? ShaderLanguage.GLSL : ShaderLanguage.HLSL, SourceVertex = name is "chain" or "texel-chain" ? "" : Read("vert"), SourceFragment = name is "chain" or "texel-chain" ? "" : Read("frag"), SourceCompute = name is "chain" or "texel-chain" ? Read("comp") : "" };
+        using var source = new RDShaderSource { Language = language == "glsl" ? ShaderLanguage.GLSL : ShaderLanguage.HLSL, SourceVertex = name is "chain" or "texel-chain" or "image-chain" ? "" : Read("vert"), SourceFragment = name is "chain" or "texel-chain" or "image-chain" ? "" : Read("frag"), SourceCompute = name is "chain" or "texel-chain" or "image-chain" ? Read("comp") : "" };
         using var code2 = device.ShaderCompileSPIRVFromSource(source); Check(code2.CompileErrorVertex == "" && code2.CompileErrorFragment == "" && code2.CompileErrorCompute == "", code2.CompileErrorVertex + code2.CompileErrorFragment + code2.CompileErrorCompute); return device.ShaderCreateFromSPIRV(code2);
     }
     private static RID Set(RenderingDevice device, RID shader, RID buffer)

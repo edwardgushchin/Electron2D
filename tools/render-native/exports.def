@@ -21,3 +21,9 @@ EXPORTS
     e2d_render_multisample_pipeline
     e2d_render_depth_support
     e2d_render_depth_pipeline
+    e2d_render_image_support
+    e2d_render_image_release
+    e2d_render_image_transition
+    e2d_render_bind_image
+    e2d_render_prepare_images
+    e2d_render_images_pipeline

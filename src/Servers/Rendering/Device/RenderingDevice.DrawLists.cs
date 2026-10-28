@@ -32,7 +32,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="clearDepthValue">Finite depth clear from zero through one; defaults to one.</param>
     /// <param name="clearStencilValue">Eight-bit stencil clear; defaults to zero.</param>
     /// <returns>The active owner-thread draw-list identity.</returns>
-    /// <remarks>Clears affect the complete attachment. The region restricts draws. Ordinary storage-buffer writes are ordered between draws and become available to subsequent compute, copy and canvas passes after DrawListEnd. Invocations within one draw own their race freedom.</remarks>
+    /// <remarks>Clears affect the complete attachment. The region restricts draws. Ordinary storage-buffer and storage-image writes are ordered between draws and become available to subsequent compute, copy and canvas passes after DrawListEnd. Invocations within one draw own their race freedom.</remarks>
     public long DrawListBegin(RID framebuffer, DrawFlags drawFlags = 0, ReadOnlySpan<Color> clearColorValues = default, Rect2 region = default, float clearDepthValue = 1, int clearStencilValue = 0)
     {
         IdleList(); var target = GetFramebuffer(framebuffer); var actual = DrawRegion(region, target.Size);
@@ -110,10 +110,10 @@ public sealed unsafe partial class RenderingDevice
             }
         }
     }
-    private void BeginDrawPass(bool resetBindings = true)
+    private void BeginDrawPass(bool resetBindings = true, bool captureInputs = true)
     {
         var target = _drawTarget!; var layout = DrawPassLayout; var depthIndex = layout.DepthIndex;
-        CaptureInputAttachments(layout);
+        if (captureInputs) CaptureInputAttachments(layout);
         var colors = stackalloc SDL.GPUColorTargetInfo[8];
         for (var native = 0; native < layout.ColorSlots.Length; native++)
         {
@@ -262,7 +262,11 @@ public sealed unsafe partial class RenderingDevice
                 else if (descriptor.Type == UniformType.Image)
                 {
                     if (ActiveAttachment(resource)) throw new InvalidOperationException("An active output attachment cannot be read as storage during its render pass.");
-                    if (fragment) SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1);
+                    if (_generalImages.Count != 0)
+                    {
+                        if (NativeBindImage(Device, 1, _command, resource.NativeHandle, (uint)descriptor.Native, fragment ? 1u : 0u, descriptor.NativeImage ? 1u : 0u) != 1) throw new InvalidOperationException("The native graphics image could not be bound.");
+                    }
+                    else if (fragment) SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1);
                 }
                 else { if (fragment) SDL.BindGPUFragmentStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageBuffers(_drawPass, (uint)descriptor.Native, binding, 1); }
             }
@@ -274,6 +278,7 @@ public sealed unsafe partial class RenderingDevice
             else SDL.BindGPUVertexSamplers(_drawPass, (uint)link.Native.Native, samplerBinding, 1);
         }
         PushUniforms(program);
+        PrepareNativeImages(program);
     }
     /// <summary>Records a procedural, vertex-array or indexed draw with validated instance capacity.</summary>
     /// <param name="drawList">The active draw list.</param>
@@ -318,7 +323,7 @@ public sealed unsafe partial class RenderingDevice
             if (indices.RestartIndices && primitive is not (RenderPrimitive.LineStrips or RenderPrimitive.TriangleStripsWithRestartIndex) || !indices.RestartIndices && primitive == RenderPrimitive.TriangleStripsWithRestartIndex) throw new ArgumentException("Index restart role and strip topology must match.");
             SDL.BindGPUIndexBuffer(_drawPass, new() { Buffer = indices.Handle!.DangerousGetHandle(), Offset = _drawIndices.Offset }, indices.IndexFormat == IndexBufferFormat.UInt16 ? SDL.GPUIndexElementSize.IndexElementSize16Bit : SDL.GPUIndexElementSize.IndexElementSize32Bit);
         }
-        if (captureImages && CaptureGraphicsImages()) return PrepareDraw(useIndices, instances, proceduralVertexCount, false);
+        if ((captureImages || _generalImages.Count == 0 && PipelineProgram(_graphicsPipeline!).GraphicsImages != 0) && CaptureGraphicsImages()) return PrepareDraw(useIndices, instances, proceduralVertexCount, false);
         BindDrawResources();
         return count;
     }

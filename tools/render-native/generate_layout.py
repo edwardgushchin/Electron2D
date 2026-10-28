@@ -33,6 +33,7 @@ def generate(source):
     renderer = block(vulkan, "struct VulkanRenderer\n{").replace('#include "SDL_gpu_vulkan_vkfuncs.h"', functions)
     pointers = sorted(set(re.findall(r"^    ([A-Za-z_]\w*) \*", renderer, re.M)) -
                       {"SDL_Mutex", "VulkanMemoryAllocator"})
+    pointers = sorted(set(pointers) | {"VulkanCommandPool", "VulkanComputePipeline", "VulkanPresentData", "VulkanUniformBuffer"})
     forward = "\n".join("typedef struct " + name + " " + name + ";"
                         for name in pointers if not name.startswith("Vk"))
     return "\n".join([
@@ -47,20 +48,27 @@ def generate(source):
         block(gpu, "typedef struct TextureCommonHeader"),
         block(gpu, "typedef struct GraphicsPipelineCommonHeader"),
         "typedef struct VulkanBuffer VulkanBuffer;", "typedef struct VulkanTexture VulkanTexture;",
+        "typedef struct VulkanTextureContainer VulkanTextureContainer;",
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
         "typedef struct VulkanFenceHandle VulkanFenceHandle;",
         vulkan[vulkan.index("typedef struct VulkanMemoryFreeRegion"):vulkan.index("// Memory structures")],
+        block(vulkan, "typedef struct VulkanTextureSubresource\n{"),
+        block(vulkan, "struct VulkanTexture\n{"),
+        block(vulkan, "struct VulkanTextureContainer\n{"),
         "#ifdef E2D_RENDER_FILTERING", block(vulkan, "static VkFormat SDLToVK_TextureFormat[]"), "#endif",
         block(vulkan, "typedef struct VulkanSampler"),
         block(vulkan, "typedef struct VulkanExtensions"), block(vulkan, "typedef struct VulkanFencePool"),
         forward, renderer, "typedef struct VulkanRenderer VulkanRenderer;",
         block(vulkan, "typedef struct VulkanShader\n{"),
         re.search(r"typedef uint32_t DescriptorSetLayoutID;", vulkan).group(0),
+        re.search(r"#define DESCRIPTOR_POOL_SIZE\s+\d+", vulkan).group(0),
+        block(vulkan, "typedef struct DescriptorSetPool\n{"),
+        block(vulkan, "typedef struct DescriptorSetCache\n{"),
         block(vulkan, "typedef struct DescriptorSetLayout\n{"),
         block(vulkan, "typedef struct VulkanGraphicsPipelineResourceLayout\n{"),
         block(vulkan, "typedef struct VulkanGraphicsPipeline\n{"),
 
-        vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    VkCommandBuffer commandBuffer;") + len("    VkCommandBuffer commandBuffer;")] + "\n} VulkanCommandBuffer;", "",
+        vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    Sint32 usedTextureCapacity;") + len("    Sint32 usedTextureCapacity;")] + "\n} VulkanCommandBuffer;", "",
     ])
 
 

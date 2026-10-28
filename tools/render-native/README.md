@@ -55,7 +55,7 @@ The Linux test_shader16_mask.c development shim selects integer/arithmetic/buffe
 
 The private narrow feature property retains only successfully enabled features. The Linux test_shader8_mask.c fixture refuses byte arithmetic/buffer/uniform/push, Int16/Float16 arithmetic, all byte features or Vulkan 1.2. DeviceInt8.Consumer checks available siblings and pre-publication failures; never package the shim.
 
-`e2d_render_graphics_storage_support` ABI 1 returns physical vertex/fragment store-and-atomic support in bits 0/1 (zero on unsupported backends, -1 for invalid arguments). The factory requests those core features separately and retains only enabled bits. `e2d_render_storage_barrier` ABI 1 validates the pinned device/command ownership and records an all-command read/write memory dependency outside a pass; returns 1 on success or -1 on rejection. SDL only maintains pass/submission flags in debug mode, where the bridge checks them too; Release pass lifetime is enforced by the managed owner. The generated pinned command prefix ends at VkCommandBuffer, and both symbols enter every export list/package closure. `Electron2DRenderCheck` runs debug idle/pass guards; the public consumer runs ordinary Release devices. No vendored source is modified.
+`e2d_render_graphics_storage_support` ABI 1 returns physical vertex/fragment store-and-atomic support in bits 0/1 (zero on unsupported backends, -1 for invalid arguments). The factory requests those core features separately and retains only enabled bits. `e2d_render_storage_barrier` ABI 1 validates the pinned device/command ownership and records an all-command read/write memory dependency outside a pass; returns 1 on success or -1 on rejection. SDL only maintains pass/submission flags in debug mode, where the bridge checks them too; Release pass lifetime is enforced by the managed owner. The generated pinned command prefix includes descriptor bindings, caches and used-texture tracking, and both symbols enter every export list/package closure. `Electron2DRenderCheck` runs debug idle/pass guards; the public consumer runs ordinary Release devices. No vendored source is modified.
 
 The four `e2d_render_empty_*` ABI 1 exports implement explicit-extent attachmentless
 passes on the pinned Vulkan backend. `support` returns available 1/2/4/8 sample
@@ -87,4 +87,15 @@ The private line-support and line-pipeline entries query physical width range/pr
 
 The multisample support/pipeline entries add physical sampleRateShading/alphaToOne queries and copied native mask/fraction/flags through the existing call-local creator. Neither sample mask nor disabled optional state requires these features. The factory retains independent logical feature ownership; test_multisample_mask.c refuses either/both creation requests. See [sample controls](../../docs/components/multisample-state.md).
 
-The two `e2d_render_depth_*` ABI 1 exports query per-face/bounds support and create copied depth/stencil pipelines beside existing raster/multisample state. The native package now carries 21 exports. Independent references remove only SDL's shared dynamic reference selector. The managed factory negotiates depthBounds independently in the bounded optional raster profile. `test_depth_mask.c` is a development-only device-creation refusal shim; never package it. See [the native state contract](../../docs/components/depth-stencil-state.md).
+The two `e2d_render_depth_*` ABI 1 exports query per-face/bounds support and create copied depth/stencil pipelines beside existing raster/multisample state. The native package now carries 27 exports. Independent references remove only SDL's shared dynamic reference selector. The managed factory negotiates depthBounds independently in the bounded optional raster profile. `test_depth_mask.c` is a development-only device-creation refusal shim; never package it. See [the native state contract](../../docs/components/depth-stencil-state.md).
+
+The six graphics-image ABI 1 entries query adapter availability, create mixed image
+pipelines, transition original images, bind base-mip views, prepare command-owned
+resource sets and retire device-owned layouts. The generated pinned command prefix
+includes descriptor pools/bindings and used-texture ownership. Resource sets use
+actual STORAGE_IMAGE descriptors beside sampled images/samplers/buffers; SDL retains
+uniform binding and command-pool reset. Profiles reserve IDs once after successful
+native layout creation and retire before the last shared physical device is destroyed.
+`Electron2DRenderCheck` covers 260-set rollover/reuse, guards, texture tracking and
+idle retirement; mask-images.c checks explicit missing-adapter refusal. See
+[graphics image ownership and qualification](../../docs/components/graphics-storage-images.md).

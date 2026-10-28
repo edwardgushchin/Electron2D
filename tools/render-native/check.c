@@ -28,6 +28,12 @@ extern SDL_GPUGraphicsPipeline *e2d_render_multisample_pipeline(SDL_GPUDevice *,
 typedef struct DepthStencilState { uint32_t flags, front_mask, front_write, front_reference, back_mask, back_write, back_reference; float minimum, maximum; } DepthStencilState;
 extern int e2d_render_depth_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_depth_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *);
+extern int e2d_render_image_support(SDL_GPUDevice *, uint32_t);
+extern void e2d_render_image_release(SDL_GPUDevice *, uint32_t);
+extern int e2d_render_image_transition(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, SDL_GPUTexture *const *, uint32_t, uint32_t);
+extern int e2d_render_bind_image(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, SDL_GPUTexture *, uint32_t, uint32_t, uint32_t);
+extern int e2d_render_prepare_images(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, uint32_t, SDL_GPUTexture *const *, uint32_t);
+extern SDL_GPUGraphicsPipeline *e2d_render_images_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t);
 extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
@@ -62,6 +68,55 @@ static int raster_thread(void *data)
         require(pipeline != NULL); SDL_ReleaseGPUGraphicsPipeline(checks->device, pipeline);
     }
     return 0;
+}
+static void image_check(SDL_GPUDevice *device, SDL_GPUShaderCreateInfo shader_info, const uint32_t *fragment, uint32_t fragment_size)
+{
+    require(e2d_render_image_support(device, 1) == 1);
+    shader_info.num_samplers = 1; shader_info.num_storage_textures = 2; shader_info.num_storage_buffers = 1; shader_info.num_uniform_buffers = 1;
+    SDL_GPUShader *vs = SDL_CreateGPUShader(device, &shader_info); require(vs != NULL);
+    shader_info.code = (const uint8_t *)fragment; shader_info.code_size = fragment_size; shader_info.stage = SDL_GPU_SHADERSTAGE_FRAGMENT;
+    SDL_GPUShader *fs = SDL_CreateGPUShader(device, &shader_info); require(fs != NULL);
+    SDL_GPUGraphicsPipelineCreateInfo info = {.vertex_shader = vs, .fragment_shader = fs, .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST, .rasterizer_state = {.enable_depth_clip = true}};
+    MultisampleState samples = {0}; DepthStencilState depth = {0};
+    require(e2d_render_images_pipeline(device, 1, &info, 1, 1, &samples, &depth, 257) == NULL);
+    // These empty shaders exercise descriptor ownership without requiring graphics store instructions.
+    require(SDL_SetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.graphics_storage", 3));
+    SDL_GPUGraphicsPipeline *pipeline = e2d_render_images_pipeline(device, 1, &info, 1, 1, &samples, &depth, 257); require(pipeline != NULL);
+    VulkanRenderer *renderer = (VulkanRenderer *)device->driverData; int ids = SDL_GetAtomicInt(&renderer->layoutResourceID);
+    for (int i = 0; i < 32; i++) {
+        SDL_GPUGraphicsPipeline *copy = e2d_render_images_pipeline(device, 1, &info, 1, 1, &samples, &depth, 257); require(copy != NULL);
+        require(((VulkanGraphicsPipeline *)pipeline)->resourceLayout == ((VulkanGraphicsPipeline *)copy)->resourceLayout); SDL_ReleaseGPUGraphicsPipeline(device, copy);
+    }
+    require(SDL_GetAtomicInt(&renderer->layoutResourceID) == ids);
+    SDL_GPUTextureCreateInfo texture_info = {.type = SDL_GPU_TEXTURETYPE_2D, .format = SDL_GPU_TEXTUREFORMAT_R32_UINT, .usage = SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE, .width = 2, .height = 2, .layer_count_or_depth = 1, .num_levels = 1};
+    SDL_GPUTexture *texture = SDL_CreateGPUTexture(device, &texture_info); require(texture != NULL);
+    SDL_GPUSamplerCreateInfo sampler_info = {.max_lod = 1}; SDL_GPUSampler *sampler = SDL_CreateGPUSampler(device, &sampler_info); require(sampler != NULL);
+    SDL_GPUBufferCreateInfo buffer_info = {.size = 16, .usage = SDL_GPU_BUFFERUSAGE_GRAPHICS_STORAGE_READ}; SDL_GPUBuffer *buffer = SDL_CreateGPUBuffer(device, &buffer_info); require(buffer != NULL);
+    void *empty = e2d_render_empty_create(device, 1, 2, 2, 0); require(empty != NULL);
+    for (int cycle = 0; cycle < 3; cycle++) {
+        SDL_GPUCommandBuffer *commands = SDL_AcquireGPUCommandBuffer(device); require(commands != NULL);
+        require(e2d_render_image_transition(device, 1, commands, &texture, 1, 1) == 1);
+        require(e2d_render_prepare_images(device, 1, commands, 257, &texture, 1) == -1);
+        SDL_GPURenderPass *pass = e2d_render_empty_begin(device, 1, commands, empty); require(pass != NULL);
+        require(e2d_render_image_transition(device, 1, commands, &texture, 1, 0) == -1);
+        SDL_BindGPUGraphicsPipeline(pass, pipeline);
+        SDL_GPUTextureSamplerBinding sampled = {.texture = texture, .sampler = sampler};
+        SDL_BindGPUVertexSamplers(pass, 0, &sampled, 1); SDL_BindGPUFragmentSamplers(pass, 0, &sampled, 1);
+        SDL_BindGPUVertexStorageBuffers(pass, 0, &buffer, 1); SDL_BindGPUFragmentStorageBuffers(pass, 0, &buffer, 1);
+        for (uint32_t stage = 0; stage < 2; stage++) for (uint32_t slot = 0; slot < 2; slot++) require(e2d_render_bind_image(device, 1, commands, texture, slot, stage, slot == 0) == 1);
+        require(e2d_render_prepare_images(device, 1, commands, 258, &texture, 1) == -1);
+        for (int i = 0; i < 260; i++) require(e2d_render_prepare_images(device, 1, commands, 257, &texture, 1) == 1);
+        VulkanCommandBuffer *native = (VulkanCommandBuffer *)commands;
+        for (int i = 0; i < 2; i++) { DescriptorSetPool *pool = &native->descriptorSetCache->pools[((VulkanGraphicsPipeline *)pipeline)->resourceLayout->descriptorSetLayouts[i * 2]->ID]; require(pool->poolCount == 3 && pool->descriptorSetCount == 384 && pool->descriptorSetIndex == 260); }
+        require(native->usedTextureCount == 1);
+        SDL_EndGPURenderPass(pass); require(e2d_render_image_transition(device, 1, commands, &texture, 1, 0) == 1);
+        require(SDL_SubmitGPUCommandBuffer(commands)); require(SDL_WaitForGPUIdle(device));
+    }
+    require(SDL_GetAtomicInt(&renderer->layoutResourceID) == ids);
+    SDL_ReleaseGPUGraphicsPipeline(device, pipeline); SDL_ReleaseGPUShader(device, vs); SDL_ReleaseGPUShader(device, fs); SDL_ReleaseGPUTexture(device, texture); SDL_ReleaseGPUSampler(device, sampler); SDL_ReleaseGPUBuffer(device, buffer); e2d_render_empty_release(device, 1, empty);
+    require(SDL_WaitForGPUIdle(device)); e2d_render_image_release(device, 1); e2d_render_image_release(device, 1);
+    require(SDL_GetPointerProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.render.image_layouts", NULL) == NULL);
+    puts("Native mixed image descriptors: bounded layout IDs, 260-set pool rollover/reuse, original sampled alias, texture tracking, ABI/pass/profile guards and idle cache retirement passed");
 }
 static void raster_check(SDL_GPUDevice *device)
 {
@@ -105,6 +160,8 @@ static void raster_check(SDL_GPUDevice *device)
         puts("Native raster layout IDs, 64 concurrent creations/retirements and shader references passed");
     }
     require(renderer->vkCreateGraphicsPipelines == original);
+    shader_info.code = (const uint8_t *)vertex; shader_info.code_size = sizeof(vertex); shader_info.stage = SDL_GPU_SHADERSTAGE_VERTEX;
+    if (!getenv("ELECTRON2D_TEST_RASTER_FAILURE")) image_check(device, shader_info, fragment, sizeof(fragment));
     SDL_ReleaseGPUShader(device, vs); SDL_ReleaseGPUShader(device, fs); require(SDL_WaitForGPUIdle(device));
 }
 typedef struct LineLimits { float minimum, maximum, granularity; } LineLimits;
@@ -113,6 +170,12 @@ int main(int argc, char **argv)
 {
     MultisampleState samples = {0};
     DepthStencilState depth = {0};
+    require(e2d_render_image_support(NULL, 1) == -1);
+    require(e2d_render_image_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_image_transition((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, NULL, 0, 1) == -1);
+    require(e2d_render_bind_image((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, (SDL_GPUTexture *)(uintptr_t)1, 0, 0, 1) == -1);
+    require(e2d_render_prepare_images((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, 0, NULL, 0) == -1);
+    e2d_render_image_release((SDL_GPUDevice *)(uintptr_t)1, 0);
     require(e2d_render_depth_support(NULL, 1) == -1);
     require(e2d_render_depth_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);

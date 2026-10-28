@@ -19,8 +19,8 @@ public sealed unsafe partial class RenderingDevice
         var pointers = instructions.Where(i => Op(i) == 32 && i.Length == 4).ToDictionary(i => i[1], i => i[3]);
         var readOnly = instructions.Where(i => Op(i) == 71 && i.Length == 3 && i[2] == 24).Select(i => i[1]).ToHashSet();
         var variables = instructions.Where(i => Op(i) == 59 && i.Length >= 4 && i[3] == 0 && pointers.TryGetValue(i[1], out var image) && images.ContainsKey(image)).ToArray();
-        if (variables.Any(v => !readOnly.Contains(v[2]))) throw new NotSupportedException("Graphics storage images require readonly declarations.");
-        if (images.Values.Any(i => i[4] != 0 || i[5] != 0 || i[6] != 0)) throw new NotSupportedException("Graphics storage images require ordinary color images.");
+        if (images.Values.Any(i => i[4] == 1 || i[5] != 0 || i[6] != 0)) throw new NotSupportedException("Graphics storage images require ordinary color images.");
+        if (variables.Any(v => !readOnly.Contains(v[2]))) return (code, []);
         var formats = variables.ToDictionary(v => v[2], v => images[pointers[v[1]]][8]);
         var translated = images.Keys.ToHashSet();
         var definitions = new List<uint[]>(); var next = words[3];

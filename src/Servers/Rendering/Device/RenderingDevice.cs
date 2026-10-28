@@ -74,6 +74,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal bool? IntegerBorder;
         internal bool UnnormalizedSampling;
         internal bool CompareSampling, LinearSampling, LinearFormatSampling, GraphicsStorage, RestartIndices;
+        internal uint GraphicsImages;
         internal IndexBufferFormat IndexFormat;
         internal VertexArray? Vertices;
         internal IndexArray? Indices;
@@ -236,7 +237,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or vertex with an optional fragment stage.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
-    /// <remarks>Vertex-only programs require DiscardPrimitives at pipeline creation and retain no public fragment bytecode. FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable ordinary graphics storage buffers require the enabled native feature of each writing stage; unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
+    /// <remarks>Vertex-only programs require DiscardPrimitives at pipeline creation and retain no public fragment bytecode. FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable graphics buffers and ordinary images require the enabled native feature of each writing stage; images additionally require the native descriptor/layout adapter and address original base-mip storage. Unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); var program = CaptureDeviceProgram(spirvData, name);
@@ -272,6 +273,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         ValidateGraphicsStorage(layout);
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
+        foreach (var binding in layout) if (binding.NativeImage) entry.GraphicsImages |= 1u << (binding.Native + (binding.Stage == ShaderStage.Fragment ? 8 : 0));
         entry.Sources = sources; entry.Constants = constants; entry.OutputSlots = outputSlots; entry.ViewIndex = viewIndex;
         if (template) return entry;
         ValidateShaderLimits(modules, entry);
@@ -490,7 +492,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
-            _entries.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
+            _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }
         base.Dispose(disposing);
     }

@@ -19,3 +19,9 @@ _e2d_render_multisample_support
 _e2d_render_multisample_pipeline
 _e2d_render_depth_support
 _e2d_render_depth_pipeline
+_e2d_render_image_support
+_e2d_render_image_release
+_e2d_render_image_transition
+_e2d_render_bind_image
+_e2d_render_prepare_images
+_e2d_render_images_pipeline

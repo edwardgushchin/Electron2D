@@ -66,7 +66,7 @@ public sealed unsafe partial class RenderingDevice
             var info = recipe.Description; info.VertexShader = program.Handle!.DangerousGetHandle(); info.FragmentShader = program.FragmentHandle!.DangerousGetHandle();
             info.VertexInputState.VertexAttributes = (nint)attributes; info.VertexInputState.VertexBufferDescriptions = (nint)buffers;
             info.TargetInfo.ColorTargetDescriptions = (nint)colors;
-            return new(CreateGraphicsPipeline(in info, recipe.Discard, recipe.LineWidth, recipe.Samples, recipe.Depth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+            return new(CreateGraphicsPipeline(in info, recipe.Discard, recipe.LineWidth, recipe.Samples, recipe.Depth, program.GraphicsImages), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
         }
     }
     private static void ReleaseSwizzle(SwizzleVariant variant)

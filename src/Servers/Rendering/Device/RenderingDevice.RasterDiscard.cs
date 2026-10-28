@@ -6,13 +6,14 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private int? _rasterSupport;
-    private nint CreateGraphicsPipeline(in SDL.GPUGraphicsPipelineCreateInfo info, bool discard, float lineWidth, NativeMultisampleState samples, NativeDepthStencilState depth)
+    private nint CreateGraphicsPipeline(in SDL.GPUGraphicsPipelineCreateInfo info, bool discard, float lineWidth, NativeMultisampleState samples, NativeDepthStencilState depth, uint images)
     {
         var outline = info.RasterizerState.FillMode == SDL.GPUFillMode.Line && _context.Driver == "vulkan";
-        if (!discard && lineWidth == 1 && !outline && samples.Flags == 0 && depth.Flags == 0) return SDL.CreateGPUGraphicsPipeline(Device, in info);
+        if (!discard && lineWidth == 1 && !outline && samples.Flags == 0 && depth.Flags == 0 && images == 0) return SDL.CreateGPUGraphicsPipeline(Device, in info);
         if (lineWidth != 1 && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.WideLinesProperty, false)) throw new NotSupportedException("Nonunit line width requires native wide-line rasterization.");
         _rasterSupport ??= NativeRasterSupport(Device, 1);
         if (_rasterSupport != 1) throw new NotSupportedException("Raster state requires the native graphics-pipeline adapter.");
+        if (images != 0) return NativeImagesPipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u, in samples, in depth, images);
         if (depth.Flags != 0) return NativeDepthPipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u, in samples, in depth);
         if (samples.Flags != 0) return NativeMultisamplePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u, in samples);
         return lineWidth == 1 && !outline ? NativeRasterPipeline(Device, 1, in info) : NativeLinePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u);

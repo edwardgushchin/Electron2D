@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false, bool UnnormalizedUnsafe = false, bool UsesSampler = true, bool Writable = false);
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false, int Attachment = -1, bool Multisample = false, int Count = 1, int Element = 0, bool DynamicCount = false, bool UnnormalizedUnsafe = false, bool UsesSampler = true, bool Writable = false, bool NativeImage = false);
     private static int ResourceWidth(UniformType type) => type is UniformType.SamplerWithTexture or UniformType.SamplerWithTextureBuffer ? 2 : 1;
     private static int ResourceID(Binding binding, int lane = 0) => binding.Element * ResourceWidth(binding.Type) + lane;
     private static (byte[] Code, Binding[] Layout, PushStage[] Push) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute) { var result = RemapCore(code, stage, false); return (result.Code, result.Layout, result.Push); }
@@ -91,7 +91,7 @@ public sealed unsafe partial class RenderingDevice
                 if (samplerTypes.Contains(imageType)) continue;
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("The image descriptor type has no scalar native adapter.");
-                if (atomicImages.Contains(variable.ID) && (!compute || image.Sampled != 2 || image.Format is not (24 or 33) || image.Array != 0)) throw new NotSupportedException("Image atomics require ordinary compute R32SINT or R32UINT storage images.");
+                if (atomicImages.Contains(variable.ID) && (image.Sampled != 2 || image.Format is not (24 or 33) || image.Array != 0)) throw new NotSupportedException("Image atomics require ordinary R32SINT or R32UINT storage images.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 if (readonlyTranslation.Images.TryGetValue(variable.ID, out var originalFormat))
                 {
@@ -109,14 +109,13 @@ public sealed unsafe partial class RenderingDevice
                 if (image.Multisample != 0) throw new NotSupportedException("Multisample shader images require their input-attachment/sample-load adapter.");
                 var writable = image.Sampled == 2;
                 if (image.Depth == 1 && (writable || pixelType != 0)) throw new NotSupportedException("Depth comparison requires a sampled floating-point image.");
-                if (!compute && writable && !readOnly.Contains(variable.ID)) throw new NotSupportedException("Graphics image storage requires a readonly declaration.");
                 if (combined && writable) throw new ArgumentException("A storage image cannot contain a combined sampler.", nameof(code));
                 if (writable && image.Array != 0) throw new NotSupportedException("Array image storage requires subresource-view integration.");
                 var nativeImage = writable ? imageSlot++ : textureSlot++;
                 if (imageSlot > 8 || textureSlot > 16) throw new NotSupportedException("Compute image bindings exceed backend limits.");
                 var origin = logical[variable.ID];
                 if (layout.Any(b => b.Set == origin.Set && b.Slot == origin.Slot)) throw new ArgumentException("Duplicate image binding.", nameof(code));
-                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage, Depth: image.Depth == 1));
+                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage, Depth: image.Depth == 1, Writable: !compute && writable && !readOnly.Contains(variable.ID), NativeImage: !compute && writable));
                 if (!writable && !combined)
                 {
                     var paired = variables.SingleOrDefault(v => pointers.TryGetValue(v.Type, out var ty) && samplerTypes.Contains(ty) && logical.TryGetValue(v.ID, out var loc) && loc == origin);

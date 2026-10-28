@@ -754,6 +754,8 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`ImageMetrics`](classes/ImageMetrics.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Implemented and verified |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`ClockDirection`](classes/ClockDirection.md) | [`ClockDirection.cs`](../src/Core/Math/ClockDirection.cs) | Current | Implemented and verified |
 
+Ordinary vertex/fragment Image stores and R32 integer atomics now reach compute, copies, readback and retained canvas through the [graphics image adapter](components/graphics-storage-images.md).
+
 ## Assembly inventory
 
 | Assembly | Project | Target | State |

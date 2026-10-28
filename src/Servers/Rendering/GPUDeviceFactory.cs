@@ -15,6 +15,14 @@ internal static unsafe partial class GPUDeviceFactory
     internal const string Int64Property = "Electron2D.gpu.shader_int64";
     internal const string BufferAtomic64Property = "Electron2D.gpu.buffer_int64_atomics";
     internal const string SharedAtomic64Property = "Electron2D.gpu.shared_int64_atomics";
+    private static void Destroy(nint device)
+    {
+        NativeImageRelease(device, 1);
+        SDL.DestroyGPUDevice(device);
+    }
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_image_release")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial void NativeImageRelease(nint device, uint abi);
     [StructLayout(LayoutKind.Sequential)]
     private struct Vulkan12Features
     {
@@ -87,7 +95,7 @@ internal static unsafe partial class GPUDeviceFactory
         internal SharedDevice(bool allowAndroidRelaxation)
         {
             var created = Create(allowAndroidRelaxation);
-            Handle = new RenderHandle(created.Device, SDL.DestroyGPUDevice);
+            Handle = new RenderHandle(created.Device, Destroy);
             Relaxed = created.Relaxed; SizedPoints = created.SizedPoints;
         }
 

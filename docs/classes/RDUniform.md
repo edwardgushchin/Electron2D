@@ -119,6 +119,8 @@ Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, incl
 
 The internal [device cache](../components/device-resource-caches.md) readers borrow validated description spans for key comparisons. Copied cache keys never retain these description objects or expose their mutable storage.
 
-Ordinary writable vertex/fragment storage and formatted ImageBuffer resources execute with independently enabled native stage features and ordered pass-boundary dependencies. Shared descriptors, AsStorage vertex/index buffers, GPU-produced indirect commands and following compute/readback use the existing API. See [writable graphics storage](../components/local-compute.md#writable-graphics-storage-buffers) for ownership, synchronization and remaining adapters.
+Writable vertex/fragment StorageBuffer, ordinary Image and formatted ImageBuffer resources execute with independently enabled native stage features and ordered pass-boundary dependencies. Shared descriptors, AsStorage vertex/index buffers, GPU-produced indirect commands and following compute/readback use the existing API. See [writable graphics storage](../components/local-compute.md#writable-graphics-storage-buffers) for ownership, synchronization and remaining adapters.
 
 Formatted ImageBuffer stores and signed/unsigned R32 atomics now execute in independently enabled vertex/fragment stages, using the same encoded allocation as compute and sampled reads. See [formatted graphics producers](../components/local-compute.md#writable-formatted-graphics-producers) for format, array, synchronization, HLSL frontend and verification boundaries.
+
+Ordinary Image stores and R32 atomics use the [original-image descriptor/layout adapter](../components/graphics-storage-images.md), preserving base-mip storage, sampled aliases and subsequent GPU consumers. Layered storage and wider atomics retain their prerequisites.

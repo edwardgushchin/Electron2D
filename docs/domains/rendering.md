@@ -68,6 +68,8 @@ Private native runtime binaries come from versioned Linux/macOS packages in ordi
 
 [File-backed arrays](../components/compressed-arrays.md) load raw/PNG/WebP and Basis LDR/HDR layers with complete mips, atomic source replacement, typed caching/worker loading and embedded archives. They reuse the existing GPU array consumer and borrowed RenderingDevice lifetime; Compatibility keeps its explicit custom-shader gate.
 
+Ordinary vertex/fragment Image stores and R32 integer atomics now reach compute, copies, readback and retained canvas through the [graphics image adapter](../components/graphics-storage-images.md).
+
 ## Native text coverage modes
 
 FontFile/SystemFont now generate real Mono/Gray/LCD native glyphs and share a captured project subpixel layout. Scalable glyph regions consume the existing GPU LCD path, while compatibility retains ordinary coverage and explicitly rejects component glyphs. [The complete font contract](../components/text.md#native-font-antialiasing-and-lcd-layout) records variation/fallback/storage, native oracle and rendered/allocation evidence. MSDF generation remains separate.
