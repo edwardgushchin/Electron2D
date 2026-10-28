@@ -1,3 +1,5 @@
+[Streaming GZIP native storage](../coverage/performance-producers.md#streaming-gzip-allocation-domain) now shares the existing bridge allocator, preserving strict gzip/zlib validation and complete cleanup. Composed memory selectors and foreign-host qualification remain open.
+
 # Networking
 
 [ENet-owned native allocations](../coverage/performance-producers.md#enet-owned-allocation-domain) now share the engine allocator ledger, with checked partial failure and finalizer cleanup. Complete memory monitors and foreign-platform qualification remain open.

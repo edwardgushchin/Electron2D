@@ -1448,27 +1448,27 @@
     {
       "godot": "class:StreamPeerGZIP",
       "electron2d": "T:Electron2D.StreamPeerGZIP",
-      "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+      "reason": "ADR 0094: bounded incremental gzip/zlib through the existing private codec bridge. Opaque context and internal zlib storage share the owned-native allocation ledger, including partial failure, explicit clear/disposal and finalization. HTTPTests preserves strict end/checksum validation, fragmented/backpressured wire behavior and prepared zero-byte calls; GZIPCleanupTests and the production native allocation-failure oracle check complete storage retirement. Exact composed managed/native monitors and foreign qualification remain open. See docs/coverage/performance-producers.md#streaming-gzip-allocation-domain."
     },
     {
       "godot": "StreamPeerGZIP::method:clear()",
       "electron2d": "method:Electron2D.StreamPeerGZIP.Clear()",
-      "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+      "reason": "ADR 0094: bounded incremental gzip/zlib through the existing private codec bridge. Opaque context and internal zlib storage share the owned-native allocation ledger, including partial failure, explicit clear/disposal and finalization. HTTPTests preserves strict end/checksum validation, fragmented/backpressured wire behavior and prepared zero-byte calls; GZIPCleanupTests and the production native allocation-failure oracle check complete storage retirement. Exact composed managed/native monitors and foreign qualification remain open. See docs/coverage/performance-producers.md#streaming-gzip-allocation-domain."
     },
     {
       "godot": "StreamPeerGZIP::method:finish()",
       "electron2d": "method:Electron2D.StreamPeerGZIP.Finish()",
-      "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+      "reason": "ADR 0094: bounded incremental gzip/zlib through the existing private codec bridge. Opaque context and internal zlib storage share the owned-native allocation ledger, including partial failure, explicit clear/disposal and finalization. HTTPTests preserves strict end/checksum validation, fragmented/backpressured wire behavior and prepared zero-byte calls; GZIPCleanupTests and the production native allocation-failure oracle check complete storage retirement. Exact composed managed/native monitors and foreign qualification remain open. See docs/coverage/performance-producers.md#streaming-gzip-allocation-domain."
     },
     {
       "godot": "StreamPeerGZIP::method:start_compression(bool:,int:)",
       "electron2d": "method:Electron2D.StreamPeerGZIP.StartCompression(System.Boolean,System.Int32)",
-      "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+      "reason": "ADR 0094: bounded incremental gzip/zlib through the existing private codec bridge. Opaque context and internal zlib storage share the owned-native allocation ledger, including partial failure, explicit clear/disposal and finalization. HTTPTests preserves strict end/checksum validation, fragmented/backpressured wire behavior and prepared zero-byte calls; GZIPCleanupTests and the production native allocation-failure oracle check complete storage retirement. Exact composed managed/native monitors and foreign qualification remain open. See docs/coverage/performance-producers.md#streaming-gzip-allocation-domain."
     },
     {
       "godot": "StreamPeerGZIP::method:start_decompression(bool:,int:)",
       "electron2d": "method:Electron2D.StreamPeerGZIP.StartDecompression(System.Boolean,System.Int32)",
-      "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
+      "reason": "ADR 0094: bounded incremental gzip/zlib through the existing private codec bridge. Opaque context and internal zlib storage share the owned-native allocation ledger, including partial failure, explicit clear/disposal and finalization. HTTPTests preserves strict end/checksum validation, fragmented/backpressured wire behavior and prepared zero-byte calls; GZIPCleanupTests and the production native allocation-failure oracle check complete storage retirement. Exact composed managed/native monitors and foreign qualification remain open. See docs/coverage/performance-producers.md#streaming-gzip-allocation-domain."
     },
     {
       "godot": "class:WebSocketPeer",
@@ -6275,9 +6275,7 @@
         "HTTPRequest::property:max_redirects",
         "HTTPRequest::property:timeout",
         "HTTPRequest::property:use_threads",
-        "HTTPRequest::signal:request_completed(int:,int:,PackedStringArray:,PackedByteArray:)",
-        "StreamPeerGZIP::method:clear()",
-        "StreamPeerGZIP::method:finish()"
+        "HTTPRequest::signal:request_completed(int:,int:,PackedStringArray:,PackedByteArray:)"
       ],
       "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
     },
@@ -6860,12 +6858,14 @@
     },
     {
       "godot": [
-        "class:StreamPeerGZIP",
+        "StreamPeerGZIP::method:clear()",
+        "StreamPeerGZIP::method:finish()",
         "StreamPeerGZIP::method:start_compression(bool:,int:)",
-        "StreamPeerGZIP::method:start_decompression(bool:,int:)"
+        "StreamPeerGZIP::method:start_decompression(bool:,int:)",
+        "class:StreamPeerGZIP"
       ],
       "state": "Implemented",
-      "reason": "ADR 0094: bounded incremental gzip/zlib streams retain strict checksum/end validation, backpressure, concatenated gzip members, constructing-thread ownership and prepared zero-managed-byte public HTTP/codec cycles. Failed initialization now ends an existing runtime-owned inner record before freeing the engine-owned outer PAL state, preserving the native error and unconfigured stream. Shared normal cleanup remains one-time through repeated disposal. GZIPCleanupTests reproduces the preceding constructor leak with calibrated native allocation/free counts and passes on Linux CLR/strict NativeAOT; the complete HTTP/HTTPS/worker suite passes. Public format defaults and signatures are unchanged. Native codec byte/peak instrumentation and foreign-host qualification remain open. See docs/components/http.md#failed-codec-initialization."
+      "reason": "ADR 0094: bounded incremental gzip/zlib through the existing private codec bridge. Opaque context and internal zlib storage share the owned-native allocation ledger, including partial failure, explicit clear/disposal and finalization. HTTPTests preserves strict end/checksum validation, fragmented/backpressured wire behavior and prepared zero-byte calls; GZIPCleanupTests and the production native allocation-failure oracle check complete storage retirement. Exact composed managed/native monitors and foreign qualification remain open. See docs/coverage/performance-producers.md#streaming-gzip-allocation-domain."
     }
   ]
 }

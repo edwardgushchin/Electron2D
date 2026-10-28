@@ -4,7 +4,7 @@ Last updated: 2026-10-28
 
 ## Public surface
 
-[HTTPClient](../classes/HTTPClient.md) exposes polled HTTP/1.1 request/header/body state over owned TCP/TLS or a borrowed StreamPeer. [HTTPRequest](../classes/HTTPRequest.md) adds scene scheduling, dedicated-worker execution, typed completion, progress, redirect policy, timeout, memory/file downloads and content decompression. [StreamPeerGZIP](../classes/StreamPeerGZIP.md) incrementally compresses/decompresses bounded gzip or zlib-wrapped deflate. HTTPMethod, HTTPResponseCode and HTTPStatus are shared HTTP enum domains; HTTPRequestResult is the distinct transfer-completion domain. HTTPTransfer/HTTPProxySettings and the compression PAL helpers remain internal. [ADR 0094](../decisions/networking.md#adr-0094) owns the contract.
+[HTTPClient](../classes/HTTPClient.md) exposes polled HTTP/1.1 request/header/body state over owned TCP/TLS or a borrowed StreamPeer. [HTTPRequest](../classes/HTTPRequest.md) adds scene scheduling, dedicated-worker execution, typed completion, progress, redirect policy, timeout, memory/file downloads and content decompression. [StreamPeerGZIP](../classes/StreamPeerGZIP.md) incrementally compresses/decompresses bounded gzip or zlib-wrapped deflate. HTTPMethod, HTTPResponseCode and HTTPStatus are shared HTTP enum domains; HTTPRequestResult is the distinct transfer-completion domain. HTTPTransfer/HTTPProxySettings and the compression bridge helpers remain internal. [ADR 0094](../decisions/networking.md#adr-0094) owns the contract.
 
 ## HTTP client flow
 
@@ -28,17 +28,21 @@ GetBodySize reports declared wire-body size or minus one; GetDownloadedBytes rep
 
 ## Compression backend and budgets
 
-StreamPeerGZIP uses the compression PAL already delivered with the .NET 10 runtime. The internal sequential PAL state, source-generated imports and SafeHandle release match the pinned v10.0.1 native contract. No new package, OS installation, public native handles or vendored source is added. Source state and output buffers are prepared at Start; output rounds to a power of two with a reserved byte, bounded to 64 MiB. Partial writes report input consumed under backpressure; drain output before retrying. Finish is compression-only and preserves finishing state across drain/retry. IsFinished exposes actual native end status, including gzip trailer/checksum verification; concatenated gzip members reset prepared inflate state. Zlib-wrapped deflate follows the reference useDeflate contract, not raw deflate.
+StreamPeerGZIP uses zlib through four private calls in the existing ENet/file-codec bridge. The opaque context and every internal codec allocation use the shared owned-native allocator; no platform-specific z_stream layout crosses the managed boundary. SafeHandle releases complete context/codec storage on disposal or finalization. This reuses the already packaged dependency and source-built bridge, with no new library. Source-generated imports use the platform C calling convention; an older bridge fails explicitly at creation.
 
-Setup, request construction, DNS, TLS handshakes, parsing/header snapshots, aggregate bodies and file operations are cold/loading boundaries. Repeated prepared HTTP body-span/poll and gzip member/read/reset operations allocate no managed bytes in the checked interval. The PAL state is allocated only at preparation; external native codec allocator totals are unmeasured. Direct PAL ABI integration is tied to the selected .NET 10 runtime and requires an executable packaging gate on each claimed target. Current native execution is Linux x64; HTTPS inherits the current Linux OpenSSL 3 backend. Browser HTTP host integration and other-platform/backend/native packaging remain separate.
+Output capacity is prepared at Start, rounds to a power of two with a reserved byte and is bounded to 64 MiB. Partial writes report consumed input under backpressure; drain output before retrying. Finish is compression-only and preserves partial finishing state for drain/retry. IsFinished exposes actual native end status, including gzip trailer/checksum validation; concatenated gzip members reset prepared inflate state. Zlib-wrapped deflate retains the useDeflate contract.
+
+Setup, request construction, DNS, TLS handshakes, response parsing, aggregate bodies and file operations are cold/loading boundaries. Prepared body-span/poll and gzip member/read/reset operations retain their zero-managed-allocation requirement. Internal inflate storage can be allocated on first decoding and remains counted until native release. Matching bridge exports and executable behavior need target qualification; local Linux evidence does not establish foreign execution, the entire native bundle or composed managed/native memory monitors.
 
 ## Failed codec initialization
 
-The .NET compression PAL allocates an inner `z_stream` record before calling
-codec initialization. A failed initialization can therefore leave that record
-owned even when the codec itself was never prepared. GZIPContext now uses the
-matching native End operation on failure whenever the inner pointer exists,
-then frees its own outer PAL record in a finally block. A null inner pointer
+The current opaque bridge releases a failed context and any initialized zlib storage before returning its original error. GZIPCleanupTests checks invalid windows, repeat disposal, finalization and public Clear; the production native oracle also injects failure at every allocation boundary. The following receipts describe the preceding PAL implementation.
+
+The preceding .NET compression PAL allocated an inner `z_stream` record before calling
+codec initialization. A failed initialization could therefore leave that record
+owned even when the codec itself was never prepared. The preceding cleanup fix used the
+matching native End operation on failure whenever the inner pointer existed,
+then freed its own outer PAL record in a finally block. A null inner pointer
 skips End. The original initialization error remains observable; the stream
 does not publish a partially configured context. Normal SafeHandle retirement
 uses the same cleanup, retaining one-time release through repeated Dispose.
@@ -57,14 +61,13 @@ process-wide observation window; they are not a byte-size or peak measurement.
 Linux x64 CLR and strict full-trim NativeAOT both pass the failure and normal
 retirement checks. The NativeAOT process maps no CoreCLR; its allocator counts
 also balance at 260/260 and 386/386. Receipts are under
-`bin/gzip-initialization-cleanup/2026-10-28/`. Codec allocator
-totals and the complete composed Performance memory monitors remain separate.
+`bin/gzip-initialization-cleanup/2026-10-28/`. That historical PAL cleanup evidence does not qualify the replacement bridge. The current [owned GZIP domain](../coverage/performance-producers.md#streaming-gzip-allocation-domain) records its separate accounting and failure checks; complete composed Performance memory monitors remain open.
 
 ## Verification
 
 [HTTPTests](../../tests/Electron2D.Tests/HTTPTests.cs) exercises fragmented headers/fixed/chunked/close bodies, informational/headerless/HEAD/CONNECT behavior, chunk extensions/trailers, duplicate/ambiguous/injected fields, query escaping and caller-owned transport lifetime. Native TCP/DNS fallback, forward proxy, CONNECT tunnel and independent SslStream HTTPS server execute on loopback. Scene and worker tests verify owner-thread/idle completion, redirects, incremental gzip, zip-bomb limits, truncated gzip rejection, atomic file preservation/success, timeout/cancel/tree exit, reentry and PackedScene configuration. Independent BCL gzip/zlib decoding verifies compressed wire output; fragmented native decoding verifies checksums/end status. 64 HTTP body-span/poll and 64 gzip member/decode/read/reset cycles each measure zero managed bytes after preparation.
 
-Native codec allocator totals, routed network conditions/throughput, foreign targets/browser, authenticated real-world proxies and owner acceptance remain separate gates. Network checks do not establish rendered output, editor tooling or unified agent/project workflows.
+Complete native allocation-domain coverage, routed network conditions/throughput, foreign targets/browser, authenticated real-world proxies and owner acceptance remain separate gates. Network checks do not establish rendered output, editor tooling or unified agent/project workflows.
 
 ## Shared address resolution
 

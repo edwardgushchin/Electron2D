@@ -1,10 +1,12 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 namespace Electron2D;
 
 /// <summary>Incrementally compresses or decompresses gzip and zlib-wrapped deflate bytes through bounded output storage.</summary>
 /// <remarks>Input and output spans are borrowed only during a call. Drain output when partial writes stop progressing.
 /// Native codec state and output capacity are prepared on Start. Failed initialization releases partial native state
-/// and leaves the stream unconfigured. Calls and disposal require the constructing thread.</remarks>
+/// and leaves the stream unconfigured. Context and internal codec storage share owned-native accounting.
+/// Calls and disposal require the constructing thread.</remarks>
 public class StreamPeerGZIP : StreamPeer
 {
     private GZIPContext? _context;
@@ -58,15 +60,6 @@ public class StreamPeerGZIP : StreamPeer
     protected override void Dispose(bool disposing) { if (disposing) Clear(); base.Dispose(disposing); }
 }
 
-[StructLayout(LayoutKind.Sequential)]
-internal unsafe struct GZIPState
-{
-    internal byte* Input;
-    internal byte* Output;
-    internal nint Message, State;
-    internal uint InputLeft, OutputLeft;
-}
-
 internal sealed unsafe class GZIPContext : SafeHandle
 {
     internal readonly bool Compress;
@@ -75,51 +68,37 @@ internal sealed unsafe class GZIPContext : SafeHandle
     internal GZIPContext(bool compress, int window) : base(0, true)
     {
         Compress = compress; _window = window;
-        var pointer = (GZIPState*)NativeAllocation.AllocZeroed((nuint)sizeof(GZIPState));
-        try { var result = compress ? GZIPNative.StartCompression(pointer, -1, 8, _window, 8, 0) : GZIPNative.StartDecompression(pointer, _window); if (result != 0) throw new InvalidDataException("Native compression initialization failed: " + result); SetHandle((nint)pointer); }
-        catch
-        {
-            try { End(pointer); }
-            finally { NativeAllocation.Free(pointer); }
-            throw;
-        }
+        ENetNative.PrepareMemory();
+        nint pointer;
+        int result;
+        try { pointer = GZIPNative.Create(compress ? 1 : 0, window, out result); }
+        catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("Stream compression requires the matching source-built native bundle.", error); }
+        if (pointer == 0) throw new InvalidDataException("Native compression initialization failed: " + result);
+        SetHandle(pointer);
     }
     public override bool IsInvalid => handle == 0;
     internal int Process(ReadOnlySpan<byte> input, Span<byte> output, bool finish, out int written)
     {
-        var state = (GZIPState*)handle;
-        if (!Compress && Finished && !input.IsEmpty) { if (_window != 31) throw new InvalidDataException("Trailing zlib data."); if (GZIPNative.Reset(state, _window) != 0) throw new InvalidDataException("Gzip member reset failed."); Finished = false; }
+        if (!Compress && Finished && !input.IsEmpty) { if (_window != 31) throw new InvalidDataException("Trailing zlib data."); if (GZIPNative.Reset(handle, _window) != 0) throw new InvalidDataException("Gzip member reset failed."); Finished = false; }
         fixed (byte* source = input) fixed (byte* destination = output)
         {
-            state->Input = source; state->InputLeft = (uint)input.Length; state->Output = destination; state->OutputLeft = (uint)output.Length;
-            var result = Compress ? GZIPNative.Compress(state, finish ? 4 : 0) : GZIPNative.Decompress(state, 0);
-            written = output.Length - (int)state->OutputLeft; var consumed = input.Length - (int)state->InputLeft;
-            state->Input = state->Output = null; state->InputLeft = state->OutputLeft = 0;
-            if (result is not (0 or 1 or -5)) throw new InvalidDataException("Compressed stream validation failed: " + result); Finished = result == 1; return consumed;
+            var consumed = (uint)input.Length; var count = (uint)output.Length;
+            var result = GZIPNative.Process(handle, source, &consumed, destination, &count, finish ? 1 : 0);
+            written = (int)count;
+            if (result is not (0 or 1 or -5)) throw new InvalidDataException("Compressed stream validation failed: " + result); Finished = result == 1; return (int)consumed;
         }
-    }
-    private void End(GZIPState* state)
-    {
-        // The runtime allocates its inner record before codec initialization can fail.
-        if (state->State == 0) return;
-        if (Compress) GZIPNative.EndCompression(state); else GZIPNative.EndDecompression(state);
     }
     protected override bool ReleaseHandle()
     {
-        var state = (GZIPState*)handle;
-        try { End(state); return true; }
-        finally { NativeAllocation.Free(state); }
+        GZIPNative.Destroy(handle); return true;
     }
 }
 
 internal static unsafe partial class GZIPNative
 {
-    private const string Library = "System.IO.Compression.Native";
-    [LibraryImport(Library, EntryPoint = "CompressionNative_DeflateInit2_")] internal static partial int StartCompression(GZIPState* stream, int level, int method, int windowBits, int memoryLevel, int strategy);
-    [LibraryImport(Library, EntryPoint = "CompressionNative_InflateInit2_")] internal static partial int StartDecompression(GZIPState* stream, int windowBits);
-    [LibraryImport(Library, EntryPoint = "CompressionNative_Deflate")] internal static partial int Compress(GZIPState* stream, int flush);
-    [LibraryImport(Library, EntryPoint = "CompressionNative_Inflate")] internal static partial int Decompress(GZIPState* stream, int flush);
-    [LibraryImport(Library, EntryPoint = "CompressionNative_DeflateEnd")] internal static partial int EndCompression(GZIPState* stream);
-    [LibraryImport(Library, EntryPoint = "CompressionNative_InflateEnd")] internal static partial int EndDecompression(GZIPState* stream);
-    [LibraryImport(Library, EntryPoint = "CompressionNative_InflateReset2_")] internal static partial int Reset(GZIPState* stream, int windowBits);
+    private const string Library = NativeLibraries.ENetLibrary;
+    [LibraryImport(Library, EntryPoint = "e2d_gzip_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint Create(int compress, int window, out int error);
+    [LibraryImport(Library, EntryPoint = "e2d_gzip_process"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Process(nint stream, byte* input, uint* inputLength, byte* output, uint* outputLength, int finish);
+    [LibraryImport(Library, EntryPoint = "e2d_gzip_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void Destroy(nint stream);
+    [LibraryImport(Library, EntryPoint = "e2d_gzip_reset"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Reset(nint stream, int windowBits);
 }

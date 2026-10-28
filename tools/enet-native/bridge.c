@@ -56,6 +56,40 @@ static void *allocate_zeroed(size_t count, size_t size) {
 static void *codec_allocate(void *opaque, size_t size) { return allocate_cb(size); }
 static void codec_release(void *opaque, void *value) { release_cb(value); }
 static void *zlib_allocate(void *opaque, uInt count, uInt size) { return allocate_zeroed(count, size); }
+typedef struct { z_stream stream; int compress; } GZIP;
+API void e2d_gzip_destroy(GZIP *context) {
+  if (!context) return;
+  if (context->stream.state) {
+    if (context->compress) deflateEnd(&context->stream); else inflateEnd(&context->stream);
+  }
+  release_cb(context);
+}
+API GZIP *e2d_gzip_create(int compress, int window, int *error) {
+  if (!error) return NULL;
+  *error = Z_MEM_ERROR;
+  GZIP *context = allocate_zeroed(1, sizeof(*context));
+  if (!context) return NULL;
+  context->compress = compress;
+  context->stream.zalloc = zlib_allocate; context->stream.zfree = codec_release;
+  *error = compress ? deflateInit2(&context->stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED, window, 8, Z_DEFAULT_STRATEGY)
+                    : inflateInit2(&context->stream, window);
+  if (*error != Z_OK) { e2d_gzip_destroy(context); return NULL; }
+  return context;
+}
+API int e2d_gzip_process(GZIP *context, const unsigned char *input, uint32_t *input_length,
+                         unsigned char *output, uint32_t *output_length, int finish) {
+  if (!context || !input_length || !output_length) return Z_STREAM_ERROR;
+  z_stream *stream = &context->stream;
+  stream->next_in = (Bytef *)input; stream->avail_in = *input_length;
+  stream->next_out = output; stream->avail_out = *output_length;
+  int result = context->compress ? deflate(stream, finish ? Z_FINISH : Z_NO_FLUSH) : inflate(stream, Z_NO_FLUSH);
+  *input_length -= stream->avail_in; *output_length -= stream->avail_out;
+  stream->next_in = stream->next_out = NULL; stream->avail_in = stream->avail_out = 0;
+  return result;
+}
+API int e2d_gzip_reset(GZIP *context, int window) {
+  return context && !context->compress ? inflateReset2(&context->stream, window) : Z_STREAM_ERROR;
+}
 static ZSTD_customMem codec_memory(void) {
   ZSTD_customMem memory = {codec_allocate, codec_release, NULL};
   return memory;

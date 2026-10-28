@@ -8,7 +8,7 @@ Last updated: 2026-10-28
 
 Incrementally compresses or decompresses gzip and zlib-wrapped deflate bytes through bounded output storage.
 
-Input and output spans are borrowed only during a call. Drain output when partial writes stop progressing. Native codec state and output capacity are prepared on Start. Calls and disposal require the constructing thread.
+Input and output spans are borrowed only during a call. Drain output when partial writes stop progressing. Native codec state and output capacity are prepared on Start. The private bridge counts context/internal zlib payloads in owned-native accounting and releases them through SafeHandle; lazy decoder storage remains part of that lifetime. Calls and disposal require the constructing thread.
 
 Failed initialization releases partially owned native state and leaves the
 stream unconfigured. The [native cleanup regression](../components/http.md#failed-codec-initialization)

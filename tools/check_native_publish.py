@@ -114,7 +114,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         assert needed == {"libz.so.1", "libzstd.so.1", "libc.so.6", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}, f"Unreviewed ENet dependencies: {needed}"
         symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(enet)], text=True)
         exports = {line.split()[-1] for line in symbols.splitlines()}
-        assert exports == {"e2d_enet_" + name for name in ("memory", "callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"}, "ENet private ABI export mismatch"
+        assert exports == {"e2d_enet_" + name for name in ("memory", "callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")}, "ENet private ABI export mismatch"
         webrtc = native / "libElectron2DWebRTC.so"
         assert webrtc.is_file() and not (publish / webrtc.name).exists(), "WebRTC must retain its RID directory"
         check_private_webrtc(rid, webrtc)

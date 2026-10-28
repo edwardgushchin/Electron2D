@@ -1,12 +1,12 @@
 # GZIPNative
 
-Last updated: 2026-10-04
+Last updated: 2026-10-28
 
 **Visibility:** internal. **Source:** [StreamPeerGZIP.cs](../../src/Core/Networking/StreamPeerGZIP.cs). **Component:** [HTTP](../components/http.md).
 
 ## Responsibilities
 
-Private source-generated imports into the compression shim already delivered with the .NET runtime. The pinned .NET 10 ABI and self-contained native gate are separate from public stream semantics; no new external package or vendor source is added.
+Private source-generated C imports for create/process/reset/destroy of opaque gzip/zlib contexts in the existing ENet/file-codec bridge. Only pinned input/output spans and fixed-width counts cross each call. Matching exports are required by native packaging, publish checks and the desktop preflight; no runtime compression PAL layout or new dependency is used.
 
 ## Verification
 

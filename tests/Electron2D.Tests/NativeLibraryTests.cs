@@ -12,18 +12,20 @@ internal static class NativeLibraryTests
             var file = Path.Combine(AppContext.BaseDirectory, "runtimes", NativeLibraries.RuntimeRID, "native", name);
             if (!File.Exists(file) || File.Exists(Path.Combine(AppContext.BaseDirectory, name)))
                 throw new InvalidOperationException($"Project-referenced native library must exist only under runtimes/RID/native: {name}");
-            if (name.Contains("WebP", StringComparison.Ordinal) || name.Contains("FreeType", StringComparison.Ordinal))
+            if (name.Contains("WebP", StringComparison.Ordinal) || name.Contains("FreeType", StringComparison.Ordinal) || name.Contains("ENet", StringComparison.Ordinal))
             {
                 var library = NativeLibrary.Load(file);
                 try
                 {
-                    foreach (var export in name.Contains("FreeType", StringComparison.Ordinal) ? new[] { "e2d_ft_hb_memory" } : new[] { "e2d_webp_encode", "e2d_webp_decode" })
+                    var exports = name.Contains("FreeType", StringComparison.Ordinal) ? new[] { "e2d_ft_hb_memory" } :
+                        name.Contains("ENet", StringComparison.Ordinal) ? ["e2d_enet_memory", "e2d_file_encode", "e2d_file_decode", "e2d_gzip_create", "e2d_gzip_process", "e2d_gzip_reset", "e2d_gzip_destroy"] : ["e2d_webp_encode", "e2d_webp_decode"];
+                    foreach (var export in exports)
                         if (!NativeLibrary.TryGetExport(library, export, out _))
                             throw new InvalidOperationException($"Native bridge is missing {export}; use the matching native bundle: {file}");
                 }
                 finally { NativeLibrary.Free(library); }
             }
         }
-        Console.WriteLine("Project-referenced native libraries retain their runtime directory without root copies; WebP encode/decode and font allocation exports are present.");
+        Console.WriteLine("Project-referenced native libraries retain their runtime directory without root copies; WebP, font allocation and ENet/file/GZIP exports are present.");
     }
 }
