@@ -28,15 +28,17 @@ internal static unsafe partial class NativeFontAllocationTests
         try { using var invalid = new NativeFontPrecision([0, 1, 2, 3]); throw new Exception("Invalid font unexpectedly opened."); }
         catch (InvalidOperationException) { }
         Check(NativeAllocation.Snapshot().Current == baseline.Current, "Failed production face construction retires the initialized modules and allocator.");
-        var calls = ExerciseLibrary(data, 0);
-        Check(calls > 0, "The native library actually called its supplied allocator.");
-        for (var failAt = 1; failAt <= calls; failAt++) _ = ExerciseLibrary(data, failAt);
+        var unhinted = ExerciseLibrary(data, 0, false);
+        var hinted = ExerciseLibrary(data, 0, true);
+        Check(unhinted > 0 && hinted > unhinted, "Both render modes use the allocator; hinting also allocates its interpreter state.");
+        for (var failAt = 1; failAt <= unhinted; failAt++) _ = ExerciseLibrary(data, failAt, false);
+        for (var failAt = 1; failAt <= hinted; failAt++) _ = ExerciseLibrary(data, failAt, true);
         Check(NativeAllocation.Snapshot().Current == baseline.Current, "All injected native allocation failures drain their accepted ownership.");
         var abandoned = Abandon(data); AllocationWarmupCheck.Collect();
         Check(!abandoned.IsAlive && NativeAllocation.Snapshot().Current == baseline.Current, "Finalizer teardown retains the callback record until library retirement completes.");
-        Console.WriteLine($"FreeType allocation ownership: production lifetime/errors/finalization, {calls} unhinted native failure positions and 128 zero-managed-allocation shaping calls passed.");
+        Console.WriteLine($"FreeType allocation ownership: production lifetime/errors/finalization, {unhinted}/{hinted} unhinted/hinted native failure positions and 128 zero-managed-allocation shaping calls passed.");
     }
-    private static int ExerciseLibrary(byte[] data, int failAt)
+    private static int ExerciseLibrary(byte[] data, int failAt, bool hinted)
     {
         var before = NativeAllocation.Snapshot(); var state = new FaultState { Normal = Memory.Create(), FailAt = failAt };
         var memory = state.Normal; memory.User = &state; memory.Allocate = &Allocate; memory.Reallocate = &Reallocate;
@@ -51,7 +53,7 @@ internal static unsafe partial class NativeFontAllocationTests
                     AddModules(null, library); SetProperties(null, library);
                     error = NewFace(null, library, bytes, new CLong(data.Length), new CLong(0), out face);
                     if (error == 0) error = SetSize(null, face, new CLong(0), new CLong(24 * 64), 72, 72);
-                    if (error == 0) error = LoadGlyph(null, face, GlyphIndex(null, face, new CULong('A')), 4 | 2);
+                    if (error == 0) error = LoadGlyph(null, face, GlyphIndex(null, face, new CULong('A')), hinted ? 4 : 4 | 2);
                 }
                 if (failAt == 0) Check(error == 0 && face != 0, "Unrestricted native initialization, decoding and rendering succeeds.");
                 else Check(state.Failures == 1, "Each requested native allocation failure actually occurred.");
@@ -62,7 +64,7 @@ internal static unsafe partial class NativeFontAllocationTests
                 if (library != 0) Check(DoneLibrary(null, library) == 0, "Modules/library close while their caller-owned callback record is live.");
             }
         }
-        Check(NativeAllocation.Snapshot().Current == before.Current, $"Native allocation failure {failAt} leaves no tracked allocation.");
+        Check(NativeAllocation.Snapshot().Current == before.Current, $"Native allocation failure {failAt}, hinted={hinted}, leaves no tracked allocation.");
         return state.Calls;
     }
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]

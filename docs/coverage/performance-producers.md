@@ -69,7 +69,46 @@ This follows the [documented custom-memory library lifetime](https://freetype.or
 
 NativeFontAllocationTests verifies actual production face ownership, explicit/failed/finalizer cleanup, native callbacks and fail-at-every-request initialization/decoding/unhinted rendering. Its prepared shaping interval measures managed allocations; new raster image creation remains a cold allocating operation. Linux x64 CLR and strict full-trim NativeAOT pass all 1162 unhinted allocation-failure positions and 128 warmed shaping calls at strict 0/0 owner/all-thread managed bytes. Source-bound raster/cache/metadata/variation/paragraph checks pass, including 60 independent packaged-library raster oracle cases both with default properties and with truetype:interpreter-version=35. Real-window GPU and compatibility text checks pass; CPU/GPU owner/separate role profiles retain 512 zero-allocation full frames. The GPU rerun uses the current-main native render bridge; earlier stale-bridge failures are retained separately. Receipts, the native C reproduction, immutable cohort hashes and matching runtime/test/consumer PDB/resource proofs are under bin/freetype-allocation-accounting/2026-10-28/. The full ordinary suite and other platforms were not rerun for this slice. Native package export validation now also requires the four custom-library initialization/teardown entry points.
 
-The packaged Linux 2.13.3 library has an unresolved hinted-glyph allocation-failure crash: the bound trial aborts at request 1158 of 1179, inside FT_Load_Glyph; unhinted rendering passes all 1162 positions. The same failure reproduces in a standalone C program using ordinary malloc/realloc/free with the packaged library; the system library returns an error instead. The earlier system-library result (1173 positions) does not qualify the package. The hinted failure case remains an explicit native dependency defect and prevents complete error-path qualification; do not promote either memory selector from this slice.
+### Hinted allocation-failure guard (2026-10-28)
+
+The preceding packaged Linux 2.13.3 trial crashed at request 1158 of 1179.
+A fresh Debug build of the pinned producer reproduces the same native C failure:
+TT_New_Context returns null and tt_size_init_bytecode passes it to
+TT_Load_Context, which dereferences exec->memory. This is independent of the
+managed allocator callback ABI.
+
+The private producer now backports the context-allocation check, matching the
+[upstream guard](https://github.com/freetype/freetype/blob/3f6dad8e4f82c4f9c7cf9ffbf82972b912c08e48/src/truetype/ttobjs.c#L1036).
+The source pin remains `0a0221a1347e2f1e07c395263540026e9a0aa7c7` (2.13.3).
+`tools/font-native/freetype-context-oom.cmake` generates a marked TrueType unit
+in the build directory; the dependency checkout stays unchanged. The exact
+initializer and compilation-unit checks fail configuration if the pinned layout
+changes. The macOS incremental source target includes this helper among its
+inputs. No new native export or public managed API is introduced.
+
+The target-native Electron2DFreeTypeCheck now injects failure at every allocation
+for both unhinted and hinted rendering, checks zero retained callback blocks and
+retries the same face after a failed bytecode-context allocation. Debug and
+Release pass all 1162/1179 positions. Release also passes both default properties
+and truetype:interpreter-version=35, including two successful context retries
+per run. The managed NativeFontAllocationTests now executes both complete
+failure matrices, production/finalizer cleanup and 128 warmed shaping calls at
+strict 0/0 owner/all-thread managed bytes on Linux CLR and full-trim NativeAOT.
+The AOT process maps the qualified FreeType and no CoreCLR.
+
+The qualified producer library SHA-256 is
+`8de7fa02d02599eebf027d51e22eb0c58861dfe07836b118cf0dc16dc3ef592c`.
+The root consumer also passes its allocation route, 60 independent raster-oracle
+cases under default properties and 60 under interpreter 35, plus the native
+raster-policy suite. Receipts, hashes, original failing GDB stack and commands
+are under `bin/freetype-hinted-oom/2026-10-28/`.
+
+This qualifies the rebuilt library and explicit local consumer cohorts. Existing
+published/cached native packages must be rebuilt before they acquire the fix;
+their files were not replaced by these checks. Foreign targets, complete ordinary
+suite, independent allocation domains and coherent managed/native current/peak
+producers remain open. Physics declaration coverage stays **1365/1369 (99.71%)**,
+four Partial and 92 Excluded; neither memory selector is promoted by this fix.
 
 The focused FastTests route requires explicit native qualification: `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -- --freetype-allocation`. The existing consumer platform property admits the standard native package for that run; ordinary managed fast builds keep their existing dependency boundary.
 
