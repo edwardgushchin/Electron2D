@@ -2,7 +2,7 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 The authorized [2026-10-20 RTX baseline](physics-rtx-current.md) adds physical
 GPU monitored-scene measurements and calibrated native request counts. Its 16,384-body scene medians were close with worse GPU tails. The later
@@ -16,7 +16,81 @@ adds all-thread libc request accounting to the complete monitored scene, with
 separate ordinary timing and software-driver limits. Older trials below keep
 their own revisions and workloads.
 
-## Current-main populated monitor refresh (2026-10-26)
+## Monitored scene diagnostic at d54b90f03 (2026-10-28)
+
+Six fresh processes use one immutable cohort content-qualified against
+`d54b90f033851d96e824f2608e2015e417f15489`. Each keeps 16,384 awake
+RigidBody nodes, four walls, contact monitoring with cap eight, interpolation,
+144 Hz, four substeps and sixteen solver iterations. Each process warms 1,600
+complete frames and measures 128. The order is CPU/GPU/GPU/CPU headless, then
+CPU/GPU windows. Both windows use the GPU renderer, 1152 x 800, the same native
+event pump and one injected mouse-motion event per frame. No numerical stage,
+contact receiver or body is removed. These are full scene paths, separate from
+the raw-server-body pile.
+
+This is a diagnostic series without quiet admission. The same external observer
+samples host CPU activity and NVIDIA telemetry once per second for both backends.
+Whole-child background CPU averages are shown below; they include setup, warmup
+and cleanup and do not establish isolation of the measured interval. The host is
+Ryzen 7 5700X / RTX 3090 Ti / NVIDIA 615.71.09. No clock, power, affinity or user
+application policy was changed.
+
+| Case | Full physics mean / p50 / p95 / p99, ms | Real-window FPS | Background CPU cores, mean |
+| --- | --- | ---: | ---: |
+| headless-1-cpu | 115.9663 / 115.0712 / 124.3011 / 136.1633 | n/a | 4.926 |
+| headless-1-gpu | 192.0457 / 115.0028 / 507.3085 / 568.4987 | n/a | 5.308 |
+| headless-2-gpu | 76.0051 / 74.1397 / 86.8220 / 133.0725 | n/a | 2.895 |
+| headless-2-cpu | 127.8530 / 124.9728 / 144.8764 / 189.4930 | n/a | 3.912 |
+| window-cpu | 122.6171 / 121.3728 / 132.9733 / 143.2904 | 4.7771 | 4.561 |
+| window-gpu | 89.5323 / 82.7907 / 131.2107 / 146.9297 | 5.5321 | 5.340 |
+
+All six children return zero and pass exact population/tick, finite state,
+contact publication, penetration/containment and energy checks. Every measured
+complete physics bracket has zero owner/all-thread managed bytes: 768 measured
+steps in total. CPU maximum escape/penetration is .299927/.297867; GPU maxima
+are .032471/.121679, with the existing .601 penetration limit. These values
+exercise the existing physical acceptance checks; they do not prove cross-platform
+numerical agreement or bitwise determinism.
+
+Window physics p50 is 121.3728/82.7907 ms CPU/GPU, while complete frame p50 is
+206.4287/170.9953 ms. Render p50 is 83.0426/83.6503 ms and pose-buffer publication
+p50 is 1.6246/2.7682 ms. Both hosts request Disabled VSync but observe Enabled.
+The captures were inspected, and automatic checks retain one rendered instance
+for every simulated body. The window throughput ratio is an observation from
+this fixed host and presentation mode, not an uncapped renderer or game-loop limit.
+
+Both windows retain nonzero aggregate frame bytes: 52,224 CPU / 52,712 GPU, all
+inside the measured input-pump bracket. Pose-buffer publication, idle processing,
+rendering and physics each remain zero. This preserves the existing distinction
+between fresh owned native input events and the physical allocation gate; the
+additional GPU-pump bytes were not separately attributed. frameManagedZero is
+false in both reports. The copied matrix wrapper incorrectly required zero whole-
+frame bytes, so it stopped after the successful CPU-window child. That failed
+wrapper/log remains intact. The originally planned, unstarted GPU-window case
+then ran separately with the identical settings; none of the five completed
+children was retried and no benchmark assertion was removed.
+
+GPU headless selected-contact result payloads are 6,206,644.75 and 6,210,378.375
+bytes/tick; complete physics-store readback is 7,387,374.5 and 7,391,083.375 bytes/
+tick. The window records 6,168,605.125 selected-result bytes and 7,349,391.875
+total readback bytes/tick. These are requested download payload sizes, not
+measured PCIe transactions. The two headless GPU pose/contact/event completion
+means are 40.4962/33.1952/6.0189 and 17.3962/9.8616/2.6987 ms. Their large variation,
+the first GPU p99 of 568.4987 ms and the changing background load prevent a
+repeatable performance-advantage claim. Current complete performance acceptance
+remains open; these measurements do not update any API coverage state.
+
+Receipts, raw distributions, telemetry, source/binary proof links and both PNGs
+are under `bin/physics-goal-review/2026-10-28/`. summary.json validates the six
+physical results separately from the failed legacy wrapper. The cohort reuses
+the prior 80 immutable files without another binary copy. Runtime/root SHA-256:
+`4862f1d9ef3e0645910ed1c8a3cba5a06d683893059159dc62a6b1d0e6a1de55` /
+`35dd91f88ce84385e44d29924259ee7b458b39935395619c746a420a7407a005`.
+The matching source/PDB/resource and Git bindings remain under
+`bin/freetype-allocation-accounting/2026-10-28/`. Build revision metadata predates
+the implementation commit; those content proofs establish the source association.
+
+## Populated monitor refresh (2026-10-26)
 
 ### Process and owner CPU time
 
