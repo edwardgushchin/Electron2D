@@ -1,6 +1,6 @@
 # Resident GPU contact publication
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 ## Boundary
 
@@ -15,6 +15,71 @@ observed depth. These local identities are not wire IDs or public RIDs. The publ
 adapter resolves them to retained common identities and logical shape indices,
 applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
+
+## Compact monitor contacts (2026-10-28)
+
+Monitor-only scene receivers now transfer sixteen-byte shape/generation keys after
+the same device cap/depth selection. Numerical report fields remain frozen in
+resident sixty-eight-byte results. Identity, RID, owner, logical shape indices and
+history tokens are resolved when the keys are published. A late numerical getter
+reads the selected receiver row and fills only its numerical fields; it never
+reselects contacts or samples edited poses, velocities or shape ownership.
+
+Raw server receivers, direct-state extensions, integration/sync callbacks and
+positive reporting-depth thresholds retain full packets. Observed numerical reads
+request a full packet for the next interval as a cost hint. A late change requiring
+full data before worker capture materializes the selected results on the owner.
+The monitor's identity enumeration never causes numerical downloads on workers.
+Local and portable snapshot preparation batch full materialization in one read;
+restoration supplies complete observer values and retires device selection versions.
+
+The existing step guard rejects direct-state queries during synchronous solver-pose
+notifications; the next contact capture replaces the previous view before public
+result callbacks run. Keys reuse the report hash
+table after selection, retaining six read-only/eight writable shader bindings;
+the next numerical publication rebuilds that scratch. Host source indices and
+per-receiver transfer capacity are prepared before warmed reads. Full contact
+arrays remain available for eager consumers and snapshot capture; the change
+reduces routine transfer, not numerical work or the public contact contract.
+
+The focused native/scene regression compares every frozen field with the full
+selection, changes pose/velocity and removes a collider shape before the first
+numerical read, checks stale selection/offset alias rejection, local/portable
+restore, positive depth and callback demand. Eight identical contact frames
+transfer 1088 full versus 256 compact selected-result bytes (76.47% less), with
+128 warmed full scene frames retaining zero owner/all-thread managed bytes.
+The 512-receiver dense scene also passes all identities, moving/stationary/sleep,
+wake and both restore paths with zero warmed managed bytes.
+
+The source-bound full-frame comparison uses 4096 scene RigidBodies plus four walls,
+144 Hz, four substeps, sixteen solver sweeps, cap eight, contact monitoring,
+interpolation and disabled sleeping. Each fresh process runs 1600 warmup and 128
+measured frames. GPU order is full/keys, then the CPU child, then keys/full; the CPU
+child has an unavailable Vulkan ICD. The unchanged runtime SHA-256 is
+`22ccff4ac8fcac439002688d62a35ffce087c712ffd26b25962efd219883df95`.
+All five children exit zero, pass the same physical bounds and retain 0/0 warmed
+physics/frame managed bytes. Shared-desktop background work remains uncontrolled;
+these timings do not qualify whole-goal GPU advantage or real-window FPS.
+
+| Child | Mean ms | p50 ms | p99 ms | Selected result KiB/tick | Total readback KiB/tick |
+|---|---:|---:|---:|---:|---:|
+| gpu-full-1 | 45.115 | 26.213 | 126.788 | 1438.6 | 1727.6 |
+| gpu-keys-1 | 21.942 | 21.902 | 26.357 | 335.6 | 624.7 |
+| cpu | 26.263 | 26.160 | 30.118 | 0.0 | 0.0 |
+| gpu-keys-2 | 21.145 | 20.907 | 26.437 | 339.1 | 628.2 |
+| gpu-full-2 | 21.854 | 21.653 | 25.874 | 1448.7 | 1737.8 |
+
+The first full-packet run has material latency spikes; the second pair differs by
+0.709 ms in mean frame time. Retain the measured traffic reduction without treating
+that noisy comparison as final throughput acceptance. Local receipts and source/
+cohort manifests are under `bin/physics-contact-keys/2026-10-28/`.
+
+These are functional/traffic receipts, not accepted whole-step or window-speed
+improvements. The internal ForceFullGPUContactReports control compares complete
+scene paths at one source revision; the pipeline fixture exposes it as
+ELECTRON2D_PHYSICS_PERFORMANCE_FULL_CONTACT_REPORTS=1. Physics declaration coverage
+remains 1364/1369 (99.63%), five Partial and 92 Excluded; complete performance and
+platform qualification stay open.
 
 ## Authored report policy publication (2026-10-27)
 

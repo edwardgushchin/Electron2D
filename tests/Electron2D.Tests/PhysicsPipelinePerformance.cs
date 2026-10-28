@@ -102,6 +102,7 @@ internal static partial class PhysicsPipelinePerformance
             var data = PhysicsServer.Service.GetSceneSpace(world.Space); var gpu = data.GPUStore;
             var publicationControl = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_PUBLICATION_CONTROL") == "1";
             data.ForceGPUStatePublication = publicationControl;
+            data.ForceFullGPUContactReports = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_FULL_CONTACT_REPORTS") == "1";
             var serialContacts = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_SERIAL_CONTACTS") == "1";
             data.ForceSerialContactPublication = serialContacts;
             var separateContactSubmissions = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_SEPARATE_CONTACT_SUBMISSIONS") == "1";
@@ -243,6 +244,7 @@ internal static partial class PhysicsPipelinePerformance
                 windowHost = display is null ? null : "fixed-scene-frame",
                 presentationInterpolationFraction = display is null ? (double?)null : Engine.PhysicsInterpolationFraction,
                 publicationControl,
+                fullContactReports = data.ForceFullGPUContactReports,
                 serialContacts,
                 separateContactSubmissions,
                 warmup,

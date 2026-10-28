@@ -4,7 +4,7 @@ internal sealed partial class GPUPhysicsWorldBackend
 {
     internal override void PrepareCheckpoint()
     {
-        EnsureAccess();
+        EnsureAccess(); Space.MaterializeGPUContactReports();
         foreach (var body in Space.Bodies) SynchronizeIntegrationInputs(GPUStore.NativeCollider(body.Backend), body.Runtime);
         uint areaOrder = 0;
         foreach (var area in Space.Areas) GPUStore.SetAreaFields(GPUStore.NativeCollider(area.Backend).GPUHandle, PhysicsSpace.GPUFields(area.Fields), areaOrder++);

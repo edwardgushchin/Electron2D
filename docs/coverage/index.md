@@ -1,3 +1,5 @@
+[Compact GPU monitor contacts](../components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28) reduce routine selected-result transfer without changing declaration status. Physics remains **1364/1369 (99.63%)**, five Partial and 92 Excluded; remaining script/monitor and full performance qualification stay open.
+
 [Shared texture views](../components/shared-texture-views.md) now execute original-owner format/layer/mip aliases, initial format overrides and automatic shared RID retirement. Eight applicable rows become Implemented; the direct writable image-array descriptor/lowering dependency remains explicit.
 
 [The Node contract audit](../components/node-contract-audit.md) closes the remaining neutral scene class row after 38 current-source root/public/native profiles. Physics declaration coverage advances to **1364/1369 (99.63%)**, five Partial and 92 Excluded. This completes an audit of existing behavior; it adds no runtime operation. Object/Resource, fixed CLR script replacement/change and composed memory monitors remain open. Earlier figures below describe preceding checkpoints.
