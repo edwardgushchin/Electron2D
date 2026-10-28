@@ -11,7 +11,7 @@ using Certificate = Electron2D.X509Certificate;
 
 internal static class HTTPTests
 {
-    internal static void Run() { Compression(); Scripted(); Native(); SceneRequests(); ProxiesAndTLS(); Console.WriteLine("HTTP/HTTPS wire framing, native/scene/worker requests, compression, proxies, redirects, limits and ownership checks passed."); }
+    internal static void Run() { GZIPCleanupTests.Run(); Compression(); Scripted(); Native(); SceneRequests(); ProxiesAndTLS(); Console.WriteLine("HTTP/HTTPS wire framing, native/scene/worker requests, compression, proxies, redirects, limits and ownership checks passed."); }
     private static void Compression()
     {
         var raw = new byte[32768]; Random.Shared.NextBytes(raw);

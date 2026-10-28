@@ -728,7 +728,7 @@ def render():
             updated = "2026-10-27"
         if name in {"RDPipelineMultisampleState", "RDPipelineDepthStencilState"}:
             updated = "2026-10-28"
-        if name == "Node":
+        if name in {"Node", "StreamPeerGZIP"}:
             updated = "2026-10-28"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

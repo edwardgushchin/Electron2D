@@ -3,7 +3,8 @@ namespace Electron2D;
 
 /// <summary>Incrementally compresses or decompresses gzip and zlib-wrapped deflate bytes through bounded output storage.</summary>
 /// <remarks>Input and output spans are borrowed only during a call. Drain output when partial writes stop progressing.
-/// Native codec state and output capacity are prepared on Start. Calls and disposal require the constructing thread.</remarks>
+/// Native codec state and output capacity are prepared on Start. Failed initialization releases partial native state
+/// and leaves the stream unconfigured. Calls and disposal require the constructing thread.</remarks>
 public class StreamPeerGZIP : StreamPeer
 {
     private GZIPContext? _context;
@@ -19,7 +20,7 @@ public class StreamPeerGZIP : StreamPeer
     {
         CheckStream(); if (_context is not null) throw new InvalidOperationException("Clear the active codec before restarting.");
         if (size <= 0 || size > 64 * 1024 * 1024) throw new ArgumentOutOfRangeException(nameof(size));
-        var capacity = 2; while (capacity < size) capacity *= 2; var bytes = new byte[capacity]; var context = new GZIPContext(compress, deflate); _bytes = bytes; _context = context; _head = _count = 0;
+        var capacity = 2; while (capacity < size) capacity *= 2; var bytes = new byte[capacity]; var context = new GZIPContext(compress, deflate ? 15 : 31); _bytes = bytes; _context = context; _head = _count = 0;
     }
     /// <summary>Reports whether the compression finish or decompression member boundary was reached.</summary><returns>False before configuration or while a member remains incomplete.</returns>
     public bool IsFinished() { CheckStream(); return _context?.Finished ?? false; }
@@ -71,12 +72,17 @@ internal sealed unsafe class GZIPContext : SafeHandle
     internal readonly bool Compress;
     private readonly int _window;
     internal bool Finished { get; private set; }
-    internal GZIPContext(bool compress, bool deflate) : base(0, true)
+    internal GZIPContext(bool compress, int window) : base(0, true)
     {
-        Compress = compress; _window = deflate ? 15 : 31;
+        Compress = compress; _window = window;
         var pointer = (GZIPState*)NativeAllocation.AllocZeroed((nuint)sizeof(GZIPState));
         try { var result = compress ? GZIPNative.StartCompression(pointer, -1, 8, _window, 8, 0) : GZIPNative.StartDecompression(pointer, _window); if (result != 0) throw new InvalidDataException("Native compression initialization failed: " + result); SetHandle((nint)pointer); }
-        catch { NativeAllocation.Free(pointer); throw; }
+        catch
+        {
+            try { End(pointer); }
+            finally { NativeAllocation.Free(pointer); }
+            throw;
+        }
     }
     public override bool IsInvalid => handle == 0;
     internal int Process(ReadOnlySpan<byte> input, Span<byte> output, bool finish, out int written)
@@ -92,7 +98,18 @@ internal sealed unsafe class GZIPContext : SafeHandle
             if (result is not (0 or 1 or -5)) throw new InvalidDataException("Compressed stream validation failed: " + result); Finished = result == 1; return consumed;
         }
     }
-    protected override bool ReleaseHandle() { var state = (GZIPState*)handle; if (Compress) GZIPNative.EndCompression(state); else GZIPNative.EndDecompression(state); NativeAllocation.Free(state); return true; }
+    private void End(GZIPState* state)
+    {
+        // The runtime allocates its inner record before codec initialization can fail.
+        if (state->State == 0) return;
+        if (Compress) GZIPNative.EndCompression(state); else GZIPNative.EndDecompression(state);
+    }
+    protected override bool ReleaseHandle()
+    {
+        var state = (GZIPState*)handle;
+        try { End(state); return true; }
+        finally { NativeAllocation.Free(state); }
+    }
 }
 
 internal static unsafe partial class GZIPNative

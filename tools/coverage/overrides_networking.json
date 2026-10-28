@@ -6276,11 +6276,8 @@
         "HTTPRequest::property:timeout",
         "HTTPRequest::property:use_threads",
         "HTTPRequest::signal:request_completed(int:,int:,PackedStringArray:,PackedByteArray:)",
-        "class:StreamPeerGZIP",
         "StreamPeerGZIP::method:clear()",
-        "StreamPeerGZIP::method:finish()",
-        "StreamPeerGZIP::method:start_compression(bool:,int:)",
-        "StreamPeerGZIP::method:start_decompression(bool:,int:)"
+        "StreamPeerGZIP::method:finish()"
       ],
       "reason": "ADR 0094 HTTP delivery: executable polled HTTP/1.1 client and scene/dedicated-worker request nodes over native TCP/TLS, forward/CONNECT proxies, typed scalar/array query formatting, fixed/chunked/close-delimited bodies, consumed ordered headers, redirects/cancellation/timeouts, bounded incremental gzip/zlib with strict end/checksum validation and atomic sibling-file downloads. HTTPTests verifies fragmented fixtures/security framing, actual TCP/DNS and independent SslStream HTTPS/proxy exchanges, scene/worker owner completion, reentry/tree exit/packing, decoded limits/truncated data/destination preservation, and 64 prepared HTTP span-body/poll plus gzip member/read/reset zero-managed-allocation cycles. Typed exceptions/enum snapshots adapt Error/Array/Dictionary shapes; node memory buffering/loading and response snapshots are cold work. Native codec internals, routed throughput, foreign hosts/browser and owner acceptance remain separate."
     },
@@ -6860,6 +6857,15 @@
         "MultiplayerSynchronizer::property:root_path"
       ],
       "reason": "ADR 0094 typed synchronization. Live configuration/root replacement validates complete property targets and aggregate buffer budgets before changing settings or unregistering the producer. Rejected resource lifetime, target/path/type and budget checks preserve live replication; nonpositive authority IDs reject before unregistration. Empty/missing roots disable automatic visibility lanes. Provider registration still precedes final preparation, preserving callback-authored configuration. Public CPU/no-device and physical GPU CLR/strict NativeAOT checks retain full physical motion, RID/instance/tick and typed wire values after eight rejected edits, valid replacement, disabling, reattachment and provider callbacks. Same-fixture controls reject the original runtime and stale callback bindings; WS/WSS lifecycle and warmed owner allocation checks execute separately. Source-bound evidence: bin/physics-replication-reconfiguration/2026-10-22/. No whole-backend, performance, foreign or owner acceptance is implied."
+    },
+    {
+      "godot": [
+        "class:StreamPeerGZIP",
+        "StreamPeerGZIP::method:start_compression(bool:,int:)",
+        "StreamPeerGZIP::method:start_decompression(bool:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0094: bounded incremental gzip/zlib streams retain strict checksum/end validation, backpressure, concatenated gzip members, constructing-thread ownership and prepared zero-managed-byte public HTTP/codec cycles. Failed initialization now ends an existing runtime-owned inner record before freeing the engine-owned outer PAL state, preserving the native error and unconfigured stream. Shared normal cleanup remains one-time through repeated disposal. GZIPCleanupTests reproduces the preceding constructor leak with calibrated native allocation/free counts and passes on Linux CLR/strict NativeAOT; the complete HTTP/HTTPS/worker suite passes. Public format defaults and signatures are unchanged. Native codec byte/peak instrumentation and foreign-host qualification remain open. See docs/components/http.md#failed-codec-initialization."
     }
   ]
 }
