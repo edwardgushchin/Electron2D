@@ -164,6 +164,7 @@ internal static partial class PhysicsPipelinePerformance
             upload = (gpu?.UploadBytes ?? 0) - upload; readback = (gpu?.ReadbackBytes ?? 0) - readback;
             reportReadback = (gpu?.ReportResultReadbackBytes ?? 0) - reportReadback;
             submissions = (gpu?.SubmissionCount ?? 0) - submissions; uniform = (gpu?.UniformBytes ?? 0) - uniform;
+            var contactStaging = data.GPUContactStagingBytes;
             Check(PhysicsServer.SpaceGetTick(world.Space) == tick + (ulong)samples, "Each complete scene frame advances exactly one fixed physical tick");
             Check(PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects) == count, "Every requested rigid body remains awake and simulated");
             var states = new float[count * 7]; var positions = new Vector2[count];
@@ -263,6 +264,12 @@ internal static partial class PhysicsPipelinePerformance
                 uploadBytesPerTick = (double)upload / samples,
                 readbackBytesPerTick = (double)readback / samples,
                 contactResultReadbackBytesPerTick = (double)reportReadback / samples,
+                gpuContactStagingBytes = gpu is null ? null : new
+                {
+                    keys = contactStaging.Keys,
+                    reports = contactStaging.Reports,
+                    scratch = contactStaging.Scratch
+                },
                 uniformBytesPerTick = (double)uniform / samples,
                 submissionsPerTick = (double)submissions / samples,
                 finalContactColors = gpu?.ContactColorCount,

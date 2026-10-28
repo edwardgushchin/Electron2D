@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
@@ -7,6 +9,11 @@ internal sealed partial class PhysicsSpace
     private GPUPhysicsBodyStore.ContactReport[] _gpuContactScratch = [];
     private bool _gpuUseContactKeys, _gpuFullContactsRequested;
     private long _gpuContactResultVersion;
+
+    internal (long Keys, long Reports, long Scratch) GPUContactStagingBytes =>
+        ((long)_gpuReportIdentities.Length * Unsafe.SizeOf<GPUPhysicsBodyStore.ContactIdentity>(),
+            (long)_gpuReports.Length * Unsafe.SizeOf<GPUPhysicsBodyStore.ContactReport>(),
+            (long)_gpuContactScratch.Length * Unsafe.SizeOf<GPUPhysicsBodyStore.ContactReport>());
 
     internal void RequestGPUContactDetails() { if (GPUStore is not null) _gpuFullContactsRequested = true; }
     private static bool RequiresGPUContactDetails(PhysicsBodyRuntime runtime) =>
@@ -31,9 +38,13 @@ internal sealed partial class PhysicsSpace
     internal void MaterializeGPUContactReports()
     {
         if (!_gpuUseContactKeys) return;
-        var count = 0;
+        var count = 0; var capacity = 0;
         for (var i = 0; i < _gpuReportBodyCount; i++)
+        {
             count = Math.Max(count, checked(_gpuReportSourceOffsets[i] + _gpuReportCounts[i]));
+            capacity = checked(capacity + _gpuReportLimits[i]);
+        }
+        if (_gpuReports.Length < capacity) Array.Resize(ref _gpuReports, Math.Max(8, checked(capacity * 2)));
         var reports = ReadGPUContactRow(_gpuContactResultVersion, 0, count);
         for (var i = 0; i < _gpuReportBodyCount; i++)
         {
