@@ -13,3 +13,5 @@ EXPORTS
     e2d_render_empty_create
     e2d_render_empty_begin
     e2d_render_empty_release
+    e2d_render_raster_support
+    e2d_render_raster_pipeline

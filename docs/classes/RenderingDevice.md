@@ -1438,3 +1438,7 @@ Formatted ImageBuffer stores and signed/unsigned R32 atomics now execute in inde
 ## Framebuffers without attachments
 
 `FramebufferFormatCreateEmpty(samples = Samples1)` and `FramebufferCreateEmpty(size, samples = Samples1, validateWithFormat = -1)` execute vertex/fragment storage-producing passes without color/depth images. Extents must be positive and native-limited; an explicit format must be empty and have the same exact sample count. The pinned Vulkan adapter supports its available 1/2/4/8 counts. Missing adapters or unsupported counts throw NotSupportedException. FreeRID completes pending work before releasing the native framebuffer. See [attachmentless graphics](../components/local-compute.md#attachmentless-graphics) for shader roles, executable checks and platform limits.
+
+## Vertex-only graphics
+
+Vertex-only source/SPIR-V programs now execute with copied `RDPipelineRasterizationState.DiscardPrimitives`. Paired programs can also suppress raster/fragment execution. Native pipeline variants and framebuffers retain ordinary ordering and lifetime. Vertex-only binary containers use version two; compute/paired version-one writing and reading remain. See [primitive discard](../components/raster-discard.md).

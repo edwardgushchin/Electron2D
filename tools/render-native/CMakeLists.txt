@@ -13,12 +13,12 @@ FetchContent_MakeAvailable(SDLMemory)
 set(layout "${CMAKE_CURRENT_BINARY_DIR}/memory-layout.h")
 add_custom_command(OUTPUT "${layout}"
     COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/generate_layout.py" "${sdlmemory_SOURCE_DIR}" "${layout}"
-    DEPENDS generate_layout.py "${sdlmemory_SOURCE_DIR}/src/gpu/SDL_sysgpu.h" "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan.c")
+    DEPENDS "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h" generate_layout.py "${sdlmemory_SOURCE_DIR}/src/gpu/SDL_sysgpu.h" "${sdlmemory_SOURCE_DIR}/src/gpu/vulkan/SDL_gpu_vulkan.c")
 set(kind SHARED)
 if(ELECTRON2D_STATIC_NATIVE)
     set(kind STATIC)
 endif()
-add_library(Electron2DRender ${kind} bridge.c sampler.c limits.c filtering.c storage.c empty.c "${layout}")
+add_library(Electron2DRender ${kind} bridge.c sampler.c limits.c filtering.c storage.c empty.c raster.c "${layout}")
 target_compile_features(Electron2DRender PRIVATE c_std_11)
 target_include_directories(Electron2DRender PRIVATE "${CMAKE_CURRENT_BINARY_DIR}"
     "${sdlmemory_SOURCE_DIR}/include" "${sdlmemory_SOURCE_DIR}/src/video/khronos")

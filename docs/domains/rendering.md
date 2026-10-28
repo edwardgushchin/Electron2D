@@ -582,3 +582,5 @@ Ordinary writable graphics storage now connects vertex/fragment producers to ord
 Formatted graphics producers now store encoded ImageBuffer elements and execute R32 atomics before sampled draw, compute/readback and retained canvas consumption. [Contract and limits](../components/local-compute.md#writable-formatted-graphics-producers).
 
 [Attachmentless graphics](../components/local-compute.md#attachmentless-graphics) now executes explicit raster extents and exact available samples without dummy image attachments. Existing graphics storage writes feed following compute, ordinary graphics and canvas consumers; raster discard remains a separate state adapter.
+
+[Primitive discard](../components/raster-discard.md) now executes vertex-only/no-Position and paired graphics programs without raster/fragment work, through the pinned native pipeline adapter. Storage writes feed ordinary compute, graphics and canvas consumers; wide-line and patch controls remain separate prerequisites.

@@ -83,6 +83,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal RID Shader;
         internal string Name = "";
         internal ShaderStage Stage = ShaderStage.Compute;
+        internal bool VertexOnly => Stage == ShaderStage.Vertex && Sources.Length == 2 && Sources[1].Length == 0;
         internal RenderHandle? FragmentHandle;
         internal ComputePipeline? Compute;
         internal uint Set;
@@ -231,11 +232,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         DeliverReadbacks();
     }
 
-    /// <summary>Validates and creates a compute shader or a paired graphics shader from compiled bytecode.</summary>
-    /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or both vertex and fragment.</param>
+    /// <summary>Validates and creates a compute, vertex-only or paired graphics shader from compiled bytecode.</summary>
+    /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or vertex with an optional fragment stage.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
-    /// <remarks>FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable ordinary graphics storage buffers require the enabled native feature of each writing stage; unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
+    /// <remarks>Vertex-only programs require DiscardPrimitives at pipeline creation and retain no public fragment bytecode. FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable ordinary graphics storage buffers require the enabled native feature of each writing stage; unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); var program = CaptureDeviceProgram(spirvData, name);
@@ -247,15 +248,15 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         ArgumentNullException.ThrowIfNull(spirvData); ArgumentNullException.ThrowIfNull(name);
         var compute = spirvData.BytecodeCompute; var vertex = spirvData.BytecodeVertex; var fragment = spirvData.BytecodeFragment;
         if (compute.Length != 0 && (vertex.Length != 0 || fragment.Length != 0)) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
-        if (compute.Length != 0 ? spirvData.CompileErrorCompute.Length != 0 : vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0) throw new ArgumentException("Supply successful compute or paired graphics modules.", nameof(spirvData));
+        if (compute.Length != 0 ? spirvData.CompileErrorCompute.Length != 0 : vertex.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0) throw new ArgumentException("Supply successful compute or vertex graphics modules.", nameof(spirvData));
         byte[][] sources = compute.Length != 0 ? [compute] : [vertex, fragment];
-        foreach (var source in sources) ShaderPrecision.ValidateNative(Device, source);
-        var symbolic = sources.Any(code => new SpecializationModule(code, [], []).HasSpecialization);
+        foreach (var source in sources) if (source.Length != 0) ShaderPrecision.ValidateNative(Device, source);
+        var symbolic = sources.Any(code => code.Length != 0 && new SpecializationModule(code, [], []).HasSpecialization);
         var program = CreateDeviceProgram(sources, name, [], symbolic); program.Sources = sources; return program;
     }
     private Entry CreateDeviceProgram(byte[][] sources, string name, Dictionary<uint, Specialization> constants, bool template = false, int[]? outputSlots = null, uint viewIndex = 0, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? swizzles = null)
     {
-        var used = new HashSet<uint>(); var modules = sources.Select(code => template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
+        var used = new HashSet<uint>(); var modules = sources.Select(code => code.Length == 0 ? EmptyFragmentModule() : template ? code.ToArray() : new SpecializationModule(code, constants, used).Freeze()).ToArray();
         if (!template && constants.Keys.Any(id => !used.Contains(id))) throw new ArgumentException("A specialization identifier is not declared by this shader.", nameof(constants));
         var layouts = new Binding[modules.Length][]; var pushes = new PushStage[modules.Length][]; var samplers = new SamplerLink[modules.Length][];
         for (var i = 0; i < modules.Length; i++)

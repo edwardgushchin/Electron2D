@@ -150,3 +150,7 @@ Initially false; validated and copied by its device consumer.
 ## Lifecycle, errors and verification
 
 Copied descriptions borrow no native state and can be disposed after creation. Device RIDs remain owner-thread resources. Unknown enum selectors and nonfinite bias/clear values reject. References must fit eight bits for visible stencil faces; both visible faces require equal effective masks/reference. Depth-bounds and raw aspect-transfer adapters remain explicit prerequisites in coverage. [RenderingDeviceDepthTests](../../tests/Electron2D.Tests/RenderingDeviceDepthTests.cs) verifies native pixels and warmed managed allocation on Linux/Vulkan; foreign platforms and native allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).
+
+## Primitive discard
+
+`DiscardPrimitives` defaults to false and is copied at graphics pipeline creation. True executes vertex work without rasterization or fragment execution, including vertex-only programs without Position output. Its inherited property descriptor retains ordinary get/set/disposal behavior. See [the executing contract and checks](../components/raster-discard.md).

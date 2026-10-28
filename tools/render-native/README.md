@@ -70,3 +70,15 @@ public native handle is exposed. The C check verifies debug guards and unchanged
 native image/buffer totals. Public CLR/NativeAOT consumers and `mask-empty.c`
 exercise storage effects, ordinary graphics/canvas, missing support and injected
 creation failure. Native/driver heap and foreign-backend qualification are separate.
+
+`e2d_render_raster_support` and `e2d_render_raster_pipeline` ABI 1 supply primitive
+discard through a call-local renderer view, shared locked layout caches and four
+reserved globally unique descriptor-layout IDs per descriptor-count profile.
+A device-owned cache serializes creation and keeps repeated profiles from growing
+SDL's indexed descriptor pools; its cleanup retires the private profile records. The thread-local callback sets
+real native rasterizer discard and includes only the vertex stage. Shared function
+pointers remain unchanged; native pipeline failure restores both shader references.
+The generated declarations also pin SDL_gpu_vulkan_vkfuncs.h. The C check covers
+concurrent creation/retirement, layout IDs and injected failure reference counts;
+the public graphics-storage consumer covers source/binary, pixels and managed
+allocations. Other backends need their own pipeline adapters.

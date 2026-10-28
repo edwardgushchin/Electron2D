@@ -87,7 +87,7 @@ internal static partial class RenderingDeviceBinaryTests
         var longest = device.ShaderCompileBinaryFromSPIRV(module, new string('é', 2048)); device.FreeRID(device.ShaderCreateFromBytecode(longest)); module.CompileErrorCompute = "failed"; Reject<ArgumentException>(() => device.ShaderCompileBinaryFromSPIRV(module)); module.CompileErrorCompute = ""; module.BytecodeVertex = module.BytecodeCompute; Reject<ArgumentException>(() => device.ShaderCompileBinaryFromSPIRV(module)); module.BytecodeVertex = []; module.Dispose(); Reject<ObjectDisposedException>(() => device.ShaderCompileBinaryFromSPIRV(module));
         void Invalid(byte[] bytes) => Reject<ArgumentException>(() => device.ShaderCreateFromBytecode(bytes, placeholder));
         for (var i = 0; i < 60; i++) Invalid(valid[..i]); var corrupted = valid.ToArray(); corrupted[^1] ^= 1; Invalid(corrupted); corrupted = valid.ToArray(); corrupted[0] ^= 1; Invalid(corrupted); corrupted = valid.ToArray(); BinaryPrimitives.WriteInt32LittleEndian(corrupted.AsSpan(12), int.MaxValue); Invalid(corrupted);
-        corrupted = valid.ToArray(); corrupted[8] = 2; Reject<NotSupportedException>(() => device.ShaderCreateFromBytecode(corrupted, placeholder));
+        corrupted = valid.ToArray(); corrupted[8] = 3; Reject<NotSupportedException>(() => device.ShaderCreateFromBytecode(corrupted, placeholder));
         var nameSize = BinaryPrimitives.ReadInt32LittleEndian(valid.AsSpan(52));
         void Mutate(int offset, int value) { var bytes = valid.ToArray(); BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(offset), value); SHA256.HashData(bytes.AsSpan(48), bytes.AsSpan(16, 32)); Invalid(bytes); }
         foreach (var count in new[] { -1, 0, 2, 3, int.MaxValue }) Mutate(48, count);

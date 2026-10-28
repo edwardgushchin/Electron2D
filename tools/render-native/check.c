@@ -21,6 +21,9 @@ extern void *e2d_render_empty_create(SDL_GPUDevice *, uint32_t, uint32_t, uint32
 extern SDL_GPURenderPass *e2d_render_empty_begin(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, void *);
 extern void e2d_render_empty_release(SDL_GPUDevice *, uint32_t, void *);
 
+extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
+extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
+
 static void require_at(bool valid, int line)
 {
     if (!valid) { fprintf(stderr, "Native render check failed at line %d: %s\n", line, SDL_GetError()); exit(1); }
@@ -43,8 +46,59 @@ static int reader(void *device)
     }
     return 0;
 }
+typedef struct RasterChecks { SDL_GPUDevice *device; SDL_GPUGraphicsPipelineCreateInfo info; } RasterChecks;
+static int raster_thread(void *data)
+{
+    RasterChecks *checks = data;
+    for (int i = 0; i < 32; i++) {
+        SDL_GPUGraphicsPipeline *pipeline = e2d_render_raster_pipeline(checks->device, 1, &checks->info);
+        require(pipeline != NULL); SDL_ReleaseGPUGraphicsPipeline(checks->device, pipeline);
+    }
+    return 0;
+}
+static void raster_check(SDL_GPUDevice *device)
+{
+    uint32_t vertex[] = {0x07230203, 0x10000, 0, 5, 0, 0x20011, 1, 0x3000e, 0, 1, 0x5000f, 0, 1, 0x6e69616d, 0, 0x20013, 2, 0x30021, 3, 2, 0x50036, 2, 1, 0, 3, 0x200f8, 4, 0x100fd, 0x10038};
+    uint32_t fragment[] = {0x07230203, 0x10000, 0, 5, 0, 0x20011, 1, 0x3000e, 0, 1, 0x5000f, 4, 1, 0x6e69616d, 0, 0x30010, 1, 7, 0x20013, 2, 0x30021, 3, 2, 0x50036, 2, 1, 0, 3, 0x200f8, 4, 0x100fd, 0x10038};
+    SDL_GPUShaderCreateInfo shader_info = {.code_size = sizeof(vertex), .code = (uint8_t *)vertex, .entrypoint = "main", .format = SDL_GPU_SHADERFORMAT_SPIRV, .stage = SDL_GPU_SHADERSTAGE_VERTEX};
+    SDL_GPUShader *vs = SDL_CreateGPUShader(device, &shader_info); require(vs != NULL);
+    shader_info.code_size = sizeof(fragment); shader_info.code = (uint8_t *)fragment; shader_info.stage = SDL_GPU_SHADERSTAGE_FRAGMENT;
+    SDL_GPUShader *fs = SDL_CreateGPUShader(device, &shader_info); require(fs != NULL);
+    RasterChecks checks = {.device = device, .info = {.vertex_shader = vs, .fragment_shader = fs, .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST, .rasterizer_state = {.enable_depth_clip = true}}};
+    VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
+    PFN_vkCreateGraphicsPipelines original = renderer->vkCreateGraphicsPipelines;
+    int vertex_refs = SDL_GetAtomicInt(&((VulkanShader *)vs)->referenceCount);
+    int fragment_refs = SDL_GetAtomicInt(&((VulkanShader *)fs)->referenceCount);
+    if (SDL_getenv("ELECTRON2D_TEST_RASTER_FAILURE")) {
+        for (int i = 0; i < 3; i++) {
+            require(e2d_render_raster_pipeline(device, 1, &checks.info) == NULL);
+            require(SDL_GetAtomicInt(&((VulkanShader *)vs)->referenceCount) == vertex_refs);
+            require(SDL_GetAtomicInt(&((VulkanShader *)fs)->referenceCount) == fragment_refs);
+        }
+        puts("Native raster failure restores both shader reference counts in three attempts");
+    } else {
+        require(e2d_render_raster_support(device, 1) == 1);
+        int first_id = SDL_GetAtomicInt(&renderer->layoutResourceID);
+        SDL_GPUGraphicsPipeline *pipeline = e2d_render_raster_pipeline(device, 1, &checks.info); require(pipeline != NULL);
+        VulkanGraphicsPipeline *native = (VulkanGraphicsPipeline *)pipeline;
+        for (int i = 0; i < 4; i++) require(native->resourceLayout->descriptorSetLayouts[i]->ID >= (uint32_t)first_id && native->resourceLayout->descriptorSetLayouts[i]->ID < (uint32_t)first_id + 4);
+        require(SDL_GetAtomicInt(&renderer->layoutResourceID) == first_id + 4);
+        SDL_ReleaseGPUGraphicsPipeline(device, pipeline); require(SDL_WaitForGPUIdle(device));
+        SDL_Thread *a = SDL_CreateThread(raster_thread, "raster A", &checks), *b = SDL_CreateThread(raster_thread, "raster B", &checks); require(a != NULL && b != NULL);
+        SDL_WaitThread(a, NULL); SDL_WaitThread(b, NULL); require(SDL_WaitForGPUIdle(device));
+        require(SDL_GetAtomicInt(&renderer->layoutResourceID) == first_id + 4);
+        require(SDL_GetAtomicInt(&((VulkanShader *)vs)->referenceCount) == vertex_refs);
+        require(SDL_GetAtomicInt(&((VulkanShader *)fs)->referenceCount) == fragment_refs);
+        puts("Native raster layout IDs, 64 concurrent creations/retirements and shader references passed");
+    }
+    require(renderer->vkCreateGraphicsPipelines == original);
+    SDL_ReleaseGPUShader(device, vs); SDL_ReleaseGPUShader(device, fs); require(SDL_WaitForGPUIdle(device));
+}
 int main(int argc, char **argv)
 {
+    require(e2d_render_raster_support(NULL, 1) == -1);
+    require(e2d_render_raster_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_raster_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1) == NULL);
     require(e2d_render_graphics_storage_support(NULL, 1) == -1);
     require(e2d_render_graphics_storage_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_storage_barrier(NULL, 1, NULL) == -1);
@@ -94,6 +148,7 @@ int main(int argc, char **argv)
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
+    raster_check(device);
     require(e2d_render_sampler(device, 1, &sampler_info, 4, 2, 2, 0) == NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
     int empty_samples = e2d_render_empty_support(device, 1); require(empty_samples > 0 && empty_samples <= 15);

@@ -277993,6 +277993,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDPipelineRasterizationState.DiscardPrimitives()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "DiscardPrimitives",
+    "signature": "public System.Boolean DiscardPrimitives { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDPipelineRasterizationState.EnableDepthClamp()",
     "kind": "property",
     "declaringType": "Electron2D.RDPipelineRasterizationState",

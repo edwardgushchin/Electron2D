@@ -11,3 +11,5 @@ _e2d_render_empty_support
 _e2d_render_empty_create
 _e2d_render_empty_begin
 _e2d_render_empty_release
+_e2d_render_raster_support
+_e2d_render_raster_pipeline

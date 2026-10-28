@@ -2373,3 +2373,5 @@ Writable graphics storage: `RenderingDevice.GraphicsStorage` owns stage-feature 
 Formatted graphics writes reuse `TexelBufferProgram`, `RenderingDevice.GraphicsStorage` and the existing encoded `TextureBufferCreate` allocation. The derived module drops texel-only native image requirements; `GPUDeviceFactory` keeps graphics-only requests independent of Vulkan 1.2. [Contract](components/local-compute.md#writable-formatted-graphics-producers).
 
 [Attachmentless framebuffers](components/local-compute.md#attachmentless-graphics) extend RenderingDevice with two executing factories. No additional public type is introduced; the native extent/lifetime adapter remains private.
+
+[Primitive discard](components/raster-discard.md) extends RDPipelineRasterizationState and RenderingDevice with vertex-only graphics, binary round-trip and a private native pipeline adapter. No new public runtime type is added.

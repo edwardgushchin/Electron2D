@@ -13,6 +13,10 @@ public sealed class RDPipelineRasterizationState : ElectronObject
     /// <summary>Gets or sets the winding treated as front-facing.</summary>
     /// <value>Initially RenderingDevice.PolygonFrontFace.Clockwise; validated and copied by its device consumer.</value>
     public RenderingDevice.PolygonFrontFace FrontFace { get { ThrowIfDisposed(); return _frontFace; } set { ThrowIfDisposed(); _frontFace = value; } }
+    private bool _discardPrimitives;
+    /// <summary>Gets or sets whether vertex processing executes without rasterization or fragment execution.</summary>
+    /// <value>False initially. Copied at pipeline creation; required for a vertex-only shader.</value>
+    public bool DiscardPrimitives { get { ThrowIfDisposed(); return _discardPrimitives; } set { ThrowIfDisposed(); _discardPrimitives = value; } }
     private bool _wireframe = false;
     /// <summary>Gets or sets outline rather than filled rasterization.</summary>
     /// <value>Initially false; validated and copied by its device consumer.</value>
@@ -48,6 +52,7 @@ public sealed class RDPipelineRasterizationState : ElectronObject
 
         new PropertyDescriptor<RDPipelineRasterizationState, RenderingDevice.PolygonCullMode>(nameof(CullMode), p => p.CullMode, (p, v) => p.CullMode = v, _ => RenderingDevice.PolygonCullMode.Disabled),
         new PropertyDescriptor<RDPipelineRasterizationState, RenderingDevice.PolygonFrontFace>(nameof(FrontFace), p => p.FrontFace, (p, v) => p.FrontFace = v, _ => RenderingDevice.PolygonFrontFace.Clockwise),
+        new PropertyDescriptor<RDPipelineRasterizationState, bool>(nameof(DiscardPrimitives), n => n.DiscardPrimitives, (n, v) => n.DiscardPrimitives = v, _ => false),
         new PropertyDescriptor<RDPipelineRasterizationState, bool>(nameof(Wireframe), p => p.Wireframe, (p, v) => p.Wireframe = v, _ => false),
         new PropertyDescriptor<RDPipelineRasterizationState, bool>(nameof(EnableDepthClamp), p => p.EnableDepthClamp, (p, v) => p.EnableDepthClamp = v, _ => false),
     ]);

@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 
 SOURCES = {
+    "src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h": "75921837d29c19f4c3b3b0e66e3c1db97a589cb2e928985c4e844948857e1258",
     "src/gpu/SDL_sysgpu.h": "86f74c57f00529fc9531f680340be114414688c4809b724eac894d862f86fb6e",
     "src/gpu/vulkan/SDL_gpu_vulkan.c": "28b42c4286805a6cff952bd698de29659180132ae881eedd3f6bf24d16583361",
 }
@@ -28,8 +29,8 @@ def generate(source):
             raise ValueError("The SDL memory ABI source differs from pinned 3.4.18: " + name)
     gpu = (source / "src/gpu/SDL_sysgpu.h").read_text(encoding="utf-8")
     vulkan = (source / "src/gpu/vulkan/SDL_gpu_vulkan.c").read_text(encoding="utf-8")
-    renderer = vulkan[vulkan.index("struct VulkanRenderer\n{"):
-                      vulkan.index("    SDL_Mutex *allocatorLock;") + len("    SDL_Mutex *allocatorLock;")] + "\n};"
+    functions = (source / "src/gpu/vulkan/SDL_gpu_vulkan_vkfuncs.h").read_text(encoding="utf-8")
+    renderer = block(vulkan, "struct VulkanRenderer\n{").replace('#include "SDL_gpu_vulkan_vkfuncs.h"', functions)
     pointers = sorted(set(re.findall(r"^    ([A-Za-z_]\w*) \*", renderer, re.M)) -
                       {"SDL_Mutex", "VulkanMemoryAllocator"})
     forward = "\n".join("typedef struct " + name + " " + name + ";"
@@ -44,6 +45,7 @@ def generate(source):
         block(gpu, "struct SDL_GPUDevice\n{"),
         gpu[gpu.index("#define MAX_TEXTURE_SAMPLERS_PER_STAGE"):gpu.index("typedef struct TextureCommonHeader")],
         block(gpu, "typedef struct TextureCommonHeader"),
+        block(gpu, "typedef struct GraphicsPipelineCommonHeader"),
         "typedef struct VulkanBuffer VulkanBuffer;", "typedef struct VulkanTexture VulkanTexture;",
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
         "typedef struct VulkanFenceHandle VulkanFenceHandle;",
@@ -52,6 +54,12 @@ def generate(source):
         block(vulkan, "typedef struct VulkanSampler"),
         block(vulkan, "typedef struct VulkanExtensions"), block(vulkan, "typedef struct VulkanFencePool"),
         forward, renderer, "typedef struct VulkanRenderer VulkanRenderer;",
+        block(vulkan, "typedef struct VulkanShader\n{"),
+        re.search(r"typedef uint32_t DescriptorSetLayoutID;", vulkan).group(0),
+        block(vulkan, "typedef struct DescriptorSetLayout\n{"),
+        block(vulkan, "typedef struct VulkanGraphicsPipelineResourceLayout\n{"),
+        block(vulkan, "typedef struct VulkanGraphicsPipeline\n{"),
+
         vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    VkCommandBuffer commandBuffer;") + len("    VkCommandBuffer commandBuffer;")] + "\n} VulkanCommandBuffer;", "",
     ])
 

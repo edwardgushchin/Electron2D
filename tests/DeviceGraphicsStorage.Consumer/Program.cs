@@ -9,6 +9,7 @@ internal static partial class GraphicsStorage
 {
     internal static void Run(string mode)
     {
+        if (mode.StartsWith("discard", StringComparison.Ordinal)) { Discard(mode); return; }
         if (mode.StartsWith("empty", StringComparison.Ordinal)) { Empty(mode); return; }
         if (mode.StartsWith("texel", StringComparison.Ordinal)) { Texels(mode); return; }
         if (mode == "canvas") { Canvas(); Canvas(); return; }
