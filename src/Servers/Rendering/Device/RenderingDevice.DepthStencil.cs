@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using SDL3;
 
 namespace Electron2D;
@@ -52,17 +53,21 @@ public sealed unsafe partial class RenderingDevice
     private static SDL.GPUStencilOp Stencil(StencilOperation value) => value is >= StencilOperation.Keep and < StencilOperation.Max ? (SDL.GPUStencilOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
     private static bool DepthFormat(DataFormat format) => format is DataFormat.D16UNORM or DataFormat.X8D24UNORMPACK32 or DataFormat.D32SFLOAT or DataFormat.D16UNORMS8UINT or DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
     private static bool StencilFormat(DataFormat format) => format is DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
-    private static SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferPassLayout target, out byte reference)
+    [StructLayout(LayoutKind.Sequential)]
+    private readonly record struct NativeDepthStencilState(uint Flags, uint FrontMask, uint FrontWrite, uint FrontReference, uint BackMask, uint BackWrite, uint BackReference, float Minimum, float Maximum);
+    private SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferPassLayout target, out byte reference, out NativeDepthStencilState native)
     {
-        var enabled = state.EnableDepthTest || state.EnableDepthWrite || state.EnableStencil;
+        var enabled = state.EnableDepthTest || state.EnableDepthWrite || state.EnableStencil || state.EnableDepthRange;
         if (enabled && target.DepthIndex < 0) throw new ArgumentException("Depth/stencil state requires a depth attachment.", nameof(state));
         if (state.EnableStencil && !StencilFormat(target.Formats[target.DepthIndex])) throw new ArgumentException("Stencil testing requires a stencil aspect.", nameof(state));
+        if (state.EnableDepthRange && state.DepthRangeMin > state.DepthRangeMax) throw new ArgumentException("An enabled depth range must have an ordered lower and upper bound.", nameof(state));
+        if (state.EnableDepthRange && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.DepthBoundsProperty, false)) throw new NotSupportedException("Depth bounds require the independently enabled native depth-bounds feature.");
         var frontReference = state.FrontOpReference; var backReference = state.BackOpReference;
         if (state.EnableStencil && (raster.CullMode != PolygonCullMode.Front && frontReference is < 0 or > 255 || raster.CullMode != PolygonCullMode.Back && backReference is < 0 or > 255)) throw new ArgumentOutOfRangeException(nameof(state), "Stencil reference must fit eight bits.");
         var frontMask = unchecked((byte)state.FrontOpCompareMask); var backMask = unchecked((byte)state.BackOpCompareMask);
         var frontWrite = unchecked((byte)state.FrontOpWriteMask); var backWrite = unchecked((byte)state.BackOpWriteMask);
-        // shortcut: distinct visible-face masks/references need a native per-face state adapter.
-        if (state.EnableStencil && raster.CullMode == PolygonCullMode.Disabled && (frontReference != backReference || frontMask != backMask || frontWrite != backWrite)) throw new NotSupportedException("Both visible faces require equal effective stencil masks and references on this backend.");
+        var separate = state.EnableStencil && raster.CullMode == PolygonCullMode.Disabled && (frontReference != backReference || frontMask != backMask || frontWrite != backWrite);
+        native = new((state.EnableDepthRange ? 1u : 0u) | (separate ? 2u : 0u), frontMask, frontWrite, unchecked((byte)frontReference), backMask, backWrite, unchecked((byte)backReference), state.DepthRangeMin, state.DepthRangeMax);
         var back = raster.CullMode == PolygonCullMode.Front;
         reference = (byte)(back ? backReference : frontReference);
         return new()
@@ -77,6 +82,9 @@ public sealed unsafe partial class RenderingDevice
             BackStencilState = new() { CompareOp = Compare(state.BackOpCompare), FailOp = Stencil(state.BackOpFail), PassOp = Stencil(state.BackOpPass), DepthFailOp = Stencil(state.BackOpDepthFail) }
         };
     }
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_depth_pipeline")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial nint NativeDepthPipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info, float lineWidth, uint discard, in NativeMultisampleState samples, in NativeDepthStencilState depth);
     private void InitializeDepth(Entry entry)
     {
         var info = entry.Texture!;

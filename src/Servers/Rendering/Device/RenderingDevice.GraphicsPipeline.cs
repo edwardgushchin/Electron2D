@@ -12,7 +12,7 @@ public sealed unsafe partial class RenderingDevice
         _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
     private static SDL.GPUBlendOp Blend(BlendOperation value) => Enum.IsDefined(value) && value != BlendOperation.Max ? (SDL.GPUBlendOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
-    /// <summary>Creates an executable color and depth/stencil graphics pipeline with copied sample coverage and shading state.</summary>
+    /// <summary>Creates an executable graphics pipeline with copied depth bounds, independent stencil faces, sample coverage and shading.</summary>
     /// <param name="shader">A live vertex shader with an optional fragment stage; vertex-only programs require primitive discard.</param>
     /// <param name="framebufferFormat">A color and optional depth/stencil layout on this device.</param>
     /// <param name="vertexFormat">A copied vertex layout, or -1 for procedural vertices.</param>
@@ -40,7 +40,7 @@ public sealed unsafe partial class RenderingDevice
         if (samples != target.Samples) throw new ArgumentException("Pipeline sample count must match the framebuffer raster targets.", nameof(multisampleState));
         var sampleState = CaptureMultisample(multisampleState, samples);
         using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
-        var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, out var stencilReference);
+        var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, out var stencilReference, out var nativeDepth);
         var variant = PipelineVariant(program, specializationConstants, discard ? null : target.ColorSlots);
         try
         {
@@ -110,19 +110,19 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
-                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState);
+                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState, nativeDepth);
                 var views = FramebufferLayouts(framebufferFormat).ViewCount;
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try
                 {
-                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     for (var view = 1; view < views; view++)
                     {
                         var source = Get(shader, Kind.Shader);
                         var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: discard ? null : target.ColorSlots, viewIndex: (uint)view);
                         entry.ViewPrograms[view - 1] = viewProgram;
                         info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
-                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     }
                     return Add(entry);
                 }

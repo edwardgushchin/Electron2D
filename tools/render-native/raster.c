@@ -40,7 +40,8 @@ static RasterCache *raster_cache(SDL_GPUDevice *device)
     SDL_UnlockProperties(props); return cache;
 }
 typedef struct MultisampleState { uint32_t mask, flags; float minimum; } MultisampleState;
-typedef struct RasterState { PFN_vkCreateGraphicsPipelines create; float width; bool discard; MultisampleState samples; } RasterState;
+typedef struct DepthStencilState { uint32_t flags, front_mask, front_write, front_reference, back_mask, back_write, back_reference; float minimum, maximum; } DepthStencilState;
+typedef struct RasterState { PFN_vkCreateGraphicsPipelines create; float width; bool discard; MultisampleState samples; DepthStencilState depth; } RasterState;
 static E2D_THREAD_LOCAL RasterState state;
 
 static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cache, uint32_t count,
@@ -59,6 +60,29 @@ static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cach
         multisample.alphaToOneEnable = (state.samples.flags & 4) != 0;
         multisample.pSampleMask = (state.samples.flags & 1) ? &mask : NULL;
         info.pMultisampleState = &multisample;
+    }
+    VkPipelineDepthStencilStateCreateInfo depth;
+    VkPipelineDynamicStateCreateInfo dynamic;
+    VkDynamicState dynamic_states[16];
+    if (state.depth.flags) {
+        if (!info.pDepthStencilState) return VK_ERROR_INITIALIZATION_FAILED;
+        depth = *info.pDepthStencilState;
+        depth.depthBoundsTestEnable = (state.depth.flags & 1) != 0;
+        depth.minDepthBounds = state.depth.minimum; depth.maxDepthBounds = state.depth.maximum;
+        if (state.depth.flags & 2) {
+            depth.front.compareMask = state.depth.front_mask; depth.front.writeMask = state.depth.front_write; depth.front.reference = state.depth.front_reference;
+            depth.back.compareMask = state.depth.back_mask; depth.back.writeMask = state.depth.back_write; depth.back.reference = state.depth.back_reference;
+            if (info.pDynamicState) {
+                dynamic = *info.pDynamicState;
+                if (dynamic.dynamicStateCount > SDL_arraysize(dynamic_states)) return VK_ERROR_INITIALIZATION_FAILED;
+                uint32_t n = 0;
+                for (uint32_t i = 0; i < dynamic.dynamicStateCount; i++)
+                    if (dynamic.pDynamicStates[i] != VK_DYNAMIC_STATE_STENCIL_REFERENCE) dynamic_states[n++] = dynamic.pDynamicStates[i];
+                // SDL's shared dynamic reference must not override the copied independent faces.
+                dynamic.dynamicStateCount = n; dynamic.pDynamicStates = dynamic_states; info.pDynamicState = &dynamic;
+            }
+        }
+        info.pDepthStencilState = &depth;
     }
     if (state.discard) info.stageCount = 1;
     return state.create(device, cache, 1, &info, allocator, pipelines);
@@ -90,6 +114,19 @@ E2D_EXPORT int e2d_render_multisample_support(SDL_GPUDevice *device, uint32_t ab
     return (features.sampleRateShading ? 1 : 0) | (features.alphaToOne ? 2 : 0);
 }
 
+_Static_assert(offsetof(VkPhysicalDeviceFeatures, depthBounds) == 14 * sizeof(VkBool32), "depth bounds feature word");
+E2D_EXPORT int e2d_render_depth_support(SDL_GPUDevice *device, uint32_t abi)
+{
+    if (!device || abi != 1) return -1;
+    if (e2d_render_raster_support(device, 1) != 1) return 0;
+    const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
+    PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    PFN_vkGetPhysicalDeviceFeatures query = proc ? (PFN_vkGetPhysicalDeviceFeatures)proc(renderer->instance, "vkGetPhysicalDeviceFeatures") : NULL;
+    if (!query) return 1;
+    VkPhysicalDeviceFeatures features; query(renderer->physicalDevice, &features);
+    return 1 | (features.depthBounds ? 2 : 0);
+}
+
 typedef struct LineLimits { float minimum, maximum, granularity; } LineLimits;
 _Static_assert(offsetof(VkPhysicalDeviceFeatures, wideLines) == 15 * sizeof(VkBool32), "wide line feature word");
 
@@ -108,7 +145,7 @@ E2D_EXPORT int e2d_render_line_support(SDL_GPUDevice *device, uint32_t abi, Line
     return 1;
 }
 
-static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, bool discard, const MultisampleState *samples)
+static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, bool discard, const MultisampleState *samples, const DepthStencilState *depth)
 {
     if (!device || !info || !info->vertex_shader || !info->fragment_shader || e2d_render_raster_support(device, 1) != 1) return NULL;
     VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
@@ -146,7 +183,7 @@ static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, co
     PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetDeviceProcAddr device_proc = (PFN_vkGetDeviceProcAddr)proc(renderer->instance, "vkGetDeviceProcAddr");
     RasterState previous = state;
-    state = (RasterState){(PFN_vkCreateGraphicsPipelines)device_proc(renderer->logicalDevice, "vkCreateGraphicsPipelines"), width, discard, samples ? *samples : (MultisampleState){0}};
+    state = (RasterState){(PFN_vkCreateGraphicsPipelines)device_proc(renderer->logicalDevice, "vkCreateGraphicsPipelines"), width, discard, samples ? *samples : (MultisampleState){0}, depth ? *depth : (DepthStencilState){0}};
     SDL_GPUGraphicsPipeline *pipeline = device->CreateGraphicsPipeline((SDL_GPURenderer *)&local, info);
     state = previous;
     layout->next_id = SDL_max(layout->next_id, SDL_GetAtomicInt(&local.layoutResourceID));
@@ -161,10 +198,10 @@ static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, co
 
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info)
 {
-    return abi == 1 ? create_raster_pipeline(device, info, 1, true, NULL) : NULL;
+    return abi == 1 ? create_raster_pipeline(device, info, 1, true, NULL, NULL) : NULL;
 }
 
-static SDL_GPUGraphicsPipeline *create_line_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples)
+static SDL_GPUGraphicsPipeline *create_line_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth)
 {
     if (!device || abi != 1 || !info || discard > 1 || !isfinite(width) || width <= 0) return NULL;
     if (width != 1) {
@@ -174,20 +211,35 @@ static SDL_GPUGraphicsPipeline *create_line_pipeline(SDL_GPUDevice *device, uint
             !isfinite(limits.minimum) || !isfinite(limits.maximum) || limits.minimum <= 0 || limits.maximum < limits.minimum) return NULL;
         width = SDL_clamp(width, limits.minimum, limits.maximum);
     }
-    return create_raster_pipeline(device, info, width, discard != 0, samples);
+    return create_raster_pipeline(device, info, width, discard != 0, samples, depth);
 }
 
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_line_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard)
 {
-    return create_line_pipeline(device, abi, info, width, discard, NULL);
+    return create_line_pipeline(device, abi, info, width, discard, NULL, NULL);
+}
+
+static bool valid_multisample(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, const MultisampleState *samples)
+{
+    if (!device || abi != 1 || !info || !samples || (samples->flags & ~7u) || !isfinite(samples->minimum) || samples->minimum < 0 || samples->minimum > 1) return false;
+    if (e2d_render_raster_support(device, 1) != 1 || info->multisample_state.sample_count > SDL_GPU_SAMPLECOUNT_8) return false;
+    uint32_t required = (samples->flags >> 1) & 3;
+    uint32_t enabled = (uint32_t)SDL_GetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.multisample_features", 0);
+    return (required & ~enabled) == 0;
 }
 
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_multisample_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples)
 {
-    if (!device || abi != 1 || !info || !samples || (samples->flags & ~7u) || !isfinite(samples->minimum) || samples->minimum < 0 || samples->minimum > 1) return NULL;
-    if (e2d_render_raster_support(device, 1) != 1 || info->multisample_state.sample_count > SDL_GPU_SAMPLECOUNT_8) return NULL;
-    uint32_t required = (samples->flags >> 1) & 3;
-    uint32_t enabled = (uint32_t)SDL_GetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.multisample_features", 0);
-    if (required & ~enabled) return NULL;
-    return create_line_pipeline(device, abi, info, width, discard, samples);
+    return valid_multisample(device, abi, info, samples) ? create_line_pipeline(device, abi, info, width, discard, samples, NULL) : NULL;
+}
+
+E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_depth_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth)
+{
+    if (!depth || (depth->flags & ~3u) || !isfinite(depth->minimum) || !isfinite(depth->maximum) || depth->minimum < 0 || depth->maximum > 1 || depth->minimum > 1 || depth->maximum < 0 ||
+        (depth->front_mask | depth->front_write | depth->front_reference | depth->back_mask | depth->back_write | depth->back_reference) > 255) return NULL;
+    if (!valid_multisample(device, abi, info, samples)) return NULL;
+    if (depth->flags && !info->target_info.has_depth_stencil_target) return NULL;
+    if ((depth->flags & 1) && (depth->minimum > depth->maximum || !SDL_GetBooleanProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.depth_bounds", false))) return NULL;
+    if ((depth->flags & 2) && !info->depth_stencil_state.enable_stencil_test) return NULL;
+    return create_line_pipeline(device, abi, info, width, discard, samples, depth);
 }

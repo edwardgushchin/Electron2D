@@ -277895,6 +277895,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDPipelineDepthStencilState.DepthRangeMax()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineDepthStencilState",
+    "name": "DepthRangeMax",
+    "signature": "public System.Single DepthRangeMax { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineDepthStencilState.DepthRangeMin()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineDepthStencilState",
+    "name": "DepthRangeMin",
+    "signature": "public System.Single DepthRangeMin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineDepthStencilState.EnableDepthRange()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineDepthStencilState",
+    "name": "EnableDepthRange",
+    "signature": "public System.Boolean EnableDepthRange { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDPipelineDepthStencilState.EnableDepthTest()",
     "kind": "property",
     "declaringType": "Electron2D.RDPipelineDepthStencilState",

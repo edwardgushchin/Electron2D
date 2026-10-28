@@ -415,7 +415,9 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-28
+
+[Copied native depth/stencil state](../components/depth-stencil-state.md) completes RDPipelineDepthStencilState: three range properties and independent front/back masks/reference now execute through the existing adapter; broader RenderingDevice dependencies keep their separate rows.
 
 [The complete CollisionObject contract](../components/physics-collision-object-contract.md) reconciles all 45 declared members and qualifies their common class behavior across six current Body/Area siblings. Eight public CPU/GPU CLR/strict NativeAOT owner/separate profiles retain 9216 measured complete frames in 80 strict 0/0 allocation intervals. The class row becomes Implemented: physics is **1346/1369 (98.32%)**, **23 open** (15 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded. No runtime member or numerical tolerance changes; inherited and full-goal acceptance remain open. Earlier figures below describe their checkpoints.
 

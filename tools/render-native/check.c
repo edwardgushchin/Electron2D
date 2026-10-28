@@ -25,6 +25,9 @@ extern SDL_GPUGraphicsPipeline *e2d_render_line_pipeline(SDL_GPUDevice *, uint32
 typedef struct MultisampleState { uint32_t mask, flags; float minimum; } MultisampleState;
 extern int e2d_render_multisample_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_multisample_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *);
+typedef struct DepthStencilState { uint32_t flags, front_mask, front_write, front_reference, back_mask, back_write, back_reference; float minimum, maximum; } DepthStencilState;
+extern int e2d_render_depth_support(SDL_GPUDevice *, uint32_t);
+extern SDL_GPUGraphicsPipeline *e2d_render_depth_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *);
 extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
@@ -109,6 +112,14 @@ extern int e2d_render_line_support(SDL_GPUDevice *, uint32_t, LineLimits *);
 int main(int argc, char **argv)
 {
     MultisampleState samples = {0};
+    DepthStencilState depth = {0};
+    require(e2d_render_depth_support(NULL, 1) == -1);
+    require(e2d_render_depth_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
+    require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, NULL) == NULL);
+    depth.flags = 4; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
+    depth.flags = 0; depth.minimum = -1; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
+    depth.minimum = 0; depth.back_reference = 256; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     require(e2d_render_multisample_support(NULL, 1) == -1);
     require(e2d_render_multisample_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples) == NULL);
@@ -175,6 +186,8 @@ int main(int argc, char **argv)
     raster_check(device);
     int multisample_features = e2d_render_multisample_support(device, 1); require(multisample_features >= 0 && multisample_features <= 3);
     printf("Native multisample feature mask=%d (sample shading=1, alpha-to-one=2)\n", multisample_features);
+    int depth_features = e2d_render_depth_support(device, 1); require(depth_features >= 0 && depth_features <= 3);
+    printf("Native depth feature mask=%d (per-face=1, depth bounds=2)\n", depth_features);
 
     int wide = e2d_render_line_support(device, 1, &lines); require(wide == 0 || wide == 1);
     if (wide) { require(lines.minimum > 0 && lines.maximum >= lines.minimum && lines.granularity > 0); printf("Native line range %g..%g, granularity %g (physical feature; logical opt-in independent)\n", lines.minimum, lines.maximum, lines.granularity); }

@@ -8,6 +8,7 @@ internal static unsafe partial class GPUDeviceFactory
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
     internal const string GraphicsStorageProperty = "Electron2D.gpu.graphics_storage";
     internal const string MultisampleProperty = "Electron2D.gpu.multisample_features";
+    internal const string DepthBoundsProperty = "Electron2D.gpu.depth_bounds";
     internal const string WideLinesProperty = "Electron2D.gpu.wide_lines";
     internal const string NarrowProperty = "Electron2D.gpu.narrow_features";
     internal const string Float64Property = "Electron2D.gpu.shader_float64";
@@ -130,7 +131,9 @@ internal static unsafe partial class GPUDeviceFactory
             if (wide is < 0 or > 1) throw new InvalidOperationException("Native line rasterization could not be queried.");
             var multisample = ReadMultisampleSupport(device, 1);
             if (multisample is < 0 or > 3) throw new InvalidOperationException("Native multisample features could not be queried.");
-            var raster = wide | (multisample << 1); available |= graphics << 10;
+            var depth = ReadDepthSupport(device, 1);
+            if (depth is < 0 or > 3) throw new InvalidOperationException("Native depth/stencil features could not be queried.");
+            var raster = wide | (multisample << 1) | ((depth & 2) << 2); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
@@ -160,6 +163,10 @@ internal static unsafe partial class GPUDeviceFactory
     [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_multisample_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadMultisampleSupport(nint device, uint abi);
+
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_depth_support")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial int ReadDepthSupport(nint device, uint abi);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct LineLimits { internal float Minimum, Maximum, Granularity; }
@@ -223,7 +230,7 @@ internal static unsafe partial class GPUDeviceFactory
                 nint device = 0; var mirror = false;
                 for (var selected = raster; ; selected = (selected - 1) & raster)
                 {
-                    features[15] = (uint)selected & 1; features[6] = ((uint)selected >> 1) & 1; features[17] = ((uint)selected >> 2) & 1;
+                    features[15] = (uint)selected & 1; features[6] = ((uint)selected >> 1) & 1; features[17] = ((uint)selected >> 2) & 1; features[14] = ((uint)selected >> 3) & 1;
                     options.DeviceExtensionCount = 1; options.DeviceExtensionNames = (nint)(&extension); advanced.Flags[0] = 1;
                     device = SDL.CreateGPUDeviceWithProperties(props); mirror = device != 0;
                     if (device == 0)
@@ -244,6 +251,7 @@ internal static unsafe partial class GPUDeviceFactory
                      precision != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow & 1023) ||
                      ((narrow >> 10) & 3) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), GraphicsStorageProperty, (narrow >> 10) & 3) ||
                      features[15] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), WideLinesProperty, true) ||
+                     features[14] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DepthBoundsProperty, true) ||
                      (features[6] | features[17]) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), MultisampleProperty, features[6] | features[17] << 1)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);

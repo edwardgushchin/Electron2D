@@ -119,11 +119,11 @@ internal static class RenderingDeviceDepthTests
         bias.DepthBiasClamp = -.001f; var negativeClamp = Pipeline(biasDepth, bias); list = Begin(z: .5f); Draw(list, negativeClamp); Finish(); Pixel(0, 0, 0, "negative bias clamp floors the bias");
         bias.DepthBiasConstantFactor = 0; bias.DepthBiasClamp = 0; bias.DepthBiasSlopeFactor = -2; var sloped = Pipeline(biasDepth, bias);
         Parameters(Colors.Blue, .5f, layer: .2f); list = Begin(z: .5f); Draw(list, sloped); Finish(); Pixel(0, 0, 255, "negative slope depth bias shifts the interpolated primitive");
-        using var asymmetric = StencilState(7); asymmetric.BackOpReference = 8; Reject<NotSupportedException>(() => Pipeline(asymmetric));
+        using var asymmetric = StencilState(7); asymmetric.BackOpReference = 8; device.FreeRID(Pipeline(asymmetric));
         using var culled = new RDPipelineRasterizationState { CullMode = PolygonCullMode.Front }; asymmetric.FrontOpReference = 999; asymmetric.FrontOpPass = asymmetric.BackOpPass = StencilOperation.Replace;
         var culledPipeline = Pipeline(asymmetric, culled); using var backRead = StencilState(8, CompareOperator.Equal); var backReader = Pipeline(backRead);
         Parameters(Colors.Red, .5f); list = Begin(); Draw(list, culledPipeline); device.DrawListEnd(); Parameters(Colors.Blue, .5f); list = Begin(false); Draw(list, backReader); Finish(); Pixel(0, 0, 255, "front culling applies back-face masks/reference"); device.FreeRID(culledPipeline); asymmetric.FrontOpReference = 7;
-        asymmetric.BackOpReference = 7; asymmetric.BackOpCompareMask = 127; Reject<NotSupportedException>(() => Pipeline(asymmetric)); asymmetric.BackOpCompareMask = 255; asymmetric.BackOpWriteMask = 127; Reject<NotSupportedException>(() => Pipeline(asymmetric));
+        asymmetric.BackOpReference = 7; asymmetric.BackOpCompareMask = 127; device.FreeRID(Pipeline(asymmetric)); asymmetric.BackOpCompareMask = 255; asymmetric.BackOpWriteMask = 127; device.FreeRID(Pipeline(asymmetric));
         using var invalidStencil = StencilState(256); Reject<ArgumentOutOfRangeException>(() => Pipeline(invalidStencil));
         using var shadowModule = RenderingDeviceGraphicsTests.Load("DeviceShadow" + language); RenderingDeviceGraphicsTests.Export(shadowModule, "DeviceShadow" + language); var shadow = device.ShaderCreateFromSPIRV(shadowModule);
         var shadowSet = device.UniformSetCreate([descriptor], shadow, 5);

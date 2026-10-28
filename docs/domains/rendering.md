@@ -46,6 +46,8 @@
 
 Last updated: 2026-10-28
 
+[Copied native depth/stencil state](../components/depth-stencil-state.md) executes stored-depth bounds and independent visible-face masks/reference across ordinary and derived graphics pipelines.
+
 [Integer material graphs](../components/visual-shaders.md#integer-arithmetic-and-bit-patterns) now execute exact signed/unsigned arithmetic, functions and bit masks through the existing archive/import/material path. Byte-encoded and UV-driven consumers observe precision before float conversion.
 
 [Numeric ranges and masks](../components/visual-shaders.md#numeric-ranges-and-masks) now execute typed clamps, interpolation, thresholds, fused multiply/add and interval remapping through existing graph archives, imports and materials. Shared scalar-control layouts preserve port roles and transactional default conversion.

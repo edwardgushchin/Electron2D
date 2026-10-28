@@ -6,6 +6,8 @@ For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/ext
 
 Last updated: 2026-10-28
 
+Depth/stencil changes follow [the native state contract](components/depth-stencil-state.md): preserve stored-depth range semantics, independent visible faces, optional feature refusal, ordinary dynamic-reference switching, composed view/pass/MSAA/component variants and the warmed owner-allocation boundary.
+
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
 For release preparation and publication, follow [Releasing Electron2D](releasing.md): finish documentation before final qualification, test the actual release packages, retain their source/run/artifact identities and publish those same files. The [development pipeline](development-ci.md) defines fast feedback, full package qualification and exact-artifact promotion; its hosted activation and platform acceptance remain separate. Existing license, package, platform and acceptance checks below still apply.

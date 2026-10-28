@@ -1,9 +1,8 @@
 namespace Electron2D;
 
 /// <summary>Describes copied depth testing, depth writes and eight-bit two-sided stencil operations.</summary>
-/// <remarks>Both visible faces must have equal effective masks and references on the current backend.
-/// Culling allows different unused-face values. Depth writes require an enabled depth test.
-/// Depth-bounds testing requires a separate native adapter and is not exposed as inert configuration.</remarks>
+/// <remarks>Independent face masks/references and stored-depth bounds use the native pipeline adapter.
+/// Visible stencil references must fit eight bits. Depth writes require an enabled depth test.</remarks>
 public sealed class RDPipelineDepthStencilState : ElectronObject
 {
     /// <summary>Creates the default disabled tests and zeroing stencil operations.</summary>
@@ -16,6 +15,19 @@ public sealed class RDPipelineDepthStencilState : ElectronObject
     /// <summary>Enables depth writes for fragments passing an enabled depth test.</summary>
     /// <value>Initially false; validated and copied at pipeline creation.</value>
     public bool EnableDepthWrite { get { ThrowIfDisposed(); return _enableDepthWrite; } set { ThrowIfDisposed(); _enableDepthWrite = value; } }
+    private bool _enableDepthRange;
+    /// <summary>Rejects samples whose stored attachment depth lies outside the inclusive depth range.</summary>
+    /// <value>False initially; requires the independently enabled native depth-bounds feature and a depth attachment.</value>
+    public bool EnableDepthRange { get { ThrowIfDisposed(); return _enableDepthRange; } set { ThrowIfDisposed(); _enableDepthRange = value; } }
+    private float _depthRangeMin, _depthRangeMax;
+    /// <summary>Selects the inclusive lower bound for stored attachment depth.</summary>
+    /// <value>Zero initially; finite zero through one. An enabled range is ordered at pipeline creation.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or outside zero through one.</exception>
+    public float DepthRangeMin { get { ThrowIfDisposed(); return _depthRangeMin; } set { ThrowIfDisposed(); if (!float.IsFinite(value) || value < 0 || value > 1) throw new ArgumentOutOfRangeException(nameof(value)); _depthRangeMin = value; } }
+    /// <summary>Selects the inclusive upper bound for stored attachment depth.</summary>
+    /// <value>Zero initially; finite zero through one. Disabled ranges do not affect drawing.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or outside zero through one.</exception>
+    public float DepthRangeMax { get { ThrowIfDisposed(); return _depthRangeMax; } set { ThrowIfDisposed(); if (!float.IsFinite(value) || value < 0 || value > 1) throw new ArgumentOutOfRangeException(nameof(value)); _depthRangeMax = value; } }
     private RenderingDevice.CompareOperator _depthCompareOperator = RenderingDevice.CompareOperator.Always;
     /// <summary>Selects the depth comparison.</summary>
     /// <value>Initially RenderingDevice.CompareOperator.Always; validated and copied at pipeline creation.</value>
@@ -84,6 +96,9 @@ public sealed class RDPipelineDepthStencilState : ElectronObject
     /// <returns>Typed configuration descriptors with the pinned defaults.</returns>
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
+        new PropertyDescriptor<RDPipelineDepthStencilState, bool>(nameof(EnableDepthRange), p => p.EnableDepthRange, (p, v) => p.EnableDepthRange = v, _ => false),
+        new PropertyDescriptor<RDPipelineDepthStencilState, float>(nameof(DepthRangeMin), p => p.DepthRangeMin, (p, v) => p.DepthRangeMin = v, _ => 0),
+        new PropertyDescriptor<RDPipelineDepthStencilState, float>(nameof(DepthRangeMax), p => p.DepthRangeMax, (p, v) => p.DepthRangeMax = v, _ => 0),
         new PropertyDescriptor<RDPipelineDepthStencilState, bool>(nameof(EnableDepthTest), p => p.EnableDepthTest, (p, v) => p.EnableDepthTest = v, _ => false),
         new PropertyDescriptor<RDPipelineDepthStencilState, bool>(nameof(EnableDepthWrite), p => p.EnableDepthWrite, (p, v) => p.EnableDepthWrite = v, _ => false),
         new PropertyDescriptor<RDPipelineDepthStencilState, RenderingDevice.CompareOperator>(nameof(DepthCompareOperator), p => p.DepthCompareOperator, (p, v) => p.DepthCompareOperator = v, _ => RenderingDevice.CompareOperator.Always),

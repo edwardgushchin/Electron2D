@@ -9,6 +9,8 @@ and framebuffer-format identities remain in effect.
 
 Last updated: 2026-10-28
 
+[Copied native depth/stencil state](../components/depth-stencil-state.md) extends pipeline creation with stored-depth bounds and independent visible-face masks/reference, including derived native variants.
+
 Compute storage-array lengths use each actual bound byte range, including
 different bindings across dispatches in one submission. The internal
 [ComputePipeline](ComputePipeline.md) supplies Metal's size table; the logical

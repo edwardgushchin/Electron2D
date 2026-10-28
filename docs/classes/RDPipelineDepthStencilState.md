@@ -1,6 +1,6 @@
 # RDPipelineDepthStencilState
 
-Last updated: 2026-10-12
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDPipelineDepthStencilState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDPipelineDepthStencilState.cs](../../src/Servers/Rendering/Device/RDPipelineDepthStencilState.cs).
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-12
 
 Describes copied depth testing, depth writes and eight-bit two-sided stencil operations.
 
-Both visible faces must have equal effective masks and references on the current backend. Culling allows different unused-face values. Depth writes require an enabled depth test. Depth-bounds testing requires a separate native adapter and is not exposed as inert configuration.
+Independent visible-face masks/references and inclusive stored-depth bounds execute through the native pipeline adapter. Culling allows different unused-face values. Depth writes require an enabled depth test. See [copied native state](../components/depth-stencil-state.md) for feature negotiation and variant behavior.
 
 ## Example
 
@@ -44,6 +44,9 @@ using var depth = new RDPipelineDepthStencilState { EnableDepthTest = true, Enab
 | [`public Electron2D.RenderingDevice.StencilOperation FrontOpPass { get; set; }`](#member-24c3d897cbab) | Selects the front-face operation when both tests pass. |
 | [`public System.Int32 FrontOpReference { get; set; }`](#member-cd80e4c050c8) | Selects the front-face reference from zero through 255. |
 | [`public System.Int32 FrontOpWriteMask { get; set; }`](#member-219802895014) | Selects the front-face write mask; only its low eight bits are used. |
+| [`public System.Boolean EnableDepthRange { get; set; }`](#member-7535eaff406b) | Rejects samples whose stored attachment depth lies outside the inclusive range. |
+| [`public System.Single DepthRangeMin { get; set; }`](#member-840ce122a7cd) | Selects the inclusive lower bound for stored attachment depth. |
+| [`public System.Single DepthRangeMax { get; set; }`](#member-17ce025556e4) | Selects the inclusive upper bound for stored attachment depth. |
 
 ## Member descriptions
 
@@ -265,6 +268,39 @@ Selects the front-face write mask; only its low eight bits are used.
 
 Initially 0; validated and copied at pipeline creation.
 
+<a id="member-7535eaff406b"></a>
+### EnableDepthRange
+
+```csharp
+public System.Boolean EnableDepthRange { get; set; }
+```
+
+Rejects samples whose stored attachment depth lies outside the inclusive range.
+
+False initially. Requires an independently enabled native depth-bounds feature and a depth attachment. The stored depth is tested even when ordinary depth comparison is disabled. Unavailable state raises NotSupportedException at pipeline creation.
+
+<a id="member-840ce122a7cd"></a>
+### DepthRangeMin
+
+```csharp
+public System.Single DepthRangeMin { get; set; }
+```
+
+Selects the inclusive lower bound for stored attachment depth.
+
+Zero initially. Finite zero through one is accepted; other values throw ArgumentOutOfRangeException. An enabled inverted range throws ArgumentException at pipeline creation; description mutation after creation does not change copied state.
+
+<a id="member-17ce025556e4"></a>
+### DepthRangeMax
+
+```csharp
+public System.Single DepthRangeMax { get; set; }
+```
+
+Selects the inclusive upper bound for stored attachment depth.
+
+Zero initially. Finite zero through one is accepted; other values throw ArgumentOutOfRangeException. Disabled ranges ignore their ordering. Equal bounds accept only that stored depth value.
+
 ## Lifecycle, errors and verification
 
-Copied descriptions borrow no native state and can be disposed after creation. Device RIDs remain owner-thread resources. Unknown enum selectors and nonfinite bias/clear values reject. References must fit eight bits for visible stencil faces; both visible faces require equal effective masks/reference. Depth-bounds and raw aspect-transfer adapters remain explicit prerequisites in coverage. [RenderingDeviceDepthTests](../../tests/Electron2D.Tests/RenderingDeviceDepthTests.cs) verifies native pixels and warmed managed allocation on Linux/Vulkan; foreign platforms and native allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).
+Copied descriptions borrow no native state and can be disposed after creation. Device RIDs remain owner-thread resources. Unknown enum selectors and nonfinite bias/clear values reject. References must fit eight bits for visible stencil faces; independent visible-face values are copied through native state. Depth bounds require ordered normalized finite bounds and the enabled native feature. Raw aspect-transfer adapters remain explicit prerequisites in coverage. [RenderingDeviceDepthTests](../../tests/Electron2D.Tests/RenderingDeviceDepthTests.cs) and [the depth consumer](../../tests/DeviceGraphicsStorage.Consumer/GraphicsStorage.Depth.cs) verify native pixels and warmed managed allocation on Linux/Vulkan; foreign platforms and native allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).

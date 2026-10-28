@@ -54,7 +54,7 @@ def required_exports(name):
     if "FAudio" in name:
         return {"e2d_audio_select_output", "e2d_audio_output_latency", "e2d_audio_create_offline_master", "e2d_audio_mix_offline"}
     if "Electron2DRender" in name:
-        return {"e2d_render_raster_support", "e2d_render_raster_pipeline", "e2d_render_line_support", "e2d_render_line_pipeline", "e2d_render_multisample_support", "e2d_render_multisample_pipeline", "e2d_render_empty_support", "e2d_render_empty_create", "e2d_render_empty_begin", "e2d_render_empty_release", "e2d_render_graphics_storage_support", "e2d_render_storage_barrier", "e2d_render_shader16_support", "e2d_render_memory", "e2d_render_sampler", "e2d_render_sampler_view", "e2d_render_limits", "e2d_render_filter_support", "e2d_render_texture_format"}
+        return {"e2d_render_depth_support", "e2d_render_depth_pipeline", "e2d_render_raster_support", "e2d_render_raster_pipeline", "e2d_render_line_support", "e2d_render_line_pipeline", "e2d_render_multisample_support", "e2d_render_multisample_pipeline", "e2d_render_empty_support", "e2d_render_empty_create", "e2d_render_empty_begin", "e2d_render_empty_release", "e2d_render_graphics_storage_support", "e2d_render_storage_barrier", "e2d_render_shader16_support", "e2d_render_memory", "e2d_render_sampler", "e2d_render_sampler_view", "e2d_render_limits", "e2d_render_filter_support", "e2d_render_texture_format"}
     if "Electron2DMesh" in name:
         return {"e2d_mesh_scale", "e2d_mesh_simplify"}
     if "ENet" in name:
