@@ -101,6 +101,8 @@ public abstract partial class PropertyDescriptor
         throw new NotSupportedException($"Property descriptor '{Name}' does not support scene storage.");
 
     internal virtual StoredPropertyValue CaptureReloadValue(ElectronObject owner) => CaptureStoredValue(owner);
+    internal virtual StoredPropertyValue CaptureCopyValue(ElectronObject owner) => CaptureStoredValue(owner);
+    internal virtual void RestoreCopyValue(ElectronObject owner, StoredPropertyValue value) => RestoreStoredValue(owner, value, static r => r);
     internal virtual bool MatchesStoredValue(ElectronObject owner, StoredPropertyValue value) => false;
 
     internal virtual void RestoreStoredValue(
@@ -289,6 +291,25 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
             return new StoredNodeReferenceValue(typeof(TValue), referenced is null ? null : node.GetPathTo(referenced));
         }
 
+        EnsureStoredType();
+        var value = getter(typedOwner);
+        return new StoredPropertyValue<TValue>(StoredPropertyValue<TValue>.Snapshot(value));
+    }
+
+    internal override StoredPropertyValue CaptureCopyValue(ElectronObject owner)
+    {
+        EnsureStoredType();
+        return new StoredPropertyValue<TValue>((StoredGetter ?? _getter)(GetOwner(owner)));
+    }
+
+    internal override void RestoreCopyValue(ElectronObject owner, StoredPropertyValue value)
+    {
+        if (value is not StoredPropertyValue<TValue> typed) throw new InvalidOperationException($"Stored property '{Name}' has an incompatible value type.");
+        if (StoredSetter is { } setter) setter(GetOwner(owner), typed.Value); else SetValue(GetOwner(owner), typed.Value);
+    }
+
+    private void EnsureStoredType()
+    {
         if (RuntimeHelpers.IsReferenceOrContainsReferences<TValue>() &&
             typeof(TValue) != typeof(string) &&
             typeof(TValue) != typeof(string[]) &&
@@ -307,8 +328,6 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
                 $"Stored property '{Name}' uses unsupported reference-shaped type {typeof(TValue).FullName}.");
         }
 
-        var value = getter(typedOwner);
-        return new StoredPropertyValue<TValue>(StoredPropertyValue<TValue>.Snapshot(value));
     }
 
     internal override void RestoreStoredValue(

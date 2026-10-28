@@ -1,3 +1,5 @@
+[Native Script property schemas](../components/scripting.md#native-property-schemas) extend typed owner discovery and copy/archive restoration through immutable live bindings.
+
 [Live Script RPC declarations](../components/scripting.md#live-binding-rpc) switch handlers on stable Node roles while retaining ID policies and separating explicit token lifetime.
 
 [Live canvas callbacks](../components/scripting.md#live-canvas-recording) record on native canvas/physical owners through the existing typed binding and retained drawing scope.

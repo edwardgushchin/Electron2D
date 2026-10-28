@@ -12,7 +12,7 @@ public partial class Node
         Signals = 1,
         /// <summary>Copies persistent and runtime group memberships.</summary>
         Groups = 2,
-        /// <summary>Constructs the original compiled gameplay types through their scene factories.</summary>
+        /// <summary>Constructs the original compiled gameplay types and restores live bindings and their typed properties.</summary>
         Scripts = 4,
         /// <summary>Uses the original linked scene as the starting hierarchy when available.</summary>
         UseInstantiation = 8,
@@ -30,7 +30,8 @@ public partial class Node
     /// external references and ordinary resources stay borrowed. Owned resource/file leases remain valid after
     /// source disposal. Always-duplicate resource properties receive independent shallow copies. Signals copies
     /// registered authored subscriptions, preserving external receivers; ordinary CLR subscriptions remain local.
-    /// Without Scripts, live-bound owners retain their stable CLR role with no installed binding; fixed compiled project
+    /// Without Scripts, live-bound owners retain their stable CLR role and ordinary CLR fields without an installed
+    /// binding or injected property values; fixed compiled project
     /// classes use their nearest constructible runtime or registered extension base. A linked
     /// template retains its own compiled types unless Scripts replaces them with the source types. Derived
     /// classes require static CreateSceneInstanceFactory hooks. Source mutation/reentry is rejected while copying.</remarks>
@@ -110,7 +111,7 @@ public partial class Node
                     if (original is InstancePlaceholder oldPlaceholder && target is InstancePlaceholder newPlaceholder)
                         newPlaceholder.InitializePending(oldPlaceholder.GetInstancePath(), oldPlaceholder.PendingFields.Copy(static r => r).Fields.Values);
                     if (Has(DuplicateFlags.Groups)) foreach (var group in original._groups) target.AddToGroup(group.Key, group.Value);
-                    var properties = original.GetPropertyList().Where(property => !property.IsReadOnly &&
+                    var properties = original.GetPropertyList(includeScript: Has(DuplicateFlags.Scripts)).Where(property => !property.IsReadOnly &&
                         (property.IsStored || Has(DuplicateFlags.InternalState)) && property.Name != nameof(Name) &&
                         !(original is MissingNode && MissingNode.IsRecoveryControl(property.Name)) &&
                         !(property.Name == nameof(TranslationDomain) && original.IsTranslationDomainInherited) &&

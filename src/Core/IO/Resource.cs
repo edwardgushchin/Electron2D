@@ -332,6 +332,8 @@ public class Resource : ElectronObject
     /// defines other behavior. <see cref="ResetState"/> runs first. Change notifications raised while copying are
     /// coalesced into one final <see cref="Changed"/> event. Batches targeting the same resource are serialized, but
     /// derived state still requires caller coordination. The target retains its current compiled source and live binding.
+    /// Injected stored script properties copy after native/custom state when the target exposes the same name and exact
+    /// value type. Ordinary CLR properties remain the responsibility of their existing copy implementation.
     /// The operation is not transactional if a derived callback fails.
     /// A reset or copy failure still attempts one final change event. Operation and final handler failures are
     /// aggregated in that order. Nested batches publish at the outer boundary; a final handler may start a new batch.
@@ -382,6 +384,7 @@ public class Resource : ElectronObject
                         if (copyConstructionScript && CopyConstructionScript(source, source.GetScript(), out scriptChanged) is { } bindingError)
                             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
                         source.CopyCustomStateTo(this, deep: false, DeepDuplicateMode.None, static resource => resource, static resource => resource);
+                        source.CopyScriptPropertiesTo(this, deep: false, static resource => resource, static resource => resource);
                         copied = true;
                     }
                     catch (Exception error) { operationError = error; }
@@ -599,6 +602,7 @@ public class Resource : ElectronObject
     /// The base implementation supports only an exact <see cref="Resource"/> instance. Derived implementations must
     /// copy all stored custom state and call the base implementation only when they intentionally want its validation.
     /// Assigning the original nested-resource reference directly expresses a never-duplicate property.
+    /// The engine copies injected stored script properties after this hook; overrides need not repeat those writes.
     /// </remarks>
     /// <exception cref="NotSupportedException">A derived resource has not explicitly implemented custom-state copying.</exception>
     protected virtual void CopyCustomStateTo(
@@ -610,6 +614,20 @@ public class Resource : ElectronObject
     {
         if (GetType() != typeof(Resource))
             throw new NotSupportedException($"{GetType().Name} must override {nameof(CopyCustomStateTo)} to support copying.");
+    }
+
+    private void CopyScriptPropertiesTo(Resource target, bool deep, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
+    {
+        if (!HasLiveScriptBinding) return;
+        var ordinary = GetPropertyList(includeScript: false).Select(p => p.Name).ToHashSet(StringComparer.Ordinal);
+        var targets = target.GetPropertyList().Where(p => p.IsStored && !p.IsReadOnly).ToDictionary(p => p.Name, StringComparer.Ordinal);
+        foreach (var property in GetPropertyList().Where(p => p.IsStored && !ordinary.Contains(p.Name)))
+            if (targets.TryGetValue(property.Name, out var other) && other.ValueType == property.ValueType)
+            {
+                var value = property.CaptureCopyValue(this);
+                if (deep) value = value.TransformResources(r => (property.AlwaysDuplicateResource ? force(r) : duplicate(r))!);
+                other.RestoreCopyValue(target, value);
+            }
     }
 
     /// <summary>Clears non-stored state when <see cref="ResetState"/> or <see cref="CopyFromResource"/> requests it.</summary>
@@ -1091,6 +1109,9 @@ public class Resource : ElectronObject
                         mode,
                         resource => resource is null ? null : Duplicate(resource),
                         resource => resource is null ? null : Duplicate(resource, force: true));
+                    source.CopyScriptPropertiesTo(target, deep,
+                        resource => resource is null ? null : Duplicate(resource),
+                        resource => resource is null ? null : Duplicate(resource, force: true));
                 },
                 emitAtEnd: false);
 
@@ -1120,6 +1141,7 @@ public class Resource : ElectronObject
                         if (to.CopyConstructionScript(from, script is null ? null : (Script)Duplicate(script), out changed) is { } bindingError)
                             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
                         from.CopyCustomStateTo(to, deep: true, mode, r => r is null ? null : Duplicate(r), r => r is null ? null : Duplicate(r, force: true));
+                        from.CopyScriptPropertiesTo(to, deep: true, r => r is null ? null : Duplicate(r), r => r is null ? null : Duplicate(r, force: true));
                         to.AdoptFileOwnership(from._fileOwnership?.RetainOwner());
                     }
                     catch (Exception error) { operationError = error; }

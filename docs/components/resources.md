@@ -119,6 +119,8 @@ changes no runtime API or architectural decision.
 | Preflight before reset/metadata/events; accepted partial failures and recovery | `RunShapeGeometry`, `RunWorldCopies`, `ResourceCopyFailures`; real selected frames and queries retain accepted body/shape/space identities |
 | Coalesced, nested and reentrant changes; all rollback disposers attempted in reverse order | `VerifyResources` and `ResourceCopyFailures`; original, observer and cleanup exceptions retain their identities/order |
 
+Live native Script schemas add typed stored fields after the ordinary custom copy hook. Matching target names and exact value types receive those fields; public shallow copying retains target code and container aliases. Deep duplication uses the existing per-edge resource policy and independent containers. These injected fields do not require duplicate writes in derived hooks; ordinary CLR fields still do. See [the schema contract](scripting.md#native-property-schemas).
+
 Each derived type must supply its complete stored-field copy and appropriate
 container handling. An unsupported application type fails explicitly. A missing
 field in a concrete implementation belongs to that type's audit; arbitrary caller

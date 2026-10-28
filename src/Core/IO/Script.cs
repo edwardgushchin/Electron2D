@@ -81,19 +81,21 @@ public sealed partial class Script : Resource
     }
     internal static void ValidateSchema(ScriptRegistration record, ElectronObject instance)
     {
-        var actual = instance.GetPropertyList().Where(p => p.OwnerType.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(p.OwnerType)).ToArray(); var schema = Properties(record);
-        if (actual.Length != schema.Length || actual.Any(p => !schema.Any(s => s.Name == p.Name && s.OwnerType == p.OwnerType && s.ValueType == p.ValueType && s.IsStored == p.IsStored && s.IsReadOnly == p.IsReadOnly))) throw new InvalidOperationException("Constructed script property schema differs from registration.");
+        var actual = instance.GetPropertyList(); var schema = Properties(record, instance.GetType());
+        if (record.BindingOwner is null) actual = actual.Where(p => p.OwnerType.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(p.OwnerType)).ToArray();
+        if (record.BindingOwner is null && actual.Count != schema.Length || schema.Any(s => !actual.Any(p => s.Name == p.Name && s.OwnerType == p.OwnerType && s.ValueType == p.ValueType && s.IsStored == p.IsStored && s.IsReadOnly == p.IsReadOnly))) throw new InvalidOperationException("Constructed script property schema differs from registration.");
     }
     internal ScriptRegistration? GetBindingRegistration(bool requireLive)
     { lock (_gate) { if (requireLive) ThrowIfDisposed(); return _registration?.BindingOwner is null ? null : _registration; } }
     internal bool MatchesConstructionType(Type type) { lock (_gate) { ThrowIfDisposed(); return _registration is { } record && (record.BindingOwner is { } owner ? type != typeof(Script) && owner.IsAssignableFrom(type) : record.Type == type); } }
-    private static PropertyDescriptor[] Properties(ScriptRegistration record)
+    internal static PropertyDescriptor[] Properties(ScriptRegistration record, Type? receiver = null)
     {
+        receiver ??= record.InstanceType;
         var properties = new List<PropertyDescriptor>(); var type = record.Type;
-        while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) { if (FindType(type) is { } entry) foreach (var property in entry.Properties) if (!properties.Any(p => p.Name == property.Name)) properties.Add(property); type = type.BaseType; }
+        while (type != null && type.Assembly != typeof(Script).Assembly && !ExtensionBindings.IsExtensionRole(type)) { if (FindType(type) is { } entry) foreach (var property in entry.Properties) if (property.OwnerType.IsAssignableFrom(receiver) && !properties.Any(p => p.Name == property.Name)) properties.Add(property); type = type.BaseType; }
         return properties.ToArray();
     }
-    /// <summary>Returns copied typed project property metadata, including registered script bases.</summary><returns>Descriptors with no untyped access channel.</returns>
+    /// <summary>Returns copied typed code property metadata, including compatible registered script bases.</summary><returns>Descriptors with no untyped access channel.</returns>
     public PropertyDescriptor[] GetScriptPropertyList() { lock (_gate) { ThrowIfDisposed(); return _registration == null ? [] : Properties(_registration); } }
     /// <summary>Reads a typed declared default in an existing compatible owner context.</summary>
     /// <typeparam name="TOwner">Compiled owner class.</typeparam><typeparam name="TValue">Exact property value type.</typeparam>
@@ -103,7 +105,7 @@ public sealed partial class Script : Resource
     {
         ArgumentNullException.ThrowIfNull(property); ArgumentNullException.ThrowIfNull(owner);
         ScriptRegistration? record; lock (_gate) { ThrowIfDisposed(); record = _registration; }
-        if (record?.InstanceType.IsInstanceOfType(owner) != true || !GetScriptPropertyList().Contains(property)) throw new ArgumentException("Default query requires a registered descriptor and compatible owner.");
+        if (record?.InstanceType.IsInstanceOfType(owner) != true || !Properties(record, owner.GetType()).Contains(property)) throw new ArgumentException("Default query requires a registered descriptor and compatible owner.");
         if (!property.TryGetRevertValue(owner, out var value)) throw new InvalidOperationException("The property has no declared default."); return value;
     }
     /// <summary>Returns declared project methods and inherited project methods without invoking them.</summary><returns>Copied registration-time CLR method metadata, ordered by name/signature.</returns>

@@ -335,6 +335,8 @@ Builds the current validated list of typed properties exposed to tooling.
 
 **Returns:** A read-only snapshot whose property names are unique using ordinal comparison.
 
+Installed live Script declarations extend the ordinary CLR list, including compatible registered code bases. Discovery uses the immutable installed binding even after source edits or disposal. Native-name collisions reject; an existing identical descriptor token is reused. Prior snapshots remain unchanged, and explicit typed descriptor calls retain their authored callback and lifetime rules.
+
 **Exceptions**
 
 - `ObjectDisposedException`: The object is disposing on another thread or has finished disposing.

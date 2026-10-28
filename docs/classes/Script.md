@@ -52,7 +52,7 @@ RegisterObject covers compiled project classes directly based on ElectronObject 
 | `public Script? GetBaseScript()` | Cached source resource for a directly registered project base; null otherwise. |
 | `public T New<T>() where T : ElectronObject` | Caller-owned exact instance via registered factory. |
 | `public T New<T>(Func<T>? constructor) where T : ElectronObject` | Typed constructor arguments via direct C# expression; null uses default factory. |
-| `public PropertyDescriptor[] GetScriptPropertyList()` | Copied explicit typed user schema including registered project bases. |
+| `public PropertyDescriptor[] GetScriptPropertyList()` | Copied explicit typed code schema including compatible registered bases. |
 | `public TValue GetPropertyDefaultValue<TOwner,TValue>(PropertyDescriptor<TOwner,TValue> property, TOwner owner) where TOwner : ElectronObject` | Declared typed default in a live compatible owner context. |
 | `public MethodInfo[] GetScriptMethodList()` | Copied CLR project method metadata, including project bases. |
 | `public bool HasScriptMethod(string methodName)` | Project method-name query; no invocation. |
@@ -66,7 +66,9 @@ RegisterObject covers compiled project classes directly based on ElectronObject 
 
 ## Contracts and limitations
 
-Node/resource registration follows the same static factory and portable ID rules as ResourceFileTypes. Properties must belong to the closed project class or project base and match constructed object descriptors. Factories must return a live exact class instance; a mismatched returned object is disposed. Project constructors may throw; no unknown object created only inside a throwing user delegate can be recovered by the runtime.
+Live binding declarations may use runtime owner types. Their typed schema extends ordinary owner descriptors; compatible registered code bases merge with derived name priority. Binding initialization precedes typed copy/archive restoration, and discovery follows the installed registration through source edits or disposal. See [native property schemas](../components/scripting.md#native-property-schemas).
+
+Compiled Node/resource registration follows the same static factory and portable ID rules as ResourceFileTypes. Properties must belong to the closed project class or project base and match constructed object descriptors. Factories must return a live exact class instance; a mismatched returned object is disposed. Project constructors may throw; no unknown object created only inside a throwing user delegate can be recovered by the runtime.
 
 The source/type association is proven by assembly MVID and matching portable PDB documents. All partial documents retain compiler checksums and are validated on uncached source load. Missing/unmatched symbols, missing/changed source or an unknown registration fail before replacing a cached wrapper. Rebuild and restart publishes a different compiled cohort. Source editing/saving leaves the loaded class unchanged. New instances remain independent caller-owned objects and continue ordinary callbacks after Script disposal.
 

@@ -6,7 +6,8 @@ namespace Electron2D;
 /// <summary>Provides the common identity, notification, property, localization, and lifetime contract for engine objects.</summary>
 /// <remarks>
 /// The contract uses typed properties and events and deliberately omits dynamic calls, untyped metadata, generic signal
-/// registration, and live script reassignment. Compiled construction may retain a borrowed source asset through
+/// registration. Live typed bindings can replace code on a stable owner; fixed CLR classes retain their type.
+/// Compiled construction may retain a borrowed source asset through
 /// <see cref="GetScript"/>. Instances have deterministic <see cref="IDisposable"/> lifetime.
 /// Compiled subclasses provide custom typed iteration through the ordinary C# enumeration pattern or
 /// <see cref="System.Collections.Generic.IEnumerable{T}"/>; each cursor owns its traversal state and normal lifetime guards.
@@ -199,25 +200,38 @@ public partial class ElectronObject : IDisposable
 
     /// <summary>Builds the current validated list of typed properties exposed to tooling.</summary>
     /// <returns>A read-only snapshot whose property names are unique using ordinal comparison.</returns>
+    /// <remarks>Installed live Script declarations extend the ordinary CLR list. Discovery uses the immutable binding,
+    /// including compatible registered code bases, independently of borrowed source edits or disposal.
+    /// Existing project-owner descriptors may supply declared fields; native-name collisions reject.
+    /// Returned descriptors retain their ordinary explicit typed callback/lifetime contract.</remarks>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="ArgumentNullException"><see cref="GetPropertyDescriptors"/> yielded a null descriptor.</exception>
     /// <exception cref="ArgumentException">A validated descriptor is incompatible with this object's runtime type.</exception>
     /// <exception cref="InvalidOperationException">Two validated descriptors have the same name.</exception>
     /// <exception cref="Exception">A derived property-discovery or validation hook throws.</exception>
-    public IReadOnlyList<PropertyDescriptor> GetPropertyList()
+    public IReadOnlyList<PropertyDescriptor> GetPropertyList() => GetPropertyList(includeScript: true);
+
+    internal IReadOnlyList<PropertyDescriptor> GetPropertyList(bool includeScript)
     {
         ThrowIfDisposed();
 
         var properties = new List<PropertyDescriptor>();
         var names = new HashSet<string>(StringComparer.Ordinal);
 
-        foreach (var property in GetPropertyDescriptors())
+        foreach (var property in GetPropertyDescriptors()) Add(property);
+        if (includeScript && LiveScriptRegistration is { } script)
+            foreach (var property in Script.Properties(script, GetType()))
+                if (!names.Contains(property.Name) || property.OwnerType.Assembly == typeof(Script).Assembly && !properties.Any(p => ReferenceEquals(p, property))) Add(property);
+
+        return properties.AsReadOnly();
+
+        void Add(PropertyDescriptor property)
         {
             ArgumentNullException.ThrowIfNull(property);
 
             var validated = ValidateProperty(property);
             if (validated is null)
-                continue;
+                return;
 
             validated.EnsureCompatible(this);
 
@@ -227,7 +241,6 @@ public partial class ElectronObject : IDisposable
             properties.Add(validated);
         }
 
-        return properties.AsReadOnly();
     }
 
     /// <summary>Reports whether a tooling property currently differs from its revert value.</summary>

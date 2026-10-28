@@ -24,7 +24,8 @@ public sealed partial class Script
     /// <param name="factory">Static fresh exact owner constructor, or null for attachment/explicit construction only.</param>
     /// <param name="bind">Static callback installing fresh per-owner state and typed functions.</param>
     /// <param name="clear">Static callback retiring all installed functions and state, including after a partial bind.</param>
-    /// <param name="properties">The owner's typed project schema.</param>
+    /// <param name="properties">Script-owned typed properties, including native-owner descriptors.
+    /// Existing project-owner descriptors may be shared with the owner's CLR property list.</param>
     /// <remarks>Uses the owner's existing virtual callbacks; no frame traversal or script base class is added.
     /// Binding follows the complete owner constructor. Callbacks own their side effects and must retire functions
     /// before reporting cleanup errors. Resource copies bind before stored restoration; source assets cannot own bindings.
@@ -131,7 +132,7 @@ public sealed partial class Script
         path = System.IO.Path.GetFullPath(ResourceArchive.Absolute(path));
         if (!System.IO.Path.GetExtension(path).Equals(".cs", StringComparison.OrdinalIgnoreCase) || type.IsAbstract && factory != null) throw new ArgumentException("Registration requires C# source and an appropriate concrete/abstract factory.");
         var copy = (PropertyDescriptor[])properties.Clone(); var names = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var property in copy) if (property == null || property.OwnerType.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(property.OwnerType) || !property.OwnerType.IsAssignableFrom(bindingOwner ?? type) || !names.Add(property.Name)) throw new ArgumentException("Invalid script property schema.", nameof(properties));
+        foreach (var property in copy) if (property == null || bindingOwner is null && property.OwnerType.Assembly == typeof(Script).Assembly || ExtensionBindings.IsExtensionRole(property.OwnerType) || !property.OwnerType.IsAssignableFrom(bindingOwner ?? type) || !names.Add(property.Name)) throw new ArgumentException("Invalid script property schema.", nameof(properties));
         if (rpc.Length > 65536) throw new ArgumentException("Script RPC declarations exceed the method budget.", nameof(rpc));
         var declarations = new Dictionary<uint, RPCRegistration>(rpc.Length);
         foreach (var entry in rpc)
