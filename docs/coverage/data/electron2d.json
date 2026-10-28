@@ -269263,6 +269263,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.GetAccessibilityConfigurationWarnings()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "GetAccessibilityConfigurationWarnings",
+    "signature": "public Func\u003CTNode, System.String[]\u003E GetAccessibilityConfigurationWarnings { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTNode, System.String[]\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.GetConfigurationWarnings()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "GetConfigurationWarnings",
+    "signature": "public Func\u003CTNode, System.String[]\u003E GetConfigurationWarnings { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTNode, System.String[]\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.GetFocusedAccessibilityElement()",
+    "kind": "property",
+    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
+    "name": "GetFocusedAccessibilityElement",
+    "signature": "public Func\u003CTNode, Electron2D.RID\u003E GetFocusedAccessibilityElement { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTNode, Electron2D.RID\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Input()",
     "kind": "property",
     "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
@@ -279725,6 +279764,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceScriptCallbacks\u003CTResource\u003E.GetRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "name": "GetRID",
+    "signature": "public Func\u003CTResource, Electron2D.RID\u003E GetRID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTResource, Electron2D.RID\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceScriptCallbacks\u003CTResource\u003E.ResetState()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "name": "ResetState",
+    "signature": "public Action\u003CTResource\u003E ResetState { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTResource\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceScriptCallbacks\u003CTResource\u003E.SetPathCache()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "name": "SetPathCache",
+    "signature": "public Action\u003CTResource, System.String\u003E SetPathCache { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTResource, System.String\u003E",
     "value": null
   },
   {

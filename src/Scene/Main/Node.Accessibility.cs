@@ -26,10 +26,14 @@ public partial class Node
     /// <exception cref="InvalidOperationException">An attached mutation is outside the owner or current processing group.</exception>
     public void QueueAccessibilityUpdate() { EnsureProcessingAccess(); AccessibilityQueued = true; }
     /// <summary>Returns accessibility-specific authoring warnings.</summary><returns>Ordered warning strings; empty by default.</returns>
-    protected virtual string[] OnGetAccessibilityConfigurationWarnings() => [];
+    protected virtual string[] OnGetAccessibilityConfigurationWarnings() => ScriptCallbacks?.GetAccessibilityConfigurationWarnings?.Invoke() ?? [];
     /// <summary>Selects the semantic element focused when this node owns GUI focus.</summary>
     /// <returns>The node's own element by default; a composite may return one of its live sub-elements.</returns>
-    protected virtual RID OnGetFocusedAccessibilityElement() => GetAccessibilityElement();
+    protected virtual RID OnGetFocusedAccessibilityElement()
+    {
+        ThrowIfDisposed(); Tree?.EnsureOwnerThread();
+        return ScriptCallbacks?.GetFocusedAccessibilityElement?.Invoke() ?? GetAccessibilityElement();
+    }
     internal void DispatchAccessibilityUpdate() => DispatchNotification(NotificationAccessibilityUpdate);
     internal RID FocusedAccessibilityElement() => OnGetFocusedAccessibilityElement();
     internal void SetAccessibilityElement(RID id) => _accessibilityElement = id;

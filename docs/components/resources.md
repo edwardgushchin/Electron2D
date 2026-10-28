@@ -139,7 +139,7 @@ owner/all-thread managed bytes; all 36 physical frame brackets pass at 0/0.
 These are functional/allocation results; the
 concurrent ordinary suite and GPU timings are separate evidence.
 
-Scene-local live Resource callbacks use [ResourceScriptCallbacks](../classes/ResourceScriptCallbacks.md) after native setup and stored restoration. They share common object callback installation and cleanup; an acquired graph whose setup fails remains owned by the existing rollback. See [common native callbacks](scripting.md#common-native-object-callbacks) for qualification and remaining resource hooks.
+Scene-local live Resource callbacks use [ResourceScriptCallbacks](../classes/ResourceScriptCallbacks.md) after native setup and stored restoration. They share common object callback installation and cleanup; an acquired graph whose setup fails remains owned by the existing rollback. See [common native callbacks](scripting.md#common-native-object-callbacks) for qualification and the reset/path/base-RID hooks.
 
 ## Exclusions and deferred integration
 

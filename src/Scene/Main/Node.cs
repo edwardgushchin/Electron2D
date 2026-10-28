@@ -1262,14 +1262,17 @@ public partial class Node : ElectronObject
     }
 
     /// <summary>Returns this node's current configuration warnings for tooling.</summary>
-    /// <returns>An empty array by default. Overrides return ordered warning messages and should include base warnings.</returns>
+    /// <returns>Native/accessibility warnings followed by installed Script configuration warnings; empty by default.</returns>
     /// <remarks>This query does not cache results, emit events or require an edited scene. Attached queries run on
     /// the scene owner or this node's current processing group. Consumers may call it after NodeConfigurationWarningChanged to refresh their display.</remarks>
     /// <exception cref="InvalidOperationException">An attached query runs outside the owner/current processing group.</exception>
     /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
     public virtual string[] GetConfigurationWarnings()
     {
-        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this); return OnGetAccessibilityConfigurationWarnings();
+        ThrowIfDisposed(); Tree?.EnsureProcessingAccess(this);
+        var native = OnGetAccessibilityConfigurationWarnings();
+        var script = ScriptCallbacks?.GetConfigurationWarnings?.Invoke();
+        return script is null || script.Length == 0 ? native : native.Length == 0 ? script : [.. native, .. script];
     }
 
     /// <summary>Requests a configuration-warning refresh for this node in the selected edited scene.</summary>

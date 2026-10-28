@@ -22,6 +22,8 @@ Last updated: 2026-10-26
 
 Authoring guards inspect affected scene colliders and their actual physical attachments, including detached descendants and colliders imported into caller-owned spaces. Numerical hooks cannot mutate their node/subtree authoring; hierarchy, entry and disposal reject borrowed physical contexts before structural changes. Engine pose publication retains its ordinary step phase. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) verifies these paths.
 
+[Native role callbacks](../components/scripting.md#native-resource-and-node-role-hooks) add typed configuration/accessibility warnings and focused semantic-element selection to the installed node set. Refresh events do not query warnings; existing native/CLR chains and access/lifetime checks remain authoritative.
+
 ## Deferred scene authoring
 
 `GetSceneInstanceLoadPlaceholder()` and `SetSceneInstanceLoadPlaceholder(bool)` control future capture of an actual nonroot scene instance with a scene file path. The setter changes authoring state; it does not replace the live node. [Deferred scenes](../components/deferred-scenes.md) restores a transform-free InstancePlaceholder and later explicitly materializes its sibling through the existing scene/resource lifecycle.

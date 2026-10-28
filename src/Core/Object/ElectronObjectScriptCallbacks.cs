@@ -49,4 +49,7 @@ internal class ObjectScriptBinding
     internal Func<PropertyDescriptor, bool>? CanRevertProperty;
     internal Func<string>? StringRepresentation;
     internal Action? Retired, SetupLocalToScene;
+    internal Func<RID>? GetRID;
+    internal Action? ResetState;
+    internal Action<string>? SetPathCache;
 }

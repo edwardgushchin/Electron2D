@@ -13,10 +13,11 @@ namespace Electron2D;
 public class Resource : ElectronObject
 {
     /// <summary>Returns a resource's typed backend identity, or empty when it has no registered backend role.</summary>
-    /// <returns>Empty for base managed resources; concrete overrides return their physics, rendering or text-source identity.</returns>
-    /// <remarks>Overrides project their concrete backend role and lifetime. Base resources have no registered backend identity.</remarks>
+    /// <returns>The installed base-resource Script RID, or empty; concrete overrides return their own backend identity.</returns>
+    /// <remarks>Overrides project their concrete backend role and lifetime. A Script callback returns a borrowed
+    /// identity without acquiring ownership. Native shape, rendering and text overrides retain their canonical IDs.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposed.</exception>
-    public virtual RID GetRID() { ThrowIfDisposed(); return default; }
+    public virtual RID GetRID() { ThrowIfDisposed(); return NativeScriptCallbacks?.GetRID?.Invoke() ?? default; }
 
     private const string LocalPathPrefix = "local://";
     private const string EmbeddedPathSeparator = "::";
@@ -379,7 +380,7 @@ public class Resource : ElectronObject
                     {
                         source.ThrowIfDisposed();
                         var (name, localToScene, canTranslateMessages, translationDomain) = source.GetCopyableBaseState();
-                        EmitChanged(); ThrowIfDisposed(); OnResetState(); ResourceName = name; ResourceLocalToScene = localToScene;
+                        EmitChanged(); ThrowIfDisposed(); ResetStateCore(); ResourceName = name; ResourceLocalToScene = localToScene;
                         CanTranslateMessages = canTranslateMessages; TranslationDomain = translationDomain;
                         if (copyConstructionScript && CopyConstructionScript(source, source.GetScript(), out scriptChanged) is { } bindingError)
                             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
@@ -491,7 +492,7 @@ public class Resource : ElectronObject
             });
     }
 
-    /// <summary>Clears non-stored state through <see cref="OnResetState"/>.</summary>
+    /// <summary>Clears non-stored state through the native hook followed by the installed Script reset callback.</summary>
     /// <remarks>The base implementation does not change stored properties and does not raise <see cref="Changed"/>.</remarks>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
     /// <exception cref="InvalidOperationException">An engine resource's authoring policy rejects resetting before its custom hook runs.</exception>
@@ -500,7 +501,7 @@ public class Resource : ElectronObject
     {
         ThrowIfDisposed();
         ValidateStateMutation();
-        OnResetState();
+        ResetStateCore();
     }
 
     /// <summary>Sets the path value without registering it in the process-wide resource cache.</summary>
@@ -510,6 +511,7 @@ public class Resource : ElectronObject
     /// resource's previously registered path, then invokes <see cref="OnPathCacheSet"/> after committing the value.
     /// Equal raw assignments also invoke the hook. The general path-change hook is attempted after it;
     /// both failures are aggregated without rolling back metadata or acquiring a cache entry.
+    /// An installed Script path callback follows successful native path-cache handling in the same error stage.
     /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
@@ -533,6 +535,7 @@ public class Resource : ElectronObject
         try
         {
             OnPathCacheSet(path);
+            NativeScriptCallbacks?.SetPathCache?.Invoke(path);
         }
         catch (Exception error)
         {
@@ -558,6 +561,12 @@ public class Resource : ElectronObject
         ThrowIfDisposed();
         OnSetupLocalToScene();
         NativeScriptCallbacks?.SetupLocalToScene?.Invoke();
+    }
+
+    private void ResetStateCore()
+    {
+        OnResetState();
+        NativeScriptCallbacks?.ResetState?.Invoke();
     }
 
     /// <summary>Transfers ownership of a process-wide resource path to this resource.</summary>
@@ -1137,7 +1146,7 @@ public class Resource : ElectronObject
                     Exception? operationError = null;
                     try
                     {
-                        to.OnResetState(); to.ResourceName = name; to.ResourceLocalToScene = local;
+                        to.ResetStateCore(); to.ResourceName = name; to.ResourceLocalToScene = local;
                         to.CanTranslateMessages = translate; to.TranslationDomain = domain;
                         var script = from.GetScript();
                         if (to.CopyConstructionScript(from, script is null ? null : (Script)Duplicate(script), out changed) is { } bindingError)

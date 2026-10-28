@@ -27,6 +27,14 @@ public class NodeScriptCallbacks<TNode> : ElectronObjectScriptCallbacks<TNode> w
     public Action<TNode, InputEventKey>? UnhandledKeyInput { get; init; }
     /// <summary>Receives the final ordinary unhandled input stage.</summary>
     public Action<TNode, InputEvent>? UnhandledInput { get; init; }
+    /// <summary>Returns script configuration warnings when tooling explicitly queries this node.</summary>
+    /// <remarks>Warnings join the existing native warning chain. Queries are uncached cold operations.</remarks>
+    public Func<TNode, string[]>? GetConfigurationWarnings { get; init; }
+    /// <summary>Returns accessibility authoring warnings through the native accessibility warning hook.</summary>
+    public Func<TNode, string[]>? GetAccessibilityConfigurationWarnings { get; init; }
+    /// <summary>Selects a borrowed semantic RID through the ordinary native focus hook.</summary>
+    /// <remarks>The accessibility publisher retains live-element and same-window validation. CLR overrides retain control of base calls.</remarks>
+    public Func<TNode, RID>? GetFocusedAccessibilityElement { get; init; }
     internal override ObjectScriptBinding CreateBinding() => new NodeScriptBinding();
     internal override void Populate(ObjectScriptBinding binding, TNode owner)
     {
@@ -41,11 +49,16 @@ public class NodeScriptCallbacks<TNode> : ElectronObjectScriptCallbacks<TNode> w
         target.ShortcutInput = ShortcutInput is { } shortcut ? value => shortcut(owner, value) : null;
         target.UnhandledKeyInput = UnhandledKeyInput is { } key ? value => key(owner, value) : null;
         target.UnhandledInput = UnhandledInput is { } unhandled ? value => unhandled(owner, value) : null;
+        target.GetConfigurationWarnings = GetConfigurationWarnings is { } warnings ? () => warnings(owner) : null;
+        target.GetAccessibilityConfigurationWarnings = GetAccessibilityConfigurationWarnings is { } accessibility ? () => accessibility(owner) : null;
+        target.GetFocusedAccessibilityElement = GetFocusedAccessibilityElement is { } focused ? () => focused(owner) : null;
     }
 }
 
 internal sealed class NodeScriptBinding : ObjectScriptBinding
 {
+    internal Func<string[]>? GetConfigurationWarnings, GetAccessibilityConfigurationWarnings;
+    internal Func<RID>? GetFocusedAccessibilityElement;
     internal Action? EnterTree, ExitTree, Ready, MouseEnter, MouseExit, Draw;
     internal Action<double>? Process, PhysicsProcess;
     internal Action<InputEvent>? Input, ShortcutInput, UnhandledInput;

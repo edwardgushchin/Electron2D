@@ -1,3 +1,5 @@
+[Native role callbacks](../components/scripting.md#native-resource-and-node-role-hooks) connect Resource reset/raw-path/base-RID and Node warnings/semantic focus to the installed Script set.
+
 [Common native Script callbacks](../components/scripting.md#common-native-object-callbacks) share typed notifications, metadata/string hooks and retirement across plain, resource and physical owners.
 
 [Native Script property schemas](../components/scripting.md#native-property-schemas) extend typed owner discovery and copy/archive restoration through immutable live bindings.
