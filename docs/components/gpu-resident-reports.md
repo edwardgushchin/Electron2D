@@ -51,35 +51,73 @@ transfer 1088 full versus 256 compact selected-result bytes (76.47% less), with
 The 512-receiver dense scene also passes all identities, moving/stationary/sleep,
 wake and both restore paths with zero warmed managed bytes.
 
-The source-bound full-frame comparison uses 4096 scene RigidBodies plus four walls,
-144 Hz, four substeps, sixteen solver sweeps, cap eight, contact monitoring,
-interpolation and disabled sleeping. Each fresh process runs 1600 warmup and 128
-measured frames. GPU order is full/keys, then the CPU child, then keys/full; the CPU
-child has an unavailable Vulkan ICD. The unchanged runtime SHA-256 is
-`22ccff4ac8fcac439002688d62a35ffce087c712ffd26b25962efd219883df95`.
-All five children exit zero, pass the same physical bounds and retain 0/0 warmed
-physics/frame managed bytes. Shared-desktop background work remains uncontrolled;
-these timings do not qualify whole-goal GPU advantage or real-window FPS.
+The earlier five-process 4096-body full/key comparison retains its raw reports
+and unchanged cohort manifest under `bin/physics-contact-keys/2026-10-28/`.
+It establishes reduced selected-result traffic; its uncontrolled desktop timings
+do not qualify whole-step or window-speed improvement. The internal
+ForceFullGPUContactReports control remains available through
+ELECTRON2D_PHYSICS_PERFORMANCE_FULL_CONTACT_REPORTS=1.
 
-| Child | Mean ms | p50 ms | p99 ms | Selected result KiB/tick | Total readback KiB/tick |
-|---|---:|---:|---:|---:|---:|
-| gpu-full-1 | 45.115 | 26.213 | 126.788 | 1438.6 | 1727.6 |
-| gpu-keys-1 | 21.942 | 21.902 | 26.357 | 335.6 | 624.7 |
-| cpu | 26.263 | 26.160 | 30.118 | 0.0 | 0.0 |
-| gpu-keys-2 | 21.145 | 20.907 | 26.437 | 339.1 | 628.2 |
-| gpu-full-2 | 21.854 | 21.653 | 25.874 | 1448.7 | 1737.8 |
+### Current mass-scene diagnostic (2026-10-28)
 
-The first full-packet run has material latency spikes; the second pair differs by
-0.709 ms in mean frame time. Retain the measured traffic reduction without treating
-that noisy comparison as final throughput acceptance. Local receipts and source/
-cohort manifests are under `bin/physics-contact-keys/2026-10-28/`.
+Four fresh processes exercise the complete monitored scene on the same frozen
+85-file payload at main `4bc06562db528eb7b51cf91a03b65f651b598a87`.
+Its runtime/test/native rendering inputs are unchanged from the separately built
+`7df827f014ee4a5337753c7006b7f62c8c6171b9` source. Runtime SHA-256 is
+`8a671a520b32f3f33b526f045c332af57248a8dcf5d3d74dba8007ecbd5e3ba1`;
+render bridge SHA-256 is
+`c98191488ce1b179db2fd2036847bea68f9526c657fa6146c578f419b47f7cbe`.
+The complete file hashes, commands, native maps, NVML samples and kernel intervals
+are retained under `bin/physics-window-current/2026-10-28/`.
 
-These are functional/traffic receipts, not accepted whole-step or window-speed
-improvements. The internal ForceFullGPUContactReports control compares complete
-scene paths at one source revision; the pipeline fixture exposes it as
-ELECTRON2D_PHYSICS_PERFORMANCE_FULL_CONTACT_REPORTS=1. Physics declaration coverage
-remains 1364/1369 (99.63%), five Partial and 92 Excluded; complete performance and
-platform qualification stay open.
+Each process uses 16384 RigidBodies plus four walls, 144 Hz, four substeps,
+sixteen solver sweeps, eight reported contacts, monitoring, interpolation and
+disabled sleeping; 1600 warmup ticks precede 128 measured ticks. CPU headless
+startup uses SDL dummy and an unavailable Vulkan ICD, with no NVIDIA mappings.
+Both real windows use the same NVIDIA GPU renderer, all 16384 visual instances,
+1152x800 internal pixels and one injected native mouse-motion event per frame.
+Every current visual instance is checked against its physical body. Both final
+PNG captures were inspected and contain the complete contained pile.
+
+| Process | Step mean / p50 / p99 ms | Actual window FPS | Render p50 ms | External CPU cores, mean |
+|---|---:|---:|---:|---:|
+| headless-gpu | 99.490 / 92.045 / 161.336 | — | — | 4.479 |
+| headless-cpu | 108.675 / 107.996 / 117.317 | — | — | 0.735 |
+| window-cpu | 119.905 / 119.326 / 131.926 | 4.956 | 79.501 | 0.953 |
+| window-gpu | 119.979 / 119.002 / 146.105 | 4.775 | 86.214 | 3.909 |
+
+These are diagnostic observations. No quiet admission or statistical repetitions
+were performed. External CPU means cover sampled process lifetimes, including
+setup, warmup and retirement, rather than only the 128 measured ticks. The GPU
+headless interval reaches 14.821 external CPU cores; the two window intervals
+reach 15.603/15.732. The different background activity prevents a controlled
+speed comparison. In this pair GPU window throughput is lower, so it supplies
+no evidence of the required real-window advantage.
+
+All four children exit zero, retain identical payload hashes and pass physical
+bounds, awake population, contacts/events and strict zero owner/all-thread
+managed bytes during each complete PhysicsFrame. Headless whole intervals also
+retain 0/0 bytes. Each window allocates 52224 owner/all-thread bytes outside
+physics, all charged to the native event pump: 408 bytes per measured frame.
+Pose publication, scene processing and rendering allocate zero owner bytes in
+these intervals. The first matrix controller incorrectly required zero across
+the complete input-injected frame and stopped after the successful CPU window;
+that failed assertion remains recorded. The GPU window then runs separately
+with identical input. The final summary keeps physical and whole-frame outcomes
+separate; it does not convert the latter into a zero-allocation result.
+
+GPU headless/window selected-result traffic is 1452320/1470844.5 bytes per tick;
+total physical readback is 2633016/2651629 bytes per tick. Headless completion
+spends 38.152 ms on average, including 18.259 ms in pose/motion/field publication
+and 16.573 ms in contact capture/monitor work. These observed costs remain
+investigation targets, rather than proof of a particular cause under clean load.
+Disabled VSync is requested and Enabled is observed in both windows, consistent
+with the supported-mode fallback. The small non-injected 64-body CPU window
+control reaches 144.429 FPS with 0/0 whole-frame managed bytes.
+
+Physics declaration coverage remains **1364/1369 (99.63%)**, five Partial and
+92 Excluded. Controlled repeatable mass-scene GPU advantage, real-window
+throughput and the remaining API/native/platform gates stay open.
 
 ## Authored report policy publication (2026-10-27)
 
