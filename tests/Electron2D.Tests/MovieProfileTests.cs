@@ -41,7 +41,7 @@ internal static class MovieProfileTests
             foreach (var extension in new[] { "png", "avi", "ogv" })
             {
                 var path = Path.Combine(folder, "profile." + extension); Configure(path, 37, true);
-                var window = Scene(source); window.Size = new(66, 50); var stop = new Frames(37); window.AddChild(stop);
+                var window = Scene(source); window.Size = new(66, 50); window.ContentScaleMode = ContentScaleMode.Viewport; window.ContentScaleSize = window.Size; var stop = new Frames(37); window.AddChild(stop);
                 window.Ready += _ =>
                 {
                     var startupMode = DisplayServer.WindowGetVSyncMode();
@@ -51,15 +51,15 @@ internal static class MovieProfileTests
                     File.WriteAllText(path + ".presentation.txt", startupMode.ToString());
                     Configure(Path.Combine(folder, "must-not-create." + extension), 11, false);
                 };
-                Check(Engine.RunMovie(window) == 23 && window.IsDisposed && stop.Count == 4, "Profile recording owns and finishes the scene.");
+                Check(Engine.RunMovie(window) == 23 && window.IsDisposed && stop.Count == 3, "Profile recording owns and finishes the scene.");
                 File.WriteAllText(path + ".expect.json", "{\"frames\":3,\"rate\":48000,\"channels\":2,\"fps\":37,\"width\":66,\"height\":50,\"keyframes\":64}");
             }
             Configure(Path.Combine(folder, "ignored.ogv"), 11, true);
-            var explicitPath = Path.Combine(folder, "explicit.png"); var explicitWindow = Scene(source); explicitWindow.AddChild(new Frames(59));
+            var explicitPath = Path.Combine(folder, "explicit.png"); var explicitWindow = Scene(source); explicitWindow.ContentScaleMode = ContentScaleMode.Viewport; explicitWindow.ContentScaleSize = explicitWindow.Size; explicitWindow.AddChild(new Frames(59));
             explicitWindow.Ready += _ => Check(Engine.GetWriteMoviePath() == explicitPath, "Explicit path precedes profile override.");
             Engine.Run(explicitWindow, explicitPath, 59);
             File.WriteAllText(explicitPath + ".expect.json", "{\"frames\":3,\"rate\":48000,\"channels\":2,\"fps\":59,\"width\":64,\"height\":48}");
-            var defaultPath = Path.Combine(folder, "explicit-default.png"); var defaults = Scene(source); defaults.AddChild(new Frames(60)); Engine.Run(defaults, defaultPath);
+            var defaultPath = Path.Combine(folder, "explicit-default.png"); var defaults = Scene(source); defaults.ContentScaleMode = ContentScaleMode.Viewport; defaults.ContentScaleSize = defaults.Size; defaults.AddChild(new Frames(60)); Engine.Run(defaults, defaultPath);
             File.WriteAllText(defaultPath + ".expect.json", "{\"frames\":3,\"rate\":48000,\"channels\":2,\"fps\":60,\"width\":64,\"height\":48}");
             var ordinary = new Window { Size = new(64, 48) };
             ordinary.Ready += _ =>
@@ -69,7 +69,7 @@ internal static class MovieProfileTests
             };
             Engine.Run(ordinary);
             var asyncPath = Path.Combine(folder, "async.avi"); Configure(asyncPath, 43, false);
-            var asyncWindow = Scene(source); asyncWindow.AddChild(new Frames(43));
+            var asyncWindow = Scene(source); asyncWindow.ContentScaleMode = ContentScaleMode.Viewport; asyncWindow.ContentScaleSize = asyncWindow.Size; asyncWindow.AddChild(new Frames(43));
             asyncWindow.Ready += _ => Check(DisplayServer.WindowGetVSyncMode() == (backend == "gpu" ? DisplayServer.VSyncMode.Enabled : DisplayServer.VSyncMode.Disabled), "False movie policy retains backend presentation default.");
             var prior = SynchronizationContext.Current; var context = new PumpContext(); SynchronizationContext.SetSynchronizationContext(context);
             try
@@ -85,7 +85,7 @@ internal static class MovieProfileTests
             Configure(Path.Combine(folder, "ready-failure.png"), 37, true);
             var readyFailure = Scene(source, failReady: true); Reject<AggregateException>(() => Engine.RunMovie(readyFailure)); Check(readyFailure.IsDisposed && Engine.GetWriteMoviePath() == "", "Profile Ready failure cleans recording and native state.");
             Configure(Path.Combine(folder, "restart.ogv"), 37, true);
-            var restart = new Window { Size = new(66, 50) }; restart.Ready += _ => restart.Tree!.Quit(); Engine.RunMovie(restart);
+            var restart = new Window { Size = new(66, 50), ContentScaleSize = new(66, 50), ContentScaleMode = ContentScaleMode.Viewport }; restart.Ready += _ => restart.Tree!.Quit(); Engine.RunMovie(restart);
             Check(!File.Exists(Path.Combine(folder, "ignored.ogv")) && !Directory.EnumerateFiles(folder, "must-not-create*").Any(), "Sampled and explicit paths stay authoritative.");
         }
         finally
@@ -118,6 +118,6 @@ internal static class MovieProfileTests
     {
         internal int Count;
         protected override void OnReady() => Draw += item => item.DrawRect(new(32, 0, 34, 50), (Count & 1) == 0 ? Colors.Green : Colors.Blue);
-        protected override void OnProcess(double delta) { Check(Math.Abs(delta - 1d / fps) < 1e-12, "Profile cadence is sampled before scene callbacks."); QueueRedraw(); if (++Count == 4) Tree!.Quit(23); }
+        protected override void OnProcess(double delta) { Check(Math.Abs(delta - 1d / fps) < 1e-12, "Profile cadence is sampled before scene callbacks."); QueueRedraw(); if (++Count == 3) Tree!.Quit(23); }
     }
 }

@@ -139,7 +139,8 @@ public sealed partial class Engine
                     var smoothed = _frameDeltaSmoother.Smooth((long)(elapsed * 1_000_000d), true, true, out var applied);
                     if (applied) simulationElapsed = smoothed / 1_000_000d;
                 }
-                if (AdvanceFrameCore(simulationElapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS, deferFrameTiming: true, diagnosticElapsed: elapsed))
+                var stopRequested = AdvanceFrameCore(simulationElapsed, out var renderStep, fixedFPS: movie is null ? 0 : movieFPS, deferFrameTiming: true, diagnosticElapsed: elapsed);
+                if (stopRequested && movie is null)
                 {
                     CompleteFrameTiming(elapsed);
                     break;
@@ -147,6 +148,7 @@ public sealed partial class Engine
                 window.Render(tree, renderStep);
                 CompleteFrameTiming(elapsed);
                 movie?.Write(window);
+                if (stopRequested) break;
                 var waitStart = Stopwatch.GetTimestamp();
                 while (!tree.QuitRequested)
                 {

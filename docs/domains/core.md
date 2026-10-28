@@ -397,3 +397,5 @@ Standard-handle and managed process-termination helpers reject unsupported Apple
 [Native modal alerts](../components/native-alerts.md) add OS.Alert before startup and after shutdown, with active lifecycle/display owner checks and explicit native failure.
 
 Specified desktop application launch now uses [OS.OpenWithProgram](../components/processes.md#specified-application-launch), sharing literal process argv, native ownership and reaping. Native Linux execution is verified separately from macOS bundle, foreign sandbox and application acceptance.
+
+Owned movie runs now preserve the last successful simulation pose and PCM on process/physics quit before writer finalization; [animation completion](../components/movie-writing.md#animation-completion) owns the precise before-step/failure boundary.

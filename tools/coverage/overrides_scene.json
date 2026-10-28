@@ -8619,6 +8619,7 @@
     }
   ],
   "statusGroups": [
+    {"state": "Implemented", "reason": "ADRs 0093/0109: current playback selection is distinct from mixer scheduling; IsAnimationActive retains paused/completed selection and Stop clears it. Stop and finite terminal completion emit empty CurrentAnimationChanged after committed state, with revision guards for newer callback controls. AnimationMovieCompletionTests adds selection/state, event ordering, callback restart/Stop and real movie consumers alongside the existing scene/blending profiles. See docs/components/movie-writing.md#animation-completion.", "godot": ["AnimationPlayer::method:is_animation_active()", "AnimationPlayer::signal:current_animation_changed(StringName:)", "AnimationPlayer::method:stop(bool:)"]},
     {
       "godot": [
         "class:Node"
@@ -10888,7 +10889,6 @@
         "AnimationPlayer::method:get_section_end_time()",
         "AnimationPlayer::method:get_section_start_time()",
         "AnimationPlayer::method:has_section()",
-        "AnimationPlayer::method:is_animation_active()",
         "AnimationPlayer::method:is_playing()",
         "AnimationPlayer::method:pause()",
         "AnimationPlayer::method:play(StringName:,float:,float:,bool:)",
@@ -10904,7 +10904,6 @@
         "AnimationPlayer::method:set_blend_time(StringName:,StringName:,float:)",
         "AnimationPlayer::method:set_section(float:,float:)",
         "AnimationPlayer::method:set_section_with_markers(StringName:,StringName:)",
-        "AnimationPlayer::method:stop(bool:)",
         "AnimationPlayer::property:assigned_animation",
         "AnimationPlayer::property:autoplay",
         "AnimationPlayer::property:current_animation",
@@ -10916,8 +10915,7 @@
         "AnimationPlayer::property:playback_auto_capture_transition_type",
         "AnimationPlayer::property:playback_default_blend_time",
         "AnimationPlayer::property:speed_scale",
-        "AnimationPlayer::signal:animation_changed(StringName:,StringName:)",
-        "AnimationPlayer::signal:current_animation_changed(StringName:)"
+        "AnimationPlayer::signal:animation_changed(StringName:,StringName:)"
       ]
     },
     {
@@ -11054,8 +11052,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Requires the accepted rendered movie/capture host and its completion policy; ordinary window playback is implemented but no movie host exists (ADR 0090).",
+      "state": "Implemented",
+      "reason": "ADRs 0093/0109: stored false-default MovieQuitOnFinish connects finite terminal playback to its exact Engine recording tree after completion/selection callbacks and queued/configured successors. Reentry, live enable/disable, explicit quit code, Ready, physics, TimeScale, pause, looping/seek and foreign/detached/ordinary guards execute. Successful final-step pixels and rational PCM precede normal End; failures finalize earlier submissions. AnimationMovieCompletionTests verifies portable scene/file/owner behavior and actual Linux GPU/Compatibility PNG/WAV/AVI/OGV output. Foreign platforms, NativeAOT, native heap and user acceptance remain separate gates; see docs/components/movie-writing.md#animation-completion.",
       "godot": [
         "AnimationPlayer::property:movie_quit_on_finish"
       ]

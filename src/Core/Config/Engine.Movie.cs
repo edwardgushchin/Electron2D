@@ -27,7 +27,9 @@ public sealed partial class Engine
     /// <param name="moviePath">Output path accepted by a registered MovieWriter; .png selects PNG/WAV; .avi selects MJPEG/PCM; .ogv selects Theora/Vorbis.</param>
     /// <param name="fps">Positive recording frames per second, initially 60.</param>
     /// <returns>The SceneTree quit code after writer, scene and native cleanup.</returns>
-    /// <remarks>Uses the ordinary window lifecycle, process/physics scheduler and actual renderer. Process delta is
+    /// <remarks>A successful simulation step that requests quit still writes its final rendered frame and PCM block.
+    /// Quit before a step writes no additional frame. Failure finalizes only frames already submitted successfully.
+    /// Uses the ordinary window lifecycle, process/physics scheduler and actual renderer. Process delta is
     /// 1/fps before TimeScale. Audio mixes synchronously without an output device. MaxFPS waiting is disabled.
     /// MovieWriterDisableVSync is sampled before startup and applied before renderer creation.
     /// Hook failures abort and cleanup is attempted. Readback/encoding may allocate and block. Other Run ownership rules apply.</remarks>

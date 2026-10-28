@@ -537,3 +537,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.
 
 [Editor canvas guides](../components/editor-canvas-guides.md) connect spatial Marker anchors, ReferenceRect UI borders and notifier ShowRect regions to the actual passive editor preview and ordinary retained drawing.
+
+AnimationPlayer.MovieQuitOnFinish now connects authored finite playback to [actual movie completion](../components/movie-writing.md#animation-completion), including stored state, callback control and final endpoint publication.

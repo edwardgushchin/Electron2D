@@ -39,21 +39,21 @@ internal static class OGVMovieWriterTests
                     ProjectSettings.Set(ProjectSettings.MovieWriterSpeakerMode, mode); ProjectSettings.Set(ProjectSettings.MovieWriterMixRate, 44100);
                     ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, quality); ProjectSettings.Set(ProjectSettings.MovieWriterOGVAudioQuality, quality == 0 ? -.1f : 1);
                     ProjectSettings.Set(ProjectSettings.MovieWriterOGVEncodingSpeed, (int)mode + 1); ProjectSettings.Set(ProjectSettings.MovieWriterOGVKeyframeInterval, quality == 0 ? 3 : 1);
-                    var path = Path.Combine(folder, $"recording-{mode}-{quality}.OGV"); var window = AnimatedScene(source); window.Size = new(66, 50); window.AddChild(new Finish(18));
+                    var path = Path.Combine(folder, $"recording-{mode}-{quality}.OGV"); var window = AnimatedScene(source); window.Size = new(66, 50); window.AddChild(new Finish(17));
                     Engine.Run(window, path, 59); Validate(path, 17, 44100, mode == AudioServer.SpeakerMode.Surround31 ? 6 : 2 + (int)mode * 2, 59, (int)(quality * 63));
                 }
             ProjectSettings.Set(ProjectSettings.MovieWriterSpeakerMode, AudioServer.SpeakerMode.Stereo); ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, .75f); ProjectSettings.Set(ProjectSettings.MovieWriterOGVAudioQuality, .5f);
             ProjectSettings.Set(ProjectSettings.MovieWriterOGVKeyframeInterval, 1024);
             foreach (var (name, frames, fps) in new[] { ("short", 1, 59), ("empty", 0, 59), ("low-fps", 2, 7), ("zero-audio-blocks", 4, 100000) })
             {
-                var window = AnimatedScene(source); window.Size = new(66, 50); if (frames == 0) window.Ready += _ => window.Tree!.Quit(); else window.AddChild(new Finish(frames + 1));
+                var window = AnimatedScene(source); window.Size = new(66, 50); if (frames == 0) window.Ready += _ => window.Tree!.Quit(); else window.AddChild(new Finish(frames));
                 var path = Path.Combine(folder, name + ".ogv"); Engine.Run(window, path, fps); Validate(path, frames, 44100, 2, fps, 47);
             }
             var failure = AnimatedScene(source); failure.Size = new(66, 50); failure.AddChild(new Finish(3, true)); var failedPath = Path.Combine(folder, "failed.ogv");
             try { Engine.Run(failure, failedPath, 59); throw new InvalidOperationException("Expected scene failure."); }
             catch (AggregateException error) when (error.InnerExceptions.Count == 1 && error.InnerException is FormatException { Message: "OGV scene failure" }) { }
             Validate(failedPath, 2, 44100, 2, 59, 47); Check(failure.IsDisposed, "Failure closes OGV recording.");
-            var snapshot = AnimatedScene(source); snapshot.Size = new(66, 50); snapshot.AddChild(new Finish(3)); snapshot.Ready += _ => { ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, 0); ProjectSettings.Set(ProjectSettings.MovieWriterOGVAudioQuality, -.1f); };
+            var snapshot = AnimatedScene(source); snapshot.Size = new(66, 50); snapshot.AddChild(new Finish(2)); snapshot.Ready += _ => { ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, 0); ProjectSettings.Set(ProjectSettings.MovieWriterOGVAudioQuality, -.1f); };
             var snapshotPath = Path.Combine(folder, "snapshot.ogv"); Engine.Run(snapshot, snapshotPath, 59); Validate(snapshotPath, 2, 44100, 2, 59, 47);
             var odd = AnimatedScene(source); odd.Size = new(65, 49); odd.ContentScaleSize = odd.Size; Reject<NotSupportedException>(() => Engine.Run(odd, Path.Combine(folder, "odd.ogv"))); Check(odd.IsDisposed, "Odd-size failure consumes reserved scene.");
             if (OperatingSystem.IsLinux())

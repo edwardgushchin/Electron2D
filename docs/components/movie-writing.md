@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-20
+Last updated: 2026-10-28
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -21,6 +21,16 @@ Automatic pre-delete veto retains a borrowed custom writer registration; later A
 The creating thread registers/disposes custom writers; runtime hooks execute serially on the runtime owner. Registered instances remain borrowed and cannot be disposed while any runtime is reserved. Hook reentry into registration, nested runs and active disposal rejects. Invalid public path/FPS arguments preserve an unconsumed root; after reservation the runtime owns and cleans the root even if selection, metadata, native preparation, Begin, Ready, frame or End fails.
 
 End is attempted after an attempted Begin, including a partially failed Begin. Metadata/selection failures do not invoke End. End runs before scene/native teardown; later cleanup always continues. Callback exceptions remain failures, and distinct cleanup errors aggregate. The requested movie path stays visible through teardown and clears when the reservation releases. Captured Images and PCM spans are borrowed only for OnWriteFrame; retention requires an explicit caller copy.
+
+## Animation completion
+
+AnimationPlayer.MovieQuitOnFinish defaults false and is stored with the ordinary typed scene schema. Enable it on a finite player to finish an unattended movie run. AnimationFinished is delivered first; once there is no queued/configured successor, CurrentAnimationChanged receives an empty name. Reentrant Play/Pause/Stop/Seek/section/speed control invalidates the previous completion; callbacks may also enable or disable the movie flag. Linear/ping-pong loops and seeking alone do not finish playback.
+
+The request applies only when that player's Tree is the active Engine movie loop, including Ready activation. Detached players, other manual trees and ordinary runs cannot finish that recording. An existing quit request/code remains intact. Automatic completion commits Tree.Quit(0) and sends an OS.LogMessage containing the player's path. Logger callback failures retain the existing contained diagnostic policy; physical output failures remain failures after committed quit.
+
+A successful process/physics step that requests quit now passes its final pose through render and writer submission, including the final rational PCM block. End then follows the existing cleanup path. Before-frame/native-event/Ready quit requests add no simulation frame. A failing simulation/render/write finalizes only the prior successful submissions. Existing encoder fixtures request quit on their final intended frame rather than compensating for the previous skipped final frame.
+
+AnimationMovieCompletionTests exercises the public property, in-memory/file storage, ordinary and foreign/detached behavior, forward/reverse/section/queue/next/restart/selection-callback/explicit-control completion, Ready, physics, rejected worker scheduling, TimeScale, pause, live enable/disable, loops/seek, explicit exit codes and callback/End failure recovery. Actual GPU and Compatibility windows verify endpoint pixels and PCM, plus finalized PNG/WAV, AVI and OGV files. Animation stepping remains scene-owner-only: an automatic SubThread group fails before its first pose/frame and finalizes the empty recording. Supporting animation evaluation and its typed target callbacks in active groups is a separate dependency. Portable and native results do not establish foreign platforms, NativeAOT, native allocator totals or user application acceptance.
 
 ## HDR input
 
@@ -75,3 +85,5 @@ Callback-first recording Run/RunAsync and configured RunMovie/RunMovieAsync over
 [File save and swap](file-save-and-swap.md) optionally stages OGV exact Write output until successful EOS/close and cancels it on codec/callback failure. AVI and PNG WAV mixed-mode access retains its existing direct behavior; valid submitted frames still finalize after an unrelated scene failure.
 
 OGV render fixtures explicitly fix the content viewport to 66x50 (or 65x49 for rejection), so native window size/DPI rounding does not accidentally change the codec input dimensions.
+
+The host-boundary allocation regression uses a 320-by-96 client above desktop decoration minima. Its 24 warm frames run at 60 FPS so asynchronous native configure events settle; boundary 25 disables pacing and the same 64 complete host/input/scheduler/render intervals retain a strict zero-owner-byte assertion. The trace motivating this setup observed a 64-to-224 client-width correction and cold allocations; temporary trace code is not shipped. Exact-size configured encoder fixtures use an explicit viewport target so compositor/DPI sizing cannot introduce odd OGV dimensions.

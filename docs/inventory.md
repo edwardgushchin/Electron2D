@@ -95,6 +95,8 @@ CanvasItem TopLevel rebinding now connects to the existing recursive presentatio
 
 Last updated: 2026-10-28
 
+[Animation movie completion](components/movie-writing.md#animation-completion) adds AnimationPlayer.MovieQuitOnFinish and connects the existing Engine/MovieWriter owners. No production type is added.
+
 [Specified application launch](components/processes.md#specified-application-launch) adds OS.OpenWithProgram to the existing retained process service. It introduces no production type.
 
 [Failed initial collider preparation](components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now discards partial numerical readback while retaining common body authoring. Ordinary retirement still captures accepted motion; no production type or public declaration is added.

@@ -90,10 +90,13 @@ internal static class EngineBeforeFrameTests
                 Reject<ArithmeticException>(() => { if (asynchronous == 0) Engine.Run(Fail, root); else Await(() => Engine.RunAsync(Fail, root)); });
                 Check(root.IsDisposed && Engine.MainLoop is null, "Throwing host callbacks release all owned native and scene state.");
             }
-            Engine.MaxFPS = 0; var firstProcess = Engine.ProcessFrames;
-            var measuredRoot = new Window { Size = new(64, 64) }; long before = 0, allocated = 0; var samples = 0;
+            Engine.MaxFPS = 60; var firstProcess = Engine.ProcessFrames;
+            // Desktop decoration minima must not resize a prepared allocation-measurement target.
+            var measuredRoot = new Window { Size = new(320, 96) }; long before = 0, allocated = 0; var samples = 0;
             Check(Engine.Run((window, next) =>
             {
+                // Native configure events settle during paced warmup; all measured intervals remain uncapped.
+                if (next == 25) Engine.MaxFPS = 0;
                 var current = GC.GetAllocatedBytesForCurrentThread();
                 if (next >= 26) { allocated += current - before; samples++; }
                 before = current;

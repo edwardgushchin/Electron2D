@@ -607,3 +607,5 @@ role observed by OS.GetThreadCallerID, including failed startup and finalization
 See [thread identities and native names](../components/os-thread-identity.md) for identity and access boundaries.
 
 Engine teardown on the camera owner also closes opt-in [camera monitoring](../components/camera-feeds.md), retiring native camera sources while leaving custom source ownership with callers. CameraServer is a permanent non-removable built-in service.
+
+Movie runs now submit the final successful simulation step even when that step requests scene quit. Earlier requests before a step add no frame; failures finalize prior submissions. [Animation completion](../components/movie-writing.md#animation-completion) documents the AnimationPlayer producer, writer ordering and exercised limits.

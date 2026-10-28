@@ -47,19 +47,19 @@ internal static class AVIMovieWriterTests
                     ProjectSettings.Set(ProjectSettings.MovieWriterAudioBitDepth, bits); ProjectSettings.Set(ProjectSettings.MovieWriterSpeakerMode, mode);
                     ProjectSettings.Set(ProjectSettings.MovieWriterMixRate, 44100); ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, .75f);
                     var path = Path.Combine(folder, $"recording-{mode}-{bits}.AVI");
-                    var window = Pattern(source); window.AddChild(new Finish(5)); Engine.Run(window, path, 59);
+                    var window = Pattern(source); window.AddChild(new Finish(4)); Engine.Run(window, path, 59);
                     Validate(path, 4, 44100, 2 + (int)mode * 2, bits, 59);
                 }
             ProjectSettings.Set(ProjectSettings.MovieWriterSpeakerMode, AudioServer.SpeakerMode.Stereo);
             foreach (var quality in new[] { 0f, 1f })
             {
                 ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, quality);
-                var path = Path.Combine(folder, $"quality-{quality}.avi"); var window = Pattern(source); window.AddChild(new Finish(3));
+                var path = Path.Combine(folder, $"quality-{quality}.avi"); var window = Pattern(source); window.AddChild(new Finish(2));
                 Engine.Run(window, path, 7); var result = Validate(path, 2, 44100, 2, 32, 7);
                 if (quality == 0) lowSize = result; else highSize = result;
             }
             Check(highSize > lowSize, "Quality affects JPEG output.");
-            var fastPath = Path.Combine(folder, "zero-audio-blocks.avi"); var fast = Pattern(source); fast.AddChild(new Finish(5));
+            var fastPath = Path.Combine(folder, "zero-audio-blocks.avi"); var fast = Pattern(source); fast.AddChild(new Finish(4));
             Engine.Run(fast, fastPath, 100000); Validate(fastPath, 4, 44100, 2, 32, 100000, expectSignal: false);
             var emptyPath = Path.Combine(folder, "empty.avi"); var empty = Pattern(source); empty.Ready += _ => empty.Tree!.Quit();
             Engine.Run(empty, emptyPath, 59); Validate(emptyPath, 0, 44100, 2, 32, 59);
@@ -69,7 +69,7 @@ internal static class AVIMovieWriterTests
             Validate(failedPath, 2, 44100, 2, 32, 59); Check(failed.IsDisposed, "Scene failure releases writer and window.");
             var snapshotPath = Path.Combine(folder, "snapshot.avi"); var snapshot = Pattern(source);
             snapshot.Ready += _ => { ProjectSettings.Set(ProjectSettings.MovieWriterAudioBitDepth, 16); ProjectSettings.Set(ProjectSettings.MovieWriterVideoQuality, 0); };
-            snapshot.AddChild(new Finish(3)); Engine.Run(snapshot, snapshotPath, 59); Validate(snapshotPath, 2, 44100, 2, 32, 59);
+            snapshot.AddChild(new Finish(2)); Engine.Run(snapshot, snapshotPath, 59); Validate(snapshotPath, 2, 44100, 2, 32, 59);
             var missing = Pattern(source); Reject<DirectoryNotFoundException>(() => Engine.Run(missing, Path.Combine(folder, "absent", "fail.avi")));
             Check(missing.IsDisposed && Engine.GetWriteMoviePath() == "", "Begin IO failure releases recording ownership.");
             var customPath = Path.Combine(folder, "custom.avi"); File.Delete(customPath);

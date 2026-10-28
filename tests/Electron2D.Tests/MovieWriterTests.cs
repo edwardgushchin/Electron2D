@@ -251,7 +251,7 @@ internal static class MovieWriterTests
         internal void Pump() { if (_queue.TryDequeue(out var work)) work.Callback(work.State); else Thread.Sleep(1); }
     }
     private sealed class QuitNode : Node
-    { private int _frames; protected override void OnProcess(double delta) { if (++_frames == 5) Tree!.Quit(); } }
+    { private int _frames; protected override void OnProcess(double delta) { if (++_frames == 4) Tree!.Quit(); } }
     private sealed class DeltaNode(List<double> deltas) : Node
     { protected override void OnProcess(double delta) => deltas.Add(delta); }
 }

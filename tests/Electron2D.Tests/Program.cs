@@ -274,6 +274,12 @@ if (args.Length >= 2 && args[0] == "--movie-profile-project")
     return;
 }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_MOVIE") is { } animationMovieMode)
+{
+    if (animationMovieMode == "portable") AnimationMovieCompletionTests.Portable();
+    else AnimationMovieCompletionTests.Native(animationMovieMode, Environment.GetEnvironmentVariable("ELECTRON2D_ANIMATION_MOVIE_OUTPUT") ?? IOPath.Combine(IOPath.GetTempPath(), "electron2d-animation-movie"));
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOVIE_WRITER") is { } movieMode)
 {
     if (movieMode == "portable") MovieWriterTests.Portable();

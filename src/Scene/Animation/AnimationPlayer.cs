@@ -15,6 +15,7 @@ public partial class AnimationPlayer : AnimationMixer
         new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackAutoCaptureDuration), n => n.PlaybackAutoCaptureDuration, (n, v) => n.PlaybackAutoCaptureDuration = v, _ => -1, stored: true),
         new PropertyDescriptor<AnimationPlayer, Tween.TransitionType>(nameof(PlaybackAutoCaptureTransitionType), n => n.PlaybackAutoCaptureTransitionType, (n, v) => n.PlaybackAutoCaptureTransitionType = v, _ => Tween.TransitionType.Linear, stored: true),
         new PropertyDescriptor<AnimationPlayer, Tween.EaseType>(nameof(PlaybackAutoCaptureEaseType), n => n.PlaybackAutoCaptureEaseType, (n, v) => n.PlaybackAutoCaptureEaseType = v, _ => Tween.EaseType.In, stored: true),
+        new PropertyDescriptor<AnimationPlayer, bool>(nameof(MovieQuitOnFinish), n => n.MovieQuitOnFinish, (n, v) => n.MovieQuitOnFinish = v, _ => false, stored: true),
         new PropertyDescriptor<AnimationPlayer, string>(nameof(Autoplay), n => n.Autoplay, (n, v) => n.Autoplay = v, _ => "", stored: true),
         new PropertyDescriptor<AnimationPlayer, double>(nameof(SpeedScale), n => n.SpeedScale, (n, v) => n.SpeedScale = v, _ => 1, stored: true),
     ];
@@ -22,7 +23,7 @@ public partial class AnimationPlayer : AnimationMixer
     public AnimationPlayer() { }
     private string _assigned = "", _autoplay = "";
     private bool _methodSeekPending, _methodSeekExternal;
-    private bool _playing, _stopping;
+    private bool _playing, _stopping, _movieQuitOnFinish;
     private double _position, _speedScale = 1, _customSpeed = 1, _start = -1, _end = -1;
     private int _pingDirection = 1;
     private long _playRevision;
@@ -49,6 +50,12 @@ public partial class AnimationPlayer : AnimationMixer
     /// <summary>Gets or sets the name started on the ready notification; empty disables autoplay.</summary>
     /// <remarks>Editor authoring preserves the name without automatic startup. Explicit Play and Queue remain available.</remarks>
     public string Autoplay { get { ThrowIfDisposed(); return _autoplay; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _autoplay = value; } }
+    /// <summary>Gets or sets whether finite playback completion ends the owning movie recording; initially false.</summary>
+    /// <value>Whether to request scene quit after completion callbacks when no queued or configured successor remains.</value>
+    /// <remarks>Only the active recording scene is affected. Looping, seeking alone, detached playback and ordinary runs
+    /// do not request quit. A callback that changes playback cancels the previous completion request.
+    /// The final successful movie simulation frame is rendered and written before normal writer cleanup.</remarks>
+    public bool MovieQuitOnFinish { get { ThrowIfDisposed(); return _movieQuitOnFinish; } set { EnsureAnimationMutable(); _movieQuitOnFinish = value; } }
     /// <summary>Gets the complete selected resource duration, or zero without a selection.</summary>
     public double CurrentAnimationLength { get { ThrowIfDisposed(); return HasAnimation(_assigned) ? GetAnimation(_assigned).Length : 0; } }
     /// <summary>Gets the current timeline position in seconds.</summary>
@@ -58,11 +65,12 @@ public partial class AnimationPlayer : AnimationMixer
     /// <summary>Occurs when queued or configured-next playback changes the selected animation.</summary>
     public event Action<string, string>? AnimationChanged { add => _publisherAnimationChanged.Add(value); remove => _publisherAnimationChanged.Remove(value); }
     private EventPublisher<Action<string, string>> _publisherAnimationChanged;
-    /// <summary>Occurs when the current animation selection changes.</summary>
+    /// <summary>Occurs when the current animation selection changes, including empty after Stop or terminal completion.</summary>
     public event Action<string>? CurrentAnimationChanged { add => _publisherCurrentAnimationChanged.Add(value); remove => _publisherCurrentAnimationChanged.Remove(value); }
     private EventPublisher<Action<string>> _publisherCurrentAnimationChanged;
-    /// <summary>Returns whether animation evaluation is active.</summary>
-    public bool IsAnimationActive() => Active;
+    /// <summary>Returns whether a playback selection remains, independently of automatic evaluation.</summary>
+    /// <returns>False before selection and after Stop; Pause and finite completion retain the selected endpoint.</returns>
+    public bool IsAnimationActive() { ThrowIfDisposed(); return _hasPlayback; }
     /// <summary>Returns whether playback is enabled, including with zero speed.</summary>
     public bool IsPlaying() { ThrowIfDisposed(); return _playing; }
     /// <summary>Returns zero while paused, otherwise the signed effective speed.</summary>
@@ -123,13 +131,16 @@ public partial class AnimationPlayer : AnimationMixer
     public void Pause() { EnsureAnimationMutable(); _playing = false; _queue.Clear(); _playRevision++; InvalidateBindings(false); }
     /// <summary>Stops, resets position/speed and queued work, and stops still-controlled child players; keepState preserves target values.</summary>
     /// <param name="keepState">Whether to leave target property values unchanged while resetting playback.</param>
+    /// <remarks>A successful stop publishes an empty current-selection notification unless reentrant control selected newer playback.</remarks>
     public void Stop(bool keepState = false)
     {
         EnsureAnimationMutable(); if (_stopping) return; _stopping = true;
         try
         {
-            _blendClips.Clear(); _hasPlayback = false; _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear(); _playRevision++; InvalidateBindings(false);
+            _blendClips.Clear(); _hasPlayback = false; _playing = false; _position = 0; _customSpeed = 1; _pingDirection = 1; _start = _end = -1; _queue.Clear();
+            var revision = ++_playRevision; InvalidateBindings(false);
             if (!keepState && HasAnimation(_assigned)) ApplyAnimation(GetAnimation(_assigned), 0, false, updateOnly: true);
+            if (!IsDisposed && revision == _playRevision) BeginEventEmission(_publisherCurrentAnimationChanged.Handlers)?.Invoke("");
         }
         finally { _stopping = false; }
     }
@@ -226,7 +237,18 @@ public partial class AnimationPlayer : AnimationMixer
         _playing = false; _playRevision++; var completedRevision = _playRevision;
         Finished(name); if (IsDisposed || completedRevision != _playRevision) return;
         var next = _queue.Count > 0 ? _queue.Dequeue() : IsInsideTree && Engine.IsEditorHint ? "" : _next.GetValueOrDefault(name, "");
-        if (next.Length == 0 || !HasAnimation(next)) return;
+        if (next.Length == 0 || !HasAnimation(next))
+        {
+            BeginEventEmission(_publisherCurrentAnimationChanged.Handlers)?.Invoke("");
+            if (IsDisposed || completedRevision != _playRevision) return;
+            if (_movieQuitOnFinish && Engine.GetWriteMoviePath().Length != 0 && Tree is { } tree &&
+                ReferenceEquals(Engine.MainLoop, tree) && !tree.QuitRequested)
+            {
+                tree.Quit();
+                OS.LogMessage($"Movie recording is ending after animation finished: {GetPath()}");
+            }
+            return;
+        }
         var queuedNames = _queue.ToArray(); Play(next); foreach (var queued in queuedNames) _queue.Enqueue(queued);
         if (!IsDisposed) BeginEventEmission(_publisherAnimationChanged.Handlers)?.Invoke(name, next);
     }

@@ -1,6 +1,6 @@
 # AnimationPlayer
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 **Inherits:** [AnimationMixer](AnimationMixer.md)
 
@@ -152,7 +152,7 @@ Gets or sets the finite signed playback multiplier; zero keeps playback enabled.
 | `public System.Double GetSectionEndTime()` | Returns the effective section end. |
 | `public System.Double GetSectionStartTime()` | Returns the effective section start. |
 | `public System.Boolean HasSection()` | Returns whether either section boundary is explicit. |
-| `public System.Boolean IsAnimationActive()` | Returns whether animation evaluation is active. |
+| `public System.Boolean IsAnimationActive()` | Returns whether a playback selection remains; Pause/completion retain it, while Stop clears it, independently of automatic evaluation. |
 | `public System.Boolean IsPlaying()` | Returns whether playback is enabled, including with zero speed. |
 | `protected override System.Void OnNotification(System.Int32 what)` | Handles an engine notification delivered to this object. |
 | `public System.Void Pause()` | Pauses while retaining selection/position; clears queued/captured work and stops still-controlled child players while keeping their values. |
@@ -279,7 +279,7 @@ Returns whether either section boundary is explicit.
 
 `public System.Boolean IsAnimationActive()`
 
-Returns whether animation evaluation is active.
+Returns whether a playback selection remains; Pause/completion retain it, while Stop clears it, independently of automatic evaluation.
 
 <a id="member-ad441bb6dc92"></a>
 ### IsPlaying
@@ -549,3 +549,9 @@ Returns a fresh, detached, childless exact-type node. Stored descriptors reconst
 The inherited stored ResetOnSave policy executes through [PackedScene.PackForSave](PackedScene.md#packforsave). Ordinary Pack and runtime playback keep their prior behavior.
 
 [Editor authoring mode](Engine.md#editor-authoring-mode) preserves Autoplay while suppressing automatic startup. Explicit playback remains available; source timing, native transport and lifetime keep their ordinary contracts.
+
+## MovieQuitOnFinish
+
+`public bool MovieQuitOnFinish { get; set; }`
+
+Initially false. When finite playback ends without a successor, requests quit only for its active Engine movie scene after completion/selection callbacks remain current. Ordinary runs, detached/foreign trees, loops and seeking alone do not quit. The authored flag survives scene copies/files. Successful final simulation pixels and PCM are recorded before writer End; see [movie completion](../components/movie-writing.md#animation-completion) for ordering, callback controls, diagnostics and native verification limits.

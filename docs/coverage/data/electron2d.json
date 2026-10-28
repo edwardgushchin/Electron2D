@@ -250449,6 +250449,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.AnimationPlayer.MovieQuitOnFinish()",
+    "kind": "property",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "MovieQuitOnFinish",
+    "signature": "public System.Boolean MovieQuitOnFinish { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.AnimationPlayer.PlaybackAutoCapture()",
     "kind": "property",
     "declaringType": "Electron2D.AnimationPlayer",
