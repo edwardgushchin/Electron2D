@@ -1,3 +1,5 @@
+[The full ordinary Linux run](../components/physics-contract-audit.md#ordinary-linux-qualification-at-1ec946c7f) passes the frozen `1ec946c7f` runtime/root suite in 958.824 seconds with unchanged cohort hashes. The subsequent renderer merge passes five focused physical/render-memory profiles and current build/API/wiki gates; its full ordinary run remains separate. Physics stays **1364/1369 (99.63%)**, five Partial and 92 Excluded.
+
 [Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) executes compute and vertex/fragment typed loads, stores, dimensions and signed/unsigned R32 atomics across independent layers, fixed descriptors and retained canvas consumers. This completes six runtime roles within existing members; broader shader/uniform-set rows keep their remaining precise dependencies, so no whole declaration is promoted by this slice.
 
 [ENet-owned native allocation accounting](performance-producers.md#enet-owned-allocation-domain) supplies a missing source for composed memory monitors, without promoting a declaration. Physics remains **1364/1369 (99.63%)**, five Partial and 92 Excluded.

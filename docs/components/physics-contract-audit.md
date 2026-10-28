@@ -1,3 +1,46 @@
+## Ordinary Linux qualification at 1ec946c7f
+
+The complete unfiltered Electron2D.Tests executable exits zero in **958.824 s**
+at source `1ec946c7f77bd516915b6fa8e4e23ac0ecbf7aeb`. No test selector or test
+argument is set. The single final `Electron2D checks passed.` marker belongs to
+this completed process; all 85 copied cohort files retain their initial SHA-256.
+All 4837 captured runtime/root-test sources match that Git tree. The runtime hash
+is `8a47069c34d21536ff4e693b2e342b615158c4d6517cc01a4c8250d315fa712e`;
+the test hash is
+`1770b7dd6fd13266054f98ee7dd119a5626130fe11a7abd675decd73b163e6d1`.
+
+The run includes ordinary CPU/GPU shape, query, CCD, contact/event, replay,
+lifecycle and numerical-thread cohorts, as well as the surrounding resource,
+scene, networking, text, rendering, audio and animation checks. Actual GPU
+receipts identify NVIDIA GeForce RTX 3090 Ti/Vulkan. Required warmed intervals
+retain their own zero owner/all-thread managed-byte assertions. The 530 repeated
+GTK locale warnings are retained in the raw log; they do not replace its exit
+or completion checks. Receipts, exact command, input/source hashes and post-run
+comparison are under `bin/physics-main-qualification/2026-10-28/`.
+
+During execution, the separate array-storage renderer work merged into main as
+`7df827f014ee4a5337753c7006b7f62c8c6171b9`, including managed and native bridge
+changes. The original executable/native cohort stayed unchanged. This complete
+result qualifies the frozen `1ec946c7f` cohort; it does **not** certify the later
+renderer revision or every child tool source against the earlier Git tree.
+
+The merged `7df827f01` source is rebuilt separately with its matching current
+native render bridge. Five focused fresh-process checks pass: compact contact
+publication on owner/separate lanes, dense and mixed GPU publication, and local
+native render-memory ownership/lifetime. The new 85-file cohort also remains
+unchanged. Runtime SHA-256 is
+`8a671a520b32f3f33b526f045c332af57248a8dcf5d3d74dba8007ecbd5e3ba1`;
+render bridge SHA-256 is
+`c98191488ce1b179db2fd2036847bea68f9526c657fa6146c578f419b47f7cbe`.
+Release, compiled API coverage and wiki test/generation/check gates pass on that
+merged revision. These focused checks do not replace its full ordinary rerun.
+
+No API status changes: **1364/1369 (99.63%)**, five Partial and 92 Excluded.
+Fixed CLR script replacement, whole Object/Resource acceptance and complete
+managed/native memory producers remain open. Mass-scene GPU advantage, actual
+window FPS, native failure domains and broader platform qualification retain
+their separate requirements. Earlier sections below record preceding checkpoints.
+
 [The Node contract audit](node-contract-audit.md) closes the neutral class declaration after 38 current-source functional profiles. Current physics declaration coverage is **1364/1369 (99.63%)**, five Partial and 92 Excluded. This is acceptance of existing Node behavior; no new physics operation is added. Object/Resource class acceptance, fixed CLR SetScript/ScriptChanged and the complete GetMonitor producer remain open. Full numerical/network/native/platform/mass/FPS acceptance remains separate; earlier figures below are checkpoints.
 
 [Native Resource/Node Script role hooks](scripting.md#native-resource-and-node-role-hooks) close six installed callbacks with source-bound CPU/GPU owner/separate and native-window focus/error/lifetime checks. Physics declaration coverage stays **1363/1369 (99.56%)**, six Partial, 92 Excluded. Fixed CLR assignment and current/peak allocation producers remain the declaration gaps; mass GPU advantage, real-window FPS and full-goal qualification remain separate.
