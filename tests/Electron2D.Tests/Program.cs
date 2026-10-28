@@ -893,6 +893,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PERFORMANCE") == "1") { PhysicsPipelinePerformance.Run(); return; }
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_LIBRARIES") == "1") return;
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AOT_PREREQUISITES") == "1") { PhysicsAOTPrerequisiteTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AUTO_CALLBACKS") is { } autoCallbacks)
 {

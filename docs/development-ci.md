@@ -1,6 +1,6 @@
 # Development feedback and package qualification
 
-Last updated: 2026-10-25
+Last updated: 2026-10-28
 
 The [CI workflow](../.github/workflows/ci.yml) separates fast development feedback
 from complete package qualification. This preserves the configured platform
@@ -8,6 +8,15 @@ matrix and the acceptance boundaries in [ADR 0021](decisions/product.md#adr-0021
 The workflow source is implemented; a successful GitHub run is still required
 after pushing these changes. Local checks do not establish hosted execution or
 hardware acceptance.
+
+The ordinary root test runner checks native asset placement and both WebP bridge
+exports before entering the full suite. `ELECTRON2D_TEST_NATIVE_LIBRARIES=1` runs
+only this desktop preflight. An encoder-only cached bundle fails immediately with
+the missing export and selected library path. Use the matching platform bundle or
+the documented [native source build](native-packaging.md#full-native-rebuild);
+`Electron2DWebPNativeLibrary` selects the resulting bridge for project-reference
+builds and publishes. A passing preflight verifies loading and exports, not codec
+behavior, the complete native bundle, platform execution or physics acceptance.
 
 ## When work runs
 

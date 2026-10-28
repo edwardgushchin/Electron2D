@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using NativeLibraries = Electron2D.NativeLibraries;
 
 internal static class NativeLibraryTests
@@ -11,7 +12,18 @@ internal static class NativeLibraryTests
             var file = Path.Combine(AppContext.BaseDirectory, "runtimes", NativeLibraries.RuntimeRID, "native", name);
             if (!File.Exists(file) || File.Exists(Path.Combine(AppContext.BaseDirectory, name)))
                 throw new InvalidOperationException($"Project-referenced native library must exist only under runtimes/RID/native: {name}");
+            if (name.Contains("WebP", StringComparison.Ordinal))
+            {
+                var library = NativeLibrary.Load(file);
+                try
+                {
+                    foreach (var export in new[] { "e2d_webp_encode", "e2d_webp_decode" })
+                        if (!NativeLibrary.TryGetExport(library, export, out _))
+                            throw new InvalidOperationException($"Native WebP bridge is missing {export}; use the matching native bundle or Electron2DWebPNativeLibrary source override: {file}");
+                }
+                finally { NativeLibrary.Free(library); }
+            }
         }
-        Console.WriteLine("Project-referenced native text/audio/ENet/mesh libraries retain their runtime directory without root copies.");
+        Console.WriteLine("Project-referenced native libraries retain their runtime directory without root copies; WebP encode/decode exports are present.");
     }
 }
