@@ -353,3 +353,9 @@ byte field is -1 when unavailable. See [OSMemoryInfo](OSMemoryInfo.md) and
 ## Alert
 
 `public static void Alert(string text, string title = "Alert!")` displays a blocking native acknowledgement message before startup, during a lifecycle or after shutdown. Empty strings are accepted; null/NUL values reject. The active Engine/display owner rules apply; otherwise use the host main thread. Native failure throws InvalidOperationException. A main window is supplied as an optional native parent when available. This does not create engine/display/renderer services. [Native modal alerts](../components/native-alerts.md) owns presentation, lifetime and verification limits.
+
+## OpenWithProgram
+
+`public static void OpenWithProgram(string programPath, ReadOnlySpan<string> paths)`
+
+Launches a chosen desktop application with literal ordered host file/directory paths. Ordinary executable children are independent; macOS .app requests use the system open launcher. Empty arrays launch without arguments. Complete input validation precedes creation; launch failures throw. Virtual executable paths resolve through ProjectSettings, while file arguments are unchanged. Success confirms launch acceptance. See [specified application launch](../components/processes.md#specified-application-launch) for ownership, platform and verification limits.

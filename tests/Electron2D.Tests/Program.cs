@@ -685,12 +685,14 @@ if (args.Length == 2 && args[0] == "--os-stdio-child") { OSStandardInputTests.Ch
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_STDIO") == "1") { OSStandardInputTests.Run(); return; }
 if (args.Length == 3 && args[0] == "--os-environment-child") { OSEnvironmentTests.Child(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_ENVIRONMENT") == "1") { OSEnvironmentTests.Run(); return; }
+if (OSOpenWithProgramTests.TryRunChild(args)) return;
 if (args.Length > 1 && args[0] == "--os-process-child") { OSProcessTests.Child(args); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT_NATIVE") == "1") { WindowContentScaleNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CONTENT") == "1") { WindowContentScaleTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT_NATIVE") == "1") { ProjectLayoutDirectionNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT") == "1") { ProjectLayoutDirectionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); Console.WriteLine("FileAccess filesystem/encoding/lifecycle regression passed."); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPEN_WITH_PROGRAM") == "1") { OSOpenWithProgramTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_PROCESS") == "1") { OSProcessTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERER_TEXTURE_DEVICE") == "1") { RendererTextureDeviceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_CHILD") is { } missingPath) { MissingResourceTests.RunChild(missingPath, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_MODE") ?? "preserve", Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MISSING_RENDER") == "1"); return; }

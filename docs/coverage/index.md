@@ -435,6 +435,8 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-28
 
+[Specified application launch](../components/processes.md#specified-application-launch) adds OS.OpenWithProgram with real independent Linux application/file consumers and the existing process owner. One missing declaration becomes Implemented: 13,384/18,855 applicable declarations (70.9838%), 1,090 Partial, 395 Unimplemented, 3,986 Blocked and 8,438 Excluded, with zero unmapped engine declarations. macOS bundle, foreign sandbox/native hosts and user application acceptance remain separate gates.
+
 [Copied native depth/stencil state](../components/depth-stencil-state.md) completes RDPipelineDepthStencilState: three range properties and independent front/back masks/reference now execute through the existing adapter; broader RenderingDevice dependencies keep their separate rows.
 
 [The complete CollisionObject contract](../components/physics-collision-object-contract.md) reconciles all 45 declared members and qualifies their common class behavior across six current Body/Area siblings. Eight public CPU/GPU CLR/strict NativeAOT owner/separate profiles retain 9216 measured complete frames in 80 strict 0/0 allocation intervals. The class row becomes Implemented: physics is **1346/1369 (98.32%)**, **23 open** (15 Partial, 5 Blocked, 3 Unimplemented), 92 Excluded. No runtime member or numerical tolerance changes; inherited and full-goal acceptance remain open. Earlier figures below describe their checkpoints.

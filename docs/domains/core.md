@@ -395,3 +395,5 @@ Standard-handle and managed process-termination helpers reject unsupported Apple
 [Server monitor snapshots](../components/runtime-diagnostics.md#server-monitor-snapshots) connect the retained Performance service to committed navigation counters and active audio output latency with independent read/lifecycle semantics. Memory and renderer instrumentation remain open.
 
 [Native modal alerts](../components/native-alerts.md) add OS.Alert before startup and after shutdown, with active lifecycle/display owner checks and explicit native failure.
+
+Specified desktop application launch now uses [OS.OpenWithProgram](../components/processes.md#specified-application-launch), sharing literal process argv, native ownership and reaping. Native Linux execution is verified separately from macOS bundle, foreign sandbox and application acceptance.

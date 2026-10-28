@@ -189,3 +189,5 @@ operations alone do not change those consumers. A public TextLine width consumer
 reproduced this gap in `bin/text-server-providers/2026-10-27/dispatch-consumer.log`;
 the incomplete experiment was reverted. Registration/replacement/retirement and the
 extension callbacks remain in that full executable slice, not a completed provider.
+
+A second consumer-boundary experiment on 2026-10-28 reached actual TextLine width dispatch, unlocked source reads, callback failure/reentry recovery and zero managed bytes over 128 prepared reads. It still lacked typed opaque-provider font projection/duplication and explicit callback-buffer retirement when native Font caches evict layouts, plus the complete shared glyph/wrapping/drawing boundary. It was retired without publishing API; receipts and recoverable source are under bin/external-text-providers/2026-10-28/retirement.json. Do not revive either virtual-facade prototype as an implemented provider.

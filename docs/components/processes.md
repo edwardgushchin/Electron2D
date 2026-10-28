@@ -1,6 +1,6 @@
 # Independent processes and pipes
 
-Last updated: 2026-10-13
+Last updated: 2026-10-28
 
 ## Scope and flow
 
@@ -47,3 +47,11 @@ A restart attempt clears its retained flag and arguments before subsequent manag
 CreateInstance relaunches an application executable directly. For a dotnet host it resolves the named entry DLL from AppContext.BaseDirectory and verifies the file before launching, without requiring Assembly.Location. Literal argument and process ownership contracts remain unchanged.
 
 Managed process termination explicitly rejects iOS, tvOS, MacCatalyst and browser profiles before reaching unsupported process APIs. The local iOS-profile platform-analysis build checks this guard; target-native execution remains a separate gate.
+
+## Specified application launch
+
+OS.OpenWithProgram(programPath, paths) opens ordered host file/directory paths in a chosen application. Ordinary executable launches share CreateProcess validation, independent lifetime and completed-child reaping; no shell interprets spaces, quotes, semicolons, dollar expressions or leading dashes. An empty path list launches the application without arguments, and individual empty strings remain literal arguments. The complete input is checked before launch. Virtual executable paths resolve through ProjectSettings; file arguments retain their exact supplied value, so explicitly globalize virtual resource paths first.
+
+On macOS a .app suffix selects /usr/bin/open with separate -a, absolute bundle path, -- and path arguments. The call waits for the request launcher, not the application, and a nonzero launcher exit becomes IOException. This supplies specified-bundle selection independently of CreateProcess's remaining general bundle launch gap. On ordinary desktop executable launches the call returns after process creation. The typed void/exception result projects the reference Error result; success proves request acceptance, not that the chosen application opened every file. Unsupported mobile/browser process hosts reject before launch.
+
+ELECTRON2D_TEST_OPEN_WITH_PROGRAM=1 exercises OSOpenWithProgramTests with the Release runner. Its fresh application waits on an explicit file gate after launch has returned, then reports the exact argv and exits through the ordinary OS process owner. Empty lists, empty strings, Unicode, quotes, shell-looking text, leading separators, caller array mutation, null/NUL/invalid-UTF16 input and missing-program cleanup are covered on Linux. The operation is cold and allocating. macOS bundle selection, Windows console behavior, foreign sandboxes and user application acceptance require their native hosts.

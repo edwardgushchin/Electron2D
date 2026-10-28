@@ -21,6 +21,34 @@ public sealed partial class OS
     /// <exception cref="System.ComponentModel.Win32Exception">The executable cannot be started.</exception>
     /// <exception cref="IOException">Native process creation fails.</exception>
     public static int CreateProcess(string path, ReadOnlySpan<string> arguments, bool openConsole = false) => Service.StartProcess(path, arguments, openConsole);
+    /// <summary>Opens files or directories with a specified application without an implicit shell.</summary>
+    /// <param name="programPath">Executable path or search name; on macOS, an application bundle path is also accepted.
+    /// Virtual executable paths resolve through ProjectSettings.</param>
+    /// <param name="paths">Literal ordered host paths, including empty strings. Resolve virtual file paths before calling.</param>
+    /// <remarks>Ordinary executables launch independently and this call does not wait for them to exit.
+    /// A macOS application bundle uses the system open launcher and waits only for its launch request to finish.
+    /// Success confirms process creation or launch-request acceptance, not that the application opened every path.
+    /// This cold operation may allocate. Unsupported mobile/browser process hosts reject explicitly.</remarks>
+    /// <exception cref="ArgumentException">The program is empty, or an input contains null characters or invalid UTF-16.</exception>
+    /// <exception cref="ArgumentNullException">The program or a path is null.</exception>
+    /// <exception cref="PlatformNotSupportedException">The host has no desktop process service.</exception>
+    /// <exception cref="System.ComponentModel.Win32Exception">The executable cannot be started.</exception>
+    /// <exception cref="IOException">Process creation or the macOS launch request fails.</exception>
+    public static void OpenWithProgram(string programPath, ReadOnlySpan<string> paths)
+    {
+        DesktopProcesses(); ValidateProcessInput(programPath, paths);
+        if (programPath.Contains("://", StringComparison.Ordinal)) programPath = ProjectSettings.GlobalizePath(programPath);
+        if (OperatingSystem.IsMacOS() && programPath.EndsWith(".app", StringComparison.OrdinalIgnoreCase))
+        {
+            var arguments = new string[checked(paths.Length + 3)];
+            arguments[0] = "-a"; arguments[1] = System.IO.Path.GetFullPath(programPath); arguments[2] = "--";
+            paths.CopyTo(arguments.AsSpan(3));
+            var code = Execute("/usr/bin/open", arguments);
+            if (code != 0) throw new IOException($"The application launch request failed with exit code {code}.");
+            return;
+        }
+        Service.StartProcess(programPath, paths, false);
+    }
     /// <summary>Starts another instance of the current application with literal ordered arguments.</summary>
     /// <param name="arguments">New application arguments; current arguments are not copied.</param>
     /// <returns>The independent child process ID.</returns>
