@@ -87,7 +87,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             UniqueName = Marshal.PtrToStringUTF8(g_dbus_connection_get_unique_name(_connection)) ?? throw new ExternalException("The native accessibility connection has no identity.");
             _nodeInfo = g_dbus_node_info_new_for_xml(Introspection, out error);
             if (_nodeInfo == 0) throw new ExternalException(ErrorMessage(error));
-            _vtable = (VTable*)NativeMemory.AllocZeroed((nuint)sizeof(VTable));
+            _vtable = (VTable*)NativeAllocation.AllocZeroed((nuint)sizeof(VTable));
             _vtable->Method = (nint)(delegate* unmanaged<nint, nint, nint, nint, nint, nint, nint, nint, void>)&Method;
             _vtable->GetProperty = (nint)(delegate* unmanaged<nint, nint, nint, nint, nint, nint, nint, nint>)&Property;
             _vtable->SetProperty = (nint)(delegate* unmanaged<nint, nint, nint, nint, nint, nint, nint, nint, int>)&SetProperty;
@@ -472,7 +472,7 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         }
         if (_nodeInfo != 0) { g_dbus_node_info_unref(_nodeInfo); _nodeInfo = 0; }
         if (_context != 0) { g_main_context_unref(_context); _context = 0; }
-        NativeMemory.Free(_vtable); _vtable = null; _visibilityNodes.Clear();
+        NativeAllocation.Free(_vtable); _vtable = null; _visibilityNodes.Clear();
         if (retirementError is not null) throw retirementError;
     }
 }

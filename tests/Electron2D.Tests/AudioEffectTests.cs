@@ -118,7 +118,8 @@ internal static class AudioEffectTests
             using var reused = new ArithmeticEffect(1, Vector2.Zero); AudioServer.AddBusEffect(0, reused); var borrowed = AudioServer.GetBusEffectInstance(0, 0); reused.Reuse = borrowed; Reject<InvalidOperationException>(() => AudioServer.AddBusEffect(0, reused)); Check(AudioServer.GetBusEffectCount(0) == 1 && !borrowed.IsDisposed, "Reused attached factory state rejects without disposing live instance."); reused.Reuse = null;
             reused.FailDispose = true; Reject<AggregateException>(() => AudioServer.RemoveBusEffect(0, 0)); Check(borrowed.IsDisposed && AudioServer.GetBusEffectCount(0) == 0, "Disposal-hook failure completes removal and logical cleanup.");
             using var disposed = new AudioEffectCapture(); AudioServer.AddBusEffect(0, disposed); disposed.Dispose(); Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); AudioServer.RemoveBusEffect(0, 0);
-            AudioServer.SetBusVolumeDB(0, float.MaxValue); Wait(native, 4); Reject<AggregateException>(() => tree.ProcessFrame(.01)); AudioServer.SetBusVolumeDB(0, 0); Wait(native, 4); tree.ProcessFrame(.01);
+            var volume = AudioServer.GetBusVolumeDB(0); Reject<ArgumentOutOfRangeException>(() => AudioServer.SetBusVolumeDB(0, float.MaxValue));
+            Check(AudioServer.GetBusVolumeDB(0) == volume, "Overflowing gain rejects before native publication."); Wait(native, 4); tree.ProcessFrame(.01);
         }
         finally { tree.Dispose(); server.CloseNative(); while (AudioServer.GetBusEffectCount(0) > 0) AudioServer.RemoveBusEffect(0, 0); server.CloseNative(); ProjectSettings.Set(ProjectSettings.AudioBusesChannelDisableTime, oldTime); }
     }

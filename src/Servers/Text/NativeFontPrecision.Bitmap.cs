@@ -13,7 +13,7 @@ internal sealed unsafe partial class NativeFontPrecision
         _bitmap = bitmap;
         try
         {
-            _callbacks = (CallbackState*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackState));
+            _callbacks = (CallbackState*)NativeAllocation.AllocZeroed((nuint)sizeof(CallbackState));
             _bitmapHandle = GCHandle.Alloc(this); _callbacks->Bitmap = GCHandle.ToIntPtr(_bitmapHandle);
             _hbFace = HBFaceCreate((nint)(delegate* unmanaged[Cdecl]<nint, uint, nint, nint>)&BitmapReferenceTable, 0, 0);
             HBFaceSetGlyphCount(_hbFace, 0x110000); HBFaceSetUPEM(_hbFace, 64);

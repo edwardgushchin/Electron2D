@@ -1,11 +1,11 @@
 # Performance producer audit
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 This audit follows reference `4.7.2-stable` at
 `ed1daf0bf001b61586d9930840f2f1394092c079`. It separates executable planar
 diagnostics from 3D-only source categories and the remaining allocation work.
-This allocator audit changes no runtime producer. The later [registered extension
+The public current/peak producers remain incomplete. The later [registered extension
 replacement](../components/extensions.md) closes a different inherited row; current
 physics declaration coverage is **1363/1369 (99.56%)**, six open, 92 Excluded.
 
@@ -49,6 +49,16 @@ implemented under [ADR 0028](../decisions/rendering.md#adr-0028), including
 planar mesh/material variants and its documented native ownership boundaries.
 The remaining PipelineSource enum/CANVAS/sentinel rows retain their own audit
 states; this source trace does not implement that separate public enum.
+
+## Direct owned native storage
+
+The internal NativeAllocation ledger now replaces direct NativeMemory and HGlobal payload allocation in the managed runtime. It owns the raw pointer and requested byte size in a private prefix, preserves ordinary fundamental or requested power-of-two alignment, and serializes successful allocation/resize/free publication with coherent current/peak reads. The peak updates at each successful boundary and survives frees; failed requests retain both the old block and counters. Requested payload bytes exclude allocator prefixes/padding. Zero-byte blocks remain releasable with a zero payload contribution. This is CPU native storage; GPU memory and managed wrapper objects are not counted again.
+
+Current consumers are FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
+
+This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. In particular gzip's internal codec allocations are distinct from its tracked wrapper state. It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
+
+NativeAllocationTests passes on Linux x64 CLR and strict full-trim NativeAOT, including native allocation/reallocation failure, zero-size blocks, alignment 1–4096, four concurrent workers, an unobserved transient high-water mark and 1024 warmed alloc/resize/free/read cycles at strict 0/0 owner/all-thread managed bytes. Sixteen source-bound root profiles also pass for native allocation, file identity, networking, fonts/60 independent raster oracle cases, text, dialogs, audio, accessibility and CPU/GPU owner/separate physics. Receipts and exact payload/PDB/source hashes are under `bin/native-allocation-accounting/2026-10-28/`. The full ordinary suite also passes on that unchanged cohort in 951.475 seconds with one completion marker. Other platforms and total-memory producers remain open.
 
 ## Allocation producers remain open
 

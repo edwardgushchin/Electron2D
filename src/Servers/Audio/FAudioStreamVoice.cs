@@ -32,7 +32,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
         _frames = new Vector2[context.QuantumFrames + 64]; _ring = new float[context.QuantumFrames * context.Channels * 4]; _output = new float[context.QuantumFrames * context.Channels]; _tail = new float[_output.Length]; _matrix = new float[context.Channels * 2]; _previousMatrix = new float[_matrix.Length];
         lock (context.Gate) try
             {
-                _pin = GCHandle.Alloc(_ring, GCHandleType.Pinned); _self = GCHandle.Alloc(this); _callback = (Callback*)NativeMemory.AllocZeroed((nuint)sizeof(Callback));
+                _pin = GCHandle.Alloc(_ring, GCHandleType.Pinned); _self = GCHandle.Alloc(this); _callback = (Callback*)NativeAllocation.AllocZeroed((nuint)sizeof(Callback));
                 _callback->User = GCHandle.ToIntPtr(_self); _callback->Functions.OnVoiceProcessingPassStart = (nint)(delegate* unmanaged[Cdecl]<nint, uint, void>)&Process;
                 var format = new F.FAudioWaveFormatEx { wFormatTag = 3, nChannels = (ushort)context.Channels, nSamplesPerSec = (uint)context.MixRate, nAvgBytesPerSec = checked((uint)context.MixRate * (uint)context.Channels * 4), nBlockAlign = (ushort)(context.Channels * 4), wBitsPerSample = 32 };
                 var descriptor = new F.FAudioSendDescriptor { pOutputVoice = send }; var sends = new F.FAudioVoiceSends { SendCount = 1, pSends = (nint)(&descriptor) };
@@ -251,7 +251,7 @@ internal sealed unsafe class FAudioStreamVoice : IDisposable
         lock (_context.Gate)
         {
             _playback.SceneOwner = null; _playback.UpdateNativeOwner(null); _sample?.Dispose(); _sample = null; _active = false; if (_voice != 0) { F.FAudioVoice_DestroyVoice(_voice); _voice = 0; }
-            if (_pin.IsAllocated) _pin.Free(); if (_self.IsAllocated) _self.Free(); if (_callback is not null) { NativeMemory.Free(_callback); _callback = null; }
+            if (_pin.IsAllocated) _pin.Free(); if (_self.IsAllocated) _self.Free(); if (_callback is not null) { NativeAllocation.Free(_callback); _callback = null; }
             _context.ForgetSource(this);
         }
     }

@@ -27,7 +27,7 @@ internal sealed unsafe partial class ATSPIServer
         if (extra.IsEmpty) { container = container.TrimEnd(); if (container.IsEmpty) name = name.TrimEnd(); }
         var capacity = checked(Encoding.UTF8.GetByteCount(name) + Encoding.UTF8.GetByteCount(container) + Encoding.UTF8.GetByteCount(extra) + 2 * (name.Count('\0') + container.Count('\0') + extra.Count('\0')) + 3);
         byte* allocated = null;
-        Span<byte> buffer = capacity <= 1024 ? stackalloc byte[capacity] : new(allocated = (byte*)NativeMemory.Alloc((nuint)capacity), capacity);
+        Span<byte> buffer = capacity <= 1024 ? stackalloc byte[capacity] : new(allocated = (byte*)NativeAllocation.Alloc((nuint)capacity), capacity);
         try
         {
             var at = Write(name, buffer); if (at != 0 && !container.IsEmpty) buffer[at++] = (byte)' ';
@@ -35,7 +35,7 @@ internal sealed unsafe partial class ATSPIServer
             at += Write(extra, buffer[at..]); buffer[at] = 0;
             fixed (byte* p = buffer) return g_variant_new_string(p);
         }
-        finally { NativeMemory.Free(allocated); }
+        finally { NativeAllocation.Free(allocated); }
         static int Write(ReadOnlySpan<char> text, Span<byte> destination)
         {
             var written = 0; int nul;

@@ -24,7 +24,7 @@ public sealed partial class DisplayServer
         return GetWindow(MainWindowId);
     }
 
-    internal void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
+    internal unsafe void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
     {
         EnsureOwner();
         OS.ValidateNativeMessage(title, nameof(title));
@@ -35,7 +35,7 @@ public sealed partial class DisplayServer
             throw new ArgumentException("At least one button is required.", nameof(buttons));
 
         var buttonSize = Marshal.SizeOf<SDL.MessageBoxButtonData>();
-        var nativeButtons = Marshal.AllocHGlobal(checked(buttons.Count * buttonSize));
+        var nativeButtons = (nint)NativeAllocation.Alloc((nuint)checked(buttons.Count * buttonSize));
         var written = 0;
         try
         {
@@ -69,7 +69,7 @@ public sealed partial class DisplayServer
         {
             for (var index = 0; index < written; index++)
                 Marshal.DestroyStructure<SDL.MessageBoxButtonData>(nativeButtons + index * buttonSize);
-            Marshal.FreeHGlobal(nativeButtons);
+            NativeAllocation.Free((void*)nativeButtons);
         }
     }
 

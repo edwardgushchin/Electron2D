@@ -49,7 +49,7 @@ public class PacketPeerDTLS : PacketPeer
         try
         {
             _ = certificate.RetainCertificates(); _certificate = certificate; var bytes = key.RetainPrivateKey(); _key = key; CryptographicOperations.ZeroMemory(bytes);
-            Attach(peer, TLSNative.CreateSession(context, true, "", false, out var network, true), network); _cookie = (nint)NativeMemory.Alloc(32); cookie.CopyTo(new Span<byte>((void*)_cookie, 32)); TLSNative.Require(TLSNative.SSL_set_ex_data(_session!.Pointer, 0, _cookie), "DTLS cookie binding failed."); TLSNative.SSL_set_options(_session.Pointer, 1UL << 13); Poll();
+            Attach(peer, TLSNative.CreateSession(context, true, "", false, out var network, true), network); _cookie = (nint)NativeAllocation.Alloc(32); cookie.CopyTo(new Span<byte>((void*)_cookie, 32)); TLSNative.Require(TLSNative.SSL_set_ex_data(_session!.Pointer, 0, _cookie), "DTLS cookie binding failed."); TLSNative.SSL_set_options(_session.Pointer, 1UL << 13); Poll();
         }
         catch (EntryPointNotFoundException error) { Cleanup(); _status = TLSStatus.Error; throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
         catch { Fail(); throw; }
@@ -115,7 +115,7 @@ public class PacketPeerDTLS : PacketPeer
     private void Fail() { var status = _status == TLSStatus.ErrorHostnameMismatch ? _status : TLSStatus.Error; Cleanup(); _status = status; }
     private unsafe void Cleanup()
     {
-        _session?.Dispose(); _session = null; _network?.Dispose(); _network = null; _udp = null; if (_cookie != 0) { CryptographicOperations.ZeroMemory(new Span<byte>((void*)_cookie, 32)); NativeMemory.Free((void*)_cookie); _cookie = 0; }
+        _session?.Dispose(); _session = null; _network?.Dispose(); _network = null; _udp = null; if (_cookie != 0) { CryptographicOperations.ZeroMemory(new Span<byte>((void*)_cookie, 32)); NativeAllocation.Free((void*)_cookie); _cookie = 0; }
         _key?.ReleaseTLSUse(); _key = null; _certificate?.ReleaseTLSUse(); _certificate = null; _trust?.ReleaseTLSUse(); _trust = null; _inputCount = 0; _packets.Clear(); _status = TLSStatus.Disconnected;
     }
     /// <inheritdoc />

@@ -51,7 +51,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         try
         {
             CheckFT(FTInit(out _library));
-            _data = (byte*)NativeMemory.Alloc((nuint)immutableData.Length);
+            _data = (byte*)NativeAllocation.Alloc((nuint)immutableData.Length);
             immutableData.CopyTo(new Span<byte>(_data, immutableData.Length));
             CheckFT(FTNewMemoryFace(_library, _data, new CLong(immutableData.Length), new CLong(faceIndex), out _face));
             var face = (FaceRecord*)_face;
@@ -65,7 +65,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             StyleName = Marshal.PtrToStringUTF8(face->StyleName) ?? string.Empty;
             AttachMetrics(auxiliaryMetrics);
             FaceFlags = face->Flags.Value;
-            _callbacks = (CallbackState*)NativeMemory.AllocZeroed((nuint)sizeof(CallbackState));
+            _callbacks = (CallbackState*)NativeAllocation.AllocZeroed((nuint)sizeof(CallbackState));
             _callbacks->Face = _face;
             _hbFace = HBFaceCreate((nint)(delegate* unmanaged[Cdecl]<nint, uint, nint, nint>)&ReferenceTable, (nint)_callbacks, 0);
             if (_hbFace != 0 && !IsSFNT) { HBFaceSetGlyphCount(_hbFace, (uint)GlyphCount); HBFaceSetUPEM(_hbFace, (uint)UnitsPerEm); }
@@ -264,8 +264,8 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if (_face != 0) FTDoneFace(_face);
         if (_library != 0) FTDone(_library);
         if (_bitmapHandle.IsAllocated) _bitmapHandle.Free();
-        NativeMemory.Free(_callbacks);
-        NativeMemory.Free(_data);
+        NativeAllocation.Free(_callbacks);
+        NativeAllocation.Free(_data);
         _buffer = _font = _parentFont = _hbFace = _face = _library = 0;
         _callbacks = null;
         _data = null;
@@ -345,16 +345,16 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             CULong size = default;
             if (FTLoadSFNTTable(state->Face, new CULong(tag), default, null, ref size) != 0 || size.Value == 0) return HBBlobGetEmpty();
             if (size.Value > int.MaxValue) { state->Error = -1; return HBBlobGetEmpty(); }
-            table = (byte*)NativeMemory.Alloc(size.Value);
+            table = (byte*)NativeAllocation.Alloc(size.Value);
             var error = FTLoadSFNTTable(state->Face, new CULong(tag), default, table, ref size);
-            if (error != 0) { state->Error = error; NativeMemory.Free(table); return HBBlobGetEmpty(); }
+            if (error != 0) { state->Error = error; NativeAllocation.Free(table); return HBBlobGetEmpty(); }
             return HBBlobCreate(table, (uint)size.Value, 2, (nint)table, (nint)(delegate* unmanaged[Cdecl]<nint, void>)&FreeTable);
         }
-        catch { NativeMemory.Free(table); state->Error = -1; return HBBlobGetEmpty(); }
+        catch { NativeAllocation.Free(table); state->Error = -1; return HBBlobGetEmpty(); }
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
-    private static void FreeTable(nint data) => NativeMemory.Free((void*)data);
+    private static void FreeTable(nint data) => NativeAllocation.Free((void*)data);
 
     [StructLayout(LayoutKind.Sequential)] private struct CallbackState { internal nint Face, Bitmap; internal int Error; }
     [StructLayout(LayoutKind.Sequential)] private struct Generic { internal nint Data, Finalizer; }

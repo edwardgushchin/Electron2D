@@ -1239,12 +1239,12 @@ public sealed class DirAccess : ElectronObject
         throw new PlatformNotSupportedException("Filesystem object identity is not implemented on this platform.");
     }
 
-    private static FileIdentity? GetUnixFileIdentity(string path, bool appleLayout)
+    private static unsafe FileIdentity? GetUnixFileIdentity(string path, bool appleLayout)
     {
         if (!Environment.Is64BitProcess)
             throw new PlatformNotSupportedException("Filesystem object identity requires a 64-bit runtime.");
 
-        var buffer = Marshal.AllocHGlobal(512);
+        var buffer = (nint)NativeAllocation.Alloc(512);
         try
         {
             var result = appleLayout ? StatApple(path, buffer) : StatUnix(path, buffer);
@@ -1266,7 +1266,7 @@ public sealed class DirAccess : ElectronObject
         }
         finally
         {
-            Marshal.FreeHGlobal(buffer);
+            NativeAllocation.Free((void*)buffer);
         }
     }
 

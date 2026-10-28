@@ -74,9 +74,9 @@ internal sealed unsafe class GZIPContext : SafeHandle
     internal GZIPContext(bool compress, bool deflate) : base(0, true)
     {
         Compress = compress; _window = deflate ? 15 : 31;
-        var pointer = (GZIPState*)NativeMemory.AllocZeroed((nuint)sizeof(GZIPState));
+        var pointer = (GZIPState*)NativeAllocation.AllocZeroed((nuint)sizeof(GZIPState));
         try { var result = compress ? GZIPNative.StartCompression(pointer, -1, 8, _window, 8, 0) : GZIPNative.StartDecompression(pointer, _window); if (result != 0) throw new InvalidDataException("Native compression initialization failed: " + result); SetHandle((nint)pointer); }
-        catch { NativeMemory.Free(pointer); throw; }
+        catch { NativeAllocation.Free(pointer); throw; }
     }
     public override bool IsInvalid => handle == 0;
     internal int Process(ReadOnlySpan<byte> input, Span<byte> output, bool finish, out int written)
@@ -92,7 +92,7 @@ internal sealed unsafe class GZIPContext : SafeHandle
             if (result is not (0 or 1 or -5)) throw new InvalidDataException("Compressed stream validation failed: " + result); Finished = result == 1; return consumed;
         }
     }
-    protected override bool ReleaseHandle() { var state = (GZIPState*)handle; if (Compress) GZIPNative.EndCompression(state); else GZIPNative.EndDecompression(state); NativeMemory.Free(state); return true; }
+    protected override bool ReleaseHandle() { var state = (GZIPState*)handle; if (Compress) GZIPNative.EndCompression(state); else GZIPNative.EndDecompression(state); NativeAllocation.Free(state); return true; }
 }
 
 internal static unsafe partial class GZIPNative

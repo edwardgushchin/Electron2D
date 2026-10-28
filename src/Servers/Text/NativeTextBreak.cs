@@ -133,10 +133,10 @@ internal static unsafe partial class NativeTextBreak
                 ?? throw new InvalidOperationException("The native text boundary data is missing.");
             var length = checked((int)stream.Length);
             if (length is <= 0 or > 64 * 1024 * 1024) throw new InvalidDataException("The native text boundary data has an invalid length.");
-            var memory = NativeMemory.AlignedAlloc((nuint)((length + 15) & ~15), 16);
+            var memory = NativeAllocation.AlignedAlloc((nuint)((length + 15) & ~15), 16);
             if (memory == null) throw new OutOfMemoryException();
             try { stream.ReadExactly(new Span<byte>(memory, length)); Check(InitializeData(memory)); }
-            catch { NativeMemory.AlignedFree(memory); throw; }
+            catch { NativeAllocation.AlignedFree(memory); throw; }
             // ICU retains this process-owned immutable block; it is not a renderer or font-resource allocation.
             _data = (nint)memory;
         }

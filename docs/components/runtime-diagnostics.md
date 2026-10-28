@@ -2,9 +2,13 @@
 
 [Object lifetime monitors](object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 [Frame timing monitors](frame-monitors.md) add four actual Engine producers: FPS and per-window peak process, physics-step and navigation durations. They retain independent cached reads and explicit reset, error, presentation and direct-host boundaries.
+
+## Direct native allocation ownership
+
+[The internal allocation ledger](../coverage/performance-producers.md#direct-owned-native-storage) records requested CPU native payload bytes at successful alloc/resize/free boundaries for the runtime's direct allocations and FAudio allocator callbacks. Failed reallocations preserve the old block and counters; transient allocations contribute to the process peak even without an intervening read. Native callback allocation failures return null. Managed heap and remaining native producer composition are still open, so this source does not expose or certify MemoryStatic/MemoryStaticMax.
 
 ## Deferred message memory
 
