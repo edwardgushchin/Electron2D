@@ -7,8 +7,8 @@ This audit follows reference `4.7.2-stable` at
 diagnostics from 3D-only source categories and the remaining allocation work.
 The public current/peak producers remain incomplete. The later [registered extension
 replacement](../components/extensions.md) closes a different inherited row; current
-physics declaration coverage after the [Node audit](../components/node-contract-audit.md)
-is **1364/1369 (99.63%)**, five open, 92 Excluded.
+physics declaration coverage after the [Resource audit](../components/resource-contract-audit.md)
+is **1365/1369 (99.71%)**, four open, 92 Excluded.
 
 ## Pipeline source ownership
 
@@ -87,9 +87,11 @@ not qualify the pinned producer; the current qualification follows below.
 
 All five earlier local overrides differed from the declared recipe revisions.
 Their FreeType/HarfBuzz versions were 2.13.3/5.2.0. The producer now rejects an
-incorrect Git HEAD or changed tracked source for every dependency, including
-source overrides. Successful configuration records each exact revision. The
-self-contained regression checks clean, changed, wrong-revision and unversioned
+incorrect Git HEAD or changed tracked source for every dependency. Supplied
+source overrides are checked before their CMakeLists.txt can execute; fetched
+sources are checked after population. Successful configuration records each
+exact revision. The self-contained regression checks clean, changed,
+wrong-revision and unversioned
 inputs; the native workflow runs it before selecting its producer matrix.
 
 The actual pinned closure is FreeType **2.14.3**, HarfBuzz **14.5.1**, zlib
@@ -290,11 +292,14 @@ that every possible instrumented runtime approach is infeasible.
 `qualified-comparison.json`, `qualified-aot-proof.json`, process maps and source/build hashes retain
 the exact runs. The NativeAOT executable maps no CoreCLR. These receipts reject
 the tested snapshot shortcuts; they do not implement a producer or qualify the
-complete engine. GetMonitor and both memory selectors stay open, with physics
-declaration coverage **1364/1369 (99.63%)**, five Partial and 92 Excluded.
+complete engine. At the time of this probe, GetMonitor and both memory selectors
+stayed open, with physics declaration coverage **1364/1369 (99.63%)**, five
+Partial and 92 Excluded. The current declaration count is reported above.
 
 The accepted requirement remains an allocation/free/GC producer with coherent
 aggregation and startup/lifetime/error qualification on each supported host.
-A bounded observed-peak C# adaptation is a separate pending user decision,
-described in the local `contract-choice.txt`; no ADR or coverage status changes
-until that decision and its executable implementation are complete.
+The owner explicitly retained the exact current/peak contract on 2026-10-28,
+including short-lived peaks between monitor reads. The bounded observed-peak
+C# adaptation is rejected; the local `contract-choice.txt` retains the comparison
+and this decision. The existing ADR remains unchanged. Coverage stays Partial
+until the exact producer is implemented and qualified.

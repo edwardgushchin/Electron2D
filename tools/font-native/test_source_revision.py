@@ -16,7 +16,9 @@ class SourceRevisionTests(unittest.TestCase):
             subprocess.run(["git", "-c", f"init.templateDir={empty_hooks}", "init", "-q", str(source)], check=True)
             tracked = source / "input.txt"
             tracked.write_text("original\n")
-            subprocess.run(["git", "-C", str(source), "add", "input.txt"], check=True)
+            marker = root / "unexpected-source-configuration"
+            (source / "CMakeLists.txt").write_text(f'file(WRITE "{marker.as_posix()}" "unexpected")\n')
+            subprocess.run(["git", "-C", str(source), "add", "input.txt", "CMakeLists.txt"], check=True)
             subprocess.run(["git", "-C", str(source), "-c", "user.name=Fixture", "-c",
                             "user.email=fixture@example.invalid", "-c", "commit.gpgsign=false",
                             "-c", f"core.hooksPath={empty_hooks}", "commit", "-qm", "fixture"], check=True)
@@ -25,8 +27,8 @@ class SourceRevisionTests(unittest.TestCase):
 
             def verify(path, expected):
                 script = root / "check.cmake"
-                script.write_text(f'set(sample_SOURCE_DIR "{path.as_posix()}")\n'
-                                  f'include("{helper}")\nverify_source(Sample "{expected}")\n')
+                script.write_text(f'include("{helper}")\n'
+                                  f'verify_source(Sample "{expected}" "{path.as_posix()}")\n')
                 return subprocess.run(["cmake", "-P", str(script)], cwd=root, capture_output=True, text=True)
 
             self.assertEqual(verify(source, revision).returncode, 0)
@@ -38,6 +40,13 @@ class SourceRevisionTests(unittest.TestCase):
             result = verify(source, "0" * 40)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("differs from the required", " ".join(result.stderr.split()))
+            producer = Path(__file__).resolve().parent
+            result = subprocess.run(["cmake", "-S", str(producer), "-B", str(root / "build"),
+                                     f"-DFETCHCONTENT_SOURCE_DIR_ZLIB={source}",
+                                     "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"], capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("differs from the required", " ".join(result.stderr.split()))
+            self.assertFalse(marker.exists(), "A rejected override must not execute its CMakeLists.txt")
             result = verify(root, revision)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("differs from the required", " ".join(result.stderr.split()))
