@@ -44,7 +44,7 @@ internal sealed partial class PhysicsSpace
     private int[] _gpuReportLimits = [], _gpuReportCounts = [];
     private GPUPhysicsBodyStore.ContactReport[] _gpuReports = [];
     private int _gpuReportBodyCount;
-    private (int Offset, int Count)[] _gpuReportRanges = [];
+    private (int Offset, int Count, bool Keys)[] _gpuReportRanges = [];
 
     internal void RegisterGPUCollider(PhysicsColliderBackend backend)
     {
@@ -86,7 +86,7 @@ internal sealed partial class PhysicsSpace
         {
             var capacity = Math.Max(8, count * 2);
             Array.Resize(ref _gpuReportBodies, capacity); Array.Resize(ref _gpuReportLimits, capacity); Array.Resize(ref _gpuReportCounts, capacity);
-            Array.Resize(ref _gpuReportRanges, capacity);
+            Array.Resize(ref _gpuReportRanges, capacity); Array.Resize(ref _gpuReportFormats, capacity);
             Array.Resize(ref _gpuReportSourceOffsets, capacity); Array.Resize(ref _gpuReportNativeOffsets, capacity);
         }
     }
@@ -128,16 +128,19 @@ internal sealed partial class PhysicsSpace
     internal void PublishGPUCompletion()
     {
         var bodies = _gpuReportBodies.AsSpan(0, _gpuReportBodyCount); var limits = _gpuReportLimits.AsSpan(0, _gpuReportBodyCount);
-        PublishGPUCompletion(_gpuUseContactKeys ? new(bodies, limits, _gpuReportCounts, _gpuReportIdentities, _gpuReportSourceOffsets) :
-            new(bodies, limits, _gpuReportCounts, _gpuReports));
+        if (!_gpuUseContactKeys) PublishGPUCompletion(new(bodies, limits, _gpuReportCounts, _gpuReports));
+        else if (_gpuReportFullSlots == 0) PublishGPUCompletion(new(bodies, limits, _gpuReportCounts, _gpuReportIdentities, _gpuReportSourceOffsets));
+        else PublishGPUCompletion(new(bodies, limits, _gpuReportCounts, _gpuReports, _gpuReportIdentities, _gpuReportSourceOffsets,
+            _gpuReportFormats.AsSpan(0, _gpuReportBodyCount)));
         _gpuContactResultVersion = GPUStore!.ContactResultVersion;
         Array.Clear(_gpuReportRanges);
-        var offset = 0;
+        var fullOffset = 0; var keyOffset = 0;
         for (var i = 0; i < _gpuReportBodyCount; i++)
         {
-            _gpuReportRanges[_gpuReportBodies[i].Index] = (offset, _gpuReportCounts[i]);
+            var key = _gpuReportFormats[i] != 0;
+            _gpuReportRanges[_gpuReportBodies[i].Index] = (key ? keyOffset : fullOffset, _gpuReportCounts[i], key);
             _gpuReportNativeOffsets[_gpuReportBodies[i].Index] = _gpuReportSourceOffsets[i];
-            offset += _gpuReportLimits[i];
+            if (key) keyOffset += _gpuReportLimits[i]; else fullOffset += _gpuReportLimits[i];
         }
     }
 
@@ -197,27 +200,28 @@ internal sealed partial class PhysicsSpace
 
     internal void PrepareGPUReports()
     {
-        // Attachment, limit edits and replay already publish report flags; only pack receiver demand here.
-        _gpuUseContactKeys = !ForceFullGPUContactReports && !_gpuFullContactsRequested; _gpuFullContactsRequested = false;
-        _gpuReportBodyCount = 0; var contacts = 0;
+        // Attachment, limit edits and replay already publish report flags; pack each receiver's demand here.
+        _gpuUseContactKeys = false; _gpuReportFullSlots = 0;
+        _gpuReportBodyCount = 0; var keySlots = 0;
         foreach (var body in _bodies) Add(body.Backend, body.Runtime);
         foreach (var body in _serverColliders)
             if (!body.IsArea) Add(body.Backend, body.Runtime);
 
         void Add(PhysicsColliderBackend backend, PhysicsBodyRuntime runtime)
         {
+            var requested = runtime.GPUContactDetailsRequested; runtime.GPUContactDetailsRequested = false;
             var limit = runtime.ContactLimit;
             if (limit == 0) return;
-            if (RequiresGPUContactDetails(runtime)) _gpuUseContactKeys = false;
+            var key = !ForceFullGPUContactReports && !requested && !RequiresGPUContactDetails(runtime);
+            if (key) { _gpuUseContactKeys = true; keySlots = checked(keySlots + limit); }
+            else _gpuReportFullSlots = checked(_gpuReportFullSlots + limit);
             if (_gpuContactScratch.Length < limit) Array.Resize(ref _gpuContactScratch, limit);
             _gpuReportBodies[_gpuReportBodyCount] = GPUCollider(backend).GPUHandle;
-            _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);
+            _gpuReportFormats[_gpuReportBodyCount] = key ? (byte)1 : (byte)0;
+            _gpuReportLimits[_gpuReportBodyCount++] = limit;
         }
-        if (_gpuUseContactKeys)
-        {
-            if (_gpuReportIdentities.Length < contacts) Array.Resize(ref _gpuReportIdentities, Math.Max(8, checked(contacts * 2)));
-        }
-        else if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, checked(contacts * 2)));
+        if (_gpuReportIdentities.Length < keySlots) Array.Resize(ref _gpuReportIdentities, Math.Max(8, checked(keySlots * 2)));
+        if (_gpuReports.Length < _gpuReportFullSlots) Array.Resize(ref _gpuReports, Math.Max(8, checked(_gpuReportFullSlots * 2)));
         GPUStore!.CaptureContactReports = _gpuReportBodyCount > 0;
     }
     private void ReleaseGPUState()
@@ -225,7 +229,7 @@ internal sealed partial class PhysicsSpace
         _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = null; _gpuQueryShape = null;
         _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges = [];
         _gpuChanges = []; _gpuActivity = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
-        _gpuReportIdentities = []; _gpuReportSourceOffsets = []; _gpuReportNativeOffsets = []; _gpuContactScratch = [];
+        _gpuReportFormats = []; _gpuReportIdentities = []; _gpuReportSourceOffsets = []; _gpuReportNativeOffsets = []; _gpuContactScratch = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
         _gpuShapeQuery[0] = default;
     }
@@ -235,7 +239,7 @@ internal sealed partial class PhysicsSpace
         if ((uint)index >= (uint)_gpuReportRanges.Length) return;
         var range = _gpuReportRanges[index];
         if (range.Count == 0) return;
-        if (_gpuUseContactKeys)
+        if (range.Keys)
         {
             view.BeginGPUContacts(_gpuContactResultVersion, _gpuReportNativeOffsets[index], range.Count);
             for (var i = 0; i < range.Count; i++)

@@ -22,7 +22,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal readonly Vector2 ColliderVelocity => new(Velocities.Z, Velocities.W);
     }
     [StructLayout(LayoutKind.Sequential)]
-    private struct ReportRequest { internal uint Body, Generation, Limit; }
+    private struct ReportRequest { internal uint Body, Generation, Limit, Full; }
     [StructLayout(LayoutKind.Sequential)]
     private struct ReportSettings { internal uint Stage, Count, Records, Table, Bodies, Initialize, Points, Capacity; }
     private RenderHandle? _reportPipeline, _reportRecords, _reportTable, _reportPointHeads, _reportPointLinks, _reportBodyHeads,
@@ -45,7 +45,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal long ReportResultReadbackBytes { get; private set; }
     internal long ReportDeviceCapacityBytes => (long)_reportRecordCapacity * 128 + ((long)_reportTableCapacity + _reportPointHeadCapacity) * 4 +
         (long)_reportPointLinkCapacity * 8 + (long)_reportBodyHeadCapacity * 4 + (long)_reportResultCapacity * sizeof(ContactReport) +
-        (long)_reportRequestCapacity * sizeof(ReportRequest) + (long)_reportCountCapacity * 8 + (_reportSummary is null ? 0 : 8);
+        (long)_reportRequestCapacity * sizeof(ReportRequest) + (long)_reportCountCapacity * 16 + (_reportSummary is null ? 0 : 16);
     internal long ReportTransferCapacityBytes => (long)_reportUploadCapacity + _reportDownloadCapacity;
 
     private void BeginContactReports()
@@ -63,8 +63,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _reportBodyHeads, ref _reportBodyHeadCapacity, _highWater, 4, false);
         Grow(ref _reportResults, ref _reportResultCapacity, 1, sizeof(ContactReport), false);
         Grow(ref _reportRequests, ref _reportRequestCapacity, 1, sizeof(ReportRequest), false);
-        Grow(ref _reportCounts, ref _reportCountCapacity, 1, 8, false);
-        _reportSummary ??= Buffer(8);
+        Grow(ref _reportCounts, ref _reportCountCapacity, 1, 16, false);
+        _reportSummary ??= Buffer(16);
         GrowTransfer(ref _reportUpload, ref _reportUploadCapacity, 8, SDL.GPUTransferBufferUsage.Upload);
         GrowTransfer(ref _reportDownload, ref _reportDownloadCapacity, 8, SDL.GPUTransferBufferUsage.Download);
     }
@@ -146,11 +146,20 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal readonly Span<ContactReport> Results;
         internal readonly Span<ContactIdentity> Identities;
         internal readonly Span<int> SourceOffsets;
+        internal readonly ReadOnlySpan<byte> Formats;
         internal readonly bool IdentityOnly;
+        internal readonly bool Mixed;
         internal ContactRead(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactReport> results)
         { Bodies = bodies; Limits = limits; Counts = counts; Results = results; }
         internal ContactRead(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactIdentity> identities, Span<int> sourceOffsets)
         { Bodies = bodies; Limits = limits; Counts = counts; Identities = identities; SourceOffsets = sourceOffsets; IdentityOnly = true; }
+        internal ContactRead(ReadOnlySpan<BodyHandle> bodies, ReadOnlySpan<int> limits, Span<int> counts, Span<ContactReport> results,
+            Span<ContactIdentity> identities, Span<int> sourceOffsets, ReadOnlySpan<byte> formats)
+        { Bodies = bodies; Limits = limits; Counts = counts; Results = results; Identities = identities; SourceOffsets = sourceOffsets; Formats = formats; Mixed = true; }
+        internal bool HasCompact => IdentityOnly || Mixed;
+        internal int HeaderBytes => Mixed ? 16 : 8;
+        internal int MetadataWords => Mixed ? 3 : 2;
+        internal bool IsIdentity(int index) => IdentityOnly || Mixed && Formats[index] != 0;
         internal int WireStride => IdentityOnly ? sizeof(ContactIdentity) : sizeof(ContactReport);
     }
 
@@ -160,35 +169,47 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 
     internal void ReadContactReports(ContactRead read)
     {
-        var resultCount = PrepareContactRead(read);
-        if (resultCount == 0) { AcceptContactRead(read, 0); return; }
+        var layout = PrepareContactRead(read);
+        if (layout.Count == 0) { AcceptContactRead(read, 0, 0); return; }
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire selected contact reports");
         try
         {
-            RecordContactRead(command, read, resultCount); _failed = true; Finish(ref command);
-            AcceptContactRead(read, resultCount); _failed = false;
+            RecordContactRead(command, read, layout.Count, layout.Bytes); _failed = true; Finish(ref command);
+            AcceptContactRead(read, layout.Count, layout.Bytes); _failed = false;
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
     }
 
-    private int PrepareContactRead(ContactRead read)
+    private (int Count, int Bytes) PrepareContactRead(ContactRead read)
     {
         EnsureAccess();
         var bodies = read.Bodies; var limits = read.Limits; var counts = read.Counts; var results = read.Results;
         if (limits.Length != bodies.Length || counts.Length < bodies.Length) throw new ArgumentException("Contact request/count lengths differ.");
-        if (read.IdentityOnly && (read.SourceOffsets.Length < bodies.Length || read.SourceOffsets.Overlaps(limits) || read.SourceOffsets.Overlaps(counts)))
+        if (MemoryMarshal.AsBytes(limits).Overlaps(MemoryMarshal.AsBytes(results)) || MemoryMarshal.AsBytes(limits).Overlaps(MemoryMarshal.AsBytes(read.Identities)) ||
+            MemoryMarshal.AsBytes(counts).Overlaps(MemoryMarshal.AsBytes(results)) || MemoryMarshal.AsBytes(counts).Overlaps(MemoryMarshal.AsBytes(read.Identities)))
+            throw new ArgumentException("Contact data destinations cannot overlap limits or count metadata.");
+        if (read.HasCompact && (read.SourceOffsets.Length < bodies.Length || read.SourceOffsets.Overlaps(limits) || read.SourceOffsets.Overlaps(counts)))
             throw new ArgumentException("Contact source offsets require a separate destination for every receiver.");
-        var total = 0; var largestLimit = 0;
+        if (read.Mixed && (read.Formats.Length != bodies.Length ||
+            read.Formats.Overlaps(MemoryMarshal.AsBytes(counts)) || read.Formats.Overlaps(MemoryMarshal.AsBytes(read.SourceOffsets)) ||
+            read.Formats.Overlaps(MemoryMarshal.AsBytes(results)) || read.Formats.Overlaps(MemoryMarshal.AsBytes(read.Identities)) ||
+            MemoryMarshal.AsBytes(results).Overlaps(MemoryMarshal.AsBytes(read.Identities)) ||
+            MemoryMarshal.AsBytes(read.SourceOffsets).Overlaps(MemoryMarshal.AsBytes(results)) ||
+            MemoryMarshal.AsBytes(read.SourceOffsets).Overlaps(MemoryMarshal.AsBytes(read.Identities))))
+            throw new ArgumentException("Mixed contact formats and destinations require separate storage.");
+        var total = 0; var fullTotal = 0; var keyTotal = 0; var largestLimit = 0;
         for (var i = 0; i < bodies.Length; i++)
         {
             Validate(bodies[i]);
             if (limits[i] < 0 || limits[i] > PhysicsBodyRuntime.MaxContactLimit) throw new ArgumentOutOfRangeException(nameof(limits));
             total = checked(total + limits[i]);
-            largestLimit = Math.Max(largestLimit, limits[i]);
+            if (read.Mixed && read.Formats[i] > 1) throw new ArgumentOutOfRangeException(nameof(read.Formats));
+            if (read.IsIdentity(i)) { keyTotal = checked(keyTotal + limits[i]); largestLimit = Math.Max(largestLimit, limits[i]); }
+            else fullTotal = checked(fullTotal + limits[i]);
         }
-        if ((read.IdentityOnly ? read.Identities.Length : results.Length) < total) throw new ArgumentException("The contact report destination is too small.", nameof(results));
-        if (!_captureReports || !_reportReady || _reportCount == 0 || total == 0) return 0;
+        if (read.Identities.Length < keyTotal || results.Length < fullTotal) throw new ArgumentException("The contact report destination is too small.", nameof(results));
+        if (!_captureReports || !_reportReady || _reportCount == 0 || total == 0) return default;
         if (_reportRequestEpochs.Length < _highWater)
         {
             Array.Resize(ref _reportRequestEpochs, _slots.Length); Array.Resize(ref _reportRequestMultiplicities, _slots.Length);
@@ -202,89 +223,96 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         }
         // A frame record belongs to at most two receivers; repeated requests multiply that bound.
         var resultCount = (int)Math.Min(total, 2L * _reportCount * multiplicity);
+        var resultBytes = read.Mixed ? checked(resultCount * sizeof(ContactIdentity) + Math.Min(resultCount, fullTotal) * (sizeof(ContactReport) - sizeof(ContactIdentity))) : checked(resultCount * read.WireStride);
         Grow(ref _reportRequests, ref _reportRequestCapacity, bodies.Length, sizeof(ReportRequest), false);
-        Grow(ref _reportCounts, ref _reportCountCapacity, bodies.Length, 8, false);
+        Grow(ref _reportCounts, ref _reportCountCapacity, bodies.Length, 16, false);
         if (resultCount > _reportResultCapacity) InvalidateContactResults();
         Grow(ref _reportResults, ref _reportResultCapacity, resultCount, sizeof(ContactReport), false);
-        if (read.IdentityOnly)
+        if (read.HasCompact)
         {
             // Selection is complete; its hash scratch can hold compact keys without adding a ninth writable binding.
-            Grow(ref _reportTable, ref _reportTableCapacity, checked(resultCount * 4), 4, false);
+            Grow(ref _reportTable, ref _reportTableCapacity, resultBytes / 4, 4, false);
             Grow(ref _reportPointHeads, ref _reportPointHeadCapacity, _reportTableCapacity, 4, false);
         }
-        var requestBytes = checked(bodies.Length * sizeof(ReportRequest)); var countBytes = checked(bodies.Length * 8); var resultBytes = checked(resultCount * read.WireStride);
-        GrowTransfer(ref _reportUpload, ref _reportUploadCapacity, checked(8 + requestBytes), SDL.GPUTransferBufferUsage.Upload);
+        var requestBytes = checked(bodies.Length * sizeof(ReportRequest)); var countBytes = checked(bodies.Length * read.MetadataWords * 4);
+        GrowTransfer(ref _reportUpload, ref _reportUploadCapacity, checked(read.HeaderBytes + requestBytes), SDL.GPUTransferBufferUsage.Upload);
         GrowTransfer(ref _reportDownload, ref _reportDownloadCapacity,
-            Math.Max(checked(8 + countBytes + resultBytes), read.IdentityOnly ? checked(largestLimit * sizeof(ContactReport)) : 0), SDL.GPUTransferBufferUsage.Download);
-        return resultCount;
+            Math.Max(checked(read.HeaderBytes + countBytes + resultBytes), read.HasCompact ? checked(largestLimit * sizeof(ContactReport)) : 0), SDL.GPUTransferBufferUsage.Download);
+        return (resultCount, resultBytes);
     }
 
-    private void RecordContactRead(nint command, ContactRead read, int resultCount)
+    private void RecordContactRead(nint command, ContactRead read, int resultCount, int resultBytes)
     {
         if (resultCount == 0) return;
         var bodies = read.Bodies; var limits = read.Limits;
-        var requestBytes = checked(bodies.Length * sizeof(ReportRequest)); var countBytes = checked(bodies.Length * 8); var resultBytes = checked(resultCount * read.WireStride);
+        var requestBytes = checked(bodies.Length * sizeof(ReportRequest)); var countBytes = checked(bodies.Length * read.MetadataWords * 4);
         var mapped = SDL.MapGPUTransferBuffer(Device, _reportUpload!.DangerousGetHandle(), false);
         if (mapped == 0) throw GPUPhysicsDevice.Failure("map contact report requests");
-        *(ulong*)mapped = 0; var requests = (ReportRequest*)((byte*)mapped + 8);
+        new Span<byte>((void*)mapped, read.HeaderBytes).Clear(); var requests = (ReportRequest*)((byte*)mapped + read.HeaderBytes);
         for (var i = 0; i < bodies.Length; i++)
-        { requests[i] = new() { Body = (uint)bodies[i].Index, Generation = bodies[i].Generation, Limit = (uint)limits[i] }; }
+        { requests[i] = new() { Body = (uint)bodies[i].Index, Generation = bodies[i].Generation, Limit = (uint)limits[i], Full = read.IsIdentity(i) ? 0u : 1u }; }
         SDL.UnmapGPUTransferBuffer(Device, _reportUpload.DangerousGetHandle());
         var copy = SDL.BeginGPUCopyPass(command);
         if (copy == 0) throw GPUPhysicsDevice.Failure("begin contact report requests");
-        SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle() }, new() { Buffer = _reportSummary!.DangerousGetHandle(), Size = 8 }, false);
-        SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle(), Offset = 8 }, new() { Buffer = _reportRequests!.DangerousGetHandle(), Size = (uint)requestBytes }, false);
-        SDL.EndGPUCopyPass(copy); ReportPass(command, 5, bodies.Length, resultCount);
+        SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle() }, new() { Buffer = _reportSummary!.DangerousGetHandle(), Size = (uint)read.HeaderBytes }, false);
+        SDL.UploadToGPUBuffer(copy, new() { TransferBuffer = _reportUpload.DangerousGetHandle(), Offset = (uint)read.HeaderBytes }, new() { Buffer = _reportRequests!.DangerousGetHandle(), Size = (uint)requestBytes }, false);
+        SDL.EndGPUCopyPass(copy); ReportPass(command, 5, bodies.Length, resultCount, read.Mixed);
         _frozenReportSlots = resultCount; ContactResultVersion++;
         if (read.IdentityOnly) ReportPass(command, 7, resultCount, resultCount);
+        else if (read.Mixed) ReportPass(command, 8, bodies.Length, resultBytes / 4, true);
         copy = SDL.BeginGPUCopyPass(command);
         if (copy == 0) throw GPUPhysicsDevice.Failure("begin selected contact download");
-        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportSummary.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _reportDownload!.DangerousGetHandle() });
-        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportCounts!.DangerousGetHandle(), Size = (uint)countBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = 8 });
-        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = (read.IdentityOnly ? _reportTable : _reportResults)!.DangerousGetHandle(), Size = (uint)resultBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = (uint)(8 + countBytes) });
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportSummary.DangerousGetHandle(), Size = (uint)read.HeaderBytes }, new() { TransferBuffer = _reportDownload!.DangerousGetHandle() });
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _reportCounts!.DangerousGetHandle(), Size = (uint)countBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = (uint)read.HeaderBytes });
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = (read.HasCompact ? _reportTable : _reportResults)!.DangerousGetHandle(), Size = (uint)resultBytes }, new() { TransferBuffer = _reportDownload.DangerousGetHandle(), Offset = (uint)(read.HeaderBytes + countBytes) });
         SDL.EndGPUCopyPass(copy);
     }
 
-    private void AcceptContactRead(ContactRead read, int resultCount)
+    private void AcceptContactRead(ContactRead read, int resultCount, int resultBytes)
     {
         var bodies = read.Bodies; var limits = read.Limits; var counts = read.Counts; var results = read.Results;
-        if (resultCount == 0) { if (read.IdentityOnly) read.SourceOffsets[..bodies.Length].Clear(); counts[..bodies.Length].Clear(); return; }
-        var countBytes = checked(bodies.Length * 8);
-        UploadBytes += 8 + bodies.Length * sizeof(ReportRequest); ReadbackBytes += 8 + countBytes + resultCount * read.WireStride; ReportReadCount++;
-        ReportResultReadbackBytes += (long)resultCount * read.WireStride;
+        if (resultCount == 0) { if (read.HasCompact) read.SourceOffsets[..bodies.Length].Clear(); counts[..bodies.Length].Clear(); return; }
+        var words = read.MetadataWords; var countBytes = checked(bodies.Length * words * 4);
+        UploadBytes += read.HeaderBytes + bodies.Length * sizeof(ReportRequest); ReadbackBytes += read.HeaderBytes + countBytes + resultBytes; ReportReadCount++;
+        ReportResultReadbackBytes += resultBytes;
         var mapped = SDL.MapGPUTransferBuffer(Device, _reportDownload!.DangerousGetHandle(), false);
         if (mapped == 0) throw GPUPhysicsDevice.Failure("map selected contact results");
         try
         {
-            var selected = ((uint*)mapped)[1]; var rows = (uint*)((byte*)mapped + 8); ulong sum = 0;
-            if (*(uint*)mapped != 0 || selected > resultCount) throw new InvalidOperationException("GPU contact report selection returned invalid data.");
+            var selected = ((uint*)mapped)[1]; var rows = (uint*)((byte*)mapped + read.HeaderBytes); ulong sum = 0, wireSum = 0;
+            var selectedBytes = read.Mixed ? ((uint*)mapped)[2] : checked(selected * (uint)read.WireStride);
+            if (*(uint*)mapped != 0 || selected > resultCount || selectedBytes > resultBytes) throw new InvalidOperationException("GPU contact report selection returned invalid data.");
             for (var i = 0; i < bodies.Length; i++)
             {
-                var count = rows[i * 2]; var first = rows[i * 2 + 1];
-                if (count > limits[i] || first > selected || count > selected - first) throw new InvalidOperationException("GPU contact report selection returned invalid ranges.");
-                sum += count;
+                var count = rows[i * words]; var first = rows[i * words + 1];
+                var stride = read.IsIdentity(i) ? sizeof(ContactIdentity) : sizeof(ContactReport);
+                var wire = read.Mixed ? rows[i * words + 2] : first * (uint)stride;
+                if (count > limits[i] || first > selected || count > selected - first || wire > selectedBytes || (ulong)count * (uint)stride > selectedBytes - wire)
+                    throw new InvalidOperationException("GPU contact report selection returned invalid ranges.");
+                sum += count; wireSum += (ulong)count * (uint)stride;
             }
-            if (sum != selected) throw new InvalidOperationException("GPU contact report selection returned inconsistent counts.");
+            if (sum != selected || wireSum != selectedBytes) throw new InvalidOperationException("GPU contact report selection returned inconsistent counts.");
             fixed (ContactReport* full = results)
             fixed (ContactIdentity* keys = read.Identities)
             {
-                var target = read.IdentityOnly ? (byte*)keys : (byte*)full;
-                var offset = 0; var payload = (byte*)mapped + 8 + countBytes;
+                var fullOffset = 0; var keyOffset = 0; var payload = (byte*)mapped + read.HeaderBytes + countBytes;
                 for (var i = 0; i < bodies.Length; i++)
                 {
-                    var count = rows[i * 2]; var first = rows[i * 2 + 1];
-                    if (count != 0) System.Buffer.MemoryCopy(payload + (long)first * read.WireStride, target + (long)offset * read.WireStride,
-                        (long)limits[i] * read.WireStride, (long)count * read.WireStride);
-                    offset += limits[i];
+                    var key = read.IsIdentity(i); var stride = key ? sizeof(ContactIdentity) : sizeof(ContactReport);
+                    var count = rows[i * words]; var first = rows[i * words + 1];
+                    var wire = read.Mixed ? rows[i * words + 2] : first * (uint)stride;
+                    var target = key ? (byte*)keys + (long)keyOffset * stride : (byte*)full + (long)fullOffset * stride;
+                    if (count != 0) System.Buffer.MemoryCopy(payload + wire, target, (long)limits[i] * stride, (long)count * stride);
+                    if (key) keyOffset += limits[i]; else fullOffset += limits[i];
                 }
             }
-            if (read.IdentityOnly) for (var i = 0; i < bodies.Length; i++) read.SourceOffsets[i] = (int)rows[i * 2 + 1];
+            if (read.HasCompact) for (var i = 0; i < bodies.Length; i++) read.SourceOffsets[i] = (int)rows[i * words + 1];
             // Commit counts after scattering so callers may alias their limits and count spans.
-            for (var i = 0; i < bodies.Length; i++) counts[i] = (int)rows[i * 2];
+            for (var i = 0; i < bodies.Length; i++) counts[i] = (int)rows[i * words];
         }
         finally { SDL.UnmapGPUTransferBuffer(Device, _reportDownload.DangerousGetHandle()); }
     }
-    private void ReportPass(nint command, uint stage, int count, int resultCount = 0)
+    private void ReportPass(nint command, uint stage, int count, int resultCount = 0, bool mixed = false)
     {
         if (count == 0) return;
         var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[8];
@@ -305,9 +333,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Records = (uint)_reportCount,
             Table = (uint)_reportTableCapacity,
             Bodies = (uint)(stage == 5 ? _publishedReportBodies : _highWater),
-            Initialize = _reportInitialize ? 1u : 0u,
+            Initialize = mixed ? 2u : _reportInitialize ? 1u : 0u,
             Points = (uint)ContactPointCount,
-            Capacity = (uint)(stage == 5 ? resultCount : _reportRecordCapacity)
+            Capacity = (uint)(stage is 5 or 8 ? resultCount : _reportRecordCapacity)
         };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(ReportSettings));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute); UniformBytes += sizeof(ReportSettings);

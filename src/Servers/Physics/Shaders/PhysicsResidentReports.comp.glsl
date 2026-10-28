@@ -7,7 +7,7 @@
 #include "PhysicsPairHash.inc.glsl"
 layout(local_size_x=64) in;
 struct FrameContact { uvec4 pair; uvec4 features; uvec4 owners; uvec4 links; vec4 positions; vec4 normalDepth; vec4 impulse; vec4 velocities; };
-struct ReportRequest { uint body; uint generation; uint limit; };
+struct ReportRequest { uint body; uint generation; uint limit; uint full; };
 struct Report {
     uint shape; uint shapeGeneration; uint colliderShape; uint colliderShapeGeneration;
     float depth;
@@ -27,11 +27,11 @@ layout(std430,set=1,binding=2) buffer PointHeads { uint pointHeads[]; };
 layout(std430,set=1,binding=3) buffer PointLinks { uvec2 pointLinks[]; };
 layout(std430,set=1,binding=4) buffer BodyHeads { uint bodyHeads[]; };
 layout(std430,set=1,binding=5) buffer Results { Report results[]; };
-layout(std430,set=1,binding=6) buffer Counts { uvec2 counts[]; };
-layout(std430,set=1,binding=7) buffer Summary { uvec2 summary; };
+layout(std430,set=1,binding=6) buffer Counts { uint counts[]; };
+layout(std430,set=1,binding=7) buffer Summary { uint summary[]; };
 layout(std140,set=2,binding=0) uniform Settings { uint stage; uint count; uint recordCount; uint tableCapacity; uint bodyCount; uint initialize; uint pointCount; uint capacity; };
 const uint none=0xffffffffu, incoming=0x80000000u;
-void fail(){atomicOr(summary.x,1u);}
+void fail(){atomicOr(summary[0],1u);}
 uint hash(uvec4 pair,uvec4 features){return pairHash(pair.xy)^pairHash(pair.zw)^pairHash(features.xy)^pairHash(features.zw);}
 bool matches(uint token,ContactPoint p)
 {
@@ -81,7 +81,7 @@ void main()
         FrameContact r;
         if((token&incoming)!=0u)
         {
-            token=atomicAdd(summary.y,1u);if(token>=capacity){fail();return;}
+            token=atomicAdd(summary[1],1u);if(token>=capacity){fail();return;}
             r=FrameContact(p.pair,p.features,uvec4(ai,bi,sa.owner.y,sb.owner.y),uvec4(none),vec4(0),vec4(0,0,depth,0),vec4(0),vec4(0));
             r.links.x=atomicExchange(bodyHeads[ai],token);r.links.y=atomicExchange(bodyHeads[bi],token);
             table[slot]=token;
@@ -94,8 +94,8 @@ void main()
     }
     if(stage==4u)
     {
-        if(summary.x!=0u)return;
-        uint completedCount=summary.y;if(completedCount>capacity){fail();return;}
+        if(summary[0]!=0u)return;
+        uint completedCount=summary[1];if(completedCount>capacity){fail();return;}
         uint at=bodyHeads[i],previous=none;
         // Reverse the prepend list once, preserving first-encounter selection across intervals.
         for(uint visited=0u;at!=none;visited++)
@@ -116,7 +116,8 @@ void main()
     if(stage==5u)
     {
         ReportRequest request=requests[i];uint selected=0u,available=0u;
-        if(request.body>=bodyCount||request.limit==0u){counts[i]=uvec2(0);return;}
+        uint words=initialize==2u?3u:2u;
+        if(request.body>=bodyCount||request.limit==0u){counts[i*words]=0u;counts[i*words+1u]=0u;if(words==3u)counts[i*words+2u]=0u;return;}
         uint at=bodyHeads[request.body];
         for(uint visited=0u;at!=none&&available<request.limit;visited++)
         {
@@ -126,7 +127,7 @@ void main()
             at=second?r.links.y:r.links.x;
             if((second?r.owners.w:r.owners.z)==request.generation)available++;
         }
-        uint first=atomicAdd(summary.y,available);
+        uint first=atomicAdd(summary[1],available);
         if(first>capacity||available>capacity-first){fail();return;}
         at=bodyHeads[request.body];
         for(uint visited=0u;at!=none;visited++)
@@ -154,10 +155,33 @@ void main()
                 motion.x,motion.y,motion.z,motion.w);
         }
         if(selected!=available){fail();return;}
-        counts[i]=uvec2(selected,first);return;
+        counts[i*words]=selected;counts[i*words+1u]=first;
+        if(words==3u)counts[i*words+2u]=atomicAdd(summary[2],selected*(request.full!=0u?68u:16u));
+        return;
     }
     if(stage==6u){records[i].impulse=vec4(0);records[i].velocities=vec4(0);}
-    if(stage==7u&&i<summary.y)
+    if(stage==8u)
+    {
+        uint selected=counts[i*3u],first=counts[i*3u+1u],wire=counts[i*3u+2u];
+        uint stride=requests[i].full!=0u?17u:4u,at=wire/4u;
+        if(selected==0u)return;
+        if(wire%4u!=0u||first>summary[1]||selected>summary[1]-first||at>capacity||selected*stride>capacity-at){fail();return;}
+        for(uint j=0u;j<selected;j++,at+=stride)
+        {
+            Report r=results[first+j];
+            table[at]=r.shape;table[at+1u]=r.shapeGeneration;table[at+2u]=r.colliderShape;table[at+3u]=r.colliderShapeGeneration;
+            if(stride==4u)continue;
+            table[at+4u]=floatBitsToUint(r.depth);
+            table[at+5u]=floatBitsToUint(r.positionX);table[at+6u]=floatBitsToUint(r.positionY);
+            table[at+7u]=floatBitsToUint(r.colliderPositionX);table[at+8u]=floatBitsToUint(r.colliderPositionY);
+            table[at+9u]=floatBitsToUint(r.normalX);table[at+10u]=floatBitsToUint(r.normalY);
+            table[at+11u]=floatBitsToUint(r.impulseX);table[at+12u]=floatBitsToUint(r.impulseY);
+            table[at+13u]=floatBitsToUint(r.velocityX);table[at+14u]=floatBitsToUint(r.velocityY);
+            table[at+15u]=floatBitsToUint(r.colliderVelocityX);table[at+16u]=floatBitsToUint(r.colliderVelocityY);
+        }
+        return;
+    }
+    if(stage==7u&&i<summary[1])
     {
         // The selection hash is no longer needed; full selected values remain frozen in results.
         Report r=results[i];uint at=i*4u;

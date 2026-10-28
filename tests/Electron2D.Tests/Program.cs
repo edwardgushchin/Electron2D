@@ -1931,6 +1931,7 @@ PhysicsDebugTests.Run(false);
 PhysicsContactDebugTests.Run(false);
 PhysicsVelocityEditTests.Run(false);
 PhysicsGPUPublicationTests.Run(false);
+GPUPhysicsContactKeyTests.Run();
 PhysicsHostPreparationTests.Run(false);
 PhysicsBackendOwnershipTests.Run(PhysicsServer.Backend.CPU);
 PhysicsResultConstructionTests.Run(PhysicsServer.Backend.CPU);

@@ -44,8 +44,8 @@ reduces routine transfer, not numerical work or the public contact contract.
 
 ### Demand-based host staging (2026-10-28)
 
-The space reserves staging for the selected publication format: compact keys for
-monitor-only scenes, numerical reports for eager consumers. It no longer reserves
+The space reserves staging for each receiver's publication format: compact keys for
+monitor-only receivers, numerical reports for eager consumers. It no longer reserves
 both payload arrays before either is used. A late single-receiver numerical read
 uses its row scratch without reserving a whole numerical staging array. The
 existing numerical-demand hint may select full reports on the next interval.
@@ -81,6 +81,85 @@ late-row reads, callback/depth demand and 128 warmed complete frames at zero
 managed allocation. Dense 512-receiver and mixed scene/raw publication controls
 also pass their existing wake, current-state and local/portable restore gates.
 No declaration status changes: 1364/1369 (99.63%), five Partial, 92 Excluded.
+
+### Mixed receiver formats (2026-10-28)
+
+A numerical getter now requests a full-packet cost hint for its own body. Raw
+server receivers, extension states, callbacks and positive depth thresholds keep
+their numerical format; unrelated monitor receivers keep compact identities.
+The hint changes only a future readback strategy. Late reads still acquire the
+same frozen selected row and preserve sampled ownership through later edits.
+Explicit whole-world local/portable capture materializes all pending receivers
+and requests the corresponding future numerical demand.
+
+The GPU retains contiguous 68-byte selected numerical rows. A mixed publication
+also packs the requested 16/68-byte wire rows into the retired selection-hash
+scratch. Native row and byte offsets are separate: mixed metadata carries count,
+native row offset and wire byte offset per request. The mixed status header adds
+actual wire byte count. Selection and packing remain in the existing six-read/
+eight-write/one-uniform pipeline; the read shares one submission/completion with
+body state where applicable. No count-first CPU wait or CPU numerical solve is
+introduced. Pure full/key callers retain their original result and metadata
+formats; the private request record now includes the receiver format.
+
+For R = min(sum of limits, twice retained records times maximum request
+multiplicity) and F = sum of numerical receiver limits, mixed result download is
+bounded by 16*R + 52*min(R,F) bytes. This deliberately retains bound padding;
+actual GPU byte count and every native/wire range are validated before outputs.
+Limits/counts may alias, with counts committed last. Formats and result storage
+must not overlap mutable metadata; result writes may not replace limits needed
+by later segments. Duplicate receivers may request different formats.
+
+Host numerical and identity segments have separate offsets. Whole-world
+materialization appends compact segments after the existing numerical segments,
+preparing capacity before scatter. It preserves empty reserved gaps and frozen
+view source indices. Prepared mode changes/replay retain peak buffer capacities.
+
+The contact-key cohort exercises mixed duplicate requests, every numerical field,
+late reads after pose/velocity edits and collider removal, invalid formats,
+undersized/overlapping targets and permitted limits/count aliasing. Its scene
+uses 64 contacting receivers, an empty 128-slot receiver and one numerical
+callback in the middle of the receiver list. Late reading a second body promotes
+only that receiver on the next publication. Local/portable captures preserve the
+mixed offsets. Sixteen complete warmed frames transfer 139264/36096 selected
+result bytes with forced-full/selective formats, at 0/0 owner/all-thread managed
+bytes and one contact read per frame on the owner and separate numerical lanes.
+
+The frozen complete-scene comparison uses 4096 awake RigidBodies, four walls,
+144 Hz, four substeps, sixteen sweeps, cap eight, monitoring/interpolation and
+one actual numerical callback in every process. Each runs 1600 warmup and 128
+measured frames. Forced-full/selective/selective-repeat share runtime SHA-256
+`daaf6005569133bd538da935723c2216bdf577174a91c12deda3c0e06ad3d1c1`.
+All three pass physical bounds and 0/0 owner/all-thread managed allocation.
+
+| Process | Whole-step mean / p50 / p99 ms | Selected result B/tick | Total readback B/tick | Host numerical staging B |
+|---|---:|---:|---:|---:|
+| mass-full | 25.147 / 24.843 / 32.074 | 1494099.19 | 1806543.69 | 4456448 |
+| mass-mixed | 25.243 / 24.719 / 31.174 | 348142.50 | 676940.75 | 1088 |
+| mass-mixed-repeat | 24.586 / 24.526 / 29.558 | 342961.75 | 671784.75 | 1088 |
+
+Selective host key/scratch capacity is 1048320/544 bytes. Device report capacity
+is 7766032 versus 7241744 bytes for forced-full; transfer capacity is 655360 versus
+2228224 bytes. These are retained capacity counters, not device timings or whole
+process current/peak memory. The selective result payload is about 77% smaller;
+whole-step times do not establish a controlled speed advantage. No quiet
+admission or window-FPS qualification is attached to these packet controls.
+Source deltas, unchanged 85-file payload manifests, commands and reports are under
+`bin/physics-mixed-contacts/2026-10-28/`.
+
+The public separate-process network check also reaches tick 600 with a CPU
+headless authority, GPU prediction client and late CPU client, separate numerical
+threads, packet impairment, lifecycle/ownership/event confirmation and final
+convergence. Prepared owner/all-thread step and replay counters are zero in all
+three reports; the GPU client's separate total ReplayAllocations is 7392 bytes
+outside those prepared brackets. This is current integration evidence for the
+same frozen runtime, rather than complete platform or whole-goal acceptance.
+
+The complete pipeline fixture accepts the optional
+ELECTRON2D_PHYSICS_PERFORMANCE_NUMERICAL_RECEIVERS count and records it with
+contact device/transfer capacities. It keeps all bodies, monitor caps, physical
+settings and actual callbacks in both forced-full and selective controls.
+Whole-step and real-window acceptance remain separate from packet qualification.
 
 ### Compact transfer qualification
 

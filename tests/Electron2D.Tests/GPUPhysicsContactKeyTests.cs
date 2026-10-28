@@ -9,7 +9,7 @@ internal static class GPUPhysicsContactKeyTests
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_THREAD") == "1");
-        try { Native(); EagerStorage(); SnapshotStorage(false); SnapshotStorage(true); Scene(); }
+        try { Native(); MixedNative(); EagerStorage(); SnapshotStorage(false); SnapshotStorage(true); Scene(); MixedScene(); }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
         Console.WriteLine("Compact contact keys: frozen fields, identity, demand, replay and zero-allocation publication passed.");
     }
@@ -48,6 +48,73 @@ internal static class GPUPhysicsContactKeyTests
         var invalid = false;
         try { store.ReadContactReports(new([body], [4], counts, keys, counts)); } catch (ArgumentException) { invalid = true; }
         Check(invalid, "Compact offset/count aliasing rejects before publication");
+    }
+    private static void MixedNative()
+    {
+        using var store = new Store { CaptureContactReports = true };
+        using var shape = new CircleShape { Radius = 10 };
+        var floor = store.Add(new(Mode.Static, new(0, 18), 0, default, 0));
+        var secondFloor = store.Add(new(Mode.Static, new(30, 18), 0, default, 0));
+        var a = store.Add(new(Mode.RigidLinear, default, 0, new(20, 30), 0, CanSleep: false));
+        var b = store.Add(new(Mode.RigidLinear, new(30, 0), 0, new(-20, 30), 0, CanSleep: false));
+        foreach (var body in new[] { floor, secondFloor, a, b }) store.AddShape(body, shape);
+        store.Simulate(.01f, Vector2.Zero);
+        Store.BodyHandle[] receivers = [a, b, a, b]; int[] limits = [4, 4, 4, 4], counts = new int[4], offsets = new int[4];
+        byte[] formats = [1, 0, 1, 1];
+        Span<Store.ContactReport> reference = stackalloc Store.ContactReport[16], full = stackalloc Store.ContactReport[4];
+        Span<Store.ContactIdentity> keys = stackalloc Store.ContactIdentity[12];
+        store.ReadContactReports(receivers, limits, counts, reference);
+        var expectedCounts = counts.ToArray(); var submissions = store.SubmissionCount; var bytes = store.ReportResultReadbackBytes;
+        store.ReadContactReports(new(receivers, limits, counts, full, keys, offsets, formats));
+        Check(store.SubmissionCount == submissions + 1, "Mixed duplicate receiver formats share one selected-result completion");
+        Check(counts.SequenceEqual(expectedCounts) && counts.All(value => value > 0), "Mixed duplicate receivers preserve complete nonempty counts");
+        var fullOffset = 0; var keyOffset = 0;
+        for (var i = 0; i < receivers.Length; i++)
+        {
+            for (var j = 0; j < counts[i]; j++)
+            {
+                var expected = reference[i * 4 + j];
+                if (formats[i] == 0) Check(full[fullOffset + j].Equals(expected), "Mixed numerical receivers retain every frozen report field");
+                else
+                {
+                    var key = keys[keyOffset + j];
+                    Check(key.Shape == expected.Shape && key.ShapeGeneration == expected.ShapeGeneration && key.ColliderShape == expected.ColliderShape &&
+                        key.ColliderShapeGeneration == expected.ColliderShapeGeneration, "Mixed compact receivers retain both observed shape generations");
+                }
+            }
+            if (formats[i] == 0) fullOffset += limits[i]; else keyOffset += limits[i];
+        }
+        Check(store.ReportResultReadbackBytes - bytes < 8 * 68, "Sparse numerical demand reduces the bounded mixed result payload");
+        int[] limitCounts = [4, 4, 4, 4];
+        store.ReadContactReports(new(receivers, limitCounts, limitCounts, full, keys, offsets, formats));
+        Check(limitCounts.SequenceEqual(expectedCounts), "Mixed publication commits aliased limits/counts only after every result segment");
+        var version = store.ContactResultVersion; var before = counts.ToArray(); var rejected = false;
+        try { store.ReadContactReports(new(receivers, limits, counts, full, keys, offsets, System.Runtime.InteropServices.MemoryMarshal.AsBytes(counts.AsSpan())[..4])); }
+        catch (ArgumentException) { rejected = true; }
+        Check(rejected && counts.SequenceEqual(before) && store.ContactResultVersion == version, "Aliased mixed formats reject before selection or output writes");
+        rejected = false;
+        try { store.ReadContactReports(new(receivers, limits, counts, full[..3], keys, offsets, formats)); }
+        catch (ArgumentException) { rejected = true; }
+        Check(rejected && counts.SequenceEqual(before) && store.ContactResultVersion == version, "An undersized mixed numerical destination rejects before selection");
+        rejected = false; formats[0] = 2;
+        try { store.ReadContactReports(new(receivers, limits, counts, full, keys, offsets, formats)); }
+        catch (ArgumentOutOfRangeException) { rejected = true; }
+        formats[0] = 1;
+        Check(rejected && counts.SequenceEqual(before) && store.ContactResultVersion == version, "An undefined receiver format rejects before selection");
+        rejected = false;
+        try { store.ReadContactReports(new(receivers, limits, counts, full, System.Runtime.InteropServices.MemoryMarshal.Cast<Store.ContactReport, Store.ContactIdentity>(full)[..12], offsets, formats)); }
+        catch (ArgumentException) { rejected = true; }
+        Check(rejected && counts.SequenceEqual(before) && store.ContactResultVersion == version, "Overlapping mixed result destinations reject before output writes");
+        rejected = false;
+        Span<Store.ContactReport> aliasData = stackalloc Store.ContactReport[16];
+        var aliasLimits = System.Runtime.InteropServices.MemoryMarshal.Cast<Store.ContactReport, int>(aliasData)[..4]; aliasLimits.Fill(4);
+        try { store.ReadContactReports(new(receivers, aliasLimits, counts, aliasData[..4], keys, offsets, formats)); }
+        catch (ArgumentException) { rejected = true; }
+        Check(rejected && counts.SequenceEqual(before) && store.ContactResultVersion == version, "Result writes cannot replace limits still needed by later receiver segments");
+        store.SetPose(a, new(200, 100), 1); store.SetSolverVelocity(a, new(-90, 80), 3); store.Step(0, Vector2.Zero); store.Remove(floor);
+        Span<Store.ContactReport> late = stackalloc Store.ContactReport[1];
+        store.ReadFrozenContactReports(version, offsets[0], late);
+        Check(late[0].Equals(reference[0]), "A compact row in a mixed packet retains its numerical fields through authoring and collider removal");
     }
     private static void EagerStorage()
     {
@@ -179,6 +246,67 @@ internal static class GPUPhysicsContactKeyTests
             Frame(); Frame();
             var bytes = store.ReportResultReadbackBytes;
             for (var i = 0; i < 8; i++) Frame();
+            return store.ReportResultReadbackBytes - bytes;
+        }
+    }
+
+    private static void MixedScene()
+    {
+        const int count = 64;
+        using var world = new World(PhysicsServer.Backend.GPU);
+        using var root = new SubViewport { World = world };
+        using var circle = new CircleShape { Radius = 10 };
+        using var rectangle = new RectangleShape { Size = new(4000, 20) };
+        var floor = new StaticBody { Position = new(0, 20) }; floor.AddChild(new CollisionShape { Shape = rectangle }); root.AddChild(floor);
+        var bodies = new RigidBody[count];
+        for (var i = 0; i < count; i++)
+        {
+            var body = new RigidBody { Position = new(i * 30, 0), ContactMonitor = true, MaxContactsReported = 4, CanSleep = false, LockRotation = true };
+            body.AddChild(new CollisionShape { Shape = circle }); root.AddChild(body); bodies[i] = body;
+        }
+        var quiet = new RigidBody { Freeze = true, ContactMonitor = true, MaxContactsReported = 128 }; root.AddChild(quiet);
+        using var tree = new SceneTree(root);
+        PhysicsServer.AreaSetGravity(world.Space, 60);
+        var space = PhysicsServer.Service.GetSceneSpace(world.Space); var store = space.GPUStore!; var observed = 0;
+        PhysicsServer.BodySetStateSyncCallback(bodies[count / 2].GetRID(), state =>
+        {
+            Check(state.GetContactCount() > 0 && state.GetContactCollider(0) == floor.GetRID() && state.GetContactLocalNormal(0).LengthSquared() > .99f,
+                "The sparse numerical receiver observes its actual floor and unit normal");
+            _ = state.GetContactImpulse(0); observed++;
+        });
+        for (var i = 0; i < 128; i++) Frame();
+        Check(space.GPUContactStagingBytes.Reports <= 8 * 68 && space.GPUContactStagingBytes.Keys > 0,
+            "One numerical receiver does not reserve numerical staging for unrelated monitors");
+        var compact = Measure(false); var full = Measure(true);
+        Check(compact < full / 2 && observed > 0, "One numerical callback keeps unrelated receiver results compact");
+        space.ForceFullGPUContactReports = false; Frame(); Frame();
+        var view = PhysicsServer.BodyGetDirectState(bodies[1].GetRID())!; _ = view.GetContactImpulse(0);
+        var promotedBytes = store.ReportResultReadbackBytes; var promotedReads = store.ReportReadCount;
+        Frame();
+        promotedBytes = store.ReportResultReadbackBytes - promotedBytes;
+        Check(promotedBytes > compact / 16 && promotedBytes < full / 16 && store.ReportReadCount == promotedReads + 1,
+            "A late numerical getter promotes only its receiver in the next single-read publication");
+        using (var checkpoint = PhysicsServer.SpaceCreateCheckpoint(world.Space)) checkpoint.Restore();
+        using var map = new PhysicsSnapshotMap(world.Space);
+        for (var i = 0; i < count; i++) map.Bind((ulong)i + 1, 1, bodies[i].GetRID());
+        map.Bind(count + 1, 1, floor.GetRID()); map.Bind(count + 2, 1, quiet.GetRID());
+        var packet = new PhysicsSnapshot(2 << 20); map.Capture(packet); map.Apply(packet);
+        Check(PhysicsServer.BodyGetDirectState(bodies[^1].GetRID())!.GetContactCollider(0) == floor.GetRID(), "Mixed local/portable snapshots preserve compact receiver contacts");
+        Console.WriteLine($"Mixed contact scene: {count} contacting receivers + empty receiver/one numerical callback, full/compact result bytes={full}/{compact}; local/portable snapshots passed.");
+
+        void Frame()
+        {
+            for (var i = 0; i < count; i++) { bodies[i].Position = new(i * 30, 0); bodies[i].LinearVelocity = new(5, 20); }
+            tree.PhysicsFrame(1d / 60);
+        }
+        long Measure(bool allFull)
+        {
+            space.ForceFullGPUContactReports = allFull; Frame(); Frame(); AllocationWarmupCheck.Collect();
+            var bytes = store.ReportResultReadbackBytes; var reads = store.ReportReadCount;
+            var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 16; i++) Frame();
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(owner == 0 && all == 0 && store.ReportReadCount == reads + 16, "Mixed complete frames retain zero owner/all-thread allocation and one contact read each");
             return store.ReportResultReadbackBytes - bytes;
         }
     }

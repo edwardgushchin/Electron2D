@@ -104,7 +104,7 @@ public partial class PhysicsDirectBodyState : ElectronObject
     {
         Access();
         if ((uint)index >= (uint)_contactCount) throw new ArgumentOutOfRangeException(nameof(index));
-        if (details) { _space.RequestGPUContactDetails(); MaterializeGPUContacts(); }
+        if (details) { if (_space.GPUStore is not null) _runtime.GPUContactDetailsRequested = true; MaterializeGPUContacts(); }
         return _contacts[index];
     }
 
