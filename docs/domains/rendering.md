@@ -1,3 +1,5 @@
+[Built-in rendering textures](../components/rendering-builtin-textures.md) expose lazy RGB8 test/white RID sources through the ordinary native canvas/shader/cache lifetime.
+
 [Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits.
 
 [Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) connects existing Image descriptors to complete independent-layer GPU loads/stores/R32 atomics, fixed descriptor arrays and retained TextureArrayRD consumers. No public type or signature is added.

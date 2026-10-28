@@ -10,6 +10,15 @@ Last updated: 2026-10-29
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
 
+## Built-in textures
+
+| Declaration | Contract |
+| --- | --- |
+| `public static RID GetTestTexture()` | Lazily creates and caches the current renderer's 256-by-256 RGB8 grid/gradient test image. |
+| `public static RID GetWhiteTexture()` | Lazily creates and caches the current renderer's 4-by-4 RGB8 opaque white image. |
+
+Both identities use ordinary owned-texture drawing, updates, replacement and retirement. Free/source consumption permits original-image recreation; a new renderer has fresh caches. Warm calls retain identity without allocating. See [pixels, ownership and verification](../components/rendering-builtin-textures.md). Source: [RenderingServer.BuiltinTextures.cs](../../src/Servers/Rendering/RenderingServer.BuiltinTextures.cs).
+
 ## Viewport render time
 
 | Declaration | Contract |

@@ -179799,6 +179799,32 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.GetTestTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetTestTexture",
+    "signature": "public static Electron2D.RID GetTestTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.GetWhiteTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetWhiteTexture",
+    "signature": "public static Electron2D.RID GetWhiteTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.GlobalShaderParameterAdd(System.String,Electron2D.RenderingServer.GlobalShaderParameterType,System.ReadOnlySpan\u003CSystem.Single\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",

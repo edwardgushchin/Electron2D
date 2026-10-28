@@ -173,6 +173,8 @@ public sealed partial class RenderingServer
         var texture = RenderingTextureRegistry.OwnedResource(rid, this);
         if (texture is DrawableTexture writable) writable.EnsureCanRelease();
         _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid);
+        if (rid == _testTextureRID) _testTextureRID = default;
+        if (rid == _whiteTextureRID) _whiteTextureRID = default;
         if (texture is DrawableTexture drawable) drawable.ServerReleased = true; else if (texture is TextureRD deviceTexture) deviceTexture.ServerReleased = true; else if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
         texture.Dispose();
     }

@@ -1,3 +1,5 @@
+[Built-in test/white textures](rendering-builtin-textures.md) now provide renderer-owned cached calibration inputs through the ordinary RID drawing and shader sampling path.
+
 # Canvas rendering
 
 [Canvas matrix inputs](visual-shaders.md#canvas-matrix-inputs) retain original model and canvas bases during ordering, extend them through draw/mesh/instance transforms, and expose readonly numeric vertex matrices without recovering originals from a canvas inverse. Each viewport owns its pose snapshot.
