@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Electron2D;
 
 internal static partial class FontAntialiasingTests
@@ -52,6 +53,8 @@ internal static partial class FontAntialiasingTests
         try
         {
             using var face = new NativeFontPrecision(FontTestFixtures.OpenSans); var glyph = face.GetGlyphIndex('A');
+            LibraryVersion(null, Library(face), out var major, out var minor, out var patch);
+            var version = $"{major}.{minor}.{patch}";
             foreach (var aa in new[] { FontAntialiasing.None, FontAntialiasing.Gray, FontAntialiasing.LCD })
                 foreach (var layout in new[] { FontLCDSubpixelLayout.None, FontLCDSubpixelLayout.HorizontalRGB, FontLCDSubpixelLayout.HorizontalBGR, FontLCDSubpixelLayout.VerticalRGB, FontLCDSubpixelLayout.VerticalBGR })
                     foreach (var profile in new[] { (16, FontHinting.Normal, 0, 0), (16, FontHinting.Light, 16, 0), (28, FontHinting.None, 0, 0), (16, FontHinting.Light, 32, 64) })
@@ -63,13 +66,15 @@ internal static partial class FontAntialiasingTests
                         using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEnd(); var error = process.StandardError.ReadToEnd(); process.WaitForExit();
                         Check(process.ExitCode == 0 && string.IsNullOrWhiteSpace(error), "Raster oracle executes: " + error);
                         var lines = output.Trim().Split('\n'); var header = lines[0].Split(' ');
-                        Check(header[0] == "2.13.3" && raster.Width == int.Parse(header[1]) && raster.Height == int.Parse(header[2]) && raster.Left == int.Parse(header[3]) && raster.Top == int.Parse(header[4]) && raster.LCD == (header[5] == "1") && raster.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(lines[1])), $"Exact native raster aa={aa}, layout={layout}, profile={profile}."); count++;
+                        Check(header[0] == version && raster.Width == int.Parse(header[1]) && raster.Height == int.Parse(header[2]) && raster.Left == int.Parse(header[3]) && raster.Top == int.Parse(header[4]) && raster.LCD == (header[5] == "1") && raster.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(lines[1])), $"Exact native raster aa={aa}, layout={layout}, profile={profile}."); count++;
                     }
         }
         finally { File.Delete(path); }
         Check(count == 60, "Complete raster matrix."); Console.WriteLine("60 packaged FreeType oracle cases passed for Mono/Gray/LCD, all layouts, phases, hinting and outlines.");
     }
     private static void Fail(Resource _) => throw new Marker();
+    [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_library")] private static extern ref nint Library(NativeFontPrecision font);
+    [UnsafeAccessor(UnsafeAccessorKind.StaticMethod, Name = "FTLibraryVersion")] private static extern void LibraryVersion(NativeFontPrecision? owner, nint library, out int major, out int minor, out int patch);
     private sealed class Marker : Exception { }
     private static void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
     private static void Reject<T>(Action action) where T : Exception { try { action(); } catch (T) { return; } throw new InvalidOperationException("Expected " + typeof(T).Name); }

@@ -2,22 +2,29 @@ cmake_minimum_required(VERSION 3.16)
 project(Electron2DFreeType LANGUAGES C CXX)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include(FetchContent)
+include("${CMAKE_CURRENT_LIST_DIR}/verify-source.cmake")
+
+set(zlib_revision da607da739fa6047df13e66a2af6b8bec7c2a498)
+set(png_revision cd952f49f95bb27154ae77dbb103032d95f6e580)
+set(brotli_revision 028fb5a23661f123017c060daa546b55cf4bde29)
+set(harfbuzz_revision eb033319fc2ebe723597fa497d4bb4331bab8b6b)
+set(freetype_revision 0a0221a1347e2f1e07c395263540026e9a0aa7c7)
 
 FetchContent_Declare(Zlib
     GIT_REPOSITORY https://github.com/madler/zlib.git
-    GIT_TAG da607da739fa6047df13e66a2af6b8bec7c2a498)
+    GIT_TAG ${zlib_revision})
 FetchContent_Declare(Png
     GIT_REPOSITORY https://github.com/pnggroup/libpng.git
-    GIT_TAG cd952f49f95bb27154ae77dbb103032d95f6e580)
+    GIT_TAG ${png_revision})
 FetchContent_Declare(Brotli
     GIT_REPOSITORY https://github.com/google/brotli.git
-    GIT_TAG 028fb5a23661f123017c060daa546b55cf4bde29)
+    GIT_TAG ${brotli_revision})
 FetchContent_Declare(HarfBuzz
     GIT_REPOSITORY https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG eb033319fc2ebe723597fa497d4bb4331bab8b6b)
+    GIT_TAG ${harfbuzz_revision})
 FetchContent_Declare(FreeType
     GIT_REPOSITORY https://github.com/freetype/freetype.git
-    GIT_TAG 0a0221a1347e2f1e07c395263540026e9a0aa7c7)
+    GIT_TAG ${freetype_revision})
 
 set(BUILD_SHARED_LIBS OFF)
 set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -36,6 +43,7 @@ set(HB_BUILD_SUBSET OFF CACHE BOOL "" FORCE)
 set(HB_HAVE_FREETYPE OFF CACHE BOOL "" FORCE)
 set(HB_HAVE_CORETEXT OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(Zlib)
+verify_source(Zlib "${zlib_revision}")
 set(ZLIB_LIBRARY zlibstatic CACHE STRING "" FORCE)
 configure_file("${zlib_SOURCE_DIR}/zlib.h" "${zlib_BINARY_DIR}/zlib.h" COPYONLY)
 set(ZLIB_INCLUDE_DIR "${zlib_BINARY_DIR}" CACHE PATH "" FORCE)
@@ -44,6 +52,8 @@ if(NOT TARGET ZLIB::ZLIB)
     add_library(ZLIB::ZLIB ALIAS zlibstatic)
 endif()
 FetchContent_MakeAvailable(Png Brotli)
+verify_source(Png "${png_revision}")
+verify_source(Brotli "${brotli_revision}")
 if(NOT TARGET PNG::PNG)
     add_library(PNG::PNG ALIAS png_static)
 endif()
@@ -54,6 +64,10 @@ if(ANDROID)
     set(BUILD_SHARED_LIBS ON)
 endif()
 FetchContent_MakeAvailable(HarfBuzz)
+verify_source(HarfBuzz "${harfbuzz_revision}")
+if(NOT TARGET HarfBuzz::HarfBuzz)
+    add_library(HarfBuzz::HarfBuzz ALIAS harfbuzz)
+endif()
 if(ANDROID OR ELECTRON2D_STATIC_NATIVE)
     set_target_properties(harfbuzz PROPERTIES OUTPUT_NAME Electron2DHarfBuzz
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
@@ -72,13 +86,14 @@ set(FT_REQUIRE_ZLIB ON CACHE BOOL "" FORCE)
 set(FT_REQUIRE_PNG ON CACHE BOOL "" FORCE)
 set(FT_REQUIRE_BROTLI ON CACHE BOOL "" FORCE)
 set(FT_REQUIRE_HARFBUZZ ON CACHE BOOL "" FORCE)
+set(FT_DYNAMIC_HARFBUZZ OFF CACHE BOOL "" FORCE)
 set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS ON)
 if(ELECTRON2D_STATIC_NATIVE)
     set(BUILD_SHARED_LIBS OFF)
 endif()
 FetchContent_MakeAvailable(FreeType)
-include("${CMAKE_CURRENT_LIST_DIR}/freetype-context-oom.cmake")
+verify_source(FreeType "${freetype_revision}")
 include("${CMAKE_CURRENT_LIST_DIR}/freetype-woff2-memory.cmake")
 target_include_directories(freetype PRIVATE "${png_BINARY_DIR}")
 set_property(TARGET freetype PROPERTY VERSION)

@@ -67,50 +67,55 @@ Native outline faces now create an FT_Memory record with the same owned payload 
 
 This follows the [documented custom-memory library lifetime](https://freetype.org/freetype2/docs/reference/ft2-module_management.html#ft_new_library) and [memory callback protocol](https://freetype.org/freetype2/docs/reference/ft2-system_interface.html#ft_memoryrec). Face/metadata/glyph/raster allocations routed through FT_Memory now contribute alongside copied input/table buffers, without counting the wrappers twice. The rebuilt private WOFF2 producer also routes its Brotli decoder through this allocator, as qualified [below](#woff2-decoder-allocation-domain-2026-10-28). HarfBuzz, ICU and other independent native allocators remain separate domains. This does not complete either public total-memory selector.
 
-NativeFontAllocationTests verifies actual production face ownership, explicit/failed/finalizer cleanup, native callbacks and fail-at-every-request initialization/decoding/unhinted rendering. Its prepared shaping interval measures managed allocations; new raster image creation remains a cold allocating operation. Linux x64 CLR and strict full-trim NativeAOT pass all 1162 unhinted allocation-failure positions and 128 warmed shaping calls at strict 0/0 owner/all-thread managed bytes. Source-bound raster/cache/metadata/variation/paragraph checks pass, including 60 independent packaged-library raster oracle cases both with default properties and with truetype:interpreter-version=35. Real-window GPU and compatibility text checks pass; CPU/GPU owner/separate role profiles retain 512 zero-allocation full frames. The GPU rerun uses the current-main native render bridge; earlier stale-bridge failures are retained separately. Receipts, the native C reproduction, immutable cohort hashes and matching runtime/test/consumer PDB/resource proofs are under bin/freetype-allocation-accounting/2026-10-28/. The full ordinary suite and other platforms were not rerun for this slice. Native package export validation now also requires the four custom-library initialization/teardown entry points.
+The earlier **legacy 2.13.3 override qualification** used NativeFontAllocationTests to verify actual production face ownership, explicit/failed/finalizer cleanup, native callbacks and fail-at-every-request initialization/decoding/unhinted rendering. Its prepared shaping interval measures managed allocations; new raster image creation remains a cold allocating operation. Linux x64 CLR and strict full-trim NativeAOT pass all 1162 unhinted allocation-failure positions and 128 warmed shaping calls at strict 0/0 owner/all-thread managed bytes. Source-bound raster/cache/metadata/variation/paragraph checks pass, including 60 independent packaged-library raster oracle cases both with default properties and with truetype:interpreter-version=35. Real-window GPU and compatibility text checks pass; CPU/GPU owner/separate role profiles retain 512 zero-allocation full frames. The GPU rerun uses the current-main native render bridge; earlier stale-bridge failures are retained separately. Receipts, the native C reproduction, immutable cohort hashes and matching runtime/test/consumer PDB/resource proofs are under bin/freetype-allocation-accounting/2026-10-28/. The full ordinary suite and other platforms were not rerun for this slice. Native package export validation now also requires the four custom-library initialization/teardown entry points.
 
 ### Hinted allocation-failure guard (2026-10-28)
 
-The preceding packaged Linux 2.13.3 trial crashed at request 1158 of 1179.
-A fresh Debug build of the pinned producer reproduces the same native C failure:
-TT_New_Context returns null and tt_size_init_bytecode passes it to
-TT_Load_Context, which dereferences exec->memory. This is independent of the
-managed allocator callback ABI.
+The earlier Linux 2.13.3 reproduction is valid for the legacy source revision
+`42608f77f20749dd6ddc9e0536788eaad70ea4b5`: request 1158 of 1179 returned a
+null bytecode context that was dereferenced. Its backport checks, GDB stack,
+CLR/AOT receipts and libraries remain historical evidence under
+`bin/freetype-hinted-oom/2026-10-28/`.
 
-The private producer now backports the context-allocation check, matching the
-[upstream guard](https://github.com/freetype/freetype/blob/3f6dad8e4f82c4f9c7cf9ffbf82972b912c08e48/src/truetype/ttobjs.c#L1036).
-The source pin remains `0a0221a1347e2f1e07c395263540026e9a0aa7c7` (2.13.3).
-`tools/font-native/freetype-context-oom.cmake` generates a marked TrueType unit
-in the build directory; the dependency checkout stays unchanged. The exact
-initializer and compilation-unit checks fail configuration if the pinned layout
-changes. The macOS incremental source target includes this helper among its
-inputs. No new native export or public managed API is introduced.
+**Provenance correction:** those builds used explicit source overrides, not the
+recipe's declared pin `0a0221a1347e2f1e07c395263540026e9a0aa7c7`. That pin is
+FreeType **2.14.3** and already checks TT_New_Context before publishing it.
+The obsolete backport helper has been removed. The legacy 2.13.3 evidence does
+not qualify the pinned producer; the current qualification follows below.
 
-The target-native Electron2DFreeTypeCheck now injects failure at every allocation
-for both unhinted and hinted rendering, checks zero retained callback blocks and
-retries the same face after a failed bytecode-context allocation. Debug and
-Release pass all 1162/1179 positions. Release also passes both default properties
-and truetype:interpreter-version=35, including two successful context retries
-per run. The managed NativeFontAllocationTests now executes both complete
-failure matrices, production/finalizer cleanup and 128 warmed shaping calls at
-strict 0/0 owner/all-thread managed bytes on Linux CLR and full-trim NativeAOT.
-The AOT process maps the qualified FreeType and no CoreCLR.
+### Source revision qualification (2026-10-28)
 
-The qualified producer library SHA-256 is
-`8de7fa02d02599eebf027d51e22eb0c58861dfe07836b118cf0dc16dc3ef592c`.
-The root consumer also passes its allocation route, 60 independent raster-oracle
-cases under default properties and 60 under interpreter 35, plus the native
-raster-policy suite. Receipts, hashes, original failing GDB stack and commands
-are under `bin/freetype-hinted-oom/2026-10-28/`.
+All five earlier local overrides differed from the declared recipe revisions.
+Their FreeType/HarfBuzz versions were 2.13.3/5.2.0. The producer now rejects an
+incorrect Git HEAD or changed tracked source for every dependency, including
+source overrides. Successful configuration records each exact revision. The
+self-contained regression checks clean, changed, wrong-revision and unversioned
+inputs; the native workflow runs it before selecting its producer matrix.
 
-This qualifies the rebuilt library and explicit local consumer cohorts. Existing
-published/cached native packages must be rebuilt before they acquire the fix;
-their files were not replaced by these checks. Foreign targets, complete ordinary
-suite, independent allocation domains and coherent managed/native current/peak
-producers remain open. Physics declaration coverage stays **1365/1369 (99.71%)**,
-four Partial and 92 Excluded; neither memory selector is promoted by this fix.
+The actual pinned closure is FreeType **2.14.3**, HarfBuzz **14.5.1**, zlib
+**1.3.2**, libpng **1.6.59** and Brotli **1.2.0**. Its existing recipe revisions
+are unchanged. FreeType's default runtime HarfBuzz lookup is explicitly disabled;
+the supplied static target is used instead. A runtime version query confirms
+2.14.3 and embedded HarfBuzz 14.5.1, and the ELF dependency list has no dynamic
+HarfBuzz. The bytecode null-context check comes from that pinned upstream source.
 
-The focused FastTests route requires explicit native qualification: `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -- --freetype-allocation`. The existing consumer platform property admits the standard native package for that run; ordinary managed fast builds keep their existing dependency boundary.
+The WOFF2 generated unit now checks the actual 2.14.3 source hash. Native failure
+matrices pass **1172/1180** unhinted/hinted positions with zero retained blocks,
+two same-face context retries, decoder refusal reported as Out_Of_Memory and
+corrupt-stream cleanup, under default properties and interpreter 35. The raster
+oracle compares its version with the actual engine-owned FreeType library before
+checking every pixel; it no longer assumes a legacy package version.
+
+Linux CLR and full-trim NativeAOT pass these matrices, explicit/error/finalizer
+cleanup and 128 warmed shaping calls at strict 0/0 owner/all-thread managed bytes.
+The root consumer passes 120 independent raster comparisons across default and
+interpreter-35 properties and its raster-policy suite. A separate 60-case run on
+the legacy 2.13.3 library also passes the version-aware oracle. Cached packages,
+other platforms and complete ordinary-suite acceptance remain separate gates.
+
+Commands, exact revision receipts, the original configuration failure and current
+qualification are under `bin/font-source-provenance/2026-10-28/`. Qualified library
+SHA-256: `bf0006ee1e333aa90537282b937af6be7965721b98064283dedae7c702e8b836`.
 
 ### WOFF2 decoder allocation domain (2026-10-28)
 
@@ -133,7 +138,7 @@ dependency pin or public managed API changes.
 The target-native checker calibrates the opaque Brotli decoder-state allocation
 through its public callback API, then observes exactly one such allocation in
 the actual WOFF2 face's supplied domain. The preceding qualified library fails
-this check with zero observations. The rebuilt producer passes all **1172/1189**
+this check with zero observations. The legacy 2.13.3 override passes all **1172/1189**
 unhinted/hinted allocation-failure positions with zero retained blocks, including
 Out_Of_Memory from decoder-state refusal, same-face bytecode-context recovery and
 cleanup after a corrupt Brotli stream inside a valid WOFF2 directory. Both default
@@ -145,13 +150,14 @@ its allocator route, 60 independent raster-oracle cases under default properties
 60 under interpreter 35, and the raster-policy suite. Both consumer cohorts stay
 unchanged across their checks.
 
-Qualified library SHA-256:
+Legacy override library SHA-256:
 `58cbe1a5fa253466a2da64a5a8ae45f4955cac6fe57bcaed2b38dc8d7b60d2ba`.
 Commands, RED result, source-drift rejection, hashes and receipts are under
 `bin/freetype-woff2-memory/2026-10-28/`.
 
-This qualifies rebuilt producer storage, not cached packages or all native heap
-domains. HarfBuzz/ICU/other codecs and coherent managed/native current/peak remain
+Those receipts qualify the legacy override, not the declared source pins or cached
+packages. The corrected pinned-producer qualification is recorded above. Neither
+set of checks qualifies all native heap domains. HarfBuzz/ICU/other codecs and coherent managed/native current/peak remain
 open. Physics declaration coverage remains **1365/1369 (99.71%)**, four Partial
 and 92 Excluded.
 

@@ -414,6 +414,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     [StructLayout(LayoutKind.Sequential)] private struct GlyphInfo { internal uint Codepoint, Mask, Cluster, Var1, Var2; }
     [StructLayout(LayoutKind.Sequential)] private struct GlyphPosition { internal int XAdvance, YAdvance, XOffset, YOffset; internal uint Var; }
 
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Library_Version"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTLibraryVersion(nint library, out int major, out int minor, out int patch);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_New_Library"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTNewLibrary(FTMemory* memory, out nint library);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Add_Default_Modules"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTAddDefaultModules(nint library);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Set_Default_Properties"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTSetDefaultProperties(nint library);

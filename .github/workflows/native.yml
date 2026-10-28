@@ -60,6 +60,7 @@ jobs:
       - id: matrix
         run: |
           python3 -B tools/native/test_package.py
+          python3 -B tools/font-native/test_source_revision.py
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           from pathlib import Path
