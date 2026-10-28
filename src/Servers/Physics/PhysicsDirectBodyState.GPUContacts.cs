@@ -13,6 +13,7 @@ public partial class PhysicsDirectBodyState
     private void MaterializeGPUContacts()
     {
         if (!_gpuContactsPending) return;
+        _runtime.GPUContactDetailsRequested = true;
         ApplyGPUContactDetails(_gpuContactVersion, _space.ReadGPUContactRow(_gpuContactVersion, _gpuContactOffset, _gpuContactRows), _gpuContactOffset);
     }
     internal void ApplyGPUContactDetails(long version, ReadOnlySpan<GPUPhysicsBodyStore.ContactReport> reports, int offset = 0)

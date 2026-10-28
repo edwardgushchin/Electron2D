@@ -91,6 +91,9 @@ internal static partial class PhysicsPipelinePerformance
             body.AddChild(new CollisionShape { Shape = circle }); root.AddChild(body); bodies[i] = body;
         }
         using var tree = new SceneTree(root) { PhysicsInterpolation = true };
+        var numericalReceivers = Read("NUMERICAL_RECEIVERS", 0, 0, count);
+        Action<PhysicsDirectBodyState> numerical = static state => { if (state.GetContactCount() > 0) _ = state.GetContactImpulse(0); };
+        for (var i = 0; i < numericalReceivers; i++) PhysicsServer.BodySetStateSyncCallback(bodies[i * count / numericalReceivers].GetRID(), numerical);
         var setupMS = Stopwatch.GetElapsedTime(setupStart).TotalMilliseconds;
         try
         {
@@ -238,6 +241,7 @@ internal static partial class PhysicsPipelinePerformance
                 substeps = 4,
                 solverIterations = 16,
                 contactMonitor = true,
+                numericalContactReceivers = numericalReceivers,
                 maxContacts = 8,
                 interpolation = true,
                 sleeping = false,
@@ -264,6 +268,8 @@ internal static partial class PhysicsPipelinePerformance
                 uploadBytesPerTick = (double)upload / samples,
                 readbackBytesPerTick = (double)readback / samples,
                 contactResultReadbackBytesPerTick = (double)reportReadback / samples,
+                contactDeviceCapacityBytes = gpu?.ReportDeviceCapacityBytes,
+                contactTransferCapacityBytes = gpu?.ReportTransferCapacityBytes,
                 gpuContactStagingBytes = gpu is null ? null : new
                 {
                     keys = contactStaging.Keys,

@@ -27,6 +27,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal PhysicsDirectBodyState? View { get; private set; }
     internal bool ActiveBeforeStep;
     internal bool FieldsInitialized;
+    internal bool GPUContactDetailsRequested;
     internal bool Released;
 
     internal (PhysicsBody? Scene, PhysicsServerCollider? Server) Owners
