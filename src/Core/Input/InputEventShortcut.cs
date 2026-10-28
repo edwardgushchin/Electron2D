@@ -40,7 +40,9 @@ public sealed class InputEventShortcut : InputEvent
     /// <exception cref="ObjectDisposedException">The event is disposed.</exception>
     public override string ToString()
     {
-        ThrowIfDisposed(); return _shortcut is { IsDisposed: false } ? "InputEventShortcut: shortcut=" + _shortcut.GetAsText() : "None";
+        ThrowIfDisposed();
+        if (NativeScriptCallbacks?.StringRepresentation is { } stringify) return stringify();
+        return _shortcut is { IsDisposed: false } ? "InputEventShortcut: shortcut=" + _shortcut.GetAsText() : "None";
     }
     /// <inheritdoc />
     protected override InputEvent CreateEventInstance() => new InputEventShortcut();

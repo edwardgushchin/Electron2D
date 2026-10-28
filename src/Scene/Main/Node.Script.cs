@@ -18,11 +18,14 @@ public partial class Node
     /// <exception cref="ObjectDisposedException">The owner is disposed.</exception>
     public void SetScriptCallbacks<TNode>(NodeScriptCallbacks<TNode> callbacks) where TNode : Node
     {
-        ArgumentNullException.ThrowIfNull(callbacks); EnsureScriptCallbackInstallation(); ValidateMutation();
-        if (this is not TNode owner) throw new ArgumentException("The callback receiver role is incompatible with this node.", nameof(callbacks));
-        if (ScriptCallbacks is not null) throw new InvalidOperationException("This binding already has a callback set.");
-        callbacks.Issue(); var binding = new NodeScriptBinding(); callbacks.Populate(binding, owner);
-        ScriptCallbacks = binding; BoundScriptNotification = binding.Notification;
+        base.SetScriptCallbacks(callbacks);
+    }
+
+    internal void InstallNodeScriptCallbacks(ObjectScriptBinding callbacks)
+    {
+        ScriptCallbacks = callbacks as NodeScriptBinding;
+        var binding = ScriptCallbacks;
+        if (binding is null) return;
         if (binding.Draw is not null && this is CanvasItem item) item.InvalidateCanvas();
         if (IsNodeReady) EnableScriptCallbacks();
     }
@@ -38,12 +41,10 @@ public partial class Node
         if (callbacks.UnhandledInput is not null) UnhandledInputEnabled = true;
     }
 
-    internal Exception? RetireScriptCallbacks()
+    internal void ClearNodeScriptCallbacks()
     {
-        var callbacks = ScriptCallbacks; ScriptCallbacks = null; BoundScriptNotification = null;
+        var callbacks = ScriptCallbacks; ScriptCallbacks = null;
         if (callbacks?.Draw is not null && !IsDisposed && this is CanvasItem item) item.InvalidateCanvas();
-        try { callbacks?.Retired?.Invoke(); return null; }
-        catch (Exception error) { return error; }
     }
 
     internal void PrepareScriptCallbackDisposal()

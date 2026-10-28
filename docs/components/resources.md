@@ -139,6 +139,8 @@ owner/all-thread managed bytes; all 36 physical frame brackets pass at 0/0.
 These are functional/allocation results; the
 concurrent ordinary suite and GPU timings are separate evidence.
 
+Scene-local live Resource callbacks use [ResourceScriptCallbacks](../classes/ResourceScriptCallbacks.md) after native setup and stored restoration. They share common object callback installation and cleanup; an acquired graph whose setup fails remains owned by the existing rollback. See [common native callbacks](scripting.md#common-native-object-callbacks) for qualification and remaining resource hooks.
+
 ## Exclusions and deferred integration
 
 The component does not expose a public manual reference counter: managed memory remains owned by the runtime, while `IDisposable` performs deterministic logical cleanup. The first synchronous image-texture loader uses this weak path cache; it adds no manager-owned native payload or lease. A future shared-payload asset manager may use internal disposable leases when a concrete ownership transition requires them. Renderer IDs, further concrete payload schemas, imports, automatic reflection-based discovery and wider editor/import workflows remain deferred. Runtime packed scenes implement per-instance local duplication and automatic setup; persistent endpoint storage remains absent; typed archive resource/scene persistence executes through the resource-file component.

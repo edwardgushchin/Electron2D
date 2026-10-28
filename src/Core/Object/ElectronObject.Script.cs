@@ -12,6 +12,7 @@ public partial class ElectronObject
     { if (Volatile.Read(ref _scriptLifetimeOperation) == 1) throw new InvalidOperationException("RPC execution requires a completed script binding transition."); }
     [ThreadStatic] private static ElectronObject? _scriptCallbackOwner;
     internal Action<int, bool>? BoundScriptNotification;
+    internal ObjectScriptBinding? NativeScriptCallbacks { get; private set; }
     internal bool HasLiveScriptBinding => _scriptBinding is not null;
 
     /// <summary>Installs, replaces or detaches a registered live typed script binding on this existing owner.</summary>
@@ -93,10 +94,40 @@ public partial class ElectronObject
         try
         {
             try { old.Clear!(this); } catch (Exception failure) { error = failure; }
-            var native = this is Node node ? node.RetireScriptCallbacks() : null;
+            var native = RetireNativeScriptCallbacks();
             return error is null ? native : native is null ? error : new AggregateException(error, native);
         }
         finally { Volatile.Write(ref _constructionScript, null); }
+    }
+
+    /// <summary>Installs a fresh object callback set during this owner's synchronous registered live Script Bind.</summary>
+    /// <typeparam name="TObject">Compatible receiver role.</typeparam>
+    /// <param name="callbacks">Single-use typed callbacks and state-retirement function.</param>
+    /// <remarks>Shares one installation and retirement with node/resource specializations. Ordinary CLR hooks retain
+    /// their dispatch; installed property validation follows native validation. Metadata discovery runs only when queried.
+    /// Project Clear precedes automatic slot removal and Retired, including partial-bind cleanup and committed disposal.
+    /// Installation rejects worker/foreign calls and cannot replace another set in the same binding.</remarks>
+    /// <exception cref="ArgumentNullException">The set is null.</exception>
+    /// <exception cref="ArgumentException">This owner is incompatible with the receiver role.</exception>
+    /// <exception cref="InvalidOperationException">No matching Bind is active, a set exists, or the set was already used.</exception>
+    /// <exception cref="ObjectDisposedException">This owner is disposed.</exception>
+    public void SetScriptCallbacks<TObject>(ElectronObjectScriptCallbacks<TObject> callbacks) where TObject : ElectronObject
+    {
+        ArgumentNullException.ThrowIfNull(callbacks); EnsureScriptCallbackInstallation(); ValidateMutation();
+        if (this is not TObject owner) throw new ArgumentException("The callback receiver role is incompatible with this object.", nameof(callbacks));
+        if (NativeScriptCallbacks is not null) throw new InvalidOperationException("This binding already has a callback set.");
+        callbacks.Issue(); var binding = callbacks.CreateBinding(); callbacks.Populate(binding, owner);
+        NativeScriptCallbacks = binding; BoundScriptNotification = binding.Notification;
+        if (this is Node node) node.InstallNodeScriptCallbacks(binding);
+    }
+
+    private Exception? RetireNativeScriptCallbacks()
+    {
+        var callbacks = NativeScriptCallbacks; NativeScriptCallbacks = null; BoundScriptNotification = null;
+        Exception? error = null;
+        try { if (this is Node node) node.ClearNodeScriptCallbacks(); } catch (Exception failure) { error = failure; }
+        try { callbacks?.Retired?.Invoke(); } catch (Exception failure) { error = error is null ? failure : new AggregateException(error, failure); }
+        return error;
     }
 
     private void InvokeScriptBind(ScriptRegistration registration)

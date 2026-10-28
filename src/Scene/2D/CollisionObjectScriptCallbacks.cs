@@ -16,9 +16,10 @@ public class CollisionObjectScriptCallbacks<TObject> : CanvasItemScriptCallbacks
     public Action<TObject, int>? MouseShapeEnter { get; init; }
     /// <summary>Receives the departed global logical shape index.</summary>
     public Action<TObject, int>? MouseShapeExit { get; init; }
-    internal override void Populate(NodeScriptBinding target, TObject owner)
+    internal override void Populate(ObjectScriptBinding binding, TObject owner)
     {
-        base.Populate(target, owner);
+        base.Populate(binding, owner);
+        var target = (NodeScriptBinding)binding;
         target.InputEvent = InputEvent is { } input ? (viewport, value, shape) => input(owner, viewport, value, shape) : null;
         target.MouseEnter = MouseEnter is { } enter ? () => enter(owner) : null;
         target.MouseExit = MouseExit is { } exit ? () => exit(owner) : null;

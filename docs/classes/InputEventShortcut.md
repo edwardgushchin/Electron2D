@@ -4,6 +4,8 @@ Last updated: 2026-09-27
 
 Source: [`src/Core/Input/InputEventShortcut.cs`](../../src/Core/Input/InputEventShortcut.cs). Declaration: `public sealed class InputEventShortcut : InputEvent`. Inherits [InputEvent](InputEvent.md).
 
+An installed [common Script callback](../components/scripting.md#common-native-object-callbacks) may supply ToString. Disposed-event guards still apply; ordinary event text formatting remains the default.
+
 ## Description
 
 Activates an exact borrowed [Shortcut](Shortcut.md) through the ordinary scene shortcut stage. Construction sets the inherited pressed state to true; IsReleased and IsActionType are false. No public press setter or fake hardware binding is introduced. The event itself has no special IsMatch override: Shortcut.MatchesEvent performs identity matching.

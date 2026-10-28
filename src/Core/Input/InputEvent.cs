@@ -396,7 +396,11 @@ public abstract class InputEvent : Resource
     /// <summary>Returns <see cref="AsText"/>.</summary>
     /// <returns>The current human-readable event description.</returns>
     /// <exception cref="ObjectDisposedException">The event is disposing or disposed.</exception>
-    public override string ToString() => AsText();
+    public override string ToString()
+    {
+        ThrowIfDisposed();
+        return NativeScriptCallbacks?.StringRepresentation is { } stringify ? stringify() : AsText();
+    }
 }
 
 internal readonly record struct InputActionMatch(bool Pressed, float Strength, float RawStrength);

@@ -557,6 +557,7 @@ public class Resource : ElectronObject
     {
         ThrowIfDisposed();
         OnSetupLocalToScene();
+        NativeScriptCallbacks?.SetupLocalToScene?.Invoke();
     }
 
     /// <summary>Transfers ownership of a process-wide resource path to this resource.</summary>
@@ -687,9 +688,10 @@ public class Resource : ElectronObject
     }
 
     /// <summary>Returns a diagnostic string containing the optional resource name, path, runtime class, and instance identifier.</summary>
-    /// <returns>A stable diagnostic representation of this resource's current base state.</returns>
+    /// <returns>The installed live Script representation, or a diagnostic representation of current base state.</returns>
     public override string ToString()
     {
+        if (NativeScriptCallbacks?.StringRepresentation is { } stringify) return stringify();
         string name;
         string path;
 

@@ -38,6 +38,8 @@ callbacks have no implicit synchronization or thread affinity.
 
 Injected stored [Script properties](../components/scripting.md#native-property-schemas) copy after native/custom state by matching name and exact value type. Public CopyFromResource retains the target binding and shallow aliases; deep copies clone containers and follow the existing resource graph policy. Custom copy hooks continue to own ordinary CLR fields.
 
+[ResourceScriptCallbacks](ResourceScriptCallbacks.md) adds a typed SetupLocalToScene hook after native setup, when stored data and the new local scene are available. It shares common object metadata/notification/string callbacks and retirement. Setup failure follows ordinary acquired-graph rollback; RID/reset/path callbacks are separate remaining work.
+
 Stored base state includes inherited `ElectronObject.CanTranslateMessages` and `TranslationDomain` together with resource name and locality. Shallow/deep duplicates, scene-local resource graphs and `CopyFromResource` retain that policy. A successful copy publishes its coalesced `Changed` event after inherited settings and custom stored state are applied. Path/scene identity and runtime subscribers retain their separate ownership rules.
 
 Ordinary nested `Script` references retain the same asset under every deep-copy mode, including built-in paths. Force-copy fields and explicit Script root copies create independent wrappers; they do not replace ordinary references even when visited first. Scene instantiation shares non-local ordinary scripts and duplicates local scripts once per scene. Isolated authoring capture keeps independent source snapshots.

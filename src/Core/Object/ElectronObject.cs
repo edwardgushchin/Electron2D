@@ -202,6 +202,7 @@ public partial class ElectronObject : IDisposable
     /// <returns>A read-only snapshot whose property names are unique using ordinal comparison.</returns>
     /// <remarks>Installed live Script declarations extend the ordinary CLR list. Discovery uses the immutable binding,
     /// including compatible registered code bases, independently of borrowed source edits or disposal.
+    /// Installed object callbacks may append descriptors and customize metadata after native validation.
     /// Existing project-owner descriptors may supply declared fields; native-name collisions reject.
     /// Returned descriptors retain their ordinary explicit typed callback/lifetime contract.</remarks>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
@@ -217,19 +218,36 @@ public partial class ElectronObject : IDisposable
 
         var properties = new List<PropertyDescriptor>();
         var names = new HashSet<string>(StringComparer.Ordinal);
+        var nativeNames = new HashSet<string>(StringComparer.Ordinal);
+        var supplied = new HashSet<PropertyDescriptor>(ReferenceEqualityComparer.Instance);
 
-        foreach (var property in GetPropertyDescriptors()) Add(property);
+        foreach (var property in GetPropertyDescriptors())
+        {
+            if (property is not null && property.OwnerType.Assembly == typeof(Script).Assembly) nativeNames.Add(property.Name);
+            Add(property!);
+        }
+        if (includeScript && NativeScriptCallbacks?.PropertyDescriptors is { } discover)
+            foreach (var property in discover()) AddScript(property);
         if (includeScript && LiveScriptRegistration is { } script)
-            foreach (var property in Script.Properties(script, GetType()))
-                if (!names.Contains(property.Name) || property.OwnerType.Assembly == typeof(Script).Assembly && !properties.Any(p => ReferenceEquals(p, property))) Add(property);
+            foreach (var property in Script.Properties(script, GetType())) AddScript(property);
 
         return properties.AsReadOnly();
+
+        void AddScript(PropertyDescriptor property)
+        {
+            ArgumentNullException.ThrowIfNull(property);
+            if (supplied.Contains(property)) return;
+            if (nativeNames.Contains(property.Name)) throw new InvalidOperationException($"Script property '{property.Name}' conflicts with a native declaration.");
+            if (!names.Contains(property.Name) || property.OwnerType.Assembly == typeof(Script).Assembly) Add(property);
+        }
 
         void Add(PropertyDescriptor property)
         {
             ArgumentNullException.ThrowIfNull(property);
+            supplied.Add(property);
 
             var validated = ValidateProperty(property);
+            if (validated is not null && NativeScriptCallbacks?.ValidateProperty is { } validate) validated = validate(validated);
             if (validated is null)
                 return;
 
@@ -246,6 +264,8 @@ public partial class ElectronObject : IDisposable
     /// <summary>Reports whether a tooling property currently differs from its revert value.</summary>
     /// <param name="property">A descriptor compatible with this object.</param>
     /// <returns><see langword="true"/> when the property has a distinct revert value; otherwise <see langword="false"/>.</returns>
+    /// <remarks>An installed live Script availability callback precedes the protected policy.
+    /// Typed descriptors retain their actual revert values and writes.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="property"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="property"/> is not compatible with this object.</exception>
     /// <exception cref="ObjectDisposedException">The object is disposing on another thread or has finished disposing.</exception>
@@ -255,7 +275,7 @@ public partial class ElectronObject : IDisposable
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(property);
         property.EnsureCompatible(this);
-        return CanRevertProperty(property);
+        return NativeScriptCallbacks?.CanRevertProperty is { } revert ? revert(property) : CanRevertProperty(property);
     }
 
     /// <summary>Restores a tooling property to its current typed revert value.</summary>
@@ -376,7 +396,7 @@ public partial class ElectronObject : IDisposable
             if (!canceled)
             {
                 if (this is Node || this is Resource and not Image) RenderingServer.NotifyRenderMutation();
-                if (this is Node { ScriptCallbacks: not null } scriptNode)
+                if (this is Node scriptNode && NativeScriptCallbacks is not null)
                     try { scriptNode.PrepareScriptCallbackDisposal(); } catch (Exception error) { disposalError = error; }
                 var scriptError = RetireScriptBinding();
                 if (scriptError is not null) disposalError = disposalError is null ? scriptError : new AggregateException(disposalError, scriptError);
@@ -523,5 +543,5 @@ public partial class ElectronObject : IDisposable
 
     /// <summary>Returns a diagnostic string containing the runtime class name and instance identifier.</summary>
     /// <returns>A string in the form <c>&lt;ClassName&gt;#&lt;InstanceID&gt;</c>.</returns>
-    public override string ToString() => $"{ClassName}#{InstanceID}";
+    public override string ToString() => NativeScriptCallbacks?.StringRepresentation is { } stringify ? stringify() : $"{ClassName}#{InstanceID}";
 }

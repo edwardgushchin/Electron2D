@@ -9,9 +9,10 @@ public sealed class RigidBodyScriptCallbacks<TBody> : CollisionObjectScriptCallb
     /// <summary>Runs on the ordinary owner integration lane with its borrowed solved body/contact state.</summary>
     /// <remarks>Uses the same lifetime, mutation and error policy as the native protected integration hook.</remarks>
     public Action<TBody, PhysicsDirectBodyState>? IntegrateForces { get; init; }
-    internal override void Populate(NodeScriptBinding target, TBody owner)
+    internal override void Populate(ObjectScriptBinding binding, TBody owner)
     {
-        base.Populate(target, owner);
+        base.Populate(binding, owner);
+        var target = (NodeScriptBinding)binding;
         target.IntegrateForces = IntegrateForces is { } integrate ? state => integrate(owner, state) : null;
     }
 }

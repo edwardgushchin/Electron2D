@@ -4569,6 +4569,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "ElectronObjectScriptCallbacks\u00601",
+    "signature": "public class Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Engine",
     "kind": "type",
     "declaringType": "Electron2D.Engine",
@@ -8156,7 +8169,7 @@
     "name": "NodeScriptCallbacks\u00601",
     "signature": "public class Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
     "visibility": "public",
-    "baseType": "System.Object",
+    "baseType": "ElectronObjectScriptCallbacks\u003CTNode\u003E",
     "interfaces": [],
     "parameters": null,
     "returnType": null,
@@ -11438,6 +11451,19 @@
     "interfaces": [
       "System.IDisposable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "name": "ResourceScriptCallbacks\u00601",
+    "signature": "public class Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "visibility": "public",
+    "baseType": "ElectronObjectScriptCallbacks\u003CTResource\u003E",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -22130,6 +22156,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": ".ctor",
+    "signature": "public ElectronObjectScriptCallbacks()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.Entity..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.Entity",
@@ -26644,6 +26683,19 @@
     "declaringType": "Electron2D.ResourcePreloader",
     "name": ".ctor",
     "signature": "public ResourcePreloader()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ResourceScriptCallbacks\u003CTResource\u003E..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "name": ".ctor",
+    "signature": "public ResourceScriptCallbacks()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -112403,6 +112455,25 @@
       {
         "name": "script",
         "type": "Electron2D.Script",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ElectronObject.SetScriptCallbacks\u00601(ElectronObjectScriptCallbacks\u003CTObject\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ElectronObject",
+    "name": "SetScriptCallbacks",
+    "signature": "public System.Void SetScriptCallbacks\u003CTObject\u003E(ElectronObjectScriptCallbacks\u003CTObject\u003E callbacks)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "callbacks",
+        "type": "ElectronObjectScriptCallbacks\u003CTObject\u003E",
         "default": null
       }
     ],
@@ -259897,6 +259968,84 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E.CanRevertProperty()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "CanRevertProperty",
+    "signature": "public Func\u003CTObject, Electron2D.PropertyDescriptor, System.Boolean\u003E CanRevertProperty { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTObject, Electron2D.PropertyDescriptor, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E.Notification()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "Notification",
+    "signature": "public Action\u003CTObject, System.Int32, System.Boolean\u003E Notification { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject, System.Int32, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E.PropertyDescriptors()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "PropertyDescriptors",
+    "signature": "public Func\u003CTObject, System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E\u003E PropertyDescriptors { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTObject, System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E.Retired()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "Retired",
+    "signature": "public Action\u003CTObject\u003E Retired { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTObject\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E.StringRepresentation()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "StringRepresentation",
+    "signature": "public Func\u003CTObject, System.String\u003E StringRepresentation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTObject, System.String\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E.ValidateProperty()",
+    "kind": "property",
+    "declaringType": "Electron2D.ElectronObjectScriptCallbacks\u003CTObject\u003E",
+    "name": "ValidateProperty",
+    "signature": "public Func\u003CTObject, Electron2D.PropertyDescriptor, Electron2D.PropertyDescriptor\u003E ValidateProperty { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Func\u003CTObject, Electron2D.PropertyDescriptor, Electron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Engine.ArchitectureName()",
     "kind": "property",
     "declaringType": "Electron2D.Engine",
@@ -269127,19 +269276,6 @@
     "value": null
   },
   {
-    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Notification()",
-    "kind": "property",
-    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
-    "name": "Notification",
-    "signature": "public Action\u003CTNode, System.Int32, System.Boolean\u003E Notification { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Action\u003CTNode, System.Int32, System.Boolean\u003E",
-    "value": null
-  },
-  {
     "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.PhysicsProcess()",
     "kind": "property",
     "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
@@ -269171,19 +269307,6 @@
     "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
     "name": "Ready",
     "signature": "public Action\u003CTNode\u003E Ready { get; set; }",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Action\u003CTNode\u003E",
-    "value": null
-  },
-  {
-    "id": "property:Electron2D.NodeScriptCallbacks\u003CTNode\u003E.Retired()",
-    "kind": "property",
-    "declaringType": "Electron2D.NodeScriptCallbacks\u003CTNode\u003E",
-    "name": "Retired",
-    "signature": "public Action\u003CTNode\u003E Retired { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -279563,6 +279686,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ResourceScriptCallbacks\u003CTResource\u003E.SetupLocalToScene()",
+    "kind": "property",
+    "declaringType": "Electron2D.ResourceScriptCallbacks\u003CTResource\u003E",
+    "name": "SetupLocalToScene",
+    "signature": "public Action\u003CTResource\u003E SetupLocalToScene { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Action\u003CTResource\u003E",
     "value": null
   },
   {

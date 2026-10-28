@@ -12,6 +12,8 @@ Last updated: 2026-09-24
 
 > Provides the abstract base contract for all engine input events.
 
+An installed [common Script callback](../components/scripting.md#common-native-object-callbacks) may supply ToString. Disposed-event guards still apply; ordinary event text formatting remains the default.
+
 ## Description
 
 Provides the abstract base contract for all engine input events.

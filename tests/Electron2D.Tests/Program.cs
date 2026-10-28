@@ -977,6 +977,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICAL_BONE_CHILD") is
     PhysicalBoneTests.RunChild(physicalChild, PhysicalBoneTests.SelectedBackend()); return;
 }
 // Focused script routes precede the shared-collider shorthand, which also consumes the threaded flag.
+if (args.Length == 2 && args[0] == "--object-callback-child") { ObjectCallbackTests.Child(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OBJECT_SCRIPT_CALLBACKS") is { } objectCallbackBackend)
+{
+    ObjectCallbackTests.Run(objectCallbackBackend switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for object Script callbacks.") }, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1"); return;
+}
 if (args.Length == 2 && args[0] == "--script-property-child") { ScriptPropertyTests.Child(args[1]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_PROPERTIES") is { } propertyBackend)
 {
@@ -1989,6 +1994,7 @@ ScriptObjectTests.Run(PhysicsServer.Backend.CPU); ScriptObjectTests.Run(PhysicsS
 LiveScriptBindingTests.Run(PhysicsServer.Backend.CPU); LiveScriptBindingTests.Run(PhysicsServer.Backend.GPU);
 NativeCallbackTests.Run(PhysicsServer.Backend.CPU, false); NativeCallbackTests.Run(PhysicsServer.Backend.GPU, false);
 ScriptPropertyTests.Run(PhysicsServer.Backend.CPU, false); ScriptPropertyTests.Run(PhysicsServer.Backend.GPU, false);
+ObjectCallbackTests.Run(PhysicsServer.Backend.CPU, false); ObjectCallbackTests.Run(PhysicsServer.Backend.GPU, false);
 ExtensionSourceTests.Run();
 foreach (var backend in new PhysicsServer.Backend?[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU, null })
     foreach (var threaded in new[] { false, true }) PhysicsScriptFactoryTests.Run(backend, threaded);

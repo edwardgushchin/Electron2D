@@ -11,9 +11,10 @@ public class CanvasItemScriptCallbacks<TItem> : NodeScriptCallbacks<TItem> where
     /// Retained replay does not invoke it. Failure discards partial recording and leaves a pending retry.
     /// Installing or retiring this callback requests a fresh recording.</remarks>
     public Action<TItem>? Draw { get; init; }
-    internal override void Populate(NodeScriptBinding target, TItem owner)
+    internal override void Populate(ObjectScriptBinding binding, TItem owner)
     {
-        base.Populate(target, owner);
+        base.Populate(binding, owner);
+        var target = (NodeScriptBinding)binding;
         target.Draw = Draw is { } draw ? () => draw(owner) : null;
     }
 }
