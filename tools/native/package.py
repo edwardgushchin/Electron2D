@@ -44,7 +44,8 @@ def required_exports(name):
     if "Electron2DWebP" in name:
         return WEBP_EXPORTS
     if "FreeType" in name:
-        return {"FT_Init_FreeType", "FT_New_Memory_Face", "FT_Load_Glyph"}
+        return {"FT_Init_FreeType", "FT_New_Library", "FT_Add_Default_Modules", "FT_Set_Default_Properties",
+                "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph"}
     if "Crypto" in name or "crypto" in name:
         return {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"}
     if "SSL" in name or "ssl" in name:

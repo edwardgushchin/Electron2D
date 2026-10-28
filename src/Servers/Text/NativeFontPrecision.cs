@@ -50,7 +50,11 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if (immutableData.Length == 0) throw new ArgumentException("Font data is empty.", nameof(immutableData));
         try
         {
-            CheckFT(FTInit(out _library));
+            _ftMemory = (FTMemory*)NativeAllocation.Alloc((nuint)sizeof(FTMemory));
+            *_ftMemory = FTMemory.Create();
+            CheckFT(FTNewLibrary(_ftMemory, out _library));
+            FTAddDefaultModules(_library);
+            FTSetDefaultProperties(_library);
             _data = (byte*)NativeAllocation.Alloc((nuint)immutableData.Length);
             immutableData.CopyTo(new Span<byte>(_data, immutableData.Length));
             CheckFT(FTNewMemoryFace(_library, _data, new CLong(immutableData.Length), new CLong(faceIndex), out _face));
@@ -263,12 +267,14 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if (_hbFace != 0) HBFaceDestroy(_hbFace);
         if (_face != 0) FTDoneFace(_face);
         if (_library != 0) FTDone(_library);
+        NativeAllocation.Free(_ftMemory);
         if (_bitmapHandle.IsAllocated) _bitmapHandle.Free();
         NativeAllocation.Free(_callbacks);
         NativeAllocation.Free(_data);
         _buffer = _font = _parentFont = _hbFace = _face = _library = 0;
         _callbacks = null;
         _data = null;
+        _ftMemory = null;
     }
 
     private static void CheckFT(int error)
@@ -408,8 +414,10 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
     [StructLayout(LayoutKind.Sequential)] private struct GlyphInfo { internal uint Codepoint, Mask, Cluster, Var1, Var2; }
     [StructLayout(LayoutKind.Sequential)] private struct GlyphPosition { internal int XAdvance, YAdvance, XOffset, YOffset; internal uint Var; }
 
-    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Init_FreeType"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTInit(out nint library);
-    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Done_FreeType"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTDone(nint library);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_New_Library"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTNewLibrary(FTMemory* memory, out nint library);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Add_Default_Modules"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTAddDefaultModules(nint library);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Set_Default_Properties"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FTSetDefaultProperties(nint library);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Done_Library"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTDone(nint library);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_New_Memory_Face"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTNewMemoryFace(nint library, byte* data, CLong size, CLong faceIndex, out nint face);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Done_Face"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTDoneFace(nint face);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Set_Char_Size"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTSetCharSize(nint face, CLong width, CLong height, uint horizontalDPI, uint verticalDPI);

@@ -7383,7 +7383,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Direct owned CPU native payloads now have an allocation-boundary current/peak ledger, including FAudio callbacks, alignment, realloc failure preservation and transient peaks. Coherent managed-heap and remaining native composition remains open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md."
+      "reason": "Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Direct owned CPU native payloads now have an allocation-boundary current/peak ledger, including FAudio and FreeType FT_Memory callbacks, alignment, realloc failure preservation and transient peaks. Coherent managed-heap and remaining native composition remains open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md."
     },
     {
       "godot": [
@@ -7416,7 +7416,7 @@
         "Performance::enum_value:Monitor.MEMORY_STATIC_MAX"
       ],
       "state": "Unimplemented",
-      "reason": "Trigger: actual coherent managed/native current and peak allocation producers with explicit lifetime. Deferred-message retained capacity and the direct owned native payload ledger execute independently. Managed heap, marshalled strings and libraries without supplied allocators remain outside the complete composed producer; a sampled GC size, process RSS or sum of unrelated domain peaks does not establish total current/peak semantics."
+      "reason": "Trigger: actual coherent managed/native current and peak allocation producers with explicit lifetime. Deferred-message retained capacity and the direct owned native payload ledger, including FreeType-owned callback allocations, execute independently. Managed heap, marshalled strings and libraries without supplied allocators remain outside the complete composed producer; a sampled GC size, process RSS or sum of unrelated domain peaks does not establish total current/peak semantics."
     },
     {
       "godot": [

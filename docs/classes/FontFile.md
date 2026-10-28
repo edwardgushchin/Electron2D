@@ -1,6 +1,6 @@
 # FontFile
 
-Last updated: 2026-10-20
+Last updated: 2026-10-28
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -13,7 +13,7 @@ Last updated: 2026-10-20
 
 ## Description and example
 
-Owns scalable font source bytes and independent native metric, shaping and glyph caches. Replacement retains retired native faces only until active readers finish, then explicitly releases their handles and encoded bytes. Already recorded immutable glyph images remain valid; their native renderer payload is released after the first unused frame. Use Data for copied in-memory data or LoadDynamicFont for an operating-system, res:// or user:// file. TTF, OTF, TTC, WOFF and WOFF2 use the SFNT loading path; Type 1 PFB/PFA uses native outline callbacks and optional paired PFM/AFM metrics; bitmap font import and indexed authoring execute through the common path below. Font provides measurement, drawing and ordered borrowed fallbacks.
+Owns scalable font source bytes and independent native metric, shaping and glyph caches. Replacement retains retired native faces only until active readers finish, then explicitly releases their handles and encoded bytes. Already recorded immutable glyph images remain valid; their native renderer payload is released after the first unused frame. Use Data for copied in-memory data or LoadDynamicFont for an operating-system, res:// or user:// file. TTF, OTF, TTC, WOFF and WOFF2 use the SFNT loading path; Type 1 PFB/PFA uses native outline callbacks and optional paired PFM/AFM metrics; bitmap font import and indexed authoring execute through the common path below. Font provides measurement, drawing and ordered borrowed fallbacks. Native outline storage now follows the [FreeType allocation lifetime](../coverage/performance-producers.md#freetype-owned-allocation-domain); this does not complete total runtime-memory monitors.
 
 ```csharp
 using var font = new FontFile();

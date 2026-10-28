@@ -1,9 +1,9 @@
 # NativeFontPrecision
 
-Last updated: 2026-10-14
+Last updated: 2026-10-28
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
-- Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
+- Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Memory.cs](../../src/Servers/Text/NativeFontPrecision.Memory.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
 - Component: [canvas rendering](../components/canvas-rendering.md)
 - Visibility: internal; native handles and ABI records are unavailable to engine consumers.
 
@@ -34,6 +34,8 @@ C-long fields and arguments retain `CLong`/`CULong` widths. Native returns use i
 | `Dispose()` | Destroys buffer/fonts/face before FreeType and source bytes; repeated disposal is harmless. |
 
 ## Shaping and raster ownership
+
+[Owned FreeType memory](../coverage/performance-producers.md#freetype-owned-allocation-domain) uses NativeFontPrecision.Memory.cs to retain the custom allocator through face/library retirement. The ordinary module/property initialization, source buffers and callback error policy remain authoritative.
 
 <a id="nativetextdirection"></a><a id="nativefontfeature"></a><a id="nativeshapedglyph"></a>
 NativeTextDirection uses LTR=4, RTL=5, TTB=6 and BTT=7. NativeFontFeature contains Tag, Value, Start and End; its default range is the complete scalar domain. NativeShapedGlyph contains GlyphIndex, Cluster, signed 26.6 XAdvance/YAdvance/XOffset/YOffset and public HarfBuzz Flags. Unsafe-break/concat and safe-tatweel bits are preserved; the latter lets layout select valid Arabic elongation boundaries.
