@@ -11,6 +11,7 @@ internal static partial class ScriptTests
     internal static void Register()
     {
         if (_registered) return;
+        Script.RegisterBinding<BaseButton, ScriptAbstractBindingCode>("ScriptTest.AbstractOwner", ScriptAbstractBindingCode.SourcePath, null, ScriptAbstractBindingCode.Bind, ScriptAbstractBindingCode.Clear);
         Script.RegisterAbstract<ScriptBaseActor>("ScriptTest.Base", ScriptBaseActor.SourcePath, ScriptBaseActor.PowerProperty);
         Script.RegisterNode("ScriptTest.Actor", ScriptActor.SourcePath, CreateActor, ScriptActor.CountProperty, ScriptActor.PeerProperty);
         Script.RegisterResource("ScriptTest.Paint", ScriptPaintEffect.SourcePath, CreatePaint);
@@ -23,6 +24,7 @@ internal static partial class ScriptTests
     {
         if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_RPC_PHASE") is { } phase) { ScriptRPCTests.Run(phase); return; }
         Register();
+        VerifyAbstractBindingOwner();
         using var script = ResourceLoader.Load<Script>(ScriptActor.SourcePath);
         BackendChecks.VerifyNestedScript(script);
         Check(script.CanInstantiate() && script.IsTool() && !script.IsAbstract() && script.HasSourceCode() && script.GetGlobalName() == "ScriptActor" && script.GetInstanceBaseType() == typeof(Node), "compiled source/type metadata");
@@ -48,6 +50,16 @@ internal static partial class ScriptTests
         using var failing = copy.New<ScriptActor>(); failing.FailReady = true; Reject<AggregateException>(() => new SceneTree(failing)); Check(failing.Tree == null, "failed script activation rolls back");
         using var effectScript = ResourceLoader.Load<Script>(ScriptPaintEffect.SourcePath); using var rich = new RichTextLabel { BBCodeEnabled = true, Text = "[compiled_paint]typed[/compiled_paint]", Size = new(250, 100) }; var effect = rich.InstallEffect(effectScript); Check(effect is ScriptPaintEffect && rich.GetParsedText() == "typed", "source effect installation"); using var effectCopy = (ScriptPaintEffect)effect.Duplicate(); Check(effectCopy.BBCode == "compiled_paint" && ReferenceEquals(effect.GetScript(), effectScript) && ReferenceEquals(effectCopy.GetScript(), effectScript), "compiled effect duplicate and source identity"); rich.CustomEffects = []; Check(effect.IsDisposed, "removed label-owned script effect retirement");
         Edges(copy); Stored(copy); Console.WriteLine("Compiled C# script source/type/schema/factories, callbacks and fresh-process scene storage passed.");
+    }
+    internal static void VerifyAbstractBindingOwner()
+    {
+        Register(); using var script = ResourceLoader.Load<Script>(ScriptAbstractBindingCode.SourcePath);
+        Check(!script.IsAbstract() && !script.CanInstantiate(), "Concrete code with an abstract binding owner is attachment-only.");
+        Reject<InvalidOperationException>(() => script.New<BaseButton>());
+        var binds = ScriptAbstractBindingCode.Binds; var clears = ScriptAbstractBindingCode.Clears;
+        using var button = new Button(); var id = button.InstanceID; button.SetScript(script);
+        Check(button.InstanceID == id && ReferenceEquals(button.GetScript(), script) && ScriptAbstractBindingCode.Binds == binds + 1, "Abstract owner metadata still admits compatible existing concrete instances.");
+        button.SetScript(null); Check(ScriptAbstractBindingCode.Clears == clears + 1, "Abstract-role attachment uses ordinary retirement.");
     }
     private static void Identity(Script script)
     {

@@ -43,7 +43,7 @@ RegisterObject covers compiled project classes directly based on ElectronObject 
 | `public string SourceCode { get; set; }` | Editable text; does not reload compiled implementation; eight MiB UTF-8 budget. |
 | `public string CompiledTypeID { get; }` | Stable portable registration ID; empty when unbound. |
 | `public Type? CompiledType { get; }` | Associated CLR class; null when unbound. |
-| `public bool CanInstantiate()` | Concrete compiled-class availability; required arguments may still need an explicit typed constructor. |
+| `public bool CanInstantiate()` | Concrete compiled-code and construction-role availability; abstract binding owners are attachment-only. Required arguments may still need an explicit typed constructor. |
 | `public bool HasSourceCode()` | Nonempty resource text. |
 | `public bool IsAbstract()` | Compiled class abstract flag; false when unbound. |
 | `public bool IsTool()` | Inherited ToolAttribute declaration. |

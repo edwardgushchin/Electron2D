@@ -68,7 +68,7 @@ public class ControlScriptCallbacks<TControl> : CanvasItemScriptCallbacks<TContr
     }
 }
 
-internal sealed class ControlScriptBinding : NodeScriptBinding
+internal class ControlScriptBinding : NodeScriptBinding
 {
     internal Func<Vector2>? GetMinimumSize, GetMaximumSize;
     internal Func<Vector2, bool>? HasPoint;

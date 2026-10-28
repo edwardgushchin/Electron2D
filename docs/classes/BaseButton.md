@@ -10,6 +10,8 @@ Provides mouse, touch, action and shortcut interaction for button controls. The 
 
 Attached getters obey the scene owner thread. Mutations additionally reject scene capture. Committed state survives callback errors: remaining current signal and cleanup phases execute, then errors are reported as AggregateException. A nested newer activation or state mutation cancels subsequent phases of the old operation. Group iterations use captured membership generations and stop when the initiating operation is replaced.
 
+Live [BaseButtonScriptCallbacks](BaseButtonScriptCallbacks.md) add direct activation/toggle code on an existing native owner. Dispatch runs installed Script, native CLR hook, then signal, retaining interaction guards between phases. Signal blocking preserves direct hooks; silent assignment invokes neither toggle hook nor signal. Code replacement during a toggle affects the later activation phase on the same owner.
+
 ## Example
 
 ```csharp

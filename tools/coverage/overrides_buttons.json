@@ -48,12 +48,12 @@
     {
       "godot": "BaseButton::method:_pressed()",
       "electron2d": "method:Electron2D.BaseButton.OnPressed()",
-      "reason": "ADRs 0038/0008/0083: abstract button state executes press/release edges, toggle/outside policy, hover/focus/disable cancellation, masks, direct shortcut feedback, ordered hooks/events and group exclusivity with reentry/failure continuation. BaseButtonTests cover state, groups, silent writes, weak membership, scene-local copies and warmed direct/routed-shortcut reuse. Inherited Node/Control drag/scroll producers and native semantic accessibility remain on their declaring owners; this does not close those capabilities or assert allocation-free pointer event cloning."
+      "reason": "ADR 0038/0091: ordinary CLR hook plus live BaseButtonScriptCallbacks on existing native button roles. Script precedes native hook and signal; blocking retains direct callbacks, silent assignment omits toggles, current-generation guards skip stale phases and errors retain current cleanup/signals. ButtonScriptTests covers replacement, disposal, copies/files and selected CPU/GPU physical effects; complete SetScript remains Partial. See docs/components/scripting.md#live-button-callbacks."
     },
     {
       "godot": "BaseButton::method:_toggled(bool:)",
       "electron2d": "method:Electron2D.BaseButton.OnToggled(System.Boolean)",
-      "reason": "ADRs 0038/0008/0083: abstract button state executes press/release edges, toggle/outside policy, hover/focus/disable cancellation, masks, direct shortcut feedback, ordered hooks/events and group exclusivity with reentry/failure continuation. BaseButtonTests cover state, groups, silent writes, weak membership, scene-local copies and warmed direct/routed-shortcut reuse. Inherited Node/Control drag/scroll producers and native semantic accessibility remain on their declaring owners; this does not close those capabilities or assert allocation-free pointer event cloning."
+      "reason": "ADR 0038/0091: ordinary CLR hook plus live BaseButtonScriptCallbacks on existing native button roles. Script precedes native hook and signal; blocking retains direct callbacks, silent assignment omits toggles, current-generation guards skip stale phases and errors retain current cleanup/signals. ButtonScriptTests covers replacement, disposal, copies/files and selected CPU/GPU physical effects; complete SetScript remains Partial. See docs/components/scripting.md#live-button-callbacks."
     },
     {
       "godot": "BaseButton::method:get_draw_mode()",

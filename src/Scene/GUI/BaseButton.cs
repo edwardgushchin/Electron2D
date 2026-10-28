@@ -277,12 +277,14 @@ public abstract class BaseButton : Control
     private void NotifyToggled(ulong generation, SceneTree? tree, ref List<Exception>? errors)
     {
         var pressed = _pressed;
-        try { OnToggled(pressed); } catch (Exception e) { CollectException(ref errors, e); }
+        try { (ScriptCallbacks as ButtonScriptBinding)?.Toggled?.Invoke(pressed); } catch (Exception e) { CollectException(ref errors, e); }
+        if (Current(generation, tree)) try { OnToggled(pressed); } catch (Exception e) { CollectException(ref errors, e); }
         if (Current(generation, tree)) try { BeginEventEmission(_publisherToggled.Handlers)?.Invoke(pressed); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void NotifyPressed(ulong generation, SceneTree? tree, ref List<Exception>? errors)
     {
-        try { OnPressed(); } catch (Exception e) { CollectException(ref errors, e); }
+        try { (ScriptCallbacks as ButtonScriptBinding)?.Pressed?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
+        if (Current(generation, tree)) try { OnPressed(); } catch (Exception e) { CollectException(ref errors, e); }
         if (Current(generation, tree)) try { BeginEventEmission(_publisherPressed.Handlers)?.Invoke(); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void ClearAttempt() { _attempt = false; _inside = false; _touch = -1; }

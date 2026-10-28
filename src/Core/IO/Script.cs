@@ -25,8 +25,8 @@ public sealed partial class Script : Resource
     public string CompiledTypeID { get { lock (_gate) { ThrowIfDisposed(); return _registration?.ID ?? ""; } } }
     /// <summary>Gets the selected compiled CLR type without constructing an instance.</summary><value>Null when unbound.</value>
     public Type? CompiledType { get { lock (_gate) { ThrowIfDisposed(); return _registration?.Type; } } }
-    /// <summary>Reports whether this asset describes a concrete compiled class with its native extension base available.</summary><returns>False for unbound/abstract assets or an unavailable native base. Required constructor arguments may still be needed.</returns>
-    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false } record && ExtensionBindings.CanConstruct(record.InstanceType); } }
+    /// <summary>Reports whether this asset describes concrete compiled code and a concrete owner with its native extension base available.</summary><returns>False for unbound/abstract code, an abstract binding owner or an unavailable native base. Required constructor arguments may still be needed.</returns>
+    public bool CanInstantiate() { lock (_gate) { ThrowIfDisposed(); return _registration is { Type.IsAbstract: false, InstanceType.IsAbstract: false } record && ExtensionBindings.CanConstruct(record.InstanceType); } }
     /// <summary>Reports whether source text is nonempty.</summary><returns>Whether SourceCode contains text.</returns>
     public bool HasSourceCode() => SourceCode.Length > 0;
     /// <summary>Reports whether the associated compiled class is abstract.</summary><returns>False when unbound.</returns>
