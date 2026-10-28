@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-For managed memory instrumentation, run the [allocation boundary probe](../tools/physics/allocation-boundary-probe/README.md) with matching CLR/NativeAOT hosts before selecting runtime hooks. Preserve native profiler calibration, exact library identity, object/string/pinned-array routes, raw/aligned size distinction and disabled/uninitialized controls. Helper entries alone do not qualify committed allocation, GC/free lifetime or the composed current/peak monitor.
+For managed memory instrumentation, run the [allocation boundary probe](../tools/physics/allocation-boundary-probe/README.md) with matching CLR/NativeAOT hosts before selecting runtime hooks. Preserve native profiler calibration, exact library identity, object/string/pinned-array routes, raw/aligned size distinction and disabled/uninitialized controls. Helper entries alone do not qualify committed allocation, GC/free lifetime or the composed current/peak monitor. For the CLR lifetime producer, run the [managed live probe](../tools/physics/managed-live-probe/README.md) on workstation and server GC. Preserve generation/relocation/finalization/worker and unseen-peak witnesses, prepared zero-byte reads and disabled/invalid controls. Record MONITOR_GC's concurrent-GC cost and the excluded frozen domain; this diagnostic cannot promote the full monitor.
 
 For streaming GZIP allocator/bridge changes, retain all twenty ENet/file/GZIP exports and run the production native memory oracle, native package tests, `ELECTRON2D_TEST_GZIP_CLEANUP=1|native` and `ELECTRON2D_TEST_HTTP=1`. Preserve strict checksum/end validation, concatenated-member backpressure, partial initialization cleanup, finalization, prepared zero-byte calls and source-built CLR/NativeAOT proof. See [the owned GZIP domain](coverage/performance-producers.md#streaming-gzip-allocation-domain).
 
@@ -12,7 +12,7 @@ For registered extension-class changes, follow [ADR 0116](decisions/extensions.m
 
 For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and run the [public consumer](components/extensions.md). Keep typed module initialization/unloading separate from class registration, state rebinding and reload acceptance; storage must never serialize/activate entry callbacks.
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 Depth/stencil changes follow [the native state contract](components/depth-stencil-state.md): preserve stored-depth range semantics, independent visible faces, optional feature refusal, ordinary dynamic-reference switching, composed view/pass/MSAA/component variants and the warmed owner-allocation boundary.
 

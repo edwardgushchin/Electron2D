@@ -1,6 +1,6 @@
 # Performance producer audit
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 This audit follows reference `4.7.2-stable` at
 `ed1daf0bf001b61586d9930840f2f1394092c079`. It separates executable planar
@@ -401,3 +401,55 @@ constant monitor or partial shipping hook is introduced. GetMonitor and both
 memory selectors remain Partial; physics declaration coverage remains
 **1365/1369 (99.71%)**, four Partial and 92 Excluded. This diagnostic adds no
 physical, network, foreign-platform or GPU/FPS acceptance.
+
+
+## CLR dynamic-heap lifetime producer
+
+The [managed live probe](../../tools/physics/managed-live-probe/README.md) now
+executes successful allocation plus GC retirement on Linux x64 / CoreCLR 10.0.1.
+It is a separate native profiler and public-CLR consumer, not a production monitor.
+Its pinned Info4 size and Callback4 relocation/survivor slots are checked against
+v10.0.1 corprof.idl before execution. Pointer-sized sizes/ranges replace the older
+32-bit recorder path for this experiment. The [CLR implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/vm/proftoeeinterfaceimpl.cpp#L1676-L1730)
+queries successful object sizes without triggering GC. Objects retain their old
+map keys until every relocation range is applied; dead objects retire only from
+collected generations, in one native bookkeeping critical section at GC finish.
+
+Workstation GC and two-heap server GC passed the same 25 numeric witness checks:
+
+| Witness | Allocated aligned bytes | Verified lifetime |
+| --- | ---: | --- |
+| 1024 ordinary objects | 24576 | Half retired in gen 0, half retained through gen 1/2, then reclaimed |
+| 65 strings of 128 characters | 18200 | Raw 18070; aligned bytes reclaimed after roots are dropped |
+| Pinned 131072-byte array | 131096 | Dead payload retained across gen 0/1, reclaimed by gen 2 |
+| Ordinary 262144-byte array | 262168 | Dead large object retained across gen 0/1, reclaimed by gen 2 |
+| Eight finalizable objects | 192 | Queued objects survive GC, then retire after finalization and another GC |
+| 512 temporary objects | 12288 | First read after GC reports current zero and peak 12288 |
+| Two retained worker cohorts | 98304 each | Survive relocation while rooted, then both retire completely |
+| Two workers overlapping induced GC/read intervals | 786432 each | All 32768 allocations per worker commit and retire |
+
+Twenty thousand prepared native snapshot reads allocate zero managed bytes on
+the caller. Profiling-disabled, invalid-tag and invalid-snapshot children reject
+with exit 132. The checker retains native/CLR maps, raw child logs and source,
+assembly, library and pinned-IDL hashes under
+`bin/runtime-memory-producer/2026-10-29/qualified/`. This is measured callback-ledger
+behavior; the same results do not establish complete process ownership or GPU/FPS
+performance.
+
+The [CLR GC callback implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/vm/eetoprofinterfaceimpl.cpp#L5726-L5799)
+requires non-concurrent GC in this profiling mode. MONITOR_GC therefore changes
+the host collector, which must be included in any future performance comparison.
+A tight forced-GC stress loop starved mutators and reached its 90-second deadline;
+the final workload leaves a 1 ms mutator interval while preserving the full
+allocation count and forced collections overlapping both workers.
+
+The initial run also exposed non-GC frozen objects: GetObjectGeneration returns
+CORPROF_E_NOT_GC_OBJECT (0x80131389). This experiment excludes and counts those
+objects explicitly, and rejects frozen tagged witnesses. Their actual lifetime,
+image objects, NativeAOT, over-4-GiB sizing, failed-allocation behavior and the
+production managed/native shared commit boundary remain unqualified. In
+particular, callback-ledger peaks cannot establish an exact simultaneous native
+and managed peak if publication is delayed after an allocator commit. Do not
+wire these diagnostic snapshots to GetMonitor or treat separate domain peaks as
+a composition. The full exact contract remains accepted; physics coverage stays
+**1365/1369 (99.71%)**, four Partial and 92 Excluded.
