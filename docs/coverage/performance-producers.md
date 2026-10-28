@@ -352,3 +352,52 @@ including short-lived peaks between monitor reads. The bounded observed-peak
 C# adaptation is rejected; the local `contract-choice.txt` retains the comparison
 and this decision. The existing ADR remains unchanged. Coverage stays Partial
 until the exact producer is implemented and qualified.
+
+## Runtime allocation hook boundary
+
+The [allocation-boundary probe](../../tools/physics/allocation-boundary-probe/README.md)
+compares the existing calibrated CLR native profiler with a separate published
+NativeAOT executable on matching .NET 10.0.1/Linux x64 with EventSourceSupport enabled. Its own linker wrappers
+count entries to RhpNewFast and RhpGcAlloc without changing the SDK archives or
+engine runtime. The profiler client loads the exact configured library instance;
+a copy at a different path can have uninitialized independent state. The checker
+also pins child apphosts to the selected CLI's runtime root: the first automatic
+apphost selection used CLR 10.0.12 and was retained as a separate checkpoint.
+
+| Retained witness | CLR objects / owner bytes | NativeAOT fast / slow helper entries |
+| --- | ---: | ---: |
+| 512 ordinary objects | 512 / 12288 | 512 / 1 |
+| 64 strings of 128 characters | 64 / 17920 | 0 / 2 |
+| One 131072-byte pinned array | 1 / 131096 | 0 / 0 |
+
+The calibrated CLR ObjectAllocated callback observes all 577 witness objects.
+The string raw-size sum is 17792 bytes; eight-byte alignment gives the observed
+17920 owner bytes. Summing raw profiler sizes directly therefore loses 128 bytes
+in this bounded case. Object and array totals already have that alignment.
+The reused Info2 recorder queries a [32-bit object size](https://learn.microsoft.com/en-us/dotnet/framework/unmanaged-api/profiling/icorprofilerinfo-getobjectsize-method); these witnesses do not
+qualify large-object sizing. A complete producer needs a qualified [64-bit size
+path](https://learn.microsoft.com/en-us/dotnet/framework/unmanaged-api/profiling/icorprofilerinfo4-getobjectsize2-method) as well as collection/free accounting.
+Disabled CLR profiling and the same configured NativeAOT profiler both reject an
+uninitialized trace bridge with exit 132. NativeAOT maps contain no CoreCLR; no
+CLR trace initialization file appears. This qualifies that tested bridge's host
+boundary, rather than every possible NativeAOT instrumentation mechanism.
+
+The pinned [fast helper](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/runtime/amd64/AllocFast.S)
+updates the thread allocation pointer directly, with a distinct string/array
+path. The pinned [GC helpers](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/nativeaot/Runtime/GCHelpers.cpp#L658-L717)
+also route direct array/object requests into GcAllocInternal independently of
+RhpGcAlloc. A hook on that slow export alone misses both ordinary fast allocation
+and the pinned-array witness. The observed entries count attempts, not committed
+allocations or surviving heap bytes. Collection/free lifetime, startup, failure
+and cross-thread aggregation remain requirements of a complete producer.
+
+Commands, calibrated traces, raw/aligned totals, process maps, source/native
+identities and the matched-host receipt are retained in
+`bin/runtime-memory-boundary/2026-10-28/final-qualified/`. These results
+select the next implementation boundary: successful allocation publication must
+cover the fast helpers and common allocator, with GC retirement and the shared
+native ledger composed at actual producer transitions. No sampled peak,
+constant monitor or partial shipping hook is introduced. GetMonitor and both
+memory selectors remain Partial; physics declaration coverage remains
+**1365/1369 (99.71%)**, four Partial and 92 Excluded. This diagnostic adds no
+physical, network, foreign-platform or GPU/FPS acceptance.

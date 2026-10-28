@@ -1,5 +1,7 @@
 # Maintaining the Electron2D contract
 
+For managed memory instrumentation, run the [allocation boundary probe](../tools/physics/allocation-boundary-probe/README.md) with matching CLR/NativeAOT hosts before selecting runtime hooks. Preserve native profiler calibration, exact library identity, object/string/pinned-array routes, raw/aligned size distinction and disabled/uninitialized controls. Helper entries alone do not qualify committed allocation, GC/free lifetime or the composed current/peak monitor.
+
 For streaming GZIP allocator/bridge changes, retain all twenty ENet/file/GZIP exports and run the production native memory oracle, native package tests, `ELECTRON2D_TEST_GZIP_CLEANUP=1|native` and `ELECTRON2D_TEST_HTTP=1`. Preserve strict checksum/end validation, concatenated-member backpressure, partial initialization cleanup, finalization, prepared zero-byte calls and source-built CLR/NativeAOT proof. See [the owned GZIP domain](coverage/performance-producers.md#streaming-gzip-allocation-domain).
 
 For live button Script changes, run `ELECTRON2D_TEST_BUTTON_SCRIPT=cpu|gpu` with owner/separate physics; optional `ELECTRON2D_TEST_BUTTON_SCRIPT_RENDERER=gpu|compatibility` checks actual button pixels. Preserve Script/native/signal order, generation/scene/disposal guards, error continuation, silent assignment, callback replacement, abstract-role CanInstantiate admission and fresh-process typed storage. Keep existing buttons and Control callback regressions. See [the button callback contract](components/scripting.md#live-button-callbacks).
