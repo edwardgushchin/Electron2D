@@ -136,8 +136,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private nint Commands()
     {
         RenderingServer.NotifyRenderMutation();
-        if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission();
-        if (_command == 0) { _command = SDL.AcquireGPUCommandBuffer(Device); if (_command == 0) throw GPUPhysicsDevice.Failure("acquire compute commands"); }
+        if (_fence != 0 || _submittedReadbacks.Count != 0 || _timestampPending) CompleteSubmission();
+        if (_command == 0)
+        {
+            _command = SDL.AcquireGPUCommandBuffer(Device); if (_command == 0) throw GPUPhysicsDevice.Failure("acquire compute commands");
+            try { ResetTimestamps(_command); } catch { SDL.CancelGPUCommandBuffer(_command); _command = 0; throw; }
+        }
         return _command;
     }
     private RenderHandle Transfer(uint size, SDL.GPUTransferBufferUsage usage) => new(SDL.CreateGPUTransferBuffer(Device, new SDL.GPUTransferBufferCreateInfo { Size = size, Usage = usage }), h => SDL.ReleaseGPUTransferBuffer(Device, h), _context.Handle);
@@ -381,7 +385,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
     /// <summary>Begins an owner-thread compute list.</summary>
     /// <returns>The active list identity; only one list may be active.</returns>
-    public long ComputeListBegin() { IdleList(); Commands(); _pipeline = null; _sets.Clear(); ResetPush(); return _activeList = ++_nextList; }
+    public long ComputeListBegin() { IdleList(); Commands(); _pipeline = null; _sets.Clear(); ResetPush(); _timestampListUsed = false; return _activeList = ++_nextList; }
     /// <summary>Selects a compute pipeline for subsequent dispatches.</summary>
     /// <param name="computeList">The active list.</param>
     /// <param name="computePipeline">A live executable pipeline.</param>
@@ -448,6 +452,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (nativeImages) { PrepareComputeImages(imageHandles, (uint)imageCount, true); preparedImages = true; }
             if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
             else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
+            _timestampListUsed = true;
         }
         finally { try { if (preparedImages) PrepareComputeImages(imageHandles, (uint)imageCount, false); } finally { try { RestoreAddressUniforms(); } finally { SDL.EndGPUComputePass(pass); if (_pipeline.PhysicalAddresses) StorageBarrier(); } } }
     }
@@ -467,17 +472,19 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
     private void SubmitRecorded(bool canvasMetadata = false)
     {
-        IdleList(canvasMetadata); if (_fence != 0 || _submittedReadbacks.Count != 0) throw new InvalidOperationException("Synchronize the previous submission first.");
+        IdleList(canvasMetadata); if (_fence != 0 || _submittedReadbacks.Count != 0 || _timestampPending) throw new InvalidOperationException("Synchronize the previous submission first.");
         if (_command != 0)
         {
             var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
             if (_fence == 0)
             {
+                _timestampRecorded = 0;
                 CancelRendererUploads();
                 while (_recordedReadbacks.TryDequeue(out var cancelled)) RecycleReadback(cancelled);
                 throw GPUPhysicsDevice.Failure("submit compute commands");
             }
         }
+        SubmitTimestamps();
         if (_serverOwner is null) _drawableShaderSamplers?.AdvanceEpoch();
         CommitRendererUploads();
         while (_recordedReadbacks.TryDequeue(out var request)) _submittedReadbacks.Enqueue(request);
@@ -530,7 +537,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
             foreach (var e in _entries.Values) { e.StorageArrayView?.Dispose(); e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
-            _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
+            _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _timestampPool?.Dispose(); _timestampPool = null; _context.Dispose();
         }
         base.Dispose(disposing);
     }

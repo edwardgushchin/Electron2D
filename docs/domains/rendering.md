@@ -602,3 +602,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 [Buffer device addresses](../components/buffer-device-addresses.md) execute pointer-based compute and graphics through stable native allocations, including direct GPU uniform consumers and capability refusal.
 
 [Canvas follow-scale preview](../components/canvas-rendering.md#canvas-follow-scale-preview) now executes through one renderer-session policy on the shared GPU/Compatibility composition, preserving authored transforms, input, snapping and complete attachment overrides.
+
+[Native device timestamps](../components/gpu-timestamps.md) connect named CPU/GPU markers to ordered commands, completed-frame publication and retained query-pool lifetimes on the pinned Vulkan adapter.

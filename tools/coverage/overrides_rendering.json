@@ -5301,6 +5301,41 @@
       "godot": "RenderingServer::method:canvas_set_disable_scale(bool:)",
       "electron2d": "method:Electron2D.RenderingServer.CanvasSetDisableScale(System.Boolean)",
       "reason": "ADRs 0028/0095: renderer-session CanvasSetDisableScale controls actual CanvasLayer viewport-follow scaling across the shared native canvas composition. It preserves camera/layer/item transforms, authored follow-unit snapping, logical input/storage and explicit attachment matrices; owner/capture guards and session reset remain enforced. CanvasScalePreviewTests verifies root/nested/RID pixels, zero/negative/fractional scales, snapping, restoration, failures and prepared frames on the current backends. See docs/components/canvas-rendering.md#canvas-follow-scale-preview for qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.CaptureTimestamp(System.String)",
+      "godot": "RenderingDevice::method:capture_timestamp(String:)",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.GetCapturedTimestampCPUTime(System.Int32)",
+      "godot": "RenderingDevice::method:get_captured_timestamp_cpu_time(int:)",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.GetCapturedTimestampGPUTime(System.Int32)",
+      "godot": "RenderingDevice::method:get_captured_timestamp_gpu_time(int:)",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.GetCapturedTimestampName(System.Int32)",
+      "godot": "RenderingDevice::method:get_captured_timestamp_name(int:)",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.GetCapturedTimestampsCount()",
+      "godot": "RenderingDevice::method:get_captured_timestamps_count()",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.GetCapturedTimestampsFrame()",
+      "godot": "RenderingDevice::method:get_captured_timestamps_frame()",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.MaxTimestampQueryElements()",
+      "godot": "ProjectSettings::property:debug/settings/profiler/max_timestamp_query_elements",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
     }
   ],
   "statusGroups": [
@@ -7409,15 +7444,16 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "Trigger: SDL_GPU native timestamp query pools, command-buffer timestamp insertion and completed query readback, or an accepted native command-buffer bridge providing all three on the active renderers. The current SDL_GPU API exposes none; SDL issue 11696 remains open at candidate selection on 2026-10-27 (https://github.com/libsdl-org/SDL/issues/11696). CPU elapsed time cannot implement GPU timestamps. Implement capture, names, CPU/GPU values, count and completed-frame ownership together when that dependency lands.",
+      "state": "Implemented",
+      "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits.",
       "godot": [
         "RenderingDevice::method:capture_timestamp(String:)",
         "RenderingDevice::method:get_captured_timestamp_cpu_time(int:)",
         "RenderingDevice::method:get_captured_timestamp_gpu_time(int:)",
         "RenderingDevice::method:get_captured_timestamp_name(int:)",
         "RenderingDevice::method:get_captured_timestamps_count()",
-        "RenderingDevice::method:get_captured_timestamps_frame()"
+        "RenderingDevice::method:get_captured_timestamps_frame()",
+        "ProjectSettings::property:debug/settings/profiler/max_timestamp_query_elements"
       ]
     },
     {

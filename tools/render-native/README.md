@@ -124,3 +124,9 @@ Readonly arrays therefore need no graphics-store feature. `array-storage-check.c
 is an optional external compute fixture for Electron2DRenderCheck, supplied through
 ELECTRON2D_TEST_ARRAY_STORAGE_SPIRV; the check forwards real Vulkan descriptor writes
 while observing the exact shared/independent layouts and verifies layer-two bytes.
+
+## Device timestamps
+
+The ABI-1 timestamp adapter owns Vulkan query pools, reset/write commands and completed raw-clock readback. It uses the pinned command-buffer layout, validates physical queue timestamp support, masks valid counter bits and scales device ticks to nanoseconds. First-use reset can complete through its own short command buffer so an empty active render pass permits capture; later reuse resets at command-buffer acquisition. Managed owners retain pools through command cancellation/completion and destroy them before releasing the device lease. See [the component contract](../../docs/components/gpu-timestamps.md).
+
+Build Electron2DRenderTimestampCheck and run it against the configured native library. It checks invalid ABI/capacity/index/count, unwritten queries, real GPU marker order and pool retirement. This does not account for native driver heap costs or qualify other backends.

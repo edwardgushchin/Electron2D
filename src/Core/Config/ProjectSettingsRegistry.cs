@@ -62,6 +62,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(ProjectSettings.AccessibilitySupport, isBasic: false);
         RegisterInternal(LowProcessorMode, isBasic: false);
         RegisterInternal(LowProcessorModeSleepUsec, isBasic: false);
+        RegisterInternal(MaxTimestampQueryElements, isBasic: false);
         RegisterInternal(ApplicationVersion, isBasic: true);
         RegisterInternal(GUIThemeCustom, isBasic: true);
         RegisterInternal(GUIThemeCustomFont, isBasic: true);
@@ -1236,6 +1237,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, ProjectSettings.AccessibilitySupport) ||
         ReferenceEquals(setting, LowProcessorMode) ||
         ReferenceEquals(setting, LowProcessorModeSleepUsec) ||
+        ReferenceEquals(setting, MaxTimestampQueryElements) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
         ReferenceEquals(setting, AudioGeneralDefaultPlaybackType) ||

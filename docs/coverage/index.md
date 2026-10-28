@@ -1,6 +1,8 @@
 [The runtime allocation boundary](performance-producers.md#runtime-allocation-hook-boundary) now has a calibrated matching-host CLR/NativeAOT probe. It exposes ordinary fast, string and direct pinned-array gaps in a slow-helper-only hook and the raw-size alignment difference. Exact composed memory remains Partial; physics declaration coverage remains **1365/1369 (99.71%)**, four Partial and 92 Excluded.
 
-[Native text input](../components/native-text-input.md) now executes copied single-line confirmation, cancellation and native modal lifetimes, with resumed GPU/Compatibility output. One Blocked row becomes Implemented: **13,389/18,855 applicable declarations (71.0103%)**, 1,090 Partial, 395 Unimplemented, 3,981 Blocked, 8,438 Excluded and zero unmapped. Platform qualification limits remain in the owning component.
+[Native GPU timestamps](../components/gpu-timestamps.md) now execute named compute/draw markers and completed local/renderer batches. Six methods and the live query-capacity setting move from Blocked to Implemented: **13,396/18,855 applicable declarations (71.0475%)**, 1,090 Partial, 395 Unimplemented, 3,974 Blocked, 8,438 Excluded and zero unmapped. Clock units, native lifetime and platform qualification remain in the owning component.
+
+[Native text input](../components/native-text-input.md) executes copied single-line confirmation, cancellation and modal lifetimes, with resumed GPU/Compatibility output.
 
 [Canvas follow-scale preview](../components/canvas-rendering.md#canvas-follow-scale-preview) controls root/nested canvases on both current renderer backends while preserving authored transforms/input and explicit attachment matrices.
 

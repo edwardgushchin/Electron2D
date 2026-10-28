@@ -90,6 +90,12 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Boolean ComputePipelineIsValid(Electron2D.RID pipeline)` | Reports whether a pipeline and its shader remain alive. |
 | `protected override System.Void Dispose(System.Boolean disposing)` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
 | `public System.Void FreeRID(Electron2D.RID rid)` | Frees a resource after completing pending work. |
+| `public void CaptureTimestamp(System.String name)` | Records an ordered native timestamp marker. |
+| `public System.Int32 GetCapturedTimestampsCount()` | Counts markers in the last completed device frame. |
+| `public System.UInt64 GetCapturedTimestampsFrame()` | Returns the completed submission-frame index. |
+| `public System.String GetCapturedTimestampName(System.Int32 index)` | Reads a completed marker name. |
+| `public System.UInt64 GetCapturedTimestampCPUTime(System.Int32 index)` | Reads CPU microseconds. |
+| `public System.UInt64 GetCapturedTimestampGPUTime(System.Int32 index)` | Reads native GPU nanoseconds. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
 | [`public System.Byte[] ShaderCompileBinaryFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")`](#member-shader-binary-compile) | Validates and packages copied stages and a strict UTF-8 diagnostic name. |
 | [`public Electron2D.RID ShaderCreateFromBytecode(System.ReadOnlySpan<System.Byte> binaryData, Electron2D.RID placeholderRID = default)`](#member-shader-binary-load) | Loads a complete container and optionally initializes one reserved shader identity. |
@@ -1489,3 +1495,7 @@ public System.Boolean HasFeature(Electron2D.RenderingDevice.Features feature)
 ```
 
 Reports enabled address execution, R32 image atomics and renderer main HDR output. Unsupported scaling/ray-query paths return false; undefined selectors reject. Local devices have no HDR presentation surface.
+
+## Native timestamps
+
+CaptureTimestamp records names alongside actual native query writes. GetCapturedTimestampsCount and GetCapturedTimestampsFrame identify one completed batch; the Name/CPUTime/GPUTime getters index only that batch. Results publish after native completion, before readback callbacks. CPU microseconds and GPU nanoseconds have separate clock epochs. Empty completed batches clear old markers. See [device timestamps](../components/gpu-timestamps.md) for capacity, list guards, local/renderer ownership, exact units and backend qualification.

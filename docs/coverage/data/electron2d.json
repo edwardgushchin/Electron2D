@@ -174746,6 +174746,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.CaptureTimestamp(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "CaptureTimestamp",
+    "signature": "public System.Void CaptureTimestamp(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.ComputeListAddBarrier(System.Int64)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -175648,6 +175667,89 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetCapturedTimestampCPUTime(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetCapturedTimestampCPUTime",
+    "signature": "public System.UInt64 GetCapturedTimestampCPUTime(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetCapturedTimestampGPUTime(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetCapturedTimestampGPUTime",
+    "signature": "public System.UInt64 GetCapturedTimestampGPUTime(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetCapturedTimestampName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetCapturedTimestampName",
+    "signature": "public System.String GetCapturedTimestampName(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetCapturedTimestampsCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetCapturedTimestampsCount",
+    "signature": "public System.Int32 GetCapturedTimestampsCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.GetCapturedTimestampsFrame()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "GetCapturedTimestampsFrame",
+    "signature": "public System.UInt64 GetCapturedTimestampsFrame()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -277367,6 +277469,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "MaxPhysicsStepsPerFrame",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E MaxPhysicsStepsPerFrame { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.MaxTimestampQueryElements()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "MaxTimestampQueryElements",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E MaxTimestampQueryElements { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

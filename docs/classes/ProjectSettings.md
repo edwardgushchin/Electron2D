@@ -1848,3 +1848,7 @@ RGBA new(.5f, .5f, .5f, 1) by default; sampled with feature overrides on first g
 Configures enable link connections for retained navigation diagnostics.
 
 True by default; sampled with feature overrides on first global geometry diagnostics use. Restart to resample.
+
+## MaxTimestampQueryElements
+
+`public static ProjectSetting<int> MaxTimestampQueryElements { get; }` registers `debug/settings/profiler/max_timestamp_query_elements`, default 256, with positive-value validation and feature overrides. Each RenderingDevice captures its effective value at creation. Existing devices retain their pool limit when the project value changes. See [device timestamps](../components/gpu-timestamps.md).

@@ -171,6 +171,9 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <value>application/run/low_processor_mode; false initially.</value>
     public static ProjectSetting<bool> LowProcessorMode { get; } = new("application/run/low_processor_mode", false);
 
+    /// <summary>Maximum named timestamp queries per device submission, captured at device creation.</summary>
+    public static ProjectSetting<int> MaxTimestampQueryElements { get; } = new("debug/settings/profiler/max_timestamp_query_elements", 256, value => value > 0);
+
     /// <summary>Defines the initial low-processor wait between owned frames, in microseconds.</summary>
     /// <value>application/run/low_processor_mode_sleep_usec; 6900 initially. Negative values are rejected.</value>
     public static ProjectSetting<int> LowProcessorModeSleepUsec { get; } = new("application/run/low_processor_mode_sleep_usec", 6900, validator: value => value >= 0);

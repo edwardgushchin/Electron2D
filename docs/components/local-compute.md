@@ -539,3 +539,5 @@ This is Linux/Vulkan qualification on the exercised device. Vulkan render-pass/f
 [Vertex-only processing and primitive discard](raster-discard.md) now execute source/SPIR-V and version-two vertex-only containers while retaining version-one compute/paired container behavior.
 
 [Copied graphics line width](wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.
+
+[Native timestamps](gpu-timestamps.md) now bracket real compute/draw work and publish completed device-frame measurements, including renderer-owned batches.

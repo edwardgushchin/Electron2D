@@ -111,6 +111,7 @@ public sealed unsafe partial class RenderingDevice
             if (!SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1)) throw GPUPhysicsDevice.Failure("wait for compute commands");
             SDL.ReleaseGPUFence(Device, _fence); _fence = 0;
         }
+        CompleteTimestamps();
         while (_submittedReadbacks.TryPeek(out var request))
         {
             if (request.Download)

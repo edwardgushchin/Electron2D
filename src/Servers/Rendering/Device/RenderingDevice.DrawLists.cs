@@ -64,7 +64,7 @@ public sealed unsafe partial class RenderingDevice
         try
         {
             BeginDrawPass();
-            return _activeList = ++_nextList;
+            _timestampListUsed = false; return _activeList = ++_nextList;
         }
         catch { _drawTarget = null; throw; }
     }
@@ -295,6 +295,7 @@ public sealed unsafe partial class RenderingDevice
         DrawList(drawList); if (instances == 0) throw new ArgumentOutOfRangeException(nameof(instances));
         if (_graphicsPipeline is null) throw new InvalidOperationException("Bind a graphics pipeline first.");
         var count = PrepareDraw(useIndices, instances, proceduralVertexCount);
+        _timestampListUsed = true;
         for (var view = 0; view < FramebufferLayouts(_drawTarget!.Format).ViewCount; view++)
         { if (_drawView != view) { SelectDrawView(view); PrepareDraw(useIndices, instances, proceduralVertexCount, false); } if (useIndices) SDL.DrawGPUIndexedPrimitives(_drawPass, count, instances, 0, 0, 0); else SDL.DrawGPUPrimitives(_drawPass, count, instances, 0, 0); MarkGraphicsStorage(); }
     }
@@ -351,6 +352,7 @@ public sealed unsafe partial class RenderingDevice
         if (_graphicsPipeline is null) throw new InvalidOperationException("Bind a graphics pipeline first.");
         PrepareDraw(useIndices, 1, _graphicsPipeline.Graphics!.VertexFormat == -1 ? 1u : 0u);
         if (drawCount == 0) return;
+        _timestampListUsed = true;
         var writes = WritesGraphicsStorage(PipelineProgram(_graphicsPipeline));
         for (var view = 0; view < FramebufferLayouts(_drawTarget!.Format).ViewCount; view++)
         {

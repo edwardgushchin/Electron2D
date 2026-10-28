@@ -1,3 +1,5 @@
+Existing RenderingDevice and ProjectSettings own [native GPU timestamps](components/gpu-timestamps.md), private pool state and the typed query-capacity key; the native bridge adds private TimestampPool storage without a new production C# type.
+
 The existing [DisplayServer](classes/DisplayServer.md#method-dialoginputtext) now owns [native text input](components/native-text-input.md) through its private GTK partial; no production type is added.
 
 [Native array storage](components/graphics-storage-images.md#compute-and-array-consumers) connects existing Image descriptors to complete independent-layer GPU loads/stores/R32 atomics, fixed descriptor arrays and retained TextureArrayRD consumers. No public type or signature is added.
