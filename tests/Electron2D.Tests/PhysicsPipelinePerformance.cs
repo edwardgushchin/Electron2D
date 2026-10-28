@@ -134,7 +134,9 @@ internal static partial class PhysicsPipelinePerformance
                 var pumpOwner = GC.GetAllocatedBytesForCurrentThread();
                 display?.Pump(tree);
                 pumpOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - pumpOwner;
-                var physicalOwner = GC.GetAllocatedBytesForCurrentThread(); var physicalAll = GC.GetTotalAllocatedBytes(true);
+                var physicalOwner = GC.GetAllocatedBytesForCurrentThread();
+                // Precise all-thread reads suspend managed threads; headless uses the stricter whole-batch bracket.
+                var physicalAll = rendered ? GC.GetTotalAllocatedBytes(true) : 0;
                 var wait = gpu?.WaitMS ?? 0;
                 if (nativeAllocations) NativeAllocationProbe.Begin();
                 var cpuStart = processCPU is not null ? PhysicsCPUClock.Read() : default;
@@ -149,7 +151,7 @@ internal static partial class PhysicsPipelinePerformance
                     Check(processCPU[i] >= 0 && ownerCPU[i] >= 0, "Physical CPU clock samples remain monotonic");
                 }
                 physicsOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - physicalOwner;
-                physicsAllThreadsBytes += GC.GetTotalAllocatedBytes(true) - physicalAll;
+                if (rendered) physicsAllThreadsBytes += GC.GetTotalAllocatedBytes(true) - physicalAll;
                 waits[i] = (gpu?.WaitMS ?? 0) - wait;
                 for (var phase = 0; phase < phases.Length; phase++) { phases[phase] += data.ProfileMS[phase]; phaseBytes[phase] += data.ProfileBytes[phase]; }
                 for (var phase = 0; phase < completionPhases.Length; phase++) completionPhases[phase] += data.ProfileCompletionMS[phase];
@@ -164,6 +166,7 @@ internal static partial class PhysicsPipelinePerformance
             Check(completionPhases.Sum() <= phases[5] + .001 * samples, "Completion subphases remain inside their complete pipeline phase");
             var frameSeconds = Stopwatch.GetElapsedTime(frameStart).TotalSeconds;
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; total = GC.GetTotalAllocatedBytes(true) - total;
+            if (!rendered) physicsAllThreadsBytes = total;
             upload = (gpu?.UploadBytes ?? 0) - upload; readback = (gpu?.ReadbackBytes ?? 0) - readback;
             reportReadback = (gpu?.ReportResultReadbackBytes ?? 0) - reportReadback;
             submissions = (gpu?.SubmissionCount ?? 0) - submissions; uniform = (gpu?.UniformBytes ?? 0) - uniform;
@@ -285,6 +288,7 @@ internal static partial class PhysicsPipelinePerformance
                 allThreadsBytes = total,
                 physicsOwnerBytes,
                 physicsAllThreadsBytes,
+                physicsAllThreadsSampling = rendered ? "per-step" : "whole-headless-batch",
                 physicsManagedZero,
                 frameManagedZero,
                 pumpOwnerBytes,

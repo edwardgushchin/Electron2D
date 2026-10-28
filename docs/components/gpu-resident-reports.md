@@ -258,6 +258,52 @@ Physics declaration coverage remains **1364/1369 (99.63%)**, five Partial and
 92 Excluded. Controlled repeatable mass-scene GPU advantage, real-window
 throughput and the remaining API/native/platform gates stay open.
 
+## Headless allocation counter brackets (2026-10-28)
+
+Complete headless scene measurements now read the precise cumulative all-thread
+allocation counter before and after the measured batch. A zero delta covers every
+physical step and the intervening instrumentation. Owner-thread step counters and
+both strict zero-byte gates remain. Rendered measurements retain precise per-step
+brackets because input and presentation have separate allocation ownership.
+The additive schema 6 field `physicsAllThreadsSampling` identifies
+`whole-headless-batch` or `per-step`; headless nonzero values conservatively charge
+the entire measured loop to physics.
+
+The [.NET 10.0.1 counter implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/vm/comutilnative.cpp#L922-L950)
+suspends managed execution to inspect every thread's allocation context. The
+headless fixture avoids two such calls per step without changing the runtime,
+solver, scene, timestep, feature set or acceptance limits. This is a measurement
+protocol correction; it does not establish faster physical work.
+
+The frozen 81-file source cohort starts at `c1a99dba72ed09a50fbcaac16ea234c5ea526cbe`;
+only the test DLL/PDB change. Fresh 4096-body GPU processes use 64 warmup and
+512 measured complete steps. Both original and revised untraced runs pass with
+0/0 owner/all-thread bytes; observed means are 21.512/22.560 ms. Profiled means
+are 22.586/23.226 ms. These uncontrolled single observations show no speedup.
+Sampled thread time includes waits: the `PollGCWorker` share remains
+5.53/5.42%, so removing the counter calls does not explain that hot stack.
+A direct-field contact-copy experiment was slower in a focused check and was
+reverted completely. The renderer and physical implementation are unchanged.
+
+The revised CPU scene passes 512 steps with 0/0 bytes after the fixture's default
+1600 warmup steps. With only 64 warmup steps, both original and revised CPU
+fixtures reject exactly 123499504 owner/all-thread bytes while physical bounds
+pass; their final state/contact hashes match. A copied-fixture negative control
+allocates one 32-byte object on another thread after each of 64 physical steps:
+the owner remains zero, the cumulative counter observes 2048 bytes and the
+zero-allocation gate rejects the run. The injected copy is diagnostic output,
+not a retained test hook or runtime change.
+
+A real Wayland GPU window with 4096 bodies, injected input and 64 warmup/64
+measured frames passes with 0/0 physical bytes and `per-step` attribution.
+Its input pump accounts for 26112 whole-frame bytes, 408 per frame. Every visual
+record matches its body and the inspected 1152x800 capture contains the scene.
+The observed 23.015 FPS is diagnostic, with no quiet admission or matched CPU
+window control. Commands, hashes, traces, rejected controls and capture remain
+under `bin/physics-publication-profile/2026-10-28/`. Declaration coverage stays
+**1365/1369 (99.71%)**, four Partial and 92 Excluded; exact composed memory,
+controlled mass-scene advantage and complete platform qualification remain open.
+
 ## Authored report policy publication (2026-10-27)
 
 GPU collider registration now publishes the body's initial contact-reporting flag.
