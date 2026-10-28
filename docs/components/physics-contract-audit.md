@@ -1,3 +1,5 @@
+[Linux ordinary qualification](#linux-ordinary-qualification-2026-10-28) passes the unfiltered root suite at `0f5d114b5b5f837ef430f329c88543aa435d5b1c` with one completion marker, zero exit and an unchanged 80-file cohort. This functional result changes no declaration state: **1363/1369 (99.56%)**, six Partial, 92 Excluded. The later renderer revision and complete-goal numerical/network/native/platform/mass/FPS acceptance retain their own gates; earlier checkpoints below keep their original scope.
+
 [Registered extension class replacement](extensions.md) now restores every surviving class binding and compatible stored value before automatic `NotificationExtensionReloaded`. Object/RID, contacts, sleep and joint controls execute on CPU/GPU CLR/NativeAOT; Script/copy/disposal families retain their native shell roles. One inherited physics declaration becomes Implemented: **1363/1369 (99.56%)**, six open (five Partial, one Blocked), 92 Excluded. The complete physical, network, native/platform, mass-throughput and real-window gates remain separate.
 
 [The earlier CLR experiment](scripting.md#native-extension-reload-boundary) remains rejected as an extension producer. Its successful metadata edit did not create registered class bindings or restore module-owned state. The typed producer is the new implementation; file/native discovery and real assembly unloading remain open. Earlier figures below describe preceding checkpoints.
@@ -957,6 +959,35 @@ coverage. Remaining acceptance gates stay open even if the generated API ledger 
 open rows. [ADR 0094](../decisions/networking.md#adr-0094) and ADR 0054 record the
 required integration; the public local-checkpoint prerequisite does not close the
 portable authoritative networking rows.
+
+## Linux ordinary qualification, 2026-10-28
+
+The complete root executable, without test selectors, exits zero after
+795.1936 seconds with exactly one `Electron2D checks passed.` marker. The frozen
+runtime is bound to `0f5d114b5b5f837ef430f329c88543aa435d5b1c`; the later
+`a3dc5b1aef96ae90e21f10576a237f3d8004598a` renderer change is outside that closure.
+The process uses Linux x64 CoreCLR, NVIDIA Vulkan and Wayland. Its ordinary
+functional, failure and allocation checks retain their original workloads.
+
+The selected WebP and Render source overrides preserve the native runtime
+layout and required private ABIs. The [development preflight](../development-ci.md)
+rejects the older encoder-only bundle before ordinary full-suite work. Package
+publication remains a separate prerequisite. Runtime/root DLL SHA-256 are
+`17e03a470131fb4860d57ba02835ed4f250b01a26f2604af7041d11b616ae164` and
+`8d7dd00696f3da6968ec1e657f81dad6786f563a77afcc79c11004779bd8c002`.
+
+The 80-file cohort is byte-identical before/after. Matching PDBs prove 2,730
+runtime and 1,064 test authored documents; all 891 embedded resources match
+compiled inputs, including 486 generated resources. Git binding verifies 4,342
+tracked inputs against the selected commit. Receipts, complete raw output and
+reproduction are under `bin/physics-complete-current/2026-10-28-e771c4ebd/`:
+`run-full.py`, `full-result.json`, `full.log`, `cohort-manifest.json`,
+`complete-source-proof.json` and `git-binding.json`. Raw log SHA-256 is
+`7c85efdc112c907b93124fcf3c04e24e346b1075aa98538158e34b6d361f46e1`.
+
+This closes this ordinary Linux gate. Declaration completeness, strict NativeAOT,
+foreign platforms, full numerical/network scope, native allocation freedom,
+repeatable mass-scene benefit, real-window FPS and human acceptance remain open.
 
 ## Acceptance and continuation
 
