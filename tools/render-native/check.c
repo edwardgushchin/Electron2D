@@ -39,6 +39,9 @@ extern int e2d_render_logic_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_logic_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
+extern int e2d_render_view_support(SDL_GPUDevice *, uint32_t);
+extern void e2d_views_check(SDL_GPUDevice *);
+
 static void require_at(bool valid, int line)
 {
     if (!valid) { fprintf(stderr, "Native render check failed at line %d: %s\n", line, SDL_GetError()); exit(1); }
@@ -388,6 +391,7 @@ int main(int argc, char **argv)
     Memory retained = read_memory(device);
     printf("32 native allocation/retirement cycles and concurrent snapshots; texture=%llu buffer=%llu committed=%llu.\n",
         (unsigned long long)retained.textures, (unsigned long long)retained.buffers, (unsigned long long)retained.total);
+    if (e2d_render_view_support(device, 1) == 1) e2d_views_check(device);
     SDL_DestroyGPUDevice(device); SDL_Quit();
     return 0;
 }

@@ -58,11 +58,15 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private sealed class Entry
     {
         internal Kind Kind;
+        internal RID TextureOwner;
+        internal Entry? TextureSource;
+        internal List<RID>? TextureViews;
+        internal RenderHandle? TextureAllocation;
         internal RendererTextureBorrow? Borrowed;
         internal MultiMeshGPUState? MeshOwner;
         internal bool MeshCommand, MeshExported;
         internal bool Expired;
-        internal bool Alive => !Expired && (Borrowed?.Alive ?? true) && (MeshOwner?.Alive ?? true) && (!MeshCommand || MeshOwner?.CommandsAlive != false);
+        internal bool Alive => !Expired && (TextureSource?.Alive ?? true) && (Borrowed?.Alive ?? true) && (MeshOwner?.Alive ?? true) && (!MeshCommand || MeshOwner?.CommandsAlive != false);
         internal nint NativeHandle => Borrowed?.Native ?? Handle!.DangerousGetHandle();
         internal RenderHandle? Handle, Upload, Download, TextureScratch, InputShadow;
         internal bool ScratchColorTarget;
@@ -467,7 +471,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="rid">A live identity owned by this device.</param>
     /// <remarks>Borrowed renderer image identities release their wrapper and leases, preserving source ownership.
     /// Live renderer-owned instance buffers retain their resource lifetime and cannot be freed directly.
-    /// Expired borrowed identities may still be freed. Borrowers become invalid; they may still be freed explicitly. Pending readbacks complete
+    /// Expired borrowed identities may still be freed. Shared texture views are automatically freed with their original owner. Other borrowers become invalid and may still be freed explicitly. Pending readbacks complete
     /// before removal; their callbacks run after the resource is removed.</remarks>
     /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
     /// <exception cref="InvalidOperationException">A live instance buffer has resource-owned lifetime, or owner/list/native state is invalid.</exception>
@@ -476,8 +480,15 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         IdleList(); if (!_entries.TryGetValue(rid, out var entry)) throw new ArgumentException("The resource identity is not owned by this device.", nameof(rid)); if (entry.MeshOwner is not null && entry.Alive) throw new InvalidOperationException("The instance resource owns this retained buffer lifetime."); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         RenderingServer.NotifyRenderMutation();
-        _entries.Remove(rid); if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
-        EvictResourceCaches(rid); DeliverReadbacks();
+        ReleaseEntry(rid, entry); DeliverReadbacks();
+    }
+    private void ReleaseEntry(RID rid, Entry entry)
+    {
+        if (!_entries.Remove(rid)) return; entry.Expired = true;
+        if (entry.TextureViews is { } views) while (views.Count != 0) { var child = views[^1]; views.RemoveAt(views.Count - 1); if (_entries.TryGetValue(child, out var owned)) ReleaseEntry(child, owned); }
+        if (entry.TextureOwner != default && _entries.TryGetValue(entry.TextureOwner, out var owner)) owner.TextureViews?.Remove(rid);
+        if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.TextureAllocation?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
+        EvictResourceCaches(rid);
     }
     /// <inheritdoc />
     protected override void ValidateDisposal() { if (_serverOwner is not null && !_serverOwner.DeviceClosing) throw new InvalidOperationException("The renderer owns this device lifetime."); Access(); if (_activeList != 0 && _serverOwner is null) throw new InvalidOperationException("End the command list before disposing the device."); base.ValidateDisposal(); }
@@ -491,7 +502,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
-            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
+            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }
         base.Dispose(disposing);

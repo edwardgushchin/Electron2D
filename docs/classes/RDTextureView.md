@@ -1,6 +1,6 @@
 # RDTextureView
 
-Last updated: 2026-10-25
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureView`. **Source:** [RDTextureView.cs](../../src/Servers/Rendering/Device/RDTextureView.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-25
 
 ## Description
 
-A caller-owned initial view description. DataFormat.Max retains the allocation format. Creation copies each output channel's R/G/B/A, Identity, Zero or One source. Sampling uses the copied map after format conversion and filtering; fetch and gather follow the same component view. Depth comparison precedes its component map. Storage-image descriptors, input attachments and framebuffer attachments require identity maps. Updates, copies, clears and snapshots preserve raw stored channels. Alternate format reinterpretation still requires shared native format/subresource views and fails explicitly. This description owns no native identity and does not extend texture lifetime.
+A caller-owned initial or shared view description. DataFormat.Max retains the allocation format. Creation copies each output channel's R/G/B/A, Identity, Zero or One source. Sampling uses the copied map after format conversion and filtering; fetch and gather follow the same component view. Depth comparison precedes its component map. Storage-image descriptors, input attachments and framebuffer attachments require identity maps. Updates, copies, clears and snapshots preserve raw stored channels. Alternate format reinterpretation executes through [shared texture views](../components/shared-texture-views.md), including initial views and selected original layer/mip intervals. The allocation must declare compatible alternate formats. This description owns no native identity and does not extend texture lifetime.
 
 ## Example
 

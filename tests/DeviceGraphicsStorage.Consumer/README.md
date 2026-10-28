@@ -56,3 +56,15 @@ ELECTRON2D_TEST_RASTER_FAILURE=1 only for the latter. Each rejects all sixteen e
 operations and executes disabled-state graphics. Repeat with strict NativeAOT.
 See [logical color operations](../../docs/components/logic-operations.md) for the
 complete contract and evidence limits.
+
+`views` and `views-source` execute original-owner shared format/layer/mip views:
+raw transfer/queued snapshot ordering, physical self-copy/feedback guards, initial
+overrides and native format classes, GLSL/HLSL typed image atomics and sampled
+siblings in GENERAL, actual query extents, MSAA resolve, depth rejection, input
+snapshots without sampled source usage and zero warmed owner bytes. `views-canvas`
+checks selected/mapped retained pixels, raw partial-mip snapshots, borrowed source
+expiration, owner invalidation and renderer recreation. `views-unavailable` uses
+`LD_PRELOAD` with `mask-views.c`; `views-failure` also sets
+`ELECTRON2D_TEST_VIEWS_FAILURE=1`. Both check repeated setup rollback and surviving
+ordinary texture work. The mask intercepts only the private view procedure lookup.
+See [shared texture views](../../docs/components/shared-texture-views.md).

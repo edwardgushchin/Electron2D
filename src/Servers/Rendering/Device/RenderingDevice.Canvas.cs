@@ -30,7 +30,7 @@ public sealed unsafe partial class RenderingDevice
     }
     internal void CompleteRendererReadbacks()
     {
-        IdleList(); if (_submittedReadbacks.Count != 0) CompleteSubmission(); DeliverReadbacks();
+        IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission(); RetireRendererTextures(); GPUTextureViews.CollectIfActive(Device); DeliverReadbacks();
     }
     internal Image? CanvasImage(RID rid, uint layer)
     {
@@ -39,7 +39,7 @@ public sealed unsafe partial class RenderingDevice
         if (PixelType(info.Format) != 0) return IntegerCanvasImage(rid, layer, info);
         var format = CanvasImageFormat(info.Format);
         if (format is null) return ConvertedCanvasImage(entry, layer);
-        return Image.CreateFromData((int)info.Width, (int)info.Height, info.Mips > 1, format.Value, TextureGetData(rid, layer));
+        return CanvasSnapshot(info, format.Value, TextureGetData(rid, layer));
     }
     private Image IntegerCanvasImage(RID rid, uint layer, TextureInfo info)
     {
@@ -68,7 +68,7 @@ public sealed unsafe partial class RenderingDevice
                 };
             }
         }
-        return Image.CreateFromData((int)info.Width, (int)info.Height, info.Mips > 1, Image.Format.Rgbaf, System.Runtime.InteropServices.MemoryMarshal.AsBytes(output.AsSpan()).ToArray());
+        return CanvasSnapshot(info, Image.Format.Rgbaf, System.Runtime.InteropServices.MemoryMarshal.AsBytes(output.AsSpan()).ToArray());
     }
     private Image ConvertedCanvasImage(Entry source, uint layer)
     {
@@ -117,9 +117,16 @@ public sealed unsafe partial class RenderingDevice
         SubmitRecorded(); CompleteSubmission(); var pointer = SDL.MapGPUTransferBuffer(Device, transfer.DangerousGetHandle(), false);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map converted image read");
         Image image;
-        try { image = Image.CreateFromData((int)info.Width, (int)info.Height, info.Mips > 1, Image.Format.Rgbaf, new ReadOnlySpan<byte>((void*)pointer, (int)total).ToArray()); }
+        try { image = CanvasSnapshot(info, Image.Format.Rgbaf, new ReadOnlySpan<byte>((void*)pointer, (int)total).ToArray()); }
         finally { SDL.UnmapGPUTransferBuffer(Device, transfer.DangerousGetHandle()); }
         try { DeliverReadbacks(); return image; } catch { image.Dispose(); throw; }
+    }
+    private static Image CanvasSnapshot(TextureInfo info, Image.Format format, byte[] bytes)
+    {
+        // Image stores complete mip chains; a bounded native view can contain fewer levels.
+        var complete = info.Mips == System.Numerics.BitOperations.Log2(Math.Max(info.Width, info.Height)) + 1;
+        if (!complete && info.Mips > 1) bytes = bytes.AsSpan(0, Image.GetRequiredDataSize((int)info.Width, (int)info.Height, format, false)).ToArray();
+        return Image.CreateFromData((int)info.Width, (int)info.Height, complete && info.Mips > 1, format, bytes);
     }
     internal static Image.Format? CanvasImageFormat(DataFormat format) => format switch
     {

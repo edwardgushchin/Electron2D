@@ -49,13 +49,14 @@ public sealed unsafe partial class RenderingDevice
     }
     private void PrepareRendererTexture(Entry entry)
     {
-        var borrow = entry.Borrowed; if (borrow is null) return;
+        var borrow = (entry.TextureSource ?? entry).Borrowed; if (borrow is null) return;
         if (!borrow.Alive) throw new ArgumentException("The borrowed renderer texture allocation expired.");
         borrow.RefreshPixels(); var pixels = borrow.Pixels;
         if (pixels?.NeedsRecording != true) return;
         if (_drawPass != 0) throw new InvalidOperationException("Prepare authored texture updates before beginning a draw list.");
         pixels.Upload(Commands()); pixels.RecordUpload(); _rendererUploads.Add(pixels);
     }
+    private readonly List<RID> _retiredRendererTextureViews = new(8);
     private void RetireRendererTextures()
     {
         if (_command != 0 || _fence != 0 || _recordedReadbacks.Count != 0) return;
@@ -65,8 +66,10 @@ public sealed unsafe partial class RenderingDevice
             var entry = pair.Value; if (entry.Borrowed is not { } borrow || borrow.Alive) continue;
             if (_rendererTextures.GetValueOrDefault(borrow.Source) == pair.Key) _rendererTextures.Remove(borrow.Source);
             entry.Expired = true; entry.Borrowed = null; borrow.Dispose(); retired = true;
+            if (entry.TextureViews is { } views) _retiredRendererTextureViews.AddRange(views);
         }
-        if (retired) EvictResourceCaches();
+        foreach (var rid in _retiredRendererTextureViews) if (_entries.TryGetValue(rid, out var view)) ReleaseEntry(rid, view);
+        _retiredRendererTextureViews.Clear(); if (retired) EvictResourceCaches();
     }
     private void CommitRendererUploads() { foreach (var pixels in _rendererUploads) pixels.CommitUpload(); _rendererUploads.Clear(); }
     private void CancelRendererUploads() { foreach (var pixels in _rendererUploads) pixels.CancelUpload(); _rendererUploads.Clear(); }

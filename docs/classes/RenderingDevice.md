@@ -105,7 +105,10 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void TextureGetData(Electron2D.RID texture, System.UInt32 layer, System.Span<System.Byte> destination)` | Synchronizes and reads one layer mip chain into caller-owned storage. |
 | `public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Action<System.Byte[]> callback)` | Queues a request-time layer snapshot and delivers an independent mip chain at local completion. |
 | `public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Memory<System.Byte> destination, System.Action callback)` | Queues a layer snapshot into reusable caller-owned storage. |
-| `public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)` | Copies the actual texture allocation description. |
+| `public Electron2D.RID TextureCreateShared(Electron2D.RDTextureView view, Electron2D.RID withTexture)` | Copies a native format/component view over the original owner's full extent. |
+| `public Electron2D.RID TextureCreateSharedFromSlice(Electron2D.RDTextureView view, Electron2D.RID withTexture, System.UInt32 layer, System.UInt32 mipmap, System.UInt32 mipmaps = 1, Electron2D.RenderingDevice.TextureSliceType sliceType = Electron2D.RenderingDevice.TextureSliceType.Texture)` | Views one original layer and a positive mip interval. |
+| `public enum Electron2D.RenderingDevice.TextureSliceType` | [Ordinary slice selector](RenderingDevice.TextureSliceType.md). |
+| `public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)` | Copies stored format metadata and the selected view dimensions, layers and mip interval. |
 | `public System.Boolean TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.TextureUsageBits usageFlags)` | Reports whether the selected format supports the requested two-dimensional texture usage. |
 | `public System.Boolean TextureIsValid(Electron2D.RID texture)` | Reports whether an identity is a live texture of this device. |
 | `public System.Void TextureUpdate(Electron2D.RID texture, System.UInt32 layer, System.ReadOnlySpan<System.Byte> data)` | Updates one complete layer including every mip level. |
@@ -549,7 +552,7 @@ Preparation must cover the largest physical mip-chain size and peak concurrent r
 public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)
 ```
 
-Copies the actual texture allocation description.
+Copies stored format metadata and the selected view dimensions, layers and mip interval.
 
 A caller-owned description independent of the allocation.
 
@@ -1450,3 +1453,13 @@ Vertex-only source/SPIR-V programs now execute with copied `RDPipelineRasterizat
 [Copied graphics line width](../components/wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.
 
 [Native sample controls](../components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.
+
+<a id="texture-create-shared"></a>
+### TextureCreateShared(RDTextureView, RID)
+
+Copies `view` over the original owner resolved from `withTexture`. Includes its complete layer/mip extent. Max retains the stored format. Alternate formats must be declared shareable and native-compatible with every usage/sample role. Returns a device-owned shared RID automatically freed with that owner; freeing an intermediate view preserves siblings. Unknown/freed/foreign sources and disposed/null descriptions reject before publication. Missing native adapter support throws NotSupportedException; native setup failure throws InvalidOperationException. Calls follow the device owner-thread/idle-list contract.
+
+<a id="texture-create-shared-from-slice"></a>
+### TextureCreateSharedFromSlice(RDTextureView, RID, uint, uint, uint, TextureSliceType)
+
+Same ownership/format contract, selecting `layer`, first `mipmap` and `mipmaps` (default 1) from the original owner. `sliceType` defaults to Texture. Invalid selectors, layers or zero/overflowing mip intervals throw ArgumentOutOfRangeException. The new ordinary image reports selected dimensions and one layer. GetFormat preserves stored format, while shaders and attachments validate the effective view encoding. No pixel copies occur. See [shared texture views](../components/shared-texture-views.md) for transfers, physical feedback guards, renderer-source expiration and actual native verification.

@@ -726,7 +726,7 @@ def render():
             updated = "2026-10-25"
         if name in {"NavigationServer2D", "ProjectSettings", "UniformSetCacheRD", "FramebufferCacheRD"}:
             updated = "2026-10-27"
-        if name in {"RDPipelineMultisampleState", "RDPipelineDepthStencilState"}:
+        if name in {"RDPipelineMultisampleState", "RDPipelineDepthStencilState", "RDTextureView", "RDTextureFormat", "RenderingDevice"}:
             updated = "2026-10-28"
         if name == "Node":
             updated = "2026-10-28"

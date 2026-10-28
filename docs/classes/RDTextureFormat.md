@@ -1,6 +1,6 @@
 # RDTextureFormat
 
-Last updated: 2026-10-20
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureFormat`. **Source:** [RDTextureFormat.cs](../../src/Servers/Rendering/Device/RDTextureFormat.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-20
 
 ## Description
 
-A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty single-mip target allocations, including arrays; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
+A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; MIPMaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. A nonempty shareable list includes the exact allocation format; compatible alternate formats execute through [shared texture views](../components/shared-texture-views.md). ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty single-mip target allocations, including arrays; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
 
 InputAttachment supports single-mip color images and arrays, including exact multisample targets. An input array or combining it with Sampling retains a private readonly single-layer GPU snapshot for the input pass; see [ordered framebuffer inputs](../components/local-compute.md#ordered-framebuffer-passes-and-inputs). Depth/stencil input aspects retain their separate native prerequisite.
 
@@ -32,9 +32,9 @@ var texture = device.TextureCreate(format, view);
 | Declaration | Contract |
 | --- | --- |
 | `public RDTextureFormat()` | Creates a single-layer, one-texel R8 normalized image description. |
-| `public System.Void AddShareableFormat(Electron2D.RenderingDevice.DataFormat format)` | Adds an explicitly allowed alternate view format. |
+| `public System.Void AddShareableFormat(Electron2D.RenderingDevice.DataFormat format)` | Adds a permitted native view format; a nonempty list must include the allocation format. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Inherited typed metadata projection. |
-| `public System.Void RemoveShareableFormat(Electron2D.RenderingDevice.DataFormat format)` | Removes an allowed alternate view format. |
+| `public System.Void RemoveShareableFormat(Electron2D.RenderingDevice.DataFormat format)` | Removes a permitted native view format before allocation; existing textures retain their copied list. |
 | `public System.UInt32 ArrayLayers { get; set; }` | Gets or sets the number of independent image layers. |
 | `public Electron2D.RenderingDevice.DataFormat Format { get; set; }` | Gets or sets the encoded pixel or compressed-block format. |
 | `public System.UInt32 Height { get; set; }` | Gets or sets the base mip height in texels. |
@@ -63,7 +63,7 @@ Creates a single-layer, one-texel R8 normalized image description.
 public System.Void AddShareableFormat(Electron2D.RenderingDevice.DataFormat format)
 ```
 
-Adds an explicitly allowed alternate view format.
+Adds a permitted native view format; a nonempty list must include the allocation format.
 
 `format`: A concrete format identifier.
 
@@ -83,7 +83,7 @@ Extends inherited ElectronObject metadata with typed, validated configuration pr
 public System.Void RemoveShareableFormat(Electron2D.RenderingDevice.DataFormat format)
 ```
 
-Removes an allowed alternate view format.
+Removes a permitted native view format before allocation; existing textures retain their copied list.
 
 `format`: The concrete format to remove.
 

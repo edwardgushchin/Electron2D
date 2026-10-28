@@ -1,10 +1,10 @@
 namespace Electron2D;
 
-/// <summary>Describes an initial sampled image view.</summary>
+/// <summary>Describes a copied initial or shared image view.</summary>
 /// <remarks>Texture creation copies each sampled component source, including identity, zero and one.
 /// Sampling maps components after format conversion and filtering; raw transfers retain stored channels.
 /// Storage-image descriptors and framebuffer attachments require identity mappings.
-/// Alternate pixel formats require the shared native format-view adapter.</remarks>
+/// Alternate pixel formats use native shared image storage and must be declared shareable.</remarks>
 public sealed class RDTextureView : ElectronObject
 {
     /// <summary>Creates the default TextureView configuration.</summary>

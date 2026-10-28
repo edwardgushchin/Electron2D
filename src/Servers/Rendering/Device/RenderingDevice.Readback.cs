@@ -131,6 +131,7 @@ public sealed unsafe partial class RenderingDevice
         }
         RetireRendererTextures();
         RetireMultiMeshBuffers();
+        GPUTextureViews.CollectIfActive(Device);
     }
     private void DeliverReadbacks()
     {

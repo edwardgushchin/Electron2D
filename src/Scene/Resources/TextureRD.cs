@@ -45,6 +45,7 @@ public sealed class TextureRD : Texture
     /// <returns>A caller-owned image containing all readable mip levels; integer sources use raw component values in float32 RGBA.</returns>
     /// <remarks>This cold readback synchronizes pending device work. Formats without a direct Image representation
     /// convert on the GPU into floating-point RGBA; ordinary canvas drawing performs no CPU pixel copy.</remarks>
+    /// <remarks>Returns raw effective-format pixels. An incomplete selected mip chain yields a base-only Image; HasMIPMaps continues to describe the GPU resource.</remarks>
     public override Image? GetImage() => DeviceInfo is null ? null : _device!.CanvasImage(_texture, 0);
     internal override TexturePixels? CapturePixels() { ThrowIfDisposed(); return null; }
     /// <inheritdoc />

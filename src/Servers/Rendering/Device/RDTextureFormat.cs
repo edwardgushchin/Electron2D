@@ -42,10 +42,10 @@ public sealed class RDTextureFormat : ElectronObject
     /// <value>Initially false; copied and validated at allocation.</value>
     public bool IsResolveBuffer { get { ThrowIfDisposed(); return _isResolveBuffer; } set { ThrowIfDisposed(); _isResolveBuffer = value; } }
     private readonly HashSet<RenderingDevice.DataFormat> _shareable = [];
-    /// <summary>Adds an explicitly allowed alternate view format.</summary>
+    /// <summary>Adds a permitted native view format; a nonempty list must include the allocation format.</summary>
     /// <param name="format">A concrete format identifier.</param>
     public void AddShareableFormat(RenderingDevice.DataFormat format) { ThrowIfDisposed(); _shareable.Add(RDTextureConfiguration.FormatValue(format)); }
-    /// <summary>Removes an allowed alternate view format.</summary>
+    /// <summary>Removes a permitted native view format before allocation; existing textures retain their copied list.</summary>
     /// <param name="format">The concrete format to remove.</param>
     public void RemoveShareableFormat(RenderingDevice.DataFormat format) { ThrowIfDisposed(); _shareable.Remove(RDTextureConfiguration.FormatValue(format)); }
     internal RenderingDevice.DataFormat[] ShareableFormats => _shareable.ToArray();

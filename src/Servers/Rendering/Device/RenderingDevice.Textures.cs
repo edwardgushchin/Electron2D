@@ -117,7 +117,7 @@ public sealed unsafe partial class RenderingDevice
         41 => DataFormat.R64SINT,
         _ => DataFormat.Max
     };
-    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false, uint Swizzle = 0);
+    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false, uint Swizzle = 0, DataFormat StoredFormat = DataFormat.Max);
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {
         var native = (SDL.GPUTextureUsageFlags)0;
@@ -149,7 +149,7 @@ public sealed unsafe partial class RenderingDevice
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
-    /// <param name="view">Copied initial sampled component mapping; alternate pixel formats require a shared native format view.</param>
+    /// <param name="view">Copied initial format and sampled component mapping; alternate formats must be declared shareable.</param>
     /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
     /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary R32 Storage allocations also retain native simultaneous read-modify-write access.
@@ -166,8 +166,8 @@ public sealed unsafe partial class RenderingDevice
         if (kind == TextureType.Texture && layers != 1) throw new ArgumentException("An ordinary image has one layer.", nameof(format));
         if (mips > 1 + System.Numerics.BitOperations.Log2(Math.Max(width, height))) throw new ArgumentException("The mip count exceeds this image.", nameof(format));
 
-        if (view.FormatOverride != DataFormat.Max && view.FormatOverride != pixelFormat ||
-            shareable.Any(f => f != pixelFormat)) throw new NotSupportedException("Alternate native formats require texture-view integration.");
+        var viewedFormat = view.FormatOverride == DataFormat.Max ? pixelFormat : view.FormatOverride;
+        if (viewedFormat != pixelFormat && !shareable.Contains(viewedFormat)) throw new ArgumentException("The initial view format is not declared shareable.", nameof(view));
         if (!TextureIsFormatSupportedForUsage(pixelFormat, format.Samples != TextureSamples.Samples1 ? usage & ~(TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo) : usage)) throw new NotSupportedException("The device does not support this texture format/usage.");
         var samples = format.Samples; var resolve = format.IsResolveBuffer;
         if ((usage & TextureUsageBits.InputAttachment) != 0 && (mips != 1)) throw new ArgumentException("Input attachments require single-mip textures.", nameof(format));
@@ -179,53 +179,44 @@ public sealed unsafe partial class RenderingDevice
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
             var allowedUsage = targetRole | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment);
             if (mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets; sampling, storage and raw transfers require separate adapters.");
-            var multi = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, Swizzle: TextureSwizzles.Capture(view)) };
+            var multi = new Entry { Kind = Kind.Texture, Texture = new(viewedFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, Swizzle: TextureSwizzles.Capture(view), StoredFormat: pixelFormat) };
             try
             {
-                multi.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+                multi.Handle = CreateTextureStorage(multi, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
                 if (DepthFormat(pixelFormat)) InitializeDepth(multi); else for (uint layer = 0; layer < layers; layer++) ClearMultisample(multi, default, layer);
                 PrepareInputShadow(multi);
                 return Add(multi);
             }
-            catch { multi.InputShadow?.Dispose(); multi.Handle?.Dispose(); throw; }
+            catch { multi.InputShadow?.Dispose(); multi.Handle?.Dispose(); multi.TextureAllocation?.Dispose(); throw; }
         }
         if (DepthFormat(pixelFormat))
         {
             if (!data.IsEmpty) throw new NotSupportedException("Raw depth/stencil uploads require a native aspect-transfer adapter.");
-            var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, Swizzle: TextureSwizzles.Capture(view)) };
+            var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(viewedFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, Swizzle: TextureSwizzles.Capture(view), StoredFormat: pixelFormat) };
             try
             {
-                depthEntry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+                depthEntry.Handle = CreateTextureStorage(depthEntry, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
                 InitializeDepth(depthEntry); return Add(depthEntry);
             }
-            catch { depthEntry.Handle?.Dispose(); throw; }
+            catch { depthEntry.Handle?.Dispose(); depthEntry.TextureAllocation?.Dispose(); throw; }
         }
         if (!data.IsEmpty && data.Length != layers) throw new ArgumentException("Provide one mip chain per layer.", nameof(data));
-        var native = NativeFormat(pixelFormat); var offsets = new uint[mips]; var packed = new uint[mips]; var sizes = new uint[mips]; uint total = 0, transferSize = 0;
-        var alignment = Math.Max(4u, SDL.GPUTextureFormatTexelBlockSize(native));
-        for (var mip = 0; mip < mips; mip++)
-        {
-            packed[mip] = total; offsets[mip] = checked((transferSize + alignment - 1) / alignment * alignment); sizes[mip] = TextureBytes(native, Math.Max(1, width >> mip), Math.Max(1, height >> mip));
-            if ((ulong)total + sizes[mip] > int.MaxValue || (ulong)offsets[mip] + sizes[mip] > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format), "The mip chain exceeds managed transfer capacity.");
-            total += sizes[mip]; transferSize = offsets[mip] + sizes[mip];
-        }
-        if (total == 0 || total > int.MaxValue || transferSize > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format));
-        foreach (var bytes in data) if (bytes is null || bytes.Length != total) throw new ArgumentException("Each mip chain must have the exact byte size.", nameof(data));
-        var info = new TextureInfo(pixelFormat, kind, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve, TextureSwizzles.Capture(view));
-        var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = total };
+        var info = CaptureTextureInfo(viewedFormat, kind, width, height, layers, mips, usage, shareable, samples, resolve, TextureSwizzles.Capture(view), pixelFormat);
+        foreach (var bytes in data) if (bytes is null || bytes.Length != info.Total) throw new ArgumentException("Each mip chain must have the exact byte size.", nameof(data));
+        var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total };
         try
         {
-            entry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = native, Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+            entry.Handle = CreateTextureStorage(entry, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
             PrepareInputShadow(entry);
-            entry.Upload = Transfer(transferSize, SDL.GPUTransferBufferUsage.Upload);
-            var zero = data.IsEmpty ? new byte[total] : null;
+            entry.Upload = Transfer(info.TransferSize, SDL.GPUTransferBufferUsage.Upload);
+            var zero = data.IsEmpty ? new byte[info.Total] : null;
             for (uint layer = 0; layer < layers; layer++) UploadTexture(entry, layer, data.IsEmpty ? zero : data[(int)layer]);
             return Add(entry);
         }
-        catch { entry.Handle?.Dispose(); entry.InputShadow?.Dispose(); entry.Upload?.Dispose(); throw; }
+        catch { entry.Handle?.Dispose(); entry.TextureAllocation?.Dispose(); entry.InputShadow?.Dispose(); entry.Upload?.Dispose(); throw; }
     }
     private static void Layer(Entry entry, uint layer) { if (layer >= entry.Texture!.Layers) throw new ArgumentOutOfRangeException(nameof(layer)); }
-    private static SDL.GPUTextureRegion Region(Entry entry, uint layer, int mip) => new() { Texture = entry.NativeHandle, Layer = layer, MipLevel = (uint)mip, W = Math.Max(1, entry.Texture!.Width >> mip), H = Math.Max(1, entry.Texture.Height >> mip), D = 1 };
+    private SDL.GPUTextureRegion Region(Entry entry, uint layer, int mip) => GPUTextureViews.Region(Device, new() { Texture = entry.NativeHandle, Layer = layer, MipLevel = (uint)mip, W = Math.Max(1, entry.Texture!.Width >> mip), H = Math.Max(1, entry.Texture.Height >> mip), D = 1 });
     private void UploadTexture(Entry entry, uint layer, ReadOnlySpan<byte> data)
     {
         entry.Upload ??= Transfer(entry.Texture!.TransferSize, SDL.GPUTransferBufferUsage.Upload);
@@ -307,13 +298,13 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="texture">The identity to inspect.</param>
     /// <returns>True only for a live owned texture.</returns>
     public bool TextureIsValid(RID texture) { Access(); return _entries.TryGetValue(texture, out var entry) && entry.Kind == Kind.Texture && entry.Alive; }
-    /// <summary>Copies the actual texture allocation description.</summary>
+    /// <summary>Copies stored format metadata and the selected view dimensions, layers and mip interval.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <returns>A caller-owned description independent of the allocation.</returns>
     public RDTextureFormat TextureGetFormat(RID texture)
     {
         var info = Get(texture, Kind.Texture).Texture!;
-        var result = new RDTextureFormat { Width = info.Width, Height = info.Height, ArrayLayers = info.Layers, MIPMaps = info.Mips, TextureType = info.Type, Format = info.Format, UsageBits = info.Usage, Samples = info.Samples, IsResolveBuffer = info.Resolve };
+        var result = new RDTextureFormat { Width = info.Width, Height = info.Height, ArrayLayers = info.Layers, MIPMaps = info.Mips, TextureType = info.Type, Format = info.StoredFormat == DataFormat.Max ? info.Format : info.StoredFormat, UsageBits = info.Usage, Samples = info.Samples, IsResolveBuffer = info.Resolve };
         foreach (var format in info.Shareable) result.AddShareableFormat(format);
         return result;
     }

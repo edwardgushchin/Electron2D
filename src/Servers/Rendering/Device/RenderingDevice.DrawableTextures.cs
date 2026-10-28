@@ -31,7 +31,7 @@ public sealed unsafe partial class RenderingDevice
         for (var i = 0; i < sampleCount; i++)
         {
             var sample = Get(samples[i], Kind.Texture); PrepareRendererTexture(sample);
-            for (var j = 0; j < targets.Length; j++) if (sample.NativeHandle == colors[j].Texture) throw new ArgumentException("A blit source cannot alias any target allocation.");
+            for (var j = 0; j < targets.Length; j++) if (GPUTextureViews.Overlap(Device, sample.NativeHandle, sample.Texture!.Layers, sample.Texture.Mips, colors[j].Texture, 1, 1, (uint)mip)) throw new ArgumentException("A blit source cannot alias any target allocation.");
             var descriptor = material?.Program.Textures[i];
             if (PixelType(sample.Texture!.Format) != (descriptor?.PixelType ?? 0) || (sample.Texture.Type == TextureType.TextureArray) != (descriptor?.IsArray ?? false))
                 throw new ArgumentException("A blit image does not match its sampled scalar type or shape.");

@@ -11011,6 +11011,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.TextureSliceType",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.TextureSliceType",
+    "name": "TextureSliceType",
+    "signature": "public enum Electron2D.RenderingDevice.TextureSliceType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.TextureSwizzle",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.TextureSwizzle",
@@ -55344,6 +55362,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.TextureSamples",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSliceType.Texture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSliceType",
+    "name": "Texture",
+    "signature": "public const Electron2D.RenderingDevice.TextureSliceType Texture = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSliceType",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.TextureSwizzle.A()",
@@ -175908,6 +175939,74 @@
         "name": "data",
         "type": "System.ReadOnlySpan\u003CSystem.Byte[]\u003E",
         "default": "default"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.TextureCreateShared(Electron2D.RDTextureView,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "TextureCreateShared",
+    "signature": "public Electron2D.RID TextureCreateShared(Electron2D.RDTextureView view, Electron2D.RID withTexture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "view",
+        "type": "Electron2D.RDTextureView",
+        "default": null
+      },
+      {
+        "name": "withTexture",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.TextureCreateSharedFromSlice(Electron2D.RDTextureView,Electron2D.RID,System.UInt32,System.UInt32,System.UInt32,Electron2D.RenderingDevice.TextureSliceType)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "TextureCreateSharedFromSlice",
+    "signature": "public Electron2D.RID TextureCreateSharedFromSlice(Electron2D.RDTextureView view, Electron2D.RID withTexture, System.UInt32 layer, System.UInt32 mipmap, System.UInt32 mipmaps = 1, Electron2D.RenderingDevice.TextureSliceType sliceType = Texture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "view",
+        "type": "Electron2D.RDTextureView",
+        "default": null
+      },
+      {
+        "name": "withTexture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "layer",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "mipmap",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "mipmaps",
+        "type": "System.UInt32",
+        "default": "1"
+      },
+      {
+        "name": "sliceType",
+        "type": "Electron2D.RenderingDevice.TextureSliceType",
+        "default": "Texture"
       }
     ],
     "returnType": "Electron2D.RID",

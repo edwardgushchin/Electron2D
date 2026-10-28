@@ -29,7 +29,7 @@ public sealed unsafe partial class RenderingDevice
                 foreach (var entry in _graphicsSnapshots)
                 {
                     var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("snapshot graphics image");
-                    SDL.CopyGPUTextureToTexture(copy, new() { Texture = entry.NativeHandle }, new() { Texture = entry.InputShadow!.DangerousGetHandle() }, entry.Texture!.Width, entry.Texture.Height, 1, false);
+                    GPUTextureViews.Copy(Device, copy, new() { Texture = entry.NativeHandle }, new() { Texture = entry.InputShadow!.DangerousGetHandle() }, entry.Texture!.Width, entry.Texture.Height, 1, false);
                     SDL.EndGPUCopyPass(copy);
                 }
                 BeginDrawPass(false); return true;

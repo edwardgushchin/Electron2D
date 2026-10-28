@@ -29,3 +29,12 @@ EXPORTS
     e2d_render_images_pipeline
     e2d_render_logic_support
     e2d_render_logic_pipeline
+    e2d_render_view_support
+    e2d_render_view_create
+    e2d_render_view_destroy
+    e2d_render_texture_create
+    e2d_render_views_collect
+    e2d_render_views_release
+    e2d_render_view_region
+    e2d_render_view_format_support
+    e2d_render_view_overlap

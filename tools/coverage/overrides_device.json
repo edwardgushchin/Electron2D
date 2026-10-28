@@ -339,14 +339,14 @@
     {
       "godot": "RDTextureFormat::method:add_shareable_format(int:RenderingDevice.DataFormat)",
       "electron2d": "method:Electron2D.RDTextureFormat.AddShareableFormat(Electron2D.RenderingDevice.DataFormat)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Sampled component maps execute through derived native modules. Alternate native format views retain their allocation/view adapter. Native border and negotiated mirror-clamp addressing execute through the shared sampler adapter."
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
       "godot": "RDTextureFormat::method:remove_shareable_format(int:RenderingDevice.DataFormat)",
       "electron2d": "method:Electron2D.RDTextureFormat.RemoveShareableFormat(Electron2D.RenderingDevice.DataFormat)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Sampled component maps execute through derived native modules. Alternate native format views retain their allocation/view adapter. Native border and negotiated mirror-clamp addressing execute through the shared sampler adapter."
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
       "godot": "RDTextureFormat::property:array_layers",
@@ -393,14 +393,14 @@
     {
       "godot": "class:RDTextureView",
       "electron2d": "T:Electron2D.RDTextureView",
-      "state": "Partial",
-      "reason": "Copied initial sampled component maps execute across the retained renderer and local device. Alternate FormatOverride values still require shared native format/subresource views and ownership."
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
       "godot": "RDTextureView::property:format_override",
       "electron2d": "property:Electron2D.RDTextureView.FormatOverride()",
-      "state": "Partial",
-      "reason": "Max and the allocation format execute. Alternate format reinterpretation requires shared native format/subresource views with distinct lifetime ownership; creation explicitly rejects it."
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
       "godot": "RDTextureView::property:swizzle_a",
@@ -2164,7 +2164,7 @@
       "godot": "RenderingDevice::method:texture_copy(RID:,RID:,Vector3:,Vector3:,Vector3:,int:,int:,int:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureCopy(Electron2D.RID,Electron2D.RID,Electron2D.Vector3,Electron2D.Vector3,Electron2D.Vector3,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
       "state": "Partial",
-      "reason": "ADR 0028: native owner-thread local color-image transfers, validated mip/layer regions and roles, GPU command ordering, retained scratch lifetime, queued snapshots and prepared zero managed allocation. RenderingDeviceTextureTransferTests executes real Linux/Vulkan output. Raw matching texel/block footprints copy without resampling, compressed edges and disjoint self copies execute. Depth/shared native views remain allocation prerequisites; reinterpretation on other native drivers needs the verified compatible-view adapter."
+      "reason": "ADR 0028: native owner-thread local color-image transfers, validated mip/layer regions and roles, GPU command ordering, retained scratch lifetime, queued snapshots and prepared zero managed allocation. RenderingDeviceTextureTransferTests executes real Linux/Vulkan output. Raw matching texel/block footprints copy without resampling, compressed edges and disjoint self copies execute. Raw depth aspect copies retain their transfer adapter. Shared native views execute with original-coordinate physical alias guards; reinterpretation on other native drivers needs their verified compatible-view adapter."
     },
     {
       "godot": "class:Texture2DRD",
@@ -3906,6 +3906,30 @@
       "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Max()",
       "state": "Implemented",
       "reason": "ADR 0028: exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "godot": "RenderingDevice::enum:TextureSliceType",
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits.",
+      "electron2d": "T:Electron2D.RenderingDevice.TextureSliceType"
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSliceType.TEXTURE_SLICE_2D",
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits.",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSliceType.Texture()"
+    },
+    {
+      "godot": "RenderingDevice::method:texture_create_shared(RDTextureView:,RID:)",
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits.",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureCreateShared(Electron2D.RDTextureView,Electron2D.RID)"
+    },
+    {
+      "godot": "RenderingDevice::method:texture_create_shared_from_slice(RDTextureView:,RID:,int:,int:,int:,int:RenderingDevice.TextureSliceType)",
+      "state": "Implemented",
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits.",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureCreateSharedFromSlice(Electron2D.RDTextureView,Electron2D.RID,System.UInt32,System.UInt32,System.UInt32,Electron2D.RenderingDevice.TextureSliceType)"
     }
   ],
   "extras": [
@@ -4383,12 +4407,12 @@
       "reason": "ADRs 0004/0028: one-dimensional, volume and cube image roles are outside the strictly two-dimensional image API."
     },
     {
-      "state": "Blocked",
+      "state": "Implemented",
       "godot": [
         "RenderingDevice::method:texture_create_shared(RDTextureView:,RID:)",
         "RenderingDevice::method:texture_create_shared_from_slice(RDTextureView:,RID:,int:,int:,int:,int:RenderingDevice.TextureSliceType)"
       ],
-      "reason": "ADR 0028: native texture subresource/format view adapter and retained shared-view lifetime are missing. Implement with the first executable native-view slice."
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
       "state": "Blocked",
@@ -5238,18 +5262,18 @@
       "reason": "ADR 0028: creation copies R/G/B/A/identity/zero/one component sources. Sampling/fetch maps after format conversion and filtering; gather selects mapped components and depth comparison maps its result. Native variants follow bound images across compute, paired graphics, multiview, canvas, particle and writable-texture consumers without changing public bytecode or consuming uniform slots. Raw transfers stay unchanged; storage/input/framebuffer descriptors require identity. Checked Linux software Vulkan profiles; native heap, hardware and foreign platforms remain separate."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "class:RDTextureView"
       ],
-      "reason": "Copied initial sampled component maps execute across the retained renderer and local device. Alternate FormatOverride values still require shared native format/subresource views and ownership."
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "RDTextureView::property:format_override"
       ],
-      "reason": "Max and the allocation format execute. Alternate format reinterpretation requires shared native format/subresource views with distinct lifetime ownership; creation explicitly rejects it."
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     },
     {
       "state": "Implemented",
@@ -5346,6 +5370,22 @@
         "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_MAX"
       ],
       "reason": "ADR 0028: exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:TextureSliceType.TEXTURE_SLICE_3D",
+        "RenderingDevice::enum_value:TextureSliceType.TEXTURE_SLICE_CUBEMAP"
+      ],
+      "reason": "ADR 0004 strict image boundary: volume/cube slice roles are outside the two-dimensional image/independent-array product. Excluded; no implementation trigger."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDTextureFormat::method:add_shareable_format(int:RenderingDevice.DataFormat)",
+        "RDTextureFormat::method:remove_shareable_format(int:RenderingDevice.DataFormat)"
+      ],
+      "reason": "ADR 0028: native original-owner format/layer/mip views execute initial overrides, sampled maps, per-layer image stores/R32 atomics, color/depth/stencil targets, MSAA resolve, readonly input snapshots, raw transfers and retained canvas. Stored GetFormat metadata remains distinct from effective shader/attachment encoding. Nonempty shareable lists include the exact base format and validate native compatibility/usage/sample roles. Owner retirement automatically frees views; intermediate views preserve siblings. Native refusal rolls back pins/images/memory. See docs/components/shared-texture-views.md for executable checks and platform/native-heap limits."
     }
   ]
 }

@@ -25,7 +25,7 @@ public sealed unsafe partial class RenderingDevice
         {
             if (!types.TryGetValue(variable[1], out var pointer) || Op(pointer) != 32 || !images.TryGetValue(pointer[3], out var image)) continue;
             var index = instructions.Where(i => Op(i) == 71 && i.Length == 4 && i[1] == variable[2] && i[2] == 43).ToArray();
-            if (index.Length != 1 || index[0][3] > int.MaxValue || image[4] != 0 || image[5] != 0 || image[6] > 1) throw new ArgumentException("Invalid input attachment index or image role.", nameof(code));
+            if (index.Length != 1 || index[0][3] > int.MaxValue || image[4] is not (0 or 2) || image[5] != 0 || image[6] > 1) throw new ArgumentException("Invalid input attachment index or image role.", nameof(code));
             inputs.Add(variable[2], new((int)index[0][3], image[6] != 0));
         }
         var valueTypes = new Dictionary<uint, uint>();

@@ -42,7 +42,8 @@ public sealed unsafe partial class RenderingDevice
         // shortcut: other drivers need a verified compatible-format adapter before reinterpretation is enabled.
         if (sourceFormat != destinationFormat && TextureDriver != "vulkan") throw new NotSupportedException("Format reinterpretation requires this backend's compatible-view adapter.");
         CopyBlocks(source, a, width, height); CopyBlocks(destination, b, width, height);
-        var self = ReferenceEquals(source, destination) && sourceMipmap == destinationMipmap && sourceLayer == destinationLayer;
+        var physicalSource = GPUTextureViews.Location(Device, a); var physicalDestination = GPUTextureViews.Location(Device, b);
+        var self = physicalSource.Texture == physicalDestination.Texture && physicalSource.MipLevel == physicalDestination.MipLevel && physicalSource.Layer == physicalDestination.Layer;
         if (self && a.X < (ulong)b.X + width && b.X < (ulong)a.X + width && a.Y < (ulong)b.Y + height && b.Y < (ulong)a.Y + height) throw new ArgumentException("Source and destination rectangles overlap.");
         var scratch = self ? PrepareTextureScratch(source, false) : null;
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin image region copy");
@@ -51,9 +52,9 @@ public sealed unsafe partial class RenderingDevice
             if (scratch is not null)
             {
                 var temporary = a; temporary.Texture = scratch.DangerousGetHandle(); temporary.Layer = 0;
-                SDL.CopyGPUTextureToTexture(pass, a, temporary, width, height, 1, false); a = temporary;
+                GPUTextureViews.Copy(Device, pass, a, temporary, width, height, 1, false); a = temporary;
             }
-            SDL.CopyGPUTextureToTexture(pass, a, b, width, height, 1, false);
+            GPUTextureViews.Copy(Device, pass, a, b, width, height, 1, false);
         }
         finally { SDL.EndGPUCopyPass(pass); }
     }
@@ -150,7 +151,7 @@ public sealed unsafe partial class RenderingDevice
             try
             {
                 var source = new SDL.GPUTextureLocation { Texture = scratch.DangerousGetHandle(), MipLevel = mip };
-                for (var layer = baseLayer; layer < baseLayer + layerCount; layer++) SDL.CopyGPUTextureToTexture(copy, source, new() { Texture = entry.NativeHandle, MipLevel = mip, Layer = layer }, Math.Max(1, info.Width >> (int)mip), Math.Max(1, info.Height >> (int)mip), 1, false);
+                for (var layer = baseLayer; layer < baseLayer + layerCount; layer++) GPUTextureViews.Copy(Device, copy, source, new() { Texture = entry.NativeHandle, MipLevel = mip, Layer = layer }, Math.Max(1, info.Width >> (int)mip), Math.Max(1, info.Height >> (int)mip), 1, false);
             }
             finally { SDL.EndGPUCopyPass(copy); }
         }

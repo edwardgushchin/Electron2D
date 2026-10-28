@@ -18,6 +18,7 @@ internal static unsafe partial class GPUDeviceFactory
     internal const string SharedAtomic64Property = "Electron2D.gpu.shared_int64_atomics";
     private static void Destroy(nint device)
     {
+        GPUTextureViews.Release(device, 1);
         NativeImageRelease(device, 1);
         SDL.DestroyGPUDevice(device);
     }

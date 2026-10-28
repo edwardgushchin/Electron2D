@@ -684,7 +684,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | Resource | Partial | 24 |
 | [RDShaderSource](classes/RDShaderSource.md) | RefCounted | Partial | 13 |
 | [RDTextureFormat](classes/RDTextureFormat.md) | RefCounted | Partial | 13 |
-| [RDTextureView](classes/RDTextureView.md) | RefCounted | Partial | 5 |
+| [RDTextureView](classes/RDTextureView.md) | RefCounted | Implemented | 5 |
 | [RDUniform](classes/RDUniform.md) | RefCounted | Implemented | 5 |
 | [RDVertexAttribute](classes/RDVertexAttribute.md) | RefCounted | Implemented | 6 |
 | [RID](classes/RID.md) | — | Implemented | 10 |

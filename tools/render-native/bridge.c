@@ -7,6 +7,8 @@
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
 
+extern uint64_t e2d_views_memory(SDL_GPUDevice *);
+
 typedef struct E2DRenderMemory {
     uint64_t textures, buffers, total;
 } E2DRenderMemory;
@@ -48,7 +50,8 @@ E2D_EXPORT int e2d_render_memory(SDL_GPUDevice *device, uint32_t abi, E2DRenderM
         }
     }
     SDL_UnlockMutex(renderer->allocatorLock);
-    if (!valid) return -1;
+    uint64_t views = e2d_views_memory(device);
+    if (!valid || !add(&result.textures, views) || !add(&result.total, views)) return -1;
     *out = result;
     return 1;
 }

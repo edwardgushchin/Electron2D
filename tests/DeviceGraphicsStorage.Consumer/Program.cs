@@ -9,6 +9,7 @@ internal static partial class GraphicsStorage
 {
     internal static void Run(string mode)
     {
+        if (mode.StartsWith("views", StringComparison.Ordinal)) { Views(mode); return; }
         if (mode.StartsWith("logic", StringComparison.Ordinal)) { Logic(mode); return; }
         if (mode.StartsWith("images", StringComparison.Ordinal)) { Images(mode); return; }
         if (mode.StartsWith("depth", StringComparison.Ordinal)) { Depth(mode); return; }

@@ -8,6 +8,8 @@
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
 
+extern bool e2d_views_general_sample(SDL_GPUDevice *, VkImageView, SDL_GPUTexture *const *, uint32_t);
+
 #define IMAGE_CACHE "Electron2D.render.image_layouts"
 typedef struct ImageLayout {
     uint32_t counts[8], masks;
@@ -141,6 +143,8 @@ E2D_EXPORT int e2d_render_image_transition(SDL_GPUDevice *device, uint32_t abi, 
     for (uint32_t i = 0; i < count; i++) if (!track_texture(command, ((VulkanTextureContainer *)textures[i])->activeTexture)) return -1;
     for (uint32_t i = 0; i < count; i++) {
         VulkanTexture *texture = ((VulkanTextureContainer *)textures[i])->activeTexture;
+        bool repeated = false; for (uint32_t j = 0; j < i; j++) repeated |= ((VulkanTextureContainer *)textures[j])->activeTexture->image == texture->image;
+        if (repeated) continue;
         VkImageLayout ordinary = (texture->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_GENERAL;
         VkImageMemoryBarrier barrier = {.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER, .srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT, .dstAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT,
             .oldLayout = general ? ordinary : VK_IMAGE_LAYOUT_GENERAL, .newLayout = general ? VK_IMAGE_LAYOUT_GENERAL : ordinary, .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED, .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED, .image = texture->image,
@@ -213,6 +217,7 @@ E2D_EXPORT int e2d_render_prepare_images(SDL_GPUDevice *device, uint32_t abi, SD
         for (uint32_t i = 0; i < layout->samplerCount; i++) {
             VkImageLayout image_layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             for (uint32_t j = 0; j < count; j++) if (sampler_views[i] == ((VulkanTextureContainer *)general[j])->activeTexture->fullView) image_layout = VK_IMAGE_LAYOUT_GENERAL;
+            if (image_layout != VK_IMAGE_LAYOUT_GENERAL && e2d_views_general_sample(device, sampler_views[i], general, count)) image_layout = VK_IMAGE_LAYOUT_GENERAL;
             images[image_count] = (VkDescriptorImageInfo){samplers[i], sampler_views[i], image_layout};
             writes[n] = (VkWriteDescriptorSet){.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, .dstSet = set, .dstBinding = n, .descriptorCount = 1, .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .pImageInfo = &images[image_count++]}; n++;
         }

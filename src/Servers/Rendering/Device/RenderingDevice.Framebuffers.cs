@@ -178,6 +178,9 @@ public sealed unsafe partial class RenderingDevice
         }
         foreach (var pass in layout.Passes)
         {
+            var outputs = pass.Colors.Concat(pass.Resolves).Append(pass.DepthIndex).Where(i => i >= 0).ToArray();
+            for (var a = 0; a < outputs.Length; a++) for (var b = a + 1; b < outputs.Length; b++)
+                    if (GPUTextureViews.Overlap(Device, Get(textures[outputs[a]], Kind.Texture).NativeHandle, (uint)viewCount, 1, Get(textures[outputs[b]], Kind.Texture).NativeHandle, (uint)viewCount, 1)) throw new ArgumentException("Framebuffer output views must address disjoint image subresources.", nameof(textures));
             foreach (var preserved in pass.Preserves) Get(textures[preserved], Kind.Texture);
             for (var i = 0; i < pass.Resolves.Length; i++)
                 if (pass.Resolves[i] >= 0) ResolvePair(Get(textures[pass.Colors[i]], Kind.Texture).Texture!, Get(textures[pass.Resolves[i]], Kind.Texture).Texture!);

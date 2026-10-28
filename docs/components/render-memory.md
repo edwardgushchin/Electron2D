@@ -1,6 +1,6 @@
 # Native render memory
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 `RenderingDevice.GetMemoryUsage(MemoryType)` reads texture regions, buffer
 regions or committed allocation blocks in bytes. The same producers feed
@@ -16,7 +16,7 @@ allocator under its existing native mutex. Texture and buffer values use actual
 native resource allocation requirements. Total sums committed native blocks,
 including free space retained for reuse. It is not the sum of public descriptor
 sizes, a host RAM query, a physical adapter budget or other applications' VRAM.
-Native driver internals outside this allocator are excluded.
+Private mutable-format images add their exact native allocation requirements to texture and total values once. Ordinary shared views add no image payload. These counters are read under their own native cache mutex after releasing the SDL allocator mutex; concurrent mutation can fall between the two snapshots. See [shared texture views](shared-texture-views.md). Native driver internals outside these allocators are excluded.
 
 [ADR 0054](../decisions/physics-backends.md#adr-0054) shares one physical SDL
 payload between independent renderer, local-compute and GPU-physics leases.

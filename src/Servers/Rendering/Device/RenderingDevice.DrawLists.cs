@@ -71,9 +71,10 @@ public sealed unsafe partial class RenderingDevice
     private bool ActiveAttachment(Entry entry)
     {
         var layout = DrawPassLayout; var target = _drawTarget!;
-        foreach (var index in layout.Colors) if (index >= 0 && Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
-        if (layout.DepthIndex >= 0 && Get(target.Textures[layout.DepthIndex], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
-        foreach (var index in layout.Resolves) if (index >= 0 && Get(target.Textures[index], Kind.Texture).NativeHandle == entry.NativeHandle) return true;
+        var views = (uint)FramebufferLayouts(target.Format).ViewCount;
+        foreach (var index in layout.Colors) if (index >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[index], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
+        if (layout.DepthIndex >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[layout.DepthIndex], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
+        foreach (var index in layout.Resolves) if (index >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[index], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
         return false;
     }
     private bool AttachmentIgnored(int index)
