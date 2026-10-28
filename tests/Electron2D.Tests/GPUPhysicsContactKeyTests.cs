@@ -9,7 +9,7 @@ internal static class GPUPhysicsContactKeyTests
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_THREAD") == "1");
-        try { Native(); Scene(); }
+        try { Native(); EagerStorage(); SnapshotStorage(false); SnapshotStorage(true); Scene(); }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
         Console.WriteLine("Compact contact keys: frozen fields, identity, demand, replay and zero-allocation publication passed.");
     }
@@ -49,6 +49,55 @@ internal static class GPUPhysicsContactKeyTests
         try { store.ReadContactReports(new([body], [4], counts, keys, counts)); } catch (ArgumentException) { invalid = true; }
         Check(invalid, "Compact offset/count aliasing rejects before publication");
     }
+    private static void EagerStorage()
+    {
+        var space = PhysicsServer.SpaceCreate(PhysicsServer.Backend.GPU);
+        var body = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.BodySetMaxContactsReported(body, 4);
+            PhysicsServer.BodySetSpace(body, space);
+            PhysicsServer.SpaceSetActive(space, true);
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            var bytes = PhysicsServer.Service.GetSceneSpace(space).GPUContactStagingBytes;
+            Check(bytes.Reports > 0 && bytes.Keys == 0, "An eager raw receiver reserves numerical staging without an unused key mirror");
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
+    }
+    private static void SnapshotStorage(bool portable)
+    {
+        using var world = new World(PhysicsServer.Backend.GPU);
+        using var root = new SubViewport { World = world };
+        using var shape = new CircleShape { Radius = 10 };
+        var floor = new StaticBody { Position = new(0, 18) };
+        floor.AddChild(new CollisionShape { Shape = shape }); root.AddChild(floor);
+        var quiet = new RigidBody { Freeze = true, ContactMonitor = true, MaxContactsReported = 128 };
+        root.AddChild(quiet);
+        var body = new RigidBody { ContactMonitor = true, MaxContactsReported = 4, CanSleep = false };
+        body.AddChild(new CollisionShape { Shape = shape }); root.AddChild(body);
+        using var tree = new SceneTree(root);
+        PhysicsServer.AreaSetGravity(world.Space, 0); tree.PhysicsFrame(.01);
+        var space = PhysicsServer.Service.GetSceneSpace(world.Space);
+        Check(space.GPUContactStagingBytes.Reports == 0, "A fresh compact snapshot source has no numerical staging mirror");
+        Span<Store.ContactReport> expected = stackalloc Store.ContactReport[1];
+        space.GPUStore!.ReadFrozenContactReports(space.GPUStore.ContactResultVersion, 0, expected);
+        if (portable)
+        {
+            using var map = new PhysicsSnapshotMap(world.Space);
+            map.Bind(1, 1, floor.GetRID()); map.Bind(2, 1, quiet.GetRID()); map.Bind(3, 1, body.GetRID());
+            var packet = new PhysicsSnapshot(1 << 20); map.Capture(packet); map.Apply(packet);
+        }
+        else
+        {
+            using var checkpoint = PhysicsServer.SpaceCreateCheckpoint(world.Space); checkpoint.Restore();
+        }
+        var view = PhysicsServer.BodyGetDirectState(body.GetRID())!;
+        Check(space.GPUContactStagingBytes.Reports > 0 && view.GetContactCount() > 0 && view.GetContactCollider(0) == floor.GetRID() &&
+            view.GetContactLocalPosition(0) == expected[0].Position && view.GetContactColliderPosition(0) == expected[0].ColliderPosition &&
+            view.GetContactLocalNormal(0) == expected[0].Normal && view.GetContactImpulse(0) == expected[0].Impulse &&
+            view.GetContactLocalVelocityAtPosition(0) == expected[0].Velocity && view.GetContactColliderVelocityAtPosition(0) == expected[0].ColliderVelocity,
+            "First snapshot demand materializes and restores complete contacts after an empty receiver's reserved segment");
+    }
     private static void Scene()
     {
         using var world = new World(PhysicsServer.Backend.GPU);
@@ -62,6 +111,9 @@ internal static class GPUPhysicsContactKeyTests
         using var tree = new SceneTree(root);
         PhysicsServer.AreaSetGravity(world.Space, 60); PhysicsServer.AreaSetLinearDamp(world.Space, 0); PhysicsServer.AreaSetAngularDamp(world.Space, 0);
         var space = PhysicsServer.Service.GetSceneSpace(world.Space); var store = space.GPUStore!;
+        Frame();
+        var staging = space.GPUContactStagingBytes;
+        Check(staging.Keys > 0 && staging.Reports == 0, "A monitor-only receiver reserves keys without a numerical staging mirror");
         Frame(); var view = PhysicsServer.BodyGetDirectState(body.GetRID())!;
         Check(view.GetContactCount() > 0 && view.GetContactCollider(0) == floor.GetRID(), "The monitor and identity getters observe real contact keys");
         var reads = store.ReportReadCount; _ = view.GetContactColliderID(0); _ = view.GetContactColliderShape(0);
@@ -76,6 +128,7 @@ internal static class GPUPhysicsContactKeyTests
             view.GetContactLocalVelocityAtPosition(0) == old.Velocity && view.GetContactColliderVelocityAtPosition(0) == old.ColliderVelocity &&
             view.GetContactCollider(0) == floorRID && view.GetContactColliderID(0) == floorID,
             "Late getters retain the selected fields, logical shapes and identity through pose/velocity/shape edits");
+        Check(space.GPUContactStagingBytes.Reports == 0, "A late single-row getter does not reserve a whole numerical staging mirror");
         floor.AddChild(new CollisionShape { Shape = rectangle });
         // Recreate a stationary contact before comparing the same complete frame path.
         for (var i = 0; i < 128; i++) Frame();

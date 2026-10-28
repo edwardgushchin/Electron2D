@@ -42,6 +42,48 @@ per-receiver transfer capacity are prepared before warmed reads. Full contact
 arrays remain available for eager consumers and snapshot capture; the change
 reduces routine transfer, not numerical work or the public contact contract.
 
+### Demand-based host staging (2026-10-28)
+
+The space reserves staging for the selected publication format: compact keys for
+monitor-only scenes, numerical reports for eager consumers. It no longer reserves
+both payload arrays before either is used. A late single-receiver numerical read
+uses its row scratch without reserving a whole numerical staging array. The
+existing numerical-demand hint may select full reports on the next interval.
+First local/portable snapshot capture prepares numerical capacity for every
+receiver segment before scattering frozen selected rows, including gaps reserved
+by empty receivers. Once demanded, buffers retain their capacity for warmed
+mode changes and replay. Full selected numerical rows remain resident on device.
+
+Schema 6 scene reports add optional `gpuContactStagingBytes` with `keys`, `reports`
+and `scratch` payload capacities, captured at the measured-step boundary. These
+counters exclude array headers, receiver metadata, per-view contacts, native/device
+storage and other managed heap allocations. They are internal fixture diagnostics;
+the public composed memory monitor retains its separate producer requirements.
+
+The source-bound 16384-body/four-wall probe uses 64 warmup and 64 measured complete
+frames, with the unchanged 144 Hz/four-substep/sixteen-sweep monitored scene.
+Before/after key payloads are 4194304/4194304 bytes and row scratch is 544/544;
+numerical staging falls from 17825792 to zero, saving exactly 17 MiB of reserved
+payload. Both fresh processes pass physical gates and retain 0/0 owner/all-thread
+managed bytes. Their state/contact hashes differ; numerical bit equality is not
+an acceptance condition. These short probes qualify staging capacity and the
+exercised physical bounds; controlled full-step and window-speed acceptance stay
+open. Baseline/candidate runtime SHA-256 values are
+`807082b76f49539dd76c985b265d6197766a00e255cf2d23f24ed2b71d642b9d` and
+`76f6b1e8c89cf6378aab887f4ec051aafc7896f0b465fc3a6f76c5faa649b96d`.
+Receipts, source deltas and payload manifests are under
+`bin/physics-contact-staging/2026-10-28/`.
+
+The storage regression fails on the earlier eager reservation. The corrected
+owner/separate-lane cohorts pass fresh raw eager storage, first local/portable
+capture after an empty receiver's reserved segment, every frozen numerical field,
+late-row reads, callback/depth demand and 128 warmed complete frames at zero
+managed allocation. Dense 512-receiver and mixed scene/raw publication controls
+also pass their existing wake, current-state and local/portable restore gates.
+No declaration status changes: 1364/1369 (99.63%), five Partial, 92 Excluded.
+
+### Compact transfer qualification
+
 The focused native/scene regression compares every frozen field with the full
 selection, changes pose/velocity and removes a collider shape before the first
 numerical read, checks stale selection/offset alias rejection, local/portable

@@ -213,8 +213,11 @@ internal sealed partial class PhysicsSpace
             _gpuReportBodies[_gpuReportBodyCount] = GPUCollider(backend).GPUHandle;
             _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);
         }
-        if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, contacts * 2));
-        if (_gpuReportIdentities.Length < contacts) Array.Resize(ref _gpuReportIdentities, _gpuReports.Length);
+        if (_gpuUseContactKeys)
+        {
+            if (_gpuReportIdentities.Length < contacts) Array.Resize(ref _gpuReportIdentities, Math.Max(8, checked(contacts * 2)));
+        }
+        else if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, checked(contacts * 2)));
         GPUStore!.CaptureContactReports = _gpuReportBodyCount > 0;
     }
     private void ReleaseGPUState()
