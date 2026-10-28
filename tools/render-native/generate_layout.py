@@ -47,6 +47,7 @@ def generate(source):
         gpu[gpu.index("#define MAX_TEXTURE_SAMPLERS_PER_STAGE"):gpu.index("typedef struct TextureCommonHeader")],
         block(gpu, "typedef struct TextureCommonHeader"),
         block(gpu, "typedef struct GraphicsPipelineCommonHeader"),
+        block(gpu, "typedef struct ComputePipelineCommonHeader"),
         "typedef struct VulkanBuffer VulkanBuffer;", "typedef struct VulkanTexture VulkanTexture;",
         "typedef struct VulkanTextureContainer VulkanTextureContainer;",
         "typedef struct VulkanMemoryAllocation VulkanMemoryAllocation;",
@@ -67,6 +68,8 @@ def generate(source):
         block(vulkan, "typedef struct DescriptorSetLayout\n{"),
         block(vulkan, "typedef struct VulkanGraphicsPipelineResourceLayout\n{"),
         block(vulkan, "typedef struct VulkanGraphicsPipeline\n{"),
+        block(vulkan, "typedef struct VulkanComputePipelineResourceLayout\n{"),
+        block(vulkan, "typedef struct VulkanComputePipeline\n{"),
 
         vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    Sint32 usedTextureCapacity;") + len("    Sint32 usedTextureCapacity;")] + "\n} VulkanCommandBuffer;", "",
     ])

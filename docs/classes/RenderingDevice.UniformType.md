@@ -12,7 +12,7 @@ Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Imag
 
 | Declaration | Contract |
 | --- | --- |
-| `public const Electron2D.RenderingDevice.UniformType Image = 3` | A writable image descriptor. |
+| `public const Electron2D.RenderingDevice.UniformType Image = 3` | A typed storage image descriptor for ordinary color texels or independent array layers. |
 | `public const Electron2D.RenderingDevice.UniformType ImageBuffer = 6` | One formatted image buffer for indexed reads, compute stores and supported 32-bit atomics. |
 | `public const Electron2D.RenderingDevice.UniformType InputAttachment = 9` | A framebuffer input attachment. |
 | `public const Electron2D.RenderingDevice.UniformType Sampler = 0` | A sampler descriptor. |
@@ -34,7 +34,7 @@ Descriptor-category values used by RDUniform. UniformBuffer, StorageBuffer, Imag
 public const Electron2D.RenderingDevice.UniformType Image = 3
 ```
 
-A writable image descriptor.
+A typed storage image descriptor for ordinary color texels or independent array layers.
 
 <a id="member-5011cc50953c"></a>
 ### ImageBuffer

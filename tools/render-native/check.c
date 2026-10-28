@@ -85,6 +85,9 @@ static void image_check(SDL_GPUDevice *device, SDL_GPUShaderCreateInfo shader_in
     MultisampleState samples = {0}; DepthStencilState depth = {0};
     require(e2d_render_images_pipeline(device, 1, &info, 1, 1, &samples, &depth, 257) == NULL);
     // These empty shaders exercise descriptor ownership without requiring graphics store instructions.
+    SDL_GPUGraphicsPipeline *readonly_pipeline = e2d_render_images_pipeline(device, 2, &info, 1, 1, &samples, &depth, 257); require(readonly_pipeline != NULL); SDL_ReleaseGPUGraphicsPipeline(device, readonly_pipeline);
+    require(e2d_render_images_pipeline(device, 2, &info, 1, 1, &samples, &depth, 257 | (1u << 16)) == NULL);
+    require(e2d_render_images_pipeline(device, 2, &info, 1, 1, &samples, &depth, 257 | (1u << 18)) == NULL);
     require(SDL_SetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.graphics_storage", 3));
     SDL_GPUGraphicsPipeline *pipeline = e2d_render_images_pipeline(device, 1, &info, 1, 1, &samples, &depth, 257); require(pipeline != NULL);
     VulkanRenderer *renderer = (VulkanRenderer *)device->driverData; int ids = SDL_GetAtomicInt(&renderer->layoutResourceID);

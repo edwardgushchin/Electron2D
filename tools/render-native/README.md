@@ -106,3 +106,21 @@ The factory independently retains logical feature ownership within at most 32 ra
 subprofiles. test_logic_mask.c refuses only that feature request. See
 [logical color operations](../../docs/components/logic-operations.md) for semantics,
 refusal and verification limits. Test masks are never packaged.
+
+Array storage uses view ABI 2: array selector 2 retains all selected layers in one
+single-mip compute-write view. ABI 1 ordinary/shared views remain available.
+`e2d_render_prepare_compute_images` ABI 2 replaces only compute's readonly set when
+a sampler shares physical storage with a writable image; shared descriptors use
+GENERAL and independent descriptors preserve READ_ONLY. The prepare flag enters
+or leaves the deduplicated complete-root image scope, retaining image-write views
+and bypassing SDL’s single-subresource compute-image transitions. Graphics scopes
+also resolve shared views to their original full allocation before transitioning.
+Descriptor-pool ownership
+and retirement remain on SDL commands. View ABI 2 checks the required descriptor
+procedures before publication. `e2d_render_images_pipeline` and the image-aware
+logic request also accept ABI 2, with actual writing-stage bits 16..17 above the
+existing 16 image-kind bits; ABI 1 retains its inferred writing-stage guard.
+Readonly arrays therefore need no graphics-store feature. `array-storage-check.comp.glsl`
+is an optional external compute fixture for Electron2DRenderCheck, supplied through
+ELECTRON2D_TEST_ARRAY_STORAGE_SPIRV; the check forwards real Vulkan descriptor writes
+while observing the exact shared/independent layouts and verifies layer-two bytes.

@@ -136,7 +136,7 @@ internal static class DeviceImageArrays
             }
             if (op == 60 && valueTypes.TryGetValue(i[3], out var atomic) && Opaque(atomic))
             {
-                var image = Image(atomic); if (types[image][3] != 1 || types[image][5] != 0 || types[image][8] is not (24 or 33)) throw new NotSupportedException("Image atomics require ordinary R32SINT or R32UINT storage images.");
+                var image = Image(atomic); if (types[image][3] != 1 || types[image][5] > 1 || types[image][8] is not (24 or 33)) throw new NotSupportedException("Image atomics require R32SINT or R32UINT storage images.");
                 atomicPointers.Add(i[2], (image, i[3], i[4], i[5], i[1])); continue;
             }
             if (op == 83 && atomicPointers.TryGetValue(i[3], out var copied)) { atomicPointers.Add(i[2], copied); continue; }

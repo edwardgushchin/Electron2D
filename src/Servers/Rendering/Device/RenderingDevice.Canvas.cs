@@ -14,7 +14,7 @@ public sealed unsafe partial class RenderingDevice
     internal TextureInfo ValidateCanvasImage(RID rid, bool array)
     {
         IdleList(); var info = Get(rid, Kind.Texture).Texture!;
-        if ((info.Type == TextureType.TextureArray) != array || array && info.Layers < 2) throw new ArgumentException("The canvas image sampling role does not match.", nameof(rid));
+        if ((info.Type == TextureType.TextureArray) != array) throw new ArgumentException("The canvas image sampling role does not match.", nameof(rid));
         if (info.Samples != TextureSamples.Samples1) throw new NotSupportedException("Resolve multisample images before canvas sampling.");
         if ((info.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("The image has no sampling role.", nameof(rid));
         return info;

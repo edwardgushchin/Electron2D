@@ -265,7 +265,7 @@ public sealed unsafe partial class RenderingDevice
                     if (ActiveAttachment(resource)) throw new InvalidOperationException("An active output attachment cannot be read as storage during its render pass.");
                     if (_generalImages.Count != 0)
                     {
-                        if (NativeBindImage(Device, 1, _command, resource.NativeHandle, (uint)descriptor.Native, fragment ? 1u : 0u, descriptor.NativeImage ? 1u : 0u) != 1) throw new InvalidOperationException("The native graphics image could not be bound.");
+                        if (NativeBindImage(Device, 1, _command, StorageImageHandle(resource, descriptor.Array), (uint)descriptor.Native, fragment ? 1u : 0u, descriptor.NativeImage ? 1u : 0u) != 1) throw new InvalidOperationException("The native graphics image could not be bound.");
                     }
                     else if (fragment) SDL.BindGPUFragmentStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1); else SDL.BindGPUVertexStorageTextures(_drawPass, (uint)descriptor.Native, binding, 1);
                 }

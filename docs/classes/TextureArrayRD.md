@@ -57,3 +57,5 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 ## Renderer allocation interop
 
 RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).
+
+[Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) executes typed compute/vertex/fragment loads, stores and signed/unsigned R32 atomics across independent layers, including one-layer arrays. Canvas sampling borrows the same GPU storage; private views retain one mip and follow original/renderer lifetime.

@@ -38,3 +38,4 @@ EXPORTS
     e2d_render_view_region
     e2d_render_view_format_support
     e2d_render_view_overlap
+    e2d_render_prepare_compute_images

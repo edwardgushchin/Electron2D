@@ -1,3 +1,5 @@
+[Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) connects existing Image descriptors to complete independent-layer GPU loads/stores/R32 atomics, fixed descriptor arrays and retained TextureArrayRD consumers. No public type or signature is added.
+
 [Camera pixel feeds](../components/camera-feeds.md) connect opt-in native discovery/capture and caller-produced copied images to ordinary Texture views on both renderers. Source ownership, owner-delivered events, prepared conversion, resource storage and external-image limits follow [ADR 0115](../decisions/camera-feeds.md#adr-0115).
 
 [Texture drawing](../components/canvas-rendering.md#texture-drawing-contract-2026-10-26) now has a current native contract across object/RID/direct virtual routes and moving CPU/GPU receivers. Named atlas sampling rejects missing backing storage before canvas/blit submission while cold authoring remains valid.

@@ -91,7 +91,7 @@ public sealed unsafe partial class RenderingDevice
                 if (samplerTypes.Contains(imageType)) continue;
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("The image descriptor type has no scalar native adapter.");
-                if (atomicImages.Contains(variable.ID) && (image.Sampled != 2 || image.Format is not (24 or 33) || image.Array != 0)) throw new NotSupportedException("Image atomics require ordinary R32SINT or R32UINT storage images.");
+                if (atomicImages.Contains(variable.ID) && (image.Sampled != 2 || image.Format is not (24 or 33))) throw new NotSupportedException("Image atomics require R32SINT or R32UINT storage images.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 if (readonlyTranslation.Images.TryGetValue(variable.ID, out var originalFormat))
                 {
@@ -110,7 +110,6 @@ public sealed unsafe partial class RenderingDevice
                 var writable = image.Sampled == 2;
                 if (image.Depth == 1 && (writable || pixelType != 0)) throw new NotSupportedException("Depth comparison requires a sampled floating-point image.");
                 if (combined && writable) throw new ArgumentException("A storage image cannot contain a combined sampler.", nameof(code));
-                if (writable && image.Array != 0) throw new NotSupportedException("Array image storage requires subresource-view integration.");
                 var nativeImage = writable ? imageSlot++ : textureSlot++;
                 if (imageSlot > 8 || textureSlot > 16) throw new NotSupportedException("Compute image bindings exceed backend limits.");
                 var origin = logical[variable.ID];

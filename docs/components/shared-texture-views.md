@@ -31,8 +31,9 @@ storage. Storage images and attachments require identity channel maps.
 Views execute through ordinary/array sampling, selected-layer writable image
 loads/stores/R32 atomics, color/depth/stencil attachments, multisample color resolve,
 readonly input snapshots and retained `TextureRD`/`TextureArrayRD` consumers.
-Direct writable image-array descriptors retain their native array write binding
-and SPIR-V lowering dependency; a per-layer ordinary view already executes.
+Direct [array storage descriptors](graphics-storage-images.md#compute-and-array-consumers)
+now execute native full-layer/single-mip loads, writes and signed/unsigned R32
+atomics in compute and independently enabled graphics stages.
 Physical range overlap guards cover framebuffer outputs, draw feedback, blits and
 self copies. Disjoint layers/mips remain usable. Sampled siblings of writable
 views share the actual image's GENERAL descriptor layout.

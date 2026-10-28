@@ -259,6 +259,11 @@ E2D_EXPORT int e2d_render_logic_support(SDL_GPUDevice *device, uint32_t abi)
 }
 static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic)
 {
+    uint32_t required = ((images & 255) ? 1 : 0) | ((images & 65280) ? 2 : 0);
+    if (abi == 2) {
+        if ((images >> 18) || ((images >> 16) & ~required)) return NULL;
+        required = images >> 16; images &= 65535; abi = 1;
+    }
     if (!depth || (depth->flags & ~3u) || !isfinite(depth->minimum) || !isfinite(depth->maximum) || depth->minimum < 0 || depth->maximum > 1 || depth->minimum > 1 || depth->maximum < 0 ||
         (depth->front_mask | depth->front_write | depth->front_reference | depth->back_mask | depth->back_write | depth->back_reference) > 255 || images > 65535 || logic > 16) return NULL;
     if (!valid_multisample(device, abi, info, samples)) return NULL;
@@ -267,8 +272,7 @@ static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uin
     if ((depth->flags & 2) && !info->depth_stencil_state.enable_stencil_test) return NULL;
     if (images) {
         if (e2d_render_image_support(device, 1) != 1) return NULL;
-        uint32_t required = ((images & 255) ? 1 : 0) | ((images >> 8) ? 2 : 0);
-        if (required & ~(uint32_t)SDL_GetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.graphics_storage", 0)) return NULL;
+        if (required & ~(uint32_t)SDL_GetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.graphics_storage", 0)) { SDL_SetError("Graphics image stores require an enabled feature for each writing stage"); return NULL; }
     }
     if (logic && (e2d_render_logic_support(device, 1) != 1 || !SDL_GetBooleanProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.logic_op", false))) return NULL;
     return create_line_pipeline(device, abi, info, width, discard, samples, depth, images, logic);

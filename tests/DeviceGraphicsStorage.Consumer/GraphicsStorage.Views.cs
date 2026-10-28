@@ -108,7 +108,10 @@ internal static partial class GraphicsStorage
         using var sampleUniform = ViewUniform(UniformType.SamplerWithTexture, 0, sampler, sampled); using var imageUniform = ViewUniform(UniformType.Image, 1, counter); using var outputUniform = ViewUniform(UniformType.StorageBuffer, 2, output); using var arrayUniform = ViewUniform(UniformType.SamplerWithTexture, 3, sampler, layered); var set = device.UniformSetCreate([sampleUniform, imageUniform, outputUniform, arrayUniform], shader, 0); using var wrong = ViewUniform(UniformType.Image, 1, sampled); Reject<ArgumentException>(() => device.UniformSetCreate([sampleUniform, wrong, outputUniform, arrayUniform], shader, 0)); uint[] results = new uint[64], pixels = new uint[16];
         void Cycle()
         {
-            device.TextureClear(counter, default, 0, 1, 0, 1); var list = device.ComputeListBegin(); device.ComputeListBindComputePipeline(list, pipeline); device.ComputeListBindUniformSet(list, set, 0); device.ComputeListDispatch(list, 1, 1, 1); device.ComputeListEnd(); device.BufferGetData(output, MemoryMarshal.AsBytes(results.AsSpan())); device.TextureGetData(counter, 0, MemoryMarshal.AsBytes(pixels.AsSpan()));
+            device.TextureClear(counter, default, 0, 1, 0, 1); var list = device.ComputeListBegin();
+            try { device.ComputeListBindComputePipeline(list, pipeline); device.ComputeListBindUniformSet(list, set, 0); device.ComputeListDispatch(list, 1, 1, 1); }
+            finally { device.ComputeListEnd(); }
+            device.BufferGetData(output, MemoryMarshal.AsBytes(results.AsSpan())); device.TextureGetData(counter, 0, MemoryMarshal.AsBytes(pixels.AsSpan()));
         }
         Cycle(); for (var i = 0; i < 16; i++) Check(results[i * 4] == BitConverter.SingleToUInt32Bits(.25f) && Math.Abs(BitConverter.UInt32BitsToSingle(results[i * 4 + 1]) - .8f) < .00001f && results[i * 4 + 2] == 0 && results[i * 4 + 3] == 0x03010408 && pixels[i] == 1, "Native view sampling/array maps/query extents compose with typed atomic writes to a disjoint subresource of the same image.");
         for (var i = 0; i < 16; i++) Cycle(); var bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 32; i++) Cycle(); Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Prepared view sample/atomic/readback cycles allocate zero owner bytes.");

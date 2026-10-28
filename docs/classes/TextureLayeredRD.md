@@ -8,7 +8,7 @@ Last updated: 2026-10-25
 
 ## Description
 
-Abstract borrowed device image-array resource. Independent array storage requires at least two layers and a sampled float, normalized or integer image of the active retained rendering device. Arrays stay separate from ordinary rectangle drawing and bind through typed shader sampler defaults/overrides.
+Abstract borrowed device image-array resource. Independent array storage accepts one or more layers and a sampled float, normalized or integer image of the active retained rendering device. Arrays stay separate from ordinary rectangle drawing and bind through typed shader sampler defaults/overrides.
 
 The binding borrows device pixels; disposing the resource or freeing a server wrapper never frees the source image. Freeing the device image empties live metadata; renderer shutdown expires the device. Canvas drawing samples native storage directly with no CPU frame bridge. Sampled component maps captured by the device image follow ordinary/layered shader, lighting and particle consumers; snapshots retain raw image components. Snapshots require CPURead or CanCopyFrom, synchronize device work and copy every mip. Representable formats retain encoded data; other sampled color formats convert on GPU to floating RGBA. Resource archives reconstruct an unbound object; duplication borrows the same image. Mutating bindings and disposing live bindings obey device owner/submission guards.
 
@@ -163,7 +163,7 @@ public Electron2D.RID TextureRDRID { get; set; }
 
 Gets or sets a sampled image-array identity of the active rendering device.
 
-An empty identity initially. Bound arrays require at least two image layers.
+An empty identity initially. Bound arrays contain one or more independent image layers.
 
 Device identities remain borrowed and transient; archives do not store this binding.
 
@@ -174,3 +174,5 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 ## Renderer allocation interop
 
 RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).
+
+[Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) executes typed compute/vertex/fragment loads, stores and signed/unsigned R32 atomics across independent layers, including one-layer arrays. Canvas sampling borrows the same GPU storage; private views retain one mip and follow original/renderer lifetime.

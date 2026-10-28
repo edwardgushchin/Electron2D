@@ -11,6 +11,7 @@
     <Electron2DShader Include="Shaders/*.comp.glsl;Shaders/*.comp.hlsl" Stage="compute" Profile="device" />
     <Electron2DShader Include="Shaders/*.vert.glsl;Shaders/*.vert.hlsl" Stage="vertex" Profile="device" />
     <Electron2DShader Include="Shaders/*.frag.glsl;Shaders/*.frag.hlsl" Stage="fragment" Profile="device" />
+    <Electron2DShader Include="Shaders/array-storage.canvas.glsl" Stage="fragment" Profile="canvas" />
   </ItemGroup>
   <Import Project="../../tools/shaders/Electron2D.Shaders.targets" />
   <Target Name="BuildGraphicsStorageImportTool" BeforeTargets="_CompileElectron2DShaders">

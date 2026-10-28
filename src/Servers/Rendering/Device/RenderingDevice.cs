@@ -35,7 +35,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         SamplerWithTexture = 1,
         /// <summary>A sampled texture descriptor.</summary>
         Texture = 2,
-        /// <summary>A writable image descriptor.</summary>
+        /// <summary>A typed storage image descriptor for ordinary color texels or independent array layers.</summary>
         Image = 3,
         /// <summary>One formatted buffer for indexed shader reads.</summary>
         TextureBuffer = 4,
@@ -68,7 +68,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal bool Expired;
         internal bool Alive => !Expired && (TextureSource?.Alive ?? true) && (Borrowed?.Alive ?? true) && (MeshOwner?.Alive ?? true) && (!MeshCommand || MeshOwner?.CommandsAlive != false);
         internal nint NativeHandle => Borrowed?.Native ?? Handle!.DangerousGetHandle();
-        internal RenderHandle? Handle, Upload, Download, TextureScratch, InputShadow;
+        internal RenderHandle? Handle, Upload, Download, TextureScratch, InputShadow, StorageArrayView;
         internal bool ScratchColorTarget;
         internal byte[] Data = [];
         internal uint Size, BufferOffset;
@@ -79,6 +79,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal bool UnnormalizedSampling;
         internal bool CompareSampling, LinearSampling, LinearFormatSampling, GraphicsStorage, RestartIndices;
         internal uint GraphicsImages;
+        internal uint GraphicsImageWrites;
         internal IndexBufferFormat IndexFormat;
         internal VertexArray? Vertices;
         internal IndexArray? Indices;
@@ -241,7 +242,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or vertex with an optional fragment stage.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
-    /// <remarks>Vertex-only programs require DiscardPrimitives at pipeline creation and retain no public fragment bytecode. FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable graphics buffers and ordinary images require the enabled native feature of each writing stage; images additionally require the native descriptor/layout adapter and address original base-mip storage. Unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
+    /// <remarks>Vertex-only programs require DiscardPrimitives at pipeline creation and retain no public fragment bytecode. FP64 and 64-bit integer modules require their enabled native Vulkan shaderFloat64/shaderInt64 features, including symbolic templates. Compute 64-bit buffer/workgroup atomics additionally require their independently enabled native Vulkan 1.2 storage features. Half and Int8/UInt8/Int16/UInt16 modules require their independently enabled native arithmetic/storage features; exact compact push reconstruction also requires the matching Float16, Int16 or Int8 arithmetic. Writable graphics buffers and ordinary/array images require the enabled native feature of each writing stage; images additionally require the native descriptor/layout adapter and address original base-mip storage. Unsupported templates reject before identity publication. Specialization modules retain copied symbolic templates. Pipeline creation applies typed values before native/layout validation; ordinary shaders retain their validated native program.</remarks>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); var program = CaptureDeviceProgram(spirvData, name);
@@ -277,7 +278,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         ValidateGraphicsStorage(layout);
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
-        foreach (var binding in layout) if (binding.NativeImage) entry.GraphicsImages |= 1u << (binding.Native + (binding.Stage == ShaderStage.Fragment ? 8 : 0));
+        foreach (var binding in layout) if (binding.NativeImage) { entry.GraphicsImages |= 1u << (binding.Native + (binding.Stage == ShaderStage.Fragment ? 8 : 0)); if (binding.Writable) entry.GraphicsImageWrites |= binding.Stage == ShaderStage.Fragment ? 2u : 1u; }
         entry.Sources = sources; entry.Constants = constants; entry.OutputSlots = outputSlots; entry.ViewIndex = viewIndex;
         if (template) return entry;
         ValidateShaderLimits(modules, entry);
@@ -385,7 +386,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="xGroups">Positive X group count, at most 65535.</param>
     /// <param name="yGroups">Positive Y group count, at most 65535.</param>
     /// <param name="zGroups">Positive Z group count, at most 65535.</param>
-    /// <remarks>Runtime storage-buffer lengths reflect each resource bound for this dispatch, including rebinding within one submission.</remarks>
+    /// <remarks>Runtime storage-buffer lengths reflect each resource bound for this dispatch, including rebinding within one submission.
+    /// Array storage images address every retained layer of one base mip. Sampled aliases use the same native image with coherent descriptor layouts;
+    /// unsupported native adapters reject before dispatch, and callers retain their ordinary command-list lifetime.</remarks>
     public void ComputeListDispatch(long computeList, uint xGroups, uint yGroups, uint zGroups)
     {
         List(computeList);
@@ -401,13 +404,14 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
         Span<uint> bufferSizes = stackalloc uint[8];
         var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
+        var imageHandles = stackalloc nint[8];
         var samplers = stackalloc SDL.GPUTextureSamplerBinding[16]; var samplerCount = 0;
         foreach (var descriptor in _pipeline.Layout)
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || set.Shader != Get(_pushPipeline).Shader) throw new InvalidOperationException("Bind each pipeline resource set first.");
             var ids = set.Bindings[descriptor.Slot];
             ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var buffer = Get(ids[ResourceID(descriptor, BufferID(descriptor.Type))]);
-            if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.NativeHandle }; imageCount++; }
+            if (descriptor.Type == UniformType.Image) { imageHandles[descriptor.Native] = StorageImageHandle(buffer, descriptor.Array); images[descriptor.Native] = new() { Texture = imageHandles[descriptor.Native] }; imageCount++; }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[ResourceID(descriptor, 1)]).NativeHandle }; samplerCount++; }
             else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; bufferSizes[descriptor.Native] = buffer.Size; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
@@ -415,14 +419,19 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }
         PushUniforms(_pipeline);
         _pipeline.Compute?.PrepareBufferSizes(_command, ReadOnlySpan<uint>.Empty, bufferSizes[..count]);
-        var pass = SDL.BeginGPUComputePass(_command, (nint)images, (uint)imageCount, (nint)buffers, (uint)count);
+        var nativeImages = UseNativeComputeImages(imageHandles, (uint)imageCount, samplers, (uint)samplerCount); var preparedImages = false;
+        var pass = SDL.BeginGPUComputePass(_command, (nint)images, nativeImages ? 0 : (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
-        SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
-        _pipeline.Compute?.BindBufferSizes(pass);
-        if (samplerCount != 0) SDL.BindGPUComputeSamplers(pass, 0, (nint)samplers, (uint)samplerCount);
-        if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
-        else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
-        SDL.EndGPUComputePass(pass);
+        try
+        {
+            SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
+            _pipeline.Compute?.BindBufferSizes(pass);
+            if (samplerCount != 0) SDL.BindGPUComputeSamplers(pass, 0, (nint)samplers, (uint)samplerCount);
+            if (nativeImages) { PrepareComputeImages(imageHandles, (uint)imageCount, true); preparedImages = true; }
+            if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
+            else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
+        }
+        finally { try { if (preparedImages) PrepareComputeImages(imageHandles, (uint)imageCount, false); } finally { SDL.EndGPUComputePass(pass); } }
     }
     /// <summary>Establishes a full dependency after prior dispatches in this list.</summary>
     /// <param name="computeList">The active list.</param>
@@ -487,7 +496,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (!_entries.Remove(rid)) return; entry.Expired = true;
         if (entry.TextureViews is { } views) while (views.Count != 0) { var child = views[^1]; views.RemoveAt(views.Count - 1); if (_entries.TryGetValue(child, out var owned)) ReleaseEntry(child, owned); }
         if (entry.TextureOwner != default && _entries.TryGetValue(entry.TextureOwner, out var owner)) owner.TextureViews?.Remove(rid);
-        if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.TextureAllocation?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
+        if (NeedsGraphicsSnapshot(entry)) _graphicsSnapshotCount--; if (entry.Borrowed is { } borrow && _rendererTextures.GetValueOrDefault(borrow.Source) == rid) _rendererTextures.Remove(borrow.Source); entry.StorageArrayView?.Dispose(); entry.Borrowed?.Dispose(); ReleaseViews(entry); ReleaseSwizzles(entry); ReleaseProgram(entry.Variant); ReleaseProgram(entry); entry.TextureAllocation?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose(); entry.InputShadow?.Dispose();
         EvictResourceCaches(rid);
     }
     /// <inheritdoc />
@@ -502,7 +511,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();
-            foreach (var e in _entries.Values) { e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
+            foreach (var e in _entries.Values) { e.StorageArrayView?.Dispose(); e.Borrowed?.Dispose(); ReleaseViews(e); ReleaseSwizzles(e); ReleaseProgram(e.Variant); ReleaseProgram(e); e.TextureAllocation?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); e.InputShadow?.Dispose(); }
             _entries.Clear(); _generalImages.Clear(); _graphicsSnapshots.Clear(); _graphicsSnapshotCount = 0; _rendererTextures.Clear(); _sourceCache.Clear(); _sourceCacheBytes = 0; _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _screens.Clear(); _screenFormats.Clear(); _screenDraw = null; _activeList = 0; CancelReadbacks(); _fetchSampler?.Dispose(); _fetchSampler = null; _context.Dispose();
         }
         base.Dispose(disposing);

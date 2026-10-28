@@ -116,14 +116,14 @@ public sealed unsafe partial class RenderingDevice
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try
                 {
-                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, program.GraphicsImages, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, program.GraphicsImages, program.GraphicsImageWrites, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     for (var view = 1; view < views; view++)
                     {
                         var source = Get(shader, Kind.Shader);
                         var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: discard ? null : target.ColorSlots, viewIndex: (uint)view);
                         entry.ViewPrograms[view - 1] = viewProgram;
                         info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
-                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, viewProgram.GraphicsImages, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, viewProgram.GraphicsImages, viewProgram.GraphicsImageWrites, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     }
                     return Add(entry);
                 }

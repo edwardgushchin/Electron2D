@@ -11,6 +11,7 @@ public sealed unsafe partial class RenderingDevice
         var enabled = SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.GraphicsStorageProperty, 0);
         foreach (var binding in layout)
         {
+            if (binding.Type == UniformType.Image && binding.Array) RequireStorageArrayViews();
             if (binding.NativeImage && (_imageSupport ??= NativeImageSupport(Device, 1)) != 1) throw new NotSupportedException("Graphics storage images require the native descriptor/layout adapter.");
             if (!binding.Writable || binding.Stage == ShaderStage.Compute) continue;
             var feature = binding.Stage == ShaderStage.Vertex ? 1 : 2;

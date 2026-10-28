@@ -8,6 +8,7 @@
 #define E2D_EXPORT __attribute__((visibility("default")))
 #endif
 
+extern SDL_GPUTexture *e2d_render_view_region(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *, uint32_t *, uint32_t *);
 extern bool e2d_views_general_sample(SDL_GPUDevice *, VkImageView, SDL_GPUTexture *const *, uint32_t);
 
 #define IMAGE_CACHE "Electron2D.render.image_layouts"
@@ -130,28 +131,37 @@ static VulkanCommandBuffer *checked_command(SDL_GPUDevice *device, uint32_t abi,
     VulkanCommandBuffer *command = (VulkanCommandBuffer *)commands;
     return command->common.device == device && command->renderer == (VulkanRenderer *)device->driverData && !(device->debug_mode && command->common.submitted) ? command : NULL;
 }
+static int transition_images(SDL_GPUDevice *device, VulkanCommandBuffer *command, SDL_GPUTexture *const *textures, uint32_t count, uint32_t general)
+{
+    VulkanRenderer *renderer = command->renderer; VulkanTexture *roots[16];
+    for (uint32_t i = 0; i < count; i++) {
+        VulkanTextureContainer *container = (VulkanTextureContainer *)textures[i];
+        if (!container || !container->activeTexture || container->activeTexture->aspectFlags != VK_IMAGE_ASPECT_COLOR_BIT || !container->activeTexture->subresources[0].computeWriteView) return -1;
+        uint32_t layer = 0, level = 0; SDL_GPUTexture *root = e2d_render_view_region(device, 1, textures[i], &layer, &level);
+        if (!root) return -1;
+        roots[i] = ((VulkanTextureContainer *)root)->activeTexture;
+    }
+    for (uint32_t i = 0; i < count; i++) if (!track_texture(command, roots[i]) || !track_texture(command, ((VulkanTextureContainer *)textures[i])->activeTexture)) return -1;
+    for (uint32_t i = 0; i < count; i++) {
+        VulkanTexture *texture = roots[i];
+        bool repeated = false; for (uint32_t j = 0; j < i; j++) repeated |= roots[j]->image == texture->image;
+        if (repeated) continue;
+        VkImageLayout ordinary = (texture->usage & (SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ)) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL :
+            (texture->usage & SDL_GPU_TEXTUREUSAGE_COLOR_TARGET) ? VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL :
+            (texture->usage & SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_GENERAL;
+        VkImageMemoryBarrier barrier = {.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER, .srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT, .dstAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT,
+            .oldLayout = general ? ordinary : VK_IMAGE_LAYOUT_GENERAL, .newLayout = general ? VK_IMAGE_LAYOUT_GENERAL : ordinary, .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED, .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED, .image = texture->image,
+            .subresourceRange = {.aspectMask = texture->aspectFlags, .levelCount = texture->levelCount, .layerCount = texture->layerCount}};
+        renderer->vkCmdPipelineBarrier(command->commandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, NULL, 0, NULL, 1, &barrier);
+    }
+    return 1;
+}
 E2D_EXPORT int e2d_render_image_transition(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, SDL_GPUTexture *const *textures, uint32_t count, uint32_t general)
 {
     if (!textures || count > 16 || general > 1) return -1;
     VulkanCommandBuffer *command = checked_command(device, abi, commands); if (!command) return -1;
     if (device->debug_mode && (command->common.render_pass.in_progress || command->common.compute_pass.in_progress || command->common.copy_pass.in_progress)) return -1;
-    VulkanRenderer *renderer = command->renderer;
-    for (uint32_t i = 0; i < count; i++) {
-        VulkanTextureContainer *container = (VulkanTextureContainer *)textures[i];
-        if (!container || !container->activeTexture || container->activeTexture->aspectFlags != VK_IMAGE_ASPECT_COLOR_BIT || !container->activeTexture->subresources[0].computeWriteView) return -1;
-    }
-    for (uint32_t i = 0; i < count; i++) if (!track_texture(command, ((VulkanTextureContainer *)textures[i])->activeTexture)) return -1;
-    for (uint32_t i = 0; i < count; i++) {
-        VulkanTexture *texture = ((VulkanTextureContainer *)textures[i])->activeTexture;
-        bool repeated = false; for (uint32_t j = 0; j < i; j++) repeated |= ((VulkanTextureContainer *)textures[j])->activeTexture->image == texture->image;
-        if (repeated) continue;
-        VkImageLayout ordinary = (texture->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_GENERAL;
-        VkImageMemoryBarrier barrier = {.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER, .srcAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT, .dstAccessMask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT,
-            .oldLayout = general ? ordinary : VK_IMAGE_LAYOUT_GENERAL, .newLayout = general ? VK_IMAGE_LAYOUT_GENERAL : ordinary, .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED, .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED, .image = texture->image,
-            .subresourceRange = {.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT, .levelCount = texture->levelCount, .layerCount = texture->layerCount}};
-        renderer->vkCmdPipelineBarrier(command->commandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, NULL, 0, NULL, 1, &barrier);
-    }
-    return 1;
+    return transition_images(device, command, textures, count, general);
 }
 E2D_EXPORT int e2d_render_bind_image(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, SDL_GPUTexture *image, uint32_t slot, uint32_t fragment, uint32_t storage)
 {
@@ -194,6 +204,50 @@ fail:
     }
 ready:
     return pool->descriptorSets[pool->descriptorSetIndex++];
+}
+E2D_EXPORT int e2d_render_prepare_compute_images(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, SDL_GPUTexture *const *general, uint32_t count, uint32_t prepare)
+{
+    if (prepare > 1 || abi != 2 || !general || count > 8) { SDL_SetError("Invalid compute image adapter ABI or image count"); return -1; }
+    VulkanCommandBuffer *command = checked_command(device, 1, commands);
+    if (!command || !command->currentComputePipeline || (device->debug_mode && !command->common.compute_pass.in_progress)) { SDL_SetError("Compute image descriptors require an active owned compute pipeline"); return -1; }
+    for (uint32_t i = 0; i < count; i++) if (!general[i] || !((VulkanTextureContainer *)general[i])->activeTexture) { SDL_SetError("Invalid compute storage image"); return -1; }
+    VulkanRenderer *renderer = command->renderer;
+    VulkanComputePipelineResourceLayout *pipeline = command->currentComputePipeline->resourceLayout;
+    if (pipeline->numSamplers > 16 || pipeline->numReadonlyStorageTextures > 8 || pipeline->numReadonlyStorageBuffers > 8) { SDL_SetError("Compute image descriptors exceed native capacity"); return -1; }
+    if (pipeline->numReadWriteStorageTextures != count || command->readWriteComputeStorageTextureSubresourceCount != 0) { SDL_SetError("Compute image adapter requires its own complete storage bindings"); return -1; }
+    if (!prepare) {
+        int result = transition_images(device, command, general, count, 0);
+        for (uint32_t i = 0; i < count; i++) { command->readWriteComputeStorageTextureViewBindings[i] = VK_NULL_HANDLE; if (device->debug_mode) command->common.compute_pass.read_write_storage_texture_bound[i] = false; }
+        return result;
+    }
+    bool shared = false;
+    for (uint32_t i = 0; i < pipeline->numSamplers; i++) shared |= e2d_views_general_sample(device, command->computeSamplerTextureViewBindings[i], general, count);
+    if (shared) {
+        DescriptorSetLayout *layout = pipeline->descriptorSetLayouts[0];
+        VkDescriptorSet set = acquire_set(renderer, command, layout, 0); if (!set) { SDL_SetError("Could not acquire compute image descriptor set"); return -1; }
+        VkWriteDescriptorSet writes[32]; VkDescriptorImageInfo images[24]; VkDescriptorBufferInfo buffers[8]; uint32_t n = 0;
+        for (uint32_t i = 0; i < pipeline->numSamplers; i++) {
+            VkImageView view = command->computeSamplerTextureViewBindings[i];
+            images[n] = (VkDescriptorImageInfo){command->computeSamplerBindings[i], view, e2d_views_general_sample(device, view, general, count) ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL};
+            writes[n] = (VkWriteDescriptorSet){.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, .dstSet = set, .dstBinding = n, .descriptorCount = 1, .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .pImageInfo = &images[n]}; n++;
+        }
+        for (uint32_t i = 0; i < pipeline->numReadonlyStorageTextures; i++) {
+            images[n] = (VkDescriptorImageInfo){.imageView = command->readOnlyComputeStorageTextureViewBindings[i], .imageLayout = VK_IMAGE_LAYOUT_GENERAL};
+            writes[n] = (VkWriteDescriptorSet){.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, .dstSet = set, .dstBinding = n, .descriptorCount = 1, .descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, .pImageInfo = &images[n]}; n++;
+        }
+        for (uint32_t i = 0; i < pipeline->numReadonlyStorageBuffers; i++) {
+            buffers[i] = (VkDescriptorBufferInfo){command->readOnlyComputeStorageBufferBindings[i], 0, VK_WHOLE_SIZE};
+            writes[n] = (VkWriteDescriptorSet){.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET, .dstSet = set, .dstBinding = n, .descriptorCount = 1, .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, .pBufferInfo = &buffers[i]}; n++;
+        }
+        renderer->vkUpdateDescriptorSets(renderer->logicalDevice, n, writes, 0, NULL);
+        renderer->vkCmdBindDescriptorSets(command->commandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline->pipelineLayout, 0, 1, &set, 0, NULL);
+        command->computeReadOnlyDescriptorSet = set; command->needNewComputeReadOnlyDescriptorSet = false;
+    }
+    // SDL's ordinary compute binding transitions one subresource; the adapter owns the full physical image scope.
+    if (transition_images(device, command, general, count, 1) != 1) { SDL_SetError("Could not retain compute storage images"); return -1; }
+    for (uint32_t i = 0; i < count; i++) { command->readWriteComputeStorageTextureViewBindings[i] = ((VulkanTextureContainer *)general[i])->activeTexture->subresources[0].computeWriteView; if (device->debug_mode) command->common.compute_pass.read_write_storage_texture_bound[i] = true; }
+    command->needNewComputeReadWriteDescriptorSet = true;
+    return 1;
 }
 E2D_EXPORT int e2d_render_prepare_images(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands, uint32_t masks, SDL_GPUTexture *const *general, uint32_t count)
 {

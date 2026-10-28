@@ -1463,3 +1463,5 @@ Copies `view` over the original owner resolved from `withTexture`. Includes its 
 ### TextureCreateSharedFromSlice(RDTextureView, RID, uint, uint, uint, TextureSliceType)
 
 Same ownership/format contract, selecting `layer`, first `mipmap` and `mipmaps` (default 1) from the original owner. `sliceType` defaults to Texture. Invalid selectors, layers or zero/overflowing mip intervals throw ArgumentOutOfRangeException. The new ordinary image reports selected dimensions and one layer. GetFormat preserves stored format, while shaders and attachments validate the effective view encoding. No pixel copies occur. See [shared texture views](../components/shared-texture-views.md) for transfers, physical feedback guards, renderer-source expiration and actual native verification.
+
+[Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) executes typed compute/vertex/fragment loads, stores and signed/unsigned R32 atomics across independent layers, including one-layer arrays. Canvas sampling borrows the same GPU storage; private views retain one mip and follow original/renderer lifetime.

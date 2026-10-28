@@ -65,7 +65,7 @@ public sealed unsafe partial class RenderingDevice
         {
             var entry = pair.Value; if (entry.Borrowed is not { } borrow || borrow.Alive) continue;
             if (_rendererTextures.GetValueOrDefault(borrow.Source) == pair.Key) _rendererTextures.Remove(borrow.Source);
-            entry.Expired = true; entry.Borrowed = null; borrow.Dispose(); retired = true;
+            entry.Expired = true; entry.StorageArrayView?.Dispose(); entry.StorageArrayView = null; entry.Borrowed = null; borrow.Dispose(); retired = true;
             if (entry.TextureViews is { } views) _retiredRendererTextureViews.AddRange(views);
         }
         foreach (var rid in _retiredRendererTextureViews) if (_entries.TryGetValue(rid, out var view)) ReleaseEntry(rid, view);

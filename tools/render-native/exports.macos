@@ -36,3 +36,4 @@ _e2d_render_views_release
 _e2d_render_view_region
 _e2d_render_view_format_support
 _e2d_render_view_overlap
+_e2d_render_prepare_compute_images

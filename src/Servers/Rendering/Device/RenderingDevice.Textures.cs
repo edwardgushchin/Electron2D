@@ -48,6 +48,7 @@ public sealed unsafe partial class RenderingDevice
         {
             if ((texture.Usage & TextureUsageBits.Storage) == 0) throw new ArgumentException("Texture lacks the storage role.", nameof(ids));
             if (binding.ImageFormat != 0 && StorageImageFormat(binding.ImageFormat) != texture.Format) throw new ArgumentException("Storage image format does not match the shader declaration.", nameof(ids));
+            if (binding.Array) _ = StorageImageHandle(Get(ids[0], Kind.Texture), true);
         }
     }
     internal static int PixelType(DataFormat format) => format switch
@@ -152,7 +153,8 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="view">Copied initial format and sampled component mapping; alternate formats must be declared shareable.</param>
     /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
-    /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary R32 Storage allocations also retain native simultaneous read-modify-write access.
+    /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
+    /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
     /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>

@@ -68,3 +68,21 @@ expiration, owner invalidation and renderer recreation. `views-unavailable` uses
 `ELECTRON2D_TEST_VIEWS_FAILURE=1`. Both check repeated setup rollback and surviving
 ordinary texture work. The mask intercepts only the private view procedure lookup.
 See [shared texture views](../../docs/components/shared-texture-views.md).
+
+Array storage profiles: `array-storage` and `array-storage-source` execute GLSL/HLSL
+compute and vertex/fragment layered load/store/dimensions/R32 atomics, signed and
+unsigned fixed descriptor arrays, invalid selectors, specialization, shared format
+owners, sampled same-image mips and warmed zero managed owner bytes.
+`array-storage-readonly` uses native one-layer Image descriptors without Sampling
+(GLSL declarations and HLSL-derived NonWritable SPIR-V; original HLSL RWTexture
+permission remains writable and rejects absent store features);
+`array-storage-no-stores` repeats readonly and compute execution under mask-features.c,
+then checks writer refusal. `array-storage-canvas` runs two renderer lifetimes with
+one/three layers, native authored array writes/updates/expiry and TextureArrayRD
+sampling/snapshots. `array-storage-export` writes shader binaries into
+ELECTRON2D_ARRAY_STORAGE_OUTPUT. `array-storage-unavailable` and `array-storage-failure`
+use mask-views.c; the latter also sets ELECTRON2D_TEST_VIEWS_FAILURE. They exercise
+pre-publication refusal, placeholder retry, failed private-view rollback and retained
+ordinary operations. `array-storage-legacy` uses the actual preceding ABI-1 bridge:
+array publication and unsafe sampled/storage alias dispatch reject; a later ordinary
+image-writing pass succeeds. Repeat the same profiles with strict NativeAOT.

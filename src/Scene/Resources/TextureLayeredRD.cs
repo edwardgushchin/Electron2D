@@ -10,7 +10,7 @@ public abstract class TextureLayeredRD : TextureLayered
     /// <summary>Initializes an unbound independent image-array view.</summary>
     protected TextureLayeredRD() { }
     /// <summary>Gets or sets a sampled image-array identity of the active rendering device.</summary>
-    /// <value>An empty identity initially. Bound arrays require at least two image layers.</value>
+    /// <value>An empty identity initially. Bound arrays contain one or more independent image layers.</value>
     /// <remarks>Device identities remain borrowed and transient; archives do not store this binding.</remarks>
     public RID TextureRDRID
     {
