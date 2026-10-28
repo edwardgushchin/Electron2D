@@ -2235,8 +2235,8 @@
     {
       "godot": "class:RDPipelineColorBlendState",
       "electron2d": "T:Electron2D.RDPipelineColorBlendState",
-      "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Logic operations require native per-target logic-operation support. Blending addresses logical color slots; unused slots and extra trailing entries are ignored. Sparse native output maps execute in RenderingDeviceSparseTests."
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
     },
     {
       "godot": "RDPipelineColorBlendState::property:attachments",
@@ -3786,6 +3786,126 @@
       "electron2d": "property:Electron2D.RDPipelineDepthStencilState.DepthRangeMax()",
       "state": "Implemented",
       "reason": "ADR 0028: copied stored-depth bounds and independent front/back eight-bit stencil masks/references execute through the call-local native pipeline adapter. Depth-bounds feature negotiation/refusal is independent of sample shading, alpha-to-one, line width and shader storage. Source/binary GLSL/HLSL pixels, state copying, view/pass/MSAA/component-map variants, failure/lifetime and prepared zero owner-managed bytes are checked on Linux/Vulkan; native heap, throughput, other targets and owner acceptance remain unverified. See docs/components/depth-stencil-state.md."
+    },
+    {
+      "godot": "RDPipelineColorBlendState::property:enable_logic_op",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendState.EnableLogicOp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RDPipelineColorBlendState::property:logic_op",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendState.LogicOp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum:LogicOperation",
+      "electron2d": "T:Electron2D.RenderingDevice.LogicOperation",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_CLEAR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Clear()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_AND",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.And()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_AND_REVERSE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.AndReverse()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_COPY",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Copy()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_AND_INVERTED",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.AndInverted()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_NO_OP",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.NoOp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_XOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Xor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_OR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Or()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_NOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Nor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_EQUIVALENT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Equivalent()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_INVERT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Invert()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_OR_REVERSE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.OrReverse()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_COPY_INVERTED",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.CopyInverted()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_OR_INVERTED",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.OrInverted()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_NAND",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Nand()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_SET",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Set()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.LogicOperation.Max()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exclusive numeric extent, rejected as an executable selection."
     }
   ],
   "extras": [
@@ -4337,14 +4457,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "RDPipelineColorBlendState::property:enable_logic_op",
-        "RDPipelineColorBlendState::property:logic_op"
-      ],
-      "reason": "Trigger: first executable owning slice under ADR 0028. Logic operations require native per-target logic-operation support."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "RDPipelineRasterizationState::property:patch_control_points"
       ],
       "reason": "Trigger: native tessellation control/evaluation stages and patch topology pipeline adapter under ADR 0028. Primitive discard and static line width execute independently."
@@ -4758,13 +4870,6 @@
         "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)"
       ],
       "reason": "ADR 0028: typed copied Boolean/SByte/Byte/Int16/UInt16/Int32/UInt32/Int64/UInt64/Half/Single/Double specialization values freeze scalar defaults and dependent integer/logical/vector/composite expressions before native pipeline creation. Compute workgroup dimensions and uniform/push array layouts use specialized values. Shader identities remain borrowed; native variants are owned and released by pipelines. Unassigned descriptions, unknown/duplicate/negative identifiers, scalar type mismatch, malformed/cyclic/undefined expressions and exceeding native limits reject. Linux/Vulkan compute values, paired graphics pixels, retained canvas and 32 warmed zero-owner-thread-managed-byte cycles execute; foreign targets and native allocations remain unverified. Compute or paired graphics source modules execute; specialization templates defer size/native checks until values have been applied. Descriptor arrays, view reinterpretation/swizzles and additional scalar/pointer capabilities retain their owning resource/shader adapters. Native FP64 arithmetic, raw SSBO/UBO and scalar/vector/matrix/array/struct push layouts now execute with enabled Vulkan shaderFloat64; typed Double values preserve two-word defaults/overrides, floating conversions and composite selection. Optional refusal preserves ordinary device creation. DeviceFP64.Consumer verifies GLSL/HLSL native compute and graphics; direct HLSL double specialization remains blocked by pinned DXC, while float-to-double specialization executes. Narrow-integer precision, 64-bit image atomics, 64-bit vertex/texel formats and pointer capabilities retain their separate adapters. Native Int64 now executes signed/unsigned arithmetic, raw buffers/push data, typed long/ulong specialization and bounded wide array/index lowering. Independent Vulkan shaderInt64/FP64 refusal preserves the remaining profile. Wide interstage values match complete location footprints. DeviceInt64.Consumer covers native GLSL/HLSL outputs and the mixed unsigned-to-FP64 path; narrow precision, 64-bit image atomics and vertex/texel formats retain separate adapters. Native 64-bit compute buffer/workgroup atomics execute through independent Vulkan 1.2 features. DeviceAtomic64.Consumer verifies exact concurrent returns, CAS, rollover, copied values and storage-specific refusal; image/graphics atomic adapters remain separate. See the native atomic contract in docs/components/local-compute.md. Native Half arithmetic and packed SSBO/UBO/push execute through independently enabled Vulkan 1.2 features. DeviceFP16.Consumer covers GLSL/HLSL compute/graphics/canvas, copied typed values, compact layouts, raw bits and feature refusal. Direct HLSL Half specialization requires frontend support; storage-only Half push requires the Float16 reconstruction adapter, and native 16-bit stage IO requires its feature. See docs/components/local-compute.md#native-half-arithmetic-and-packed-data. Native Int16/UInt16 arithmetic and packed SSBO/UBO/push data execute with independent shaderInt16/storage opt-in. Typed short/ushort values preserve exact bits, signed literal extension and width-correct operations/conversions; narrow array extents normalize before layout. DeviceInt16.Consumer covers GLSL/HLSL compute/graphics, retained canvas, zero warmed owner bytes and independent integer/Half/storage refusal. Exact integer push also requires Int16 arithmetic. Stage16 IO, non-32-bit vertex/color formats, native allocations and foreign devices remain separate; see local-compute native Int16 section. Native Int8/UInt8 arithmetic, one-byte SSBO/UBO/push and typed sbyte/byte overrides execute with independent Vulkan 1.2 features. Mixed byte/Int16/Half layouts retain exact bits/alignment; direct byte extents and dependent conversions resolve before native creation. DeviceInt8.Consumer covers source/bytecode compute, actual graphics/canvas, zero warmed owner bytes and byte/16-bit sibling refusal. Actual byte GLSL uses modern storage classes; HLSL native8 syntax requires its frontend upgrade. Byte stage IO, native formats and foreign/native-allocation acceptance remain separate; see local-compute byte section. ADR 0028: ordinary writable graphics StorageBuffer execution and inter-draw ordering now follow docs/components/local-compute.md#writable-graphics-storage-buffers; unsupported native stages reject before shader/binary publication. ADR 0028: writable vertex/fragment ImageBuffer stores and R32 atomics now execute through existing encoded buffers and draw dependencies, including packed neighbors, descriptor choices/specialized counts and later sampled/compute/CPU consumers; native texel-only capabilities are removed and core graphics no longer forces Vulkan 1.2. HLSL source specialization-array lengths retain their pinned frontend dependency; see docs/components/local-compute.md#writable-formatted-graphics-producers. Vertex-only/no-position programs and copied DiscardPrimitives now execute, including source, version-two binary round-trip, multiview and sampled variants; see docs/components/raster-discard.md. Broader row limits remain unchanged."
-    },
-    {
-      "state": "Partial",
-      "godot": [
-        "class:RDPipelineColorBlendState"
-      ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Logic operations require native per-target logic-operation support."
     },
     {
       "state": "Partial",
@@ -5208,6 +5313,39 @@
         "class:RDPipelineDepthStencilState"
       ],
       "reason": "ADR 0028: copied stored-depth bounds and independent front/back eight-bit stencil masks/references execute through the call-local native pipeline adapter. Depth-bounds feature negotiation/refusal is independent of sample shading, alpha-to-one, line width and shader storage. Source/binary GLSL/HLSL pixels, state copying, view/pass/MSAA/component-map variants, failure/lifetime and prepared zero owner-managed bytes are checked on Linux/Vulkan; native heap, throughput, other targets and owner acceptance remain unverified. See docs/components/depth-stencil-state.md."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:RDPipelineColorBlendState",
+        "RDPipelineColorBlendState::property:enable_logic_op",
+        "RDPipelineColorBlendState::property:logic_op",
+        "RenderingDevice::enum:LogicOperation",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_CLEAR",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_AND",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_AND_REVERSE",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_COPY",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_AND_INVERTED",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_NO_OP",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_XOR",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_OR",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_NOR",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_EQUIVALENT",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_INVERT",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_OR_REVERSE",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_COPY_INVERTED",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_OR_INVERTED",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_NAND",
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_SET"
+      ],
+      "reason": "ADR 0028: copied pipeline-wide logical color state executes all sixteen encoded-component operations, preserves per-attachment masks and disables arithmetic blending. Integer/normalized outputs execute; float/sRGB copy the source. Independently enabled Vulkan logicOp and the pinned pipeline adapter are required only when enabled. GLSL/HLSL native truth tables, MRT/images/component variants, depth/stencil, views/passes/scissor, MSAA masks/shading/resolves, retained canvas and zero warmed owner managed bytes execute on Linux/Vulkan. Foreign backends, native heap totals and broad performance remain unverified. See docs/components/logic-operations.md."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::enum_value:LogicOperation.LOGIC_OP_MAX"
+      ],
+      "reason": "ADR 0028: exclusive numeric extent, rejected as an executable selection."
     }
   ]
 }

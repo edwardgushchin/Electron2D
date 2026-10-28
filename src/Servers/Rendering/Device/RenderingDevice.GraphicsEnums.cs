@@ -81,6 +81,44 @@ public sealed unsafe partial class RenderingDevice
         /// <summary>Selects CounterClockwise.</summary>
         CounterClockwise = 1,
     }
+    /// <summary>Selects a bitwise operation on encoded framebuffer components.</summary>
+    public enum LogicOperation
+    {
+        /// <summary>Writes zero bits.</summary>
+        Clear = 0,
+        /// <summary>Writes source AND destination.</summary>
+        And = 1,
+        /// <summary>Writes source AND inverted destination.</summary>
+        AndReverse = 2,
+        /// <summary>Writes source bits.</summary>
+        Copy = 3,
+        /// <summary>Writes inverted source AND destination.</summary>
+        AndInverted = 4,
+        /// <summary>Preserves destination bits.</summary>
+        NoOp = 5,
+        /// <summary>Writes source XOR destination.</summary>
+        Xor = 6,
+        /// <summary>Writes source OR destination.</summary>
+        Or = 7,
+        /// <summary>Writes the bitwise complement of source OR destination.</summary>
+        Nor = 8,
+        /// <summary>Writes the bitwise complement of source XOR destination.</summary>
+        Equivalent = 9,
+        /// <summary>Writes inverted destination bits.</summary>
+        Invert = 10,
+        /// <summary>Writes source OR inverted destination.</summary>
+        OrReverse = 11,
+        /// <summary>Writes inverted source bits.</summary>
+        CopyInverted = 12,
+        /// <summary>Writes inverted source OR destination.</summary>
+        OrInverted = 13,
+        /// <summary>Writes the bitwise complement of source AND destination.</summary>
+        Nand = 14,
+        /// <summary>Writes one bits.</summary>
+        Set = 15,
+        /// <summary>Marks the exclusive numeric extent; it is not an executable selection.</summary>
+        Max = 16,
+    }
     /// <summary>Identifies BlendOperation values for executable graphics operations.</summary>
     public enum BlendOperation
     {

@@ -672,7 +672,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDAttachmentFormat](classes/RDAttachmentFormat.md) | RefCounted | Implemented | 3 |
 | [RDFramebufferPass](classes/RDFramebufferPass.md) | RefCounted | Implemented | 6 |
 | [RDHitGroup](classes/RDHitGroup.md) | RefCounted | Excluded | 3 |
-| [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Partial | 4 |
+| [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Implemented | 4 |
 | [RDPipelineColorBlendStateAttachment](classes/RDPipelineColorBlendStateAttachment.md) | RefCounted | Implemented | 12 |
 | [RDPipelineDepthStencilState](classes/RDPipelineDepthStencilState.md) | RefCounted | Implemented | 21 |
 | [RDPipelineMultisampleState](classes/RDPipelineMultisampleState.md) | RefCounted | Implemented | 6 |

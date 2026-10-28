@@ -87,7 +87,7 @@ The private line-support and line-pipeline entries query physical width range/pr
 
 The multisample support/pipeline entries add physical sampleRateShading/alphaToOne queries and copied native mask/fraction/flags through the existing call-local creator. Neither sample mask nor disabled optional state requires these features. The factory retains independent logical feature ownership; test_multisample_mask.c refuses either/both creation requests. See [sample controls](../../docs/components/multisample-state.md).
 
-The two `e2d_render_depth_*` ABI 1 exports query per-face/bounds support and create copied depth/stencil pipelines beside existing raster/multisample state. The native package now carries 27 exports. Independent references remove only SDL's shared dynamic reference selector. The managed factory negotiates depthBounds independently in the bounded optional raster profile. `test_depth_mask.c` is a development-only device-creation refusal shim; never package it. See [the native state contract](../../docs/components/depth-stencil-state.md).
+The two `e2d_render_depth_*` ABI 1 exports query per-face/bounds support and create copied depth/stencil pipelines beside existing raster/multisample state. The native package now carries 29 exports. Independent references remove only SDL's shared dynamic reference selector. The managed factory negotiates depthBounds independently in the bounded optional raster profile. `test_depth_mask.c` is a development-only device-creation refusal shim; never package it. See [the native state contract](../../docs/components/depth-stencil-state.md).
 
 The six graphics-image ABI 1 entries query adapter availability, create mixed image
 pipelines, transition original images, bind base-mip views, prepare command-owned
@@ -99,3 +99,10 @@ native layout creation and retire before the last shared physical device is dest
 `Electron2DRenderCheck` covers 260-set rollover/reuse, guards, texture tracking and
 idle retirement; mask-images.c checks explicit missing-adapter refusal. See
 [graphics image ownership and qualification](../../docs/components/graphics-storage-images.md).
+
+The two logic ABI 1 entries query physical logicOp and create copied logical color
+pipelines through the shared call-local raster path, preserving images/depth/samples.
+The factory independently retains logical feature ownership within at most 32 raster
+subprofiles. test_logic_mask.c refuses only that feature request. See
+[logical color operations](../../docs/components/logic-operations.md) for semantics,
+refusal and verification limits. Test masks are never packaged.

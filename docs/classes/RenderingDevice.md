@@ -30,6 +30,8 @@ Layered framebuffers execute ordered native passes for each view, with vertex/fr
 
 Ordinary graphics Image stores and signed/unsigned R32 atomics change the original base-mip allocation through the [native image adapter](../components/graphics-storage-images.md). Each writing stage requires its native feature. Pure readonly modules keep their [snapshot coherence path](../components/local-compute.md#readonly-graphics-image-coherence).
 
+Copied [logical color operations](../components/logic-operations.md) execute all sixteen bitwise operations with per-target masks, native feature refusal and preserved graphics variants. Float and sRGB targets retain unblended source semantics.
+
 Independent Texture and Sampler sets execute native compute and graphics through reusable pair bindings, including plain/array and signed/unsigned images, comparison sampling, fetch/query, helpers and control flow. Combined declarations retain sampler-first IDs. See [independent sampled bindings](../components/local-compute.md#independent-sampled-resource-bindings) for validation timing, native capacity and verification.
 
 Fixed descriptor arrays execute across image, sampler, texel and input roles with ordered copied IDs and scalar native capacity; see [device arrays](../components/local-compute.md#fixed-device-descriptor-arrays).
@@ -1074,7 +1076,7 @@ A pipeline borrowing the shader identity and owning specialized native stages wh
 | `vertexFormat` | A copied vertex layout, or -1 for procedural vertices. |
 | `primitive` | Point, line or triangle topology. |
 | `rasterizationState` | Copied rasterization configuration. |
-| `colorBlendState` | Copied blending configuration, with one entry per target. |
+| `colorBlendState` | Copied logical operation and per-slot blending configuration; enabled logic disables arithmetic blending and requires its native feature. |
 | `dynamicStateFlags` | Allows dynamic blend constants; other dynamic states require their native adapters. |
 | `depthStencilState` | Copied depth/stencil configuration; null disables both tests and depth writes. |
 | `multisampleState` | Copied sample count and alpha-to-coverage state; null selects one sample. |

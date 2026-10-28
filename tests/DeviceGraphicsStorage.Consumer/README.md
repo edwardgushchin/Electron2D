@@ -40,3 +40,19 @@ publication, preserve the placeholder, and execute the available stage. images-f
 uses mask-raster.c with ELECTRON2D_TEST_RASTER_FAILURE=1 and checks repeated pipeline
 failure with the ordinary buffer chain still executing. Repeat all profiles with
 strict NativeAOT. Shims are development-only and must never be packaged.
+
+Logical color profiles: logic and logic-source check all sixteen operations on
+seven formats in imported and explicit-source GLSL/HLSL, copied descriptions,
+integer blend suppression, float/sRGB exceptions and zero warmed owner bytes.
+logic-edges combines MRT masks, component variants, views/subpasses/scissor,
+image atomics and independent depth/stencil state. logic-samples adds four-sample
+masks, sample shading and resolves. logic-canvas checks retained XOR pixels twice
+across renderer retirement after releasing the producer pipeline.
+
+logic-refuse uses mask-logic.c via LD_PRELOAD to remove the physical query, or
+tools/render-native/test_logic_mask.c via SDL3_DYNAMIC_API to refuse logical-device
+creation. logic-unavailable and logic-failure use mask-raster.c, with
+ELECTRON2D_TEST_RASTER_FAILURE=1 only for the latter. Each rejects all sixteen enabled
+operations and executes disabled-state graphics. Repeat with strict NativeAOT.
+See [logical color operations](../../docs/components/logic-operations.md) for the
+complete contract and evidence limits.

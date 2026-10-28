@@ -12,13 +12,13 @@ public sealed unsafe partial class RenderingDevice
         _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
     private static SDL.GPUBlendOp Blend(BlendOperation value) => Enum.IsDefined(value) && value != BlendOperation.Max ? (SDL.GPUBlendOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
-    /// <summary>Creates an executable graphics pipeline with copied depth bounds, independent stencil faces, sample coverage and shading.</summary>
+    /// <summary>Creates an executable graphics pipeline with copied logical color, depth/stencil and multisample state.</summary>
     /// <param name="shader">A live vertex shader with an optional fragment stage; vertex-only programs require primitive discard.</param>
     /// <param name="framebufferFormat">A color and optional depth/stencil layout on this device.</param>
     /// <param name="vertexFormat">A copied vertex layout, or -1 for procedural vertices.</param>
     /// <param name="primitive">Point, line or triangle topology.</param>
     /// <param name="rasterizationState">Copied rasterization configuration, including primitive discard and line width.</param>
-    /// <param name="colorBlendState">Copied blending configuration covering every logical color slot; unused slots and trailing entries are ignored.</param>
+    /// <param name="colorBlendState">Copied logical operation and blending configuration covering every logical color slot; unused slots and trailing entries are ignored. Enabled logical operations disable arithmetic blending and require their native feature.</param>
     /// <param name="dynamicStateFlags">Allows dynamic blend constants; other dynamic states require their native adapters.</param>
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
     /// <param name="multisampleState">Copied sample count, coverage/masks, alpha-to-one and sample shading; null selects one sample with ordinary shading.</param>
@@ -62,18 +62,19 @@ public sealed unsafe partial class RenderingDevice
             };
             if (!Enum.IsDefined(rasterizationState.CullMode) || !Enum.IsDefined(rasterizationState.FrontFace)) throw new ArgumentException("Unknown rasterization value.", nameof(rasterizationState));
             var attachments = colorBlendState.Attachments;
+            var logic = CaptureLogicOp(colorBlendState);
             if (attachments.Length < target.Colors.Length) throw new ArgumentException("Provide blending for every logical color slot.", nameof(colorBlendState));
             var colors = stackalloc SDL.GPUColorTargetDescription[8];
             for (var native = 0; native < target.ColorSlots.Length; native++)
             {
                 var i = target.ColorSlots[native]; var a = attachments[i];
-                if (a.EnableBlend && PixelType(target.Formats[target.Colors[i]]) != 0) throw new ArgumentException("Integer color targets cannot blend.", nameof(colorBlendState));
+                if (logic == 0 && a.EnableBlend && PixelType(target.Formats[target.Colors[i]]) != 0) throw new ArgumentException("Integer color targets cannot blend.", nameof(colorBlendState));
                 colors[native] = new()
                 {
                     Format = NativeFormat(target.Formats[target.Colors[i]]),
                     BlendState = new()
                     {
-                        EnableBlend = a.EnableBlend,
+                        EnableBlend = logic == 0 && a.EnableBlend,
                         SrcColorBlendFactor = Blend(a.SrcColorBlendFactor),
                         DstColorBlendFactor = Blend(a.DstColorBlendFactor),
                         SrcAlphaBlendFactor = Blend(a.SrcAlphaBlendFactor),
@@ -110,19 +111,19 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
-                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState, nativeDepth);
+                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState, nativeDepth, logic);
                 var views = FramebufferLayouts(framebufferFormat).ViewCount;
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try
                 {
-                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, program.GraphicsImages), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, program.GraphicsImages, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     for (var view = 1; view < views; view++)
                     {
                         var source = Get(shader, Kind.Shader);
                         var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: discard ? null : target.ColorSlots, viewIndex: (uint)view);
                         entry.ViewPrograms[view - 1] = viewProgram;
                         info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
-                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, viewProgram.GraphicsImages), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, viewProgram.GraphicsImages, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     }
                     return Add(entry);
                 }

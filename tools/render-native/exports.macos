@@ -25,3 +25,5 @@ _e2d_render_image_transition
 _e2d_render_bind_image
 _e2d_render_prepare_images
 _e2d_render_images_pipeline
+_e2d_render_logic_support
+_e2d_render_logic_pipeline

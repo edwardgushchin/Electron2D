@@ -35,6 +35,8 @@ extern int e2d_render_bind_image(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer
 extern int e2d_render_prepare_images(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, uint32_t, SDL_GPUTexture *const *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_images_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t);
 extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
+extern int e2d_render_logic_support(SDL_GPUDevice *, uint32_t);
+extern SDL_GPUGraphicsPipeline *e2d_render_logic_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
 static void require_at(bool valid, int line)
@@ -170,6 +172,11 @@ int main(int argc, char **argv)
 {
     MultisampleState samples = {0};
     DepthStencilState depth = {0};
+    require(e2d_render_logic_support(NULL, 1) == -1);
+    require(e2d_render_logic_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_logic_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth, 0, 1) == NULL);
+    require(e2d_render_logic_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth, 0, 0) == NULL);
+    require(e2d_render_logic_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth, 0, 17) == NULL);
     require(e2d_render_image_support(NULL, 1) == -1);
     require(e2d_render_image_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_image_transition((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, NULL, 0, 1) == -1);
@@ -246,6 +253,8 @@ int main(int argc, char **argv)
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
+    int logic_features = e2d_render_logic_support(device, 1); require(logic_features == 0 || logic_features == 1);
+    printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);
     int multisample_features = e2d_render_multisample_support(device, 1); require(multisample_features >= 0 && multisample_features <= 3);
     printf("Native multisample feature mask=%d (sample shading=1, alpha-to-one=2)\n", multisample_features);

@@ -70,6 +70,8 @@ Private native runtime binaries come from versioned Linux/macOS packages in ordi
 
 Ordinary vertex/fragment Image stores and R32 integer atomics now reach compute, copies, readback and retained canvas through the [graphics image adapter](../components/graphics-storage-images.md).
 
+Copied [logical color operations](../components/logic-operations.md) execute all sixteen bitwise operations with per-target masks, native feature refusal and preserved graphics variants. Float and sRGB targets retain unblended source semantics.
+
 ## Native text coverage modes
 
 FontFile/SystemFont now generate real Mono/Gray/LCD native glyphs and share a captured project subpixel layout. Scalable glyph regions consume the existing GPU LCD path, while compatibility retains ordinary coverage and explicitly rejects component glyphs. [The complete font contract](../components/text.md#native-font-antialiasing-and-lcd-layout) records variation/fallback/storage, native oracle and rendered/allocation evidence. MSDF generation remains separate.
