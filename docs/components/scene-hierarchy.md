@@ -1,6 +1,11 @@
 # Scene hierarchy component
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
+
+The [Node contract audit](node-contract-audit.md) accounts for the neutral
+class and all 212 applicable own members. Inherited Object script-replacement
+gaps remain on their declaring page; canvas, spatial and overall physics
+acceptance retain their own boundaries.
 
 ## Node authoring observations
 

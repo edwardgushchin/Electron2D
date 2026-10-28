@@ -77,6 +77,10 @@ Application culture and pseudolocalization changes now deliver `NotificationTran
 
 ## Description
 
+The [Node contract audit](../components/node-contract-audit.md) records the
+complete own-type declaration family and its current executable evidence.
+Inherited script-replacement limits remain on ElectronObject's declaring contract.
+
 The neutral base of every object in a scene tree. Owns ordered children, paths, groups, lifecycle, process/input participation, queued deletion, packed-scene ownership and inherited localization policy. It has no transform, visibility, material or drawing API. Parent/child relationships and callbacks accept Node, so timers and spatial objects share one tree. Physical/hierarchy mutation runs on the tree owner thread; local grouping and processing metadata also allow the current processing group; ready notification enables overridden frame/input callbacks before OnReady, and callers can disable them explicitly. Tree entry is parent-first, readiness is child-first, and teardown continues through callback failures.
 
 `UniqueNameInOwner` allows an owned node to be resolved through `%Name` from its owner or another node with that same owner. The first node to claim a name keeps it; a later conflicting claim is cleared. Owner and name changes update the claim, and packed scenes restore it after ownership is assigned. `GetPathTo(node, useUniquePath: true)` uses the eligible unique node on the destination side first, or a unique node on the source side when no destination shortcut exists.

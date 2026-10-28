@@ -70,7 +70,6 @@ def check_physics_report(pages):
         rows = [row for row in node_page.splitlines() if row.startswith("| [`method " + method + "(")]
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "scene-thread-messages.md" in rows[0]
         assert not any(key.startswith("Node::method:" + method + "(") for key in expected)
-    assert expected["class:Node"] == "Partial", "Invocation completion must retain unrelated receiver gaps"
     rigid_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines() if row.startswith("| [`")]
     assert len(rigid_rows) == 55 and all(" | Implemented | " in row for row in rigid_rows)
     assert "physics-rigid-body-contract.md" in rigid_rows[0]
@@ -86,6 +85,12 @@ def check_physics_report(pages):
     assert len(loop_rows) == 18 and all(" | Implemented | " in row for row in loop_rows)
     assert "whole-type-contract-audit" in loop_rows[0]
     assert "class:MainLoop" not in expected, "The complete own-type audit must retain Object gaps on their declaring type"
+    node_rows = [row for row in pages[CLASS_PAGES / "Node.md"].splitlines() if row.startswith("| [`")]
+    assert len(node_rows) == 214
+    assert " | Implemented | " in node_rows[0] and "node-contract-audit.md" in node_rows[0]
+    assert sum(" | Implemented | " in row for row in node_rows) == 213
+    assert sum(" | Excluded | " in row for row in node_rows) == 1
+    assert "class:Node" not in expected, "Node's own-type audit must retain inherited Object script gaps"
     notification = [row for row in object_page.splitlines() if row.startswith("| [`method notification(")]
     assert len(notification) == 1 and " | Implemented | " in notification[0] and "Notify(System.Int32 what, System.Boolean reversed)" in notification[0]
     assert "Object::method:notification(int:,bool:)" not in expected

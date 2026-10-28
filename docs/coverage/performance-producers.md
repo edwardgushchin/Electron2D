@@ -7,7 +7,8 @@ This audit follows reference `4.7.2-stable` at
 diagnostics from 3D-only source categories and the remaining allocation work.
 The public current/peak producers remain incomplete. The later [registered extension
 replacement](../components/extensions.md) closes a different inherited row; current
-physics declaration coverage is **1363/1369 (99.56%)**, six open, 92 Excluded.
+physics declaration coverage after the [Node audit](../components/node-contract-audit.md)
+is **1364/1369 (99.63%)**, five open, 92 Excluded.
 
 ## Pipeline source ownership
 

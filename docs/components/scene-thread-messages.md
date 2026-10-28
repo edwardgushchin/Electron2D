@@ -1,6 +1,6 @@
 # Typed processing-group invocation contract
 
-Last updated: 2026-10-25
+Last updated: 2026-10-28
 
 This audit covers the complete six-member Node invocation family inherited by physical nodes. ADRs 0004/0006/0104 project named calls and property values to typed delegates and numeric notifications. No runtime name lookup or universal value container is introduced. The pinned Node input at `ed1daf0bf001b61586d9930840f2f1394092c079` declares these six nondeprecated operations; Node's declaring type is also nondeprecated.
 
@@ -13,7 +13,7 @@ This audit covers the complete six-member Node invocation family inherited by ph
 | set_deferred_thread_group | SetDeferredThreadGroup<TNode,TValue>(Action<TNode,TValue>,TValue) | Same deferred policy with captured typed value |
 | notify_deferred_thread_group | NotifyDeferredThreadGroup(int) | Same deferred policy with captured notification |
 
-The pinned `node.cpp:3627–3721` wrappers return nil for both call forms and use exactly this immediate-versus-queued choice. They invoke the ordinary receiver operation. They do not make an otherwise forbidden renderer, geometry, force or hierarchy operation legal. This distinction also appears explicitly in accepted ADR 0006. Coverage previously kept all six wrappers Partial because some receiver operations remained unavailable from workers; that requirement belongs to those receiver/type contracts. General Node/CanvasItem/Entity and physical receiver gaps remain open independently of these six completed operations.
+The pinned `node.cpp:3627–3721` wrappers return nil for both call forms and use exactly this immediate-versus-queued choice. They invoke the ordinary receiver operation. They do not make an otherwise forbidden renderer, geometry, force or hierarchy operation legal. This distinction also appears explicitly in accepted ADR 0006. Coverage previously kept all six wrappers Partial because some receiver operations remained unavailable from workers; that requirement belongs to those receiver/type contracts. The later [Node audit](node-contract-audit.md) qualifies the complete own-type contract under its accepted access boundaries. These six wrappers supply no additional receiver permissions or inherited Object scripting acceptance.
 
 ## Queue, errors and lifetime
 
@@ -31,7 +31,7 @@ Current qualification also exposed a stale regression: GroupContext still requir
 
 Evidence is under `bin/physics-thread-message-contract/2026-10-25/`: verified pinned source hashes, exact commands, source/payload manifests, negative receipt, CLR/strict NativeAOT summaries and `qualification.json`. GPU receipts require NVIDIA mappings and reject software ICDs; CPU processes use dummy video and unavailable ICDs. NativeAOT receipts reject CoreCLR mappings. All 48 profiles passed: 24 CLR and 24 strict NativeAOT, covering all four consumers on CPU/GPU/registered implementations with owner/separate numerical policies. Printed small-scene timings are functional observations, not performance qualification.
 
-These six invocation rows are complete; generic notification propagation is qualified separately below. Node itself, reserved PropagateNotification receivers, general worker scene/GUI/physical authoring, full-suite qualification, cross-process networking, native allocation, foreign platforms, mass-scene advantage and real-window FPS keep their separate open gates. The physical motion component documents the currently supported worker mutation boundary.
+These six invocation rows are complete; generic notification propagation is qualified separately below. The later Node own-type audit and receiver-specific components record their subsequent qualification. Inherited Object scripting, full-suite qualification, cross-process networking, native allocation, foreign platforms, mass-scene advantage and real-window FPS retain their separate gates. The physical motion component documents the currently supported worker mutation boundary.
 
 ## Notification propagation contract
 

@@ -1,3 +1,5 @@
+[The Node contract audit](components/node-contract-audit.md) qualifies the existing neutral scene type and its 212 applicable own members. No runtime type or signature is added; inherited Object script-replacement gaps remain open.
+
 [Source-publication notifications](components/scripting.md#source-publication-notifications) connect existing ElectronObject events to resource replacement/remapping and reject callback-retired file results. No public runtime type or signature is added.
 
 [Compiled C# initialization](components/scripting.md#compiled-c-initialization) adds argument-only source registrations for Node, Resource and RPC-enabled Node classes through the existing typed construction path.
