@@ -1,5 +1,25 @@
 # Physics measurement helpers
 
+## Managed heap observations
+
+The standalone [managed-memory probe](managed-memory-probe/ManagedMemoryProbe.csproj)
+compares warmed snapshot-query allocations and a temporary 64 MiB managed peak,
+then observes native-runtime GC event delivery. It uses no Electron2D runtime,
+window or GPU. Its forced collections belong only to the counterexample and
+must not be copied into a monitor implementation.
+
+```bash
+dotnet run --project tools/physics/managed-memory-probe/ManagedMemoryProbe.csproj -c Release
+dotnet publish tools/physics/managed-memory-probe/ManagedMemoryProbe.csproj -c Release -r linux-x64 -p:PublishAot=true -p:TrimMode=full -o bin/managed-memory-probe
+bin/managed-memory-probe/ManagedMemoryProbe
+```
+
+Both hosts explicitly enable EventSource and use nonconcurrent workstation GC.
+The output is one JSON observation record; a missing transient-peak witness
+fails the process. Event callbacks and allocation ticks are observations, not
+an exact aggregate allocation/free producer. See the [source qualification](../../docs/coverage/performance-producers.md#managed-heap-source-qualification)
+for current evidence and its limits.
+
 ## Native GPU device retirement
 
 The standalone [SDL lifetime probe](../../tests/Electron2D.Tests/Native/GPUDeviceLifetime.c)

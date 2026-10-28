@@ -120,3 +120,51 @@ until the complete current/peak producers and their failure/lifetime checks run.
 The source manifest and bounded trace receipt are retained in
 `bin/physics-monitor-audit/2026-10-27/`. This audit adds no physical, native,
 platform, network or performance acceptance evidence.
+
+## Managed heap source qualification
+
+The standalone [managed-memory probe](../../tools/physics/managed-memory-probe/ManagedMemoryProbe.csproj)
+checks the stock .NET 10.0.1 APIs on Linux x64 CLR and strict full-trim NativeAOT.
+It uses workstation, nonconcurrent GC and explicitly enables EventSource support.
+Forced collections belong only to this diagnostic counterexample; they are not
+an accepted implementation of GetMonitor. No Electron2D runtime code changes.
+
+| Observation | CLR | NativeAOT |
+| --- | ---: | ---: |
+| Owner managed bytes for 1024 warmed GetGCMemoryInfo calls | 294912 | 294912 |
+| Owner managed bytes for 1024 warmed GetTotalMemory(false) calls | 0 | 0 |
+| Observed live managed bytes with a temporary 64 MiB array | 67167368 | 67150800 |
+| Current managed bytes after release and subsequent collections | 58480 | 41912 |
+| Maximum of the ordinary before/after observations | 58480 | 41912 |
+| Latest collection's sum of generation SizeBeforeBytes | 58936 | 41912 |
+| GC heap-stat callbacks after eight explicit collections | 8 | 8 |
+| Callback thread / caller thread | 3 / 1 | 2 / 1 |
+
+Both snapshots lose the known temporary peak. GCMemoryInfo is additionally an
+allocating query: the [pinned CLR implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/coreclr/System.Private.CoreLib/src/System/GC.CoreCLR.cs#L64-L76)
+creates a fresh data object per call. Its generation fields describe the
+[selected most recent collection](https://github.com/dotnet/runtime/blob/v10.0.1/src/libraries/System.Private.CoreLib/src/System/GCMemoryInfo.cs),
+not a retained maximum over every intervening collection. Cumulative allocated
+bytes cannot supply current live storage or a concurrent native/managed peak.
+
+Runtime GC events do execute in both checked hosts; they are not an absent
+NativeAOT prerequisite here. Their callbacks run away from the caller, and the
+[native-event forwarding implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/libraries/System.Private.CoreLib/src/System/Diagnostics/Tracing/NativeRuntimeEventSource.cs#L47-L70)
+allocates decoded payload objects before dispatch. The documented
+[AllocationTick](https://learn.microsoft.com/en-us/dotnet/fundamentals/diagnostics/runtime-garbage-collection-events#gcallocationtick_v3-event)
+is a sampled event around each 100 KB, not an exact object-allocation boundary.
+Sampling a later native ledger from such a callback does not establish that its
+value coexisted with the managed sample. Event counts and this probe do not prove
+that every possible instrumented runtime approach is infeasible.
+
+`qualified-comparison.json`, `qualified-aot-proof.json`, process maps and source/build hashes retain
+the exact runs. The NativeAOT executable maps no CoreCLR. These receipts reject
+the tested snapshot shortcuts; they do not implement a producer or qualify the
+complete engine. GetMonitor and both memory selectors stay open, with physics
+declaration coverage **1364/1369 (99.63%)**, five Partial and 92 Excluded.
+
+The accepted requirement remains an allocation/free/GC producer with coherent
+aggregation and startup/lifetime/error qualification on each supported host.
+A bounded observed-peak C# adaptation is a separate pending user decision,
+described in the local `contract-choice.txt`; no ADR or coverage status changes
+until that decision and its executable implementation are complete.
