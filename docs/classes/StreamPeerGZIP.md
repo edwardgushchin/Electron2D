@@ -1,6 +1,6 @@
 # StreamPeerGZIP
 
-Last updated: 2026-10-04
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.StreamPeerGZIP`. **Inherits:** [StreamPeer](StreamPeer.md). **Source:** [StreamPeerGZIP.cs](../../src/Core/Networking/StreamPeerGZIP.cs).
 
@@ -9,6 +9,10 @@ Last updated: 2026-10-04
 Incrementally compresses or decompresses gzip and zlib-wrapped deflate bytes through bounded output storage.
 
 Input and output spans are borrowed only during a call. Drain output when partial writes stop progressing. Native codec state and output capacity are prepared on Start. Calls and disposal require the constructing thread.
+
+Failed initialization releases partially owned native state and leaves the
+stream unconfigured. The [native cleanup regression](../components/http.md#failed-codec-initialization)
+covers both compression and decompression without changing the public formats.
 
 [HTTP and compression](../components/http.md) and [ADR 0094](../decisions/networking.md#adr-0094) define wire, ownership, worker, allocation and platform boundaries.
 

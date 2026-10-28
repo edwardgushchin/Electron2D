@@ -75,6 +75,13 @@ The focused FastTests route requires explicit native qualification: `dotnet run 
 
 ## Allocation producers remain open
 
+The [compression initialization cleanup](../components/http.md#failed-codec-initialization)
+now retires the runtime's partially initialized native record before the engine's
+tracked outer PAL record. The calibrated allocator regression reproduces the
+preceding leak and observes balanced allocation/free calls after the fix. It
+neither instruments codec-owned bytes nor completes the managed/native total;
+both memory selectors and the current five open physics declarations stay open.
+
 The two applicable missing selectors are MEMORY_STATIC and MEMORY_STATIC_MAX.
 [Performance](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/main/performance.cpp#L251-L254)
 delegates to the instrumented engine allocator's current and maximum usage.

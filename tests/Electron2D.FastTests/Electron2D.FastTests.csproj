@@ -13,6 +13,8 @@
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
     <Compile Include="../Electron2D.Tests/CanvasVertexLayoutTests.cs" Link="CanvasVertexLayoutTests.cs" />
     <Compile Include="../Electron2D.Tests/NativeAllocationTests.cs" Link="NativeAllocationTests.cs" />
+    <Compile Include="../Electron2D.Tests/GZIPCleanupTests.cs" Link="GZIPCleanupTests.cs" />
+    <Compile Include="../Electron2D.Tests/NativeAllocationProbe.cs" Link="NativeAllocationProbe.cs" />
     <Compile Include="../Electron2D.Tests/NativeFontAllocationTests.cs" Link="NativeFontAllocationTests.cs" />
     <Compile Include="../Electron2D.Tests/AllocationWarmupCheck.cs" Link="AllocationWarmupCheck.cs" />
   </ItemGroup>

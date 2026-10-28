@@ -1,6 +1,6 @@
 # HTTP transfers and stream compression
 
-Last updated: 2026-10-14
+Last updated: 2026-10-28
 
 ## Public surface
 
@@ -31,6 +31,34 @@ GetBodySize reports declared wire-body size or minus one; GetDownloadedBytes rep
 StreamPeerGZIP uses the compression PAL already delivered with the .NET 10 runtime. The internal sequential PAL state, source-generated imports and SafeHandle release match the pinned v10.0.1 native contract. No new package, OS installation, public native handles or vendored source is added. Source state and output buffers are prepared at Start; output rounds to a power of two with a reserved byte, bounded to 64 MiB. Partial writes report input consumed under backpressure; drain output before retrying. Finish is compression-only and preserves finishing state across drain/retry. IsFinished exposes actual native end status, including gzip trailer/checksum verification; concatenated gzip members reset prepared inflate state. Zlib-wrapped deflate follows the reference useDeflate contract, not raw deflate.
 
 Setup, request construction, DNS, TLS handshakes, parsing/header snapshots, aggregate bodies and file operations are cold/loading boundaries. Repeated prepared HTTP body-span/poll and gzip member/read/reset operations allocate no managed bytes in the checked interval. The PAL state is allocated only at preparation; external native codec allocator totals are unmeasured. Direct PAL ABI integration is tied to the selected .NET 10 runtime and requires an executable packaging gate on each claimed target. Current native execution is Linux x64; HTTPS inherits the current Linux OpenSSL 3 backend. Browser HTTP host integration and other-platform/backend/native packaging remain separate.
+
+## Failed codec initialization
+
+The .NET compression PAL allocates an inner `z_stream` record before calling
+codec initialization. A failed initialization can therefore leave that record
+owned even when the codec itself was never prepared. GZIPContext now uses the
+matching native End operation on failure whenever the inner pointer exists,
+then frees its own outer PAL record in a finally block. A null inner pointer
+skips End. The original initialization error remains observable; the stream
+does not publish a partially configured context. Normal SafeHandle retirement
+uses the same cleanup, retaining one-time release through repeated Dispose.
+
+[The pinned native implementation](https://github.com/dotnet/runtime/blob/v10.0.1/src/native/libs/System.IO.Compression.Native/pal_zlib.c)
+defines both ownership layers. `GZIPCleanupTests` deliberately supplies invalid
+internal window bits to exercise actual partial native initialization for both
+compression and decompression. Public format options remain gzip/zlib. The
+existing calibrated Linux glibc allocation probe observes the failed constructor
+loops, rather than inferring native release from managed memory or the engine's
+outer-record ledger. Before the fix, 128 compressor failures show 260 native
+allocations and 132 frees; the fixed CLR run shows 260/260, with the decoder's
+386/386 also balanced. The totals include other allocator traffic within each
+process-wide observation window; they are not a byte-size or peak measurement.
+
+Linux x64 CLR and strict full-trim NativeAOT both pass the failure and normal
+retirement checks. The NativeAOT process maps no CoreCLR; its allocator counts
+also balance at 260/260 and 386/386. Receipts are under
+`bin/gzip-initialization-cleanup/2026-10-28/`. Codec allocator
+totals and the complete composed Performance memory monitors remain separate.
 
 ## Verification
 
