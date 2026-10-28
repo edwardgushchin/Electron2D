@@ -65,7 +65,7 @@ NativeAllocationTests passes on Linux x64 CLR and strict full-trim NativeAOT, in
 
 Native outline faces now create an FT_Memory record with the same owned payload allocator and supply it to FT_New_Library. The record outlives every face, driver and library allocation; FT_Done_Library completes before the record is freed. Default modules and FT_Set_Default_Properties retain the previous initialization and FREETYPE_PROPERTIES behavior. Bitmap-only faces create no FreeType library. Callback signatures use CLong for native C long across supported ABI layouts. Native allocation failure returns null, and failed resize preserves the preceding block and contribution.
 
-This follows the [documented custom-memory library lifetime](https://freetype.org/freetype2/docs/reference/ft2-module_management.html#ft_new_library) and [memory callback protocol](https://freetype.org/freetype2/docs/reference/ft2-system_interface.html#ft_memoryrec). Face/metadata/glyph/raster allocations routed through FT_Memory now contribute alongside copied input/table buffers, without counting the wrappers twice. HarfBuzz, ICU and codecs with independent allocators remain separate domains: the pinned [WOFF2 decoder](https://github.com/freetype/freetype/blob/0a0221a1347e2f1e07c395263540026e9a0aa7c7/src/sfnt/sfwoff2.c#L286-L307) calls Brotli's single-shot decoder without this allocator. This change does not complete either public total-memory selector.
+This follows the [documented custom-memory library lifetime](https://freetype.org/freetype2/docs/reference/ft2-module_management.html#ft_new_library) and [memory callback protocol](https://freetype.org/freetype2/docs/reference/ft2-system_interface.html#ft_memoryrec). Face/metadata/glyph/raster allocations routed through FT_Memory now contribute alongside copied input/table buffers, without counting the wrappers twice. The rebuilt private WOFF2 producer also routes its Brotli decoder through this allocator, as qualified [below](#woff2-decoder-allocation-domain-2026-10-28). HarfBuzz, ICU and other independent native allocators remain separate domains. This does not complete either public total-memory selector.
 
 NativeFontAllocationTests verifies actual production face ownership, explicit/failed/finalizer cleanup, native callbacks and fail-at-every-request initialization/decoding/unhinted rendering. Its prepared shaping interval measures managed allocations; new raster image creation remains a cold allocating operation. Linux x64 CLR and strict full-trim NativeAOT pass all 1162 unhinted allocation-failure positions and 128 warmed shaping calls at strict 0/0 owner/all-thread managed bytes. Source-bound raster/cache/metadata/variation/paragraph checks pass, including 60 independent packaged-library raster oracle cases both with default properties and with truetype:interpreter-version=35. Real-window GPU and compatibility text checks pass; CPU/GPU owner/separate role profiles retain 512 zero-allocation full frames. The GPU rerun uses the current-main native render bridge; earlier stale-bridge failures are retained separately. Receipts, the native C reproduction, immutable cohort hashes and matching runtime/test/consumer PDB/resource proofs are under bin/freetype-allocation-accounting/2026-10-28/. The full ordinary suite and other platforms were not rerun for this slice. Native package export validation now also requires the four custom-library initialization/teardown entry points.
 
@@ -111,6 +111,49 @@ producers remain open. Physics declaration coverage stays **1365/1369 (99.71%)**
 four Partial and 92 Excluded; neither memory selector is promoted by this fix.
 
 The focused FastTests route requires explicit native qualification: `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -- --freetype-allocation`. The existing consumer platform property admits the standard native package for that run; ordinary managed fast builds keep their existing dependency boundary.
+
+### WOFF2 decoder allocation domain (2026-10-28)
+
+The unmodified pinned WOFF2 reader used BrotliDecoderDecompress with default
+allocation callbacks. Its temporary decoder and scratch storage bypassed
+FT_Memory even when the face supplied one. The private producer now creates a
+decoder with that face's allocation/free callbacks and performs the same single
+streaming decode. Every exit destroys the decoder before its stack-owned callback
+context expires. Callback allocation failure returns Out_Of_Memory; oversized
+size_t requests reject before conversion to C long. Invalid/incomplete streams
+and decoded-length mismatches retain Invalid_Table. Trailing-input behavior and
+normal decoded bytes follow the preceding single-shot implementation.
+
+`tools/font-native/freetype-woff2-memory.cmake` generates the SFNT aggregation
+unit in the build directory, leaving the dependency checkout unchanged. Its
+normalized-source SHA-256 and compilation-unit checks reject a changed pin.
+The macOS incremental source target includes this helper. No native export,
+dependency pin or public managed API changes.
+
+The target-native checker calibrates the opaque Brotli decoder-state allocation
+through its public callback API, then observes exactly one such allocation in
+the actual WOFF2 face's supplied domain. The preceding qualified library fails
+this check with zero observations. The rebuilt producer passes all **1172/1189**
+unhinted/hinted allocation-failure positions with zero retained blocks, including
+Out_Of_Memory from decoder-state refusal, same-face bytecode-context recovery and
+cleanup after a corrupt Brotli stream inside a valid WOFF2 directory. Both default
+properties and interpreter 35 pass. The production CLR and full-trim NativeAOT allocator routes pass
+the same matrices, explicit/error/finalizer lifetime and 128 warmed shaping calls
+with strict **0/0 owner/all-thread managed bytes**. The AOT process maps the
+qualified FreeType and no CoreCLR. A fresh ordinary root consumer also passes
+its allocator route, 60 independent raster-oracle cases under default properties,
+60 under interpreter 35, and the raster-policy suite. Both consumer cohorts stay
+unchanged across their checks.
+
+Qualified library SHA-256:
+`58cbe1a5fa253466a2da64a5a8ae45f4955cac6fe57bcaed2b38dc8d7b60d2ba`.
+Commands, RED result, source-drift rejection, hashes and receipts are under
+`bin/freetype-woff2-memory/2026-10-28/`.
+
+This qualifies rebuilt producer storage, not cached packages or all native heap
+domains. HarfBuzz/ICU/other codecs and coherent managed/native current/peak remain
+open. Physics declaration coverage remains **1365/1369 (99.71%)**, four Partial
+and 92 Excluded.
 
 ## ENet-owned allocation domain
 
