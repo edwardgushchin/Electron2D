@@ -7,6 +7,10 @@ Last updated: 2026-10-26
 - Component: [canvas-rendering](../components/canvas-rendering.md)
 - Visibility: internal; unavailable to engine consumers.
 
+## Viewport render time
+
+The private timing subclass owns reusable native queries for the authoritative canvas Draw stream. Its [measurement and retirement contract](../components/viewport-render-time.md) excludes secondary compatibility replay and presentation. Source: [CompatibilityCanvasBackend.Timing.cs](../../src/Servers/Rendering/CompatibilityCanvasBackend.Timing.cs).
+
 ## Description
 
 The SDL_Renderer implementation of CanvasBackend. It supports baseline geometry and textures and rejects every shader material before drawing. A retained RGBA8 target supports readback and window presentation. Native resources are owner-thread state; the renderer retains its window through RenderHandle. Unsupported float texture or repeat capabilities are rejected before drawing.

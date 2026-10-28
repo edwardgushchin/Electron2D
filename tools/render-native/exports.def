@@ -50,3 +50,4 @@ EXPORTS
     e2d_render_timestamp_write
     e2d_render_timestamp_read
     e2d_render_timestamp_destroy
+    e2d_render_timestamp_elapsed

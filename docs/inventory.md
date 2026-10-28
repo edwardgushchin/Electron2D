@@ -1,4 +1,4 @@
-Existing RenderingDevice and ProjectSettings own [native GPU timestamps](components/gpu-timestamps.md), private pool state and the typed query-capacity key; the native bridge adds private TimestampPool storage without a new production C# type.
+Existing RenderingDevice and ProjectSettings own [native GPU timestamps](components/gpu-timestamps.md). RenderingServer and both canvas backends now own [viewport render time](components/viewport-render-time.md), sharing private GPUTimestampQueries and retained CanvasRenderTiming state.
 
 The existing [DisplayServer](classes/DisplayServer.md#method-dialoginputtext) now owns [native text input](components/native-text-input.md) through its private GTK partial; no production type is added.
 
@@ -1050,6 +1050,8 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [CanvasPresentation](classes/CanvasPresentation.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasOutput](classes/CanvasOutput.md) | [CanvasOutput.cs](../src/Servers/Rendering/CanvasOutput.cs) | [native HDR output](components/native-hdr-output.md) |
 | [CanvasBackend](classes/CanvasBackend.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [CanvasRenderTiming](classes/CanvasRenderTiming.md) | [CanvasRenderTiming.cs](../src/Servers/Rendering/CanvasRenderTiming.cs) | [Viewport render time](components/viewport-render-time.md) |
+| [GPUTimestampQueries](classes/GPUTimestampQueries.md) | [GPUTimestampQueries.cs](../src/Servers/Rendering/GPUTimestampQueries.cs) | [Device timestamps](components/gpu-timestamps.md), [viewport render time](components/viewport-render-time.md) |
 | [RenderHandle](classes/RenderHandle.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [GPUCanvasBackend](classes/GPUCanvasBackend.md) | [GPUCanvasBackend.cs](../src/Servers/Rendering/GPUCanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [RenderingParticleState](classes/RenderingParticleState.md) | [RenderingParticleState.cs](../src/Servers/Rendering/RenderingParticleState.cs) | [GPU particles](components/gpu-particles.md) |

@@ -20,7 +20,7 @@ The pool initializes lazily on first capture. A separate reset submission handle
 
 The private source/hash/version/revision-bound SDL 3.4.18 Vulkan bridge provides query-pool creation, timestamp-support detection on the selected queue, reset, ordered write and completed readback. No native device or query handle enters the public API. Missing bridge entry points or an unsupported native timestamp backend throw NotSupportedException at capture. Query allocation/read/reset failures throw explicitly. Ordinary completed-result getters remain usable before capture.
 
-This scope measures the RenderingDevice stream. RenderingServer whole-canvas frame profiling needs its own canvas-command/fence integration; these markers do not time an unrelated canvas command buffer. Foreign backends, NativeAOT, independent physical timing calibration and complete native driver heap accounting retain separate qualification requirements.
+This scope measures the RenderingDevice stream. [Viewport render time](viewport-render-time.md) separately brackets authoritative canvas commands/fences using the shared private GPUTimestampQueries owner; named markers do not time an unrelated canvas command buffer. Foreign backends, NativeAOT, independent physical timing calibration and complete native driver heap accounting retain separate qualification requirements.
 
 ## Verification
 

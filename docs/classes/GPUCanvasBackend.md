@@ -15,6 +15,10 @@ pipeline retirement and renderer teardown release their tables together.
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Copied byte, normalized/float, block and unsigned-integer images execute; foreign/native-allocation acceptance remains separate.
 
+## Viewport render time
+
+The private timing subclass owns reusable native queries for the authoritative canvas Draw stream. Its [measurement and retirement contract](../components/viewport-render-time.md) excludes secondary compatibility replay and presentation. Source: [GPUCanvasBackend.Timing.cs](../../src/Servers/Rendering/GPUCanvasBackend.Timing.cs).
+
 ## Description
 
 Thin canvas strokes use existing native Lines/LineStrip pipelines. SnapNativeLines rounds original endpoints in the upload copy before the vertex program, without changing shared host geometry; HDR color conversion and canvas modulation keep their existing order.

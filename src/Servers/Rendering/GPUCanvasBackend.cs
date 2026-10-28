@@ -152,8 +152,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         return pipeline;
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null)
     {
+        var measured = (GPUTiming?)timing;
         ResetRenderInfo();
         _textureMIPMapBias = output.TextureMIPMapBias;
         _currentHDR = output.HDR; _linearSources.Clear(); _linearArraySources.Clear();
@@ -224,6 +225,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         nint pass = 0; var particlesCommitted = false;
         try
         {
+            measured?.Begin(command);
             foreach (var texture in _textures.Values) texture.Upload(command);
             foreach (var texture in _layeredTextures.Values) texture.Upload(command);
             if (uploadBytes != 0)
@@ -411,7 +413,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 RecordCanvasDraw(batch, drawCalls);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
-            var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
+            measured?.End(command);
+            var submitted = command; command = 0;
+            if (measured is not null) measured.Submit(submitted); else Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
             if (processParticles) { CommitParticleChanges(); particlesCommitted = true; }
             foreach (var texture in _textures.Values) texture.CommitUpload();
             foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit();

@@ -101,6 +101,14 @@ E2D_EXPORT int e2d_render_timestamp_read(SDL_GPUDevice *device, uint32_t abi, Ti
     return 1;
 }
 
+E2D_EXPORT int e2d_render_timestamp_elapsed(SDL_GPUDevice *device, uint32_t abi, TimestampPool *pool, uint64_t *nanoseconds)
+{
+    if (!pool || abi != 1 || !compatible(device) || pool->renderer != (VulkanRenderer *)device->driverData || !nanoseconds || pool->capacity < 2) return -1;
+    uint64_t values[2];
+    if (pool->read(pool->renderer->logicalDevice, pool->pool, 0, 2, sizeof(values), values, sizeof(*values), VK_QUERY_RESULT_64_BIT) != VK_SUCCESS) return -1;
+    return timestamp_ns(values[1] - values[0], pool->bits, pool->period, nanoseconds) ? 1 : -1;
+}
+
 E2D_EXPORT void e2d_render_timestamp_destroy(SDL_GPUDevice *device, uint32_t abi, TimestampPool *pool)
 {
     if (!pool || abi != 1 || !compatible(device) || pool->renderer != (VulkanRenderer *)device->driverData) return;

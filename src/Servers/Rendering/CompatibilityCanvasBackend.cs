@@ -131,8 +131,9 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting, bool processParticles = true, ReadOnlySpan<CanvasModelPose> modelPoses = default, CanvasRenderTiming? timing = null)
     {
+        var measured = (GLTiming?)timing;
         ResetRenderInfo();
         foreach (var batch in batches)
             if (batch.Glyph.Mode != CanvasGlyphMode.None) throw new NotSupportedException("Glyph distance and component coverage require GPU rendering.");
@@ -145,6 +146,7 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
                 if (batch.Blend != BlendMode.Mix || batch.GroupShader || batch.MaskShader)
                     throw new NotSupportedException($"The software compatibility renderer cannot execute {(batch.GroupShader || batch.MaskShader ? BlendMode.PremultAlpha : batch.Blend)} canvas blending.");
         var renderer = _renderer.DangerousGetHandle();
+        if (measured is not null) { Check(SDL.FlushRenderer(renderer), "flush before measured canvas"); measured.Begin(); }
         var size = output.Size; var screen = false;
         foreach (var batch in batches)
         {
@@ -282,8 +284,12 @@ internal sealed partial class CompatibilityCanvasBackend : CanvasBackend
         }
         finally
         {
-            try { Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping"); }
-            finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
+            try { if (measured is not null) { Check(SDL.FlushRenderer(renderer), "flush measured canvas"); measured.End(); } }
+            finally
+            {
+                try { Check(SDL.SetRenderClipRect(renderer, 0), "clear canvas clipping"); }
+                finally { Check(SDL.SetRenderTarget(renderer, 0), "restore window render target"); }
+            }
         }
     }
 

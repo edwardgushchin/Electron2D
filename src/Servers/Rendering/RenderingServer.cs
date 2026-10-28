@@ -174,7 +174,7 @@ public sealed partial class RenderingServer : ElectronObject
     { if (node is CanvasItem item && ReferenceEquals(item.CanvasViewport, viewport)) item.QueueRedraw(); for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) InvalidateViewportRecordings(node.GetChild(i, includeInternal: true), viewport); }
     internal void SetWindowVisible(DisplayServer display, bool visible) { EnsureViewportMutation(); if (display.WindowID == 0) _backend.SetWindowVisible(display, visible); else display.SetWindowVisible(visible); }
     internal void EnsureViewportMutation() { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot mutate during native submission."); MarkChanged(); }
-    internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); ReleaseNativeTarget(viewport); _canvasFrames.Remove(viewport); RemoveViewportState(viewport); viewport.RenderingOwner = null; }
+    internal void ReleaseViewport(Viewport viewport) { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport targets cannot be released during native submission."); ReleaseNativeTarget(viewport); _canvasFrames.Remove(viewport); try { RemoveViewportState(viewport); } finally { viewport.RenderingOwner = null; } }
     internal Vector2i ViewportDimensions(Viewport viewport) { EnsureOwner(); return TargetSize(viewport); }
     internal Image? ReadbackViewport(Viewport viewport)
     { EnsureOwner(); if (_submittingTextures) throw new InvalidOperationException("Viewport readback cannot reenter native submission."); if (viewport is Window w && (w.ContentLayout.TargetSize.X == 0 || w.ContentLayout.TargetSize.Y == 0)) return null; var target = _backend.FindTarget(viewport); return target?.HasFrame == true ? _backend.Readback(target) : null; }
@@ -199,6 +199,7 @@ public sealed partial class RenderingServer : ElectronObject
             capturedRevision = Volatile.Read(ref _changeRevision);
             _continuousCanvas = false;
             BeginEventEmission(_publisherFramePreDrawCore.Handlers)?.Invoke();
+            var setupStart = Stopwatch.GetTimestamp();
             _globalParameters.BindScene(tree.SelectedShaderGlobals?.Parameters);
             UpdatePhysicsContacts(tree);
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
@@ -213,7 +214,9 @@ public sealed partial class RenderingServer : ElectronObject
             _particleFrame++; _particleDelta = step;
             _nativeFrameStarted = true;
             BeginNativeFrames();
+            var setupTicks = Stopwatch.GetTimestamp() - setupStart;
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (ScreenVisible(frame.Viewport) || UpdateMode(frame.Viewport) is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
+            setupStart = Stopwatch.GetTimestamp();
             if (_backend is GPUCanvasBackend particlesBackend)
             {
                 _submittingTextures = true;
@@ -222,10 +225,14 @@ public sealed partial class RenderingServer : ElectronObject
             }
             ReplayNativeFrames();
             _continuousCanvas |= HasVisibleTextureRedraw();
+            setupTicks += Stopwatch.GetTimestamp() - setupStart;
             PresentViewports();
+            setupStart = Stopwatch.GetTimestamp();
             EndNativeFrames();
             _nativeFrameStarted = false;
             PublishRenderInfo();
+            setupTicks += Stopwatch.GetTimestamp() - setupStart;
+            _frameSetupCPU = setupTicks * 1000d / Stopwatch.Frequency;
             _frameSubmitted = true;
             _submittedRevision = capturedRevision;
             _needsPresentation = !swapBuffers || _renderingDevice?.HasPendingScreens == true;
@@ -277,24 +284,39 @@ public sealed partial class RenderingServer : ElectronObject
     {
         if (frame.State != 0 || !frame.Wanted || !ViewportLive(frame.Viewport, tree) || !ViewportActive(frame.Viewport) || TargetSize(frame.Viewport).X < (ReferenceEquals(frame.Viewport, _window) ? 1 : 2) || TargetSize(frame.Viewport).Y < (ReferenceEquals(frame.Viewport, _window) ? 1 : 2) || _backend.FindTarget(frame.Viewport) is null) return;
         if (UpdateMode(frame.Viewport) == ViewportUpdateMode.Disabled || frame.Viewport is Window { Visible: false }) return;
-        frame.State = 1; BuildFrame(frame, tree);
-        foreach (var batch in frame.Batches)
+        var parentTiming = _cpuRenderTiming; PauseRenderCPU(); _cpuRenderTiming = null;
+        var timing = ViewportTiming(frame.Viewport);
+        try
         {
-            SubmitTexture(batch.Texture, tree);
-            if (batch.Material is { } material) SubmitMaterialTextures(material, frame, tree);
+            timing?.BeginFrame(); _cpuRenderTiming = timing; if (timing is not null) _cpuRenderStart = Stopwatch.GetTimestamp();
+            frame.State = 1; BuildFrame(frame, tree);
+            foreach (var batch in frame.Batches)
+            {
+                SubmitTexture(batch.Texture, tree);
+                if (batch.Material is { } material) SubmitMaterialTextures(material, frame, tree);
+            }
+            SubmitParticleTextures(frame, tree);
+            foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
+            foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
+            var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
+            _renderingDevice?.FlushRendererCommands();
+            frame.Clear = FrameClear(frame.Viewport); frame.ClearEnabled = ClearMode(frame.Viewport) != ViewportClearMode.Never;
+            _submittingTextures = true;
+            try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses), timing: timing); }
+            finally { _submittingTextures = false; }
+            frame.RenderObjects = _backend.RenderObjects; frame.RenderPrimitives = _backend.RenderPrimitives; frame.RenderDrawCalls = _backend.RenderDrawCalls;
+            ViewportSubmitted(frame.Viewport);
+            frame.State = 2; frame.Drawn = true; _submittedFrames.Add(frame);
+            PauseRenderCPU(); _cpuRenderTiming = null; timing?.EndFrame();
         }
-        SubmitParticleTextures(frame, tree);
-        foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
-        foreach (var child in _activeFrames) if (UpdateMode(child.Viewport) == ViewportUpdateMode.WhenParentVisible && ReferenceEquals(RenderParent(child.Viewport), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
-        var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
-        _renderingDevice?.FlushRendererCommands();
-        frame.Clear = FrameClear(frame.Viewport); frame.ClearEnabled = ClearMode(frame.Viewport) != ViewportClearMode.Never;
-        _submittingTextures = true;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), frame.Clear, frame.ClearEnabled, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting, modelPoses: CollectionsMarshal.AsSpan(frame.ModelPoses)); }
-        finally { _submittingTextures = false; }
-        frame.RenderObjects = _backend.RenderObjects; frame.RenderPrimitives = _backend.RenderPrimitives; frame.RenderDrawCalls = _backend.RenderDrawCalls;
-        ViewportSubmitted(frame.Viewport);
-        frame.State = 2; frame.Drawn = true; _submittedFrames.Add(frame);
+        catch (Exception failure)
+        {
+            PauseRenderCPU(); _cpuRenderTiming = null;
+            try { timing?.Abort(); } catch (Exception cleanup) { throw new AggregateException("Viewport timing cleanup failed.", failure, cleanup); }
+            throw;
+        }
+        finally { _cpuRenderTiming = parentTiming; if (parentTiming is not null) _cpuRenderStart = Stopwatch.GetTimestamp(); }
+
     }
     private void SubmitMaterialTextures(MaterialState material, CanvasFrame frame, SceneTree tree)
     {
@@ -616,6 +638,7 @@ public sealed partial class RenderingServer : ElectronObject
             List<Exception>? errors = null;
             try
             {
+                ReleaseRenderTimings(ref errors);
                 CloseNativeWindows(ref errors);
                 try { _globalParameters.RetireProjectImages(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseParticles(); } catch (Exception error) { (errors ??= []).Add(error); }

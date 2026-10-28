@@ -5336,6 +5336,26 @@
       "electron2d": "property:Electron2D.ProjectSettings.MaxTimestampQueryElements()",
       "godot": "ProjectSettings::property:debug/settings/profiler/max_timestamp_query_elements",
       "reason": "ADR 0028: native Vulkan timestamp pools execute ordered reset/write/read through the private pinned command-buffer bridge. Completed fence publication retains names, CPU microseconds, GPU device-clock nanoseconds and submission-frame identity; empty completed batches replace prior results. Empty active lists permit capture; used draw/compute lists reject. Capacity comes from the typed positive project key (default 256) at device creation. GPUTimestampTests checks actual compute values, graphics/window pixels, local/renderer lifetime, guards, overflow, reuse and zero prepared owner-managed bytes; the native ABI check covers unavailable query slots and bounds. GPU and CPU epochs are independent; native heap, hardware-counter wrapping, foreign backends and NativeAOT remain explicit qualification limits."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetMeasureRenderTime(Electron2D.RID,System.Boolean)",
+      "godot": "RenderingServer::method:viewport_set_measure_render_time(RID:,bool:)",
+      "reason": "ADR 0028/0095: static viewport timing executes paired completed CPU/GPU millisecond measurements through native Vulkan canvas queries/fences and retained Linux GL timestamp contexts. Common frame setup excludes viewport submission and presentation; dependent viewport/query-collection CPU scopes are paused. Disabled/new measurements return zero; native unsupported enabling rejects explicitly. ViewportTimingTests verifies real root/SubViewport/RID/native-child output, process exclusion, enable/resize/remap/retirement and owner/capture guards with 64 active/64 idle frames at zero prepared owner-managed bytes on both adapters. Native ABI and existing device-marker regressions retain shared pool lifetime; foreign backends, GLES execution, NativeAOT and physical timing calibration remain unqualified."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportGetMeasuredRenderTimeCPU(Electron2D.RID)",
+      "godot": "RenderingServer::method:viewport_get_measured_render_time_cpu(RID:)",
+      "reason": "ADR 0028/0095: static viewport timing executes paired completed CPU/GPU millisecond measurements through native Vulkan canvas queries/fences and retained Linux GL timestamp contexts. Common frame setup excludes viewport submission and presentation; dependent viewport/query-collection CPU scopes are paused. Disabled/new measurements return zero; native unsupported enabling rejects explicitly. ViewportTimingTests verifies real root/SubViewport/RID/native-child output, process exclusion, enable/resize/remap/retirement and owner/capture guards with 64 active/64 idle frames at zero prepared owner-managed bytes on both adapters. Native ABI and existing device-marker regressions retain shared pool lifetime; foreign backends, GLES execution, NativeAOT and physical timing calibration remain unqualified."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.ViewportGetMeasuredRenderTimeGPU(Electron2D.RID)",
+      "godot": "RenderingServer::method:viewport_get_measured_render_time_gpu(RID:)",
+      "reason": "ADR 0028/0095: static viewport timing executes paired completed CPU/GPU millisecond measurements through native Vulkan canvas queries/fences and retained Linux GL timestamp contexts. Common frame setup excludes viewport submission and presentation; dependent viewport/query-collection CPU scopes are paused. Disabled/new measurements return zero; native unsupported enabling rejects explicitly. ViewportTimingTests verifies real root/SubViewport/RID/native-child output, process exclusion, enable/resize/remap/retirement and owner/capture guards with 64 active/64 idle frames at zero prepared owner-managed bytes on both adapters. Native ABI and existing device-marker regressions retain shared pool lifetime; foreign backends, GLES execution, NativeAOT and physical timing calibration remain unqualified."
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingServer.GetFrameSetupTimeCPU()",
+      "godot": "RenderingServer::method:get_frame_setup_time_cpu()",
+      "reason": "ADR 0028/0095: static viewport timing executes paired completed CPU/GPU millisecond measurements through native Vulkan canvas queries/fences and retained Linux GL timestamp contexts. Common frame setup excludes viewport submission and presentation; dependent viewport/query-collection CPU scopes are paused. Disabled/new measurements return zero; native unsupported enabling rejects explicitly. ViewportTimingTests verifies real root/SubViewport/RID/native-child output, process exclusion, enable/resize/remap/retirement and owner/capture guards with 64 active/64 idle frames at zero prepared owner-managed bytes on both adapters. Native ABI and existing device-marker regressions retain shared pool lifetime; foreign backends, GLES execution, NativeAOT and physical timing calibration remain unqualified."
     }
   ],
   "statusGroups": [
@@ -7476,6 +7496,16 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: a complete native quantized canvas-shadow atlas producer and fragment consumer, including allocation/lifetime, sampling capacity and ordinary/authored-light shader composition. ADR 0028 currently executes direct contour visibility rather than a shadow atlas, so there is no texture whose resolution can be changed. Integrate the real atlas before exposing this control; do not store an ignored size or relabel direct-contour sampling as texture resolution."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028/0095: static viewport timing executes paired completed CPU/GPU millisecond measurements through native Vulkan canvas queries/fences and retained Linux GL timestamp contexts. Common frame setup excludes viewport submission and presentation; dependent viewport/query-collection CPU scopes are paused. Disabled/new measurements return zero; native unsupported enabling rejects explicitly. ViewportTimingTests verifies real root/SubViewport/RID/native-child output, process exclusion, enable/resize/remap/retirement and owner/capture guards with 64 active/64 idle frames at zero prepared owner-managed bytes on both adapters. Native ABI and existing device-marker regressions retain shared pool lifetime; foreign backends, GLES execution, NativeAOT and physical timing calibration remain unqualified.",
+      "godot": [
+        "RenderingServer::method:viewport_set_measure_render_time(RID:,bool:)",
+        "RenderingServer::method:viewport_get_measured_render_time_cpu(RID:)",
+        "RenderingServer::method:viewport_get_measured_render_time_gpu(RID:)",
+        "RenderingServer::method:get_frame_setup_time_cpu()"
+      ]
     }
   ],
   "extras": [

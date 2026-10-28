@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-25
+Last updated: 2026-10-29
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
@@ -9,6 +9,17 @@ Last updated: 2026-10-25
 
 Public static declarations are in [`RenderingServer.API.cs`](../../src/Servers/Rendering/RenderingServer.API.cs).
 
+
+## Viewport render time
+
+| Declaration | Contract |
+| --- | --- |
+| `public static void ViewportSetMeasureRenderTime(RID viewport, bool enable)` | Independently retain/retire a viewport's native measurements; ordinary owner/capture guards apply. |
+| `public static double ViewportGetMeasuredRenderTimeCPU(RID viewport)` | Last completed owner CPU rendering milliseconds, excluding child viewport execution; zero when disabled/new. |
+| `public static double ViewportGetMeasuredRenderTimeGPU(RID viewport)` | Matching completed native GPU elapsed milliseconds; zero when disabled/new. |
+| `public static double GetFrameSetupTimeCPU()` | Last successful frame's common CPU setup, outside viewport submission and presentation. |
+
+[Viewport render time](../components/viewport-render-time.md) defines native completion, clock scopes, backend support and lifecycle. Source: [RenderingServer.Timing.cs](../../src/Servers/Rendering/RenderingServer.Timing.cs).
 
 ## ViewportSetTextureMIPMapBias
 

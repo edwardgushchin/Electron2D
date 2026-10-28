@@ -4,6 +4,7 @@ public sealed partial class RenderingServer
 {
     private sealed class ServerViewportState(bool owned)
     {
+        internal CanvasRenderTiming? Timing;
         internal readonly bool Owned = owned;
         internal bool Active = !owned, DisableCanvas, ParentAssigned;
         internal Viewport? Parent;
@@ -155,11 +156,15 @@ public sealed partial class RenderingServer
     }
     private void RemoveViewportState(Viewport view)
     {
-        _serverViewports.Remove(view);
-        foreach (var state in _serverViewports.Values) if (ReferenceEquals(state.Parent, view)) state.Parent = null;
-        var rid = view.RegisteredViewportRID;
-        foreach (var canvas in _ownedCanvasRIDs) RenderingCanvasRegistry.Resolve(canvas).Attachments.Remove(rid);
-        foreach (var canvas in _serverSceneCanvases) canvas.Attachments.Remove(rid);
+        _serverViewports.Remove(view, out var removed);
+        try { removed?.Timing?.Dispose(); }
+        finally
+        {
+            foreach (var state in _serverViewports.Values) if (ReferenceEquals(state.Parent, view)) state.Parent = null;
+            var rid = view.RegisteredViewportRID;
+            foreach (var canvas in _ownedCanvasRIDs) RenderingCanvasRegistry.Resolve(canvas).Attachments.Remove(rid);
+            foreach (var canvas in _serverSceneCanvases) canvas.Attachments.Remove(rid);
+        }
     }
     private static void DisposeServerViewport(Viewport view)
     { var texture = view.GetTexture(); try { view.Dispose(); } finally { texture.Dispose(); } }

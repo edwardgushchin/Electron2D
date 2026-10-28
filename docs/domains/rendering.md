@@ -1,3 +1,5 @@
+[Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits.
+
 [Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) connects existing Image descriptors to complete independent-layer GPU loads/stores/R32 atomics, fixed descriptor arrays and retained TextureArrayRD consumers. No public type or signature is added.
 
 [Camera pixel feeds](../components/camera-feeds.md) connect opt-in native discovery/capture and caller-produced copied images to ordinary Texture views on both renderers. Source ownership, owner-delivered events, prepared conversion, resource storage and external-image limits follow [ADR 0115](../decisions/camera-feeds.md#adr-0115).

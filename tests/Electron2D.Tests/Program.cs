@@ -22,6 +22,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_CACHES") is { }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BYTE_BUFFERS") == "1") { ByteBufferTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_TIMING") is { } viewportTimingProfile) { RenderingRuntimeTests.RunViewportTiming(viewportTimingProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TIMESTAMPS") is { } timestampProfile) { GPUTimestampTests.Run(timestampProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_TEXT_INPUT") is { } inputProfile) { NativeTextInputTests.Run(inputProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_SCALE") is { } scaleBackend) { RenderingRuntimeTests.RunCanvasScalePreview(scaleBackend); return; }

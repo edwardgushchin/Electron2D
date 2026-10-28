@@ -1,11 +1,9 @@
-using System.Runtime.InteropServices;
-
 namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
     private readonly int _timestampCapacity = ProjectSettings.GetWithOverride(ProjectSettings.MaxTimestampQueryElements);
-    private RenderHandle? _timestampPool;
+    private GPUTimestampQueries? _timestampPool;
     private string[] _timestampNames = [], _timestampWorkNames = [];
     private ulong[] _timestampCPU = [], _timestampGPU = [], _timestampWorkCPU = [], _timestampWorkGPU = [];
     private int _timestampCount, _timestampRecorded, _timestampSubmitted;
@@ -30,7 +28,7 @@ public sealed unsafe partial class RenderingDevice
         if (_timestampRecorded == _timestampCapacity) throw new InvalidOperationException("The configured timestamp capacity is exhausted for this device frame.");
         RenderingServer.NotifyRenderMutation(); EnsureTimestampPool();
         var command = Commands();
-        if (NativeTimestampWrite(Device, 1, _timestampPool!.DangerousGetHandle(), command, (uint)_timestampRecorded) != 1) throw new InvalidOperationException("The native timestamp could not be recorded.");
+        _timestampPool!.Write(command, (uint)_timestampRecorded);
         _timestampWorkNames[_timestampRecorded] = name; _timestampWorkCPU[_timestampRecorded] = Time.GetTicksUSEC(); _timestampRecorded++;
     }
     /// <summary>Returns the marker count in the most recently completed device frame.</summary>
@@ -61,19 +59,10 @@ public sealed unsafe partial class RenderingDevice
         if (_timestampPool is not null) return;
         var names = new string[_timestampCapacity]; var workNames = new string[_timestampCapacity];
         var cpu = new ulong[_timestampCapacity]; var gpu = new ulong[_timestampCapacity]; var workCPU = new ulong[_timestampCapacity]; var workGPU = new ulong[_timestampCapacity];
-        int status; nint pool;
-        try { status = NativeTimestampCreate(Device, 1, (uint)_timestampCapacity, out pool); }
-        catch (Exception error) when (error is EntryPointNotFoundException or DllNotFoundException) { throw new NotSupportedException("Native timestamp queries require the current native Vulkan adapter.", error); }
-        if (status == 0) throw new NotSupportedException("This device has no integrated native timestamp query adapter.");
-        if (status != 1 || pool == 0) throw new InvalidOperationException("The native timestamp query pool could not be created.");
-        try { _timestampPool = new(pool, h => NativeTimestampDestroy(Device, 1, h), _context.Handle); }
-        catch { NativeTimestampDestroy(Device, 1, pool); throw; }
+        _timestampPool = new(Device, _context.Handle, (uint)_timestampCapacity);
         _timestampNames = names; _timestampWorkNames = workNames; _timestampCPU = cpu; _timestampGPU = gpu; _timestampWorkCPU = workCPU; _timestampWorkGPU = workGPU;
     }
-    private void ResetTimestamps(nint command)
-    {
-        if (_timestampPool is not null && NativeTimestampReset(Device, 1, _timestampPool.DangerousGetHandle(), command) != 1) throw new InvalidOperationException("The native timestamp query pool could not be reset.");
-    }
+    private void ResetTimestamps(nint command) => _timestampPool?.Reset(command);
     private void SubmitTimestamps()
     {
         _timestampSequence++; if (_timestampPool is null) return;
@@ -82,17 +71,10 @@ public sealed unsafe partial class RenderingDevice
     private void CompleteTimestamps()
     {
         if (!_timestampPending) return;
-        if (_timestampSubmitted != 0)
-            fixed (ulong* values = _timestampWorkGPU)
-                if (NativeTimestampRead(Device, 1, _timestampPool!.DangerousGetHandle(), (uint)_timestampSubmitted, values) != 1) throw new InvalidOperationException("Completed native timestamp queries could not be read.");
+        if (_timestampSubmitted != 0) _timestampPool!.Read(_timestampWorkGPU.AsSpan(0, _timestampSubmitted));
         Array.Clear(_timestampNames, 0, _timestampCount);
         (_timestampNames, _timestampWorkNames) = (_timestampWorkNames, _timestampNames);
         (_timestampCPU, _timestampWorkCPU) = (_timestampWorkCPU, _timestampCPU); (_timestampGPU, _timestampWorkGPU) = (_timestampWorkGPU, _timestampGPU);
         _timestampCount = _timestampSubmitted; _timestampFrame = _timestampSubmittedFrame; _timestampPending = false;
     }
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_create")] private static partial int NativeTimestampCreate(nint device, uint abi, uint capacity, out nint pool);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_reset")] private static partial int NativeTimestampReset(nint device, uint abi, nint pool, nint command);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_write")] private static partial int NativeTimestampWrite(nint device, uint abi, nint pool, nint command, uint index);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_read")] private static partial int NativeTimestampRead(nint device, uint abi, nint pool, uint count, ulong* values);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_destroy")] private static partial void NativeTimestampDestroy(nint device, uint abi, nint pool);
 }
