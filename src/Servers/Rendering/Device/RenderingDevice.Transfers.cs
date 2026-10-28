@@ -19,7 +19,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="destinationOffset">First destination byte.</param>
     /// <param name="sizeBytes">Number of bytes to copy; zero performs no copy.</param>
     /// <remarks>Storage-to-storage copies follow the GPU timeline without readback. Uniform destinations
-    /// are updated before returning; reading a storage source for a uniform destination synchronizes GPU work.
+    /// with host-only storage are updated before returning; native uniform destinations follow the GPU timeline. Reading a GPU source for a host-only uniform destination synchronizes GPU work.
     /// A same-buffer copy requires disjoint ranges. End the active compute list before copying.</remarks>
     /// <exception cref="ArgumentException">An identity is invalid, is not a buffer or the ranges overlap.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Either range exceeds its buffer.</exception>
@@ -31,12 +31,12 @@ public sealed unsafe partial class RenderingDevice
         if (sizeBytes == 0) return;
         if (ReferenceEquals(source, destination) && sourceOffset < destinationOffset + sizeBytes && destinationOffset < sourceOffset + sizeBytes)
             throw new ArgumentException("A same-buffer copy requires disjoint ranges.");
-        if (destination.Kind == Kind.Uniform)
+        if (HostUniform(destination))
         {
             BufferGetData(sourceBuffer, destination.Data.AsSpan((int)destinationOffset, (int)sizeBytes), sourceOffset);
             return;
         }
-        if (source.Kind == Kind.Uniform) { Upload(destination, destinationOffset, source.Data.AsSpan((int)sourceOffset, (int)sizeBytes)); return; }
+        if (HostUniform(source)) { Upload(destination, destinationOffset, source.Data.AsSpan((int)sourceOffset, (int)sizeBytes)); return; }
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin buffer copy");
         SDL.CopyGPUBufferToBuffer(pass, new() { Buffer = source.Handle!.DangerousGetHandle(), Offset = source.BufferOffset + sourceOffset },
             new() { Buffer = destination.Handle!.DangerousGetHandle(), Offset = destination.BufferOffset + destinationOffset }, sizeBytes, false);
@@ -47,8 +47,8 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="buffer">Live ordinary or formatted texel buffer.</param>
     /// <param name="offset">First byte to clear.</param>
     /// <param name="sizeBytes">Number of bytes, divisible by four; zero performs no clear.</param>
-    /// <remarks>Storage clears are ordered with uploads, copies and dispatches. Uniform clears update host
-    /// data immediately. End the active compute list before clearing.</remarks>
+    /// <remarks>Storage clears are ordered with uploads, copies and dispatches. Host-only uniform clears update host
+    /// data immediately; native uniform clears follow the GPU timeline. End the active compute list before clearing.</remarks>
     /// <exception cref="ArgumentException">The identity is invalid or is not a buffer.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The size is not divisible by four or the range exceeds its buffer.</exception>
     /// <exception cref="InvalidOperationException">The device is accessed from another thread or a compute list is active.</exception>
@@ -57,7 +57,7 @@ public sealed unsafe partial class RenderingDevice
         IdleList(); var entry = Get(buffer); Range(entry, offset, sizeBytes);
         if (sizeBytes % 4 != 0) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
         if (sizeBytes == 0) return;
-        if (entry.Kind == Kind.Uniform) { entry.Data.AsSpan((int)offset, (int)sizeBytes).Clear(); return; }
+        if (HostUniform(entry)) { entry.Data.AsSpan((int)offset, (int)sizeBytes).Clear(); return; }
         var command = Commands();
         var pointer = SDL.MapGPUTransferBuffer(Device, entry.Upload!.DangerousGetHandle(), true);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map clear storage");

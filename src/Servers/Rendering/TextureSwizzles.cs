@@ -44,7 +44,7 @@ internal sealed class TextureSwizzleCache
         var swizzles = TextureSwizzleKey.Create(maps); if (swizzles == default) return code;
         var key = (code, swizzles); if (_modules.TryGetValue(key, out var existing)) { existing.Epoch = _epoch; return existing.Code; }
         var module = new Module(code); var source = module.Instructions;
-        var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         var decorations = source.Where(i => Op(i) == 71 && i.Length == 4 && i[2] == 33).ToDictionary(i => i[1], i => (int)i[3]);
         var images = new Dictionary<int, uint[]>();
         foreach (var variable in source.Where(i => Op(i) == 59 && i[3] == 0))

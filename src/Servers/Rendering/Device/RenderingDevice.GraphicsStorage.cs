@@ -18,8 +18,9 @@ public sealed unsafe partial class RenderingDevice
             if ((enabled & feature) == 0) throw new NotSupportedException($"Writable {binding.Stage} storage requires an enabled native graphics-storage feature.");
         }
     }
-    private static bool WritesGraphicsStorage(Entry program)
+    private bool WritesGraphicsStorage(Entry program)
     {
+        if (program.PhysicalAddresses || NativeUniformsUsed(program)) return true;
         foreach (var binding in program.Layout) if (binding.Writable && binding.Stage != ShaderStage.Compute) return true;
         return false;
     }
@@ -30,7 +31,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private void EndDrawPass()
     {
-        SDL.EndGPURenderPass(_drawPass); _drawPass = 0;
+        try { RestoreAddressUniforms(); } finally { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
         var writes = _drawStorageWrites; _drawStorageWrites = false;
         try { RestoreGraphicsImages(); if (writes) StorageBarrier(); }
         catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush(); throw; }

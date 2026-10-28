@@ -4,6 +4,7 @@ namespace Electron2D;
 
 public sealed partial class RenderingServer
 {
+    internal bool DeviceHasHDROutput => _backend is GPUCanvasBackend gpu && gpu.HDROutputAvailable;
     internal (Vector2i Size, RenderingDevice.DataFormat Format) DeviceScreen(int screen)
     {
         EnsureDeviceAccess();
@@ -16,6 +17,7 @@ public sealed partial class RenderingServer
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
+    internal bool HDROutputAvailable => _output.Available;
     private RenderingDevice.DataFormat? _screenFormat;
     internal (Vector2i Size, RenderingDevice.DataFormat Format) ScreenInfo(ChildPresentation? child)
     {

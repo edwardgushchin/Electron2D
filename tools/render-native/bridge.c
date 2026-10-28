@@ -8,6 +8,7 @@
 #endif
 
 extern uint64_t e2d_views_memory(SDL_GPUDevice *);
+extern uint64_t e2d_addresses_memory(SDL_GPUDevice *);
 
 typedef struct E2DRenderMemory {
     uint64_t textures, buffers, total;
@@ -50,8 +51,8 @@ E2D_EXPORT int e2d_render_memory(SDL_GPUDevice *device, uint32_t abi, E2DRenderM
         }
     }
     SDL_UnlockMutex(renderer->allocatorLock);
-    uint64_t views = e2d_views_memory(device);
-    if (!valid || !add(&result.textures, views) || !add(&result.total, views)) return -1;
+    uint64_t views = e2d_views_memory(device), addresses = e2d_addresses_memory(device);
+    if (!valid || !add(&result.textures, views) || !add(&result.total, views) || !add(&result.buffers, addresses) || !add(&result.total, addresses)) return -1;
     *out = result;
     return 1;
 }

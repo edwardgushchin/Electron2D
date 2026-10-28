@@ -137,6 +137,7 @@ public sealed unsafe partial class RenderingDevice
             depth.StencilLoadOp = !target.Touched[_drawView * target.Textures.Length + depthIndex] && (_drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
             depth.StoreOp = SDL.GPUStoreOp.Store; depth.StencilStoreOp = depth.StoreOp;
         }
+        if (_graphicsPipeline is not null && (PipelineProgram(_graphicsPipeline).PhysicalAddresses || NativeUniformsUsed(PipelineProgram(_graphicsPipeline)))) PrepareAddressBuffers();
         var pass = target.Empty != 0 ? NativeEmptyBegin(Device, 1, Commands(), target.Empty) : SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.ColorSlots.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
         _drawPass = pass; target.Visited[_drawView] = true;
@@ -234,6 +235,7 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListDisableScissor(long drawList) { DrawList(drawList); SetScissor(new(0, 0, _drawTarget!.Size.X, _drawTarget.Size.Y)); }
     private void BindDrawResources()
     {
+        RestoreAddressUniforms();
         var original = PipelineProgram(_graphicsPipeline!); RequirePush(original);
         var sampledVariant = SampledVariant(_graphicsPipeline!);
         var program = sampledVariant?.Programs[_drawView] ?? original;
@@ -246,7 +248,8 @@ public sealed unsafe partial class RenderingDevice
             var ids = set.Bindings[descriptor.Slot]; ValidateBinding(descriptor, ids); if (descriptor.Native < 0) continue; var resource = Get(ids[ResourceID(descriptor, BufferID(descriptor.Type))]); var fragment = descriptor.Stage == ShaderStage.Fragment;
             if (descriptor.Type == UniformType.UniformBuffer)
             {
-                if (fragment) SDL.PushGPUFragmentUniformData(_command, (uint)descriptor.Native, resource.Data.AsSpan(), resource.Size);
+                if (!HostUniform(resource)) BindAddressUniform(resource, descriptor.Stage, descriptor.Native);
+                else if (fragment) SDL.PushGPUFragmentUniformData(_command, (uint)descriptor.Native, resource.Data.AsSpan(), resource.Size);
                 else SDL.PushGPUVertexUniformData(_command, (uint)descriptor.Native, resource.Data.AsSpan(), resource.Size);
             }
             else if (descriptor.Type == UniformType.SamplerWithTexture)

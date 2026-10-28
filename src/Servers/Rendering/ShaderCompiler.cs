@@ -97,7 +97,7 @@ internal static unsafe partial class ShaderCompiler
     internal static uint SamplerCount(byte[] code)
     {
         var source = new MaterialLightingProgram.Module(code).Instructions;
-        var types = source.Where(i => MaterialLightingProgram.Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => MaterialLightingProgram.Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         var bindings = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 4 && i[2] == 33).ToDictionary(i => i[1], i => i[3]);
         var samplers = source.Where(i => MaterialLightingProgram.Op(i) == 59 && i[3] == 0 && MaterialLightingProgram.Op(types[types[i[1]][3]]) == 26).Select(i => bindings[i[2]]).ToHashSet();
         uint count = 0;
@@ -117,7 +117,7 @@ internal static unsafe partial class ShaderCompiler
     private static uint UniformBufferCount(byte[] code, bool fragment)
     {
         var source = new MaterialLightingProgram.Module(code).Instructions;
-        var types = source.Where(i => MaterialLightingProgram.Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => MaterialLightingProgram.Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         var blocks = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 3 && i[2] == 2).Select(i => i[1]).ToHashSet();
         var bindings = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 4 && i[2] == 33).ToDictionary(i => i[1], i => i[3]);
         var sets = source.Where(i => MaterialLightingProgram.Op(i) == 71 && i.Length == 4 && i[2] == 34).ToDictionary(i => i[1], i => i[3]);

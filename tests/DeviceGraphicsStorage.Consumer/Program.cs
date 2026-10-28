@@ -9,6 +9,7 @@ internal static partial class GraphicsStorage
 {
     internal static void Run(string mode)
     {
+        if (mode.StartsWith("address", StringComparison.Ordinal)) { Addresses(mode); return; }
         if (mode.StartsWith("array-storage", StringComparison.Ordinal)) { ArrayStorage(mode); return; }
         if (mode.StartsWith("views", StringComparison.Ordinal)) { Views(mode); return; }
         if (mode.StartsWith("logic", StringComparison.Ordinal)) { Logic(mode); return; }
@@ -27,13 +28,13 @@ internal static partial class GraphicsStorage
     private static RDShaderSPIRV Code(string name, string language)
     {
         byte[] Read(string stage) => File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + "." + stage + "." + language + ".spv"));
-        return name is "chain" or "texel-chain" or "image-chain" ? new() { BytecodeCompute = Read("comp") } : new() { BytecodeVertex = Read("vert"), BytecodeFragment = Read("frag") };
+        return name is "chain" or "texel-chain" or "image-chain" or "address" or "address-uniform-chain" or "address-list" or "address-atomic" or "address-narrow" or "address-boundary" ? new() { BytecodeCompute = Read("comp") } : new() { BytecodeVertex = Read("vert"), BytecodeFragment = Read("frag") };
     }
     private static RID Shader(RenderingDevice device, string name, string language, bool authoring)
     {
         if (!authoring) { using var code = Code(name, language); return device.ShaderCreateFromBytecode(device.ShaderCompileBinaryFromSPIRV(code)); }
         string Read(string stage) => File.ReadAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "Shaders", name + "." + stage + "." + language));
-        using var source = new RDShaderSource { Language = language == "glsl" ? ShaderLanguage.GLSL : ShaderLanguage.HLSL, SourceVertex = name is "chain" or "texel-chain" or "image-chain" ? "" : Read("vert"), SourceFragment = name is "chain" or "texel-chain" or "image-chain" ? "" : Read("frag"), SourceCompute = name is "chain" or "texel-chain" or "image-chain" ? Read("comp") : "" };
+        using var source = new RDShaderSource { Language = language == "glsl" ? ShaderLanguage.GLSL : ShaderLanguage.HLSL, SourceVertex = name is "chain" or "texel-chain" or "image-chain" or "address" or "address-uniform-chain" or "address-list" or "address-atomic" or "address-narrow" or "address-boundary" ? "" : Read("vert"), SourceFragment = name is "chain" or "texel-chain" or "image-chain" or "address" or "address-uniform-chain" or "address-list" or "address-atomic" or "address-narrow" or "address-boundary" ? "" : Read("frag"), SourceCompute = name is "chain" or "texel-chain" or "image-chain" or "address" or "address-uniform-chain" or "address-list" or "address-atomic" or "address-narrow" or "address-boundary" ? Read("comp") : "" };
         using var code2 = device.ShaderCompileSPIRVFromSource(source); Check(code2.CompileErrorVertex == "" && code2.CompileErrorFragment == "" && code2.CompileErrorCompute == "", code2.CompileErrorVertex + code2.CompileErrorFragment + code2.CompileErrorCompute); return device.ShaderCreateFromSPIRV(code2);
     }
     private static RID Set(RenderingDevice device, RID shader, RID buffer)

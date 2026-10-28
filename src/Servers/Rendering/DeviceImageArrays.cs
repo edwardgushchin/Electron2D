@@ -10,7 +10,7 @@ internal static class DeviceImageArrays
     internal static (byte[] Code, Dictionary<(uint Set, int Binding), Source> Sources) Lower(byte[] code, bool symbolic)
     {
         var module = new Module(code); var source = module.Instructions;
-        var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         bool Opaque(uint id)
         {
             for (var depth = 0; depth < 32; depth++)

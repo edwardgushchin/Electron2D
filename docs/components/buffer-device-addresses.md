@@ -1,0 +1,27 @@
+# Buffer device addresses
+
+Last updated: 2026-10-28
+
+[RenderingDevice](../classes/RenderingDevice.md) executes physical-storage pointer shaders under [ADR 0028](../decisions/rendering.md#adr-0028). `HasFeature(Features.SupportsBufferDeviceAddress)` reports the enabled logical-device feature and allocation adapter. This first native profile requires the pinned Vulkan backend and Vulkan 1.2; other backends refuse address creation and pointer modules before publication.
+
+## Resources and execution
+
+`StorageBufferCreate`, `VertexBufferCreate`, `IndexBufferCreate` and `UniformBufferCreate` accept `BufferCreationBits.DeviceAddress`. `BufferGetDeviceAddress` returns an unsigned 64-bit GPU address, stable through updates, clears, copies, dispatches and draws until that resource is freed. A live ordinary buffer without this role returns zero. Foreign, stale and non-buffer identities reject. `AsStorage` independently enables descriptor storage use for vertex, index and uniform buffers; address creation alone does not imply that descriptor role. Storage buffers already have it.
+
+Address allocations own one Vulkan buffer and device-local memory with the required usage/allocation flags. They stay outside SDL's relocating allocator. Existing SDL uploads, transfers, vertex/index binding, indirect commands and readback use that same storage. The Vulkan uniform limit is 4 KiB, matching the pinned descriptor range; oversized host and native uniforms reject instead of accessing an undersized descriptor. Native uniform allocations have at least that range, retain their logical public size and bind GPU storage directly; pointer or descriptor writes therefore reach subsequent uniform consumers without a CPU shadow readback. Ordinary uniforms retain the host-data path. Native uniform/storage allocation requires its current Vulkan descriptor adapter even without an address flag.
+
+The command adapter conservatively retains live address/native-uniform buffers on the shared native device for pointer execution, because numeric shader data cannot enumerate its referenced resources. Full memory dependencies order pointer dispatches and graphics pass boundaries with later shader and transfer consumers. Completed or cancelled commands release their references; retired allocations are collected after submission and at device retirement. Public resource ownership remains per RenderingDevice. Keep referenced buffers alive, use only addresses from that device and obey bounds, alignment and invocation race rules. Saving an address in another buffer does not extend its public lifetime.
+
+## Shader interface
+
+Source/imported SPIR-V, encoded shader binaries and specialized pipelines preserve `PhysicalStorageBufferAddresses`, the physical-storage addressing model and pointer types. Forward pointer declarations stay in the module without being mistaken for duplicate type definitions. Physical pointers in push blocks reconstruct both address words directly, without requiring Int64 arithmetic. Integer-address arithmetic still requires its own native scalar capability. Recursive pointers carry address words rather than their pointee scalar layout; byte, Int16 and Half payloads retain their independent native storage/arithmetic requirements without leaking those requirements into the pointer-holding push block. Graphics pointer stores and atomics additionally require that stage's enabled storage feature; readonly physical loads do not. Native 64-bit physical atomics use the independently enabled buffer-atomic feature. Unsupported or inconsistent capability/model declarations reject before shader or binary publication.
+
+`HasFeature` also reports the integrated R32 signed/unsigned image-atomic path and the renderer's native main HDR output availability; local devices have no presentation surface. MetalFX spatial/temporal scaling and inline ray queries report unavailable until their actual adapters exist. These queries do not implement those missing execution paths. Three-dimensional ray-tracing pipelines remain outside the public product boundary.
+
+## Verification and limits
+
+The public consumer is [Addresses.cs](../../tests/DeviceGraphicsStorage.Consumer/Addresses.cs), selected with `address`, `address-source` or `address-unavailable`. Linux/Vulkan checks cover actual compute and vertex/fragment pointer writes, ordered repeated dispatch/draw, all four buffer families, stable transfers, native compute/graphics uniform reads, host/native uniform rebinding, queued free/readback and capability refusal. A prepared 32-cycle dispatch/readback cohort measures owner-thread managed allocations. Evidence is retained under `bin/buffer-device-addresses/2026-10-28/`; successful gates and their source/binary identities must be read from that evidence, not inferred from this test inventory.
+
+Foreign native targets, native allocation totals, physical HDR displays and human visual acceptance require their own qualification. HLSL pointer authoring depends on the pinned frontend's physical-storage extension support; this native execution profile consumes validated SPIR-V and GLSL source. Raw pointers do not supply shader memory safety or portable CPU addresses.
+
+Native feature/allocation flags and pointer representation follow the [Khronos buffer-address guide](https://docs.vulkan.org/guide/latest/buffer_device_address.html); stage store requirements follow the [Vulkan feature contract](https://github.khronos.org/Vulkan-Site/spec/latest/chapters/features.html).

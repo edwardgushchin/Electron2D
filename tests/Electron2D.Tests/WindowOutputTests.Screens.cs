@@ -15,6 +15,7 @@ internal static partial class WindowOutputTests
             window.Ready += _ =>
             {
                 var device = RenderingServer.GetRenderingDevice()!;
+                Check(device.HasFeature(RenderingDevice.Features.SupportsHDROutput), "Device HDR capability follows the integrated native main output.");
                 var hdrFormat = device.ScreenGetFramebufferFormat();
                 var list = device.DrawListBeginForScreen(clearColor: new(.25f, 1, 2.5f)); device.DrawListEnd();
                 Check(list != RenderingDevice.InvalidID, "Real native screen draw list.");

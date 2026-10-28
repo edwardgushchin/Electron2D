@@ -33,6 +33,7 @@ internal static partial class ShaderPrecision
                 21 when type.Length == 4 && type[2] == 16 => 32,
                 21 when type.Length == 4 && type[2] == 8 => 64,
                 23 or 24 or 28 or 29 when type.Length >= 3 => Arithmetic(type[2]),
+                32 when type.Length == 4 && type[2] == 5349 => 0,
                 32 when type.Length == 4 => Arithmetic(type[3]),
                 30 => type.Skip(2).Aggregate(0, (mask, element) => mask | Arithmetic(element)),
                 _ => 0

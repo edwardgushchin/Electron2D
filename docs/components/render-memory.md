@@ -16,7 +16,7 @@ allocator under its existing native mutex. Texture and buffer values use actual
 native resource allocation requirements. Total sums committed native blocks,
 including free space retained for reuse. It is not the sum of public descriptor
 sizes, a host RAM query, a physical adapter budget or other applications' VRAM.
-Private mutable-format images add their exact native allocation requirements to texture and total values once. Ordinary shared views add no image payload. These counters are read under their own native cache mutex after releasing the SDL allocator mutex; concurrent mutation can fall between the two snapshots. See [shared texture views](shared-texture-views.md). Native driver internals outside these allocators are excluded.
+Private mutable-format images add their exact native allocation requirements to texture and total values once. [Address/native-uniform buffers](buffer-device-addresses.md) add their standalone allocation requirements to buffer and total values once; their SDL wrappers are outside the relocatable allocator. Ordinary shared views add no image payload. These counters are read under their own native cache mutex after releasing the SDL allocator mutex; concurrent mutation can fall between the two snapshots. See [shared texture views](shared-texture-views.md). Native driver internals outside these allocators are excluded.
 
 [ADR 0054](../decisions/physics-backends.md#adr-0054) shares one physical SDL
 payload between independent renderer, local-compute and GPU-physics leases.

@@ -40,6 +40,8 @@ Formatted texel buffers execute indexed compute/graphics reads, compute stores a
 
 Shader binaries and reserved shader RIDs use the same validated runtime program path; see [container ownership and loading](../components/local-compute.md#shader-binaries-and-deferred-identities).
 
+[BufferCreationBits](RenderingDevice.BufferCreationBits.md) and [Features](RenderingDevice.Features.md) define native address/storage roles and live capability queries. See [buffer addresses](../components/buffer-device-addresses.md) for execution and lifetime.
+
 ## Example
 
 The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/WaterPlayground/WaterSimulation.GPU.cs).
@@ -67,6 +69,8 @@ byte[] result = device.BufferGetData(buffer);
 
 | Declaration | Contract |
 | --- | --- |
+| `public System.UInt64 BufferGetDeviceAddress(Electron2D.RID buffer)` | Stable native address or zero for an ordinary non-address buffer. |
+| `public System.Boolean HasFeature(Electron2D.RenderingDevice.Features feature)` | Queries an integrated executing capability. |
 | `public System.Void BufferGetData(Electron2D.RID buffer, System.Span<System.Byte> destination, System.UInt32 offsetBytes = 0)` | Synchronizes and copies a buffer range into caller-provided storage. |
 | `public System.Byte[] BufferGetData(Electron2D.RID buffer, System.UInt32 offsetBytes = 0, System.UInt32 sizeBytes = 0)` | Synchronizes and copies a buffer range into an independent array. |
 | `public System.Void BufferCopy(Electron2D.RID sourceBuffer, Electron2D.RID destinationBuffer, System.UInt32 sourceOffset, System.UInt32 destinationOffset, System.UInt32 sizeBytes)` | Copies disjoint validated byte ranges; storage copies stay on the GPU timeline. |
@@ -92,10 +96,10 @@ byte[] result = device.BufferGetData(buffer);
 | [`public Electron2D.RID ShaderCreatePlaceholder()`](#member-shader-binary-placeholder) | Reserves an owned identity for later bytecode loading. |
 | `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader or a paired graphics shader from compiled bytecode. |
 | `public Electron2D.RID TextureBufferCreate(System.UInt32 sizeElements, Electron2D.RenderingDevice.DataFormat format, System.ReadOnlySpan<System.Byte> data = default)` | Creates an owned formatted buffer; size counts elements and nonempty data covers its complete encoded byte capacity. |
-| `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
+| `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
 | `public System.Void Submit()` | Submits all recorded uploads and compute lists. |
 | `public System.Void Sync()` | Waits for submitted work, releases its fence and delivers completed readback callbacks. |
-| `public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)` | Creates a constant uniform buffer. |
+| `public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)` | Creates a uniform buffer, optionally backed by native addressable or storage-capable data. |
 | `public Electron2D.RID UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform> uniforms, Electron2D.RID shader, System.UInt32 shaderSet)` | Creates a copied set of validated buffer/image/sampler bindings. |
 | `public System.Boolean UniformSetIsValid(Electron2D.RID uniformSet)` | Reports whether a set and every borrowed resource remain alive. |
 | `protected override System.Void ValidateDisposal()` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
@@ -334,10 +338,10 @@ Creates a device-owned formatted GPU buffer. `sizeElements` is a positive elemen
 TextureBuffer and ImageBuffer borrow this RID. SamplerWithTextureBuffer borrows sampler first, then this buffer; indexed fetches ignore filtering. Compute stores and supported signed/unsigned R32 image atomics change the original encoded bytes. Ordinary update/copy/clear and synchronous/queued readback use byte offsets in that data, excluding private format metadata. FreeRID invalidates dependent sets and retires owned native storage; identities never cross devices. Graphics uses readonly declarations. See the component for native capacity, format conversion, allocation checks and remaining runtime/nested-descriptor and precision gates.
 
 <a id="member-8126118533ad"></a>
-### StorageBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>)
+### StorageBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>, Electron2D.RenderingDevice.StorageBufferUsage, Electron2D.RenderingDevice.BufferCreationBits)
 
 ```csharp
-public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)
+public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)
 ```
 
 Creates a zero-initialized read/write storage buffer.
@@ -367,13 +371,13 @@ public System.Void Sync()
 Waits for submitted work, releases its fence and delivers completed readback callbacks.
 
 <a id="member-2488ae168080"></a>
-### UniformBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>)
+### UniformBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>, Electron2D.RenderingDevice.BufferCreationBits)
 
 ```csharp
-public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)
+public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)
 ```
 
-Creates a constant uniform buffer.
+Creates a uniform buffer, optionally backed by native addressable or storage-capable data.
 
 A device-owned buffer identity.
 
@@ -1465,3 +1469,23 @@ Copies `view` over the original owner resolved from `withTexture`. Includes its 
 Same ownership/format contract, selecting `layer`, first `mipmap` and `mipmaps` (default 1) from the original owner. `sliceType` defaults to Texture. Invalid selectors, layers or zero/overflowing mip intervals throw ArgumentOutOfRangeException. The new ordinary image reports selected dimensions and one layer. GetFormat preserves stored format, while shaders and attachments validate the effective view encoding. No pixel copies occur. See [shared texture views](../components/shared-texture-views.md) for transfers, physical feedback guards, renderer-source expiration and actual native verification.
 
 [Native array storage](../components/graphics-storage-images.md#compute-and-array-consumers) executes typed compute/vertex/fragment loads, stores and signed/unsigned R32 atomics across independent layers, including one-layer arrays. Canvas sampling borrows the same GPU storage; private views retain one mip and follow original/renderer lifetime.
+
+## Buffer address and capability descriptions
+
+See [buffer device addresses](../components/buffer-device-addresses.md) for the executing native allocation, shader, transfer and lifetime contract.
+
+### BufferGetDeviceAddress(Electron2D.RID)
+
+```csharp
+public System.UInt64 BufferGetDeviceAddress(Electron2D.RID buffer)
+```
+
+Returns the stable GPU address of a live ordinary buffer created with DeviceAddress, or zero without that role. The value expires at resource retirement. Invalid, foreign and non-buffer identities reject.
+
+### HasFeature(Electron2D.RenderingDevice.Features)
+
+```csharp
+public System.Boolean HasFeature(Electron2D.RenderingDevice.Features feature)
+```
+
+Reports enabled address execution, R32 image atomics and renderer main HDR output. Unsupported scaling/ray-query paths return false; undefined selectors reject. Local devices have no HDR presentation surface.

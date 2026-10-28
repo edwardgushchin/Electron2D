@@ -226,11 +226,13 @@ public sealed unsafe partial class RenderingDevice
         /// <summary>Discards every color, depth and stencil aspect; absent aspects are ignored.</summary>
         IgnoreAll = 720640,
     }
-    /// <summary>Identifies BufferCreationBits values for executable graphics operations.</summary>
+    /// <summary>Selects additional storage and stable-address roles for device buffers.</summary>
     [Flags]
     public enum BufferCreationBits
     {
-        /// <summary>Selects AsStorage.</summary>
+        /// <summary>Allocates stable storage usable by physical-storage shader pointers.</summary>
+        DeviceAddress = 1,
+        /// <summary>Permits vertex, index and uniform buffers to bind as shader storage; storage buffers already have this role.</summary>
         AsStorage = 2,
     }
 }

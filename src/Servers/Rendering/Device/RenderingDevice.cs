@@ -72,6 +72,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal bool ScratchColorTarget;
         internal byte[] Data = [];
         internal uint Size, BufferOffset;
+        internal ulong DeviceAddress;
+        internal bool PhysicalAddresses;
         internal TexelLayout? Texel;
         internal StorageBufferUsage Usage;
         internal TextureInfo? Texture;
@@ -144,17 +146,18 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="sizeBytes">Positive byte capacity, divisible by four.</param>
     /// <param name="data">Optional initial prefix; remaining bytes are zero.</param>
     /// <param name="usage">Optional indirect-dispatch role.</param>
+    /// <param name="creationBits">Optional stable device-address role; AsStorage is already inherent.</param>
     /// <returns>A device-owned buffer identity.</returns>
-    /// <remarks>Compute and independently enabled vertex/fragment stages may write this buffer. Draw boundaries order later graphics, compute and transfers; invocations within one draw own race freedom.</remarks>
+    /// <remarks>DeviceAddress requires the enabled native address feature; its value stays stable until FreeRID. Compute and independently enabled vertex/fragment stages may write this buffer. Draw boundaries order later graphics, compute and transfers; invocations within one draw own race freedom.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The size, data length or usage flags are invalid.</exception>
-    public RID StorageBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default, StorageBufferUsage usage = 0)
+    public RID StorageBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default, StorageBufferUsage usage = 0, BufferCreationBits creationBits = 0)
     {
         IdleList(); if (sizeBytes == 0 || sizeBytes % 4 != 0 || sizeBytes > int.MaxValue || data.Length > sizeBytes) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
         if ((usage & ~StorageBufferUsage.DispatchIndirect) != 0) throw new ArgumentOutOfRangeException(nameof(usage));
         var entry = new Entry { Kind = Kind.Storage, Size = sizeBytes, Usage = usage };
         try
         {
-            entry.Handle = new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo { Size = sizeBytes, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite | SDL.GPUBufferUsageFlags.GraphicsStorageRead | (usage.HasFlag(StorageBufferUsage.DispatchIndirect) ? SDL.GPUBufferUsageFlags.Indirect : 0) }), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
+            entry.Handle = CreateBuffer(entry, SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite | SDL.GPUBufferUsageFlags.GraphicsStorageRead | (usage.HasFlag(StorageBufferUsage.DispatchIndirect) ? SDL.GPUBufferUsageFlags.Indirect : 0), creationBits);
             entry.Upload = Transfer(sizeBytes, SDL.GPUTransferBufferUsage.Upload);
             var initial = new byte[sizeBytes]; data.CopyTo(initial); Upload(entry, 0, initial);
             return Add(entry);
@@ -162,14 +165,25 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         catch { entry.Handle?.Dispose(); entry.Upload?.Dispose(); throw; }
     }
 
-    /// <summary>Creates a constant uniform buffer.</summary>
+    /// <summary>Creates a uniform buffer, optionally backed by native addressable or storage-capable data.</summary>
+    /// <remarks>Native roles bind GPU storage directly and participate in ordered transfers/readback. Ordinary uniforms retain copied host bytes. Unsupported allocation or address adapters reject before resource publication.</remarks>
+    /// <param name="creationBits">Optional storage and stable device-address roles.</param>
     /// <param name="sizeBytes">Positive capacity divisible by four, at most 16 KiB.</param>
     /// <param name="data">Optional initial prefix; remaining bytes are zero.</param>
     /// <returns>A device-owned buffer identity.</returns>
-    public RID UniformBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default)
+    public RID UniformBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default, BufferCreationBits creationBits = 0)
     {
         Access(); if (sizeBytes == 0 || sizeBytes % 4 != 0 || sizeBytes > 16384 || ValidationLimits is { } limits && sizeBytes > limits[21] || data.Length > sizeBytes) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
-        var entry = new Entry { Kind = Kind.Uniform, Size = sizeBytes, Data = new byte[sizeBytes] }; data.CopyTo(entry.Data); return Add(entry);
+        if ((creationBits & ~(BufferCreationBits.AsStorage | BufferCreationBits.DeviceAddress)) != 0) throw new ArgumentOutOfRangeException(nameof(creationBits));
+        var entry = new Entry { Kind = Kind.Uniform, Size = sizeBytes, Data = new byte[sizeBytes], GraphicsStorage = (creationBits & BufferCreationBits.AsStorage) != 0 }; data.CopyTo(entry.Data);
+        if (creationBits == 0) return Add(entry);
+        IdleList();
+        try
+        {
+            entry.Handle = CreateBuffer(entry, SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite | SDL.GPUBufferUsageFlags.GraphicsStorageRead, creationBits);
+            entry.Upload = Transfer(sizeBytes, SDL.GPUTransferBufferUsage.Upload); Upload(entry, 0, entry.Data); return Add(entry);
+        }
+        catch { entry.Handle?.Dispose(); entry.Upload?.Dispose(); throw; }
     }
 
     /// <summary>Updates a validated byte range of a buffer.</summary>
@@ -182,7 +196,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var entry = Get(buffer); Range(entry, offset, sizeBytes);
         if (sizeBytes > data.Length) throw new ArgumentException("Source data is too short.", nameof(data));
         var source = data[..(int)sizeBytes];
-        if (entry.Kind == Kind.Uniform) source.CopyTo(entry.Data.AsSpan((int)offset));
+        if (HostUniform(entry)) source.CopyTo(entry.Data.AsSpan((int)offset));
         else { IdleList(); Upload(entry, offset, source); }
     }
     private static void Range(Entry entry, uint offset, uint size)
@@ -225,7 +239,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public void BufferGetData(RID buffer, Span<byte> destination, uint offsetBytes = 0)
     {
         IdleList(); var entry = Get(buffer); Range(entry, offsetBytes, (uint)destination.Length);
-        if (entry.Kind == Kind.Uniform) { entry.Data.AsSpan((int)offsetBytes, destination.Length).CopyTo(destination); return; }
+        if (HostUniform(entry)) { entry.Data.AsSpan((int)offsetBytes, destination.Length).CopyTo(destination); return; }
         if (destination.IsEmpty) return;
         entry.Download ??= Transfer(entry.Size, SDL.GPUTransferBufferUsage.Download);
         var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("begin buffer read");
@@ -279,6 +293,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         ValidateGraphicsStorage(layout);
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         foreach (var binding in layout) if (binding.NativeImage) { entry.GraphicsImages |= 1u << (binding.Native + (binding.Stage == ShaderStage.Fragment ? 8 : 0)); if (binding.Writable) entry.GraphicsImageWrites |= binding.Stage == ShaderStage.Fragment ? 2u : 1u; }
+        entry.PhysicalAddresses = sources.Any(ShaderPrecision.ReadAddressRequirement);
         entry.Sources = sources; entry.Constants = constants; entry.OutputSlots = outputSlots; entry.ViewIndex = viewIndex;
         if (template) return entry;
         ValidateShaderLimits(modules, entry);
@@ -414,24 +429,27 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (descriptor.Type == UniformType.Image) { imageHandles[descriptor.Native] = StorageImageHandle(buffer, descriptor.Array); images[descriptor.Native] = new() { Texture = imageHandles[descriptor.Native] }; imageCount++; }
             else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.NativeHandle, Texture = Get(ids[ResourceID(descriptor, 1)]).NativeHandle }; samplerCount++; }
             else if (StorageBinding(descriptor.Type)) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; bufferSizes[descriptor.Native] = buffer.Size; count++; }
-            else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
+            else if (HostUniform(buffer)) { fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size); }
         }
         foreach (var link in _pipeline.Samplers) { samplers[link.Native.Native] = LinkedSampler(link, false); samplerCount++; }
         PushUniforms(_pipeline);
         _pipeline.Compute?.PrepareBufferSizes(_command, ReadOnlySpan<uint>.Empty, bufferSizes[..count]);
         var nativeImages = UseNativeComputeImages(imageHandles, (uint)imageCount, samplers, (uint)samplerCount); var preparedImages = false;
+        if (_pipeline.PhysicalAddresses || NativeUniformsUsed(_pipeline)) PrepareAddressBuffers();
         var pass = SDL.BeginGPUComputePass(_command, (nint)images, nativeImages ? 0 : (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         try
         {
             SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
+            foreach (var descriptor in _pipeline.Layout) if (descriptor.Type == UniformType.UniformBuffer && descriptor.Native >= 0)
+                { var uniform = Get(_sets[descriptor.Set].Bindings[descriptor.Slot][ResourceID(descriptor)]); if (!HostUniform(uniform)) BindAddressUniform(uniform, ShaderStage.Compute, descriptor.Native); }
             _pipeline.Compute?.BindBufferSizes(pass);
             if (samplerCount != 0) SDL.BindGPUComputeSamplers(pass, 0, (nint)samplers, (uint)samplerCount);
             if (nativeImages) { PrepareComputeImages(imageHandles, (uint)imageCount, true); preparedImages = true; }
             if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
             else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
         }
-        finally { try { if (preparedImages) PrepareComputeImages(imageHandles, (uint)imageCount, false); } finally { SDL.EndGPUComputePass(pass); } }
+        finally { try { if (preparedImages) PrepareComputeImages(imageHandles, (uint)imageCount, false); } finally { try { RestoreAddressUniforms(); } finally { SDL.EndGPUComputePass(pass); if (_pipeline.PhysicalAddresses) StorageBarrier(); } } }
     }
     /// <summary>Establishes a full dependency after prior dispatches in this list.</summary>
     /// <param name="computeList">The active list.</param>
@@ -507,7 +525,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         if (disposing)
         {
             RenderingServer.NotifyRenderMutation();
-            if (_drawPass != 0) { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
+            if (_drawPass != 0) { try { RestoreAddressUniforms(); } finally { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; } }
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             CancelRendererUploads(); ReleaseDrawablePipelines(); RetireResourceCaches();

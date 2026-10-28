@@ -45,14 +45,14 @@ public sealed unsafe partial class RenderingDevice
             {
                 var t = Type(type);
                 if (Op(t) is 23 or 24 or 28) { type = t[2]; continue; }
-                return Op(t) is 21 or 22 ? t[2] / 8 : 4u;
+                return Op(t) == 32 && t[2] == 5349 ? 8u : Op(t) is 21 or 22 ? t[2] / 8 : 4u;
             }
             throw new ArgumentException("Push element nesting exceeds the module depth.");
         }
         private uint Alignment(uint type)
         {
             var t = Type(type);
-            return Op(t) switch { 21 when t[2] == 8 => 1, 21 or 22 when t[2] == 16 => 2, 23 or 24 or 28 => Alignment(t[2]), 30 => t.Skip(2).Select(Alignment).DefaultIfEmpty(4u).Max(), _ => 4 };
+            return Op(t) switch { 32 when t[2] == 5349 => 8, 21 when t[2] == 8 => 1, 21 or 22 when t[2] == 16 => 2, 23 or 24 or 28 => Alignment(t[2]), 30 => t.Skip(2).Select(Alignment).DefaultIfEmpty(4u).Max(), _ => 4 };
         }
         private (uint Column, uint Row) Matrix(uint type, uint member)
         {
@@ -70,6 +70,7 @@ public sealed unsafe partial class RenderingDevice
                 switch (Op(t))
                 {
                     case 20: size = 4; break;
+                    case 32 when t[2] == 5349: size = 8; break;
                     case 21:
                         if (t[2] is not (8 or 16 or 32 or 64)) throw new NotSupportedException("Push integer precision requires its native shader adapter."); size = t[2] / 8; break;
                     case 22:
@@ -108,7 +109,7 @@ public sealed unsafe partial class RenderingDevice
         private uint Load(uint type, uint address, uint column, uint row, uint vectorStride)
         {
             var t = Type(type);
-            if (Op(t) is 20 or 21 or 22)
+            if (Op(t) is 20 or 21 or 22 || Op(t) == 32 && t[2] == 5349)
             {
                 var value = LoadWord(address);
                 if (Op(t) == 21 && t[2] is 8 or 16)
@@ -127,7 +128,7 @@ public sealed unsafe partial class RenderingDevice
                     var pair = Instruction(124, _halfPair, value);
                     return Instruction(77, type, pair, Instruction(199, _uint, Instruction(194, _uint, address, Constant(1)), Constant(1)));
                 }
-                if (Op(t) is 21 or 22 && t[2] == 64)
+                if (Op(t) is 21 or 22 && t[2] == 64 || Op(t) == 32 && t[2] == 5349)
                 {
                     if (_wordPair == 0)
                     {

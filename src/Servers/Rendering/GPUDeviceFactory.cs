@@ -5,6 +5,7 @@ namespace Electron2D;
 
 internal static unsafe partial class GPUDeviceFactory
 {
+    internal const string AddressProperty = "Electron2D.gpu.buffer_device_address";
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
     internal const string GraphicsStorageProperty = "Electron2D.gpu.graphics_storage";
     internal const string MultisampleProperty = "Electron2D.gpu.multisample_features";
@@ -18,6 +19,7 @@ internal static unsafe partial class GPUDeviceFactory
     internal const string SharedAtomic64Property = "Electron2D.gpu.shared_int64_atomics";
     private static void Destroy(nint device)
     {
+        try { ReleaseAddresses(device, 1); } catch (EntryPointNotFoundException) { }
         GPUTextureViews.Release(device, 1);
         NativeImageRelease(device, 1);
         SDL.DestroyGPUDevice(device);
@@ -25,6 +27,12 @@ internal static unsafe partial class GPUDeviceFactory
     [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_image_release")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void NativeImageRelease(nint device, uint abi);
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_addresses_release")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial void ReleaseAddresses(nint device, uint abi);
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_address_support")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    internal static partial int ReadAddressSupport(nint device, uint abi);
     [StructLayout(LayoutKind.Sequential)]
     private struct Vulkan12Features
     {
@@ -145,6 +153,10 @@ internal static unsafe partial class GPUDeviceFactory
             if (depth is < 0 or > 3) throw new InvalidOperationException("Native depth/stencil features could not be queried.");
             var logic = ReadLogicSupport(device, 1);
             if (logic is < 0 or > 1) throw new InvalidOperationException("Native logical color operations could not be queried.");
+            var addresses = 0;
+            try { addresses = ReadAddressSupport(device, 1); } catch (EntryPointNotFoundException) { }
+            if (addresses is < 0 or > 1) throw new InvalidOperationException("Native buffer addresses could not be queried.");
+            available |= addresses << 12;
             var raster = wide | (multisample << 1) | ((depth & 2) << 2) | (logic << 4); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
@@ -227,19 +239,20 @@ internal static unsafe partial class GPUDeviceFactory
             features[25] = ((uint)narrow >> 10) & 1; features[26] = ((uint)narrow >> 11) & 1;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
             // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
-            var precision = narrow & 1023;
+            var precision = narrow & 1023; var addresses = (narrow >> 12) & 1;
             var storage16 = new Vulkan11Features { Type = 49 };
             for (var i = 0; i < 4; i++) storage16.Flags[i] = ((uint)narrow >> i) & 1;
             var advanced = new Vulkan12Features { Type = 51 };
             if (precision != 0) advanced.Next = (nint)(&storage16);
             advanced.Flags[7] = ((uint)narrow >> 4) & 1; advanced.Flags[8] = ((uint)narrow >> 6) & 1;
             for (var i = 0; i < 3; i++) advanced.Flags[i + 1] = ((uint)narrow >> (i + 7)) & 1;
+            advanced.Flags[38] = (uint)addresses;
             advanced.Flags[0] = 1; advanced.Flags[5] = (uint)atomics & 1; advanced.Flags[6] = ((uint)atomics >> 1) & 1;
             fixed (uint* pointer = features)
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
             {
                 var extension = (nint)extensionName;
-                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | ((atomics | precision) == 0 ? 0u : 2u << 12), FeatureList = (atomics | precision) == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
+                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | ((atomics | precision | addresses) == 0 ? 0u : 2u << 12), FeatureList = (atomics | precision | addresses) == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
                     throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
                 nint device = 0; var mirror = false;
@@ -259,7 +272,8 @@ internal static unsafe partial class GPUDeviceFactory
                     if (selected == 0) return 0;
                 }
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
-                    (mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
+                    (addresses != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), AddressProperty, true) ||
+                     mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
                      float64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Float64Property, true) ||
                      int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true) ||
                      (atomics & 1) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), BufferAtomic64Property, true) ||

@@ -12,7 +12,7 @@ public sealed unsafe partial class RenderingDevice
         if (binding.Type == UniformType.StorageBuffer)
         {
             var buffer = Get(ids[0]);
-            if (buffer.Kind != Kind.Storage && !(buffer.Kind is Kind.Vertex or Kind.Index && buffer.GraphicsStorage)) throw new ArgumentException("A storage-capable buffer is required.", nameof(ids));
+            if (buffer.Kind != Kind.Storage && !(buffer.Kind is Kind.Vertex or Kind.Index or Kind.Uniform && buffer.GraphicsStorage)) throw new ArgumentException("A storage-capable buffer is required.", nameof(ids));
             return;
         }
         if (TexelBinding(binding.Type))

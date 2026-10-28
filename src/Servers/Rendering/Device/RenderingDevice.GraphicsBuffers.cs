@@ -73,13 +73,13 @@ public sealed unsafe partial class RenderingDevice
     private VertexLayout VertexFormat(int format) => _vertexFormats.TryGetValue(format, out var layout) ? layout : throw new ArgumentException("Unknown vertex format.", nameof(format));
     private RID GraphicsBuffer(uint size, ReadOnlySpan<byte> data, Kind kind, BufferCreationBits creation, IndexBufferFormat index = default)
     {
-        IdleList(); if (size == 0 || size > int.MaxValue || data.Length > size || (creation & ~BufferCreationBits.AsStorage) != 0) throw new ArgumentOutOfRangeException(nameof(size));
+        IdleList(); if (size == 0 || size > int.MaxValue || data.Length > size || (creation & ~(BufferCreationBits.AsStorage | BufferCreationBits.DeviceAddress)) != 0) throw new ArgumentOutOfRangeException(nameof(size));
         var usage = kind == Kind.Vertex ? SDL.GPUBufferUsageFlags.Vertex : SDL.GPUBufferUsageFlags.Index;
-        if (creation != 0) usage |= SDL.GPUBufferUsageFlags.GraphicsStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite;
-        var entry = new Entry { Kind = kind, Size = size, GraphicsStorage = creation != 0, IndexFormat = index };
+        if ((creation & BufferCreationBits.AsStorage) != 0) usage |= SDL.GPUBufferUsageFlags.GraphicsStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite;
+        var entry = new Entry { Kind = kind, Size = size, GraphicsStorage = (creation & BufferCreationBits.AsStorage) != 0, IndexFormat = index };
         try
         {
-            entry.Handle = new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo { Size = size, Usage = usage }), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
+            entry.Handle = CreateBuffer(entry, usage, creation);
             entry.Upload = Transfer(size, SDL.GPUTransferBufferUsage.Upload); var bytes = new byte[size]; data.CopyTo(bytes); Upload(entry, 0, bytes); return Add(entry);
         }
         catch { entry.Handle?.Dispose(); entry.Upload?.Dispose(); throw; }
@@ -87,7 +87,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Creates a zero-filled vertex buffer with a copied initial prefix.</summary>
     /// <param name="sizeBytes">Positive byte capacity.</param>
     /// <param name="data">Initial byte prefix.</param>
-    /// <param name="creationBits">Optional storage role.</param>
+    /// <param name="creationBits">Optional storage and stable device-address roles.</param>
     /// <returns>A device-owned buffer identity.</returns>
     public RID VertexBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default, BufferCreationBits creationBits = 0) => GraphicsBuffer(sizeBytes, data, Kind.Vertex, creationBits);
     /// <summary>Creates a copied unsigned index buffer.</summary>
@@ -95,7 +95,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="format">Unsigned 16 or 32-bit indices.</param>
     /// <param name="data">Initial byte prefix.</param>
     /// <param name="useRestartIndices">Enables maximum unsigned index values as strip restart markers.</param>
-    /// <param name="creationBits">Optional storage role.</param>
+    /// <param name="creationBits">Optional storage and stable device-address roles.</param>
     /// <returns>A device-owned index buffer identity.</returns>
     public RID IndexBufferCreate(uint sizeIndices, IndexBufferFormat format, ReadOnlySpan<byte> data = default, bool useRestartIndices = false, BufferCreationBits creationBits = 0)
     { if (!Enum.IsDefined(format)) throw new ArgumentOutOfRangeException(nameof(format)); var rid = GraphicsBuffer(checked(sizeIndices * (format == IndexBufferFormat.UInt16 ? 2u : 4u)), data, Kind.Index, creationBits, format); Get(rid).RestartIndices = useRestartIndices; return rid; }

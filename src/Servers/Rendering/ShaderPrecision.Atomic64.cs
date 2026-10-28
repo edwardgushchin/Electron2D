@@ -19,12 +19,7 @@ internal static partial class ShaderPrecision
             operations |= op is >= 227 and <= 242;
         }
         if (!operations || integers.Count == 0) return (declared, false, false);
-        var values = new Dictionary<uint, uint>();
-        for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
-        {
-            var count = (int)(words[at] >> 16); var op = words[at] & 65535;
-            if (op is 55 or 57 or 59 or 60 or 61 or 65 or 66 or 67 or 70 or 83 or 120 or 169 or 245 && count >= 3 && pointers.ContainsKey(words[at + 1])) values.Add(words[at + 2], words[at + 1]);
-        }
+        var values = ReadPointerValues(words, pointers);
         var buffer = false; var shared = false;
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
         {
@@ -36,10 +31,21 @@ internal static partial class ShaderPrecision
             if (!values.TryGetValue(id, out var type) || !pointers.TryGetValue(type, out var pointer)) throw new NotSupportedException("Atomics require a typed native buffer or shared pointer.");
             if (!integers.Contains(pointer.Element)) continue;
             if (!declared) throw new ArgumentException("A 64-bit atomic instruction requires its Int64Atomics capability.");
-            if (pointer.Storage is 2 or 12) buffer = true;
+            if (pointer.Storage is 2 or 12 or 5349) buffer = true;
             else if (pointer.Storage == 4) shared = true;
             else throw new NotSupportedException("This 64-bit atomic storage class requires its native resource adapter.");
         }
         return (declared, buffer, shared);
     }
+    private static Dictionary<uint, uint> ReadPointerValues(ReadOnlySpan<uint> words, Dictionary<uint, (uint Storage, uint Element)> pointers)
+    {
+        var values = new Dictionary<uint, uint>();
+        for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
+        {
+            var count = (int)(words[at] >> 16); var op = words[at] & 65535;
+            if (op is 55 or 57 or 59 or 60 or 61 or 65 or 66 or 67 or 70 or 83 or 120 or 124 or 169 or 245 && count >= 3 && pointers.ContainsKey(words[at + 1])) values.Add(words[at + 2], words[at + 1]);
+        }
+        return values;
+    }
+
 }

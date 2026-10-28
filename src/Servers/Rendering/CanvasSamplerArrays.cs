@@ -15,7 +15,7 @@ internal static partial class CanvasSamplerArrays
         if (swizzles is not null && swizzles.Count != textures.Length) throw new ArgumentException("A sampled component map is required for every native texture slot.", nameof(swizzles));
         var module = new Module(code);
         var source = module.Instructions;
-        var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         uint next = module.Header[3];
         var declarations = new List<uint[]>(); var annotations = new List<uint[]>(); var helpers = new List<uint[]>();
         uint Type(uint op, params uint[] operands)

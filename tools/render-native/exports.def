@@ -39,3 +39,9 @@ EXPORTS
     e2d_render_view_format_support
     e2d_render_view_overlap
     e2d_render_prepare_compute_images
+    e2d_render_address_support
+    e2d_render_address_create
+    e2d_render_address_destroy
+    e2d_render_addresses_prepare
+    e2d_render_addresses_release
+    e2d_render_address_uniform

@@ -30,7 +30,7 @@ public sealed unsafe partial class RenderingDevice
     }
     internal void CompleteRendererReadbacks()
     {
-        IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission(); RetireRendererTextures(); GPUTextureViews.CollectIfActive(Device); DeliverReadbacks();
+        IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission(); RetireRendererTextures(); GPUTextureViews.CollectIfActive(Device); CollectAddressBuffers(); DeliverReadbacks();
     }
     internal Image? CanvasImage(RID rid, uint layer)
     {

@@ -1,12 +1,14 @@
 # RenderingDevice.BufferCreationBits
 
-Last updated: 2026-10-11
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.BufferCreationBits`. **Source:** [RenderingDevice.GraphicsEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.GraphicsEnums.cs). **Component:** [Local device](../components/local-compute.md).
 
 ## Description
 
 Identifies BufferCreationBits values for executable graphics operations. Numeric identities are retained. Unknown or extent selectors reject when consumed. Only executable roles are accepted by the current device; missing backend/attachment families remain coverage prerequisites.
+
+`DeviceAddress = 1` selects stable native storage for physical-pointer shaders; `AsStorage = 2` independently enables descriptor storage on vertex, index and uniform resources. The [address contract](../components/buffer-device-addresses.md) defines lifetime and refusal.
 
 ## Example
 
@@ -16,7 +18,8 @@ Use this selector through the owning [RenderingDevice](RenderingDevice.md) opera
 
 | Declaration | Contract |
 | --- | --- |
-| `public const Electron2D.RenderingDevice.BufferCreationBits AsStorage = 2` | Selects AsStorage. |
+| `public const Electron2D.RenderingDevice.BufferCreationBits DeviceAddress = 1` | Stable physical-storage address. |
+| `public const Electron2D.RenderingDevice.BufferCreationBits AsStorage = 2` | Enables shader storage binding on vertex, index and uniform resources. |
 
 ## Member descriptions
 
@@ -27,7 +30,7 @@ Use this selector through the owning [RenderingDevice](RenderingDevice.md) opera
 public const Electron2D.RenderingDevice.BufferCreationBits AsStorage = 2
 ```
 
-Selects AsStorage.
+Enables shader storage binding on vertex, index and uniform resources.
 
 ## Lifetime and verification
 

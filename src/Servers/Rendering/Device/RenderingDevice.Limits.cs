@@ -125,7 +125,8 @@ public sealed unsafe partial class RenderingDevice
         values[0] = values[2] + values[3] + values[4] + values[5] + values[6];
         values[1] = Math.Min(values[1], 8);
         values[20] = Math.Min(values[21], MaximumPushBytes);
-        values[21] = Math.Min(values[21], 16384);
+        // The pinned Vulkan backend binds dynamic uniform descriptors to 4 KiB sections.
+        values[21] = Math.Min(values[21], 4096);
         values[23] = Math.Min(values[23], 16); values[24] = Math.Min(values[24], 16);
         values[25] = Math.Min(values[25], 2048); values[22] = Math.Min(values[22], values[25] - 1);
         for (var i = 28; i <= 30; i++) values[i] = Math.Min(values[i], 65535);

@@ -16,7 +16,7 @@ internal static partial class CanvasSamplerArrays
     internal static Dictionary<(uint Set, int Binding), bool> CoordinateSamplingRequirements(byte[] code)
     {
         var module = new Module(code); var source = module.Instructions;
-        var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         bool Opaque(uint type) => types.TryGetValue(type, out var i) && (Op(i) is 26 or 27 || Op(i) == 25 && i[7] == 1 || Op(i) is 28 or 29 && Opaque(i[2]) || Op(i) == 32 && i[2] == 0 && Opaque(i[3]));
         var resources = source.Where(i => Op(i) == 59 && i[3] == 0 && Opaque(i[1])).Select(i => i[2]).ToHashSet();
         if (resources.Count == 0) return [];

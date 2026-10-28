@@ -596,3 +596,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 [Copied graphics line width](../components/wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.
 
 [Native sample controls](../components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.
+
+[Buffer device addresses](../components/buffer-device-addresses.md) execute pointer-based compute and graphics through stable native allocations, including direct GPU uniform consumers and capability refusal.

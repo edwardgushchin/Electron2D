@@ -12,7 +12,7 @@ internal static partial class CanvasSamplerArrays
     internal static (byte[] Code, DevicePlan? Plan) LowerDevice(byte[] code, bool symbolic = false, IReadOnlyDictionary<(uint Set, int Binding, int Element), uint>? swizzles = null)
     {
         var module = new Module(code); var source = module.Instructions;
-        var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         bool Opaque(uint type) => types.TryGetValue(type, out var i) && (Op(i) is 26 or 27 || Op(i) == 25 && i[7] == 1 || Op(i) is 28 or 29 && Opaque(i[2]) || Op(i) == 32 && i[2] == 0 && Opaque(i[3]));
         var resources = source.Where(i => Op(i) == 59 && i[3] == 0 && Opaque(i[1])).ToArray();
         var lengths = source.Where(i => Op(i) == 43 && i.Length == 4).ToDictionary(i => i[2], i => i[3]);

@@ -15,7 +15,7 @@ internal static partial class TexelBufferProgram
         if (!module.Instructions.Any(i => Op(i) == 25 && i[3] == 5)) return (code, []);
         var library = ImportLibrary(module);
         var source = module.Instructions;
-        var types = source.Where(i => Op(i) is >= 19 and <= 39).ToDictionary(i => i[1]);
+        var types = source.Where(i => Op(i) is >= 19 and < 39).ToDictionary(i => i[1]);
         var declarations = new List<uint[]>(); var annotations = new List<uint[]>(); var helpers = new List<uint[]>(); var next = module.Header[3];
         uint Type(uint op, params uint[] operands)
         {
