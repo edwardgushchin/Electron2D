@@ -45,10 +45,26 @@ internal static partial class ShaderPrecision
         return (float64, int64);
     }
 
+    private static bool ReadSampleRequirement(byte[] code)
+    {
+        var words = MemoryMarshal.Cast<byte, uint>(code.AsSpan()); var declared = false; var used = false;
+        for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
+        {
+            var count = words[at] >> 16; var op = words[at] & 65535;
+            declared |= op == 17 && count == 2 && words[at + 1] == 35;
+            used |= op == 71 && (count == 3 && words[at + 2] == 17 || count == 4 && words[at + 2] == 11 && words[at + 3] is 18 or 19) ||
+                op == 72 && (count == 4 && words[at + 3] == 17 || count == 5 && words[at + 3] == 11 && words[at + 4] is 18 or 19);
+        }
+        if (used && !declared) throw new ArgumentException("Sample interpolation and sample-index/position inputs require the sample-rate capability.", nameof(code));
+        return declared;
+    }
+
     internal static void ValidateNative(nint device, byte[] code)
     {
         var required = ReadRequirements(code);
         var narrow = ReadNarrowRequirements(code);
+        var sample = ReadSampleRequirement(code);
+        if (sample && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MultisampleProperty, 0) & 1) == 0) throw new NotSupportedException("Sample-rate shaders require an enabled native sample-shading feature.");
         if (!required.Float64 && !required.Int64 && narrow == 0) return;
         var vulkan = SDL.GetGPUDeviceDriver(device) == "vulkan"; var properties = SDL.GetGPUDeviceProperties(device);
         if (required.Float64 && (!vulkan || !SDL.GetBooleanProperty(properties, GPUDeviceFactory.Float64Property, false)))

@@ -17,3 +17,5 @@ EXPORTS
     e2d_render_raster_pipeline
     e2d_render_line_support
     e2d_render_line_pipeline
+    e2d_render_multisample_support
+    e2d_render_multisample_pipeline

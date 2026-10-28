@@ -12,7 +12,7 @@ public sealed unsafe partial class RenderingDevice
         _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
     private static SDL.GPUBlendOp Blend(BlendOperation value) => Enum.IsDefined(value) && value != BlendOperation.Max ? (SDL.GPUBlendOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
-    /// <summary>Creates an executable color and depth/stencil graphics pipeline with copied multisample state.</summary>
+    /// <summary>Creates an executable color and depth/stencil graphics pipeline with copied sample coverage and shading state.</summary>
     /// <param name="shader">A live vertex shader with an optional fragment stage; vertex-only programs require primitive discard.</param>
     /// <param name="framebufferFormat">A color and optional depth/stencil layout on this device.</param>
     /// <param name="vertexFormat">A copied vertex layout, or -1 for procedural vertices.</param>
@@ -21,12 +21,12 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="colorBlendState">Copied blending configuration covering every logical color slot; unused slots and trailing entries are ignored.</param>
     /// <param name="dynamicStateFlags">Allows dynamic blend constants; other dynamic states require their native adapters.</param>
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
-    /// <param name="multisampleState">Copied sample count and alpha-to-coverage state; null selects one sample.</param>
+    /// <param name="multisampleState">Copied sample count, coverage/masks, alpha-to-one and sample shading; null selects one sample with ordinary shading.</param>
     /// <param name="specializationConstants">Copied scalar overrides shared by the paired stages; omitted values retain defaults.</param>
     /// <param name="forRenderPass">Zero-based framebuffer pass whose outputs and inputs this pipeline consumes.</param>
     /// <returns>A pipeline borrowing the shader identity and owning specialized native stages when needed.</returns>
     /// <exception cref="ArgumentException">Shader interfaces, layouts or configurations disagree.</exception>
-    /// <remarks>Depth-bounds tests and sample shading require their native state adapters. Ordered passes select forRenderPass. Typed specialization freezes constants before native creation. Without primitive discard, fragment outputs must exactly match active logical color slots; sparse slots use private native output remapping.</remarks>
+    /// <remarks>Depth-bounds tests require their native state adapter. Sample shading and alpha-to-one require independently enabled native features. Ordered passes select forRenderPass. Typed specialization freezes constants before native creation. Without primitive discard, fragment outputs must exactly match active logical color slots; sparse slots use private native output remapping.</remarks>
     public RID RenderPipelineCreate(RID shader, int framebufferFormat, int vertexFormat, RenderPrimitive primitive,
         RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null, RDPipelineMultisampleState? multisampleState = null, ReadOnlySpan<RDPipelineSpecializationConstant> specializationConstants = default, uint forRenderPass = 0)
     {
@@ -38,6 +38,7 @@ public sealed unsafe partial class RenderingDevice
         var target = FramebufferFormat(framebufferFormat, forRenderPass);
         var samples = multisampleState?.SampleCount ?? TextureSamples.Samples1;
         if (samples != target.Samples) throw new ArgumentException("Pipeline sample count must match the framebuffer raster targets.", nameof(multisampleState));
+        var sampleState = CaptureMultisample(multisampleState, samples);
         using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
         var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, out var stencilReference);
         var variant = PipelineVariant(program, specializationConstants, discard ? null : target.ColorSlots);
@@ -109,19 +110,19 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
-                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth);
+                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState);
                 var views = FramebufferLayouts(framebufferFormat).ViewCount;
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try
                 {
-                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     for (var view = 1; view < views; view++)
                     {
                         var source = Get(shader, Kind.Shader);
                         var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: discard ? null : target.ColorSlots, viewIndex: (uint)view);
                         entry.ViewPrograms[view - 1] = viewProgram;
                         info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
-                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     }
                     return Add(entry);
                 }

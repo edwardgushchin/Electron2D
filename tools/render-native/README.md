@@ -84,3 +84,5 @@ the public graphics-storage consumer covers source/binary, pixels and managed
 allocations. Other backends need their own pipeline adapters.
 
 The private line-support and line-pipeline entries query physical width range/precision and execute copied width through the call-local raster adapter. Logical wideLines ownership is required for nonunit widths; shared native callbacks are never mutated. See [the consumer contract](../../docs/components/wide-lines.md) and test_wide_mask.c for independent optional-feature refusal.
+
+The multisample support/pipeline entries add physical sampleRateShading/alphaToOne queries and copied native mask/fraction/flags through the existing call-local creator. Neither sample mask nor disabled optional state requires these features. The factory retains independent logical feature ownership; test_multisample_mask.c refuses either/both creation requests. See [sample controls](../../docs/components/multisample-state.md).

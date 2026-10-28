@@ -675,7 +675,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Partial | 4 |
 | [RDPipelineColorBlendStateAttachment](classes/RDPipelineColorBlendStateAttachment.md) | RefCounted | Implemented | 12 |
 | [RDPipelineDepthStencilState](classes/RDPipelineDepthStencilState.md) | RefCounted | Partial | 21 |
-| [RDPipelineMultisampleState](classes/RDPipelineMultisampleState.md) | RefCounted | Partial | 6 |
+| [RDPipelineMultisampleState](classes/RDPipelineMultisampleState.md) | RefCounted | Implemented | 6 |
 | [RDPipelineRasterizationState](classes/RDPipelineRasterizationState.md) | RefCounted | Partial | 11 |
 | [RDPipelineShader](classes/RDPipelineShader.md) | RefCounted | Blocked | 2 |
 | [RDPipelineSpecializationConstant](classes/RDPipelineSpecializationConstant.md) | RefCounted | Implemented | 2 |

@@ -22,6 +22,9 @@ extern SDL_GPURenderPass *e2d_render_empty_begin(SDL_GPUDevice *, uint32_t, SDL_
 extern void e2d_render_empty_release(SDL_GPUDevice *, uint32_t, void *);
 
 extern SDL_GPUGraphicsPipeline *e2d_render_line_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t);
+typedef struct MultisampleState { uint32_t mask, flags; float minimum; } MultisampleState;
+extern int e2d_render_multisample_support(SDL_GPUDevice *, uint32_t);
+extern SDL_GPUGraphicsPipeline *e2d_render_multisample_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *);
 extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
@@ -105,6 +108,13 @@ typedef struct LineLimits { float minimum, maximum, granularity; } LineLimits;
 extern int e2d_render_line_support(SDL_GPUDevice *, uint32_t, LineLimits *);
 int main(int argc, char **argv)
 {
+    MultisampleState samples = {0};
+    require(e2d_render_multisample_support(NULL, 1) == -1);
+    require(e2d_render_multisample_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples) == NULL);
+    require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, NULL) == NULL);
+    samples.flags = 8; require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples) == NULL);
+    samples.flags = 0; samples.minimum = -1; require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples) == NULL);
     LineLimits lines = {0};
     require(e2d_render_line_support(NULL, 1, &lines) == -1);
     require(e2d_render_line_support((SDL_GPUDevice *)(uintptr_t)1, 0, &lines) == -1);
@@ -163,6 +173,9 @@ int main(int argc, char **argv)
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
     raster_check(device);
+    int multisample_features = e2d_render_multisample_support(device, 1); require(multisample_features >= 0 && multisample_features <= 3);
+    printf("Native multisample feature mask=%d (sample shading=1, alpha-to-one=2)\n", multisample_features);
+
     int wide = e2d_render_line_support(device, 1, &lines); require(wide == 0 || wide == 1);
     if (wide) { require(lines.minimum > 0 && lines.maximum >= lines.minimum && lines.granularity > 0); printf("Native line range %g..%g, granularity %g (physical feature; logical opt-in independent)\n", lines.minimum, lines.maximum, lines.granularity); }
 

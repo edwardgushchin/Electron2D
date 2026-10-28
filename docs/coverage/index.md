@@ -1,3 +1,5 @@
+[Native sample controls](../components/multisample-state.md) now execute the complete RDPipelineMultisampleState property family: masks, sample shading/fraction and alpha-to-one join exact sample count/alpha-to-coverage. The class and four properties become Implemented; broader resource/backend dependencies retain their own rows.
+
 [Copied line width](../components/wide-lines.md) now executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping/precision and retained discard/view/pass/component-map state. LineWidth moves from Blocked to Implemented; dynamic width and patch/tessellation keep their explicit adapters.
 
 [Unfiltered Linux qualification](../components/physics-contract-audit.md#linux-ordinary-qualification-2026-10-28) passes the source-bound `0f5d114b5` root suite in 795.1936 seconds with an unchanged cohort. Later revisions retain their own gates. The native script property schema audit identifies the next live-assignment gap; no declaration is promoted. Physics remains **1363/1369 (99.56%)**, six Partial, 92 Excluded.

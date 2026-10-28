@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private sealed record GraphicsRecipe(SDL.GPUGraphicsPipelineCreateInfo Description, SDL.GPUVertexAttribute[] Attributes, SDL.GPUVertexBufferDescription[] Buffers, SDL.GPUColorTargetDescription[] Colors, bool Discard, float LineWidth);
+    private sealed record GraphicsRecipe(SDL.GPUGraphicsPipelineCreateInfo Description, SDL.GPUVertexAttribute[] Attributes, SDL.GPUVertexBufferDescription[] Buffers, SDL.GPUColorTargetDescription[] Colors, bool Discard, float LineWidth, NativeMultisampleState Samples);
     private sealed record SwizzleVariant(Entry[] Programs, RenderHandle[] Pipelines);
 
     private uint BoundSwizzle(uint set, int binding, int element, UniformType type, RID shader, int count)
@@ -66,7 +66,7 @@ public sealed unsafe partial class RenderingDevice
             var info = recipe.Description; info.VertexShader = program.Handle!.DangerousGetHandle(); info.FragmentShader = program.FragmentHandle!.DangerousGetHandle();
             info.VertexInputState.VertexAttributes = (nint)attributes; info.VertexInputState.VertexBufferDescriptions = (nint)buffers;
             info.TargetInfo.ColorTargetDescriptions = (nint)colors;
-            return new(CreateGraphicsPipeline(in info, recipe.Discard, recipe.LineWidth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+            return new(CreateGraphicsPipeline(in info, recipe.Discard, recipe.LineWidth, recipe.Samples), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
         }
     }
     private static void ReleaseSwizzle(SwizzleVariant variant)

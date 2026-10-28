@@ -3383,7 +3383,7 @@
       "godot": "class:RDPipelineMultisampleState",
       "electron2d": "T:Electron2D.RDPipelineMultisampleState",
       "state": "Partial",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Sample masks are reserved native fields; alpha-to-one and per-sample shading require executing native states."
+      "reason": "ADR 0028: copied native sample masks, sample shading/fraction and alpha-to-one execute beside exact sample count/alpha-to-coverage. Independent optional sampleRateShading/alphaToOne negotiation retains mask, wide-line and storage siblings. Native source/SPIR-V/binary sample inputs/capability, copied views/passes/component variants, actual resolved pixels/invocation counts/compute/canvas and prepared zero-owner-byte cycles are exercised in CLR/strict NativeAOT on Linux/Vulkan. Native heap/throughput, foreign targets and owner acceptance remain unverified. Public nonempty mask vectors preserve the pinned count-sized validation shape; native words/bits beyond the sample count are ignored. See docs/components/multisample-state.md."
     },
     {
       "godot": "RDFramebufferPass::constant:ATTACHMENT_UNUSED",
@@ -3744,6 +3744,30 @@
       "electron2d": "property:Electron2D.RDPipelineRasterizationState.LineWidth()",
       "state": "Implemented",
       "reason": "ADR 0028: finite positive copied pixel width executes for line lists/strips and polygon outlines through the pinned Vulkan pipeline adapter. Optional wideLines is independently negotiated; nonunit widths require its enabled feature; positive values clamp to the native range before precision quantization. Ordinary one-pixel pipelines survive refusal; discard, views/passes and sampled component variants preserve width. See docs/components/wide-lines.md for executable checks and platform/native-allocation limits."
+    },
+    {
+      "godot": "RDPipelineMultisampleState::property:enable_alpha_to_one",
+      "electron2d": "property:Electron2D.RDPipelineMultisampleState.EnableAlphaToOne()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied native sample masks, sample shading/fraction and alpha-to-one execute beside exact sample count/alpha-to-coverage. Independent optional sampleRateShading/alphaToOne negotiation retains mask, wide-line and storage siblings. Native source/SPIR-V/binary sample inputs/capability, copied views/passes/component variants, actual resolved pixels/invocation counts/compute/canvas and prepared zero-owner-byte cycles are exercised in CLR/strict NativeAOT on Linux/Vulkan. Native heap/throughput, foreign targets and owner acceptance remain unverified. Public nonempty mask vectors preserve the pinned count-sized validation shape; native words/bits beyond the sample count are ignored. See docs/components/multisample-state.md."
+    },
+    {
+      "godot": "RDPipelineMultisampleState::property:enable_sample_shading",
+      "electron2d": "property:Electron2D.RDPipelineMultisampleState.EnableSampleShading()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied native sample masks, sample shading/fraction and alpha-to-one execute beside exact sample count/alpha-to-coverage. Independent optional sampleRateShading/alphaToOne negotiation retains mask, wide-line and storage siblings. Native source/SPIR-V/binary sample inputs/capability, copied views/passes/component variants, actual resolved pixels/invocation counts/compute/canvas and prepared zero-owner-byte cycles are exercised in CLR/strict NativeAOT on Linux/Vulkan. Native heap/throughput, foreign targets and owner acceptance remain unverified. Public nonempty mask vectors preserve the pinned count-sized validation shape; native words/bits beyond the sample count are ignored. See docs/components/multisample-state.md."
+    },
+    {
+      "godot": "RDPipelineMultisampleState::property:min_sample_shading",
+      "electron2d": "property:Electron2D.RDPipelineMultisampleState.MinSampleShading()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied native sample masks, sample shading/fraction and alpha-to-one execute beside exact sample count/alpha-to-coverage. Independent optional sampleRateShading/alphaToOne negotiation retains mask, wide-line and storage siblings. Native source/SPIR-V/binary sample inputs/capability, copied views/passes/component variants, actual resolved pixels/invocation counts/compute/canvas and prepared zero-owner-byte cycles are exercised in CLR/strict NativeAOT on Linux/Vulkan. Native heap/throughput, foreign targets and owner acceptance remain unverified. Public nonempty mask vectors preserve the pinned count-sized validation shape; native words/bits beyond the sample count are ignored. See docs/components/multisample-state.md."
+    },
+    {
+      "godot": "RDPipelineMultisampleState::property:sample_masks",
+      "electron2d": "property:Electron2D.RDPipelineMultisampleState.SampleMasks()",
+      "state": "Implemented",
+      "reason": "ADR 0028: copied native sample masks, sample shading/fraction and alpha-to-one execute beside exact sample count/alpha-to-coverage. Independent optional sampleRateShading/alphaToOne negotiation retains mask, wide-line and storage siblings. Native source/SPIR-V/binary sample inputs/capability, copied views/passes/component variants, actual resolved pixels/invocation counts/compute/canvas and prepared zero-owner-byte cycles are exercised in CLR/strict NativeAOT on Linux/Vulkan. Native heap/throughput, foreign targets and owner acceptance remain unverified. Public nonempty mask vectors preserve the pinned count-sized validation shape; native words/bits beyond the sample count are ignored. See docs/components/multisample-state.md."
     }
   ],
   "extras": [
@@ -4867,13 +4891,6 @@
       "reason": "ADR 0028: copied framebuffer color slots retain AttachmentUnused holes in logical shader output order. Pipelines require the exact active shader output mask and matching scalar formats; native target/blend arrays and private SPIR-V output locations compact active slots, including grouped location decorations and specialization. Original modules remain unchanged. Leading/middle/trailing holes, float/signed/unsigned pixels, eight-slot boundaries, ignored unused/trailing blend entries, copied metadata, MSAA resolve/input/preservation, depth-only passes, owner/lifetime errors and retained canvas execute in RenderingDeviceSparseTests. GLSL/HLSL prepared active/unchanged draw/readback intervals require zero managed owner bytes. Foreign platforms, native/driver allocation and throughput remain unverified."
     },
     {
-      "state": "Partial",
-      "godot": [
-        "class:RDPipelineMultisampleState"
-      ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Sample masks are reserved native fields; alpha-to-one and per-sample shading require executing native states."
-    },
-    {
       "state": "Implemented",
       "godot": [
         "RDAttachmentFormat::property:samples",
@@ -4953,34 +4970,6 @@
         "RDFramebufferPass::property:preserve_attachments"
       ],
       "reason": "ADR 0028: copied ordered framebuffer passes execute on SDL_GPU with native color/depth/resolve output, readonly fragment input loads, per-pass pipeline selection and preservation across inactive intermediate passes. GLSL/HLSL float and 2DMS input pixels, independent native resolve edge oracles, signed/unsigned exact bits, sparse input indices, logical sets, copied layout/state/lifetime errors, retained canvas output and 32 prepared zero-managed-owner-byte cycles are checked on Linux/Vulkan. Input+Sampling uses a retained private GPU snapshot; input-only images bind directly. Foreign platforms, native/driver allocation and throughput remain unverified."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDPipelineMultisampleState::property:sample_masks"
-      ],
-      "reason": "ADR 0028: SDL_GPU SampleMask/EnableMask are reserved and must remain zero/false; requires an executing native mask state adapter."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDPipelineMultisampleState::property:enable_alpha_to_one"
-      ],
-      "reason": "ADR 0028: SDL_GPU has no alpha-to-one state; requires an executing native alpha-to-one adapter."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDPipelineMultisampleState::property:enable_sample_shading"
-      ],
-      "reason": "ADR 0028: SDL_GPU has no per-sample shading state; requires sample-rate shader/raster integration."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDPipelineMultisampleState::property:min_sample_shading"
-      ],
-      "reason": "ADR 0028: Requires the same executing sample-shading state and shader adapter as EnableSampleShading."
     },
     {
       "state": "Blocked",
@@ -5202,6 +5191,17 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0028: copied primitive discard executes native vertex-only graphics without rasterization or fragment execution. Source/SPIR-V/binary vertex-only programs, paired fragment suppression, specialization/push, direct/indirect writes, MSAA, multiview/multipass and sampled component variants retain device ownership and ordering. Version-two vertex-only containers preserve an absent public fragment; ordinary version-one containers remain readable. The pinned native adapter uses a call-local renderer and shared locked layout caches, with globally unique layout IDs and reference rollback on failure. See docs/components/raster-discard.md for CLR/AOT, native concurrency/failure checks and Linux/Vulkan qualification limits."
+    },
+    {
+      "godot": [
+        "RDPipelineMultisampleState::property:enable_alpha_to_one",
+        "RDPipelineMultisampleState::property:enable_sample_shading",
+        "RDPipelineMultisampleState::property:min_sample_shading",
+        "RDPipelineMultisampleState::property:sample_masks",
+        "class:RDPipelineMultisampleState"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: copied native sample masks, sample shading/fraction and alpha-to-one execute beside exact sample count/alpha-to-coverage. Independent optional sampleRateShading/alphaToOne negotiation retains mask, wide-line and storage siblings. Native source/SPIR-V/binary sample inputs/capability, copied views/passes/component variants, actual resolved pixels/invocation counts/compute/canvas and prepared zero-owner-byte cycles are exercised in CLR/strict NativeAOT on Linux/Vulkan. Native heap/throughput, foreign targets and owner acceptance remain unverified. Public nonempty mask vectors preserve the pinned count-sized validation shape; native words/bits beyond the sample count are ignored. See docs/components/multisample-state.md."
     }
   ]
 }

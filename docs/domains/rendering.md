@@ -586,3 +586,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 [Primitive discard](../components/raster-discard.md) now executes vertex-only/no-Position and paired graphics programs without raster/fragment work, through the pinned native pipeline adapter. Storage writes feed ordinary compute, graphics and canvas consumers; wide-line and patch controls remain separate prerequisites.
 
 [Copied graphics line width](../components/wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.
+
+[Native sample controls](../components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.

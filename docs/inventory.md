@@ -2377,3 +2377,5 @@ Formatted graphics writes reuse `TexelBufferProgram`, `RenderingDevice.GraphicsS
 [Primitive discard](components/raster-discard.md) extends RDPipelineRasterizationState and RenderingDevice with vertex-only graphics, binary round-trip and a private native pipeline adapter. No new public runtime type is added.
 
 [Copied native line width](components/wide-lines.md) extends the existing RDPipelineRasterizationState/RenderingDevice family; no new public type.
+
+[Native sample controls](components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.

@@ -726,6 +726,8 @@ def render():
             updated = "2026-10-25"
         if name in {"NavigationServer2D", "ProjectSettings", "UniformSetCacheRD", "FramebufferCacheRD"}:
             updated = "2026-10-27"
+        if name == "RDPipelineMultisampleState":
+            updated = "2026-10-28"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

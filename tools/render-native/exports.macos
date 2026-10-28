@@ -15,3 +15,5 @@ _e2d_render_raster_support
 _e2d_render_raster_pipeline
 _e2d_render_line_support
 _e2d_render_line_pipeline
+_e2d_render_multisample_support
+_e2d_render_multisample_pipeline

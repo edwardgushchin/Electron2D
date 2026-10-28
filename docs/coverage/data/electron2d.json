@@ -277915,6 +277915,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDPipelineMultisampleState.EnableAlphaToOne()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "EnableAlphaToOne",
+    "signature": "public System.Boolean EnableAlphaToOne { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineMultisampleState.EnableSampleShading()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "EnableSampleShading",
+    "signature": "public System.Boolean EnableSampleShading { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineMultisampleState.MinSampleShading()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "MinSampleShading",
+    "signature": "public System.Single MinSampleShading { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDPipelineMultisampleState.SampleCount()",
     "kind": "property",
     "declaringType": "Electron2D.RDPipelineMultisampleState",
@@ -277925,6 +277964,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineMultisampleState.SampleMasks()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "SampleMasks",
+    "signature": "public System.UInt32[] SampleMasks { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32[]",
     "value": null
   },
   {
