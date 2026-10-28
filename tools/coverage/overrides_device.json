@@ -2332,7 +2332,7 @@
       "godot": "class:RDPipelineRasterizationState",
       "electron2d": "T:Electron2D.RDPipelineRasterizationState",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth bias requires the first depth attachment/state slice. Wide lines, raster discard and patch control require native raster/geometry adapters."
+      "reason": "ADR 0028: copied culling/front-face, depth clamp/bias, wireframe, primitive discard and static native line width execute through graphics pipelines. Nonunit width independently negotiates wideLines and native clamping/precision, preserving views/passes and sampled variants. Patch control points require the native tessellation-stage/topology adapter; see docs/components/wide-lines.md and raster-discard.md."
     },
     {
       "godot": "RDPipelineRasterizationState::property:cull_mode",
@@ -3738,6 +3738,12 @@
       "electron2d": "property:Electron2D.RDPipelineRasterizationState.DiscardPrimitives()",
       "state": "Implemented",
       "reason": "ADR 0028: copied primitive discard executes native vertex-only graphics without rasterization or fragment execution. Source/SPIR-V/binary vertex-only programs, paired fragment suppression, specialization/push, direct/indirect writes, MSAA, multiview/multipass and sampled component variants retain device ownership and ordering. Version-two vertex-only containers preserve an absent public fragment; ordinary version-one containers remain readable. The pinned native adapter uses a call-local renderer and shared locked layout caches, with globally unique layout IDs and reference rollback on failure. See docs/components/raster-discard.md for CLR/AOT, native concurrency/failure checks and Linux/Vulkan qualification limits."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:line_width",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.LineWidth()",
+      "state": "Implemented",
+      "reason": "ADR 0028: finite positive copied pixel width executes for line lists/strips and polygon outlines through the pinned Vulkan pipeline adapter. Optional wideLines is independently negotiated; nonunit widths require its enabled feature; positive values clamp to the native range before precision quantization. Ordinary one-pixel pipelines survive refusal; discard, views/passes and sampled component variants preserve width. See docs/components/wide-lines.md for executable checks and platform/native-allocation limits."
     }
   ],
   "extras": [
@@ -4297,10 +4303,9 @@
     {
       "state": "Blocked",
       "godot": [
-        "RDPipelineRasterizationState::property:line_width",
         "RDPipelineRasterizationState::property:patch_control_points"
       ],
-      "reason": "Trigger: native wide-line raster and tessellation/patch adapters under ADR 0028; primitive discard is implemented separately."
+      "reason": "Trigger: native tessellation control/evaluation stages and patch topology pipeline adapter under ADR 0028. Primitive discard and static line width execute independently."
     },
     {
       "state": "Blocked",
@@ -4470,7 +4475,6 @@
       "godot": [
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BIAS",
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BOUNDS",
-        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_LINE_WIDTH",
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_COMPARE_MASK",
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_REFERENCE",
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_WRITE_MASK"
@@ -4725,7 +4729,7 @@
       "godot": [
         "class:RDPipelineRasterizationState"
       ],
-      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
+      "reason": "ADR 0028: copied culling/front-face, depth clamp/bias, wireframe, primitive discard and static native line width execute through graphics pipelines. Nonunit width independently negotiates wideLines and native clamping/precision, preserving views/passes and sampled variants. Patch control points require the native tessellation-stage/topology adapter; see docs/components/wide-lines.md and raster-discard.md."
     },
     {
       "state": "Partial",
@@ -5177,6 +5181,27 @@
         "RenderingDevice::enum:SamplerBorderColor"
       ],
       "reason": "ADR 0028: executable normalized U/V ClampToBorder through the private pinned SDL/Vulkan sampler adapter; six copied floating-point/integer colors, scalar-role validation, shader metadata version two with version-one reads, native cache and retained SDL lifetime. Public CLR/AOT device and GPU drawable consumers qualify native pixels and edge filtering; foreign drivers/platforms and window presentation remain separate gates."
+    },
+    {
+      "godot": [
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_LINE_WIDTH"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: native command-recorded dynamic line-width state and its consuming operation under ADR 0028; copied static RDPipelineRasterizationState.LineWidth executes separately."
+    },
+    {
+      "godot": [
+        "RDPipelineRasterizationState::property:line_width"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: finite positive copied pixel width executes for line lists/strips and polygon outlines through the pinned Vulkan pipeline adapter. Optional wideLines is independently negotiated; nonunit widths require its enabled feature; positive values clamp to the native range before precision quantization. Ordinary one-pixel pipelines survive refusal; discard, views/passes and sampled component variants preserve width. See docs/components/wide-lines.md for executable checks and platform/native-allocation limits."
+    },
+    {
+      "godot": [
+        "RDPipelineRasterizationState::property:discard_primitives"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0028: copied primitive discard executes native vertex-only graphics without rasterization or fragment execution. Source/SPIR-V/binary vertex-only programs, paired fragment suppression, specialization/push, direct/indirect writes, MSAA, multiview/multipass and sampled component variants retain device ownership and ordering. Version-two vertex-only containers preserve an absent public fragment; ordinary version-one containers remain readable. The pinned native adapter uses a call-local renderer and shared locked layout caches, with globally unique layout IDs and reference rollback on failure. See docs/components/raster-discard.md for CLR/AOT, native concurrency/failure checks and Linux/Vulkan qualification limits."
     }
   ]
 }

@@ -1,6 +1,6 @@
 # RDPipelineRasterizationState
 
-Last updated: 2026-10-12
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDPipelineRasterizationState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDPipelineRasterizationState.cs](../../src/Servers/Rendering/Device/RDPipelineRasterizationState.cs).
 
@@ -12,7 +12,7 @@ Describes copied PipelineRasterizationState configuration for graphics resources
 
 
 
-Constant/slope depth bias and clamp execute in the native pipeline. Invalid/nonfinite values fail before native creation; unsupported native features propagate failure. Other raster states retain their exact backend prerequisites.
+Constant/slope depth bias and clamp execute in the native pipeline. Vulkan wireframe fails explicitly when native polygon outlines are unavailable; it never silently becomes filled triangles. Invalid/nonfinite values fail before native creation; unsupported native features propagate failure. Other raster states retain their exact backend prerequisites.
 
 ## Example
 
@@ -35,6 +35,8 @@ using var raster = new RDPipelineRasterizationState { DepthBiasEnabled = true, D
 | [`public System.Single DepthBiasSlopeFactor { get; set; }`](#member-70e2e438e5e7) | Scales the maximum primitive depth slope. |
 | [`public System.Boolean EnableDepthClamp { get; set; }`](#member-0249a8f655fc) | Gets or sets depth clamping rather than clip-depth rejection. |
 | [`public Electron2D.RenderingDevice.PolygonFrontFace FrontFace { get; set; }`](#member-ecfde3f806ff) | Gets or sets the winding treated as front-facing. |
+| [`public System.Single LineWidth { get; set; }`](#member-line-width) | Copies the finite positive rasterized line width in pixels; one initially. |
+| [`public System.Boolean DiscardPrimitives { get; set; }`](#member-discard-primitives) | Executes vertex work without rasterization or fragment execution. |
 | [`public System.Boolean Wireframe { get; set; }`](#member-b33a02d6143b) | Gets or sets outline rather than filled rasterization. |
 
 ## Member descriptions
@@ -146,6 +148,24 @@ public System.Boolean Wireframe { get; set; }
 Gets or sets outline rather than filled rasterization.
 
 Initially false; validated and copied by its device consumer.
+
+<a id="member-line-width"></a>
+### LineWidth
+
+```csharp
+public System.Single LineWidth { get; set; }
+```
+
+One pixel initially. Set a finite positive value before pipeline creation; later changes do not alter existing pipelines. Line lists/strips and polygon outlines use native pixel width and precision. Nonunit widths require the enabled native feature; unsupported capability raises NotSupportedException. Finite positive widths are clamped to the native range before raster precision quantization. Invalid setters reject immediately. Disposed access raises ObjectDisposedException. See [copied graphics line width](../components/wide-lines.md).
+
+<a id="member-discard-primitives"></a>
+### DiscardPrimitives
+
+```csharp
+public System.Boolean DiscardPrimitives { get; set; }
+```
+
+False initially. True executes vertex work without rasterization or fragment execution. Copied at pipeline creation and required for a vertex-only program. Nonunit line width retains its capability check and native range clamping. See [primitive discard](../components/raster-discard.md).
 
 ## Lifecycle, errors and verification
 

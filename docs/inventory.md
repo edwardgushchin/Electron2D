@@ -85,7 +85,7 @@ AndroidGameActivity/AndroidWindowHost now produce actual framework system back r
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 [Failed initial collider preparation](components/physics-registered-adapter.md#authored-state-after-failed-initial-attachment) now discards partial numerical readback while retaining common body authoring. Ordinary retirement still captures accepted motion; no production type or public declaration is added.
 
@@ -2375,3 +2375,5 @@ Formatted graphics writes reuse `TexelBufferProgram`, `RenderingDevice.GraphicsS
 [Attachmentless framebuffers](components/local-compute.md#attachmentless-graphics) extend RenderingDevice with two executing factories. No additional public type is introduced; the native extent/lifetime adapter remains private.
 
 [Primitive discard](components/raster-discard.md) extends RDPipelineRasterizationState and RenderingDevice with vertex-only graphics, binary round-trip and a private native pipeline adapter. No new public runtime type is added.
+
+[Copied native line width](components/wide-lines.md) extends the existing RDPipelineRasterizationState/RenderingDevice family; no new public type.

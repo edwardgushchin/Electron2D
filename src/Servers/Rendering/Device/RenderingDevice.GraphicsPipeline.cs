@@ -17,7 +17,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="framebufferFormat">A color and optional depth/stencil layout on this device.</param>
     /// <param name="vertexFormat">A copied vertex layout, or -1 for procedural vertices.</param>
     /// <param name="primitive">Point, line or triangle topology.</param>
-    /// <param name="rasterizationState">Copied rasterization configuration, including primitive discard.</param>
+    /// <param name="rasterizationState">Copied rasterization configuration, including primitive discard and line width.</param>
     /// <param name="colorBlendState">Copied blending configuration covering every logical color slot; unused slots and trailing entries are ignored.</param>
     /// <param name="dynamicStateFlags">Allows dynamic blend constants; other dynamic states require their native adapters.</param>
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
@@ -33,7 +33,7 @@ public sealed unsafe partial class RenderingDevice
         IdleList(); ArgumentNullException.ThrowIfNull(rasterizationState); ArgumentNullException.ThrowIfNull(colorBlendState);
         var program = Get(shader, Kind.Shader); if (program.Stage != ShaderStage.Vertex) throw new ArgumentException("A paired graphics shader is required.", nameof(shader));
         if ((dynamicStateFlags & ~PipelineDynamicStateFlags.BlendConstants) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
-        var discard = rasterizationState.DiscardPrimitives;
+        var discard = rasterizationState.DiscardPrimitives; var lineWidth = rasterizationState.LineWidth;
         if (program.VertexOnly && !discard) throw new ArgumentException("A vertex-only shader requires primitive discard.", nameof(rasterizationState));
         var target = FramebufferFormat(framebufferFormat, forRenderPass);
         var samples = multisampleState?.SampleCount ?? TextureSamples.Samples1;
@@ -109,19 +109,19 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
-                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard);
+                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth);
                 var views = FramebufferLayouts(framebufferFormat).ViewCount;
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try
                 {
-                    entry.Handle = new(CreateGraphicsPipeline(in info, discard), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     for (var view = 1; view < views; view++)
                     {
                         var source = Get(shader, Kind.Shader);
                         var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: discard ? null : target.ColorSlots, viewIndex: (uint)view);
                         entry.ViewPrograms[view - 1] = viewProgram;
                         info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
-                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     }
                     return Add(entry);
                 }

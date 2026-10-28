@@ -7,6 +7,7 @@ internal static unsafe partial class GPUDeviceFactory
 {
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
     internal const string GraphicsStorageProperty = "Electron2D.gpu.graphics_storage";
+    internal const string WideLinesProperty = "Electron2D.gpu.wide_lines";
     internal const string NarrowProperty = "Electron2D.gpu.narrow_features";
     internal const string Float64Property = "Electron2D.gpu.shader_float64";
     internal const string Int64Property = "Electron2D.gpu.shader_int64";
@@ -124,7 +125,9 @@ internal static unsafe partial class GPUDeviceFactory
         {
             var available = ReadNarrow(device, 3); var graphics = ReadGraphicsStorage(device, 1);
             if (available is < 0 or > 1023 || graphics is < 0 or > 3) throw new InvalidOperationException("Native optional shader features could not be queried.");
-            available |= graphics << 10;
+            var wide = ReadLineSupport(device, 1, out _);
+            if (wide is < 0 or > 1) throw new InvalidOperationException("Native line rasterization could not be queried.");
+            available |= (graphics << 10) | (wide << 12);
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
@@ -150,6 +153,12 @@ internal static unsafe partial class GPUDeviceFactory
     [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_graphics_storage_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadGraphicsStorage(nint device, uint abi);
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct LineLimits { internal float Minimum, Maximum, Granularity; }
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_line_support")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    internal static partial int ReadLineSupport(nint device, uint abi, out LineLimits limits);
 
     private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed)
     {
@@ -184,8 +193,8 @@ internal static unsafe partial class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            // VkPhysicalDeviceFeatures: largePoints=16, vertex/fragment stores=25/26, float64/int64/int16=39/40/41.
-            Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
+            // VkPhysicalDeviceFeatures: wideLines=15, largePoints=16, vertex/fragment stores=25/26, float64/int64/int16=39/40/41.
+            Span<uint> features = stackalloc uint[55]; features.Clear(); features[15] = ((uint)narrow >> 12) & 1; features[16] = sizedPoints ? 1u : 0u;
             features[25] = ((uint)narrow >> 10) & 1; features[26] = ((uint)narrow >> 11) & 1;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
             // VkPhysicalDeviceVulkan12Features has 47 flags: mirror clamp/buffer atomics/shared atomics are 0/5/6.
@@ -211,6 +220,17 @@ internal static unsafe partial class GPUDeviceFactory
                     options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0; advanced.Flags[0] = 0;
                     device = SDL.CreateGPUDeviceWithProperties(props);
                 }
+                if (device == 0 && features[15] != 0)
+                {
+                    // Retry the same shader profile without optional wide lines before dropping other capabilities.
+                    features[15] = 0; options.DeviceExtensionCount = 1; options.DeviceExtensionNames = (nint)(&extension); advanced.Flags[0] = 1;
+                    device = SDL.CreateGPUDeviceWithProperties(props); mirror = device != 0;
+                    if (device == 0)
+                    {
+                        options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0; advanced.Flags[0] = 0;
+                        device = SDL.CreateGPUDeviceWithProperties(props);
+                    }
+                }
                 if (device == 0) return 0;
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
                     (mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
@@ -219,7 +239,8 @@ internal static unsafe partial class GPUDeviceFactory
                      (atomics & 1) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), BufferAtomic64Property, true) ||
                      (atomics & 2) != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), SharedAtomic64Property, true) ||
                      precision != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), NarrowProperty, narrow & 1023) ||
-                     (narrow >> 10) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), GraphicsStorageProperty, narrow >> 10)))
+                     ((narrow >> 10) & 3) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), GraphicsStorageProperty, (narrow >> 10) & 3) ||
+                     features[15] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), WideLinesProperty, true)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);
                     throw new InvalidOperationException("GPU capabilities could not be retained: " + error);

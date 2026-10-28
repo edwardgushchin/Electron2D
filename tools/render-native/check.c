@@ -21,6 +21,7 @@ extern void *e2d_render_empty_create(SDL_GPUDevice *, uint32_t, uint32_t, uint32
 extern SDL_GPURenderPass *e2d_render_empty_begin(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, void *);
 extern void e2d_render_empty_release(SDL_GPUDevice *, uint32_t, void *);
 
+extern SDL_GPUGraphicsPipeline *e2d_render_line_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t);
 extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
@@ -67,6 +68,12 @@ static void raster_check(SDL_GPUDevice *device)
     RasterChecks checks = {.device = device, .info = {.vertex_shader = vs, .fragment_shader = fs, .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST, .rasterizer_state = {.enable_depth_clip = true}}};
     VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
     PFN_vkCreateGraphicsPipelines original = renderer->vkCreateGraphicsPipelines;
+    bool nonsolid = renderer->supportsFillModeNonSolid;
+    renderer->supportsFillModeNonSolid = false; checks.info.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_LINE;
+    require(e2d_render_line_pipeline(device, 1, &checks.info, 1, 0) == NULL);
+    require(e2d_render_raster_pipeline(device, 1, &checks.info) == NULL);
+    renderer->supportsFillModeNonSolid = nonsolid; checks.info.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_FILL;
+
     int vertex_refs = SDL_GetAtomicInt(&((VulkanShader *)vs)->referenceCount);
     int fragment_refs = SDL_GetAtomicInt(&((VulkanShader *)fs)->referenceCount);
     if (SDL_getenv("ELECTRON2D_TEST_RASTER_FAILURE")) {
@@ -94,8 +101,15 @@ static void raster_check(SDL_GPUDevice *device)
     require(renderer->vkCreateGraphicsPipelines == original);
     SDL_ReleaseGPUShader(device, vs); SDL_ReleaseGPUShader(device, fs); require(SDL_WaitForGPUIdle(device));
 }
+typedef struct LineLimits { float minimum, maximum, granularity; } LineLimits;
+extern int e2d_render_line_support(SDL_GPUDevice *, uint32_t, LineLimits *);
 int main(int argc, char **argv)
 {
+    LineLimits lines = {0};
+    require(e2d_render_line_support(NULL, 1, &lines) == -1);
+    require(e2d_render_line_support((SDL_GPUDevice *)(uintptr_t)1, 0, &lines) == -1);
+    require(e2d_render_line_support((SDL_GPUDevice *)(uintptr_t)1, 1, NULL) == -1);
+    require(e2d_render_line_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 4, 0) == NULL);
     require(e2d_render_raster_support(NULL, 1) == -1);
     require(e2d_render_raster_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_raster_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1) == NULL);
@@ -149,6 +163,9 @@ int main(int argc, char **argv)
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
     raster_check(device);
+    int wide = e2d_render_line_support(device, 1, &lines); require(wide == 0 || wide == 1);
+    if (wide) { require(lines.minimum > 0 && lines.maximum >= lines.minimum && lines.granularity > 0); printf("Native line range %g..%g, granularity %g (physical feature; logical opt-in independent)\n", lines.minimum, lines.maximum, lines.granularity); }
+
     require(e2d_render_sampler(device, 1, &sampler_info, 4, 2, 2, 0) == NULL);
     require(e2d_render_sampler(device, 1, &sampler_info, 2, 4, 2, 0) == NULL);
     int empty_samples = e2d_render_empty_support(device, 1); require(empty_samples > 0 && empty_samples <= 15);

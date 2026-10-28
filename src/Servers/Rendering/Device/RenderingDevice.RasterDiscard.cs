@@ -6,13 +6,18 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private int? _rasterSupport;
-    private nint CreateGraphicsPipeline(in SDL.GPUGraphicsPipelineCreateInfo info, bool discard)
+    private nint CreateGraphicsPipeline(in SDL.GPUGraphicsPipelineCreateInfo info, bool discard, float lineWidth)
     {
-        if (!discard) return SDL.CreateGPUGraphicsPipeline(Device, in info);
+        var outline = info.RasterizerState.FillMode == SDL.GPUFillMode.Line && _context.Driver == "vulkan";
+        if (!discard && lineWidth == 1 && !outline) return SDL.CreateGPUGraphicsPipeline(Device, in info);
+        if (lineWidth != 1 && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.WideLinesProperty, false)) throw new NotSupportedException("Nonunit line width requires native wide-line rasterization.");
         _rasterSupport ??= NativeRasterSupport(Device, 1);
-        if (_rasterSupport != 1) throw new NotSupportedException("Primitive discard requires the native graphics-pipeline adapter.");
-        return NativeRasterPipeline(Device, 1, in info);
+        if (_rasterSupport != 1) throw new NotSupportedException("Raster state requires the native graphics-pipeline adapter.");
+        return lineWidth == 1 && !outline ? NativeRasterPipeline(Device, 1, in info) : NativeLinePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u);
     }
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_line_pipeline")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial nint NativeLinePipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info, float lineWidth, uint discard);
     // SDL retains two shader objects; this private unused stage never enters a discard pipeline's native stage list.
     private static byte[] EmptyFragmentModule() => MemoryMarshal.AsBytes<uint>([
         0x07230203, 0x00010000, 0, 5, 0,

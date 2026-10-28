@@ -4,7 +4,7 @@ For registered extension-class changes, follow [ADR 0116](decisions/extensions.m
 
 For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and run the [public consumer](components/extensions.md). Keep typed module initialization/unloading separate from class registration, state rebinding and reload acceptance; storage must never serialize/activate entry callbacks.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -591,3 +591,5 @@ Formatted graphics checks extend DeviceGraphicsStorage.Consumer with texels, tex
 For attachmentless framebuffer or pass-state changes, run the public graphics-storage consumer modes `empty`, `empty-source`, `empty-canvas` and the controlled `mask-empty.c` / `empty-unavailable` and `empty-failure` profiles in CLR and strict NativeAOT. Rebuild the render bridge, run its C ABI/extent/pass/memory check and package export tests, and repeat connected ordinary graphics, MSAA, ordered passes and multiview because pass begin/end is shared. See [attachmentless graphics](components/local-compute.md#attachmentless-graphics).
 
 For primitive discard or shader-stage/container changes, follow [the public/native checks](components/raster-discard.md#executable-checks). Rebuild the private bridge and run discard source/binary/canvas, independent stage refusal and missing/failed native adapter profiles in CLR and strict NativeAOT. Recheck graphics specialization, push, sampled variants, MSAA, passes/multiview and version-one binary regressions; run the native concurrent creation/reference rollback checks and package export tests.
+
+For copied graphics line width, follow [the executing contract](components/wide-lines.md). Run wide/source/canvas and physical-feature/device-creation/native-pipeline refusal profiles in CLR and strict NativeAOT; preserve ordinary graphics/storage siblings, primitive discard, per-view/pass and sampled component variants. Static native clamping/precision must not be presented as dynamic line-state or foreign-backend acceptance.

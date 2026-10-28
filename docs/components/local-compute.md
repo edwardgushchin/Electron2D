@@ -1,6 +1,6 @@
 # Local compute
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -535,3 +535,5 @@ Build `tests/DeviceGraphicsStorage.Consumer` with the matching render bridge and
 This is Linux/Vulkan qualification on the exercised device. Vulkan render-pass/framebuffer object allocations, native/driver heap behavior, throughput and other backends/platforms remain unverified. Counts beyond eight samples require extending the retained native pipeline state adapter before they can execute.
 
 [Vertex-only processing and primitive discard](raster-discard.md) now execute source/SPIR-V and version-two vertex-only containers while retaining version-one compute/paired container behavior.
+
+[Copied graphics line width](wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.

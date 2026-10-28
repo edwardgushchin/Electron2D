@@ -1442,3 +1442,5 @@ Formatted ImageBuffer stores and signed/unsigned R32 atomics now execute in inde
 ## Vertex-only graphics
 
 Vertex-only source/SPIR-V programs now execute with copied `RDPipelineRasterizationState.DiscardPrimitives`. Paired programs can also suppress raster/fragment execution. Native pipeline variants and framebuffers retain ordinary ordering and lifetime. Vertex-only binary containers use version two; compute/paired version-one writing and reading remain. See [primitive discard](../components/raster-discard.md).
+
+[Copied graphics line width](../components/wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.

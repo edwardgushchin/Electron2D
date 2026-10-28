@@ -44,7 +44,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-28
 
 [Integer material graphs](../components/visual-shaders.md#integer-arithmetic-and-bit-patterns) now execute exact signed/unsigned arithmetic, functions and bit masks through the existing archive/import/material path. Byte-encoded and UV-driven consumers observe precision before float conversion.
 
@@ -584,3 +584,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 [Attachmentless graphics](../components/local-compute.md#attachmentless-graphics) now executes explicit raster extents and exact available samples without dummy image attachments. Existing graphics storage writes feed following compute, ordinary graphics and canvas consumers; raster discard remains a separate state adapter.
 
 [Primitive discard](../components/raster-discard.md) now executes vertex-only/no-Position and paired graphics programs without raster/fragment work, through the pinned native pipeline adapter. Storage writes feed ordinary compute, graphics and canvas consumers; wide-line and patch controls remain separate prerequisites.
+
+[Copied graphics line width](../components/wide-lines.md) executes native line lists/strips and polygon outlines with independent optional feature negotiation, native range clamping and retained width across discard, views/passes and sampled component variants. Foreign backend and native-allocation limits remain explicit.

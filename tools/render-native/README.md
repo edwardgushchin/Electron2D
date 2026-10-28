@@ -82,3 +82,5 @@ The generated declarations also pin SDL_gpu_vulkan_vkfuncs.h. The C check covers
 concurrent creation/retirement, layout IDs and injected failure reference counts;
 the public graphics-storage consumer covers source/binary, pixels and managed
 allocations. Other backends need their own pipeline adapters.
+
+The private line-support and line-pipeline entries query physical width range/precision and execute copied width through the call-local raster adapter. Logical wideLines ownership is required for nonunit widths; shared native callbacks are never mutated. See [the consumer contract](../../docs/components/wide-lines.md) and test_wide_mask.c for independent optional-feature refusal.
