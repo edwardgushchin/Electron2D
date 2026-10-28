@@ -103,7 +103,12 @@ def check_physics_report(pages):
         rows = [row for row in resource_page.splitlines() if row.startswith("| [`method " + method + "(")]
         assert len(rows) == 1 and " | Implemented | " in rows[0] and "resources.md#copy-and-duplicate-contract" in rows[0]
         assert not any(key.startswith("Resource::method:" + method + "(") for key in expected)
-    assert expected["class:Resource"] == "Partial", "Copy completion must retain inherited live-script gaps"
+    resource_rows = [row for row in resource_page.splitlines() if row.startswith("| [`")]
+    assert len(resource_rows) == 29
+    assert " | Implemented | " in resource_rows[0] and "resource-contract-audit.md" in resource_rows[0]
+    assert sum(" | Implemented | " in row for row in resource_rows) == 27
+    assert sum(" | Excluded | " in row for row in resource_rows) == 2
+    assert "class:Resource" not in expected, "Resource's own-type audit must retain Object gaps on their declaring type"
     canvas_page = pages[CLASS_PAGES / "CanvasItem.md"]
     for method in ("draw_arc", "draw_circle", "draw_dashed_line", "draw_ellipse", "draw_ellipse_arc",
                    "draw_line", "draw_multiline", "draw_multiline_colors", "draw_polyline", "draw_rect"):

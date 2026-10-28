@@ -125,7 +125,9 @@ Each derived type must supply its complete stored-field copy and appropriate
 container handling. An unsupported application type fails explicitly. A missing
 field in a concrete implementation belongs to that type's audit; arbitrary caller
 hooks cannot become an unbounded prerequisite for the base session. The base
-class still inherits the open Object script-binding/initialization requirements.
+class still inherits Object's open fixed CLR script assignment/change requirements
+on their declaring rows. Its [own-type audit](resource-contract-audit.md) qualifies
+the Resource class separately.
 
 Current qualification is retained in
 `bin/physics-resource-contract/2026-10-25/qualification.json`: 38 profiles pass

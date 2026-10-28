@@ -1,3 +1,5 @@
+[The Resource own-type audit](resource-contract-audit.md) closes the base class after 42 current-main profiles while retaining inherited Object/script gaps. Physics declaration coverage is **1365/1369 (99.71%)**, four Partial and 92 Excluded. The [frozen unfiltered root attempt](gpu-resident-reports.md#ordinary-root-attempt-2026-10-28) times out without final completion and is not a full-suite pass. Earlier figures below remain historical checkpoints.
+
 [The current 16384-body scene/window diagnostic](gpu-resident-reports.md#current-mass-scene-diagnostic-2026-10-28) passes physical and warmed-step allocation gates on one frozen current payload. It does not demonstrate controlled GPU speedup; native input allocation is reported separately. API declaration coverage stays **1364/1369 (99.63%)**, five Partial and 92 Excluded.
 
 ## Ordinary Linux qualification at 1ec946c7f

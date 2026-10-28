@@ -714,7 +714,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RenderSceneDataRD](classes/RenderSceneDataRD.md) | RenderSceneData | Excluded | 0 |
 | [RenderingDevice](classes/RenderingDevice.md) | Object | Partial | 748 |
 | [RenderingServer](classes/RenderingServer.md) | Object | Partial | 1137 |
-| [Resource](classes/Resource.md) | RefCounted | Partial | 28 |
+| [Resource](classes/Resource.md) | RefCounted | Implemented | 28 |
 | [ResourceFormatLoader](classes/ResourceFormatLoader.md) | RefCounted | Implemented | 17 |
 | [ResourceFormatSaver](classes/ResourceFormatSaver.md) | RefCounted | Implemented | 5 |
 | [ResourceImporter](classes/ResourceImporter.md) | RefCounted | Blocked | 4 |

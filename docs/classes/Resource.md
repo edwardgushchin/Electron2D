@@ -4,7 +4,7 @@ Validated duplication factories also bind registered extension ancestors before 
 
 [Performance.ObjectResourceCount](Performance.Monitor.md) counts current live registered path owners, excluding uncached resources and unregistered aliases.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-28
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -23,6 +23,8 @@ The existing internal SceneDuplicationScope now resolves forced subresource copi
 Automatic pre-delete cancellation retains ResourcePath registration and its namespace reservation. During the notification, ordinary cache lookup hides the closed resource without deleting its entry; competing ordinary assignment cannot steal the path. An explicit TakeOverPath remains an intentional ownership transfer.
 
 ## Description
+
+The [own-type contract audit](../components/resource-contract-audit.md) qualifies this concrete base and its declared members. Inherited Object script assignment/change remains tracked on its declaring type.
 
 Provides reusable data, change notification, path identity, and typed duplication for engine assets.
 

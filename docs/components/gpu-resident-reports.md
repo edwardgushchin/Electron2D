@@ -161,6 +161,24 @@ contact device/transfer capacities. It keeps all bodies, monitor caps, physical
 settings and actual callbacks in both forced-full and selective controls.
 Whole-step and real-window acceptance remain separate from packet qualification.
 
+#### Ordinary root attempt (2026-10-28)
+
+The frozen unfiltered root attempt reaches its 2400-second deadline and exits
+124 after 2403.240 seconds. Its 85-file payload remains unchanged, and the new
+mixed-contact scene check runs once, but the final `Electron2D checks passed.`
+marker is absent. This is an incomplete full-suite check, not ordinary-suite
+acceptance. It uses runtime
+`daaf6005569133bd538da935723c2216bdf577174a91c12deda3c0e06ad3d1c1`, tests
+`cb56d52adb314e637c2aff5e7aff9f6b43a7b9ae43e0bfd04dee9953b75189df`
+and render bridge
+`c98191488ce1b179db2fd2036847bea68f9526c657fa6146c578f419b47f7cbe`.
+The later viewport-mipmap merge changes the root Program while this immutable
+cohort runs; its results are not relabelled as that later main. Commands,
+terminal status, source differences and complete logs remain in
+`bin/physics-mixed-contacts/2026-10-28/ordinary*.json` and `ordinary.log`.
+The [Resource own-type audit](resource-contract-audit.md) retains its separate
+current-main targeted qualification and contact rechecks.
+
 ### Compact transfer qualification
 
 The focused native/scene regression compares every frozen field with the full
