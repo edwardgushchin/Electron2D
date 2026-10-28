@@ -23,8 +23,9 @@ public sealed partial class DisplayServer
     /// shapes, content scale, native dialogs, primary selection, and input-method composition are advertised only on
     /// the native drivers listed in the feature reference. On Wayland, icon support becomes known after a successful native icon request;
     /// a false result before that request does not prove the compositor lacks the icon protocol. Other defined values and unknown numeric values return
-    /// false. On Wayland, a positive <see cref="Feature.Ime"/> or <see cref="Feature.NativeDialogFile"/> result does not yet
-    /// prove that the compositor text-input protocol or native file chooser is available. Native operations can still fail after a positive query.
+    /// false. On Wayland, a positive <see cref="Feature.Ime"/> result does not yet prove compositor text-input support.
+    /// Linux native-file and MIME capabilities probe the FileChooser interface version without opening UI; this is cold
+    /// native service work and may block during startup. Native operations can still fail after a positive query.
     /// </remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static bool HasFeature(Feature feature) => RequireService().HasFeatureCore(feature);
@@ -48,14 +49,14 @@ public sealed partial class DisplayServer
     /// <param name="filename">Initial filename for file modes, or an empty string. Linux uses it only for SaveFile.</param>
     /// <param name="showHidden">Requests hidden files. This SDL chooser ignores the preference; on Linux this matches the native contract.</param>
     /// <param name="mode">The selection mode. <see cref="FileDialogMode.OpenAny"/> has no equivalent in the current native backend.</param>
-    /// <param name="filters">Extension filters such as <c>*.png,*.jpg;Images</c>. File modes accept but do not apply a trailing MIME section; MIME-only filters are unavailable. Folder mode ignores filters.</param>
+    /// <param name="filters">Filters such as <c>*.png,*.jpg;Images;image/png,image/jpeg</c>. The Linux portal accepts extension and MIME rules, including MIME-only filters. Other backends retain their extension-only policy. Folder mode ignores filters.</param>
     /// <param name="callback">Receives success, selected paths, and the selected filter index. Cancellation and native failure both deliver false and an empty path list.</param>
     /// <param name="parentWindowId">An active native parent window ID; zero selects the main window. The selected parent must survive until native completion.</param>
-    /// <remarks>The native callback may run on another thread. Paths are copied immediately and the typed callback runs only on the owner thread during <see cref="ProcessEvents"/>. A native failure still completes the callback, then the event pump reports it in an aggregate exception. Disposal is rejected until the native chooser completes and its result has been pumped. The operating system may ignore the title, initial location, or filters; Android may return content URIs instead of filesystem paths.</remarks>
+    /// <remarks>The native callback may run on another thread. Paths are copied immediately and the typed callback runs only on the owner thread during <see cref="ProcessEvents"/>. A native failure still completes the callback, then the event pump reports it in an aggregate exception. Disposal is rejected until the native chooser completes and its result has been pumped. Linux desktop hosts use the FileChooser portal and copy local file URIs into filesystem paths. Extension and MIME rules are combined; current_filter maps back to the original filter index, or -1 when unspecified. Service loss and malformed responses complete with failure before event-pump error reporting. Directory selection needs portal version 3. The operating system may ignore the title or initial location; Android may return content URIs instead of filesystem paths.</remarks>
     /// <exception cref="ArgumentNullException">A required argument is null.</exception>
     /// <exception cref="ArgumentException">A filter is malformed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The mode or window ID is invalid.</exception>
-    /// <exception cref="NotSupportedException">The mode is <see cref="FileDialogMode.OpenAny"/> or a file-mode filter contains only MIME types.</exception>
+    /// <exception cref="NotSupportedException">The mode is <see cref="FileDialogMode.OpenAny"/>, the portal/service or requested directory capability is unavailable, or the selected non-portal backend cannot apply a MIME-only filter.</exception>
     /// <exception cref="ObjectDisposedException">The display server is disposing or disposed.</exception>
     /// <exception cref="InvalidOperationException">The native chooser could not be launched or the call is off the owner thread.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

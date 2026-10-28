@@ -435,6 +435,8 @@ status changes; full retained/native/device history budgets remain open.
 
 Last updated: 2026-10-28
 
+[Native portal file choosers](../components/native-file-portal.md) add actual Linux MIME-aware open/save/directory selection through DisplayServer and FileDialog. One Blocked row becomes Implemented: **13,386/18,855 applicable declarations (70.9944%)**, 1,090 Partial, 395 Unimplemented, 3,984 Blocked, 8,438 Excluded and zero unmapped. Private protocol, actual scene and installed Wayland chooser checks retain the documented foreign/NativeAOT/native-heap gates.
+
 [Animation-driven movie completion](../components/movie-writing.md#animation-completion) adds the stored AnimationPlayer.MovieQuitOnFinish producer and records the last successful simulation frame/PCM before finalization. One Blocked row becomes Implemented: 13,385/18,855 applicable declarations (70.9891%), 1,090 Partial, 395 Unimplemented, 3,985 Blocked, 8,438 Excluded and zero unmapped engine declarations. Linux GPU/Compatibility endpoint and finalized-media checks retain foreign-platform, NativeAOT, native-heap and user acceptance gates.
 
 [Specified application launch](../components/processes.md#specified-application-launch) adds OS.OpenWithProgram with real independent Linux application/file consumers and the existing process owner. One missing declaration becomes Implemented: 13,384/18,855 applicable declarations (70.9838%), 1,090 Partial, 395 Unimplemented, 3,986 Blocked and 8,438 Excluded, with zero unmapped engine declarations. macOS bundle, foreign sandbox/native hosts and user application acceptance remain separate gates.

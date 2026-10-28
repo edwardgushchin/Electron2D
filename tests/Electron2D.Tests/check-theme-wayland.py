@@ -87,7 +87,7 @@ try:
     for version, scheme in ((0, 1), (1, 0)):
         settings.version, settings.scheme = version, scheme
         result = subprocess.run(command, env=environment(version, scheme), capture_output=True, text=True, timeout=15)
-        if result.returncode or result.stdout.strip() != f"PROBE_OK:{version}:{scheme}":
+        if result.returncode or result.stdout.strip().splitlines()[-1:] != [f"PROBE_OK:{version}:{scheme}"]:
             raise RuntimeError(f"Theme probe {version}/{scheme} failed:\n{result.stdout}{result.stderr}")
 
     settings.version, settings.scheme = 1, 1
@@ -97,7 +97,11 @@ try:
 
     def collect_lines():
         for line in child.stdout:
-            lines.put(line.strip())
+            text = line.strip()
+            if text.startswith(("READY:", "DONE:")):
+                lines.put(text)
+            else:
+                print(text)
 
     reader = threading.Thread(target=collect_lines, daemon=True)
     reader.start()

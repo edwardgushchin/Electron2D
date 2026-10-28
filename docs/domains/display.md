@@ -162,3 +162,5 @@ results, cold predicate decoding, data budgets, precision and owner/lifetime rul
 Native Wayland verification uses an isolated compositor and external producer.
 
 [Native modal alerts](../components/native-alerts.md) share native-text validation with DialogShow and preserve unreported cancellation as -1; owned callbacks can show a nested alert.
+
+[Linux portal file choosers](../components/native-file-portal.md) provide MIME/extension rules, exact returned-filter identity and local file paths through the existing DisplayServer/FileDialog lifecycle. Positive/absent/version probes and actual installed Wayland acceptance/cancellation execute; advanced native options and combined file/directory mode remain separate dependencies.

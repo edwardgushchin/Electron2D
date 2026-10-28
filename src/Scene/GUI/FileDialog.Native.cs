@@ -20,8 +20,9 @@ public partial class FileDialog
         var result = new List<string>();
         if (filters.Length > 1)
         {
-            var patterns = filters.SelectMany(filter => filter.Split(';')[0].Split(',')).Select(pattern => pattern.Trim()).ToArray();
-            result.Add((patterns.Any(pattern => pattern is "*" or "*.*") ? "*" : string.Join(',', patterns)) + ";All Recognized");
+            var patterns = filters.SelectMany(filter => filter.Split(';')[0].Split(',')).Select(pattern => pattern.Trim()).Where(pattern => pattern.Length != 0).ToArray();
+            var mimes = filters.Select(filter => filter.Split(';')).Where(parts => parts.Length > 2).SelectMany(parts => parts[2].Split(',')).Select(mime => mime.Trim()).Where(mime => mime.Length != 0).ToArray();
+            result.Add((patterns.Any(pattern => pattern is "*" or "*.*") ? "*" : string.Join(',', patterns)) + ";All Recognized" + (mimes.Length == 0 ? "" : ";" + string.Join(',', mimes)));
         }
         result.AddRange(filters); result.Add("*;All Files"); return result.ToArray();
     }

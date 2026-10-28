@@ -631,8 +631,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "The SDL chooser already handles asynchronous OpenFile, OpenFiles, OpenDirectory, and SaveFile with owner-thread typed result delivery, and accepts but ignores showHidden on Linux. The pinned Wayland FileChooser applies MIME filters, which SDL's extension-only filter type cannot represent; MIME-only filters and OpenAny reject explicitly. Trigger: the first native Linux portal FileChooser bridge must implement MIME filters and selected-filter behavior with executable Wayland checks; file-or-directory selection requires a separately approved native chooser capability because the standard portal has no combined mode (ADR 0040).",
+      "state": "Implemented",
+      "reason": "ADR 0040: Linux portal FileChooser executes open/multiple/directory/save with MIME-only and combined extension/MIME rules, exact selected-filter matching, decoded copied local paths, parent/request lifetime and owner-pump delivery. Private native D-Bus tests cover absent/old service, early/alternate handles, authentic path/sender, malformed URI/count/type, callback errors, concurrent results and service death; actual GPU/Compatibility FileDialog consumers and installed Wayland native acceptance/filter/cancellation pass. OpenAny remains the accepted explicit backend limit pending a separately approved combined chooser capability; Linux showHidden is ignored as specified. Other desktop hosts retain SDL extension-only behavior. See docs/components/native-file-portal.md for cold-work and foreign/NativeAOT/native-heap limits.",
       "godot": [
         "DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)"
       ]
@@ -790,7 +790,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "The query reports integrated SDL-backed paths and current device state; the driver identity is retained per display lifetime to remove per-tick string marshaling in passive physics picking (see [native allocation check](../../components/physics-window-allocations.md)); Wayland IME advertising and SDL text-input activation passed native smoke, and the native message dialog opened. However, a true IME or file-dialog result is not yet backed by a non-UI check that the Wayland text-input-v3 protocol or Linux FileChooser service is available. Trigger: add a Wayland text-input protocol capability probe in the first native keyboard/text adapter slice and a portal FileChooser capability probe in the first Linux native chooser slice; then verify positive and absent-service results without opening UI. Other driver/device-dependent results remain separate executable verification work (ADR 0040).",
+      "reason": "The query reports integrated paths and current device state; the driver identity remains retained for passive picking. Linux native-file and MIME capabilities now probe the FileChooser version without UI, with positive/absent/old-version, service loss and session-bus loss checks in docs/components/native-file-portal.md. Blocked remainder: a positive Wayland IME result still lacks a non-UI text-input-v3 capability probe. Add it in the first native keyboard/text adapter and verify protocol presence/absence; remaining driver/device-dependent native profiles retain their own verification gates (ADR 0040).",
       "godot": [
         "DisplayServer::method:has_feature(int:DisplayServer.Feature)"
       ]

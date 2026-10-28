@@ -27,6 +27,39 @@ public sealed partial class DisplayServer
     [LibraryImport("libgobject-2.0.so.0", EntryPoint = "g_object_unref")]
     private static partial void GObjectUnref(nint instance);
 
+    [LibraryImport("libgio-2.0.so.0", EntryPoint = "g_bus_get_sync")]
+    private static partial nint GIOBusGetSync(int type, nint cancellable, nint error);
+    [LibraryImport("libgio-2.0.so.0", EntryPoint = "g_dbus_connection_get_exit_on_close")]
+    private static partial int GIOGetExitOnClose(nint connection);
+    [LibraryImport("libgio-2.0.so.0", EntryPoint = "g_dbus_connection_set_exit_on_close")]
+    private static partial void GIOSetExitOnClose(nint connection, int enabled);
+    [LibraryImport("libgio-2.0.so.0", EntryPoint = "g_dbus_connection_is_closed")]
+    private static partial int GIOIsClosed(nint connection);
+
+    private static (nint Connection, int ExitOnClose) RetainGTKSessionBus()
+    {
+        nint connection = 0;
+        try
+        {
+            connection = GIOBusGetSync(2, 0, 0);
+            if (connection == 0) return default;
+            var previous = GIOGetExitOnClose(connection);
+            // The decoration plugin pumps this shared connection; bus loss must not terminate the host.
+            GIOSetExitOnClose(connection, 0);
+            var retained = (connection, previous); connection = 0; return retained;
+        }
+        catch (DllNotFoundException) { return default; }
+        catch (EntryPointNotFoundException) { return default; }
+        finally { if (connection != 0) GObjectUnref(connection); }
+    }
+
+    private static void ReleaseGTKSessionBus((nint Connection, int ExitOnClose) retained)
+    {
+        if (retained.Connection == 0) return;
+        try { if (GIOIsClosed(retained.Connection) == 0) GIOSetExitOnClose(retained.Connection, retained.ExitOnClose); }
+        finally { GObjectUnref(retained.Connection); }
+    }
+
     private static (nint GtkScreen, nint GtkProvider) InstallGTKTitlebarStyle()
     {
         nint provider = 0;

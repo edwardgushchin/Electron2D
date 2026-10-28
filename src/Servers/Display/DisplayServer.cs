@@ -46,6 +46,7 @@ public sealed partial class DisplayServer : ElectronObject
     private readonly bool _linuxPortalThemeSupported;
     private readonly nint _gtkScreen;
     private readonly nint _gtkTitlebarProvider;
+    private (nint Connection, int ExitOnClose) _gtkSessionBus;
     private readonly string? _previousGamepadBackgroundHint;
     private Rect2i _windowRect;
     private string _accessibilityTitle = "";
@@ -102,7 +103,7 @@ public sealed partial class DisplayServer : ElectronObject
     /// <param name="size">Positive initial dimensions in native window coordinates, which are logical on Wayland; Android uses its fullscreen surface size.</param>
     /// <param name="hidden">Whether the window starts hidden.</param>
     /// <returns>The process's active display server.</returns>
-    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. Desktop windows start with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere. Android, iOS, tvOS and browser surfaces have no minimum-size request; client sizes and input coordinates use physical pixels. Browser startup fills the document. Android SDLActivity establishes the SDL video thread during video initialization. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar.</remarks>
+    /// <remarks>The caller owns and must dispose the returned server on the opening thread. It owns the SDL video and gamepad subsystems and restores the prior background-controller hint on close. Desktop windows start with a 64-by-64 minimum in client pixels on Wayland and native window coordinates elsewhere. Android, iOS, tvOS and browser surfaces have no minimum-size request; client sizes and input coordinates use physical pixels. Browser startup fills the document. Android SDLActivity establishes the SDL video thread during video initialization. A visible Wayland window presents a blank surface so the compositor can show it before rendering is available; size and scale events refresh that surface. If a Wayland session inherits an X11-only GTK backend setting, this method selects the matching GTK backend before initializing video. An available GTK decoration plugin keeps its desktop theme while filling the border below its title bar. The Wayland display lifetime retains the shared GIO session connection without process termination on bus loss, restoring its prior policy on a surviving connection after native teardown.</remarks>
     /// <exception cref="ArgumentNullException"><paramref name="title"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> has a nonpositive component.</exception>
     /// <exception cref="InvalidOperationException">Another server is active, the call is off SDL's main thread, or SDL fails to open video or create the window.</exception>
@@ -156,6 +157,7 @@ public sealed partial class DisplayServer : ElectronObject
             }
 
             (nint GtkScreen, nint GtkProvider) gtkStyle = default;
+            (nint Connection, int ExitOnClose) gtkSessionBus = default;
             try
             {
                 if (correctedGdkBackend && SDL.GetCurrentVideoDriver() != "wayland")
@@ -164,7 +166,10 @@ public sealed partial class DisplayServer : ElectronObject
                     correctedGdkBackend = false;
                 }
                 if (SDL.GetCurrentVideoDriver() == "wayland")
+                {
                     gtkStyle = InstallGTKTitlebarStyle();
+                    gtkSessionBus = RetainGTKSessionBus();
+                }
                 var flags = SDL.WindowFlags.Resizable | SDL.WindowFlags.HighPixelDensity;
                 if (hidden)
                     flags |= SDL.WindowFlags.Hidden;
@@ -196,6 +201,7 @@ public sealed partial class DisplayServer : ElectronObject
                     AccessibilityServer.BeginDisplay();
                     _instance = server;
                     AccessibilityServer.StartDisplayOutput();
+                    server._gtkSessionBus = gtkSessionBus;
                     return server;
                 }
                 catch
@@ -217,6 +223,7 @@ public sealed partial class DisplayServer : ElectronObject
                     SetGDKBackend(previousGdkBackend!);
                 SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
                 SDL.QuitSubSystem(SDL.InitFlags.Video);
+                ReleaseGTKSessionBus(gtkSessionBus);
                 RestoreGamepadBackgroundHint(previousGamepadBackgroundHint);
                 throw;
             }
@@ -632,6 +639,7 @@ public sealed partial class DisplayServer : ElectronObject
             RemoveGTKTitlebarStyle(_gtkScreen, _gtkTitlebarProvider);
             SDL.QuitSubSystem(SDL.InitFlags.Gamepad);
             SDL.QuitSubSystem(SDL.InitFlags.Video);
+            ReleaseGTKSessionBus(_gtkSessionBus);
             RestoreGamepadBackgroundHint(_previousGamepadBackgroundHint);
             if (ReferenceEquals(_instance, this))
                 _instance = null;

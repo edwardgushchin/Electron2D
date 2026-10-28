@@ -99,6 +99,12 @@ public sealed partial class DisplayServer
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unknown file dialog mode."),
         };
 
+        if (UsesPortalFileChooser)
+        {
+            ShowPortalFileDialog(window, parentWindowId, title, currentDirectory, filename, mode, filters, callback);
+            return;
+        }
+
         var nativeFilters = nativeMode == SDL.FileDialogType.OpenFolder ? [] : CreateDialogFilters(filters);
         var request = new DialogRequest(this, ResolveWindow(parentWindowId), callback, nativeFilters);
         var properties = SDL.CreateProperties();
@@ -247,6 +253,7 @@ public sealed partial class DisplayServer
     private void DrainDialogCallbacks()
     {
         EnsureOwner();
+        PollPortalFileDialogs();
         DialogCompletion[] batch;
         lock (_dialogGate)
         {

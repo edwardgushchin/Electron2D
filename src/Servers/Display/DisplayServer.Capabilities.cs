@@ -96,7 +96,9 @@ public sealed partial class DisplayServer
             Feature.MouseWarp => driver is "windows" or "x11" or "cocoa" && SDL.HasMouse(),
             Feature.Clipboard => true,
             Feature.CursorShape or Feature.CustomCursorShape => desktop && SDL.HasMouse(),
-            Feature.NativeDialog or Feature.NativeDialogFile => desktop,
+            Feature.NativeDialog => desktop,
+            Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,
+            Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.Hidpi => desktop && GetScreenCountCore() > 0,
             Feature.Icon => driver is "windows" or "x11" or "cocoa" ||
                 driver == "wayland" && _nativeWaylandIconAvailable,

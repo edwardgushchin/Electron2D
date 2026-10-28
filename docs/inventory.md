@@ -2402,3 +2402,5 @@ Formatted graphics writes reuse `TexelBufferProgram`, `RenderingDevice.GraphicsS
 [Native sample controls](components/multisample-state.md) execute copied masks, sample shading/fraction and alpha-to-one, with independent feature refusal, sample-rate shader publication guards and real resolve/storage/canvas consumers. Keep nonempty mask vector shape, copied variant state and the native/platform qualification limits together.
 
 [Copied native depth/stencil state](components/depth-stencil-state.md) completes the existing RDPipelineDepthStencilState family and pipeline variants; no new public runtime type.
+
+The existing DisplayServer/FileDialog chain now uses the [Linux FileChooser portal](components/native-file-portal.md) for real MIME-aware native file/folder selection; no public type is added.
