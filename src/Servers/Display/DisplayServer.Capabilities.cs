@@ -51,7 +51,7 @@ public sealed partial class DisplayServer
         StatusIndicator = 22,
         /// <summary>Native help-search integration.</summary>
         NativeHelp = 23,
-        /// <summary>Native text-input dialogs.</summary>
+        /// <summary>Native single-line text input; currently requires GTK 3.22 with a matching Linux desktop display.</summary>
         NativeDialogInput = 24,
         /// <summary>Native file-selection dialogs.</summary>
         NativeDialogFile = 25,
@@ -97,6 +97,7 @@ public sealed partial class DisplayServer
             Feature.Clipboard => true,
             Feature.CursorShape or Feature.CustomCursorShape => desktop && SDL.HasMouse(),
             Feature.NativeDialog => desktop,
+            Feature.NativeDialogInput => CanUseGTKInput(),
             Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,
             Feature.NativeDialogFileExtra or Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.Hidpi => desktop && GetScreenCountCore() > 0,

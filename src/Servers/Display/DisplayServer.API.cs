@@ -43,6 +43,23 @@ public sealed partial class DisplayServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback) => RequireService().DialogShowCore(title, description, buttons, callback);
 
+    /// <summary>Shows a native text-input dialog and invokes the callback when confirmed.</summary>
+    /// <param name="title">Native dialog title.</param>
+    /// <param name="description">Plain text describing the input field.</param>
+    /// <param name="existingText">Initial text, copied into the native field without silent truncation.</param>
+    /// <param name="callback">Receives copied text, including an empty string, after confirmation and native cleanup. Cancellation or window close does not invoke it.</param>
+    /// <remarks>Requires NativeDialogInput. The current Linux GTK 3.22 path blocks the display owner until close;
+    /// the main window is retained and supplied as a native parent hint. Backend availability must match the active
+    /// video driver. Input editing uses native GTK controls. Callback errors propagate after cleanup; the callback
+    /// may open another dialog. Display event pumping and another text dialog reject during the modal native loop.
+    /// This is a cold operation, with no real-time allocation guarantee.</remarks>
+    /// <exception cref="ArgumentNullException">A required argument is null.</exception>
+    /// <exception cref="ArgumentException">A string contains NUL, or the native field cannot preserve the initial text.</exception>
+    /// <exception cref="NotSupportedException">The matching native text-input backend is unavailable.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable, the call is off-owner, a dialog is already active, or native setup fails.</exception>
+    /// <exception cref="ObjectDisposedException">The display is disposed.</exception>
+    public static void DialogInputText(string title, string description, string existingText, Action<string> callback) => RequireService().DialogInputTextCore(title, description, existingText, callback);
+
     /// <summary>Opens a native file or folder chooser and delivers its result during a later event pump.</summary>
     /// <param name="title">Requested dialog title; the native platform may ignore it.</param>
     /// <param name="currentDirectory">Initial filesystem directory, or an empty string for the platform default.</param>

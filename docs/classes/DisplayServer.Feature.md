@@ -171,7 +171,7 @@ Native help-search integration.
 <a id="value-nativedialoginput"></a>
 ### `NativeDialogInput = 24`
 
-Native text-input dialogs.
+Native single-line text input through [DialogInputText](DisplayServer.md#method-dialoginputtext). Available on Linux with optional GTK 3.22 or later and a default toolkit display matching the active SDL Wayland/X11 driver; the cold probe opens no UI. See [native text input](../components/native-text-input.md).
 
 <a id="value-nativedialogfile"></a>
 ### `NativeDialogFile = 25`

@@ -116,6 +116,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static bool HasFeature(Feature feature)`](#method-hasfeature) | Reports whether the current backend exposes an executable capability. |
 | [`public static void ProcessEvents()`](#method-processevents) | Drains native events and commits typed keyboard, mouse, touch and controller state before game callbacks. |
 | [`public static void ForceProcessAndDropEvents()`](#method-forceprocessanddropevents) | Processes native window events while discarding pending keyboard, pointer, touch, and text input. |
+| [`public static void DialogInputText(string title, string description, string existingText, Action<string> callback)`](#method-dialoginputtext) | Shows native single-line text input and reports confirmation. |
 | [`public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`](#method-dialogshow) | Shows a blocking native message dialog. |
 | [`public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
 | [`public static void FileDialogWithOptionsShow(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId = MainWindowId)`](#method-filedialogwithoptionsshow) | Opens a native chooser with typed checkbox/choice controls. |
@@ -244,6 +245,15 @@ Shows an operating-system message box with the requested title, body and ordered
 
 **Source:** `src/Servers/Display/DisplayServer.Dialogs.cs`.
 
+<a id="method-dialoginputtext"></a>
+#### `public static void DialogInputText(string title, string description, string existingText, Action<string> callback)`
+
+Shows blocking native single-line input on the display owner. Confirmation copies the exact edited string, including an empty value, then destroys the native UI and releases parent retention before calling back once. Cancel and window close invoke no callback. A callback may open another input dialog or dispose a manually owned display; exceptions propagate after cleanup. The native dialog retains the main window as its parent hint.
+
+Requires `NativeDialogInput`: currently Linux GTK 3.22 or later with a default display matching the active Wayland/X11 SDL driver. Missing toolkit, incompatible driver and unsupported hosts return false from the feature query and throw `NotSupportedException` on invocation. Null and embedded-NUL strings reject; initial text that GTK cannot represent exactly rejects with `ArgumentException` before presentation. During the modal loop, recursive input dialogs, SDL event pumping and display retirement throw `InvalidOperationException`. This cold blocking operation pauses engine frames. See [native text input](../components/native-text-input.md) for lifecycle, qualification and platform limits.
+
+**Source:** `src/Servers/Display/DisplayServer.Gtk.Input.cs`.
+
 <a id="method-filedialogshow"></a>
 #### `public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`
 
@@ -322,7 +332,7 @@ Reports whether the current backend advertises an integrated display capability.
 
 - `feature`: The display capability to query.
 
-**Remarks:** A false result may mean that the platform offers a service that this engine has not integrated. Clipboard access is available while open; mouse and touchscreen results follow connected devices, with touchscreen also available when mouse-to-touch emulation is enabled. Pointer warp, cursor shapes, content scale, icon changes, primary selection, and input-method composition follow the native driver rules in the [Feature reference](DisplayServer.Feature.md). Other defined values and unknown numeric IDs return false. A positive `Ime` result on Wayland still needs a non-UI text-input protocol probe in the owning keyboard adapter. Linux native-file and MIME queries now probe the FileChooser interface version without opening UI; this cold work may block during service startup. Native operations can still fail after a positive query. See [native file portal](../components/native-file-portal.md).
+**Remarks:** A false result may mean that the platform offers a service that this engine has not integrated. Clipboard access is available while open; mouse and touchscreen results follow connected devices, with touchscreen also available when mouse-to-touch emulation is enabled. Pointer warp, cursor shapes, content scale, icon changes, primary selection, and input-method composition follow the native driver rules in the [Feature reference](DisplayServer.Feature.md). Other defined values and unknown numeric IDs return false. A positive `Ime` result on Wayland still needs a non-UI text-input protocol probe in the owning keyboard adapter. Linux native-file and MIME queries now probe the FileChooser interface version without opening UI; this cold work may block during service startup. NativeDialogInput probes the optional GTK 3.22 toolkit and matching Linux desktop display without opening UI; first use can initialize GTK. Native operations can still fail after a positive query. See [native file portal](../components/native-file-portal.md).
 
 **Source:** `src/Servers/Display/DisplayServer.Capabilities.cs`.
 

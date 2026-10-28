@@ -294,14 +294,14 @@ public sealed partial class DisplayServer
     {
         lock (_dialogGate)
             if (_pendingNativeDialogs != 0 || _dialogCompletions.Count != 0)
-                throw new InvalidOperationException("Complete and pump native file dialogs before disposing the display server.");
+                throw new InvalidOperationException("Complete and pump native dialogs before disposing the display server.");
     }
 
     internal void ValidateNativeWindowRetirement()
     {
         EnsureOwner();
         if (Volatile.Read(ref _pendingOwnedNativeDialogs) != 0)
-            throw new InvalidOperationException("Complete native file dialogs before retiring their parent window.");
+            throw new InvalidOperationException("Complete native dialogs before retiring their parent window.");
         ValidateDialogDisposal();
     }
 

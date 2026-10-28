@@ -1,3 +1,5 @@
+The existing [DisplayServer](classes/DisplayServer.md#method-dialoginputtext) now owns [native text input](components/native-text-input.md) through its private GTK partial; no production type is added.
+
 [Native array storage](components/graphics-storage-images.md#compute-and-array-consumers) connects existing Image descriptors to complete independent-layer GPU loads/stores/R32 atomics, fixed descriptor arrays and retained TextureArrayRD consumers. No public type or signature is added.
 
 The existing ENetNative and private file-codec bridge now publish [owned native host/packet/codec allocations](coverage/performance-producers.md#enet-owned-allocation-domain), including custom zlib/Zstandard contexts and the [streaming GZIP domain](coverage/performance-producers.md#streaming-gzip-allocation-domain). No public declaration is added.

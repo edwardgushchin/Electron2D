@@ -1,6 +1,8 @@
 [The runtime allocation boundary](performance-producers.md#runtime-allocation-hook-boundary) now has a calibrated matching-host CLR/NativeAOT probe. It exposes ordinary fast, string and direct pinned-array gaps in a slow-helper-only hook and the raw-size alignment difference. Exact composed memory remains Partial; physics declaration coverage remains **1365/1369 (99.71%)**, four Partial and 92 Excluded.
 
-[Canvas follow-scale preview](../components/canvas-rendering.md#canvas-follow-scale-preview) adds an executable RenderingServer control across root/nested canvases and both current renderer backends. One Blocked row becomes Implemented: **13,388/18,855 applicable declarations (71.0050%)**, 1,090 Partial, 395 Unimplemented, 3,982 Blocked, 8,438 Excluded and zero unmapped. Authored transforms/input and explicit attachment matrices retain their contracts; native heap and foreign-host acceptance stay separate.
+[Native text input](../components/native-text-input.md) now executes copied single-line confirmation, cancellation and native modal lifetimes, with resumed GPU/Compatibility output. One Blocked row becomes Implemented: **13,389/18,855 applicable declarations (71.0103%)**, 1,090 Partial, 395 Unimplemented, 3,981 Blocked, 8,438 Excluded and zero unmapped. Platform qualification limits remain in the owning component.
+
+[Canvas follow-scale preview](../components/canvas-rendering.md#canvas-follow-scale-preview) controls root/nested canvases on both current renderer backends while preserving authored transforms/input and explicit attachment matrices.
 
 [Streaming GZIP storage](performance-producers.md#streaming-gzip-allocation-domain) now feeds the owned-native ledger through the existing codec bridge. Exact composed managed/native monitors remain Partial; physics declaration coverage stays **1365/1369 (99.71%)**, four Partial and 92 Excluded.
 

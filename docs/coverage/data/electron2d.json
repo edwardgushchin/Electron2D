@@ -109125,6 +109125,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.DialogInputText(System.String,System.String,System.String,System.Action\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "DialogInputText",
+    "signature": "public static System.Void DialogInputText(System.String title, System.String description, System.String existingText, System.Action\u003CSystem.String\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "existingText",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.DialogShow(System.String,System.String,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Action\u003CSystem.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",

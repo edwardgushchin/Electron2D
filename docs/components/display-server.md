@@ -182,3 +182,5 @@ BootImageTests verifies real main-window alpha pixels, the native transparency f
 The [native accessibility service](accessibility.md) initializes only for an eligible display/application policy or manual producer. ProcessEvents pumps its private native context on the existing owner and aggregates callback errors with other display callback failures. Native-window/display retirement removes semantic registrations before native ownership is released. Retained window title and driver identity avoid repeated managed UTF-8 strings during stable semantic frames; public observed-title queries keep their existing SDL behavior.
 
 [Native file options](native-file-portal.md#native-checkbox-and-choice-controls) use FileDialogWithOptionsShow with immutable typed descriptions and read-only checkbox/choice results. Linux portal controls share ordinary parent retention, owner pumping and failure completion; root restriction retains the custom FileDialog browser.
+
+[Native text input](native-text-input.md) uses optional GTK controls with matching backend capability, main-window retention, modal pump guards and copied confirmation callbacks.

@@ -12,6 +12,8 @@ The host provider controls appearance, button placement, window attachment, font
 
 The same string validation covers DisplayServer.DialogShow titles, descriptions and button labels. Native buttons already marshaled before a later invalid label are released. DialogShow initializes the selected index to -1: providers that leave output unwritten on window close cannot accidentally confirm button zero. Explicit native button indices remain unchanged. The callback runs on the display owner before return, can open another alert, and exceptions still release the marshaled button storage. [Display dialogs](file-dialogs.md) retain their separate asynchronous file-chooser contract.
 
+[Native text input](native-text-input.md) adds an independent single-line confirmation flow through DisplayServer.DialogInputText.
+
 ## Executable checks
 
 `tests/NativeAlerts.Consumer` uses only public engine API. The `managed` profile checks null/NUL values and a worker rejected by the active manual Engine lifecycle, without requesting a dialog. The `failure` profile uses `SDL_VIDEO_DRIVER=dummy` and checks repeated native failure before/during/after a display, partial button-marshaling cleanup and retained display operation.

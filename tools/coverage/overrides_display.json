@@ -554,6 +554,11 @@
       "godot": "DisplayServer::method:file_dialog_with_options_show(String:,String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Dictionary[]:,Callable:,int:)",
       "electron2d": "method:Electron2D.DisplayServer.FileDialogWithOptionsShow(System.String,System.String,System.String,System.String,System.Boolean,Electron2D.FileDialogMode,System.Collections.Generic.IReadOnlyList<System.String>,System.Collections.Generic.IReadOnlyList<Electron2D.FileDialogOption>,System.Action<System.Boolean, System.Collections.Generic.IReadOnlyList<System.String>, System.Int32, System.Collections.Generic.IReadOnlyDictionary<System.String, Electron2D.FileDialogOptionValue>>,System.Int32)",
       "reason": "ADR 0040: typed immutable FileDialogOption descriptions project the native option dictionary family; Linux FileChooser portals execute checkbox/choice serialization and validated read-only results on the display owner pump. FileDialog consumes request snapshots and publishes choices before selection events; duplicate names use authored order. Nonempty root is explicitly unsupported by the standard portal and FileDialog retains its custom root browser. Protocol and current Wayland native/scene verification are recorded in docs/components/native-file-portal.md; other native hosts and NativeAOT remain separate qualification gates. Typed exceptions replace the native Error return."
+    },
+    {
+      "electron2d": "method:Electron2D.DisplayServer.DialogInputText(System.String,System.String,System.String,System.Action<System.String>)",
+      "godot": "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)",
+      "reason": "ADR 0040: Linux GTK 3.22 matching the active Wayland/X11 display executes native single-line input, localized native buttons, main-window parent retention and exact copied UTF-8 confirmation, including empty strings. Cancel/close invoke no callback. Native modal-loop probes cover owner, retirement, SDL pump/reentry guards; callbacks can throw, reopen or dispose after cleanup. Dummy validation, real Wayland AT-SPI edit/readback and GPU/Compatibility frame-resumption checks cover the executable boundary. Initial text that native storage cannot round-trip rejects before presentation. Typed exceptions replace Error; foreign hosts, physical typing, native-heap and NativeAOT qualification remain separate."
     }
   ],
   "extras": [
@@ -1163,7 +1168,6 @@
       "godot": [
         "DisplayServer::method:create_status_indicator(Texture2D:,String:,Callable:)",
         "DisplayServer::method:delete_status_indicator(int:)",
-        "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)",
         "DisplayServer::method:status_indicator_get_rect(int:)",
         "DisplayServer::method:status_indicator_set_callback(int:,Callable:)",
         "DisplayServer::method:status_indicator_set_icon(int:,Texture2D:)",
@@ -1655,6 +1659,13 @@
       "reason": "ADR 0040: typed immutable FileDialogOption descriptions project the native option dictionary family; Linux FileChooser portals execute checkbox/choice serialization and validated read-only results on the display owner pump. FileDialog consumes request snapshots and publishes choices before selection events; duplicate names use authored order. Nonempty root is explicitly unsupported by the standard portal and FileDialog retains its custom root browser. Protocol and current Wayland native/scene verification are recorded in docs/components/native-file-portal.md; other native hosts and NativeAOT remain separate qualification gates. Typed exceptions replace the native Error return.",
       "godot": [
         "DisplayServer::method:file_dialog_with_options_show(String:,String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Dictionary[]:,Callable:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0040: Linux GTK 3.22 matching the active Wayland/X11 display executes native single-line input, localized native buttons, main-window parent retention and exact copied UTF-8 confirmation, including empty strings. Cancel/close invoke no callback. Native modal-loop probes cover owner, retirement, SDL pump/reentry guards; callbacks can throw, reopen or dispose after cleanup. Dummy validation, real Wayland AT-SPI edit/readback and GPU/Compatibility frame-resumption checks cover the executable boundary. Initial text that native storage cannot round-trip rejects before presentation. Typed exceptions replace Error; foreign hosts, physical typing, native-heap and NativeAOT qualification remain separate.",
+      "godot": [
+        "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)"
       ]
     }
   ]
