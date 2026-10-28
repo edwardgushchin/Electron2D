@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <summary>Owns an ENet protocol host, its typed peers and native UDP/DTLS transport.</summary>
 /// <remarks>Owner-thread Service advances reliability/events and queues received packets on associated peers.
 /// Constructors, host/channel/peer/codec preparation allocate; ready service/span packet loops reuse managed
-/// storage. ENet/FastLZ are unchanged native dependency sources; native allocator totals remain separate.</remarks>
+/// storage. ENet/FastLZ are unchanged native dependency sources; owned native host/packet/codec payloads contribute to the shared allocator ledger.</remarks>
 public class ENetConnection : ElectronObject
 {
     private readonly int _owner = Environment.CurrentManagedThreadId;

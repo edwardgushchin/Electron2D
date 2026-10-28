@@ -1,3 +1,5 @@
+The existing ENetNative and private file-codec bridge now publish [owned native host/packet/codec allocations](coverage/performance-producers.md#enet-owned-allocation-domain), including custom zlib/Zstandard contexts. No public declaration is added.
+
 Existing GPUPhysicsBodyStore, PhysicsSpace and PhysicsDirectBodyState now use [compact monitor contacts](components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28), with resident full results and late numerical reads. The existing store owns a nested ContactIdentity packet; no public declaration is added.
 
 [The Node contract audit](components/node-contract-audit.md) qualifies the existing neutral scene type and its 212 applicable own members. No runtime type or signature is added; inherited Object script-replacement gaps remain open.

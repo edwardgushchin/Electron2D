@@ -1,3 +1,5 @@
+[ENet-owned native allocation accounting](performance-producers.md#enet-owned-allocation-domain) supplies a missing source for composed memory monitors, without promoting a declaration. Physics remains **1364/1369 (99.63%)**, five Partial and 92 Excluded.
+
 [Compact GPU monitor contacts](../components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28) reduce routine selected-result transfer without changing declaration status. Physics remains **1364/1369 (99.63%)**, five Partial and 92 Excluded; remaining script/monitor and full performance qualification stay open.
 
 [Shared texture views](../components/shared-texture-views.md) now execute original-owner format/layer/mip aliases, initial format overrides and automatic shared RID retirement. Eight applicable rows become Implemented; the direct writable image-array descriptor/lowering dependency remains explicit.

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <zlib.h>
+#define ZSTD_STATIC_LINKING_ONLY
 #include <zstd.h>
 #if defined(_WIN32)
 #include <windows.h>
@@ -29,6 +30,49 @@ typedef struct {
   void *data;
   size_t length;
 } E2DBuffer;
+typedef void *(*Allocate)(size_t);
+typedef void (*Release)(void *);
+static Allocate allocate_cb;
+static Release release_cb;
+static void no_memory(void) {}
+// The engine registers one process-lifetime allocator before any bridge allocation.
+API int e2d_enet_memory(Allocate allocate, Release release) {
+  if (!allocate || !release) return -1;
+  if (allocate_cb || release_cb)
+    return allocate_cb == allocate && release_cb == release ? 0 : -1;
+  ENetCallbacks callbacks = {allocate, release, no_memory};
+  if (enet_initialize_with_callbacks(ENET_VERSION, &callbacks) != 0) return -1;
+  allocate_cb = allocate;
+  release_cb = release;
+  return 0;
+}
+static void *allocate_zeroed(size_t count, size_t size) {
+  if (!allocate_cb || (count && size > SIZE_MAX / count)) return NULL;
+  size *= count;
+  void *value = allocate_cb(size);
+  if (value) memset(value, 0, size);
+  return value;
+}
+static void *codec_allocate(void *opaque, size_t size) { return allocate_cb(size); }
+static void codec_release(void *opaque, void *value) { release_cb(value); }
+static void *zlib_allocate(void *opaque, uInt count, uInt size) { return allocate_zeroed(count, size); }
+static ZSTD_customMem codec_memory(void) {
+  ZSTD_customMem memory = {codec_allocate, codec_release, NULL};
+  return memory;
+}
+static size_t zlib_process(int compressing, const unsigned char *input, size_t length,
+                           unsigned char *output, size_t capacity) {
+  z_stream stream = {0};
+  stream.zalloc = zlib_allocate; stream.zfree = codec_release;
+  stream.next_in = (Bytef *)input; stream.avail_in = (uInt)length;
+  stream.next_out = output; stream.avail_out = (uInt)capacity;
+  int initialized = compressing ? deflateInit(&stream, Z_DEFAULT_COMPRESSION) : inflateInit(&stream);
+  if (initialized != Z_OK) return 0;
+  int result = compressing ? deflate(&stream, Z_FINISH) : inflate(&stream, Z_FINISH);
+  size_t size = stream.total_out;
+  if (compressing) deflateEnd(&stream); else inflateEnd(&stream);
+  return result == Z_STREAM_END ? size : 0;
+}
 typedef int (*Send)(int, uint32_t, uint16_t, const E2DBuffer *, size_t);
 typedef int (*Receive)(int, uint32_t *, uint16_t *, void *, size_t);
 typedef int (*Wait)(int, uint32_t *, uint32_t);
@@ -157,7 +201,7 @@ typedef struct {
 } Event;
 API State *e2d_enet_create(int socket_id, int bind, uint16_t port, int count,
                            int channels, uint32_t in, uint32_t out) {
-  State *s = calloc(1, sizeof(*s));
+  State *s = allocate_zeroed(1, sizeof(*s));
   if (!s)
     return NULL;
   creating_socket = socket_id;
@@ -165,13 +209,13 @@ API State *e2d_enet_create(int socket_id, int bind, uint16_t port, int count,
   s->host = enet_host_create(bind ? &address : NULL, count, channels, in, out);
   creating_socket = -1;
   if (!s->host) {
-    free(s);
+    release_cb(s);
     return NULL;
   }
-  s->budgets = calloc(count, sizeof(*s->budgets));
+  s->budgets = allocate_zeroed(count, sizeof(*s->budgets));
   if (!s->budgets) {
     enet_host_destroy(s->host);
-    free(s);
+    release_cb(s);
     return NULL;
   }
   for (int i = 0; i < count; i++)
@@ -182,8 +226,8 @@ API State *e2d_enet_create(int socket_id, int bind, uint16_t port, int count,
 }
 API void e2d_enet_destroy(State *s) {
   enet_host_destroy(s->host);
-  free(s->budgets);
-  free(s);
+  release_cb(s->budgets);
+  release_cb(s);
 }
 API int e2d_enet_connect(State *s, uint32_t token, uint16_t port, int channels,
                          uint32_t data) {
@@ -395,11 +439,8 @@ static size_t encode(void *ctx, const ENetBuffer *buffers, size_t count,
   if (c->mode == 2)
     size = fastlz_compress(c->source, (int)n, c->encoded);
   else if (c->mode == 3) {
-    uLongf len = sizeof(c->encoded);
-    if (compress2(c->encoded, &len, c->source, n, Z_DEFAULT_COMPRESSION) !=
-        Z_OK)
-      return 0;
-    size = len;
+    size = zlib_process(1, c->source, n, c->encoded, sizeof(c->encoded));
+    if (!size) return 0;
   } else {
     size = ZSTD_compressCCtx(c->c, c->encoded, sizeof(c->encoded), c->source, n,
                              3);
@@ -419,8 +460,7 @@ static size_t decode(void *ctx, const unsigned char *in, size_t n,
     return r > 0 ? (size_t)r : 0;
   }
   if (c->mode == 3) {
-    uLongf len = cap;
-    return uncompress(out, &len, in, n) == Z_OK ? len : 0;
+    return zlib_process(0, in, n, out, cap);
   }
   size_t r = ZSTD_decompressDCtx(c->d, out, cap, in, n);
   return ZSTD_isError(r) ? 0 : r;
@@ -429,7 +469,7 @@ static void codec_free(void *ctx) {
   Codec *c = ctx;
   ZSTD_freeCCtx(c->c);
   ZSTD_freeDCtx(c->d);
-  free(c);
+  release_cb(c);
 }
 API int e2d_enet_compress(State *s, int mode) {
   if (mode == 0) {
@@ -440,13 +480,13 @@ API int e2d_enet_compress(State *s, int mode) {
     return enet_host_compress_with_range_coder(s->host);
   if (mode < 2 || mode > 4)
     return -1;
-  Codec *c = calloc(1, sizeof(*c));
+  Codec *c = allocate_zeroed(1, sizeof(*c));
   if (!c)
     return -1;
   c->mode = mode;
   if (mode == 4) {
-    c->c = ZSTD_createCCtx();
-    c->d = ZSTD_createDCtx();
+    c->c = ZSTD_createCCtx_advanced(codec_memory());
+    c->d = ZSTD_createDCtx_advanced(codec_memory());
     if (!c->c || !c->d) {
       codec_free(c);
       return -1;
@@ -460,7 +500,7 @@ API int e2d_enet_compress(State *s, int mode) {
 
 API int e2d_file_encode(int mode, const unsigned char *input, int length,
                         unsigned char *output, int capacity) {
-  if (length < 0 || length > 65536 || (mode != 0 && mode != 2)) return -1;
+  if (!allocate_cb || length < 0 || length > 65536 || (mode != 0 && mode != 2)) return -1;
   size_t bound = mode == 0 ? (size_t)length * 2 + 64 : ZSTD_compressBound((size_t)length);
   if (!output && capacity == 0) return (int)bound;
   if (!input || !output || capacity < (int)bound) return -1;
@@ -470,12 +510,15 @@ API int e2d_file_encode(int mode, const unsigned char *input, int length,
     int result = fastlz_compress(input, length, output);
     return result > 0 && result <= capacity ? result : -1;
   }
-  size_t result = ZSTD_compress(output, (size_t)capacity, input, (size_t)length, 3);
+  ZSTD_CCtx *context = ZSTD_createCCtx_advanced(codec_memory());
+  if (!context) return -1;
+  size_t result = ZSTD_compressCCtx(context, output, (size_t)capacity, input, (size_t)length, 3);
+  ZSTD_freeCCtx(context);
   return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
 }
 API int e2d_file_decode(int mode, const unsigned char *input, int length,
                         unsigned char *output, int capacity) {
-  if (!input || !output || length <= 0 || capacity <= 0 || capacity > 65536 ||
+  if (!allocate_cb || !input || !output || length <= 0 || capacity <= 0 || capacity > 65536 ||
       (mode != 0 && mode != 2)) return -1;
   if (mode == 0) {
     if (length < 2) return -1;
@@ -484,6 +527,9 @@ API int e2d_file_decode(int mode, const unsigned char *input, int length,
   }
   size_t frame = ZSTD_findFrameCompressedSize(input, (size_t)length);
   if (ZSTD_isError(frame) || frame != (size_t)length) return -1;
-  size_t result = ZSTD_decompress(output, (size_t)capacity, input, (size_t)length);
+  ZSTD_DCtx *context = ZSTD_createDCtx_advanced(codec_memory());
+  if (!context) return -1;
+  size_t result = ZSTD_decompressDCtx(context, output, (size_t)capacity, input, (size_t)length);
+  ZSTD_freeDCtx(context);
   return ZSTD_isError(result) || result > (size_t)capacity ? -1 : (int)result;
 }

@@ -79,3 +79,17 @@ if(WIN32)
 else()
   target_compile_definitions(Electron2DENetOracle PRIVATE HAS_SOCKLEN_T=1 HAS_FCNTL=1 HAS_POLL=1 HAS_INET_PTON=1 HAS_INET_NTOP=1 HAS_MSGHDR_FLAGS=1)
 endif()
+
+# Test-only allocator failure oracle compiles the exact production bridge callbacks.
+add_executable(Electron2DENetMemory EXCLUDE_FROM_ALL check_memory.c
+  "${base}/ENet/callbacks.c" "${base}/ENet/compress.c" "${base}/ENet/host.c"
+  "${base}/ENet/list.c" "${base}/ENet/packet.c" "${base}/ENet/peer.c" "${base}/ENet/protocol.c"
+  "${base}/FastLZ/fastlz.c")
+target_include_directories(Electron2DENetMemory PRIVATE "${base}/ENet/include" "${base}/FastLZ")
+if(APPLE OR WIN32 OR ANDROID OR EMSCRIPTEN)
+  target_include_directories(Electron2DENetMemory PRIVATE "${zstd_SOURCE_DIR}/lib")
+endif()
+target_link_libraries(Electron2DENetMemory PRIVATE ZLIB::ZLIB "${ZSTD_LIBRARY}")
+if(WIN32)
+  target_link_libraries(Electron2DENetMemory PRIVATE bcrypt ws2_32)
+endif()

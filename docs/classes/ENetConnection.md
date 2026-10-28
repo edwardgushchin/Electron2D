@@ -8,7 +8,7 @@ Last updated: 2026-10-14
 
 Owns an ENet protocol host, its typed peers and native UDP/DTLS transport.
 
-Owner-thread Service advances reliability/events and queues received packets on associated peers. Constructors, host/channel/peer/codec preparation allocate; ready service/span packet loops reuse managed storage. ENet/FastLZ are unchanged native dependency sources; native allocator totals remain separate.
+Owner-thread Service advances reliability/events and queues received packets on associated peers. Constructors, host/channel/peer/codec preparation allocate; ready service/span packet loops reuse managed storage. ENet/FastLZ are unchanged native dependency sources; owned native host/packet/codec payloads contribute to the shared allocator ledger.
 
 See [native ENet](../components/enet.md) for channel mapping, packet/native ownership, DTLS, budgets and verification.
 

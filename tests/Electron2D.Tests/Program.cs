@@ -1387,6 +1387,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_EDITOR") == "1") { Edito
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE_CHILD") is { } archivePath) { ResourceArchiveTests.RunChild(archivePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESOURCE_ARCHIVE") == "1") { ResourceArchiveTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENET_ALLOCATION") == "1") { ENetAllocationTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ENET") == "1") { ENetTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DTLS") == "1") { DTLSTests.Run(); return; }

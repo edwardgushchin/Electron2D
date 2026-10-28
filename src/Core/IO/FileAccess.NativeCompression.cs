@@ -80,7 +80,11 @@ public sealed partial class FileAccess
 internal static unsafe partial class FileCodecNative
 {
     [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_file_encode"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    internal static partial int Encode(int mode, byte* input, int length, byte* output, int capacity);
+    private static partial int EncodeCore(int mode, byte* input, int length, byte* output, int capacity);
+    internal static int Encode(int mode, byte* input, int length, byte* output, int capacity)
+    { ENetNative.PrepareMemory(); return EncodeCore(mode, input, length, output, capacity); }
     [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_file_decode"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
-    internal static partial int Decode(int mode, byte* input, int length, byte* output, int capacity);
+    private static partial int DecodeCore(int mode, byte* input, int length, byte* output, int capacity);
+    internal static int Decode(int mode, byte* input, int length, byte* output, int capacity)
+    { ENetNative.PrepareMemory(); return DecodeCore(mode, input, length, output, capacity); }
 }

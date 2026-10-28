@@ -21,7 +21,7 @@ internal static unsafe partial class ENetNative
     internal static void Prepare()
     {
         if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("ENet requires a packaged desktop, Android or Apple native backend.");
-        lock (Gate) { if (_ready) return; Callbacks(&ENetTransport.SendCallback, &ENetTransport.ReceiveCallback, &ENetTransport.WaitCallback, &ENetTransport.ControlCallback); _ready = true; }
+        lock (Gate) { if (_ready) return; PrepareMemory(); Callbacks(&ENetTransport.SendCallback, &ENetTransport.ReceiveCallback, &ENetTransport.WaitCallback, &ENetTransport.ControlCallback); _ready = true; }
     }
     [LibraryImport(Library, EntryPoint = "e2d_enet_callbacks"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void Callbacks(delegate* unmanaged[Cdecl]<int, uint, ushort, ENetNativeBuffer*, nuint, int> send, delegate* unmanaged[Cdecl]<int, uint*, ushort*, byte*, nuint, int> receive, delegate* unmanaged[Cdecl]<int, uint*, uint, int> wait, delegate* unmanaged[Cdecl]<int, int, int, int> control);
     [LibraryImport(Library, EntryPoint = "e2d_enet_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint Create(int socketID, int bound, ushort port, int peers, int channels, uint inBandwidth, uint outBandwidth);

@@ -55,7 +55,7 @@ states; this source trace does not implement that separate public enum.
 
 The internal NativeAllocation ledger now replaces direct NativeMemory and HGlobal payload allocation in the managed runtime. It owns the raw pointer and requested byte size in a private prefix, preserves ordinary fundamental or requested power-of-two alignment, and serializes successful allocation/resize/free publication with coherent current/peak reads. The peak updates at each successful boundary and survives frees; failed requests retain both the old block and counters. Requested payload bytes exclude allocator prefixes/padding. Zero-byte blocks remain releasable with a zero payload contribution. This is CPU native storage; GPU memory and managed wrapper objects are not counted again.
 
-Current consumers are FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
+Current consumers include [ENet hosts/packets/codecs and file blocks](#enet-owned-allocation-domain), FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
 
 This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. In particular gzip's internal codec allocations are distinct from its tracked wrapper state. It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
 
@@ -72,6 +72,48 @@ NativeFontAllocationTests verifies actual production face ownership, explicit/fa
 The packaged Linux 2.13.3 library has an unresolved hinted-glyph allocation-failure crash: the bound trial aborts at request 1158 of 1179, inside FT_Load_Glyph; unhinted rendering passes all 1162 positions. The same failure reproduces in a standalone C program using ordinary malloc/realloc/free with the packaged library; the system library returns an error instead. The earlier system-library result (1173 positions) does not qualify the package. The hinted failure case remains an explicit native dependency defect and prevents complete error-path qualification; do not promote either memory selector from this slice.
 
 The focused FastTests route requires explicit native qualification: `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -- --freetype-allocation`. The existing consumer platform property admits the standard native package for that run; ordinary managed fast builds keep their existing dependency boundary.
+
+## ENet-owned allocation domain
+
+The private ENet bridge now installs the process-lifetime NativeAllocation callbacks
+before any host or file-block allocation. Host/peer/packet storage and bridge
+budgets/codecs share the supplied allocator. zlib uses zalloc/zfree; Zstandard
+uses advanced contexts with custom memory, including the transient file-block
+contexts. FastLZ retains its stack/caller buffers. No vendor source, wire format,
+public API or external library dependency changes.
+
+Registration is idempotent for the same callbacks and rejects a different owner;
+live pointers cannot be switched to another deallocator. Managed out-of-memory
+returns null across the native callback boundary. ENet's no-memory callback
+returns control to its checked failure paths, preserving cleanup rather than
+aborting. The new private e2d_enet_memory export is required in the matching
+native bundle; older bridges reject before socket/host allocation. Package export
+validation covers the added entry point on every target. Native file-codec setup
+installs memory callbacks without initializing a socket transport.
+
+The production-bridge C oracle checks all 52 allocation-failure positions in its
+host/peer/packet, five-codec and file-block scenarios, each returning to zero live
+payload. AddressSanitizer/UBSan and leak detection pass the same scenarios. The
+independent file oracle retains 32 bidirectional FastLZ/Zstandard comparisons;
+the C oracle also decodes tracked zlib output through the standard entry point
+and decodes standard output through the tracked context.
+Fresh-process ENetAllocationTests checks actual managed/native registration,
+transient file peaks, fragmented wire data with all five codecs, four concurrent
+host workers, SafeHandle finalization and 128 warmed service/accounting intervals
+per codec at zero owner/all-thread managed bytes. Linux x64 CLR and strict full-trim
+NativeAOT both pass; the ELF control maps the exact bridge and no CoreCLR.
+The 600-tick separate-process scenario also passes with a CPU/no-GPU authority,
+GPU prediction, late CPU join, impairment, ownership/lifecycle and confirmed events;
+its prepared step/replay allocation intervals remain zero. Existing ENet IPv4/IPv6, DTLS,
+loss/replication, file-compression and byte-buffer regressions also pass.
+
+Receipts and source/cohort manifests are under
+`bin/enet-allocation-accounting/2026-10-28/`. This closes the ENet bridge allocation
+source only. Runtime compression PAL/BCL codecs, other uninstrumented native
+libraries, marshalled strings and coherent managed/native current/peak aggregation
+remain open. The complete MEMORY_STATIC/MEMORY_STATIC_MAX producers and Performance.GetMonitor
+remain open; physics remains 1364/1369 (99.63%), five Partial
+and 92 Excluded. Other platforms and final whole-goal acceptance remain separate.
 
 ## Allocation producers remain open
 

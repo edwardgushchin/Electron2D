@@ -1,5 +1,7 @@
 # Networking
 
+[ENet-owned native allocations](../coverage/performance-producers.md#enet-owned-allocation-domain) now share the engine allocator ledger, with checked partial failure and finalizer cleanup. Complete memory monitors and foreign-platform qualification remain open.
+
 Last updated: 2026-10-19
 
 The [WebRTC component](../components/webrtc.md) implements native peer/channel negotiation, typed extension providers and WebRTCMultiplayerPeer consumed by SceneMultiplayer/SceneTree. It shares PacketWriteMode with WebSocketPeer. Configuration and peer observations use typed records; signaling remains application-owned. Linux native and independent browser packet checks passed; routed and foreign adapter gates remain explicit.

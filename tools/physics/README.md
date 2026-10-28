@@ -140,3 +140,22 @@ queries. Omitting the backend selects the registered provider. The root selector
 `ELECTRON2D_GROUP_COORDINATES_RENDERER=gpu|compatibility` selects rendering independently.
 The root native selector is `ELECTRON2D_TEST_NATIVE_GROUP_COORDINATES=cpu|gpu[-threaded]`.
 See [the coordinate contract](../../docs/components/canvas-rendering.md#coordinate-observation-from-processing-groups).
+
+## ENet native allocation source
+
+The private networking allocator source contributes to the remaining composed
+memory-monitor contract. Build and run its production-bridge failure oracle:
+
+```bash
+cmake -S tools/enet-native -B bin/enet-memory -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build bin/enet-memory --target Electron2DENet Electron2DENetMemory --parallel 4
+bin/enet-memory/Electron2DENetMemory
+python3 -B tools/enet-native/check_file_codecs.py bin/enet-memory/libElectron2DENet.so
+```
+
+The root fixture selects ELECTRON2D_TEST_ENET_ALLOCATION=1. The focused public/native
+route is `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -p:Electron2DENetNativeLibrary=/absolute/path/to/libElectron2DENet.so -- --enet-allocation`.
+Use the matching current bridge. The NativeAOT profile adds PublishAot=true and
+TrimMode=full when publishing that host; standalone native execution supplies the
+same selector. Neither ledger coverage nor zero managed bytes completes total
+current/peak memory or whole-physics performance acceptance.

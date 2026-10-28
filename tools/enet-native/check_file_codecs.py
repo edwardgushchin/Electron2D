@@ -13,6 +13,9 @@ def main():
     parser.add_argument('bridge', type=Path)
     args = parser.parse_args()
     bridge = c.CDLL(str(args.bridge.resolve()))
+    libc = c.CDLL(None)
+    bridge.e2d_enet_memory.argtypes = [c.c_void_p, c.c_void_p]
+    assert bridge.e2d_enet_memory(c.cast(libc.malloc, c.c_void_p), c.cast(libc.free, c.c_void_p)) == 0
     signature = [c.c_int, c.c_void_p, c.c_int, c.c_void_p, c.c_int]
     for name in ['e2d_file_encode', 'e2d_file_decode']:
         function = getattr(bridge, name)
