@@ -219,7 +219,7 @@ public abstract class BaseButton : Control
             {
                 if (_touch == -1 && touch.Pressed)
                 {
-                    _touch = touch.Index; _attempt = true; _inside = HasPoint(touch.Position); ActionEvent(inputEvent); return;
+                    _touch = touch.Index; _attempt = true; _inside = HasLocalPoint(touch.Position); ActionEvent(inputEvent); return;
                 }
                 if (_touch == touch.Index && !touch.Pressed) { _touch = -1; ActionEvent(inputEvent); return; }
             }
@@ -236,7 +236,7 @@ public abstract class BaseButton : Control
     private void UpdateInside(Vector2 point)
     {
         if (!point.IsFinite()) throw new ArgumentException("Button pointer coordinates must be finite.", nameof(point));
-        var inside = HasPoint(point); if (_inside == inside) return; _inside = inside; QueueRedraw();
+        var inside = HasLocalPoint(point); if (_inside == inside) return; _inside = inside; QueueRedraw();
     }
     private void ActionEvent(InputEvent input)
     {

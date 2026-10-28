@@ -14,8 +14,8 @@ public partial class Control
     protected virtual string OnGetAccessibilityContainerName(Node node)
     {
         ArgumentNullException.ThrowIfNull(node);
-        return GetParentControl()?.OnGetAccessibilityContainerName(this) ?? "";
+        return GetParentControl()?.AccessibleContainerName(this) ?? "";
     }
-    internal string AccessibleContextualInfo() => OnAccessibilityGetContextualInfo() ?? throw new InvalidOperationException("Contextual help cannot be null.");
-    internal string AccessibleContainerName(Node child) => OnGetAccessibilityContainerName(child) ?? throw new InvalidOperationException("A container name cannot be null.");
+    internal string AccessibleContextualInfo() => (ControlCallbacks?.AccessibilityGetContextualInfo is { } query ? query() : OnAccessibilityGetContextualInfo()) ?? throw new InvalidOperationException("Contextual help cannot be null.");
+    internal string AccessibleContainerName(Node child) => (ControlCallbacks?.GetAccessibilityContainerName is { } query ? query(child) : OnGetAccessibilityContainerName(child)) ?? throw new InvalidOperationException("A container name cannot be null.");
 }

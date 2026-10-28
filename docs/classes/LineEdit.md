@@ -409,7 +409,7 @@ System.ArgumentOutOfRangeException: The value is outside minus one through three
 | `public System.Void MenuOption(Electron2D.TextMenuAction option)` | Executes a typed editing command without requiring popup presentation. |
 | `protected override System.Boolean OnCanDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)` | Tests a potential drop target; false rejects it. |
 | `protected override System.Void OnDropData(Electron2D.Vector2 atPosition, Electron2D.DragPayload payload)` | Consumes an accepted drop after the target test succeeds. |
-| `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)` | Processes a temporary control-local event before Electron2D.Control.GUIInput subscribers. |
+| `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)` | Processes a temporary control-local event after GUIInput subscribers and the installed Script hook. |
 | `protected override Electron2D.DragPayload OnGetDragData(Electron2D.Vector2 atPosition)` | Produces drag data for an automatic pointer drag; null rejects the attempt. |
 | `protected override Electron2D.Vector2 OnGetMinimumSize()` | Supplies the intrinsic minimum size; the base control has none. |
 | `protected override System.Void OnIMECompositionChanged(System.String text, Electron2D.Vector2i selection)` | Receives an uncommitted composition update before Electron2D.Control.IMECompositionChanged subscribers. |
@@ -673,7 +673,7 @@ payload: The borrowed typed payload.
 
 `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)`
 
-Processes a temporary control-local event before Electron2D.Control.GUIInput subscribers.
+Processes a temporary control-local event after GUIInput subscribers and the installed Script hook.
 
 inputEvent: Borrowed event valid only during synchronous dispatch.
 

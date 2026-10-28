@@ -1018,6 +1018,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LIVE_RPC") is { } liveRP
     LiveRPCTests.Run(liveRPC switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for live RPC.") }, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1"); return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COMPILED_RPC") == "1") { ScriptRPCTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_RPC_PHASE") ?? "host"); return; }
+if (args.Length == 2 && args[0] == "--control-script-child") { ControlScriptTests.Child(args[1]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_SCRIPT") is { } controlScript)
+{
+    ControlScriptTests.Run(controlScript switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for Control Script callbacks.") },
+        Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_COLLIDER") == "1", Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROL_SCRIPT_RENDERER")); return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCRIPT_DRAW") is { } scriptDraw)
 {
     ScriptDrawTests.Run(scriptDraw switch { "cpu" => PhysicsServer.Backend.CPU, "gpu" => PhysicsServer.Backend.GPU, _ => throw new ArgumentException("Use cpu or gpu for live Script drawing.") },
@@ -2025,6 +2031,7 @@ NativeCallbackTests.Run(PhysicsServer.Backend.CPU, false); NativeCallbackTests.R
 ScriptPropertyTests.Run(PhysicsServer.Backend.CPU, false); ScriptPropertyTests.Run(PhysicsServer.Backend.GPU, false);
 ObjectCallbackTests.Run(PhysicsServer.Backend.CPU, false); ObjectCallbackTests.Run(PhysicsServer.Backend.GPU, false);
 RoleHookTests.Run(PhysicsServer.Backend.CPU, false); RoleHookTests.Run(PhysicsServer.Backend.GPU, false);
+ControlScriptTests.Run(PhysicsServer.Backend.CPU, false, null); ControlScriptTests.Run(PhysicsServer.Backend.GPU, false, null);
 ExtensionSourceTests.Run();
 foreach (var backend in new PhysicsServer.Backend?[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU, null })
     foreach (var threaded in new[] { false, true }) PhysicsScriptFactoryTests.Run(backend, threaded);

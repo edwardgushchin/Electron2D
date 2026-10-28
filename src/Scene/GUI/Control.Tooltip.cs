@@ -57,7 +57,7 @@ public partial class Control
     /// <exception cref="ObjectDisposedException">This control is disposed.</exception>
     public string GetTooltip(Vector2 atPosition = default)
     {
-        CheckTooltipAccess(); ValidateTooltipPosition(atPosition); return OnGetTooltip(atPosition) ?? string.Empty;
+        CheckTooltipAccess(); ValidateTooltipPosition(atPosition); return (ControlCallbacks?.GetTooltip is { } query ? query(atPosition) : OnGetTooltip(atPosition)) ?? string.Empty;
     }
     /// <summary>Supplies untranslated tooltip text for a local control position.</summary>
     /// <param name="atPosition">The finite local cursor position.</param>
@@ -74,10 +74,10 @@ public partial class Control
     /// Do not return this control, an ancestor, or a control already parented or attached to a scene tree.</remarks>
     protected virtual Control? OnMakeCustomTooltip(string forText) => null;
 
-    internal virtual Control? CreateTooltipControl(string text) => OnMakeCustomTooltip(text);
+    internal virtual Control? CreateTooltipControl(string text) => ControlCallbacks?.MakeCustomTooltip is { } query ? query(text) : OnMakeCustomTooltip(text);
     internal NodeAutoTranslateMode GetTooltipTranslationMode(Vector2 position)
     {
-        CheckTooltipAccess(); ValidateTooltipPosition(position); return OnGetTooltipAutoTranslateModeAt(position);
+        CheckTooltipAccess(); ValidateTooltipPosition(position); return ControlCallbacks?.GetTooltipAutoTranslateModeAt is { } query ? query(position) : OnGetTooltipAutoTranslateModeAt(position);
     }
     internal bool IsFocusOwnerInShortcutContext()
     {

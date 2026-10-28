@@ -384,7 +384,7 @@
       "electron2d": "method:Electron2D.Control.OnGUIInput(Electron2D.InputEvent)",
       "godot": "Control::method:_gui_input(InputEvent:)",
       "state": "Partial",
-      "reason": "Root viewport input invokes the typed virtual callback after Node input, with pointer hit testing, hover updates and focused keyboard delivery. Clipping, full draw order and nested viewports remain to audit."
+      "reason": "Routed GUI input follows Node input, GUIInput subscribers, current live Script and the native CLR hook. Acceptance, detachment or disposal stops later stages. ControlInputTests proves signal-first rejection; ControlScriptTests covers replacement/retirement and native derived hooks. Internal refresh/capture events preserve native housekeeping. Other routing dependencies retain their own open rows."
     },
     {
       "electron2d": "method:Electron2D.Control.HasPoint(Electron2D.Vector2)",

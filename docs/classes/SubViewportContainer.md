@@ -113,7 +113,7 @@ System.ObjectDisposedException: The container is disposed.
 | `public override System.String[] GetConfigurationWarnings()` | Returns this node's current configuration warnings for tooling. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` |  |
 | `protected override System.Void OnDraw()` | Records this node's retained canvas commands before its first visible frame and after QueueRedraw. |
-| `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)` | Processes a temporary control-local event before Electron2D.Control.GUIInput subscribers. |
+| `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)` | Processes a temporary control-local event after GUIInput subscribers and the installed Script hook. |
 | `protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)` | Chooses a cursor for a control-local position; defaults to Electron2D.Control.MouseDefaultCursorShape. |
 | `protected override Electron2D.Vector2 OnGetMinimumSize()` | Supplies the intrinsic minimum size; the base control has none. |
 | `protected override System.Void OnInput(Electron2D.InputEvent inputEvent)` | Receives an input event during the first scene-input propagation stage. |
@@ -192,7 +192,7 @@ Remarks: Runs on the scene owner thread during rendering. Geometry, texture and 
 
 `protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)`
 
-Processes a temporary control-local event before Electron2D.Control.GUIInput subscribers.
+Processes a temporary control-local event after GUIInput subscribers and the installed Script hook.
 
 inputEvent: Borrowed event valid only during synchronous dispatch.
 

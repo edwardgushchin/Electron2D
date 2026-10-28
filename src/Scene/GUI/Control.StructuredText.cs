@@ -17,7 +17,7 @@ public partial class Control
         var count = CountScalars(text.AsSpan());
         if (parser == StructuredTextParser.Custom)
         {
-            var ranges = OnStructuredTextParser(options, text) ?? throw new InvalidOperationException("A structured text parser returned null.");
+            var ranges = (ControlCallbacks?.StructuredTextParser is { } query ? query(options, text) : OnStructuredTextParser(options, text)) ?? throw new InvalidOperationException("A structured text parser returned null.");
             foreach (var range in ranges)
             {
                 if (range.Start < 0 || range.End < range.Start || range.End > count || range.Direction is < TextDirection.Auto or > TextDirection.Inherited)

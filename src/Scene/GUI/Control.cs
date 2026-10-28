@@ -186,7 +186,7 @@ public partial class Control : CanvasItem
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        var size = OnGetMinimumSize();
+        var size = ControlCallbacks?.GetMinimumSize is { } query ? query() : OnGetMinimumSize();
         EnsureFinite(size, nameof(size));
         return size;
     }
@@ -205,7 +205,7 @@ public partial class Control : CanvasItem
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        var size = OnGetMaximumSize();
+        var size = ControlCallbacks?.GetMaximumSize is { } query ? query() : OnGetMaximumSize();
         EnsureFinite(size, nameof(size));
         return size;
     }
@@ -232,6 +232,13 @@ public partial class Control : CanvasItem
         var maximum = GetCombinedMaximumSize();
         return new(maximum.X >= 0 ? Mathf.Min(minimum.X, maximum.X) : minimum.X,
             maximum.Y >= 0 ? Mathf.Min(minimum.Y, maximum.Y) : minimum.Y);
+    }
+
+    private ControlScriptBinding? ControlCallbacks => ScriptCallbacks as ControlScriptBinding;
+
+    internal void InvalidateScriptControlQueries()
+    {
+        UpdateMinimumSize(); UpdateMaximumSize(); AccessibilityQueued = true;
     }
 
     internal virtual Vector2 GetDesiredSize() => Vector2.Zero;

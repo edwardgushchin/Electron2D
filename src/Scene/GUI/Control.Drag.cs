@@ -25,7 +25,7 @@ public partial class Control
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread();
         if (!atPosition.IsFinite()) throw new ArgumentException("Drag position must be finite.", nameof(atPosition));
-        return _forwardGetDragData is { } forward ? forward(atPosition) : OnGetDragData(atPosition);
+        return GetDragDataCore(atPosition);
     }
 
     /// <summary>Tests whether this control accepts a typed payload at a local position.</summary>
@@ -36,7 +36,7 @@ public partial class Control
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread(); ArgumentNullException.ThrowIfNull(payload);
         if (!atPosition.IsFinite()) throw new ArgumentException("Drop position must be finite.", nameof(atPosition));
-        return _forwardCanDropData is { } forward ? forward(atPosition, payload) : OnCanDropData(atPosition, payload);
+        return CanDropDataCore(atPosition, payload);
     }
 
     /// <summary>Delivers an accepted payload to this control.</summary>
@@ -46,8 +46,18 @@ public partial class Control
     {
         EnsureMutable(); ArgumentNullException.ThrowIfNull(payload);
         if (!atPosition.IsFinite()) throw new ArgumentException("Drop position must be finite.", nameof(atPosition));
-        if (_forwardDropData is { } forward) forward(atPosition, payload);
-        else OnDropData(atPosition, payload);
+        DropDataCore(atPosition, payload);
+    }
+
+    private DragPayload? GetDragDataCore(Vector2 position) => _forwardGetDragData is { } forward ? forward(position) :
+        ControlCallbacks?.GetDragData is { } query ? query(position) : OnGetDragData(position);
+    private bool CanDropDataCore(Vector2 position, DragPayload payload) => _forwardCanDropData is { } forward ? forward(position, payload) :
+        ControlCallbacks?.CanDropData is { } query ? query(position, payload) : OnCanDropData(position, payload);
+    private void DropDataCore(Vector2 position, DragPayload payload)
+    {
+        if (_forwardDropData is { } forward) forward(position, payload);
+        else if (ControlCallbacks?.DropData is { } drop) drop(position, payload);
+        else OnDropData(position, payload);
     }
 
     /// <summary>Produces drag data for a pointer or non-positional accessible drag; null rejects the attempt.</summary>

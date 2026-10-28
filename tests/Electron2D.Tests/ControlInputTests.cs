@@ -4,6 +4,7 @@ internal static class ControlInputTests
 {
     internal static void Run()
     {
+        SignalBeforeNative();
         var root = new TestViewport();
         var parent = new Control { Name = "parent", Position = new(10, 10), Size = new(60, 50) };
         var child = new Probe { Position = new(5, 5), Size = new(20, 20), MouseFilter = MouseFilter.Pass, FocusMode = FocusMode.Click, InputEnabled = true };
@@ -230,6 +231,23 @@ internal static class ControlInputTests
         Check(reentrantRoot.GetGUIFocusOwner() is null &&
             reentrantOrder.SequenceEqual(["viewport", "reentrant:enter-notification", "reentrant:exit-notification", "exited"]),
             "Reentrant notification release prevents a stale focus-enter event.");
+    }
+
+    private static void SignalBeforeNative()
+    {
+        using var root = new TestViewport();
+        var control = new Probe { Size = new(20, 20), FocusMode = FocusMode.All };
+        root.AddChild(control); using var tree = new SceneTree(root); control.GrabFocus();
+        var order = new List<string>(); var accept = false;
+        control.GUIAction = _ => order.Add("native");
+        control.GUIInput += _ => { order.Add("signal"); if (accept) control.AcceptEvent(); };
+        using var key = new InputEventKey { Pressed = true };
+        root.PushInput(key, inLocalCoordinates: true);
+        Check(order.SequenceEqual(["signal", "native"]), "The GUI signal precedes the native input hook.");
+        order.Clear(); accept = true; root.PushInput(key, inLocalCoordinates: true);
+        Check(order.SequenceEqual(["signal"]), "A signal subscriber can prevent the native input hook.");
+        order.Clear(); control.SetBlockSignals(true); root.PushInput(key, inLocalCoordinates: true);
+        Check(order.SequenceEqual(["native"]), "Blocking the GUI signal preserves direct input handling.");
     }
 
     private sealed class TestViewport : Viewport { public override Rect2 GetVisibleRect() => new(0, 0, 100, 100); }

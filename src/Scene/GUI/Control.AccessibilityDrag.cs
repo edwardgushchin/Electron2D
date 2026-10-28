@@ -18,8 +18,7 @@ public partial class Control
     {
         EnsureMutable(); (Tree ?? throw new InvalidOperationException("Accessible dropping requires an attached control.")).CompleteAccessibilityDrag(this);
     }
-    internal DragPayload? GetAccessibilityDragData() => _forwardGetDragData is { } forward ? forward(AccessibilityDragPosition) : OnGetDragData(AccessibilityDragPosition);
-    internal bool CanAccessibilityDrop(DragPayload payload) => _forwardCanDropData is { } forward ? forward(AccessibilityDragPosition, payload) : OnCanDropData(AccessibilityDragPosition, payload);
-    internal void DropAccessibilityData(DragPayload payload)
-    { if (_forwardDropData is { } forward) forward(AccessibilityDragPosition, payload); else OnDropData(AccessibilityDragPosition, payload); }
+    internal DragPayload? GetAccessibilityDragData() => GetDragDataCore(AccessibilityDragPosition);
+    internal bool CanAccessibilityDrop(DragPayload payload) => CanDropDataCore(AccessibilityDragPosition, payload);
+    internal void DropAccessibilityData(DragPayload payload) => DropDataCore(AccessibilityDragPosition, payload);
 }

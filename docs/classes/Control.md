@@ -169,7 +169,7 @@ When the window changes size, the panel's right edge stays 12 units from the win
 | `public event Action? Resized` | Raised synchronously on the owner thread after a size change while attached. |
 | `public event Action? MinimumSizeChanged` | Raised after deferred reflow when the combined minimum actually changes while visible and attached. |
 | `public event Action? MaximumSizeChanged` | Raised after deferred reflow when the combined maximum actually changes while visible and attached. |
-| `public event Action<InputEvent>? GUIInput` | Raised after OnGUIInput with the same borrowed event. |
+| `public event Action<InputEvent>? GUIInput` | Raised before installed Script and native input hooks with the same borrowed event. |
 | `public event Action<string>? TextInput` | Raised after OnTextInput for one complete native commit. |
 | `public event Action<string, Vector2i>? IMECompositionChanged` | Raised after OnIMECompositionChanged for the current preedit. |
 | `public event Action? FocusEntered` | Raised after NotificationFocusEnter when this control gains keyboard focus. |
@@ -254,7 +254,7 @@ Unhandled Tab, reverse Tab, arrows, D-pad and fresh analog action transitions ap
 
 ### `HasPoint`, `OnGUIInput`, `GUIInput`, `AcceptEvent`
 
-The virtual `HasPoint` tests a control-local point against `[0, Size.X) × [0, Size.Y)` by default and can define a custom hit shape. Pointer events are copied into each receiving Control's local coordinates; their `GlobalPosition` is in the receiving CanvasLayer's coordinates. `OnGUIInput` runs before the `GUIInput` event. The local event is borrowed only during the callback. `AcceptEvent` forwards to the active scene handled flag and throws outside input delivery. Callback failures are collected while eligible parent and later Node callbacks continue.
+The virtual `HasPoint` tests a control-local point against `[0, Size.X) × [0, Size.Y)` by default and can define a custom hit shape. Pointer events are copied into each receiving Control's local coordinates; their `GlobalPosition` is in the receiving CanvasLayer's coordinates. `GUIInput` runs first, then the currently installed [Control Script](ControlScriptCallbacks.md) input callback, then `OnGUIInput`. Acceptance, detachment or disposal stops later stages; internal refresh/capture events retain only native housekeeping. The local event is borrowed only during the callback. `AcceptEvent` forwards to the active scene handled flag and throws outside input delivery. Callback failures are collected while eligible parent and later Node callbacks continue.
 
 ### `GetAnchor(Side side)`, `SetAnchor(Side side, float anchor, bool keepOffset = false, bool pushOppositeAnchor = true)`
 

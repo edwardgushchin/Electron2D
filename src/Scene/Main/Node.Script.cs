@@ -27,6 +27,7 @@ public partial class Node
         var binding = ScriptCallbacks;
         if (binding is null) return;
         if (binding.Draw is not null && this is CanvasItem item) item.InvalidateCanvas();
+        if (binding is ControlScriptBinding && this is Control control) control.InvalidateScriptControlQueries();
         if (IsNodeReady) EnableScriptCallbacks();
     }
 
@@ -45,6 +46,7 @@ public partial class Node
     {
         var callbacks = ScriptCallbacks; ScriptCallbacks = null;
         if (callbacks?.Draw is not null && !IsDisposed && this is CanvasItem item) item.InvalidateCanvas();
+        if (callbacks is ControlScriptBinding && !IsDisposed && this is Control control) control.InvalidateScriptControlQueries();
     }
 
     internal void PrepareScriptCallbackDisposal()

@@ -51,7 +51,7 @@ public partial class Control
     private bool _mouseForcePassScrollEvents = true;
     private CursorShape _mouseDefaultCursorShape;
 
-    /// <summary>Receives a temporary control-local input event after <see cref="OnGUIInput"/>.</summary>
+    /// <summary>Receives a temporary control-local input event before Script and native input hooks.</summary>
     /// <remarks>The event is borrowed for the duration of the callback. Pointer input targets one hit control,
     /// then may bubble to parent controls; keyboard input targets only the focused control.</remarks>
     public event Action<InputEvent>? GUIInput { add => _publisherGUIInput.Add(value); remove => _publisherGUIInput.Remove(value); }
@@ -233,7 +233,7 @@ public partial class Control
     {
         ThrowIfDisposed();
         if (!atPosition.IsFinite()) throw new ArgumentException("Cursor position must be finite.", nameof(atPosition));
-        var shape = OnGetCursorShape(atPosition);
+        var shape = ControlCallbacks?.GetCursorShape is { } query ? query(atPosition) : OnGetCursorShape(atPosition);
         if ((uint)shape > (uint)CursorShape.Help) throw new ArgumentOutOfRangeException(nameof(shape), shape, "Unknown cursor shape.");
         return shape;
     }
@@ -243,15 +243,22 @@ public partial class Control
     /// <returns>The shape selected for the given position.</returns>
     protected virtual CursorShape OnGetCursorShape(Vector2 atPosition) => _mouseDefaultCursorShape;
 
-    /// <summary>Processes a temporary control-local event before <see cref="GUIInput"/> subscribers.</summary>
+    /// <summary>Processes a temporary control-local event after GUIInput subscribers and the installed Script hook.</summary>
     /// <param name="inputEvent">Borrowed event valid only during synchronous dispatch.</param>
     protected virtual void OnGUIInput(InputEvent inputEvent) { }
 
-    internal bool HitTest(Vector2 viewportPoint) => HasPoint(MakeCanvasPositionLocal(viewportPoint));
+    internal bool HitTest(Vector2 viewportPoint) => HasLocalPoint(MakeCanvasPositionLocal(viewportPoint));
+    internal bool HasLocalPoint(Vector2 point) => ControlCallbacks?.HasPoint is { } query ? query(point) : HasPoint(point);
     internal void DispatchGUIInput(InputEvent inputEvent)
     {
+        var tree = Tree; var viewport = GetViewport();
+        if (inputEvent.Device != InputEvent.DeviceIdInternal) BeginEventEmission(_publisherGUIInput.Handlers)?.Invoke(inputEvent);
+        if (Stopped()) return;
+        if (inputEvent.Device != InputEvent.DeviceIdInternal) ControlCallbacks?.GUIInput?.Invoke(inputEvent);
+        if (Stopped()) return;
         OnGUIInput(inputEvent);
-        BeginEventEmission(_publisherGUIInput.Handlers)?.Invoke(inputEvent);
+        bool Stopped() => IsDisposed || !ReferenceEquals(Tree, tree) || !ReferenceEquals(GetViewport(), viewport) || tree is not null &&
+            (viewport is null || inputEvent.Device != InputEvent.DeviceIdInternal && viewport.IsInputHandled());
     }
     internal void NotifyFocusEntered() => NotifyFocusChange(NotificationFocusEnter);
     internal void NotifyFocusExited() => NotifyFocusChange(NotificationFocusExit);

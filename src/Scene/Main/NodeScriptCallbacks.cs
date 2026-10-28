@@ -55,7 +55,7 @@ public class NodeScriptCallbacks<TNode> : ElectronObjectScriptCallbacks<TNode> w
     }
 }
 
-internal sealed class NodeScriptBinding : ObjectScriptBinding
+internal class NodeScriptBinding : ObjectScriptBinding
 {
     internal Func<string[]>? GetConfigurationWarnings, GetAccessibilityConfigurationWarnings;
     internal Func<RID>? GetFocusedAccessibilityElement;
