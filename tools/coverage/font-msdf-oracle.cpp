@@ -1,4 +1,5 @@
-// Independent public FreeType/msdfgen glyph oracle; it does not call the engine bridge.
+#include "font-memory.h"
+// Independent glyph rasterization through public FreeType and msdfgen APIs.
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
@@ -27,6 +28,7 @@ static int cubic(const FT_Vector *one, const FT_Vector *two, const FT_Vector *to
     c.contour->addEdge(new msdfgen::CubicSegment(c.at, point(one), point(two), p)); c.at = p; return 0;
 }
 int main(int argc, char **argv) {
+    prepare_font_memory();
     if (argc != 8) return 1;
     FT_Library library = nullptr; FT_Face face = nullptr;
     if (FT_Init_FreeType(&library) || FT_New_Face(library, argv[1], 0, &face)) return 2;

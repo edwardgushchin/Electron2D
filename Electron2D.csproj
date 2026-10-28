@@ -51,7 +51,6 @@
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform)" Version="$(Electron2DSDLVersion)" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Image" Version="3.4.6.12" PrivateAssets="all" />
     <PackageReference Include="SDL3-CS.$(Electron2DNativePlatform).Shadercross" Version="3.0.0.13" PrivateAssets="all" />
-    <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'Linux'" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="14.2.1.301" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'Linux'" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="14.2.1.301" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'Windows'" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="14.2.1.301" PrivateAssets="all" Condition="'$(Electron2DNativePlatform)' == 'MacOS'" />
@@ -100,6 +99,6 @@
   <Import Project="tools/ogv-native.targets" />
   <Import Project="tools/ktx-native.targets" />
   <Import Project="tools/tls-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
-  <Import Project="tools/font-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
+  <Import Project="tools/font-native.targets" />
   <Import Project="tools/native-package.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
 </Project>

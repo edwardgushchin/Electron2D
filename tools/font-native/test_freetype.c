@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern int e2d_ft_hb_memory(void *(*)(size_t), void *(*)(void *, size_t), void (*)(void *));
+
 struct MemoryState { long calls, fail_at, failures, live, decoders, decoder_failed; };
 static long recovered_contexts;
 static size_t decoder_size;
@@ -107,6 +109,7 @@ static long compressed_offset(const unsigned char *data, long size) {
 
 int main(int argc, char **argv) {
     if (argc != 2) return 1;
+    if (e2d_ft_hb_memory(malloc, realloc, free)) return 11;
     BrotliDecoderState *decoder = BrotliDecoderCreateInstance(probe_allocate, probe_release, NULL);
     if (!decoder || !decoder_size) return 10;
     BrotliDecoderDestroyInstance(decoder);

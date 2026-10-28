@@ -6,6 +6,11 @@ import sys
 
 root = Path(__file__).resolve().parents[2]
 library = ctypes.CDLL(str(Path(sys.argv[1]).resolve()))
+libc = ctypes.CDLL(None)
+library.e2d_ft_hb_memory.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+assert library.e2d_ft_hb_memory(ctypes.cast(libc.malloc, ctypes.c_void_p),
+                              ctypes.cast(libc.realloc, ctypes.c_void_p),
+                              ctypes.cast(libc.free, ctypes.c_void_p)) == 0
 library.FT_Init_FreeType.argtypes = [ctypes.POINTER(ctypes.c_void_p)]
 library.FT_New_Memory_Face.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long,
                                     ctypes.c_long, ctypes.POINTER(ctypes.c_void_p)]

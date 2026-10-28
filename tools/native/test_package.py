@@ -395,6 +395,29 @@ endif()
                 else:
                     self.assertEqual(test_consumer.read_manifests(feed), manifest)
 
+    def test_linux_freetype_rejects_global_codec_dependencies(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in package.LIBRARIES["Linux"]:
+                data = bytearray(64)
+                data[:6] = b"\x7fELF\x02\x01"
+                data[18:20] = (62).to_bytes(2, "little")
+                (root / name).write_bytes(data)
+            for dependency in ("libc.so.6", "libpng16.so.16", "libz.so.1", "libbrotlidec.so.1", "libharfbuzz.so.0"):
+                def dynamic(command, **kwargs):
+                    name = Path(command[-1]).name
+                    needed = "libSDL3.so.0" if name == "libFAudio.so.0" else dependency if "FreeType" in name else "libc.so.6"
+                    return f"(SONAME) [{name}]\n(NEEDED) [{needed}]\n"
+                with patch.object(package.subprocess, "check_output", side_effect=dynamic), \
+                        patch.object(package, "elf_exports", side_effect=lambda path: package.required_exports(path.name)), \
+                        patch.object(package, "check_private_text"), patch.object(package, "check_private_webrtc"), \
+                        patch.object(package, "check_private_webp"):
+                    if dependency == "libc.so.6":
+                        package.inspect("linux-x64", root)
+                    else:
+                        with self.assertRaisesRegex(ValueError, "statically linked"):
+                            package.inspect("linux-x64", root)
+
     def test_macos_freetype_rejects_global_codec_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:
             library = Path(directory) / "libElectron2DFreeType.dylib"

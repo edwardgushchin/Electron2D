@@ -19,7 +19,7 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
              "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
              "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
-LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so"),
+LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so", "libElectron2DFreeType.so"),
              "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DWebRTC.dylib", "libElectron2DMesh.dylib", "libElectron2DRender.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
                        "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"),
              "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DWebRTC.dll", "Electron2DMesh.dll", "Electron2DRender.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
@@ -45,7 +45,7 @@ def required_exports(name):
         return WEBP_EXPORTS
     if "FreeType" in name:
         return {"FT_Init_FreeType", "FT_New_Library", "FT_Add_Default_Modules", "FT_Set_Default_Properties",
-                "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph"}
+                "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph", "e2d_ft_hb_memory"}
     if "Crypto" in name or "crypto" in name:
         return {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"}
     if "SSL" in name or "ssl" in name:
@@ -216,6 +216,9 @@ def inspect(rid, directory):
             raise ValueError(f"Wrong SONAME: {path}")
         if re.search(r"\((RPATH|RUNPATH)\)", dynamic):
             raise ValueError(f"Native package must not retain a build-machine search path: {path}")
+        if rid.startswith("linux-") and "FreeType" in name and re.search(
+                r"\(NEEDED\).*\[(libharfbuzz|libpng|libbrotli|libz\.)", dynamic, re.IGNORECASE):
+            raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")
         if name == "libFAudio.so.0" and "[libSDL3.so.0]" not in dynamic:
             raise ValueError("FAudio must share the packaged SDL3 core")
         exports = elf_exports(path)

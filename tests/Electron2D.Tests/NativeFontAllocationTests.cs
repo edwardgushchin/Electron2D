@@ -10,6 +10,8 @@ internal static unsafe partial class NativeFontAllocationTests
     {
         using var source = typeof(Font).Assembly.GetManifestResourceStream("Electron2D.Fonts.OpenSans_SemiBold.woff2")!;
         var data = new byte[checked((int)source.Length)]; source.ReadExactly(data);
+        using (var warm = new NativeFontPrecision(data))
+            Check(warm.Rasterize(warm.GetGlyphIndex('A'), FontHinting.Normal, forceAutohinter: true).Width > 0, "Prepare process-lifetime automatic-hinting caches.");
         var baseline = NativeAllocation.Snapshot();
         using (var font = new NativeFontPrecision(data))
         {
@@ -17,6 +19,9 @@ internal static unsafe partial class NativeFontAllocationTests
             Check(NativeAllocation.Snapshot().Current > baseline.Current + data.Length, "Actual FreeType-owned storage is counted beside the source bytes.");
             var glyph = font.GetGlyphIndex('A'); Check(glyph != 0, "The normal module set retains character mapping."); font.SetSize(24);
             Check(font.Rasterize(glyph, FontHinting.Normal, 0, 0).Width > 0, "The supplied allocator retains real glyph rendering.");
+            var beforeAuto = NativeAllocation.Snapshot();
+            Check(font.Rasterize(glyph, FontHinting.Normal, forceAutohinter: true).Width > 0, "Accounted automatic hinting retains real glyph rendering.");
+            Check(NativeAllocation.Snapshot().Current > beforeAuto.Current, "Automatic hinting retains accounted native state with the face.");
             uint[] text = ['A', 'f', 'f', 'i'];
             for (var i = 0; i < 128; i++) _ = font.Shape(text, NativeTextDirection.LTR);
             AllocationWarmupCheck.Collect(); for (var i = 0; i < 128; i++) _ = font.Shape(text, NativeTextDirection.LTR);

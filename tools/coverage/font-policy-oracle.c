@@ -1,3 +1,4 @@
+#include "font-memory.h"
 /* Independent public FreeType raster oracle for native strike/autohinter policy. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,6 +6,7 @@
 #include FT_FREETYPE_H
 static void check(FT_Error error) { if (error) { fprintf(stderr, "FreeType error %d\n", error); exit(1); } }
 int main(int argc, char **argv) {
+    prepare_font_memory();
     if (argc != 5) return 2;
     FT_Library library; FT_Face face;
     check(FT_Init_FreeType(&library)); check(FT_New_Face(library, argv[1], 0, &face));

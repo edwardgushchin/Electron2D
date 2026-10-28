@@ -62,7 +62,7 @@ internal static partial class FontAntialiasingTests
                         face.SetSize(profile.Item1); var raster = face.Rasterize(glyph, profile.Item2, profile.Item3, profile.Item4, antialiasing: aa, layout: layout);
                         var start = new ProcessStartInfo(oracle) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
                         foreach (var arg in new[] { path, profile.Item1.ToString(), ((int)profile.Item2).ToString(), profile.Item3.ToString(), profile.Item4.ToString(), ((int)aa).ToString(), ((int)layout).ToString() }) start.ArgumentList.Add(arg);
-                        start.Environment["LD_PRELOAD"] = System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libfreetype.so");
+                        start.Environment["LD_PRELOAD"] = System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DFreeType.so");
                         using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEnd(); var error = process.StandardError.ReadToEnd(); process.WaitForExit();
                         Check(process.ExitCode == 0 && string.IsNullOrWhiteSpace(error), "Raster oracle executes: " + error);
                         var lines = output.Trim().Split('\n'); var header = lines[0].Split(' ');

@@ -40,13 +40,13 @@ internal static partial class Type1FontTests
     {
         var start = new ProcessStartInfo(executable) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
         foreach (var arg in arguments) start.ArgumentList.Add(arg);
-        start.Environment["LD_PRELOAD"] = System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libfreetype.so");
+        start.Environment["LD_PRELOAD"] = System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DFreeType.so");
         using var process = Process.Start(start)!; var output = process.StandardOutput.ReadToEndAsync(); var error = process.StandardError.ReadToEndAsync();
         if (!process.WaitForExit(10000)) { process.Kill(true); throw new TimeoutException("Type 1 native oracle."); }
         Check(process.ExitCode == 0 && string.IsNullOrWhiteSpace(error.GetAwaiter().GetResult()), "Native oracle: " + error.GetAwaiter().GetResult()); return output.GetAwaiter().GetResult().Trim().Split('\n');
     }
     private static void Match(NativeRasterGlyph actual, string[] result, bool msdf)
     {
-        var header = result[0].Split(' '); Check(header[0] == "2.13.3" && actual.Width == int.Parse(header[1]) && actual.Height == int.Parse(header[2]) && Math.Abs(actual.Left - double.Parse(header[3], CultureInfo.InvariantCulture)) < .0001 && Math.Abs(actual.Top - double.Parse(header[4], CultureInfo.InvariantCulture)) < .0001 && (msdf || actual.LCD == (header[5] == "1")) && actual.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(result[1])), "Exact independent Type 1 glyph pixels/bounds.");
+        var header = result[0].Split(' '); Check(header[0] == "2.14.3" && actual.Width == int.Parse(header[1]) && actual.Height == int.Parse(header[2]) && Math.Abs(actual.Left - double.Parse(header[3], CultureInfo.InvariantCulture)) < .0001 && Math.Abs(actual.Top - double.Parse(header[4], CultureInfo.InvariantCulture)) < .0001 && (msdf || actual.LCD == (header[5] == "1")) && actual.Pixels.AsSpan().SequenceEqual(Convert.FromHexString(result[1])), "Exact independent Type 1 glyph pixels/bounds.");
     }
 }

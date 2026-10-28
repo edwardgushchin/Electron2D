@@ -10,6 +10,7 @@ internal sealed unsafe partial class NativeFontPrecision
     private GCHandle _bitmapHandle;
     internal NativeFontPrecision(FontCache bitmap)
     {
+        PrepareHarfBuzzMemory();
         _bitmap = bitmap;
         try
         {

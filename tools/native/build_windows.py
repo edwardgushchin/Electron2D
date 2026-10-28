@@ -38,9 +38,10 @@ def build(rid, sdl, artifacts):
                         "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", *options], check=True)
         subprocess.run(["cmake", "--build", str(directory), "--target", target, "--parallel", "2"], check=True)
         if target == "freetype":
-            subprocess.run(["cmake", "--build", str(directory), "--target", "Electron2DFreeTypeCheck", "--parallel", "2"], check=True)
+            subprocess.run(["cmake", "--build", str(directory), "--target", "Electron2DFreeTypeCheck", "Electron2DHarfBuzzMemoryCheck", "--parallel", "2"], check=True)
             font = next((root / "src/Scene/Theme/Fonts").glob("*.woff2"))
             subprocess.run([str(directory / "Electron2DFreeTypeCheck.exe"), str(font)], check=True)
+            subprocess.run([str(directory / "Electron2DHarfBuzzMemoryCheck.exe"), str(font)], check=True)
         if target == "Electron2DOGV":
             subprocess.run(["cmake", "--build", str(directory), "--target", "Electron2DOGVCheck", "Electron2DVorbisResidueCheck", "--parallel", "2"], check=True)
             checks = directory / "checks"

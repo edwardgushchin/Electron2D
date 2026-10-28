@@ -163,6 +163,49 @@ set of checks qualifies all native heap domains. HarfBuzz/ICU/other codecs and c
 open. Physics declaration coverage remains **1365/1369 (99.71%)**, four Partial
 and 92 Excluded.
 
+### FreeType auto-hinter HarfBuzz allocation domain (2026-10-28)
+
+The pinned HarfBuzz target now uses its four compile-time allocator hooks. The
+private FreeType bridge registers the process-lifetime NativeAllocation
+allocate/resize/free callbacks before the first outline or bitmap font owner.
+Registration is published atomically, accepts an identical repeat and rejects a
+different owner. Before registration, allocation fails without a libc fallback.
+Zeroed requests check multiplication overflow; failed resize preserves its old
+payload, while zero-size resize releases it. Native out-of-memory returns null
+through the C ABI rather than throwing across it.
+
+Face-owned HarfBuzz storage drains with the FreeType face. Global HarfBuzz caches
+remain counted for the process lifetime; HB_NO_ATEXIT prevents a late native
+destructor from invoking managed callbacks after CLR teardown. These caches are
+not attributed to an individual face or subtracted on session retirement.
+
+Linux now builds and packages libElectron2DFreeType.so from the existing private
+recipe, like the other native producers, and removes the old MonoGame dependency.
+Source builds and explicit Electron2DFontNativeLibrary overrides preserve the
+runtime RID directory. Export audits require e2d_ft_hb_memory; older bundles reject
+before accepting a font owner. The independent desktop HarfBuzzSharp shaping
+allocator and coherent managed/native total remain open. This adds no public API
+or declaration coverage.
+
+The Linux native check exercises actual forced automatic hinting, all 853 observed
+HarfBuzz refusal positions, resize preservation, calloc overflow/zeroing and 512
+automatic-hinter face lifetimes on four threads. Each refusal drains its face
+storage. Prepared global caches retain 434 payload bytes; the peak survives face
+teardown.
+Linux CLR and strict full-trim NativeAOT pass production lifetime, failure and
+finalizer checks, forced automatic hinting and 128 warmed shaping calls at 0/0
+owner/all-thread managed bytes. One unchanged final cohort also passes the font
+family, 528 independent raster/MSDF comparisons and GPU/Compatibility windows,
+each with 64 active and 64 idle 0/0 intervals. An old uninstrumented private library
+fails before owner initialization. The actual Linux MSBuild font-source target
+passes its decoder and concurrent allocator checks without changing the qualified
+library. These are bounded font/allocator checks, not physical throughput or FPS.
+
+Qualified Linux x64 library SHA-256:
+`aeca770f6208f8ccb79ef48dce1265baf24aef92498934c5a1ba24faa90e91e1`.
+Receipts are under `bin/harfbuzz-allocation-accounting/2026-10-28/`; complete bundle,
+foreign-platform and full-goal qualification remain separate.
+
 ## ENet-owned allocation domain
 
 The private ENet bridge now installs the process-lifetime NativeAllocation callbacks

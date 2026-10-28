@@ -1,3 +1,4 @@
+#include "font-memory.h"
 /* Independent public FreeType raster oracle, using the packaged library through LD_PRELOAD. */
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,6 +8,7 @@
 #include FT_STROKER_H
 static void check(FT_Error error) { if (error) { fprintf(stderr, "FreeType error %d\n", error); exit(1); } }
 int main(int argc, char **argv) {
+    prepare_font_memory();
     if (argc != 8) return 2;
     int size = atoi(argv[2]), hint = atoi(argv[3]), phase = atoi(argv[4]), radius = atoi(argv[5]), aa = atoi(argv[6]), layout = atoi(argv[7]);
     FT_Library library; FT_Face face; FT_Glyph glyph = NULL; FT_Stroker stroker = NULL;

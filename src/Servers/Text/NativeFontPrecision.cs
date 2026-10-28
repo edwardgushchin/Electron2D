@@ -50,6 +50,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if (immutableData.Length == 0) throw new ArgumentException("Font data is empty.", nameof(immutableData));
         try
         {
+            PrepareHarfBuzzMemory();
             _ftMemory = (FTMemory*)NativeAllocation.Alloc((nuint)sizeof(FTMemory));
             *_ftMemory = FTMemory.Create();
             CheckFT(FTNewLibrary(_ftMemory, out _library));

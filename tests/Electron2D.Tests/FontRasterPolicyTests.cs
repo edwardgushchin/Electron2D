@@ -123,7 +123,7 @@ internal static partial class FontRasterPolicyTests
         {
             var start = new ProcessStartInfo(oracle) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
             start.ArgumentList.Add(path); start.ArgumentList.Add(size.ToString()); start.ArgumentList.Add(font.DisableEmbeddedBitmaps ? "1" : "0"); start.ArgumentList.Add(force ? "1" : "0");
-            start.Environment["LD_PRELOAD"] = System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libfreetype.so");
+            start.Environment["LD_PRELOAD"] = System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DFreeType.so");
             using var child = Process.Start(start)!; var output = child.StandardOutput.ReadToEnd(); var error = child.StandardError.ReadToEnd(); child.WaitForExit(); Check(child.ExitCode == 0 && string.IsNullOrWhiteSpace(error), "Independent FreeType oracle: " + error);
             var lines = output.Trim().Split('\n'); var header = lines[0].Split(' '); var glyph = Glyph(font, size); Check(glyph.Size == new Vector2(int.Parse(header[0]), int.Parse(header[1])) && Alpha(glyph).SequenceEqual(Convert.FromHexString(lines[1])), "Native pixels match independent public FreeType oracle.");
         }

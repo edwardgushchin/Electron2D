@@ -15,7 +15,6 @@ PACKAGES = {
     "SDL3-CS.Linux/3.4.18",
     "SDL3-CS.Linux.Image/3.4.6.12",
     "SDL3-CS.Linux.Shadercross/3.0.0.13",
-    "MonoGame.Library.FreeType/2.13.2.5",
     "HarfBuzzSharp.NativeAssets.Linux/14.2.1.301",
 }
 NATIVE_GROUPS = {
@@ -24,7 +23,7 @@ NATIVE_GROUPS = {
                "libhostpolicy.so", "libmscordaccore.so", "libmscordbi.so"),
     "SDL": ("libSDL3.so*", "libElectron2DRender.so"),
     "SDL_image": ("libSDL3_image.so*",),
-    "FreeType": ("libfreetype.so",),
+    "FreeType": ("libElectron2DFreeType.so",),
     "HarfBuzz": ("libHarfBuzzSharp.so",),
     "FAudio": ("libFAudio.so.0",),
     "ENet": ("libElectron2DENet.so",),

@@ -6,6 +6,39 @@ namespace Electron2D;
 internal sealed unsafe partial class NativeFontPrecision
 {
     private FTMemory* _ftMemory;
+    private static readonly object MemoryGate = new();
+    private static bool _memoryReady;
+
+    private static void PrepareHarfBuzzMemory()
+    {
+        lock (MemoryGate)
+        {
+            if (_memoryReady) return;
+            try
+            {
+                if (HarfBuzzMemory(&AllocateHarfBuzzMemory, &ReallocateHarfBuzzMemory, &FreeHarfBuzzMemory) != 0)
+                    throw new InvalidOperationException("The native font allocator has already been assigned to another owner.");
+            }
+            catch (EntryPointNotFoundException error)
+            { throw new PlatformNotSupportedException("Font allocation accounting requires the matching source-built native bundle.", error); }
+            _memoryReady = true;
+        }
+    }
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void* AllocateHarfBuzzMemory(nuint size)
+    {
+        try { return NativeAllocation.Alloc(size); } catch (OutOfMemoryException) { return null; }
+    }
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void* ReallocateHarfBuzzMemory(void* value, nuint size)
+    {
+        try { return NativeAllocation.Realloc(value, size); } catch (OutOfMemoryException) { return null; }
+    }
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static void FreeHarfBuzzMemory(void* value) => NativeAllocation.Free(value);
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "e2d_ft_hb_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int HarfBuzzMemory(delegate* unmanaged[Cdecl]<nuint, void*> allocate,
+        delegate* unmanaged[Cdecl]<void*, nuint, void*> resize, delegate* unmanaged[Cdecl]<void*, void> release);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct FTMemory

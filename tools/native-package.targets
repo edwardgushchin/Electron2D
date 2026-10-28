@@ -10,7 +10,7 @@
     <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Private native builds require a supported Linux or MacOS profile." />
     <CallTarget Targets="BuildElectron2DTextNative;BuildElectron2DAudioNative;BuildElectron2DENetNative;BuildElectron2DTLSNative;BuildElectron2DWebRTCNative;BuildElectron2DMeshNative;BuildElectron2DRenderNative;BuildElectron2DWebPNative;BuildElectron2DKTXNative;BuildElectron2DOGVNative;CheckElectron2DOGVNative;BuildElectron2DTLSNative;BuildElectron2DFontNative" />
     <Copy SourceFiles="$(_Electron2DTextNativeLibrary);$(_Electron2DAudioLibrary);$(_Electron2DENetLibrary);$(_Electron2DWebRTCLibrary);$(_Electron2DMeshLibrary);$(_Electron2DRenderLibrary);$(_Electron2DWebPLibrary);$(_Electron2DOGVLibrary);$(_Electron2DKTXLibrary);@(_Electron2DTLSNative)" DestinationFolder="$(NativeArtifacts)/runtimes/$(_Electron2DPrivateNativeRID)/native" />
-    <Copy SourceFiles="$(_Electron2DFontLibrary)" DestinationFolder="$(NativeArtifacts)/runtimes/$(_Electron2DPrivateNativeRID)/native" Condition="'$(Electron2DNativePlatform)' == 'MacOS'" />
+    <Copy SourceFiles="$(_Electron2DFontLibrary)" DestinationFolder="$(NativeArtifacts)/runtimes/$(_Electron2DPrivateNativeRID)/native" />
     <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)native/package.py&quot; stage $(_Electron2DPrivateNativeRID) &quot;$(NativeArtifacts)&quot;" />
   </Target>
 </Project>

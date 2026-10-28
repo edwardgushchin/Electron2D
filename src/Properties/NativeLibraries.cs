@@ -116,7 +116,7 @@ internal static partial class NativeLibraries
                 };
             }
             if (!OperatingSystem.IsLinux()) return 0;
-            if (name == "freetype") return LoadRuntime("libfreetype.so", assembly, path);
+            if (name == "freetype") return LoadRuntime("libElectron2DFreeType.so", assembly, path);
             if (name == "Electron2DCrypto") return NativeLibrary.Load("libcrypto.so.3", assembly, path);
             if (name == "Electron2DSSL") return NativeLibrary.Load("libssl.so.3", assembly, path);
             if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.so", assembly, path);
@@ -147,7 +147,7 @@ internal static partial class NativeLibraries
             "runtimes", RuntimeRID, "native", name);
 #if !IOS && !TVOS && !ANDROID && !ELECTRON2D_BROWSER_NATIVE
         // Keep packaged font implementations isolated from Fontconfig dependency symbols on Linux.
-        if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() && name is "libfreetype.so" or "libHarfBuzzSharp.so")
+        if (OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() && name is "libElectron2DFreeType.so" or "libHarfBuzzSharp.so")
         {
             var handle = DLOpen(File.Exists(file) ? file : name, 2 | 8); // NOW, LOCAL and DEEPBIND.
             if (handle == 0) throw new DllNotFoundException(Marshal.PtrToStringUTF8(DLError()) ?? "Font library could not be loaded.");

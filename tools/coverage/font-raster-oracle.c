@@ -1,3 +1,4 @@
+#include "font-memory.h"
 /* Independent bitmap oracle for FontRenderingTests. Uses only public FreeType APIs.
  * Build: cc font-raster-oracle.c $(pkg-config --cflags --libs freetype2) -o font-raster-oracle
  * Run with LD_PRELOAD pointing at the exact packaged MonoGame.Library.FreeType native
@@ -19,6 +20,7 @@ static void check(FT_Error error) {
 }
 
 int main(int argc, char **argv) {
+    prepare_font_memory();
     if (argc != 5) { fputs("Expected FONT SIZE PHASE OUTLINE\n", stderr); return 2; }
     FT_Library library; FT_Face face; FT_Glyph glyph = NULL; FT_Stroker stroker = NULL;
     check(FT_Init_FreeType(&library));

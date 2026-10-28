@@ -7,7 +7,7 @@ the correction; its public test now covers automatic, hyphenated, underscored an
 script-qualified languages. Existing prefix/tier rules and glyph output remain.
 The corrected local `en-US` bracket retains zero allocations. Cross-platform runtime and rendered checks are separate from this local bracket.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 
 FontTests drains the existing calibrated collection/finalization warmup after its
 sixteen layout/recording warmups and before measuring the same sixty-four rebuilds.
@@ -49,7 +49,7 @@ Current GPU draws component LCD coverage; SDL_Renderer rejects an actual LCD gly
 
 ## Ownership, errors and warm reuse
 
-[FreeType allocator ownership](../coverage/performance-producers.md#freetype-owned-allocation-domain) now includes its own face/driver/library allocations in the direct native payload ledger. Each library retains its caller-owned callback record through complete teardown, including failed preparation and finalization. Default modules and environment properties retain the ordinary initialization policy; independent HarfBuzz/Brotli/ICU allocation domains remain open.
+[FreeType allocator ownership](../coverage/performance-producers.md#freetype-owned-allocation-domain) includes face/driver/library and WOFF2 decoder allocations in the direct native payload ledger. Each library retains its caller-owned callback record through complete teardown, including failed preparation and finalization. The [auto-hinter's HarfBuzz allocator](../coverage/performance-producers.md#freetype-auto-hinter-harfbuzz-allocation-domain-2026-10-28) now joins that ledger through process-lifetime callbacks. Linux uses the private FreeType producer and requires its matching bundle; Electron2DFontNativeLibrary selects a qualified source-built library for local builds. Default modules and environment properties retain the ordinary initialization policy; independent desktop HarfBuzzSharp, ICU and coherent managed/native memory totals remain open.
 
 The [pinned producer qualification](../coverage/performance-producers.md#source-revision-qualification-2026-10-28) verifies FreeType 2.14.3 and its exact dependency revisions. This upstream source already rejects a failed bytecode-context allocation; native checks verify a successful retry and complete allocator teardown. Earlier 2.13.3 override checks are retained as legacy evidence. Incorrect or changed source overrides now fail configuration; previously cached packages need a matching native build.
 

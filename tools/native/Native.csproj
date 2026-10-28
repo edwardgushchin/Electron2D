@@ -29,7 +29,6 @@
     <PackageReference Include="SDL3-CS.$(NativePackagePlatform)" Version="[$(Electron2DSDLVersion)]" Condition="'$(NativePackagePlatform)' != 'Web'" />
     <PackageReference Include="SDL3-CS.$(NativePackagePlatform).Image" Version="[3.4.6.12]" Condition="'$(NativePackagePlatform)' != 'Web'" />
     <PackageReference Include="SDL3-CS.$(NativePackagePlatform).Shadercross" Version="[3.0.0.13]" Condition="'$(NativePackagePlatform)' != 'Web'" />
-    <PackageReference Include="MonoGame.Library.FreeType" Version="[2.13.2.5]" Condition="'$(NativePackagePlatform)' == 'Linux'" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="[14.2.1.301]" Condition="'$(NativePackagePlatform)' == 'Linux'" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.Win32" Version="[14.2.1.301]" Condition="'$(NativePackagePlatform)' == 'Windows'" />
     <PackageReference Include="HarfBuzzSharp.NativeAssets.macOS" Version="[14.2.1.301]" Condition="'$(NativePackagePlatform)' == 'MacOS'" />

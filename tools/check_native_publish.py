@@ -76,7 +76,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     elif rid.startswith("osx-"):
         platform, host, names = "MacOS", app_name, ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib")
     elif rid.startswith("linux-"):
-        platform, host, names = "Linux", app_name, ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libfreetype.so", "libHarfBuzzSharp.so")
+        platform, host, names = "Linux", app_name, ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so")
     else:
         raise ValueError(f"No self-contained desktop host for {rid}")
 
@@ -89,8 +89,6 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     }
     actual = {name for name in packages if name.startswith("SDL3-CS.")}
     text_platform = {"Windows": "Win32", "MacOS": "macOS", "Linux": "Linux"}[platform]
-    if platform == "Linux":
-        assert "MonoGame.Library.FreeType/2.13.2.5" in packages, "Missing pinned native FreeType package"
     assert f"HarfBuzzSharp.NativeAssets.{text_platform}/14.2.1.301" in packages, "Missing pinned native HarfBuzz package"
     assert actual == expected, f"Wrong SDL packages: {actual}"
     assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
