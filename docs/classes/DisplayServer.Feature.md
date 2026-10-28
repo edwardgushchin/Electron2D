@@ -44,7 +44,7 @@ The current host advertises `Clipboard` while open; `Mouse` when SDL reports a m
 | [`NativeHelp = 23`](#value-nativehelp) | Native help-search integration. |
 | [`NativeDialogInput = 24`](#value-nativedialoginput) | Native text-input dialogs. |
 | [`NativeDialogFile = 25`](#value-nativedialogfile) | Native file-selection dialogs. |
-| [`NativeDialogFileExtra = 26`](#value-nativedialogfileextra) | Native file dialogs with additional options and virtual paths. |
+| [`NativeDialogFileExtra = 26`](#value-nativedialogfileextra) | Native file dialogs with additional checkbox and choice controls. |
 | [`WindowDrag = 27`](#value-windowdrag) | Interactive native window dragging and resizing. |
 | [`ScreenExcludeFromCapture = 28`](#value-screenexcludefromcapture) | Window exclusion from ordinary screen capture. |
 | [`WindowEmbedding = 29`](#value-windowembedding) | Embedding of external native windows. |
@@ -181,7 +181,7 @@ Native file-selection dialogs.
 <a id="value-nativedialogfileextra"></a>
 ### `NativeDialogFileExtra = 26`
 
-Native file dialogs with additional options and virtual paths.
+Native file dialogs with additional checkbox and choice controls.
 
 <a id="value-windowdrag"></a>
 ### `WindowDrag = 27`

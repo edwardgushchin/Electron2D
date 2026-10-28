@@ -1,10 +1,10 @@
 # FileDialogOptionValue
 
-Last updated: 2026-10-06
+Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public struct Electron2D.FileDialogOptionValue`. **Inherits:** `System.ValueType`. **Inherited By:** —. **Source:** [source](../../src/Scene/GUI/FileDialogOptionValue.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
-Immutable result of a configured checkbox or choice. IsCheckbox distinguishes the case; SelectedIndex retains the checkbox 0/1 or selected choice index. Checked throws InvalidOperationException for a choice. The dialog returns an owned read-only dictionary snapshot, never object/Variant payloads.
+Immutable result of a configured checkbox or choice. IsCheckbox distinguishes the case; SelectedIndex retains the checkbox 0/1 or selected choice index. Checked throws InvalidOperationException for a choice. FileDialog and DisplayServer.FileDialogWithOptionsShow return owned read-only dictionary snapshots. See [native options](../components/native-file-portal.md#native-checkbox-and-choice-controls) for request defaults, callback publication, cancellation and validation.
 
 ## Properties
 

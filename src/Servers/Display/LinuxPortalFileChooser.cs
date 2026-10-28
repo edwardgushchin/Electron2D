@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using static Electron2D.LinuxPortalDBus;
@@ -15,10 +17,14 @@ internal sealed class LinuxPortalFileChooser : IDisposable
     private bool _completed;
     private readonly bool _multiple;
     private readonly Filter[] _filters;
+    private readonly FileDialogOption[] _options;
+    private static readonly IReadOnlyDictionary<string, FileDialogOptionValue> EmptyOptions = new ReadOnlyDictionary<string, FileDialogOptionValue>(new Dictionary<string, FileDialogOptionValue>());
+    internal IReadOnlyDictionary<string, FileDialogOptionValue> SelectedOptions { get; private set; } = EmptyOptions;
 
-    internal LinuxPortalFileChooser(string parent, string title, string directory, string filename, FileDialogMode mode, IReadOnlyList<string> filters)
+    internal LinuxPortalFileChooser(string parent, string title, string directory, string filename, FileDialogMode mode, IReadOnlyList<string> filters, FileDialogOption[] options)
     {
         OS.ValidateNativeMessage(title, nameof(title)); OS.ValidateNativeMessage(directory, nameof(directory)); OS.ValidateNativeMessage(filename, nameof(filename));
+        _options = options;
         _multiple = mode == FileDialogMode.OpenFiles;
         _filters = mode == FileDialogMode.OpenDirectory ? [] : ParseFilters(filters);
         try
@@ -61,6 +67,7 @@ internal sealed class LinuxPortalFileChooser : IDisposable
                 foreach (var filter in _filters) WriteFilter(ref list, filter);
                 Close(ref variant, ref list); Close(ref entry, ref variant); Close(ref options, ref entry);
             }
+            if (_options.Length != 0) WriteChoices(ref options);
             Close(ref args, ref options);
             var reply = SendWithReplyAndBlock(_connection, message, 5000, 0);
             if (reply == 0) throw new InvalidOperationException("The FileChooser portal could not launch the request.");
@@ -94,6 +101,48 @@ internal sealed class LinuxPortalFileChooser : IDisposable
         foreach (var rule in filter.Rules)
         { var pair = Open(ref rules, StructType, null); AppendUInt32(ref pair, rule.Kind); AppendString(ref pair, rule.Pattern); Close(ref rules, ref pair); }
         Close(ref item, ref rules); Close(ref list, ref item);
+    }
+
+    private void WriteChoices(ref MessageIter options)
+    {
+        var entry = Option(ref options, "choices", "a(ssa(ss)s)", out var variant); var list = Open(ref variant, ArrayType, "(ssa(ss)s)");
+        for (var i = 0; i < _options.Length; i++)
+        {
+            var option = _options[i]; var item = Open(ref list, StructType, null);
+            AppendString(ref item, "option_" + i.ToString(CultureInfo.InvariantCulture)); AppendString(ref item, option.Name);
+            var values = Open(ref item, ArrayType, "(ss)");
+            for (var j = 0; j < option.Values.Length; j++)
+            { var pair = Open(ref values, StructType, null); AppendString(ref pair, j.ToString(CultureInfo.InvariantCulture)); AppendString(ref pair, option.Values[j]); Close(ref values, ref pair); }
+            Close(ref item, ref values);
+            AppendString(ref item, option.Values.Length == 0 ? option.DefaultValueIndex == 0 ? "false" : "true" : option.DefaultValueIndex.ToString(CultureInfo.InvariantCulture));
+            Close(ref list, ref item);
+        }
+        Close(ref variant, ref list); Close(ref entry, ref variant); Close(ref options, ref entry);
+    }
+
+    private IReadOnlyDictionary<string, FileDialogOptionValue> ReadChoices(ref MessageIter value)
+    {
+        Require(ref value, ArrayType); Recurse(ref value, out var entries); var selected = new FileDialogOptionValue?[_options.Length];
+        while (GetArgType(ref entries) != 0)
+        {
+            Require(ref entries, StructType); Recurse(ref entries, out var pair); var id = ReadString(ref pair); Next(ref pair); var text = ReadString(ref pair);
+            if (Next(ref pair) != 0) throw new InvalidOperationException("The portal returned an invalid option pair.");
+            if (id.StartsWith("option_", StringComparison.Ordinal) && int.TryParse(id.AsSpan(7), NumberStyles.None, CultureInfo.InvariantCulture, out var index) &&
+                (uint)index < _options.Length && id == "option_" + index.ToString(CultureInfo.InvariantCulture))
+            {
+                if (selected[index].HasValue) throw new InvalidOperationException("The portal returned a duplicate option.");
+                var checkbox = _options[index].Values.Length == 0;
+                int choice;
+                if (checkbox) choice = text == "true" ? 1 : text == "false" ? 0 : throw new InvalidOperationException("The portal returned an invalid checkbox value.");
+                else if (!int.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out choice) || (uint)choice >= _options[index].Values.Length || text != choice.ToString(CultureInfo.InvariantCulture))
+                    throw new InvalidOperationException("The portal returned an invalid choice index.");
+                selected[index] = new(checkbox, choice);
+            }
+            Next(ref entries);
+        }
+        var result = new Dictionary<string, FileDialogOptionValue>(StringComparer.Ordinal);
+        for (var i = 0; i < _options.Length; i++) result[_options[i].Name] = selected[i] ?? throw new InvalidOperationException("The portal omitted an option result.");
+        return new ReadOnlyDictionary<string, FileDialogOptionValue>(result);
     }
 
     private static Filter[] ParseFilters(IReadOnlyList<string> filters)
@@ -152,7 +201,7 @@ internal sealed class LinuxPortalFileChooser : IDisposable
             if (!connected) throw new InvalidOperationException("The FileChooser session bus disconnected.");
             return false;
         }
-        catch (Exception failure) { paths = []; filter = -1; error = failure.Message; _completed = true; return true; }
+        catch (Exception failure) { SelectedOptions = EmptyOptions; paths = []; filter = -1; error = failure.Message; _completed = true; return true; }
     }
 
     private void ReadResponse(nint message, out string[] paths, out int filter)
@@ -163,6 +212,7 @@ internal sealed class LinuxPortalFileChooser : IDisposable
         if (response != 0) throw new InvalidOperationException("The FileChooser portal ended the request unsuccessfully.");
         Next(ref args); Require(ref args, ArrayType); Recurse(ref args, out var entries);
         var foundPaths = false; var foundFilter = false;
+        IReadOnlyDictionary<string, FileDialogOptionValue>? selections = null;
         while (GetArgType(ref entries) != 0)
         {
             Require(ref entries, DictEntryType); Recurse(ref entries, out var entry); var key = ReadString(ref entry); Next(ref entry); Require(ref entry, VariantType); Recurse(ref entry, out var value);
@@ -185,9 +235,15 @@ internal sealed class LinuxPortalFileChooser : IDisposable
                 var selected = ReadFilter(ref value);
                 for (var i = 0; i < _filters.Length; i++) if (selected.Label == _filters[i].Label && selected.Rules.AsSpan().SequenceEqual(_filters[i].Rules)) { filter = i; break; }
             }
+            else if (key == "choices" && _options.Length != 0)
+            {
+                if (selections != null) throw new InvalidOperationException("The portal returned duplicate option results.");
+                selections = ReadChoices(ref value);
+            }
             Next(ref entries);
         }
         if (!foundPaths || paths.Length == 0 || !_multiple && paths.Length != 1) throw new InvalidOperationException("The successful portal response contains an invalid file count.");
+        SelectedOptions = selections ?? (_options.Length == 0 ? EmptyOptions : throw new InvalidOperationException("The portal omitted option results."));
     }
     private static bool IsFileURI(string text)
     {

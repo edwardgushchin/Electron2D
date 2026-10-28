@@ -127,7 +127,7 @@ public partial class FileDialog : ConfirmationDialog
     /// <value>The current directory with a trailing separator when filename is empty.</value>
     public string CurrentPath { get { CheckFileDialog(); return Join(CurrentDir, CurrentFile); } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var slash = value.Replace('\\', '/').LastIndexOf('/'); if (slash >= 0) CurrentDir = value[..(slash + 1)]; CurrentFile = slash < 0 ? value : value[(slash + 1)..]; } }
     /// <summary>Gets or sets a directory navigation boundary within the selected scope.</summary>
-    /// <value>Empty initially. Requests with this boundary use the custom browser until native-file-extra is available.</value>
+    /// <value>Empty initially. Requests with this boundary use the custom browser because the current native portal cannot confine navigation.</value>
     public string RootSubfolder { get { CheckFileDialog(); return _rootSubfolderText; } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var old = _root; _root = ""; try { if (value.Length != 0) { ChangeDirectory(value, false); _root = CurrentDir; } } catch { _root = old; throw; } _rootSubfolderText = value; _history.Clear(); _historyIndex = -1; PushHistory(); Invalidate(); } }
     /// <summary>Gets or sets whether hidden entries are listed.</summary>
     /// <value>False initially.</value>
@@ -139,7 +139,7 @@ public partial class FileDialog : ConfirmationDialog
     /// <value>An empty ordered list initially; All Files remains available.</value>
     public string[] Filters { get { CheckFileDialog(); return (string[])_filters.Clone(); } set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); var copy = value.ToArray(); foreach (var filter in copy) ValidateFilter(filter); _filters = copy; RebuildFilters(); Invalidate(); } }
     /// <summary>Gets or sets preference for a supported OS-native chooser.</summary>
-    /// <value>False initially. Scoped/options/root-boundary requests fall back to this browser when native-file-extra is unavailable.</value>
+    /// <value>False initially. Scoped/root-boundary requests retain this browser; options use native controls only when supported and their captions are representable.</value>
     public bool UseNativeDialog { get { CheckFileDialog(); return _native; } set { EnsureMutable(); _native = value; if (Visible && CanUseNative()) { Hide(); PresentNative(); } } }
     /// <summary>Returns the borrowed main content column for caller-authored controls.</summary>
     /// <returns>The stable owned VBoxContainer.</returns>
@@ -159,7 +159,7 @@ public partial class FileDialog : ConfirmationDialog
     /// <summary>Marks listing and appearance for refresh; visible custom dialogs refresh immediately.</summary>
     public void Invalidate() { EnsureMutable(); _dirty = true; if (Visible && !_nativePending) RefreshBrowser(); }
     /// <summary>Shows this dialog centered using its configured size, selecting the editable filename.</summary>
-    public void PopupFileDialog() { EnsureMutable(); if (CanUseNative()) PresentNative(); else { PopupCentered(); _filenameEdit.SelectAll(); if (_mode == FileDialogMode.SaveFile) _filenameEdit.GrabFocus(); else _files.GrabFocus(); } }
+    public void PopupFileDialog() { EnsureMutable(); EnsureNativeIdle(); if (CanUseNative()) PresentNative(); else { PopupCentered(); _filenameEdit.SelectAll(); if (_mode == FileDialogMode.SaveFile) _filenameEdit.GrabFocus(); else _files.GrabFocus(); } }
     private void CheckFileDialog() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private static string Join(string directory, string name) => directory.EndsWith("://", StringComparison.Ordinal) ? directory + name : directory.TrimEnd('/', '\\') + "/" + name;
     private static string ParentPath(string path) { var slash = path.Replace('\\', '/').LastIndexOf('/'); if (slash < 0) return "."; if (slash == 0) return "/"; if (path[..slash].EndsWith(":/", StringComparison.Ordinal)) return path[..(slash + 1)]; return path[..slash]; }

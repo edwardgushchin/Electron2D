@@ -70,6 +70,26 @@ public sealed partial class DisplayServer
         Action<bool, IReadOnlyList<string>, int> callback,
         int parentWindowId = MainWindowId) => RequireService().FileDialogShowCore(title, currentDirectory, filename, showHidden, mode, filters, callback, parentWindowId);
 
+    /// <summary>Opens a native file chooser with typed checkbox and choice controls.</summary>
+    /// <param name="title">Requested native title.</param>
+    /// <param name="currentDirectory">Initial filesystem directory, or empty for the platform default.</param>
+    /// <param name="root">Must be empty: the current portal cannot constrain selection to a root.</param>
+    /// <param name="filename">Initial save filename, or empty.</param>
+    /// <param name="showHidden">Requested hidden-file policy; the current portal ignores this preference.</param>
+    /// <param name="mode">A native file/directory selection mode; OpenAny is unsupported.</param>
+    /// <param name="filters">Copied extension/MIME filter descriptions, as in FileDialogShow.</param>
+    /// <param name="options">Copied immutable option descriptions; at most 65536.</param>
+    /// <param name="callback">Owner-pump result: success, copied paths, filter index and read-only selections keyed by option name. Duplicate names use the last configured option. Cancellation/failure returns empty paths and selections, and filter -1.</param>
+    /// <param name="parentWindowId">Active native parent window; zero selects the main window.</param>
+    /// <remarks>Requires NativeDialogFileExtra. Linux desktop FileChooser portals version one and later support options; directories require version three. Initial defaults are clamped by FileDialogOption. Results are validated before publication. Native failures complete the callback before aggregate event-pump error reporting. Parent/display disposal is rejected until completion has been pumped. See FileDialogShow for the shared native lifecycle.</remarks>
+    /// <exception cref="ArgumentNullException">A required argument or option is null.</exception>
+    /// <exception cref="ArgumentException">A filter or native string is malformed.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The option count, mode or window identity is invalid.</exception>
+    /// <exception cref="NotSupportedException">The backend, mode or root restriction is unsupported.</exception>
+    /// <exception cref="InvalidOperationException">The service is unavailable, the call is off the owner thread, or native launch fails.</exception>
+    /// <exception cref="ObjectDisposedException">The display is disposing or disposed.</exception>
+    public static void FileDialogWithOptionsShow(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId = MainWindowId) => RequireService().FileDialogWithOptionsShowCore(title, currentDirectory, root, filename, showHidden, mode, filters, options, callback, parentWindowId);
+
     /// <summary>Occurs when the operating system requests that the application quit.</summary>
     /// <remarks>Delivery is synchronous during <see cref="ProcessEvents"/>. The server does not close automatically.</remarks>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>

@@ -73,6 +73,15 @@ public sealed partial class DisplayServer
         }
     }
 
+    internal void FileDialogWithOptionsShowCore(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId)
+    {
+        EnsureOwner(); ArgumentNullException.ThrowIfNull(root); ArgumentNullException.ThrowIfNull(options); ArgumentNullException.ThrowIfNull(callback);
+        if (root.Length != 0) throw new NotSupportedException("The native file chooser cannot constrain selection to a root directory.");
+        if (options.Count > 65536) throw new ArgumentOutOfRangeException(nameof(options));
+        var copy = options.ToArray(); foreach (var option in copy) ArgumentNullException.ThrowIfNull(option);
+        FileDialogShowCore(title, currentDirectory, filename, showHidden, mode, filters, null, parentWindowId, copy, callback);
+    }
+
     internal void FileDialogShowCore(
     string title,
     string currentDirectory,
@@ -80,15 +89,17 @@ public sealed partial class DisplayServer
     bool showHidden,
     FileDialogMode mode,
     IReadOnlyList<string> filters,
-    Action<bool, IReadOnlyList<string>, int> callback,
-    int parentWindowId = MainWindowId)
+    Action<bool, IReadOnlyList<string>, int>? callback,
+    int parentWindowId = MainWindowId,
+    FileDialogOption[]? options = null,
+    Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>>? optionsCallback = null)
     {
         EnsureOwner();
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(currentDirectory);
         ArgumentNullException.ThrowIfNull(filename);
         ArgumentNullException.ThrowIfNull(filters);
-        ArgumentNullException.ThrowIfNull(callback);
+        if (optionsCallback == null) ArgumentNullException.ThrowIfNull(callback);
         var window = GetWindow(parentWindowId);
         var nativeMode = mode switch
         {
@@ -101,12 +112,13 @@ public sealed partial class DisplayServer
 
         if (UsesPortalFileChooser)
         {
-            ShowPortalFileDialog(window, parentWindowId, title, currentDirectory, filename, mode, filters, callback);
+            ShowPortalFileDialog(window, parentWindowId, title, currentDirectory, filename, mode, filters, callback, options, optionsCallback);
             return;
         }
+        if (options != null) throw new NotSupportedException("This native file chooser cannot display additional options.");
 
         var nativeFilters = nativeMode == SDL.FileDialogType.OpenFolder ? [] : CreateDialogFilters(filters);
-        var request = new DialogRequest(this, ResolveWindow(parentWindowId), callback, nativeFilters);
+        var request = new DialogRequest(this, ResolveWindow(parentWindowId), callback!, nativeFilters);
         var properties = SDL.CreateProperties();
         if (properties == 0)
         {

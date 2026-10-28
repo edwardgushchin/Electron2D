@@ -35,14 +35,14 @@ internal static class PortalFileChooserTests
     private static void RunCore(string profile, nint sessionConnection)
     {
         var folder = Environment.GetEnvironmentVariable("ELECTRON2D_PORTAL_FOLDER") ?? throw new InvalidOperationException("A fixture folder is required.");
-        if (profile == "live") { Live(folder); return; }
+        if (profile is "live" or "live-options") { Live(folder, profile == "live-options"); return; }
         if (profile is "gpu" or "compatibility") { Scene(profile, folder); return; }
         using var display = DisplayServer.Open("Portal contract", new(320, 240), hidden: true);
         CheckLiveBusPolicy();
         var version = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_PORTAL_VERSION") ?? "4");
         Check(DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFile) == (version > 0), "FileChooser availability reflects its native version.");
         Check(DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFileMime) == (version > 0), "MIME capability reflects the executing portal.");
-        Check(!DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFileExtra), "Native extra-option capability remains separate.");
+        Check(DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFileExtra) == (version > 0), "Native extra-option capability reflects the executing portal.");
         if (version == 0)
         { Reject<NotSupportedException>(() => DisplayServer.FileDialogShow("absent", folder, "", false, FileDialogMode.OpenFile, [], (_, _, _) => throw new Exception("No callback for unlaunched requests."))); Console.WriteLine("Portal unavailable passed."); return; }
         if (version == 2)
@@ -83,6 +83,7 @@ internal static class PortalFileChooserTests
             Check(called == 1 && failures == (failing ? 1 : 0), name + ": one terminal result and expected failure.");
             Console.WriteLine("Portal " + name + " passed.");
         }
+        Options(folder, filters, display);
         var completed = 0;
         for (var i = 0; i < 2; i++)
         {
@@ -93,6 +94,44 @@ internal static class PortalFileChooserTests
         DisplayServer.FileDialogShow("disconnect", folder, "", false, FileDialogMode.OpenFile, filters, (ok, paths, _) => { Check(!ok && paths.Count == 0, "Portal death fails its outstanding request."); completed++; });
         Check(Pump(() => completed == 3) == 1, "Portal death finalizes pending owner state.");
         Console.WriteLine("Portal contract passed.");
+    }
+
+    private static void Options(string folder, string[] filters, DisplayServer display)
+    {
+        Reject<ArgumentNullException>(() => new FileDialogOption(null!, []));
+        Reject<ArgumentException>(() => new FileDialogOption("", []));
+        Reject<ArgumentException>(() => new FileDialogOption("bad\0name", []));
+        Reject<ArgumentNullException>(() => new FileDialogOption("Valid", null!));
+        Reject<ArgumentNullException>(() => new FileDialogOption("Valid", [null!]));
+        Reject<ArgumentException>(() => new FileDialogOption("Valid", [""]));
+        Reject<ArgumentException>(() => new FileDialogOption("Valid", ["bad\0caption"]));
+        string[] captions = ["Text", "Image"]; var option = new FileDialogOption("Format", captions, -1); captions[0] = "changed";
+        var returned = option.GetValues(); returned[1] = "changed";
+        Check(option.GetValues().SequenceEqual(new[] { "Text", "Image" }) && option.DefaultValueIndex == 0 && new FileDialogOption("Check", [], 99).DefaultValueIndex == 1, "Native options own their captions and clamp defaults.");
+        FileDialogOption[] options = [new("Preview", [], 1), option, new("Format", ["First", "Last"], 99)];
+        Reject<NotSupportedException>(() => DisplayServer.FileDialogWithOptionsShow("invalid", folder, folder, "", false, FileDialogMode.OpenFile, filters, options, (_, _, _, _) => { }));
+        Reject<ArgumentNullException>(() => DisplayServer.FileDialogWithOptionsShow("invalid", folder, "", "", false, FileDialogMode.OpenFile, filters, [null!], (_, _, _, _) => { }));
+        Reject<ArgumentNullException>(() => DisplayServer.FileDialogWithOptionsShow("invalid", folder, "", "", false, FileDialogMode.OpenFile, filters, options, null!));
+        Reject<ArgumentOutOfRangeException>(() => DisplayServer.FileDialogWithOptionsShow("invalid", folder, "", "", false, FileDialogMode.OpenFile, filters, Enumerable.Repeat(option, 65537).ToArray(), (_, _, _, _) => { }));
+        foreach (var name in new[] { "options-accept", "options-checked", "options-cancel", "options-missing", "options-omitted", "options-duplicate", "options-bool", "options-range", "options-index", "options-type", "options-pair", "options-bad-uri", "options-callback" })
+        {
+            var calls = 0; var failing = name is not ("options-accept" or "options-checked" or "options-cancel");
+            var snapshot = (FileDialogOption[])options.Clone();
+            DisplayServer.FileDialogWithOptionsShow(name, folder, "", "", true, FileDialogMode.OpenFile, filters, snapshot, (ok, paths, filter, selected) =>
+            {
+                calls++;
+                if (name == "options-callback") throw new FormatException("option observer failure");
+                if (failing || name == "options-cancel") { Check(!ok && paths.Count == 0 && filter == -1 && selected.Count == 0, name + ": no partial native result escapes."); return; }
+                Check(ok && paths.Count == 1 && filter == 1 && selected.Count == 2 && selected["Preview"].IsCheckbox && selected["Preview"].Checked == (name == "options-checked") && !selected["Format"].IsCheckbox && selected["Format"].SelectedIndex == 0, "Reordered results preserve configured duplicate-name order and ignore provider choices.");
+                Reject<NotSupportedException>(() => ((IDictionary<string, FileDialogOptionValue>)selected).Clear());
+            });
+            snapshot[0] = new("Mutated after launch", []);
+            Check(calls == 0, "Extra-option callbacks wait for owner pumping."); Reject<InvalidOperationException>(display.Dispose);
+            Check(Pump(() => calls == 1) == (failing ? 1 : 0) && calls == 1, name + ": one terminal callback, with explicit failure reporting.");
+        }
+        var emptyCalls = 0;
+        DisplayServer.FileDialogWithOptionsShow("options-empty", folder, "", "", false, FileDialogMode.OpenFile, filters, [], (ok, _, _, selected) => { Check(ok && selected.Count == 0, "An empty option list uses the same native workflow."); emptyCalls++; });
+        Check(Pump(() => emptyCalls == 1) == 0, "Empty native options complete normally.");
     }
 
     private static int Pump(Func<bool> done)
@@ -107,7 +146,7 @@ internal static class PortalFileChooserTests
         Check(done(), "A native request must finish before its deadline."); return errors;
     }
 
-    private static void Live(string folder)
+    private static void Live(string folder, bool extra)
     {
         using var display = DisplayServer.Open("Electron2D portal live parent", new(320, 240));
         CheckLiveBusPolicy();
@@ -115,12 +154,19 @@ internal static class PortalFileChooserTests
         foreach (var name in new[] { "accept", "cancel" })
         {
             var calls = 0;
-            DisplayServer.FileDialogShow("Electron2D MIME chooser " + name, folder, "", false, FileDialogMode.OpenFile, [";Text;text/plain", ";Images;image/png"], (ok, paths, filter) =>
+            void Completed(bool ok, IReadOnlyList<string> paths, int filter, IReadOnlyDictionary<string, FileDialogOptionValue>? choices)
             {
                 calls++;
                 if (name == "cancel") Check(!ok && paths.Count == 0, "Installed chooser cancellation.");
-                else Check(ok && paths.Count == 1 && paths[0] == IOPath.Combine(folder, "выбранный #.txt") && filter == 0, "Installed chooser selected file and actual MIME filter.");
-            });
+                else
+                {
+                    Check(ok && paths.Count == 1 && paths[0] == IOPath.Combine(folder, "выбранный #.txt") && filter == 0, "Installed chooser selected file and actual MIME filter.");
+                    if (extra) Check(choices != null && choices.Count == 2 && !choices["Preview"].Checked && choices["Format"].SelectedIndex == 1, "Installed chooser returns the actually changed checkbox and choice.");
+                }
+                if (extra && name == "cancel") Check(choices!.Count == 0, "Installed chooser cancellation returns empty options.");
+            }
+            if (extra) DisplayServer.FileDialogWithOptionsShow("Electron2D options chooser " + name, folder, "", "", false, FileDialogMode.OpenFile, [";Text;text/plain", ";Images;image/png"], [new("Preview", [], 1), new("Format", ["Text", "Image"], 0)], (ok, paths, filter, choices) => Completed(ok, paths, filter, choices));
+            else DisplayServer.FileDialogShow("Electron2D MIME chooser " + name, folder, "", false, FileDialogMode.OpenFile, [";Text;text/plain", ";Images;image/png"], (ok, paths, filter) => Completed(ok, paths, filter, null));
             Console.WriteLine("NATIVE_READY:" + name);
             var deadline = Environment.TickCount64 + 20000;
             while (calls == 0 && Environment.TickCount64 < deadline) { DisplayServer.ProcessEvents(); Thread.Sleep(5); }
@@ -132,14 +178,27 @@ internal static class PortalFileChooserTests
     private static void Scene(string backend, string folder)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
-        var root = new Window { Size = new(320, 240), Title = "Portal scene consumer" };
+        var root = new Window { Size = new(320, 240), Title = "Portal scene consumer", GUIEmbedSubwindows = true };
         var picker = new FileDialog { Access = FileDialogAccess.FileSystem, UseNativeDialog = true, CurrentDir = folder, FileMode = FileDialogMode.OpenFile, Title = "scene" };
         picker.Filters = [";Images;image/png", ";Text;text/plain"]; root.AddChild(picker);
-        var selected = 0; picker.FileSelected += path => { Check(path == IOPath.Combine(folder, "выбранный #.txt"), "The real FileDialog receives the selected native path."); selected++; root.Tree!.Quit(); };
-        root.Ready += _ => { CheckLiveBusPolicy(); picker.PopupFileDialog(); Check(!picker.Visible, "Native presentation does not open the custom browser."); };
+        picker.AddOption("Preview", [], 1); picker.AddOption("Format", ["Text", "Image"], 0);
+        var selected = 0; picker.FileSelected += path =>
+        {
+            var choices = picker.GetSelectedOptions();
+            Check(path == IOPath.Combine(folder, "выбранный #.txt") && !choices["Preview"].Checked && choices["Format"].SelectedIndex == 1 && !choices.ContainsKey("Changed"), "The real FileDialog commits the captured option result before FileSelected.");
+            selected++; picker.Title = "scene-cancel"; picker.PopupFileDialog();
+        };
+        var canceled = 0; picker.Canceled += () =>
+        {
+            var choices = picker.GetSelectedOptions(); Check(choices.Count == 2 && choices["Changed"].Checked && choices["Format"].SelectedIndex == 0, "Native cancellation retains captured initial defaults.");
+            canceled++; picker.RootSubfolder = folder; picker.PopupFileDialog(); Check(picker.Visible, "Root confinement retains the working custom browser despite native-extra availability."); picker.Hide();
+            picker.RootSubfolder = ""; picker.SetOptionName(0, ""); picker.PopupFileDialog(); Check(picker.Visible, "Empty native labels keep custom checkbox presentation."); picker.Hide();
+            picker.SetOptionName(0, "Preview"); picker.SetOptionValues(1, ["", "Image"]); picker.PopupFileDialog(); Check(picker.Visible && picker.GetSelectedOptions()["Preview"].Checked, "Empty native choice captions keep the custom browser and rebuild current defaults."); picker.Hide(); root.Tree!.Quit();
+        };
+        root.Ready += _ => { CheckLiveBusPolicy(); picker.PopupFileDialog(); Check(!picker.Visible, "Native presentation does not open the custom browser."); Check(picker.GetSelectedOptions()["Preview"].Checked, "A launched native request publishes its defaults."); picker.SetOptionName(0, ""); Reject<InvalidOperationException>(picker.PopupFileDialog); picker.UseNativeDialog = false; Reject<InvalidOperationException>(picker.Show); Reject<InvalidOperationException>(() => picker.PopupCentered()); Reject<InvalidOperationException>(() => picker.Visible = true); picker.UseNativeDialog = true; picker.SetOptionName(0, "Changed"); picker.SetOptionDefault(1, 0); };
         var deadline = Environment.TickCount64 + 8000;
         var code = Engine.Run((_, _) => { if (Environment.TickCount64 > deadline) root.Tree!.Quit(91); }, root);
-        Check(code == 0 && selected == 1 && picker.IsDisposed && !DisplayServer.IsAvailable, "The scene native consumer completes and releases parent and display.");
+        Check(code == 0 && selected == 1 && canceled == 1 && picker.IsDisposed && !DisplayServer.IsAvailable, "The scene native consumer completes and releases parent and display.");
         Console.WriteLine("Portal scene " + backend + " passed.");
     }
 }

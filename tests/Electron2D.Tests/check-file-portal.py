@@ -94,7 +94,8 @@ class Portal(dbus.service.Object):
             raise dbus.exceptions.DBusException("Fixture launch refused", name="org.freedesktop.portal.Error.NotAllowed")
         assert not parent or str(parent).startswith("wayland:")
         assert bool(options["modal"])
-        assert bytes(options["current_folder"]) == str(folder).encode() + b"\0"
+        assert bytes(options["current_folder"])[-1:] == b"\0"
+        assert Path(os.fsdecode(bytes(options["current_folder"])[:-1])).resolve() == folder.resolve()
         assert method == ("SaveFile" if title == "save" else "OpenFile")
         assert bool(options.get("multiple", False)) == (title == "multi")
         assert bool(options.get("directory", False)) == (title == "directory")
@@ -103,14 +104,21 @@ class Portal(dbus.service.Object):
         filters = options.get("filters", [])
         if title == "directory":
             assert not filters
-        elif title == "scene":
+        elif title in ("scene", "scene-cancel"):
             assert len(filters) == 4
             assert filters[0][0] == "All Recognized"
             assert list(filters[0][1]) == [(1, "image/png"), (1, "text/plain")]
         else:
             assert list(filters[0][1]) == [(1, "image/png"), (1, "image/jpeg")]
             assert list(filters[1][1]) == [(0, "*.txt"), (1, "text/plain")]
-        observed.append({"title": title, "method": method, "parent": str(parent), "filters": str(filters)})
+        choices = options.get("choices", [])
+        if title.startswith("options-") and title != "options-empty":
+            assert list(choices) == [("option_0", "Preview", [], "true"), ("option_1", "Format", [("0", "Text"), ("1", "Image")], "0"), ("option_2", "Format", [("0", "First"), ("1", "Last")], "1")]
+        elif title in ("scene", "scene-cancel"):
+            assert list(choices) == [("option_0", "Changed" if title == "scene-cancel" else "Preview", [], "true"), ("option_1", "Format", [("0", "Text"), ("1", "Image")], "0")]
+        else:
+            assert not choices
+        observed.append({"title": title, "method": method, "parent": str(parent), "filters": str(filters), "choices": str(choices)})
         path = PATH + "/request/" + str(sender)[1:].replace(".", "_") + "/" + str(options["handle_token"])
         if title == "alternate":
             path += "_alternate"
@@ -122,10 +130,24 @@ class Portal(dbus.service.Object):
             uris.append((folder / "другой.png").as_uri())
         values = {"uris": dbus.Array(uris, signature="s")}
         if filters and title != "missing-filter":
-            values["current_filter"] = filters[2 if title == "scene" else 1]
+            values["current_filter"] = filters[2 if title in ("scene", "scene-cancel") else 1]
         if title == "unknown-filter":
             values["current_filter"] = dbus.Struct(("Unconditional", dbus.Array([dbus.Struct((dbus.UInt32(1), "text/x-unknown"), signature="us")], signature="(us)")), signature="sa(us)")
-        if title == "bad-uri":
+        if choices:
+            pairs = [("option_" + str(i), "false" if not choice[2] else "0" if i == 2 else "1") for i, choice in enumerate(choices)]
+            if title == "options-checked": pairs[0] = ("option_0", "true")
+            pairs.reverse()
+            pairs.append(("x-provider-read-only", "true"))
+            if title == "options-omitted": pairs.pop(1)
+            if title == "options-duplicate": pairs.append(pairs[0])
+            if title == "options-bool": pairs = [(key, "1" if key == "option_0" else val) for key, val in pairs]
+            if title == "options-range": pairs[0] = ("option_2", "2")
+            if title == "options-index": pairs[0] = ("option_2", "00")
+            if title == "options-pair":
+                values["choices"] = dbus.Array([dbus.Struct(("option_0", "false", "extra"), signature="sss")], signature="(sss)")
+            elif title == "options-type": values["choices"] = dbus.UInt32(1)
+            elif title != "options-missing": values["choices"] = dbus.Array([dbus.Struct(pair, signature="ss") for pair in pairs], signature="(ss)")
+        if title in ("bad-uri", "options-bad-uri"):
             values["uris"] = dbus.Array(["https://example.invalid/file"], signature="s")
         if title == "bad-nul":
             values["uris"] = dbus.Array(["file:///tmp/%00invalid"], signature="s")
@@ -152,7 +174,7 @@ class Portal(dbus.service.Object):
         elif title == "disconnect":
             GLib.timeout_add(20, lambda: service_bus.close())
         else:
-            status = 1 if title in ("cancel", "wrong-sender") else 2 if title == "error" else 0
+            status = 1 if title in ("cancel", "wrong-sender", "options-cancel", "scene-cancel") else 2 if title == "error" else 0
             if title in ("early", "alternate"):
                 request.Response(status, values)
             else:

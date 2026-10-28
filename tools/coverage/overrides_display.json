@@ -549,6 +549,11 @@
       "godot": "DisplayServer::method:window_set_mouse_passthrough(PackedVector2Array:,int:)",
       "state": "Implemented",
       "reason": "ADR 0040: copied authored Window policy plus native X11/Windows/macOS input regions and full passthrough override; Wayland rejects effective requests. Actual X11 CLR/strict NativeAOT GPU/compatibility routing and prepared owner-frame 0/0 checks: docs/components/window-input-region.md. Windows/macOS execution remains unverified."
+    },
+    {
+      "godot": "DisplayServer::method:file_dialog_with_options_show(String:,String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Dictionary[]:,Callable:,int:)",
+      "electron2d": "method:Electron2D.DisplayServer.FileDialogWithOptionsShow(System.String,System.String,System.String,System.String,System.Boolean,Electron2D.FileDialogMode,System.Collections.Generic.IReadOnlyList<System.String>,System.Collections.Generic.IReadOnlyList<Electron2D.FileDialogOption>,System.Action<System.Boolean, System.Collections.Generic.IReadOnlyList<System.String>, System.Int32, System.Collections.Generic.IReadOnlyDictionary<System.String, Electron2D.FileDialogOptionValue>>,System.Int32)",
+      "reason": "ADR 0040: typed immutable FileDialogOption descriptions project the native option dictionary family; Linux FileChooser portals execute checkbox/choice serialization and validated read-only results on the display owner pump. FileDialog consumes request snapshots and publishes choices before selection events; duplicate names use authored order. Nonempty root is explicitly unsupported by the standard portal and FileDialog retains its custom root browser. Protocol and current Wayland native/scene verification are recorded in docs/components/native-file-portal.md; other native hosts and NativeAOT remain separate qualification gates. Typed exceptions replace the native Error return."
     }
   ],
   "extras": [
@@ -1159,7 +1164,6 @@
         "DisplayServer::method:create_status_indicator(Texture2D:,String:,Callable:)",
         "DisplayServer::method:delete_status_indicator(int:)",
         "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)",
-        "DisplayServer::method:file_dialog_with_options_show(String:,String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Dictionary[]:,Callable:,int:)",
         "DisplayServer::method:status_indicator_get_rect(int:)",
         "DisplayServer::method:status_indicator_set_callback(int:,Callable:)",
         "DisplayServer::method:status_indicator_set_icon(int:,Texture2D:)",
@@ -1644,6 +1648,13 @@
       "reason": "ADR 0040: copied authored Window policy plus native X11/Windows/macOS input regions and full passthrough override; Wayland rejects effective requests. Actual X11 CLR/strict NativeAOT GPU/compatibility routing and prepared owner-frame 0/0 checks: docs/components/window-input-region.md. Windows/macOS execution remains unverified.",
       "godot": [
         "DisplayServer::method:window_set_mouse_passthrough(PackedVector2Array:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0040: typed immutable FileDialogOption descriptions project the native option dictionary family; Linux FileChooser portals execute checkbox/choice serialization and validated read-only results on the display owner pump. FileDialog consumes request snapshots and publishes choices before selection events; duplicate names use authored order. Nonempty root is explicitly unsupported by the standard portal and FileDialog retains its custom root browser. Protocol and current Wayland native/scene verification are recorded in docs/components/native-file-portal.md; other native hosts and NativeAOT remain separate qualification gates. Typed exceptions replace the native Error return.",
+      "godot": [
+        "DisplayServer::method:file_dialog_with_options_show(String:,String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Dictionary[]:,Callable:,int:)"
       ]
     }
   ]

@@ -15,6 +15,9 @@ resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = Path(os.environ["ELECTRON2D_PORTAL_TEST_OUTPUT"])
 FOLDER = Path(os.environ["ELECTRON2D_PORTAL_FOLDER"])
+EXTRA = os.environ.get("ELECTRON2D_PORTAL_LIVE_OPTIONS") == "1"
+TITLE = "Electron2D options chooser " if EXTRA else "Electron2D MIME chooser "
+PREFIX = "installed-options" if EXTRA else "installed-portal"
 Atspi.init()
 context = GLib.MainContext.default()
 
@@ -72,24 +75,57 @@ def action(node, name):
             return True
 
 
-env = dict(os.environ, SDL_VIDEODRIVER="wayland", SDL_VIDEO_DRIVER="wayland", ELECTRON2D_TEST_FILE_PORTAL="live")
+def set_native_options(root):
+    def unique(predicate):
+        queue = [root]; found = []
+        while queue:
+            node = queue.pop(); node.clear_cache()
+            if predicate(node): found.append(node)
+            queue.extend(item for item in children(node) if item)
+        return found[0] if len(found) == 1 else None
+
+    def showing(node):
+        return node.get_state_set().contains(Atspi.StateType.SHOWING)
+
+    def menu(node):
+        return node.get_role() == Atspi.Role.MENU_ITEM and showing(node)
+
+    def open_options():
+        button = wait(lambda: unique(lambda node: node.get_role() == Atspi.Role.TOGGLE_BUTTON and node.get_name() == "Показать параметры" and showing(node)))
+        assert button.get_action_iface().do_action(0)
+
+    open_options()
+    # This GTK menu exposes blank item names; identify its unique checked option by observed state.
+    checkbox = wait(lambda: unique(lambda node: menu(node) and node.get_state_set().contains(Atspi.StateType.CHECKED)))
+    assert checkbox.get_action_iface().do_action(0)
+    open_options()
+    submenu = wait(lambda: unique(lambda node: menu(node) and node.get_state_set().contains(Atspi.StateType.EXPANDABLE)))
+    assert submenu.get_action_iface().do_action(0)
+    choice = wait(lambda: unique(lambda node: menu(node) and node.get_state_set().contains(Atspi.StateType.CHECKABLE) and not node.get_state_set().contains(Atspi.StateType.CHECKED)))
+    assert choice.get_action_iface().do_action(0)
+
+
+env = dict(os.environ, SDL_VIDEODRIVER="wayland", SDL_VIDEO_DRIVER="wayland", ELECTRON2D_TEST_FILE_PORTAL="live-options" if EXTRA else "live")
 env.pop("NO_AT_BRIDGE", None)
 child = subprocess.Popen(["dotnet", str(ROOT / "tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll")], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 steps = []
 try:
-    root = wait(lambda: chooser("Electron2D MIME chooser accept"))
+    root = wait(lambda: chooser(TITLE + "accept"))
+    if EXTRA:
+        set_native_options(root)
+        steps.append({"controls": "native menu checkbox and two-item choice", "observed_initial": "unique checked checkbox; first choice checked", "changed": {"Preview": False, "Format": 1}})
     wait(lambda: select_file(root))
     wait(lambda: action(root, "chooser.accept"))
     steps.append({"chooser": "accept", "observed_file": "выбранный #.txt", "action": "chooser.accept"})
-    root = wait(lambda: chooser("Electron2D MIME chooser cancel"))
+    root = wait(lambda: chooser(TITLE + "cancel"))
     wait(lambda: action(root, "window.close"))
     steps.append({"chooser": "cancel", "action": "window.close"})
     output, _ = child.communicate(timeout=8)
-    (OUTPUT / "installed-portal.log").write_text(output)
+    (OUTPUT / (PREFIX + ".log")).write_text(output)
     assert child.returncode == 0, output
     assert "NATIVE_DONE:accept" in output and "NATIVE_DONE:cancel" in output
-    (OUTPUT / "installed-portal.json").write_text(json.dumps({"returncode": child.returncode, "steps": steps, "selected_filter_index": 0}, indent=2, ensure_ascii=False) + "\n")
-    print("Installed Wayland portal: native MIME file acceptance, selected filter and cancellation passed.")
+    (OUTPUT / (PREFIX + ".json")).write_text(json.dumps({"returncode": child.returncode, "steps": steps, "selected_filter_index": 0}, indent=2, ensure_ascii=False) + "\n")
+    print("Installed Wayland portal: native " + ("checkbox/choice edits, " if EXTRA else "") + "MIME file acceptance, selected filter and cancellation passed.")
 finally:
     if child.poll() is None:
         child.terminate()

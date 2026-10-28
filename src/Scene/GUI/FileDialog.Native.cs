@@ -2,17 +2,35 @@ namespace Electron2D;
 
 public partial class FileDialog
 {
-    private bool CanUseNative() => _native && IsInsideTree && _access == FileDialogAccess.FileSystem && _options.Count == 0 && _root.Length == 0 && DisplayServer.IsAvailable && DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFile);
-    internal override bool TryNativeVisibility(bool visible) { if (!visible || !CanUseNative()) return false; PresentNative(); return true; }
-    internal override bool TryNativePopup() { if (!CanUseNative()) return false; PresentNative(); return true; }
+    private bool CanUseNative() => _native && IsInsideTree && _access == FileDialogAccess.FileSystem && _root.Length == 0 && DisplayServer.IsAvailable && DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFile) && (_options.Count == 0 || DisplayServer.HasFeature(DisplayServer.Feature.NativeDialogFileExtra) && _options.All(option => option.Name.Length != 0 && option.Values.All(value => value.Length != 0)));
+    private void EnsureNativeIdle() { if (_nativePending) throw new InvalidOperationException("A native file chooser is already pending."); }
+    internal override bool TryNativeVisibility(bool visible) { if (!visible) return false; EnsureNativeIdle(); if (!CanUseNative()) return false; PresentNative(); return true; }
+    internal override bool TryNativePopup() { EnsureNativeIdle(); if (!CanUseNative()) return false; PresentNative(); return true; }
     private void PresentNative()
     {
         EnsureMutable(); if (!CanUseNative()) { PopupCentered(); return; }
-        if (_nativePending) throw new InvalidOperationException("A native file chooser is already pending.");
+        EnsureNativeIdle();
         var directory = ProjectSettings.GlobalizePath(CurrentDir); var file = CurrentFile; var filters = (string[])_filters.Clone(); var nativeFilters = NativeFilters(filters); var mode = _mode; var parentId = DisplayServer.MainWindowId;
         for (var node = Parent; node != null; node = node.Parent) if (node is Window window && window.GetWindowID() >= DisplayServer.MainWindowId) { parentId = window.GetWindowID(); break; }
         _nativePending = true;
-        try { DisplayServer.FileDialogShow(Title, directory, file, _showHidden, mode, nativeFilters, (ok, paths, filter) => NativeCompleted(mode, ok, paths, filter, filters), parentId); }
+        try
+        {
+            if (_options.Count == 0) DisplayServer.FileDialogShow(Title, directory, file, _showHidden, mode, nativeFilters, (ok, paths, filter) => NativeCompleted(mode, ok, paths, filter, filters), parentId);
+            else
+            {
+                var options = _options.Select(option => new FileDialogOption(option.Name, option.Values, option.Default)).ToArray();
+                DisplayServer.FileDialogWithOptionsShow(Title, directory, "", file, _showHidden, mode, nativeFilters, options, (ok, paths, filter, selected) =>
+                {
+                    if (!IsDisposed && ok)
+                    {
+                        _selectedOptions.Clear(); foreach (var pair in selected) _selectedOptions[pair.Key] = pair.Value;
+                    }
+                    _optionsDirty = true;
+                    NativeCompleted(mode, ok, paths, filter, filters);
+                }, parentId);
+                _selectedOptions.Clear(); foreach (var option in options) _selectedOptions[option.Name] = new(option.Values.Length == 0, option.DefaultValueIndex);
+            }
+        }
         catch { _nativePending = false; throw; }
     }
     private static string[] NativeFilters(string[] filters)

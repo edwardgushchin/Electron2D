@@ -4898,6 +4898,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.FileDialogOption",
+    "kind": "type",
+    "declaringType": "Electron2D.FileDialogOption",
+    "name": "FileDialogOption",
+    "signature": "public sealed class Electron2D.FileDialogOption",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.FileDialogOptionValue",
     "kind": "type",
     "declaringType": "Electron2D.FileDialogOptionValue",
@@ -22352,6 +22365,35 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.FileDialogOption..ctor(System.String,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.FileDialogOption",
+    "name": ".ctor",
+    "signature": "public FileDialogOption(System.String name, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E values, System.Int32 defaultValueIndex = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "values",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "defaultValueIndex",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -109190,6 +109232,70 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.FileDialogWithOptionsShow(System.String,System.String,System.String,System.String,System.Boolean,Electron2D.FileDialogMode,System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E,System.Collections.Generic.IReadOnlyList\u003CElectron2D.FileDialogOption\u003E,System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, Electron2D.FileDialogOptionValue\u003E\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "FileDialogWithOptionsShow",
+    "signature": "public static System.Void FileDialogWithOptionsShow(System.String title, System.String currentDirectory, System.String root, System.String filename, System.Boolean showHidden, Electron2D.FileDialogMode mode, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E filters, System.Collections.Generic.IReadOnlyList\u003CElectron2D.FileDialogOption\u003E options, System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, Electron2D.FileDialogOptionValue\u003E\u003E callback, System.Int32 parentWindowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "currentDirectory",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "root",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "showHidden",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.FileDialogMode",
+        "default": null
+      },
+      {
+        "name": "filters",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E",
+        "default": null
+      },
+      {
+        "name": "options",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.FileDialogOption\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Boolean, System.Collections.Generic.IReadOnlyList\u003CSystem.String\u003E, System.Int32, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, Electron2D.FileDialogOptionValue\u003E\u003E",
+        "default": null
+      },
+      {
+        "name": "parentWindowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.ForceProcessAndDropEvents()",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -116158,6 +116264,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.FileDialogOption.GetValues()",
+    "kind": "method",
+    "declaringType": "Electron2D.FileDialogOption",
+    "name": "GetValues",
+    "signature": "public System.String[] GetValues()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -262016,6 +262135,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialogOption.DefaultValueIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialogOption",
+    "name": "DefaultValueIndex",
+    "signature": "public System.Int32 DefaultValueIndex { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.FileDialogOption.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.FileDialogOption",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

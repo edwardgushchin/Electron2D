@@ -45,7 +45,7 @@ public partial class FileDialog
     /// <summary>Changes copied choice values and clamps the retained default.</summary><param name="option">An index, optionally counted from the end.</param><param name="values">Captions or empty for a checkbox.</param>
     public void SetOptionValues(int option, IReadOnlyList<string> values) { EnsureMutable(); var copy = CopyValues(values); var item = GetOption(option, true); item.Values = copy; item.Default = ClampDefault(copy, item.Default); OptionsChanged(); }
     /// <summary>Returns an owned read-only snapshot of current checkbox/choice results keyed by option name.</summary>
-    /// <returns>Typed results, populated when controls are prepared; duplicate keys use the last configured option.</returns>
+    /// <returns>Typed results, populated when controls are prepared or a native request launches, then committed before acceptance events; cancellation retains the initial native defaults. Duplicate keys use the last configured option.</returns>
     public IReadOnlyDictionary<string, FileDialogOptionValue> GetSelectedOptions() { CheckFileDialog(); return new ReadOnlyDictionary<string, FileDialogOptionValue>(new Dictionary<string, FileDialogOptionValue>(_selectedOptions, StringComparer.Ordinal)); }
     private void OptionsChanged() { _optionsDirty = true; if (Visible) RefreshOptions(); }
     private void RefreshOptions()

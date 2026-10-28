@@ -49,9 +49,9 @@ Own enum identities: [Customization](FileDialog.Customization.md) and [DisplayMo
 | `public System.Int32 OptionCount { get; set; }` | Gets or sets the number of additional checkbox/choice controls. value: Zero initially; range 0..65536. |
 | `public System.Boolean OverwriteWarningEnabled { get; set; }` | Gets or sets explicit confirmation for existing save destinations. value: True initially. |
 | `public System.Boolean RecentListEnabled { get; set; }` | Gets or sets visibility of recent directories. value: True initially. |
-| `public System.String RootSubfolder { get; set; }` | Gets or sets a directory navigation boundary within the selected scope. value: Empty initially. Requests with this boundary use the custom browser until native-file-extra is available. |
+| `public System.String RootSubfolder { get; set; }` | Gets or sets a directory navigation boundary within the selected scope. value: Empty initially. Requests with this boundary use the custom browser because the current native portal cannot confine navigation. |
 | `public System.Boolean ShowHiddenFiles { get; set; }` | Gets or sets whether hidden entries are listed. value: False initially. |
-| `public System.Boolean UseNativeDialog { get; set; }` | Gets or sets preference for a supported OS-native chooser. value: False initially. Scoped/options/root-boundary requests fall back to this browser when native-file-extra is unavailable. |
+| `public System.Boolean UseNativeDialog { get; set; }` | Gets or sets preference for a supported OS-native chooser. value: False initially. Scoped/root-boundary requests retain this browser; options use native controls only when supported and their captions are representable. |
 
 ## Events
 
@@ -80,7 +80,7 @@ Own enum identities: [Customization](FileDialog.Customization.md) and [DisplayMo
 | `public System.String[] GetOptionValues(System.Int32 option)` | Returns an independent copy of choice captions. option: A nonnegative index. returns: An empty list for a checkbox. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Inherited dialog/tree/scene lifecycle extension point; see the owning base reference. |
 | `public static System.Collections.Generic.IReadOnlyList<System.String> GetRecentList()` | Returns a copied shared recent-directory list on the authoring thread. returns: Ordered scoped directory paths normalized with trailing separators. |
-| `public System.Collections.Generic.IReadOnlyDictionary<System.String, Electron2D.FileDialogOptionValue> GetSelectedOptions()` | Returns an owned read-only snapshot of current checkbox/choice results keyed by option name. returns: Typed results, populated when controls are prepared; duplicate keys use the last configured option. |
+| `public System.Collections.Generic.IReadOnlyDictionary<System.String, Electron2D.FileDialogOptionValue> GetSelectedOptions()` | Returns an owned read-only snapshot of current checkbox/choice results keyed by option name. returns: Typed results, populated when controls are prepared or a native request launches and committed before acceptance events; cancellation retains initial native defaults. Duplicate keys use the last configured option. |
 | `public Electron2D.VBoxContainer GetVBox()` | Returns the borrowed main content column for caller-authored controls. returns: The stable owned VBoxContainer. |
 | `public System.Void Invalidate()` | Marks listing and appearance for refresh; visible custom dialogs refresh immediately. |
 | `public System.Boolean IsCustomizationFlagEnabled(Electron2D.FileDialog.Customization flag)` | Reports whether one browser customization feature is enabled. flag: A defined feature. returns: The retained feature state. |
@@ -107,4 +107,6 @@ FileDialogTests, DisplayServerDialogTests and FileDialogRenderingTests exercise 
 
 Native dropdown/context anchors now resolve through the containing viewport into the actual embedded or native popup parent. Native custom menus remain canvas-rendered menus; system menus retain the separate NativeMenu prerequisite. Transparent native popups require compatibility; for the GPU backend configure the borrowed popup's `Transparent=false` while hidden before opening. Owned internal-popup runtime configuration is reapplied after scene restoration; explicit authored PopupMenu nodes retain their own stored Window properties. See [native popup presentation](../components/popup-windows.md#native-popup-presentation) for geometry, lifecycle and verification limits.
 
-The [Linux native file portal](../components/native-file-portal.md) applies MIME-only and combined filters through UseNativeDialog, including both rule families in All Recognized. Native options/root restrictions keep the existing custom browser fallback.
+The [Linux native file portal](../components/native-file-portal.md) applies MIME-only and combined filters through UseNativeDialog, including both rule families in All Recognized. Native root restrictions keep the existing custom browser fallback; typed options execute through the portal.
+
+Native [checkbox/choice options](../components/native-file-portal.md#native-checkbox-and-choice-controls) now execute on the Linux portal. GetSelectedOptions publishes captured defaults after launch and accepted results before selection events. RootSubfolder, virtual access and empty native labels/captions retain the working custom browser.

@@ -118,6 +118,7 @@ DisplayServer.FileDialogShow("Open image", "", "", false,
 | [`public static void ForceProcessAndDropEvents()`](#method-forceprocessanddropevents) | Processes native window events while discarding pending keyboard, pointer, touch, and text input. |
 | [`public static void DialogShow(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)`](#method-dialogshow) | Shows a blocking native message dialog. |
 | [`public static void FileDialogShow(string title, string currentDirectory, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, Action<bool, IReadOnlyList<string>, int> callback, int parentWindowId = MainWindowId)`](#method-filedialogshow) | Opens an asynchronous native file or folder chooser. |
+| [`public static void FileDialogWithOptionsShow(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId = MainWindowId)`](#method-filedialogwithoptionsshow) | Opens a native chooser with typed checkbox/choice controls. |
 | [`public static Key KeyboardGetKeycodeFromPhysical(Key physical)`](#method-keyboardgetkeycodefromphysical) | Maps a physical key to the logical key reported for the current keyboard layout. |
 | [`public static Key KeyboardGetLabelFromPhysical(Key physical)`](#method-keyboardgetlabelfromphysical) | Maps a physical key to its localized label in the current keyboard layout. |
 | [`public static void WindowSetIcon(Image image, int windowId = MainWindowId)`](#method-windowseticon) | Sets an icon specifically for the main window. |
@@ -255,6 +256,11 @@ The native result may arrive on another thread. File names are copied from SDL-o
 **Source:** `src/Servers/Display/DisplayServer.Dialogs.cs`.
 
 <a id="method-hashardwarekeyboard"></a>
+<a id="method-filedialogwithoptionsshow"></a>
+#### `public static void FileDialogWithOptionsShow(string title, string currentDirectory, string root, string filename, bool showHidden, FileDialogMode mode, IReadOnlyList<string> filters, IReadOnlyList<FileDialogOption> options, Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>> callback, int parentWindowId = MainWindowId)`
+
+Opens the same owner-pumped native chooser with copied immutable checkbox/choice descriptions and read-only typed selections. At most 65536 options; root must be empty. Requires NativeDialogFileExtra (current Linux desktop portal version one or later; directory mode needs three). Cancellation/failure returns empty paths/selections and -1; malformed results fail before publishing partial state. Duplicate names resolve by configured order, with the last winning. Parent lifetime, thread/disposal guards and aggregate native/callback failure follow FileDialogShow. See [the complete native option contract](../components/native-file-portal.md#native-checkbox-and-choice-controls) for defaults, validation, authoring edits and custom root/empty-label fallback.
+
 #### `public static bool HasHardwareKeyboard()`
 
 On Android and iOS, reports the native probe for a connected keyboard; on other targets reports `true`, matching the desktop input contract. The mobile result may change as devices are attached or removed. Call on the opening thread.
@@ -1227,7 +1233,7 @@ Identifies a display-server capability for `HasFeature`.
 | `NativeHelp = 23` | Native help-search integration. |
 | `NativeDialogInput = 24` | Native text-input dialogs. |
 | `NativeDialogFile = 25` | Native file-selection dialogs. |
-| `NativeDialogFileExtra = 26` | Native file dialogs with additional options and virtual paths. |
+| `NativeDialogFileExtra = 26` | Native file dialogs with additional checkbox and choice controls. |
 | `WindowDrag = 27` | Interactive native window dragging and resizing. |
 | `ScreenExcludeFromCapture = 28` | Window exclusion from ordinary screen capture. |
 | `WindowEmbedding = 29` | Embedding of external native windows. |

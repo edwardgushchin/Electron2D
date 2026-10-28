@@ -55,7 +55,7 @@ public sealed partial class DisplayServer
         NativeDialogInput = 24,
         /// <summary>Native file-selection dialogs.</summary>
         NativeDialogFile = 25,
-        /// <summary>Native file dialogs with additional options and virtual paths.</summary>
+        /// <summary>Native file dialogs with additional checkbox and choice controls.</summary>
         NativeDialogFileExtra = 26,
         /// <summary>Interactive native window dragging and resizing.</summary>
         WindowDrag = 27,
@@ -98,7 +98,7 @@ public sealed partial class DisplayServer
             Feature.CursorShape or Feature.CustomCursorShape => desktop && SDL.HasMouse(),
             Feature.NativeDialog => desktop,
             Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,
-            Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
+            Feature.NativeDialogFileExtra or Feature.NativeDialogFileMime => UsesPortalFileChooser && LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1,
             Feature.Hidpi => desktop && GetScreenCountCore() > 0,
             Feature.Icon => driver is "windows" or "x11" or "cocoa" ||
                 driver == "wayland" && _nativeWaylandIconAvailable,
