@@ -4,8 +4,8 @@ Last updated: 2026-10-27
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1088 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 375 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [TextServerAdvanced](classes/TextServerAdvanced.md), [TextServerDummy](classes/TextServerDummy.md), [TextServerFallback](classes/TextServerFallback.md), [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
+1. Close 1068 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 372 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [TextServerAdvanced](classes/TextServerAdvanced.md), [TextServerDummy](classes/TextServerDummy.md), [TextServerFallback](classes/TextServerFallback.md), [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 [External text providers](../components/text-server.md#external-provider-prerequisite) first require a provider-aware consumer layout/font-cache boundary, callback-safe read lifetimes, coherent glyph/run/paragraph metadata, primary-selection invalidation and real drawing. Registry methods and virtual facades alone do not supply those native consumers.
@@ -21,7 +21,7 @@ Choose each next executable vertical slice by user API value, dependent work unl
 5. **Stage 4b, Git workspace:** use 4a's repository/document boundary for editor/no-UI review/index/commits, branches, remotes/fetch/pull/push, worktrees, integration/conflicts and explicit recovery. Preserve dirty buffers and coordinate shared refs; verify real failure/cancellation/uncertain-result cases.
 6. **Stage 4c, provider and capability expansion:** qualify the named provider/backend plus executor profiles in the [support matrix](../components/project-agent.md#provider-and-client-support), including native Kimi Code CLI/Qwen Code and compatible-executor DeepSeek/GLM/MiniMax backends, plus Copilot CLI/Cursor external clients. Keep the common skill/context/journal contract and qualify each actual endpoint/model/executor combination. Expand semantic operations, spatial context and composition; benchmark real tasks and qualify installed distribution/additional platforms. Keep all README locales accurate. Concurrent agents and hot reload retain separate justified slices.
 
-Linux/Wayland remains the executable gate under ADR 0021. Absent editor/import/export/plugin families retain exact dependencies; the historical broad trigger counts below do not mean the startup window alone unlocks those families.
+ADR 0021 requires equivalent behavior and packaged host execution across the full applicable product matrix. Bounded platform slices remain partial progress; declaration states and historical counts do not establish platform qualification. MIDI scope is accepted in ADR 0038; its missing native adapters and device/event path remain blockers, not a request for further product approval. Absent editor/import/export/plugin families retain their exact dependencies.
 
 ## Existing type backlog
 
@@ -31,7 +31,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 229 | 26 |
 | [RenderingDevice](classes/RenderingDevice.md) | 74 | 39 |
-| [OS](classes/OS.md) | 25 | 14 |
+| [OS](classes/OS.md) | 22 | 14 |
 | [Engine](classes/Engine.md) | 10 | 11 |
 | [SceneTree](classes/SceneTree.md) | 5 | 15 |
 | [SceneState](classes/SceneState.md) | 5 | 10 |
@@ -98,13 +98,13 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: graph-frame/comment authoring with a real editor graph layout/preview consumer under ADRs 0027/0028; numeric canvas graph import already executes. | 2 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 1 |
-| Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: complete typed thread start/result, priority and join/retirement after the implemented OS identity/native-name foundation, plus a resolved executable safety-check override contract: the pinned set_thread_safety_checks_enabled(bool) must not be an inert flag and current ADRs 0006/0011/0104 require owner-affine scene mutation. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041). | 1 |
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 1 |
+| Trigger: native MIDI input adapters, device lifetime and message delivery under the accepted platform matrix (ADRs 0038 and 0021); product scope is approved, platform parity remains unverified. | 1 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 

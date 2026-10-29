@@ -1,6 +1,6 @@
 # Display decisions
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -194,7 +194,7 @@ The accepted display host already owns SDL video initialization and event pumpin
 - `IsDarkMode()` reads SDL's current theme and returns true only for Dark; on Linux Wayland and X11 it also requires portal support. `IsDarkModeSupported()` on Linux Wayland and X11 queries the session D-Bus for `org.freedesktop.portal.Settings` interface version at server creation, accepts version one or newer independently of the current color-scheme value, and caches the result. A missing bus, portal, or native D-Bus library returns false; reopening refreshes support. Other drivers retain the known-Light-or-Dark SDL criterion. Both methods follow the display server's opening-thread and disposal rules.
 - The portal probe uses a bounded 250 ms native `libdbus-1.so.3` call. SDL remains the theme-value and change-event source; no second listener, runtime command, or managed package is added.
 - `SystemThemeChanged` is a typed C# event in place of callback registration. `ProcessEvents` delivers SDL's system-theme-change notification in native queue order. Handler failures follow the existing pump policy: continue draining events and aggregate failures afterward.
-- Classify these three reference declarations as implemented for the current Linux Wayland gate after an isolated native Settings portal test verifies version zero, an unset preference, and dark/light/unknown change notifications through SDL and the typed event. A physical GNOME preference change and other targets remain separate verification work. Accent/base colors, high-contrast and related preferences, and other desktop services remain blocked on their named native platform integration; no default color or inert event is exposed.
+- Classify these three reference declarations as implemented in their bounded declaration audit after an isolated native Settings portal test verifies version zero, an unset preference, and dark/light/unknown change notifications through SDL and the typed event. This remains partial platform evidence under ADR 0021; physical GNOME preference changes and other targets require their own verification. Accent/base colors, high-contrast and related preferences, and other desktop services remain blocked on their named native platform integration; no default color or inert event is exposed.
 
 ### Consequences
 

@@ -1,6 +1,6 @@
 # Electron2D video playback decisions
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 <a id="adr-0110"></a>
 ## ADR 0110: Timed Theora textures and queued video audio
@@ -66,8 +66,9 @@ incompatible decoded frame rather than publishing mismatched storage.
 Verify actual decoded pixels, PCM, durations, seeking, tracks and corruption with
 independent files/decoding, then exercise public scene authoring, fresh-process
 storage and real GPU/compatibility rendering under [ADR 0090](agent-native.md#adr-0090).
-The current native release gate remains Linux Wayland under
-[ADR 0021](product.md#adr-0021); source inclusion does not establish foreign-host
-execution or physical listening acceptance.
+Completion follows the full product-platform gate in
+[ADR 0021](product.md#adr-0021); bounded Linux execution remains partial platform
+progress. Source inclusion does not establish foreign-host execution or physical
+listening acceptance.
 
 Editor authoring startup and explicit-preview policy follows the host role in [ADR 0015](core-object-runtime.md#adr-0015); authoring does not rewrite stored autoplay configuration.

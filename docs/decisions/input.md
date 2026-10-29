@@ -1,6 +1,6 @@
 # Input decisions
 
-Last updated: 2026-10-25
+Last updated: 2026-10-29
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -12,11 +12,11 @@ This log owns durable decisions for input events, action mapping, process-wide i
 
 - Status: Accepted; the native display/event-pump integration, including pointer emulation, is recorded in [ADR 0040](display.md#adr-0040)
 - Date: 2026-09-21
-- Last updated: 2026-10-25
+- Last updated: 2026-10-29
 
 ### Context
 
-Electron2D needs keyboard, mouse, touch, gesture, and controller input before a native SDL host exists. The stable Godot 4.7.2 Input/InputMap/InputEvent hierarchy is the coverage reference, with typed C# replacing Variant/Callable. Native root-window and viewport coordinate routing are implemented. Root viewport Control hit testing, mouse delivery and keyboard focus now run; Shortcut resources and the scene shortcut stage now execute; complete GUI routing and a MIDI product decision remain absent; native controller mapping and platform-info parity are still partial.
+Electron2D needs keyboard, mouse, touch, gesture, and controller input before a native SDL host exists. The stable Godot 4.7.2 Input/InputMap/InputEvent hierarchy is the coverage reference, with typed C# replacing Variant/Callable. Native root-window and viewport coordinate routing are implemented. Root viewport Control hit testing, mouse delivery and keyboard focus now run; Shortcut resources and the scene shortcut stage now execute; complete GUI routing remains partial; MIDI input is accepted below but its native producer remains absent; native controller mapping and platform-info parity are still partial.
 
 An earlier statement that a missing feature was merely "deferred" was not sufficient for context-free continuation. Every gap needs a concrete prerequisite and a rule that tells a later agent whether work is actionable.
 
@@ -60,11 +60,32 @@ The following items are **not actionable now** unless their trigger is present i
 | Deferred item | Exact missing dependency | Implementation trigger | When to implement |
 | --- | --- | --- | --- |
 | Native mobile accelerometer, gravity, gyroscope and magnetometer acquisition | Mobile sensor adapter, native capabilities/permissions and device delivery; Vector3 numeric values are already accepted under ADR 0033 | The owning mobile host executes sensor acquisition and cleanup | In that mobile sensor slice; controller delivery does not establish mobile device support |
-| MIDI event type, device enumeration, and message delivery | Product approval for a MIDI domain plus a selected native host API | A user-approved MIDI ADR names scope, host API, ownership, and platform matrix | Only after that separate decision; MIDI is not automatically part of SDL input work |
+| MIDI event type, device enumeration, and message delivery | Native MIDI adapters, device ownership and typed message delivery under the accepted MIDI contract below | The first executable MIDI device/event slice implements that contract and records each target's remaining gaps under ADR 0021 | Product scope is approved; no further MIDI-domain approval is required. A bounded platform slice remains partial until the full matrix is qualified |
 | Complete GUI control consumption and nested viewport input routing | Root Control pointer/focus/hover/action navigation and descendant rectangle clipping exist; scroll clipping, exact navigation ranking, exact draw order and nested viewport ownership remain | The first complete GUI/nested viewport routing slice supplies those missing behaviors | Extend root GUI consumption between `OnInput` and unhandled stages and add independently owned nested viewport routing; root viewport coordinate conversion already runs |
 | Synthetic mouse-motion refresh after changing the default cursor | Implemented through internal mouse motion and containing-window routing, with safe-point coalescing during active execution | Current GUI routing and nested viewport ownership | Changed defaults use the last parsed client position; explicit Viewport refresh queries native pointer. User Node input callbacks omit internal events, GUI hover/cursor and passive physics hover execute. |
 
 Explicit Viewport cursor refresh and changed Input default-cursor policy emit internal mouse motion. GUI and passive physics hover execute; Node user input callbacks omit the internal device. Requests during frame/input/lifecycle delivery coalesce at the next safe point to preserve SceneTree non-reentrancy, and synthetic callbacks cannot reenter refresh. The containing Window evaluates parent overlap before nested viewport forwarding. Default changes retain immediate Control cursor precedence, use the last parsed client position and preserve real button polling.
+
+### MIDI input scope and platform contract
+
+MIDI input is accepted as an Input capability under the full product-platform completion rule in [ADR 0021](product.md#adr-0021). The first connected slice includes `InputEventMIDI : InputEvent`, the typed `MIDIMessage` identities and static `OS.OpenMIDIInputs`, `OS.GetConnectedMIDIInputs` and `OS.CloseMIDIInputs` under ADR 0095. Preserve the complete applicable pinned event/message contract, inherited resource behavior and descriptors, defaults, text, copying and stored round trips; do not invent automatic InputMap bindings or change existing action semantics. MIDI output, a synthesizer, Standard MIDI File playback and a new SysEx payload API are outside this input slice. This decision is accepted scope, not implemented runtime behavior.
+
+The shared managed event/message path stays independent of SDL, audio, rendering and editor hosts. An internal MIDI owner retained by OS owns native clients, ports, subscriptions, callback roots and queued data; Input receives ordinary typed events. Open is explicit and repeat-safe; startup failure rolls back acquired resources, and close is repeat-safe. Engine shutdown retires an active session even after a callback failure. Native callbacks copy bounded data and never invoke game/scene code. Delivery occurs on the active MainLoop owner through the existing Input parser and scene stages; headless hosts use that same input phase. Device identities remain stable for their open-session lifetime, queued data retains its source/session identity, and close/reopen or disconnect cannot deliver stale callbacks into a new session. Failure and queue-overflow reporting must remain observable; silently losing a note release is not acceptable cleanup.
+
+The selected host boundaries are internal and preserve one public event/control contract:
+
+| Runtime target | Native host API and remaining integration |
+| --- | --- |
+| Linux/X11 and Linux/Wayland | [ALSA Sequencer](https://www.alsa-project.org/alsa-doc/alsa-lib/seq.html), using system libasound, nonblocking input and port subscriptions; no window or audio-server requirement |
+| Windows | [WinMM MIDI input](https://learn.microsoft.com/en-us/windows/win32/api/mmeapi/nf-mmeapi-midiinopen), with owned device handles and callback retirement |
+| macOS and iOS | [CoreMIDI](https://developer.apple.com/documentation/coremidi), with native client/source/port ownership and MIDI 1 message projection through the current protocol-aware input API |
+| Android and Android TV | [MidiManager](https://developer.android.com/reference/android/media/midi/MidiManager) through the owning Android host adapter; honor actual FEATURE_MIDI availability and asynchronous device opening, without assuming phone/TV equivalence |
+| Web | [Web MIDI](https://www.w3.org/TR/webmidi/) through the browser host; secure-context/permission acquisition is asynchronous, and pending/denied access must not be reported as opened input |
+| tvOS | Native source acquisition remains an unresolved platform gap. Apple's availability metadata for [MIDIClientCreate](https://developer.apple.com/documentation/coremidi/midiclientcreate%28_%3A_%3A_%3A_%3A%29) and [MIDIInputPortCreateWithProtocol](https://developer.apple.com/documentation/coremidi/midiinputportcreatewithprotocol%28_%3A_%3A_%3A_%3A_%3A%29) does not list tvOS; framework availability alone does not qualify device input. Establish a permitted source/transport and its lifecycle or record an owning capability decision under ADR 0021; do not silently exclude this target or claim native support |
+
+Do not add a universal MIDI wrapper or external managed assembly just to defer these host obligations. Native adapters belong inside the runtime or its already accepted platform bootstrap boundary. If another native dependency becomes necessary, first establish its packaging, ABI and lifecycle contract under ADR 0012. An absent producer, missing permission, denied access, no connected device and disconnected session are distinct outcomes; an empty list cannot hide an unavailable backend or an error. An unsupported result records a gap or exact external capability condition, not achieved functional parity.
+
+Use the same independent message vectors and scene-delivery assertions on all hosts, including channel/status boundaries, 14-bit values, note-on velocity zero, interleaved/fragmented native input where applicable, multiple source identities, opening failure, disconnect, denied/pending browser access, close/reopen and shutdown after callback failure. Exercise actual native virtual endpoints before physical MIDI-device acceptance, and retain package/trim/AOT checks for applicable RIDs. Bounded Linux, emulator or virtual-endpoint execution does not complete the remaining hosts or establish physical-device acceptance. The [platform report](../platform-verification.md#cross-platform-parity-acceptance) owns evidence accounting; no MIDI production type or native producer currently exists.
 
 ### Consequences
 

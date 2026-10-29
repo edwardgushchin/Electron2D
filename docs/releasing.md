@@ -1,6 +1,6 @@
 # Releasing Electron2D
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 This is the maintainer runbook for future releases. Product versions follow
 [ADR 0096](decisions/versioning.md#adr-0096); platform acceptance follows
@@ -31,6 +31,10 @@ for the fast loop and complete qualification triggers.
   `README.es.md`, `README.pt-BR.md` and `README.zh-CN.md`. A badge/version edit
   does not complete this review. Describe implemented capabilities and link
   their boundaries; do not claim whole-subsystem completion from API counts.
+  Apply the [full platform acceptance gate](platform-verification.md#cross-platform-parity-acceptance)
+  to every advertised capability. Missing adapters, unexecuted target profiles and
+  unsupported results remain blockers to an all-platform support claim; a bounded
+  development preview must retain its explicit incomplete scope.
 - Finish XML/class/component/domain/coverage changes and prepare the Wiki from
   the candidate assembly. Follow the existing pre-commit checks in `AGENTS.md`;
   keep generated Wiki output and release receipts outside engine commits.
@@ -50,9 +54,10 @@ for the fast loop and complete qualification triggers.
    source/build-recipe changes invalidate the relevant cache. Do not add an
    unconditional publication rebuild to an already qualified package set.
 3. Run the configured Build/Tests matrix once on the final candidate, together
-   with the applicable native/rendered checks required by the active platform
-   gate. A focused pass is diagnostic evidence, not a replacement for the final
-   matrix. Keep physical-device, physical audio, hardware performance and owner
+   with the shared feature conformance and actual native/rendered host checks
+   required across the complete applicable product matrix by ADR 0021. A focused
+   pass is diagnostic evidence, not a replacement for the final matrix. Keep
+   physical-device, physical audio, hardware performance and owner
    acceptance limits explicit; software-rendered CI does not establish them.
 4. Exercise the actual release `.nupkg` files through fresh package-only
    consumers, including the applicable target profiles. Retain empty-cache

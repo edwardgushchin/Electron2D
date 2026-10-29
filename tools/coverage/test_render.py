@@ -886,7 +886,18 @@ def main():
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name
         assert "ResourceArchiveTests" in rows[0] and "typed archive" in rows[0], name
     assert "Electron2D.RPCMode" in pages[CLASS_PAGES / "MultiplayerAPI.md"]
-    assert "accepted MIDI-domain" in class_rows["InputEventMIDI"]
+    midi_rows = [row for row in pages[CLASS_PAGES / "InputEventMIDI.md"].splitlines()
+                 if row.startswith("| [`")]
+    os_midi_rows = [row for row in pages[CLASS_PAGES / "OS.md"].splitlines()
+                   if any(f"method {name}(" in row for name in
+                          ("open_midi_inputs", "get_connected_midi_inputs", "close_midi_inputs"))]
+    assert len(midi_rows) == 9 and len(os_midi_rows) == 3
+    midi_message_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
+                         if "enum MIDIMessage`" in row or "[MIDIMessage]" in row]
+    assert len(midi_message_rows) == 20
+    for row in midi_rows + os_midi_rows + midi_message_rows:
+        assert " | Blocked | " in row and "native MIDI input adapters" in row, row
+        assert "ADRs 0038 and 0021" in row and "accepted MIDI-domain" not in row, row
     button_rows = 0
     for name in ("BaseButton", "ButtonGroup", "Button", "CheckBox", "CheckButton", "TextureButton", "Shortcut", "InputEventShortcut"):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]

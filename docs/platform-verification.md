@@ -1,6 +1,14 @@
 # Platform verification matrix
 
-Last updated: 2026-10-24
+Last updated: 2026-10-29
+
+## Cross-platform parity acceptance
+
+[ADR 0021](decisions/product.md#adr-0021) requires the same observable runtime behavior across Windows, macOS, Linux/X11, Linux/Wayland, Android, Android TV, iOS, tvOS and Web. Editor parity applies to Windows, macOS and both Linux display hosts. The former Linux/Wayland-only completion gate is superseded; older receipts below retain their source, scope and limitations.
+
+For each capability, the owning component/class page records its common conformance scenarios, expected results, actual target/host/backend/RID, source and package identity, executed results and exact remaining failures or absent adapters. Include normal delivery, error/permission handling and repeated startup/teardown. Numeric/rendering tolerances are shared contract choices. Compilation, package presence, headless execution, native/rendered execution and physical-device checks are distinct evidence; an absent device or skipped check is not a pass. Shared OS/RID packaging does not merge Android with Android TV or iOS with tvOS; X11 and Wayland retain their own host checks.
+
+Unavoidable external capability limits need the owning ADR's exact condition and observable result. Missing engine backends or tests remain gaps rather than new exclusions. An explicit unsupported result does not demonstrate functional parity. This report currently contains bounded receipts and known gaps, not an exhaustive passing feature-by-target matrix. Existing configured CI and `release-qualified` artifacts do not automate that exhaustive acceptance gate; [development CI](development-ci.md) and [release preparation](releasing.md) retain that distinction.
 
 ## Current release checks
 
@@ -640,7 +648,7 @@ Completion requires reproducible target builds or provenance-checked prebuilt ar
 - Android device runs: build and use [Electron2D.AndroidProbe](../tests/Electron2D.AndroidProbe/README.md). Its five engine scenarios separate forced fallback, automatic fallback, GPU, shader, and physics; `gles_shader` checks the TV GPU separately. The engine project excludes nested generated Android Java/JAR/native files so switching ABI builds does not bind a prior test application's output.
 - Web: the browser result came from an isolated `/tmp` source snapshot and WebAssembly host, with SDL 3.4.16 built through Emscripten 3.1.56 and a temporary browser-compatible projection of the SDL3-CS P/Invoke bindings. It is diagnostic evidence only. No browser host, transitive native package, nonblocking frame loop, input/storage lifecycle, or shader GPU backend has been merged into the runtime. A two-frame `Engine.Run` returned successfully but disposed its canvas before sustained browser presentation.
 
-The Linux Wayland gate in [ADR 0021](decisions/product.md#adr-0021) remains the current release gate. The Android results cover these tested devices and paths; they do not establish lifecycle, controller input, audio, storage, signing, or store packaging. The Web engine result proves only the isolated fallback and managed physics probe; the separate [Chrome WebGPU shader probe](../tests/Electron2D.WebGpuProbe/README.md) rendered a red frame outside Electron2D. Chrome hardware acceleration is available. [ADR 0028](decisions/rendering.md#adr-0028) selects a separate WebGPU canvas backend with SPIR-V-to-WGSL translation, but it is not implemented yet. [SDL states that its GPU API currently has no Web backend](https://wiki.libsdl.org/SDL3/FAQDevelopment). Apple and desktop runtime claims require their own hosts and device checks.
+The [full product-platform acceptance gate](#cross-platform-parity-acceptance) supersedes the former Linux/Wayland-only gate; the following receipts retain their bounded scope. The Android results cover these tested devices and paths; they do not establish lifecycle, controller input, audio, storage, signing, or store packaging. The Web engine result proves only the isolated fallback and managed physics probe; the separate [Chrome WebGPU shader probe](../tests/Electron2D.WebGpuProbe/README.md) rendered a red frame outside Electron2D. Chrome hardware acceleration is available. [ADR 0028](decisions/rendering.md#adr-0028) selects a separate WebGPU canvas backend with SPIR-V-to-WGSL translation, but it is not implemented yet. [SDL states that its GPU API currently has no Web backend](https://wiki.libsdl.org/SDL3/FAQDevelopment). Apple and desktop runtime claims require their own hosts and device checks.
 
 ## Automated RID checks
 

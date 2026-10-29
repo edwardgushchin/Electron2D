@@ -409,6 +409,8 @@ Current replacements retain their own implementation and verification requiremen
 
 ## Complete implementation slice
 
+Apply the full product-platform completion rule in [ADR 0021](decisions/product.md#adr-0021). Reuse the same public conformance scenarios and expected outcomes on each target, including native host/package startup, failures and cleanup. State exactly which platforms executed and which remain open. A bounded platform implementation can be committed as partial progress; matching signatures, a green package matrix, skipped hardware checks or an explicit unsupported result do not complete the portable feature. Record receipts and gaps through the [platform report](platform-verification.md#cross-platform-parity-acceptance).
+
 When asked to implement a type or concept, deliver a production-ready vertical slice rather than a compiling skeleton:
 
 1. Read the current owning ADR, existing class/component/domain documents, complete upstream class reference and inheritance chain, and relevant coverage rows. Check declaration and owner deprecation before selecting the applicable API. Inventory properties, overloads, events, notifications, callbacks, defaults, state transitions, ordering, ownership, errors, and threading before coding.

@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 This file routes architecture work to bounded domain decision documents. Start here, locate the affected ADR headings and read the relevant sections plus needed cross-domain contracts. Use search/ranges before loading a whole document; follow links only when the task requires their contract. Class, component, and domain documents remain authoritative for implemented behavior.
 

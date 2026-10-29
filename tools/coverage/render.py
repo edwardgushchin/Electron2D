@@ -16,6 +16,7 @@ DATA = COVERAGE / "data"
 CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
+MIDI_INPUT_TRIGGER = "Trigger: native MIDI input adapters, device lifetime and message delivery under the accepted platform matrix (ADRs 0038 and 0021); product scope is approved, platform parity remains unverified."
 ALIASES = Path(__file__).with_name("type_aliases.json")
 OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "extensions", "file_save_swap", "byte_buffers", "host_delta", "movie_writing", "video_playback", "camera_feeds", "diagnostics", "zip", "resource_packs", "jobs", "display", "hdr_output", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "render_memory", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "device_limits", "device_caches", "navigation", "navigation_diagnostics", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
@@ -289,7 +290,7 @@ def reason_for_type(item, lookup):
         if name in names:
             return "Unimplemented", f"Accepted 2D capability; trigger: {trigger}."
     if name == "InputEventMIDI":
-        return "Blocked", "Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038)."
+        return "Blocked", MIDI_INPUT_TRIGGER
     if name in {"InputEventShortcut", "Shortcut"}:
         return "Blocked", "Trigger: first typed GUI/editor Shortcut ownership and focus-routing slice (ADR 0038)."
     if name == "AccessibilityServer":
@@ -440,6 +441,13 @@ def reason_for_type(item, lookup):
 
 
 def special_reason(item, member):
+    if item["name"] == "@GlobalScope" and (
+            member["kind"] == "enum" and member["name"] == "MIDIMessage"
+            or member["kind"] == "enum_value" and member["attributes"].get("enum") == "MIDIMessage"):
+        return "Blocked", MIDI_INPUT_TRIGGER
+    if item["name"] == "OS" and member["kind"] == "method" and member["name"] in {
+            "open_midi_inputs", "get_connected_midi_inputs", "close_midi_inputs"}:
+        return "Blocked", MIDI_INPUT_TRIGGER
     if item["name"].startswith("Packed") and item["name"].endswith("Array"):
         collection_methods = {"append", "append_array", "bsearch", "clear", "count", "duplicate", "erase", "fill", "find", "get", "has", "insert", "is_empty", "push_back", "remove_at", "resize", "reverse", "rfind", "set", "size", "slice", "sort"}
         if item["name"] == "PackedByteArray" and member["name"] in {"decode_var", "decode_var_size", "encode_var", "has_encoded_var"}:
@@ -884,7 +892,7 @@ def render():
             "4. **Stage 4a, next project-authoring slice:** [Git-backed creation and durable project memory](../decisions/agent-native.md#git-backed-project-memory), portable instructions, shared Markdown/six-section journal publication, validated Conventional Commits 1.0.0, bounded indexed context and an actually delivered/loaded development skill. Verify fresh-client continuation in editor/no-UI modes.",
             "5. **Stage 4b, Git workspace:** use 4a's repository/document boundary for editor/no-UI review/index/commits, branches, remotes/fetch/pull/push, worktrees, integration/conflicts and explicit recovery. Preserve dirty buffers and coordinate shared refs; verify real failure/cancellation/uncertain-result cases.",
             "6. **Stage 4c, provider and capability expansion:** qualify the named provider/backend plus executor profiles in the [support matrix](../components/project-agent.md#provider-and-client-support), including native Kimi Code CLI/Qwen Code and compatible-executor DeepSeek/GLM/MiniMax backends, plus Copilot CLI/Cursor external clients. Keep the common skill/context/journal contract and qualify each actual endpoint/model/executor combination. Expand semantic operations, spatial context and composition; benchmark real tasks and qualify installed distribution/additional platforms. Keep all README locales accurate. Concurrent agents and hot reload retain separate justified slices.", "",
-            "Linux/Wayland remains the executable gate under ADR 0021. Absent editor/import/export/plugin families retain exact dependencies; the historical broad trigger counts below do not mean the startup window alone unlocks those families.", "",
+            "ADR 0021 requires equivalent behavior and packaged host execution across the full applicable product matrix. Bounded platform slices remain partial progress; declaration states and historical counts do not establish platform qualification. MIDI scope is accepted in ADR 0038; its missing native adapters and device/event path remain blockers, not a request for further product approval. Absent editor/import/export/plugin families retain their exact dependencies.", "",
             "## Existing type backlog", "",
             "These classes already have an Electron2D type. The counts scope work; they do not rank the next slice or authorize skipping a dependency.", "",
             "| Godot class | Unimplemented members | Partial members |", "| --- | ---: | ---: |"]

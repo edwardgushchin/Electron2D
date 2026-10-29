@@ -1,13 +1,15 @@
 # Development feedback and package qualification
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 The [CI workflow](../.github/workflows/ci.yml) separates fast development feedback
 from complete package qualification. This preserves the configured platform
 matrix and the acceptance boundaries in [ADR 0021](decisions/product.md#adr-0021).
 The workflow source is implemented; a successful GitHub run is still required
 after pushing these changes. Local checks do not establish hosted execution or
-hardware acceptance.
+hardware acceptance. The full product-platform completion rule in ADR 0021 also
+requires feature/host conformance; the configured pipeline is not an exhaustive
+implementation of that rule.
 
 The ordinary root test runner checks native asset placement, both WebP bridge
 exports and the private FreeType allocator export before entering the full suite. `ELECTRON2D_TEST_NATIVE_LIBRARIES=1` runs
@@ -100,7 +102,11 @@ and `qualification.json` with repository, source SHA, run/attempt and per-file
 identity, size and SHA-256. It is retained for 30 days. Missing, changed, incomplete
 or expired artifacts require qualification again. `Development` summarizes the
 planned scope; `Build` and `Tests` are skipped on fast-only runs and cannot be
-presented as a complete matrix success.
+presented as a complete matrix success. Even a successful full run qualifies only
+the configured package and test scope. It does not certify every engine/editor
+capability on every host. Record remaining feature/host checks in the
+[platform report](platform-verification.md#cross-platform-parity-acceptance); a
+`release-qualified` artifact does not waive those acceptance gaps.
 
 ## Main branch and publication
 
