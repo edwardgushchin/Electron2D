@@ -539,3 +539,5 @@ The [deferred call/setter contract](../components/scene-tree.md#complete-deferre
 [Editor canvas guides](../components/editor-canvas-guides.md) connect spatial Marker anchors, ReferenceRect UI borders and notifier ShowRect regions to the actual passive editor preview and ordinary retained drawing.
 
 AnimationPlayer.MovieQuitOnFinish now connects authored finite playback to [actual movie completion](../components/movie-writing.md#animation-completion), including stored state, callback control and final endpoint publication.
+
+Custom AnimationNode clip blending now carries reported loop endpoints through method, audio and nested playback using [shared event ranges](../components/scene-animation.md#custom-clip-event-boundaries). Built-in unfolded timelines and ordinary scene scheduling retain their existing ownership.

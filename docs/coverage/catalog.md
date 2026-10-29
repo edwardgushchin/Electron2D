@@ -24,7 +24,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Animation](classes/Animation.md) | Resource | Partial | 114 |
 | [AnimationLibrary](classes/AnimationLibrary.md) | Resource | Implemented | 11 |
 | [AnimationMixer](classes/AnimationMixer.md) | Node | Partial | 49 |
-| [AnimationNode](classes/AnimationNode.md) | Resource | Partial | 33 |
+| [AnimationNode](classes/AnimationNode.md) | Resource | Implemented | 33 |
 | [AnimationNodeAdd2](classes/AnimationNodeAdd2.md) | AnimationNodeSync | Implemented | 0 |
 | [AnimationNodeAdd3](classes/AnimationNodeAdd3.md) | AnimationNodeSync | Implemented | 0 |
 | [AnimationNodeAnimation](classes/AnimationNodeAnimation.md) | AnimationRootNode | Implemented | 11 |

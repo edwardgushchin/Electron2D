@@ -1,6 +1,6 @@
 # AnimationNode
 
-Last updated: 2026-10-13
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.AnimationNode` · **Source:** [AnimationNode.cs](../../src/Scene/Animation/AnimationNode.cs).
 
@@ -16,7 +16,7 @@ Last updated: 2026-10-13
 
 A reusable animation-graph resource with typed parameters, inputs and track filters.
 
-Protected hooks supply caption, ordered children, typed parameter definitions/defaults/read-only policy, filter support and processing. The AnimationNodeExtension.OnProcessAnimationNode callback may call BlendInput, BlendNode or BlendAnimation only during evaluation. Blend helpers return remaining seconds for the selected timeline; looped timelines use a large finite remaining duration. GetParameter/SetParameter access the current instance, never the resource definition. Test-only evaluation suppresses persistent cell changes, leaf signals and mixer output. Child filters use exact full track/property paths. BlendAnimation currently schedules property tracks; external seek/loop endpoint flags have no additional property effects and their event-track effects remain a separate scheduler dependency.
+Protected hooks supply caption, ordered children, typed parameter definitions/defaults/read-only policy, filter support and processing. The AnimationNodeExtension.OnProcessAnimationNode callback may call BlendInput, BlendNode or BlendAnimation only during evaluation. Blend helpers return remaining seconds for the selected timeline; looped timelines use a large finite remaining duration. GetParameter/SetParameter access the current instance, never the resource definition. Test-only evaluation suppresses persistent cell changes, leaf signals and mixer output. Child filters use exact full track/property paths. BlendAnimation schedules typed properties and method/audio/nested events. Custom sampled time/delta and reported loop endpoints share the event-range contract; property interpolation and built-in unfolded clocks retain their existing behavior.
 
 Graph resources borrow child resources; the blend tree owns only its reserved output. Resource duplication copies definition containers, with shallow/deep resource aliases governed by Resource. Evaluation state and typed parameter cells belong to each AnimationTree and graph path. A definition may be shared sequentially across trees; concurrent processing of the same definition is unsupported. Scene controllers and parameter writes obey the inherited Node owner-thread rule. Resource edits invalidate prepared graph/binding state; cold preparation may allocate. Exact built-in graph file schemas execute; editor UI remains separate. State machines evaluate typed C# predicates and condition keys.
 
@@ -83,7 +83,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 | Complete C# signature | Contract |
 | --- | --- |
 | `public virtual System.Boolean AddInput(System.String name)` | Adds an input; root resources and names with slash/dot are rejected. |
-| `public System.Void BlendAnimation(System.String animation, System.Double time, System.Double delta, System.Boolean seeked, System.Boolean isExternalSeeking, System.Double blend, Electron2D.Animation.LoopedFlag loopedFlag = None)` | Adds a named clip to the active tree's typed property mixer. |
+| `public System.Void BlendAnimation(System.String animation, System.Double time, System.Double delta, System.Boolean seeked, System.Boolean isExternalSeeking, System.Double blend, Electron2D.Animation.LoopedFlag loopedFlag = None)` | Adds a named clip to the active tree's typed property and event mixers. |
 | `public System.Double BlendInput(System.Int32 inputIndex, System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Double blend, Electron2D.AnimationNode.FilterAction filter = Ignore, System.Boolean sync = true, System.Boolean testOnly = false)` | Processes an input of the current blend-tree instance. |
 | `public System.Double BlendNode(System.String name, Electron2D.AnimationNode node, System.Double time, System.Boolean seek, System.Boolean isExternalSeeking, System.Double blend, Electron2D.AnimationNode.FilterAction filter = Ignore, System.Boolean sync = true, System.Boolean testOnly = false)` | Processes a named child resource of the active graph instance. |
 | `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicate, System.Func<Electron2D.Resource, Electron2D.Resource> force)` | Copies derived stored state into a duplicate or copy target. |
@@ -130,7 +130,7 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 
 `public System.Void BlendAnimation(System.String animation, System.Double time, System.Double delta, System.Boolean seeked, System.Boolean isExternalSeeking, System.Double blend, Electron2D.Animation.LoopedFlag loopedFlag = None)`
 
-Adds a named clip to the active tree's typed property mixer.
+Adds a named clip to the active tree's typed property and event mixers.
 
 animation: The exact qualified clip name.
 
@@ -144,7 +144,9 @@ isExternalSeeking: Whether the seek is external.
 
 blend: The finite signed contribution.
 
-loopedFlag: The crossed endpoint flag.
+loopedFlag: The reported endpoint for folded custom event ranges. Linear loops include a newly crossed boundary; PingPong splits at Start or End. Method, audio and nested-animation consumers share this interpretation.
+
+System.ArgumentOutOfRangeException: A numeric argument or derived event interval is nonfinite, or the endpoint flag is undefined.
 
 System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
@@ -566,3 +568,5 @@ System.ObjectDisposedException: This resource/controller or a required borrowed 
 ## File persistence
 
 Built-in graph definitions now use exact typed resource-file factories. Files retain input captions, filters, authoring policies, child topology and aliases. AnimationTree scene files also retain compiled writable parameter values; clocks, requests already consumed, read-only diagnostics and private playback objects restart. Application subclasses register their own exact factory and stable parameter/predicate IDs. See [graph file persistence](../components/scene-animation.md#graph-file-persistence).
+
+Custom loop traversal, numerical boundaries, suppression, native audio checks and resource-lifetime behavior are specified in [the animation component](../components/scene-animation.md#custom-clip-event-boundaries).

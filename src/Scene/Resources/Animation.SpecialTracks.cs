@@ -252,6 +252,17 @@ internal sealed partial class AnimationMethodTrack<TOwner> : AnimationTypedTrack
             var clip = frame.Animation; var revision = clip.ChangeRevision;
             if (frame.UpdateOnly || Math.Abs(weight) < 1e-5 || !Current(clip, mixer, generation, revision) || _track.Times.Count == 0) return;
             if (!frame.Previous.HasValue) { SeekKey(clip, index, frame.Time, frame.ExternalSeeking, mixer); return; }
+            if (frame.LoopedFlag.HasValue)
+            {
+                Span<AnimationEventRange> ranges = stackalloc AnimationEventRange[2];
+                var count = AnimationEventRange.Get(frame, ranges);
+                for (var i = 0; i < count && Current(clip, mixer, generation, revision); i++)
+                {
+                    var keyCursor = ranges[i].Backward ? _track.Times.Count : -1;
+                    while (Current(clip, mixer, generation, revision) && ranges[i].TryNext(_track.Times, ref keyCursor, out var key)) Invoke(key, mixer);
+                }
+                return;
+            }
             var cursor = frame.Previous.Value;
             if (frame.IncludeStart) { SeekKey(clip, index, cursor, frame.ExternalSeeking, mixer); if (!Current(clip, mixer, generation, revision)) return; }
             var remaining = frame.Movement; var start = frame.Start; var end = frame.End < 0 ? clip.Length : frame.End;

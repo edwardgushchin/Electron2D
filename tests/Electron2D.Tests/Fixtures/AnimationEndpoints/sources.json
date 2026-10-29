@@ -1,0 +1,13 @@
+{
+  "commit": "ed1daf0bf001b61586d9930840f2f1394092c079",
+  "paths": {
+    "animation.cpp": "scene/resources/animation.cpp",
+    "math_funcs.h": "core/math/math_funcs.h",
+    "math_defs.h": "core/math/math_defs.h"
+  },
+  "sha256": {
+    "animation.cpp": "6faaa27c9d032bfd95ea1dc541a7700032f2a66093814fc34e1ed7cae928f988",
+    "math_funcs.h": "944eac1e6c84b9ebf4ea51af604af129c6f1dc1117c6ef57fe6a62e34ddbbb49",
+    "math_defs.h": "db5046323f7cc8a6d6340c0303c0bd02e399768a8b11b2df8b88654540eb3fdd"
+  }
+}

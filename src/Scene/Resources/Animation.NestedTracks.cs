@@ -55,36 +55,12 @@ internal sealed class AnimationNestedTrack : AnimationTypedTrack<string>
         internal override void StopPlayback() { var owned = OwnsPlayback; _playing = false; if (owned) player.Stop(true); }
         private void Start(string name)
         { _playing = true; _controlRevision = player.PlaybackRevision + 1; player.Play(name); }
-        private int Range(double from, double to, bool reverse)
-        {
-            var index = track.Times.BinarySearch(to);
-            if (reverse) { if (index < 0) index = ~index; return index < track.Times.Count && track.Times[index] < from ? index : -1; }
-            if (index < 0) index = ~index - 1;
-            return index >= 0 && track.Times[index] > from ? index : -1;
-        }
-        private int LastCrossed(AnimationMixFrame frame, int index)
-        {
-            var clip = frame.Animation; var cursor = frame.Previous!.Value; var found = frame.IncludeStart ? clip.TrackFindKey(index, cursor, Animation.FindMode.Exact, true) : -1;
-            var remaining = frame.Movement; var start = frame.Start; var end = frame.End < 0 ? clip.Length : frame.End;
-            if (end <= start) return found;
-            cursor = Math.Clamp(cursor, start, end);
-            while (remaining != 0)
-            {
-                var reverse = remaining < 0; var endpoint = reverse ? start : end; var travel = Math.Min(Math.Abs(remaining), Math.Abs(endpoint - cursor)); var next = cursor + (reverse ? -travel : travel);
-                var key = Range(cursor, next, reverse); if (key >= 0) found = key;
-                var rest = remaining + (reverse ? travel : -travel); if (travel > 0 && rest == remaining) throw new InvalidOperationException("Nested timeline delta cannot make representable progress."); remaining = rest; cursor = next;
-                if (cursor != endpoint || clip.LoopMode == SpriteFrames.LoopMode.None) break;
-                if (clip.LoopMode == SpriteFrames.LoopMode.PingPong) remaining = -remaining;
-                else { cursor = reverse ? end : start; key = clip.TrackFindKey(index, cursor, Animation.FindMode.Exact, true); if (key >= 0) found = key; }
-            }
-            return found;
-        }
         internal override void Mix(AnimationMixFrame frame, int index, double weight, AnimationMixer mixer, long generation)
         {
             if (!track.Enabled || track.Times.Count == 0 || Math.Abs(weight) < 1e-5 || player.IsDisposed || player.IsQueuedForDeletion || !ReferenceEquals(player.Tree, mixer.Tree)) return;
             _seen = true;
             var seek = !frame.Previous.HasValue || frame.IncludeStart;
-            var key = seek ? frame.Animation.TrackFindKey(index, frame.Time, Animation.FindMode.Nearest, true) : LastCrossed(frame, index);
+            var key = seek ? frame.Animation.TrackFindKey(index, frame.Time, Animation.FindMode.Nearest, true) : track.FindLastCrossed(frame, index);
             if (key < 0) return;
             var name = track.Values[key];
             if (name == "[stop]" || !player.HasAnimation(name)) { if (!seek && OwnsPlayback) { _playing = false; player.Stop(); } return; }

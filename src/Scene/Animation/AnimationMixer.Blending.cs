@@ -133,7 +133,7 @@ public partial class AnimationMixer
     internal void DiscreteWritten(ulong owner, string property) { if (_blendProperties.TryGetValue((owner, property), out var state)) state.DiscreteWritten = true; }
     private sealed record AnimationBlendCache(long Revision, AnimationBinding?[] Bindings);
 }
-internal readonly record struct AnimationMixFrame(Animation Animation, double Time, bool Backward, double? Previous, double Weight, double Start = 0, double End = -1, double Movement = 0, double[]? TrackWeights = null, bool IncludeStart = false, bool ExternalSeeking = false, bool UpdateOnly = false);
+internal readonly record struct AnimationMixFrame(Animation Animation, double Time, bool Backward, double? Previous, double Weight, double Start = 0, double End = -1, double Movement = 0, double[]? TrackWeights = null, bool IncludeStart = false, bool ExternalSeeking = false, bool UpdateOnly = false, Animation.LoopedFlag? LoopedFlag = null);
 internal abstract class AnimationBlendProperty(Node owner)
 {
     internal readonly Node Owner = owner;

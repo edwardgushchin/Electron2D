@@ -343,6 +343,17 @@ internal abstract class AnimationTrack
     internal virtual T MethodArguments<T>(int key) => throw new InvalidOperationException("Operation requires a method track.");
     internal int FindLastCrossed(AnimationMixFrame frame, int index)
     {
+        if (frame.LoopedFlag.HasValue)
+        {
+            Span<AnimationEventRange> ranges = stackalloc AnimationEventRange[2];
+            var count = AnimationEventRange.Get(frame, ranges); var last = -1;
+            for (var i = 0; i < count; i++)
+            {
+                var key = ranges[i].Last(Times);
+                if (key >= 0) last = key;
+            }
+            return last;
+        }
         var cursor = frame.Previous!.Value; var remaining = frame.Movement; var start = frame.Start; var end = frame.End < 0 ? frame.Animation.Length : frame.End; var found = -1;
         if (end <= start) return found; cursor = Math.Clamp(cursor, start, end);
         while (remaining != 0)

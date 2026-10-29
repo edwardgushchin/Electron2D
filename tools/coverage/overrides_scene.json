@@ -3339,8 +3339,8 @@
     {
       "godot": "class:AnimationNode",
       "electron2d": "T:Electron2D.AnimationNode",
-      "state": "Partial",
-      "reason": "ADR 0093 typed animation graph execution: reusable borrowed resources, per-tree/path typed parameter cells, clip timing, graph topology/filtering, signed Blend/Add/Sub, TimeScale/TimeSeek and provider integration. AnimationGraphTests verifies editing/cycles, two shared-tree instances, parameters/readonly/errors, arithmetic/filtering/clock edges, reentry/cleanup and zero warmed managed allocations. Two Linux Wayland GPU and two compatibility five-pose readbacks verify real rendered execution. Disk/editor and other-platform acceptance remain separate. Expression-driven transition evaluation or non-property track schedulers remain separate."
+      "state": "Implemented",
+      "reason": "ADR 0093 complete custom graph event traversal: BlendAnimation forwards sampled time/delta and all LoopedFlag values to shared allocation-free method/audio/nested ranges. AnimationEndpointTests and public AnimationEndpoints.Consumer compare 3564 independent C++ vectors, reverse/folded/minimum-length/epsilon boundaries, seek/test-only/weight suppression, deferred order, callback edits/failure and warm zero allocation. Real FAudio callback/capture profiles execute None/Linear/PingPong. Built-in unfolded section/repeated-loop clocks, typed graph files and modern extension behavior remain intact. Editor/physical/foreign qualification is separate; see docs/components/scene-animation.md#custom-clip-event-boundaries."
     },
     {
       "godot": "AnimationNode::enum:FilterAction",
@@ -3423,8 +3423,8 @@
     {
       "godot": "AnimationNode::method:blend_animation(StringName:,float:,float:,bool:,bool:,float:,int:Animation.LoopedFlag)",
       "electron2d": "method:Electron2D.AnimationNode.BlendAnimation(System.String,System.Double,System.Double,System.Boolean,System.Boolean,System.Double,Electron2D.Animation.LoopedFlag)",
-      "state": "Partial",
-      "reason": "ADR 0093 typed custom clip blending executes property and all applicable event-track frames. Partial remains for explicit LoopedFlag effects supplied by a custom graph hook: forward that caller-supplied endpoint flag through the event traversal contract and verify reverse/section/seam cases. Built-in leaves compute their own movement/loop traversal; no absent method/audio/nested scheduler is claimed."
+      "state": "Implemented",
+      "reason": "ADR 0093 complete custom graph event traversal: BlendAnimation forwards sampled time/delta and all LoopedFlag values to shared allocation-free method/audio/nested ranges. AnimationEndpointTests and public AnimationEndpoints.Consumer compare 3564 independent C++ vectors, reverse/folded/minimum-length/epsilon boundaries, seek/test-only/weight suppression, deferred order, callback edits/failure and warm zero allocation. Real FAudio callback/capture profiles execute None/Linear/PingPong. Built-in unfolded section/repeated-loop clocks, typed graph files and modern extension behavior remain intact. Editor/physical/foreign qualification is separate; see docs/components/scene-animation.md#custom-clip-event-boundaries."
     },
     {
       "godot": "AnimationNode::method:blend_input(int:,float:,bool:,bool:,float:,int:AnimationNode.FilterAction,bool:,bool:)",
@@ -11155,8 +11155,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0093 typed custom clip blending executes property and all applicable event-track frames. Partial remains for explicit LoopedFlag effects supplied by a custom graph hook: forward that caller-supplied endpoint flag through the event traversal contract and verify reverse/section/seam cases. Built-in leaves compute their own movement/loop traversal; no absent method/audio/nested scheduler is claimed.",
+      "state": "Implemented",
+      "reason": "ADR 0093 complete custom graph event traversal: BlendAnimation forwards sampled time/delta and all LoopedFlag values to shared allocation-free method/audio/nested ranges. AnimationEndpointTests and public AnimationEndpoints.Consumer compare 3564 independent C++ vectors, reverse/folded/minimum-length/epsilon boundaries, seek/test-only/weight suppression, deferred order, callback edits/failure and warm zero allocation. Real FAudio callback/capture profiles execute None/Linear/PingPong. Built-in unfolded section/repeated-loop clocks, typed graph files and modern extension behavior remain intact. Editor/physical/foreign qualification is separate; see docs/components/scene-animation.md#custom-clip-event-boundaries.",
       "godot": [
         "AnimationNode::method:blend_animation(StringName:,float:,float:,bool:,bool:,float:,int:Animation.LoopedFlag)"
       ]
@@ -11587,8 +11587,8 @@
       "godot": [
         "class:AnimationNode"
       ],
-      "state": "Partial",
-      "reason": "Exact graph files and modern typed extension execute. Remaining precise member dependency is forwarding caller-supplied BlendAnimation.LoopedFlag into method/audio/nested endpoint traversal and verifying reverse/section/seam cases; built-in leaves already compute traversal. Editor/native/foreign acceptance remains separate."
+      "state": "Implemented",
+      "reason": "ADR 0093 complete custom graph event traversal: BlendAnimation forwards sampled time/delta and all LoopedFlag values to shared allocation-free method/audio/nested ranges. AnimationEndpointTests and public AnimationEndpoints.Consumer compare 3564 independent C++ vectors, reverse/folded/minimum-length/epsilon boundaries, seek/test-only/weight suppression, deferred order, callback edits/failure and warm zero allocation. Real FAudio callback/capture profiles execute None/Linear/PingPong. Built-in unfolded section/repeated-loop clocks, typed graph files and modern extension behavior remain intact. Editor/physical/foreign qualification is separate; see docs/components/scene-animation.md#custom-clip-event-boundaries."
     },
     {
       "godot": [

@@ -2435,3 +2435,5 @@ ProjectSettings.Accessibility.cs now registers native AccessibilityDriver and Ac
 | [MIDIMessage](classes/MIDIMessage.md) | [source](../src/Core/Input/MIDIMessage.cs) | Typed MIDI 1 message identities |
 
 The retained OS MIDI owner is implemented in [OS.MIDI.cs](../src/Core/OS/OS.MIDI.cs); its native and platform boundaries are recorded in [MIDI input](components/midi-input.md).
+
+Custom AnimationNode endpoint delivery extends the existing AnimationNode/AnimationTree/AnimationMixer and Animation track families. Internal [AnimationEventRange](../src/Scene/Animation/AnimationEventRange.cs) and transient AnimationMixFrame metadata implement the [shared event traversal](components/scene-animation.md#custom-clip-event-boundaries); no public type or persisted schema is added.

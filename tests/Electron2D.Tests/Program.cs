@@ -10,6 +10,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_ENDPOINTS") is { } endpointMode) { if (endpointMode == "1") AnimationEndpointTests.Run(); else AnimationEndpointTests.RunAudio(endpointMode == "linear" ? SpriteFrames.LoopMode.Linear : endpointMode == "pingpong" ? SpriteFrames.LoopMode.PingPong : SpriteFrames.LoopMode.None); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIDI") is { } midiMode) { if (midiMode == "managed") MIDIInputTests.Managed(); else if (midiMode == "unavailable") MIDIInputTests.Unavailable(); else MIDIInputTests.Native(midiMode); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PROVIDER_CLIP") is { } clipBackend) { TextProviderClipTests.Run(clipBackend); return; }
@@ -2030,6 +2032,7 @@ AnimationResetSaveTests.Run();
 AnimationGraphPersistenceTests.Run();
 AnimationCuePersistenceTests.Run();
 SceneAnimationBlendTests.Run();
+AnimationEndpointTests.Run();
 AnimationGraphTests.Run();
 AnimationBlendSpaceTests.Run();
 AnimationActionTests.Run();

@@ -151,18 +151,20 @@ public partial class AnimationNode : Resource
     /// <exception cref="InvalidOperationException">Processing context is absent, an input is disconnected, or an external write targets a read-only slot.</exception>
     public double BlendNode(string name, AnimationNode node, double time, bool seek, bool isExternalSeeking, double blend, FilterAction filter = FilterAction.Ignore, bool sync = true, bool testOnly = false)
     { var c = Current(); var child = c.Instance.Children[name]; if (!ReferenceEquals(child.Definition, node)) throw new ArgumentException("Child resource differs from the prepared graph.", nameof(node)); var info = c.Tree.BlendChild(c, child, time, seek, isExternalSeeking, blend, filter, sync, testOnly); c.Result = info; c.HasTime = true; return info.Remaining; }
-    /// <summary>Adds a named clip to the active tree's typed property mixer.</summary>
+    /// <summary>Adds a named clip to the active tree's typed property and event mixers.</summary>
     /// <param name="animation">The exact qualified clip name.</param>
     /// <param name="time">The clip position in seconds.</param>
     /// <param name="delta">The signed clip delta in seconds.</param>
     /// <param name="seeked">Whether the position was explicitly sought.</param>
     /// <param name="isExternalSeeking">Whether the seek is external.</param>
     /// <param name="blend">The finite signed contribution.</param>
-    /// <param name="loopedFlag">The crossed endpoint flag.</param>
+    /// <param name="loopedFlag">The reported endpoint: linear loops include a newly crossed boundary; ping-pong loops split the event interval at Start or End.</param>
+    /// <remarks>Time and signed delta define custom event ranges. Method, audio and nested-animation tracks share their ordering; seek, test-only and zero-weight suppression remain unchanged. Built-in leaves retain their unfolded clocks and repeated crossings.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">A numeric argument or derived event interval is nonfinite, or the endpoint flag is undefined.</exception>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
     /// <exception cref="InvalidOperationException">Processing context is absent, an input is disconnected, or an external write targets a read-only slot.</exception>
     public void BlendAnimation(string animation, double time, double delta, bool seeked, bool isExternalSeeking, double blend, Animation.LoopedFlag loopedFlag = Animation.LoopedFlag.None)
-    { var c = Current(); Animation.Valid(loopedFlag); if (!c.TestOnly) c.Tree.AddClip(c.Instance, animation, time, delta, seeked, blend, external: isExternalSeeking); }
+    { var c = Current(); Animation.Valid(loopedFlag); if (!c.TestOnly) c.Tree.AddClip(c.Instance, animation, time, delta, seeked, blend, external: isExternalSeeking, loopedFlag: loopedFlag); }
     /// <summary>Returns the display caption of this resource.</summary>
     /// <returns>The typed caption.</returns>
     /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
