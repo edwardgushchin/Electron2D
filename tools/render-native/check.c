@@ -177,6 +177,29 @@ static void raster_check(SDL_GPUDevice *device)
 }
 typedef struct LineLimits { float minimum, maximum, granularity; } LineLimits;
 extern int e2d_render_line_support(SDL_GPUDevice *, uint32_t, LineLimits *);
+static void aspect_copy_guards(SDL_GPUDevice *device)
+{
+    if (!SDL_GPUTextureSupportsSampleCount(device, SDL_GPU_TEXTUREFORMAT_D32_FLOAT, SDL_GPU_SAMPLECOUNT_4)) return;
+    SDL_GPUTextureCreateInfo info = {.type = SDL_GPU_TEXTURETYPE_2D, .format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
+        .width = 4, .height = 4, .layer_count_or_depth = 1, .num_levels = 1,
+        .sample_count = SDL_GPU_SAMPLECOUNT_4, .usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET};
+    SDL_GPUTexture *multi = SDL_CreateGPUTexture(device, &info); require(multi != NULL);
+    info.sample_count = SDL_GPU_SAMPLECOUNT_1;
+    SDL_GPUTexture *single = SDL_CreateGPUTexture(device, &info); require(single != NULL);
+    SDL_GPUTransferBufferCreateInfo buffer = {.usage = SDL_GPU_TRANSFERBUFFERUSAGE_DOWNLOAD, .size = 64};
+    SDL_GPUTransferBuffer *transfer = SDL_CreateGPUTransferBuffer(device, &buffer); require(transfer != NULL);
+    SDL_GPUCommandBuffer *commands = SDL_AcquireGPUCommandBuffer(device); require(commands != NULL);
+    SDL_GPUCopyPass *pass = SDL_BeginGPUCopyPass(commands); require(pass != NULL);
+    SDL_GPUTextureRegion region = {.texture = multi, .w = 4, .h = 4, .d = 1};
+    SDL_GPUTextureLocation from = {.texture = multi}, to = {.texture = single};
+    require(e2d_render_aspect_transfer(device, 1, commands, &region, transfer, 0, 0, 0) == -1);
+    require(e2d_render_aspect_copy(device, 1, commands, &from, &to, 4, 4) == -1);
+    require(e2d_render_aspect_copy(device, 1, commands, &from, &from, 4, 4) == -1);
+    SDL_EndGPUCopyPass(pass); require(SDL_CancelGPUCommandBuffer(commands));
+    SDL_ReleaseGPUTransferBuffer(device, transfer); SDL_ReleaseGPUTexture(device, single); SDL_ReleaseGPUTexture(device, multi);
+    puts("Native depth copy sample-count/self guards and raw multisample transfer refusal passed");
+}
+
 int main(int argc, char **argv)
 {
     MultisampleState samples = {0};
@@ -271,6 +294,7 @@ int main(int argc, char **argv)
     int logic_features = e2d_render_logic_support(device, 1); require(logic_features == 0 || logic_features == 1);
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);
+    aspect_copy_guards(device);
     require(e2d_render_aspect_support(device, 1, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM) == 0);
     for (int format = SDL_GPU_TEXTUREFORMAT_D16_UNORM; format <= SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT; format++) {
         int support = e2d_render_aspect_support(device, 1, (SDL_GPUTextureFormat)format); require(support >= 0 && support <= 1);

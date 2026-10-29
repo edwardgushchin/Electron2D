@@ -62,7 +62,7 @@ static bool retain_buffer(VulkanCommandBuffer *c, VulkanBuffer *b)
 static bool region_valid(VulkanTextureContainer *t, const SDL_GPUTextureRegion *region)
 {
     const SDL_GPUTextureCreateInfo *info = &t->header.info;
-    if (!t->activeTexture || depth_format(info->format) == VK_FORMAT_UNDEFINED || info->sample_count != SDL_GPU_SAMPLECOUNT_1 || region->mip_level >= info->num_levels || region->layer >= info->layer_count_or_depth || region->z || region->d != 1 || !region->w || !region->h) return false;
+    if (!t->activeTexture || depth_format(info->format) == VK_FORMAT_UNDEFINED || region->mip_level >= info->num_levels || region->layer >= info->layer_count_or_depth || region->z || region->d != 1 || !region->w || !region->h) return false;
     uint32_t width = SDL_max(1u, info->width >> region->mip_level), height = SDL_max(1u, info->height >> region->mip_level);
     return region->x <= width && region->y <= height && region->w <= width - region->x && region->h <= height - region->y;
 }
@@ -86,7 +86,7 @@ E2D_EXPORT int e2d_render_aspect_transfer(SDL_GPUDevice *device, uint32_t abi, S
     if (!c || !region || !region->texture || !transfer || upload > 1 || depth_offset % 4 || stencil_offset % 4) return -1;
     VulkanRenderer *r = c->renderer; int result = -1; SDL_LockRWLockForReading(r->defragLock);
     VulkanTextureContainer *container = (VulkanTextureContainer *)region->texture; VulkanBuffer *b = ((VulkanBufferContainer *)transfer)->activeBuffer;
-    if (!region_valid(container, region) || !b || b->type != VULKAN_BUFFER_TYPE_TRANSFER) goto done;
+    if (!region_valid(container, region) || container->header.info.sample_count != SDL_GPU_SAMPLECOUNT_1 || !b || b->type != VULKAN_BUFFER_TYPE_TRANSFER) goto done;
     VulkanTexture *t = container->activeTexture; uint64_t pixels = (uint64_t)region->w * region->h;
     uint32_t bytes = container->header.info.format == SDL_GPU_TEXTUREFORMAT_D16_UNORM ? 2 : 4;
     bool stencil = (t->aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT) != 0;
@@ -110,7 +110,7 @@ E2D_EXPORT int e2d_render_aspect_copy(SDL_GPUDevice *device, uint32_t abi, SDL_G
     VulkanTextureContainer *a = (VulkanTextureContainer *)source->texture, *b = (VulkanTextureContainer *)destination->texture;
     SDL_GPUTextureRegion x = {.texture=source->texture,.mip_level=source->mip_level,.layer=source->layer,.x=source->x,.y=source->y,.w=width,.h=height,.d=1};
     SDL_GPUTextureRegion y = {.texture=destination->texture,.mip_level=destination->mip_level,.layer=destination->layer,.x=destination->x,.y=destination->y,.w=width,.h=height,.d=1};
-    if (!region_valid(a, &x) || !region_valid(b, &y) || a->header.info.format != b->header.info.format || (a->activeTexture->image == b->activeTexture->image && x.mip_level == y.mip_level && x.layer == y.layer)) goto done;
+    if (!region_valid(a, &x) || !region_valid(b, &y) || a->header.info.format != b->header.info.format || a->header.info.sample_count != b->header.info.sample_count || (a->activeTexture->image == b->activeTexture->image && x.mip_level == y.mip_level && x.layer == y.layer)) goto done;
     VulkanTexture *src = a->activeTexture, *dst = b->activeTexture;
     if (!retain_texture(c, src) || !retain_texture(c, dst)) goto done;
     VkImageCopy regions[2] = {{.srcSubresource = {VK_IMAGE_ASPECT_DEPTH_BIT, x.mip_level, x.layer, 1}, .srcOffset = {x.x,x.y,0}, .dstSubresource = {VK_IMAGE_ASPECT_DEPTH_BIT, y.mip_level, y.layer, 1}, .dstOffset = {y.x,y.y,0}, .extent = {width,height,1}}};

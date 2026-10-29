@@ -191,7 +191,7 @@ Initially false; copied and validated at allocation.
 public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }
 ```
 
-Selects the exact allocation sample count.
+Selects the exact allocation sample count. [Equal-count copies](../components/multisample-copies.md) preserve every native color/depth/stencil sample; CPU sample upload/readback remains separate.
 
 Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.
 

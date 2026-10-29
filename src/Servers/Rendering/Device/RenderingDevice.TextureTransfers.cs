@@ -20,10 +20,11 @@ public sealed unsafe partial class RenderingDevice
     /// <remarks>Coordinates are truncated to integral texels after bounds validation. Matching encoded
     /// texel/block footprints may be reinterpreted on Vulkan; other backends currently require the same
     /// format. Compressed offsets must begin on blocks and partial blocks must reach both image edges.
-    /// Matching single-sample depth/stencil copies preserve both aspects through the native adapter.
+    /// Source and destination must have the same sample count; every sample is preserved without resolving.
+    /// Matching depth/stencil copies preserve both aspects through the native adapter.
     /// Color and depth formats cannot substitute for each other. Same-subresource rectangles must not overlap. A prepared native scratch image preserves disjoint
     /// self copies. This operation neither submits nor invokes readback callbacks.</remarks>
-    /// <exception cref="ArgumentException">The texture, region, format footprint or overlap is invalid.</exception>
+    /// <exception cref="ArgumentException">The texture, sample count, region, format footprint or overlap is invalid.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A coordinate, mip level or layer is out of range.</exception>
     /// <exception cref="InvalidOperationException">A required usage is absent, the device state is invalid or native recording fails.</exception>
     /// <exception cref="NotSupportedException">This backend cannot reinterpret the selected formats.</exception>
@@ -31,7 +32,7 @@ public sealed unsafe partial class RenderingDevice
         uint sourceMipmap, uint destinationMipmap, uint sourceLayer, uint destinationLayer)
     {
         IdleList(); var source = Get(fromTexture, Kind.Texture); var destination = Get(toTexture, Kind.Texture);
-        if (source.Texture!.Samples != TextureSamples.Samples1 || destination.Texture!.Samples != TextureSamples.Samples1) throw new NotSupportedException("Use multisample resolve rather than raw sample copies.");
+        if (source.Texture!.Samples != destination.Texture!.Samples) throw new ArgumentException("Texture copies require matching sample counts; use a resolve to reduce samples.");
         TextureRole(source, TextureUsageBits.CanCopyFrom); TextureRole(destination, TextureUsageBits.CanCopyTo);
         TextureSubresource(source, sourceMipmap, sourceLayer); TextureSubresource(destination, destinationMipmap, destinationLayer);
         if (!size.IsFinite() || size.X < 1 || size.Y < 1 || size.Z != 1) throw new ArgumentOutOfRangeException(nameof(size));
@@ -90,7 +91,7 @@ public sealed unsafe partial class RenderingDevice
         {
             entry.ScratchColorTarget = SDL.GPUTextureSupportsFormat(Device, format, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget);
             if (clear && !entry.ScratchColorTarget) throw new NotSupportedException("This format requires a color-clear adapter; encoded blocks cannot be rendered as color targets.");
-            entry.TextureScratch = new(SDL.CreateGPUTexture(Device, new() { Type = SDL.GPUTextureType.TextureType2D, Format = format, Width = info.Width, Height = info.Height, LayerCountOrDepth = 1, NumLevels = info.Mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = DepthFormat(info.Format) ? SDL.GPUTextureUsageFlags.DepthStencilTarget : entry.ScratchColorTarget ? SDL.GPUTextureUsageFlags.ColorTarget : SDL.GPUTextureUsageFlags.Sampler }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+            entry.TextureScratch = new(SDL.CreateGPUTexture(Device, new() { Type = SDL.GPUTextureType.TextureType2D, Format = format, Width = info.Width, Height = info.Height, LayerCountOrDepth = 1, NumLevels = info.Mips, SampleCount = (SDL.GPUSampleCount)info.Samples, Usage = DepthFormat(info.Format) ? SDL.GPUTextureUsageFlags.DepthStencilTarget : entry.ScratchColorTarget ? SDL.GPUTextureUsageFlags.ColorTarget : SDL.GPUTextureUsageFlags.Sampler }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
         }
         if (clear && !entry.ScratchColorTarget) throw new NotSupportedException("This format requires a color-clear adapter.");
         return entry.TextureScratch;

@@ -78,6 +78,9 @@ internal static class DepthTransfersTests
             Check(device.TextureIsValid(depth), "Native depth rendering remains available without the transfer adapter.");
             Reject<NotSupportedException>(() => Image(device, DataFormat.D32SFLOAT));
             Reject<NotSupportedException>(() => Image(device, DataFormat.D32SFLOAT, data: [Payload(DataFormat.D32SFLOAT, 1)], usage: TextureUsageBits.DepthStencilAttachment));
+            using var multi = new RDTextureFormat { Width = 4, Height = 4, Format = DataFormat.D32SFLOAT, Samples = TextureSamples.Samples4, UsageBits = TextureUsageBits.DepthStencilAttachment | TextureUsageBits.CanCopyFrom };
+            using var view = new RDTextureView(); Reject<NotSupportedException>(() => device.TextureCreate(multi, view));
+            multi.UsageBits = TextureUsageBits.DepthStencilAttachment; var ordinary = device.TextureCreate(multi, view); Check(device.TextureIsValid(ordinary), "Empty MS depth rendering remains available without the transfer adapter.");
             Console.WriteLine($"Depth transfer adapter refusal PASS {_checks}"); return;
         }
         foreach (var format in new[] { DataFormat.D16UNORM, DataFormat.X8D24UNORMPACK32, DataFormat.D32SFLOAT, DataFormat.D24UNORMS8UINT, DataFormat.D32SFLOATS8UINT })

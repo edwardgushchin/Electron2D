@@ -650,6 +650,8 @@ public System.Void TextureCopy(Electron2D.RID fromTexture, Electron2D.RID toText
 
 Records a raw rectangular image copy on the GPU timeline.
 
+Source and destination must have equal sample counts. Copies preserve every native sample without resolving; matching depth/stencil formats preserve both aspects. [Multisample copies](../components/multisample-copies.md) describes exact roles, view ownership and qualification.
+
 Coordinates are truncated to integral texels after bounds validation. Matching encoded texel/block footprints may be reinterpreted on Vulkan; other backends currently require the same format. Compressed offsets must begin on blocks and partial blocks must reach both image edges. Same-subresource rectangles must not overlap. A prepared native scratch image preserves disjoint self copies. This operation neither submits nor invokes readback callbacks.
 
 `fromTexture`: Live source with CanCopyFrom usage.
@@ -670,7 +672,7 @@ Coordinates are truncated to integral texels after bounds validation. Matching e
 
 `destinationLayer`: Zero-based destination image layer.
 
-Throws `System.ArgumentException`: The texture, region, format footprint or overlap is invalid.
+Throws `System.ArgumentException`: The texture, sample count, region, format footprint or overlap is invalid.
 
 Throws `System.ArgumentOutOfRangeException`: A coordinate, mip level or layer is out of range.
 

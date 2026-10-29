@@ -1,3 +1,5 @@
+[Multisample copies](../components/multisample-copies.md) preserve individual color/depth/stencil samples through native rectangles, array layers, shared slices and same-count scratch.
+
 [Depth/stencil transfers](../components/depth-texture-transfers.md) connect existing texture allocation/update/copy/readback APIs to real native depth and stencil aspects, with portable bytes and shared-view/queued lifetime.
 
 [Multisample storage](../components/graphics-storage-images.md#multisample-storage-images) connects existing Image descriptors to explicit per-sample compute/graphics loads, stores, queries and R32 array atomics with independent native feature refusal.

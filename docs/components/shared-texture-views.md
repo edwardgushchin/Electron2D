@@ -35,7 +35,7 @@ Direct [array storage descriptors](graphics-storage-images.md#compute-and-array-
 now execute native full-layer/single-mip loads, writes and signed/unsigned R32
 atomics in compute and independently enabled graphics stages.
 Physical range overlap guards cover framebuffer outputs, draw feedback, blits and
-self copies. Disjoint layers/mips remain usable. Sampled siblings of writable
+self copies. [Equal-count MS copies](multisample-copies.md) preserve each sample in the original selected layer and use matching-count scratch for disjoint same-subresource copies. Disjoint layers/mips remain usable. Sampled siblings of writable
 views share the actual image's GENERAL descriptor layout.
 
 `TextureRD.GetImage` preserves raw channels before sampled component maps. An

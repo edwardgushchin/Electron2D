@@ -2445,3 +2445,5 @@ MSAA shader sampling extends existing RenderingDevice/RDTextureFormat/RDTextureV
 MSAA storage extends the existing RenderingDevice/RDTextureFormat family without adding public types. GPUDeviceFactory negotiates the storage feature; ShaderPrecision guards original capabilities; DeviceImageArrays preserves sample-count queries through descriptor selection. See [the storage contract](components/graphics-storage-images.md#multisample-storage-images).
 
 RenderingDevice.DepthTransfers.cs owns portable depth/stencil bytes and shared upload/readback packing; the private render-native/aspects.c adapter records actual aspect transfers and retains SDL resources/allocator regions. Existing public types are unchanged. See [depth/stencil transfers](components/depth-texture-transfers.md).
+
+RenderingDevice.TextureTransfers.cs now preserves equal-count native samples through the existing copy API, including depth/stencil and matching-count scratch. No public types are added. See [multisample copies](components/multisample-copies.md).
