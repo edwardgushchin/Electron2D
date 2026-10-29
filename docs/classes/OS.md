@@ -1,6 +1,6 @@
 # OS
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
@@ -359,3 +359,7 @@ byte field is -1 when unavailable. See [OSMemoryInfo](OSMemoryInfo.md) and
 `public static void OpenWithProgram(string programPath, ReadOnlySpan<string> paths)`
 
 Launches a chosen desktop application with literal ordered host file/directory paths. Ordinary executable children are independent; macOS .app requests use the system open launcher. Empty arrays launch without arguments. Complete input validation precedes creation; launch failures throw. Virtual executable paths resolve through ProjectSettings, while file arguments are unchanged. Success confirms launch acceptance. See [specified application launch](../components/processes.md#specified-application-launch) for ownership, platform and verification limits.
+
+## MIDI inputs
+
+`OpenMIDIInputs()`, `GetConnectedMIDIInputs() -> string[]` and `CloseMIDIInputs()` operate an explicit retained input session. Desktop Linux uses system ALSA; other native adapters remain missing. Open/close are repeat-safe, the names array is a copy indexed by event Device, and failures never masquerade as an empty successful acquisition. [MIDI input](../components/midi-input.md) owns the lifecycle, exceptions, thread/delivery contract, executable evidence and platform limits.

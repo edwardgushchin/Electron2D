@@ -10,6 +10,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MIDI") is { } midiMode) { if (midiMode == "managed") MIDIInputTests.Managed(); else if (midiMode == "unavailable") MIDIInputTests.Unavailable(); else MIDIInputTests.Native(midiMode); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PROVIDER_CLIP") is { } clipBackend) { TextProviderClipTests.Run(clipBackend); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXT_PROVIDER_RETENTION") == "1") { TextProviderRetentionTests.Run(); return; }
 // Prepare the traced one-time CoreCLR lock delegate before strict warmed allocation intervals.
@@ -2287,6 +2289,7 @@ VerifyInputText();
 VerifyControllerValues();
 VerifyControllerText();
 VerifyTouchGestureText();
+MIDIInputTests.Managed();
 VerifyInput();
 InputActionSettingsTests.Run();
 VerifyInputEmulation();

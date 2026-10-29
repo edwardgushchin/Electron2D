@@ -895,9 +895,11 @@ def main():
     midi_message_rows = [row for row in pages[CLASS_PAGES / "@GlobalScope.md"].splitlines()
                          if "enum MIDIMessage`" in row or "[MIDIMessage]" in row]
     assert len(midi_message_rows) == 20
-    for row in midi_rows + os_midi_rows + midi_message_rows:
-        assert " | Blocked | " in row and "native MIDI input adapters" in row, row
-        assert "ADRs 0038 and 0021" in row and "accepted MIDI-domain" not in row, row
+    for row in midi_rows + midi_message_rows:
+        assert " | Implemented | " in row and "MIDIInputTests" in row, row
+    for row in os_midi_rows:
+        assert " | Partial | " in row and "WinMM" in row and "ALSA" in row, row
+        assert "ADRs 0038 and 0021" in row, row
     button_rows = 0
     for name in ("BaseButton", "ButtonGroup", "Button", "CheckBox", "CheckButton", "TextureButton", "Shortcut", "InputEventShortcut"):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]

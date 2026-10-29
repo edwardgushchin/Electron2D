@@ -204,10 +204,14 @@ public sealed partial class Engine : ElectronObject
         catch (Exception error)
         {
             if (Volatile.Read(ref _applicationRun) == 0) RuntimeDiagnostics.Instance.ReportException(error);
+            Exception? midiCloseFailure = null;
+            try { OS.CloseMIDIInputs(); }
+            catch (Exception closeError) { RuntimeDiagnostics.Instance.ReportException(closeError); midiCloseFailure = closeError; }
             Volatile.Write(ref _mainLoop, null);
             OS.SetMainThreadOwner(0);
             Volatile.Write(ref _runtimeOwnerThreadId, 0);
             Volatile.Write(ref _runtimeState, RuntimeIdle);
+            if (midiCloseFailure is not null) throw new AggregateException("Engine startup and MIDI cleanup failed.", error, midiCloseFailure);
             throw;
         }
     }
@@ -233,6 +237,7 @@ public sealed partial class Engine : ElectronObject
         {
             var mainLoop = Volatile.Read(ref _mainLoop) ??
                 throw new InvalidOperationException("The running engine has no MainLoop.");
+            OS.PumpMIDIInputs();
             var physicsTicksPerSecond = PhysicsTicksPerSecondCore;
             var fixedCadence = fixedFPS != 0;
             var maxPhysicsSteps = fixedCadence ? int.MaxValue : MaxPhysicsStepsPerFrameCore;
@@ -328,6 +333,8 @@ public sealed partial class Engine : ElectronObject
 
         List<Exception>? errors = null;
         try { (Volatile.Read(ref _mainLoop) ?? throw new InvalidOperationException("The running engine has no MainLoop.")).FinalizeLoop(); }
+        catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
+        try { OS.CloseMIDIInputs(); }
         catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }
         try { CameraServer.CloseForEngine(); }
         catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); Node.CollectException(ref errors, error); }

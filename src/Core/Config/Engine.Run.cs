@@ -183,6 +183,8 @@ public sealed partial class Engine
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { if (tree is not null) tree.Dispose(); else window.Dispose(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
+            try { OS.CloseMIDIInputs(); }
+            catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { CameraServer.CloseForEngine(); }
             catch (Exception error) { RuntimeDiagnostics.Instance.ReportException(error); failures.Add(error); }
             try { AudioServer.CloseForEngine(); }

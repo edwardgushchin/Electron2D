@@ -16,7 +16,7 @@ This log owns durable decisions for input events, action mapping, process-wide i
 
 ### Context
 
-Electron2D needs keyboard, mouse, touch, gesture, and controller input before a native SDL host exists. The stable Godot 4.7.2 Input/InputMap/InputEvent hierarchy is the coverage reference, with typed C# replacing Variant/Callable. Native root-window and viewport coordinate routing are implemented. Root viewport Control hit testing, mouse delivery and keyboard focus now run; Shortcut resources and the scene shortcut stage now execute; complete GUI routing remains partial; MIDI input is accepted below but its native producer remains absent; native controller mapping and platform-info parity are still partial.
+Electron2D needs keyboard, mouse, touch, gesture, and controller input before a native SDL host exists. The stable Godot 4.7.2 Input/InputMap/InputEvent hierarchy is the coverage reference, with typed C# replacing Variant/Callable. Native root-window and viewport coordinate routing are implemented. Root viewport Control hit testing, mouse delivery and keyboard focus now run; Shortcut resources and the scene shortcut stage now execute; complete GUI routing remains partial; MIDI input has the Linux ALSA producer described in [MIDI input](../components/midi-input.md); foreign native adapters remain open; native controller mapping and platform-info parity are still partial.
 
 An earlier statement that a missing feature was merely "deferred" was not sufficient for context-free continuation. Every gap needs a concrete prerequisite and a rule that tells a later agent whether work is actionable.
 

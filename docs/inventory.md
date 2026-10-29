@@ -2426,3 +2426,12 @@ Existing RenderingServer and Viewport canvas composition now implement [follow-s
 External text integration extends the existing Font/TextLayout/TextLine/GUI owners. Internal FontCallbackSource, provider font/layout admissions, scoped CanvasTextClip commands and CanvasRasterScale subscriptions are implementation details of [the text provider contract](components/text-server.md#external-implementations); they add no native handle or independent renderer.
 
 ProjectSettings.Accessibility.cs now registers native AccessibilityDriver and AccessibilityUpdatesPerSecond preferences. AccessibilityServer.Policy.cs captures the actual driver per display; SceneTree.Accessibility.cs coalesces automatic semantic passes by monotonic wall time. The [component contract](components/accessibility.md#native-driver-and-scene-scheduling) owns settings, lifetime and verification limits. No color/braille API is added by this slice.
+
+## MIDI input additions
+
+| Type | Source | Implemented role |
+| --- | --- | --- |
+| [InputEventMIDI](classes/InputEventMIDI.md) | [source](../src/Core/Input/InputEventMIDI.cs) | Stored MIDI event/resource values and native Linux scene input |
+| [MIDIMessage](classes/MIDIMessage.md) | [source](../src/Core/Input/MIDIMessage.cs) | Typed MIDI 1 message identities |
+
+The retained OS MIDI owner is implemented in [OS.MIDI.cs](../src/Core/OS/OS.MIDI.cs); its native and platform boundaries are recorded in [MIDI input](components/midi-input.md).

@@ -4,7 +4,7 @@ Last updated: 2026-10-27
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1068 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1071 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 368 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [VisualShaderNodeDistanceFade](classes/VisualShaderNodeDistanceFade.md), [VisualShaderNodeProximityFade](classes/VisualShaderNodeProximityFade.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking. Advance the self-hosted editor through the dependency stages below rather than waiting for the whole runtime backlog. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -31,7 +31,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: | ---: |
 | [RenderingServer](classes/RenderingServer.md) | 229 | 26 |
 | [RenderingDevice](classes/RenderingDevice.md) | 74 | 39 |
-| [OS](classes/OS.md) | 22 | 14 |
+| [OS](classes/OS.md) | 22 | 17 |
 | [Engine](classes/Engine.md) | 10 | 11 |
 | [SceneTree](classes/SceneTree.md) | 5 | 15 |
 | [SceneState](classes/SceneState.md) | 5 | 10 |
@@ -104,7 +104,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first portable external-image ownership and native texture-import decision (ADRs 0021 and 0028). | 1 |
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 1 |
-| Trigger: native MIDI input adapters, device lifetime and message delivery under the accepted platform matrix (ADRs 0038 and 0021); product scope is approved, platform parity remains unverified. | 1 |
 | Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 

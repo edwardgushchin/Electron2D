@@ -389,7 +389,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [InputEventJoypadButton](classes/InputEventJoypadButton.md) | InputEvent | Partial | 3 |
 | [InputEventJoypadMotion](classes/InputEventJoypadMotion.md) | InputEvent | Partial | 2 |
 | [InputEventKey](classes/InputEventKey.md) | InputEventWithModifiers | Partial | 14 |
-| [InputEventMIDI](classes/InputEventMIDI.md) | InputEvent | Blocked | 8 |
+| [InputEventMIDI](classes/InputEventMIDI.md) | InputEvent | Implemented | 8 |
 | [InputEventMagnifyGesture](classes/InputEventMagnifyGesture.md) | InputEventGesture | Partial | 1 |
 | [InputEventMouse](classes/InputEventMouse.md) | InputEventWithModifiers | Partial | 4 |
 | [InputEventMouseButton](classes/InputEventMouseButton.md) | InputEventMouse | Partial | 5 |

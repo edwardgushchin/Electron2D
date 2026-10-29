@@ -80,3 +80,7 @@ This is a finite routing inventory of the observed imports and producer graph.
 It deliberately records the remaining ownership audits as open. It does not
 prove that every allocation in a dynamically loaded or foreign closure is
 accounted, and cannot promote GetMonitor or the four remaining physics rows.
+
+## System ALSA MIDI input boundary
+
+[OS.MIDI.cs](../../src/Core/OS/OS.MIDI.cs) owns one explicit sequencer session and releases its native client, ports, subscriptions and buffered data on close/failure/engine cleanup. Virtual native source tests exercise release after callback and startup failures. ALSA query allocations are freed on success/failure; returned event storage is borrowed from ALSA. The system library owns its internal heap/pool implementation. That heap is not yet attributed to Electron2D native allocation accounting or MemoryMonitor, so handle-lifetime verification does not close the native memory contract. See [MIDI input](../components/midi-input.md).

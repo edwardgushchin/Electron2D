@@ -214,6 +214,7 @@ public sealed partial class ThemeDB
         ["InputEventJoypadButton"] = ["InputEventJoypadButton", "InputEvent", "Resource", "ElectronObject"],
         ["InputEventJoypadMotion"] = ["InputEventJoypadMotion", "InputEvent", "Resource", "ElectronObject"],
         ["InputEventKey"] = ["InputEventKey", "InputEventWithModifiers", "InputEventFromWindow", "InputEvent", "Resource", "ElectronObject"],
+        ["InputEventMIDI"] = ["InputEventMIDI", "InputEvent", "Resource", "ElectronObject"],
         ["InputEventMagnifyGesture"] = ["InputEventMagnifyGesture", "InputEventGesture", "InputEventWithModifiers", "InputEventFromWindow", "InputEvent", "Resource", "ElectronObject"],
         ["InputEventMouse"] = ["InputEventMouse", "InputEventWithModifiers", "InputEventFromWindow", "InputEvent", "Resource", "ElectronObject"],
         ["InputEventMouseButton"] = ["InputEventMouseButton", "InputEventMouse", "InputEventWithModifiers", "InputEventFromWindow", "InputEvent", "Resource", "ElectronObject"],

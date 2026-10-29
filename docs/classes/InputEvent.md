@@ -463,3 +463,5 @@ Identifies the primary mouse.
 ## Inherited API
 
 Public and protected members inherited from [Resource](Resource.md). Their lifecycle and error contracts remain applicable unless this page states an override.
+
+[InputEventMIDI](InputEventMIDI.md) adds stored MIDI message values and retains base press/release, copying and action behavior. [MIDI input](../components/midi-input.md) owns native source lifetime and scene delivery.

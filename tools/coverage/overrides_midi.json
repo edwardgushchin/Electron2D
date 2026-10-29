@@ -1,0 +1,227 @@
+{
+  "mappings": [
+    {
+      "godot": "InputEventMIDI::property:channel",
+      "electron2d": "property:Electron2D.InputEventMIDI.Channel()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:controller_number",
+      "electron2d": "property:Electron2D.InputEventMIDI.ControllerNumber()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:controller_value",
+      "electron2d": "property:Electron2D.InputEventMIDI.ControllerValue()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:instrument",
+      "electron2d": "property:Electron2D.InputEventMIDI.Instrument()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:message",
+      "electron2d": "property:Electron2D.InputEventMIDI.Message()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:pitch",
+      "electron2d": "property:Electron2D.InputEventMIDI.Pitch()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:pressure",
+      "electron2d": "property:Electron2D.InputEventMIDI.Pressure()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "InputEventMIDI::property:velocity",
+      "electron2d": "property:Electron2D.InputEventMIDI.Velocity()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum:MIDIMessage",
+      "electron2d": "T:Electron2D.MIDIMessage",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_ACTIVE_SENSING",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.ActiveSensing()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_AFTERTOUCH",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.Aftertouch()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_CHANNEL_PRESSURE",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.ChannelPressure()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_CONTINUE",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.Continue()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_CONTROL_CHANGE",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.ControlChange()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_NONE",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.None()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_NOTE_OFF",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.NoteOff()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_NOTE_ON",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.NoteOn()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_PITCH_BEND",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.PitchBend()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_PROGRAM_CHANGE",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.ProgramChange()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_QUARTER_FRAME",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.QuarterFrame()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SONG_POSITION_POINTER",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.SongPositionPointer()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SONG_SELECT",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.SongSelect()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_START",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.Start()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_STOP",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.Stop()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SYSTEM_EXCLUSIVE",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.SystemExclusive()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SYSTEM_RESET",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.SystemReset()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_TIMING_CLOCK",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.TimingClock()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_TUNE_REQUEST",
+      "electron2d": "enumValue:Electron2D.MIDIMessage.TuneRequest()",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md."
+    },
+    {
+      "godot": "OS::method:close_midi_inputs()",
+      "electron2d": "method:Electron2D.OS.CloseMIDIInputs()",
+      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md."
+    },
+    {
+      "godot": "OS::method:get_connected_midi_inputs()",
+      "electron2d": "method:Electron2D.OS.GetConnectedMIDIInputs()",
+      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md."
+    },
+    {
+      "godot": "OS::method:open_midi_inputs()",
+      "electron2d": "method:Electron2D.OS.OpenMIDIInputs()",
+      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.InputEventMIDI..ctor()",
+      "reason": "ADR 0038 typed C# concrete event lifecycle: construction, localized inherited AsText implementation, exact resource-copy factory/state and stored descriptor override; MIDIInputTests verifies defaults, text, changes, duplication, storage and disposed guards. These override the inherited InputEvent/Resource contract rather than adding MIDI protocol payload API."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMIDI.AsText()",
+      "reason": "ADR 0038 typed C# concrete event lifecycle: construction, localized inherited AsText implementation, exact resource-copy factory/state and stored descriptor override; MIDIInputTests verifies defaults, text, changes, duplication, storage and disposed guards. These override the inherited InputEvent/Resource contract rather than adding MIDI protocol payload API."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMIDI.CopyEventStateTo(Electron2D.InputEvent)",
+      "reason": "ADR 0038 typed C# concrete event lifecycle: construction, localized inherited AsText implementation, exact resource-copy factory/state and stored descriptor override; MIDIInputTests verifies defaults, text, changes, duplication, storage and disposed guards. These override the inherited InputEvent/Resource contract rather than adding MIDI protocol payload API."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMIDI.CreateEventInstance()",
+      "reason": "ADR 0038 typed C# concrete event lifecycle: construction, localized inherited AsText implementation, exact resource-copy factory/state and stored descriptor override; MIDIInputTests verifies defaults, text, changes, duplication, storage and disposed guards. These override the inherited InputEvent/Resource contract rather than adding MIDI protocol payload API."
+    },
+    {
+      "electron2d": "method:Electron2D.InputEventMIDI.GetPropertyDescriptors()",
+      "reason": "ADR 0038 typed C# concrete event lifecycle: construction, localized inherited AsText implementation, exact resource-copy factory/state and stored descriptor override; MIDIInputTests verifies defaults, text, changes, duplication, storage and disposed guards. These override the inherited InputEvent/Resource contract rather than adding MIDI protocol payload API."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0038/0095: InputEventMIDI and MIDIMessage retain typed identities, zero defaults, stored descriptors, localization, copying and portable resource round trips. MIDIInputTests and the public MIDIInput.Consumer exercise values and actual ALSA source-to-scene delivery, boundaries, running status, system messages, session replacement and failure cleanup. Event declaration completion does not establish physical or foreign-platform acceptance; see docs/components/midi-input.md.",
+      "godot": [
+        "class:InputEventMIDI",
+        "InputEventMIDI::property:channel",
+        "InputEventMIDI::property:controller_number",
+        "InputEventMIDI::property:controller_value",
+        "InputEventMIDI::property:instrument",
+        "InputEventMIDI::property:message",
+        "InputEventMIDI::property:pitch",
+        "InputEventMIDI::property:pressure",
+        "InputEventMIDI::property:velocity",
+        "@GlobalScope::enum:MIDIMessage",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_ACTIVE_SENSING",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_AFTERTOUCH",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_CHANNEL_PRESSURE",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_CONTINUE",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_CONTROL_CHANGE",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_NONE",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_NOTE_OFF",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_NOTE_ON",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_PITCH_BEND",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_PROGRAM_CHANGE",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_QUARTER_FRAME",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SONG_POSITION_POINTER",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SONG_SELECT",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_START",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_STOP",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SYSTEM_EXCLUSIVE",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_SYSTEM_RESET",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_TIMING_CLOCK",
+        "@GlobalScope::enum_value:MIDIMessage.MIDI_MESSAGE_TUNE_REQUEST"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADRs 0038 and 0021: Linux ALSA input owns explicit repeat-safe sessions, stable source indices, bounded owner-thread polling, scene delivery, rollback/disconnect/overflow and cleanup after callback failures, exercised by MIDIInputTests and MIDIInput.Consumer. Missing WinMM/CoreMIDI/Android/Web MIDI producers and unresolved tvOS acquisition keep full platform behavior Partial; physical and native heap acceptance remain open. See docs/components/midi-input.md.",
+      "godot": [
+        "OS::method:close_midi_inputs()",
+        "OS::method:get_connected_midi_inputs()",
+        "OS::method:open_midi_inputs()"
+      ]
+    }
+  ]
+}

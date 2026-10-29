@@ -76,6 +76,7 @@ public sealed partial class Input : ElectronObject
         lock (_gate)
             flush = _flushBufferedEvents;
         flush?.Invoke();
+        OS.PumpMIDIInputs();
     }
 
     internal void SetNativeFlush(Action? flush)
