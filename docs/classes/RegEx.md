@@ -1,12 +1,12 @@
 # RegEx
 
-Last updated: 2026-10-21
+Last updated: 2026-10-29
 
 - **Inherits:** [ElectronObject](ElectronObject.md)
 - **Source:** [RegEx.cs](../../src/Core/String/RegEx.cs)
 - **Declaration:** `public sealed class RegEx : ElectronObject`
 
-Compiles a PCRE2 pattern and searches or replaces ordinary C# strings. The pinned private interpreter supports recursive/conditional/branch-reset patterns, native group numbering and Unicode code-point regions. Programs use deterministic native ownership and one instance lock; independent instances can run concurrently. Results retain immutable captured data after program retirement. Matching allocates and may block; see [the component](../components/text-patterns.md) for exact budgets, errors, native provenance and verification boundaries.
+Compiles a PCRE2 pattern and searches or replaces ordinary C# strings. The pinned private interpreter supports recursive/conditional/branch-reset patterns, native group numbering and Unicode code-point regions. Programs and temporary interpreter storage use the [common native allocator](../coverage/performance-producers.md#pcre2-owned-allocation-domain-2026-10-29). Programs use deterministic native ownership and one instance lock; independent instances can run concurrently. Results retain immutable captured data after program retirement. Matching allocates and may block; see [the component](../components/text-patterns.md) for exact budgets, errors, native provenance and verification boundaries.
 
 ## Example
 

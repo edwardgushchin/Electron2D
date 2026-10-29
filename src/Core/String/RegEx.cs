@@ -5,7 +5,8 @@ namespace Electron2D;
 /// <summary>Compiles a regular expression and searches or replaces text.</summary>
 /// <remarks>Patterns use PCRE2 and code-point positions. One owner serializes operations; results survive program retirement.
 /// Inputs/output are bounded to 16777216 code points, with a 32 MiB native match-heap cap, native work/depth limits
-/// and a five-second callout deadline. This is blocking/allocating text work outside frame hot paths.</remarks>
+/// and a five-second callout deadline. Compiled native storage retires on Clear or Dispose; per-call storage retires before return.
+/// This is blocking/allocating text work outside frame hot paths.</remarks>
 public sealed class RegEx : ElectronObject
 {
     private readonly object _gate = new();
@@ -18,6 +19,7 @@ public sealed class RegEx : ElectronObject
     /// <summary>Creates and compiles a regular expression.</summary>
     /// <param name="pattern">The search pattern.</param>
     /// <exception cref="ArgumentException">The pattern is invalid.</exception>
+    /// <exception cref="OutOfMemoryException">Native pattern storage cannot be allocated.</exception>
     public RegEx(string pattern) => Compile(pattern);
 
     /// <summary>Gets the last pattern supplied to <see cref="Compile"/>.</summary>
@@ -55,6 +57,7 @@ public sealed class RegEx : ElectronObject
     /// <param name="pattern">The PCRE2 regular-expression pattern.</param>
     /// <exception cref="ArgumentNullException">The pattern is null.</exception>
     /// <exception cref="ArgumentException">The pattern cannot be compiled; the exception contains diagnostics.</exception>
+    /// <exception cref="OutOfMemoryException">Native pattern storage cannot be allocated.</exception>
     /// <exception cref="ObjectDisposedException">The expression has been disposed.</exception>
     public void Compile(string pattern)
     {
@@ -73,6 +76,7 @@ public sealed class RegEx : ElectronObject
     /// <returns>A compiled expression owned by the caller.</returns>
     /// <exception cref="ArgumentNullException">The pattern is null.</exception>
     /// <exception cref="ArgumentException">The pattern is invalid.</exception>
+    /// <exception cref="OutOfMemoryException">Native pattern storage cannot be allocated.</exception>
     public static RegEx CreateFromString(string pattern) => new(pattern);
 
     /// <summary>Finds the first match within the specified region.</summary>
@@ -84,6 +88,7 @@ public sealed class RegEx : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException">The offset is negative.</exception>
     /// <exception cref="InvalidOperationException">No pattern is compiled.</exception>
     /// <exception cref="InvalidOperationException">A native work/depth/heap or output budget is exhausted.</exception>
+    /// <exception cref="OutOfMemoryException">Native matching storage cannot be allocated.</exception>
     /// <exception cref="RegexMatchTimeoutException">The match exceeds the five-second limit.</exception>
     /// <exception cref="ObjectDisposedException">The expression has been disposed.</exception>
     public RegExMatch? Search(string subject, int offset = 0, int end = -1)
@@ -101,6 +106,7 @@ public sealed class RegEx : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException">The offset is negative.</exception>
     /// <exception cref="InvalidOperationException">No pattern is compiled.</exception>
     /// <exception cref="InvalidOperationException">A native work/depth/heap or output budget is exhausted.</exception>
+    /// <exception cref="OutOfMemoryException">Native matching storage cannot be allocated.</exception>
     /// <exception cref="RegexMatchTimeoutException">The match exceeds the five-second limit.</exception>
     /// <exception cref="ObjectDisposedException">The expression has been disposed.</exception>
     public RegExMatch[] SearchAll(string subject, int offset = 0, int end = -1) => SearchCore(subject, offset, end, all: true);
@@ -116,6 +122,7 @@ public sealed class RegEx : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException">The offset is negative.</exception>
     /// <exception cref="InvalidOperationException">No pattern is compiled.</exception>
     /// <exception cref="InvalidOperationException">A native work/depth/heap or output budget is exhausted.</exception>
+    /// <exception cref="OutOfMemoryException">Native matching storage cannot be allocated.</exception>
     /// <exception cref="RegexMatchTimeoutException">Matching exceeds the five-second limit.</exception>
     /// <exception cref="ObjectDisposedException">The expression has been disposed.</exception>
     public string Sub(string subject, string replacement, bool all = false, int offset = 0, int end = -1)

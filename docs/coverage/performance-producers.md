@@ -291,6 +291,52 @@ native libraries, concurrent managed collection, module/unload lifetime, runtime
 delivery, performance and foreign-platform qualification remain open. Physics declaration coverage
 stays **1365/1369 (99.71%)**, four Partial and 92 Excluded.
 
+## PCRE2-owned allocation domain (2026-10-29)
+
+RegEx compilation now prepares the existing immutable text allocation callbacks
+without initializing the ICU database. Private PCRE2 general contexts select
+that same requested-payload allocator for compilation, code, match contexts,
+match-data vectors, interpreter heap frames and substitution work. The compiled
+program keeps copied callbacks after its temporary compile/general contexts
+retire; each operation releases its own contexts before return. No process-wide
+PCRE2 cache or public API is added. See the documented
+[general context](https://www.pcre.org/current/doc/html/pcre2_general_context_create.html)
+and [match-data allocator ownership](https://www.pcre.org/current/doc/html/pcre2_match_data_create_from_pattern.html).
+
+A failed context cannot fall back to the system allocator. Unregistered native
+compilation returns an allocation error with a defined offset. Failed native
+compile/match/substitution allocations propagate their existing typed errors;
+no-match remains distinct. Normal and ASan/UBSan native checks pass all 29
+observed allocation-failure positions across valid/invalid compilation, match,
+no-match, substitution sizing/output/replacement errors and work-limit cases.
+Operation failure preserves the compiled program for a successful retry and
+all payloads drain after retirement. The existing 512-cycle native ABI/deadline
+check and the independent 297-vector interpreter comparison also pass.
+
+The public CLR and full-trim NativeAOT fault profiles replace only the native
+memory core with a test build of its production source that fails one malloc.
+All 11 compile/search/substitution positions must raise OutOfMemoryException,
+retain a usable program after operation failure and drain every payload. This
+control exposed a substitution bug: PCRE2 leaves SIZE_MAX as its output length
+on allocation failure. RegExProgram now excludes that sentinel from the
+buffer-sizing retry, preserving the typed allocation error instead of reporting
+an output-budget error. The retained pre-fix public control fails on that error.
+
+The public consumer observes 288 retained compiled bytes and a 21040-byte native
+peak from temporary matching storage between reads. Clear, failed recompilation,
+forgotten-owner finalization and four concurrent workers drain their ownership;
+20000 prepared metadata/snapshot cycles allocate zero owner/all-thread managed
+bytes. Matching itself remains cold allocating work under ADR 0112.
+
+The export closure remains twenty-six functions. Exact source-built native
+identity matters: the preceding ICU-only bridge can register callbacks but fails
+the compiled-payload control, as does the preceding managed/native cohort.
+Receipts, hashes and qualification limits are retained under
+`bin/regex-allocation-accounting/2026-10-29/`. This domain does not implement the
+public composed memory monitors. MSDF/other native domains, concurrent managed
+collection, module/unload ownership and runtime delivery remain open. Physics
+coverage stays **1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
 ## Streaming GZIP allocation domain
 
 StreamPeerGZIP now uses the existing private bridge's opaque streaming gzip/zlib context instead of the runtime compression PAL. Context and all zlib allocation/free callbacks share NativeAllocation with ENet and file block codecs. Requested payload bytes update coherent current/high-water counters at their actual native boundaries, including lazy decoder storage and short-lived failed initialization. SafeHandle disposal/finalization drains owned storage; no managed heap or GPU bytes enter this producer. These four private exports are required by native packaging and publish checks on every profile; no new public declaration or native dependency is added.

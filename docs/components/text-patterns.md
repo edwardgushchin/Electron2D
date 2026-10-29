@@ -1,6 +1,6 @@
 # Text patterns component
 
-Last updated: 2026-10-21
+Last updated: 2026-10-29
 
 Core owns [RegEx](../classes/RegEx.md), [RegExMatch](../classes/RegExMatch.md) and internal [RegExProgram](../classes/RegExProgram.md). [ADR 0112](../decisions/text-patterns.md#adr-0112) selects the complete PCRE2-32 interpreter profile. The existing private text library statically embeds unmodified PCRE2 10.47, source f454e231fe5006dd7ff8f4693fd2b8eb94333429. Six private C exports expose compilation, metadata, matching, substitution, errors and release. No global PCRE2 installation, video initialization or executable-memory JIT is required. Original source fingerprints, prefixed private symbols, build receipts and BSD notices follow the existing native packaging path.
 
@@ -14,6 +14,16 @@ Mixed named/unnamed captures use source-order numbering. GetNames returns distin
 
 SearchAll advances by one code point after an empty match, including the final empty position. Sub uses native first/global replacement grammar, including numbered/named groups, whole-match aliases, literal dollar and unset/unknown groups becoming empty. It preserves the suffix after end. Native global empty substitution can differ from the repeated-search sequence because PCRE2 also tries a nonempty alternative at the same position.
 
+## Native allocation ownership
+
+The [PCRE2 allocation domain](../coverage/performance-producers.md#pcre2-owned-allocation-domain-2026-10-29)
+uses the common requested-payload ledger for the compiled program and per-call
+interpreter storage. Preparation registers callbacks without loading the Unicode
+database or opening a device. Clear, failed recompilation, disposal and forgotten
+SafeHandle retirement release program bytes; search/substitution release temporary
+contexts before return. Captures retain only copied managed data. Prepared
+metadata reads remain allocation-free; matching remains allocating work.
+
 ## Budgets and failures
 
 This is blocking/allocating text work outside frame hot paths. Pattern, subject, replacement and resulting text are bounded to 16,777,216 code points. Native per-call contexts use a 32 MiB match-heap cap and normal PCRE2 work/depth limits. Auto-callouts enforce a five-second deadline, sampled every 4096 calls; substitution sizing retries share their remaining deadline. Native optimizations and one callout interval can delay observation. These are resource bounds, not a real-time scheduling guarantee.
@@ -24,4 +34,4 @@ Invalid compile/replacement/explicit UTF data raises ArgumentException. Invalid 
 
 `ELECTRON2D_TEST_REGEX=1` exercises public dialect features, Unicode/NUL/malformed text, regions, group numbering/duplicates, replacement, native work/input/output budgets, shared/independent concurrency, retained results and forgotten owner collection. `tools/coverage/regex_oracle.py OUTPUT.json` independently compiles the original interpreter without the engine bridge and emits 297 vectors. Pass that file to the Release test runner with `--regex-oracle` to compare group metadata, all capture values/positions, first/global substitution and invalid inputs.
 
-The separate public-only [RegEx.Consumer](../../tests/RegEx.Consumer/RegEx.Consumer.csproj) parses recursive game configuration and uses its captured values in actual Engine/Label output. Its managed/gpu/compatibility profiles distinguish parsing from rendered pixels. The same public parser also executes in a standalone Linux x64 NativeAOT application. Software Wayland/X11 execution remains distinct from hardware and foreign hosts. Electron2DRegexCheck checks native ABI bounds, buffer sizing, 512 ownership cycles and a short native deadline; the same target runs with AddressSanitizer/UndefinedBehaviorSanitizer and leak detection. Existing text/font consumers remain adjacent regressions because the private text library is shared. Package/private-symbol/source checks do not establish foreign execution, native allocation totals or release acceptance.
+The separate public-only [RegEx.Consumer](../../tests/RegEx.Consumer/RegEx.Consumer.csproj) parses recursive game configuration and uses its captured values in actual Engine/Label output. Its managed/gpu/compatibility profiles distinguish parsing from rendered pixels. The same public parser also executes in a standalone Linux x64 NativeAOT application. Software Wayland/X11 execution remains distinct from hardware and foreign hosts. Electron2DRegexCheck checks native ABI bounds, buffer sizing, 512 ownership cycles and a short native deadline; the same target runs with AddressSanitizer/UndefinedBehaviorSanitizer and leak detection. Existing text/font consumers remain adjacent regressions because the private text library is shared. Package/private-symbol/source checks do not establish foreign execution, complete managed/native totals or release acceptance.

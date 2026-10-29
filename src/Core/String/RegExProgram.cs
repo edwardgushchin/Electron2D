@@ -31,6 +31,7 @@ internal sealed partial class RegExProgram : SafeHandle
     internal static unsafe RegExProgram Compile(string pattern)
     {
         var input = new Text(pattern);
+        NativeTextBreak.PrepareMemory();
         fixed (uint* values = input.Values)
         {
             var code = Create(values, (nuint)input.Count, out var error, out var offset);
@@ -63,7 +64,7 @@ internal sealed partial class RegExProgram : SafeHandle
                 var length = (nuint)output.Length; int status;
                 fixed (uint* destination = output)
                     status = SubstituteNative(this, input, (nuint)end, (nuint)offset, value, (nuint)replace.Count, all ? 1 : 0, remaining, destination, ref length);
-                if (status == -48 && length > (nuint)output.Length)
+                if (status == -48 && length != nuint.MaxValue && length > (nuint)output.Length)
                 {
                     if (length > (nuint)maximum + 1u) throw new InvalidOperationException("Regular-expression output exceeds the code-point budget.");
                     output = new uint[checked((int)length)]; continue;

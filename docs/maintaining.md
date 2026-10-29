@@ -2,6 +2,25 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For PCRE2 allocation changes, build Electron2DRegexCheck and
+Electron2DRegexMemoryCheck against the actual private text library. Run
+`python3 -B tools/coverage/check_regex_memory.py BUILD/Electron2DRegexMemoryCheck REPORT.json`
+normally and under ASan/UBSan with leak detection. Preserve typed allocation
+errors, buffer-sizing versus allocation failure, native budgets, usable retry
+and complete drain. Run ELECTRON2D_TEST_REGEX_ALLOCATION=1, the `regex` profile of
+tests/NativeMemory.ICUHost on CLR/full-trim NativeAOT, the independent interpreter
+vectors and the public RegEx.Consumer. Shared callback changes also retain the
+ICU domain's regression checks. Exact text producer identity is required; an
+older ICU-only bridge has the same registration export without PCRE2 accounting.
+For the public `regex-fault` profile, compile the test-only memory core with
+`cc -std=c11 -shared -fPIC -fvisibility=hidden -O2 tools/coverage/regex_memory_fault.c -pthread -o BUILD/libElectron2DENet.so`.
+Copy each published host into its own fault-profile directory, replace only
+`runtimes/linux-x64/native/libElectron2DENet.so` there, and run the host with
+`regex-fault`. Require all 11 positions to raise OutOfMemoryException with full
+drain and successful retry. Never ship this fault library or replace shared
+native build outputs with it.
+See the [PCRE2 domain](coverage/performance-producers.md#pcre2-owned-allocation-domain-2026-10-29).
+
 For private ICU allocation changes, build Electron2DICUMemoryCheck with
 `-DELECTRON2D_STATIC_NATIVE=ON` and run
 `python3 -B tools/coverage/check_icu_memory.py BUILD/Electron2DICUMemoryCheck src/Vendor/ICU/data/TextBreak78.dat REPORT.json`.

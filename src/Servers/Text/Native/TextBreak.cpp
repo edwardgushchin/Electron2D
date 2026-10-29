@@ -5,6 +5,7 @@
 #include "unicode/uclean.h"
 #include "unicode/uloc.h"
 #include <atomic>
+#include "TextMemory.h"
 
 #if defined(_WIN32)
 #define E2D_TEXT_API extern "C" __declspec(dllexport)
@@ -19,6 +20,11 @@ static UMemReallocFn *memory_resize;
 static UMemFreeFn *memory_release;
 extern thread_local int32_t e2d_icu_break_error;
 extern "C" int32_t e2d_icu_prepare_locales();
+
+void *e2d_text_allocate(size_t size, void *) {
+    return memory_ready.load(std::memory_order_acquire) ? memory_allocate(nullptr, size) : nullptr;
+}
+void e2d_text_release(void *value, void *) { if (value) memory_release(nullptr, value); }
 
 // Process caches retain these callbacks; replacing them would mix allocation owners.
 E2D_TEXT_API int32_t e2d_text_memory(UMemAllocFn *allocate, UMemReallocFn *resize, UMemFreeFn *release) {

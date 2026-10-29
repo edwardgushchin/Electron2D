@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal static unsafe partial class NativeTextBreak
 {
-    private static void PrepareMemory()
+    internal static void PrepareMemory()
     {
         NativeAllocation.Prepare();
         try { Check(InstallMemory(&AllocateMemory, &ReallocateMemory, &FreeMemory)); }

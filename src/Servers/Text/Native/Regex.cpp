@@ -2,6 +2,7 @@
 #include <chrono>
 #include <cstring>
 #include <memory>
+#include "TextMemory.h"
 
 #if defined(_WIN32)
 #define E2D_REGEX_API extern "C" __declspec(dllexport)
@@ -10,6 +11,10 @@
 #endif
 
 namespace {
+using GeneralContext = std::unique_ptr<pcre2_general_context, decltype(&pcre2_general_context_free)>;
+static GeneralContext memory_context() {
+    return {pcre2_general_context_create(e2d_text_allocate, e2d_text_release, nullptr), pcre2_general_context_free};
+}
 struct Operation {
     std::chrono::steady_clock::time_point deadline;
     explicit Operation(int milliseconds) : deadline(std::chrono::steady_clock::now() + std::chrono::milliseconds(milliseconds)) {}
@@ -21,9 +26,11 @@ struct Operation {
 };
 struct MatchContext {
     Operation operation;
-    std::unique_ptr<pcre2_match_context, decltype(&pcre2_match_context_free)> context{pcre2_match_context_create(nullptr), pcre2_match_context_free};
+    GeneralContext memory{memory_context()};
+    std::unique_ptr<pcre2_match_context, decltype(&pcre2_match_context_free)> context{
+        memory ? pcre2_match_context_create(memory.get()) : nullptr, pcre2_match_context_free};
     std::unique_ptr<pcre2_match_data, decltype(&pcre2_match_data_free)> data;
-    explicit MatchContext(const pcre2_code *code, int milliseconds = 5000) : operation(milliseconds), data(pcre2_match_data_create_from_pattern(code, nullptr), pcre2_match_data_free) {
+    explicit MatchContext(const pcre2_code *code, int milliseconds = 5000) : operation(milliseconds), data(memory ? pcre2_match_data_create_from_pattern(code, memory.get()) : nullptr, pcre2_match_data_free) {
         if (context) {
             pcre2_set_heap_limit(context.get(), 32768);
             pcre2_set_callout(context.get(), &Operation::callout, &operation);
@@ -34,7 +41,14 @@ struct MatchContext {
 }
 
 E2D_REGEX_API pcre2_code *e2d_regex_create(const uint32_t *pattern, size_t length, int *error, size_t *offset) {
-    return pcre2_compile(pattern, length, PCRE2_DUPNAMES | PCRE2_AUTO_CALLOUT, error, offset, nullptr);
+    if (!error || !offset) return nullptr;
+    *error = PCRE2_ERROR_NOMEMORY; *offset = 0;
+    auto memory = memory_context();
+    if (!memory) return nullptr;
+    std::unique_ptr<pcre2_compile_context, decltype(&pcre2_compile_context_free)> context{
+        pcre2_compile_context_create(memory.get()), pcre2_compile_context_free};
+    if (!context) return nullptr;
+    return pcre2_compile(pattern, length, PCRE2_DUPNAMES | PCRE2_AUTO_CALLOUT, error, offset, context.get());
 }
 E2D_REGEX_API void e2d_regex_destroy(pcre2_code *code) { pcre2_code_free(code); }
 E2D_REGEX_API int e2d_regex_info(const pcre2_code *code, uint32_t *groups, uint32_t *names, uint32_t *width, const uint32_t **table) {

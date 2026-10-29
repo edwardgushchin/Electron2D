@@ -103,7 +103,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 
 | Declaration | State | Missing behavior / evidence |
 | --- | --- | --- |
-| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Direct owned CPU native payloads now have an allocation-boundary current/peak ledger, including FAudio, FreeType FT_Memory and private ICU callbacks, alignment, realloc failure preservation and transient peaks. Coherent managed-heap and remaining native composition remains open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md. |
+| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Direct owned CPU native payloads now have an allocation-boundary current/peak ledger, including FAudio, FreeType FT_Memory and private ICU/PCRE2 callbacks, alignment, realloc failure preservation and transient peaks. Coherent managed-heap and remaining native composition remains open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md. |
 
 
 The [networked coupled support profile](../components/physics-network-example.md#coupled-support-across-network-correction-2026-10-15)

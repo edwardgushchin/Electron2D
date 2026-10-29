@@ -4,8 +4,10 @@
 #include <cstdio>
 #include <string>
 #include <vector>
+#include <cstdlib>
 
 extern "C" {
+int e2d_text_memory(void *(*)(const void *, size_t), void *(*)(const void *, void *, size_t), void (*)(const void *, void *));
 void *e2d_regex_create(const uint32_t *, size_t, int *, size_t *);
 void e2d_regex_destroy(void *);
 int e2d_regex_info(const void *, uint32_t *, uint32_t *, uint32_t *, const uint32_t **);
@@ -13,11 +15,15 @@ int e2d_regex_match(const void *, const uint32_t *, size_t, size_t, size_t *, si
 int e2d_regex_substitute(const void *, const uint32_t *, size_t, size_t, const uint32_t *, size_t, int, int, uint32_t *, size_t *);
 int e2d_regex_error(int, uint32_t *, size_t);
 }
+static void *allocate(const void *, size_t size) { return std::malloc(size); }
+static void *resize(const void *, void *value, size_t size) { return std::realloc(value, size); }
+static void release(const void *, void *value) { std::free(value); }
 static const uint32_t *data(const std::u32string &text) { return reinterpret_cast<const uint32_t *>(text.c_str()); }
 static void *compile(const std::u32string &pattern) {
     int error = 0; size_t offset = 0; void *code = e2d_regex_create(data(pattern), pattern.size(), &error, &offset); assert(code); return code;
 }
 int main() {
+    assert(e2d_text_memory(allocate, resize, release) == 0);
     int error = 0; size_t offset = 0;
     assert(!e2d_regex_create(data(U"("), 1, &error, &offset) && error > 0 && offset <= 1);
     uint32_t message[256]; assert(e2d_regex_error(error, message, 256) > 0);
