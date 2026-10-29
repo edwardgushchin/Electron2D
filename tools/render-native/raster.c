@@ -114,16 +114,17 @@ E2D_EXPORT int e2d_render_raster_support(SDL_GPUDevice *device, uint32_t abi)
 
 _Static_assert(offsetof(VkPhysicalDeviceFeatures, sampleRateShading) == 6 * sizeof(VkBool32), "sample shading feature word");
 _Static_assert(offsetof(VkPhysicalDeviceFeatures, alphaToOne) == 17 * sizeof(VkBool32), "alpha-to-one feature word");
+_Static_assert(offsetof(VkPhysicalDeviceFeatures, shaderStorageImageMultisample) == 30 * sizeof(VkBool32), "multisample storage feature word");
 E2D_EXPORT int e2d_render_multisample_support(SDL_GPUDevice *device, uint32_t abi)
 {
-    if (!device || abi != 1) return -1;
+    if (!device || (abi != 1 && abi != 2)) return -1;
     if (e2d_render_raster_support(device, 1) != 1) return 0;
     const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
     PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetPhysicalDeviceFeatures query = proc ? (PFN_vkGetPhysicalDeviceFeatures)proc(renderer->instance, "vkGetPhysicalDeviceFeatures") : NULL;
     if (!query) return 0;
     VkPhysicalDeviceFeatures features; query(renderer->physicalDevice, &features);
-    return (features.sampleRateShading ? 1 : 0) | (features.alphaToOne ? 2 : 0);
+    return (features.sampleRateShading ? 1 : 0) | (features.alphaToOne ? 2 : 0) | (abi == 2 && features.shaderStorageImageMultisample ? 4 : 0);
 }
 
 _Static_assert(offsetof(VkPhysicalDeviceFeatures, depthBounds) == 14 * sizeof(VkBool32), "depth bounds feature word");

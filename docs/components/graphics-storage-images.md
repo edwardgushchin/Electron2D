@@ -13,7 +13,7 @@ The image role addresses mip zero of an ordinary color texture or every layer of
 an independent color array, including a one-layer array. The storage view exposes
 one mip; image coordinates select the layer. Higher mips retain their contents.
 [Shared views](shared-texture-views.md) preserve the selected format and owner.
-Multisample storage and wider/float atomics require their native capabilities. Sampling and transfer usage remain independent roles.
+Multisample storage executes under the feature contract below. Wider/float atomics require their own native capabilities. Sampling and transfer usage remain independent roles.
 Storage access uses identity channels even when another sampled image has a copied
 component mapping.
 
@@ -39,7 +39,7 @@ Copied push bytes, scissor and ordinary attachment state survive the restart.
 Active color/depth/resolve output feedback rejects. Each draw's shader invocations
 own their race freedom: pass boundaries do not synchronize a vertex write with a
 fragment read inside that draw. No intermediate CPU copy, readback or submission
-is inserted. Modules containing array storage use native storage descriptors for
+is inserted. Modules containing array or multisample storage use native storage descriptors for
 both readonly and writable images. The native pipeline request carries the actual
 writing-stage mask separately from descriptor kinds, so readonly arrays require
 no graphics-store capability. HLSL RWTexture declarations keep write permission
@@ -125,3 +125,15 @@ runs are retained as failed diagnostics. The unchanged tests pass on the ordinar
 Wayland desktop. No production presentation workaround or system setting is
 introduced. Whole-runtime formatting reports 24 pre-existing whitespace issues in
 unchanged TextLayout.cs; all fourteen changed runtime files pass separately.
+
+## Multisample storage images
+
+Color MSAA images and arrays accept Storage, optional Sampling and R32 StorageAtomic through the existing TextureCreate/Image API. Empty data, one mip and an exact supported format/usage/sample-count tuple remain required. A storage-only allocation retains its public usage unchanged; native backing includes the private color-target role used to clear every sample/layer to zero. That initialization role must also be supported by the format. Depth/stencil storage, raw sample uploads/readbacks/copies, direct canvas MS sampling and float/wider atomics retain their separate adapters.
+
+The device independently queries and requests Vulkan shaderStorageImageMultisample. Version two of the private multisample feature query preserves the version-one shading/alpha bits and adds the storage bit. The retained capability is published only for a successfully created profile. Optional feature refusal walks the existing raster fallback while preserving the current precision/storage profile; ordinary storage and sampled MSAA remain available. A storage allocation or original SPIR-V capability/type requiring the missing feature rejects before publication, including binary replay. An MS storage type without its declared SPIR-V capability is malformed.
+
+GLSL image2DMS/iimage2DMS/uimage2DMS and their Array forms execute explicit sample-index loads/stores, dimensions/sample queries and signed/unsigned R32 image atomics. Fixed descriptor arrays keep guarded scalar descriptors: ImageQuerySamples follows the same selector helpers as loads, stores and dimensions, including zero for invalid selectors. Storage channels retain identity mapping. Shared views preserve native samples and selected layers; ordinary/MS, array, scalar and declared-format mismatches reject at binding. Readonly graphics MS images retain native descriptors rather than a single-sample snapshot. Existing per-stage store feature gates, feedback guards, GENERAL transitions, later-command barriers and deferred native retirement apply. Invocations remain responsible for sample bounds and race freedom.
+
+[MultisampleStorage.Consumer](../../tests/MultisampleStorage.Consumer/README.md) uses only public API. Its GLSL source and compiler-free binary profiles check dynamic descriptor choices, array layers, storage-only zero initialization, signed/unsigned array atomics, original and sliced views, pending retirement, missing capabilities, shape/format/role errors, and actual vertex/fragment image loads/stores followed by color and compute readback. Prepared compute and graphics/readback intervals check zero owner-thread managed bytes after warmup. The SDL dynamic-API refusal fixture rejects storage feature requests while retaining ordinary storage and sampled MSAA. Atomic selector helpers receive the dynamic sample index as an ordinary parameter; no helper captures an SSA value from the caller function. The root lowering check exports the actual remapped native modules for independent SPIR-V validation. HLSL MS storage source authoring is unverified here; valid imported SPIR-V uses the same runtime path.
+
+Verification receipts live under ignored bin/multisample-storage/2026-10-29. Linux/Vulkan on NVIDIA RTX 3090 Ti is the exercised backend. CLR, packaged CLR and strict NativeAOT qualification are recorded separately from compilation. Native heap cost, validation layers, other drivers/platforms and physical/owner acceptance require their own evidence.

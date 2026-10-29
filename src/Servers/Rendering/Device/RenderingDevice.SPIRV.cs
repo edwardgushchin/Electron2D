@@ -106,7 +106,6 @@ public sealed unsafe partial class RenderingDevice
                     layout.Add(new(inputOrigin.Set, inputOrigin.Slot, UniformType.InputAttachment, imageSlot, PixelType: pixelType, Stage: stage, Attachment: input.Index, Multisample: input.Multisample));
                     words[imageSet] = nativeSet; words[imageBinding] = (uint)imageSlot++; continue;
                 }
-                if (image.Multisample != 0 && image.Sampled == 2) throw new NotSupportedException("Multisample storage images require their native read/write image adapter.");
                 var writable = image.Sampled == 2;
                 if (image.Depth == 1 && (writable || pixelType != 0)) throw new NotSupportedException("Depth comparison requires a sampled floating-point image.");
                 if (combined && writable) throw new ArgumentException("A storage image cannot contain a combined sampler.", nameof(code));

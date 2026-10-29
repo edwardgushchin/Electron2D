@@ -1,3 +1,5 @@
+[Multisample storage](../components/graphics-storage-images.md#multisample-storage-images) connects existing Image descriptors to explicit per-sample compute/graphics loads, stores, queries and R32 array atomics with independent native feature refusal.
+
 [Built-in rendering textures](../components/rendering-builtin-textures.md) expose lazy RGB8 test/white RID sources through the ordinary native canvas/shader/cache lifetime.
 
 [Viewport render time](../components/viewport-render-time.md) measures completed native canvas CPU/GPU durations and common CPU frame setup through RenderingServer, with independent per-viewport lifetime and explicit backend limits.

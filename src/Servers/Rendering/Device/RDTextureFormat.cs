@@ -35,7 +35,7 @@ public sealed class RDTextureFormat : ElectronObject
     public RenderingDevice.TextureUsageBits UsageBits { get { ThrowIfDisposed(); return _usageBits; } set { ThrowIfDisposed(); _usageBits = RDTextureConfiguration.Usage(value); } }
     private RenderingDevice.TextureSamples _samples = RenderingDevice.TextureSamples.Samples1;
     /// <summary>Selects the exact allocation sample count.</summary>
-    /// <remarks>Multisample color/depth targets may include Sampling for explicit per-sample shader reads and size/sample queries. Native sample counts and image/view support are validated at allocation.</remarks>
+    /// <remarks>Multisample color/depth targets may include Sampling for explicit per-sample shader reads. Color Storage images also support explicit sample loads, stores, queries and R32 atomics with the enabled native feature. Empty data, one mip and the exact native format/usage/count tuple are validated at allocation.</remarks>
     /// <value>Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.</value>
     public RenderingDevice.TextureSamples Samples { get { ThrowIfDisposed(); return _samples; } set { ThrowIfDisposed(); _samples = value; } }
     private bool _isResolveBuffer = false;

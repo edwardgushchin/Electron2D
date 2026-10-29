@@ -20,7 +20,12 @@ static SDL_GPUDevice *SDLCALL masked_create(SDL_PropertiesID props)
     const SDL_GPUVulkanOptions *options = actual_pointer(props, SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER, NULL);
     const Uint32 *features = options ? options->vulkan_10_physical_device_features : NULL;
     const char *mask = getenv("ELECTRON2D_TEST_MULTISAMPLE_MASK");
-    if (features && ((features[6] && (!mask || strcmp(mask, "alpha") != 0)) || (features[17] && (!mask || strcmp(mask, "shading") != 0)))) {
+    if (features && mask && strcmp(mask, "storage") == 0 && features[30]) {
+        fprintf(stderr, "MASKED native multisample storage feature request\n");
+        actual_error("Test native device has no multisample storage feature");
+        return NULL;
+    }
+    if (features && (!mask || strcmp(mask, "storage") != 0) && ((features[6] && (!mask || strcmp(mask, "alpha") != 0)) || (features[17] && (!mask || strcmp(mask, "shading") != 0)))) {
         fprintf(stderr, "MASKED native multisample feature request\n");
         actual_error("Test native device has no multisample feature feature");
         return NULL;

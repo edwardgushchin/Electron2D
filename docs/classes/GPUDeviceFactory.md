@@ -1,6 +1,6 @@
 # GPUDeviceFactory
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 Source: [GPUDeviceFactory.cs](../../src/Servers/Rendering/GPUDeviceFactory.cs).
 
@@ -31,3 +31,5 @@ Native memory diagnostics use lightweight admission/counting to retain physical 
 The [FP64 contract](../components/local-compute.md#native-fp64-arithmetic-and-data) records Vulkan feature opt-in and fallback; retained private device properties identify successful feature negotiation.
 
 The [wide integer profile](../components/local-compute.md#native-64-bit-integer-arithmetic-and-data) tries both, either and neither precision feature, preserving ordinary creation and each available capability.
+
+The [multisample storage contract](../components/graphics-storage-images.md#multisample-storage-images) adds independently negotiated Vulkan storage-image samples. The bounded shader guard checks the declared capability and actual multisample storage type before native publication; optional feature refusal retains the other precision, storage and raster capabilities.

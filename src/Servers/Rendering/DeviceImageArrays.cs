@@ -69,8 +69,8 @@ internal static class DeviceImageArrays
         {
             var opcode = Op(operation); var store = opcode == 228; var resultType = store ? nothing : operation[1]; var operand = store ? 1 : 3;
             var memoryCount = opcode is 230 or 231 ? 3 : 2; var memory = operation.AsSpan(operand + 1, memoryCount).ToArray(); var values = operation.AsSpan(operand + 1 + memoryCount).ToArray();
-            var parameterTypes = new[] { integer, valueTypes[pointer.Coordinate] }.Concat(values.Select(v => valueTypes[v])).ToArray();
-            var key = "atomic:" + opcode + ":" + pointer.Image + ":" + resultType + ":" + pointer.PointerType + ":" + pointer.Sample + ":" + string.Join(',', memory) + ":" + string.Join(',', parameterTypes);
+            var parameterTypes = new[] { integer, valueTypes[pointer.Coordinate], valueTypes[pointer.Sample] }.Concat(values.Select(v => valueTypes[v])).ToArray();
+            var key = "atomic:" + opcode + ":" + pointer.Image + ":" + resultType + ":" + pointer.PointerType + ":" + string.Join(',', memory) + ":" + string.Join(',', parameterTypes);
             if (!operations.TryGetValue(key, out var function))
             {
                 function = next++; operations.Add(key, function); var helper = new List<uint[]> { Instruction(54, resultType, function, 0, Type(33, [resultType, .. parameterTypes])) };
@@ -79,8 +79,8 @@ internal static class DeviceImageArrays
                 helper.Add(Instruction(247, merge, 0)); helper.Add(Instruction(251, [parameters[0], fallback, .. choices.SelectMany((s, n) => new uint[] { s.Selector, labels[n] }).ToArray()]));
                 for (var n = 0; n < choices.Length; n++)
                 {
-                    helper.Add(Instruction(248, labels[n])); var address = Emit(helper, 60, pointer.PointerType, choices[n].Variable, parameters[1], pointer.Sample);
-                    var operands = new uint[] { address }.Concat(memory).Concat(parameters.Skip(2)).ToArray();
+                    helper.Add(Instruction(248, labels[n])); var address = Emit(helper, 60, pointer.PointerType, choices[n].Variable, parameters[1], parameters[2]);
+                    var operands = new uint[] { address }.Concat(memory).Concat(parameters.Skip(3)).ToArray();
                     if (store) helper.Add(Instruction(opcode, operands)); else { incoming.Add(Emit(helper, opcode, resultType, operands)); incoming.Add(labels[n]); }
                     helper.Add(Instruction(249, merge));
                 }
@@ -110,7 +110,7 @@ internal static class DeviceImageArrays
             }
             if (op == 61 && Opaque(i[1])) { body.Add(Instruction(83, integer, i[2], i[3])); continue; }
             var imageOperand = op == 99 ? 1 : 3;
-            if (op is 98 or 99 or 104 && valueTypes.TryGetValue(i[imageOperand], out var resourceType) && Opaque(resourceType))
+            if (op is 98 or 99 or 104 or 107 && valueTypes.TryGetValue(i[imageOperand], out var resourceType) && Opaque(resourceType))
             {
                 var image = Image(resourceType); var resultType = op == 99 ? nothing : i[1]; var mask = op == 99 ? 4 : op == 98 ? 5 : int.MaxValue;
                 var arguments = Enumerable.Range(imageOperand + 1, i.Length - imageOperand - 1).Where(n => n != mask).ToArray(); var parameterTypes = arguments.Select(n => valueTypes[i[n]]).ToArray();
@@ -144,7 +144,7 @@ internal static class DeviceImageArrays
             if (op is >= 227 and <= 242 && atomicPointers.TryGetValue(i[pointerOperand], out var pointer))
             {
                 var function = Atomic(i, pointer); var resultType = op == 228 ? nothing : i[1]; var result = op == 228 ? next++ : i[2]; var memoryCount = op is 230 or 231 ? 3 : 2;
-                body.Add(Instruction(57, [resultType, result, function, pointer.Selector, pointer.Coordinate, .. i.AsSpan(pointerOperand + 1 + memoryCount).ToArray()])); continue;
+                body.Add(Instruction(57, [resultType, result, function, pointer.Selector, pointer.Coordinate, pointer.Sample, .. i.AsSpan(pointerOperand + 1 + memoryCount).ToArray()])); continue;
             }
             if (i.Length > 3 && atomicPointers.ContainsKey(i[3])) throw new NotSupportedException("This image atomic operation requires its native precision or pointer adapter.");
             if (inFunction && i.Length > 2 && Opaque(i[1])) i[1] = integer;

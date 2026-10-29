@@ -79,6 +79,7 @@ public sealed unsafe partial class RenderingDevice
         if (total == 0 || total > int.MaxValue || transferSize > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format));
         return new(format, type, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve, swizzle, stored);
     }
+    // Storage-only multisample images retain a private color role for zero initialization.
     private static SDL.GPUTextureCreateInfo NativeTextureInfo(TextureInfo info) => new()
     {
         Type = info.Type == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray,
@@ -88,7 +89,7 @@ public sealed unsafe partial class RenderingDevice
         LayerCountOrDepth = info.Layers,
         NumLevels = info.Mips,
         SampleCount = (SDL.GPUSampleCount)info.Samples,
-        Usage = NativeUsage(info.Usage & ~(info.Type == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0))
+        Usage = NativeUsage((info.Usage | (info.Samples != TextureSamples.Samples1 && (info.Usage & TextureUsageBits.Storage) != 0 ? TextureUsageBits.ColorAttachment : 0)) & ~(info.Type == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0))
     };
     private RenderHandle CreateTextureStorage(Entry entry, in SDL.GPUTextureCreateInfo create, DataFormat[] shareable, DataFormat viewedFormat)
     {
@@ -96,7 +97,7 @@ public sealed unsafe partial class RenderingDevice
         if (shareable.Length != 0 && !shareable.Contains(entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat)) throw new ArgumentException("Shareable formats must include the allocation format.", nameof(shareable));
         var mutable = shareable.Any(f => NativeFormat(f) != allocationFormat);
         RenderHandle storage;
-        if (mutable || create.SampleCount != SDL.GPUSampleCount.SampleCount1 && (create.Usage & SDL.GPUTextureUsageFlags.Sampler) != 0)
+        if (mutable || create.SampleCount != SDL.GPUSampleCount.SampleCount1 && (create.Usage & (SDL.GPUTextureUsageFlags.Sampler | SDL.GPUTextureUsageFlags.ComputeStorageWrite)) != 0)
         {
             RequireTextureViews(); if (shareable.Length == 0) shareable = [entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat];
             var formats = new SDL.GPUTextureFormat[shareable.Length];

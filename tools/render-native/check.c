@@ -197,6 +197,8 @@ int main(int argc, char **argv)
     depth.flags = 0; depth.minimum = -1; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     depth.minimum = 0; depth.back_reference = 256; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     require(e2d_render_multisample_support(NULL, 1) == -1);
+    require(e2d_render_multisample_support(NULL, 2) == -1);
+    require(e2d_render_multisample_support((SDL_GPUDevice *)(uintptr_t)1, 3) == -1);
     require(e2d_render_multisample_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples) == NULL);
     require(e2d_render_multisample_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, NULL) == NULL);
@@ -263,6 +265,9 @@ int main(int argc, char **argv)
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);
     int multisample_features = e2d_render_multisample_support(device, 1); require(multisample_features >= 0 && multisample_features <= 3);
+    int storage_samples = e2d_render_multisample_support(device, 2);
+    require(storage_samples >= 0 && storage_samples <= 7 && (storage_samples & 3) == multisample_features);
+    printf("Native multisample storage feature mask=%d (storage=4)\n", storage_samples);
     printf("Native multisample feature mask=%d (sample shading=1, alpha-to-one=2)\n", multisample_features);
     int depth_features = e2d_render_depth_support(device, 1); require(depth_features >= 0 && depth_features <= 3);
     printf("Native depth feature mask=%d (per-face=1, depth bounds=2)\n", depth_features);

@@ -147,8 +147,8 @@ internal static unsafe partial class GPUDeviceFactory
             if (available is < 0 or > 1023 || graphics is < 0 or > 3) throw new InvalidOperationException("Native optional shader features could not be queried.");
             var wide = ReadLineSupport(device, 1, out _);
             if (wide is < 0 or > 1) throw new InvalidOperationException("Native line rasterization could not be queried.");
-            var multisample = ReadMultisampleSupport(device, 1);
-            if (multisample is < 0 or > 3) throw new InvalidOperationException("Native multisample features could not be queried.");
+            var multisample = ReadMultisampleSupport(device, 2);
+            if (multisample is < 0 or > 7) throw new InvalidOperationException("Native multisample features could not be queried.");
             var depth = ReadDepthSupport(device, 1);
             if (depth is < 0 or > 3) throw new InvalidOperationException("Native depth/stencil features could not be queried.");
             var logic = ReadLogicSupport(device, 1);
@@ -157,7 +157,7 @@ internal static unsafe partial class GPUDeviceFactory
             try { addresses = ReadAddressSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (addresses is < 0 or > 1) throw new InvalidOperationException("Native buffer addresses could not be queried.");
             available |= addresses << 12;
-            var raster = wide | (multisample << 1) | ((depth & 2) << 2) | (logic << 4); available |= graphics << 10;
+            var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
@@ -234,7 +234,7 @@ internal static unsafe partial class GPUDeviceFactory
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureIndirectDrawFirstInstanceBoolean, false) &&
                 SDL.SetBooleanProperty(props, SDL.Props.GPUDeviceCreateFeatureAnisotropyBoolean, false);
             if (!valid) throw new InvalidOperationException("GPU device properties could not be configured: " + SDL.GetError());
-            // VkPhysicalDeviceFeatures: logicOp=8, wideLines=15, largePoints=16, vertex/fragment stores=25/26, float64/int64/int16=39/40/41.
+            // VkPhysicalDeviceFeatures: logicOp=8, wideLines=15, largePoints=16, vertex/fragment stores=25/26, multisample storage=30, float64/int64/int16=39/40/41.
             Span<uint> features = stackalloc uint[55]; features.Clear(); features[16] = sizedPoints ? 1u : 0u;
             features[25] = ((uint)narrow >> 10) & 1; features[26] = ((uint)narrow >> 11) & 1;
             features[39] = float64 ? 1u : 0u; features[40] = int64 ? 1u : 0u; features[41] = ((uint)narrow >> 5) & 1;
@@ -259,7 +259,7 @@ internal static unsafe partial class GPUDeviceFactory
                 for (var selected = raster; ; selected = (selected - 1) & raster)
                 {
                     features[15] = (uint)selected & 1; features[6] = ((uint)selected >> 1) & 1; features[17] = ((uint)selected >> 2) & 1; features[14] = ((uint)selected >> 3) & 1;
-                    features[8] = ((uint)selected >> 4) & 1;
+                    features[8] = ((uint)selected >> 4) & 1; features[30] = ((uint)selected >> 5) & 1;
                     options.DeviceExtensionCount = 1; options.DeviceExtensionNames = (nint)(&extension); advanced.Flags[0] = 1;
                     device = SDL.CreateGPUDeviceWithProperties(props); mirror = device != 0;
                     if (device == 0)
@@ -283,7 +283,7 @@ internal static unsafe partial class GPUDeviceFactory
                      features[15] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), WideLinesProperty, true) ||
                      features[14] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DepthBoundsProperty, true) ||
                      features[8] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), LogicOpProperty, true) ||
-                     (features[6] | features[17]) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), MultisampleProperty, features[6] | features[17] << 1)))
+                     (features[6] | features[17] | features[30]) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), MultisampleProperty, features[6] | features[17] << 1 | features[30] << 2)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);
                     throw new InvalidOperationException("GPU capabilities could not be retained: " + error);

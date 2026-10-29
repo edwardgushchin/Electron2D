@@ -2439,3 +2439,5 @@ The retained OS MIDI owner is implemented in [OS.MIDI.cs](../src/Core/OS/OS.MIDI
 Custom AnimationNode endpoint delivery extends the existing AnimationNode/AnimationTree/AnimationMixer and Animation track families. Internal [AnimationEventRange](../src/Scene/Animation/AnimationEventRange.cs) and transient AnimationMixFrame metadata implement the [shared event traversal](components/scene-animation.md#custom-clip-event-boundaries); no public type or persisted schema is added.
 
 MSAA shader sampling extends existing RenderingDevice/RDTextureFormat/RDTextureView resources with internal copied sample-role metadata; it adds no public type or stored schema. See [multisample shader reads](components/local-compute.md#multisample-shader-reads).
+
+MSAA storage extends the existing RenderingDevice/RDTextureFormat family without adding public types. GPUDeviceFactory negotiates the storage feature; ShaderPrecision guards original capabilities; DeviceImageArrays preserves sample-count queries through descriptor selection. See [the storage contract](components/graphics-storage-images.md#multisample-storage-images).

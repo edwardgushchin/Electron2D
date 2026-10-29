@@ -174,6 +174,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CHROME") is { } w
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADER_SDF") == "1") { LightingTests.NativeSDF(); ParticleServerTests.Run("sdf"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_VIEWPORT_MIP_BIAS") is { } mipBias) { if (mipBias == "managed") ViewportMIPMapBiasTests.RunManaged(); else ViewportMIPMapBiasTests.RunNative(mipBias); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SAMPLER_CONFIGURATION") == "1") { SamplerConfigurationTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_STORAGE_LOWER") is { } msStorageLower) { MultisampleStorageLoweringTests.Run(msStorageLower); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_STORAGE") is { } msStorage) { MultisampleStorageTests.Run(msStorage == "1" ? null : msStorage); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MS_SAMPLING") is { } msSampling) { MultisampleSamplingTests.Run(msSampling == "1" ? null : msSampling); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SAMPLERS") is { } deviceSamplers) { if (deviceSamplers == "1") RenderingDeviceSamplerTests.Run(); else RenderingDeviceSamplerTests.Canvas(deviceSamplers); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_MULTIVIEW") is { } multiviewProfile) { if (multiviewProfile == "canvas") RenderingDeviceMultiviewTests.Canvas(); else RenderingDeviceMultiviewTests.Run(); return; }

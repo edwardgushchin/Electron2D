@@ -157,7 +157,7 @@ public sealed unsafe partial class RenderingDevice
     /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
     /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
-    /// Multisample color/depth targets may include Sampling for explicit per-sample shader loads and size/sample queries. They require empty data, one mip and the native image/view adapter; storage, raw sample transfers and direct canvas sampling retain their separate adapters.
+    /// Multisample color/depth targets may include Sampling for explicit per-sample shader loads and size/sample queries. They require empty data, one mip and the native image/view adapter; color storage uses the enabled native multisample-storage feature. Raw sample transfers and direct canvas sampling retain their separate adapters.
     /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Image extents or layers exceed the effective device limits.</exception>
@@ -181,12 +181,13 @@ public sealed unsafe partial class RenderingDevice
         if (samples != TextureSamples.Samples1)
         {
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
-            var allowedUsage = targetRole | TextureUsageBits.Sampling | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment);
-            if (mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets with optional sampling; storage and raw transfers require separate adapters.");
+            var allowedUsage = targetRole | TextureUsageBits.Sampling | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment | TextureUsageBits.Storage | TextureUsageBits.StorageAtomic);
+            if (mips != 1 || !data.IsEmpty || (usage & (targetRole | TextureUsageBits.Storage)) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets or color storage images with optional sampling; raw transfers require a separate adapter.");
+            if ((usage & TextureUsageBits.Storage) != 0 && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.MultisampleProperty, 0) & 4) == 0) throw new NotSupportedException("Multisample storage requires its enabled native shader feature.");
             var multi = new Entry { Kind = Kind.Texture, Texture = new(viewedFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, Swizzle: TextureSwizzles.Capture(view), StoredFormat: pixelFormat) };
             try
             {
-                multi.Handle = CreateTextureStorage(multi, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
+                multi.Handle = CreateTextureStorage(multi, NativeTextureInfo(multi.Texture! with { Format = pixelFormat }), shareable, viewedFormat);
                 if (DepthFormat(pixelFormat)) InitializeDepth(multi); else for (uint layer = 0; layer < layers; layer++) ClearMultisample(multi, default, layer);
                 PrepareInputShadow(multi);
                 return Add(multi);

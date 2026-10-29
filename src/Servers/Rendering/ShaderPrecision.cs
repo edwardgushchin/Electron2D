@@ -45,18 +45,22 @@ internal static partial class ShaderPrecision
         return (float64, int64);
     }
 
-    private static bool ReadSampleRequirement(byte[] code)
+    private static (bool Shading, bool Storage) ReadSampleRequirements(byte[] code)
     {
-        var words = MemoryMarshal.Cast<byte, uint>(code.AsSpan()); var declared = false; var used = false;
+        var words = MemoryMarshal.Cast<byte, uint>(code.AsSpan()); var declared = false; var used = false; var storage = false; var storageUsed = false;
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
         {
             var count = words[at] >> 16; var op = words[at] & 65535;
+            storage |= op == 17 && count == 2 && words[at + 1] == 27;
+            // SubpassData inputs also use Sampled=2, without the storage-image feature.
+            storageUsed |= op == 25 && count >= 9 && words[at + 3] != 6 && words[at + 6] != 0 && words[at + 7] == 2;
             declared |= op == 17 && count == 2 && words[at + 1] == 35;
             used |= op == 71 && (count == 3 && words[at + 2] == 17 || count == 4 && words[at + 2] == 11 && words[at + 3] is 18 or 19) ||
                 op == 72 && (count == 4 && words[at + 3] == 17 || count == 5 && words[at + 3] == 11 && words[at + 4] is 18 or 19);
         }
         if (used && !declared) throw new ArgumentException("Sample interpolation and sample-index/position inputs require the sample-rate capability.", nameof(code));
-        return declared;
+        if (storageUsed && !storage) throw new ArgumentException("Multisample storage image types require their declared capability.", nameof(code));
+        return (declared, storage);
     }
 
     internal static void ValidateNative(nint device, byte[] code)
@@ -64,8 +68,9 @@ internal static partial class ShaderPrecision
         var required = ReadRequirements(code);
         ValidateAddresses(device, code);
         var narrow = ReadNarrowRequirements(code);
-        var sample = ReadSampleRequirement(code);
-        if (sample && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MultisampleProperty, 0) & 1) == 0) throw new NotSupportedException("Sample-rate shaders require an enabled native sample-shading feature.");
+        var sample = ReadSampleRequirements(code);
+        if (sample.Shading && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MultisampleProperty, 0) & 1) == 0) throw new NotSupportedException("Sample-rate shaders require an enabled native sample-shading feature.");
+        if (sample.Storage && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MultisampleProperty, 0) & 4) == 0) throw new NotSupportedException("Multisample storage shaders require an enabled native storage-image feature.");
         if (!required.Float64 && !required.Int64 && narrow == 0) return;
         var vulkan = SDL.GetGPUDeviceDriver(device) == "vulkan"; var properties = SDL.GetGPUDeviceProperties(device);
         if (required.Float64 && (!vulkan || !SDL.GetBooleanProperty(properties, GPUDeviceFactory.Float64Property, false)))
