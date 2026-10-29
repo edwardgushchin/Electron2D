@@ -58,6 +58,7 @@ public sealed partial class Image
     /// <param name="buffer">WebP data, copied before validation and decoding, at most 64 MiB.</param>
     /// <remarks>Uses the private native codec to produce RGBA8 without mipmaps. Animated input supplies its first composited frame. Failure preserves pixels; success emits Changed.</remarks>
     /// <exception cref="InvalidDataException">Data is malformed or exceeds image limits.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native codec bundle does not support allocation ownership.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadWebPFromBuffer(ReadOnlySpan<byte> buffer) => DecodeAndCommit(buffer, "WEBP");
 

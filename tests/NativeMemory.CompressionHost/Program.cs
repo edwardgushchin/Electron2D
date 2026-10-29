@@ -15,12 +15,13 @@ internal static unsafe class Program
     private static Counts Read() { Counts value; _snapshot(&value); Check(value.Allocated - value.Retired == value.NativeCurrent, "Native conservation failed."); return value; }
     private static void Main(string[] args)
     {
-        if (args.Length != 1) throw new ArgumentException("Expected deflate, gzip, zlib or brotli.");
+        if (args.Length != 1) throw new ArgumentException("Expected deflate, gzip, zlib, brotli or webp.");
         var library = NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DENet.so"));
         _snapshot = (delegate* unmanaged[Cdecl]<Counts*, void>)NativeLibrary.GetExport(library, "e2d_memory_snapshot");
         var mode = args[0]; var source = new byte[65536];
         for (var i = 0; i < source.Length; i++) source[i] = (byte)(i * 113 + i / 7);
         var baseline = Read();
+        if (mode == "webp") { WebP(source, baseline); Finish(mode, baseline); return; }
         using var encoded = new MemoryStream();
         using (var stream = Codec(encoded, mode, true))
         {
@@ -43,16 +44,37 @@ internal static unsafe class Program
         for (var i = 0; i < 10 && (abandoned.IsAlive || Read().NativeCurrent != baseline.NativeCurrent); i++) { GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect(); }
         Check(!abandoned.IsAlive && Read().NativeCurrent == baseline.NativeCurrent, "Finalized codec storage did not drain.");
         if (mode == "deflate") ZIP(source, baseline.NativeCurrent);
+        Finish(mode, baseline);
+    }
+    private static void Finish(string mode, Counts baseline)
+    {
         for (var i = 0; i < 1024; i++) _ = Read();
         var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 20000; i++) Check(Read().NativeCurrent == baseline.NativeCurrent, "Prepared read changed native storage.");
         var allBytes = GC.GetTotalAllocatedBytes(true) - all; var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
         Check(ownerBytes == 0 && allBytes == 0, "Prepared native reads allocated managed storage.");
         var paths = System.IO.File.ReadLines("/proc/self/maps").Select(line => line[(line.LastIndexOf(' ') + 1)..]).Distinct().ToArray();
-        Check(paths.Count(path => path.EndsWith("libSystem.IO.Compression.Native.so", StringComparison.Ordinal)) == 1 && paths.Count(path => path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal)) == 1, "Expected one PAL and one common ledger.");
+        var codecLibrary = mode == "webp" ? "libElectron2DWebP.so" : "libSystem.IO.Compression.Native.so";
+        Check(paths.Count(path => path.EndsWith(codecLibrary, StringComparison.Ordinal)) == 1 && paths.Count(path => path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal)) == 1, "Expected one codec and one common ledger.");
         Check(paths.Any(path => path.EndsWith("libcoreclr.so", StringComparison.Ordinal)) == RuntimeFeature.IsDynamicCodeSupported, "Runtime identity mismatch.");
-        Console.WriteLine($"BCL {mode}: nativePeak={Read().NativePeak}, currentDelta={Read().NativeCurrent - baseline.NativeCurrent}; streaming/public file/finalization passed; ZIP={(mode == "deflate" ? "passed" : "separate deflate role")}; prepared20000={ownerBytes}/{allBytes}; dynamicCode={RuntimeFeature.IsDynamicCodeSupported}.");
-        foreach (var path in paths.Where(path => path.EndsWith("libSystem.IO.Compression.Native.so", StringComparison.Ordinal) || path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal))) Console.WriteLine(path);
+        var exercised = mode == "webp" ? "public WebP 14 encoding/decoding profiles" : "streaming/public file/finalization; ZIP=" + (mode == "deflate" ? "passed" : "separate deflate role");
+        Console.WriteLine($"Codec {mode}: nativePeak={Read().NativePeak}, currentDelta={Read().NativeCurrent - baseline.NativeCurrent}; {exercised} passed; prepared20000={ownerBytes}/{allBytes}; dynamicCode={RuntimeFeature.IsDynamicCodeSupported}.");
+        foreach (var path in paths.Where(path => path.EndsWith(codecLibrary, StringComparison.Ordinal) || path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal))) Console.WriteLine(path);
+    }
+    private static void WebP(byte[] source, Counts baseline)
+    {
+        using var image = Image.CreateFromData(128, 128, false, Image.Format.Rgba8, source);
+        using var restored = new Image();
+        for (var method = 0; method <= 6; method++)
+        {
+            ProjectSettings.Set(ProjectSettings.WebPCompressionMethod, method);
+            foreach (var lossy in new[] { false, true })
+            {
+                var encoded = image.SaveWebPToBuffer(lossy); restored.LoadWebPFromBuffer(encoded);
+                Check(restored.Width == 128 && restored.Height == 128 && (lossy || restored.GetData().AsSpan().SequenceEqual(source)), "Public WebP pixels changed.");
+                Check(Read().NativeCurrent == baseline.NativeCurrent && Read().NativePeak > baseline.NativePeak, "Public WebP lost its transient peak or leaked native storage.");
+            }
+        }
     }
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static WeakReference Abandon(string mode, byte[] source)

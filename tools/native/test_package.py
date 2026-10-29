@@ -29,14 +29,17 @@ class NativePackageTests(unittest.TestCase):
             library = root / "libElectron2DWebP.so"
             rid = "linux-x64" if platform.machine() == "x86_64" else "linux-arm64"
 
-            def build(decoder=True, rpath=False):
-                source.write_text("void e2d_webp_encode(void) {}\n" + ("void e2d_webp_decode(void) {}\n" if decoder else ""))
+            def build(decoder=True, rpath=False, memory=True):
+                source.write_text("void e2d_webp_encode(void) {}\n" + ("void e2d_webp_memory(void) {}\n" if memory else "") + ("void e2d_webp_decode(void) {}\n" if decoder else ""))
                 command = ["cc", "-shared", "-fPIC", "-Wl,-soname,libElectron2DWebP.so", str(source), "-o", str(library)]
                 if rpath:
                     command.append("-Wl,-rpath,/unshipped-build-directory")
                 subprocess.run(command, check=True, capture_output=True)
 
             build(decoder=False)
+            with self.assertRaisesRegex(AssertionError, "WebP"):
+                package.check_private_webp(rid, library)
+            build(memory=False)
             with self.assertRaisesRegex(AssertionError, "WebP"):
                 package.check_private_webp(rid, library)
             build()
@@ -209,7 +212,7 @@ endif()
     def test_webp_decoder_and_animation_closure_are_required(self):
         for profile, names in package.LIBRARIES.items():
             name = next(name for name in names if "Electron2DWebP" in name)
-            self.assertEqual(package.required_exports(name), {"e2d_webp_encode", "e2d_webp_decode"})
+            self.assertEqual(package.required_exports(name), {"e2d_webp_encode", "e2d_webp_decode", "e2d_webp_memory"})
             if profile in ("iOS", "tvOS", "Web"):
                 self.assertEqual(names.count("libwebpdemux.a"), 1)
                 self.assertIn("WebPAnimDecoderGetNext", package.required_exports("libwebpdemux.a"))

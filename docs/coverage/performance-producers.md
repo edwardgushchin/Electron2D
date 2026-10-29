@@ -422,6 +422,49 @@ runtime delivery, foreign-platform execution and the full public monitor remain
 open. Physics declaration coverage stays **1365/1369 (99.71%)**, four Partial
 and 92 Excluded.
 
+## WebP-owned allocation domain (2026-10-29)
+
+The private image codec now supplies the existing native ledger through one
+immutable allocation/free callback pair. Hash-checked generated copies of the
+pinned utility allocator and SharpYUV implementation route codec, demux,
+animation canvas and sharp color-conversion scratch ownership into that ledger.
+Downloaded sources stay pristine; both utility object-library variants and the
+SharpYUV target use the generated inputs. The existing browser codec target is
+reused when present. A missing allocator export rejects before codec use.
+Concurrent identical registration succeeds; incomplete or different ownership
+rejects. Native allocation failures return null across the callback ABI.
+
+Linux x64 release and ASan/UBSan/leak profiles each pass **2763 cases, 2734
+allocation-failure positions**, covering all seven lossless/lossy methods,
+static decoding and first-canvas animation. Every attempted failure retains
+complete native drain and a healthy retry. Separate host libwebp decoding
+verifies actual encoded pixels; the animation fixture checks its known offset
+red rectangle on the transparent canvas. Four registration workers, prepared-use
+rejection and allocator replacement controls execute in each child. The existing
+native bridge checks retain output canaries, 128 writer rejections and 128
+animation/error cleanups. Both source owners reject changed pinned input.
+
+The public NativeMemory.CompressionHost `webp` role executes fourteen encoding
+and decoding combinations on CLR and strict full-trim NativeAOT. Both observe
+**2972898 bytes** of native high-water storage and **zero current delta** after
+codec completion. Each host passes **20000 prepared snapshot reads at 0/0
+owner/all-thread managed bytes**, one actual WebP library and one common ledger
+mapping; NativeAOT has no CoreCLR. Old-bundle controls reject the missing allocator
+entry point. Existing BCL codec roles still pass after sharing the report helper.
+The ordinary image checks and real GPU/Compatibility texture-and-capture
+profiles pass. Static bridge builds and reuse of an existing pinned codec target
+also execute the native bridge checks on Linux; this does not qualify foreign
+platform execution or browser delivery.
+Receipts and exact source/binary/PDB identities are under
+`bin/webp-allocation-accounting/2026-10-29/`.
+
+This accounts the exercised CPU native payload domain; managed image/output
+arrays, GPU storage and allocator bookkeeping are separate. Cold image I/O still
+allocates. Remaining native ownership, managed collection/composition, runtime
+delivery and foreign-platform/package execution remain open. The complete
+GetMonitor contract stays Partial; physics declaration coverage remains
+**1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
 ## Allocation producers remain open
 
 The [compression initialization cleanup](../components/http.md#failed-codec-initialization)

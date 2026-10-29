@@ -23,7 +23,7 @@ WEBRTC_EXPORTS = {"e2d_rtc_" + name for name in (
     "event_kind", "event_string", "event_channel", "event_release", "channel_create", "channel_destroy",
     "channel_close", "channel_poll", "channel_info", "channel_string", "channel_size", "channel_read", "channel_send")}
 
-WEBP_EXPORTS = {"e2d_webp_encode", "e2d_webp_decode"}
+WEBP_EXPORTS = {"e2d_webp_encode", "e2d_webp_decode", "e2d_webp_memory"}
 
 
 def check_private_webp(rid: str, library: Path) -> None:

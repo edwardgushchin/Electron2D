@@ -17,6 +17,7 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
     /// <exception cref="InvalidDataException">The source blocks or pixel values are invalid.</exception>
     /// <exception cref="IOException">The image exceeds encoding limits or encoding fails.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native codec bundle does not support allocation ownership.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public unsafe byte[] SaveWebPToBuffer(bool lossy = false, float quality = 0.75f)
     {
@@ -31,6 +32,7 @@ public sealed partial class Image
         var inputLength = checked(state.Width * state.Height * 4);
         var effort = lossy ? quality * 100 : ProjectSettings.Get(ProjectSettings.WebPLosslessCompressionFactor);
         var method = ProjectSettings.Get(ProjectSettings.WebPCompressionMethod);
+        WebPMemory.Prepare();
         using var output = new WebPOutput();
         var handle = GCHandle.Alloc(output);
         try
@@ -57,11 +59,13 @@ public sealed partial class Image
     /// <exception cref="InvalidOperationException">The image is empty or block expansion exceeds the codec work budget.</exception>
     /// <exception cref="InvalidDataException">The source blocks or pixel values are invalid.</exception>
     /// <exception cref="IOException">Encoding or saving fails.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native codec bundle does not support allocation ownership.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void SaveWebP(string path, bool lossy = false, float quality = 0.75f) => SaveEncodedFile(path, SaveWebPToBuffer(lossy, quality));
 
     private static unsafe State DecodeWebP(byte[] bytes, Vector2i size)
     {
+        WebPMemory.Prepare();
         var pixels = new byte[GetRequiredDataSize(size.X, size.Y, Format.Rgba8, false)];
         fixed (byte* input = bytes)
         fixed (byte* output = pixels)
@@ -101,4 +105,35 @@ public sealed partial class Image
     [LibraryImport(NativeLibraries.WebPLibrary, EntryPoint = "e2d_webp_decode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int WebPDecodeNative(byte* bytes, ulong length, byte* pixels, ulong capacity, int width, int height);
+
+    private static unsafe partial class WebPMemory
+    {
+        private static readonly object Gate = new();
+        private static bool _ready;
+        internal static void Prepare()
+        {
+            if (Volatile.Read(ref _ready)) return;
+            NativeAllocation.Prepare();
+            lock (Gate)
+            {
+                if (_ready) return;
+                try
+                {
+                    if (Install(&Allocate, &Release) != 0) throw new InvalidOperationException("The native WebP allocator has another owner.");
+                }
+                catch (EntryPointNotFoundException error)
+                { throw new PlatformNotSupportedException("WebP allocation accounting requires the matching source-built native bundle.", error); }
+                Volatile.Write(ref _ready, true);
+            }
+        }
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+        private static void* Allocate(nuint size)
+        {
+            try { return NativeAllocation.Alloc(size); } catch (OutOfMemoryException) { return null; }
+        }
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+        private static void Release(void* value) => NativeAllocation.Free(value);
+        [LibraryImport(NativeLibraries.WebPLibrary, EntryPoint = "e2d_webp_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        private static partial int Install(delegate* unmanaged[Cdecl]<nuint, void*> allocate, delegate* unmanaged[Cdecl]<void*, void> release);
+    }
 }

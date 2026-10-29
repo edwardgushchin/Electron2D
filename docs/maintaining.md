@@ -2,6 +2,18 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For WebP allocation changes, run
+`python3 -O -B tools/webp-native/check_sources.py PINNED_SOURCE`, then build
+Electron2DWebPCheck and Electron2DWebPMemoryCheck. Run the former and
+`python3 -O -B tools/webp-native/check_memory.py BUILD REPORT.json` normally and
+under ASan/UBSan/leak detection. Preserve both hash-checked utility targets,
+SharpYUV scratch ownership, concurrent registration, old-bundle rejection,
+independent pixels, every observed failed request, complete drain and healthy
+retry. Run NativeMemory.CompressionHost `webp` on CLR/full-trim NativeAOT,
+existing BCL roles and ImageWebPTests managed/native profiles. Retain source/PDB
+and exact native identities and distinguish local execution from foreign/runtime
+delivery. See [the WebP domain](coverage/performance-producers.md#webp-owned-allocation-domain-2026-10-29).
+
 For the owned runtime compression component, follow the
 [compression source profile](../tools/runtime-native/compression/README.md).
 Run its pinned-source corruption controls, complete native failure matrix and

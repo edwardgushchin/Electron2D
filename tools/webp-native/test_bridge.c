@@ -5,6 +5,7 @@
 #include <webp/decode.h>
 extern int e2d_webp_encode(const uint8_t *, uint64_t, int, int, int, float, int, int (*)(const uint8_t *, size_t, void *), void *);
 extern int e2d_webp_decode(const uint8_t *, uint64_t, uint8_t *, uint64_t, int, int);
+extern int e2d_webp_memory(void *(*)(size_t), void (*)(void *));
 typedef struct { uint8_t bytes[4096]; size_t size; } buffer;
 static int write_bytes(const uint8_t *bytes, size_t length, void *context) {
     buffer *output = context;
@@ -28,6 +29,7 @@ static const uint8_t animation[] = {
     0xff, 0xfe, 0x07, 0x22, 0xa2, 0xff, 0x01, 0x00,
 };
 int main(void) {
+    if (e2d_webp_memory(malloc, free)) return 10;
     uint8_t rgba[7 * 5 * 4];
     for (size_t i = 0; i < sizeof(rgba); ++i) rgba[i] = (uint8_t)(i * 73);
     rgba[3] = 0;
