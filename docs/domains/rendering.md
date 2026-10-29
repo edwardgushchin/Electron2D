@@ -1,3 +1,5 @@
+[Depth/stencil transfers](../components/depth-texture-transfers.md) connect existing texture allocation/update/copy/readback APIs to real native depth and stencil aspects, with portable bytes and shared-view/queued lifetime.
+
 [Multisample storage](../components/graphics-storage-images.md#multisample-storage-images) connects existing Image descriptors to explicit per-sample compute/graphics loads, stores, queries and R32 array atomics with independent native feature refusal.
 
 [Built-in rendering textures](../components/rendering-builtin-textures.md) expose lazy RGB8 test/white RID sources through the ordinary native canvas/shader/cache lifetime.

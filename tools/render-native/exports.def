@@ -51,3 +51,7 @@ EXPORTS
     e2d_render_timestamp_read
     e2d_render_timestamp_destroy
     e2d_render_timestamp_elapsed
+
+e2d_render_aspect_support
+e2d_render_aspect_transfer
+e2d_render_aspect_copy

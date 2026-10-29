@@ -73,7 +73,7 @@ def generate(source):
         block(vulkan, "typedef struct VulkanComputePipelineResourceLayout\n{"),
         block(vulkan, "typedef struct VulkanComputePipeline\n{"),
 
-        vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    Sint32 usedTextureCapacity;") + len("    Sint32 usedTextureCapacity;")] + "\n} VulkanCommandBuffer;", "",
+        vulkan[vulkan.index("typedef struct VulkanCommandBuffer\n{"):vulkan.index("    Sint32 texturesUsedInPendingTransfersCapacity;") + len("    Sint32 texturesUsedInPendingTransfersCapacity;")] + "\n} VulkanCommandBuffer;", "",
     ])
 
 

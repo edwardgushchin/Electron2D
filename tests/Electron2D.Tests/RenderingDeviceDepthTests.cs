@@ -23,7 +23,7 @@ internal static class RenderingDeviceDepthTests
         var depthUsage = TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling;
         Check(device.TextureIsFormatSupportedForUsage(DataFormat.D16UNORM, depthUsage), "The native minimum depth format is executable.");
         Check(!device.TextureIsFormatSupportedForUsage(DataFormat.D16UNORMS8UINT, depthUsage), "No native packed D16/S8 adapter is claimed.");
-        Check(!device.TextureIsFormatSupportedForUsage(DataFormat.D32SFLOAT, depthUsage | TextureUsageBits.CanUpdate), "Raw depth transfers are not advertised.");
+        Check(device.TextureIsFormatSupportedForUsage(DataFormat.D32SFLOAT, depthUsage | TextureUsageBits.CanUpdate), "The native aspect adapter advertises executing depth updates.");
         Check(!device.TextureIsFormatSupportedForUsage(DataFormat.R8G8B8A8UNORM, depthUsage), "Color formats cannot pretend to own a depth aspect.");
         var stencilFormat = device.TextureIsFormatSupportedForUsage(DataFormat.D24UNORMS8UINT, depthUsage) ? DataFormat.D24UNORMS8UINT : DataFormat.D32SFLOATS8UINT;
         var depth = Image(device, stencilFormat, depthUsage);

@@ -67,7 +67,8 @@ public sealed unsafe partial class RenderingDevice
     }
     private static TextureInfo CaptureTextureInfo(DataFormat format, TextureType type, uint width, uint height, uint layers, uint mips, TextureUsageBits usage, DataFormat[] shareable, TextureSamples samples, bool resolve, uint swizzle, DataFormat stored)
     {
-        if (samples != TextureSamples.Samples1 || DepthFormat(format)) return new(format, type, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, resolve, swizzle, stored);
+        if (samples == TextureSamples.Samples1 && DepthFormat(format)) return CaptureDepthInfo(format, type, width, height, layers, mips, usage, shareable, swizzle, stored);
+        if (samples != TextureSamples.Samples1) return new(format, type, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, resolve, swizzle, stored);
         var native = NativeFormat(format); var offsets = new uint[mips]; var packed = new uint[mips]; var sizes = new uint[mips]; uint total = 0, transferSize = 0;
         var alignment = Math.Max(4u, SDL.GPUTextureFormatTexelBlockSize(native));
         for (var mip = 0; mip < mips; mip++)

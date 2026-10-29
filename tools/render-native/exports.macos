@@ -49,3 +49,7 @@ _e2d_render_timestamp_write
 _e2d_render_timestamp_read
 _e2d_render_timestamp_destroy
 _e2d_render_timestamp_elapsed
+
+_e2d_render_aspect_support
+_e2d_render_aspect_transfer
+_e2d_render_aspect_copy

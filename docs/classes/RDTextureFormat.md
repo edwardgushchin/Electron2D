@@ -170,7 +170,7 @@ Configurations are independent caller-owned ElectronObject values; disposing a d
 
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
 
-Depth/stencil formats accept only DepthStencilAttachment and optional Sampling usage on this profile. Empty data initializes every depth layer/mip to zero through native passes. Raw aspect transfers and depth-bound state retain exact adapters in coverage. See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).
+Depth/stencil formats accept only DepthStencilAttachment and optional Sampling usage on this profile. Empty data initializes every depth layer/mip to zero through native passes. Single-sample native aspect transfers execute through the [depth transfer adapter](../components/depth-texture-transfers.md); copied depth-bound state uses the [native depth/stencil feature](../components/depth-stencil-state.md). See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).
 
 <a id="member-17c8de36cbaa"></a>
 ### IsResolveBuffer
@@ -200,3 +200,5 @@ Combining Sampling and Storage preserves a private readonly GPU snapshot for gra
 Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.
 
 Samples may be combined with the color/depth attachment and Sampling roles for explicit per-sample shader reads. Empty data, one mip, exact native count support and the native image/view adapter remain required. See [multisample shader reads](../components/local-compute.md#multisample-shader-reads).
+
+Single-sample depth/stencil images accept copied encoded mip chains and native CanUpdate/CanCopyFrom/CanCopyTo/CPURead roles. Empty data still initializes every aspect to zero. D32 floats require finite unit-range data; readback canonicalizes unused bits. See [the encoded byte layout and transfer lifetime](../components/depth-texture-transfers.md).

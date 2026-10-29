@@ -81,7 +81,7 @@ public sealed unsafe partial class RenderingDevice
                 try
                 {
                     if (entry.Texture is { } texture)
-                        for (var mip = 0; mip < texture.Mips; mip++) SDL.DownloadFromGPUTexture(pass, Region(entry, layer, mip), new() { TransferBuffer = request.Transfer.DangerousGetHandle(), Offset = texture.Offsets[mip] });
+                        for (var mip = 0; mip < texture.Mips; mip++) TransferTextureMip(entry, layer, mip, request.Transfer.DangerousGetHandle(), false, pass);
                     else SDL.DownloadFromGPUBuffer(pass, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = entry.BufferOffset + offset, Size = (uint)destination.Length }, new() { TransferBuffer = request.Transfer.DangerousGetHandle() });
                 }
                 finally { SDL.EndGPUCopyPass(pass); }
@@ -122,7 +122,7 @@ public sealed unsafe partial class RenderingDevice
                 try
                 {
                     if (request.Texture is { } texture)
-                        for (var mip = 0; mip < texture.Mips; mip++) new ReadOnlySpan<byte>((void*)(pointer + (nint)texture.Offsets[mip]), (int)texture.Sizes[mip]).CopyTo(destination.Slice((int)texture.PackedOffsets[mip], (int)texture.Sizes[mip]));
+                        ReadTextureTransfer(texture, pointer, destination);
                     else new ReadOnlySpan<byte>((void*)pointer, request.Destination.Length).CopyTo(destination);
                 }
                 finally { SDL.UnmapGPUTransferBuffer(Device, request.Transfer.DangerousGetHandle()); }

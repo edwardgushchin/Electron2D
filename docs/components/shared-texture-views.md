@@ -90,3 +90,5 @@ Metal/D3D12/browser behavior and owner visual acceptance are separate. Native
 HLSL input attachments may declare an unspecified depth role; the lowering accepts
 that valid role while retaining explicit depth-input rejection, following
 [SPIR-V OpTypeImage](https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#OpTypeImage).
+
+[Depth/stencil transfers](depth-texture-transfers.md) now map shared-view regions to their original physical mip/layer before native aspect copies. View readback exposes its own tight extent; updating a selected view preserves every neighboring original subresource. The original owner and native transfer allocation remain pinned through pending commands.

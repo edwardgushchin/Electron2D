@@ -142,17 +142,18 @@ public sealed unsafe partial class RenderingDevice
         if ((usageFlags & TextureUsageBits.StorageAtomic) != 0 && format is not (DataFormat.R32SINT or DataFormat.R32UINT)) return false;
         if (DepthFormat(format))
         {
-            if ((usageFlags & TextureUsageBits.DepthStencilAttachment) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling)) != 0) return false;
+            if ((usageFlags & TextureUsageBits.DepthStencilAttachment) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0) return false;
         }
         else if ((usageFlags & TextureUsageBits.DepthStencilAttachment) != 0) return false;
         var native = NativeFormat(format);
+        if (DepthFormat(format) && (usageFlags & (TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0 && !DepthTransfersSupported(format)) return false;
         if ((usageFlags & TextureUsageBits.InputAttachment) != 0 && (DepthFormat(format) || native == SDL.GPUTextureFormat.Invalid || !SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.GraphicsStorageRead))) return false;
         return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, NativeUsage(usageFlags));
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
     /// <param name="view">Copied initial format and sampled component mapping; alternate formats must be declared shareable.</param>
-    /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
+    /// <param name="data">One tightly packed mip chain per layer, or empty for zero initialization. Single-sample depth/stencil data uses the documented portable aspect encoding; D32 floats must be finite and within zero through one. Empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
     /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
     /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
@@ -196,14 +197,16 @@ public sealed unsafe partial class RenderingDevice
         }
         if (DepthFormat(pixelFormat))
         {
-            if (!data.IsEmpty) throw new NotSupportedException("Raw depth/stencil uploads require a native aspect-transfer adapter.");
-            var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(viewedFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, Swizzle: TextureSwizzles.Capture(view), StoredFormat: pixelFormat) };
+            var depthInfo = CaptureTextureInfo(viewedFormat, kind, width, height, layers, mips, usage, shareable, samples, resolve, TextureSwizzles.Capture(view), pixelFormat);
+            if (!data.IsEmpty) { RequireDepthTransfers(pixelFormat); if (data.Length != layers) throw new ArgumentException("Provide one depth mip chain per layer.", nameof(data)); foreach (var bytes in data) { if (bytes is null || bytes.Length != depthInfo.Total) throw new ArgumentException("Each depth mip chain requires the exact encoded byte size.", nameof(data)); ValidateDepthData(viewedFormat, bytes); } }
+            var depthEntry = new Entry { Kind = Kind.Texture, Texture = depthInfo, Size = depthInfo.Total };
             try
             {
                 depthEntry.Handle = CreateTextureStorage(depthEntry, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
-                InitializeDepth(depthEntry); return Add(depthEntry);
+                if (data.IsEmpty) InitializeDepth(depthEntry); else for (uint layer = 0; layer < layers; layer++) UploadTexture(depthEntry, layer, data[(int)layer]);
+                return Add(depthEntry);
             }
-            catch { depthEntry.Handle?.Dispose(); depthEntry.TextureAllocation?.Dispose(); throw; }
+            catch { depthEntry.Handle?.Dispose(); depthEntry.TextureAllocation?.Dispose(); depthEntry.Upload?.Dispose(); throw; }
         }
         if (!data.IsEmpty && data.Length != layers) throw new ArgumentException("Provide one mip chain per layer.", nameof(data));
         var info = CaptureTextureInfo(viewedFormat, kind, width, height, layers, mips, usage, shareable, samples, resolve, TextureSwizzles.Capture(view), pixelFormat);
@@ -224,19 +227,20 @@ public sealed unsafe partial class RenderingDevice
     private SDL.GPUTextureRegion Region(Entry entry, uint layer, int mip) => GPUTextureViews.Region(Device, new() { Texture = entry.NativeHandle, Layer = layer, MipLevel = (uint)mip, W = Math.Max(1, entry.Texture!.Width >> mip), H = Math.Max(1, entry.Texture.Height >> mip), D = 1 });
     private void UploadTexture(Entry entry, uint layer, ReadOnlySpan<byte> data)
     {
+        if (DepthFormat(entry.Texture!.Format)) { RequireDepthTransfers(entry.Texture.Format); ValidateDepthData(entry.Texture.Format, data); }
         entry.Upload ??= Transfer(entry.Texture!.TransferSize, SDL.GPUTransferBufferUsage.Upload);
         var command = Commands(); var pointer = SDL.MapGPUTransferBuffer(Device, entry.Upload!.DangerousGetHandle(), true);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map texture upload");
-        try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) data.Slice((int)entry.Texture.PackedOffsets[mip], (int)entry.Texture.Sizes[mip]).CopyTo(new Span<byte>((void*)(pointer + (nint)entry.Texture.Offsets[mip]), (int)entry.Texture.Sizes[mip])); }
+        try { WriteTextureTransfer(entry.Texture!, pointer, data); }
         finally { SDL.UnmapGPUTransferBuffer(Device, entry.Upload.DangerousGetHandle()); }
         var pass = SDL.BeginGPUCopyPass(command); if (pass == 0) throw GPUPhysicsDevice.Failure("begin texture upload");
-        try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) SDL.UploadToGPUTexture(pass, new() { TransferBuffer = entry.Upload.DangerousGetHandle(), Offset = entry.Texture.Offsets[mip] }, Region(entry, layer, mip), false); }
+        try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) TransferTextureMip(entry, layer, mip, entry.Upload.DangerousGetHandle(), true, pass); }
         finally { SDL.EndGPUCopyPass(pass); }
     }
     /// <summary>Updates one complete layer including every mip level.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <param name="layer">Zero-based layer.</param>
-    /// <param name="data">Exact tightly packed layer mip-chain bytes.</param>
+    /// <param name="data">Exact tightly packed layer mip-chain bytes; depth/stencil uses the portable packed encoding and bounded D32 floats.</param>
     public void TextureUpdate(RID texture, uint layer, ReadOnlySpan<byte> data)
     {
         IdleList(); var entry = Get(texture, Kind.Texture); Layer(entry, layer);
@@ -248,7 +252,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Synchronizes and returns an independent tightly packed layer mip chain.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
     /// <param name="layer">Zero-based layer.</param>
-    /// <returns>A copied layer mip chain.</returns>
+    /// <returns>A copied layer mip chain; depth/stencil uses the portable packed encoding with zero unused bits.</returns>
     public byte[] TextureGetData(RID texture, uint layer) { var entry = Get(texture, Kind.Texture); var bytes = new byte[entry.Size]; TextureGetData(texture, layer, bytes.AsSpan()); return bytes; }
     /// <summary>Synchronizes and reads one layer mip chain into caller-owned storage.</summary>
     /// <param name="texture">Live texture owned by this device.</param>
@@ -260,11 +264,11 @@ public sealed unsafe partial class RenderingDevice
         if (destination.Length != entry.Size) throw new ArgumentException("The layer byte size does not match.", nameof(destination));
         entry.Download ??= Transfer(entry.Texture!.TransferSize, SDL.GPUTransferBufferUsage.Download);
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin texture read");
-        try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) SDL.DownloadFromGPUTexture(pass, Region(entry, layer, mip), new() { TransferBuffer = entry.Download.DangerousGetHandle(), Offset = entry.Texture.Offsets[mip] }); }
+        try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) TransferTextureMip(entry, layer, mip, entry.Download.DangerousGetHandle(), false, pass); }
         finally { SDL.EndGPUCopyPass(pass); }
         SubmitRecorded(); CompleteSubmission(); var pointer = SDL.MapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle(), false);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map texture read");
-        try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) new ReadOnlySpan<byte>((void*)(pointer + (nint)entry.Texture.Offsets[mip]), (int)entry.Texture.Sizes[mip]).CopyTo(destination.Slice((int)entry.Texture.PackedOffsets[mip], (int)entry.Texture.Sizes[mip])); }
+        try { ReadTextureTransfer(entry.Texture!, pointer, destination); }
         finally { SDL.UnmapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle()); }
         DeliverReadbacks();
     }

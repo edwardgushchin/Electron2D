@@ -6,6 +6,9 @@
 #include <SDL3/SDL_vulkan.h>
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
+extern int e2d_render_aspect_support(SDL_GPUDevice *, uint32_t, SDL_GPUTextureFormat);
+extern int e2d_render_aspect_transfer(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, const SDL_GPUTextureRegion *, SDL_GPUTransferBuffer *, uint32_t, uint32_t, uint32_t);
+extern int e2d_render_aspect_copy(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, const SDL_GPUTextureLocation *, const SDL_GPUTextureLocation *, uint32_t, uint32_t);
 extern int e2d_render_graphics_storage_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_storage_barrier(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *);
 extern int e2d_render_shader16_support(SDL_GPUDevice *, uint32_t);
@@ -196,6 +199,10 @@ int main(int argc, char **argv)
     depth.flags = 4; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     depth.flags = 0; depth.minimum = -1; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     depth.minimum = 0; depth.back_reference = 256; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
+    require(e2d_render_aspect_support(NULL, 1, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
+    require(e2d_render_aspect_support((SDL_GPUDevice *)(uintptr_t)1, 0, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
+    require(e2d_render_aspect_transfer((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, NULL, NULL, 0, 0, 0) == -1);
+    require(e2d_render_aspect_copy((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, NULL, NULL, 1, 1) == -1);
     require(e2d_render_multisample_support(NULL, 1) == -1);
     require(e2d_render_multisample_support(NULL, 2) == -1);
     require(e2d_render_multisample_support((SDL_GPUDevice *)(uintptr_t)1, 3) == -1);
@@ -264,6 +271,11 @@ int main(int argc, char **argv)
     int logic_features = e2d_render_logic_support(device, 1); require(logic_features == 0 || logic_features == 1);
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);
+    require(e2d_render_aspect_support(device, 1, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM) == 0);
+    for (int format = SDL_GPU_TEXTUREFORMAT_D16_UNORM; format <= SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT; format++) {
+        int support = e2d_render_aspect_support(device, 1, (SDL_GPUTextureFormat)format); require(support >= 0 && support <= 1);
+        printf("Native depth transfer format=%d support=%d\n", format, support);
+    }
     int multisample_features = e2d_render_multisample_support(device, 1); require(multisample_features >= 0 && multisample_features <= 3);
     int storage_samples = e2d_render_multisample_support(device, 2);
     require(storage_samples >= 0 && storage_samples <= 7 && (storage_samples & 3) == multisample_features);

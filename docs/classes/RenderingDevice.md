@@ -490,7 +490,7 @@ A texture RID belonging to this device.
 | --- | --- |
 | `format` | Allocation description copied before returning. |
 | `view` | Copied initial sampled component mapping; alternate pixel formats require a shared native format view. |
-| `data` | One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears. |
+| `data` | One tightly packed mip chain per layer, or empty for zero initialization. Single-sample depth/stencil uses the documented portable aspect encoding; empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears. |
 
 - `T:System.NotSupportedException`: The requested format, view or allocation role is not supported.
 <a id="member-a3f596fd4b89"></a>
@@ -1503,3 +1503,5 @@ CaptureTimestamp records names alongside actual native query writes. GetCaptured
 Multisample sampled color/depth targets now support explicit compute/vertex/fragment sample loads, image/sample queries and copied descriptor shape validation. See [multisample shader reads](../components/local-compute.md#multisample-shader-reads) for formats, ownership, sampler semantics and verification limits.
 
 [Multisample storage images](../components/graphics-storage-images.md#multisample-storage-images) extend existing Image descriptors to explicit per-sample loads/stores, queries and signed/unsigned R32 atomics in compute and graphics. Public storage-only descriptions retain their roles and native owner/view lifetime.
+
+[Depth/stencil transfers](../components/depth-texture-transfers.md) extend TextureCreate/TextureUpdate/TextureCopy and both synchronous/queued readback forms to exact single-sample depth encodings. Native queries, shared mip/layer views, independent request snapshots and callback/retirement rules retain the ordinary device contract. Raw MS sample transfers and depth resolve remain separate.
