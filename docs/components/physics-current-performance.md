@@ -2,7 +2,7 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 The [2026-10-27 containment correction](gpu-contact-colors.md#dense-retention-witness-2026-10-27)
 closes the raw benchmark with four walls and adds CPU/GPU open-wall controls. The
@@ -18,6 +18,26 @@ records complete CPU/GPU steps, real-window FPS, managed allocation scopes and
 host activity on a frozen d54b90f03 source cohort. All physical checks pass;
 contention, varying tails and observed Enabled VSync keep performance acceptance
 open. It does not qualify the separate raw-server-body pile below.
+
+## Comparison admission at 18d95cf44 (2026-10-29)
+
+The frozen eight-case CPU/GPU headless/window comparison stopped at its initial
+quiet-host gate after 600.451445 seconds and 277 observations. Background CPU
+was .046510–14.487720 cores (median .870220); the longest stable sequence was
+14 of the required 30 consecutive two-second samples. Foreign non-desktop GPU
+contexts appeared in 32 observations; total GPU utilization reached 8%. The
+original .25-core/5% limits and context exclusion were unchanged. No physical
+case started, so this attempt supplies no new complete-step latency, GPU
+advantage, window FPS, numerical or allocation result.
+
+All 6,406 source inputs match `18d95cf44221cbf48c33b410a2da915567b70b20`;
+the manifest records 96 frozen output files. Runtime/root SHA-256 are
+`3b3f03f66203f97a7f3cfad716f528cad79bd01335ba36d2b9954cc0f803ab8a` and
+`ea25d00868edb86bde29762a6e4f6f82b3a840b416b72042763cf51a641306aa`.
+Method, source proof, terminal controller state and admission summary are under
+`bin/physics-full-comparison/2026-10-29-18d95cf44/`. Later source changes and
+[late-callback transfer checks](gpu-resident-reports.md#late-callback-demand-2026-10-29)
+do not inherit performance qualification from this unstarted comparison.
 
 ## Comparison admission at 6c47d64b1 (2026-10-26)
 

@@ -3,13 +3,17 @@ using Store = Electron2D.GPUPhysicsBodyStore;
 using Mode = Electron2D.PhysicsServer.BodyMode;
 using static PhysicsDebugTests;
 
-internal static class GPUPhysicsContactKeyTests
+internal sealed class GPUPhysicsContactKeyTests
 {
     internal static void Run()
     {
         var previous = ProjectSettings.Get(ProjectSettings.Physics2DRunOnSeparateThread);
         ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_THREAD") == "1");
-        try { Native(); MixedNative(); EagerStorage(); SnapshotStorage(false); SnapshotStorage(true); Scene(); MixedScene(); }
+        try
+        {
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CONTACT_LATE") == "1") { LateScriptDemands(); return; }
+            Native(); MixedNative(); EagerStorage(); SnapshotStorage(false); SnapshotStorage(true); Scene(); MixedScene(); LateScriptDemands();
+        }
         finally { ProjectSettings.Set(ProjectSettings.Physics2DRunOnSeparateThread, previous); }
         Console.WriteLine("Compact contact keys: frozen fields, identity, demand, replay and zero-allocation publication passed.");
     }
@@ -89,6 +93,7 @@ internal static class GPUPhysicsContactKeyTests
         store.ReadContactReports(new(receivers, limitCounts, limitCounts, full, keys, offsets, formats));
         Check(limitCounts.SequenceEqual(expectedCounts), "Mixed publication commits aliased limits/counts only after every result segment");
         var version = store.ContactResultVersion; var before = counts.ToArray(); var rejected = false;
+        FrozenBatch(store, version, offsets, counts, reference);
         try { store.ReadContactReports(new(receivers, limits, counts, full, keys, offsets, System.Runtime.InteropServices.MemoryMarshal.AsBytes(counts.AsSpan())[..4])); }
         catch (ArgumentException) { rejected = true; }
         Check(rejected && counts.SequenceEqual(before) && store.ContactResultVersion == version, "Aliased mixed formats reject before selection or output writes");
@@ -115,6 +120,35 @@ internal static class GPUPhysicsContactKeyTests
         Span<Store.ContactReport> late = stackalloc Store.ContactReport[1];
         store.ReadFrozenContactReports(version, offsets[0], late);
         Check(late[0].Equals(reference[0]), "A compact row in a mixed packet retains its numerical fields through authoring and collider removal");
+    }
+    private static void FrozenBatch(Store store, long version, ReadOnlySpan<int> offsets, ReadOnlySpan<int> counts, ReadOnlySpan<Store.ContactReport> reference)
+    {
+        ReadOnlySpan<(int Offset, int Count)> rows = [(offsets[1], counts[1]), (offsets[3], 0), (offsets[0], counts[0]), (offsets[1], counts[1])];
+        var count = counts[1] * 2 + counts[0];
+        Span<Store.ContactReport> storage = stackalloc Store.ContactReport[12]; var output = storage[..count];
+        Span<Store.ContactReport> single = stackalloc Store.ContactReport[1];
+        var reads = store.ReportReadCount; var submissions = store.SubmissionCount; var bytes = store.ReportResultReadbackBytes;
+        store.ReadFrozenContactReports(version, rows, output);
+        Check(store.ReportReadCount == reads + 1 && store.SubmissionCount == submissions + 1 && store.ReportResultReadbackBytes == bytes + count * 68,
+            "Reordered/duplicate frozen rows and an empty segment share one exact-size download and fence");
+        Check(output[..counts[1]].SequenceEqual(reference.Slice(4, counts[1])) &&
+            output.Slice(counts[1], counts[0]).SequenceEqual(reference[..counts[0]]) &&
+            output[(counts[1] + counts[0])..].SequenceEqual(reference.Slice(4, counts[1])), "Batched rows preserve every selected numerical and identity field");
+        AllocationWarmupCheck.Collect();
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 32; i++) { store.ReadFrozenContactReports(version, rows, output); store.ReadFrozenContactReports(version, offsets[0], single); }
+        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all, "Prepared batched and ordinary frozen reads allocate zero owner/all-thread managed bytes");
+        reads = store.ReportReadCount; submissions = store.SubmissionCount;
+        foreach (var row in new (int, int)[] { (-1, 1), (int.MaxValue, 1), (0, -1), (offsets[0], 0) })
+        {
+            var rejected = false;
+            try { store.ReadFrozenContactReports(version, [row], single); } catch (ArgumentException) { rejected = true; }
+            Check(rejected && store.ReportReadCount == reads && store.SubmissionCount == submissions && single[0].Equals(reference[0]), "Invalid batch ranges or lengths reject before output or native submission");
+        }
+        var alias = System.Runtime.InteropServices.MemoryMarshal.Cast<Store.ContactReport, (int, int)>(storage)[..1]; alias[0] = (offsets[0], 1);
+        var original = storage[0]; var aliased = false;
+        try { store.ReadFrozenContactReports(version, alias, storage[..1]); } catch (ArgumentException) { aliased = true; }
+        Check(aliased && storage[0].Equals(original) && store.ReportReadCount == reads && store.SubmissionCount == submissions, "Aliased batch metadata rejects before its destination is changed");
     }
     private static void EagerStorage()
     {
@@ -247,6 +281,98 @@ internal static class GPUPhysicsContactKeyTests
             var bytes = store.ReportResultReadbackBytes;
             for (var i = 0; i < 8; i++) Frame();
             return store.ReportResultReadbackBytes - bytes;
+        }
+    }
+
+    private static bool _lateRegistered;
+    private static int _lateIntegrations, _lateContacts;
+    private static void BindLate(RigidBody body) => body.SetScriptCallbacks(new RigidBodyScriptCallbacks<RigidBody> { IntegrateForces = ReadLate });
+    private static void ClearLate(RigidBody body) { }
+    private static void ReadLate(RigidBody body, PhysicsDirectBodyState state)
+    {
+        Check(state.GetContactCount() > 0 && state.GetContactLocalNormal(0).LengthSquared() > .99f && state.GetContactImpulse(0).IsFinite() &&
+            Math.Abs(state.GetContactLocalPosition(0).X - body.GlobalPosition.X) < 20,
+            "A Script installed during pose publication receives complete solved contacts on its integration lane");
+        _lateIntegrations++; _lateContacts += state.GetContactCount();
+    }
+    private static string Source([System.Runtime.CompilerServices.CallerFilePath] string path = "") => path;
+    private static void LateScriptDemands() { LateScriptDemand(1); LateScriptDemand(3); LateScriptDemand(255); }
+    private static void LateScriptDemand(int receivers)
+    {
+        if (!_lateRegistered)
+        {
+            Script.RegisterBinding<RigidBody, GPUPhysicsContactKeyTests>("ContactKeys.Late", Source(), null, BindLate, ClearLate);
+            _lateRegistered = true;
+        }
+        using var code = ResourceLoader.Load<Script>(Source());
+        const int count = 256;
+        using var world = new World(PhysicsServer.Backend.GPU);
+        using var root = new SubViewport { World = world };
+        using var circle = new CircleShape { Radius = 10 };
+        using var rectangle = new RectangleShape { Size = new(count * 64, 20) };
+        var floor = new StaticBody { Position = new(0, 20) }; floor.AddChild(new CollisionShape { Shape = rectangle }); root.AddChild(floor);
+        var bodies = new RigidBody[count];
+        for (var i = 0; i < count; i++)
+        {
+            var body = new RigidBody { Position = new(i * 30, 0), ContactMonitor = true, MaxContactsReported = 4, CanSleep = false, LockRotation = true };
+            body.AddChild(new CollisionShape { Shape = circle }); root.AddChild(body); bodies[i] = body;
+        }
+        var empty = new RigidBody { Freeze = true, ContactMonitor = true, MaxContactsReported = 128 }; root.AddChild(empty);
+        using var tree = new SceneTree(root);
+        PhysicsServer.AreaSetGravity(world.Space, 60);
+        PhysicsServer.BodySetStateSyncCallback(bodies[0].GetRID(), static state => _ = state.GetContactCount());
+        var space = PhysicsServer.Service.GetSceneSpace(world.Space); var store = space.GPUStore!;
+        for (var i = 0; i < 32; i++) Frame();
+        var targets = Enumerable.Range(1, receivers).Select(i => bodies[i * count / (receivers + 1)]).ToArray();
+        var receiver = targets[0]; receiver.NotifyLocalTransformChanges = true;
+        var installed = false; long before = 0, readBefore = 0, submissionBefore = 0;
+        Action<CanvasItem> publish = _ =>
+        {
+            if (installed) return;
+            installed = true;
+            foreach (var target in targets) target.SetScript(code);
+            before = store.ReportResultReadbackBytes; readBefore = store.ReportReadCount; submissionBefore = store.SubmissionCount;
+        };
+        for (var i = 0; i < count; i++) { bodies[i].Position = new(i * 30, 0); bodies[i].LinearVelocity = new(5, 20); }
+        receiver.LinearVelocity = new(100, 20);
+        receiver.LocalTransformChanged += publish; _lateIntegrations = _lateContacts = 0;
+        tree.PhysicsFrame(1d / 60);
+        receiver.LocalTransformChanged -= publish;
+        var lateBytes = store.ReportResultReadbackBytes - before;
+        Check(installed && _lateIntegrations == receivers, $"Late Scripts install after selection and integrate in the same completed frame: installed={installed}, integrations={_lateIntegrations}, bytes={lateBytes}");
+        Check(lateBytes == _lateContacts * 68 && space.GPUContactStagingBytes.Reports <= (4 + receivers * 4) * 2 * 68 &&
+            store.ReportReadCount == readBefore + 1 && store.SubmissionCount == submissionBefore + 1,
+            $"One late numerical receiver must not materialize the world's contact mirror: {lateBytes} B");
+        if (receivers < count - 1)
+        {
+            var other = PhysicsServer.BodyGetDirectState(bodies[^1].GetRID())!; var reads = store.ReportReadCount;
+            _ = other.GetContactImpulse(0);
+            Check(store.ReportReadCount == reads + 1, "An unrelated receiver remains a lazy frozen contact row");
+        }
+        var sampled = new[] { bodies[0], receiver, bodies[count / 2], bodies[^1] };
+        var expected = sampled.Select(body => PhysicsServer.BodyGetDirectState(body.GetRID())!.CapturedContacts.ToArray()).ToArray();
+        var snapshotReads = store.ReportReadCount;
+        if (receivers == 3)
+        {
+            using var map = new PhysicsSnapshotMap(world.Space);
+            map.Bind(1, 1, floor.GetRID()); map.Bind(2, 1, empty.GetRID());
+            for (var i = 0; i < count; i++) map.Bind((ulong)i + 3, 1, bodies[i].GetRID());
+            var packet = new PhysicsSnapshot(2 << 20); map.Capture(packet); map.Apply(packet);
+        }
+        else
+        {
+            using var checkpoint = PhysicsServer.SpaceCreateCheckpoint(world.Space); checkpoint.Restore();
+        }
+        for (var i = 0; i < sampled.Length; i++)
+            Check(PhysicsServer.BodyGetDirectState(sampled[i].GetRID())!.CapturedContacts.SequenceEqual(expected[i]),
+                "Snapshot restoration preserves every field and sampled identity across eager, late and compact rows");
+        if (receivers == count - 1) Check(store.ReportReadCount == snapshotReads, "Empty compact receivers do not cause a second full-world download during snapshot capture");
+        foreach (var target in targets) target.SetScript(null);
+        Console.WriteLine($"Late Script contact demand: {count} parallel receivers, {receivers} late callbacks, {lateBytes} numerical bytes in one read/fence; {(receivers == 3 ? "portable" : "local")} replay passed.");
+        void Frame()
+        {
+            for (var i = 0; i < count; i++) { bodies[i].Position = new(i * 30, 0); bodies[i].LinearVelocity = new(5, 20); }
+            tree.PhysicsFrame(1d / 60);
         }
     }
 

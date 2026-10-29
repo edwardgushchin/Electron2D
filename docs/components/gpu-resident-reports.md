@@ -28,10 +28,39 @@ reselects contacts or samples edited poses, velocities or shape ownership.
 Raw server receivers, direct-state extensions, integration/sync callbacks and
 positive reporting-depth thresholds retain full packets. Observed numerical reads
 request a full packet for the next interval as a cost hint. A late change requiring
-full data before worker capture materializes the selected results on the owner.
+full data before worker capture batches only the newly required frozen rows on the owner.
 The monitor's identity enumeration never causes numerical downloads on workers.
 Local and portable snapshot preparation batch full materialization in one read;
 restoration supplies complete observer values and retires device selection versions.
+
+### Late callback demand (2026-10-29)
+
+A Script installed during synchronous solver-pose publication can require numerical
+contacts after device selection has already completed. Owner preparation now packs
+only those nonempty receiver rows into one transfer and one submission/fence before
+contact workers run. Existing eager rows remain available; unrelated monitor rows
+retain compact identities and lazy numerical reads. Destination ranges become visible
+only after the entire batch arrives. Request order, duplicates, empty segments,
+version/bounds checks and alias rejection preserve frozen values without reselection.
+
+Snapshot preparation scatters remaining compact rows after the existing numerical
+prefix, including selectively converted rows and empty reserved segments. An empty
+compact receiver alone does not download the complete world. Local and portable
+restoration retain every sampled contact field and identity.
+
+The 256-body CLR fixture installs 1, 3 or 255 real Script integration callbacks
+after pose publication. The pre-change runtime reads 17,408 numerical bytes for
+one new receiver; the candidate reads 68, 204 or 17,340 bytes respectively, in one
+read/fence. Owner and separate numerical profiles exercise same-frame integration,
+unrelated lazy reads, numerical staging bounds and replay. Prepared native single
+and batched reads retain zero owner/all-thread managed bytes. Script installation
+is cold authoring and is outside that allocation claim. Receipts and immutable
+input identities are under `bin/physics-late-contact/2026-10-29/`.
+Adjacent public contact-projection checks pass on CLR and strict full-trim
+NativeAOT, on owner/separate numerical lanes: 64 active frames, 64 idle frames
+and 64 populated/empty replay cycles each retain 0/0 owner/all-thread managed bytes.
+These transfer checks establish no complete-step speedup, massive-window FPS,
+source-free NativeAOT Script acceptance or foreign-platform acceptance.
 
 The existing step guard rejects direct-state queries during synchronous solver-pose
 notifications; the next contact capture replaces the previous view before public

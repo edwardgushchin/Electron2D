@@ -229,7 +229,7 @@ internal sealed partial class PhysicsSpace
         _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = null; _gpuQueryShape = null;
         _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges = [];
         _gpuChanges = []; _gpuActivity = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
-        _gpuReportFormats = []; _gpuReportIdentities = []; _gpuReportSourceOffsets = []; _gpuReportNativeOffsets = []; _gpuContactScratch = [];
+        _gpuReportFormats = []; _gpuReportIdentities = []; _gpuReportSourceOffsets = []; _gpuReportNativeOffsets = []; _gpuContactScratch = []; _gpuContactReads = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
         _gpuShapeQuery[0] = default;
     }

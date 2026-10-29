@@ -2,6 +2,8 @@
 
 GPU monitor-only contacts now publish compact identity keys with late frozen numerical reads, owner-side demand fallback and batched replay capture. See [compact monitor contacts](../components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28).
 
+[Late callback demand](../components/gpu-resident-reports.md#late-callback-demand-2026-10-29) batches only newly required nonempty numerical rows before worker capture. Unrelated compact receivers remain lazy; replay scatters remaining rows after the existing numerical prefix and skips an empty-only download.
+
 The [velocity observation qualifier](../components/gpu-demand-publication.md#scalar-velocity-observations-2026-10-25)
 advances with numerical/shared motion changes independently from complete-state
 invalidation. Targeted writes invalidate their collider; current wake/activity,

@@ -2,6 +2,17 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For compact GPU contact publication, run `ELECTRON2D_TEST_GPU_CONTACT_KEYS=1`
+with the Release root runner on owner and separate numerical lanes
+(`ELECTRON2D_TEST_GPU_PUBLICATION_THREAD=0|1`). Preserve frozen single/batch
+fields, request-order/duplicate/empty/invalid/alias controls and strict prepared
+zero owner/all-thread bytes. Late Script fixtures require matching source/PDBs;
+verify same-frame callbacks, one selected-row fence, unrelated lazy rows,
+mixed local/portable replay and empty-only snapshot demand. Cold Script authoring
+and source-free NativeAOT support remain outside the prepared-read claim. Recheck
+dense/mixed publication, combined completion, space checkpoints and replication
+after changing this boundary. See [late callback demand](components/gpu-resident-reports.md#late-callback-demand-2026-10-29).
+
 Dependency changes follow ADR 0012: choose the latest stable compatible release, retain one exact upstream version across engine-controlled roles and targets, and qualify the affected consumers. A delayed upgrade needs a concrete incompatibility and upgrade condition. HarfBuzz uses `tools/native/harfbuzz.cmake` for every producer; run its preparation/source-pin tests, native refusal/oracle checks, CLR/full-trim NativeAOT public checks and mixed-bundle rejection controls before committing.
 
 For the owned SDL allocation profile, follow

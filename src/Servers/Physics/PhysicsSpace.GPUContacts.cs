@@ -7,6 +7,7 @@ internal sealed partial class PhysicsSpace
     private GPUPhysicsBodyStore.ContactIdentity[] _gpuReportIdentities = [];
     private int[] _gpuReportSourceOffsets = [], _gpuReportNativeOffsets = [];
     private GPUPhysicsBodyStore.ContactReport[] _gpuContactScratch = [];
+    private (int Offset, int Count)[] _gpuContactReads = [];
     private bool _gpuUseContactKeys;
     private byte[] _gpuReportFormats = [];
     private int _gpuReportFullSlots;
@@ -25,8 +26,29 @@ internal sealed partial class PhysicsSpace
     internal void PrepareGPUContactPublication()
     {
         if (!_gpuUseContactKeys) return;
+        var rows = 0; var count = 0;
         foreach (var body in _bodies)
-            if (body.Runtime.ContactLimit > 0 && _gpuReportRanges[GPUCollider(body.Backend).GPUHandle.Index].Keys && RequiresGPUContactDetails(body.Runtime)) { MaterializeGPUContactReports(); return; }
+        {
+            if (body.Runtime.ContactLimit <= 0) continue;
+            var index = GPUCollider(body.Backend).GPUHandle.Index; var range = _gpuReportRanges[index];
+            if (!range.Keys || range.Count == 0 || !RequiresGPUContactDetails(body.Runtime)) continue;
+            if (_gpuContactReads.Length == rows) Array.Resize(ref _gpuContactReads, Math.Max(8, checked((rows + 1) * 2)));
+            _gpuContactReads[rows++] = (_gpuReportNativeOffsets[index], range.Count);
+            count = checked(count + range.Count);
+        }
+        if (count == 0) return;
+        var required = checked(_gpuReportFullSlots + count);
+        if (_gpuReports.Length < required) Array.Resize(ref _gpuReports, Math.Max(8, checked(required * 2)));
+        GPUStore!.ReadFrozenContactReports(_gpuContactResultVersion, _gpuContactReads.AsSpan(0, rows), _gpuReports.AsSpan(_gpuReportFullSlots, count));
+        // Publish host ranges only after the complete selected batch has arrived.
+        foreach (var body in _bodies)
+        {
+            if (body.Runtime.ContactLimit <= 0) continue;
+            var index = GPUCollider(body.Backend).GPUHandle.Index; var range = _gpuReportRanges[index];
+            if (!range.Keys || range.Count == 0 || !RequiresGPUContactDetails(body.Runtime)) continue;
+            _gpuReportRanges[index] = (_gpuReportFullSlots, range.Count, false);
+            _gpuReportFullSlots += range.Count;
+        }
     }
     internal ReadOnlySpan<GPUPhysicsBodyStore.ContactReport> ReadGPUContactRow(long version, int offset, int count)
     {
@@ -41,18 +63,19 @@ internal sealed partial class PhysicsSpace
         var count = 0; var capacity = 0;
         for (var i = 0; i < _gpuReportBodyCount; i++)
         {
-            if (_gpuReportRanges[_gpuReportBodies[i].Index].Keys)
+            if (_gpuReportRanges[_gpuReportBodies[i].Index] is { Keys: true, Count: > 0 })
                 count = Math.Max(count, checked(_gpuReportSourceOffsets[i] + _gpuReportCounts[i]));
             capacity = checked(capacity + _gpuReportLimits[i]);
         }
         if (_gpuReports.Length < capacity) Array.Resize(ref _gpuReports, Math.Max(8, checked(capacity * 2)));
         var reports = ReadGPUContactRow(_gpuContactResultVersion, 0, count);
+        var next = _gpuReportFullSlots;
         for (var i = 0; i < _gpuReportBodyCount; i++)
         {
             var index = _gpuReportBodies[i].Index; var range = _gpuReportRanges[index];
             if (!range.Keys) continue;
-            var offset = checked(_gpuReportFullSlots + range.Offset);
-            reports.Slice(_gpuReportSourceOffsets[i], range.Count).CopyTo(_gpuReports.AsSpan(offset));
+            var offset = next; next = checked(next + _gpuReportLimits[i]);
+            if (range.Count > 0) reports.Slice(_gpuReportSourceOffsets[i], range.Count).CopyTo(_gpuReports.AsSpan(offset));
             _gpuReportRanges[index] = (offset, range.Count, false);
         }
         foreach (var body in _bodies)
