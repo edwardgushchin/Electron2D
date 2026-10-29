@@ -80,6 +80,7 @@ internal static class TextServerWrappingTests
             using var paragraph = new TextParagraph(); paragraph.AddString("first\nsecond", font, 26); var line = paragraph.GetLineRID(1); var independent = Slice(line, 6, 6); paragraph.Width = 5; paragraph.GetLineCount();
             Check(!s.Has(line) && s.ShapedTextGetParent(independent) == paragraph.GetRID() && s.ShapedTextGetGlyphCount(independent) > 0, "Paragraph reflow retires borrowed parent without invalidating owned substring");
             s.ShapedTextSetOrientation(independent, TextOrientation.Vertical); Check(s.ShapedTextGetParent(independent) == default && s.ShapedTextGetSize(independent).Y > 0, "Axis mutation detaches and runs");
+            Check(s.ShapedTextGetRange(independent) == new Vector2i(6, 12) && s.ShapedTextGetGlyphs(independent).All(glyph => glyph.Start >= 6 && glyph.End <= 12), "Detached provider reauthoring preserves public scalar coordinates after its producer origin resets.");
             using var arabic = new FontFile { Data = FontTestFixtures.Arabic, AllowSystemFallback = false };
             using var justified = new TextLine { Alignment = HorizontalAlignment.Fill, Width = 500, TextOverrunBehavior = TextOverrunBehavior.NoTrimming };
             justified.AddString("سلام عالم", arabic, 28, "ar"); var justifiedSlice = Slice(justified.GetRID(), 0, 9);

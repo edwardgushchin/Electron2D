@@ -176,7 +176,7 @@ internal sealed partial class FontData : IDisposable
         lock (_gate) { Check(); if (!HasData) return string.Empty; if (_characters is null) Run(Operation.Characters); return _characters!; }
     }
     internal void Shape(uint[] scalars, int offset, int count, int fontSize, NativeTextDirection direction, uint script, string language,
-        List<NativeShapedGlyph> output, NativeFontFeature[]? features = null, int textLength = -1)
+        List<NativeShapedGlyph> output, NativeFontFeature[]? features = null, int textLength = -1, bool simple = false)
     {
         ArgumentNullException.ThrowIfNull(scalars); ArgumentNullException.ThrowIfNull(output); ArgumentNullException.ThrowIfNull(language); ValidateSize(fontSize);
         var length = textLength < 0 ? scalars.Length : textLength;
@@ -185,9 +185,9 @@ internal sealed partial class FontData : IDisposable
         {
             Check(); output.Clear(); if (!HasData || count == 0) return;
             _scalars = scalars; _offset = offset; _count = count; _textLength = length; _size = fontSize; _direction = direction;
-            _script = script; _language = language; _shapeOutput = output; _features = features ?? OpenTypeFeatures;
+            _script = script; _language = language; _shapeOutput = output; _features = features ?? OpenTypeFeatures; _simpleShaping = simple;
             try { Run(Operation.Shape); }
-            finally { _scalars = null; _shapeOutput = null; _features = null; _language = string.Empty; }
+            finally { _scalars = null; _shapeOutput = null; _features = null; _language = string.Empty; _simpleShaping = false; }
         }
     }
     private NativeTextDirection _direction;
@@ -287,7 +287,7 @@ internal sealed partial class FontData : IDisposable
                 break;
             case Operation.Shape:
                 _precision!.SetSize(FixedNativeSize(_size)); var shapeScale = FixedNativeScale(_size);
-                var shaped = _precision.Shape(_scalars.AsSpan(0, _textLength), _offset, _count, _direction, _script, _language, _features);
+                var shaped = _simpleShaping ? ShapeSimple() : _precision.Shape(_scalars.AsSpan(0, _textLength), _offset, _count, _direction, _script, _language, _features);
                 _shapeOutput!.EnsureCapacity(shaped.Length);
                 var horizontal = _direction is NativeTextDirection.LTR or NativeTextDirection.RTL;
                 var advanceSize = Authored is { FixedSize: > 0 } fixedCache ? fixedCache.FixedSize : _size;

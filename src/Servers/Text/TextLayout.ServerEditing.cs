@@ -11,6 +11,11 @@ internal sealed partial class TextLayout
     {
         if (_serverCharactersReady) return;
         _serverCharacters.Clear();
+        if (_options.SimpleLayout)
+        {
+            for (var at = 1; at <= _count; at++) _serverCharacters.Add(at);
+            _serverCharactersReady = true; return;
+        }
         for (var start = 0; start < _count;)
         {
             var end = start + 1; var language = StyleAt(start).Language;

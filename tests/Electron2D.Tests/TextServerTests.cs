@@ -5,10 +5,10 @@ internal static class TextServerTests
     internal static void Run()
     {
         var ts = TextServerManager.GetPrimaryInterface();
-        Check(ReferenceEquals(ts, TextServerManager.GetInterface(0)) && ReferenceEquals(ts, TextServerManager.FindInterface(ts.GetName())) && TextServerManager.GetInterfaceCount() == 1 && TextServerManager.GetInterfaces().SequenceEqual([ts]), "Retained provider discovery.");
+        Check(ts is TextServerAdvanced && ReferenceEquals(ts, TextServerManager.GetInterface(0)) && ReferenceEquals(ts, TextServerManager.FindInterface(ts.GetName())) && TextServerManager.GetInterfaces() is [TextServerAdvanced, TextServerFallback, TextServerDummy], "Retained concrete provider discovery.");
         Check(Engine.GetSingleton<TextServerManager>(nameof(TextServerManager)) is not null && TextServerManager.FindInterface("missing") is null, "Named service identity.");
         Reject<InvalidOperationException>(() => ts.Dispose()); Reject<InvalidOperationException>(() => Engine.GetSingleton<TextServerManager>(nameof(TextServerManager)).Dispose());
-        Reject<ArgumentOutOfRangeException>(() => TextServerManager.GetInterface(1)); Reject<ArgumentNullException>(() => TextServerManager.FindInterface(null!));
+        Reject<ArgumentOutOfRangeException>(() => TextServerManager.GetInterface(3)); Reject<ArgumentNullException>(() => TextServerManager.FindInterface(null!));
         Reject<ArgumentOutOfRangeException>(() => ts.CreateShapedText((TextDirection)99)); Reject<ArgumentOutOfRangeException>(() => ts.CreateShapedText(TextDirection.Inherited));
         using var font = new FontFile { Data = FontTestFixtures.Variable, AllowSystemFallback = false };
         using var arabic = new FontFile { Data = FontTestFixtures.Arabic, AllowSystemFallback = false };

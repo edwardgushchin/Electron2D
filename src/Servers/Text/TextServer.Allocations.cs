@@ -29,6 +29,7 @@ public abstract partial class TextServer
         try
         {
             var rid = create(); var fresh = false;
+            if (this is TextServerDummy && rid == default && scope.Created.Count == 0) return rid;
             foreach (var entry in scope.Created) if (ReferenceEquals(entry.Owner, this) && entry.RID == rid && entry.Font == font) { fresh = true; break; }
             if (!fresh || !HasOwnedRole(rid, font)) throw new InvalidOperationException("A text resource factory must return a fresh live identity of its requested role owned by this implementation.");
             return rid;

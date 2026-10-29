@@ -1,6 +1,6 @@
 # TextLayout
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
@@ -44,3 +44,5 @@ Retained text buffers prepare zero-advance word and Arabic elongation opportunit
 Internal glyph records retain the actual source RID and an ellipsis discriminator through fitting, slicing and display copying. Virtual word/Kashida records preserve the same source. The private ServerTextRun scratch list groups visual cluster leaders by authored span, source, size and direction without changing layout order. Snapshot arrays expose TextGlyph values, while scalar run queries reuse scratch capacity. Ellipsis queries select only the current display payload and preserve the independent raw geometry.
 
 Internal scalar rectangles and copied font-run metadata also feed [native accessibility text](AccessibilityServer.md#native-text). This integration retains the existing buffer/font ownership and Unicode scalar contract; it adds no public text-server API.
+
+Concrete Fallback buffers preserve their simple-layout option through duplicates and source-version substrings. Scalar boundaries, LTR levels/common scripts and nominal font-worker shaping bypass contextual shaping and ICU iterator refinement while retaining shared real wrapping/formatting/editing consumers. Explicit Dummy selection releases provider layout state and publishes zero text geometry without manufacturing a successful shaped buffer. See [concrete text profiles](../components/text-server.md#concrete-implementation-profiles).

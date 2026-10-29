@@ -9,7 +9,7 @@ internal readonly record struct TextLayoutKey(string Text, int FontSize, float W
     int MaxLines, TextLineBreakFlags Breaks, TextJustificationFlags Justification, TextDirection Direction, TextOrientation Orientation, bool Multiline = false);
 
 internal readonly record struct TextLayoutOptions(float LineSpacing = 0, float ParagraphSpacing = 0, string Language = "",
-    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "", bool ServerBuffers = false, int BufferGlyphSpacing = 0, int BufferSpaceSpacing = 0, int BufferTopSpacing = 0, int BufferBottomSpacing = 0, TextLayout? RetainedShape = null);
+    float[]? TabStops = null, int Overrun = 1, string Ellipsis = "\u2026", int VisibleCharacters = -1, int VisibleBehavior = 1, IReadOnlyList<TextBIDIRange>? BIDIOverride = null, bool ApplyAlignment = true, bool? WrappedBehavior = null, bool PreserveControl = false, IReadOnlyList<TextLayoutStyleSpan>? Styles = null, IReadOnlyList<TextLayoutInlineObject>? Objects = null, float DropcapWidth = 0, float DropcapHeight = 0, bool PreserveInvalid = true, bool GlobalObjectMetrics = false, bool ParagraphBuffers = false, string CustomPunctuation = "", bool ServerBuffers = false, int BufferGlyphSpacing = 0, int BufferSpaceSpacing = 0, int BufferTopSpacing = 0, int BufferBottomSpacing = 0, TextLayout? RetainedShape = null, bool SimpleLayout = false);
 
 internal readonly record struct TextLayoutLine(int Start, int End, int GlyphStart, int GlyphCount, float Width, float Ascent,
     float Descent, float CrossOffset, bool ParagraphEnd, int ParagraphLevel, int RangeEnd = -1, float UnderlinePosition = 0, float UnderlineThickness = 0, int TrimPosition = -1, int EllipsisPosition = -1)
@@ -98,10 +98,20 @@ internal sealed partial class TextLayout
     private void BuildCore(Font font, TextLayoutKey key, TextLayoutOptions? options, Font.ReadScope rootRead)
     {
         _font = font; _options = options ?? new TextLayoutOptions(Overrun: 1, VisibleCharacters: -1);
+        var implementation = TextServerManager.CallbackProvider;
+        if (!TextServer.IsNativeBackendCall) _options = _options with { SimpleLayout = implementation is TextServerFallback };
+        if (implementation is TextServerFallback)
+        {
+            TextServerFallback.ValidateDirection(key.Direction == TextDirection.Inherited ? TextDirection.Auto : key.Direction);
+            if (_options.BIDIOverride is { } contexts) foreach (var context in contexts)
+                    if (context.Direction == TextDirection.RTL) throw new NotSupportedException("The fallback text implementation cannot reorder right-to-left contexts.");
+        }
         Key = key; _caretsReady = false; _serverCharactersReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
+        if (TextServerManager.CallbackProvider is TextServerDummy)
+        { ReleaseProviderLayout(); _count = CharacterCount = DropcapLines = 0; NaturalWidth = UnwrappedWidth = 0; return; }
         Decode(key.Text); CharacterCount = _count; PrepareRichStyles(); PrepareCustomPunctuation(); if (_options.ServerBuffers) PrepareStyleBreaks();
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
-        if (TextServerManager.CallbackProvider is { } provider) { BuildProviderLayout(provider, rootRead); return; }
+        if (implementation is { } provider && provider is not TextServerFallback) { BuildProviderLayout(provider, rootRead); return; }
         ReleaseProviderLayout();
         ResolveProperties(); MeasureParagraphs(); BreakLines(); NaturalWidth = 0;
         foreach (var line in _lines) NaturalWidth = Math.Max(NaturalWidth, MathF.Ceiling(line.Width));
@@ -126,6 +136,7 @@ internal sealed partial class TextLayout
         _utf16[_count] = text.Length;
         Array.Clear(_advances, 0, _count + 1); Array.Clear(_grapheme, 0, _count + 1);
         _grapheme[0] = true; _grapheme[_count] = true;
+        if (_options.SimpleLayout) { DecodeSimpleBoundaries(); return; }
         var graphemes = new GraphemeEnumerator(text);
         while (graphemes.MoveNext(out var grapheme)) _grapheme[ScalarAtUTF16(grapheme.Offset + grapheme.Length)] = true;
         NativeTextBreak.Fill(text, _options.Language ?? string.Empty, _utf16.AsSpan(0, _count + 1),
@@ -136,7 +147,9 @@ internal sealed partial class TextLayout
     private void ResolveProperties()
     {
         var paragraph = 0;
-        while (paragraph < _count)
+        if (_options.SimpleLayout)
+        { _levels.AsSpan(0, _count + 1).Clear(); _paragraphLevels.AsSpan(0, _count + 1).Clear(); }
+        while (!_options.SimpleLayout && paragraph < _count)
         {
             var end = paragraph;
             while (end < _count && !IsHardBreak(_scalars[end])) end++;
@@ -155,7 +168,7 @@ internal sealed partial class TextLayout
             for (var i = paragraph; i < separatorEnd; i++) _paragraphLevels[i] = (sbyte)_bidi.ParagraphLevel;
             paragraph = separatorEnd;
         }
-        for (var i = 0; i < _count; i++) _scripts[i] = new Codepoint(_scalars[i]).Script;
+        for (var i = 0; i < _count; i++) _scripts[i] = _options.SimpleLayout ? UnicodeScript.Common : new Codepoint(_scalars[i]).Script;
         var previous = UnicodeScript.Common;
         for (var i = 0; i < _count; i++)
         {
@@ -430,7 +443,7 @@ internal sealed partial class TextLayout
                 ? (run.Level & 1) == 0 ? NativeTextDirection.TTB : NativeTextDirection.BTT
                 : (run.Level & 1) == 0 ? NativeTextDirection.LTR : NativeTextDirection.RTL;
             _shaped.Clear(); run.Face.Shape(_shapeScalars, run.Start - start, run.End - run.Start, runStyle.Size, direction,
-                TextScript.ToTag(run.Script), runStyle.Language, _shaped, features: runStyle.Font.GetShapingFeatures(run.Face), textLength: length);
+                TextScript.ToTag(run.Script), runStyle.Language, _shaped, features: runStyle.Font.GetShapingFeatures(run.Face), textLength: length, simple: _options.SimpleLayout);
             for (var i = run.Start; i < run.End; i++) _clusterEnds[i] = run.End;
             foreach (var shaped in _shaped)
             {
@@ -482,7 +495,7 @@ internal sealed partial class TextLayout
         _runs.Clear(); var length = end - start;
         if (length == 0) return; _tabRTL = _paragraphLevels[start] == 1;
         _scalars.AsSpan(start, length).CopyTo(_shapeScalars);
-        if (_options.BIDIOverride is { Count: > 0 } contexts)
+        if (!_options.SimpleLayout && _options.BIDIOverride is { Count: > 0 } contexts)
         {
             for (var contextIndex = 0; contextIndex < contexts.Count; contextIndex++)
             {
@@ -681,6 +694,7 @@ internal sealed partial class TextLayout
     private bool IsJustificationSpace(Glyph glyph) => glyph.Space && glyph.End > glyph.Start && !glyph.Tab && (glyph.Advance > 0 || glyph.Virtual) && !IsCustomPunctuation(new Rune(_scalars[glyph.Start]));
     private void PrepareJustificationGlyphs(int start, int end, bool word, bool kashida)
     {
+        if (_options.SimpleLayout) return;
         if (word) for (var i = 0; i < _lineGlyphs.Count; i++)
             {
                 var glyph = _lineGlyphs[i];

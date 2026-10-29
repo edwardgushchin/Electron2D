@@ -35,6 +35,7 @@ internal sealed class FontSupportPolicy
         uint tag = 0; for (var i = 0; i < 4; i++) tag = tag << 8 | (uint)(i < script.Length && script[i] <= 127 ? script[i] : ' ');
         return automaticScripts.Contains(tag);
     }
+    internal bool SupportsSimpleScript(string script) => _scripts.TryGetValue(script, out var value) ? value : _scripts.GetValueOrDefault("*", true);
     internal int Priority(ReadOnlySpan<char> language, uint script, HashSet<uint> automaticScripts)
     {
         var scriptSupported = _tags.TryGetValue(script, out var explicitScript) ? explicitScript : _scripts.TryGetValue("*", out var wildcardScript) ? wildcardScript : automaticScripts.Contains(script);

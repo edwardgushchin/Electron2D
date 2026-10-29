@@ -8,7 +8,7 @@ internal sealed partial class TextLayout
     private readonly record struct ServerBreakCluster(int Start, int End, float Advance, bool Space, bool Hard, bool Soft, bool Hyphen, float HyphenAdvance);
     private void PrepareStyleBreaks()
     {
-        if (_options.Styles is null || _count == 0) return;
+        if (_options.SimpleLayout || _options.Styles is null || _count == 0) return;
         for (var start = 0; start < _count;)
         {
             var end = start + 1; var language = StyleAt(start).Language; var startsWithObject = _richObjects[start].At >= 0;

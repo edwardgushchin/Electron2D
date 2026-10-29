@@ -849,10 +849,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextMesh](classes/TextMesh.md) | PrimitiveMesh | Excluded | 18 |
 | [TextParagraph](classes/TextParagraph.md) | RefCounted | Implemented | 49 |
 | [TextServer](classes/TextServer.md) | RefCounted | Implemented | 378 |
-| [TextServerAdvanced](classes/TextServerAdvanced.md) | TextServerExtension | Unimplemented | 0 |
-| [TextServerDummy](classes/TextServerDummy.md) | TextServerExtension | Unimplemented | 0 |
+| [TextServerAdvanced](classes/TextServerAdvanced.md) | TextServerExtension | Implemented | 0 |
+| [TextServerDummy](classes/TextServerDummy.md) | TextServerExtension | Implemented | 0 |
 | [TextServerExtension](classes/TextServerExtension.md) | TextServer | Implemented | 249 |
-| [TextServerFallback](classes/TextServerFallback.md) | TextServerExtension | Unimplemented | 0 |
+| [TextServerFallback](classes/TextServerFallback.md) | TextServerExtension | Implemented | 0 |
 | [TextServerManager](classes/TextServerManager.md) | Object | Implemented | 10 |
 | [Texture](classes/Texture.md#godot-texture) | Resource | Partial | 0 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | Texture | Partial | 23 |

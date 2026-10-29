@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Owns font sources and caches, retained shaped-text buffers and shared text utilities.</summary>
 /// <remarks>Obtain the retained interface from TextServerManager. Each buffer belongs to its creating thread.
 /// Created fonts and buffers are retained until FreeRID; font projections are borrowed live views.
-/// Caller fonts, text-object buffers, inline keys and metadata remain borrowed.</remarks>
+/// Caller fonts, text-object buffers, inline keys and metadata remain borrowed. Advanced and Fallback own operational
+/// resources; the explicit Dummy profile creates no identities and ignores resource requests. Capabilities govern
+/// contextual layout, boundaries and case behavior; consult each concrete implementation before requesting them.</remarks>
 public abstract partial class TextServer : ElectronObject
 {
     private readonly object _buffersGate = new();
@@ -53,7 +55,7 @@ public abstract partial class TextServer : ElectronObject
     }
     private RID Own(TextLine line)
     {
-        try { CheckFactoryAllocation(); line.ServerInterfaceOwner = this; line.ServerNativeBackend = IsNativeBackendCall; if (TextServerManager.IsCreatingConsumerBuffer(this)) line.BindConsumerOwner(this); var rid = line.GetRID(); lock (_buffersGate) _owned.Add(rid, line); RecordAllocation(rid, false); return rid; }
+        try { CheckFactoryAllocation(); line.ServerInterfaceOwner = this; line.ServerSimpleLayout = this is TextServerFallback; line.ServerNativeBackend = IsNativeBackendCall; if (TextServerManager.IsCreatingConsumerBuffer(this)) line.BindConsumerOwner(this); var rid = line.GetRID(); lock (_buffersGate) _owned.Add(rid, line); RecordAllocation(rid, false); return rid; }
         catch { line.Dispose(); throw; }
     }
     /// <summary>Reports whether an identity resolves to a live font entry or shaped buffer.</summary><param name="rid">Font or buffer identity.</param><returns>False for empty, retired or foreign identities. A surviving link remains present after its source retires.</returns>
@@ -79,6 +81,7 @@ public abstract partial class TextServer : ElectronObject
         Exception? callbackFailure = null;
         try
         {
+            if (this is TextServerDummy) return;
             var external = BeginExternalRetirement(rid);
             TextLine? buffer = null; ServerFont? font = null;
             if (external is null)
@@ -762,7 +765,7 @@ public abstract partial class TextServer : ElectronObject
 
     /// <summary>Records the current shaped display at a baseline origin.</summary><param name="shaped">Buffer identity.</param><param name="canvas">Recording canvas.</param><param name="position">Finite baseline origin.</param><param name="clipL">Negative disables the leading advance bound.</param><param name="clipR">Negative disables the trailing advance bound.</param><param name="color">Modulation, or white.</param><param name="oversampling">Positive raster scale, or automatic.</param>
     protected virtual void OnShapedTextDraw(RID shaped, CanvasItem canvas, Vector2 position, float clipL = -1, float clipR = -1, Color? color = null, float oversampling = 0)
-    { if (this is TextServerExtension) { DrawCallbackBuffer(shaped, canvas, position, clipL, clipR, 0, color ?? Colors.White, oversampling, false); return; } using var nativeTextScope = EnterNativeBackend(shaped); DrawBuffer(shaped, canvas, position, clipL, clipR, 0, color ?? Colors.White, oversampling, false); }
+    { if (UsesCallbackConsumers) { DrawCallbackBuffer(shaped, canvas, position, clipL, clipR, 0, color ?? Colors.White, oversampling, false); return; } using var nativeTextScope = EnterNativeBackend(shaped); DrawBuffer(shaped, canvas, position, clipL, clipR, 0, color ?? Colors.White, oversampling, false); }
     /// <summary>Records a shaped glyph outline at a baseline origin.</summary><param name="shaped">Buffer identity.</param><param name="canvas">Recording canvas.</param><param name="position">Baseline origin.</param><param name="clipL">Leading advance bound, or negative.</param><param name="clipR">Trailing advance bound, or negative.</param><param name="outlineSize">Outline radius; nonpositive uses unexpanded glyphs.</param><param name="color">Modulation, or white.</param><param name="oversampling">Positive raster scale, or automatic.</param>
     public void ShapedTextDrawOutline(RID shaped, CanvasItem canvas, Vector2 position, float clipL = -1, float clipR = -1, int outlineSize = 1, Color? color = null, float oversampling = 0)
     {
@@ -778,7 +781,7 @@ public abstract partial class TextServer : ElectronObject
 
     /// <summary>Records a shaped glyph outline at a baseline origin.</summary><param name="shaped">Buffer identity.</param><param name="canvas">Recording canvas.</param><param name="position">Baseline origin.</param><param name="clipL">Leading advance bound, or negative.</param><param name="clipR">Trailing advance bound, or negative.</param><param name="outlineSize">Outline radius; nonpositive uses unexpanded glyphs.</param><param name="color">Modulation, or white.</param><param name="oversampling">Positive raster scale, or automatic.</param>
     protected virtual void OnShapedTextDrawOutline(RID shaped, CanvasItem canvas, Vector2 position, float clipL = -1, float clipR = -1, int outlineSize = 1, Color? color = null, float oversampling = 0)
-    { if (this is TextServerExtension) { DrawCallbackBuffer(shaped, canvas, position, clipL, clipR, Math.Max(0, outlineSize), color ?? Colors.White, oversampling, true); return; } using var nativeTextScope = EnterNativeBackend(shaped); DrawBuffer(shaped, canvas, position, clipL, clipR, Math.Max(0, outlineSize), color ?? Colors.White, oversampling, true); }
+    { if (UsesCallbackConsumers) { DrawCallbackBuffer(shaped, canvas, position, clipL, clipR, Math.Max(0, outlineSize), color ?? Colors.White, oversampling, true); return; } using var nativeTextScope = EnterNativeBackend(shaped); DrawBuffer(shaped, canvas, position, clipL, clipR, Math.Max(0, outlineSize), color ?? Colors.White, oversampling, true); }
     private static void DrawBuffer(RID rid, CanvasItem canvas, Vector2 baseline, float left, float right, int outline, Color color, float oversampling, bool outlinePass)
     {
         var owner = TextBuffers.Resolve(rid);

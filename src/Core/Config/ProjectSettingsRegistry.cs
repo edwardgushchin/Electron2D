@@ -179,6 +179,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(DebugCollisionContactColor, isBasic: false);
         RegisterInternal(DebugCollisionMaxContacts, isBasic: false);
         RegisterInternal(LineBreakingStrictness, isBasic: false);
+        RegisterInternal(TextDriver, isBasic: false);
+        _settings[TextDriver.Name].RestartIfChanged = true;
         _settings[LineBreakingStrictness.Name].RestartIfChanged = true;
         RegisterInternal(LocaleTest, isBasic: false);
         RegisterInternal(LocaleResourceRemaps, isBasic: false);
@@ -1315,6 +1317,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, DebugCollisionContactColor) ||
         ReferenceEquals(setting, DebugCollisionMaxContacts) ||
         ReferenceEquals(setting, LineBreakingStrictness) ||
+        ReferenceEquals(setting, TextDriver) ||
         ReferenceEquals(setting, LocaleTest) ||
         ReferenceEquals(setting, LocaleResourceRemaps) ||
         ReferenceEquals(setting, LocaleFallback) ||

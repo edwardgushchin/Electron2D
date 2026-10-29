@@ -2,6 +2,8 @@ namespace Electron2D;
 
 public partial class FontFile
 {
+    internal bool SupportsSimpleScript(string script)
+    { FontSupportPolicy.Validate(script); lock (FontGate) { ThrowIfDisposed(); return _fontData!.SupportPolicy.SupportsSimpleScript(script); } }
     private static readonly PropertyDescriptor SupportProperty = new PropertyDescriptor<FontFile, byte[]>("_font_support", font => font.Read(static data => data.SupportPolicy.Save()), (font, bytes) => font.SetSupportPolicy(FontSupportPolicy.Load(bytes)), _ => [], stored: true);
     /// <summary>Overrides language support used to rank fallback faces.</summary>
     /// <param name="language">An exact ordinal language key or * wildcard; empty keys are preserved.</param>

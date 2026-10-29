@@ -13481,6 +13481,36 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextServerAdvanced",
+    "kind": "type",
+    "declaringType": "Electron2D.TextServerAdvanced",
+    "name": "TextServerAdvanced",
+    "signature": "public sealed class Electron2D.TextServerAdvanced",
+    "visibility": "public",
+    "baseType": "Electron2D.TextServerExtension",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextServerDummy",
+    "kind": "type",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "TextServerDummy",
+    "signature": "public sealed class Electron2D.TextServerDummy",
+    "visibility": "public",
+    "baseType": "Electron2D.TextServerExtension",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextServerExtension",
     "kind": "type",
     "declaringType": "Electron2D.TextServerExtension",
@@ -13488,6 +13518,21 @@
     "signature": "public abstract class Electron2D.TextServerExtension",
     "visibility": "public",
     "baseType": "Electron2D.TextServer",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextServerFallback",
+    "kind": "type",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "TextServerFallback",
+    "signature": "public sealed class Electron2D.TextServerFallback",
+    "visibility": "public",
+    "baseType": "Electron2D.TextServerExtension",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -27985,12 +28030,51 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.TextServerAdvanced..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextServerAdvanced",
+    "name": ".ctor",
+    "signature": "public TextServerAdvanced()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextServerDummy..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": ".ctor",
+    "signature": "public TextServerDummy()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.TextServerExtension..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.TextServerExtension",
     "name": ".ctor",
     "signature": "protected TextServerExtension()",
     "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextServerFallback..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": ".ctor",
+    "signature": "public TextServerFallback()",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -221178,6 +221262,5638 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextServerAdvanced.OnGetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerAdvanced",
+    "name": "OnGetName",
+    "signature": "protected override System.String OnGetName()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnCreateFont()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnCreateFont",
+    "signature": "protected override Electron2D.RID OnCreateFont()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnCreateFontLinkedVariation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnCreateFontLinkedVariation",
+    "signature": "protected override Electron2D.RID OnCreateFontLinkedVariation(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnCreateShapedText(Electron2D.TextDirection,Electron2D.TextOrientation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnCreateShapedText",
+    "signature": "protected override Electron2D.RID OnCreateShapedText(Electron2D.TextDirection direction = Auto, Electron2D.TextOrientation orientation = Horizontal)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      },
+      {
+        "name": "orientation",
+        "type": "Electron2D.TextOrientation",
+        "default": "Horizontal"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontClearGlyphs(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontClearGlyphs",
+    "signature": "protected override System.Void OnFontClearGlyphs(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontClearKerningMap(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontClearKerningMap",
+    "signature": "protected override System.Void OnFontClearKerningMap(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontClearSizeCache(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontClearSizeCache",
+    "signature": "protected override System.Void OnFontClearSizeCache(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontClearSystemFallbackCache()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontClearSystemFallbackCache",
+    "signature": "protected override System.Void OnFontClearSystemFallbackCache()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontClearTextures(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontClearTextures",
+    "signature": "protected override System.Void OnFontClearTextures(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontDrawGlyph(Electron2D.RID,Electron2D.CanvasItem,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontDrawGlyph",
+    "signature": "protected override System.Void OnFontDrawGlyph(Electron2D.RID fontRID, Electron2D.CanvasItem canvas, System.Int32 size, Electron2D.Vector2 position, System.Int32 index, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontDrawGlyphOutline(Electron2D.RID,Electron2D.CanvasItem,System.Int32,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontDrawGlyphOutline",
+    "signature": "protected override System.Void OnFontDrawGlyphOutline(Electron2D.RID fontRID, Electron2D.CanvasItem canvas, System.Int32 size, System.Int32 outlineSize, Electron2D.Vector2 position, System.Int32 index, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetAntialiasing(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetAntialiasing",
+    "signature": "protected override Electron2D.FontAntialiasing OnFontGetAntialiasing(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontAntialiasing",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetAscent(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetAscent",
+    "signature": "protected override System.Single OnFontGetAscent(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetBaselineOffset(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetBaselineOffset",
+    "signature": "protected override System.Single OnFontGetBaselineOffset(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetCharFromGlyphIndex(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetCharFromGlyphIndex",
+    "signature": "protected override System.Int32 OnFontGetCharFromGlyphIndex(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyphIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetDescent(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetDescent",
+    "signature": "protected override System.Single OnFontGetDescent(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetDisableEmbeddedBitmaps(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetDisableEmbeddedBitmaps",
+    "signature": "protected override System.Boolean OnFontGetDisableEmbeddedBitmaps(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetEmbolden(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetEmbolden",
+    "signature": "protected override System.Single OnFontGetEmbolden(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetFaceCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetFaceCount",
+    "signature": "protected override System.Int32 OnFontGetFaceCount(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetFaceIndex(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetFaceIndex",
+    "signature": "protected override System.Int32 OnFontGetFaceIndex(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetFixedSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetFixedSize",
+    "signature": "protected override System.Int32 OnFontGetFixedSize(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetFixedSizeScaleMode(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetFixedSizeScaleMode",
+    "signature": "protected override Electron2D.FixedSizeScaleMode OnFontGetFixedSizeScaleMode(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FixedSizeScaleMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGenerateMIPMaps(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGenerateMIPMaps",
+    "signature": "protected override System.Boolean OnFontGetGenerateMIPMaps(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphAdvance",
+    "signature": "protected override Electron2D.Vector2 OnFontGetGlyphAdvance(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphContours(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphContours",
+    "signature": "protected override Electron2D.FontGlyphContours OnFontGetGlyphContours(Electron2D.RID fontRID, System.Int32 size, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontGlyphContours",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphIndex(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphIndex",
+    "signature": "protected override System.Int32 OnFontGetGlyphIndex(Electron2D.RID fontRID, System.Int32 size, System.Int32 character, System.Int32 variationSelector)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "variationSelector",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphList(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphList",
+    "signature": "protected override System.Int32[] OnFontGetGlyphList(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphOffset",
+    "signature": "protected override Electron2D.Vector2 OnFontGetGlyphOffset(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphSize",
+    "signature": "protected override Electron2D.Vector2 OnFontGetGlyphSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphTextureIndex",
+    "signature": "protected override System.Int32 OnFontGetGlyphTextureIndex(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphTextureRID(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphTextureRID",
+    "signature": "protected override Electron2D.RID OnFontGetGlyphTextureRID(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphTextureSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphTextureSize",
+    "signature": "protected override Electron2D.Vector2 OnFontGetGlyphTextureSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetGlyphUVRect",
+    "signature": "protected override Electron2D.Rect2 OnFontGetGlyphUVRect(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetHinting(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetHinting",
+    "signature": "protected override Electron2D.FontHinting OnFontGetHinting(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontHinting",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetKeepRoundingRemainders(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetKeepRoundingRemainders",
+    "signature": "protected override System.Boolean OnFontGetKeepRoundingRemainders(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetKerning",
+    "signature": "protected override Electron2D.Vector2 OnFontGetKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphPair",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetKerningList(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetKerningList",
+    "signature": "protected override Electron2D.Vector2i[] OnFontGetKerningList(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetLanguageSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetLanguageSupportOverride",
+    "signature": "protected override System.Boolean OnFontGetLanguageSupportOverride(Electron2D.RID fontRID, System.String language)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetLanguageSupportOverrides(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetLanguageSupportOverrides",
+    "signature": "protected override System.String[] OnFontGetLanguageSupportOverrides(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetMSDFPixelRange(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetMSDFPixelRange",
+    "signature": "protected override System.Int32 OnFontGetMSDFPixelRange(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetMSDFSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetMSDFSize",
+    "signature": "protected override System.Int32 OnFontGetMSDFSize(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetName(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetName",
+    "signature": "protected override System.String OnFontGetName(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetOTNameStrings(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetOTNameStrings",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.String, System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E\u003E OnFontGetOTNameStrings(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Collections.Generic.Dictionary\u003CSystem.String, System.String\u003E\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetOpenTypeFeatureOverrides(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetOpenTypeFeatureOverrides",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E OnFontGetOpenTypeFeatureOverrides(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetOversampling(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetOversampling",
+    "signature": "protected override System.Single OnFontGetOversampling(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetPaletteColors(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetPaletteColors",
+    "signature": "protected override Electron2D.Color[] OnFontGetPaletteColors(Electron2D.RID fontRID, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetPaletteCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetPaletteCount",
+    "signature": "protected override System.Int32 OnFontGetPaletteCount(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetPaletteCustomColors(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetPaletteCustomColors",
+    "signature": "protected override Electron2D.Color[] OnFontGetPaletteCustomColors(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetPaletteName(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetPaletteName",
+    "signature": "protected override System.String OnFontGetPaletteName(Electron2D.RID fontRID, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetScale(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetScale",
+    "signature": "protected override System.Single OnFontGetScale(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetScriptSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetScriptSupportOverride",
+    "signature": "protected override System.Boolean OnFontGetScriptSupportOverride(Electron2D.RID fontRID, System.String script)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetScriptSupportOverrides(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetScriptSupportOverrides",
+    "signature": "protected override System.String[] OnFontGetScriptSupportOverrides(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetSizeCacheInfo(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetSizeCacheInfo",
+    "signature": "protected override Electron2D.FontSizeCacheInfo[] OnFontGetSizeCacheInfo(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontSizeCacheInfo[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetSizeCacheList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetSizeCacheList",
+    "signature": "protected override Electron2D.Vector2i[] OnFontGetSizeCacheList(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetSpacing",
+    "signature": "protected override System.Int32 OnFontGetSpacing(Electron2D.RID fontRID, Electron2D.TextSpacingType spacing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetStretch(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetStretch",
+    "signature": "protected override System.Int32 OnFontGetStretch(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetStyle(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetStyle",
+    "signature": "protected override Electron2D.FontStyle OnFontGetStyle(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontStyle",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetStyleName(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetStyleName",
+    "signature": "protected override System.String OnFontGetStyleName(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetSubpixelPositioning(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetSubpixelPositioning",
+    "signature": "protected override Electron2D.FontSubpixelPositioning OnFontGetSubpixelPositioning(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.FontSubpixelPositioning",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetSupportedChars(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetSupportedChars",
+    "signature": "protected override System.String OnFontGetSupportedChars(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetSupportedGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetSupportedGlyphs",
+    "signature": "protected override System.Int32[] OnFontGetSupportedGlyphs(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetTextureCount(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetTextureCount",
+    "signature": "protected override System.Int32 OnFontGetTextureCount(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetTextureImage",
+    "signature": "protected override Electron2D.Image OnFontGetTextureImage(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetTextureOffsets",
+    "signature": "protected override System.Int32[] OnFontGetTextureOffsets(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetTransform(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetTransform",
+    "signature": "protected override Electron2D.Transform OnFontGetTransform(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetUnderlinePosition(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetUnderlinePosition",
+    "signature": "protected override System.Single OnFontGetUnderlinePosition(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetUnderlineThickness(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetUnderlineThickness",
+    "signature": "protected override System.Single OnFontGetUnderlineThickness(Electron2D.RID fontRID, System.Int32 size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetUsedPalette(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetUsedPalette",
+    "signature": "protected override System.Int32 OnFontGetUsedPalette(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetVariationCoordinates(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetVariationCoordinates",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E OnFontGetVariationCoordinates(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontGetWeight(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontGetWeight",
+    "signature": "protected override System.Int32 OnFontGetWeight(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontHasChar(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontHasChar",
+    "signature": "protected override System.Boolean OnFontHasChar(Electron2D.RID fontRID, System.Int32 character)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontIsAllowSystemFallback(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontIsAllowSystemFallback",
+    "signature": "protected override System.Boolean OnFontIsAllowSystemFallback(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontIsForceAutohinter(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontIsForceAutohinter",
+    "signature": "protected override System.Boolean OnFontIsForceAutohinter(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontIsLanguageSupported(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontIsLanguageSupported",
+    "signature": "protected override System.Boolean OnFontIsLanguageSupported(Electron2D.RID fontRID, System.String language)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontIsModulateColorGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontIsModulateColorGlyphs",
+    "signature": "protected override System.Boolean OnFontIsModulateColorGlyphs(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontIsMultichannelSignedDistanceField(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontIsMultichannelSignedDistanceField",
+    "signature": "protected override System.Boolean OnFontIsMultichannelSignedDistanceField(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontIsScriptSupported(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontIsScriptSupported",
+    "signature": "protected override System.Boolean OnFontIsScriptSupported(Electron2D.RID fontRID, System.String script)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRemoveGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRemoveGlyph",
+    "signature": "protected override System.Void OnFontRemoveGlyph(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRemoveKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRemoveKerning",
+    "signature": "protected override System.Void OnFontRemoveKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphPair",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRemoveLanguageSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRemoveLanguageSupportOverride",
+    "signature": "protected override System.Void OnFontRemoveLanguageSupportOverride(Electron2D.RID fontRID, System.String language)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRemoveScriptSupportOverride(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRemoveScriptSupportOverride",
+    "signature": "protected override System.Void OnFontRemoveScriptSupportOverride(Electron2D.RID fontRID, System.String script)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRemoveSizeCache(Electron2D.RID,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRemoveSizeCache",
+    "signature": "protected override System.Void OnFontRemoveSizeCache(Electron2D.RID fontRID, Electron2D.Vector2i size)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRemoveTexture(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRemoveTexture",
+    "signature": "protected override System.Void OnFontRemoveTexture(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRenderGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRenderGlyph",
+    "signature": "protected override System.Void OnFontRenderGlyph(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontRenderRange(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontRenderRange",
+    "signature": "protected override System.Void OnFontRenderRange(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 start, System.Int32 end)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetAllowSystemFallback(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetAllowSystemFallback",
+    "signature": "protected override System.Void OnFontSetAllowSystemFallback(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetAntialiasing(Electron2D.RID,Electron2D.FontAntialiasing)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetAntialiasing",
+    "signature": "protected override System.Void OnFontSetAntialiasing(Electron2D.RID fontRID, Electron2D.FontAntialiasing value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontAntialiasing",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetAscent(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetAscent",
+    "signature": "protected override System.Void OnFontSetAscent(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetBaselineOffset(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetBaselineOffset",
+    "signature": "protected override System.Void OnFontSetBaselineOffset(Electron2D.RID fontRID, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetData(Electron2D.RID,System.Byte[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetData",
+    "signature": "protected override System.Void OnFontSetData(Electron2D.RID fontRID, System.Byte[] data)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.Byte[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetDescent(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetDescent",
+    "signature": "protected override System.Void OnFontSetDescent(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetDisableEmbeddedBitmaps(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetDisableEmbeddedBitmaps",
+    "signature": "protected override System.Void OnFontSetDisableEmbeddedBitmaps(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetEmbolden(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetEmbolden",
+    "signature": "protected override System.Void OnFontSetEmbolden(Electron2D.RID fontRID, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetFaceIndex(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetFaceIndex",
+    "signature": "protected override System.Void OnFontSetFaceIndex(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetFixedSize(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetFixedSize",
+    "signature": "protected override System.Void OnFontSetFixedSize(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetFixedSizeScaleMode(Electron2D.RID,Electron2D.FixedSizeScaleMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetFixedSizeScaleMode",
+    "signature": "protected override System.Void OnFontSetFixedSizeScaleMode(Electron2D.RID fontRID, Electron2D.FixedSizeScaleMode value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FixedSizeScaleMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetForceAutohinter(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetForceAutohinter",
+    "signature": "protected override System.Void OnFontSetForceAutohinter(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetGenerateMIPMaps(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetGenerateMIPMaps",
+    "signature": "protected override System.Void OnFontSetGenerateMIPMaps(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetGlyphAdvance",
+    "signature": "protected override System.Void OnFontSetGlyphAdvance(Electron2D.RID fontRID, System.Int32 size, System.Int32 glyph, Electron2D.Vector2 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetGlyphOffset",
+    "signature": "protected override System.Void OnFontSetGlyphOffset(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Vector2 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetGlyphSize",
+    "signature": "protected override System.Void OnFontSetGlyphSize(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Vector2 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetGlyphTextureIndex",
+    "signature": "protected override System.Void OnFontSetGlyphTextureIndex(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, System.Int32 textureIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetGlyphUVRect",
+    "signature": "protected override System.Void OnFontSetGlyphUVRect(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 glyph, Electron2D.Rect2 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "glyph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetHinting(Electron2D.RID,Electron2D.FontHinting)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetHinting",
+    "signature": "protected override System.Void OnFontSetHinting(Electron2D.RID fontRID, Electron2D.FontHinting value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontHinting",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetKeepRoundingRemainders(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetKeepRoundingRemainders",
+    "signature": "protected override System.Void OnFontSetKeepRoundingRemainders(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetKerning",
+    "signature": "protected override System.Void OnFontSetKerning(Electron2D.RID fontRID, System.Int32 size, Electron2D.Vector2i glyphPair, Electron2D.Vector2 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "glyphPair",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetLanguageSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetLanguageSupportOverride",
+    "signature": "protected override System.Void OnFontSetLanguageSupportOverride(Electron2D.RID fontRID, System.String language, System.Boolean supported)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "supported",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetMSDFPixelRange(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetMSDFPixelRange",
+    "signature": "protected override System.Void OnFontSetMSDFPixelRange(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetMSDFSize(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetMSDFSize",
+    "signature": "protected override System.Void OnFontSetMSDFSize(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetModulateColorGlyphs(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetModulateColorGlyphs",
+    "signature": "protected override System.Void OnFontSetModulateColorGlyphs(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetMultichannelSignedDistanceField(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetMultichannelSignedDistanceField",
+    "signature": "protected override System.Void OnFontSetMultichannelSignedDistanceField(Electron2D.RID fontRID, System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetName(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetName",
+    "signature": "protected override System.Void OnFontSetName(Electron2D.RID fontRID, System.String value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetOpenTypeFeatureOverrides(Electron2D.RID,System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetOpenTypeFeatureOverrides",
+    "signature": "protected override System.Void OnFontSetOpenTypeFeatureOverrides(Electron2D.RID fontRID, System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Collections.Generic.Dictionary\u003CSystem.String, System.Int32\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetOversampling(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetOversampling",
+    "signature": "protected override System.Void OnFontSetOversampling(Electron2D.RID fontRID, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetPaletteCustomColors(Electron2D.RID,Electron2D.Color[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetPaletteCustomColors",
+    "signature": "protected override System.Void OnFontSetPaletteCustomColors(Electron2D.RID fontRID, Electron2D.Color[] value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Color[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetScale(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetScale",
+    "signature": "protected override System.Void OnFontSetScale(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetScriptSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetScriptSupportOverride",
+    "signature": "protected override System.Void OnFontSetScriptSupportOverride(Electron2D.RID fontRID, System.String script, System.Boolean supported)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "supported",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetSpacing",
+    "signature": "protected override System.Void OnFontSetSpacing(Electron2D.RID fontRID, Electron2D.TextSpacingType spacing, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetStretch(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetStretch",
+    "signature": "protected override System.Void OnFontSetStretch(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetStyle(Electron2D.RID,Electron2D.FontStyle)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetStyle",
+    "signature": "protected override System.Void OnFontSetStyle(Electron2D.RID fontRID, Electron2D.FontStyle value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontStyle",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetStyleName(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetStyleName",
+    "signature": "protected override System.Void OnFontSetStyleName(Electron2D.RID fontRID, System.String value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetSubpixelPositioning(Electron2D.RID,Electron2D.FontSubpixelPositioning)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetSubpixelPositioning",
+    "signature": "protected override System.Void OnFontSetSubpixelPositioning(Electron2D.RID fontRID, Electron2D.FontSubpixelPositioning value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.FontSubpixelPositioning",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Image)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetTextureImage",
+    "signature": "protected override System.Void OnFontSetTextureImage(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex, Electron2D.Image image)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "image",
+        "type": "Electron2D.Image",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetTextureOffsets",
+    "signature": "protected override System.Void OnFontSetTextureOffsets(Electron2D.RID fontRID, Electron2D.Vector2i size, System.Int32 textureIndex, System.Int32[] offsets)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "offsets",
+        "type": "System.Int32[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetTransform(Electron2D.RID,Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetTransform",
+    "signature": "protected override System.Void OnFontSetTransform(Electron2D.RID fontRID, Electron2D.Transform value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetUnderlinePosition(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetUnderlinePosition",
+    "signature": "protected override System.Void OnFontSetUnderlinePosition(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetUnderlineThickness(Electron2D.RID,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetUnderlineThickness",
+    "signature": "protected override System.Void OnFontSetUnderlineThickness(Electron2D.RID fontRID, System.Int32 size, System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetUsedPalette(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetUsedPalette",
+    "signature": "protected override System.Void OnFontSetUsedPalette(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetVariationCoordinates(Electron2D.RID,System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetVariationCoordinates",
+    "signature": "protected override System.Void OnFontSetVariationCoordinates(Electron2D.RID fontRID, System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, System.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSetWeight(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSetWeight",
+    "signature": "protected override System.Void OnFontSetWeight(Electron2D.RID fontRID, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSupportedFeatureList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSupportedFeatureList",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E OnFontSupportedFeatureList(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnFontSupportedVariationList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnFontSupportedVariationList",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontVariationAxis\u003E OnFontSupportedVariationList(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontVariationAxis\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnGetFeatures()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnGetFeatures",
+    "signature": "protected override Electron2D.TextServer.Feature OnGetFeatures()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer.Feature",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnGetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnGetName",
+    "signature": "protected override System.String OnGetName()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnGetSupportData()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnGetSupportData",
+    "signature": "protected override System.Byte[] OnGetSupportData()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnGetSupportDataFilename()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnGetSupportDataFilename",
+    "signature": "protected override System.String OnGetSupportDataFilename()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnGetSupportDataInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnGetSupportDataInfo",
+    "signature": "protected override System.String OnGetSupportDataInfo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnHas(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnHas",
+    "signature": "protected override System.Boolean OnHas(Electron2D.RID rid)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "rid",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnIsConfusable(System.String,System.ReadOnlySpan\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnIsConfusable",
+    "signature": "protected override System.Int32 OnIsConfusable(System.String text, System.ReadOnlySpan\u003CSystem.String\u003E dictionary)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "dictionary",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnIsLocaleRightToLeft(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnIsLocaleRightToLeft",
+    "signature": "protected override System.Boolean OnIsLocaleRightToLeft(System.String locale)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnIsLocaleUsingSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnIsLocaleUsingSupportData",
+    "signature": "protected override System.Boolean OnIsLocaleUsingSupportData(System.String locale)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnLoadSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnLoadSupportData",
+    "signature": "protected override System.Boolean OnLoadSupportData(System.String filename)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnReferenceOversamplingLevel(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnReferenceOversamplingLevel",
+    "signature": "protected override System.Void OnReferenceOversamplingLevel(System.Single oversampling)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnSaveSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnSaveSupportData",
+    "signature": "protected override System.Boolean OnSaveSupportData(System.String filename)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunCount",
+    "signature": "protected override System.Int32 OnShapedGetRunCount(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunDirection(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunDirection",
+    "signature": "protected override Electron2D.TextDirection OnShapedGetRunDirection(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunFontRID(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunFontRID",
+    "signature": "protected override Electron2D.RID OnShapedGetRunFontRID(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunFontSize(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunFontSize",
+    "signature": "protected override System.Int32 OnShapedGetRunFontSize(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunGlyphRange(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunGlyphRange",
+    "signature": "protected override Electron2D.Vector2i OnShapedGetRunGlyphRange(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunLanguage(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunLanguage",
+    "signature": "protected override System.String OnShapedGetRunLanguage(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunObject(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunObject",
+    "signature": "protected override Electron2D.TextObjectKey OnShapedGetRunObject(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunRange(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunRange",
+    "signature": "protected override Electron2D.Vector2i OnShapedGetRunRange(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetRunText(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetRunText",
+    "signature": "protected override System.String OnShapedGetRunText(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetSpanCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetSpanCount",
+    "signature": "protected override System.Int32 OnShapedGetSpanCount(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetSpanEmbeddedObject(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetSpanEmbeddedObject",
+    "signature": "protected override Electron2D.TextObjectKey OnShapedGetSpanEmbeddedObject(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetSpanObject(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetSpanObject",
+    "signature": "protected override Electron2D.TextObjectKey OnShapedGetSpanObject(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetSpanText(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetSpanText",
+    "signature": "protected override System.String OnShapedGetSpanText(Electron2D.RID shaped, System.Int32 index)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedGetText(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedGetText",
+    "signature": "protected override System.String OnShapedGetText(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedSetSpanUpdateFont(Electron2D.RID,System.Int32,System.ReadOnlySpan\u003CElectron2D.Font\u003E,System.Int32,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedSetSpanUpdateFont",
+    "signature": "protected override System.Void OnShapedSetSpanUpdateFont(Electron2D.RID shaped, System.Int32 index, System.ReadOnlySpan\u003CElectron2D.Font\u003E fonts, System.Int32 size, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E openTypeFeatures = null)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "fonts",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Font\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "openTypeFeatures",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextAddObject(Electron2D.RID,Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextAddObject",
+    "signature": "protected override System.Boolean OnShapedTextAddObject(Electron2D.RID shaped, Electron2D.TextObjectKey key, Electron2D.Vector2 size, Electron2D.InlineAlignment inlineAlign = Center, System.Int32 length = 1, System.Single baseline = 0f)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "length",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "baseline",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextAddString(Electron2D.RID,System.String,System.ReadOnlySpan\u003CElectron2D.Font\u003E,System.Int32,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextAddString",
+    "signature": "protected override System.Boolean OnShapedTextAddString(Electron2D.RID shaped, System.String text, System.ReadOnlySpan\u003CElectron2D.Font\u003E fonts, System.Int32 size, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E openTypeFeatures = null, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fonts",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Font\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "openTypeFeatures",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E",
+        "default": "null"
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextAddString\u00601(Electron2D.RID,System.String,System.ReadOnlySpan\u003CElectron2D.Font\u003E,System.Int32,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E,System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextAddString",
+    "signature": "protected override System.Boolean OnShapedTextAddString\u003CT\u003E(Electron2D.RID shaped, System.String text, System.ReadOnlySpan\u003CElectron2D.Font\u003E fonts, System.Int32 size, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E openTypeFeatures, System.String language, T metadata)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "fonts",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Font\u003E",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "openTypeFeatures",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.String, System.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextClear(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextClear",
+    "signature": "protected override System.Void OnShapedTextClear(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextClosestCharacterPos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextClosestCharacterPos",
+    "signature": "protected override System.Int32 OnShapedTextClosestCharacterPos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextDraw(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextDraw",
+    "signature": "protected override System.Void OnShapedTextDraw(Electron2D.RID shaped, Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Single clipL = -1f, System.Single clipR = -1f, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "clipL",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "clipR",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextDrawOutline(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextDrawOutline",
+    "signature": "protected override System.Void OnShapedTextDrawOutline(Electron2D.RID shaped, Electron2D.CanvasItem canvas, Electron2D.Vector2 position, System.Single clipL = -1f, System.Single clipR = -1f, System.Int32 outlineSize = 1, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Single oversampling = 0f)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canvas",
+        "type": "Electron2D.CanvasItem",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "clipL",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "clipR",
+        "type": "System.Single",
+        "default": "-1f"
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextDuplicate(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextDuplicate",
+    "signature": "protected override Electron2D.RID OnShapedTextDuplicate(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextFitToWidth(Electron2D.RID,System.Single,Electron2D.TextJustificationFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextFitToWidth",
+    "signature": "protected override System.Single OnShapedTextFitToWidth(Electron2D.RID shaped, System.Single width, Electron2D.TextJustificationFlags justificationFlags = Kashida, WordBound)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "justificationFlags",
+        "type": "Electron2D.TextJustificationFlags",
+        "default": "Kashida, WordBound"
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetAscent(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetAscent",
+    "signature": "protected override System.Single OnShapedTextGetAscent(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetCarets(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetCarets",
+    "signature": "protected override Electron2D.TextCaretInfo OnShapedTextGetCarets(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextCaretInfo",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetCharacterBreaks(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetCharacterBreaks",
+    "signature": "protected override System.Int32[] OnShapedTextGetCharacterBreaks(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetCustomEllipsis(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetCustomEllipsis",
+    "signature": "protected override System.Int32 OnShapedTextGetCustomEllipsis(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetCustomPunctuation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetCustomPunctuation",
+    "signature": "protected override System.String OnShapedTextGetCustomPunctuation(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetDescent(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetDescent",
+    "signature": "protected override System.Single OnShapedTextGetDescent(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetDirection(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetDirection",
+    "signature": "protected override Electron2D.TextDirection OnShapedTextGetDirection(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetDominantDirectionInRange(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetDominantDirectionInRange",
+    "signature": "protected override Electron2D.TextDirection OnShapedTextGetDominantDirectionInRange(Electron2D.RID shaped, System.Int32 start, System.Int32 end)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetEllipsisGlyphCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetEllipsisGlyphCount",
+    "signature": "protected override System.Int32 OnShapedTextGetEllipsisGlyphCount(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetEllipsisGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetEllipsisGlyphs",
+    "signature": "protected override System.ReadOnlySpan\u003CElectron2D.TextGlyph\u003E OnShapedTextGetEllipsisGlyphs(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.TextGlyph\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetEllipsisPos(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetEllipsisPos",
+    "signature": "protected override System.Int32 OnShapedTextGetEllipsisPos(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetGlyphCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetGlyphCount",
+    "signature": "protected override System.Int32 OnShapedTextGetGlyphCount(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetGlyphs(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetGlyphs",
+    "signature": "protected override System.ReadOnlySpan\u003CElectron2D.TextGlyph\u003E OnShapedTextGetGlyphs(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.TextGlyph\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetGraphemeBounds(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetGraphemeBounds",
+    "signature": "protected override Electron2D.Vector2 OnShapedTextGetGraphemeBounds(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetInferredDirection(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetInferredDirection",
+    "signature": "protected override Electron2D.TextDirection OnShapedTextGetInferredDirection(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetLineBreaks(Electron2D.RID,System.Single,System.Int32,Electron2D.TextLineBreakFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetLineBreaks",
+    "signature": "protected override System.Int32[] OnShapedTextGetLineBreaks(Electron2D.RID shaped, System.Single width, System.Int32 start = 0, Electron2D.TextLineBreakFlags breakFlags = Mandatory, WordBound)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "breakFlags",
+        "type": "Electron2D.TextLineBreakFlags",
+        "default": "Mandatory, WordBound"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetLineBreaksAdv(Electron2D.RID,System.ReadOnlySpan\u003CSystem.Single\u003E,System.Int32,System.Boolean,Electron2D.TextLineBreakFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetLineBreaksAdv",
+    "signature": "protected override System.Int32[] OnShapedTextGetLineBreaksAdv(Electron2D.RID shaped, System.ReadOnlySpan\u003CSystem.Single\u003E width, System.Int32 start = 0, System.Boolean once = true, Electron2D.TextLineBreakFlags breakFlags = Mandatory, WordBound)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "once",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "breakFlags",
+        "type": "Electron2D.TextLineBreakFlags",
+        "default": "Mandatory, WordBound"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetObjectGlyph(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetObjectGlyph",
+    "signature": "protected override System.Int32 OnShapedTextGetObjectGlyph(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetObjectRange(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetObjectRange",
+    "signature": "protected override Electron2D.Vector2i OnShapedTextGetObjectRange(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetObjectRect(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetObjectRect",
+    "signature": "protected override Electron2D.Rect2 OnShapedTextGetObjectRect(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetObjects(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetObjects",
+    "signature": "protected override Electron2D.TextObjectKey[] OnShapedTextGetObjects(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextObjectKey[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetOrientation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetOrientation",
+    "signature": "protected override Electron2D.TextOrientation OnShapedTextGetOrientation(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextOrientation",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetParent(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetParent",
+    "signature": "protected override Electron2D.RID OnShapedTextGetParent(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetPreserveControl(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetPreserveControl",
+    "signature": "protected override System.Boolean OnShapedTextGetPreserveControl(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetPreserveInvalid(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetPreserveInvalid",
+    "signature": "protected override System.Boolean OnShapedTextGetPreserveInvalid(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetRange(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetRange",
+    "signature": "protected override Electron2D.Vector2i OnShapedTextGetRange(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetSelection(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetSelection",
+    "signature": "protected override System.ReadOnlySpan\u003CElectron2D.Vector2\u003E OnShapedTextGetSelection(Electron2D.RID shaped, System.Int32 start, System.Int32 end)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "end",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetSize",
+    "signature": "protected override Electron2D.Vector2 OnShapedTextGetSize(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetSpacing",
+    "signature": "protected override System.Int32 OnShapedTextGetSpacing(Electron2D.RID shaped, Electron2D.TextSpacingType spacing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetTrimPos(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetTrimPos",
+    "signature": "protected override System.Int32 OnShapedTextGetTrimPos(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetUnderlinePosition(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetUnderlinePosition",
+    "signature": "protected override System.Single OnShapedTextGetUnderlinePosition(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetUnderlineThickness(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetUnderlineThickness",
+    "signature": "protected override System.Single OnShapedTextGetUnderlineThickness(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetWidth(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetWidth",
+    "signature": "protected override System.Single OnShapedTextGetWidth(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextGetWordBreaks(Electron2D.RID,Electron2D.TextGraphemeFlags,Electron2D.TextGraphemeFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextGetWordBreaks",
+    "signature": "protected override System.Int32[] OnShapedTextGetWordBreaks(Electron2D.RID shaped, Electron2D.TextGraphemeFlags graphemeFlags = Space, Punctuation, Electron2D.TextGraphemeFlags skipGraphemeFlags = Virtual)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "graphemeFlags",
+        "type": "Electron2D.TextGraphemeFlags",
+        "default": "Space, Punctuation"
+      },
+      {
+        "name": "skipGraphemeFlags",
+        "type": "Electron2D.TextGraphemeFlags",
+        "default": "Virtual"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextHasObject(Electron2D.RID,Electron2D.TextObjectKey)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextHasObject",
+    "signature": "protected override System.Boolean OnShapedTextHasObject(Electron2D.RID shaped, Electron2D.TextObjectKey key)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextHasVisibleChars(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextHasVisibleChars",
+    "signature": "protected override System.Boolean OnShapedTextHasVisibleChars(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextHitTestGrapheme(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextHitTestGrapheme",
+    "signature": "protected override System.Int32 OnShapedTextHitTestGrapheme(Electron2D.RID shaped, System.Single coords)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "coords",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextHitTestPosition(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextHitTestPosition",
+    "signature": "protected override System.Int32 OnShapedTextHitTestPosition(Electron2D.RID shaped, System.Single coords)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "coords",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextIsReady(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextIsReady",
+    "signature": "protected override System.Boolean OnShapedTextIsReady(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextNextCharacterPos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextNextCharacterPos",
+    "signature": "protected override System.Int32 OnShapedTextNextCharacterPos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextNextGraphemePos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextNextGraphemePos",
+    "signature": "protected override System.Int32 OnShapedTextNextGraphemePos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextOverrunTrimToWidth(Electron2D.RID,System.Single,Electron2D.TextOverrunFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextOverrunTrimToWidth",
+    "signature": "protected override System.Void OnShapedTextOverrunTrimToWidth(Electron2D.RID shaped, System.Single width = 0f, Electron2D.TextOverrunFlags overrunTrimFlags = NoTrim)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "overrunTrimFlags",
+        "type": "Electron2D.TextOverrunFlags",
+        "default": "NoTrim"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextPrevCharacterPos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextPrevCharacterPos",
+    "signature": "protected override System.Int32 OnShapedTextPrevCharacterPos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextPrevGraphemePos(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextPrevGraphemePos",
+    "signature": "protected override System.Int32 OnShapedTextPrevGraphemePos(Electron2D.RID shaped, System.Int32 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextResizeObject(Electron2D.RID,Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextResizeObject",
+    "signature": "protected override System.Boolean OnShapedTextResizeObject(Electron2D.RID shaped, Electron2D.TextObjectKey key, Electron2D.Vector2 size, Electron2D.InlineAlignment inlineAlign = Center, System.Single baseline = 0f)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "key",
+        "type": "Electron2D.TextObjectKey",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "baseline",
+        "type": "System.Single",
+        "default": "0f"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetBIDIOverride(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetBIDIOverride",
+    "signature": "protected override System.Void OnShapedTextSetBIDIOverride(Electron2D.RID shaped, System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E ranges)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "ranges",
+        "type": "System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetCustomEllipsis(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetCustomEllipsis",
+    "signature": "protected override System.Void OnShapedTextSetCustomEllipsis(Electron2D.RID shaped, System.Int32 character)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetCustomPunctuation(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetCustomPunctuation",
+    "signature": "protected override System.Void OnShapedTextSetCustomPunctuation(Electron2D.RID shaped, System.String punctuation)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "punctuation",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetDirection(Electron2D.RID,Electron2D.TextDirection)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetDirection",
+    "signature": "protected override System.Void OnShapedTextSetDirection(Electron2D.RID shaped, Electron2D.TextDirection direction = Auto)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetOrientation(Electron2D.RID,Electron2D.TextOrientation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetOrientation",
+    "signature": "protected override System.Void OnShapedTextSetOrientation(Electron2D.RID shaped, Electron2D.TextOrientation orientation = Horizontal)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "orientation",
+        "type": "Electron2D.TextOrientation",
+        "default": "Horizontal"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetPreserveControl(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetPreserveControl",
+    "signature": "protected override System.Void OnShapedTextSetPreserveControl(Electron2D.RID shaped, System.Boolean enabled)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetPreserveInvalid(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetPreserveInvalid",
+    "signature": "protected override System.Void OnShapedTextSetPreserveInvalid(Electron2D.RID shaped, System.Boolean enabled)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSetSpacing",
+    "signature": "protected override System.Void OnShapedTextSetSpacing(Electron2D.RID shaped, Electron2D.TextSpacingType spacing, System.Int32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "spacing",
+        "type": "Electron2D.TextSpacingType",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextShape(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextShape",
+    "signature": "protected override System.Boolean OnShapedTextShape(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSortLogical(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSortLogical",
+    "signature": "protected override System.ReadOnlySpan\u003CElectron2D.TextGlyph\u003E OnShapedTextSortLogical(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.TextGlyph\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextSubstr(Electron2D.RID,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextSubstr",
+    "signature": "protected override Electron2D.RID OnShapedTextSubstr(Electron2D.RID shaped, System.Int32 start, System.Int32 length)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "start",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "length",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextTabAlign(Electron2D.RID,System.ReadOnlySpan\u003CSystem.Single\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextTabAlign",
+    "signature": "protected override System.Single OnShapedTextTabAlign(Electron2D.RID shaped, System.ReadOnlySpan\u003CSystem.Single\u003E tabStops)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "tabStops",
+        "type": "System.ReadOnlySpan\u003CSystem.Single\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextUpdateBreaks(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextUpdateBreaks",
+    "signature": "protected override System.Boolean OnShapedTextUpdateBreaks(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnShapedTextUpdateJustificationOps(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnShapedTextUpdateJustificationOps",
+    "signature": "protected override System.Boolean OnShapedTextUpdateJustificationOps(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnSpoofCheck(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnSpoofCheck",
+    "signature": "protected override System.Boolean OnSpoofCheck(System.String text)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnStringGetCharacterBreaks(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnStringGetCharacterBreaks",
+    "signature": "protected override System.Int32[] OnStringGetCharacterBreaks(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnStringGetWordBreaks(System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnStringGetWordBreaks",
+    "signature": "protected override System.Int32[] OnStringGetWordBreaks(System.String text, System.String language = \u0022\u0022, System.Int32 charsPerLine = 0)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "charsPerLine",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnStringToLower(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnStringToLower",
+    "signature": "protected override System.String OnStringToLower(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnStringToTitle(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnStringToTitle",
+    "signature": "protected override System.String OnStringToTitle(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnStringToUpper(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnStringToUpper",
+    "signature": "protected override System.String OnStringToUpper(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnTryGetSpanMetadata\u00601(Electron2D.RID,System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnTryGetSpanMetadata",
+    "signature": "protected override System.Boolean OnTryGetSpanMetadata\u003CT\u003E(Electron2D.RID shaped, System.Int32 index, out T metadata)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "metadata",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerDummy.OnUnreferenceOversamplingLevel(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerDummy",
+    "name": "OnUnreferenceOversamplingLevel",
+    "signature": "protected override System.Void OnUnreferenceOversamplingLevel(System.Single oversampling)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oversampling",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextServerExtension.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.TextServerExtension",
@@ -221207,6 +226923,449 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnCreateShapedText(Electron2D.TextDirection,Electron2D.TextOrientation)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnCreateShapedText",
+    "signature": "protected override Electron2D.RID OnCreateShapedText(Electron2D.TextDirection direction = Auto, Electron2D.TextOrientation orientation = Horizontal)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      },
+      {
+        "name": "orientation",
+        "type": "Electron2D.TextOrientation",
+        "default": "Horizontal"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnFontIsScriptSupported(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnFontIsScriptSupported",
+    "signature": "protected override System.Boolean OnFontIsScriptSupported(Electron2D.RID fontRID, System.String script)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnFontSupportedFeatureList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnFontSupportedFeatureList",
+    "signature": "protected override System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E OnFontSupportedFeatureList(Electron2D.RID fontRID)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.Dictionary\u003CSystem.UInt32, Electron2D.FontFeatureInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnGetFeatures()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnGetFeatures",
+    "signature": "protected override Electron2D.TextServer.Feature OnGetFeatures()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextServer.Feature",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnGetName()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnGetName",
+    "signature": "protected override System.String OnGetName()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnGetSupportData()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnGetSupportData",
+    "signature": "protected override System.Byte[] OnGetSupportData()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnGetSupportDataFilename()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnGetSupportDataFilename",
+    "signature": "protected override System.String OnGetSupportDataFilename()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnGetSupportDataInfo()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnGetSupportDataInfo",
+    "signature": "protected override System.String OnGetSupportDataInfo()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnIsConfusable(System.String,System.ReadOnlySpan\u003CSystem.String\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnIsConfusable",
+    "signature": "protected override System.Int32 OnIsConfusable(System.String text, System.ReadOnlySpan\u003CSystem.String\u003E dictionary)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "dictionary",
+        "type": "System.ReadOnlySpan\u003CSystem.String\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnIsLocaleRightToLeft(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnIsLocaleRightToLeft",
+    "signature": "protected override System.Boolean OnIsLocaleRightToLeft(System.String locale)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnIsLocaleUsingSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnIsLocaleUsingSupportData",
+    "signature": "protected override System.Boolean OnIsLocaleUsingSupportData(System.String locale)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnLoadSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnLoadSupportData",
+    "signature": "protected override System.Boolean OnLoadSupportData(System.String filename)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnSaveSupportData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnSaveSupportData",
+    "signature": "protected override System.Boolean OnSaveSupportData(System.String filename)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "filename",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnShapedTextGetDirection(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnShapedTextGetDirection",
+    "signature": "protected override Electron2D.TextDirection OnShapedTextGetDirection(Electron2D.RID shaped)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnShapedTextSetBIDIOverride(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnShapedTextSetBIDIOverride",
+    "signature": "protected override System.Void OnShapedTextSetBIDIOverride(Electron2D.RID shaped, System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E ranges)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "ranges",
+        "type": "System.ReadOnlySpan\u003CElectron2D.TextBIDIRange\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnShapedTextSetDirection(Electron2D.RID,Electron2D.TextDirection)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnShapedTextSetDirection",
+    "signature": "protected override System.Void OnShapedTextSetDirection(Electron2D.RID shaped, Electron2D.TextDirection direction = Auto)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shaped",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "direction",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnSpoofCheck(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnSpoofCheck",
+    "signature": "protected override System.Boolean OnSpoofCheck(System.String text)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnStringGetCharacterBreaks(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnStringGetCharacterBreaks",
+    "signature": "protected override System.Int32[] OnStringGetCharacterBreaks(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnStringGetWordBreaks(System.String,System.String,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnStringGetWordBreaks",
+    "signature": "protected override System.Int32[] OnStringGetWordBreaks(System.String text, System.String language = \u0022\u0022, System.Int32 charsPerLine = 0)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "charsPerLine",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnStringToLower(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnStringToLower",
+    "signature": "protected override System.String OnStringToLower(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnStringToTitle(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnStringToTitle",
+    "signature": "protected override System.String OnStringToTitle(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextServerFallback.OnStringToUpper(System.String,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextServerFallback",
+    "name": "OnStringToUpper",
+    "signature": "protected override System.String OnStringToUpper(System.String text, System.String language = \u0022\u0022)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.String",
     "value": null
   },
   {
@@ -284857,6 +291016,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.TextDriver()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "TextDriver",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E TextDriver { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
     "value": null
   },
   {

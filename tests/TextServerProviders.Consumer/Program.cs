@@ -3,6 +3,8 @@ using Electron2D;
 if (args.FirstOrDefault() == "opaque-render") OpaqueBuffers.Render(args[1], args[2]);
 else if (args.FirstOrDefault() == "retirement-errors-render") ProviderRendering.Run(args[1], args[2], retireSource: true, failDuringRetirement: true);
 else if (args.FirstOrDefault() == "native-retirement-render") ProviderRendering.Run(args[1], args[2], retireSource: true);
+else if (args.FirstOrDefault() == "profiles") ConcreteProfiles.Run();
+else if (args.FirstOrDefault() == "profiles-render") ConcreteRendering.Run(args[1], args[2]);
 else if (args.FirstOrDefault() == "render") ProviderRendering.Run(args[1], args[2]);
 else if (args.FirstOrDefault() == "lifetime") Lifetime();
 else if (args.FirstOrDefault() == "opaque") OpaqueBuffers.Run();

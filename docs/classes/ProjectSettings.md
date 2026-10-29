@@ -1,12 +1,14 @@
 # ProjectSettings
 
+TextDriver selects a registered exact text-implementation name at engine startup; empty preserves application selection. It is a permanent nonbasic restart setting with ordinary feature overrides. See [concrete text profiles](../components/text-server.md#concrete-implementation-profiles).
+
 [HDROutputRequested](../components/native-hdr-output.md) is the typed false-by-default
 `display/window/hdr/request_hdr_output` selector. Engine startup applies its
 effective feature override only to an unassigned root Window before native
 creation. Explicit scene authoring wins; independent SubViewports retain their
 own HDR canvas policy.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 

@@ -63,6 +63,7 @@ public abstract partial class TextServer
     /// <param name="fontRID">Live font identity.</param><returns>The stable runtime font projection.</returns>
     /// <remarks>Disposing a service-owned projection releases its entry. Disposing a resource-owned projection preserves its borrowed source. Use FontFile for persistent source assets.
     /// Duplicate retains an independent source snapshot. Freeing a root invalidates source operations on its links.</remarks>
+    /// <exception cref="NotSupportedException">The explicit Dummy profile has no source projection.</exception>
     /// <exception cref="InvalidOperationException">The identity or its root has retired.</exception>
     public Font FontGetResource(RID fontRID)
     {
@@ -70,6 +71,7 @@ public abstract partial class TextServer
         Exception? callbackFailure = null;
         try
         {
+            if (this is TextServerDummy) throw new NotSupportedException("The disabled text implementation has no font resource projection.");
             return ExternalFontResource(fontRID) ?? (FontFile.TryResolveSource(fontRID, out var resource) ? resource.SourceResource : FontSource(fontRID));
         }
         catch (Exception failure) { callbackFailure = failure; throw; }
@@ -92,6 +94,7 @@ public abstract partial class TextServer
         return font;
     }
     private FontFile SourceFont(RID rid) => FontFile.TryResolveSource(rid, out var resource) ? resource : FontSource(rid).Source;
+    internal bool SupportsSimpleScript(RID rid, string script) => SourceFont(rid).SupportsSimpleScript(script);
     private int SourceSpacing(RID rid, TextSpacingType spacing) => FontFile.TryResolveSource(rid, out var resource) ? resource.GetSpacing(spacing) : FontEntry(rid).GetSpacing(spacing);
     private void SourceSpacing(RID rid, TextSpacingType spacing, int value)
     { if (FontFile.TryResolveSource(rid, out var resource)) resource.SetExtraSpacing(0, spacing, value); else FontEntry(rid).SetSpacing(spacing, value); }

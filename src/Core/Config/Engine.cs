@@ -190,10 +190,10 @@ public sealed partial class Engine : ElectronObject
 
         Volatile.Write(ref _runtimeOwnerThreadId, Environment.CurrentManagedThreadId);
         OS.SetMainThreadOwner(Environment.CurrentManagedThreadId);
-        Volatile.Write(ref _mainLoop, mainLoop);
-
         try
         {
+            TextServerManager.LoadProjectDriver();
+            Volatile.Write(ref _mainLoop, mainLoop);
             TranslationServer.LoadProjectLocalization();
             ThemeDB.LoadProjectTheme();
             AudioServer.LoadDefaultLayout();

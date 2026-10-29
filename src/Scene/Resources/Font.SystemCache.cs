@@ -28,7 +28,7 @@ public partial class Font
         }
         List<Exception>? errors = null;
         foreach (var font in fonts)
-            try { if (!font.IsDisposalCommitted) font.EmitFontChanged(); }
+            try { if (!font.IsDisposalCommitted) font.InvalidateFont(); }
             catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Text provider cache invalidation callbacks failed.", errors);
     }

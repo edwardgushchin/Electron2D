@@ -13,7 +13,7 @@ public abstract partial class Font
         if (root is not null) Include(root);
         foreach (var font in fonts) if (!ReferenceEquals(font, root)) Include(font);
         var provider = TextServerManager.BeginConsumerRead(owner);
-        callbacks |= provider.Provider is TextServerExtension;
+        callbacks |= provider.Provider.UsesCallbackConsumers;
         if (callbacks) _callbackGroupDepth++;
         return new(provider, callbacks);
         void Include(Font font)
@@ -24,7 +24,7 @@ public abstract partial class Font
                 if (owner is not null && !ReferenceEquals(owner, candidate)) throw new InvalidOperationException("A text operation cannot combine opaque fonts from different implementations.");
                 owner = candidate; callbacks = true;
             }
-            callbacks |= font.GetType().Assembly != typeof(Font).Assembly;
+            callbacks |= font._externalImplementation;
         }
     }
 }

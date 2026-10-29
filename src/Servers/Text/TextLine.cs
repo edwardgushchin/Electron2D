@@ -183,7 +183,7 @@ public sealed partial class TextLine : ElectronObject
         Check(); var copy = new TextLine { _source = _source, _count = _count, _alignment = _alignment, _direction = _direction, _orientation = _orientation, _ellipsis = _ellipsis, _flags = _flags, _overrun = _overrun, _width = _width, _preserveControl = _preserveControl, _preserveInvalid = _preserveInvalid, _tabs = (float[])_tabs.Clone(), _bidi = (TextBIDIRange[])_bidi.Clone() };
         copy._text.Append(_text);
         foreach (var span in _spans) copy._spans.Add(ReferenceEquals(span.Font, _neutral) ? span with { Font = copy._neutral } : span);
-        copy._objects.AddRange(_objects); foreach (var font in _fonts) copy._fonts.Add(ReferenceEquals(font, _neutral) ? copy._neutral : font); ServerCopyFonts(copy); ServerCopyFormatSettings(copy); copy.ServerOffset = ServerOffset; copy.ServerOuterScalars = ServerOuterScalars; copy.ServerPrefix = ServerPrefix; copy.ServerSuffix = ServerSuffix; return copy;
+        copy._objects.AddRange(_objects); foreach (var font in _fonts) copy._fonts.Add(ReferenceEquals(font, _neutral) ? copy._neutral : font); ServerCopyFonts(copy); ServerCopyFormatSettings(copy); copy.ServerOffset = ServerOffset; copy.ServerOuterScalars = ServerOuterScalars; copy.ServerPrefix = ServerPrefix; copy.ServerSuffix = ServerSuffix; copy.ServerSimpleLayout = ServerSimpleLayout; return copy;
     }
     /// <summary>Removes content, objects and BIDI contexts while preserving RID, tabs and line policies.</summary>
     public void Clear()
@@ -255,7 +255,7 @@ public sealed partial class TextLine : ElectronObject
         var ellipsis = _ellipsis.EnumerateRunes(); var symbol = ellipsis.MoveNext() ? ellipsis.Current.ToString() : "…";
         var direction = _direction is TextDirection.Auto or TextDirection.Inherited && (ServerPrefix.Length != 0 || ServerSuffix.Length != 0) ? ServerSourceDirection() : _direction;
         var key = new TextLayoutKey(_source, 16, _width, _alignment, 1, TextLineBreakFlags.None, _flags, direction, _orientation);
-        var options = new TextLayoutOptions(Language: _spans.Count == 0 ? string.Empty : _spans[0].Language, TabStops: _tabs, Overrun: 0, Ellipsis: symbol, BIDIOverride: _bidi, ApplyAlignment: false, PreserveControl: _preserveControl, Styles: _styles, Objects: _inline, PreserveInvalid: _preserveInvalid, GlobalObjectMetrics: true, ServerBuffers: true, CustomPunctuation: ServerPunctuation, BufferGlyphSpacing: _serverSpacing[0], BufferSpaceSpacing: _serverSpacing[1], BufferTopSpacing: _serverSpacing[2], BufferBottomSpacing: _serverSpacing[3]);
+        var options = new TextLayoutOptions(Language: _spans.Count == 0 ? string.Empty : _spans[0].Language, TabStops: _tabs, Overrun: 0, Ellipsis: symbol, BIDIOverride: _bidi, ApplyAlignment: false, PreserveControl: _preserveControl, Styles: _styles, Objects: _inline, PreserveInvalid: _preserveInvalid, GlobalObjectMetrics: true, ServerBuffers: true, SimpleLayout: ServerSimpleLayout, CustomPunctuation: ServerPunctuation, BufferGlyphSpacing: _serverSpacing[0], BufferSpaceSpacing: _serverSpacing[1], BufferTopSpacing: _serverSpacing[2], BufferBottomSpacing: _serverSpacing[3]);
         var original = ServerShapingSource;
         if (original?.ServerLayout.UsesProvider == true)
         {
@@ -278,7 +278,7 @@ public sealed partial class TextLine : ElectronObject
         try
         {
             BeginReads();
-            target.Build(_neutral, key with { Text = _source }, options with { Language = _spans.Count == 0 ? string.Empty : _spans[0].Language, TabStops = _tabs, BIDIOverride = _bidi, Styles = _styles, Objects = _inline, PreserveControl = _preserveControl, PreserveInvalid = _preserveInvalid, GlobalObjectMetrics = true, BufferGlyphSpacing = _serverSpacing[0], BufferSpaceSpacing = _serverSpacing[1], BufferTopSpacing = _serverSpacing[2], BufferBottomSpacing = _serverSpacing[3], RetainedShape = _serverFullFormatted ? _full : null });
+            target.Build(_neutral, key with { Text = _source }, options with { Language = _spans.Count == 0 ? string.Empty : _spans[0].Language, TabStops = _tabs, BIDIOverride = _bidi, Styles = _styles, Objects = _inline, PreserveControl = _preserveControl, PreserveInvalid = _preserveInvalid, GlobalObjectMetrics = true, BufferGlyphSpacing = _serverSpacing[0], BufferSpaceSpacing = _serverSpacing[1], BufferTopSpacing = _serverSpacing[2], BufferBottomSpacing = _serverSpacing[3], RetainedShape = _serverFullFormatted ? _full : null, SimpleLayout = ServerSimpleLayout });
         }
         finally { try { EndReads(); } finally { _busy = false; } }
     }
@@ -290,7 +290,7 @@ public sealed partial class TextLine : ElectronObject
     }
     private TextServer? _consumerOwner;
     internal TextServer? ServerInterfaceOwner;
-    internal bool ServerNativeBackend;
+    internal bool ServerNativeBackend, ServerSimpleLayout;
     internal void BindConsumerOwner(TextServer owner) => _consumerOwner = owner;
     internal void InvalidateConsumerShape() { CheckMutation(); _dirty = true; }
     private void Check() { if (_consumerOwner is { } owner ? !TextServerManager.IsConsumerAdmitted(owner) : Environment.CurrentManagedThreadId != _thread) throw new InvalidOperationException("TextLine requires its creating thread or private engine admission."); ThrowIfDisposed(); }

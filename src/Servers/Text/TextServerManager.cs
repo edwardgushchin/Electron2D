@@ -13,7 +13,7 @@ public sealed class TextServerManager : ElectronObject
     private int _readers;
     [ThreadStatic] private static TextServer? _consumerProvider;
     [ThreadStatic] private static TextServer? _creatingConsumerBuffer;
-    internal static TextServer? CallbackProvider => !TextServer.IsNativeBackendCall && (_consumerProvider ?? Volatile.Read(ref Service._primary)) is TextServerExtension provider ? provider : null;
+    internal static TextServer? CallbackProvider => !TextServer.IsNativeBackendCall && (_consumerProvider ?? Volatile.Read(ref Service._primary)) is TextServerExtension provider && provider is not TextServerAdvanced ? provider : null;
     internal static bool IsCreatingConsumerBuffer(TextServer provider) => ReferenceEquals(_creatingConsumerBuffer, provider);
     internal static BufferCreation BeginBufferCreation(TextServer provider)
     { var previous = _creatingConsumerBuffer; _creatingConsumerBuffer = provider; return new(previous); }
@@ -23,7 +23,6 @@ public sealed class TextServerManager : ElectronObject
     private long _generation;
     internal static TextServer NativeInterface => Service._builtin;
     internal static long ContentGeneration => Volatile.Read(ref Service._generation);
-    internal static bool UsesCallbacks => (_consumerProvider ?? Volatile.Read(ref Service._primary)) is TextServerExtension;
     internal static ConsumerRead BeginConsumerRead(TextServer? owner = null)
     {
         lock (Service._gate)
@@ -50,7 +49,18 @@ public sealed class TextServerManager : ElectronObject
         internal long Generation => generation;
         public void Dispose() { if (provider is null) return; _consumerProvider = previous; lock (Service._gate) Service._readers--; provider.ReleaseConsumerAdmission(); }
     }
-    private TextServerManager() { _primary = _builtin; _interfaces = [_builtin]; }
+    private TextServerManager()
+    {
+        _primary = new TextServerAdvanced();
+        _interfaces = [_primary, new TextServerFallback(), new TextServerDummy()];
+    }
+    internal static void LoadProjectDriver()
+    {
+        var name = ProjectSettings.GetWithOverride(ProjectSettings.TextDriver);
+        if (name.Length == 0) return;
+        var implementation = FindInterface(name) ?? throw new NotSupportedException($"The project text implementation '{name}' is not registered.");
+        if (!ReferenceEquals(Volatile.Read(ref Service._primary), implementation)) SetPrimaryInterface(implementation);
+    }
     /// <summary>Returns the primary text implementation.</summary><returns>The selected interface.</returns>
     /// <exception cref="InvalidOperationException">The primary interface was explicitly cleared.</exception>
     public static TextServer GetPrimaryInterface() => Volatile.Read(ref Service._primary) ?? throw new InvalidOperationException("No primary text implementation is selected.");

@@ -67,7 +67,7 @@ public abstract partial class Font
         {
             font.ThrowIfDisposed();
             var source = font.ExternalSource;
-            if (source is null && !TextServer.IsNativeBackendCall && context.ProviderRead.Provider is TextServerExtension provider && font.PrimaryData is { } nativeSource && font.GetSourceRID(nativeSource) is var rid && rid != default) source = new(provider, rid);
+            if (source is null && !TextServer.IsNativeBackendCall && context.ProviderRead.Provider is { UsesCallbackConsumers: true } provider && font.PrimaryData is { } nativeSource && font.GetSourceRID(nativeSource) is var rid && rid != default) source = new(provider, rid);
             if (source is { } value && !context.CallbackSources.Contains(value))
             {
                 context.CallbackSources.Add(value);

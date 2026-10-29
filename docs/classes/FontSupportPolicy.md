@@ -1,6 +1,6 @@
 # FontSupportPolicy
 
-Last updated: 2026-10-23
+Last updated: 2026-10-29
 
 **Declaration:** `internal sealed class FontSupportPolicy` · **Source:** [FontSupportPolicy.cs](../../src/Servers/Text/FontSupportPolicy.cs) · **Component:** [Text](../components/text.md)
 
@@ -21,3 +21,5 @@ Save/Load encode versioned strict UTF8 dictionaries in the stored FontFile byte-
 ## Verification
 
 FontSupportTests covers pure queries, snapshot independence, concurrent mutations, callback failures, malformed data, actual fallback advances and fresh-process archives. The native host verifies both existing renderers and prepared active/idle managed allocation limits. Foreign and native allocation gates remain separate.
+
+The Fallback text profile applies exact script overrides, then the wildcard, then true without consulting native contextual script coverage. This uses the same immutable policy dictionaries and does not allocate a key snapshot on each query.

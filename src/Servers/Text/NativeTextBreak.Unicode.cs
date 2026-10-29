@@ -78,14 +78,16 @@ internal static unsafe partial class NativeTextBreak
         }
         return result.ToArray();
     }
-    internal static int[] StringWordBreaks(string text, string language, int charsPerLine)
+    internal static int[] StringWordBreaks(string text, string language, int charsPerLine, bool simple = false)
     {
         ValidateString(text); ValidateString(language); if (text.Length == 0) return [];
         var count = 0; foreach (var rune in text.EnumerateRunes()) count++;
         var scalars = new uint[count]; var at = 0; foreach (var rune in text.EnumerateRunes()) scalars[at++] = (uint)rune.Value;
         lock (Gate)
         {
-            Initialize(); var breaks = new bool[count + 1]; foreach (var end in StringBoundaries(text, language, 1)) breaks[end] = true;
+            Initialize(); var breaks = new bool[count + 1];
+            if (simple) { for (var i = 0; i < count; i++) breaks[i + 1] = StringWordSeparator(scalars[i]); }
+            else foreach (var end in StringBoundaries(text, language, 1)) breaks[end] = true;
             var ranges = new List<int>();
             if (charsPerLine <= 0)
             {

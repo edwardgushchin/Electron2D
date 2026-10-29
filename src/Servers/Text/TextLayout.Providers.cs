@@ -17,8 +17,10 @@ internal sealed partial class TextLayout
     }
     internal static void RetireProviderFont(Font font)
     {
-        ProviderLayout[] states;
-        lock (ProviderLayoutsGate) states = ProviderLayouts.Where(state => state.DependsOn(font)).ToArray();
+        List<ProviderLayout>? states = null;
+        lock (ProviderLayoutsGate)
+            foreach (var state in ProviderLayouts) if (state.DependsOn(font)) (states ??= []).Add(state);
+        if (states is null) return;
         List<Exception>? errors = null;
         foreach (var state in states) try { state.Release(); } catch (Exception error) { Node.CollectException(ref errors, error); }
         Node.ThrowCollected("Text provider source retirement failed.", errors);
@@ -201,6 +203,7 @@ internal sealed partial class TextLayout
                 state.Authored = false;
                 if (state.Full == default) state.Full = provider.CreateShapedText(Key.Direction == TextDirection.Inherited ? TextDirection.Auto : Key.Direction, Key.Orientation);
                 else provider.ShapedTextClear(state.Full);
+                state.ScalarOffset = 0; state.RebaseSpanIndexes = false;
                 provider.ShapedTextSetDirection(state.Full, Key.Direction == TextDirection.Inherited ? TextDirection.Auto : Key.Direction);
                 provider.ShapedTextSetOrientation(state.Full, Key.Orientation);
                 provider.ShapedTextSetPreserveControl(state.Full, _options.PreserveControl);

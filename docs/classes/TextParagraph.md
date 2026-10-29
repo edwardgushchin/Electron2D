@@ -24,6 +24,8 @@ Defaults are Left, Auto, Horizontal, Width -1, mandatory word breaks, zero line 
 
 Wrapping and line drawing share the selected text implementation, including opaque sources, producer line breaks and independent formatted line buffers. Reflow and disposal retire private buffers. See [external implementations](../components/text-server.md#external-implementations).
 
+The selected [concrete text profile](../components/text-server.md#concrete-implementation-profiles) controls ordinary layout. Primary replacement invalidates actual font generations and retained geometry. Explicit Dummy selection produces zero text geometry; operational owned buffers retain their creator. Dummy supplies no prepared ordinary lines; the one zero-sized empty line described below belongs to operational layout.
+
 ## Example
 
 ```csharp

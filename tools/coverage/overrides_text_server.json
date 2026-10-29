@@ -2619,6 +2619,26 @@
       "godot": "TextServerManager::signal:interface_removed(StringName:)",
       "electron2d": "event:Electron2D.TextServerManager.InterfaceRemoved()",
       "reason": "ADR 0046/0107: executable typed protected callbacks, guarded public admission, native defaults and opaque font/buffer ownership. Shared Font/Line/Paragraph/GUI consumers use producer glyphs, formatting, runs, editing, inline metadata and drawing. Linux native and opaque consumer checks cover registry/source/scale retirement, duplication, thread/reentry, errors and prepared allocation; package/NativeAOT, foreign-platform, native allocator/performance and owner gates remain separate."
+    },
+    {
+      "godot": "class:TextServerAdvanced",
+      "electron2d": "T:Electron2D.TextServerAdvanced",
+      "reason": "ADR 0107: independently constructible Advanced (ICU/HarfBuzz), the initial public primary; inherited native callbacks execute existing contextual, bidirectional, vertical, font/raster and Unicode operations. Registration, lifetime and real shared consumers are exercised. Declaration implementation is distinct from the outstanding complete package/host conformance matrix in ADR 0021."
+    },
+    {
+      "godot": "class:TextServerFallback",
+      "electron2d": "T:Electron2D.TextServerFallback",
+      "reason": "ADR 0107: independently constructible Fallback (Built-in), with exact simple/dynamic/bitmap/MSDF features and a real nominal scalar font-worker path. Logical LTR glyphs, native/authored kerning, scalar boundaries, nonbreaking/CRLF wrapping, objects, formatting/editing, shared GUI/raster consumers and simple Unicode case utilities execute. Explicit RTL direction/ranges reject before mutation; Auto/LTR contexts are validated and retained. No contextual shaping, dictionary iteration, security/data lifecycle or synthetic elongation is claimed. Full package/host conformance under ADR 0021 remains open."
+    },
+    {
+      "godot": "class:TextServerDummy",
+      "electron2d": "T:Electron2D.TextServerDummy",
+      "reason": "ADR 0107: independently constructible explicit portable disabled-text profile, with no capabilities/resources/shaping/output, false creation-work results, typed empty geometry and missing-position sentinels. Foreign resources cannot mutate/retire through Dummy. Shared consumers suppress text while graphics and logical editing remain usable. The sealed empty-factory exception preserves strict external-provider identity rules. Declaration implementation does not establish the full ADR 0021 package/host matrix."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/rendering/text_driver",
+      "electron2d": "property:Electron2D.ProjectSettings.TextDriver()",
+      "reason": "ADR 0107: permanent nonbasic restart setting, default empty preserves current selection; startup consumes the effective feature override, selects the first registered exact name before theme/MainLoop initialization and rejects missing names with reusable engine lifecycle. Selection invalidates actual font generations and prepared consumers. Full target/package conformance remains open under ADR 0021."
     }
   ],
   "extras": [
@@ -2925,6 +2945,1306 @@
     {
       "electron2d": "method:Electron2D.TextServerExtension.ValidateDisposal()",
       "reason": "ADR 0107: Disposal guard and balanced base/raster subscription retirement."
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextServerAdvanced..ctor()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextServerDummy..ctor()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextServerFallback..ctor()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerAdvanced.OnGetName()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnCreateFont()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnCreateFontLinkedVariation(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnCreateShapedText(Electron2D.TextDirection,Electron2D.TextOrientation)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontClearGlyphs(Electron2D.RID,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontClearKerningMap(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontClearSizeCache(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontClearSystemFallbackCache()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontClearTextures(Electron2D.RID,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontDrawGlyph(Electron2D.RID,Electron2D.CanvasItem,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontDrawGlyphOutline(Electron2D.RID,Electron2D.CanvasItem,System.Int32,System.Int32,Electron2D.Vector2,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetAntialiasing(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetAscent(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetBaselineOffset(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetCharFromGlyphIndex(Electron2D.RID,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetDescent(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetDisableEmbeddedBitmaps(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetEmbolden(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetFaceCount(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetFaceIndex(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetFixedSize(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetFixedSizeScaleMode(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGenerateMIPMaps(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphContours(Electron2D.RID,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphIndex(Electron2D.RID,System.Int32,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphList(Electron2D.RID,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphTextureRID(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphTextureSize(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetHinting(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetKeepRoundingRemainders(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetKerningList(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetLanguageSupportOverride(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetLanguageSupportOverrides(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetMSDFPixelRange(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetMSDFSize(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetName(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetOTNameStrings(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetOpenTypeFeatureOverrides(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetOversampling(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetPaletteColors(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetPaletteCount(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetPaletteCustomColors(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetPaletteName(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetScale(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetScriptSupportOverride(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetScriptSupportOverrides(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetSizeCacheInfo(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetSizeCacheList(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetStretch(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetStyle(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetStyleName(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetSubpixelPositioning(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetSupportedChars(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetSupportedGlyphs(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetTextureCount(Electron2D.RID,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetTransform(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetUnderlinePosition(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetUnderlineThickness(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetUsedPalette(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetVariationCoordinates(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontGetWeight(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontHasChar(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontIsAllowSystemFallback(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontIsForceAutohinter(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontIsLanguageSupported(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontIsModulateColorGlyphs(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontIsMultichannelSignedDistanceField(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontIsScriptSupported(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRemoveGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRemoveKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRemoveLanguageSupportOverride(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRemoveScriptSupportOverride(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRemoveSizeCache(Electron2D.RID,Electron2D.Vector2i)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRemoveTexture(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRenderGlyph(Electron2D.RID,Electron2D.Vector2i,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontRenderRange(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetAllowSystemFallback(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetAntialiasing(Electron2D.RID,Electron2D.FontAntialiasing)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetAscent(Electron2D.RID,System.Int32,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetBaselineOffset(Electron2D.RID,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetData(Electron2D.RID,System.Byte[])",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetDescent(Electron2D.RID,System.Int32,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetDisableEmbeddedBitmaps(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetEmbolden(Electron2D.RID,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetFaceIndex(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetFixedSize(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetFixedSizeScaleMode(Electron2D.RID,Electron2D.FixedSizeScaleMode)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetForceAutohinter(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetGenerateMIPMaps(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetGlyphAdvance(Electron2D.RID,System.Int32,System.Int32,Electron2D.Vector2)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetGlyphOffset(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetGlyphSize(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Vector2)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetGlyphTextureIndex(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetGlyphUVRect(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Rect2)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetHinting(Electron2D.RID,Electron2D.FontHinting)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetKeepRoundingRemainders(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetKerning(Electron2D.RID,System.Int32,Electron2D.Vector2i,Electron2D.Vector2)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetLanguageSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetMSDFPixelRange(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetMSDFSize(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetModulateColorGlyphs(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetMultichannelSignedDistanceField(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetName(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetOpenTypeFeatureOverrides(Electron2D.RID,System.Collections.Generic.Dictionary<System.String, System.Int32>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetOversampling(Electron2D.RID,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetPaletteCustomColors(Electron2D.RID,Electron2D.Color[])",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetScale(Electron2D.RID,System.Int32,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetScriptSupportOverride(Electron2D.RID,System.String,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetStretch(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetStyle(Electron2D.RID,Electron2D.FontStyle)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetStyleName(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetSubpixelPositioning(Electron2D.RID,Electron2D.FontSubpixelPositioning)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetTextureImage(Electron2D.RID,Electron2D.Vector2i,System.Int32,Electron2D.Image)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetTextureOffsets(Electron2D.RID,Electron2D.Vector2i,System.Int32,System.Int32[])",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetUnderlinePosition(Electron2D.RID,System.Int32,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetUnderlineThickness(Electron2D.RID,System.Int32,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetUsedPalette(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetVariationCoordinates(Electron2D.RID,System.Collections.Generic.Dictionary<System.UInt32, System.Single>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSetWeight(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSupportedFeatureList(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnFontSupportedVariationList(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnGetFeatures()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnGetName()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnGetSupportData()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnGetSupportDataFilename()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnGetSupportDataInfo()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnHas(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnIsConfusable(System.String,System.ReadOnlySpan<System.String>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnIsLocaleRightToLeft(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnIsLocaleUsingSupportData(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnLoadSupportData(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnReferenceOversamplingLevel(System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnSaveSupportData(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunCount(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunDirection(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunFontRID(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunFontSize(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunGlyphRange(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunLanguage(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunObject(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunRange(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetRunText(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetSpanCount(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetSpanEmbeddedObject(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetSpanObject(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetSpanText(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedGetText(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedSetSpanUpdateFont(Electron2D.RID,System.Int32,System.ReadOnlySpan<Electron2D.Font>,System.Int32,System.Collections.Generic.IReadOnlyDictionary<System.String, System.Int32>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextAddObject(Electron2D.RID,Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Int32,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextAddString(Electron2D.RID,System.String,System.ReadOnlySpan<Electron2D.Font>,System.Int32,System.Collections.Generic.IReadOnlyDictionary<System.String, System.Int32>,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextAddString`1(Electron2D.RID,System.String,System.ReadOnlySpan<Electron2D.Font>,System.Int32,System.Collections.Generic.IReadOnlyDictionary<System.String, System.Int32>,System.String,T)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextClear(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextClosestCharacterPos(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextDraw(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Nullable<Electron2D.Color>,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextDrawOutline(Electron2D.RID,Electron2D.CanvasItem,Electron2D.Vector2,System.Single,System.Single,System.Int32,System.Nullable<Electron2D.Color>,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextDuplicate(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextFitToWidth(Electron2D.RID,System.Single,Electron2D.TextJustificationFlags)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetAscent(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetCarets(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetCharacterBreaks(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetCustomEllipsis(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetCustomPunctuation(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetDescent(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetDirection(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetDominantDirectionInRange(Electron2D.RID,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetEllipsisGlyphCount(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetEllipsisGlyphs(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetEllipsisPos(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetGlyphCount(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetGlyphs(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetGraphemeBounds(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetInferredDirection(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetLineBreaks(Electron2D.RID,System.Single,System.Int32,Electron2D.TextLineBreakFlags)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetLineBreaksAdv(Electron2D.RID,System.ReadOnlySpan<System.Single>,System.Int32,System.Boolean,Electron2D.TextLineBreakFlags)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetObjectGlyph(Electron2D.RID,Electron2D.TextObjectKey)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetObjectRange(Electron2D.RID,Electron2D.TextObjectKey)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetObjectRect(Electron2D.RID,Electron2D.TextObjectKey)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetObjects(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetOrientation(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetParent(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetPreserveControl(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetPreserveInvalid(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetRange(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetSelection(Electron2D.RID,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetSize(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetSpacing(Electron2D.RID,Electron2D.TextSpacingType)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetTrimPos(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetUnderlinePosition(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetUnderlineThickness(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetWidth(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextGetWordBreaks(Electron2D.RID,Electron2D.TextGraphemeFlags,Electron2D.TextGraphemeFlags)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextHasObject(Electron2D.RID,Electron2D.TextObjectKey)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextHasVisibleChars(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextHitTestGrapheme(Electron2D.RID,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextHitTestPosition(Electron2D.RID,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextIsReady(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextNextCharacterPos(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextNextGraphemePos(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextOverrunTrimToWidth(Electron2D.RID,System.Single,Electron2D.TextOverrunFlags)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextPrevCharacterPos(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextPrevGraphemePos(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextResizeObject(Electron2D.RID,Electron2D.TextObjectKey,Electron2D.Vector2,Electron2D.InlineAlignment,System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetBIDIOverride(Electron2D.RID,System.ReadOnlySpan<Electron2D.TextBIDIRange>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetCustomEllipsis(Electron2D.RID,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetCustomPunctuation(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetDirection(Electron2D.RID,Electron2D.TextDirection)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetOrientation(Electron2D.RID,Electron2D.TextOrientation)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetPreserveControl(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetPreserveInvalid(Electron2D.RID,System.Boolean)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSetSpacing(Electron2D.RID,Electron2D.TextSpacingType,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextShape(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSortLogical(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextSubstr(Electron2D.RID,System.Int32,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextTabAlign(Electron2D.RID,System.ReadOnlySpan<System.Single>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextUpdateBreaks(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnShapedTextUpdateJustificationOps(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnSpoofCheck(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnStringGetCharacterBreaks(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnStringGetWordBreaks(System.String,System.String,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnStringToLower(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnStringToTitle(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnStringToUpper(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnTryGetSpanMetadata`1(Electron2D.RID,System.Int32,ref T)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerDummy.OnUnreferenceOversamplingLevel(System.Single)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnCreateShapedText(Electron2D.TextDirection,Electron2D.TextOrientation)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnFontIsScriptSupported(Electron2D.RID,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnFontSupportedFeatureList(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnGetFeatures()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnGetName()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnGetSupportData()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnGetSupportDataFilename()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnGetSupportDataInfo()",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnIsConfusable(System.String,System.ReadOnlySpan<System.String>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnIsLocaleRightToLeft(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnIsLocaleUsingSupportData(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnLoadSupportData(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnSaveSupportData(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnShapedTextGetDirection(Electron2D.RID)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnShapedTextSetBIDIOverride(Electron2D.RID,System.ReadOnlySpan<Electron2D.TextBIDIRange>)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnShapedTextSetDirection(Electron2D.RID,Electron2D.TextDirection)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnSpoofCheck(System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnStringGetCharacterBreaks(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnStringGetWordBreaks(System.String,System.String,System.Int32)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnStringToLower(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnStringToTitle(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
+    },
+    {
+      "electron2d": "method:Electron2D.TextServerFallback.OnStringToUpper(System.String,System.String)",
+      "adr": "ADR 0107",
+      "reason": "Concrete text implementation constructor or sealed typed callback override of the inherited TextServer contract; independent operational ownership or the explicitly selected disabled profile, with no separate public service or compatibility alias. See the concrete profile component for capability-specific results and remaining platform qualification."
     }
   ],
   "statusGroups": [
@@ -3528,12 +4848,31 @@
     },
     {
       "godot": [
-        "class:TextServerAdvanced",
-        "class:TextServerFallback",
+        "class:TextServerAdvanced"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0107: independently constructible Advanced (ICU/HarfBuzz), the initial public primary; inherited native callbacks execute existing contextual, bidirectional, vertical, font/raster and Unicode operations. Registration, lifetime and real shared consumers are exercised. Declaration implementation is distinct from the outstanding complete package/host conformance matrix in ADR 0021."
+    },
+    {
+      "godot": [
+        "class:TextServerFallback"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0107: independently constructible Fallback (Built-in), with exact simple/dynamic/bitmap/MSDF features and a real nominal scalar font-worker path. Logical LTR glyphs, native/authored kerning, scalar boundaries, nonbreaking/CRLF wrapping, objects, formatting/editing, shared GUI/raster consumers and simple Unicode case utilities execute. Explicit RTL direction/ranges reject before mutation; Auto/LTR contexts are validated and retained. No contextual shaping, dictionary iteration, security/data lifecycle or synthetic elongation is claimed. Full package/host conformance under ADR 0021 remains open."
+    },
+    {
+      "godot": [
         "class:TextServerDummy"
       ],
-      "state": "Unimplemented",
-      "reason": "The external callback/ownership prerequisite now executes. Concrete independently constructible Advanced/Fallback/Dummy classes still require their applicable feature/name/default behavior and registration/selection consumers. The current retained native implementation is not those three public concrete types; no remaining external dependency is claimed."
+      "state": "Implemented",
+      "reason": "ADR 0107: independently constructible explicit portable disabled-text profile, with no capabilities/resources/shaping/output, false creation-work results, typed empty geometry and missing-position sentinels. Foreign resources cannot mutate/retire through Dummy. Shared consumers suppress text while graphics and logical editing remain usable. The sealed empty-factory exception preserves strict external-provider identity rules. Declaration implementation does not establish the full ADR 0021 package/host matrix."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:internationalization/rendering/text_driver"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0107: permanent nonbasic restart setting, default empty preserves current selection; startup consumes the effective feature override, selects the first registered exact name before theme/MainLoop initialization and rejects missing names with reusable engine lifecycle. Selection invalidates actual font generations and prepared consumers. Full target/package conformance remains open under ADR 0021."
     }
   ]
 }

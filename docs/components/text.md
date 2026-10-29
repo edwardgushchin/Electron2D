@@ -7,7 +7,7 @@ the correction; its public test now covers automatic, hyphenated, underscored an
 script-qualified languages. Existing prefix/tier rules and glyph output remain.
 The corrected local `en-US` bracket retains zero allocations. Cross-platform runtime and rendered checks are separate from this local bracket.
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 FontTests drains the existing calibrated collection/finalization warmup after its
 sixteen layout/recording warmups and before measuring the same sixty-four rebuilds.
@@ -165,3 +165,5 @@ LineEdit supplies a lazy borrowed context menu, stored ContextMenuEnabled, ordin
 
 
 [External text implementations](text-server.md#external-implementations) now drive the shared Font, retained line/paragraph and GUI layout/drawing paths through typed callbacks. Opaque font projections and buffers preserve their creating implementation, while inherited callbacks reuse the native backend. Registry, source, buffer, raster-scale and error lifetimes are described in the owning component.
+
+[Concrete text profiles](text-server.md#concrete-implementation-profiles) expose Advanced contextual layout, real nominal scalar Fallback layout and explicit Dummy text suppression through the same Font/Line/Paragraph/GUI boundary. Project startup selects registered names; replacement invalidates retained geometry.

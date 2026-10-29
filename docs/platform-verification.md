@@ -10,6 +10,12 @@ For each capability, the owning component/class page records its common conforma
 
 Unavoidable external capability limits need the owning ADR's exact condition and observable result. Missing engine backends or tests remain gaps rather than new exclusions. An explicit unsupported result does not demonstrate functional parity. This report currently contains bounded receipts and known gaps, not an exhaustive passing feature-by-target matrix. Existing configured CI and `release-qualified` artifacts do not automate that exhaustive acceptance gate; [development CI](development-ci.md) and [release preparation](releasing.md) retain that distinction.
 
+### Concrete text profiles (2026-10-29)
+
+The common [profile scenarios](components/text-server.md#concrete-profile-verification) now execute Advanced, nominal Fallback and explicit disabled Dummy through service resources, retained Font/Line/Paragraph consumers and ten rendered GUI/text roles. The Linux x64 source ProjectReference cohort passes 56 CLR fresh-process profiles; strict full-trim NativeAOT publication and 17 public-consumer profiles also pass. Wayland and X11 each pass GPU and compatibility profile switching with real image readback, preserved logical editing and zero-byte prepared managed metric queries. Source/native/assembly identities and raw results are in `bin/concrete-text-profiles/2026-10-29/`.
+
+This bounded receipt does not cover the delivered NuGet/platform packages or Windows, macOS, Linux ARM64, Android, Android TV, iOS, tvOS or Web execution. The same public scenarios and failure/lifetime results must run through each actual package/host; physical-device, complete native-allocation/performance and owner acceptance remain separate. Dummy is an explicit application-selected disabled capability condition under ADR 0107, not an absent-backend substitute. Declaration implementation coverage does not close these platform gates.
+
 ## Current release checks
 
 ### Apple simulator first-boot budget (2026-10-24)

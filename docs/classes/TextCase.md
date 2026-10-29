@@ -1,9 +1,9 @@
 # TextCase
 
-Last updated: 2026-09-27
+Last updated: 2026-10-29
 
 - Declaration: `internal static partial class TextCase`
-- Sources: [TextCase.cs](../../src/Servers/Text/TextCase.cs), [TextCase.Data.cs](../../src/Servers/Text/TextCase.Data.cs)
+- Sources: [TextCase.cs](../../src/Servers/Text/TextCase.cs), [TextCase.Data.cs](../../src/Servers/Text/TextCase.Data.cs), [TextCase.Simple.cs](../../src/Servers/Text/TextCase.Simple.cs)
 - Component: [canvas rendering](../components/canvas-rendering.md)
 - Visibility: internal; used by text controls when uppercase text is invalidated.
 
@@ -33,3 +33,5 @@ python3 tools/update-text-case.py --check
 [TextCaseTests](../../tests/Electron2D.Tests/TextCaseTests.cs) contains 348 ICU 78.3 golden profiles covering full expansions, supplementary characters, Unicode 17 additions, locale aliases, combining contexts, Greek/Armenian tailoring and embedded NULs. It checks malformed UTF-16 preservation, string identity, guards and sixty-four measured unchanged calls after sixty-four warmup calls with zero managed bytes in each tested locale.
 
 An update-time differential passed all 1,112,064 valid Unicode scalars in six locale profiles: 6,672,384 comparisons. Greek context combinations and 50,000 seeded multilingual strings added 332,080 comparisons, for 7,004,464 exact matches against ICU 78.3 on Linux x64. For this managed uppercase transform ICU is an independent verification oracle only. TextServer.StringToUpper reuses this helper; its separate lowercase/titlecase/normalization utilities execute through the private native ICU owner. These checks establish the transform, not text-control rendering, native allocator behavior or owner acceptance. See [ADR 0046](../decisions/rendering.md#adr-0046).
+
+The simple Fallback profile also uses 1,488 pinned scalar lowercase mappings and generated uppercase/lowercase/punctuation/control-format categories. SimpleCase does not expand or tailor by locale; SimpleTitle separates camel/acronym/digit compound words and whitespace/underscore/hyphen separators before scalar casing. ScalarBreaks reports every scalar end independently of combining clusters. These helpers preserve embedded NUL and unpaired UTF-16 units, and do not consult host Unicode data. Their public consumers are covered separately by the concrete text-profile checks.

@@ -20,6 +20,8 @@ Display width/size use ceiled trimmed metrics; ascent/descent are fractional. Fu
 
 Shared layout and drawing use the selected text implementation, including opaque fonts, producer editing/run/object metadata and contextual copies. Disposal releases private provider buffers. See [external implementations](../components/text-server.md#external-implementations).
 
+The selected [concrete text profile](../components/text-server.md#concrete-implementation-profiles) controls ordinary layout. Primary replacement invalidates actual font generations and retained geometry. Explicit Dummy selection produces zero text geometry; operational owned buffers retain their creator.
+
 ## Example
 
 ```csharp

@@ -2,7 +2,7 @@
 
 [ExtensionManager](ExtensionManager.md) has one permanent reserved service identity in the built-in singleton registry. Its public module operations stay static; borrowed service disposal/unregistration reject.
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 [Frame timing monitors](../components/frame-monitors.md) expose actual completed-window process, fixed-step and navigation wall time through Performance. Start resets their current-run samples; Stop retains completed observations. Owned Window presentation contributes to process timing; manual AdvanceFrame adds no implicit rendering.
 
@@ -34,6 +34,8 @@ Engine.Run(Window) owns the elapsed-time source, native event pump, waiting/fram
 Runtime lifecycle and frame execution have owner-thread affinity. Configuration properties, metric reads, and
 named-singleton operations are safe from other threads. Fixed-step and time-scale properties use the process-wide
 [`ProjectSettings`](ProjectSettings.md) registry, including active feature overrides. A frame uses one configuration snapshot.
+
+Project startup resolves ProjectSettings.TextDriver before publishing the new MainLoop, loading the project theme or invoking initialization. Missing names reject startup and restore the engine lifecycle to idle. Empty preserves application selection. See [concrete text profiles](../components/text-server.md#concrete-implementation-profiles).
 
 ## Examples
 

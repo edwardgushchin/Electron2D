@@ -12,6 +12,8 @@ Single-line and multiline layout caches default to 64 and 16 entries. Changed fo
 
 Font metadata, measurement and drawing also use the selected external text implementation or the creator retained by an opaque projection. Captured native/opaque sources survive their active read; provider callbacks run without resource monitors. See [external implementations](../components/text-server.md#external-implementations).
 
+The selected [concrete text profile](../components/text-server.md#concrete-implementation-profiles) controls ordinary layout. Primary replacement invalidates actual font generations and retained geometry. Explicit Dummy selection produces zero text geometry; operational owned buffers retain their creator.
+
 ## Example
 
 ```csharp
@@ -485,3 +487,5 @@ Name strings are captured lazily on the serialized text owner. Each metadata cap
 `public override RID GetRID()` returns the borrowed primary source cache, or an empty RID without a primary source. `public RID[] GetRIDs()` copies primary and explicit fallbacks in traversal order, preserving repeated entries. Automatic fallback sources are reported by shaped glyphs/runs after realization. TextServer reads, edits and draws these actual caches; its FreeRID cannot release resource ownership. Cache removal, full reset, file import and disposal retire identities; FontFile data/configuration replacement preserves them. See [resource glyph metadata](../components/text-server.md#resource-sources-glyph-snapshots-and-visual-runs) for projections, linked variants and lifetime boundaries.
 
 [Project line-breaking strictness](../components/line-breaking-strictness.md) now selects native locale line rules for all shared text layouts and retained buffers. Its first nonempty-analysis snapshot, explicit language options and restart boundary are documented with executable consumers.
+
+Concrete font implementation ownership is classified once during construction. Prepared group/native/callback reads reuse that immutable result, avoiding repeated runtime assembly metadata allocation in NativeAOT while retaining external subclass dispatch.

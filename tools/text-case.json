@@ -46,11 +46,12 @@
     }
   ],
   "outputs": {
-    "src/Servers/Text/TextCase.Data.cs": "112fe9c80df170ebd31e191cb00d0b6acd62a0c3f8a9216e7d57526e41987992",
+    "src/Servers/Text/TextCase.Data.cs": "a47238ba470805acc0ebb3e201a412854297eeced15731a9caf74d7ca13772fd",
     "licence/TextCase-LICENSE.txt": "cbbbe1c00abe815d52b0dc28b0c620fda6a2a61ffac8f00a6699e310eda1fa76"
   },
   "counts": {
     "simpleUppercaseMappings": 1505,
+    "simpleLowercaseMappings": 1488,
     "fullUppercaseExpansions": 102,
     "greekEntries": 400
   },

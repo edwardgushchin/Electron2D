@@ -50,7 +50,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 
@@ -611,3 +611,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 
 
 [External text implementations](../components/text-server.md#external-implementations) extend the existing text/canvas path with typed provider callbacks, opaque sources, coordinated layouts and actual native or callback-authored glyph drawing. Their component records consumer ownership, replacement, source retirement and verification limits.
+
+[Concrete text profiles](../components/text-server.md#concrete-implementation-profiles) expose independent Advanced/Fallback/Dummy implementations and project startup selection. Fallback executes real scalar layout; Dummy is an explicit portable disabled-text policy. Bounded receipts remain separate from the full ADR 0021 host/package matrix.

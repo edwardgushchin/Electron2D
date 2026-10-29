@@ -6,8 +6,18 @@ public abstract partial class TextServer
     private readonly object _implementationGate = new();
     private int _activeImplementationCalls, _activeConsumers, _unregisterThread;
     internal static bool IsNativeBackendCall => _nativeBackendDepth != 0;
+    internal bool UsesCallbackConsumers => this is TextServerExtension and not (TextServerAdvanced or TextServerFallback);
     private ImplementationCall EnterImplementation(RID source = default, bool? font = null, bool mutation = false)
     {
+        if (this is TextServerDummy)
+        {
+            lock (_implementationGate)
+            {
+                ObjectDisposedException.ThrowIf(IsDisposed, this);
+                if (_unregisterThread != 0 && _unregisterThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("The text implementation is unregistering.");
+                _activeImplementationCalls++; return new(this, null, default, null, null, false, false);
+            }
+        }
         TextLine? line = null; TextParagraph? paragraph = null; var nativeAlias = false; var nativeBuffer = false;
         if (font is not null && TextBuffers.TryResolve(source, out var buffer))
         {

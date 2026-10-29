@@ -1,6 +1,6 @@
 # FontData
 
-Last updated: 2026-10-20
+Last updated: 2026-10-29
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
@@ -53,3 +53,5 @@ Automatic fallback realization keys its cache by the effective four spacing valu
 Native data reads and managed source disposal have separate endpoints. Retirement marks lookups unavailable immediately, while per-thread deferred owner lists drain managed files after the outermost font read exits. Native cleanup and source-file gates defer delivery; reentrant reads keep independent contexts. Resource projections and owned resource-linked entries retain their original owner until disposal, then release those references. Weak RID lookup alone never retains a resource.
 
 Automatic native glyphs register matching active raster levels. Last-owner release removes that automatic factor’s cache records and generated pages; explicitly requested factors remain source-owned until cache retirement, and retained canvas commands keep immutable pixels until renderer eviction. MSDF and authored bitmap data retain their existing policies.
+
+The concrete Fallback text profile selects a separate nominal scalar glyph path in the existing direct layout and font worker. Retained glyph scratch storage uses real FreeType/bitmap advances, native pair kerning and existing authored-cache overrides; it performs no contextual substitutions. Advanced shaping retains the existing path. See [concrete text profiles](../components/text-server.md#concrete-implementation-profiles).
