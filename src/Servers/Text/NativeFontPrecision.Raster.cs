@@ -14,6 +14,7 @@ internal sealed unsafe partial class NativeFontPrecision
         if (glyph >= GlyphCount) throw new ArgumentOutOfRangeException(nameof(glyph));
         if ((uint)phase26Dot6 >= 64) throw new ArgumentOutOfRangeException(nameof(phase26Dot6));
         if ((uint)outlineRadius26Dot6 > 16384 * 64) throw new ArgumentOutOfRangeException(nameof(outlineRadius26Dot6));
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
         var mode = antialiasing switch
         {
             FontAntialiasing.None => 2,
@@ -40,6 +41,7 @@ internal sealed unsafe partial class NativeFontPrecision
             if (outlineRadius26Dot6 == 0)
             {
                 CheckFT(FTRenderGlyph((nint)slot, mode));
+                NativeAllocation.ThrowIfFailedSince(allocationEpoch);
                 return CopyBitmap(slot->Bitmap, slot->BitmapLeft, slot->BitmapTop, reverse);
             }
             CheckFT(FTGetGlyph((nint)slot, out detached));
@@ -48,8 +50,10 @@ internal sealed unsafe partial class NativeFontPrecision
             CheckFT(FTGlyphStroke(ref detached, stroker, 1));
             CheckFT(FTGlyphToBitmap(ref detached, mode, null, 1));
             var bitmap = (BitmapGlyphRecord*)detached;
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
             return CopyBitmap(bitmap->Bitmap, bitmap->Left, bitmap->Top, reverse);
         }
+        catch { NativeAllocation.ThrowIfFailedSince(allocationEpoch); throw; }
         finally
         {
             if (detached != 0) FTDoneGlyph(detached);

@@ -16,6 +16,9 @@ internal sealed unsafe partial class NativeFontPrecision
             if (_memoryReady) return;
             try
             {
+                var shaping = HarfBuzzVersion(); var hinting = HarfBuzzHintingVersion();
+                if (shaping == null || hinting == null || !MemoryMarshal.CreateReadOnlySpanFromNullTerminated(shaping).SequenceEqual(MemoryMarshal.CreateReadOnlySpanFromNullTerminated(hinting)))
+                    throw new PlatformNotSupportedException("Font shaping and automatic hinting require the same native library version.");
                 if (HarfBuzzMemory(&AllocateHarfBuzzMemory, &ReallocateHarfBuzzMemory, &FreeHarfBuzzMemory) != 0)
                     throw new InvalidOperationException("The native font allocator has already been assigned to another owner.");
             }
@@ -24,6 +27,10 @@ internal sealed unsafe partial class NativeFontPrecision
             _memoryReady = true;
         }
     }
+    [LibraryImport(NativeLibraries.HarfBuzzLibrary, EntryPoint = "hb_version_string"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial byte* HarfBuzzVersion();
+    [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "e2d_ft_hb_version"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial byte* HarfBuzzHintingVersion();
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static void* AllocateHarfBuzzMemory(nuint size)
     {

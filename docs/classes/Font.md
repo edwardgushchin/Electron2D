@@ -12,6 +12,8 @@ Single-line and multiline layout caches default to 64 and 16 entries. Changed fo
 
 Font metadata, measurement and drawing also use the selected external text implementation or the creator retained by an opaque projection. Captured native/opaque sources survive their active read; provider callbacks run without resource monitors. See [external implementations](../components/text-server.md#external-implementations).
 
+Runtime type ownership is captured once when a Font is constructed, preserving external subclass callbacks without repeating allocation-producing assembly reflection during NativeAOT reads. Native allocation refusal raises OutOfMemoryException before publishing the new result. The next uncached query reopens mutable native state from the retained source/configuration; prepared valid results remain usable. See [shaping ownership and recovery](../coverage/performance-producers.md#desktop-shaping-allocation-domain-2026-10-29).
+
 ## Example
 
 ```csharp

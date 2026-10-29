@@ -944,3 +944,63 @@ SDK SDL, instrument direct libc allocations or independently loaded OS/graphics/
 audio providers, or complete managed/native current/peak composition. The
 ordinary package pipeline still restores SDL; foreign target and delivery gates
 remain open. Physics declaration coverage remains **1365/1369 (99.71%)**.
+
+### Desktop shaping allocation domain (2026-10-29)
+
+All shaping and auto-hinting producers now use HarfBuzz 15.0.0 at
+`35f656a1a2bab548ea7f54a6dd3fba2b09680d14`, declared once in
+[the shared source pin](../../tools/native/harfbuzz.cmake). Desktop native-assets
+package dependencies are removed; Linux/macOS source targets and the Windows
+producer build the desktop payload, while Android/Apple/Web share the font
+producer's same pin. Runtime preparation compares actual version strings and
+rejects a mixed or old bundle before creating a font owner. Platform recipe and
+item checks do not establish foreign target execution or release qualification.
+
+The desktop original allocator calls the common pure-C ledger before managed
+initialization and remains valid at native exit. Its `e2d_shaping_memory` export
+returns the actual ledger callbacks. The auto-hinter retains its own immutable
+process-lifetime callback registration and HB_NO_ATEXIT rule. Different allocator
+lifetime adapters do not select different upstream versions.
+
+A native-thread refusal epoch catches successful native returns containing
+fallback metrics after required storage was refused. Font creation, size,
+metadata/configuration, shaping and raster boundaries check it before publishing
+new state. Failed source replacement preserves bytes/configuration and emits no
+Changed. A refused operation can mutate native face caches, so FontData retires
+that mutable face and recreates it from retained source/configuration on a later
+miss; previously completed results and recorded images keep their own lifetimes.
+A checked generated source copy also prevents a refused lazy construction from
+permanently caching an empty process singleton. Upstream inputs stay unchanged;
+a changed preimage fails before output. The snapshot remains 96 bytes/ABI 1;
+the common core now requires 35 exports including the refusal epoch.
+
+Release and ASan/UBSan/leak checks each compare 48 exact glyph vectors against an unmodified 15.0.0 build
+across three fonts and sixteen language/feature/variation roles. All 6,440 cases,
+including 6,392 calibrated native refusals, pass exact healthy retry and native
+exit drain. The FreeType rebuild passes 1,172 ordinary and 1,180 hinted refusal
+positions, two same-face bytecode retries, WOFF2 decoding/corruption, 854 automatic
+hinter refusal positions and 512 concurrent face lifetimes. The common C check
+also verifies native-thread isolation of the refusal epoch.
+
+The final public CLR and strict full-trim NativeAOT cohorts pass eighteen
+ordinary/reference/fault runs plus six old-shaper, old-hinter and old-core
+rejection controls. Each runtime exercises 57 refused replacements and 1,289
+refused actual layouts across the three fonts. Required refusal preserves public state and exact same-font
+retry. Actual callback, library, runtime and unchanged cohort identities are
+checked. Prepared 20,000-call public cache/ledger reads allocate 0/0 owner/all-thread
+managed bytes. Repeated type/assembly reflection had allocated 272 bytes per read
+under NativeAOT; Font now captures immutable type ownership once for individual
+and grouped reads while retaining external-subclass routing.
+
+The connected CLR font family, metadata, variation and provider-retention checks
+pass. The independent raster oracles pass 60 Mono/Gray/LCD and 216 MSDF image/bound
+cases. Actual shaping passes 128 warmed calls at 0/0 managed bytes; mutable
+provider retirement also avoids allocating on empty or unrelated registry scans.
+These remain bounded font checks rather than frame-rate or physical throughput.
+
+Current native identities, commands, source/preimage checks and receipts are
+under `bin/shaping-unified/2026-10-29/`. The superseded 14.2.1/14.5.1 candidate
+receipts under `bin/shaping-allocation-accounting/2026-10-29/` do not qualify this
+version. Final package qualification, foreign native execution, C++/OS provider
+closures and coherent managed/native current and peak remain open. This adds no
+public declaration and does not promote GetMonitor.

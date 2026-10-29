@@ -6,7 +6,9 @@ namespace Electron2D;
 /// <remarks>Text positions specify the baseline. Fonts borrow fallback resources and forward their changes and
 /// disposal. Layout caches and resource state are synchronized; canvas drawing still requires its owning thread
 /// and recording scope. Active reads retain native or external source snapshots without holding resource monitors across provider callbacks; layouts retry changing state at most
-/// sixty-four times. Already recorded glyph pixels survive data replacement independently of native faces.</remarks>
+/// sixty-four times. Already recorded glyph pixels survive data replacement independently of native faces.
+/// Refused native font allocations raise OutOfMemoryException before publishing a new result; a later cache
+/// miss recreates the native face from retained source and configuration.</remarks>
 public abstract partial class Font : Resource
 {
     internal static readonly object FallbackMutationGate = new();
@@ -28,6 +30,8 @@ public abstract partial class Font : Resource
     private Font?[] _fallbacks = [];
     private readonly Action<Resource> _fallbackChanged;
     private readonly Action<ElectronObject> _fallbackDisposed;
+    // Runtime type ownership is immutable; repeated assembly reflection allocates under NativeAOT.
+    private readonly bool _engineType;
     private readonly List<FontData> _sources = [];
     private readonly List<Font> _dependencies = [];
     private readonly List<long> _dependencyGenerations = [];
@@ -43,7 +47,7 @@ public abstract partial class Font : Resource
         nameof(Fallbacks), font => font.Fallbacks, (font, value) => font.Fallbacks = value, _ => [], stored: true);
 
     /// <summary>Initializes empty fallback lists and caches for sixty-four lines and sixteen paragraphs.</summary>
-    protected Font() { _fallbackChanged = FallbackChanged; _fallbackDisposed = FallbackDisposed; RegisterLiveFont(); }
+    protected Font() { _engineType = GetType().Assembly == typeof(Font).Assembly; _fallbackChanged = FallbackChanged; _fallbackDisposed = FallbackDisposed; RegisterLiveFont(); }
 
     /// <summary>Gets or sets the ordered borrowed fallback fonts, retaining null slots and repeated identities.</summary>
     /// <value>An independent array snapshot; initially empty. Every successful assignment emits Changed.</value>
@@ -557,7 +561,7 @@ public abstract partial class Font : Resource
         {
             var opaqueProvider = PrepareCallbackGraph();
             provider = TextServerManager.BeginConsumerRead(opaqueProvider);
-            if (opaqueProvider is null && provider.Provider is not TextServerExtension && _callbackGroupDepth == 0 && GetType().Assembly == typeof(Font).Assembly) break;
+            if (opaqueProvider is null && provider.Provider is not TextServerExtension && _callbackGroupDepth == 0 && _engineType) break;
             try { return BeginCallbackRead(provider); }
             catch (SourceChangedDuringRead) { if (attempt + 1 >= MaximumReadAttempts) throw UnsettledRead(); }
         }

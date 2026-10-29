@@ -25,6 +25,7 @@ def build(rid, sdl, artifacts):
                 "-DELECTRON2D_SDL_VERSION=" + package.configuration()["sdlVersion"],
                 "-DSDL3_LIBRARIES=" + str(output / "sdl/SDL3.lib")]),
             ("tools/enet-native", "Electron2DENet", "Electron2DENet.dll", []),
+            ("tools/shaping-native", "harfbuzz", "libHarfBuzzSharp.dll", ["-DELECTRON2D_MEMORY_LIBRARY=" + str(output / "Electron2DENet/Electron2DENet.lib")]),
             ("tools/ktx-native", "Electron2DKTX", "Electron2DKTX.dll", []),
             ("tools/ogv-native", "Electron2DOGV", "Electron2DOGV.dll", []),
             ("tools/webp-native", "Electron2DWebP", "Electron2DWebP.dll", []),

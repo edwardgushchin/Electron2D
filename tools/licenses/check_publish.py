@@ -15,7 +15,6 @@ PACKAGES = {
     "SDL3-CS.Linux/3.4.18",
     "SDL3-CS.Linux.Image/3.4.6.12",
     "SDL3-CS.Linux.Shadercross/3.0.0.13",
-    "HarfBuzzSharp.NativeAssets.Linux/14.2.1.301",
 }
 NATIVE_GROUPS = {
     "dotnet": ("createdump", "libSystem.*.so", "libclrgc.so", "libclrjit.so",
@@ -56,6 +55,7 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     version = native_package_version or ET.parse(ROOT / "tools/native-package.props").findtext(".//Electron2DVersion")
     assert private_packages == {"Electron2D.Linux/" + version}, f"Wrong selected native package: {private_packages}"
     assert PACKAGES <= packages, f"Unreviewed native package versions: {PACKAGES - packages}"
+    assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Unexpected older shaping package"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
     assert len(elf) == 74, f"Expected 74 audited ELF files, found {len(elf)}"
@@ -72,7 +72,7 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     source = ROOT / "licence"
     expected = {p.name for p in source.iterdir() if p.is_file()} - {"ReferenceData-LICENSE.txt"}
     delivered = publish / "licence"
-    assert len(expected) == 101, f"Expected 101 source, license and notice files, found {len(expected)}"
+    assert len(expected) == 100, f"Expected 100 source, license and notice files, found {len(expected)}"
     receipt = json.loads((delivered / "vkd3d-SOURCE.json").read_text())
     assert receipt["source"]["componentSourceRef"] == "e55cf5e31ced6f3d1be5cc6d0c50e99384f9f4ba", "Unreviewed Vkd3d producer"
     assert hashlib.sha256((delivered / "vkd3d-2.0.tar.xz").read_bytes()).hexdigest() == receipt["source"]["sha256"] == "9ad29bb236808186a47ec66e853b21e6fca59b9dc62a9474b05d5e3eda2710ef", "Vkd3d corresponding source differs"

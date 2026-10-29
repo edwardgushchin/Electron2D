@@ -1,12 +1,14 @@
 # FontData
 
-Last updated: 2026-10-20
+Last updated: 2026-10-29
 
 **Visibility:** internal · **Source:** [FontData.cs](../../src/Servers/Text/FontData.cs) · **Component:** [Text](../components/text.md)
 
 ## Responsibilities and invariants
 
 Owns immutable encoded bytes, one native precision face, metadata, prepared metric/index/advance caches and CPU glyph textures. Calls are synchronized and dispatched through FontThread. Raster keys include size, outline, effective oversampling, hinting and fractional phase. Source replacement retires the complete old data object. Read leases keep its native face alive through in-flight shaping or rasterization; the last reader explicitly frees the face, encoded bytes and caches. Retirement clears each glyph image’s renderer-residency request without invalidating immutable pixels retained by recorded commands. An unused frame then releases the native texture payload. The finalizer can retire unreferenced native state independently of renderer texture keys.
+
+A same-native-thread allocation refusal retires only the mutable precision face. Immutable source/configuration and previously completed managed caches remain available. A later native cache miss recreates and configures the face on its existing text owner; name queries also reopen a retired face. Native failure is surfaced as OutOfMemoryException before the operation result is published. Complete source retirement retains its separate reader and texture lifetime rules.
 
 ## Integration and verification
 

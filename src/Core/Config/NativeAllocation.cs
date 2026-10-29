@@ -29,6 +29,18 @@ internal static unsafe partial class NativeAllocation
         Prepare(); ReadState(out var state);
         return ((long)state.NativeCurrent, (long)state.NativePeak);
     }
+    // A native provider can return a fallback value after refusing its required storage.
+    internal static ulong GetFailureEpoch()
+    {
+        Prepare();
+        try { return FailureEpoch(); }
+        catch (EntryPointNotFoundException error)
+        { throw new PlatformNotSupportedException("Native allocation error tracking requires the matching source-built native bundle.", error); }
+    }
+    internal static void ThrowIfFailedSince(ulong epoch)
+    {
+        if (GetFailureEpoch() != epoch) throw new OutOfMemoryException();
+    }
     internal static void* Alloc(nuint size) => Allocate(size, 0, 0);
     internal static void* AllocZeroed(nuint size) => Allocate(size, 0, 1);
     internal static void* AlignedAlloc(nuint size, nuint alignment)
@@ -63,4 +75,6 @@ internal static unsafe partial class NativeAllocation
     private static partial void ReleaseNative(void* value);
     [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_snapshot"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void ReadState(out State state);
+    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_failure_epoch"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial ulong FailureEpoch();
 }

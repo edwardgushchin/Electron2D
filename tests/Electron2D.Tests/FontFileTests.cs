@@ -214,7 +214,8 @@ internal static class FontFileTests
         for (var i = 0; i < 64; i++) Cycle(i);
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) Cycle(i);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0, "Warmed scalar setting changes and font invalidation allocate no managed bytes.");
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        Check(allocated == 0, $"Warmed scalar setting changes and font invalidation allocated {allocated} managed bytes.");
     }
     private static void VerifySharedDataPolicyLock(byte[] bytes)
     {

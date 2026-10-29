@@ -15,6 +15,7 @@ internal sealed unsafe partial class NativeFontPrecision
     {
         EnsureOwner();
         if (_namesRead) return;
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
         var result = new Dictionary<string, Dictionary<string, string>>(StringComparer.Ordinal);
         var textBytes = 0;
         var names = HBOTNameListNames(_hbFace, out var count);
@@ -28,6 +29,7 @@ internal sealed unsafe partial class NativeFontPrecision
             if (!result.TryGetValue(language, out var values)) result.Add(language, values = new(StringComparer.Ordinal));
             values[NameKey(entry.NameID)] = text;
         }
+        NativeAllocation.ThrowIfFailedSince(allocationEpoch);
         NameStrings = result; _namesRead = true;
     }
 

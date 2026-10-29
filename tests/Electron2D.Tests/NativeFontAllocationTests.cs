@@ -11,7 +11,10 @@ internal static unsafe partial class NativeFontAllocationTests
         using var source = typeof(Font).Assembly.GetManifestResourceStream("Electron2D.Fonts.OpenSans_SemiBold.woff2")!;
         var data = new byte[checked((int)source.Length)]; source.ReadExactly(data);
         using (var warm = new NativeFontPrecision(data))
+        {
             Check(warm.Rasterize(warm.GetGlyphIndex('A'), FontHinting.Normal, forceAutohinter: true).Width > 0, "Prepare process-lifetime automatic-hinting caches.");
+            _ = warm.Shape(['A', 'f', 'f', 'i'], NativeTextDirection.LTR);
+        }
         var baseline = NativeAllocation.Snapshot();
         using (var font = new NativeFontPrecision(data))
         {
@@ -29,7 +32,7 @@ internal static unsafe partial class NativeFontAllocationTests
             for (var i = 0; i < 128; i++) Check(font.Shape(text, NativeTextDirection.LTR).Length > 0, "Warmed native shaping remains executable.");
             Check(GC.GetAllocatedBytesForCurrentThread() == own && GC.GetTotalAllocatedBytes(true) == all, "128 warmed actual shaping calls allocate zero managed bytes.");
         }
-        Check(NativeAllocation.Snapshot().Current == baseline.Current, "Production face/library/allocator teardown drains all tracked storage.");
+        Check(NativeAllocation.Snapshot().Current == baseline.Current, $"Production face/library/allocator teardown retains {NativeAllocation.Snapshot().Current - baseline.Current} bytes beyond prepared process caches.");
         try { using var invalid = new NativeFontPrecision([0, 1, 2, 3]); throw new Exception("Invalid font unexpectedly opened."); }
         catch (InvalidOperationException) { }
         Check(NativeAllocation.Snapshot().Current == baseline.Current, "Failed production face construction retires the initialized modules and allocator.");

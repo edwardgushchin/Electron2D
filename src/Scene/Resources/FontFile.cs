@@ -94,6 +94,7 @@ public partial class FontFile : Font
     /// Active readers retain the old native face until they finish; recorded glyph pixels remain independent canvas snapshots.</remarks>
     /// <exception cref="ArgumentNullException">The supplied array is null.</exception>
     /// <exception cref="InvalidDataException">The source is malformed, unsupported or exceeds the size limit.</exception>
+    /// <exception cref="OutOfMemoryException">Native font preparation refused required storage; the previous font remains selected.</exception>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public byte[] Data
     {
@@ -222,6 +223,7 @@ public partial class FontFile : Font
     /// remainder preservation to true, modulation to false and oversampling to zero; feature overrides and fallbacks remain.
     /// Read or decode failures preserve the previous font. Success emits Changed after the replacement is committed.</remarks>
     /// <exception cref="InvalidDataException">The file is empty, malformed, unsupported or exceeds the size limit.</exception>
+    /// <exception cref="OutOfMemoryException">Native font preparation refused required storage; the previous font remains selected.</exception>
     /// <exception cref="IOException">The source cannot be read or changes size while being read.</exception>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public void LoadDynamicFont(string path)

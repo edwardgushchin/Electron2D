@@ -19,11 +19,11 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
              "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
              "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
-LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so", "libElectron2DFreeType.so"),
+LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so"),
              "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DWebRTC.dylib", "libElectron2DMesh.dylib", "libElectron2DRender.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
-                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib"),
+                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib"),
              "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DWebRTC.dll", "Electron2DMesh.dll", "Electron2DRender.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
-                         "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll")}
+                         "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")}
 LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so",
                         "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
 ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DMesh.a", "libElectron2DRender.a", "libElectron2DWebP.a", "libElectron2DOGV.a", "libElectron2DKTX.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
@@ -45,7 +45,7 @@ def required_exports(name):
         return WEBP_EXPORTS
     if "FreeType" in name:
         return {"FT_Init_FreeType", "FT_New_Library", "FT_Add_Default_Modules", "FT_Set_Default_Properties",
-                "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph", "e2d_ft_hb_memory"}
+                "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph", "e2d_ft_hb_memory", "e2d_ft_hb_version"}
     if "Crypto" in name or "crypto" in name:
         return {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"}
     if "SSL" in name or "ssl" in name:
@@ -62,9 +62,10 @@ def required_exports(name):
         return {"e2d_mesh_scale", "e2d_mesh_simplify", "e2d_mesh_memory"}
     if "ENet" in name:
         return {"e2d_enet_" + item for item in ("memory", "callbacks", "create", "destroy", "connect", "service", "flush",
-                                             "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")} | {"e2d_memory_" + name for name in ("abi", "allocate", "reallocate", "release", "snapshot", "lock", "unlock", "managed_locked", "snapshot_locked", "malloc", "calloc", "realloc", "free", "functions")}
+                                             "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")} | {"e2d_memory_" + name for name in ("abi", "allocate", "reallocate", "release", "snapshot", "lock", "unlock", "managed_locked", "snapshot_locked", "malloc", "calloc", "realloc", "free", "functions", "failure_epoch")}
     if "HarfBuzz" in name:
-        return {"hb_shape", "hb_buffer_create", "hb_font_create"}
+        exports = {"hb_shape", "hb_buffer_create", "hb_font_create", "hb_version_string"}
+        return exports | {"e2d_shaping_memory"} if "HarfBuzzSharp" in name else exports
     if name == "libSDL3.a":
         return {"SDL_Init", "SDL_OpenAudioDeviceStream", "SDL_PutAudioStreamData"}
     if name == "libSDL3_image.a":
@@ -162,7 +163,7 @@ def source_hash():
     files = set()
     for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/PCRE2", "src/Vendor/FAudio", "src/Vendor/ENet",
                       "src/Vendor/FastLZ", "src/Vendor/libdatachannel", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
-                      "tools/audio-native", "tools/enet-native", "tools/webrtc-native", "tools/mesh-native", "tools/render-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/native"):
+                      "tools/audio-native", "tools/enet-native", "tools/webrtc-native", "tools/mesh-native", "tools/render-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/shaping-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()
                      and not {"bin", "obj", "__pycache__"} & set(p.relative_to(ROOT).parts))
     files.update((ROOT / "tools").glob("*-native.targets"))

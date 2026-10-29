@@ -48,6 +48,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         ArgumentNullException.ThrowIfNull(immutableData);
         ArgumentOutOfRangeException.ThrowIfNegative(faceIndex);
         if (immutableData.Length == 0) throw new ArgumentException("Font data is empty.", nameof(immutableData));
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
         try
         {
             PrepareHarfBuzzMemory();
@@ -94,8 +95,9 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             _buffer = HBBufferCreate();
             if (_buffer == 0 || HBBufferAllocationSuccessful(_buffer) == 0) throw new OutOfMemoryException();
             SetSize(16); ReadVariationMetadata(); ReadMetadata();
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
         }
-        catch { Release(); throw; }
+        catch { Release(); NativeAllocation.ThrowIfFailedSince(allocationEpoch); throw; }
     }
 
     internal void SetSize(float pixels)
@@ -105,15 +107,19 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
             throw new ArgumentOutOfRangeException(nameof(pixels));
         if (_size == pixels) return;
         if (_bitmap != null) { SetBitmapSize(pixels); return; }
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
         var size = checked((int)Math.Round(pixels * 64d));
         if (size == 0) throw new ArgumentOutOfRangeException(nameof(pixels));
-        CheckFT(FTSetCharSize(_face, new CLong(size), new CLong(size), 72, 72));
+        var error = FTSetCharSize(_face, new CLong(size), new CLong(size), 72, 72);
+        NativeAllocation.ThrowIfFailedSince(allocationEpoch);
+        CheckFT(error);
         var face = (FaceRecord*)_face;
         var metrics = ((SizeRecord*)face->Size)->Metrics;
         var xScale = checked((int)(((ulong)metrics.XScale.Value * face->UnitsPerEm + 32768) >> 16));
         var yScale = checked((int)(((ulong)metrics.YScale.Value * face->UnitsPerEm + 32768) >> 16));
         HBFontSetScale(_parentFont, xScale, yScale);
         HBFontSetScale(_font, xScale, yScale);
+        NativeAllocation.ThrowIfFailedSince(allocationEpoch);
         Ascent = metrics.Ascent.Value / 64f;
         Descent = -metrics.Descent.Value / 64f;
         LineHeight = metrics.Height.Value / 64f;
@@ -137,12 +143,15 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         if ((uint)count > (uint)(scalars.Length - start)) throw new ArgumentOutOfRangeException(nameof(count));
         ArgumentNullException.ThrowIfNull(language);
         if (direction < NativeTextDirection.LTR || direction > NativeTextDirection.BTT) throw new ArgumentOutOfRangeException(nameof(direction));
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
         foreach (var scalar in scalars)
             if (!Rune.IsValid(scalar)) throw new ArgumentException("Text contains an invalid Unicode scalar.", nameof(scalars));
         if (!string.Equals(_languageText, language, StringComparison.Ordinal))
         {
             if (language.Contains('\0')) throw new ArgumentException("Language must not contain NUL.", nameof(language));
-            _language = HBLanguageFromString(language, -1);
+            var resolvedLanguage = HBLanguageFromString(language, -1);
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
+            _language = resolvedLanguage;
             _languageText = language;
         }
         _callbacks->Error = 0;
@@ -154,6 +163,7 @@ internal sealed unsafe partial class NativeFontPrecision : IDisposable
         fixed (uint* text = scalars) HBBufferAddUTF32(_buffer, text, scalars.Length, (uint)start, count);
         HBBufferGuessProperties(_buffer);
         fixed (NativeFontFeature* values = features) HBShape(_font, _buffer, values, (uint)features.Length);
+        NativeAllocation.ThrowIfFailedSince(allocationEpoch);
         if (_callbacks->Error != 0) CheckFT(_callbacks->Error);
         if (HBBufferAllocationSuccessful(_buffer) == 0) throw new OutOfMemoryException();
         var infos = HBBufferGetGlyphInfos(_buffer, out var glyphCount);

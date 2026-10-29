@@ -20,6 +20,12 @@ typedef struct { void *allocation; size_t size, alignment; } Header;
 _Static_assert(sizeof(Header) <= 32, "Private allocation prefix overflow");
 _Static_assert(sizeof(E2DMemorySnapshot) == 96, "Memory snapshot ABI mismatch");
 static E2DMemorySnapshot totals;
+#if defined(_WIN32)
+static __declspec(thread) uint64_t failure_epoch;
+#else
+static _Thread_local uint64_t failure_epoch;
+#endif
+uint64_t e2d_memory_failure_epoch(void) { return failure_epoch; }
 uint32_t e2d_memory_abi(void) { return 1; }
 static uint64_t add(uint64_t a, uint64_t b) { if (a > UINT64_MAX - b) abort(); return a + b; }
 static void publish(void) {
@@ -55,7 +61,7 @@ static void commit(size_t previous, size_t size) {
     if (totals.nativeCurrent > totals.nativePeak) totals.nativePeak = totals.nativeCurrent;
     publish();
 }
-static void failed(int32_t *error) { if (error) *error = 2; ++totals.failures; }
+static void failed(int32_t *error) { if (error) *error = 2; ++totals.failures; ++failure_epoch; }
 void *e2d_memory_allocate(size_t size, size_t alignment, uint32_t zero, int32_t *error) {
     if (error) *error = 0;
     if ((alignment && (alignment & (alignment - 1))) || zero > 1) { if (error) *error = 1; return NULL; }

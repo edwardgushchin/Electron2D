@@ -24,7 +24,7 @@ public abstract partial class Font
                 if (owner is not null && !ReferenceEquals(owner, candidate)) throw new InvalidOperationException("A text operation cannot combine opaque fonts from different implementations.");
                 owner = candidate; callbacks = true;
             }
-            callbacks |= font.GetType().Assembly != typeof(Font).Assembly;
+            callbacks |= !font._engineType;
         }
     }
 }

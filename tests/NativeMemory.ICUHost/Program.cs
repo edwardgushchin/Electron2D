@@ -25,7 +25,18 @@ internal static unsafe class Program
         var library = NativeLibrary.Load(path);
         // The runtime retains the same process-owned library and its allocation records.
         _snapshot = (delegate* unmanaged[Cdecl]<Counts*, void>)NativeLibrary.GetExport(library, "e2d_memory_snapshot");
-        if (args.Length == 1 && args[0] == "regex-fault")
+        if (args.Length == 2 && args[0] == "shaping-mixed")
+        {
+            RejectFontBundle(args[1]);
+        }
+        else if (args.Length == 2 && args[0] == "shaping-old-core")
+        {
+            if (NativeLibrary.TryGetExport(library, "e2d_memory_failure_epoch", out _)) throw new InvalidOperationException("Expected an older core.");
+            RejectFontBundle(args[1]);
+        }
+        else if (args.Length == 2 && args[0] is "shaping" or "shaping-fault" or "shaping-oracle")
+            NativeShapingAllocationChecks.Run(Read, File.ReadAllBytes(args[1]), args[0] == "shaping-fault", args[0] == "shaping-oracle");
+        else if (args.Length == 1 && args[0] == "regex-fault")
         {
             _fail = (delegate* unmanaged[Cdecl]<uint, void>)NativeLibrary.GetExport(library, "e2d_test_fail_after");
             NativeRegExAllocationChecks.Faults(Read, Fail);
@@ -33,6 +44,16 @@ internal static unsafe class Program
         else if (args.Length == 2 && args[0] == "msdf") NativeMSDFAllocationChecks.Run(Read, File.ReadAllBytes(args[1]));
         else if (args.Length == 1 && args[0] == "regex") NativeRegExAllocationChecks.Run(Read, fresh: true);
         else if (args.Length == 0) NativeICUAllocationChecks.Run(Read, fresh: true);
-        else throw new ArgumentException("Expected no arguments, regex, regex-fault or msdf FONT.");
+        else throw new ArgumentException("Expected no arguments, regex, regex-fault, msdf FONT, shaping FONT, shaping-fault FONT, shaping-oracle FONT, shaping-mixed FONT or shaping-old-core FONT.");
+    }
+    private static void RejectFontBundle(string source)
+    {
+        using var font = new Electron2D.FontFile(); var changed = 0; font.Changed += _ => changed++;
+        try { font.Data = File.ReadAllBytes(source); throw new InvalidOperationException("A mismatched bundle accepted a font owner."); }
+        catch (PlatformNotSupportedException)
+        {
+            if (font.Data.Length != 0 || changed != 0 || Read().Current != 0) throw new InvalidOperationException("Rejected native preparation published font state.");
+            Console.WriteLine("Mismatched bundle rejected before font owner publication; bytes/events/native current unchanged.");
+        }
     }
 }

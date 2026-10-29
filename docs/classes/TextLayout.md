@@ -1,8 +1,10 @@
 # TextLayout
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
+
+External provider retirement snapshots only actual matching owners/dependencies, then releases them outside the registry lock. Empty or unrelated registry scans allocate no managed storage, including ordinary warmed font configuration changes.
 
 ## Responsibilities and invariants
 

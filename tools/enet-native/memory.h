@@ -38,6 +38,7 @@ E2D_MEMORY_API void *e2d_memory_calloc(size_t count, size_t size);
 E2D_MEMORY_API void *e2d_memory_realloc(void *value, size_t size);
 E2D_MEMORY_API void e2d_memory_free(void *value);
 E2D_MEMORY_API void e2d_memory_functions(E2DMemoryFunctions *result);
+E2D_MEMORY_API uint64_t e2d_memory_failure_epoch(void);
 #ifdef __cplusplus
 }
 #endif
