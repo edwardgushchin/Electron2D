@@ -57,7 +57,7 @@ The internal NativeAllocation ledger replaces direct NativeMemory and HGlobal pa
 
 Current consumers include [ENet hosts/packets/codecs and file blocks](#enet-owned-allocation-domain), FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
 
-This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. The StreamPeerGZIP domain now supplies its internal zlib storage as described below; BCL compression consumers retain their separate allocator boundary. It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
+This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. The StreamPeerGZIP domain now supplies its internal zlib storage as described below; BCL compression consumers use a separate runtime boundary, qualified only in the [owned source-runtime profile](#bcl-compression-source-runtime-domain-2026-10-29). It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
 
 Before the shared-core extraction, NativeAllocationTests passed on Linux x64 CLR and strict full-trim NativeAOT, including native allocation/reallocation failure, zero-size blocks, alignment 1–4096, four concurrent workers, an unobserved transient high-water mark and 1024 warmed alloc/resize/free/read cycles at strict 0/0 owner/all-thread managed bytes. Sixteen source-bound root profiles also pass for native allocation, file identity, networking, fonts/60 independent raster oracle cases, text, dialogs, audio, accessibility and CPU/GPU owner/separate physics. Receipts and exact payload/PDB/source hashes are under `bin/native-allocation-accounting/2026-10-28/`. The full ordinary suite also passed on that unchanged cohort in 951.475 seconds with one completion marker. Other platforms and total-memory producers remain open.
 
@@ -242,11 +242,13 @@ loss/replication, file-compression and byte-buffer regressions also pass.
 
 Receipts and source/cohort manifests are under
 `bin/enet-allocation-accounting/2026-10-28/`. This closes the ENet bridge allocation
-source only. Runtime compression PAL/BCL codecs, other uninstrumented native
-libraries, marshalled strings and coherent managed/native current/peak aggregation
-remain open. The complete MEMORY_STATIC/MEMORY_STATIC_MAX producers and Performance.GetMonitor
-remain open; physics remains 1364/1369 (99.63%), five Partial
-and 92 Excluded. Other platforms and final whole-goal acceptance remain separate.
+source only. Runtime compression PAL/BCL allocation now has a separate
+[qualified source-runtime profile](#bcl-compression-source-runtime-domain-2026-10-29);
+stock runtime delivery, other uninstrumented native libraries, marshalled strings
+and coherent managed/native current/peak aggregation remain open. The complete
+MEMORY_STATIC/MEMORY_STATIC_MAX producers and Performance.GetMonitor remain open;
+current declaration totals are recorded at the top of this audit. Other platforms
+and final whole-goal acceptance remain separate.
 
 ## Private ICU allocation domain (2026-10-29)
 
@@ -376,7 +378,49 @@ remains **1365/1369 (99.71%)**, four Partial and 92 Excluded.
 
 StreamPeerGZIP now uses the existing private bridge's opaque streaming gzip/zlib context instead of the runtime compression PAL. Context and all zlib allocation/free callbacks share NativeAllocation with ENet and file block codecs. Requested payload bytes update coherent current/high-water counters at their actual native boundaries, including lazy decoder storage and short-lived failed initialization. SafeHandle disposal/finalization drains owned storage; no managed heap or GPU bytes enter this producer. These four private exports are required by native packaging and publish checks on every profile; no new public declaration or native dependency is added.
 
-The preceding runtime reports only 40 tracked bytes for a prepared compressor in the retained RED control. The replacement must count the actual codec storage and return to baseline on retirement. The native production-bridge oracle verifies independent stock-zlib wire compatibility, output backpressure, borrowed-pointer retirement and injected failure at every allocation position for gzip/zlib compression/decompression, alongside existing ENet/file checks. Linux x64 CLR and strict full-trim NativeAOT pass normal and calibrated native-probe checks. The prepared public control now observes 350456 tracked bytes and complete drain, rather than the preceding 40-byte outer record. Both profiled hosts balance 131/131 compressor and 258/258 decoder failure-window allocations/frees, with no reallocations/failures; these are process-wide call observations, not requested-byte totals. The exact production oracle passes 60 injected allocation positions across all ENet/file/streaming modes, including eight positions in the four streaming gzip/zlib roles. HTTP/HTTPS, all five file codecs, ordinary native accounting, ENet accounting and desktop export preflight pass. Four CPU/no-device or NVIDIA GPU owner/separate scene profiles retain 512 measured complete physical frames at strict 0/0 managed bytes. An old-bundle negative control rejects the missing GZIP export. The NativeAOT maps contain the bridge and no CoreCLR. Commands, payload/source/PDB identities and receipts are retained under `bin/gzip-allocation-accounting/2026-10-28/`. This domain alone does not implement either public composed memory selector. BCL file/archive compression, other native libraries and exact coherent CLR/NativeAOT allocation/GC aggregation remain open.
+The preceding runtime reports only 40 tracked bytes for a prepared compressor in the retained RED control. The replacement must count the actual codec storage and return to baseline on retirement. The native production-bridge oracle verifies independent stock-zlib wire compatibility, output backpressure, borrowed-pointer retirement and injected failure at every allocation position for gzip/zlib compression/decompression, alongside existing ENet/file checks. Linux x64 CLR and strict full-trim NativeAOT pass normal and calibrated native-probe checks. The prepared public control now observes 350456 tracked bytes and complete drain, rather than the preceding 40-byte outer record. Both profiled hosts balance 131/131 compressor and 258/258 decoder failure-window allocations/frees, with no reallocations/failures; these are process-wide call observations, not requested-byte totals. The exact production oracle passes 60 injected allocation positions across all ENet/file/streaming modes, including eight positions in the four streaming gzip/zlib roles. HTTP/HTTPS, all five file codecs, ordinary native accounting, ENet accounting and desktop export preflight pass. Four CPU/no-device or NVIDIA GPU owner/separate scene profiles retain 512 measured complete physical frames at strict 0/0 managed bytes. An old-bundle negative control rejects the missing GZIP export. The NativeAOT maps contain the bridge and no CoreCLR. Commands, payload/source/PDB identities and receipts are retained under `bin/gzip-allocation-accounting/2026-10-28/`. This domain alone does not implement either public composed memory selector. BCL file/archive compression has a separate source-runtime profile below; stock runtime delivery, other native libraries and exact coherent CLR/NativeAOT allocation/GC aggregation remain open.
+
+## BCL compression source-runtime domain (2026-10-29)
+
+The [owned compression component](../../tools/runtime-native/compression/README.md)
+builds the pinned .NET v10.0.1 PAL and its static zlib-ng/Brotli source closure.
+The zlib outer record, internal callbacks and Brotli default/bootstrap/dictionary
+allocations publish requested payload ownership into the existing production
+native ledger. Explicit caller allocators retain ownership. Failed zlib
+initialization retires both the partial internal state and outer record; Brotli
+encoder OOM cleanup returns failure instead of exiting the process. There is no
+global allocator replacement or installed SDK mutation. The component preserves
+the twenty upstream exports and adds a private ABI witness; internal Brotli
+symbol binding prevents allocation/free mixing with another loaded library.
+
+Linux x64 native release and ASan/UBSan/leak profiles each pass **181 cases,
+151 allocation-failure positions**. They cover raw deflate/zlib/gzip, inflate
+reset, Brotli streaming and one-shot paths, quality 0/5/11, repeated and
+incompressible data, invalid initialization, explicit allocator ownership,
+complete native drain and healthy retry. Separate host zlib/Brotli codecs verify
+encoded bytes and provide independent decode fixtures. Preparation checks reject
+a bad archive, modified source, extra source and a source symlink.
+
+Self-contained CLR and strict full-trim NativeAOT consumers execute actual BCL
+streams, public ByteBuffer codecs and the public ZIP writer/reader. All four
+stream modes show positive native storage, complete explicit/finalizer drain
+and retained peaks: **350448 bytes** for the deflate/gzip/zlib roles and
+**9930959 bytes** for Brotli. Each fresh process verifies **20000** prepared
+snapshot reads at strict **0/0 owner/all-thread managed bytes**, one actual
+compression PAL and one common ledger mapping. NativeAOT maps contain no
+CoreCLR. The stock self-contained runtime is a retained RED control: its codec
+storage bypasses the ledger in all eight CLR/NativeAOT role controls. The existing
+ByteBuffer, file access/compression, ZIP, resource archive, resource pack and
+managed EXR regressions also pass against a self-contained test host using this
+PAL. Commands, source/binary/PDB identities and receipts are under
+`bin/compression-pal-allocation/2026-10-29/`.
+
+This is an opt-in isolated native runtime component, not the default runtime
+or a qualified shipping runtime selection. It does not instrument managed heap
+allocation/GC or compose the whole current/peak producer. Other native domains,
+runtime delivery, foreign-platform execution and the full public monitor remain
+open. Physics declaration coverage stays **1365/1369 (99.71%)**, four Partial
+and 92 Excluded.
 
 ## Allocation producers remain open
 

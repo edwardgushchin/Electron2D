@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TieredCompilation>false</TieredCompilation><TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors><ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
+  <Import Project="../../tools/native-consumer.props" />
+  <Target Name="UseOwnedCompressionPAL" AfterTargets="SetupOSSpecificProps" Condition="'$(E2dCompressionNative)' != ''">
+    <ItemGroup><DirectPInvoke Remove="System.IO.Compression.Native" /></ItemGroup>
+  </Target>
+  <Target Name="CopyOwnedCompressionPAL" AfterTargets="Publish" Condition="'$(E2dCompressionNative)' != ''">
+    <Copy SourceFiles="$(E2dCompressionNative)" DestinationFiles="$(PublishDir)libSystem.IO.Compression.Native.so" />
+  </Target>
+</Project>

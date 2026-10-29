@@ -2,6 +2,18 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For the owned runtime compression component, follow the
+[compression source profile](../tools/runtime-native/compression/README.md).
+Run its pinned-source corruption controls, complete native failure matrix and
+ASan/UBSan/leak matrix. Preserve explicit allocator ownership, invalid-init
+cleanup, independent wire bytes, quality 0/5/11 and every observed failed request.
+Run NativeMemory.CompressionHost on self-contained CLR and strict full-trim
+NativeAOT with the same production ledger; retain the stock-runtime RED control,
+one actual PAL/core mapping, finalizer/ZIP drain and zero prepared read bytes.
+Never install this profile over the SDK or infer composed monitor/runtime
+delivery acceptance from the component. See the
+[BCL allocation domain](coverage/performance-producers.md#bcl-compression-source-runtime-domain-2026-10-29).
+
 For MSDF allocation changes, run `python3 -O -B tools/coverage/test_prepare_msdf.py`
 and `python3 -B tools/coverage/check_msdf_sources.py`. Build
 Electron2DMSDFMemoryCheck and Electron2DMSDFOwnershipCheck; run
