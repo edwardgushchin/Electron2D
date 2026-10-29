@@ -93,4 +93,18 @@
     <Copy SourceFiles="$(Electron2DMeshNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)" />
     <Copy SourceFiles="$(Electron2DMeshNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <PropertyGroup>
+    <_Electron2DConsumerSDLName>libSDL3.so.0</_Electron2DConsumerSDLName>
+    <_Electron2DConsumerSDLName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libSDL3.0.dylib</_Electron2DConsumerSDLName>
+    <_Electron2DConsumerSDLPath Condition="'$(Electron2DSDLNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DSDLNativeLibrary)'))</_Electron2DConsumerSDLPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerSDLOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DSDLNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerSDLName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerSDLName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerSDLPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerSDLOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DSDLNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <Copy SourceFiles="$(Electron2DSDLNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerSDLName)" />
+    <Copy SourceFiles="$(Electron2DSDLNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerSDLName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

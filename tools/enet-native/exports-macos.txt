@@ -27,3 +27,8 @@ _e2d_memory_lock
 _e2d_memory_unlock
 _e2d_memory_managed_locked
 _e2d_memory_snapshot_locked
+_e2d_memory_malloc
+_e2d_memory_calloc
+_e2d_memory_realloc
+_e2d_memory_free
+_e2d_memory_functions

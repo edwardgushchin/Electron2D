@@ -900,3 +900,47 @@ overhead is accepted for production by these correctness results. Other platform
 GPU physics, networking and real-window FPS are not qualified here. GetMonitor
 remains Partial; physics declarations remain **1365/1369 (99.71%)**, four Partial
 and 92 Excluded.
+
+
+## SDL original allocation source domain (2026-10-29)
+
+The [owned source profile](../../tools/sdl-native/README.md) links SDL 3.4.18's
+original malloc/calloc/realloc/free functions to the existing pure-C ledger.
+It therefore captures SDL_malloc storage from first use without changing
+owners while live pointers exist. Default callbacks and late frees never enter
+CLR; SDL and the retained common library share one native dependency identity.
+SDL's public zero-size normalization is preserved; calloc overflow fails before
+multiplication and failed native resize preserves its preceding block.
+
+Checked generated translation units leave the pinned input tree unchanged.
+Failure injection found and repaired two owning-source defects in that profile:
+both populated-environment insertion branches now retire a rejected string;
+dynamic IO reserves its pointer metadata before buffer allocation and publishes
+a successful resize under the existing property lock without another allocation.
+Failed growth retains contents and close ownership. Explicit pointer clearing
+still transfers the buffer to the caller. Growth rejects arithmetic overflow.
+
+Release and ASan/UBSan/leak checks each cover **257 fresh-process cases, 254 failed requests** across
+surfaces, retained properties and dynamic IO, with complete shutdown drain and
+healthy retry. Ordinary allocation checks also exercise zero sizes, overflow,
+resize failure and cross-thread TLS destruction. The source/corruption controls
+hash all four affected input translation units. Receipts are under
+`bin/sdl-allocation-accounting/2026-10-29/`.
+
+CLR and strict full-trim NativeAOT each passed the public host on Wayland/X11
+with GPU/Compatibility: **eight fresh processes, 96 actual frames, 24 window
+retirements**, pixel readback, one SDL/core mapping and 20,000 prepared reads
+with **0/0 owner/all-thread managed bytes** per process. The pure-native atexit
+fixture retired its 65,537-byte payload in every process. Process caches remain
+counted after window close. Stock SDL controls reject before opening a window.
+The native renderer's image/ABI/resource and real timestamp checks also passed.
+All twelve private GPU guards share one exact version/revision predicate; it
+accepts the existing SDK identity and the checked source profile's explicit
+`Electron2D memory 1` vendor identity. Unknown revisions and versions reject.
+No GPU private-layout preimage was changed.
+
+This is a selected source-build allocation domain. It does not retrofit stock
+SDK SDL, instrument direct libc allocations or independently loaded OS/graphics/
+audio providers, or complete managed/native current/peak composition. The
+ordinary package pipeline still restores SDL; foreign target and delivery gates
+remain open. Physics declaration coverage remains **1365/1369 (99.71%)**.

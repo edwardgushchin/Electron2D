@@ -1,6 +1,6 @@
 # NativeLibraries
 
-Last updated: 2026-10-12
+Last updated: 2026-10-29
 
 Native binaries come from the explicitly selected `Electron2D.{Platform}` package and its platform-only dependencies. The managed `Electron2D` package contains no native payload or implicit platform references. [Native delivery](../native-packaging.md) records the package/version/RID contract and separates local validation from publication and target execution.
 
@@ -15,7 +15,7 @@ Web uses matching archive module names in Mono's generated P/Invoke tables, not 
 
 iOS/tvOS compile the ten owned backend import names as `__Internal`, referring to symbols linked into the application executable. Module initialization does not register a dynamic resolver there. `Electron2D.iOS`/`Electron2D.tvOS` supplies the selected RID's twelve static archives through transitive NativeReference metadata and CoreBluetooth; FreeType/SDL_image use one audited PNG/zlib copy. Apple SDK linking and simulator execution remain target gates, not outcomes of a Linux build.
 
-Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
+Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API. The separate [owned SDL source profile](../../tools/sdl-native/README.md) keeps that loading path and supplies the common native ledger as SDL's original allocator; explicit consumer build/publish selection is required. The ordinary SDL package is not retrofitted by loading Electron2D.
 
 The private `libElectron2DTextBreak.so`, `libFAudio.so.0`, `libElectron2DENet.so` and `libElectron2DMesh.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the portable OS/process-architecture RID and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers, including universal macOS HarfBuzz supplied with the neutral `osx` RID. A default desktop build/publish deploys that file into its SDK host's architecture-qualified directory. Ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
 

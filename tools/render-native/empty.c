@@ -1,3 +1,4 @@
+#include "pinned-core.h"
 #include <stdint.h>
 #include "memory-layout.h"
 #include <SDL3/SDL_vulkan.h>
@@ -21,8 +22,7 @@ typedef struct EmptyFramebuffer
 
 static bool compatible(SDL_GPUDevice *device)
 {
-    return device && SDL_GetVersion() == SDL_VERSIONNUM(3, 4, 18) &&
-        SDL_strcmp(SDL_GetRevision(), "SDL-3.4.18-release-3.4.18") == 0 &&
+    return device && e2d_render_pinned_core() &&
         SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") == 0;
 }
 

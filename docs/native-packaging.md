@@ -1,6 +1,6 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-25
+Last updated: 2026-10-29
 
 A private prerelease consumer supplies its exact expected native version to the notice audit with --native-package-version; the ordinary release default still requires the product version. Native dependency versions, 73 ELF classification and all 101 source, license and notice byte comparisons remain strict.
 
@@ -173,6 +173,15 @@ The NuGet trusted publishing policy `Electron2D packages` uses repository owner 
 [Publication run 37420350558](https://github.com/edwardgushchin/Electron2D/actions/runs/37420350558), revision `17be5f4c3671420715cf70e7bab1e965707673e9`, rebuilt all eighteen native targets and packed the complete eight-package `0.1.0-alpha` bundle. The initial upload was rejected with HTTP 403 because the policy covered only legacy names. After the owner approved the exact new identities and removal of the legacy permission, only the failed publishing job was rerun; it reused the successful artifacts and nuget.org accepted all eight uploads. Validation and indexing then completed.
 
 Post-publication verification downloaded all eight packages from the public feed and compared all 755 original ZIP entries with those release artifacts; only NuGet's repository signature was added. The complete manifests contain eighteen RIDs and 155 private native files with matching SHA-256. An independent Android-framework restore of all eight exact versions passed with an empty package cache and nuget.org as its only source; this verifies the package graph, not execution on every platform. A fresh source build and a separate Linux x64 package-only text/audio/ENet consumer passed with native build tools blocked and `LD_LIBRARY_PATH` unset. The consumer also passed a self-contained publish and execution from outside the output directory. Its current inventory contains 68 audited ELF files and 67 byte-matching notices, including NLayer/NVorbis; the earlier 65-notice inventory below predates those managed decoders. Foreign execution remains bounded by the target CI evidence below; no physical audio, rendering or production-host acceptance is inferred.
+
+The separate [owned SDL allocation source profile](../tools/sdl-native/README.md)
+rebuilds the pinned core with original native allocation functions from the common
+ledger. `Electron2DSDLNativeLibrary` selects its core for Linux/macOS project
+consumer builds and publishes, including replacement of a newer packaged file
+at the same destination. Use the matching `Electron2DENetNativeLibrary` too;
+retained callbacks must resolve one actual ledger. The ordinary workflow below
+still restores SDL from its platform package. No stock package, foreign target
+or complete provider allocation closure is qualified by the source profile.
 
 ## Full native rebuild
 

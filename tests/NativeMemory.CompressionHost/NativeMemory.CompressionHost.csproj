@@ -13,4 +13,7 @@
   <Target Name="CopyOwnedCompressionPAL" AfterTargets="Publish" Condition="'$(E2dCompressionNative)' != ''">
     <Copy SourceFiles="$(E2dCompressionNative)" DestinationFiles="$(PublishDir)libSystem.IO.Compression.Native.so" />
   </Target>
+  <Target Name="CopySDLExitFixture" AfterTargets="Publish" Condition="'$(E2dSDLLifetime)' != ''">
+    <Copy SourceFiles="$(E2dSDLLifetime)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/libElectron2DSDLLifetime.so" />
+  </Target>
 </Project>

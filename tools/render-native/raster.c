@@ -1,3 +1,4 @@
+#include "pinned-core.h"
 #include <stdint.h>
 #include <math.h>
 #include "memory-layout.h"
@@ -103,8 +104,7 @@ static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cach
 E2D_EXPORT int e2d_render_raster_support(SDL_GPUDevice *device, uint32_t abi)
 {
     if (!device || abi != 1) return -1;
-    if (SDL_GetVersion() != SDL_VERSIONNUM(3, 4, 18) ||
-        SDL_strcmp(SDL_GetRevision(), "SDL-3.4.18-release-3.4.18") != 0 ||
+    if (!e2d_render_pinned_core() ||
         SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") != 0) return 0;
     const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
     PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();

@@ -1,3 +1,4 @@
+#include "pinned-core.h"
 #include <stdint.h>
 #include "memory-layout.h"
 
@@ -26,8 +27,7 @@ E2D_EXPORT int e2d_render_memory(SDL_GPUDevice *device, uint32_t abi, E2DRenderM
 {
     if (!out || !device || abi != 1) return -1;
     *out = (E2DRenderMemory){0};
-    if (SDL_GetVersion() != SDL_VERSIONNUM(3, 4, 18) ||
-        SDL_strcmp(SDL_GetRevision(), "SDL-3.4.18-release-3.4.18") != 0 ||
+    if (!e2d_render_pinned_core() ||
         SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") != 0) return 0;
     VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
     if (!renderer || !renderer->allocatorLock || !renderer->memoryAllocator) return -1;

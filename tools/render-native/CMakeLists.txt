@@ -42,3 +42,5 @@ add_executable(Electron2DRenderTimestampCheck EXCLUDE_FROM_ALL timestamps-check.
 target_compile_features(Electron2DRenderTimestampCheck PRIVATE c_std_11)
 target_include_directories(Electron2DRenderTimestampCheck PRIVATE "${sdlmemory_SOURCE_DIR}/include")
 target_link_libraries(Electron2DRenderTimestampCheck PRIVATE Electron2DRender ${SDL3_LIBRARIES})
+add_executable(Electron2DRenderCoreCheck EXCLUDE_FROM_ALL pinned-core-check.c)
+target_include_directories(Electron2DRenderCoreCheck PRIVATE "${sdlmemory_SOURCE_DIR}/include")

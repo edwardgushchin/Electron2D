@@ -1,5 +1,11 @@
 # Runtime diagnostics
 
+The [owned SDL source profile](../../tools/sdl-native/README.md) contributes
+SDL_malloc payload through original pure-C allocation functions from first use.
+It is a selected producer domain; stock package delivery, provider allocations
+and composed managed/native memory monitors remain open. See the
+[producer evidence](../coverage/performance-producers.md#sdl-original-allocation-source-domain-2026-10-29).
+
 [Object lifetime monitors](object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.
 
 Last updated: 2026-10-29

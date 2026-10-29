@@ -2,6 +2,17 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For the owned SDL allocation profile, follow
+[its source and failure checks](../tools/sdl-native/README.md). Preserve original
+allocator identity before first use, pure-native late frees, calloc overflow,
+zero-size behavior, failed-resize contents, dynamic IO ownership transfer and
+full drain/retry at every calibrated request. Check all four pinned source
+preimages, their corruption controls, common-core/package exports and SDL
+build/publish replacement. Run the public window/render/pixel profile on
+CLR/full-trim NativeAOT and keep stock SDL rejection as a negative control.
+The selected source profile does not qualify ordinary SDL package delivery or
+its independent OS/provider allocation closures.
+
 For mesh simplifier allocation changes, run
 `python3 -B tools/mesh-native/check_sources.py`, build Electron2DMeshOracle and
 Electron2DMeshMemoryCheck, then run

@@ -1,3 +1,4 @@
+#include "pinned-core.h"
 #include <stdint.h>
 #include "memory-layout.h"
 #include <SDL3/SDL_vulkan.h>
@@ -15,8 +16,7 @@ E2D_EXPORT SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *device, uint32_t ab
         SDL_SetError("Invalid native sampler arguments");
         return NULL;
     }
-    if (SDL_GetVersion() != SDL_VERSIONNUM(3, 4, 18) ||
-        SDL_strcmp(SDL_GetRevision(), "SDL-3.4.18-release-3.4.18") != 0 ||
+    if (!e2d_render_pinned_core() ||
         SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") != 0) {
         SDL_SetError("Native sampling requires the pinned Vulkan core");
         return NULL;
@@ -87,8 +87,7 @@ E2D_EXPORT SDL_GPUSampler *e2d_render_sampler(SDL_GPUDevice *device, uint32_t ab
 E2D_EXPORT int e2d_render_sampler_view(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTexture *texture)
 {
     if (!device || !texture || abi != 1) return -1;
-    if (SDL_GetVersion() != SDL_VERSIONNUM(3, 4, 18) ||
-        SDL_strcmp(SDL_GetRevision(), "SDL-3.4.18-release-3.4.18") != 0 ||
+    if (!e2d_render_pinned_core() ||
         SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") != 0) return -1;
     const TextureCommonHeader *header = (const TextureCommonHeader *)texture;
     return header->info.type == SDL_GPU_TEXTURETYPE_2D && header->info.layer_count_or_depth == 1 &&

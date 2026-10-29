@@ -6,7 +6,7 @@ The existing [DisplayServer](classes/DisplayServer.md#method-dialoginputtext) no
 
 [Native array storage](components/graphics-storage-images.md#compute-and-array-consumers) connects existing Image descriptors to complete independent-layer GPU loads/stores/R32 atomics, fixed descriptor arrays and retained TextureArrayRD consumers. No public type or signature is added.
 
-The existing NativeAllocation and source-instrumented NativeAOT producer share the pure-C allocator/gate in the private ENet/file-codec bundle; its ABI preparation opens no network or device. ENetNative and the private file-codec bridge publish [owned native host/packet/codec allocations](coverage/performance-producers.md#enet-owned-allocation-domain), including custom zlib/Zstandard contexts and the [streaming GZIP domain](coverage/performance-producers.md#streaming-gzip-allocation-domain). No public declaration is added.
+The existing NativeAllocation and source-instrumented NativeAOT producer share the pure-C allocator/gate in the private ENet/file-codec bundle; its ABI preparation opens no network or device. ENetNative and the private file-codec bridge publish [owned native host/packet/codec allocations](coverage/performance-producers.md#enet-owned-allocation-domain), including custom zlib/Zstandard contexts and the [streaming GZIP domain](coverage/performance-producers.md#streaming-gzip-allocation-domain). The [owned SDL source profile](../tools/sdl-native/README.md) links process-lifetime original allocation functions from that same ledger and preserves failed dynamic IO ownership. Stock native package selection and the composed memory monitor remain open. No public declaration is added.
 
 Existing GPUPhysicsBodyStore, PhysicsSpace and PhysicsDirectBodyState now use [compact monitor contacts](components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28), with resident full results and late numerical reads. The existing store owns a nested ContactIdentity packet; no public declaration is added.
 
@@ -99,7 +99,7 @@ AndroidGameActivity/AndroidWindowHost now produce actual framework system back r
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 [Animation movie completion](components/movie-writing.md#animation-completion) adds AnimationPlayer.MovieQuitOnFinish and connects the existing Engine/MovieWriter owners. No production type is added.
 

@@ -1,4 +1,6 @@
+#ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200112L
+#endif
 #include "memory.h"
 #include <stdlib.h>
 #include <string.h>
@@ -103,4 +105,16 @@ void e2d_memory_release(void *value) {
 #endif
     commit(size, 0); ++totals.frees;
     e2d_memory_unlock();
+}
+void *e2d_memory_malloc(size_t size) { return e2d_memory_allocate(size, 0, 0, NULL); }
+void *e2d_memory_calloc(size_t count, size_t size) {
+    // Reject multiplication before forwarding it; failures still reach the common ledger.
+    if (size && count > SIZE_MAX / size) return e2d_memory_allocate(SIZE_MAX, 0, 1, NULL);
+    return e2d_memory_allocate(count * size, 0, 1, NULL);
+}
+void *e2d_memory_realloc(void *value, size_t size) { return e2d_memory_reallocate(value, size, NULL); }
+void e2d_memory_free(void *value) { e2d_memory_release(value); }
+void e2d_memory_functions(E2DMemoryFunctions *result) {
+    if (!result) abort();
+    *result = (E2DMemoryFunctions){e2d_memory_malloc, e2d_memory_calloc, e2d_memory_realloc, e2d_memory_free};
 }

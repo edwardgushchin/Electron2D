@@ -1,3 +1,4 @@
+#include "pinned-core.h"
 #include <stdint.h>
 #include "memory-layout.h"
 
@@ -10,8 +11,7 @@
 E2D_EXPORT int e2d_render_limits(SDL_GPUDevice *device, uint32_t abi, uint64_t *out, uint32_t count)
 {
     if (!device || !out || abi != 1 || count != 37) return -1;
-    if (SDL_GetVersion() != SDL_VERSIONNUM(3, 4, 18) ||
-        SDL_strcmp(SDL_GetRevision(), "SDL-3.4.18-release-3.4.18") != 0 ||
+    if (!e2d_render_pinned_core() ||
         SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") != 0) return 0;
     const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
     const VkPhysicalDeviceLimits *p = &renderer->physicalDeviceProperties.properties.limits;
