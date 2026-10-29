@@ -1129,7 +1129,7 @@ memory monitors remain incomplete. Physics declaration coverage remains
 ## UTF8 input marshalling domain (2026-10-29)
 
 The internal [NativeUTF8StringMarshaller](../classes/NativeUTF8StringMarshaller.md)
-now owns temporary inputs for all 38 existing non-bootstrap source-generated
+initially owned temporary inputs for 38 non-bootstrap source-generated
 UTF8 bindings. This includes WebRTC descriptions/candidates/channel metadata,
 GIO/GTK, fontconfig/shaping, native environment/thread/handle queries and the
 Objective-C selector adapter. A 256-byte pinned caller buffer retains the short
@@ -1164,7 +1164,42 @@ Source/native identities, scoped binding list, commands and receipts are under
 `bin/utf8-interop-memory/2026-10-29/`. The test-only library includes the production
 ledger and a native refusal injector; it is not a production network bundle.
 The native loader's bootstrap `dlopen` string cannot depend recursively on that
-ledger. Legacy DllImport/delegate/vendor marshalling, other encodings, runtime
+ledger. The subsequent legacy conversion below closes the explicit owned UTF8
+DllImport/delegate inputs. Vendor marshalling, other encodings, runtime
 interop internals, provider heaps, foreign execution and ordinary package/runtime
 delivery remain open. This domain does not complete GetMonitor; physics remains
 1365/1369 (99.71%), four Partial and 92 Excluded.
+
+### Legacy platform input conversion (2026-10-29)
+
+Twenty-two further declarations now use the same source-generated input owner:
+seven directory/metadata/Apple identity calls, eight Linux/macOS extended-attribute
+calls, four DBus factories/container operations and three ALSA session/name/port
+calls. With the first 38, this supplies 60 owned generated UTF8 declarations.
+The dynamic GIO file-identity delegate now accepts a raw UTF8 pointer borrowed
+from scoped caller scratch/heap storage; the owned GFile result keeps its original
+release. POSIX process argv strings use the common heap owner and retire every
+prepared entry on partial failure and after native process creation.
+
+Extended-attribute data is explicitly pinned across its native call. Reads write
+the caller's complete managed output array; span writes no longer need a cloned
+array. A null pointer with size zero retains empty-attribute behavior. These
+changes preserve source error capture and existing three-attempt growth handling.
+
+CLR and strict full-trim NativeAOT checks exercise a real long non-ASCII path,
+8,193-byte and empty xattrs, native name/absence errors, refusal of either
+path/name buffer with preserved data, all three argv refusal positions and a
+healthy child that echoes a long Unicode argument. Real DBus construction and
+GIO refusal/recoverable trash run on private fixtures and private XDG storage.
+GIO rejects trash on the system tmpfs mount; the successful case uses an owned
+fixture on the ordinary home filesystem. This mount policy remains unchanged.
+Production FileAccess and process regressions pass. The Linux ALSA virtual-source consumer passes 37 checks. Six controlled portal profiles pass, including rendered GPU/compatibility clients, absent/old services and private-bus loss. The prior UTF8 primitive/caller suite also passes on CLR and NativeAOT, retaining its 1,024 warmed zero-managed-byte cycles; this is separate from the allocating cold I/O fixture.
+Foreign native calls are compiled but not thereby executed or qualified.
+Receipts and source identities are under `bin/utf8-legacy-memory/2026-10-29/`.
+
+No explicit LPUTF8Str or CoTaskMemUTF8 buffer remains in engine-owned source.
+The remaining native string DllImports in that source are four Windows Unicode
+operations. This does not qualify vendor helpers, native-loader bootstrap,
+other encodings, runtime interop internals, provider heaps or foreign/package
+execution. No public declaration changes state; full composed memory remains
+open and physics declaration coverage stays 1365/1369 (99.71%).

@@ -1,3 +1,4 @@
+if (args.Contains("--utf8-legacy")) { NativeUTF8LegacyTests.Run(); return; }
 if (args.Contains("--utf8-memory")) { NativeUTF8StringTests.Run(); NativeUTF8StringTests.RunCallers(); return; }
 if (args.Contains("--enet-allocation")) { ENetAllocationTests.Run(); return; }
 if (args.Contains("--gzip-cleanup")) { GZIPCleanupTests.Run(args.Contains("--native-probe")); return; }

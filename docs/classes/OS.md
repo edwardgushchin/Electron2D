@@ -10,6 +10,8 @@ Empty/null/NUL inputs fail before external work. Recoverable trash failure throw
 
 The isolated XDG child verifies recovery content/metadata and symlink-target preservation. External application launch, native memory and foreign platforms remain unverified. See [file-dialog component](../components/file-dialogs.md).
 
+Process argv, Linux MIDI names and GIO paths use [tracked UTF8 input storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29); partial preparation retires preceding buffers.
+
 ## Methods
 
 | Complete declaration | Contract |

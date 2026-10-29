@@ -2,6 +2,14 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For legacy UTF8 inputs, run `Electron2D.FastTests --utf8-legacy` on CLR and strict
+full-trim NativeAOT with the private fault ledger. Supply a fresh absolute
+ELECTRON2D_UTF8_TEST_DIRECTORY and private XDG_DATA_HOME on the ordinary home
+filesystem; GIO intentionally rejects trash on internal tmpfs mounts. Preserve
+real xattr output/empty data, native errors, partial path/name/argv refusals, child
+bytes and recoverable GIO behavior. Recheck production FileAccess/process/MIDI
+and controlled portal consumers.
+
 For UTF8 input ownership, compile `tools/coverage/utf8_memory_check.c` as a private
 `libElectron2DENet.so` and run `Electron2D.FastTests --utf8-memory` on CLR and strict
 full-trim NativeAOT. Keep it isolated from production network/codec checks. Preserve

@@ -1,3 +1,5 @@
+[Legacy UTF8 allocation closure](performance-producers.md#legacy-platform-input-conversion-2026-10-29) adds 22 generated bindings and owned process/GIO inputs to the native ledger. Physics remains **1365/1369 (99.71%)**, four Partial and 92 Excluded; complete managed/native memory and full acceptance remain open.
+
 [Equal-count multisample copies](../components/multisample-copies.md) now preserve independent color/depth/stencil samples through rectangles, shared slices, array layers and matching-count self-copy scratch. TextureCopy becomes Implemented: **13,711/18,853 applicable declarations (72.7258%)**, with 1,068 Partial, 368 Unimplemented, 3,706 Blocked, 8,440 Excluded and zero unmapped. Declaration accounting remains separate from the owning native/platform qualification. Earlier totals below are checkpoints.
 [UTF8 input allocation](performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now tracks source-generated and explicit WebRTC/DBus temporary native strings through their actual lifetime. No declaration changes state: physics remains **1365/1369 (99.71%)**, four Partial and 92 Excluded; remaining native/runtime composition is still open.
 

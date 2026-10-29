@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Electron2D;
@@ -32,7 +33,7 @@ public sealed partial class OS
 
     internal static void PumpMIDIInputs() => Service._midiInputs.Pump();
 
-    private sealed class MIDIInputOwner
+    private sealed partial class MIDIInputOwner
     {
         private readonly object _gate = new();
         private Session? _session;
@@ -244,7 +245,7 @@ public sealed partial class OS
             throw new IOException(message);
         }
 
-        private static class ALSA
+        private static partial class ALSA
         {
             private const string Library = "libasound.so.2";
             // Legacy ALSA event ABI: four-byte header, eight-byte timestamp, two addresses, twelve-byte union.
@@ -261,14 +262,17 @@ public sealed partial class OS
                 [FieldOffset(20)] internal uint Parameter;
                 [FieldOffset(24)] internal int Value;
             }
-            [DllImport(Library, EntryPoint = "snd_seq_open", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int Open(out nint handle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, int streams, int mode);
+            [LibraryImport(Library, EntryPoint = "snd_seq_open", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+            [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+            internal static partial int Open(out nint handle, string name, int streams, int mode);
             [DllImport(Library, EntryPoint = "snd_seq_close", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int Close(nint handle);
-            [DllImport(Library, EntryPoint = "snd_seq_set_client_name", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int SetName(nint handle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
-            [DllImport(Library, EntryPoint = "snd_seq_create_simple_port", CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int CreatePort(nint handle, [MarshalAs(UnmanagedType.LPUTF8Str)] string name, uint capabilities, uint type);
+            [LibraryImport(Library, EntryPoint = "snd_seq_set_client_name", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+            [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+            internal static partial int SetName(nint handle, string name);
+            [LibraryImport(Library, EntryPoint = "snd_seq_create_simple_port", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+            [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+            internal static partial int CreatePort(nint handle, string name, uint capabilities, uint type);
             [DllImport(Library, EntryPoint = "snd_seq_client_id", CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ClientID(nint handle);
             [DllImport(Library, EntryPoint = "snd_seq_connect_from", CallingConvention = CallingConvention.Cdecl)]

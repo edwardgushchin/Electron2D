@@ -12,7 +12,7 @@ namespace Electron2D;
 /// Registered UID notation resolves through ResourceUID before applying these scope rules; unknown UIDs fail.
 /// Operations are serialized per instance, may block, and are unsuitable for real-time callbacks.
 /// </remarks>
-public sealed class DirAccess : ElectronObject
+public sealed partial class DirAccess : ElectronObject
 {
     private readonly object _gate = new();
     private readonly AccessScope _scope;
@@ -1540,9 +1540,9 @@ public sealed class DirAccess : ElectronObject
         internal uint Flags;
     }
 
-    [DllImport("libc", EntryPoint = "open", SetLastError = true)]
-    private static extern int OpenUnix(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
+    [LibraryImport("libc", EntryPoint = "open", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int OpenUnix(
+        string path,
         int flags);
 
     [DllImport("libc", EntryPoint = "ioctl", SetLastError = true)]
@@ -1551,25 +1551,25 @@ public sealed class DirAccess : ElectronObject
     [DllImport("libc", EntryPoint = "close", SetLastError = true)]
     private static extern int CloseUnix(int descriptor);
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "pathconf", SetLastError = true)]
-    private static extern long PathConfApple(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "pathconf", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial long PathConfApple(
+        string path,
         int name);
 
-    [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", EntryPoint = "CFStringCreateWithCString")]
-    private static extern IntPtr CFStringCreateWithCString(
+    [LibraryImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", EntryPoint = "CFStringCreateWithCString", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial IntPtr CFStringCreateWithCString(
         IntPtr allocator,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string value,
+        string value,
         uint encoding);
 
     [DllImport("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation", EntryPoint = "CFRelease")]
     private static extern void CFRelease(IntPtr value);
 
-    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_getClass")]
-    private static extern IntPtr ObjCGetClass([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    [LibraryImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_getClass", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial IntPtr ObjCGetClass(string name);
 
-    [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "sel_registerName")]
-    private static extern IntPtr SelRegisterName([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    [LibraryImport("/usr/lib/libobjc.A.dylib", EntryPoint = "sel_registerName", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial IntPtr SelRegisterName(string name);
 
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
     private static extern IntPtr ObjCSend(IntPtr receiver, IntPtr selector);
@@ -1596,14 +1596,14 @@ public sealed class DirAccess : ElectronObject
     [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_autoreleasePoolPop")]
     private static extern void ObjCAutoreleasePoolPop(IntPtr pool);
 
-    [DllImport("libc", EntryPoint = "stat", SetLastError = true)]
-    private static extern int StatUnix(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
+    [LibraryImport("libc", EntryPoint = "stat", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int StatUnix(
+        string path,
         IntPtr buffer);
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "stat", SetLastError = true)]
-    private static extern int StatApple(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "stat", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int StatApple(
+        string path,
         IntPtr buffer);
 
     [DllImport("kernel32.dll", EntryPoint = "CreateFileW", SetLastError = true, CharSet = CharSet.Unicode)]

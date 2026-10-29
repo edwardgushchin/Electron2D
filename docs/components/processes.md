@@ -1,8 +1,10 @@
 # Independent processes and pipes
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 ## Scope and flow
+
+POSIX argv strings use [tracked UTF8 input storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29) and release every prepared argument after native creation or partial failure.
 
 OS process operations use the retained static service. CreateProcess starts a literal executable/argv independently; CreateInstance restarts the current application, including the entry assembly for a framework-dependent host. Execute blocks and appends one captured string after exit, preserving existing collection items. POSIX stdout/stderr capture merges into one native stream in write order; nonzero exit codes remain ordinary results. Arguments never enter an implicit shell. GetExecutablePath returns the actual native host path, GetCommandLineArgs copies application arguments, and GetCommandLineUserArgs copies the suffix after the first -- or ++ separator.
 

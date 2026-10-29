@@ -60,19 +60,26 @@ public sealed partial class OS : ElectronObject
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct NativeError { internal uint Domain; internal int Code; internal nint Message; }
-    private sealed class TrashNative
+    private sealed unsafe class TrashNative
     {
         internal static readonly Lazy<TrashNative> Instance = new(() => new());
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] internal delegate nint NewFileDelegate([MarshalAs(UnmanagedType.LPUTF8Str)] string path);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] internal delegate nint NewFileDelegate(byte* path);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] internal delegate int TrashDelegate(nint file, nint cancellation, out nint error);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] internal delegate void ReleaseDelegate(nint pointer);
-        internal readonly NewFileDelegate NewFile;
+        private readonly NewFileDelegate _newFile;
         internal readonly TrashDelegate Trash;
         internal readonly ReleaseDelegate Unref, FreeError;
+        internal nint NewFile(string path)
+        {
+            Span<byte> buffer = stackalloc byte[NativeUTF8StringMarshaller.In.BufferSize];
+            scoped NativeUTF8StringMarshaller.In text = new();
+            try { text.FromManaged(path, buffer); return _newFile(text.ToUnmanaged()); }
+            finally { text.Free(); }
+        }
         private TrashNative()
         {
             if (!NativeLibrary.TryLoad("libgio-2.0.so.0", out var library)) throw new NotSupportedException("The system GIO trash service is unavailable.");
-            try { NewFile = Load<NewFileDelegate>(library, "g_file_new_for_path"); Trash = Load<TrashDelegate>(library, "g_file_trash"); Unref = Load<ReleaseDelegate>(library, "g_object_unref"); FreeError = Load<ReleaseDelegate>(library, "g_error_free"); }
+            try { _newFile = Load<NewFileDelegate>(library, "g_file_new_for_path"); Trash = Load<TrashDelegate>(library, "g_file_trash"); Unref = Load<ReleaseDelegate>(library, "g_object_unref"); FreeError = Load<ReleaseDelegate>(library, "g_error_free"); }
             catch { NativeLibrary.Free(library); throw; }
         }
         private static T Load<T>(nint library, string symbol) where T : Delegate => Marshal.GetDelegateForFunctionPointer<T>(NativeLibrary.GetExport(library, symbol));

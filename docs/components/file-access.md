@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-10-21
+Last updated: 2026-10-29
 
 ## Scope
 
@@ -9,6 +9,8 @@ This Core component owns blocking seekable file I/O, scoped directory access, di
 [Caller-owned binary buffers](byte-buffers.md) share numeric conventions and the compressed container without creating a file session.
 
 ## Owned types
+
+Native directory and extended-attribute paths use [tracked UTF8 input storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29). Linux/macOS xattr calls pin caller arrays or spans for the native call, including zero-length data.
 
 | Type | Role |
 | --- | --- |

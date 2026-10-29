@@ -1,6 +1,6 @@
 # DirAccess
 
-Last updated: 2026-10-05
+Last updated: 2026-10-29
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -13,6 +13,8 @@ Last updated: 2026-10-05
 > Provides blocking access to directories and their contents.
 
 ## Description
+
+Directory and native metadata calls use [scoped UTF8 input storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29); foreign execution remains a separate qualification.
 
 Provides blocking access to directories and their contents.
 

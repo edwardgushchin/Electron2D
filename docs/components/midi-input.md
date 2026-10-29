@@ -4,6 +4,8 @@ Last updated: 2026-10-29
 
 The [ADR 0038](../decisions/input.md#adr-0038) input contract has a concrete desktop Linux producer using the system `libasound.so.2` ALSA Sequencer. It works independently of SDL, a window, renderer or audio output. The public values are [InputEventMIDI](../classes/InputEventMIDI.md) and [MIDIMessage](../classes/MIDIMessage.md); static [OS](../classes/OS.md) operations address a retained internal session owner.
 
+ALSA session/client/port names now use [scoped UTF8 input storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29). The existing Linux virtual-source regression passes 37 checks; physical controllers and foreign adapters retain their separate gates.
+
 ## Session and delivery
 
 `OS.OpenMIDIInputs()` opens one nonblocking input client, creates an input port, subscribes to source ports present at open and to ALSA lifetime announcements. Acquisition failure closes all partial ownership. Repeated open preserves an active session. `OS.GetConnectedMIDIInputs()` returns a defensive source-name array whose indices are the session's event `Device` values. Before open or after close it returns an empty array; a successfully opened session may have no source. Missing adapter/library, denied access and native acquisition errors throw distinct exceptions. A failed session remains observable until close or a fresh open.

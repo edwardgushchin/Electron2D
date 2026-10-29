@@ -1,4 +1,6 @@
-[UTF8 native inputs](../coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now route source-generated heap arguments and explicit WebRTC/DBus temporary strings through the common allocation gate, retaining stack scratch and failure cleanup. Bootstrap, legacy/provider/runtime ownership and the exact composed memory monitor remain open.
+[Legacy UTF8 inputs](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29) extend the common allocation gate to directory/xattr/DBus/ALSA calls, scoped GIO paths and POSIX argv. Complete memory composition remains open.
+
+[UTF8 native inputs](../coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now route source-generated heap arguments and explicit WebRTC/DBus temporary strings through the common allocation gate, retaining stack scratch and failure cleanup. Bootstrap, provider/runtime ownership and the exact composed memory monitor remain open.
 
 [Native role callbacks](../components/scripting.md#native-resource-and-node-role-hooks) connect Resource reset/raw-path/base-RID and Node warnings/semantic focus to the installed Script set.
 

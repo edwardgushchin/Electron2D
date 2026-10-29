@@ -1199,6 +1199,7 @@ public sealed partial class FileAccess : ElectronObject
         Array.AsReadOnly(ExtendedAttributes.List(ResolveMetadataPath(path)));
 
     /// <summary>Sets one extended attribute from bytes.</summary>
+    /// <remarks>Linux and macOS pin the supplied span for the blocking native write; the backend retains no data pointer after return.</remarks>
     /// <param name="path">The ordinary or supported virtual file path.</param>
     /// <param name="name">The nonempty attribute name without a Linux namespace prefix.</param>
     /// <param name="value">The attribute bytes.</param>

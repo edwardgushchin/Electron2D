@@ -169,7 +169,7 @@ public sealed partial class OS
         var pointers = new nint[checked(arguments.Length + 2)]; uint properties = 0; nint native = 0;
         try
         {
-            pointers[0] = Marshal.StringToCoTaskMemUTF8(path); for (var i = 0; i < arguments.Length; i++) pointers[i + 1] = Marshal.StringToCoTaskMemUTF8(arguments[i]);
+            pointers[0] = (nint)NativeUTF8StringMarshaller.Allocate(path); for (var i = 0; i < arguments.Length; i++) pointers[i + 1] = (nint)NativeUTF8StringMarshaller.Allocate(arguments[i]);
             properties = SDL.CreateProperties(); if (properties == 0) throw new IOException(SDL.GetError());
             fixed (nint* argv = pointers)
             {
@@ -181,7 +181,7 @@ public sealed partial class OS
             }
             var owner = new OSProcess(native); native = 0; return owner;
         }
-        finally { if (native != 0) { SDL.KillProcess(native, true); SDL.WaitProcess(native, true, out _); SDL.DestroyProcess(native); } if (properties != 0) SDL.DestroyProperties(properties); foreach (var pointer in pointers) if (pointer != 0) Marshal.FreeCoTaskMem(pointer); }
+        finally { if (native != 0) { SDL.KillProcess(native, true); SDL.WaitProcess(native, true, out _); SDL.DestroyProcess(native); } if (properties != 0) SDL.DestroyProperties(properties); foreach (var pointer in pointers) if (pointer != 0) NativeAllocation.Free((void*)pointer); }
     }
     private ProcessPipes StartPipes(string path, ReadOnlySpan<string> arguments, bool blocking, bool mergeError = false, bool capture = false)
     {

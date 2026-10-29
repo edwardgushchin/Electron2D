@@ -1,6 +1,6 @@
 # FileAccess
 
-Last updated: 2026-10-21
+Last updated: 2026-10-29
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -11,6 +11,8 @@ Last updated: 2026-10-21
 - **Declaration:** `public sealed class FileAccess : ElectronObject`
 
 > Provides seekable binary and text access to ordinary and directory-backed virtual files.
+
+Linux/macOS extended-attribute calls use [tracked UTF8 path/name storage](../coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29) and pin caller data for the call without retaining its pointer.
 
 ## Description
 

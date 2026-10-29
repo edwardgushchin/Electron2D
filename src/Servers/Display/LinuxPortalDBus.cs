@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal static unsafe class LinuxPortalDBus
+internal static unsafe partial class LinuxPortalDBus
 {
     internal const string Library = "libdbus-1.so.3", Destination = "org.freedesktop.portal.Desktop", DesktopPath = "/org/freedesktop/portal/desktop";
     internal const int StringType = 's', PathType = 'o', UInt32Type = 'u', BooleanType = 'b', ArrayType = 'a', StructType = 'r', VariantType = 'v', DictEntryType = 'e';
@@ -73,23 +73,23 @@ internal static unsafe class LinuxPortalDBus
     [DllImport(Library, EntryPoint = "dbus_bus_get")] internal static extern nint BusGet(int bus, nint error);
     [DllImport(Library, EntryPoint = "dbus_bus_get_private")] internal static extern nint BusGetPrivate(int bus, nint error);
     [DllImport(Library, EntryPoint = "dbus_bus_get_unique_name")] internal static extern nint BusGetUniqueName(nint connection);
-    [DllImport(Library, EntryPoint = "dbus_bus_add_match")] internal static extern void BusAddMatch(nint connection, [MarshalAs(UnmanagedType.LPUTF8Str)] string rule, nint error);
+    [LibraryImport(Library, EntryPoint = "dbus_bus_add_match", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] internal static partial void BusAddMatch(nint connection, string rule, nint error);
     [DllImport(Library, EntryPoint = "dbus_connection_set_exit_on_disconnect")] internal static extern void SetExitOnDisconnect(nint connection, int enabled);
     [DllImport(Library, EntryPoint = "dbus_connection_close")] internal static extern void ConnectionClose(nint connection);
     [DllImport(Library, EntryPoint = "dbus_connection_unref")] internal static extern void ConnectionUnref(nint connection);
     [DllImport(Library, EntryPoint = "dbus_connection_read_write")] internal static extern int ReadWrite(nint connection, int timeout);
     [DllImport(Library, EntryPoint = "dbus_connection_pop_message")] internal static extern nint PopMessage(nint connection);
-    [DllImport(Library, EntryPoint = "dbus_message_new_method_call")] internal static extern nint NewMethodCall([MarshalAs(UnmanagedType.LPUTF8Str)] string destination, [MarshalAs(UnmanagedType.LPUTF8Str)] string path, [MarshalAs(UnmanagedType.LPUTF8Str)] string iface, [MarshalAs(UnmanagedType.LPUTF8Str)] string method);
+    [LibraryImport(Library, EntryPoint = "dbus_message_new_method_call", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] internal static partial nint NewMethodCall(string destination, string path, string iface, string method);
     [DllImport(Library, EntryPoint = "dbus_message_unref")] internal static extern void MessageUnref(nint message);
     [DllImport(Library, EntryPoint = "dbus_message_get_type")] internal static extern int MessageType(nint message);
     [DllImport(Library, EntryPoint = "dbus_message_get_sender")] internal static extern nint MessageSender(nint message);
     [DllImport(Library, EntryPoint = "dbus_message_get_path")] internal static extern nint MessagePath(nint message);
-    [DllImport(Library, EntryPoint = "dbus_message_is_signal")] internal static extern int IsSignal(nint message, [MarshalAs(UnmanagedType.LPUTF8Str)] string iface, [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    [LibraryImport(Library, EntryPoint = "dbus_message_is_signal", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] internal static partial int IsSignal(nint message, string iface, string name);
     [DllImport(Library, EntryPoint = "dbus_message_iter_init_append")] internal static extern void InitAppend(nint message, out MessageIter iter);
     [DllImport(Library, EntryPoint = "dbus_message_iter_append_basic")] private static extern int AppendBasicPointer(ref MessageIter iter, int type, ref nint value);
     [DllImport(Library, EntryPoint = "dbus_message_iter_append_basic")] private static extern int AppendBasicByte(ref MessageIter iter, int type, ref byte value);
     [DllImport(Library, EntryPoint = "dbus_message_iter_append_basic")] private static extern int AppendBasicUInt32(ref MessageIter iter, int type, ref uint value);
-    [DllImport(Library, EntryPoint = "dbus_message_iter_open_container")] private static extern int OpenContainer(ref MessageIter iter, int type, [MarshalAs(UnmanagedType.LPUTF8Str)] string? signature, out MessageIter child);
+    [LibraryImport(Library, EntryPoint = "dbus_message_iter_open_container", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] private static partial int OpenContainer(ref MessageIter iter, int type, string? signature, out MessageIter child);
     [DllImport(Library, EntryPoint = "dbus_message_iter_close_container")] private static extern int CloseContainer(ref MessageIter iter, ref MessageIter child);
     [DllImport(Library, EntryPoint = "dbus_connection_send_with_reply_and_block")] internal static extern nint SendWithReplyAndBlock(nint connection, nint message, int timeoutMs, nint error);
     [DllImport(Library, EntryPoint = "dbus_connection_send")] internal static extern int Send(nint connection, nint message, nint serial);

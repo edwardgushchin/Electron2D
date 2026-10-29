@@ -94,7 +94,7 @@ internal static class ExtendedAttributes
     }
 }
 
-internal static class LinuxExtendedAttributes
+internal static unsafe partial class LinuxExtendedAttributes
 {
     private const int RangeError = 34;
     private const string NamespacePrefix = "user.";
@@ -110,7 +110,8 @@ internal static class LinuxExtendedAttributes
             var value = new byte[checked((int)length)];
             if (length == 0)
                 return value;
-            var actual = GetXAttr(path, nativeName, value, (nuint)value.Length);
+            nint actual;
+            fixed (byte* data = value) actual = GetXAttr(path, nativeName, data, (nuint)value.Length);
             if (actual >= 0)
                 return actual == value.Length ? value : value.AsSpan(0, checked((int)actual)).ToArray();
             if (Marshal.GetLastPInvokeError() != RangeError)
@@ -129,7 +130,8 @@ internal static class LinuxExtendedAttributes
             if (length == 0)
                 return [];
             var buffer = new byte[checked((int)length)];
-            var actual = ListXAttr(path, buffer, (nuint)buffer.Length);
+            nint actual;
+            fixed (byte* data = buffer) actual = ListXAttr(path, data, (nuint)buffer.Length);
             if (actual >= 0)
             {
                 return ExtendedAttributes.DecodeNullSeparatedNames(buffer.AsSpan(0, checked((int)actual)))
@@ -151,39 +153,39 @@ internal static class LinuxExtendedAttributes
 
     internal static void Set(string path, string name, ReadOnlySpan<byte> value)
     {
-        var bytes = value.ToArray();
-        if (SetXAttr(path, NamespacePrefix + name, bytes, (nuint)bytes.Length, 0) != 0)
-            ExtendedAttributes.ThrowNativeError("write the extended attribute");
+        fixed (byte* data = value)
+            if (SetXAttr(path, NamespacePrefix + name, data, (nuint)value.Length, 0) != 0)
+                ExtendedAttributes.ThrowNativeError("write the extended attribute");
     }
 
-    [DllImport("libc", EntryPoint = "getxattr", SetLastError = true)]
-    private static extern nint GetXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string name,
-        byte[]? value,
+    [LibraryImport("libc", EntryPoint = "getxattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial nint GetXAttr(
+        string path,
+        string name,
+        byte* value,
         nuint size);
 
-    [DllImport("libc", EntryPoint = "listxattr", SetLastError = true)]
-    private static extern nint ListXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        byte[]? list,
+    [LibraryImport("libc", EntryPoint = "listxattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial nint ListXAttr(
+        string path,
+        byte* list,
         nuint size);
 
-    [DllImport("libc", EntryPoint = "removexattr", SetLastError = true)]
-    private static extern int RemoveXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    [LibraryImport("libc", EntryPoint = "removexattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int RemoveXAttr(
+        string path,
+        string name);
 
-    [DllImport("libc", EntryPoint = "setxattr", SetLastError = true)]
-    private static extern int SetXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string name,
-        byte[] value,
+    [LibraryImport("libc", EntryPoint = "setxattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int SetXAttr(
+        string path,
+        string name,
+        byte* value,
         nuint size,
         int flags);
 }
 
-internal static class MacExtendedAttributes
+internal static unsafe partial class MacExtendedAttributes
 {
     private const int RangeError = 34;
 
@@ -197,7 +199,8 @@ internal static class MacExtendedAttributes
             var value = new byte[checked((int)length)];
             if (length == 0)
                 return value;
-            var actual = GetXAttr(path, name, value, (nuint)value.Length, 0, 0);
+            nint actual;
+            fixed (byte* data = value) actual = GetXAttr(path, name, data, (nuint)value.Length, 0, 0);
             if (actual >= 0)
                 return actual == value.Length ? value : value.AsSpan(0, checked((int)actual)).ToArray();
             if (Marshal.GetLastPInvokeError() != RangeError)
@@ -216,7 +219,8 @@ internal static class MacExtendedAttributes
             if (length == 0)
                 return [];
             var buffer = new byte[checked((int)length)];
-            var actual = ListXAttr(path, buffer, (nuint)buffer.Length, 0);
+            nint actual;
+            fixed (byte* data = buffer) actual = ListXAttr(path, data, (nuint)buffer.Length, 0);
             if (actual >= 0)
                 return ExtendedAttributes.DecodeNullSeparatedNames(buffer.AsSpan(0, checked((int)actual)));
             if (Marshal.GetLastPInvokeError() != RangeError)
@@ -233,38 +237,38 @@ internal static class MacExtendedAttributes
 
     internal static void Set(string path, string name, ReadOnlySpan<byte> value)
     {
-        var bytes = value.ToArray();
-        if (SetXAttr(path, name, bytes, (nuint)bytes.Length, 0, 0) != 0)
-            ExtendedAttributes.ThrowNativeError("write the extended attribute");
+        fixed (byte* data = value)
+            if (SetXAttr(path, name, data, (nuint)value.Length, 0, 0) != 0)
+                ExtendedAttributes.ThrowNativeError("write the extended attribute");
     }
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "getxattr", SetLastError = true)]
-    private static extern nint GetXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string name,
-        byte[]? value,
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "getxattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial nint GetXAttr(
+        string path,
+        string name,
+        byte* value,
         nuint size,
         uint position,
         int options);
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "listxattr", SetLastError = true)]
-    private static extern nint ListXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        byte[]? list,
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "listxattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial nint ListXAttr(
+        string path,
+        byte* list,
         nuint size,
         int options);
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "removexattr", SetLastError = true)]
-    private static extern int RemoveXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string name,
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "removexattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int RemoveXAttr(
+        string path,
+        string name,
         int options);
 
-    [DllImport("libSystem.B.dylib", EntryPoint = "setxattr", SetLastError = true)]
-    private static extern int SetXAttr(
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string path,
-        [MarshalAs(UnmanagedType.LPUTF8Str)] string name,
-        byte[] value,
+    [LibraryImport("libSystem.B.dylib", EntryPoint = "setxattr", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
+    private static partial int SetXAttr(
+        string path,
+        string name,
+        byte* value,
         nuint size,
         uint position,
         int options);
