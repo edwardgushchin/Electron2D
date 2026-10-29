@@ -10,6 +10,7 @@
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../Electron2D.Tests/NativeICUAllocationChecks.cs" Link="NativeICUAllocationChecks.cs" />
     <Compile Include="../Electron2D.Tests/NativeRegExAllocationChecks.cs" Link="NativeRegExAllocationChecks.cs" />
+    <Compile Include="../Electron2D.Tests/NativeMSDFAllocationChecks.cs" Link="NativeMSDFAllocationChecks.cs" />
     <Compile Include="../Electron2D.Tests/AllocationWarmupCheck.cs" Link="AllocationWarmupCheck.cs" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />

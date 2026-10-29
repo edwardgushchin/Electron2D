@@ -31,6 +31,7 @@ internal sealed unsafe partial class NativeFontPrecision
         {
             fixed (MSDFEdge* edges = CollectionsMarshal.AsSpan(context.Edges))
             {
+                NativeTextBreak.PrepareMemory();
                 var status = GenerateMSDF(edges, context.Edges.Count, pixelRange, FTOutlineGetOrientation(&slot->Outline) == 1 ? 1 : 0, out pixels, out var width, out var height, out var left, out var top);
                 if (status == 3) throw new OutOfMemoryException("MSDF generation exhausted native memory.");
                 if (status != 0) throw new InvalidOperationException($"MSDF generation rejected the outline or pixel budget ({status}).");

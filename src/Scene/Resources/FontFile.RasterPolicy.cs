@@ -14,7 +14,8 @@ public partial class FontFile
     ];
     /// <summary>Gets or sets native multichannel signed distance generation.</summary>
     /// <value>false initially. Values are stored preferences; generation requires positive bounded size and range.</value>
-    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// <remarks>Generating a new native image owns temporary storage until return; allocation failure throws OutOfMemoryException.
+    /// Changes retire generated images after active readers, preserve authored entries and invalidate
     /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
     /// subpixel phases, and requires the GPU canvas profile. Data assignment preserves preferences;
     /// file imports and ResetState restore defaults. Equal assignments are silent.</remarks>
@@ -22,7 +23,8 @@ public partial class FontFile
     public bool MultichannelSignedDistanceField { get => Read(static d => d.MultichannelSignedDistanceField); set => SetRasterConfiguration(static d => d.MultichannelSignedDistanceField, static (d, v) => d.MultichannelSignedDistanceField = v, value); }
     /// <summary>Gets or sets the distance range encoded into MSDF glyph pixels.</summary>
     /// <value>16 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
-    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// <remarks>Generating a new native image owns temporary storage until return; allocation failure throws OutOfMemoryException.
+    /// Changes retire generated images after active readers, preserve authored entries and invalidate
     /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
     /// subpixel phases, and requires the GPU canvas profile. Data assignment preserves preferences;
     /// file imports and ResetState restore defaults. Equal assignments are silent.</remarks>
@@ -30,7 +32,8 @@ public partial class FontFile
     public int MSDFPixelRange { get => Read(static d => d.MSDFPixelRange); set => SetRasterConfiguration(static d => d.MSDFPixelRange, static (d, v) => d.MSDFPixelRange = v, value); }
     /// <summary>Gets or sets the source size used for a shared MSDF glyph image.</summary>
     /// <value>48 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
-    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// <remarks>Generating a new native image owns temporary storage until return; allocation failure throws OutOfMemoryException.
+    /// Changes retire generated images after active readers, preserve authored entries and invalidate
     /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
     /// subpixel phases, and requires the GPU canvas profile. Data assignment preserves preferences;
     /// file imports and ResetState restore defaults. Equal assignments are silent.</remarks>

@@ -2,6 +2,22 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For MSDF allocation changes, run `python3 -O -B tools/coverage/test_prepare_msdf.py`
+and `python3 -B tools/coverage/check_msdf_sources.py`. Build
+Electron2DMSDFMemoryCheck and Electron2DMSDFOwnershipCheck; run
+`python3 -B tools/coverage/check_msdf_memory.py BUILD/Electron2DMSDFMemoryCheck REPORT.json`
+and the ownership executable normally and under ASan/UBSan/leak detection.
+Retain exact pristine-core images/bounds, every observed failed allocation,
+construct-before-retire assignment, scoped split adoption, no output on failure
+and usable retry. The generated tree is build output; never alter the pinned
+inputs or replace global C++ allocation operators. CMake requires the existing
+host Python 3 interpreter for this checked preparation. Run
+ELECTRON2D_TEST_MSDF_ALLOCATION=1, the public NativeMemory.ICUHost `msdf FONT`
+profile on CLR/full-trim NativeAOT, the 216-case independent glyph oracle and
+FontMSDFTests managed/native profiles. Exact text-library identity is required;
+a preceding text bridge can expose all exports while omitting MSDF accounting.
+See the [MSDF domain](coverage/performance-producers.md#msdf-owned-allocation-domain-2026-10-29).
+
 For PCRE2 allocation changes, build Electron2DRegexCheck and
 Electron2DRegexMemoryCheck against the actual private text library. Run
 `python3 -B tools/coverage/check_regex_memory.py BUILD/Electron2DRegexMemoryCheck REPORT.json`

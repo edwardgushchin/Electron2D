@@ -1,3 +1,4 @@
+#include "MSDFMemory.h"
 #include "msdfgen.h"
 #include <algorithm>
 #include <cmath>
@@ -55,7 +56,8 @@ E2D_FONT_API int32_t e2d_font_msdf_generate(const E2DMSDFEdge *edges, int32_t co
         msdfgen::generateMTSDF(image, shape,
             msdfgen::Projection(msdfgen::Vector2(1, 1), msdfgen::Vector2(-bounds.l, -bounds.b)),
             msdfgen::Range(range), msdfgen::MSDFGeneratorConfig(true, msdfgen::ErrorCorrectionConfig()));
-        auto result = std::make_unique<uint8_t[]>(static_cast<size_t>(bytes));
+        std::unique_ptr<uint8_t[], decltype(&e2d_msdf::release)> result(
+            e2d_msdf::array<uint8_t>(static_cast<size_t>(bytes)), e2d_msdf::release);
         std::fill_n(result.get(), static_cast<size_t>(bytes), uint8_t(0));
         for (int y = 0; y < imageHeight; ++y) for (int x = 0; x < imageWidth; ++x)
             for (int c = 0; c < 4; ++c) {
@@ -69,4 +71,4 @@ E2D_FONT_API int32_t e2d_font_msdf_generate(const E2DMSDFEdge *edges, int32_t co
     catch (...) { return 4; }
 }
 
-E2D_FONT_API void e2d_font_msdf_free(uint8_t *pixels) { delete[] pixels; }
+E2D_FONT_API void e2d_font_msdf_free(uint8_t *pixels) { e2d_msdf::release(pixels); }

@@ -8,7 +8,8 @@ public partial class SystemFont
     private int _msdfRange = 16, _msdfSize = 48;
     /// <summary>Gets or sets native multichannel signed distance generation.</summary>
     /// <value>false initially. Values are stored preferences; generation requires positive bounded size and range.</value>
-    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// <remarks>Generating a new native image owns temporary storage until return; allocation failure throws OutOfMemoryException.
+    /// Changes retire generated images after active readers, preserve authored entries and invalidate
     /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
     /// subpixel phases, and requires the GPU canvas profile. Preference archives rematch the host;
     /// ResetState restores defaults. Equal assignments are silent.</remarks>
@@ -16,7 +17,8 @@ public partial class SystemFont
     public bool MultichannelSignedDistanceField { get { lock (FontGate) { ThrowIfDisposed(); return _msdf; } } set => Set(ref _msdf, value); }
     /// <summary>Gets or sets the distance range encoded into MSDF glyph pixels.</summary>
     /// <value>16 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
-    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// <remarks>Generating a new native image owns temporary storage until return; allocation failure throws OutOfMemoryException.
+    /// Changes retire generated images after active readers, preserve authored entries and invalidate
     /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
     /// subpixel phases, and requires the GPU canvas profile. Preference archives rematch the host;
     /// ResetState restores defaults. Equal assignments are silent.</remarks>
@@ -24,7 +26,8 @@ public partial class SystemFont
     public int MSDFPixelRange { get { lock (FontGate) { ThrowIfDisposed(); return _msdfRange; } } set => Set(ref _msdfRange, value); }
     /// <summary>Gets or sets the source size used for a shared MSDF glyph image.</summary>
     /// <value>48 initially. Values are stored preferences; generation requires positive bounded size and range.</value>
-    /// <remarks>Changes retire generated images after active readers, preserve authored entries and invalidate
+    /// <remarks>Generating a new native image owns temporary storage until return; allocation failure throws OutOfMemoryException.
+    /// Changes retire generated images after active readers, preserve authored entries and invalidate
     /// dependent text and variations. MSDF shares source pixels across drawn sizes, ignores oversampling and
     /// subpixel phases, and requires the GPU canvas profile. Preference archives rematch the host;
     /// ResetState restores defaults. Equal assignments are silent.</remarks>

@@ -1,15 +1,17 @@
 # NativeFontPrecision
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 - Declaration: `internal sealed unsafe partial class NativeFontPrecision : IDisposable`
-- Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Memory.cs](../../src/Servers/Text/NativeFontPrecision.Memory.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
+- Sources: [NativeFontPrecision.cs](../../src/Servers/Text/NativeFontPrecision.cs), [NativeFontPrecision.Memory.cs](../../src/Servers/Text/NativeFontPrecision.Memory.cs), [NativeFontPrecision.Raster.cs](../../src/Servers/Text/NativeFontPrecision.Raster.cs), [NativeFontPrecision.MSDF.cs](../../src/Servers/Text/NativeFontPrecision.MSDF.cs), [OpenTypeFeatureTags.cs](../../src/Servers/Text/OpenTypeFeatureTags.cs)
 - Component: [canvas rendering](../components/canvas-rendering.md)
 - Visibility: internal; native handles and ABI records are unavailable to engine consumers.
 
 ## Description
 
 Owns a copied native font source, a public FreeType face, and HarfBuzz face/font/buffer handles on one serialized text owner: the native worker or nonthreaded browser execution thread. FontData serializes access from public Font resources. SFNT tables are obtained through FT_Load_Sfnt_Table, allowing the same path to shape compressed WOFF2 and ordinary TTF/OTF/TTC data without reading private library structures. HarfBuzz OT functions supply SFNT shaping, while explicit FreeType callbacks preserve unhinted advances, glyph extents and vertical origins. Scalable non-SFNT Type 1 sources set the HarfBuzz face glyph count/units and supply native nominal/selector mapping and unhinted pair kerning callbacks to the same shaper. Optional PFM/AFM bytes attach through FT_Attach_Stream before metrics and shaping configuration; attachment borrows pinned bytes only during the native call. SFNT introspection has no fabricated tables for these sources.
+
+MSDF decomposition prepares the shared native allocator before generation. The private core counts contour/edge storage, float/stencil images and the returned byte buffer; managed copying completes before native result retirement. Failed generation publishes no image and preserves typed allocation failure. See the [MSDF allocation domain](../coverage/performance-producers.md#msdf-owned-allocation-domain-2026-10-29).
 
 C-long fields and arguments retain `CLong`/`CULong` widths. Native returns use integer registers (`nint`/`nuint`), with Windows results narrowed to its 32-bit C long. Returning the managed wrapper struct selected the wrong struct-return ABI on Android x86 and corrupted underline metrics; the shared regression retains exact metrics, character-map, shaping and raster assertions on the Android host.
 

@@ -212,3 +212,5 @@ Type 1 PFB/PFA sources share native shaping and raster/MSDF consumers. The commo
 ## Runtime source identity
 
 GetRID/GetRIDs realize the current matched/theme source and expose its private native cache. TextServer queries and edits reach that actual backend, independently of stored matching preferences. Native face-count queries describe the actual selected file; the resource's logical/theme face-count policy is unchanged. Matching or theme/base source changes retire the previous cache and its borrowed views, including changes detected through dependency generations after a failed observer. Source projections keep the owning SystemFont alive. Automatic fallback identities are reported by glyph/run snapshots after realization.
+
+Native MSDF generation uses the [shared allocation domain](../coverage/performance-producers.md#msdf-owned-allocation-domain-2026-10-29), including short-lived generator buffers and failed partial edges. Output pixels are copied before native release; cached public reads do not rerun generation.

@@ -30,7 +30,7 @@ SetScript changes the actual binding on the same owner. Equality retains the cur
 
 LiveScriptBindingTests executes actual forward/reverse motion on the same Body/RID, assignment/detachment, equality and blocking, constructor/copy/fresh-process scene state, cancellation and committed retirement, partial-bind/clear/observer failures and a synchronized concurrent lifetime rejection. Four CPU/GPU owner/separate profiles each measure two 128-frame active intervals at strict 0/0 owner/all-thread managed bytes. Corrected focused selectors precede the generic threaded-collider shorthand and the launcher checks the actual backend/separate completion marker. The same frozen cohort passes four ordinary-object and four initialization profiles, registered-source extension checks and the 128-frame GPU script/effect host, including its inspected capture. Receipts are under `bin/script-live-binding/2026-10-28/verified/`.
 
-This is an executable first binding slice, not the complete SetScript family. The remaining native callback roles and fixed CLR class reassignment remain open. Resource/copy/cache behavior is specified below. SetScript is Partial; no physical declaration becomes Implemented from this slice. The physical census remains 1363/1369 (99.56%), six open, 92 Excluded.
+This is an executable first binding slice, not the complete SetScript family. The remaining native callback roles and fixed CLR class reassignment remain open. Resource/copy/cache behavior is specified below. SetScript is Partial; no physical declaration becomes Implemented from this slice. See the [current physical declaration census](../coverage/physics-status.md) for the remaining inherited obligations.
 
 ## Native property schemas
 

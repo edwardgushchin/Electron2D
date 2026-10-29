@@ -16,6 +16,7 @@ System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ICU_ALLOCATION") == "1") { NativeICUAllocationChecks.Run(NativeAllocation.Snapshot, fresh: true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGEX_ALLOCATION") == "1") { NativeRegExAllocationChecks.Run(NativeAllocation.Snapshot, fresh: true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MSDF_ALLOCATION") == "1") { NativeMSDFAllocationChecks.Run(NativeAllocation.Snapshot, FontTestFixtures.MSDF); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_GLOBAL_SETTINGS_CHILD") == "1") { NavigationGlobalDebugTests.SettingsChild(); return; }
 

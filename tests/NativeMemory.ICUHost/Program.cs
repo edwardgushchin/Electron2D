@@ -30,8 +30,9 @@ internal static unsafe class Program
             _fail = (delegate* unmanaged[Cdecl]<uint, void>)NativeLibrary.GetExport(library, "e2d_test_fail_after");
             NativeRegExAllocationChecks.Faults(Read, Fail);
         }
+        else if (args.Length == 2 && args[0] == "msdf") NativeMSDFAllocationChecks.Run(Read, File.ReadAllBytes(args[1]));
         else if (args.Length == 1 && args[0] == "regex") NativeRegExAllocationChecks.Run(Read, fresh: true);
         else if (args.Length == 0) NativeICUAllocationChecks.Run(Read, fresh: true);
-        else throw new ArgumentException("Expected no arguments, regex or regex-fault.");
+        else throw new ArgumentException("Expected no arguments, regex, regex-fault or msdf FONT.");
     }
 }

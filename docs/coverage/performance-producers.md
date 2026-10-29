@@ -333,9 +333,44 @@ identity matters: the preceding ICU-only bridge can register callbacks but fails
 the compiled-payload control, as does the preceding managed/native cohort.
 Receipts, hashes and qualification limits are retained under
 `bin/regex-allocation-accounting/2026-10-29/`. This domain does not implement the
-public composed memory monitors. MSDF/other native domains, concurrent managed
+public composed memory monitors. Other native domains, concurrent managed
 collection, module/unload ownership and runtime delivery remain open. Physics
 coverage stays **1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
+## MSDF-owned allocation domain (2026-10-29)
+
+The pinned msdfgen sources remain byte-identical to their manifest. The native
+build verifies that entire closure, then prepares a private build tree that
+replaces container/edge/pixel allocation with the existing immutable text
+callbacks. Vectors, queue storage, split edges, float/stencil images and the
+returned RGBA buffer enter the same requested-payload native ledger as ICU and
+PCRE2. No process-wide C++ allocation operator is replaced. The compiled private
+core has no unresolved default new/delete or malloc/calloc/realloc references.
+
+The overlay also gives partially split edges scoped ownership until adoption,
+and constructs bitmap/edge assignment replacements before retiring prior owners.
+A control without split ownership leaks on the fifth cubic allocation failure.
+All 162 observed allocation failures across nine native modes drain completely,
+preserve the error/output boundary and allow retry; fourteen separate ownership
+controls preserve prior bitmap/edge owners and drain partial split/adoption.
+Normal and ASan/UBSan/leak profiles pass. Normal images and bounds match a
+separately compiled pristine core byte for byte, including quadratic/cubic,
+teardrop, multiple contours and reversed orientation. Invalid/empty outlines and
+the image-byte budget keep their existing behavior.
+
+The managed adapter prepares callbacks without loading the ICU database and
+releases the returned native image after copying. The public 1536-pixel source
+control observes an 18056512-byte temporary float image, a 22607307-byte native
+peak, complete native drain on disposal and 20000 prepared preference/snapshot
+cycles at zero owner/all-thread managed bytes. Public FontFile consumers on
+CLR/full-trim NativeAOT, the existing independent glyph oracle and native window
+profiles qualify their exercised paths; exact commands, source/PDB and native
+identities and any remaining limits live under
+`bin/msdf-allocation-accounting/2026-10-29/`. Cold generation remains allocating
+work. This domain does not complete the public composed memory selectors,
+remaining native/runtime ownership, concurrent collection, runtime delivery,
+network/performance or foreign-platform acceptance. Physics declaration coverage
+remains **1365/1369 (99.71%)**, four Partial and 92 Excluded.
 
 ## Streaming GZIP allocation domain
 
@@ -350,7 +385,7 @@ now retires the runtime's partially initialized native record before the engine'
 tracked outer PAL record. The calibrated allocator regression reproduces the
 preceding leak and observes balanced allocation/free calls after the fix. It
 neither instruments codec-owned bytes nor completes the managed/native total;
-both memory selectors and the current five open physics declarations stay open.
+both memory selectors and the current four open physics declarations stay open.
 
 The two applicable missing selectors are MEMORY_STATIC and MEMORY_STATIC_MAX.
 [Performance](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/main/performance.cpp#L251-L254)
