@@ -15,6 +15,7 @@ typedef struct {
     int ready, initialized;
 } e2d_ogv_stream;
 typedef struct {
+    E2DOGVOwner owner;
     th_enc_ctx *video;
     th_ycbcr_buffer planes;
     vorbis_info audio_info;
@@ -45,7 +46,10 @@ static int queue_packet(e2d_ogv *c, e2d_ogv_stream *stream, ogg_packet *packet) 
 }
 static int write_bytes(e2d_ogv *c, const uint8_t *data, size_t length) {
     if (!length) return 0;
-    return c->writer(data, length, c->user) ? 0 : fail(c, -4);
+    E2DOGVScope *saved = e2d_ogv_scope_suspend();
+    int written = c->writer(data, length, c->user);
+    e2d_ogv_scope_resume(saved);
+    return written ? 0 : fail(c, -4);
 }
 static int write_page(e2d_ogv *c, ogg_page *p) {
     if (write_bytes(c, p->header, (size_t)p->header_len)) return c->failed;
@@ -103,22 +107,27 @@ static int pull_audio(e2d_ogv *c) {
     }
     return status < 0 ? fail(c, -3) : 0;
 }
-E2D_API void e2d_ogv_destroy(void *context) {
-    e2d_ogv *c = context; if (!c) return;
+static void destroy(e2d_ogv *c) {
     if (c->video) th_encode_free(c->video);
     if (c->block_initialized) vorbis_block_clear(&c->block);
     if (c->audio_initialized) vorbis_dsp_clear(&c->audio);
     vorbis_comment_clear(&c->audio_comment); vorbis_info_clear(&c->audio_info);
     if (c->v.initialized) ogg_stream_clear(&c->v.stream);
     if (c->a.initialized) ogg_stream_clear(&c->a.stream);
-    e2d_ogv_release(c->yuv); e2d_ogv_release(c);
+    e2d_ogv_release(c->yuv);
 }
-E2D_API int e2d_ogv_create(int width, int height, int fps, int rate, int channels, float vq, float aq, int speed, int keyframes, e2d_ogv_writer writer, void *user, void **result) {
-    if (!result) return -1; *result = NULL;
-    if (!writer || width <= 0 || height <= 0 || (width & 1) || (height & 1) || width > 1048560 || height > 1048560 || (uint64_t)width * (uint64_t)height > SIZE_MAX / 3 || fps <= 0 || rate < 1000 || rate > 200000 ||
-        (channels != 2 && channels != 4 && channels != 6 && channels != 8) || !isfinite(vq) || vq < 0 || vq > 1 || !isfinite(aq) || aq < -.1f || aq > 1 || speed < 1 || speed > 4 || keyframes < 1 || keyframes > 1024) return -1;
-    if (!e2d_ogv_memory_ready()) return -5;
-    e2d_ogv *c = e2d_ogv_zero(1, sizeof(*c)); if (!c) return -2; *result = c;
+E2D_API void e2d_ogv_destroy(void *context) {
+    e2d_ogv *c = context; if (!c || c->owner.active) return;
+    if (!c->owner.failed) {
+        E2DOGVScope scope;
+        if (!e2d_ogv_scope_enter(&scope, &c->owner)) {
+            if (!setjmp(scope.jump)) destroy(c);
+            e2d_ogv_scope_leave(&scope);
+        }
+    }
+    e2d_ogv_owner_clear(&c->owner); e2d_ogv_release(c);
+}
+static int create(e2d_ogv *c, int width, int height, int fps, int rate, int channels, float vq, float aq, int speed, int keyframes, e2d_ogv_writer writer, void *user) {
     c->writer = writer; c->user = user; c->width = width; c->height = height; c->frame_width = (width + 15) & ~15; c->frame_height = (height + 15) & ~15;
     c->channels = channels; c->output_channels = channels == 4 ? 6 : channels;
     vorbis_info_init(&c->audio_info); vorbis_comment_init(&c->audio_comment);
@@ -180,8 +189,7 @@ static void convert_rgb(e2d_ogv *c, const uint8_t *rgb) {
         c->planes[2].data[at] = (uint8_t)(128 + ((112 * r - 94 * g - 18 * b + 128) >> 8));
     }
 }
-E2D_API int e2d_ogv_frame(void *context, const uint8_t *rgb, size_t length, const int32_t *pcm, int samples) {
-    e2d_ogv *c = context; if (!c || !rgb || samples < 0 || (!pcm && samples) || (uint64_t)c->width * (uint64_t)c->height > SIZE_MAX / 3 || length != (size_t)c->width * c->height * 3) return -1;
+static int frame(e2d_ogv *c, const uint8_t *rgb, const int32_t *pcm, int samples) {
     if (c->failed || c->finished) return c->failed ? c->failed : -1;
     if (pull_video(c, 0)) return c->failed;
     convert_rgb(c, rgb); uint64_t epoch = e2d_ogv_failure_epoch();
@@ -199,8 +207,8 @@ E2D_API int e2d_ogv_frame(void *context, const uint8_t *rgb, size_t length, cons
     c->has_frame = 1; if (pull_audio(c)) return c->failed;
     return mux(c, 0);
 }
-E2D_API int e2d_ogv_finish(void *context) {
-    e2d_ogv *c = context; if (!c || c->finished) return -1; if (c->failed) return c->failed;
+static int finish(e2d_ogv *c) {
+    if (c->failed) return c->failed; if (c->finished) return -1;
     c->finished = 1;
     if (vorbis_analysis_wrote(&c->audio, 0)) return fail(c, -3);
     if (pull_audio(c) || pull_video(c, 1)) return c->failed;
@@ -213,4 +221,31 @@ E2D_API int e2d_ogv_finish(void *context) {
         ogg_page page = {header, 27, NULL, 0}; ogg_page_checksum_set(&page); return write_bytes(c, header, sizeof(header));
     }
     return 0;
+}
+E2D_API int e2d_ogv_create(int width, int height, int fps, int rate, int channels, float vq, float aq, int speed, int keyframes, e2d_ogv_writer writer, void *user, void **result) {
+    if (!result) return -1; *result = NULL;
+    if (!writer || width <= 0 || height <= 0 || (width & 1) || (height & 1) || width > 1048560 || height > 1048560 || (uint64_t)width * (uint64_t)height > SIZE_MAX / 3 || fps <= 0 || rate < 1000 || rate > 200000 ||
+        (channels != 2 && channels != 4 && channels != 6 && channels != 8) || !isfinite(vq) || vq < 0 || vq > 1 || !isfinite(aq) || aq < -.1f || aq > 1 || speed < 1 || speed > 4 || keyframes < 1 || keyframes > 1024) return -1;
+    if (!e2d_ogv_memory_ready()) return -5;
+    e2d_ogv *c = e2d_ogv_context_zero(sizeof(*c)); if (!c) return -2; *result = c;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &c->owner);
+    if (status) return fail(c, status);
+    if (setjmp(scope.jump)) { e2d_ogv_scope_leave(&scope); return fail(c, -2); }
+    status = create(c, width, height, fps, rate, channels, vq, aq, speed, keyframes, writer, user);
+    e2d_ogv_scope_leave(&scope); return status;
+}
+E2D_API int e2d_ogv_frame(void *context, const uint8_t *rgb, size_t length, const int32_t *pcm, int samples) {
+    e2d_ogv *c = context;
+    if (!c || !rgb || samples < 0 || (!pcm && samples) || (uint64_t)c->width * (uint64_t)c->height > SIZE_MAX / 3 || length != (size_t)c->width * c->height * 3) return -1;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &c->owner);
+    if (status) return status;
+    if (setjmp(scope.jump)) { e2d_ogv_scope_leave(&scope); return fail(c, -2); }
+    status = frame(c, rgb, pcm, samples); e2d_ogv_scope_leave(&scope); return status;
+}
+E2D_API int e2d_ogv_finish(void *context) {
+    e2d_ogv *c = context; if (!c) return -1;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &c->owner);
+    if (status) return status;
+    if (setjmp(scope.jump)) { e2d_ogv_scope_leave(&scope); return fail(c, -2); }
+    status = finish(c); e2d_ogv_scope_leave(&scope); return status;
 }

@@ -12,7 +12,7 @@ static void check(int value, const char *message) { if (!value) { fprintf(stderr
 static uint32_t read32(const unsigned char *p) {
     return (uint32_t)p[0] | (uint32_t)p[1]<<8 | (uint32_t)p[2]<<16 | (uint32_t)p[3]<<24;
 }
-static int exercise(void) {
+static int exercise_body(E2DOGVOwner *owner) {
     vorbis_comment vc; vorbis_comment_init(&vc); vorbis_comment_add(&vc,comment);
     ogg_packet packet={0};int status=vorbis_commentheader_out(&vc,&packet);
     vorbis_comment_clear(&vc);
@@ -28,8 +28,18 @@ static int exercise(void) {
     check(cursor+sizeof(comment)==(size_t)packet.bytes && !memcmp(packet.packet+cursor,comment,sizeof(comment)-1),"Comment payload changed");
     check(packet.packet[packet.bytes-1]==1 && packet.packetno==1 && !packet.b_o_s && !packet.e_o_s,"Comment framing changed");
     E2DMemorySnapshot state;e2d_memory_snapshot(&state);
-    check(state.nativeCurrent==(uint64_t)packet.bytes,"Published comment packet is outside its Ogg allocator");
+    check(state.nativeCurrent==(uint64_t)packet.bytes+sizeof(*owner)+owner->capacity*sizeof(void *),"Published comment packet is outside its Ogg allocator");
     ogg_packet_clear(&packet);return 0;
+}
+static int exercise(void) {
+    E2DOGVOwner *owner=e2d_ogv_context_zero(sizeof(*owner));if(!owner)return -1;
+    E2DOGVScope scope;check(!e2d_ogv_scope_enter(&scope,owner),"Scope entry failed");
+    if(setjmp(scope.jump)) {
+        e2d_ogv_scope_leave(&scope);e2d_ogv_owner_clear(owner);e2d_ogv_release(owner);return -1;
+    }
+    int status=exercise_body(owner);
+    check(!owner->count,"Comment owner retained payload after normal cleanup");
+    e2d_ogv_scope_leave(&scope);e2d_ogv_owner_clear(owner);e2d_ogv_release(owner);return status;
 }
 int main(int argc,char **argv) {
     check(argc==2,"Expected allocation failure position");

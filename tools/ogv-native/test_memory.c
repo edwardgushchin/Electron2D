@@ -11,7 +11,8 @@ static uint8_t *source;
 static size_t source_bytes;
 static void check(int value, const char *reason) { if (!value) { fprintf(stderr, "%s\n", reason); exit(1); } }
 static int write_page(const uint8_t *data, size_t size, void *user) {
-    (void)user; check(data && size, "Invalid writer input"); return 1;
+    check(data && size && user, "Invalid writer input");
+    check(e2d_ogv_finish(*(void **)user)==-1,"Reentrant writer mutated its active encoder");return 1;
 }
 static void drained(void) {
     E2DMemorySnapshot state; e2d_memory_snapshot(&state);
@@ -25,7 +26,7 @@ static int exercise(int encode, int exclusive) {
         uint8_t *rgb = malloc(extent); check(rgb != NULL, "Caller image allocation failed");
         unsigned random = 123;
         for (size_t i = 0; i < extent; ++i) { random = random * 1664525U + 1013904223U; rgb[i] = encode == 2 ? (uint8_t)(random >> 24) : 0; }
-        int status = e2d_ogv_create(width, height, 59, 48000, 2, encode == 2 ? 1.f : .75f, .5f, 4, 3, write_page, NULL, &context);
+        int status = e2d_ogv_create(width, height, 59, 48000, 2, encode == 2 ? 1.f : .75f, .5f, 4, 3, write_page, &context, &context);
         if (!status) {
             int32_t pcm[814 * 2] = {0};
             for (int i = 0; i < 4 && !status; ++i) status = e2d_ogv_frame(context, rgb, extent, pcm, 813);

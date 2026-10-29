@@ -7,6 +7,19 @@ from pathlib import Path
 import subprocess
 
 
+def allocation_closure(checker):
+    libraries = [checker.parent / name for name in ("libElectron2DVorbisCodec.a", "libElectron2DTheoraCodec.a")]
+    libraries += sorted(checker.parent.glob("libElectron2DOGV.*"))
+    result = []
+    for library in libraries:
+        symbols = subprocess.run(["nm", "-u", str(library)], check=True, capture_output=True, text=True).stdout
+        unwrapped = [line.split()[-1] for line in symbols.splitlines() if line.split() and
+                     line.split()[-1].split("@")[0] in ("malloc", "calloc", "realloc", "free", "strdup", "aligned_alloc", "posix_memalign")]
+        assert not unwrapped, (library, unwrapped)
+        result.append({"library": library.name, "sha256": hashlib.sha256(library.read_bytes()).hexdigest()})
+    return result
+
+
 def sweep(command, attempts, label):
     def refused(position):
         result = subprocess.run([*command, str(position)], capture_output=True, text=True)
@@ -21,6 +34,10 @@ def sweep(command, attempts, label):
 
 
 def check(checker, fixtures, output):
+    closure = allocation_closure(checker)
+    owner = checker.with_name("Electron2DOGVOwnerCheck")
+    owner_baseline = json.loads(subprocess.check_output([str(owner.resolve()), "0"], text=True))
+    sweep([str(owner.resolve())], owner_baseline["attempts"], "Owner")
     container = checker.with_name("Electron2DOGGContainerCheck")
     container_baseline = json.loads(subprocess.check_output([str(container.resolve()), "0"], text=True))
     sweep([str(container.resolve())], container_baseline["attempts"], "Container")
@@ -51,13 +68,14 @@ def check(checker, fixtures, output):
             baseline = json.loads(subprocess.check_output([*command, "0"], text=True))
             sweep(command, baseline["attempts"], fixture.name + "/" + role)
             results.append({"fixture": str(fixture), "sha256": hashlib.sha256(fixture.read_bytes()).hexdigest(), **baseline})
-    output.write_text(json.dumps({"checker_sha256": hashlib.sha256(checker.read_bytes()).hexdigest(),
+    output.write_text(json.dumps({"allocation_closure": closure, "checker_sha256": hashlib.sha256(checker.read_bytes()).hexdigest(),
                                  "container_checker_sha256": hashlib.sha256(container.read_bytes()).hexdigest(),
                                  "container": container_baseline, "bitwise_checker_sha256": hashlib.sha256(bits.read_bytes()).hexdigest(),
                                  "bitwise": bit_results, "packet_checker_sha256": hashlib.sha256(packets.read_bytes()).hexdigest(),
                                  "packet": packet_baseline, "headers_checker_sha256": hashlib.sha256(headers.read_bytes()).hexdigest(),
-                                 "headers": header_baseline, "oracles": oracles, "results": results}, indent=2) + "\n")
-    print(f"OGV allocations: {sum(row['attempts'] for row in results)} bridge, {container_baseline['attempts']} container, {sum(row['attempts'] for row in bit_results)} bit-buffer, {packet_baseline['attempts']} comment-header and {header_baseline['attempts']} DSP-header refusal positions; preparation/growth/retirement/retry passed.")
+                                 "headers": header_baseline, "owner_checker_sha256": hashlib.sha256(owner.read_bytes()).hexdigest(),
+                                 "owner": owner_baseline, "oracles": oracles, "results": results}, indent=2) + "\n")
+    print(f"OGV allocations: {sum(row['attempts'] for row in results)} complete codec, {container_baseline['attempts']} container, {sum(row['attempts'] for row in bit_results)} bit-buffer, {packet_baseline['attempts']} comment, {header_baseline['attempts']} DSP and {owner_baseline['attempts']} owner refusal positions; preparation/growth/retirement/retry passed.")
 
 
 if __name__ == "__main__":

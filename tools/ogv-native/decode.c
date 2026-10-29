@@ -10,6 +10,7 @@
 
 typedef struct { ogg_packet *packets; size_t count, capacity; } packet_list;
 typedef struct {
+    E2DOGVOwner owner;
     th_info ti;
     th_comment tc;
     th_setup_info *setup;
@@ -30,9 +31,7 @@ static void clear_packets(packet_list *list) {
     for (size_t i = 0; i < list->count; i++) e2d_ogv_release(list->packets[i].packet);
     e2d_ogv_release(list->packets);
 }
-void e2d_video_destroy(void *context) {
-    video_reader *r = context;
-    if (!r) return;
+static void destroy(video_reader *r) {
     if (r->block_init) vorbis_block_clear(&r->block);
     if (r->audio_init) vorbis_dsp_clear(&r->audio);
     vorbis_comment_clear(&r->vc); vorbis_info_clear(&r->vi);
@@ -40,7 +39,7 @@ void e2d_video_destroy(void *context) {
     if (r->setup) th_setup_free(r->setup);
     th_comment_clear(&r->tc); th_info_clear(&r->ti);
     clear_packets(&r->videos); clear_packets(&r->audios);
-    e2d_ogv_release(r->rgba); e2d_ogv_release(r);
+    e2d_ogv_release(r->rgba);
 }
 static int append_packet(packet_list *list, const ogg_packet *packet) {
     if (packet->bytes < 0 || list->count >= 16777216) return -1;
@@ -143,8 +142,7 @@ static int copy_frame(video_reader *r) {
     }
     return 0;
 }
-int e2d_video_frame(void *context, int64_t frame, const uint8_t **rgba) {
-    video_reader *r = context;
+static int video_frame(video_reader *r, int64_t frame, const uint8_t **rgba) {
     if (!r || !rgba || frame < 0 || (uint64_t)frame >= r->videos.count) return -1;
     *rgba = r->rgba;
     if (frame == r->video_cursor) return 0;
@@ -161,8 +159,7 @@ int e2d_video_frame(void *context, int64_t frame, const uint8_t **rgba) {
     }
     return copy_frame(r) ? -1 : 1;
 }
-int e2d_video_audio(void *context, float *pcm, int frames) {
-    video_reader *r = context;
+static int video_audio(video_reader *r, float *pcm, int frames) {
     if (!r || frames < 0 || (frames && !pcm)) return -1;
     if (!r->audio_init || !frames) return 0;
     int written = 0;
@@ -186,27 +183,21 @@ int e2d_video_audio(void *context, float *pcm, int frames) {
     }
     return written;
 }
-int e2d_video_seek_audio(void *context, int64_t frame) {
-    video_reader *r = context;
+static int video_seek_audio(video_reader *r, int64_t frame) {
     if (!r || frame < 0) return -1;
     if (!r->audio_init) return 0;
     if (vorbis_synthesis_restart(&r->audio)) return -1;
     r->audio_cursor = 0;
     float scratch[256 * 8];
     while (frame > 0) {
-        int count = e2d_video_audio(r, scratch, frame > 256 ? 256 : (int)frame);
+        int count = video_audio(r, scratch, frame > 256 ? 256 : (int)frame);
         if (count < 0) return count;
         if (!count) break;
         frame -= count;
     }
     return 0;
 }
-int e2d_video_create(const uint8_t *data, size_t bytes, int track, e2d_video_info *info, void **result) {
-    if (result) *result = NULL;
-    if (!data || !bytes || bytes > 536870912 || bytes > LONG_MAX || track < -1 || !info || !result) return -1;
-    if (!e2d_ogv_memory_ready()) return -5;
-    video_reader *r = e2d_ogv_zero(1, sizeof(*r));
-    if (!r) return -2;
+static int create(video_reader *r, const uint8_t *data, size_t bytes, int track) {
     th_info_init(&r->ti); th_comment_init(&r->tc);
     vorbis_info_init(&r->vi); vorbis_comment_init(&r->vc);
     int status = parse(r, data, bytes, track);
@@ -239,14 +230,60 @@ int e2d_video_create(const uint8_t *data, size_t bytes, int track, e2d_video_inf
     }
     /* Validate every packet and reserve codec working peaks before prepared replay. */
     const uint8_t *pixels;
-    if (r->videos.count && e2d_video_frame(r, (int64_t)r->videos.count - 1, &pixels) < 0) { status = -1; goto failed; }
+    if (r->videos.count && video_frame(r, (int64_t)r->videos.count - 1, &pixels) < 0) { status = -1; goto failed; }
     float scratch[256 * 8];
-    do { status = e2d_video_audio(r, scratch, 256); } while (status > 0);
-    if (status < 0 || e2d_video_seek_audio(r, 0)) { status = -1; goto failed; }
-    if (r->videos.count && e2d_video_frame(r, 0, &pixels) < 0) { status = -1; goto failed; }
-    *info = r->info; *result = r;
+    do { status = video_audio(r, scratch, 256); } while (status > 0);
+    if (status < 0 || video_seek_audio(r, 0)) { status = -1; goto failed; }
+    if (r->videos.count && video_frame(r, 0, &pixels) < 0) { status = -1; goto failed; }
     return 0;
 failed:
-    e2d_video_destroy(r);
     return status;
+}
+
+void e2d_video_destroy(void *context) {
+    video_reader *r = context; if (!r || r->owner.active) return;
+    if (!r->owner.failed) {
+        E2DOGVScope scope;
+        if (!e2d_ogv_scope_enter(&scope, &r->owner)) {
+            if (!setjmp(scope.jump)) destroy(r);
+            e2d_ogv_scope_leave(&scope);
+        }
+    }
+    e2d_ogv_owner_clear(&r->owner); e2d_ogv_release(r);
+}
+int e2d_video_create(const uint8_t *data, size_t bytes, int track, e2d_video_info *info, void **result) {
+    if (result) *result = NULL;
+    if (!data || !bytes || bytes > 536870912 || bytes > LONG_MAX || track < -1 || !info || !result) return -1;
+    if (!e2d_ogv_memory_ready()) return -5;
+    video_reader *r = e2d_ogv_context_zero(sizeof(*r)); if (!r) return -2;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &r->owner);
+    if (status) { e2d_video_destroy(r); return status; }
+    if (setjmp(scope.jump)) {
+        e2d_ogv_scope_leave(&scope); e2d_video_destroy(r); return -2;
+    }
+    status = create(r, data, bytes, track); e2d_ogv_scope_leave(&scope);
+    if (status) { e2d_video_destroy(r); return status; }
+    *info = r->info; *result = r; return 0;
+}
+int e2d_video_frame(void *context, int64_t frame, const uint8_t **rgba) {
+    video_reader *r = context;
+    if (!r || !rgba || frame < 0 || (uint64_t)frame >= r->videos.count) return -1;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &r->owner);
+    if (status) return status;
+    if (setjmp(scope.jump)) { e2d_ogv_scope_leave(&scope); return -2; }
+    status = video_frame(r, frame, rgba); e2d_ogv_scope_leave(&scope); return status;
+}
+int e2d_video_audio(void *context, float *pcm, int frames) {
+    video_reader *r = context; if (!r || frames < 0 || (frames && !pcm)) return -1;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &r->owner);
+    if (status) return status;
+    if (setjmp(scope.jump)) { e2d_ogv_scope_leave(&scope); return -2; }
+    status = video_audio(r, pcm, frames); e2d_ogv_scope_leave(&scope); return status;
+}
+int e2d_video_seek_audio(void *context, int64_t frame) {
+    video_reader *r = context; if (!r || frame < 0) return -1;
+    E2DOGVScope scope; int status = e2d_ogv_scope_enter(&scope, &r->owner);
+    if (status) return status;
+    if (setjmp(scope.jump)) { e2d_ogv_scope_leave(&scope); return -2; }
+    status = video_seek_audio(r, frame); e2d_ogv_scope_leave(&scope); return status;
 }
