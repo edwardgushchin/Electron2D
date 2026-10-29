@@ -60,6 +60,62 @@ def patch_controls(workspace, output):
         (output / 'patch-controls.json').write_text(json.dumps(receipt, indent=2) + '\n')
 
 
+def check_report(report, server_gc=False, dynamic_code=False, runtime=".NET 10.0.1"):
+    assert report['Runtime'] == runtime and report['DynamicCode'] == dynamic_code
+    assert report['ServerGC'] == server_gc and report['ReadBytes'] == 0
+    assert report['Allocated'] - report['Retired'] == report['Current'] and report['Peak'] >= report['Current']
+    assert report['ConcurrentCollections'] > 0 and report['FrozenCount'] > 0 and report['FrozenBytes'] > 0
+    assert report['MidpointCollection'], 'The mutator midpoint must contain a collection before either worker completes'
+    assert len(report['Rows']) == 29
+    assert all(row['Allocated'] - row['Retired'] == row['Current'] for row in report['Rows'])
+    hidden = next(row for row in report['Rows'] if row['Phase'] == 'peak-between-reads')
+    rejected = next(row for row in report['Rows'] if row['Phase'] == 'rejected-array')
+    assert hidden['Current'] == 0 and hidden['Peak'] == 12288
+    assert rejected['Current'] == rejected['Peak'] == rejected['Allocated'] == 0
+    failed = next(row for row in report['Rows'] if row['Phase'] == 'injected-failure')
+    retry = next(row for row in report['Rows'] if row['Phase'] == 'retry-retired')
+    assert failed['Current'] == failed['Peak'] == failed['Allocated'] == 0 and failed['Failures'] == 1
+    assert retry['Current'] == 0 and retry['Allocated'] == retry['Retired'] == 123480 and retry['Failures'] == 1
+    frozen = report['Frozen']
+    assert frozen['StartupObserved'] and frozen['NoGCTransitions'] and frozen['MidpointCollection']
+    assert frozen['ReadBytes'] == 0 and frozen['InterleavedCollections'] > 0 and len(frozen['Rows']) == 13
+    assert all(row['Allocated'] - row['Retired'] == row['Current'] and
+               row['ManagedCurrent'] == row['Current'] + row['DynamicCurrent'] for row in frozen['Rows'])
+    phases = {row['Phase']: row for row in frozen['Rows']}
+    base = phases['startup']
+    assert phases['registration-failure']['Failures'] == base['Failures'] + 1
+    assert phases['grow-five']['Current'] == base['Current'] + 120
+    assert phases['unregistered']['Current'] == base['Current'] and phases['unregistered']['Segments'] == base['Segments']
+    assert phases['concurrent-lifetime']['Allocated'] == base['Allocated'] + 120 + 7680
+    assert phases['unobserved-frozen-peak']['Current'] == base['Current']
+    assert phases['unobserved-frozen-peak']['Peak'] == base['Current'] + 2400000
+    assert phases['disjoint-peak']['ManagedPeak'] < phases['disjoint-peak']['Peak'] + phases['disjoint-peak']['DynamicPeak']
+    process = report['Process']
+    assert process['MidpointCollection'] and process['InterleavedCollections'] > 0 and process['ReadBytes'] == 0
+    assert len(process['Rows']) == 14
+    assert all(row['Current'] == row['ManagedCurrent'] + row['NativeCurrent'] and row['Peak'] >= row['Current'] and
+               row['Allocated'] - row['Retired'] == row['NativeCurrent'] for row in process['Rows'])
+    native = {row['Phase']: row for row in process['Rows']}
+    assert [native[name]['NativeCurrent'] for name in ['allocated', 'grown', 'shrunk', 'zero-size']] == [73, 4097, 7, 0]
+    assert native['worker-retired']['Allocated'] == native['failed-allocations']['Allocated'] + 5056
+    assert native['worker-retired']['Retired'] == native['worker-retired']['Allocated']
+    assert native['unobserved-native-peak']['NativePeak'] == 7000000
+    assert native['unobserved-native-peak']['NativeCurrent'] == 0
+    assert native['disjoint-process-peak']['Peak'] < native['disjoint-process-peak']['ManagedPeak'] + native['disjoint-process-peak']['NativePeak']
+    assert native['wide-allocation']['NativeCurrent'] == (1 << 32) + 17
+    assert native['wide-resize']['NativeCurrent'] == (1 << 32) + 33
+    assert native['wide-retired']['NativeCurrent'] == 0 and native['wide-retired']['Peak'] >= native['wide-resize']['Peak']
+    common = report['Common']
+    assert common['ReadBytes'] == 0 and common['ExpectedDelayedPeak'] == common['ObservedDelayedPeak']
+    assert common['ObservedDelayedPeak'] > 5 << 30 and len(common['Rows']) == 7
+    assert all(row['Pending'] == 0 and row['Attempts'] == row['Completed'] + row['Failed'] and
+               row['SOH'] + row['FreeList'] + row['Segment'] == row['Completed'] + row['Reverted'] for row in common['Rows'])
+    phases = {row['Phase']: row for row in common['Rows']}
+    assert phases['free-list-reuse']['FreeList'] > phases['startup']['FreeList']
+    assert phases['finalizer-failure']['Failed'] == phases['delayed-completion']['Failed'] + 1
+    assert phases['finalizer-failure']['Reverted'] == phases['delayed-completion']['Reverted'] + 1
+
+
 def main():
     if not __debug__:
         raise SystemExit('Run this checker without Python optimization.')
@@ -144,59 +200,7 @@ def main():
             assert 0 < report['HeapLimit'] <= 134217728 and report['CollectionsAfter'] > report['CollectionsBefore']
             assert report['Failed'] == 1 and report['Reverted'] == report['TaggedCurrent'] == report['TaggedAllocated'] == 0
             continue
-        assert report['Runtime'] == '.NET 10.0.1' and not report['DynamicCode']
-        assert report['ServerGC'] == (label == 'server') and report['ReadBytes'] == 0
-        assert report['Allocated'] - report['Retired'] == report['Current'] and report['Peak'] >= report['Current']
-        assert report['ConcurrentCollections'] > 0 and report['FrozenCount'] > 0 and report['FrozenBytes'] > 0
-        assert report['MidpointCollection'], 'The mutator midpoint must contain a collection before either worker completes'
-        assert len(report['Rows']) == 29
-        assert all(row['Allocated'] - row['Retired'] == row['Current'] for row in report['Rows'])
-        hidden = next(row for row in report['Rows'] if row['Phase'] == 'peak-between-reads')
-        rejected = next(row for row in report['Rows'] if row['Phase'] == 'rejected-array')
-        assert hidden['Current'] == 0 and hidden['Peak'] == 12288
-        assert rejected['Current'] == rejected['Peak'] == rejected['Allocated'] == 0
-        failed = next(row for row in report['Rows'] if row['Phase'] == 'injected-failure')
-        retry = next(row for row in report['Rows'] if row['Phase'] == 'retry-retired')
-        assert failed['Current'] == failed['Peak'] == failed['Allocated'] == 0 and failed['Failures'] == 1
-        assert retry['Current'] == 0 and retry['Allocated'] == retry['Retired'] == 123480 and retry['Failures'] == 1
-        frozen = report['Frozen']
-        assert frozen['StartupObserved'] and frozen['NoGCTransitions'] and frozen['MidpointCollection']
-        assert frozen['ReadBytes'] == 0 and frozen['InterleavedCollections'] > 0 and len(frozen['Rows']) == 13
-        assert all(row['Allocated'] - row['Retired'] == row['Current'] and
-                   row['ManagedCurrent'] == row['Current'] + row['DynamicCurrent'] for row in frozen['Rows'])
-        phases = {row['Phase']: row for row in frozen['Rows']}
-        base = phases['startup']
-        assert phases['registration-failure']['Failures'] == base['Failures'] + 1
-        assert phases['grow-five']['Current'] == base['Current'] + 120
-        assert phases['unregistered']['Current'] == base['Current'] and phases['unregistered']['Segments'] == base['Segments']
-        assert phases['concurrent-lifetime']['Allocated'] == base['Allocated'] + 120 + 7680
-        assert phases['unobserved-frozen-peak']['Current'] == base['Current']
-        assert phases['unobserved-frozen-peak']['Peak'] == base['Current'] + 2400000
-        assert phases['disjoint-peak']['ManagedPeak'] < phases['disjoint-peak']['Peak'] + phases['disjoint-peak']['DynamicPeak']
-        process = report['Process']
-        assert process['MidpointCollection'] and process['InterleavedCollections'] > 0 and process['ReadBytes'] == 0
-        assert len(process['Rows']) == 14
-        assert all(row['Current'] == row['ManagedCurrent'] + row['NativeCurrent'] and row['Peak'] >= row['Current'] and
-                   row['Allocated'] - row['Retired'] == row['NativeCurrent'] for row in process['Rows'])
-        native = {row['Phase']: row for row in process['Rows']}
-        assert [native[name]['NativeCurrent'] for name in ['allocated', 'grown', 'shrunk', 'zero-size']] == [73, 4097, 7, 0]
-        assert native['worker-retired']['Allocated'] == native['failed-allocations']['Allocated'] + 5056
-        assert native['worker-retired']['Retired'] == native['worker-retired']['Allocated']
-        assert native['unobserved-native-peak']['NativePeak'] == 7000000
-        assert native['unobserved-native-peak']['NativeCurrent'] == 0
-        assert native['disjoint-process-peak']['Peak'] < native['disjoint-process-peak']['ManagedPeak'] + native['disjoint-process-peak']['NativePeak']
-        assert native['wide-allocation']['NativeCurrent'] == (1 << 32) + 17
-        assert native['wide-resize']['NativeCurrent'] == (1 << 32) + 33
-        assert native['wide-retired']['NativeCurrent'] == 0 and native['wide-retired']['Peak'] >= native['wide-resize']['Peak']
-        common = report['Common']
-        assert common['ReadBytes'] == 0 and common['ExpectedDelayedPeak'] == common['ObservedDelayedPeak']
-        assert common['ObservedDelayedPeak'] > 5 << 30 and len(common['Rows']) == 7
-        assert all(row['Pending'] == 0 and row['Attempts'] == row['Completed'] + row['Failed'] and
-                   row['SOH'] + row['FreeList'] + row['Segment'] == row['Completed'] + row['Reverted'] for row in common['Rows'])
-        phases = {row['Phase']: row for row in common['Rows']}
-        assert phases['free-list-reuse']['FreeList'] > phases['startup']['FreeList']
-        assert phases['finalizer-failure']['Failed'] == phases['delayed-completion']['Failed'] + 1
-        assert phases['finalizer-failure']['Reverted'] == phases['delayed-completion']['Reverted'] + 1
+        check_report(report, label == 'server')
         reports[label] = report
     summary = {'reports': reports, 'runtimeInputs': runtime_inputs, 'bridgeSHA256': digest(workspace / 'producer.o'),
                'deferredBridgeSHA256': digest(workspace / 'producer-deferred.o'),

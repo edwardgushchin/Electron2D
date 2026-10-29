@@ -14,6 +14,8 @@ internal static class Program
     }
     [DllImport("Electron2DAOTMemory", EntryPoint = "e2d_aot_process_read")]
     private static extern void Snapshot(out Counts counts);
+    [DllImport("Electron2DAOTMemory", EntryPoint = "e2d_live_tag")]
+    private static extern void RequireCLRProfiler(uint tag);
     private static Counts Read()
     {
         Snapshot(out var c);
@@ -25,7 +27,8 @@ internal static class Program
     private static void Require(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
     private static void Main()
     {
-        Require(!RuntimeFeature.IsDynamicCodeSupported, "This host requires the source-instrumented NativeAOT profile");
+        if (RuntimeFeature.IsDynamicCodeSupported) RequireCLRProfiler(0);
+        Read();
         using (var warmup = new StreamPeerGZIP()) { warmup.StartCompression(); warmup.Clear(); }
         var before = Read();
         ulong contribution, retainedPeak;
@@ -49,7 +52,7 @@ internal static class Program
         long start = GC.GetAllocatedBytesForCurrentThread();
         for (int i = 0; i < 20000; ++i) Read();
         long bytes = GC.GetAllocatedBytesForCurrentThread() - start;
-        Require(bytes == 0, "Prepared shared snapshots allocate");
+        if (bytes != 0) throw new InvalidOperationException($"Prepared shared snapshots allocate {bytes} bytes");
         var report = new Report(RuntimeInformation.FrameworkDescription, contribution, retainedPeak, bytes, Read().NativeCurrent);
         Console.WriteLine(JsonSerializer.Serialize(report, Context.Default.Report));
     }

@@ -1,4 +1,4 @@
-// Test-only NativeAOT callback ledger. It never calls managed code or triggers GC.
+// Test-only source-runtime callback ledger. It never calls managed code or triggers GC.
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -12,8 +12,8 @@
 struct Counts { uint64_t current, peak, allocated, retired, count, collections, fastObjects, fastArrays, slow, frozenCount, frozenBytes, failures; };
 static_assert(sizeof(Counts) == 96 && sizeof(uintptr_t) == 8);
 struct Watch { uintptr_t type; int64_t length; Counts totals; uint64_t survivors, survivorCount; };
-struct FrozenCounts { uint64_t current, peak, allocated, retired, segments, registrations, updates, removals, failures, managedCurrent, managedPeak; };
-static_assert(sizeof(FrozenCounts) == 88);
+struct FrozenCounts { uint64_t current, peak, allocated, retired, segments, registrations, updates, removals, failures, managedCurrent, managedPeak, dynamicCurrent, dynamicPeak; };
+static_assert(sizeof(FrozenCounts) == 104);
 struct Segment { void *handle; uintptr_t start; uint64_t bytes; Segment *next; };
 using ProcessCounts = E2DMemorySnapshot;
 static_assert(sizeof(ProcessCounts) == 96);
@@ -326,6 +326,7 @@ extern "C" void e2d_aot_frozen_read(FrozenCounts *result) {
     enter();
     if (!result || !frozen.registrations) fail("frozen hooks are absent", 132);
     *result = frozen;
+    result->dynamicCurrent = watches[0].totals.current; result->dynamicPeak = watches[0].totals.peak;
     leave();
 }
 extern "C" void e2d_aot_watch(uint32_t tag, uintptr_t type, int64_t length) {

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <PublishAot>true</PublishAot>
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredCompilation>false</TieredCompilation>
     <EventSourceSupport>true</EventSourceSupport>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>

@@ -136,8 +136,15 @@ internal static partial class Program
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void RetryArray(object?[] roots) => roots[0] = GC.AllocateUninitializedArray<byte>(123456, pinned: true);
 
+#if CORECLR_SOURCE_PROBE
+    [DllImport("Electron2DAOTMemory", EntryPoint = "e2d_live_tag")]
+    private static extern void RequireCLRProfiler(uint tag);
+#endif
     private static void Main(string[] args)
     {
+#if CORECLR_SOURCE_PROBE
+        RequireCLRProfiler(0);
+#endif
         var roots = new object?[1099];
         Read(0);
         if (args.Contains("--invalid-snapshot")) Read(16);
@@ -162,8 +169,10 @@ internal static partial class Program
         if (args.Contains("--common-oom")) { RunCommonOOM(); return; }
         if (args.Contains("--invalid-watch")) Watch(1, typeof(Ordinary).TypeHandle.Value, -1);
         Fill(roots);
-        Require(Check("objects", 1, 24576, 24576, 1024).FastObjects > 0, "Missing object fast path");
-        Require(Check("strings", 2, 18200, 18200, 65).FastArrays > 0, "Missing string fast path");
+        var ordinary = Check("objects", 1, 24576, 24576, 1024);
+        Require(RuntimeFeature.IsDynamicCodeSupported ? ordinary.Slow == 1024 : ordinary.FastObjects > 0, "Object allocation route");
+        var strings = Check("strings", 2, 18200, 18200, 65);
+        Require(RuntimeFeature.IsDynamicCodeSupported ? strings.Slow == 65 : strings.FastArrays > 0, "String allocation route");
         Require(Check("pinned", 3, 131096, 131096, 1).Slow == 1, "Missing pinned direct allocation");
         Require(Check("finalizable", 4, 192, 192, 8).Slow == 8, "Finalizable allocation route");
         Require(Check("large", 5, 262168, 262168, 1).Slow == 1, "Large allocation route");

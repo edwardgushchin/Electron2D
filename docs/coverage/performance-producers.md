@@ -449,12 +449,58 @@ objects explicitly, and rejects frozen tagged witnesses. Their actual lifetime,
 image objects, NativeAOT, over-4-GiB sizing, failed-allocation behavior and the
 production managed/native shared commit boundary remain unqualified. The
 separate NativeAOT producer below now qualifies its selected frozen registry flow;
-this CLR profiler retains that ownership gap. In
+this callback-only CLR profiler retains that ownership gap. The source CLR
+profile below qualifies its selected reservation/GC/registry boundaries. In
 particular, callback-ledger peaks cannot establish an exact simultaneous native
 and managed peak if publication is delayed after an allocator commit. Do not
 wire these diagnostic snapshots to GetMonitor or treat separate domain peaks as
 a composition. The full exact contract remains accepted; physics coverage stays
 **1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
+
+## CoreCLR reservation and frozen lifetime producer
+
+The [source CLR profile](../../tools/physics/clr-memory-probe/README.md) now uses
+actual reservation hooks in a separate pinned v10.0.1 CoreCLR. The shared GC
+patch is byte-identical to the preceding NativeAOT patch. VM allocation prepares
+a native scope, SOH/UOH ownership commits publish under the production native
+ledger gate, and typed notification completes watches. A failed finalizer slot
+retires at conversion to a free object. Scopes remain valid across allocator
+retries and GC; the native scope storage lasts through the later typed callback.
+
+GC completion independently walks surviving objects and checks frozen registry
+bytes against actual object sizes. Insert/update/remove events publish under the
+GC registry lock. Frozen snapshots now copy their dynamic contribution in the
+same critical section: CLR interop/JIT preparation can allocate between separate
+queries, making the former two-query test comparison invalid.
+
+Workstation and two-heap server GC pass the shared 29 dynamic, 13 frozen,
+14 native and seven common phases. Thirteen bounded children include source/SDK
+baselines, disabled profiling, an actual enabled concurrent collector, invalid
+inputs, the delayed-producer RED case and two 128-MiB-heap OOM controls. The
+5-GiB native/4120-byte pinned overlap survives delayed typed publication; the
+late producer is rejected. All prepared query/cycle brackets report zero managed
+caller bytes. These are source-runtime correctness results, with receipts under
+`bin/clr-shared-memory/2026-10-29/`.
+
+The same public StreamPeerGZIP host now runs on the copied CLR and NativeAOT:
+startup contributes 350456 native bytes, Clear and 64 repeated sessions drain,
+and 20000 prepared reads allocate zero managed caller bytes. Each process maps
+exactly one selected production native ledger. The measurement host disables
+tiered compilation, matching the standalone CLR probe; its first tiered run
+included preparation allocations and was not accepted as a prepared-read result.
+The ordinary callback-only CLR profile also retains its five successful controls.
+
+The isolated runtime retains exact CLR/JIT/CoreLib hashes. Native
+FEATURE_EVENTSOURCE_XPLAT=0 requires managed FeatureXplatEventSource=false;
+otherwise even the uninstrumented source baseline can fault in XplatEventLogger
+before Main. PerfTracing remains enabled. The source CoreLib reports
+.NET 10.0.1-dev; installed runtime binaries remain unchanged. Allocation profiling
+routes ordinary objects through the common VM path and disables concurrent GC.
+Observer native storage, per-collection full-walk cost, complete native-library
+ownership, module/unload scenarios, foreign platforms and shipping runtime
+qualification remain open. This does not implement either public total-memory
+selector or change the **1365/1369 (99.71%)** physics declaration coverage.
 
 
 ## NativeAOT success and retirement producer

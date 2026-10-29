@@ -5,6 +5,9 @@ runtime copy. It observes successful object/string/array fast allocations and th
 common allocator, including pinned/direct and finalizable allocations. At GC end
 it enumerates actual surviving dynamic-heap objects while the EE is stopped.
 Reads copy cached native counters; they neither collect nor walk the heap.
+The [CoreCLR source profile](../clr-memory-probe/README.md) reuses the same GC
+reservation patch, native producer and byte witnesses. Frozen snapshots include
+their dynamic contribution under the same gate.
 
 The consumer checks generation 0/1/2 retirement, retained payloads, finalization,
 an unseen temporary peak, two retained workers and two allocation workers

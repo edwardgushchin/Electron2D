@@ -62,7 +62,11 @@ static int32_t initialize(void*, void *source) {
     int32_t hr = reinterpret_cast<Q>((*static_cast<void***>(source))[0])(source, &info4ID, &info);
     if (hr < 0) return hr;
     // MONITOR_GC deliberately disables concurrent GC in this CLR profiling mode.
-    hr = method<int32_t(*)(void*, uint32_t)>(16)(info, 0x00800000 | 0x00000100 | 0x00000080);
+    uint32_t mask = 0x00800000 | 0x00000100 | 0x00000080;
+#ifdef E2D_TEST_CONCURRENT_GC
+    mask &= ~uint32_t{0x00000080};
+#endif
+    hr = method<int32_t(*)(void*, uint32_t)>(16)(info, mask);
     ready = hr >= 0;
     return hr;
 }

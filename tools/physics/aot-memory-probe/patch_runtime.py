@@ -6,6 +6,107 @@ from pathlib import Path
 import sys
 
 
+def patch_heap(original, prefix):
+    changed = original
+
+    def replace(old, new):
+        nonlocal changed
+        if changed.count(old) != 1:
+            raise ValueError('Unexpected shared GC patch anchor')
+        changed = changed.replace(old, new)
+
+    replace( '#include "gceventstatus.h"', '''#include "gceventstatus.h"
+extern "C" bool e2d_aot_frozen_reject();
+extern "C" void e2d_aot_frozen_change(unsigned, void*, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+extern "C" void e2d_aot_common_begin(unsigned);
+extern "C" void e2d_aot_common_commit(void*);
+extern "C" bool e2d_aot_finalizer_reject();
+extern "C" void e2d_aot_common_cancel_begin(void*);
+extern "C" void e2d_aot_common_cancel_end();''')
+    replace( '''        acontext->alloc_ptr+=size;
+        if (acontext->alloc_ptr <= acontext->alloc_limit)
+        {
+            CObjectHeader* obj''', '''        uint8_t* next = result + size;
+        if (next <= acontext->alloc_limit)
+        {
+            e2d_aot_common_begin(1);
+            acontext->alloc_ptr = next;
+            e2d_aot_common_commit(result);
+            CObjectHeader* obj''')
+    replace( '''            acontext->alloc_ptr -= size;
+
+#ifdef _MSC_VER''', '''#ifdef _MSC_VER''')
+    replace( '''                allocator->unlink_item (a_l_idx, free_list, prev_free_item, FALSE);
+                remove_gen_free (gen_number, free_list_size);''', '''                e2d_aot_common_begin(2);
+                allocator->unlink_item (a_l_idx, free_list, prev_free_item, FALSE);
+                remove_gen_free (gen_number, free_list_size);''')
+    replace( '''                dprintf (3, ("found fit on loh at %p", free_list));''', '''                e2d_aot_common_commit(free_list);
+                dprintf (3, ("found fit on loh at %p", free_list));''')
+    replace( '''found_fit:
+    dd_new_allocation (dynamic_data_of (gen_number)) -= limit;''', '''found_fit:
+    if (gen_number != 0) e2d_aot_common_begin(3);
+    dd_new_allocation (dynamic_data_of (gen_number)) -= limit;''')
+    replace( '''        allocated += limit;
+        adjust_limit_clr (old_alloc, limit, size, acontext, flags, seg, align_const, gen_number);''', '''        allocated += limit;
+        if (gen_number != 0) e2d_aot_common_commit(old_alloc);
+        adjust_limit_clr (old_alloc, limit, size, acontext, flags, seg, align_const, gen_number);''')
+    replace( '''    if ((*s_i) == SegQueueLimit(FreeListSeg))
+    {
+        if (!GrowArray())''', '''    bool e2dRejectFinalizer = e2d_aot_finalizer_reject();
+    if ((*s_i) == SegQueueLimit(FreeListSeg) || e2dRejectFinalizer)
+    {
+        if (e2dRejectFinalizer || !GrowArray())''')
+    replace( '''                ((CObjectHeader*)obj)->SetFree(size);''', '''                e2d_aot_common_cancel_begin(obj);
+                ((CObjectHeader*)obj)->SetFree(size);
+                e2d_aot_common_cancel_end();''')
+    replace( '''    enter_spin_lock (&gc_heap::gc_lock);
+
+    if (!gc_heap::seg_table->ensure_space_for_insert ()''', '''    enter_spin_lock (&gc_heap::gc_lock);
+
+    if (e2d_aot_frozen_reject())
+    {
+        leave_spin_lock (&gc_heap::gc_lock);
+        return FALSE;
+    }
+    if (!gc_heap::seg_table->ensure_space_for_insert ()''')
+    replace( '''    FIRE_EVENT(GCCreateSegment_V1, heap_segment_mem(seg), (size_t)(heap_segment_reserved (seg) - heap_segment_mem(seg)), gc_etw_segment_read_only_heap);
+
+    leave_spin_lock (&gc_heap::gc_lock);
+    return TRUE;
+}
+
+void gc_heap::update_ro_segment''', '''    // Publish while gc_lock still protects the registry from collection and competing changes.
+    e2d_aot_frozen_change(1, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)heap_segment_allocated(seg),
+        (uintptr_t)heap_segment_committed(seg), (uintptr_t)heap_segment_reserved(seg));
+    FIRE_EVENT(GCCreateSegment_V1, heap_segment_mem(seg), (size_t)(heap_segment_reserved (seg) - heap_segment_mem(seg)), gc_etw_segment_read_only_heap);
+    leave_spin_lock (&gc_heap::gc_lock);
+    return TRUE;
+}
+
+void gc_heap::update_ro_segment''')
+    replace( '''    heap_segment_committed (seg) = committed;
+
+    leave_spin_lock (&gc_heap::gc_lock);
+}
+
+// No one is calling''', '''    heap_segment_committed (seg) = committed;
+
+    e2d_aot_frozen_change(2, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)allocated,
+        (uintptr_t)committed, (uintptr_t)heap_segment_reserved(seg));
+    leave_spin_lock (&gc_heap::gc_lock);
+}
+
+// No one is calling''')
+    replace( '''        generation_start_segment (gen2) = heap_segment_next (curr_seg);
+
+    leave_spin_lock (&gc_heap::gc_lock);''', '''        generation_start_segment (gen2) = heap_segment_next (curr_seg);
+
+    e2d_aot_frozen_change(3, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)heap_segment_allocated(seg),
+        (uintptr_t)heap_segment_committed(seg), (uintptr_t)heap_segment_reserved(seg));
+    leave_spin_lock (&gc_heap::gc_lock);''')
+    return changed.replace('e2d_aot_', prefix)
+
+
 def patch(root, output):
     pins = {
         'src/coreclr/runtime/amd64/AllocFast.S': '0e4fc5b3fe604baa8ccad94ade11a9b1251e06e4d2b48761e932291191ed8c25',
@@ -132,95 +233,7 @@ void GCToEEInterface::GcDone(int condemned)
     heap->DiagWalkHeap(E2DMemorySurvivor, nullptr, heap->GetMaxGeneration(), true);
     e2d_aot_gc_end();
 ''')
-    replace(heap, '#include "gceventstatus.h"', '''#include "gceventstatus.h"
-extern "C" bool e2d_aot_frozen_reject();
-extern "C" void e2d_aot_frozen_change(unsigned, void*, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
-extern "C" void e2d_aot_common_begin(unsigned);
-extern "C" void e2d_aot_common_commit(void*);
-extern "C" bool e2d_aot_finalizer_reject();
-extern "C" void e2d_aot_common_cancel_begin(void*);
-extern "C" void e2d_aot_common_cancel_end();''')
-    replace(heap, '''        acontext->alloc_ptr+=size;
-        if (acontext->alloc_ptr <= acontext->alloc_limit)
-        {
-            CObjectHeader* obj''', '''        uint8_t* next = result + size;
-        if (next <= acontext->alloc_limit)
-        {
-            e2d_aot_common_begin(1);
-            acontext->alloc_ptr = next;
-            e2d_aot_common_commit(result);
-            CObjectHeader* obj''')
-    replace(heap, '''            acontext->alloc_ptr -= size;
-
-#ifdef _MSC_VER''', '''#ifdef _MSC_VER''')
-    replace(heap, '''                allocator->unlink_item (a_l_idx, free_list, prev_free_item, FALSE);
-                remove_gen_free (gen_number, free_list_size);''', '''                e2d_aot_common_begin(2);
-                allocator->unlink_item (a_l_idx, free_list, prev_free_item, FALSE);
-                remove_gen_free (gen_number, free_list_size);''')
-    replace(heap, '''                dprintf (3, ("found fit on loh at %p", free_list));''', '''                e2d_aot_common_commit(free_list);
-                dprintf (3, ("found fit on loh at %p", free_list));''')
-    replace(heap, '''found_fit:
-    dd_new_allocation (dynamic_data_of (gen_number)) -= limit;''', '''found_fit:
-    if (gen_number != 0) e2d_aot_common_begin(3);
-    dd_new_allocation (dynamic_data_of (gen_number)) -= limit;''')
-    replace(heap, '''        allocated += limit;
-        adjust_limit_clr (old_alloc, limit, size, acontext, flags, seg, align_const, gen_number);''', '''        allocated += limit;
-        if (gen_number != 0) e2d_aot_common_commit(old_alloc);
-        adjust_limit_clr (old_alloc, limit, size, acontext, flags, seg, align_const, gen_number);''')
-    replace(heap, '''    if ((*s_i) == SegQueueLimit(FreeListSeg))
-    {
-        if (!GrowArray())''', '''    bool e2dRejectFinalizer = e2d_aot_finalizer_reject();
-    if ((*s_i) == SegQueueLimit(FreeListSeg) || e2dRejectFinalizer)
-    {
-        if (e2dRejectFinalizer || !GrowArray())''')
-    replace(heap, '''                ((CObjectHeader*)obj)->SetFree(size);''', '''                e2d_aot_common_cancel_begin(obj);
-                ((CObjectHeader*)obj)->SetFree(size);
-                e2d_aot_common_cancel_end();''')
-    replace(heap, '''    enter_spin_lock (&gc_heap::gc_lock);
-
-    if (!gc_heap::seg_table->ensure_space_for_insert ()''', '''    enter_spin_lock (&gc_heap::gc_lock);
-
-    if (e2d_aot_frozen_reject())
-    {
-        leave_spin_lock (&gc_heap::gc_lock);
-        return FALSE;
-    }
-    if (!gc_heap::seg_table->ensure_space_for_insert ()''')
-    replace(heap, '''    FIRE_EVENT(GCCreateSegment_V1, heap_segment_mem(seg), (size_t)(heap_segment_reserved (seg) - heap_segment_mem(seg)), gc_etw_segment_read_only_heap);
-
-    leave_spin_lock (&gc_heap::gc_lock);
-    return TRUE;
-}
-
-void gc_heap::update_ro_segment''', '''    // Publish while gc_lock still protects the registry from collection and competing changes.
-    e2d_aot_frozen_change(1, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)heap_segment_allocated(seg),
-        (uintptr_t)heap_segment_committed(seg), (uintptr_t)heap_segment_reserved(seg));
-    FIRE_EVENT(GCCreateSegment_V1, heap_segment_mem(seg), (size_t)(heap_segment_reserved (seg) - heap_segment_mem(seg)), gc_etw_segment_read_only_heap);
-    leave_spin_lock (&gc_heap::gc_lock);
-    return TRUE;
-}
-
-void gc_heap::update_ro_segment''')
-    replace(heap, '''    heap_segment_committed (seg) = committed;
-
-    leave_spin_lock (&gc_heap::gc_lock);
-}
-
-// No one is calling''', '''    heap_segment_committed (seg) = committed;
-
-    e2d_aot_frozen_change(2, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)allocated,
-        (uintptr_t)committed, (uintptr_t)heap_segment_reserved(seg));
-    leave_spin_lock (&gc_heap::gc_lock);
-}
-
-// No one is calling''')
-    replace(heap, '''        generation_start_segment (gen2) = heap_segment_next (curr_seg);
-
-    leave_spin_lock (&gc_heap::gc_lock);''', '''        generation_start_segment (gen2) = heap_segment_next (curr_seg);
-
-    e2d_aot_frozen_change(3, seg, (uintptr_t)heap_segment_mem(seg), (uintptr_t)heap_segment_allocated(seg),
-        (uintptr_t)heap_segment_committed(seg), (uintptr_t)heap_segment_reserved(seg));
-    leave_spin_lock (&gc_heap::gc_lock);''')
+    changed[heap] = patch_heap(changed[heap], 'e2d_aot_')
     diff = ''.join(''.join(difflib.unified_diff(originals[name].splitlines(True), changed[name].splitlines(True),
                                              fromfile='a/' + name, tofile='b/' + name)) for name in pins)
     output.write_text(diff)

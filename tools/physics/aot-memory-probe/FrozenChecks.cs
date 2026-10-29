@@ -7,7 +7,7 @@ internal static partial class Program
     private struct FrozenCounts
     {
         public ulong Current, Peak, Allocated, Retired, Segments, Registrations, Updates, Removals,
-            Failures, ManagedCurrent, ManagedPeak;
+            Failures, ManagedCurrent, ManagedPeak, DynamicCurrent, DynamicPeak;
     }
 
     [DllImport("Electron2DAOTMemory", EntryPoint = "e2d_aot_frozen_read")]
@@ -38,11 +38,10 @@ internal static partial class Program
 
     private static FrozenCounts CaptureFrozen(string phase)
     {
-        var dynamic = Read(0);
         var c = ReadFrozen();
-        Require(c.ManagedCurrent == c.Current + dynamic.Current, "Coherent managed current");
+        Require(c.ManagedCurrent == c.Current + c.DynamicCurrent, "Coherent managed current");
         frozenRows.Add(new(phase, c.Current, c.Peak, c.Allocated, c.Retired, c.Segments, c.Registrations,
-            c.Updates, c.Removals, c.Failures, c.ManagedCurrent, c.ManagedPeak, dynamic.Current, dynamic.Peak));
+            c.Updates, c.Removals, c.Failures, c.ManagedCurrent, c.ManagedPeak, c.DynamicCurrent, c.DynamicPeak));
         return c;
     }
 
