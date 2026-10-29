@@ -9,8 +9,11 @@ internal sealed partial class TextLayout
     private static readonly List<ProviderLayout> ProviderLayouts = [];
     internal static void RetireProviderLayouts(TextServer? owner)
     {
-        ProviderLayout[] states;
-        lock (ProviderLayoutsGate) states = ProviderLayouts.Where(state => ReferenceEquals(state.Owner, owner)).ToArray();
+        List<ProviderLayout>? states = null;
+        lock (ProviderLayoutsGate)
+            foreach (var state in ProviderLayouts)
+                if (ReferenceEquals(state.Owner, owner)) (states ??= []).Add(state);
+        if (states is null) return;
         List<Exception>? errors = null;
         foreach (var state in states) try { state.Release(); } catch (Exception error) { (errors ??= []).Add(error); }
         if (errors is not null) throw new AggregateException("Text provider cache retirement failed.", errors);
@@ -19,7 +22,8 @@ internal sealed partial class TextLayout
     {
         List<ProviderLayout>? states = null;
         lock (ProviderLayoutsGate)
-            foreach (var state in ProviderLayouts) if (state.DependsOn(font)) (states ??= []).Add(state);
+            foreach (var state in ProviderLayouts)
+                if (state.DependsOn(font)) (states ??= []).Add(state);
         if (states is null) return;
         List<Exception>? errors = null;
         foreach (var state in states) try { state.Release(); } catch (Exception error) { Node.CollectException(ref errors, error); }

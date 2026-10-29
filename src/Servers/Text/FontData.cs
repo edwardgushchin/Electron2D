@@ -238,10 +238,37 @@ internal sealed partial class FontData : IDisposable
 
     internal Dictionary<string, Dictionary<string, string>> GetNameStrings()
     {
-        lock (_gate) { Check(); if (_precision != null) Run(Operation.Names); return NameStrings; }
+        lock (_gate) { Check(); if (HasData) Run(Operation.Names); return NameStrings; }
     }
 
     private void Execute()
+    {
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
+        try
+        {
+            if (_precision is null && _operation is not (Operation.Create or Operation.Dispose)) _precision = CreatePrecision();
+            ExecuteCore();
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
+        }
+        catch
+        {
+            if (_operation is not (Operation.Create or Operation.Dispose) && NativeAllocation.GetFailureEpoch() != allocationEpoch)
+            {
+                // A native fallback can mutate face caches before reporting the refused allocation.
+                // Retain source/configuration and prepared results; the next miss reopens the face.
+                var precision = _precision; _precision = null; precision?.Dispose();
+            }
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
+            throw;
+        }
+    }
+    private NativeFontPrecision CreatePrecision()
+    {
+        var result = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex, _auxiliaryMetrics) : new NativeFontPrecision(Authored!);
+        try { if (_instance != null && _bytes.Length > 0) result.ConfigureInstance(_instance); return result; }
+        catch { result.Dispose(); throw; }
+    }
+    private void ExecuteCore()
     {
         switch (_operation)
         {
@@ -250,8 +277,7 @@ internal sealed partial class FontData : IDisposable
             case Operation.Create:
                 try
                 {
-                    _precision = _bytes.Length > 0 ? new NativeFontPrecision(_bytes, _faceIndex, _auxiliaryMetrics) : new NativeFontPrecision(Authored!);
-                    if (_instance != null && _bytes.Length > 0) _precision.ConfigureInstance(_instance);
+                    _precision = CreatePrecision();
                     _colorFont = (_precision.FaceFlags & (1L << 14)) != 0; _scalableFont = (_precision.FaceFlags & 1) != 0; SupportedScripts = _precision.SupportedScripts; VariationAxes = _precision.VariationAxes; Palettes = _precision.Palettes; PaletteNames = _precision.PaletteNames;
                     SupportedFeatures = _precision.SupportedFeatures; NameStrings = _precision.NameStrings;
                     FamilyName = _precision.FamilyName; StyleName = _precision.StyleName; FaceCount = _precision.FaceCount; GlyphCount = _precision.GlyphCount; UnitsPerEm = _precision.UnitsPerEm;

@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstring>
 #include <limits>
+#include <cstdint>
 
 #if defined(_WIN32)
 #define API __declspec(dllexport)
@@ -17,6 +18,8 @@ static Resize resize_cb;
 static Release release_cb;
 static std::atomic<bool> ready{false};
 static std::atomic_flag registration = ATOMIC_FLAG_INIT;
+static thread_local uint64_t failure_epoch;
+extern "C" uint64_t e2d_ft_hb_failure_epoch() { return failure_epoch; }
 
 // Handles and process caches must retain the same allocator through final teardown.
 extern "C" API int e2d_hb_memory(Allocate allocate, Resize resize, Release release) {
@@ -36,10 +39,12 @@ extern "C" API int e2d_hb_memory(Allocate allocate, Resize resize, Release relea
 }
 
 extern "C" API void *e2d_ft_hb_malloc(size_t size) {
-    return ready.load(std::memory_order_acquire) ? allocate_cb(size) : nullptr;
+    void *value = ready.load(std::memory_order_acquire) ? allocate_cb(size) : nullptr;
+    if (!value) ++failure_epoch;
+    return value;
 }
 extern "C" API void *e2d_ft_hb_calloc(size_t count, size_t size) {
-    if (count && size > std::numeric_limits<size_t>::max() / count) return nullptr;
+    if (count && size > std::numeric_limits<size_t>::max() / count) { ++failure_epoch; return nullptr; }
     size *= count;
     void *value = e2d_ft_hb_malloc(size);
     if (value) std::memset(value, 0, size);
@@ -51,5 +56,7 @@ extern "C" API void e2d_ft_hb_free(void *value) {
 extern "C" API void *e2d_ft_hb_realloc(void *value, size_t size) {
     if (!value) return e2d_ft_hb_malloc(size);
     if (!size) { e2d_ft_hb_free(value); return nullptr; }
-    return resize_cb(value, size);
+    void *result = resize_cb(value, size);
+    if (!result) ++failure_epoch;
+    return result;
 }

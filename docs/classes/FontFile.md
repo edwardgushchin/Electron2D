@@ -1,6 +1,6 @@
 # FontFile
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -55,6 +55,8 @@ Vector2 size = font.GetStringSize("Hello", fontSize: 20);
 
 <a id="data"></a><a id="loaddynamicfont"></a>
 Data copies its input and returns copied snapshots. Empty data clears the primary face. A nonempty assignment eagerly validates an independent replacement, refreshes intrinsic metadata, preserves current shaping/raster configuration, and emits Changed after committing and invalidating layout. Equal byte contents still perform replacement. Null is rejected; malformed/unsupported data and input above 64 MiB raise InvalidDataException. Failures preserve previous bytes, native face, settings and metrics.
+
+Required native allocation refusal raises OutOfMemoryException, preserving the prior source and Changed state. Actual layout refusal also leaves no successful cache entry; a later query recreates the mutable native face and retries from the same bytes/configuration. See [shaping ownership and recovery](../coverage/performance-producers.md#desktop-shaping-allocation-domain-2026-10-29).
 
 LoadDynamicFont bounds the file before reading and rejects empty, oversized, unreadable or concurrently resized input. On success it resets Hinting to Light, SubpixelPositioning to Disabled, KeepRoundingRemainders to true, Oversampling to zero and ModulateColorGlyphs to false. Fallbacks and OpenTypeFeatureOverrides survive. Failed reads/decodes do not run that reset. Exceptions replace status-code-only failure reporting, matching the existing Image loading contract.
 

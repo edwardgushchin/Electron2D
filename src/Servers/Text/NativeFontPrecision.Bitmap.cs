@@ -12,6 +12,7 @@ internal sealed unsafe partial class NativeFontPrecision
     {
         PrepareHarfBuzzMemory();
         _bitmap = bitmap;
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
         try
         {
             _callbacks = (CallbackState*)NativeAllocation.AllocZeroed((nuint)sizeof(CallbackState));
@@ -32,8 +33,9 @@ internal sealed unsafe partial class NativeFontPrecision
             finally { HBFontFuncsDestroy(funcs); }
             _buffer = HBBufferCreate(); if (_buffer == 0) throw new OutOfMemoryException();
             FaceCount = 1; GlyphCount = 0x110000; SetSize(16);
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
         }
-        catch { Release(); throw; }
+        catch { Release(); NativeAllocation.ThrowIfFailedSince(allocationEpoch); throw; }
     }
     private static NativeFontPrecision BitmapOwner(CallbackState* state) => (NativeFontPrecision)GCHandle.FromIntPtr(state->Bitmap).Target!;
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]

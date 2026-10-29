@@ -17,7 +17,7 @@ contains **66 ELF payload files**, including duplicate aliases. Its native
 dependency records expose closures hidden by the top-level bridge names.
 These are metadata and dependency counts, not allocation counts or proof of
 execution. The mesh allocator registration adds one private import; the
-hash-bound refreshed snapshot records **2125 imports in the same 38 families**.
+hash-bound refreshed snapshot records **2125 imports in the same 38 families**. The shaping refusal epoch and actual shaping/auto-hinting version queries add three more; the current compiled snapshot records **2128 imports in 38 families** at `bin/shaping-unified/2026-10-29/compiled-imports.json`.
 
 The reflection exporter, assembly identities, complete import records and
 `readelf -d` payload records are retained under
@@ -35,7 +35,7 @@ are not silently covered by this assembly snapshot.
 | `Electron2DENet` | [shared C ledger](../../tools/enet-native/memory.c), ENet, FastLZ, zlib and Zstandard | Direct native payload, host/packet/file/streaming-codec domains have allocation-boundary evidence. This does not instrument unrelated libc/runtime storage. |
 | `FAudio` | [audio producer](../../tools/audio-native/CMakeLists.txt), FAPO/effects and platform output | Engine/effect callbacks are tracked. SDL output also allocates device/staging storage through SDL_malloc in `FAudio_platform_sdl3.c`; it follows the open SDL boundary. Decoder and platform closures need complete allocation routing evidence. |
 | `freetype` | [private font producer](../../tools/font-native/CMakeLists.txt), PNG/zlib, WOFF2/Brotli and auto-hinter HarfBuzz | FT_Memory and the qualified WOFF2/private auto-hinter domains are tracked. Preserve actual source/profile identity and do not transfer that result to desktop shaping. |
-| `HarfBuzzSharp` | Separate desktop shaping library, selected by NativeLibraries | This is distinct from the private FreeType auto-hinter. Its retained face/font/buffer/table/cache ownership still needs allocator integration and qualification. |
+| `HarfBuzzSharp` | Separate desktop shaping library, selected by NativeLibraries | The selected [15.0.0 source producer](../../tools/shaping-native/README.md) routes original face/font/buffer/table/cache allocations to the shared C ledger, including native exit. Native-thread refusal detection and checked lazy construction protect publication/retry. It shares the single upstream source/version pin with the private FreeType auto-hinter. Runtime preparation rejects mixed versions. Foreign targets, final package qualification and C++/OS provider closure remain open. |
 | `Electron2DTextBreak` | [text producer](../../src/Servers/Text/Native/CMakeLists.txt), private ICU, PCRE2 and MSDF | Qualified owned callbacks and generated overrides cover their documented domains. Managed/runtime/module composition and delivery remain separate. |
 | `Electron2DWebP` | [WebP/SharpYUV](../../tools/webp-native/CMakeLists.txt), static codec/demux/animation | Both utility allocator variants and SharpYUV use the immutable caller allocator. See [WebP evidence](performance-producers.md#webp-owned-allocation-domain-2026-10-29). |
 | `Electron2DMesh` | [meshoptimizer](../../tools/mesh-native/CMakeLists.txt), allocator.cpp and simplifier.cpp | The connected mesh allocation slice uses the pinned library's allocator hook. Preserve throwing-new semantics, typed failure, full scratch retirement, pristine topology and public all-surface atomic publication. |

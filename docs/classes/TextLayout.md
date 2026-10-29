@@ -4,6 +4,8 @@ Last updated: 2026-10-29
 
 **Visibility:** internal · **Source:** [TextLayout.cs](../../src/Servers/Text/TextLayout.cs) · **Component:** [Text](../components/text.md)
 
+External provider retirement snapshots only actual matching owners/dependencies, then releases them outside the registry lock. Empty or unrelated registry scans allocate no managed storage, including ordinary warmed font configuration changes.
+
 ## Responsibilities and invariants
 
 Reusable layout buffer owned by Font caches or a text consumer. Converts text to Unicode scalars, determines grapheme/word/line boundaries and scripts, resolves fallback faces, shapes contextual runs, applies BiDi order, line breaks, clipping/ellipsis and permitted justification. Character bounds use shaped scalar clusters rather than ink boxes. Font revisions invalidate cached layout. Build leases every source face, repeats at most 64 times when a callback or concurrent replacement changes dependencies, and isolates nested queries from active cache entries. Drawing revalidates the built generation before recording and holds source leases through the complete draw. Retained canvas commands preserve immutable glyph-image snapshots after source retirement.
@@ -46,3 +48,5 @@ Internal glyph records retain the actual source RID and an ellipsis discriminato
 Internal scalar rectangles and copied font-run metadata also feed [native accessibility text](AccessibilityServer.md#native-text). This integration retains the existing buffer/font ownership and Unicode scalar contract; it adds no public text-server API.
 
 Concrete Fallback buffers preserve their simple-layout option through duplicates and source-version substrings. Scalar boundaries, LTR levels/common scripts and nominal font-worker shaping bypass contextual shaping and ICU iterator refinement while retaining shared real wrapping/formatting/editing consumers. Explicit Dummy selection releases provider layout state and publishes zero text geometry without manufacturing a successful shaped buffer. See [concrete text profiles](../components/text-server.md#concrete-implementation-profiles).
+
+The explicit Dummy profile retains scalar source boundaries for logical GUI navigation/deletion while publishing no lines, glyphs or text geometry. It does not erase the editable source range when disabling text output.

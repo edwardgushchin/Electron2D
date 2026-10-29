@@ -42,13 +42,16 @@ internal sealed unsafe partial class NativeFontPrecision
     }
     internal void ConfigureInstance(FontInstance instance)
     {
-        EnsureOwner(); _embolden = instance.Embolden; _variationTransform = instance.Transform;
+        EnsureOwner();
+        var allocationEpoch = NativeAllocation.GetFailureEpoch();
+        _embolden = instance.Embolden; _variationTransform = instance.Transform;
         if (VariationAxes.Count > 0)
         {
             var coordinates = new CLong[VariationAxes.Count]; var variations = new HBVariation[VariationAxes.Count]; var index = 0;
             foreach (var pair in VariationAxes) { var value = instance.Coordinates.TryGetValue(pair.Key, out var requested) ? Math.Clamp(requested, pair.Value.Minimum, pair.Value.Maximum) : pair.Value.Default; coordinates[index] = new((int)Math.Clamp(Math.Round(value * 65536d), int.MinValue, int.MaxValue)); variations[index++] = new(pair.Key, value); }
             fixed (CLong* values = coordinates) CheckFT(FTSetVarDesignCoordinates(_face, (uint)coordinates.Length, values));
             fixed (HBVariation* values = variations) { HBFontSetVariations(_parentFont, values, (uint)variations.Length); HBFontSetVariations(_font, values, (uint)variations.Length); }
+            NativeAllocation.ThrowIfFailedSince(allocationEpoch);
             _size = 0; SetSize(16);
         }
         if (Palettes.Length > 0)
@@ -56,6 +59,7 @@ internal sealed unsafe partial class NativeFontPrecision
             var index = (ushort)Math.Clamp(instance.PaletteIndex, 0, Palettes.Length - 1); CheckFT(FTPaletteSelect(_face, index, out var colors));
             for (var i = 0; i < Math.Min(instance.CustomColors.Length, Palettes[index].Length); i++) { var color = instance.CustomColors[i]; if (color == Colors.Transparent) continue; colors[i] = new() { Red = Byte(color.R), Green = Byte(color.G), Blue = Byte(color.B), Alpha = Byte(color.A) }; }
         }
+        NativeAllocation.ThrowIfFailedSince(allocationEpoch);
     }
     private static byte Byte(float value) => (byte)MathF.Round(Math.Clamp(value, 0, 1) * 255);
     private void ApplyOutlineVariation(GlyphSlotRecord* slot)

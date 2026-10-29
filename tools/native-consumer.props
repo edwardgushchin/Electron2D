@@ -107,4 +107,19 @@
     <Copy SourceFiles="$(Electron2DSDLNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerSDLName)" />
     <Copy SourceFiles="$(Electron2DSDLNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerSDLName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <PropertyGroup>
+    <_Electron2DConsumerHarfBuzzName>libHarfBuzzSharp.so</_Electron2DConsumerHarfBuzzName>
+    <_Electron2DConsumerHarfBuzzName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libHarfBuzzSharp.dylib</_Electron2DConsumerHarfBuzzName>
+    <_Electron2DConsumerHarfBuzzName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">libHarfBuzzSharp.dll</_Electron2DConsumerHarfBuzzName>
+    <_Electron2DConsumerHarfBuzzPath Condition="'$(Electron2DHarfBuzzNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DHarfBuzzNativeLibrary)'))</_Electron2DConsumerHarfBuzzPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerHarfBuzzOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DHarfBuzzNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerHarfBuzzName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerHarfBuzzName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerHarfBuzzPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerHarfBuzzOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DHarfBuzzNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <Copy SourceFiles="$(Electron2DHarfBuzzNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerHarfBuzzName)" />
+    <Copy SourceFiles="$(Electron2DHarfBuzzNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerHarfBuzzName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

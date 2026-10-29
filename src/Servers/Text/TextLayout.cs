@@ -107,8 +107,14 @@ internal sealed partial class TextLayout
                     if (context.Direction == TextDirection.RTL) throw new NotSupportedException("The fallback text implementation cannot reorder right-to-left contexts.");
         }
         Key = key; _caretsReady = false; _serverCharactersReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
-        if (TextServerManager.CallbackProvider is TextServerDummy)
-        { ReleaseProviderLayout(); _count = CharacterCount = DropcapLines = 0; NaturalWidth = UnwrappedWidth = 0; return; }
+        if (implementation is TextServerDummy)
+        {
+            ReleaseProviderLayout();
+            // Editing retains scalar positions even when text has no shaped geometry.
+            _options = _options with { SimpleLayout = true }; Decode(key.Text); CharacterCount = _count;
+            _levels.AsSpan(0, _count + 1).Clear(); _paragraphLevels.AsSpan(0, _count + 1).Clear();
+            DropcapLines = 0; NaturalWidth = UnwrappedWidth = 0; return;
+        }
         Decode(key.Text); CharacterCount = _count; PrepareRichStyles(); PrepareCustomPunctuation(); if (_options.ServerBuffers) PrepareStyleBreaks();
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
         if (implementation is { } provider && provider is not TextServerFallback) { BuildProviderLayout(provider, rootRead); return; }

@@ -32,3 +32,4 @@ _e2d_memory_calloc
 _e2d_memory_realloc
 _e2d_memory_free
 _e2d_memory_functions
+_e2d_memory_failure_epoch

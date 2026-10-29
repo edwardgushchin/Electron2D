@@ -246,13 +246,13 @@ endif()
     def test_memory_and_codec_exports_are_part_of_every_enet_payload(self):
         for name in ['libElectron2DENet.so', 'Electron2DENet.dll', 'libElectron2DENet.a']:
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 34)
+            self.assertEqual(len(exports), 35)
             self.assertTrue({'e2d_enet_memory', 'e2d_enet_callbacks', 'e2d_file_encode', 'e2d_file_decode',
                              'e2d_gzip_create', 'e2d_gzip_process', 'e2d_gzip_reset', 'e2d_gzip_destroy',
                              'e2d_memory_abi', 'e2d_memory_allocate', 'e2d_memory_reallocate', 'e2d_memory_release',
                              'e2d_memory_snapshot', 'e2d_memory_lock', 'e2d_memory_unlock',
                              'e2d_memory_managed_locked', 'e2d_memory_snapshot_locked', 'e2d_memory_malloc',
-                             'e2d_memory_calloc', 'e2d_memory_realloc', 'e2d_memory_free', 'e2d_memory_functions'} <= exports)
+                             'e2d_memory_calloc', 'e2d_memory_realloc', 'e2d_memory_free', 'e2d_memory_functions', 'e2d_memory_failure_epoch'} <= exports)
 
     def test_windows_producer_copies_tls_by_name_after_mesh_insertion(self):
         with patch.dict("sys.modules", {"windows": Mock()}):
@@ -402,6 +402,19 @@ endif()
                         test_consumer.read_manifests(feed)
                 else:
                     self.assertEqual(test_consumer.read_manifests(feed), manifest)
+
+    def test_shaping_and_hinting_share_one_source_pin(self):
+        root = package.ROOT
+        pin = (root / "tools/native/harfbuzz.cmake").read_text()
+        self.assertEqual(len(re.findall(r"set\(ELECTRON2D_HARFBUZZ_REVISION [0-9a-f]{40}\)", pin)), 1)
+        for producer in ("font-native", "shaping-native"):
+            source = (root / "tools" / producer / "CMakeLists.txt").read_text()
+            self.assertIn("../native/harfbuzz.cmake", source)
+            self.assertIn("${ELECTRON2D_HARFBUZZ_REVISION}", source)
+        for project in ("Electron2D.csproj", "tools/native/Native.csproj"):
+            self.assertNotIn("HarfBuzzSharp.NativeAssets", (root / project).read_text())
+        for platform, name in (("Linux", "libHarfBuzzSharp.so"), ("MacOS", "libHarfBuzzSharp.dylib"), ("Windows", "libHarfBuzzSharp.dll")):
+            self.assertIn(name, package.LIBRARIES[platform])
 
     def test_linux_freetype_rejects_global_codec_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:

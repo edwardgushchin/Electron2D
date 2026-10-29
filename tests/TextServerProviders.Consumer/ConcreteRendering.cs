@@ -39,6 +39,12 @@ internal static class ConcreteRendering
                 if (phase == 0) Measure(font, line, paragraph);
                 else
                 {
+                    entry.Text = "A🙂e\u0301";
+                    if (entry.GetNextCompositeCharacterColumn(1) != 2 || entry.GetNextCompositeCharacterColumn(2) != 3 || entry.GetPreviousCompositeCharacterColumn(3) != 2)
+                        throw new InvalidOperationException("Dummy lost logical scalar navigation in LineEdit.");
+                    entry.CaretColumn = 2; entry.BackspaceDeletesCompositeCharacterEnabled = true; entry.DeleteCharAtCaret();
+                    if (entry.Text != "Ae\u0301") throw new InvalidOperationException("Dummy deletion split a supplementary scalar or removed adjacent text.");
+                    CheckDisabledEditor(edit); CheckDisabledEditor(code);
                     entry.InsertTextAtCaret("X"); edit.InsertTextAtCaret("X"); code.InsertTextAtCaret("X");
                     if (!entry.Text.Contains('X') || !edit.Text.Contains('X') || !code.Text.Contains('X') || !edit.GetCaretDrawPos().IsFinite() || !code.GetCaretDrawPos().IsFinite())
                         throw new InvalidOperationException("Dummy broke logical editing or finite caret geometry.");
@@ -52,6 +58,14 @@ internal static class ConcreteRendering
             Console.WriteLine($"Concrete profiles rendered ten text roles, Dummy suppression/editing and Advanced restoration on {backend}.");
         }
         finally { TextServerManager.SetPrimaryInterface(original); }
+    }
+    private static void CheckDisabledEditor(TextEdit editor)
+    {
+        editor.Text = "A🙂e\u0301\nSecond line";
+        if (editor.GetNextCompositeCharacterColumn(0, 1) != 2 || editor.GetNextCompositeCharacterColumn(0, 2) != 3 || editor.GetPreviousCompositeCharacterColumn(0, 3) != 2)
+            throw new InvalidOperationException("Dummy lost logical scalar navigation in a multiline editor.");
+        editor.SetCaretColumn(2); editor.BackspaceDeletesCompositeCharacterEnabled = true; editor.Backspace();
+        if (editor.Text != "Ae\u0301\nSecond line") throw new InvalidOperationException("Dummy multiline deletion changed another scalar or line.");
     }
     private static void Measure(Font font, TextLine line, TextParagraph paragraph)
     {
