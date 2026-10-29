@@ -28,7 +28,7 @@ internal static partial class NativeLibraries
     private static readonly Lazy<nint> Sdl = new(LoadSDLCore);
     private static nint LoadSDLCore()
     {
-        // Load the shared allocation owner before SDL resolves its native dependency.
+        // Original native allocators must resolve before SDL can initialize any service.
         NativeAllocation.Prepare();
         var handle = LoadRuntime(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null);
         RuntimeDiagnostics.Instance.SDLAvailable(handle);

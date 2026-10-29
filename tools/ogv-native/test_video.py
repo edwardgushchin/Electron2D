@@ -21,6 +21,10 @@ def run(*args):
 def check(library, output):
     output.mkdir(parents=True, exist_ok=True)
     lib = c.CDLL(str(library.resolve()))
+    libc = c.CDLL(None)
+    functions = (c.c_void_p * 4)(*[c.cast(getattr(libc, name), c.c_void_p).value for name in ("malloc", "calloc", "realloc", "free")])
+    lib.e2d_ogv_memory.argtypes = [c.c_void_p]
+    assert lib.e2d_ogv_memory(functions) == 0
     lib.e2d_video_create.argtypes = [c.c_void_p, c.c_size_t, c.c_int, c.POINTER(Info), c.POINTER(c.c_void_p)]
     lib.e2d_video_destroy.argtypes = [c.c_void_p]
     lib.e2d_video_frame.argtypes = [c.c_void_p, c.c_int64, c.POINTER(c.c_void_p)]

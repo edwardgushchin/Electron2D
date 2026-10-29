@@ -8,6 +8,11 @@ internal static unsafe partial class NativeAllocation
 {
     private static bool _ready;
     [StructLayout(LayoutKind.Sequential)]
+    internal struct Functions
+    {
+        internal nint Allocate, Zero, Resize, Release;
+    }
+    [StructLayout(LayoutKind.Sequential)]
     private struct State
     {
         public ulong ManagedCurrent, ManagedPeak, NativeCurrent, NativePeak, Current, Peak,
@@ -40,6 +45,13 @@ internal static unsafe partial class NativeAllocation
     internal static void ThrowIfFailedSince(ulong epoch)
     {
         if (GetFailureEpoch() != epoch) throw new OutOfMemoryException();
+    }
+    internal static Functions GetFunctions()
+    {
+        Prepare();
+        try { ReadFunctions(out var functions); return functions; }
+        catch (EntryPointNotFoundException error)
+        { throw new PlatformNotSupportedException("Native allocation callbacks require the matching source-built native bundle.", error); }
     }
     internal static void* Alloc(nuint size) => Allocate(size, 0, 0);
     internal static void* AllocZeroed(nuint size) => Allocate(size, 0, 1);
@@ -77,4 +89,6 @@ internal static unsafe partial class NativeAllocation
     private static partial void ReadState(out State state);
     [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_failure_epoch"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial ulong FailureEpoch();
+    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_functions"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial void ReadFunctions(out Functions functions);
 }

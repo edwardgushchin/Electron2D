@@ -24,6 +24,7 @@ internal sealed partial class OGVMovieWriter : MovieWriter
         var audioQuality = ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterOGVAudioQuality);
         var speed = ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterOGVEncodingSpeed);
         var keyframes = ProjectSettings.GetWithOverride(ProjectSettings.MovieWriterOGVKeyframeInterval);
+        OGVNativeMemory.Prepare();
         _file = FileAccess.Open(basePath, FileAccessModeFlags.Write);
         try
         {
@@ -48,6 +49,7 @@ internal sealed partial class OGVMovieWriter : MovieWriter
     {
         if (status == 0) return;
         _failed = true;
+        if (status == -2) throw new OutOfMemoryException("Video encoder could not reserve working storage.");
         throw new IOException($"OGV encoding failed with codec status {status}.", _failure);
     }
     protected override void OnWriteEnd()

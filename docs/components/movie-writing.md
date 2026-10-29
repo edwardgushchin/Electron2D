@@ -1,6 +1,6 @@
 # Movie writing
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 Owns non-real-time rendered recording through [MovieWriter](../classes/MovieWriter.md), [MovieRecording](../classes/MovieRecording.md) and internal [PNGMovieWriter](../classes/PNGMovieWriter.md)/[AVIMovieWriter](../classes/AVIMovieWriter.md)/[OGVMovieWriter](../classes/OGVMovieWriter.md). [ADR 0109](../decisions/movie-writing.md#adr-0109) owns the typed protocol and host adaptations.
 
@@ -87,3 +87,5 @@ Callback-first recording Run/RunAsync and configured RunMovie/RunMovieAsync over
 OGV render fixtures explicitly fix the content viewport to 66x50 (or 65x49 for rejection), so native window size/DPI rounding does not accidentally change the codec input dimensions.
 
 The host-boundary allocation regression uses a 320-by-96 client above desktop decoration minima. Its 24 warm frames run at 60 FPS so asynchronous native configure events settle; boundary 25 disables pacing and the same 64 complete host/input/scheduler/render intervals retain a strict zero-owner-byte assertion. The trace motivating this setup observed a 64-to-224 client-width correction and cold allocations; temporary trace code is not shipped. Exact-size configured encoder fixtures use an explicit viewport target so compositor/DPI sizing cannot introduce odd OGV dimensions.
+
+The [direct OGV bridge allocation domain](../coverage/performance-producers.md#ogv-bridge-allocation-domain-2026-10-29) tracks context, plane and copied-packet storage through immutable pure-C callbacks. Storage refusal preserves normal partial teardown and live track-replacement state; nested codec ownership remains open. The guarded Vorbis final-band interpolation fix removes an out-of-row read at zero weight while preserving exact encoded output.

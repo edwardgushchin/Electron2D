@@ -1,0 +1,11 @@
+# At the final noise band the interpolation weight is zero; do not read past it.
+set(psy "${electron2dvorbis_SOURCE_DIR}/lib/psy.c")
+file(SHA256 "${psy}" psy_hash)
+if(NOT psy_hash STREQUAL "e8ccec1fba7d00961d5c67fec30b488c912f0ad7842ec7b1aeab987b97744b6e")
+  message(FATAL_ERROR "Re-audit the final noise-band interpolation when updating libvorbis.")
+endif()
+file(READ "${psy}" psy_text)
+string(REPLACE "p->vi->noiseoff[j][inthalfoc+1]*del" "p->vi->noiseoff[j][inthalfoc < P_BANDS-1 ? inthalfoc+1 : inthalfoc]*del" psy_text "${psy_text}")
+list(REMOVE_ITEM vorbis_files "${psy}")
+list(APPEND vorbis_files "${CMAKE_CURRENT_BINARY_DIR}/psy.c")
+file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/psy.c" CONTENT "${psy_text}")

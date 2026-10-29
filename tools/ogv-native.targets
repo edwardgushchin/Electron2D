@@ -11,7 +11,7 @@
     <_Electron2DOGVLibrary Condition="'$(Electron2DOGVNativeLibrary)' != ''">$(Electron2DOGVNativeLibrary)</_Electron2DOGVLibrary>
   </PropertyGroup>
   <ItemGroup>
-    <_Electron2DOGVInput Include="$(MSBuildThisFileDirectory)ogv-native/*;$(MSBuildThisFileFullPath)" />
+    <_Electron2DOGVInput Include="$(MSBuildThisFileDirectory)ogv-native/*;$(MSBuildThisFileDirectory)enet-native/memory-functions.h;$(MSBuildThisFileFullPath)" />
     <None Include="$(_Electron2DOGVLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS') and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DOGVLibrary)'))" Link="runtimes/$(Electron2DOGVNativeRID)/native/$(_Electron2DOGVName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
   </ItemGroup>
   <Target Name="BuildElectron2DOGVNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DOGVNativeLibrary)' == '' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')" Inputs="@(_Electron2DOGVInput)" Outputs="$(_Electron2DOGVLibrary)">

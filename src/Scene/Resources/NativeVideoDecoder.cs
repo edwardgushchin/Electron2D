@@ -22,6 +22,7 @@ internal sealed partial class NativeVideoDecoder : IDisposable
     internal readonly Metadata Info;
     internal unsafe NativeVideoDecoder(byte[] bytes, int track)
     {
+        OGVNativeMemory.Prepare();
         nint pointer;
         fixed (byte* data = bytes) Check(Create(data, (nuint)bytes.Length, track, out Info, out pointer));
         try { _handle = new(pointer); } catch { Destroy(pointer); throw; }

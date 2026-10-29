@@ -2,6 +2,7 @@
 #define ELECTRON2D_MEMORY_H
 #include <stddef.h>
 #include <stdint.h>
+#include "memory-functions.h"
 #if defined(_WIN32) && defined(E2D_MEMORY_IMPORT)
 #define E2D_MEMORY_API __declspec(dllimport)
 #elif defined(_WIN32)
@@ -16,12 +17,6 @@ typedef struct {
     uint64_t managedCurrent, managedPeak, nativeCurrent, nativePeak, current, peak;
     uint64_t allocated, retired, allocations, resizes, frees, failures;
 } E2DMemorySnapshot;
-typedef struct {
-    void *(*allocate)(size_t);
-    void *(*zero)(size_t, size_t);
-    void *(*resize)(void *, size_t);
-    void (*release)(void *);
-} E2DMemoryFunctions;
 E2D_MEMORY_API uint32_t e2d_memory_abi(void);
 E2D_MEMORY_API void *e2d_memory_allocate(size_t size, size_t alignment, uint32_t zero, int32_t *error);
 E2D_MEMORY_API void *e2d_memory_reallocate(void *value, size_t size, int32_t *error);

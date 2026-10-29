@@ -122,4 +122,18 @@
     <Copy SourceFiles="$(Electron2DHarfBuzzNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerHarfBuzzName)" />
     <Copy SourceFiles="$(Electron2DHarfBuzzNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerHarfBuzzName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <PropertyGroup>
+    <_Electron2DConsumerOGVName>libElectron2DOGV.so</_Electron2DConsumerOGVName>
+    <_Electron2DConsumerOGVName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DOGV.dylib</_Electron2DConsumerOGVName>
+    <_Electron2DConsumerOGVPath Condition="'$(Electron2DOGVNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DOGVNativeLibrary)'))</_Electron2DConsumerOGVPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerOGVOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DOGVNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerOGVName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerOGVPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerOGVOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DOGVNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <Copy SourceFiles="$(Electron2DOGVNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)" />
+    <Copy SourceFiles="$(Electron2DOGVNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

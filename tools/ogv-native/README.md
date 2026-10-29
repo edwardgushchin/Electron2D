@@ -8,7 +8,7 @@ Desktop/Android delivery uses one shared library. Static Apple/Web delivery merg
 
 Build Electron2DOGVCheck and Electron2DVorbisResidueCheck through CMake. The former takes an existing output directory; it exercises bounds, all channel layouts, short/empty output, terminal calls and write callback failures. The latter initializes/clears 24 channel/quality profiles. Run sanitizer builds with leak detection; the unadapted dependency leaks during residue setup. test_decode.py uses independent FFmpeg and the generated expectation sidecars to check CRC/timestamps, exact decoded clocks/pixels, keyframe limits and native speaker tones. Runtime GPU/Compatibility checks use OGVMovieWriterTests; their native output may be checked with the same decoder.
 
-Video playback adds five functions (nine exports total): e2d_video_create, e2d_video_frame, e2d_video_audio, e2d_video_seek_audio and e2d_video_destroy. Create copies/indexes bounded Ogg input, validates all selected Theora/Vorbis packets and warms decoder storage; it retains compressed packets and working frame/PCM buffers. The returned metadata has explicit 32-bit ABI padding before Int64 totals. Frame borrows opaque RGBA8 storage; Audio copies interleaved Vorbis-order floats. SeekAudio rewinds and discards to the requested sample; destroy releases every partial/full initialization stage. Input, dimensions, stream/packet counts and channels have explicit bounds. CRC holes, incomplete packets, unsupported headers and truncated pages/packets fail before publication.
+Video playback adds five functions (ten exports total, including allocator preparation): e2d_video_create, e2d_video_frame, e2d_video_audio, e2d_video_seek_audio and e2d_video_destroy. Create copies/indexes bounded Ogg input, validates all selected Theora/Vorbis packets and warms decoder storage; it retains compressed packets and working frame/PCM buffers. The returned metadata has explicit 32-bit ABI padding before Int64 totals. Frame borrows opaque RGBA8 storage; Audio copies interleaved Vorbis-order floats. SeekAudio rewinds and discards to the requested sample; destroy releases every partial/full initialization stage. Input, dimensions, stream/packet counts and channels have explicit bounds. CRC holes, incomplete packets, unsupported headers and truncated pages/packets fail before publication.
 
 GNU/Clang codec targets use -fwrapv for the releases' signed integer bit representations. This leaves bridge code under ordinary undefined-behavior instrumentation. No fetched decoder source is modified. Test with AddressSanitizer, UndefinedBehaviorSanitizer and LeakSanitizer; use Electron2DVideoAllocationCheck for wrapped malloc/calloc/realloc/free replay measurement after cold preparation.
 
@@ -19,4 +19,31 @@ python3 -B tools/ogv-native/test_video.py obj/video-native/libElectron2DOGV.so b
 obj/video-native/Electron2DVideoAllocationCheck bin/video-playback-validation/independent/*.ogv
 ```
 
-The independent FFmpeg oracle covers 27 chroma/channel profiles plus multiple audio tracks, cropped rational-FPS images, sample counts/content, nonmonotonic frames, audio seeks and malformed input. It explicitly removes the minimum Vorbis half-window priming from skip_manual output; default decoder trimming omits endpoint samples in these fixtures. Preserve the encoder/lifecycle/residue tests above because both roles share one private codec closure. Source receipts and package/publish validators require the exact nine exports for every producer; Linux checks do not establish foreign-host execution.
+The independent FFmpeg oracle covers 27 chroma/channel profiles plus multiple audio tracks, cropped rational-FPS images, sample counts/content, nonmonotonic frames, audio seeks and malformed input. It explicitly removes the minimum Vorbis half-window priming from skip_manual output; default decoder trimming omits endpoint samples in these fixtures. Preserve the encoder/lifecycle/residue tests above because both roles share one private codec closure. Source receipts and package/publish validators require the exact ten exports for every producer; Linux checks do not establish foreign-host execution.
+
+
+The bridge's e2d_ogv_memory entry point accepts one immutable E2DMemoryFunctions
+record before either creation function. Incomplete or replacement callbacks fail;
+identical concurrent registration is permitted. Engine callers use pure-C
+process-lifetime callbacks from the common ledger, never managed thunks. Direct
+context, YUV/RGBA, packet-vector and compressed-packet storage uses that record.
+Unprepared creation returns -5; direct storage refusal returns -2 with normal
+partial cleanup. The decoder leaves output metadata and context unpublished on
+failure. The encoder may return a partial context which the caller must destroy.
+Nested codec allocator macros are unchanged and remain an open ownership domain.
+
+Build Electron2DOGVMemoryCheck on Linux and run
+`python3 -B tools/ogv-native/check_memory.py CHECKER RECEIPT FIXTURE...` to sweep
+all direct refusal positions in fresh processes. Include a fixture with more than
+128 packets. It also checks immutable registration, terminal encoder refusal,
+independent decoder workers, prepared allocation-free replay and full drain/retry.
+Electron2DOGVFaultCore is a test-only common ledger for public CLR/NativeAOT
+refusal profiles; never distribute it. Public video, video-fault and video-old
+profiles are in tests/NativeMemory.ICUHost.
+
+vorbis-psy.cmake compiles a hash-checked copy of psy.c that clamps the second
+noise-band interpolation index at the last band. The pinned code otherwise reads
+one element past a row despite a zero interpolation weight, detected by UBSan.
+The downloaded source remains unchanged. Qualification compares all generated
+encoder files byte-for-byte with the preceding interpolation and repeats the
+independent decoding and full sanitizer profiles.

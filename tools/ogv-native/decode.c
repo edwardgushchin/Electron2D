@@ -1,4 +1,5 @@
 #include "bridge.h"
+#include "memory.h"
 #include <limits.h>
 #include <math.h>
 #include <stdlib.h>
@@ -26,8 +27,8 @@ typedef struct {
 typedef struct { ogg_stream_state state; int kind, headers; } input_stream;
 
 static void clear_packets(packet_list *list) {
-    for (size_t i = 0; i < list->count; i++) free(list->packets[i].packet);
-    free(list->packets);
+    for (size_t i = 0; i < list->count; i++) e2d_ogv_release(list->packets[i].packet);
+    e2d_ogv_release(list->packets);
 }
 void e2d_video_destroy(void *context) {
     video_reader *r = context;
@@ -39,17 +40,17 @@ void e2d_video_destroy(void *context) {
     if (r->setup) th_setup_free(r->setup);
     th_comment_clear(&r->tc); th_info_clear(&r->ti);
     clear_packets(&r->videos); clear_packets(&r->audios);
-    free(r->rgba); free(r);
+    e2d_ogv_release(r->rgba); e2d_ogv_release(r);
 }
 static int append_packet(packet_list *list, const ogg_packet *packet) {
     if (packet->bytes < 0 || list->count >= 16777216) return -1;
     if (list->count == list->capacity) {
         size_t capacity = list->capacity ? list->capacity * 2 : 64;
-        void *replacement = realloc(list->packets, capacity * sizeof(ogg_packet));
+        void *replacement = e2d_ogv_resize(list->packets, capacity * sizeof(ogg_packet));
         if (!replacement) return -2;
         list->packets = replacement; list->capacity = capacity;
     }
-    uint8_t *data = malloc(packet->bytes ? (size_t)packet->bytes : 1);
+    uint8_t *data = e2d_ogv_allocate(packet->bytes ? (size_t)packet->bytes : 1);
     if (!data) return -2;
     if (packet->bytes) memcpy(data, packet->packet, (size_t)packet->bytes);
     list->packets[list->count] = *packet;
@@ -199,7 +200,8 @@ int e2d_video_seek_audio(void *context, int64_t frame) {
 int e2d_video_create(const uint8_t *data, size_t bytes, int track, e2d_video_info *info, void **result) {
     if (result) *result = NULL;
     if (!data || !bytes || bytes > 536870912 || bytes > LONG_MAX || track < -1 || !info || !result) return -1;
-    video_reader *r = calloc(1, sizeof(*r));
+    if (!e2d_ogv_memory_ready()) return -5;
+    video_reader *r = e2d_ogv_zero(1, sizeof(*r));
     if (!r) return -2;
     th_info_init(&r->ti); th_comment_init(&r->tc);
     vorbis_info_init(&r->vi); vorbis_comment_init(&r->vc);
@@ -216,7 +218,7 @@ int e2d_video_create(const uint8_t *data, size_t bytes, int track, e2d_video_inf
     r->video = th_decode_alloc(&r->ti, r->setup);
     if (!r->video) { status = -2; goto failed; }
     th_setup_free(r->setup); r->setup = NULL;
-    r->rgba = calloc((size_t)r->info.width * r->info.height, 4);
+    r->rgba = e2d_ogv_zero((size_t)r->info.width * r->info.height, 4);
     if (!r->rgba) { status = -2; goto failed; }
     r->video_cursor = -1;
     if (r->vi.channels) {
