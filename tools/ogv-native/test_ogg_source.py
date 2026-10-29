@@ -1,4 +1,4 @@
-"""Check the framing copy and refuse changed source/target ownership."""
+"""Check both Ogg copies and refuse changed source/target ownership."""
 from pathlib import Path
 import subprocess
 import sys
@@ -11,10 +11,11 @@ ADAPTER = Path(__file__).with_name("ogg-memory.cmake").resolve()
 
 @unittest.skipIf(SOURCE is None, "Run with the pinned framing.c path")
 class OggSourceTests(unittest.TestCase):
-    def configure(self, root, content, target="src/framing.c"):
+    def configure(self, root, content, target="src/framing.c src/bitwise.c", bitwise=None):
         source = root / "source"
         (source / "src").mkdir(parents=True)
         (source / "src/framing.c").write_bytes(content)
+        (source / "src/bitwise.c").write_bytes(SOURCE.with_name("bitwise.c").read_bytes() if bitwise is None else bitwise)
         (source / "other.c").write_text("int unused;\n")
         (source / "CMakeLists.txt").write_text(
             'cmake_minimum_required(VERSION 3.24)\nproject(Probe C)\n'
@@ -34,6 +35,12 @@ class OggSourceTests(unittest.TestCase):
                 self.assertNotIn("_ogg_" + old, copy)
                 self.assertIn("e2d_ogv_" + new, copy)
             self.assertEqual((root / "source/src/framing.c").read_bytes(), original)
+            bitwise = (root / "build/bitwise-memory.c").read_text()
+            self.assertIn("value=bits ?", bitwise)
+            self.assertNotIn("_ogg_malloc", bitwise)
+            self.assertNotIn("_ogg_realloc", bitwise)
+            self.assertNotIn("_ogg_free", bitwise)
+            self.assertEqual((root / "source/src/bitwise.c").read_bytes(), SOURCE.with_name("bitwise.c").read_bytes())
         self.assertEqual(SOURCE.read_bytes(), original)
 
     def test_changed_source_is_rejected_before_generation(self):
@@ -41,7 +48,7 @@ class OggSourceTests(unittest.TestCase):
             root = Path(folder)
             result = self.configure(root, SOURCE.read_bytes() + b"\nchanged\n")
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("Re-audit Ogg container allocation", result.stderr)
+            self.assertIn("Re-audit Ogg allocation", result.stderr)
             self.assertFalse((root / "build/framing-memory.c").exists())
 
     def test_changed_target_is_rejected_before_generation(self):
@@ -51,6 +58,24 @@ class OggSourceTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("Pinned Ogg target no longer owns", result.stderr)
             self.assertFalse((root / "build/framing-memory.c").exists())
+
+    def test_changed_bitwise_is_rejected_before_generation(self):
+        with tempfile.TemporaryDirectory(prefix="e2d-ogg-source-") as folder:
+            root = Path(folder)
+            result = self.configure(root, SOURCE.read_bytes(), bitwise=b"changed")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Re-audit Ogg allocation", result.stderr)
+            self.assertFalse((root / "build/framing-memory.c").exists())
+            self.assertFalse((root / "build/bitwise-memory.c").exists())
+
+    def test_changed_bitwise_target_is_rejected_before_generation(self):
+        with tempfile.TemporaryDirectory(prefix="e2d-ogg-source-") as folder:
+            root = Path(folder)
+            result = self.configure(root, SOURCE.read_bytes(), "src/framing.c other.c")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("src/bitwise.c", result.stderr)
+            self.assertFalse((root / "build/framing-memory.c").exists())
+            self.assertFalse((root / "build/bitwise-memory.c").exists())
 
 
 if __name__ == "__main__":

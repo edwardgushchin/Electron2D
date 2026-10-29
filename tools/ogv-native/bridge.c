@@ -30,6 +30,14 @@ typedef struct {
 } e2d_ogv;
 
 static int fail(e2d_ogv *c, int code) { c->failed = code; return code; }
+static int codec_result(e2d_ogv *c, uint64_t epoch, int status) {
+    if (e2d_ogv_failure_epoch() != epoch) return fail(c, -2);
+    return status < 0 ? fail(c, -3) : status;
+}
+static int video_header(e2d_ogv *c, th_comment *comment, ogg_packet *packet) {
+    uint64_t epoch = e2d_ogv_failure_epoch();
+    return codec_result(c, epoch, th_encode_flushheader(c->video, comment, packet));
+}
 static int queue_packet(e2d_ogv *c, e2d_ogv_stream *stream, ogg_packet *packet) {
     uint64_t epoch = e2d_ogv_failure_epoch();
     if (!ogg_stream_packetin(&stream->stream, packet)) return 0;
@@ -72,15 +80,21 @@ static int mux(e2d_ogv *c, int final) {
     }
 }
 static int pull_video(e2d_ogv *c, int last) {
-    ogg_packet packet; int status;
-    while ((status = th_encode_packetout(c->video, last, &packet)) > 0)
+    ogg_packet packet;
+    for (;;) {
+        uint64_t epoch = e2d_ogv_failure_epoch();
+        int status = codec_result(c, epoch, th_encode_packetout(c->video, last, &packet));
+        if (status <= 0) return status;
         if (queue_packet(c, &c->v, &packet)) return c->failed;
-    return status < 0 ? fail(c, -3) : 0;
+    }
 }
 static int pull_audio(e2d_ogv *c) {
     ogg_packet packet; int status;
     while ((status = vorbis_analysis_blockout(&c->audio, &c->block)) > 0) {
-        if (vorbis_analysis(&c->block, NULL) || vorbis_bitrate_addblock(&c->block)) return fail(c, -3);
+        uint64_t epoch = e2d_ogv_failure_epoch();
+        if (codec_result(c, epoch, vorbis_analysis(&c->block, NULL))) return c->failed;
+        epoch = e2d_ogv_failure_epoch();
+        if (codec_result(c, epoch, vorbis_bitrate_addblock(&c->block))) return c->failed;
         while (vorbis_bitrate_flushpacket(&c->audio, &packet) > 0) {
             if (queue_packet(c, &c->a, &packet)) return c->failed;
             // Isolate the zero-duration priming packet so short streams retain their exact initial clock.
@@ -112,13 +126,19 @@ E2D_API int e2d_ogv_create(int width, int height, int fps, int rate, int channel
     if (ogg_stream_init(&c->a.stream, 0x45324441)) return fail(c, -2); c->a.initialized = 1;
     if (vorbis_encode_init_vbr(&c->audio_info, c->output_channels, rate, aq)) return fail(c, -3);
     if (vorbis_analysis_init(&c->audio, &c->audio_info)) return fail(c, -3); c->audio_initialized = 1;
-    if (vorbis_block_init(&c->audio, &c->block)) return fail(c, -3); c->block_initialized = 1;
+    uint64_t epoch = e2d_ogv_failure_epoch();
+    int block_status = vorbis_block_init(&c->audio, &c->block);
+    if (!block_status) c->block_initialized = 1;
+    if (codec_result(c, epoch, block_status)) return c->failed;
     th_info info; th_info_init(&info);
     info.frame_width = (ogg_uint32_t)c->frame_width; info.frame_height = (ogg_uint32_t)c->frame_height;
     info.pic_width = (ogg_uint32_t)width; info.pic_height = (ogg_uint32_t)height; info.fps_numerator = (ogg_uint32_t)fps; info.fps_denominator = 1;
     info.aspect_numerator = info.aspect_denominator = 1; info.pixel_fmt = TH_PF_420; info.quality = (int)(vq * 63);
     while ((1U << info.keyframe_granule_shift) < (unsigned)keyframes) info.keyframe_granule_shift++;
-    c->video = th_encode_alloc(&info); th_info_clear(&info); if (!c->video) return fail(c, -3);
+    epoch = e2d_ogv_failure_epoch();
+    c->video = th_encode_alloc(&info); th_info_clear(&info);
+    if (e2d_ogv_failure_epoch() != epoch) return fail(c, -2);
+    if (!c->video) return fail(c, -3);
     ogg_uint32_t interval = (ogg_uint32_t)keyframes; int maximum;
     if (th_encode_ctl(c->video, TH_ENCCTL_SET_KEYFRAME_FREQUENCY_FORCE, &interval, sizeof(interval)) ||
         th_encode_ctl(c->video, TH_ENCCTL_GET_SPLEVEL_MAX, &maximum, sizeof(maximum))) return fail(c, -3);
@@ -131,13 +151,14 @@ E2D_API int e2d_ogv_create(int width, int height, int fps, int rate, int channel
     for (int i = 0; i < 3; i++) { c->planes[i].width = c->frame_width >> (i != 0); c->planes[i].height = c->frame_height >> (i != 0); c->planes[i].stride = c->planes[i].width; }
     c->planes[0].data = c->yuv; c->planes[1].data = c->yuv + pixels; c->planes[2].data = c->yuv + pixels + pixels / 4;
     th_comment comment; th_comment_init(&comment); ogg_packet packet; int status;
-    status = th_encode_flushheader(c->video, &comment, &packet); if (status <= 0 || queue_packet(c, &c->v, &packet)) { th_comment_clear(&comment); return c->failed ? c->failed : fail(c, -3); }
+    status = video_header(c, &comment, &packet); if (status <= 0 || queue_packet(c, &c->v, &packet)) { th_comment_clear(&comment); return c->failed ? c->failed : fail(c, -3); }
     if (flush_headers(c, &c->v)) { th_comment_clear(&comment); return c->failed; }
     ogg_packet audio_header, audio_comment, audio_setup;
-    if (vorbis_analysis_headerout(&c->audio, &c->audio_comment, &audio_header, &audio_comment, &audio_setup) || queue_packet(c, &c->a, &audio_header)) { th_comment_clear(&comment); return c->failed ? c->failed : fail(c, -3); }
+    epoch = e2d_ogv_failure_epoch();
+    if (codec_result(c, epoch, vorbis_analysis_headerout(&c->audio, &c->audio_comment, &audio_header, &audio_comment, &audio_setup)) || queue_packet(c, &c->a, &audio_header)) { th_comment_clear(&comment); return c->failed ? c->failed : fail(c, -3); }
     if (flush_headers(c, &c->a)) { th_comment_clear(&comment); return c->failed; }
-    while ((status = th_encode_flushheader(c->video, &comment, &packet)) > 0) if (queue_packet(c, &c->v, &packet)) { th_comment_clear(&comment); return c->failed ? c->failed : fail(c, -3); }
-    th_comment_clear(&comment); if (status < 0) return fail(c, -3);
+    while ((status = video_header(c, &comment, &packet)) > 0) if (queue_packet(c, &c->v, &packet)) { th_comment_clear(&comment); return c->failed; }
+    th_comment_clear(&comment); if (status < 0) return c->failed;
     if (queue_packet(c, &c->a, &audio_comment) || queue_packet(c, &c->a, &audio_setup)) return c->failed;
     if (flush_headers(c, &c->v) || flush_headers(c, &c->a)) return c->failed;
     return 0;
@@ -163,7 +184,8 @@ E2D_API int e2d_ogv_frame(void *context, const uint8_t *rgb, size_t length, cons
     e2d_ogv *c = context; if (!c || !rgb || samples < 0 || (!pcm && samples) || (uint64_t)c->width * (uint64_t)c->height > SIZE_MAX / 3 || length != (size_t)c->width * c->height * 3) return -1;
     if (c->failed || c->finished) return c->failed ? c->failed : -1;
     if (pull_video(c, 0)) return c->failed;
-    convert_rgb(c, rgb); if (th_encode_ycbcr_in(c->video, c->planes)) return fail(c, -3);
+    convert_rgb(c, rgb); uint64_t epoch = e2d_ogv_failure_epoch();
+    if (codec_result(c, epoch, th_encode_ycbcr_in(c->video, c->planes))) return c->failed;
     if (samples) {
         float **buffer = vorbis_analysis_buffer(&c->audio, samples); if (!buffer) return fail(c, -2);
         static const int map6[] = {0, 2, 1, 4, 5, 3}, map8[] = {0, 2, 1, 6, 7, 4, 5, 3};

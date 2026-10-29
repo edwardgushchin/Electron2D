@@ -1034,8 +1034,8 @@ before SDL, without prior native allocator preparation. Source-bound receipts an
 `bin/ogv-bridge-allocation/2026-10-29/`.
 
 This qualifies the bridge's requested CPU payload. The following container domain
-also qualifies Ogg framing storage. Ogg bit buffers and Vorbis/Theora working
-storage remain open. Prepared whole-codec replay checks do not qualify their cold
+also qualifies Ogg framing storage; the [bit-buffer domain](#ogg-bit-buffer-allocation-domain-2026-10-29) qualifies packing storage. Vorbis/Theora working
+storage remains open. Prepared whole-codec replay checks do not qualify their cold
 ownership. Neither
 this result nor the guarded Vorbis final-band bounds fix completes the remaining
 library/provider inventory, coherent managed/native composition, GetMonitor or
@@ -1081,7 +1081,66 @@ receipts live under `bin/ogg-framing-allocation/2026-10-29/`. The retained curre
 consumer delta and its complete manifest refer to the preceding verified consumer
 archive; the base archive is retained as a required input.
 
-Ogg bitwise.c buffers and Vorbis/Theora working storage remain open. They have
-independent allocation/error paths and do not inherit container qualification.
+The following [bit-buffer domain](#ogg-bit-buffer-allocation-domain-2026-10-29) separately qualifies Ogg bitwise.c buffers. Vorbis/Theora working storage still has
+independent allocation/error paths and does not inherit Ogg qualification.
 Coherent managed/native composition, the remaining provider inventory,
 GetMonitor, release-package and foreign-host qualification also remain open.
+
+
+### Ogg bit-buffer allocation domain (2026-10-29)
+
+The [same source integration](../../tools/ogv-native/ogg-memory.cmake) now routes
+all libogg 1.3.6 bitwise.c buffer initialization, growth, copying and retirement
+to the existing pure-C ledger. Both packing orders use the original algorithm.
+The guarded input is
+`753d2ace9337bcb8c9ef23f42d630186f55f75a0d962ee79b3e7d87a614c147c`.
+Both Ogg input hashes and target ownership are checked before either generated
+copy is written. The fetched source remains pristine and one version serves
+encoder, decoder, shared and static profiles. Decoder bit readers borrow packet
+storage and add no separate owned allocation.
+
+Ogg invalidates a bit buffer on refusal. The guarded
+[Vorbis packet adapter](../../tools/ogv-native/vorbis-packets.cmake) checks that
+state before and after packing each header, before copying bytes. It also checks
+header-copy allocation results. The standalone comment packet uses the same
+tracked allocator as its Ogg packet-clear function; mixing its original libc
+allocation with tracked retirement is rejected by an address-sanitizer control.
+Backend-owned analysis header copies retain their paired Vorbis allocator and
+teardown, outside this domain. The original info.c input is
+`03af6059fe7e50d0b37a0370707139227e6cd4cc74be56473cd22f0300739fca`.
+An original comment-header refusal control incorrectly publishes an invalid
+packet; the adapted path fails, drains and retries. Encoder call boundaries
+capture the thread-local refusal epoch before block initialization, header/data
+packing, bitrate processing and frame submission. Refusal stays terminal with
+code -2 before packet queuing or caller writes. Complete partial owners remain
+available for ordinary teardown. Non-memory codec errors retain code -3.
+
+A zero-bit MSB write also needs a guarded zero result when unsigned long is
+32 bits. The original expression shifts by 32 and traps under the 32-bit shift
+sanitizer. The adapted full upstream byte-vector oracle passes under that same
+32-bit instrumentation. Both the original and adapted 64-bit upstream oracles
+pass all LSB/MSB scalar, copy, truncation and end-of-buffer vectors. The adapted
+oracle accounts for 34082 allocations, a 1037-byte peak and complete retirement.
+This verifies integer-width behavior locally; it is not foreign-host execution.
+
+Shared/static Release and address/undefined/leak-sanitizer checks cover 1577
+actual bridge requests: 53 ordinary encoding, 1262 large-noise encoding and 262
+decoding. The independent checks add 40 container requests, 21 bit-buffer
+requests in each order, and 34 comment-header requests. Every observed refusal
+position runs in a fresh process, preserves full retirement and permits healthy
+retry. Bit tests also verify requested capacity, 1000 prepared reset/write cycles
+without allocation calls, aligned/unaligned copies and truncation. Thirteen
+encoded files remain byte-for-byte equal to the preceding qualified producer;
+independent FFmpeg clocks, pixels, PCM, chroma/channel and multi-track checks,
+24 residue profiles and 64 prepared whole-codec loops remain connected checks.
+
+The hash-qualified CLR/full-trim NativeAOT consumers retain the same managed
+inputs and replace only the canonical native OGV module. Public preparation and
+replacement refusal, independent owners, collection, older-ABI rejection, 20000
+prepared operations and window-first GPU/Compatibility recording pass. Source,
+native and consumer identities, 32-bit controls and receipts live under
+`bin/ogg-bitwise-allocation/2026-10-29/`. Required consumer base archives remain
+retained. No package or wiki is published.
+
+Vorbis/Theora working heaps, remaining providers, coherent managed/native
+composition, GetMonitor and release/foreign-host qualification remain open.

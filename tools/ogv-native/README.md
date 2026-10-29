@@ -30,14 +30,19 @@ context, YUV/RGBA, packet-vector and compressed-packet storage uses that record.
 Unprepared creation returns -5; direct storage refusal returns -2 with normal
 partial cleanup. The decoder leaves output metadata and context unpublished on
 failure. The encoder may return a partial context which the caller must destroy.
-Ogg bit buffers and Vorbis/Theora allocator macros remain an open ownership domain.
+Ogg framing and bit buffers use the same record. Vorbis/Theora working heaps
+remain an open ownership domain.
 
 Build Electron2DOGVMemoryCheck on Linux and run
 `python3 -B tools/ogv-native/check_memory.py CHECKER RECEIPT FIXTURE...` to sweep
-all bridge/container refusal positions in fresh processes. Include a fixture with more than
+all bridge/container/bit-buffer/header refusal positions in fresh processes. Include a fixture with more than
 128 packets. The memory target also builds Electron2DOGGContainerCheck, which
 independently round-trips a 512-KiB packet through 500-byte chunks and sweeps all
-container growth failures. The script checks immutable registration, terminal encoder refusal,
+container growth failures. Electron2DOGGBitwiseCheck exercises both packing orders,
+scalar/copy/truncation paths and prepared reuse. Electron2DVorbisPacketCheck tests
+large comment-header growth and failure before publication. Reference/adapted
+bitwise oracles execute the pinned upstream byte vectors. The script checks
+immutable registration, terminal encoder refusal,
 independent decoder workers, prepared allocation-free replay and full drain/retry.
 Electron2DOGVFaultCore is a test-only common ledger for public CLR/NativeAOT
 refusal profiles; never distribute it. Public video, video-fault and video-old
@@ -51,13 +56,30 @@ encoder files byte-for-byte with the preceding interpolation and repeats the
 independent decoding and full sanitizer profiles.
 
 
-ogg-memory.cmake compiles a hash-checked framing.c copy from the same libogg pin.
-Stream bodies, lacing/granule arrays and sync buffers use the shared pure-C
-allocator; bitwise.c retains its original allocator pending separate refusal
-qualification. A private native-thread epoch classifies packet/page insertion
+ogg-memory.cmake compiles hash-checked framing.c and bitwise.c copies from the
+same libogg pin. Both source/target checks complete before either copy is written.
+Stream bodies, lacing/granule arrays, sync and bit buffers use the shared pure-C
+allocator. A private native-thread epoch classifies packet/page insertion
 failure before any managed/write callback can run. OOM becomes -2; invalid data
 retains its existing error. Failed Ogg growth clears the stream's partial state,
 then the normal bridge teardown releases its remaining owners. The container
 checker also verifies thread isolation of refusal epochs and full healthy retry.
 
-Run `python3 -B tools/ogv-native/test_ogg_source.py SOURCE/src/framing.c` for pristine-copy, changed-source and changed-target controls before updating the guarded producer.
+The bitwise copy also defines the result of a zero-bit MSB write when unsigned
+long is 32 bits. The original shift traps under 32-bit shift instrumentation;
+the adapted full upstream oracle passes with the same instrumentation. This
+integer-width check does not establish execution on another platform.
+
+vorbis-packets.cmake compiles a hash-checked info.c copy that checks bit-buffer
+validity before and after header packing and checks packet-copy allocation before
+memcpy. The standalone comment packet is allocated through the same ledger as
+its Ogg packet-clear function. Backend-owned analysis headers retain their paired
+Vorbis allocator/teardown. Encoder block/header/frame/packet calls retain a thread-local refusal
+epoch and stop with -2 before publishing invalid packets. Partially initialized
+block and encoder owners remain available for normal teardown. Other codec
+working allocation remains outside this qualified domain.
+
+Run `python3 -B tools/ogv-native/test_ogg_source.py SOURCE/src/framing.c` and
+`python3 -B tools/ogv-native/test_vorbis_packets.py VORBIS/lib/info.c` for
+pristine-copy, changed-source and changed-target controls before updating the
+guarded producer.
