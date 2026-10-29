@@ -1,12 +1,12 @@
 # SceneAccessibility
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 - Declaration: `internal sealed class SceneAccessibility`
 - Source: [SceneAccessibility.cs](../../src/Scene/Main/SceneAccessibility.cs)
 - Component: [Native accessibility](../components/accessibility.md)
 
-SceneTree retains one controller for automatic native semantic output. A cached traversal follows PathRevision; membership changes reconcile native-window ownership and source-child order while preserving custom sub-elements. Each ordinary process completion synchronizes prepared captions, authored translated metadata, roles, bounds, visibility, disabled/check states and GUI focus. Queued updates coalesce. NotificationAccessibilityUpdate runs after defaults so custom producers can refine them; the focused-element extension selects one live same-window element.
+SceneTree retains one controller for automatic native semantic output. A cached traversal follows PathRevision; membership changes reconcile native-window ownership and source-child order while preserving custom sub-elements. Each scheduled process completion synchronizes prepared captions, authored translated metadata, roles, bounds, visibility, disabled/check states and GUI focus. Queued updates coalesce. NotificationAccessibilityUpdate runs after defaults so custom producers can refine them; the focused-element extension selects one live same-window element.
 
 Native windows have separate roots and focus targets. Embedded windows and SubViewport controls belong to their containing native window; focus follows the active viewport/embedded chain. Source state and numeric snapshots avoid re-emitting defaults over custom metadata every frame. Topology changes, callback dispatch and native queries are cold allocation-capable work; unchanged warmed traversal reuses node/focus/order storage. Nodes retire their own borrowed identity and owned sub-elements before leaving a tree, including exceptional exits. Scene serialization stores metadata, never the native identity or callbacks. SceneTree finalization releases the retained traversal/controller.
 
@@ -29,3 +29,5 @@ Drag source reconciliation runs only after a revision, queued update, editabilit
 [Contextual native navigation](AccessibilityServer.md#contextual-navigation) publishes retained source help/container fragments and actual button/menu keybindings. Class/role attributes retain the native taxonomy; source changes, override precedence and callback retirement have their own verification.
 
 LinkButton URI snapshots publish [native hyperlink destinations](AccessibilityServer.md#native-hyperlinks). Changed source URIs queue dependent contextual-help refresh; unchanged sources preserve explicit service overrides, and new identities restore current authoring.
+
+SceneTree.Accessibility.cs now schedules this producer using the captured positive AccessibilityUpdatesPerSecond preference. First pass is immediate; subsequent passes coalesce by monotonic wall time without catch-up bursts. Native requests and retirement are independent. See [native scheduling](../components/accessibility.md#native-driver-and-scene-scheduling).

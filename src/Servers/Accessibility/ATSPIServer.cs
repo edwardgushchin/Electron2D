@@ -211,7 +211,9 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
             if (r.Bridge._disposing) throw new InvalidRequestException("The accessibility owner is retiring.");
             if (Marshal.PtrToStringUTF8(iface) == ValueInterface && Marshal.PtrToStringUTF8(property) == "CurrentValue")
             {
+                var tree = PrepareMutation(r.Element);
                 if (!InvokeValue(r.Element, g_variant_get_double(value))) throw new InvalidRequestException("This element cannot accept the requested numeric value.");
+                CompleteMutation(tree);
                 return 1;
             }
             if (r.Element.IsApplication && Marshal.PtrToStringUTF8(iface) == ApplicationInterface && Marshal.PtrToStringUTF8(property) == "Id")
@@ -307,6 +309,18 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
     private nint Call(Element e, string iface, string method, nint args)
     {
         if (e.Retired) throw new InvalidRequestException("The accessibility element has retired.", retired: true);
+        var mutating = iface == ActionInterface && method == "DoAction" || iface == EditableTextInterface ||
+            iface == Component && method is "GrabFocus" or "ScrollTo" or "ScrollToPoint" ||
+            iface == TextInterface && method is "SetCaretOffset" or "AddSelection" or "RemoveSelection" or "SetSelection" ||
+            iface == SelectionInterface && method is "SelectChild" or "DeselectSelectedChild" or "DeselectChild" or "SelectAll" or "ClearSelection";
+        var tree = mutating ? PrepareMutation(e) : null;
+        var result = CallCore(e, iface, method, args);
+        try { CompleteMutation(tree); }
+        catch { g_variant_unref(result); throw; }
+        return result;
+    }
+    private nint CallCore(Element e, string iface, string method, nint args)
+    {
         if (iface == Cache && method == "GetItems") return Tuple([CacheItems()]);
         if (iface == ApplicationInterface) return method switch { "GetLocale" => Tuple([S(TranslationServer.Culture.Name)]), "GetApplicationBusAddress" => Tuple([S("")]), _ => throw new InvalidOperationException("Unknown application method.") };
         if (iface == SelectionInterface) return SelectionCall(e, method, args);
@@ -349,6 +363,21 @@ internal sealed unsafe partial class ATSPIServer : IDisposable
         if (iface == Hyperlink) return HyperlinkCall(e, method, args);
         throw new InvalidOperationException("Unknown accessibility interface.");
     }
+    private static SceneTree? PrepareMutation(Element e)
+    {
+        SceneTree? owner = null;
+        for (var parent = e; parent is not null; parent = parent.Parent)
+        {
+            var source = parent.Source ?? parent.TextSource ?? parent.CollectionSource;
+            if (source is not { IsDisposed: false, IsInsideTree: true, IsDepartingTree: false, Tree: { } tree }) continue;
+            // Explicit requests need current geometry and selection even between automatic source passes.
+            owner = tree; tree.SynchronizeAccessibilityForRequest(); break;
+        }
+        if (e.Retired) throw new InvalidRequestException("The accessibility element has retired.", retired: true);
+        return owner;
+    }
+    private static void CompleteMutation(SceneTree? tree)
+    { if (tree is { IsDisposed: false }) tree.SynchronizeAccessibilityForRequest(); }
     private static bool HasPageActions(Element e) => e.HasNumericValue && e.NumericJump > 0 && e.SetValueAction is not null && !e.Flag(AFlag.ReadOnly);
     private static bool HasOffsetActions(Element e) => e.SetScrollOffsetAction is not null && (e.ScrollMask & 12) != 0;
     private static int ActionCount(Element e) => e.Actions.Count + (e.CustomActions?.Count ?? 0) + (HasPageActions(e) ? 2 : 0) + 2 * (e.ScrollUnitActions?.Count ?? 0) + (HasOffsetActions(e) ? 2 : 0);

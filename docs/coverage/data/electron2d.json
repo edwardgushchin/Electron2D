@@ -282520,6 +282520,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AccessibilityDriver()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AccessibilityDriver",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.String\u003E AccessibilityDriver { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.String\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.AccessibilitySupport()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -282530,6 +282543,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CElectron2D.AccessibilitySupport\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.AccessibilityUpdatesPerSecond()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AccessibilityUpdatesPerSecond",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E AccessibilityUpdatesPerSecond { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

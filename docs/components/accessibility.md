@@ -26,7 +26,7 @@ The first profile uses optional system libgio-2.0.so.0, libglib-2.0.so.0 and lib
 
 The Release runner supports ELECTRON2D_TEST_ACCESSIBILITY=managed, prototype, lifetimes, gpu and compatibility. [Managed checks](../../tests/Electron2D.Tests/AccessibilityFoundationTests.Managed.cs) cover detached guards, stored properties, duplication, authoring warnings and fresh-process archives. [Native checks](../../tests/Electron2D.Tests/AccessibilityFoundationTests.cs) and [lifetime checks](../../tests/Electron2D.Tests/AccessibilityFoundationTests.Lifetime.cs) launch independent [gdbus clients](../../tests/AccessibilityClient/probe.py) to discover registry/application/window/control trees, read roles/states/bounds/cache, observe native events and invoke ordinary focus/Pressed. They cover reparenting inside the currently executing native action, defunct references, hidden/disabled guards, composite focus selection, independent native-window retirement, bad requests, callback failures and fresh reopening. Prepared idle/active full-frame managed allocations and actual rendered PNGs are checked on both current software-native canvas backends.
 
-These checks establish the exercised Linux protocol and GUI behavior. A real human screen-reader session, native heap totals, physical GPUs/input, performance throughput, X11 screen placement and foreign-platform adapters remain separate acceptance gates. Remaining color/custom payload actions retain explicit follow-up slices in coverage; assigning a role does not implement those protocols. Driver selection and update-rate project settings remain absent until they control real adapter/scheduling behavior.
+These checks establish the exercised Linux protocol and GUI behavior. A real human screen-reader session, native heap totals, physical GPUs/input, performance throughput, X11 screen placement and foreign-platform adapters remain separate acceptance gates. Remaining color/custom payload actions retain explicit follow-up slices in coverage; assigning a role does not implement those protocols. Driver selection and automatic scene scheduling now execute as described below.
 
 Container.AccessibilityRegion is stored and inherited across the complete container family. It toggles the real landmark/container native role using the ordinary accessible name; unnamed landmarks and actions expose authoring warnings. The typed project policy has generated JSON enum metadata so static startup and persistence work without reflection.
 
@@ -82,3 +82,47 @@ ELECTRON2D_TEST_ACCESSIBILITY_DRAG=managed checks [ownership, forwarding, keyboa
 [Producer models](../classes/AccessibilityServer.md#producer-models) connect typed, process-local element metadata to existing compiled native actions. The service retains the slot without owning disposal; replacement, clearing and all element retirement paths release it. Automatic scene identities and copying remain separate. AccessibilityModelTests and its independent native client verify current-model lookup, ownership, failures and prepared reference-model frame budgets.
 
 The foundation retirement/reopening regression gives its deferred child finite bounds before attachment: Visible includes connected semantic groups, while Showing also requires nonempty geometry. Attaching that subtree still has to emit the real showing transition.
+
+
+## Native driver and scene scheduling
+
+`ProjectSettings.AccessibilityDriver` is a permanent, nonbasic string setting at
+`accessibility/general/accessibility_driver`. `atspi` selects the implemented
+GIO/AT-SPI bridge and is the default; `dummy` disables both automatic output and
+explicit element operations. Names are case-sensitive and unsupported names
+reject during settings validation. The display samples the effective feature
+override before attempting native initialization. Changing it affects the next
+display, including after failure. A selected native driver still reports
+unavailable when the host libraries or accessibility bus are absent. Selection
+never changes desktop settings or reports a simulated service as supported.
+
+`ProjectSettings.AccessibilityUpdatesPerSecond` is a permanent, nonbasic positive
+integer setting at `accessibility/general/updates_per_second`, default 60. A new
+SceneTree captures its effective feature override. Its first automatic semantic
+pass runs immediately; later passes run at most once per monotonic wall-clock
+interval and at most once per idle frame. A slow frame skips missed intervals
+without replaying stale snapshots. Pausing gameplay, time scaling and a frame's
+simulated delta do not stop or accelerate this clock. Repeated queued requests
+coalesce; each pass reads the latest source metadata, topology, locale and focus.
+Both preferences carry restart-required registry metadata. Existing displays and
+trees retain their captured selections.
+
+Native requests continue through the ordinary display event pump between scene
+passes. Explicit service setters publish immediately, and source/window retirement
+still invalidates its RID and callbacks immediately. Native activation checks the
+current source visibility, enabled state and lifetime even before a scheduled
+metadata pass. Pending manual live announcements flush on skipped scene passes;
+source-generated announcements follow their scheduled source publication. This
+rate is a ceiling for automatic scene publication, not a bus request limit or a
+fixed simulation frequency.
+
+`ELECTRON2D_TEST_ACCESSIBILITY_SCHEDULING=managed`, `gpu` and `compatibility`
+select [settings and host checks](../../tests/Electron2D.Tests/AccessibilitySchedulingTests.cs).
+The [independent libatspi client](../../tests/AccessibilityClient/scheduling.py)
+reads the actual native scene and invokes actual buttons while metadata is
+coalesced. On Linux/Wayland, GPU and compatibility runs verify native execution, disabled
+and reopened displays, scheduled callback failure and 64 idle/64 active prepared
+owner-frame samples with zero managed bytes. NativeAOT, foreign targets, native
+heap totals and human-reader acceptance remain separate gates.
+
+Mutating native requests force current scene passes before dispatch and after successful mutation, including numeric writes, actions, focus, scrolling, text edits/selections and collection selection. This preserves current geometry and selection between rate-limited publications. Read-only native queries do not force a pass. If source preparation retires the requested identity, the request returns an expired-object error; preparation failures keep the existing owner-pump aggregation policy.

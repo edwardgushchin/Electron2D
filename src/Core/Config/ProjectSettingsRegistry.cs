@@ -60,6 +60,10 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(QuitOnGoBack, isBasic: true);
         RegisterInternal(DeltaSmoothing, isBasic: false);
         RegisterInternal(ProjectSettings.AccessibilitySupport, isBasic: false);
+        RegisterInternal(AccessibilityDriver, isBasic: false);
+        RegisterInternal(AccessibilityUpdatesPerSecond, isBasic: false);
+        _settings[AccessibilityDriver.Name].RestartIfChanged = true;
+        _settings[AccessibilityUpdatesPerSecond.Name].RestartIfChanged = true;
         RegisterInternal(LowProcessorMode, isBasic: false);
         RegisterInternal(LowProcessorModeSleepUsec, isBasic: false);
         RegisterInternal(MaxTimestampQueryElements, isBasic: false);
@@ -1235,6 +1239,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, QuitOnGoBack) ||
         ReferenceEquals(setting, DeltaSmoothing) ||
         ReferenceEquals(setting, ProjectSettings.AccessibilitySupport) ||
+        ReferenceEquals(setting, AccessibilityDriver) ||
+        ReferenceEquals(setting, AccessibilityUpdatesPerSecond) ||
         ReferenceEquals(setting, LowProcessorMode) ||
         ReferenceEquals(setting, LowProcessorModeSleepUsec) ||
         ReferenceEquals(setting, MaxTimestampQueryElements) ||

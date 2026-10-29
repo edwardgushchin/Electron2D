@@ -127,7 +127,7 @@ public sealed partial class AccessibilityServer : ElectronObject
     /// <exception cref="InvalidOperationException">Native display access is off its owner, or an ownership rule is violated.</exception>
     public static bool IsSupported()
     {
-        if (!DisplayServer.IsAvailable || Runtime._support == AccessibilitySupport.Disabled) return false;
+        if (!DisplayServer.IsAvailable || !Runtime._driverEnabled || Runtime._support == AccessibilitySupport.Disabled) return false;
         _ = DisplayServer.WindowGetSize();
         if (!Runtime._attempted)
         {

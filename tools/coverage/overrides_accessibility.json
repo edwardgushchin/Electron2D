@@ -1163,6 +1163,18 @@
       "electron2d": "method:Electron2D.AccessibilityServer.ElementSetMeta`1(Electron2D.RID,T)",
       "state": "Implemented",
       "reason": "ADR 0114/0001: generic per-element CLR producer slot, default/null/type semantics and current-model lookup from real native actions. Strong reference replacement/clear/retirement, source copying, owner/identity rejection, failure cleanup and prepared reference-model frames execute; no dynamic value container or model disposal. NativeAOT source, hardware, human-reader, native-heap, foreign-platform and package gates remain distinct."
+    },
+    {
+      "godot": "ProjectSettings::property:accessibility/general/accessibility_driver",
+      "electron2d": "property:Electron2D.ProjectSettings.AccessibilityDriver()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native-driver and scene scheduling preference; driver spelling adapts to the actual AT-SPI implementation. See the owning status group and native scheduling component."
+    },
+    {
+      "godot": "ProjectSettings::property:accessibility/general/updates_per_second",
+      "electron2d": "property:Electron2D.ProjectSettings.AccessibilityUpdatesPerSecond()",
+      "state": "Implemented",
+      "reason": "ADR 0114: executable native-driver and scene scheduling preference; driver spelling adapts to the actual AT-SPI implementation. See the owning status group and native scheduling component."
     }
   ],
   "extras": [
@@ -1252,15 +1264,15 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
+      "state": "Implemented",
+      "reason": "ADR 0114: permanent typed atspi/dummy driver selection controls actual native bridge creation per display; a positive updates-per-second preference (default 60) coalesces automatic scene passes by monotonic wall time per SceneTree. Feature overrides, project-file persistence, disabled/reopened/failing displays, real libatspi GUI actions and immediate retirement execute. Prepared idle/active owner-thread managed bytes, native heap totals, human readers, NativeAOT and foreign platforms retain distinct gates. See docs/components/accessibility.md#native-driver-and-scene-scheduling.",
       "godot": [
         "ProjectSettings::property:accessibility/general/accessibility_driver"
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "ADR 0114: basic native output and stored name/description execute. Next slice: real adapter selection and semantic update scheduler consumption; this declaration is not implemented by the core bridge.",
+      "state": "Implemented",
+      "reason": "ADR 0114: permanent typed atspi/dummy driver selection controls actual native bridge creation per display; a positive updates-per-second preference (default 60) coalesces automatic scene passes by monotonic wall time per SceneTree. Feature overrides, project-file persistence, disabled/reopened/failing displays, real libatspi GUI actions and immediate retirement execute. Prepared idle/active owner-thread managed bytes, native heap totals, human readers, NativeAOT and foreign platforms retain distinct gates. See docs/components/accessibility.md#native-driver-and-scene-scheduling.",
       "godot": [
         "ProjectSettings::property:accessibility/general/updates_per_second"
       ]

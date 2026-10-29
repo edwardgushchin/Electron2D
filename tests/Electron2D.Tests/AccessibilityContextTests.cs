@@ -85,14 +85,14 @@ internal static class AccessibilityContextTests
             controller = AccessibilityServer.CreateSubElement(window.GetAccessibilityElement(), Role.Button); AccessibilityServer.UpdateSetName(controller, "Context controller"); AccessibilityServer.UpdateSetShortcut(controller, "Ctrl+C"); AccessibilityServer.UpdateSetShortcut(button.GetAccessibilityElement(), "Before first query");
             AccessibilityServer.UpdateAddAction(controller, AAction.Custom, (int id) => Command(id)); foreach (var id in new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 99 }) AccessibilityServer.UpdateAddCustomAction(controller, id, "command-" + id);
             var start = new ProcessStartInfo("python3") { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true }; start.ArgumentList.Add(Path.GetFullPath("tests/AccessibilityClient/context.py")); client = Process.Start(start)!; output = client.StandardOutput.ReadToEndAsync(); error = client.StandardError.ReadToEndAsync();
-            window.Tree!.ProcessFrameStarted += _ => { measuring = complete && post >= 16 && (post < 80 || post >= 96 && post < 160); if (measuring) before = GC.GetAllocatedBytesForCurrentThread(); if (complete && post >= 80) button.AccessibilityName = (post & 1) == 0 ? "Move one" : "Move two"; };
+            window.Tree!.ProcessFrameStarted += _ => { measuring = clientDone && complete && post >= 16 && (post < 80 || post >= 96 && post < 160); if (measuring) before = GC.GetAllocatedBytesForCurrentThread(); if (complete && post >= 80) button.AccessibilityName = (post & 1) == 0 ? "Move one" : "Move two"; };
             RenderingServer.FramePostDraw += AfterDraw;
         };
         void AfterDraw()
         {
             if (measuring) { var bytes = GC.GetAllocatedBytesForCurrentThread() - before; if (post < 80) idle += bytes; else active += bytes; }
             if (!captured && Environment.GetEnvironmentVariable("ELECTRON2D_CAPTURE_DIR") is { } capture) { captured = true; Directory.CreateDirectory(capture); using var image = texture.GetImage()!; image.SavePNG(Path.Combine(capture, "context-navigation-" + backend + ".png")); }
-            if (!complete) return;
+            if (!complete || !clientDone) return;
             if (post == 16) idleReads = button.Reads;
             if (post == 79) Check(button.Reads == idleReads, "Unchanged frames do not invoke contextual hooks.");
             if (++post == 160) Check(idle == 0 && active == 0, $"Prepared context idle/active managed bytes {idle}/{active}.");

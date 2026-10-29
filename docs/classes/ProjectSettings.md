@@ -83,6 +83,8 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 
 | Member | Description |
 | --- | --- |
+| [`public static ProjectSetting<string> AccessibilityDriver { get; }`](#accessibilitydriver) | Selects AT-SPI or disabled native output per display lifetime. |
+| [`public static ProjectSetting<int> AccessibilityUpdatesPerSecond { get; }`](#accessibilityupdatespersecond) | Positive wall-clock scene publication ceiling, sampled per SceneTree. |
 | [`public static ProjectSetting<AccessibilitySupport> AccessibilitySupport { get; }`](#accessibilitysupport) | Registered Auto/Always/Disabled native output policy, sampled per display lifetime. |
 | [`public static ProjectSetting<int> MovieWriterMixRate { get; }`](#moviewritermixrate) | Built-in recording rate; 48000 Hz, supported 1000..200000. |
 | [`public static ProjectSetting<AudioServer.SpeakerMode> MovieWriterSpeakerMode { get; }`](#moviewriterspeakermode) | Built-in recording channel mode; Stereo initially. |
@@ -1852,3 +1854,25 @@ True by default; sampled with feature overrides on first global geometry diagnos
 ## MaxTimestampQueryElements
 
 `public static ProjectSetting<int> MaxTimestampQueryElements { get; }` registers `debug/settings/profiler/max_timestamp_query_elements`, default 256, with positive-value validation and feature overrides. Each RenderingDevice captures its effective value at creation. Existing devices retain their pool limit when the project value changes. See [device timestamps](../components/gpu-timestamps.md).
+
+
+<a id="accessibilitydriver"></a>
+## AccessibilityDriver
+
+`public static ProjectSetting<string> AccessibilityDriver { get; }` defines the
+permanent nonbasic `accessibility/general/accessibility_driver` key. Default
+`atspi` selects the native bridge; `dummy` disables it. Other spellings reject.
+Effective feature overrides are captured when a display opens; live changes wait
+for reopening. Missing native prerequisites still report unavailable.
+
+<a id="accessibilityupdatespersecond"></a>
+## AccessibilityUpdatesPerSecond
+
+`public static ProjectSetting<int> AccessibilityUpdatesPerSecond { get; }`
+defines permanent nonbasic `accessibility/general/updates_per_second`, default
+60. Positive integers are valid; zero and negative values reject. A SceneTree
+captures its effective value at construction. First publication is immediate,
+then monotonic wall-clock intervals coalesce automatic source updates without
+catch-up bursts. Requests, explicit writes and retirement stay immediate. Both
+settings have restart-required metadata and survive independent project-file
+round trips. See [native scheduling](../components/accessibility.md#native-driver-and-scene-scheduling).

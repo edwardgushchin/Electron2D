@@ -583,3 +583,5 @@ AccessibilityServer.UpdateAddAction(element, AccessibilityServer.AccessibilityAc
 ```
 
 ELECTRON2D_TEST_ACCESSIBILITY_MODELS=managed checks unavailable-service guards. compatibility/gpu execute [AccessibilityModelTests](../../tests/Electron2D.Tests/AccessibilityModelTests.cs) with an independent [native action client](../../tests/AccessibilityClient/models.py): current/replaced/cleared models, CLR reference/value behavior, wrong-type/owner/identity rejection, weak-reference release, scene detach/reattach, reentrant retirement, callback failure and fresh reopening. Prepared 64 idle/64 active owner-frame samples cover reference-model reads/replacement. Value-type assignment may box. NativeAOT source execution, package delivery, native heap, physical hardware, foreign adapters and human-reader acceptance remain separate gates.
+
+The [native driver and scheduling preferences](../components/accessibility.md#native-driver-and-scene-scheduling) control display bridge creation and automatic scene passes. Dummy output remains unavailable to explicit service operations; direct native service writes and retirement bypass scene scheduling.

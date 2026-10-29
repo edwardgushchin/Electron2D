@@ -1,6 +1,6 @@
 # Native accessibility and semantic scene output
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 <a id="adr-0114"></a>
 ## ADR 0114: Typed accessibility elements with a native assistive-technology bridge
@@ -22,6 +22,10 @@ The runtime keeps one managed assembly. This Linux adapter uses the host's optio
 Automatic scene output uses Node element identity and queued accessibility-update notifications. Control adds stored, translatable accessible name/description. A visible Label uses its displayed text; a Button uses its displayed caption unless an explicit accessible name overrides it. An icon-only action needs an authored name, not an implementation identifier. Hidden/detached/disposed controls cannot be focused or activated. Existing keyboard focus and button activation paths own behavior; accessibility requests reuse them. Accessibility-only focus becomes eligible while the accessibility runtime is active. Scene copying/files retain authored metadata, never process-local element RIDs or callbacks.
 
 The typed project policy supports automatic activation from the host's accessibility-enabled setting, explicit always-on output and disabled output. Tests use their own application's policy and never enable a desktop screen reader globally. Cold registration, topology changes and native queries may allocate; unchanged warmed frame work must preserve the existing zero-managed-allocation boundary. Native allocator totals remain a separate measurement.
+
+The native driver preference is a validated string: atspi selects the implemented GIO/AT-SPI adapter and dummy establishes no bridge. It is captured per display before native initialization, using the effective project feature override. No disabled adapter may masquerade as a supported service. Future native adapters require actual integration and verification before extending the selector.
+
+Automatic scene output uses a positive updates-per-second preference, default 60, captured per SceneTree. The first pass is immediate. Later passes use a monotonic wall-clock deadline, coalesce current source state and never catch up missed intervals with repeated work. Simulation delta, pause and time scale do not alter the clock. Explicit service mutations, display requests and retirement remain immediate; manual announcements still flush between scheduled scene passes. Both preferences are permanent nonbasic settings with restart-required metadata. [The component](../components/accessibility.md#native-driver-and-scene-scheduling) owns the implementation and checks.
 
 Only behavior with a complete native consumer is exposed in each connected slice. The remaining color payload actions and descriptive metadata retain exact follow-up dependencies. Their declarations must not become inert setters, invented generic value containers or unsupported callbacks. The complete applicable reference family remains the target; a partial first profile does not redefine that target.
 
@@ -66,3 +70,5 @@ Require a separately launched AT-SPI client to discover the application and cont
 ### Rejected alternatives
 
 AccessKit C 0.23.1 was evaluated against its pinned C/Unix adapter sources. Its Unix backend follows the desktop accessibility-enabled state and the C API exposes no per-application force-enable option. The current host has that desktop state disabled. Changing global desktop preferences or adding an ineffective always-on project switch is not an acceptable implementation of the application policy. The direct GIO adapter can publish this application's tree without changing that preference; native discovery and actions must be verified independently.
+
+Mutating native requests force current scene passes before dispatch and after successful mutation, including numeric writes, actions, focus, scrolling, text edits/selections and collection selection. This preserves current geometry and selection between rate-limited publications. Read-only native queries do not force a pass. If source preparation retires the requested identity, the request returns an expired-object error; preparation failures keep the existing owner-pump aggregation policy.

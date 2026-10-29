@@ -168,3 +168,5 @@ Native Wayland verification uses an isolated compositor and external producer.
 [Native file options](../components/native-file-portal.md#native-checkbox-and-choice-controls) connect immutable checkbox/choice descriptions to real portal controls, validated owner-pump results and FileDialog state-before-event delivery. Root and virtual access retain their custom browser boundary.
 
 [Native text input](../components/native-text-input.md) executes single-line confirmation with exact UTF-8 text, empty results, cancellation, owner/lifetime guards and resumed engine rendering. Linux GTK availability remains an explicit capability.
+
+[Native driver selection and scene scheduling](../components/accessibility.md#native-driver-and-scene-scheduling) now consume typed project preferences. The scene rate follows monotonic wall time while requests and retirement continue through the native owner pump.
