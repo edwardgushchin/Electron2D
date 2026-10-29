@@ -331,4 +331,4 @@ Typed visual graph routing uses [VisualShaderNodeReroute](../classes/VisualShade
 
 [Material placeholders](../components/material-placeholders.md) connect fresh program-free Material factories with version-8 typed missing-material recovery, opaque graph preservation, cache/worker/local ownership and fresh-process restoration. Current native evidence covers Linux software GPU/Compatibility; physical GPU, native-heap, foreign and owner gates remain distinct.
 
-Video preparation shares the [OGV bridge allocation domain](../coverage/performance-producers.md#ogv-bridge-allocation-domain-2026-10-29) with recording. Pure-C callbacks own direct context/frame/packet storage and survive finalization; nested codec allocation remains open.
+Video preparation and recording share the [OGV bridge and container domains](../coverage/performance-producers.md#ogg-container-allocation-domain-2026-10-29). Pure-C callbacks own direct context/frame/packet and framing storage, including transient parser peaks, and survive finalization. Bit buffers and codec working storage remain open.

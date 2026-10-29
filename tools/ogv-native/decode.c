@@ -77,7 +77,11 @@ static int parse(video_reader *r, const uint8_t *data, size_t bytes, int track) 
             count++;
         } else if (ogg_page_bos(&page)) goto done;
         input_stream *s = &streams[index];
-        if (ogg_stream_pagein(&s->state, &page)) goto done;
+        uint64_t epoch = e2d_ogv_failure_epoch();
+        if (ogg_stream_pagein(&s->state, &page)) {
+            if (e2d_ogv_failure_epoch() != epoch) status = -2;
+            goto done;
+        }
         ogg_packet packet;
         int packet_status;
         while ((packet_status = ogg_stream_packetout(&s->state, &packet)) > 0) {

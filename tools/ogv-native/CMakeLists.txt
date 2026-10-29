@@ -18,6 +18,7 @@ FetchContent_Declare(Electron2DTheora
   URL_HASH SHA256=279327339903b544c28a92aeada7d0dcfd0397b59c2f368cc698ac56f515906e
   SOURCE_SUBDIR unused)
 FetchContent_MakeAvailable(Electron2DOGG Electron2DVorbis Electron2DTheora)
+include("${CMAKE_CURRENT_SOURCE_DIR}/ogg-memory.cmake")
 # Portable source lists follow the releases' lib/Makefile.am and lib/CMakeLists.txt.
 set(vorbis_sources mdct smallft block envelope window lsp lpc analysis synthesis psy info floor1 floor0 res0 mapping0 registry codebook sharedbook lookup bitrate)
 foreach(source IN LISTS vorbis_sources)
@@ -87,6 +88,9 @@ if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
   add_library(Electron2DOGVFaultCore SHARED EXCLUDE_FROM_ALL test_allocator.c)
   target_link_libraries(Electron2DOGVFaultCore PRIVATE Threads::Threads)
   set_target_properties(Electron2DOGVFaultCore PROPERTIES OUTPUT_NAME Electron2DENet LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/fault")
+  add_executable(Electron2DOGGContainerCheck EXCLUDE_FROM_ALL test_container.c test_allocator.c memory.c)
+  target_link_libraries(Electron2DOGGContainerCheck PRIVATE ogg Threads::Threads)
+  add_dependencies(Electron2DOGVMemoryCheck Electron2DOGGContainerCheck)
   add_executable(Electron2DVideoAllocationCheck EXCLUDE_FROM_ALL test_video_alloc.c decode.c memory.c)
   target_link_libraries(Electron2DVideoAllocationCheck PRIVATE Electron2DTheoraCodec Electron2DVorbisCodec m)
   target_link_options(Electron2DVideoAllocationCheck PRIVATE

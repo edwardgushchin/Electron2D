@@ -1033,9 +1033,55 @@ growth. Window-first GPU/Compatibility recording also verifies common-core loadi
 before SDL, without prior native allocator preparation. Source-bound receipts and exact native/consumer identities are retained in
 `bin/ogv-bridge-allocation/2026-10-29/`.
 
-This covers the bridge's requested CPU payload only. Nested Ogg/Vorbis/Theora
-allocations still use their pinned upstream allocator macros and remain open.
-Prepared whole-codec replay checks do not qualify cold codec ownership. Neither
+This qualifies the bridge's requested CPU payload. The following container domain
+also qualifies Ogg framing storage. Ogg bit buffers and Vorbis/Theora working
+storage remain open. Prepared whole-codec replay checks do not qualify their cold
+ownership. Neither
 this result nor the guarded Vorbis final-band bounds fix completes the remaining
 library/provider inventory, coherent managed/native composition, GetMonitor or
 foreign-platform qualification.
+
+
+### Ogg container allocation domain (2026-10-29)
+
+The [source integration](../../tools/ogv-native/ogg-memory.cmake) compiles one
+hash-checked copy of libogg 1.3.6 framing.c. All container malloc/realloc/free
+requests use the same immutable pure-C callbacks as the preceding bridge domain.
+The downloaded archive remains pristine; the guarded framing input is
+`04373c7f155e0f6d8a5f355108b2908002a6ffe3895da89796619090a3313bdc`.
+This includes stream body, segment/granule arrays, synchronization storage and
+all resize/teardown paths. Requested payload bytes exclude the shared counter's
+prefix and padding. Parser scratch can retire before decoder publication while
+its transient contribution remains in the process high-water.
+
+A native thread-local refusal epoch distinguishes a failed container allocation
+from invalid Ogg data at the packet/page call boundary. Encoder refusal is sticky;
+decoder preparation returns OutOfMemoryException without publishing metadata or a
+replacement owner. The call boundary contains no managed callback. A worker's
+refusal does not change its parent's epoch. libogg's own failure cleanup clears
+partial or invalidated stream storage before ordinary owner teardown.
+
+Shared/static Release and address/undefined/leak-sanitizer checks sweep 281 actual
+bridge/codec-container requests (8 ordinary encoding, 11 large-noise encoding,
+262 decoding) plus 40 independent container requests. The latter round-trips a
+512-KiB packet through 500-byte input chunks and verifies exact bytes, BOS/EOS,
+granule position and CRC-based parsing while exercising body, lacing, granule and
+sync growth. Every refusal drains completely and permits a healthy retry. The
+shared thread-epoch check also verifies isolation and teardown. Thirteen encoded
+files remain byte-for-byte equal; independent FFmpeg picture/PCM and prepared
+whole-codec replay checks remain part of the connected qualification.
+
+The previously hash-qualified CLR/full-trim NativeAOT consumers are first reused
+with one replaced canonical native module. After concurrent text work advanced
+main, fresh isolated CLR/full-trim NativeAOT consumers are also built and checked
+on that main revision. Factory/replacement refusal, collection, independent owners,
+20000 prepared operations and GPU/Compatibility window-first startup pass with the
+new module. Managed input identities, selected native hashes, matrices and
+receipts live under `bin/ogg-framing-allocation/2026-10-29/`. The retained current
+consumer delta and its complete manifest refer to the preceding verified consumer
+archive; the base archive is retained as a required input.
+
+Ogg bitwise.c buffers and Vorbis/Theora working storage remain open. They have
+independent allocation/error paths and do not inherit container qualification.
+Coherent managed/native composition, the remaining provider inventory,
+GetMonitor, release-package and foreign-host qualification also remain open.

@@ -30,12 +30,14 @@ context, YUV/RGBA, packet-vector and compressed-packet storage uses that record.
 Unprepared creation returns -5; direct storage refusal returns -2 with normal
 partial cleanup. The decoder leaves output metadata and context unpublished on
 failure. The encoder may return a partial context which the caller must destroy.
-Nested codec allocator macros are unchanged and remain an open ownership domain.
+Ogg bit buffers and Vorbis/Theora allocator macros remain an open ownership domain.
 
 Build Electron2DOGVMemoryCheck on Linux and run
 `python3 -B tools/ogv-native/check_memory.py CHECKER RECEIPT FIXTURE...` to sweep
-all direct refusal positions in fresh processes. Include a fixture with more than
-128 packets. It also checks immutable registration, terminal encoder refusal,
+all bridge/container refusal positions in fresh processes. Include a fixture with more than
+128 packets. The memory target also builds Electron2DOGGContainerCheck, which
+independently round-trips a 512-KiB packet through 500-byte chunks and sweeps all
+container growth failures. The script checks immutable registration, terminal encoder refusal,
 independent decoder workers, prepared allocation-free replay and full drain/retry.
 Electron2DOGVFaultCore is a test-only common ledger for public CLR/NativeAOT
 refusal profiles; never distribute it. Public video, video-fault and video-old
@@ -47,3 +49,15 @@ one element past a row despite a zero interpolation weight, detected by UBSan.
 The downloaded source remains unchanged. Qualification compares all generated
 encoder files byte-for-byte with the preceding interpolation and repeats the
 independent decoding and full sanitizer profiles.
+
+
+ogg-memory.cmake compiles a hash-checked framing.c copy from the same libogg pin.
+Stream bodies, lacing/granule arrays and sync buffers use the shared pure-C
+allocator; bitwise.c retains its original allocator pending separate refusal
+qualification. A private native-thread epoch classifies packet/page insertion
+failure before any managed/write callback can run. OOM becomes -2; invalid data
+retains its existing error. Failed Ogg growth clears the stream's partial state,
+then the normal bridge teardown releases its remaining owners. The container
+checker also verifies thread isolation of refusal epochs and full healthy retry.
+
+Run `python3 -B tools/ogv-native/test_ogg_source.py SOURCE/src/framing.c` for pristine-copy, changed-source and changed-target controls before updating the guarded producer.

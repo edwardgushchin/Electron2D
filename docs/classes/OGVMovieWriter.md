@@ -6,4 +6,4 @@ Internal sealed partial [MovieWriter](MovieWriter.md) in [OGVMovieWriter.cs](../
 
 With [save and swap](../components/file-save-and-swap.md) enabled, successful EOS finalization publishes output on close. Codec initialization/frame/finalization or native callback failure cancels staging and preserves the old destination. Scene failures still finalize already submitted valid frames.
 
-Encoder preparation installs the shared pure-C video allocator before opening the destination. Context and plane storage join the [direct bridge domain](../coverage/performance-producers.md#ogv-bridge-allocation-domain-2026-10-29); nested codec allocation remains open.
+Encoder preparation installs the shared pure-C allocator before opening the destination. The [bridge and Ogg container domains](../coverage/performance-producers.md#ogg-container-allocation-domain-2026-10-29) count context/plane storage and muxer body/lacing/granule growth. Failed packet insertion records terminal OutOfMemoryException and follows staging cancellation and cleanup. Bit buffers and codec working storage remain open.

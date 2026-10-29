@@ -20,14 +20,19 @@ static void drained(void) {
 static int exercise(int encode, int exclusive) {
     void *context = NULL;
     if (encode) {
-        int status = e2d_ogv_create(66, 50, 59, 48000, 2, .75f, .5f, 4, 3, write_page, NULL, &context);
+        int width = encode == 2 ? 512 : 66, height = encode == 2 ? 512 : 50;
+        size_t extent = (size_t)width * height * 3;
+        uint8_t *rgb = malloc(extent); check(rgb != NULL, "Caller image allocation failed");
+        unsigned random = 123;
+        for (size_t i = 0; i < extent; ++i) { random = random * 1664525U + 1013904223U; rgb[i] = encode == 2 ? (uint8_t)(random >> 24) : 0; }
+        int status = e2d_ogv_create(width, height, 59, 48000, 2, encode == 2 ? 1.f : .75f, .5f, 4, 3, write_page, NULL, &context);
         if (!status) {
-            uint8_t rgb[66 * 50 * 3] = {0}; int32_t pcm[814 * 2] = {0};
-            for (int i = 0; i < 4 && !status; ++i) status = e2d_ogv_frame(context, rgb, sizeof(rgb), pcm, 813);
+            int32_t pcm[814 * 2] = {0};
+            for (int i = 0; i < 4 && !status; ++i) status = e2d_ogv_frame(context, rgb, extent, pcm, 813);
             if (!status) status = e2d_ogv_finish(context);
         }
         if (status && context) check(e2d_ogv_finish(context) == status, "Encoder failure was not sticky");
-        e2d_ogv_destroy(context); return status;
+        e2d_ogv_destroy(context); free(rgb); return status;
     }
     e2d_video_info info, untouched; memset(&info, 0x55, sizeof(info)); untouched = info;
     int status = e2d_video_create(source, source_bytes, 0, &info, &context);
@@ -61,7 +66,7 @@ static void *parallel(void *unused) {
     return NULL;
 }
 int main(int argc, char **argv) {
-    check(argc == 4, "Expected fixture, encode/decode and failure position");
+    check(argc == 4, "Expected fixture, encode/encode-noise/decode and failure position");
     FILE *file = fopen(argv[1], "rb"); check(file && !fseek(file, 0, SEEK_END), "Fixture missing");
     long bytes = ftell(file); check(bytes > 0 && !fseek(file, 0, SEEK_SET), "Fixture is empty");
     source_bytes = (size_t)bytes; source = malloc(source_bytes);
@@ -79,7 +84,7 @@ int main(int argc, char **argv) {
     check(e2d_ogv_memory(&foreign), "Allocator replacement accepted");
     drained();
     size_t fail_at = (size_t)strtoull(argv[3], NULL, 10);
-    int encode = !strcmp(argv[2], "encode");
+    int encode = !strcmp(argv[2], "encode") ? 1 : !strcmp(argv[2], "encode-noise") ? 2 : 0;
     e2d_test_arm(fail_at); int status = exercise(encode, 1); size_t attempts = e2d_test_attempts();
     check(status == (fail_at ? -2 : 0), "Wrong allocation failure status"); drained();
     E2DMemorySnapshot before; e2d_memory_snapshot(&before);
