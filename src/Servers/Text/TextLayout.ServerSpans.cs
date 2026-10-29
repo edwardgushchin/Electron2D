@@ -7,6 +7,7 @@ internal sealed partial class TextLayout
     private readonly List<int> _serverWordGlyphs = [];
     private TextGraphemeFlags ServerGraphemeFlags(Glyph glyph)
     {
+        if (glyph.ProviderFlags is { } providerFlags) return providerFlags;
         var flags = (glyph.Face is not null && glyph.Index != 0 || glyph.ObjectIndex >= 0 ? TextGraphemeFlags.Valid : 0) |
             (glyph.RTL ? TextGraphemeFlags.RTL : 0) | (glyph.Virtual ? TextGraphemeFlags.Virtual : 0) |
             (glyph.Space ? TextGraphemeFlags.Space : 0) | (glyph.Tab ? TextGraphemeFlags.Tab : 0) |
@@ -26,6 +27,11 @@ internal sealed partial class TextLayout
     }
     internal int[] ServerWordBreaks(int start, int end, int offset, TextGraphemeFlags delimiters, TextGraphemeFlags skipped)
     {
+        if (_providerLayout is { } state)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            return ProviderBreakRanges(state.Owner.ShapedTextGetWordBreaks(ProviderRangeBuffer(state, start, end), delimiters, skipped), state, start, end, offset);
+        }
         _serverWordGlyphs.Clear();
         for (var i = 0; i < _glyphs.Count; i++)
         {

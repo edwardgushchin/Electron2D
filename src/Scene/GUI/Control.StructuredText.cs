@@ -26,49 +26,8 @@ public partial class Control
             }
             return;
         }
-        if (parser == StructuredTextParser.List)
-        {
-            if (options.Count != 1 || string.IsNullOrEmpty(options[0])) return;
-            var delimiter = options[0]; var separatorLength = CountScalars(delimiter.AsSpan()); var start = 0; var scalarStart = 0;
-            while (start <= text.Length)
-            {
-                var next = text.IndexOf(delimiter, start, StringComparison.Ordinal);
-                if (next < 0) next = text.Length;
-                var end = scalarStart + CountScalars(text.AsSpan(start, next - start));
-                if (end > scalarStart) result.Add(new(scalarStart, end, TextDirection.Inherited));
-                if (next == text.Length) break;
-                result.Add(new(end, end + separatorLength, TextDirection.Inherited));
-                start = next + delimiter.Length; scalarStart = end + separatorLength;
-            }
-            return;
-        }
-        if (parser is not (StructuredTextParser.URI or StructuredTextParser.File or StructuredTextParser.Email))
-        {
-            result.Add(new(0, count, TextDirection.Inherited)); return;
-        }
-        var previous = 0; var index = 0; var local = true;
-        foreach (var rune in text.EnumerateRunes())
-        {
-            var character = rune.Value;
-            var separator = parser switch
-            {
-                StructuredTextParser.URI => character is '\\' or '/' or '.' or ':' or '&' or '=' or '@' or '?' or '#',
-                StructuredTextParser.File => character is '\\' or '/' or ':',
-                _ => local ? character == '@' : character == '.'
-            };
-            if (separator)
-            {
-                if (previous != index || parser == StructuredTextParser.Email && local) result.Add(new(previous, index, TextDirection.Auto));
-                result.Add(new(index, index + 1, TextDirection.LTR)); previous = index + 1;
-                if (parser == StructuredTextParser.Email) local = false;
-            }
-            index++;
-        }
-        if (previous != count) result.Add(new(previous, count, TextDirection.Auto));
+        TextServerManager.GetPrimaryInterface().ParseStructuredTextInto(parser, options, text, result);
     }
 
-    internal static int CountScalars(ReadOnlySpan<char> text)
-    {
-        var count = 0; foreach (var rune in text.EnumerateRunes()) count++; return count;
-    }
+    internal static int CountScalars(ReadOnlySpan<char> text) => TextServer.CountScalars(text);
 }

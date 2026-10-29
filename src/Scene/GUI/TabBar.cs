@@ -73,15 +73,15 @@ public partial class TabBar : Control
         set
         {
             EnsureMutable(); if ((uint)value > 65536) throw new ArgumentOutOfRangeException(nameof(value)); if (value == _tabs.Count) return;
-            _tabs.EnsureCapacity(value);
-            while (_tabs.Count > value) { var tab = _tabs[^1]; ReleaseTab(tab); _tabs.RemoveAt(_tabs.Count - 1); }
+            List<Exception>? errors = null; _tabs.EnsureCapacity(value);
+            while (_tabs.Count > value) { var tab = _tabs[^1]; ReleaseTab(tab, ref errors); _tabs.RemoveAt(_tabs.Count - 1); }
             while (_tabs.Count < value) _tabs.Add(new());
             _selectionRevision++; ResetInteraction();
             if (value == 0) { _offset = 0; _current = _previous = -1; }
             else { _offset = Math.Min(_offset, value - 1); _current = Math.Min(_current, value - 1); if (_current == -1 && !CanDeselect()) _current = 0; }
             InvalidateTabs();
             if (!_initialized) { _initialized = true; var queued = _queuedCurrent; _queuedCurrent = -2; if (queued != -2 && queued != _current) CurrentTab = queued; }
-            NotifyPropertyListChanged();
+            NotifyPropertyListChanged(); ThrowCollected("Tab layout cleanup failed.", errors);
         }
     }
     /// <summary>Gets or sets the selected index, including programmatic hidden or disabled selections.</summary>
@@ -190,14 +190,14 @@ public partial class TabBar : Control
         if (!_deselectEnabled && _tabs.Count == 1) { if (Tree is not null) CurrentTab = 0; else { _current = 0; _previous = -1; InvalidateTabs(); } }
     }
     /// <summary>Removes every tab, resetting current/previous/scroll state without selection events.</summary>
-    public void ClearTabs() { EnsureMutable(); if (_tabs.Count == 0) return; foreach (var tab in _tabs) ReleaseTab(tab); _tabs.Clear(); _current = _previous = -1; _offset = 0; _selectionRevision++; ResetInteraction(); InvalidateTabs(); NotifyPropertyListChanged(); }
+    public void ClearTabs() { EnsureMutable(); if (_tabs.Count == 0) return; List<Exception>? errors = null; foreach (var tab in _tabs) ReleaseTab(tab, ref errors); _tabs.Clear(); _current = _previous = -1; _offset = 0; _selectionRevision++; ResetInteraction(); InvalidateTabs(); NotifyPropertyListChanged(); ThrowCollected("Tab layout cleanup failed.", errors); }
     /// <summary>Removes a tab and searches forward, then backward, for an available replacement selection.</summary>
     /// <param name="tabIndex">A valid zero-based index.</param>
     /// <remarks>Attached removal of the selected tab raises TabChanged, without TabSelected.</remarks>
     public void RemoveTab(int tabIndex) { EnsureMutable(); Index(tabIndex); RemoveCore(tabIndex, true); }
     private bool RemoveCore(int index, bool release)
     {
-        var selected = _current == index; var tab = _tabs[index]; if (release) ReleaseTab(tab); _tabs.RemoveAt(index);
+        List<Exception>? errors = null; var selected = _current == index; var tab = _tabs[index]; if (release) ReleaseTab(tab, ref errors); _tabs.RemoveAt(index);
         if (_current >= index && _current > 0) _current--; if (_previous >= index && _previous > 0) _previous--;
         if (_tabs.Count == 0) { _current = _previous = -1; _offset = 0; }
         else
@@ -209,7 +209,7 @@ public partial class TabBar : Control
             _offset = Math.Min(_offset, _tabs.Count - 1);
         }
         _selectionRevision++; ResetInteraction(); InvalidateTabs(); NotifyPropertyListChanged();
-        if (selected && Tree is not null && !IsDisposed) BeginEventEmission(_publisherTabChanged.Handlers)?.Invoke(_current); return selected;
+        if (selected && Tree is not null && !IsDisposed) BeginEventEmission(_publisherTabChanged.Handlers)?.Invoke(_current); ThrowCollected("Tab layout cleanup failed.", errors); return selected;
     }
     /// <summary>Moves a tab to another existing index while preserving selected and previous tab identities.</summary>
     /// <param name="from">Source index.</param><param name="to">Destination index after removal/reinsertion.</param>
@@ -327,7 +327,7 @@ public partial class TabBar : Control
         foreach (var tab in _tabs) { if (ReferenceEquals(tab.Icon, icon)) tab.Icon = null; if (ReferenceEquals(tab.ButtonIcon, icon)) tab.ButtonIcon = null; }
         if (!IsDisposed) InvalidateTabs();
     }
-    private void ReleaseTab(Tab tab) { UnwatchIcon(tab.Icon); UnwatchIcon(tab.ButtonIcon); }
+    private void ReleaseTab(Tab tab, ref List<Exception>? errors) { UnwatchIcon(tab.Icon); UnwatchIcon(tab.ButtonIcon); tab.Layout.ReleaseContent(ref errors); tab.Intrinsic.ReleaseContent(ref errors); }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(TabBar) ? CreateTabBar : base.CreateSceneInstanceFactory();
     private static Node CreateTabBar() => new TabBar();
@@ -338,7 +338,15 @@ public partial class TabBar : Control
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { foreach (var tab in _tabs) ReleaseTab(tab); _tabs.Clear(); _publisherActiveTabRearranged.Handlers = _publisherTabButtonPressed.Handlers = _publisherTabChanged.Handlers = _publisherTabClicked.Handlers = _publisherTabClosePressed.Handlers = _publisherTabHovered.Handlers = _publisherTabRMBClicked.Handlers = _publisherTabSelected.Handlers = null; }
-        base.Dispose(disposing);
+        List<Exception>? errors = null;
+        try
+        {
+            if (disposing) { foreach (var tab in _tabs) ReleaseTab(tab, ref errors); _tabs.Clear(); _publisherActiveTabRearranged.Handlers = _publisherTabButtonPressed.Handlers = _publisherTabChanged.Handlers = _publisherTabClicked.Handlers = _publisherTabClosePressed.Handlers = _publisherTabHovered.Handlers = _publisherTabRMBClicked.Handlers = _publisherTabSelected.Handlers = null; }
+
+
+        }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
     }
 }

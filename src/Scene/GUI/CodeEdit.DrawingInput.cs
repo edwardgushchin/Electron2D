@@ -26,6 +26,10 @@ public partial class CodeEdit
             if (_mainGutter >= 0) { SetGutterDraw(_mainGutter, _drawBookmarks || _drawBreakpoints || _drawExecuting); SetGutterWidth(_mainGutter, height); SetGutterClickable(_mainGutter, _drawBreakpoints); }
             if (_numberGutter >= 0) { SetGutterDraw(_numberGutter, _drawNumbers); SetGutterWidth(_numberGutter, (int)Math.Ceiling(width * (digits + 1))); }
             if (_foldGutter >= 0) { SetGutterDraw(_foldGutter, _drawFold); SetGutterWidth(_foldGutter, height); SetGutterClickable(_foldGutter, true); }
+            List<Exception>? errors = null;
+            while (_numberLayouts.Count > GetLineCount()) { _numberLayouts[^1].ReleaseContent(ref errors); _numberLayouts.RemoveAt(_numberLayouts.Count - 1); }
+            while (_optionLayouts.Count > _options.Count) { _optionLayouts[^1].ReleaseContent(ref errors); _optionLayouts.RemoveAt(_optionLayouts.Count - 1); }
+            ThrowCollected("Code layout cleanup failed.", errors);
             while (_numberLayouts.Count < GetLineCount()) _numberLayouts.Add(new()); if (_foldEnds.Length < GetLineCount()) Array.Resize(ref _foldEnds, GetLineCount()); if (_regionHeaders.Length < GetLineCount()) Array.Resize(ref _regionHeaders, GetLineCount());
             for (var line = 0; line < GetLineCount(); line++) { var number = (line + 1).ToString(CultureInfo.InvariantCulture).PadLeft(digits, _zeroPad ? '0' : ' '); _numberLayouts[line].Build(font, new(number, size, 0, HorizontalAlignment.Right, -1, 0, 0, TextDirection.LTR, TextOrientation.Horizontal)); _foldEnds[line] = FoldEnd(line); _regionHeaders[line] = IsLineCodeRegionStart(line); }
             while (_optionLayouts.Count < _options.Count) _optionLayouts.Add(new()); if (_completionPrefixWidths.Length < _options.Count) Array.Resize(ref _completionPrefixWidths, _options.Count); _completionWidth = 0; _optionHeight = height;

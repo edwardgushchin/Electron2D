@@ -14,7 +14,7 @@ public partial class TabBar
     private float _dropX;
     private int _gamepadDirection;
     private double _repeatRemaining;
-    private void ResetInteraction() { _hover = _buttonHover = _closeHover = -1; _pressedTab = null; _dropVisible = false; if (!_hoverTimer.IsDisposed) _hoverTimer.Stop(); QueueRedraw(); }
+    private void ResetInteraction() { _hover = _buttonHover = _closeHover = -1; _pressedTab = null; _dropVisible = false; if (!_hoverTimer.IsDisposed) _hoverTimer.Stop(); if (!IsDisposed) QueueRedraw(); }
     private void FocusLost() { if (IsDisposed) return; _gamepadDirection = 0; SetInternalProcessing(false, false); QueueRedraw(); }
     private void PointerExited() { if (IsDisposed) return; ResetInteraction(); _arrowHover = 0; }
     private void UpdateHover(Vector2 point)

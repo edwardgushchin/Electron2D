@@ -69,7 +69,13 @@ public sealed partial class TreeItem : ElectronObject
     private bool _collapsed, _disableFolding, _visible = true, _acceptChildren = true;
     private int _minimumHeight;
     internal TreeItem(Tree? tree, int columns) { Owner = tree; ResizeCells(columns); }
-    internal void ResizeCells(int count) { if (Cells.Count > count) Cells.RemoveRange(count, Cells.Count - count); while (Cells.Count < count) Cells.Add(new()); }
+    internal void ResizeCells(int count)
+    {
+        List<Exception>? errors = null;
+        for (var i = count; i < Cells.Count; i++) Cells[i].Layout.ReleaseContent(ref errors);
+        if (Cells.Count > count) Cells.RemoveRange(count, Cells.Count - count); while (Cells.Count < count) Cells.Add(new());
+        ThrowCollected("Tree cell cleanup failed.", errors);
+    }
     private static void CollectException(ref List<Exception>? errors, Exception error) { Node.CollectException(ref errors, error); }
     private static void ThrowCollected(string message, List<Exception>? errors) { Node.ThrowCollected(message, errors); }
     internal void CheckItem() { ThrowIfDisposed(); Owner?.CheckTree(); }
@@ -166,7 +172,7 @@ public sealed partial class TreeItem : ElectronObject
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        List<Exception>? errors = null; if (disposing) { var old = Owner; ParentItem?.Children.Remove(this); ParentItem = null; old?.ItemDetached(this); Owner = null; foreach (var child in Children.ToArray()) try { child.Dispose(); } catch (Exception error) { CollectException(ref errors, error); } Children.Clear(); Cells.Clear(); old?.InvalidateTree(); }
+        List<Exception>? errors = null; if (disposing) { var old = Owner; ParentItem?.Children.Remove(this); ParentItem = null; old?.ItemDetached(this); Owner = null; foreach (var child in Children.ToArray()) try { child.Dispose(); } catch (Exception error) { CollectException(ref errors, error); } Children.Clear(); foreach (var cell in Cells) cell.Layout.ReleaseContent(ref errors); Cells.Clear(); old?.InvalidateTree(); }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("TreeItem cleanup failed.", errors);
     }

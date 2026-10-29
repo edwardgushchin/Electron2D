@@ -36,10 +36,19 @@ public partial class ItemList
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        foreach (var icon in _watchedIcons.Keys) { icon.Changed -= IconChanged; icon.Disposed -= IconDisposed; }
-        _watchedIcons.Clear();
-        _publisherItemSelected.Handlers = null; _publisherMultiSelected.Handlers = null; _publisherItemClicked.Handlers = null; _publisherItemActivated.Handlers = null; _publisherEmptyClicked.Handlers = null;
-        base.Dispose(disposing);
+        List<Exception>? errors = null;
+        if (disposing) { foreach (var item in _items) { item.Layout.ReleaseContent(ref errors); item.Measurement.ReleaseContent(ref errors); } }
+        try
+        {
+            foreach (var icon in _watchedIcons.Keys) { icon.Changed -= IconChanged; icon.Disposed -= IconDisposed; }
+            _watchedIcons.Clear();
+            _publisherItemSelected.Handlers = null; _publisherMultiSelected.Handlers = null; _publisherItemClicked.Handlers = null; _publisherItemActivated.Handlers = null; _publisherEmptyClicked.Handlers = null;
+
+
+        }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
     }
 
     /// <summary>Gets or sets whether item icons appear above or beside text.</summary>

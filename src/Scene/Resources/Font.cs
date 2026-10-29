@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Shapes, measures and draws scalable or authored bitmap text with ordered fallback fonts.</summary>
 /// <remarks>Text positions specify the baseline. Fonts borrow fallback resources and forward their changes and
 /// disposal. Layout caches and resource state are synchronized; canvas drawing still requires its owning thread
-/// and recording scope. Active reads retain native source snapshots; layouts retry changing state at most
+/// and recording scope. Active reads retain native or external source snapshots without holding resource monitors across provider callbacks; layouts retry changing state at most
 /// sixty-four times. Already recorded glyph pixels survive data replacement independently of native faces.</remarks>
 public abstract partial class Font : Resource
 {
@@ -96,22 +96,22 @@ public abstract partial class Font : Resource
 
     /// <summary>Returns the primary face's family name, or an empty name without data.</summary>
     /// <returns>The family name.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public string GetFontName() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FamilyName ?? string.Empty; } } finally { DrainSourceRetirements(); } }
+    public string GetFontName() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetName(rid)); try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FamilyName ?? string.Empty; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's style name.</summary>
     /// <returns>The style name, or an empty name without data.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public string GetFontStyleName() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.StyleName ?? string.Empty; } } finally { DrainSourceRetirements(); } }
+    public string GetFontStyleName() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetStyleName(rid)); try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.StyleName ?? string.Empty; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's intrinsic style flags.</summary>
     /// <returns>The style flags.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public FontStyle GetFontStyle() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStyle ?? FontStyle.None; } } finally { DrainSourceRetirements(); } }
+    public FontStyle GetFontStyle() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetStyle(rid)); try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStyle ?? FontStyle.None; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's weight class.</summary>
     /// <returns>The weight, with four hundred representing normal weight.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetFontWeight() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontWeight ?? 400; } } finally { DrainSourceRetirements(); } }
+    public int GetFontWeight() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetWeight(rid)); try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontWeight ?? 400; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the primary face's width as a percentage of normal width.</summary>
     /// <returns>The stretch percentage.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetFontStretch() { try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStretch ?? 100; } } finally { DrainSourceRetirements(); } }
+    public int GetFontStretch() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetStretch(rid)); try { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStretch ?? 100; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns the number of faces in the primary font collection.</summary>
     /// <returns>The collection face count, or zero without data.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public virtual int GetFaceCount() { try { lock (FontGate) { ThrowIfDisposed(); var data = PrimaryData; return data?.AdvertisedFaceCount ?? data?.FaceCount ?? 0; } } finally { DrainSourceRetirements(); } }
+    public virtual int GetFaceCount() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetFaceCount(rid)); try { lock (FontGate) { ThrowIfDisposed(); var data = PrimaryData; return data?.AdvertisedFaceCount ?? data?.FaceCount ?? 0; } } finally { DrainSourceRetirements(); } }
     /// <summary>Returns additional spacing supplied by this font.</summary>
     /// <param name="spacing">The spacing category.</param><returns>Zero for an unmodified font.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The spacing category is invalid.</exception>
@@ -157,18 +157,18 @@ public abstract partial class Font : Resource
 
     /// <summary>Copies the primary face's OpenType axis design bounds.</summary><returns>Numeric tag keys with minimum, maximum and default coordinates. Keys retain the four-byte OpenType tags.</returns>
     /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
-    public Dictionary<uint, FontVariationAxis> GetSupportedVariationList() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData is { } data ? new(data.VariationAxes) : []; } }
+    public Dictionary<uint, FontVariationAxis> GetSupportedVariationList() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontSupportedVariationList(rid)); lock (FontGate) { ThrowIfDisposed(); return PrimaryData is { } data ? new(data.VariationAxes) : []; } }
     /// <summary>Returns the primary face's predefined palette count.</summary><returns>Zero without color palette data.</returns>
     /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
-    public int GetPaletteCount() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.Palettes.Length ?? 0; } }
+    public int GetPaletteCount() { if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetPaletteCount(rid)); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.Palettes.Length ?? 0; } }
     /// <summary>Copies a predefined palette, independently of instance overrides.</summary><param name="index">Valid palette index.</param><returns>Caller-owned colors.</returns>
     /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The palette index is outside the available range.</exception>
-    public Color[] GetPaletteColors(int index) { lock (FontGate) { ThrowIfDisposed(); var palettes = PrimaryData?.Palettes ?? []; if ((uint)index >= (uint)palettes.Length) throw new ArgumentOutOfRangeException(nameof(index)); return (Color[])palettes[index].Clone(); } }
+    public Color[] GetPaletteColors(int index) { if (TryGetCallbackSource(out _)) return QueryCallbackSource(index, static (server, rid, value) => server.FontGetPaletteColors(rid, value)); lock (FontGate) { ThrowIfDisposed(); var palettes = PrimaryData?.Palettes ?? []; if ((uint)index >= (uint)palettes.Length) throw new ArgumentOutOfRangeException(nameof(index)); return (Color[])palettes[index].Clone(); } }
     /// <summary>Reads a predefined palette's optional SFNT name.</summary><param name="index">Valid palette index.</param><returns>Palette name, or an empty string when unnamed.</returns>
     /// <exception cref="ObjectDisposedException">The font or required source is disposed.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The palette index is outside the available range.</exception>
-    public string GetPaletteName(int index) { lock (FontGate) { ThrowIfDisposed(); var names = PrimaryData?.PaletteNames ?? []; if ((uint)index >= (uint)names.Length) throw new ArgumentOutOfRangeException(nameof(index)); return names[index]; } }
+    public string GetPaletteName(int index) { if (TryGetCallbackSource(out _)) return QueryCallbackSource(index, static (server, rid, value) => server.FontGetPaletteName(rid, value)); lock (FontGate) { ThrowIfDisposed(); var names = PrimaryData?.PaletteNames ?? []; if ((uint)index >= (uint)names.Length) throw new ArgumentOutOfRangeException(nameof(index)); return names[index]; } }
 
     /// <summary>Tests the primary source's exact language support policy.</summary>
     /// <param name="language">An exact ordinal language key. Unspecified language support defaults to true.</param>
@@ -178,7 +178,7 @@ public abstract partial class Font : Resource
     /// <exception cref="ObjectDisposedException">The font or its required source is disposed.</exception>
     public bool IsLanguageSupported(string language)
     {
-        FontSupportPolicy.Validate(language); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.IsLanguageSupported(language) ?? false; }
+        FontSupportPolicy.Validate(language); if (TryGetCallbackSource(out _)) return QueryCallbackSource(language, static (server, rid, value) => server.FontIsLanguageSupported(rid, value)); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.IsLanguageSupported(language) ?? false; }
     }
     /// <summary>Tests the primary source's writing-system support.</summary>
     /// <param name="script">An exact ordinal key, ordinarily a four-letter ISO15924 tag.</param>
@@ -188,7 +188,7 @@ public abstract partial class Font : Resource
     /// <exception cref="ObjectDisposedException">The font or its required source is disposed.</exception>
     public bool IsScriptSupported(string script)
     {
-        FontSupportPolicy.Validate(script); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.IsScriptSupported(script) ?? false; }
+        FontSupportPolicy.Validate(script); if (TryGetCallbackSource(out _)) return QueryCallbackSource(script, static (server, rid, value) => server.FontIsScriptSupported(rid, value)); lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.IsScriptSupported(script) ?? false; }
     }
 
     /// <summary>Tests whether this font or a fallback contains a Unicode scalar.</summary>
@@ -200,8 +200,18 @@ public abstract partial class Font : Resource
         ValidateCharacter(character);
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var result = FindSource((uint)character) is not null;
-            if (read.IsCurrent) return result;
+            var read = BeginRead(); Exception? readFailure = null;
+            try
+            {
+                var result = false;
+                if (CallbackSources() is { Count: > 0 } callbacks)
+                { foreach (var source in callbacks) if (source.Owner.FontHasChar(source.RID, character)) { result = true; break; } }
+                else result = FindSource((uint)character) is not null;
+                if (read.IsCurrent) return result;
+
+            }
+            catch (Exception scopeError) { readFailure = scopeError; throw; }
+            finally { read.Dispose(readFailure); }
         }
         throw UnsettledRead();
     }
@@ -212,10 +222,19 @@ public abstract partial class Font : Resource
     {
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var result = new StringBuilder(); var seen = new HashSet<int>();
-            foreach (var source in GetSources()) foreach (var rune in source.GetSupportedChars().EnumerateRunes())
-                    if (seen.Add(rune.Value)) result.Append(rune.ToString());
-            if (read.IsCurrent) return result.ToString();
+            var read = BeginRead(); Exception? readFailure = null;
+            try
+            {
+                var result = new StringBuilder(); var seen = new HashSet<int>();
+                if (CallbackSources() is { Count: > 0 } callbacks)
+                { foreach (var source in callbacks) foreach (var rune in source.Owner.FontGetSupportedChars(source.RID).EnumerateRunes()) if (seen.Add(rune.Value)) result.Append(rune.ToString()); }
+                else foreach (var source in GetSources()) foreach (var rune in source.GetSupportedChars().EnumerateRunes())
+                            if (seen.Add(rune.Value)) result.Append(rune.ToString());
+                if (read.IsCurrent) return result.ToString();
+
+            }
+            catch (Exception scopeError) { readFailure = scopeError; throw; }
+            finally { read.Dispose(readFailure); }
         }
         throw UnsettledRead();
     }
@@ -229,9 +248,18 @@ public abstract partial class Font : Resource
         ValidateCharacter(character); ValidateSize(fontSize);
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var source = FindSource((uint)character, true);
-            var result = source is null ? Vector2.Zero : new Vector2(source.GetGlyphAdvance(source.GetGlyphIndex((uint)character), fontSize), GetHeight(fontSize));
-            if (read.IsCurrent) return result;
+            var read = BeginRead(); Exception? readFailure = null;
+            try
+            {
+                if (TryCallbackCharacter(character, fontSize, out var callbackSource, out var callbackGlyph, out var advance))
+                { var callbackResult = callbackSource is null ? Vector2.Zero : new Vector2(advance, GetHeight(fontSize)); if (read.IsCurrent) return callbackResult; continue; }
+                var source = FindSource((uint)character, true);
+                var result = source is null ? Vector2.Zero : new Vector2(source.GetGlyphAdvance(source.GetGlyphIndex((uint)character), fontSize), GetHeight(fontSize));
+                if (read.IsCurrent) return result;
+
+            }
+            catch (Exception scopeError) { readFailure = scopeError; throw; }
+            finally { read.Dispose(readFailure); }
         }
         throw UnsettledRead();
     }
@@ -247,9 +275,10 @@ public abstract partial class Font : Resource
         lock (FontGate)
         {
             ThrowIfDisposed(); _singleCapacity = singleLine; _multiCapacity = multiLine;
-            if (_single.Count > singleLine) _single.RemoveRange(singleLine, _single.Count - singleLine);
-            if (_multi.Count > multiLine) _multi.RemoveRange(multiLine, _multi.Count - multiLine);
+            if (_single.Count > singleLine) RetireCachedLayouts(_single, singleLine);
+            if (_multi.Count > multiLine) RetireCachedLayouts(_multi, multiLine);
         }
+        DrainRetiredLayouts();
     }
 
     /// <summary>Measures a shaped single line, including kerning, bidi order and optional width trimming.</summary>
@@ -265,7 +294,14 @@ public abstract partial class Font : Resource
         TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound,
         TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal)
     {
-        lock (FontGate) return GetLayout(text, alignment, width, fontSize, -1, TextLineBreakFlags.None, justificationFlags, direction, orientation, false).Size;
+        var read = PrepareLayout(text, alignment, width, fontSize, -1, TextLineBreakFlags.None, justificationFlags, direction, orientation, false); Exception? readFailure = null;
+        try
+        {
+            return read.Layout.Size;
+
+        }
+        catch (Exception scopeError) { readFailure = scopeError; throw; }
+        finally { read.Dispose(readFailure); }
     }
     /// <summary>Measures shaped text wrapped into lines according to Unicode boundaries.</summary>
     /// <param name="text">The text to shape.</param><param name="alignment">Alignment along the advance axis.</param>
@@ -280,7 +316,14 @@ public abstract partial class Font : Resource
         TextJustificationFlags justificationFlags = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound,
         TextDirection direction = TextDirection.Auto, TextOrientation orientation = TextOrientation.Horizontal)
     {
-        lock (FontGate) return GetLayout(text, alignment, width, fontSize, maxLines, breakFlags, justificationFlags, direction, orientation, true).Size;
+        var read = PrepareLayout(text, alignment, width, fontSize, maxLines, breakFlags, justificationFlags, direction, orientation, true); Exception? readFailure = null;
+        try
+        {
+            return read.Layout.Size;
+
+        }
+        catch (Exception scopeError) { readFailure = scopeError; throw; }
+        finally { read.Dispose(readFailure); }
     }
 
     /// <summary>Draws one unshaped Unicode character at a baseline position.</summary>
@@ -378,14 +421,31 @@ public abstract partial class Font : Resource
         ValidateCharacter(character); ValidateSize(size); ValidateDraw(canvas, position, color, oversampling);
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var source = FindSource((uint)character, true);
-            if (source is null) { if (read.IsCurrent) return 0; continue; }
-            var glyph = source.GetGlyphIndex((uint)character);
-            var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition, canvas.FontRasterScale);
-            var advance = source.GetGlyphAdvance(glyph, size); var modulate = !outlinePass && source.ModulateColorGlyphs;
-            if (!read.IsCurrent) continue;
-            TextLayout.DrawGlyph(canvas, image, rasterPosition, color, modulate);
-            return advance;
+            var read = BeginRead(); Exception? readFailure = null;
+            try
+            {
+                if (TryCallbackCharacter(character, size, out var callbackSource, out var callbackGlyph, out var callbackAdvance))
+                {
+                    if (!read.IsCurrent) continue;
+                    if (callbackSource is { } selected)
+                    {
+                        if (outlinePass) selected.Owner.FontDrawGlyphOutline(selected.RID, canvas, size, outline, position, callbackGlyph, color, oversampling);
+                        else selected.Owner.FontDrawGlyph(selected.RID, canvas, size, position, callbackGlyph, color, oversampling);
+                    }
+                    return callbackAdvance;
+                }
+                var source = FindSource((uint)character, true);
+                if (source is null) { if (read.IsCurrent) return 0; continue; }
+                var glyph = source.GetGlyphIndex((uint)character);
+                var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition, canvas.FontRasterScale);
+                var advance = source.GetGlyphAdvance(glyph, size); var modulate = !outlinePass && source.ModulateColorGlyphs;
+                if (!read.IsCurrent) continue;
+                TextLayout.DrawGlyph(canvas, image, rasterPosition, color, modulate);
+                return advance;
+
+            }
+            catch (Exception scopeError) { readFailure = scopeError; throw; }
+            finally { read.Dispose(readFailure); }
         }
         throw UnsettledRead();
     }
@@ -393,11 +453,14 @@ public abstract partial class Font : Resource
         int outline, Color color, TextLineBreakFlags breaks, TextJustificationFlags justification, TextDirection direction, TextOrientation orientation, float oversampling, bool multiline, bool outlinePass = false)
     {
         ValidateDraw(canvas, position, color, oversampling);
-        lock (FontGate)
+        var read = PrepareLayout(text, alignment, width, size, maxLines, breaks, justification, direction, orientation, multiline); Exception? readFailure = null;
+        try
         {
-            var layout = GetLayout(text, alignment, width, size, maxLines, breaks, justification, direction, orientation, multiline);
-            if (outline >= 0) layout.Draw(canvas, position, color, outline, Math.Max(0, oversampling), outlinePass: outlinePass);
+            if (outline >= 0) read.Layout.Draw(canvas, position, color, outline, Math.Max(0, oversampling), outlinePass: outlinePass);
+
         }
+        catch (Exception scopeError) { readFailure = scopeError; throw; }
+        finally { read.Dispose(readFailure); }
     }
     internal static void ValidateDraw(CanvasItem canvas, Vector2 position, Color color, float oversampling)
     {
@@ -405,56 +468,49 @@ public abstract partial class Font : Resource
         if (!color.IsFinite()) throw new ArgumentException("Text color must be finite.", nameof(color));
         if (!float.IsFinite(oversampling)) throw new ArgumentOutOfRangeException(nameof(oversampling));
     }
-    internal TextLayout GetLayout(string text, HorizontalAlignment alignment, float width, int size, int maxLines, TextLineBreakFlags breaks,
-        TextJustificationFlags justification, TextDirection direction, TextOrientation orientation, bool multiline)
-    {
-        ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(text); ValidateSize(size);
-        if (!float.IsFinite(width)) throw new ArgumentOutOfRangeException(nameof(width));
-        if (alignment is < HorizontalAlignment.Left or > HorizontalAlignment.Fill) throw new ArgumentOutOfRangeException(nameof(alignment));
-        if (direction is < TextDirection.Auto or > TextDirection.Inherited) throw new ArgumentOutOfRangeException(nameof(direction));
-        if (orientation is < TextOrientation.Horizontal or > TextOrientation.Vertical) throw new ArgumentOutOfRangeException(nameof(orientation));
-        EnsureSourcesCurrent();
-        var key = new TextLayoutKey(text, size, width, alignment, maxLines, breaks, justification, direction, orientation, multiline);
-        var cache = multiline ? _multi : _single; var capacity = multiline ? _multiCapacity : _singleCapacity;
-        foreach (var entry in cache)
-        {
-            if (entry.IsBusy || entry.Key != key) continue;
-            if (entry.Generation != _generation) { entry.Generation = -1; entry.Build(this, key); entry.Generation = _generation; }
-            entry.LastAccess = ++_access; return entry;
-        }
-        TextLayout result;
-        if (capacity == 0) result = _scratch.IsBusy ? (ReadContextAt(_readDepth).Scratch ??= new()) : _scratch;
-        else if (cache.Count < capacity) { result = new(); cache.Add(result); }
-        else
-        {
-            TextLayout? available = null;
-            foreach (var entry in cache) if (!entry.IsBusy && (available is null || entry.LastAccess < available.LastAccess)) available = entry;
-            result = available ?? (ReadContextAt(_readDepth).Scratch ??= new());
-        }
-        result.Generation = -1; result.Build(this, key); result.Generation = _generation; result.LastAccess = ++_access; return result;
-    }
     internal long GetContentGeneration()
     {
         lock (FontGate) { ThrowIfDisposed(); EnsureSourcesCurrent(); return _generation; }
     }
     internal List<FontData> GetSources()
     {
-        if (_readDepth != 0) return _reads[_readDepth - 1].Sources;
+        if (Monitor.IsEntered(FontGate) && _readDepth != 0) return _reads[_readDepth - 1].Sources;
+        for (var read = _callbackReadHead; read is not null; read = read.CallbackParent)
+            if (ReferenceEquals(read.CallbackOwner, this)) return read.Sources;
         EnsureSourcesCurrent(); return _sources;
     }
 
     internal sealed class ReadContext
     {
+        internal Font? CallbackOwner;
+        internal ReadContext? CallbackParent;
+        internal bool CallbackActive;
+        internal TextServerManager.ConsumerRead ProviderRead;
         internal readonly List<FontData> Sources = [];
+        internal readonly List<FontCallbackSource> CallbackSources = [];
+        internal readonly List<TextServer.FontSourceRead> CallbackSourceReads = [];
+        internal readonly List<TextServer.NativeFontRead> NativeSourceReads = [];
         internal readonly List<Font> Dependencies = [];
         internal readonly List<long> SystemGenerations = [];
         internal readonly List<long> Generations = [];
         internal long Generation;
         internal TextLayout? Scratch;
     }
-    internal readonly struct ReadScope(Font owner, ReadContext context) : IDisposable
+    internal readonly struct ReadScope(Font owner, ReadContext context, bool callback = false) : IDisposable
     {
         internal long Generation => context.Generation;
+        internal void CaptureDependencies(List<Font> dependencies)
+        {
+            foreach (var dependency in context.Dependencies)
+            {
+                // The empty owner font carries no source; copied buffers own a different empty root.
+                if (TextLine.IsNeutralShapingFont(dependency)) continue;
+                var found = false; foreach (var captured in dependencies) if (ReferenceEquals(captured, dependency)) { found = true; break; }
+                if (!found) dependencies.Add(dependency);
+            }
+        }
+        internal void Dispose(Exception? failure)
+        { try { Dispose(); } catch (Exception cleanup) { if (failure is not null) throw new AggregateException(failure, cleanup); throw; } }
         internal bool IsCurrent
         {
             get
@@ -467,6 +523,8 @@ public abstract partial class Font : Resource
                 }
                 for (var i = 0; i < context.Sources.Count; i++)
                     if (context.Sources[i].SystemGeneration != context.SystemGenerations[i] || !context.Sources[i].SystemSourcesCurrent) return false;
+                foreach (var source in context.CallbackSourceReads) if (!source.IsCurrent) return false;
+                foreach (var source in context.NativeSourceReads) if (!source.IsCurrent) return false;
                 return true;
             }
         }
@@ -475,7 +533,11 @@ public abstract partial class Font : Resource
             Exception? failure = null;
             try { ReleaseContext(context, context.Sources.Count); }
             catch (Exception error) { failure = error; }
-            finally { owner._readDepth--; ActiveFontReads--; Monitor.Exit(owner.FontGate); }
+            finally
+            {
+                if (callback) owner.EndCallbackRead(context);
+                else { var provider = context.ProviderRead; context.ProviderRead = default; owner._readDepth--; ActiveFontReads--; Monitor.Exit(owner.FontGate); provider.Dispose(); }
+            }
             try { owner.DrainSourceRetirements(failure); } catch (Exception error) { failure = error; }
             try { DrainPendingSourceRetirements(); }
             catch (Exception error) { if (failure is not null) throw new AggregateException(failure, error); throw; }
@@ -490,6 +552,15 @@ public abstract partial class Font : Resource
     }
     internal ReadScope BeginRead()
     {
+        TextServerManager.ConsumerRead provider;
+        for (var attempt = 0; ; attempt++)
+        {
+            var opaqueProvider = PrepareCallbackGraph();
+            provider = TextServerManager.BeginConsumerRead(opaqueProvider);
+            if (opaqueProvider is null && provider.Provider is not TextServerExtension && _callbackGroupDepth == 0 && GetType().Assembly == typeof(Font).Assembly) break;
+            try { return BeginCallbackRead(provider); }
+            catch (SourceChangedDuringRead) { if (attempt + 1 >= MaximumReadAttempts) throw UnsettledRead(); }
+        }
         Monitor.Enter(FontGate); ActiveFontReads++;
         ReadContext? context = null; var acquired = 0;
         try
@@ -502,7 +573,7 @@ public abstract partial class Font : Resource
                 foreach (var source in context.Sources) context.SystemGenerations.Add(source.SystemGeneration);
                 context.Dependencies.AddRange(_dependencies); context.Generations.AddRange(_dependencyGenerations);
                 while (acquired < context.Sources.Count && context.Sources[acquired].TryAcquireRead()) acquired++;
-                if (acquired == context.Sources.Count) { _readDepth++; return new(this, context); }
+                if (acquired == context.Sources.Count) { TextServer.RetainNativeFontSources(context.Dependencies, context.NativeSourceReads); context.ProviderRead = provider; _readDepth++; return new(this, context); }
                 var releaseCount = acquired; acquired = 0; ReleaseContext(context, releaseCount); ClearLayoutCaches();
             }
             throw UnsettledRead();
@@ -510,7 +581,7 @@ public abstract partial class Font : Resource
         catch
         {
             try { if (context is not null) ReleaseContext(context, acquired); }
-            finally { ActiveFontReads--; Monitor.Exit(FontGate); DrainPendingSourceRetirements(); }
+            finally { ActiveFontReads--; Monitor.Exit(FontGate); provider.Dispose(); DrainPendingSourceRetirements(); }
             throw;
         }
     }
@@ -519,6 +590,11 @@ public abstract partial class Font : Resource
         List<Exception>? errors = null;
         for (var i = 0; i < acquired; i++)
             try { context.Sources[i].ReleaseRead(); } catch (Exception error) { (errors ??= []).Add(error); }
+        foreach (var source in context.CallbackSourceReads)
+            try { source.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+        foreach (var source in context.NativeSourceReads)
+            try { source.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+        context.NativeSourceReads.Clear(); context.CallbackSourceReads.Clear(); context.CallbackSources.Clear();
         context.Sources.Clear(); context.SystemGenerations.Clear(); context.Dependencies.Clear(); context.Generations.Clear();
         if (errors is not null) throw new AggregateException("Font read cleanup failed.", errors);
     }
@@ -573,16 +649,35 @@ public abstract partial class Font : Resource
         ValidateSize(size);
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var result = 0f;
-            foreach (var source in GetSources())
+            var read = BeginRead(); Exception? readFailure = null;
+            try
             {
-                var m = source.GetMetrics(size);
-                result = Math.Max(result, kind switch { 0 => m.Ascent, 1 => m.Descent, 2 => m.Height, 3 => m.UnderlinePosition, _ => m.UnderlineThickness });
+                var result = 0f;
+                var callbacks = CallbackSources();
+                if (callbacks is { Count: > 0 }) foreach (var source in callbacks)
+                    {
+                        result = Math.Max(result, kind switch
+                        {
+                            0 => source.Owner.FontGetAscent(source.RID, size),
+                            1 => source.Owner.FontGetDescent(source.RID, size),
+                            2 => source.Owner.FontGetAscent(source.RID, size) + source.Owner.FontGetDescent(source.RID, size),
+                            3 => source.Owner.FontGetUnderlinePosition(source.RID, size),
+                            _ => source.Owner.FontGetUnderlineThickness(source.RID, size)
+                        });
+                    }
+                if (callbacks is not { Count: > 0 } || TextServer.IsNativeBackendCall) foreach (var source in GetSources())
+                    {
+                        var m = source.GetMetrics(size);
+                        result = Math.Max(result, kind switch { 0 => m.Ascent, 1 => m.Descent, 2 => m.Height, 3 => m.UnderlinePosition, _ => m.UnderlineThickness });
+                    }
+                var primary = PrimaryData;
+                if (kind is 0 or 2 or 3) result += GetShapingSpacing(primary, TextSpacingType.Top);
+                if (kind is 1 or 2) result += GetShapingSpacing(primary, TextSpacingType.Bottom);
+                if (read.IsCurrent) return result;
+
             }
-            var primary = PrimaryData;
-            if (kind is 0 or 2 or 3) result += GetShapingSpacing(primary, TextSpacingType.Top);
-            if (kind is 1 or 2) result += GetShapingSpacing(primary, TextSpacingType.Bottom);
-            if (read.IsCurrent) return result;
+            catch (Exception scopeError) { readFailure = scopeError; throw; }
+            finally { read.Dispose(readFailure); }
         }
         throw UnsettledRead();
     }
@@ -643,7 +738,22 @@ public abstract partial class Font : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) lock (FontGate) { UnsubscribeFallbacks(); _fallbacks = []; _sources.Clear(); _dependencies.Clear(); _dependencyGenerations.Clear(); _single.Clear(); _multi.Clear(); }
-        try { DrainSourceRetirements(); } finally { base.Dispose(disposing); }
+        List<Exception>? errors = null;
+        if (disposing)
+        {
+            lock (FontGate)
+            {
+                UnsubscribeFallbacks(); _fallbacks = []; _sources.Clear(); _dependencies.Clear(); _dependencyGenerations.Clear();
+                RetireCachedLayouts(_single, 0); RetireCachedLayouts(_multi, 0); _retiredLayouts.Add(_scratch);
+                foreach (var context in _reads) if (context.Scratch is { } scratch) _retiredLayouts.Add(scratch);
+                foreach (var context in _callbackReads) if (context.Scratch is { } scratch) _retiredLayouts.Add(scratch);
+            }
+            Interlocked.Exchange(ref _retireProviderLayouts, 1);
+            try { DrainRetiredLayouts(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        }
+        try { DrainSourceRetirements(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        if (errors is { Count: 1 }) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(errors[0]).Throw();
+        Node.ThrowCollected("Font disposal callbacks failed.", errors);
     }
 }

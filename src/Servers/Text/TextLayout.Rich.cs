@@ -2,8 +2,8 @@ using System.Text;
 
 namespace Electron2D;
 
-internal readonly record struct TextLayoutStyleSpan(int Start, int End, Font Font, int Size, string Language = "", int Group = 0);
-internal readonly record struct TextLayoutInlineObject(int At, Vector2 Size, InlineAlignment Alignment, int Index, float Baseline = -1, int Length = 1, bool ExplicitBaseline = false);
+internal readonly record struct TextLayoutStyleSpan(int Start, int End, Font Font, int Size, string Language = "", int Group = 0, RichTextMetadata? Metadata = null);
+internal readonly record struct TextLayoutInlineObject(int At, Vector2 Size, InlineAlignment Alignment, int Index, float Baseline = -1, int Length = 1, bool ExplicitBaseline = false, TextObjectKey? Key = null);
 internal sealed class TextGlyphDrawing
 {
     internal Font? Font;
@@ -23,8 +23,27 @@ internal sealed partial class TextLayout
 {
     private readonly List<Font> _richReadFonts = [];
     private readonly List<Font.ReadScope> _richReads = [];
-    private void BeginRichBuild(Font font, TextLayoutOptions? options) { if (options?.Styles is not { } styles) return; _richReadFonts.Clear(); _richReadFonts.Add(font); for (var i = 0; i < styles.Count; i++) if (!_richReadFonts.Contains(styles[i].Font)) _richReadFonts.Add(styles[i].Font); _richReadFonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID)); foreach (var item in _richReadFonts) _richReads.Add(item.BeginRead()); }
-    private void EndRichBuild() { for (var i = _richReads.Count - 1; i >= 0; i--) _richReads[i].Dispose(); _richReads.Clear(); }
+    private Font.GroupRead _richGroup;
+    private bool _richGroupActive;
+    private void BeginRichBuild(Font font, TextLayoutOptions? options)
+    {
+        _richReadFonts.Clear(); _richReadFonts.Add(font);
+        if (options?.Styles is not { } styles) return;
+        for (var i = 0; i < styles.Count; i++) if (!_richReadFonts.Contains(styles[i].Font)) _richReadFonts.Add(styles[i].Font);
+        _richReadFonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID));
+        _richGroup = Font.BeginReadGroup(_richReadFonts); _richGroupActive = true;
+        foreach (var item in _richReadFonts) _richReads.Add(item.BeginRead());
+    }
+    private bool RichReadsCurrent() { foreach (var read in _richReads) if (!read.IsCurrent) return false; return true; }
+    private void EndRichBuild(Exception? cause = null)
+    {
+        List<Exception>? errors = null;
+        for (var i = _richReads.Count - 1; i >= 0; i--) try { _richReads[i].Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        _richReads.Clear();
+        if (_richGroupActive)
+        { _richGroupActive = false; var group = _richGroup; _richGroup = default; try { group.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); } }
+        if (errors is not null) { if (cause is not null) errors.Insert(0, cause); throw new AggregateException("Rich font read cleanup failed.", errors); }
+    }
     private readonly TextGlyphDrawing _richDrawing = new();
     private TextLayoutStyleSpan[] _richStyles = [];
     private TextLayoutInlineObject[] _richObjects = [];
@@ -45,6 +64,7 @@ internal sealed partial class TextLayout
     internal int HitCharacter(Vector2 point)
     {
         if (_lines.Count == 0) return 0; var lineIndex = 0; for (var i = 0; i < _lines.Count; i++) { lineIndex = i; if (point.Y < _lines[i].CrossOffset + _lines[i].Height) break; }
+        if (_providerLayout is not null) return ProviderHitLine(lineIndex, point.X, true);
         var line = _lines[lineIndex]; var result = line.Start; var distance = float.PositiveInfinity;
         for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount; i++) { var glyph = _glyphs[i]; var left = glyph.Position.X - glyph.Offset.X; var right = left + glyph.Advance * glyph.Repeat; var rtl = glyph.RTL; var nearLeft = Math.Abs(point.X - left); var nearRight = Math.Abs(point.X - right); if (nearLeft < distance) { distance = nearLeft; result = rtl ? glyph.End : glyph.Start; } if (nearRight < distance) { distance = nearRight; result = rtl ? glyph.Start : glyph.End; } }
         return result;
@@ -52,8 +72,9 @@ internal sealed partial class TextLayout
     internal void DrawRich(CanvasItem canvas, Vector2 baseline, Action<TextGlyphDrawing> renderer, int firstLine = 0,
         int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outline = false, Rect2? clip = null, int outlineSize = 0, Action<TextGlyphDrawing>? foreground = null)
     {
-        if (IsBusy) throw new InvalidOperationException("An active text layout cannot draw recursively.");
+        if (_active != 0) throw new InvalidOperationException("An active text layout cannot draw recursively.");
         if (firstLine < 0 || firstLine >= _lines.Count) return;
+        using var group = Font.BeginReadGroup(_richReadFonts, _font);
         _active++;
         try
         {
@@ -71,28 +92,38 @@ internal sealed partial class TextLayout
                     budget++;
                     var count = 0; if (j == line.GlyphStart || _glyphs[j - 1].Start != glyph.Start) for (var k = j; k < line.GlyphStart + line.GlyphCount && _glyphs[k].Start == glyph.Start; k++) count++;
                     var state = _richDrawing; var style = StyleAt(glyph.Start); var objectIndex = glyph.ObjectIndex;
-                    using var read = style.Font.BeginRead();
-                    state.Font = style.Font; state.Face = glyph.Face; state.Size = GlyphSize(glyph); state.Index = glyph.Index;
-                    state.Count = count; state.Range = new(glyph.Start, glyph.End); state.Advance = glyph.Advance * glyph.Repeat;
-                    state.Position = origin + glyph.Position - new Vector2(removed, 0); state.Offset = Vector2.Zero;
-                    state.Transform = Transform.Identity.Translated(state.Position); state.Color = Colors.White; state.Visible = true; state.Outline = outline;
-                    state.OutlineSize = outlineSize; state.ObjectIndex = objectIndex; state.Missing = glyph.Missing;
-                    state.Flags = ServerGraphemeFlags(glyph);
-                    renderer(state);
-                    if (!state.Visible) { removed += state.Advance; continue; }
-                    if (objectIndex >= 0 || glyph.Tab) continue;
-                    if (!state.Color.IsFinite() || !state.Offset.IsFinite() || !state.Transform.IsFinite()) throw new InvalidOperationException("A glyph effect produced invalid geometry or color.");
-                    var transform = state.Transform.TranslatedLocal(-state.Position); var transformed = transform != Transform.Identity;
-                    if (transformed) canvas.DrawSetTransformMatrix(transform);
+                    var read = style.Font.BeginRead(); Exception? readFailure = null;
                     try
                     {
-                        if (glyph.Missing) { if (!outline) TextMissingGlyph.Draw(canvas, state.Size, state.Position + state.Offset, state.Index, state.Color, clip); continue; }
-                        if (glyph.Face is null || state.Index == 0) continue;
-                        for (var repeat = 0; repeat < glyph.Repeat; repeat++)
-                        { var position = state.Position + state.Offset + new Vector2(repeat * glyph.Advance, 0); var image = glyph.Face.GetGlyph(state.Index, state.Size, state.OutlineSize, 0, position, out var raster); DrawGlyph(canvas, image, raster, state.Color, !outline && glyph.Face.ModulateColorGlyphs, clip); }
+                        state.Font = style.Font; state.Face = glyph.Face; state.Size = GlyphSize(glyph); state.Index = glyph.Index;
+                        state.Count = count; state.Range = new(glyph.Start, glyph.End); state.Advance = glyph.Advance * glyph.Repeat;
+                        state.Position = origin + glyph.Position - new Vector2(removed, 0); state.Offset = Vector2.Zero;
+                        state.Transform = Transform.Identity.Translated(state.Position); state.Color = Colors.White; state.Visible = true; state.Outline = outline;
+                        state.OutlineSize = outlineSize; state.ObjectIndex = objectIndex; state.Missing = glyph.Missing;
+                        state.Flags = ServerGraphemeFlags(glyph);
+                        renderer(state);
+                        if (!state.Visible) { removed += state.Advance; continue; }
+                        if (objectIndex >= 0 || glyph.Tab) continue;
+                        if (!state.Color.IsFinite() || !state.Offset.IsFinite() || !state.Transform.IsFinite()) throw new InvalidOperationException("A glyph effect produced invalid geometry or color.");
+                        var transform = state.Transform.TranslatedLocal(-state.Position); var transformed = transform != Transform.Identity;
+                        if (transformed) canvas.DrawSetTransformMatrix(transform);
+                        try
+                        {
+                            if (glyph.Missing) { if (!outline) TextMissingGlyph.Draw(canvas, state.Size, state.Position + state.Offset, state.Index, state.Color, clip); continue; }
+                            if (glyph.Face is null && _providerLayout is null || state.Index == 0) continue;
+                            for (var repeat = 0; repeat < glyph.Repeat; repeat++)
+                            {
+                                var position = state.Position + state.Offset + new Vector2(repeat * glyph.Advance, 0);
+                                if (_providerLayout is { } providerState) { DrawProviderGlyph(providerState, canvas, glyph with { Index = state.Index, Size = state.Size }, position, state.Color, state.OutlineSize, 0, outline, clip); continue; }
+                                var image = glyph.Face!.GetGlyph(state.Index, state.Size, state.OutlineSize, 0, position, out var raster); DrawGlyph(canvas, image, raster, state.Color, !outline && glyph.Face.ModulateColorGlyphs, clip);
+                            }
+                        }
+                        finally { if (transformed) canvas.DrawSetTransformMatrix(Transform.Identity); }
+                        foreground?.Invoke(state);
+
                     }
-                    finally { if (transformed) canvas.DrawSetTransformMatrix(Transform.Identity); }
-                    foreground?.Invoke(state);
+                    catch (Exception scopeError) { readFailure = scopeError; throw; }
+                    finally { read.Dispose(readFailure); }
                 }
             }
         }
@@ -105,6 +136,19 @@ internal sealed partial class TextLayout
 {
     internal Rect2 InlineRect(int index, Vector2 size)
     {
+        if (_providerLayout is { } state)
+        {
+            for (var i = 0; i < _lines.Count; i++)
+            {
+                var line = _lines[i]; var found = false;
+                for (var j = line.GlyphStart; j < line.GlyphStart + line.GlyphCount; j++) if (_glyphs[j].ObjectIndex == index) { found = true; break; }
+                if (!found) continue;
+                var rect = ProviderObjectRect(state, index, i); var advance = ProviderAdvanceOffset(i);
+                rect.Position += Key.Orientation == TextOrientation.Horizontal ? new Vector2(advance, line.CrossOffset + line.Ascent) : new Vector2(line.CrossOffset + line.Ascent, advance);
+                return rect;
+            }
+            return default;
+        }
         foreach (var glyph in _glyphs)
         {
             if (glyph.ObjectIndex != index) continue;
@@ -119,12 +163,17 @@ internal sealed partial class TextLayout
 
 internal sealed partial class TextLayout
 {
+    internal void ReleaseContent(ref List<Exception>? errors)
+    { try { ReleaseContent(); } catch (Exception error) { Node.CollectException(ref errors, error); } }
     internal void ReleaseContent()
     {
         if (IsBusy) throw new InvalidOperationException("Active text layout cannot release its content.");
+        Exception? failure = null;
+        try { ReleaseProviderLayout(); } catch (Exception error) { failure = error; }
         _richReadFonts.Clear(); _richReads.Clear(); _options = default; Key = default; _font = null!; _ellipsis = null; _count = 0; CharacterCount = 0; Size = default;
         _serverLogicalGlyphs.Clear(); _serverBreakClusters.Clear(); _glyphs.Clear(); _rawGlyphs.Clear(); _lineGlyphs.Clear(); _lines.Clear(); _runs.Clear(); _shaped.Clear();
         Array.Clear(_faces); Array.Clear(_richStyles); Array.Clear(_richObjects); _caretsReady = false;
+        if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
     }
 }
 
@@ -133,6 +182,7 @@ internal sealed partial class TextLayout
     internal Rect2 ServerObjectRect(int index, Vector2 size, int line)
     {
         if ((uint)line >= (uint)_lines.Count) return default;
+        if (_providerLayout is { } state) return ProviderObjectRect(state, index, line);
         var metrics = _lines[line]; var vertical = Key.Orientation == TextOrientation.Vertical;
         for (var i = metrics.GlyphStart; i < metrics.GlyphStart + metrics.GlyphCount; i++)
         {
@@ -151,6 +201,7 @@ internal sealed partial class TextLayout
 {
     internal int ServerHitPosition(int index, float coordinate, float width)
     {
+        if (_providerLayout is not null) return ProviderHitLine(index, coordinate, true);
         var line = _lines[index]; if (line.GlyphCount == 0) return 0;
         var first = _glyphs[line.GlyphStart]; var last = _glyphs[line.GlyphStart + line.GlyphCount - 1];
         if (MathF.Floor(coordinate) <= 0) return first.RTL ? first.End : first.Start;

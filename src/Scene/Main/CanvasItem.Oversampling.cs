@@ -71,8 +71,7 @@ public abstract partial class CanvasItem
         var referenceKey = scaled ? key : 64;
         if (referenceKey != _itemRasterReferenceKey)
         {
-            CanvasRasterScale.ChangeReference(_itemRasterReferenceKey, referenceKey);
-            _itemRasterReferenceKey = referenceKey;
+            CanvasRasterScale.ChangeReference(ref _itemRasterReferenceKey, referenceKey);
         }
         _itemRasterScaleKey = key;
         if (_itemRasterScale == factor) return;
@@ -82,8 +81,7 @@ public abstract partial class CanvasItem
 
     private void ReleaseItemRasterScale()
     {
-        CanvasRasterScale.ChangeReference(_itemRasterReferenceKey, 64);
-        _itemRasterReferenceKey = 64;
+        CanvasRasterScale.ChangeReference(ref _itemRasterReferenceKey, 64);
         _itemRasterScaleKey = 64;
         _itemRasterScale = 1;
     }

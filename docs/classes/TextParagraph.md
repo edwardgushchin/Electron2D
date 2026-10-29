@@ -1,6 +1,6 @@
 # TextParagraph
 
-Last updated: 2026-10-23
+Last updated: 2026-10-29
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -21,6 +21,8 @@ Line width and size are ceiled; ascent, descent, underline metrics and baseline 
 Draw/DrawOutline apply paragraph alignment, dropcap flow, visibility and clipping. DrawLine/DrawLineOutline start at the requested line's own top-left, without paragraph offsets, clipping or visibility restriction. Dropcap-only drawing uses the same physical leading-margin origin as the paragraph draw. Signed finite margins and spacing are retained; do not assume non-overlapping lines with negative spacing. A dropcap reserves its ceiled size plus leading and trailing margins. GetDropcapLines counts complete covered line extents; the next partial line still flows around it. GetDropcapSize includes margins even after Clear; ClearDropcap resets them.
 
 Defaults are Left, Auto, Horizontal, Width -1, mandatory word breaks, zero line spacing, unlimited visible lines, NoTrimming, ellipsis `…`, empty custom punctuation, PreserveInvalid true and PreserveControl false. JustificationFlags initially contains Kashida, WordBound, SkipLastLine and DoNotSkipSingleLine (163). CustomPunctuation replaces the Unicode punctuation classification used for justification. Nonpositive width disables width-dependent wrapping/trimming. Invalid typed inputs throw; duplicate/missing object edits return false; empty AddString succeeds without a span. Source expansion is bounded to 1,048,576 scalars and 64 MiB UTF-16. Clear removes content/objects/BIDI/dropcap while retaining policies/tabs/margins; Duplicate copies every setting into independent buffers and shares borrowed values.
+
+Wrapping and line drawing share the selected text implementation, including opaque sources, producer line breaks and independent formatted line buffers. Reflow and disposal retire private buffers. See [external implementations](../components/text-server.md#external-implementations).
 
 ## Example
 

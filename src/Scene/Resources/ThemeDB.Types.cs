@@ -426,6 +426,7 @@ public sealed partial class ThemeDB
         ["TextLine"] = ["TextLine", "ElectronObject"],
         ["TextParagraph"] = ["TextParagraph", "ElectronObject"],
         ["TextServer"] = ["TextServer", "ElectronObject"],
+        ["TextServerExtension"] = ["TextServerExtension", "TextServer", "ElectronObject"],
         ["TextServerManager"] = ["TextServerManager", "ElectronObject"],
         ["Texture"] = ["Texture", "Resource", "ElectronObject"],
         ["TextureArray"] = ["TextureArray", "ImageTextureLayered", "TextureLayered", "Resource", "ElectronObject"],

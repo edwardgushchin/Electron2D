@@ -308,7 +308,7 @@ public abstract partial class CanvasItem
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         if (ServerState is { Commands: { } painter } state) { painter.Dispose(); state.Commands = null; }
         _canvasCommands?.Clear();
-        _polygonCount = 0; _strokeCount = 0; _meshCount = 0; _multiMeshCount = 0;
+        _polygonCount = 0; _strokeCount = 0; _meshCount = 0; _multiMeshCount = 0; _textClipDepth = 0;
         _drawing = true;
         var previousDrawingItem = _currentDrawingItem; _currentDrawingItem = this;
         try
@@ -355,16 +355,29 @@ public abstract partial class CanvasItem
         var blend = BlendMode.Mix;
         var capturedMaterial = false;
         var drawingTransform = Transform.Identity;
-        var skipping = false; var commandClip = clip;
+        var skipping = false; var commandClip = clip; Rect2i? textClip = null;
+        Span<Rect2i?> textClipStack = stackalloc Rect2i?[64]; var textClipDepth = 0;
         var capturedParticles = false;
         (bool Enabled, int Horizontal, int Vertical, bool Loop) particlesAnimation = default;
         foreach (var command in commands)
         {
             if (command.AnimationSlice is { } slice) { RenderingServer.Service?.RequireContinuousCanvas(); skipping = !slice.Includes(time); continue; }
+            if (command.TextClip is { } scopedClip)
+            {
+                if (scopedClip.Rect is { } rect)
+                {
+                    textClipStack[textClipDepth++] = textClip;
+                    var bounds = TextClipPixels(transform * drawingTransform * rect);
+                    textClip = textClip is { } previous ? previous.Intersection(bounds) : bounds;
+                }
+                else textClip = textClipStack[--textClipDepth];
+                continue;
+            }
             if (skipping || command.Texture is ServerTexture { IsDisposed: true } or TextureRD { IsDisposed: true }) continue;
             if (command.ClipIgnore is { } ignore) { commandClip = ignore ? null : clip; continue; }
             if (command.SetTransform) { drawingTransform = command.Transform; continue; }
-            if (commandClip is { } empty && !empty.HasArea()) continue;
+            var effectiveClip = textClip is { } textBounds ? commandClip is { } parentClip ? parentClip.Intersection(textBounds) : textBounds : commandClip;
+            if (effectiveClip is { } empty && !empty.HasArea()) continue;
             var replay = command;
             if (command.Texture is ServerTexture { IsProxy: true } proxy)
             {
@@ -381,20 +394,20 @@ public abstract partial class CanvasItem
             if (replay.Particles is { } particles)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                particles.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, linear, this, command.Texture, matrices?.Local(drawingTransform));
+                particles.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, linear, this, command.Texture, matrices?.Local(drawingTransform));
                 continue;
             }
             if (replay.MultiMesh is { } instances)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
                 var fraction = IsPhysicsInterpolatedAndEnabled() ? (float)Engine.PhysicsInterpolationFraction : 1f;
-                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear, command.Texture, matrices?.Local(drawingTransform));
+                instances.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, fraction, outputSize, this, linear, command.Texture, matrices?.Local(drawingTransform));
                 continue;
             }
             if (replay.Mesh is { } mesh)
             {
                 if (!capturedMaterial) { var current = CanvasMaterial; material = current?.RequireCanvasState(); blend = current?.GetCanvasBlendMode() ?? BlendMode.Mix; capturedMaterial = true; }
-                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, commandClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear, textureSource: command.Texture, matrices: matrices?.Local(drawingTransform));
+                mesh.Append(vertices, batches, replay.Texture, transform * drawingTransform, color, material, blend, filter, inheritedRepeat, anisotropy, effectiveClip, viewport?.SnapVerticesToPixel == true, skinOwner: this, linear: linear, textureSource: command.Texture, matrices: matrices?.Local(drawingTransform));
                 continue;
             }
             if (replay.ParticleCustom is { } custom)
@@ -441,7 +454,7 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            var batch = new CanvasBatch(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture, Matrices: matrices?.Local(drawingTransform).For(material));
+            var batch = new CanvasBatch(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, effectiveClip, InstanceOwner: material?.Program.HasInstanceUniforms == true ? this : null, Glyph: glyph, GlyphModulation: glyphModulation, LinearColors: linearColors, TextureSource: command.Texture, Matrices: matrices?.Local(drawingTransform).For(material));
             if (material?.Program.RegionRectUniform is not null) batch = batch with { TextureRegion = native.TextureRegion };
             if (material?.Program.NormalMapFlagsUniform is not null && replay.Texture is not null && replay.Polygon is null && replay.Stroke is null)
                 batch = batch with

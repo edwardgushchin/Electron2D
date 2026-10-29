@@ -100,8 +100,8 @@ internal static class TextLayoutBreakTests
             for (var i = 0; i < 64; i++) { font.InvalidateFont(); font.GetStringSize("123 ffi"); }
             Check(GC.GetAllocatedBytesForCurrentThread() - before == 0, "Default-language font rebuilds with a real main catalog must not allocate locale snapshots or parsing iterators.");
             catalog.Locale = "ar"; TranslationServer.Culture = CultureInfo.GetCultureInfo("ar-EG"); font.InvalidateFont();
-            var layout = font.GetLayout("123", HorizontalAlignment.Left, -1, 16, -1, TextLineBreakFlags.None, TextJustificationFlags.None, TextDirection.Auto, TextOrientation.Horizontal, false);
-            Check(layout.Lines[0].ParagraphLevel == 1, "Empty language uses the current best main-catalog locale for neutral bidi fallback.");
+            using (var read = font.PrepareLayout("123", HorizontalAlignment.Left, -1, 16, -1, TextLineBreakFlags.None, TextJustificationFlags.None, TextDirection.Auto, TextOrientation.Horizontal, false))
+                Check(read.Layout.Lines[0].ParagraphLevel == 1, "Empty language uses the current best main-catalog locale for neutral bidi fallback.");
             for (var i = 0; i < 16; i++) { font.InvalidateFont(); font.GetStringSize("123"); }
             before = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < 64; i++) { font.InvalidateFont(); font.GetStringSize("123"); }

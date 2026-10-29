@@ -287,12 +287,35 @@ public sealed partial class TextParagraph : ElectronObject
         return Axis(align + (capLTR ? cap : 0), cross);
     }
     private void ContentChanged() { _dirty = true; _fonts.Clear(); _source.CollectFonts(_fonts); _dropcap.CollectFonts(_fonts); _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID)); }
-    private void BeginReads() { foreach (var font in _fonts) _reads.Add(font.BeginRead()); }
-    private void EndReads() { for (var i = _reads.Count - 1; i >= 0; i--) _reads[i].Dispose(); _reads.Clear(); }
+    private Font.GroupRead _fontGroup;
+    private bool _fontGroupActive;
+    private void BeginReads()
+    {
+        _fontGroup = Font.BeginReadGroup(_fonts); _fontGroupActive = true;
+        foreach (var font in _fonts) _reads.Add(font.BeginRead());
+    }
+    private void EndReads()
+    {
+        List<Exception>? errors = null;
+        for (var i = _reads.Count - 1; i >= 0; i--) try { _reads[i].Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        _reads.Clear();
+        if (_fontGroupActive) { _fontGroupActive = false; var group = _fontGroup; _fontGroup = default; try { group.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); } }
+        if (errors is not null) throw new AggregateException("Text font read cleanup failed.", errors);
+    }
+
     private void RetireLines() { RetireServerLines(); foreach (var rid in _lines) TextBuffers.Remove(rid); _lines.Clear(); }
     private void EnsureLine(int line) { Ensure(); if ((uint)line >= (uint)_display.LineCount) throw new ArgumentOutOfRangeException(nameof(line)); }
     private void Check() { if (Environment.CurrentManagedThreadId != _thread) throw new InvalidOperationException("TextParagraph belongs to its creating thread."); ThrowIfDisposed(); if (_busy) throw new InvalidOperationException("An active paragraph cannot reenter, mutate or dispose."); }
-    private void CheckMutation() => Check();
+    private int _serverReaders;
+    private bool _serverMutation;
+    internal void AcquireServerMutation() { CheckMutation(); if (_serverMutation) throw new InvalidOperationException("An active paragraph cannot mutate."); _serverMutation = true; }
+    internal void ReleaseServerMutation() => _serverMutation = false;
+    internal void AcquireServerRead() { Check(); ObjectDisposedException.ThrowIf(IsDisposed, this); _serverReaders++; }
+    internal void ReleaseServerRead() => _serverReaders--;
+    internal void CheckServerMutation() => CheckMutation();
+    private void CheckMutation() { Check(); if (_serverReaders != 0) throw new InvalidOperationException("An active paragraph cannot mutate or dispose."); }
+    private protected override void ValidateDisposalTransition()
+    { base.ValidateDisposalTransition(); if (_busy || _serverReaders != 0 || _serverMutation) throw new InvalidOperationException("An active paragraph cannot dispose."); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ParagraphProperties);
     /// <inheritdoc />
@@ -300,7 +323,7 @@ public sealed partial class TextParagraph : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal() { CheckMutation(); base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { RetireLines(); _source.Dispose(); _dropcap.Dispose(); _geometry = null!; _display = null!; _fonts.Clear(); _reads.Clear(); base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { RetireLines(); _source.Dispose(); _dropcap.Dispose(); _geometry.ReleaseContent(); _display.ReleaseContent(); _geometry = null!; _display = null!; _fonts.Clear(); _reads.Clear(); base.Dispose(disposing); }
     private static readonly PropertyDescriptor[] ParagraphProperties =
     [
         new PropertyDescriptor<TextParagraph, HorizontalAlignment>(nameof(Alignment), p => p.Alignment, (p, v) => p.Alignment = v, _ => HorizontalAlignment.Left),

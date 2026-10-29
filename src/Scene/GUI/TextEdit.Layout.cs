@@ -74,7 +74,9 @@ public partial class TextEdit
     public Vector2i GetLineColumnAtPos(Vector2i position, bool clampLine = true, bool clampColumn = true)
     {
         CheckTextEdit(); EnsureTextLayout(); var index = (int)MathF.Floor((position.Y - _contentRect.Position.Y) / _rowHeight + (float)_scrollVertical); if (_visual.Count == 0) return Vector2i.Zero; if (!clampLine && (index < 0 || index >= _visual.Count)) return new(-1, -1); index = Math.Clamp(index, 0, _visual.Count - 1); var row = _visual[index]; var line = _lines[row.Line]; var wrap = line.Layout.LineCount == 0 ? default : line.Layout.Lines[row.Wrap]; var x = position.X - _contentRect.Position.X + _scrollHorizontal;
-        if (!clampColumn && (x < 0 || x > wrap.Width)) return new(-1, row.Line); var best = wrap.Start; var distance = float.MaxValue;
+        if (!clampColumn && (x < 0 || x > wrap.Width)) return new(-1, row.Line);
+        if (line.Layout.UsesProvider) return new(SourceColumn(row.Line, line.Layout.HitLine(row.Wrap, x, _caretMidGrapheme)), row.Line);
+        var best = wrap.Start; var distance = float.MaxValue;
         for (var column = wrap.Start; column <= wrap.End; column++) { if (!_caretMidGrapheme && line.Layout.ClosestGrapheme(column) != column) continue; var next = MathF.Abs(RawCaretX(line, column, row.Wrap) - x); if (next < distance) { best = column; distance = next; } }
         return new(SourceColumn(row.Line, best), row.Line);
     }

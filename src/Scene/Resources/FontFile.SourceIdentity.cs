@@ -60,6 +60,11 @@ public partial class FontFile
         }
     }
 
+    internal static bool HasSourceIdentity(RID rid)
+    {
+        lock (SourceRegistryGate) return SourceRegistry.TryGetValue(rid, out var weak) && weak.TryGetTarget(out var file) && !file.IsDisposed && (!file._sourceRetiring || RetainsCallbackSource(rid)) && file._sourceRID == rid;
+    }
+
     internal static bool TryResolveSource(RID rid, out FontFile file)
     {
         lock (SourceRegistryGate)
@@ -67,7 +72,7 @@ public partial class FontFile
             if (!SourceRegistry.TryGetValue(rid, out var weak) || !weak.TryGetTarget(out file!))
             { SourceRegistry.Remove(rid); file = null!; return false; }
         }
-        lock (file.FontGate) return !file.IsDisposalCommitted && !file.IsDisposed && !file._sourceRetiring && file._sourceRID == rid && file.TryGetNotificationOwner(out var owner) && !owner.IsDisposalCommitted && !owner.IsDisposed;
+        lock (file.FontGate) return !file.IsDisposalCommitted && !file.IsDisposed && (!file._sourceRetiring || RetainsCallbackSource(rid)) && file._sourceRID == rid && file.TryGetNotificationOwner(out var owner) && !owner.IsDisposalCommitted && !owner.IsDisposed;
     }
 
     private void RetireSourceIdentityLocked()

@@ -27,6 +27,7 @@ internal sealed partial class TextLayout
             target._grapheme = _grapheme; target._breaks = _breaks; target._wordBoundaries = _wordBoundaries; target._wordEnds = _wordEnds; target._nonprinting = _nonprinting;
             target._richStyles = _richStyles; target._richObjects = _richObjects; target._builtFontGeneration = _builtFontGeneration;
         }
+        CopyProviderFormattingTo(target);
         target._glyphs.Clear(); target._glyphs.AddRange(_glyphs); target._rawGlyphs.Clear(); target._rawGlyphs.AddRange(_glyphs);
         target._lines.Clear(); target._lines.AddRange(_lines); target.Size = Size; target.NaturalWidth = NaturalWidth; target.UnwrappedWidth = UnwrappedWidth;
         target._caretsReady = false; target._serverCharactersReady = false; target.PrepareCustomPunctuation();
@@ -42,6 +43,7 @@ internal sealed partial class TextLayout
     }
     internal void ServerCopyDisplayLine(TextLayout target, TextLayout raw, int lineIndex, int from, int to)
     {
+        if (CopyProviderSliceTo(target, from, to, lineIndex)) return;
         var line = _lines[lineIndex]; var original = raw._lines[lineIndex]; target._glyphs.Clear();
         for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount; i++)
         {
@@ -58,6 +60,7 @@ internal sealed partial class TextLayout
     }
     internal bool ServerAdoptFormattedDisplay(TextLayout display)
     {
+        if (_providerLayout is not null) return false;
         if (display._lines.Count == 0 || _lines.Count == 0 || display._lines[0].TrimPosition < 0 && display._lines[0].EllipsisPosition < 0) return false;
         var first = display._serverVisibleStart; var previousCount = display._serverVisibleCount; var sourceCount = _glyphs.Count;
         _lineGlyphs.Clear(); for (var i = 0; i < first; i++) _lineGlyphs.Add(_glyphs[i]);
@@ -73,6 +76,7 @@ internal sealed partial class TextLayout
     }
     internal float ServerFit(float width, TextJustificationFlags flags)
     {
+        if (_providerLayout is not null) return FitProvider(width, flags);
         if (_lines.Count == 0 || _glyphs.Count == 0) return _lines.Count == 0 ? 0 : _lines[0].Width;
         var original = Key; var line = _lines[0]; _lineGlyphs.Clear(); _lineGlyphs.AddRange(_glyphs);
         Key = Key with { Width = width, Justification = flags & ~TextJustificationFlags.ConstrainEllipsis }; _lineTrimmed = line.TrimPosition >= 0;
@@ -86,6 +90,13 @@ internal sealed partial class TextLayout
     private bool ServerJustificationEdge(Glyph glyph) => glyph.Start >= 0 && glyph.Start < _count && glyph.End > glyph.Start && _scalars[glyph.Start] != 0x00ad && (glyph.Space || glyph.Tab || IsHardBreak(_scalars[glyph.Start]));
     internal float ServerFitVisible(TextLayout display, float width, TextJustificationFlags flags)
     {
+        if (display._providerLayout is not null)
+        {
+            var result = display.FitProvider(width, flags);
+            display.ServerCopyFormatting(this);
+            TrimProvider(0, TextOverrunFlags.NoTrim, _providerLayout!.Owner.ShapedTextGetCustomEllipsis(_providerLayout.Full));
+            return result;
+        }
         if (display._lines.Count == 0 || display._lines[0].TrimPosition < 0) return _lines.Count == 0 ? 0 : _lines[0].Width;
         var first = display._serverVisibleStart; var count = display._serverVisibleCount; var sourceCount = _glyphs.Count;
         display._lineGlyphs.Clear(); for (var i = first; i < first + count; i++) display._lineGlyphs.Add(_glyphs[i]);
@@ -108,6 +119,8 @@ internal sealed partial class TextLayout
     {
         if (_lines.Count == 0 || previous._lines.Count == 0) return;
         var oldLine = previous._lines[0]; if (oldLine.TrimPosition < 0 && oldLine.EllipsisPosition < 0) return;
+        if (_providerLayout is not null && previous._providerLayout is { TrimLine: 0 } policy)
+        { TrimProvider(policy.TrimWidth, policy.TrimFlags, policy.Owner.ShapedTextGetCustomEllipsis(policy.Full)); return; }
         var oldFirst = previous._serverVisibleStart; var oldLast = oldFirst + previous._serverVisibleCount;
         var first = oldFirst == 0 ? 0 : FindServerCluster(previousRaw._glyphs[oldFirst]);
         var last = oldLast == previousRaw._glyphs.Count ? _glyphs.Count : FindServerCluster(previousRaw._glyphs[oldLast]);
@@ -127,6 +140,7 @@ internal sealed partial class TextLayout
     }
     internal void ServerTrim(float width, TextOverrunFlags flags, int scalar, bool minimumReached)
     {
+        if (_providerLayout is not null) { TrimProvider(width, flags, scalar); return; }
         if (_lines.Count == 0) return;
         var line = _lines[0]; var total = _glyphs.Count; _serverVisibleStart = 0; _serverVisibleCount = total; _serverEllipsisAdvance = 0;
         _lines[0] = line with { TrimPosition = -1, EllipsisPosition = -1 };

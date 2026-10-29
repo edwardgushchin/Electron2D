@@ -185,7 +185,7 @@ public partial class TabBar
         if (what == NotificationEnterTree) { _initialized = true; _dirty = true; }
         else if (what is NotificationThemeChanged or NotificationTranslationChanged or NotificationLayoutDirectionChanged or NotificationResized) { _dirty = true; QueueRedraw(); if (what != NotificationResized) UpdateMinimumSize(); }
         else if (what == NotificationDraw) DrawTabs();
-        else if (what == NotificationDragEnd) { _dropVisible = false; _hoverTimer.Stop(); QueueRedraw(); }
+        else if (what == NotificationDragEnd) { _dropVisible = false; _hoverTimer.Stop(); if (!IsDisposed) QueueRedraw(); }
         else if (what == NotificationInternalProcess) RepeatGamepad();
         else if (what == NotificationExitTree) { ResetInteraction(); SetInternalProcessing(false, false); }
 

@@ -19,6 +19,18 @@ public partial class RichTextLabel
         string[] names = ["normal", "bold", "italics", "bold_italics", "mono"]; var fonts = new Font[5]; var sizes = new int[5]; for (var i = 0; i < 5; i++) { fonts[i] = GetThemeFont(names[i] + "_font") ?? GetThemeDefaultFont() ?? throw new InvalidOperationException("Rich text requires a font."); sizes[i] = GetThemeFontSize(names[i] + "_font_size"); if (sizes[i] < 1) sizes[i] = GetThemeDefaultFontSize(); }
         return new(fonts, sizes, GetThemeConstant("line_separation"), GetThemeConstant("paragraph_separation"), GetThemeConstant("table_h_separation"), GetThemeConstant("table_v_separation"), GetThemeConstant("outline_size"), GetThemeColor("default_color"), GetThemeColor("font_outline_color"), GetThemeStyleBox("normal"));
     }
+    private static void ReleaseFrameLayouts(Frame frame, ref List<Exception>? errors)
+    {
+        foreach (var paragraph in frame.Paragraphs)
+        {
+            paragraph.Layout.ReleaseContent(ref errors); paragraph.MarkerLayout.ReleaseContent(ref errors);
+            foreach (var part in paragraph.Parts)
+            {
+                part.DropLayout.ReleaseContent(ref errors);
+                if (part.Table is { } table) foreach (var cell in table.Cells) ReleaseFrameLayouts(cell.Frame, ref errors);
+            }
+        }
+    }
     private static Frame CloneFrame(Frame original)
     {
         var frame = new Frame(); frame.Paragraphs.Clear(); foreach (var source in original.Paragraphs) { var paragraph = new Paragraph { Alignment = source.Alignment, Direction = source.Direction, Language = source.Language, Parser = source.Parser, Justification = source.Justification, Tabs = source.Tabs, Format = source.Format }; frame.Paragraphs.Add(paragraph); foreach (var part in source.Parts) { var copy = new Part(part.Kind, part.Format) { Text = part.Text, Texture = part.Texture, Width = part.Width, Height = part.Height, Color = part.Color, Alignment = part.Alignment, Region = part.Region, Key = part.Key, Pad = part.Pad, WidthPercent = part.WidthPercent, HeightPercent = part.HeightPercent, Tooltip = part.Tooltip, Alt = part.Alt, WidthUnit = part.WidthUnit, HeightUnit = part.HeightUnit, DropFont = part.DropFont, DropSize = part.DropSize, DropOutline = part.DropOutline, DropOutlineColor = part.DropOutlineColor, DropMargins = part.DropMargins }; paragraph.Parts.Add(copy); if (part.Table is { } old) { var table = new Table(old.Columns.Length) { AlignRow = old.AlignRow, Name = old.Name }; copy.Table = table; for (var c = 0; c < old.Columns.Length; c++) { var column = old.Columns[c]; table.Columns[c].Expand = column.Expand; table.Columns[c].Ratio = column.Ratio; table.Columns[c].Shrink = column.Shrink; table.Columns[c].Name = column.Name; } foreach (var oldCell in old.Cells) { var cell = new Cell { Minimum = oldCell.Minimum, Maximum = oldCell.Maximum, Padding = oldCell.Padding, Odd = oldCell.Odd, Even = oldCell.Even, Border = oldCell.Border }; var child = CloneFrame(oldCell.Frame); cell.Frame.Paragraphs.Clear(); cell.Frame.Paragraphs.AddRange(child.Paragraphs); table.Cells.Add(cell); } } } }
@@ -41,7 +53,7 @@ public partial class RichTextLabel
                 else { if (part.Table is { } table) foreach (var cell in table.Cells) PrepareFrame(cell.Frame, theme, ref global); else if (part.Kind == PartKind.Image) global++; part.Count = global - part.Start; text.Append('\ufffc'); styles.Add(part.Format); offsets.Add(part.Start); }
             }
             offsets.Add(global); paragraph.Text = text.ToString(); paragraph.Styles = styles.ToArray(); paragraph.Offsets = offsets.ToArray(); paragraph.Count = global - paragraph.Start + (index + 1 < frame.Paragraphs.Count ? 1 : 0);
-            paragraph.Spans.Clear(); for (var at = 0; at < styles.Count;) { var next = at + 1; while (next < styles.Count && ReferenceEquals(styles[next], styles[at])) next++; var format = styles[at]; paragraph.Spans.Add(new(at, next, PartFont(format, theme), PartSize(format, theme), format.Language.Length > 0 ? format.Language : paragraph.Language.Length > 0 ? paragraph.Language : _language, at)); at = next; }
+            paragraph.Spans.Clear(); for (var at = 0; at < styles.Count;) { var next = at + 1; while (next < styles.Count && ReferenceEquals(styles[next], styles[at])) next++; var format = styles[at]; paragraph.Spans.Add(new(at, next, PartFont(format, theme), PartSize(format, theme), format.Language.Length > 0 ? format.Language : paragraph.Language.Length > 0 ? paragraph.Language : _language, at, format.Meta)); at = next; }
             ParseStructuredText(paragraph.Parser == StructuredTextParser.Default ? _parser : paragraph.Parser, _parserOptions, paragraph.Text, paragraph.Contexts);
             if (index + 1 < frame.Paragraphs.Count) global++;
         }
@@ -56,7 +68,12 @@ public partial class RichTextLabel
         _building = true; try
         {
             _effectiveDirection = _direction == TextDirection.Inherited ? (IsLayoutRTL() ? TextDirection.RTL : TextDirection.LTR) : _direction; if (_dirty || _themeValues == null) _themeValues = CaptureTheme(); var theme = _themeValues!; var margin = theme.Normal?.GetMinimumSize() ?? Vector2.Zero; var offset = theme.Normal?.GetOffset() ?? Vector2.Zero; var width = Math.Max(1, Size.X - margin.X); _textRect = new(offset, new(width, Math.Max(1, Size.Y - margin.Y))); _fullTextRect = _textRect;
-            if (_dirty) { _hasFX = false; _fontVersions.Clear(); _renderRoot = CloneFrame(_main); var global = 0; PrepareFrame(_renderRoot, theme, ref global); _totalCharacters = CountFrame(_main); }
+            if (_dirty)
+            {
+                List<Exception>? retirementErrors = null; ReleaseFrameLayouts(_renderRoot, ref retirementErrors);
+                if (retirementErrors is not null) throw new AggregateException("Rich-text layout retirement failed.", retirementErrors);
+                _hasFX = false; _fontVersions.Clear(); _renderRoot = CloneFrame(_main); var global = 0; PrepareFrame(_renderRoot, theme, ref global); _totalCharacters = CountFrame(_main);
+            }
             _dirty = _revealDirty = false; var root = _renderRoot; var actualWidth = width - (_scrollActive ? _scroll.GetBoundMinimumSize().X : 0); actualWidth = Math.Max(1, actualWidth);
             if (_threaded) { _finished = false; _workerError = null; _workerReadyParagraphs = _workerPublishedParagraphs = 0; _drawParagraphs.Clear(); _lines.Clear(); _content = Vector2.Zero; _worker = StartWorker(root, actualWidth, theme); SetInternalProcessing(true, false); }
             else { ShapeFrame(root, actualWidth, theme, 0); PublishLayout(); }

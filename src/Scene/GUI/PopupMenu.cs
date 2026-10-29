@@ -293,7 +293,7 @@ public partial class PopupMenu : Popup
     public void SetItemSubmenuNode(int index, PopupMenu? submenu) { EnsureMutable(); var item = Get(index, true); ValidateSubmenu(submenu); if (submenu?.Parent is null && submenu is not null) AddChild(submenu); if (item.Submenu == submenu) return; if (item.Submenu == _activeSubmenu) CloseSubmenu(); item.Submenu = submenu; Changed(); }
     /// <summary>Removes one record without freeing its submenu.</summary><param name="index">A nonnegative index.</param>
     public void RemoveItem(int index) { EnsureMutable(); Index(index); List<Exception>? errors = null; RemoveCore(index, ref errors); ChangedStructure(errors); }
-    private void RemoveCore(int index, ref List<Exception>? errors) { var item = _items[index]; if (item.Submenu == _activeSubmenu) try { CloseSubmenu(); } catch (Exception error) { CollectException(ref errors, error); } Unwatch(item.Icon); Unwatch(item.Shortcut); _items.RemoveAt(index); if (_focused >= _items.Count) _focused = -1; }
+    private void RemoveCore(int index, ref List<Exception>? errors) { var item = _items[index]; if (item.Submenu == _activeSubmenu) try { CloseSubmenu(); } catch (Exception error) { CollectException(ref errors, error); } Unwatch(item.Icon); Unwatch(item.Shortcut); _items.RemoveAt(index); if (_focused >= _items.Count) _focused = -1; item.TextLayout.ReleaseContent(ref errors); item.AcceleratorLayout.ReleaseContent(ref errors); }
     /// <summary>Clears items, optionally disposing their distinct submenu nodes.</summary><param name="freeSubmenus">Whether to detach and free submenu nodes.</param>
     public void Clear(bool freeSubmenus = false) { EnsureMutable(); var children = freeSubmenus ? _items.Where(i => i.Submenu is not null).Select(i => i.Submenu!).Distinct().ToArray() : []; List<Exception>? errors = null; while (_items.Count > 0) RemoveCore(_items.Count - 1, ref errors); _focused = -1; foreach (var child in children) if (!child.IsDisposed) { try { if (child.Parent == this) RemoveChild(child); } catch (Exception error) { CollectException(ref errors, error); } try { child.Dispose(); } catch (Exception error) { CollectException(ref errors, error); } } ChangedStructure(errors); }
     /// <summary>Gets the current focused index.</summary><returns>Minus one when no item is focused.</returns>
@@ -304,5 +304,16 @@ public partial class PopupMenu : Popup
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(PopupMenu) ? CreateMenu : base.CreateSceneInstanceFactory();
     private static Node CreateMenu() => new PopupMenu();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { foreach (var resource in _resources.Keys) { resource.Changed -= ResourceChanged; resource.Disposed -= ResourceDisposed; } _resources.Clear(); _publisherIDPressed.Handlers = null; _publisherIndexPressed.Handlers = null; _publisherIDFocused.Handlers = null; _publisherMenuChanged.Handlers = null; _items.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        if (disposing) { foreach (var item in _items) { item.TextLayout.ReleaseContent(ref errors); item.AcceleratorLayout.ReleaseContent(ref errors); } }
+        try
+        {
+            if (disposing) { foreach (var resource in _resources.Keys) { resource.Changed -= ResourceChanged; resource.Disposed -= ResourceDisposed; } _resources.Clear(); _publisherIDPressed.Handlers = null; _publisherIndexPressed.Handlers = null; _publisherIDFocused.Handlers = null; _publisherMenuChanged.Handlers = null; _items.Clear(); }
+        }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
+    }
 }

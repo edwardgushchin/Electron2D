@@ -46,6 +46,12 @@ internal sealed partial class TextLayout
     { var order = _glyphs[a].Start.CompareTo(_glyphs[b].Start); return order == 0 ? a.CompareTo(b) : order; }
     internal int[] ServerLineBreaks(ReadOnlySpan<float> widths, int start, int rangeStart, int end, int offset, bool once, TextLineBreakFlags flags)
     {
+        if (_providerLayout is { } state)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            var ranges = state.Owner.ShapedTextGetLineBreaksAdv(ProviderRangeBuffer(state, rangeStart, end), widths, checked(start + state.ScalarOffset), once, flags);
+            return ProviderBreakRanges(ranges, state, start, end, offset);
+        }
         var first = 0; var limit = _serverBreakClusters.Count;
         while (first < limit && _serverBreakClusters[first].Start < start) first++;
         while (limit > first && _serverBreakClusters[limit - 1].End > end) limit--;
@@ -102,6 +108,7 @@ internal sealed partial class TextLayout
     private static bool ServerTrimCluster(ServerBreakCluster cluster, bool softWrap) => !(softWrap && cluster.Hyphen) && (cluster.Space || cluster.Hard || cluster.Hyphen);
     internal void ServerCopySlice(TextLayout target, int from, int to)
     {
+        if (CopyProviderSliceTo(target, from, to)) return;
         target._glyphs.Clear(); target._rawGlyphs.Clear(); target._caretsReady = false;
         ServerCopyGlyphs(target, target._glyphs, from, to, from);
         var ascent = 0f; var descent = 0f; var width = 0f; var underline = 0f; var thickness = 0f;

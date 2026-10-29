@@ -4730,8 +4730,8 @@
       "reason": "ADRs 0001/0046: the source-language-specific structured syntax parser belongs to the excluded scripting-language identity. URI, file, email, list and typed custom contexts are executable; custom parsing projects scalar start/end/direction through TextBIDIRange rather than a spatial Vector3i."
     },
     {
-      "state": "Blocked",
-      "reason": "The Vector3i result is scalar start/end/direction data, not 3D geometry; its typed projection is TextBIDIRange under ADR 0046. Control and Label parsing execute, but this standalone entrypoint requires the public TextServer service and TextServerExtension dispatch/lifetime. GDScript-specific parser value 5 remains excluded under ADR 0001.",
+      "state": "Implemented",
+      "reason": "ADR 0046/0107: executable typed protected callbacks, guarded public admission, native defaults and opaque font/buffer ownership. Shared Font/Line/Paragraph/GUI consumers use producer glyphs, formatting, runs, editing, inline metadata and drawing. Linux native and opaque consumer checks cover registry/source/scale retirement, duplication, thread/reentry, errors and prepared allocation; package/NativeAOT, foreign-platform, native allocator/performance and owner gates remain separate. Typed scalar TextBIDIRange and copied public snapshots preserve URI/file/email/list/default/custom parsing; the script-specific parser mode remains excluded.",
       "godot": [
         "TextServer::method:parse_structured_text(int:TextServer.StructuredTextParser,Array:,String:)",
         "TextServerExtension::method:_parse_structured_text(int:TextServer.StructuredTextParser,Array:,String:)"

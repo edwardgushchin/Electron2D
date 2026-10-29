@@ -11,7 +11,13 @@ public partial class TextEdit
     /// <summary>Inserts a gutter and an empty cell on every line.</summary><param name="at">Insertion index or -1 for the end.</param>
     public void AddGutter(int at = -1) { EnsureTextMutable(); if (at == -1) at = _gutters.Count; if ((uint)at > _gutters.Count) throw new ArgumentOutOfRangeException(nameof(at)); _gutters.Insert(at, new()); foreach (var line in _lines) line.Gutters.Insert(at, new()); InvalidateTextLayout(); BeginEventEmission(_publisherGutterAdded.Handlers)?.Invoke(); }
     /// <summary>Removes a gutter and its line cells.</summary><param name="gutter">Existing index.</param>
-    public void RemoveGutter(int gutter) { EnsureTextMutable(); AtGutter(gutter); _gutters.RemoveAt(gutter); foreach (var line in _lines) line.Gutters.RemoveAt(gutter); InvalidateTextLayout(); BeginEventEmission(_publisherGutterRemoved.Handlers)?.Invoke(); }
+    public void RemoveGutter(int gutter)
+    {
+        EnsureTextMutable(); AtGutter(gutter); List<Exception>? errors = null; _gutters.RemoveAt(gutter);
+        foreach (var line in _lines) { line.Gutters[gutter].Layout.ReleaseContent(ref errors); line.Gutters.RemoveAt(gutter); }
+        try { InvalidateTextLayout(); BeginEventEmission(_publisherGutterRemoved.Handlers)?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Gutter cleanup failed.", errors);
+    }
     /// <summary>Returns the gutter count.</summary><returns>Current count.</returns>
     public int GetGutterCount() { CheckTextEdit(); return _gutters.Count; }
     /// <summary>Sets a gutter's source name.</summary><param name="gutter">Existing index.</param><param name="name">Nonnull name.</param>

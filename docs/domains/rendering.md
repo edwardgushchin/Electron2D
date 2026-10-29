@@ -608,3 +608,6 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 [Canvas follow-scale preview](../components/canvas-rendering.md#canvas-follow-scale-preview) now executes through one renderer-session policy on the shared GPU/Compatibility composition, preserving authored transforms, input, snapping and complete attachment overrides.
 
 [Native device timestamps](../components/gpu-timestamps.md) connect named CPU/GPU markers to ordered commands, completed-frame publication and retained query-pool lifetimes on the pinned Vulkan adapter.
+
+
+[External text implementations](../components/text-server.md#external-implementations) extend the existing text/canvas path with typed provider callbacks, opaque sources, coordinated layouts and actual native or callback-authored glyph drawing. Their component records consumer ownership, replacement, source retirement and verification limits.

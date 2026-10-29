@@ -2,13 +2,16 @@ namespace Electron2D;
 
 public abstract partial class Font
 {
-    /// <summary>Returns the borrowed identity of this font's primary native source cache.</summary>
+    /// <summary>Returns the borrowed identity of this font's primary source cache.</summary>
     /// <returns>A live source identity, or an empty identity when no primary source resolves.</returns>
-    /// <remarks>Source configuration changes preserve the cache identity. Cache removal, full reset, file import and owner disposal retire it.
+    /// <remarks>Native cache edits preserve its identity. Cache removal, full reset, file import and owner disposal retire it.
+    /// External sources keep their creating implementation; configured variations own independently retired copies.
     /// TextServer can query and edit the cache; FreeRID cannot release a resource-owned source.</remarks>
     /// <exception cref="ObjectDisposedException">The font is disposed.</exception>
     public override RID GetRID()
     {
+        PrepareExternalSource();
+        if (ExternalSource is { } external) { ThrowIfDisposed(); return external.RID; }
         try
         {
             lock (FontGate)

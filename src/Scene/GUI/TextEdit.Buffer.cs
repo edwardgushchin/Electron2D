@@ -30,9 +30,9 @@ public partial class TextEdit
 
     // ponytail: cold undo snapshots cost O(document size); edit deltas replace them when large-document editing needs a tighter ceiling.
     private History Snapshot() => new(_lines.Select(l => l.Text).ToArray(), _carets.Select(c => c.Copy()).ToArray(), _version, _lines.Select(l => l.Gutters.Select((cell, index) => (_gutters[index], cell.Copy())).ToArray()).ToArray(), _lines.Select(l => l.Background).ToArray());
-    private void SetLines(string[] text)
+    private void SetLines(string[] text, ref List<Exception>? errors)
     {
-        while (_lines.Count > text.Length) _lines.RemoveAt(_lines.Count - 1);
+        while (_lines.Count > text.Length) { _lines[^1].Release(ref errors); _lines.RemoveAt(_lines.Count - 1); }
         for (var i = 0; i < Math.Max(1, text.Length); i++) { if (i == _lines.Count) _lines.Add(NewLine("")); _lines[i].Text = text.Length == 0 ? "" : text[i]; _lines[i].Scalars = CountScalars(_lines[i].Text.AsSpan()); }
         InvalidateTextLayout();
     }
@@ -50,20 +50,24 @@ public partial class TextEdit
     {
         ValidatePosition(from.Y, from.X); ValidatePosition(to.Y, to.X); var start = Offset(from); var end = Offset(to); if (end < start) throw new ArgumentException("The text interval is reversed.");
         value = Normalize(value); var inserted = CountScalars(value.AsSpan()); if (start == end && inserted == 0) return;
+        List<Exception>? retirementErrors = null;
         var caretOffsets = _carets.Select(c => (Position: Offset(c.Position), Origin: Offset(c.Origin))).ToArray(); StartEdit();
         var prefix = Slice(_lines[from.Y].Text, 0, from.X); var suffix = Slice(_lines[to.Y].Text, to.X, _lines[to.Y].Scalars); var pieces = (prefix + value + suffix).Split('\n'); var first = _lines[from.Y];
-        if (to.Y > from.Y) { if (from.X == 0 && to.X == 0) { first.Gutters.Clear(); first.Gutters.AddRange(_lines[to.Y].Gutters.Select(c => c.Copy())); first.Background = _lines[to.Y].Background; } else MergeGutters(to.Y, from.Y); }
+        if (to.Y > from.Y) { if (from.X == 0 && to.X == 0) { first.ReleaseGutters(ref retirementErrors); first.Gutters.Clear(); first.Gutters.AddRange(_lines[to.Y].Gutters.Select(c => c.Copy())); first.Background = _lines[to.Y].Background; } else MergeGutters(to.Y, from.Y); }
         var carryGutters = from.X == 0 && from.Y == to.Y && pieces.Length > 1 ? first.Gutters.Select(c => c.Copy()).ToArray() : null; var carryBackground = first.Background;
+        for (var line = from.Y + 1; line <= to.Y; line++) _lines[line].Release(ref retirementErrors);
         _lines.RemoveRange(from.Y + 1, to.Y - from.Y); first.Text = pieces[0]; first.Scalars = CountScalars(first.Text.AsSpan());
         for (var i = 1; i < pieces.Length; i++) _lines.Insert(from.Y + i, NewLine(pieces[i]));
-        if (carryGutters != null) { var last = _lines[from.Y + pieces.Length - 1]; last.Gutters.Clear(); last.Gutters.AddRange(carryGutters); last.Background = carryBackground; first.Gutters.Clear(); for (var g = 0; g < _gutters.Count; g++) first.Gutters.Add(new()); first.Background = new(0, 0, 0, 0); }
+        if (carryGutters != null) { var last = _lines[from.Y + pieces.Length - 1]; last.ReleaseGutters(ref retirementErrors); last.Gutters.Clear(); last.Gutters.AddRange(carryGutters); last.Background = carryBackground; first.ReleaseGutters(ref retirementErrors); first.Gutters.Clear(); for (var g = 0; g < _gutters.Count; g++) first.Gutters.Add(new()); first.Background = new(0, 0, 0, 0); }
         int Shift(int position, bool before) => position < start || position == start && before ? position : position <= end ? start + inserted : position + inserted - (end - start);
         for (var i = 0; i < _carets.Count; i++)
         {
             if (i == excludedCaret) continue;
             var caret = _carets[i]; caret.Position = PositionAt(Shift(caretOffsets[i].Position, beforeEnd)); caret.Origin = PositionAt(Shift(caretOffsets[i].Origin, beforeBegin)); if (caret.Position == caret.Origin) caret.Selected = false;
         }
-        _version = ++_nextVersion; Changed(from.Y, Math.Max(to.Y, from.Y + pieces.Length - 1), true); FinishEdit();
+        _version = ++_nextVersion;
+        try { Changed(from.Y, Math.Max(to.Y, from.Y + pieces.Length - 1), true); FinishEdit(); } catch (Exception error) { CollectException(ref retirementErrors, error); }
+        ThrowCollected("Edited line cleanup failed.", retirementErrors);
     }
     /// <summary>Returns the number of logical lines, including an empty final line.</summary><returns>At least one.</returns>
     public int GetLineCount() { CheckTextEdit(); return _lines.Count; }
@@ -133,9 +137,10 @@ public partial class TextEdit
     public void Redo() { EnsureTextMutable(); EndAction(); if (_historyPosition + 1 == _history.Count) return; Restore(_history[++_historyPosition]); }
     private void Restore(History history)
     {
-        SetLines(history.Lines); _carets.Clear(); _carets.AddRange(history.Carets.Select(c => c.Copy())); _version = history.Version;
-        for (var line = 0; line < _lines.Count; line++) { var target = _lines[line]; target.Background = history.Backgrounds[line]; target.Gutters.Clear(); foreach (var gutter in _gutters) { var found = Array.Find(history.Gutters[line], entry => ReferenceEquals(entry.Identity, gutter)); target.Gutters.Add(found.Cell?.Copy() ?? new()); } }
-        Changed(0, _lines.Count - 1, true);
+        List<Exception>? errors = null; SetLines(history.Lines, ref errors); _carets.Clear(); _carets.AddRange(history.Carets.Select(c => c.Copy())); _version = history.Version;
+        for (var line = 0; line < _lines.Count; line++) { var target = _lines[line]; target.Background = history.Backgrounds[line]; target.ReleaseGutters(ref errors); target.Gutters.Clear(); foreach (var gutter in _gutters) { var found = Array.Find(history.Gutters[line], entry => ReferenceEquals(entry.Identity, gutter)); target.Gutters.Add(found.Cell?.Copy() ?? new()); } }
+        try { Changed(0, _lines.Count - 1, true); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Restored line cleanup failed.", errors);
     }
     /// <summary>Clears undo/redo history while retaining current text.</summary>
     public void ClearUndoHistory() { EnsureTextMutable(); _savedVersion = 0; _history.Clear(); _historyPosition = 0; _operationBefore = null; _complex = _multiEdit = 0; _action = EditAction.None; _history.Add(Snapshot()); }

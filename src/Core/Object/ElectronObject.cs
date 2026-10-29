@@ -385,6 +385,8 @@ public partial class ElectronObject : IDisposable
         {
             try
             {
+                try { ValidateDisposalTransition(); }
+                catch { Interlocked.CompareExchange(ref _disposeState, PreDeleteCanceled, PreDeleting); throw; }
                 DispatchNotification(NotificationPreDelete, reversed: true);
             }
             catch (Exception error)
@@ -508,6 +510,9 @@ public partial class ElectronObject : IDisposable
     protected virtual void ValidateDisposal()
     {
     }
+
+    // Close derived admission races after the atomic state transition, before user notifications or cleanup.
+    private protected virtual void ValidateDisposalTransition() { }
 
     /// <summary>Publishes the terminal disposed state for an instance whose derived construction cannot complete.</summary>
     /// <remarks>

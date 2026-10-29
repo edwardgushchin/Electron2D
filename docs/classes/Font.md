@@ -1,6 +1,6 @@
 # Font
 
-Last updated: 2026-10-21
+Last updated: 2026-10-29
 
 **Inherits:** [Resource](Resource.md) · **Source:** [Font.cs](../../src/Scene/Resources/Font.cs) · **Component:** [Text](../components/text.md)
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-21
 Abstract shared font contract implemented by [FontFile](FontFile.md). Fonts shape Unicode text, measure scalar clusters and draw at a baseline through a currently recording CanvasItem. Text is UTF-16 at the public boundary and Unicode scalar indices internally. The fallback array is copied and borrows its members; null slots and aliases are retained, cycles and excessive depth are rejected. A resource can be measured from another managed thread, but canvas operations still require its owner thread and draw scope.
 
 Single-line and multiline layout caches default to 64 and 16 entries. Changed font data or fallback revisions invalidate dependent layouts, including a missed public change callback. Active reads lease immutable native source snapshots and retry changed dependencies up to 64 times. Continually changing callbacks fail with InvalidOperationException; nested queries use independent reusable layout storage. Disposal invalidates the public font and releases native faces after their last reader, while already recorded glyph pixels remain usable through retained canvas commands. Fallback resources remain caller-owned. The base OpenType-feature query is empty by contract, distinct from FontFile shaping overrides. Coordinate and size queries preserve fractional advances until the specified final ceiling/rounding stages.
+
+Font metadata, measurement and drawing also use the selected external text implementation or the creator retained by an opaque projection. Captured native/opaque sources survive their active read; provider callbacks run without resource monitors. See [external implementations](../components/text-server.md#external-implementations).
 
 ## Example
 

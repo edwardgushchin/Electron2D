@@ -18,6 +18,20 @@ public partial class Font
             LiveFonts.Add(new(this));
         }
     }
+    internal static void InvalidateTextProviderCaches()
+    {
+        Font[] fonts;
+        lock (LiveFontsGate)
+        {
+            LiveFonts.RemoveAll(static weak => !weak.TryGetTarget(out var font) || font.IsDisposalCommitted);
+            fonts = LiveFonts.Select(weak => weak.TryGetTarget(out var font) ? font : null).OfType<Font>().ToArray();
+        }
+        List<Exception>? errors = null;
+        foreach (var font in fonts)
+            try { if (!font.IsDisposalCommitted) font.EmitFontChanged(); }
+            catch (Exception error) { (errors ??= []).Add(error); }
+        if (errors is not null) throw new AggregateException("Text provider cache invalidation callbacks failed.", errors);
+    }
     internal static void ClearSystemFontCaches()
     {
         if (Interlocked.Exchange(ref _clearingSystemFonts, 1) != 0) throw new InvalidOperationException("System font cache clearing is already active.");

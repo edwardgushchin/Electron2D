@@ -103,7 +103,7 @@ public partial class MenuBar : Control
                 for (var i = _menus.Count - 1; i >= 0; i--)
                 {
                     var item = _menus[i]; if (!item.Popup.IsDisposed && item.Popup.Parent == this && !item.Popup.IsInternalChild) continue;
-                    _menus.RemoveAt(i); Unwatch(item); if (_active == item) _active = null;
+                    _menus.RemoveAt(i); Unwatch(item); if (_active == item) _active = null; item.Layout.ReleaseContent(ref errors);
                     try { if (!item.Popup.IsDisposed && item.Popup.Visible) item.Popup.Hide(); } catch (Exception e) { CollectException(ref errors, e); }
                     if (IsDisposed) break;
                 }
@@ -163,7 +163,16 @@ public partial class MenuBar : Control
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing) { _disposing = true; foreach (var item in _menus) { Unwatch(item); } _menus.Clear(); _active = null; }
-        base.Dispose(disposing);
+        List<Exception>? errors = null;
+        if (disposing) { foreach (var menu in _menus) menu.Layout.ReleaseContent(ref errors); }
+        try
+        {
+            if (disposing) { _disposing = true; foreach (var item in _menus) { Unwatch(item); } _menus.Clear(); _active = null; }
+
+
+        }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
     }
 }

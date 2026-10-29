@@ -43,6 +43,7 @@ internal sealed partial class TextLayout
     private bool _caretsReady;
     internal (float? Leading, float? Trailing, TextDirection LeadingDirection, TextDirection TrailingDirection) Carets(int column)
     {
+        if (_providerLayout is not null) return ProviderCarets(column);
         if (!_caretsReady) PrepareCarets();
         return _carets[Math.Clamp(column, 0, _count)];
     }
@@ -77,6 +78,7 @@ internal sealed partial class TextLayout
     }
     internal int HitColumn(float position, bool midGrapheme)
     {
+        if (_providerLayout is not null) return ProviderHitLine(0, position, midGrapheme);
         var best = 0; var distance = float.PositiveInfinity;
         for (var column = 0; column <= _count; column++)
         {
@@ -88,8 +90,9 @@ internal sealed partial class TextLayout
         }
         return best;
     }
-    internal int HitLine(int lineIndex, float position)
+    internal int HitLine(int lineIndex, float position, bool midGrapheme = false)
     {
+        if (_providerLayout is not null) return ProviderHitLine(lineIndex, position, midGrapheme);
         var line = _lines[lineIndex]; position = Math.Clamp(position, -1, MathF.Ceiling(line.Width) + 1); var result = line.Start; var distance = double.PositiveInfinity;
         for (var i = line.GlyphStart; i < line.GlyphStart + line.GlyphCount;)
         {
@@ -114,6 +117,7 @@ internal sealed partial class TextLayout
     internal void SelectionRanges(int from, int to, List<Vector2> output)
     {
         output.Clear();
+        if (_providerLayout is not null) { ProviderSelectionRanges(from, to, output); return; }
         for (var i = 0; i < _glyphs.Count;)
         {
             var glyph = _glyphs[i]; var end = i + 1; var advance = glyph.Advance * glyph.Repeat;

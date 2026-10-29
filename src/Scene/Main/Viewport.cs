@@ -148,7 +148,7 @@ public abstract partial class Viewport : Node
             RenderingOwner?.ReleaseViewport(this);
             try { Picking?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
             Picking = null;
-            CanvasRasterScale.ChangeReference(_dpiScaleKey, 64); _dpiScaleKey = 64;
+            try { CanvasRasterScale.ChangeReference(ref _dpiScaleKey, 64); } catch (Exception error) { CollectException(ref errors, error); }
             ReleaseViewportRID();
             ReleaseViewportWorld();
             _publisherTextureSizeUpdated.Handlers = null;

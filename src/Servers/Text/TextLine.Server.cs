@@ -3,6 +3,16 @@ namespace Electron2D;
 public sealed partial class TextLine
 {
     private readonly List<TextBufferFont> _serverFonts = [];
+    internal void ServerSetBIDIOverride(ReadOnlySpan<TextBIDIRange> ranges)
+    {
+        if (_consumerOwner is null) { SetBIDIOverride(ranges); return; }
+        CheckMutation();
+        // Structured parser contexts may include empty or independent ranges; public authored lines retain full coverage.
+        foreach (var range in ranges)
+            if (range.Start < 0 || range.End < range.Start || range.End > _count || range.Direction is < TextDirection.Auto or > TextDirection.Inherited)
+                throw new ArgumentException("Structured BIDI contexts exceed the current scalar buffer.", nameof(ranges));
+        _bidi = ranges.ToArray(); _dirty = true;
+    }
     internal Action? ServerChanged, ServerGuard;
     internal int ServerOffset, ServerOuterScalars;
     internal ReadOnlyMemory<char> ServerPrefix, ServerSuffix;
@@ -135,7 +145,12 @@ public sealed partial class TextLine
         Check(); var text = _contentDirty ? _text.ToString() : _source;
         return text[ServerUTF16(from)..ServerUTF16(to)];
     }
-    private void ReleaseServerFonts() { foreach (var font in _serverFonts) font.Release(); _serverFonts.Clear(); }
+    private void ReleaseServerFonts()
+    {
+        List<Exception>? errors = null;
+        foreach (var font in _serverFonts) try { font.Release(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        _serverFonts.Clear(); if (errors is not null) throw new AggregateException("Text source font retirement failed.", errors);
+    }
     internal void ServerDraw(CanvasItem canvas, Vector2 baseline, float clipL, float clipR, int outline, Color color, float oversampling, bool outlinePass)
     {
         Check(); Font.ValidateDraw(canvas, baseline, color, oversampling);
@@ -161,6 +176,8 @@ internal sealed class TextBufferFont : Font
 {
     private readonly Font[] _fonts;
     private readonly NativeFontFeature[] _features;
+    internal ReadOnlySpan<Font> BorrowedFonts => _fonts;
+    internal readonly IReadOnlyDictionary<string, int>? FeatureOverrides;
     private readonly Dictionary<FontData, (NativeFontFeature[] Defaults, NativeFontFeature[] Values)> _compiled = [];
     private int _references = 1;
     private long _featureGeneration = -1;
@@ -169,6 +186,7 @@ internal sealed class TextBufferFont : Font
         if (fonts.Length == 0 || fonts.Length > 64) throw new ArgumentException("A text span requires one to sixty-four fonts.", nameof(fonts));
         foreach (var font in fonts) { ArgumentNullException.ThrowIfNull(font); if (font.IsDisposed) throw new ObjectDisposedException(nameof(fonts)); }
         if (features is { Count: > 4096 }) throw new ArgumentException("Too many OpenType features.", nameof(features));
+        FeatureOverrides = features is null ? null : new Dictionary<string, int>(features, StringComparer.Ordinal);
         _features = features is null ? [] : features.Select(pair => new NativeFontFeature(OpenTypeFeatureTags.Resolve(pair.Key), unchecked((uint)pair.Value))).ToArray();
         _fonts = fonts.ToArray();
     }

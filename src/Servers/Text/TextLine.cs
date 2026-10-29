@@ -18,6 +18,7 @@ public sealed class TextObjectKey
 public sealed partial class TextLine : ElectronObject
 {
     private sealed class NeutralFont : Font { internal override FontData? PrimaryData => null; }
+    internal static bool IsNeutralShapingFont(Font font) => font is NeutralFont;
     private sealed record Span(int At, int Length, Font Font, int Size, string Language, RichTextMetadata? Metadata);
     private sealed record Inline(TextObjectKey Key, int At, int Length, Vector2 Size, InlineAlignment Alignment, float Baseline);
     private readonly int _thread = Environment.CurrentManagedThreadId;
@@ -185,7 +186,26 @@ public sealed partial class TextLine : ElectronObject
         copy._objects.AddRange(_objects); foreach (var font in _fonts) copy._fonts.Add(ReferenceEquals(font, _neutral) ? copy._neutral : font); ServerCopyFonts(copy); ServerCopyFormatSettings(copy); copy.ServerOffset = ServerOffset; copy.ServerOuterScalars = ServerOuterScalars; copy.ServerPrefix = ServerPrefix; copy.ServerSuffix = ServerSuffix; return copy;
     }
     /// <summary>Removes content, objects and BIDI contexts while preserving RID, tabs and line policies.</summary>
-    public void Clear() { CheckMutation(); ServerDetachSubstring(); ServerReleaseSnapshot(); ServerOffset = ServerOuterScalars = 0; ServerPrefix = ServerSuffix = default; _text.Clear(); _spans.Clear(); ReleaseServerFonts(); _objects.Clear(); _fonts.Clear(); _bidi = []; _count = 0; _source = string.Empty; _styles = []; _inline = []; _full.ReleaseContent(); _display.ReleaseContent(); _serverRawWork = _serverDisplayWork = null; _dirty = _contentDirty = true; }
+    public void Clear()
+    {
+        CheckMutation(); _busy = true;
+        try
+        {
+            List<Exception>? errors = null; ReleaseOwnedContent(ref errors);
+            ServerOffset = ServerOuterScalars = 0; ServerPrefix = ServerSuffix = default; _text.Clear(); _spans.Clear(); _objects.Clear(); _fonts.Clear(); _generations.Clear();
+            _bidi = []; _count = 0; _source = string.Empty; _styles = []; _inline = []; _serverRawWork = _serverDisplayWork = null;
+            _serverFullFormatted = _serverFitMinimum = false; _dirty = _contentDirty = true;
+            if (errors is not null) throw new AggregateException("Text line clearing failed.", errors);
+        }
+        finally { _busy = false; }
+    }
+    private void ReleaseOwnedContent(ref List<Exception>? errors)
+    {
+        try { ServerDetachSubstring(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { ServerReleaseSnapshot(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        try { ReleaseServerFonts(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        _full.ReleaseContent(ref errors); _display.ReleaseContent(ref errors); _serverRawWork?.ReleaseContent(ref errors); _serverDisplayWork?.ReleaseContent(ref errors);
+    }
     private void Ensure()
     {
         Check(); if (_busy) throw new InvalidOperationException("Text buffer cannot reenter active layout work."); _busy = true;
@@ -205,8 +225,22 @@ public sealed partial class TextLine : ElectronObject
         }
         throw Font.UnsettledRead();
     }
-    private void BeginReads() { foreach (var font in _fonts) _reads.Add(font.BeginRead()); }
-    private void EndReads() { for (var i = _reads.Count - 1; i >= 0; i--) _reads[i].Dispose(); _reads.Clear(); }
+    private Font.GroupRead _fontGroup;
+    private bool _fontGroupActive;
+    private void BeginReads()
+    {
+        _fontGroup = Font.BeginReadGroup(_fonts); _fontGroupActive = true;
+        foreach (var font in _fonts) _reads.Add(font.BeginRead());
+    }
+    private void EndReads()
+    {
+        List<Exception>? errors = null;
+        for (var i = _reads.Count - 1; i >= 0; i--) try { _reads[i].Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        _reads.Clear();
+        if (_fontGroupActive) { _fontGroupActive = false; var group = _fontGroup; _fontGroup = default; try { group.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); } }
+        if (errors is not null) throw new AggregateException("Text font read cleanup failed.", errors);
+    }
+
     private bool ReadsCurrent() { foreach (var read in _reads) if (!read.IsCurrent) return false; return true; }
     private bool FontsChanged() { if (_generations.Count != _fonts.Count) return true; for (var i = 0; i < _fonts.Count; i++) if (_fonts[i].GetContentGeneration() != _generations[i]) return true; return false; }
     private void Prepare()
@@ -215,15 +249,20 @@ public sealed partial class TextLine : ElectronObject
         if (_contentDirty)
         {
             _source = _text.ToString(); _styles = new TextLayoutStyleSpan[_spans.Count]; _inline = new TextLayoutInlineObject[_objects.Count];
-            for (var i = 0; i < _spans.Count; i++) { var span = _spans[i]; _styles[i] = new(span.At, span.At + span.Length, span.Font, span.Size, span.Language, i); }
-            for (var i = 0; i < _objects.Count; i++) { var item = _objects[i]; _inline[i] = new(item.At, item.Size, item.Alignment, i, item.Baseline, item.Length, true); }
+            for (var i = 0; i < _spans.Count; i++) { var span = _spans[i]; _styles[i] = new(span.At, span.At + span.Length, span.Font, span.Size, span.Language, i, span.Metadata); }
+            for (var i = 0; i < _objects.Count; i++) { var item = _objects[i]; _inline[i] = new(item.At, item.Size, item.Alignment, i, item.Baseline, item.Length, true, item.Key); }
         }
         var ellipsis = _ellipsis.EnumerateRunes(); var symbol = ellipsis.MoveNext() ? ellipsis.Current.ToString() : "…";
         var direction = _direction is TextDirection.Auto or TextDirection.Inherited && (ServerPrefix.Length != 0 || ServerSuffix.Length != 0) ? ServerSourceDirection() : _direction;
         var key = new TextLayoutKey(_source, 16, _width, _alignment, 1, TextLineBreakFlags.None, _flags, direction, _orientation);
         var options = new TextLayoutOptions(Language: _spans.Count == 0 ? string.Empty : _spans[0].Language, TabStops: _tabs, Overrun: 0, Ellipsis: symbol, BIDIOverride: _bidi, ApplyAlignment: false, PreserveControl: _preserveControl, Styles: _styles, Objects: _inline, PreserveInvalid: _preserveInvalid, GlobalObjectMetrics: true, ServerBuffers: true, CustomPunctuation: ServerPunctuation, BufferGlyphSpacing: _serverSpacing[0], BufferSpaceSpacing: _serverSpacing[1], BufferTopSpacing: _serverSpacing[2], BufferBottomSpacing: _serverSpacing[3]);
-        _full.Build(_neutral, key, options); _display.Build(_neutral, key, options with { Overrun = (int)_overrun });
-        if (ServerShapingSource is { } original) original.ServerCopyShaping(this);
+        var original = ServerShapingSource;
+        if (original?.ServerLayout.UsesProvider == true)
+        {
+            _full.PrepareProviderContext(_neutral, key, options); _display.PrepareProviderContext(_neutral, key, options with { Overrun = (int)_overrun });
+        }
+        else { _full.Build(_neutral, key, options); _display.Build(_neutral, key, options with { Overrun = (int)_overrun }); }
+        original?.ServerCopyShaping(this);
         _serverFullFormatted = _full.ServerAdoptFormattedDisplay(_display);
         _generations.Clear(); foreach (var font in _fonts) _generations.Add(font.GetContentGeneration()); _dirty = _contentDirty = false; _revision++;
     }
@@ -249,8 +288,60 @@ public sealed partial class TextLine : ElectronObject
         var width = DisplayWidth(); var offset = _width <= 0 ? 0 : _alignment switch { HorizontalAlignment.Center when width <= _width => MathF.Floor((_width - width) * .5f), HorizontalAlignment.Center when _full.LineCount > 0 && _full.Lines[0].ParagraphLevel == 1 => _width - width, HorizontalAlignment.Right => _width - width, _ => 0 };
         return _orientation == TextOrientation.Horizontal ? new(offset, 0) : new(0, offset);
     }
-    private void Check() { if (Environment.CurrentManagedThreadId != _thread) throw new InvalidOperationException("TextLine belongs to its creating thread."); ThrowIfDisposed(); }
-    private void CheckMutation() { Check(); if (_busy) throw new InvalidOperationException("An active text buffer cannot mutate or dispose."); }
+    private TextServer? _consumerOwner;
+    internal TextServer? ServerInterfaceOwner;
+    internal bool ServerNativeBackend;
+    internal void BindConsumerOwner(TextServer owner) => _consumerOwner = owner;
+    internal void InvalidateConsumerShape() { CheckMutation(); _dirty = true; }
+    private void Check() { if (_consumerOwner is { } owner ? !TextServerManager.IsConsumerAdmitted(owner) : Environment.CurrentManagedThreadId != _thread) throw new InvalidOperationException("TextLine requires its creating thread or private engine admission."); ThrowIfDisposed(); }
+    private readonly object _serverGate = new();
+    private int _serverReaders, _serverReadThread, _serverMutationThread, _serverRetirementThread;
+    internal void AcquireServerRead()
+    {
+        lock (_serverGate)
+        {
+            Check(); ObjectDisposedException.ThrowIf(IsDisposed, this);
+            if (_busy || _serverMutationThread != 0 && _serverMutationThread != Environment.CurrentManagedThreadId || _serverRetirementThread != 0 || _serverReaders != 0 && _serverReadThread != Environment.CurrentManagedThreadId)
+                throw new InvalidOperationException("An active text buffer cannot reenter on another thread or retire.");
+            _serverReadThread = Environment.CurrentManagedThreadId; _serverReaders++;
+        }
+    }
+    internal void ReleaseServerRead() { lock (_serverGate) { if (--_serverReaders == 0) _serverReadThread = 0; } }
+    internal void AcquireServerMutation()
+    {
+        lock (_serverGate)
+        {
+            CheckMutation(); ObjectDisposedException.ThrowIf(IsDisposed, this);
+            if (_serverMutationThread != 0 || _serverRetirementThread != 0) throw new InvalidOperationException("An active text buffer cannot mutate or retire.");
+            _serverMutationThread = Environment.CurrentManagedThreadId;
+        }
+    }
+    internal void ReleaseServerMutation() { lock (_serverGate) _serverMutationThread = 0; }
+    internal void BeginServerRetirement()
+    {
+        lock (_serverGate)
+        {
+            CheckMutation();
+            if (_serverMutationThread != 0 || _serverRetirementThread != 0) throw new InvalidOperationException("An active text buffer cannot retire.");
+            _serverRetirementThread = Environment.CurrentManagedThreadId;
+        }
+    }
+    internal void EndServerRetirement() { lock (_serverGate) _serverRetirementThread = 0; }
+    internal void CheckServerMutation() => CheckMutation();
+    private void CheckMutation()
+    {
+        lock (_serverGate)
+        {
+            Check();
+            if (_busy || _serverReaders != 0 || _serverMutationThread != 0 && _serverMutationThread != Environment.CurrentManagedThreadId || _serverRetirementThread != 0 && _serverRetirementThread != Environment.CurrentManagedThreadId)
+                throw new InvalidOperationException("An active text buffer cannot mutate or dispose.");
+        }
+    }
+    private protected override void ValidateDisposalTransition()
+    {
+        base.ValidateDisposalTransition();
+        lock (_serverGate) if (_busy || _serverReaders != 0 || _serverMutationThread != 0) throw new InvalidOperationException("An active text buffer cannot dispose.");
+    }
     private static void ValidateEnum<T>(T value) where T : struct, Enum { if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
     private static void ValidateObject(TextObjectKey key, Vector2 size, InlineAlignment alignment, float baseline)
     { ArgumentNullException.ThrowIfNull(key); if (!size.IsFinite() || size.X < 0 || size.Y < 0 || !float.IsFinite(baseline)) throw new ArgumentException("Inline geometry must be finite and nonnegative."); if ((uint)alignment > 15) throw new ArgumentOutOfRangeException(nameof(alignment)); }
@@ -277,7 +368,15 @@ public sealed partial class TextLine : ElectronObject
     /// <inheritdoc />
     protected override void ValidateDisposal() { CheckMutation(); base.ValidateDisposal(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { TextBuffers.Remove(_rid); ServerDetachSubstring(); ServerReleaseSnapshot(); ReleaseServerFonts(); _neutral.Dispose(); _full = null!; _display = null!; _serverRawWork = _serverDisplayWork = null; _source = string.Empty; _text.Clear(); _text.Capacity = 0; _spans.Clear(); _objects.Clear(); _fonts.Clear(); _reads.Clear(); _styles = []; _inline = []; _tabs = []; _bidi = []; base.Dispose(disposing); }
+    protected override void Dispose(bool disposing)
+    {
+        TextBuffers.Remove(_rid); _busy = true; List<Exception>? errors = null; ReleaseOwnedContent(ref errors);
+        try { _neutral.Dispose(); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        _full = null!; _display = null!; _serverRawWork = _serverDisplayWork = null; _source = string.Empty; _text.Clear(); _text.Capacity = 0;
+        _spans.Clear(); _objects.Clear(); _fonts.Clear(); _generations.Clear(); _reads.Clear(); _styles = []; _inline = []; _tabs = []; _bidi = [];
+        try { base.Dispose(disposing); } catch (Exception error) { Node.CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text line disposal failed.", errors);
+    }
 }
 
 internal static class TextBuffers

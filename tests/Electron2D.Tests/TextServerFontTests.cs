@@ -24,6 +24,8 @@ internal static class TextServerFontTests
             var oldRoot = root; s.FreeRID(root); root = default;
             Check(!s.Has(oldRoot) && view.IsDisposed && s.Has(a) && s.Has(b), "Base source retirement preserves independent linked entries.");
             Check(s.FontGetSpacing(a, TextSpacingType.Glyph) == -3 && s.FontGetBaselineOffset(a) == .25f, "Independent link state survives source retirement.");
+            s.FontSetSpacing(a, TextSpacingType.Glyph, 4); s.FontSetBaselineOffset(a, .75f);
+            Check(s.FontGetSpacing(a, TextSpacingType.Glyph) == 4 && s.FontGetBaselineOffset(a) == .75f, "Surviving link state remains editable after root retirement.");
             Reject<InvalidOperationException>(() => s.FontGetName(a)); Reject<InvalidOperationException>(() => s.CreateFontLinkedVariation(b));
             Reject<ObjectDisposedException>(() => linked.GetStringSize("retired"));
             Check(duplicate.GetStringSize("copy", fontSize: 28).X == width, "Duplicate source snapshot survives service retirement.");
@@ -116,7 +118,9 @@ internal static class TextServerFontTests
         {
             var root = s.CreateFont(); RID link = default; using var start = new Barrier(2);
             var create = Task.Run(() => { start.SignalAndWait(); try { link = s.CreateFontLinkedVariation(root); } catch (InvalidOperationException) { } });
-            start.SignalAndWait(); s.FreeRID(root); create.GetAwaiter().GetResult();
+            start.SignalAndWait();
+            try { s.FreeRID(root); } catch (InvalidOperationException) { }
+            create.GetAwaiter().GetResult(); if (s.Has(root)) s.FreeRID(root);
             Check(!s.Has(root), "Concurrent root retirement closes the root identity.");
             if (link != default)
             {

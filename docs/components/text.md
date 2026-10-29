@@ -162,3 +162,6 @@ The [owned font-cache producer](text-server.md#owned-font-sources-and-caches) re
 LineEdit supplies a lazy borrowed context menu, stored ContextMenuEnabled, ordinary right-click/ui_menu routing and typed direction/Unicode submenu IDs. Runtime customization remains outside scene storage. Native tooltip/context and live-policy integration follows [the accessibility contract](../classes/AccessibilityServer.md#native-live-and-popups).
 
 [Accessible GUI drag and custom native actions](../classes/AccessibilityServer.md#custom-actions-and-accessible-drag) connect focused keyboard commands, typed source/target payloads, preview ownership, source context and native callbacks. LineEdit rejects incomplete capacity before consuming data; text caret/history and intrinsic read-only guards remain active.
+
+
+[External text implementations](text-server.md#external-implementations) now drive the shared Font, retained line/paragraph and GUI layout/drawing paths through typed callbacks. Opaque font projections and buffers preserve their creating implementation, while inherited callbacks reuse the native backend. Registry, source, buffer, raster-scale and error lifetimes are described in the owning component.

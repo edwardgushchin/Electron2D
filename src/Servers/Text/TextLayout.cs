@@ -41,10 +41,13 @@ internal sealed partial class TextLayout
     private (float Ascent, float Descent, float UnderlinePosition, float UnderlineThickness) _shapeFontMetrics;
     private int _active;
     private long _builtFontGeneration = -1;
-    internal bool IsBusy => _active != 0;
+    private int _cachedUsers;
+    internal bool IsBusy => _active != 0 || _cachedUsers != 0;
+    internal void ClaimCachedUse() { if (IsBusy) throw new InvalidOperationException("A cached layout is already in use."); _cachedUsers++; }
+    internal void ReleaseCachedUse() { if (_cachedUsers != 1) throw new InvalidOperationException("A cached layout has no matching reader."); _cachedUsers--; }
     private readonly record struct Run(int Start, int End, FontData? Face, UnicodeScript Script, sbyte Level);
     private readonly record struct Glyph(FontData? Face, uint Index, int Start, int End, float Advance, Vector2 Offset,
-        uint Flags, bool Space, bool Tab, bool RTL, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0, RID SourceRID = default, bool Ellipsis = false)
+        uint Flags, bool Space, bool Tab, bool RTL, int Repeat = 1, bool Virtual = false, bool Missing = false, bool Elongation = false, int Size = 0, int ObjectIndex = -1, float ObjectAscent = 0, float ObjectDescent = 0, RID SourceRID = default, bool Ellipsis = false, TextGraphemeFlags? ProviderFlags = null, int? ProviderCount = null, int? ProviderSpanIndex = null)
     {
         internal Vector2 Position { get; init; }
     }
@@ -64,32 +67,42 @@ internal sealed partial class TextLayout
 
     internal void Build(Font font, TextLayoutKey key, TextLayoutOptions? options = null)
     {
-        if (IsBusy) throw new InvalidOperationException("An active text layout cannot rebuild itself.");
+        if (_active != 0) throw new InvalidOperationException("An active text layout cannot rebuild itself.");
         _active++;
         try
         {
-            BeginRichBuild(font, options);
             for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
             {
-                using var read = font.BeginRead();
+                Exception? failure = null;
                 try
                 {
-                    BuildCore(font, key, options);
-                    if (read.IsCurrent) { _builtFontGeneration = read.Generation; return; }
+                    BeginRichBuild(font, options);
+                    var read = font.BeginRead(); Exception? readFailure = null;
+                    try
+                    {
+                        BuildCore(font, key, options, read);
+                        if (read.IsCurrent && RichReadsCurrent()) { _builtFontGeneration = read.Generation; return; }
+                    }
+                    catch (ObjectDisposedException) when (!read.IsCurrent || !RichReadsCurrent()) { }
+                    catch (Exception error) { readFailure = error; throw; }
+                    finally { read.Dispose(readFailure); }
                 }
-                catch (ObjectDisposedException) when (!read.IsCurrent) { }
+                catch (Exception error) { failure = error; throw; }
+                finally { EndRichBuild(failure); }
             }
             throw Font.UnsettledRead();
         }
-        finally { try { EndRichBuild(); } finally { _active--; } }
+        finally { _active--; }
     }
 
-    private void BuildCore(Font font, TextLayoutKey key, TextLayoutOptions? options)
+    private void BuildCore(Font font, TextLayoutKey key, TextLayoutOptions? options, Font.ReadScope rootRead)
     {
         _font = font; _options = options ?? new TextLayoutOptions(Overrun: 1, VisibleCharacters: -1);
         Key = key; _caretsReady = false; _serverCharactersReady = false; _glyphs.Clear(); _rawGlyphs.Clear(); _lines.Clear(); Size = Vector2.Zero;
         Decode(key.Text); CharacterCount = _count; PrepareRichStyles(); PrepareCustomPunctuation(); if (_options.ServerBuffers) PrepareStyleBreaks();
         if (_options.VisibleBehavior == 0 && _options.VisibleCharacters >= 0) _count = Math.Min(_count, _options.VisibleCharacters);
+        if (TextServerManager.CallbackProvider is { } provider) { BuildProviderLayout(provider, rootRead); return; }
+        ReleaseProviderLayout();
         ResolveProperties(); MeasureParagraphs(); BreakLines(); NaturalWidth = 0;
         foreach (var line in _lines) NaturalWidth = Math.Max(NaturalWidth, MathF.Ceiling(line.Width));
         TransformLines(); PositionLines(); if (_options.ServerBuffers) PrepareServerWrapping();
@@ -163,12 +176,12 @@ internal sealed partial class TextLayout
             if (emoji) script = 0x5A737965;
             FontData? face = null;
             for (var tier = -1; tier <= 2 && face is null; tier++) foreach (var source in sources)
-            {
-                if (ReferenceEquals(source, primary) ? tier != -1 : tier != source.FallbackPriority(language, script, emoji)) continue;
-                var supported = true;
-                for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
-                if (supported) { face = source; break; }
-            }
+                {
+                    if (ReferenceEquals(source, primary) ? tier != -1 : tier != source.FallbackPriority(language, script, emoji)) continue;
+                    var supported = true;
+                    for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
+                    if (supported) { face = source; break; }
+                }
             if (face == null)
                 foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), style.Language, style.Font) is { } fallback) { face = fallback; break; }
             for (var i = start; i < end; i++)
@@ -669,30 +682,30 @@ internal sealed partial class TextLayout
     private void PrepareJustificationGlyphs(int start, int end, bool word, bool kashida)
     {
         if (word) for (var i = 0; i < _lineGlyphs.Count; i++)
-        {
-            var glyph = _lineGlyphs[i];
-            if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
-            var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
-            _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); i++;
-        }
+            {
+                var glyph = _lineGlyphs[i];
+                if (glyph.Start <= start || glyph.Start >= end || !_wordEnds[glyph.Start] || glyph.Space || glyph.Virtual || IsCustomPunctuation(new Rune(_scalars[glyph.Start]))) continue;
+                var adjacent = !glyph.RTL ? i - 1 : i + 1; if (adjacent >= 0 && adjacent < _lineGlyphs.Count && _lineGlyphs[adjacent].Space) continue;
+                _lineGlyphs.Insert(i, new(glyph.Face, 0, glyph.Start, glyph.End, 0, Vector2.Zero, 0, true, false, glyph.RTL, Virtual: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); i++;
+            }
         if (!kashida) return;
         for (var wordStart = start; wordStart < end;)
         {
             var wordEnd = wordStart + 1; while (wordEnd < end && !_wordBoundaries[wordEnd]) wordEnd++;
             var position = _wordEnds[wordEnd] ? TextJustification.FindKashida(_scalars.AsSpan(0, _count), wordStart, wordEnd) : -1;
             if (position >= 0) for (var i = 0; i < _lineGlyphs.Count; i++)
-            {
-                var glyph = _lineGlyphs[i]; if (glyph.Start != position || glyph.End <= glyph.Start || glyph.Face is null) continue;
-                if (glyph.Elongation) break;
-                if (_scalars[position] == 0x0640) { _lineGlyphs[i] = glyph with { Elongation = true }; break; }
-                if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
-                var style = StyleAt(glyph.Start); _shaped.Clear();
-                glyph.Face.Shape(ServerTatweelScalar, 0, 1, GlyphSize(glyph), NativeTextDirection.RTL, TextScript.ToTag(UnicodeScript.Arabic), style.Language, _shaped, features: style.Font.GetShapingFeatures(glyph.Face), textLength: 1);
-                if (_shaped.Count == 0 || _shaped[0].GlyphIndex == 0) break;
-                var shaped = _shaped[0]; var advance = (Key.Orientation == TextOrientation.Horizontal ? shaped.XAdvance : -shaped.YAdvance) / 64f;
-                var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(shaped.XOffset / 64f, glyph.Offset.Y) : new Vector2(glyph.Offset.X, -shaped.YOffset / 64f);
-                _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); break;
-            }
+                {
+                    var glyph = _lineGlyphs[i]; if (glyph.Start != position || glyph.End <= glyph.Start || glyph.Face is null) continue;
+                    if (glyph.Elongation) break;
+                    if (_scalars[position] == 0x0640) { _lineGlyphs[i] = glyph with { Elongation = true }; break; }
+                    if (i > 0 && (_lineGlyphs[i - 1].Flags & 4) == 0) continue;
+                    var style = StyleAt(glyph.Start); _shaped.Clear();
+                    glyph.Face.Shape(ServerTatweelScalar, 0, 1, GlyphSize(glyph), NativeTextDirection.RTL, TextScript.ToTag(UnicodeScript.Arabic), style.Language, _shaped, features: style.Font.GetShapingFeatures(glyph.Face), textLength: 1);
+                    if (_shaped.Count == 0 || _shaped[0].GlyphIndex == 0) break;
+                    var shaped = _shaped[0]; var advance = (Key.Orientation == TextOrientation.Horizontal ? shaped.XAdvance : -shaped.YAdvance) / 64f;
+                    var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(shaped.XOffset / 64f, glyph.Offset.Y) : new Vector2(glyph.Offset.X, -shaped.YOffset / 64f);
+                    _lineGlyphs.Insert(i, new(glyph.Face, shaped.GlyphIndex, glyph.Start, glyph.End, advance, offset, shaped.Flags, false, false, glyph.RTL, 0, true, Elongation: true, Size: GlyphSize(glyph), SourceRID: glyph.SourceRID)); break;
+                }
             wordStart = wordEnd;
         }
     }
@@ -732,15 +745,22 @@ internal sealed partial class TextLayout
     internal void Draw(CanvasItem canvas, Vector2 baseline, Color color, int outline = 0, float oversampling = 0,
         int firstLine = 0, int maxLines = -1, int visibleCharacters = -1, int visibleBehavior = 1, bool outlinePass = false, bool clipToWidth = false, Rect2? clipRect = null, ReadOnlySpan<Color> characterColors = default, float clipStart = 0, bool ignoreLineLimit = false, float? advanceClipWidth = null, float advanceClipLeft = -1, float advanceClipRight = -1)
     {
-        if (IsBusy) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
+        if (_active != 0) throw new InvalidOperationException("An active text layout cannot record itself recursively.");
+        using var group = Font.BeginReadGroup(_richReadFonts, _font);
         for (var attempt = 0; attempt < Font.MaximumReadAttempts; attempt++)
         {
-            using var read = _font.BeginRead();
-            if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
-            if (!read.IsCurrent) continue;
-            _active++;
-            try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors, clipStart, ignoreLineLimit, advanceClipWidth, advanceClipLeft, advanceClipRight); return; }
-            finally { _active--; }
+            var read = _font.BeginRead(); Exception? readFailure = null;
+            try
+            {
+                if (_builtFontGeneration != read.Generation) { Build(_font, Key, _options); continue; }
+                if (!read.IsCurrent) continue;
+                _active++;
+                try { DrawCore(canvas, baseline, color, outline, oversampling, firstLine, maxLines, visibleCharacters, visibleBehavior, outlinePass, clipToWidth, clipRect, characterColors, clipStart, ignoreLineLimit, advanceClipWidth, advanceClipLeft, advanceClipRight); return; }
+                finally { _active--; }
+
+            }
+            catch (Exception scopeError) { readFailure = scopeError; throw; }
+            finally { read.Dispose(readFailure); }
         }
         throw Font.UnsettledRead();
     }
@@ -758,6 +778,21 @@ internal sealed partial class TextLayout
         var clipWidth = advanceClipWidth ?? Key.Width;
         var end = ignoreLineLimit || Key.MaxLines < 0 ? _lines.Count : Math.Min(Key.MaxLines, _lines.Count);
         if (maxLines >= 0) end = Math.Min(end, firstLine + maxLines);
+        if (_providerLayout is { } providerState && visibleCharacters < 0 && characterColors.IsEmpty)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(providerState.Owner);
+            var stateUse = providerState.BeginUse(); Exception? stateUseFailure = null;
+            try
+            {
+                using var recordingClip = canvas.BeginTextRecordingClip(clipRect);
+                DrawProviderLines(providerState, canvas, baseline, color, outline, oversampling, firstLine, end, outlinePass,
+                    clipToWidth, clipWidth, clipStart, advanceClipLeft, advanceClipRight);
+                return;
+
+            }
+            catch (Exception scopeError) { stateUseFailure = scopeError; throw; }
+            finally { stateUse.Dispose(stateUseFailure); }
+        }
         var first = _lines[firstLine];
         var origin = baseline - (Key.Orientation == TextOrientation.Horizontal ? new Vector2(0, first.CrossOffset + first.Ascent) : new Vector2(first.CrossOffset + first.Ascent, 0));
         var budget = 0; var totalGlyphs = 0;
@@ -775,7 +810,7 @@ internal sealed partial class TextLayout
                     if (visibleBehavior <= 1 ? glyph.End > visibleCharacters : reverse ? budget < totalGlyphs - visibleCharacters : budget >= visibleCharacters) { budget++; continue; }
                 }
                 budget++;
-                if ((!glyph.Missing && (glyph.Face is null || glyph.Index == 0)) || glyph.Tab || glyph.Virtual && glyph.Index == 0) continue;
+                if ((!glyph.Missing && ((glyph.Face is null && _providerLayout is null) || glyph.Index == 0)) || glyph.Tab || glyph.Virtual && glyph.Index == 0) continue;
                 if (glyph.Missing && OutsideAdvanceClip(glyph, 0, advanceClipLeft, advanceClipRight)) continue;
                 if (glyph.Missing)
                 {
@@ -793,6 +828,11 @@ internal sealed partial class TextLayout
                     }
                     var offset = Key.Orientation == TextOrientation.Horizontal ? new Vector2(repeat * glyph.Advance, 0) : new Vector2(0, repeat * glyph.Advance);
                     var position = origin + glyph.Position + offset;
+                    if (_providerLayout is { } state)
+                    {
+                        DrawProviderGlyph(state, canvas, glyph, position, glyphColor, outline, oversampling, outlinePass, clipRect);
+                        continue;
+                    }
                     var image = glyph.Face!.GetGlyph(glyph.Index, GlyphSize(glyph), outline, oversampling, position, out var rasterPosition, canvas.FontRasterScale);
                     DrawGlyph(canvas, image, rasterPosition, glyphColor, !outlinePass && glyph.Face.ModulateColorGlyphs, clipRect);
                 }

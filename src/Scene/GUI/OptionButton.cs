@@ -82,8 +82,10 @@ public partial class OptionButton : Button
     private void Reconcile()
     {
         if (_disposing || IsDisposed) return; var index = _selectedItem is null ? -1 : _popup.FindMenuItem(_selectedItem); if (index != _selected) { _selected = index; _selectionRevision++; }
+        List<Exception>? errors = null;
+        while (_itemLayouts.Count > _popup.ItemCount) { _itemLayouts[^1].ReleaseContent(ref errors); _itemLayouts.RemoveAt(_itemLayouts.Count - 1); }
         if (index < 0) _selectedItem = null;
-        Text = index < 0 ? "" : _popup.GetItemText(index); Icon = index < 0 ? null : _popup.GetItemIcon(index);
+        Text = index < 0 ? "" : _popup.GetItemText(index); Icon = index < 0 ? null : _popup.GetItemIcon(index); ThrowCollected("Option layout cleanup failed.", errors);
     }
     /// <summary>Removes one record, retaining selection by identity or clearing a removed selection.</summary><param name="index">A nonnegative index.</param>
     public void RemoveItem(int index) { EnsureMutable(); MutateItems(() => _popup.RemoveItem(index)); }
@@ -155,5 +157,11 @@ public partial class OptionButton : Button
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(OptionButton) ? CreateOptionButton : base.CreateSceneInstanceFactory();
     private static Node CreateOptionButton() => new OptionButton();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposing = true; _publisherItemSelected.Handlers = null; _publisherItemFocused.Handlers = null; _selectedItem = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        if (disposing) { _disposing = true; foreach (var layout in _itemLayouts) layout.ReleaseContent(ref errors); _itemLayouts.Clear(); _publisherItemSelected.Handlers = null; _publisherItemFocused.Handlers = null; _selectedItem = null; }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Option layout cleanup failed.", errors);
+    }
 }

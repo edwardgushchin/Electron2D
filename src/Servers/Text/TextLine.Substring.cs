@@ -11,6 +11,22 @@ public sealed partial class TextLine
     }
     private SubstringSource? _serverSubstring, _serverSliceSnapshot;
     internal TextLine? ServerShapingSource => _serverSubstring?.Source;
+    internal TextLine ServerDuplicate()
+    {
+        var copy = Duplicate();
+        if (_consumerOwner is { } owner) copy.BindConsumerOwner(owner);
+        try
+        {
+            if (_full.UsesProvider || _serverFullFormatted)
+            {
+                copy.Ensure(); _full.ServerCopyFormatting(copy._full, false); _display.ServerCopyFormatting(copy._display, false);
+                copy._serverFullFormatted = _serverFullFormatted;
+                copy._serverFitMinimum = _serverFitMinimum;
+            }
+            return copy;
+        }
+        catch (Exception failure) { try { copy.Dispose(); } catch (Exception cleanup) { throw new AggregateException(failure, cleanup); } throw; }
+    }
     internal void ServerAttachSubstring(TextLine source, RID parent)
     {
         source.Ensure(); source._busy = true;
@@ -19,13 +35,8 @@ public sealed partial class TextLine
             source.BeginPreparedReads();
             if (source._serverSliceSnapshot is null)
             {
-                var snapshot = source.Duplicate();
-                try
-                {
-                    if (source._serverFullFormatted) { snapshot.Ensure(); source._full.ServerCopyFormatting(snapshot._full, false); source._full.ServerCopyFormatting(snapshot._display, false); snapshot._serverFullFormatted = true; }
-                    source._serverSliceSnapshot = new(snapshot);
-                }
-                catch { snapshot.Dispose(); throw; }
+                var snapshot = source.ServerDuplicate();
+                source._serverSliceSnapshot = new(snapshot);
             }
             _serverSubstring = source._serverSliceSnapshot; _serverSubstring.References++; ServerParent = parent;
             foreach (var font in _serverSubstring.Source._fonts) if (!_fonts.Contains(font)) _fonts.Add(font);
@@ -41,7 +52,7 @@ public sealed partial class TextLine
         var lease = _serverSubstring!; _serverSubstring = null; ServerParent = default; _fonts.Clear(); _fonts.AddRange(fonts);
         _fonts.Sort(static (a, b) => a.InstanceID.CompareTo(b.InstanceID)); _dirty = true; _generations.Clear(); lease.Release();
     }
-    private void ServerReleaseSnapshot() { _serverSliceSnapshot?.Release(); _serverSliceSnapshot = null; }
+    private void ServerReleaseSnapshot() { var snapshot = _serverSliceSnapshot; _serverSliceSnapshot = null; snapshot?.Release(); }
     private void ServerCopyShaping(TextLine target)
     {
         Ensure(); _busy = true;

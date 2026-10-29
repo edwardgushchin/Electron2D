@@ -1,6 +1,6 @@
 # TextLine
 
-Last updated: 2026-10-23
+Last updated: 2026-10-29
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -17,6 +17,8 @@ A retained standalone single line built from borrowed font/size/language segment
 Default policies are Left/Auto/Horizontal, width minus one, ellipsis character, Kashida plus WordBound flags, TrimEllipsis, PreserveInvalid true and PreserveControl false. Nonpositive finite widths are unlimited. Invalid typed inputs throw before authoring; empty text succeeds without adding a span, duplicate/missing object keys return false. Source expansion is bounded to 1,048,576 Unicode scalars and 64 MiB UTF-16.
 
 Display width/size use ceiled trimmed metrics; ascent/descent are fractional. Full-buffer carets and inline rectangles survive display trimming. Object rectangles include display alignment; hit coordinates are baseline advance-axis offsets. Supplementary characters count as one scalar. One object may represent several replacement scalars with one geometric advance. Empty and inline-only buffers need no caller font. Clear removes source/objects/BIDI ranges while retaining identity, tabs and policies; Duplicate owns a distinct buffer and copies all authored/policy state while sharing borrowed font/key/payload values.
+
+Shared layout and drawing use the selected text implementation, including opaque fonts, producer editing/run/object metadata and contextual copies. Disposal releases private provider buffers. See [external implementations](../components/text-server.md#external-implementations).
 
 ## Example
 

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Electron2D.TextFormatting.Unicode;
 
 namespace Electron2D;
@@ -22,6 +23,7 @@ internal sealed partial class TextLayout
     }
     internal int[] ServerCharacterBreaks(int start, int end, int offset)
     {
+        if (_providerLayout is not null) return ProviderCharacterBreaks(start, end, offset);
         PrepareServerCharacters(); var count = 0;
         foreach (var at in _serverCharacters) if (at > start && at <= end) count++;
         var result = new int[count]; count = 0;
@@ -30,6 +32,7 @@ internal sealed partial class TextLayout
     }
     internal int ServerCharacterPosition(int start, int end, int offset, int position, int mode)
     {
+        if (_providerLayout is not null) return ProviderCharacterPosition(start, end, offset, position, mode);
         PrepareServerCharacters(); var previous = start + offset;
         foreach (var local in _serverCharacters)
         {
@@ -52,6 +55,13 @@ internal sealed partial class TextLayout
     internal int ServerHitGrapheme(int line, float coordinate)
     {
         if ((uint)line >= (uint)_lines.Count) return -1;
+        if (_providerLayout is { } state)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            var rid = state.Lines[line]; var result = state.Owner.ShapedTextHitTestGrapheme(rid, coordinate);
+            if (result < -1 || result >= state.Owner.ShapedTextGetGlyphCount(rid)) throw new InvalidOperationException("The text implementation returned an invalid glyph hit index.");
+            return result;
+        }
         var metrics = _lines[line]; var pen = 0f;
         for (var i = metrics.GlyphStart; i < metrics.GlyphStart + metrics.GlyphCount; i++)
         { var advance = _glyphs[i].Advance * _glyphs[i].Repeat; if (coordinate >= pen && coordinate < pen + advance) return i - metrics.GlyphStart; pen += advance; }
@@ -61,6 +71,13 @@ internal sealed partial class TextLayout
     {
         if ((uint)line >= (uint)_lines.Count) return null;
         var metrics = _lines[line];
+        if (_providerLayout is { } state)
+        {
+            if (position < metrics.Start || position > metrics.End) return null;
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            var global = checked((int)position + state.ScalarOffset);
+            return ProviderPosition(next ? state.Owner.ShapedTextNextGraphemePos(state.Lines[line], global) : state.Owner.ShapedTextPrevGraphemePos(state.Lines[line], global), state, metrics.Start, metrics.End);
+        }
         for (var i = metrics.GlyphStart; i < metrics.GlyphStart + metrics.GlyphCount; i++)
         { var g = _glyphs[i]; if (next ? position >= g.Start && position < g.End : position > g.Start && position <= g.End) return next ? g.End : g.Start; }
         return null;
@@ -68,6 +85,13 @@ internal sealed partial class TextLayout
     internal Vector2 ServerGraphemeBounds(int line, long position)
     {
         if ((uint)line >= (uint)_lines.Count) return default;
+        if (_providerLayout is { } state)
+        {
+            if (position < _lines[line].Start || position > _lines[line].End) return default;
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            var bounds = state.Owner.ShapedTextGetGraphemeBounds(state.Lines[line], checked((int)position + state.ScalarOffset));
+            if (!bounds.IsFinite()) throw new InvalidOperationException("The text implementation returned nonfinite grapheme bounds."); return bounds;
+        }
         var metrics = _lines[line]; var pen = 0f; var limit = metrics.GlyphStart + metrics.GlyphCount;
         for (var i = metrics.GlyphStart; i < limit;)
         {
@@ -80,6 +104,8 @@ internal sealed partial class TextLayout
     internal bool ServerVisible(int line)
     {
         if ((uint)line >= (uint)_lines.Count) return false;
+        if (_providerLayout is { } state)
+        { using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse(); return state.Owner.ShapedTextHasVisibleChars(state.Lines[line]); }
         var metrics = _lines[line];
         for (var i = metrics.GlyphStart; i < metrics.GlyphStart + metrics.GlyphCount; i++) if (_glyphs[i].Index != 0 && !_glyphs[i].Virtual) return true;
         return false;
@@ -87,6 +113,12 @@ internal sealed partial class TextLayout
     internal TextDirection ServerDominantDirection(int line, long from, long to)
     {
         if ((uint)line >= (uint)_lines.Count) return TextDirection.Auto;
+        if (_providerLayout is { } state)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            var result = state.Owner.ShapedTextGetDominantDirectionInRange(state.Lines[line], checked((int)Math.Clamp(from, 0, _count) + state.ScalarOffset), checked((int)Math.Clamp(to, 0, _count) + state.ScalarOffset));
+            if (result is not (TextDirection.Auto or TextDirection.LTR or TextDirection.RTL)) throw new InvalidOperationException("The text implementation returned an invalid dominant direction."); return result;
+        }
         if (from > to) (from, to) = (to, from);
         if (from == to) return TextDirection.Auto;
         var metrics = _lines[line]; var ltr = 0; var rtl = 0; var limit = metrics.GlyphStart + metrics.GlyphCount;
@@ -94,12 +126,21 @@ internal sealed partial class TextLayout
         { var glyph = _glyphs[i]; if (glyph.Start < to && glyph.End > from) { if (glyph.RTL) rtl++; else ltr++; } i = ServerClusterEnd(i, limit, out _); }
         return ltr == rtl ? TextDirection.Auto : ltr > rtl ? TextDirection.LTR : TextDirection.RTL;
     }
-    internal Vector2[] ServerSelection(int line, long from, long to)
+    private readonly List<Vector2> _serverSelectionRanges = [];
+    internal ReadOnlySpan<Vector2> ServerSelection(int line, long from, long to)
     {
         if ((uint)line >= (uint)_lines.Count) return [];
         if (from == to) return [];
         if (from > to) (from, to) = (to, from);
-        var ranges = new List<Vector2>(); var metrics = _lines[line]; var pen = 0f; var limit = metrics.GlyphStart + metrics.GlyphCount;
+        var ranges = _serverSelectionRanges; ranges.Clear();
+        if (_providerLayout is { } state)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            using var selection = state.Owner.ReadSelection(state.Lines[line], checked((int)Math.Clamp(from, 0, _count) + state.ScalarOffset), checked((int)Math.Clamp(to, 0, _count) + state.ScalarOffset));
+            foreach (var range in selection.Ranges) ranges.Add(range);
+            return CollectionsMarshal.AsSpan(ranges);
+        }
+        var metrics = _lines[line]; var pen = 0f; var limit = metrics.GlyphStart + metrics.GlyphCount;
         for (var i = metrics.GlyphStart; i < limit;)
         {
             var glyph = _glyphs[i]; var next = ServerClusterEnd(i, limit, out var advance);
@@ -113,7 +154,7 @@ internal sealed partial class TextLayout
             }
             pen += advance; i = next;
         }
-        return ranges.ToArray();
+        return CollectionsMarshal.AsSpan(ranges);
     }
     private Rect2 ServerCaretRect(float advance, float cross, float advanceSize, float crossSize) => Key.Orientation == TextOrientation.Horizontal
         ? new(advance, cross, advanceSize, crossSize) : new(cross, advance, crossSize, advanceSize);
@@ -121,6 +162,11 @@ internal sealed partial class TextLayout
     {
         if ((uint)line >= (uint)_lines.Count) return default;
         if (position < rangeStart || position > rangeEnd) return default;
+        if (_providerLayout is { } state)
+        {
+            using var consumer = TextServerManager.BeginConsumerRead(state.Owner); using var use = state.BeginUse();
+            return state.Owner.ShapedTextGetCarets(state.Lines[line], checked((int)position + state.ScalarOffset));
+        }
         var metrics = _lines[line]; var height = metrics.Height; var half = height * .5f; var pen = 0f; var limit = metrics.GlyphStart + metrics.GlyphCount;
         Rect2 leading = default, trailing = default; var leadingDirection = TextDirection.Auto; var trailingDirection = TextDirection.Auto;
         for (var i = metrics.GlyphStart; i < limit;)

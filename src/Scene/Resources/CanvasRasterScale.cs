@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-internal static class CanvasRasterScale
+internal static partial class CanvasRasterScale
 {
     internal sealed class ScaleLevel
     {
@@ -23,28 +23,46 @@ internal static class CanvasRasterScale
     private static readonly object ScaleGate = new();
     private static Dictionary<int, ScaleLevel> _scales = [];
     internal static int Quantize(float scale) => (int)(Math.Clamp((double)scale, 0.1, 100) * 64);
-    internal static void ChangeReference(int previous, int next)
+    internal static void ChangeReference(ref int current, int next)
     {
+        var previous = current;
         if (previous == next) return;
-        ScaleLevel? retired = null;
+        ScaleLevel? retired = null; ProviderNotification[] providers; var removed = false;
         lock (ScaleGate)
         {
+            EnsureProviderNotificationsIdle();
             var levels = new Dictionary<int, ScaleLevel>(_scales);
+            if (next != 64 && levels.TryGetValue(next, out var full) && full.Count == int.MaxValue) throw new OverflowException("Raster reference count exceeds its limit.");
+            providers = BeginProviderNotifications();
             if (next != 64)
             {
                 if (!levels.TryGetValue(next, out var level)) levels.Add(next, level = new());
                 checked { level.Count++; }
             }
-            if (previous != 64 && levels.TryGetValue(previous, out var old) && --old.Count == 0) { levels.Remove(previous); retired = old; }
+            if (previous != 64 && levels.TryGetValue(previous, out var old))
+            { removed = true; if (--old.Count == 0) { levels.Remove(previous); retired = old; } }
             Volatile.Write(ref _scales, levels);
+            current = next;
         }
+        List<Exception>? errors = null;
+        try
+        {
+            foreach (var notification in providers)
+            {
+                var provider = notification.Provider;
+                if (next != 64) NotifyProvider(provider, next, true, false, ref errors);
+                if (removed) NotifyProvider(provider, previous, false, false, ref errors);
+            }
+        }
+        finally { EndProviderNotifications(providers); }
         if (retired is not null)
         {
             foreach (var weak in retired.Textures)
-                if (weak.TryGetTarget(out var texture)) texture.RetireScale(previous, retired);
+                if (weak.TryGetTarget(out var texture)) try { texture.RetireScale(previous, retired); } catch (Exception error) { Node.CollectException(ref errors, error); }
             foreach (var weak in retired.Fonts)
-                if (weak.TryGetTarget(out var font)) font.RetireRasterScale(previous, retired);
+                if (weak.TryGetTarget(out var font)) try { font.RetireRasterScale(previous, retired); } catch (Exception error) { Node.CollectException(ref errors, error); }
         }
+        Node.ThrowCollected("Raster scale reference committed with retirement failures.", errors);
     }
     internal static ScaleLevel? CurrentLevel(int key) => key == 64 ? null : Volatile.Read(ref _scales).GetValueOrDefault(key) ?? throw new InvalidOperationException("The viewport raster scale is no longer active.");
     internal static void TrackScale(int key, ScaleLevel level, DPITexture texture)

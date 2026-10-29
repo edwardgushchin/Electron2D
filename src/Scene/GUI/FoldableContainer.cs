@@ -137,7 +137,12 @@ public partial class FoldableContainer : Container
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        _group?.Remove(_groupReference); _membership++; _foldRevision++; _group = null; ReleaseIcons();
-        try { base.Dispose(disposing); } finally { _publisherFoldingChanged.Handlers = null; _titleControls.Clear(); }
+        List<Exception>? errors = null;
+        if (disposing) { _measure.ReleaseContent(ref errors); _drawText.ReleaseContent(ref errors); }
+        try { _group?.Remove(_groupReference); _membership++; _foldRevision++; _group = null; ReleaseIcons(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); }
+        catch (Exception error) { CollectException(ref errors, error); }
+        finally { _publisherFoldingChanged.Handlers = null; _titleControls.Clear(); }
+        ThrowCollected("Foldable title cleanup failed.", errors);
     }
 }

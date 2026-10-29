@@ -53,6 +53,8 @@ public partial class TextEdit : Control
         internal readonly TextLayout Layout = new();
         internal readonly List<TextBIDIRange> Contexts = [];
         internal readonly List<GutterCell> Gutters = [];
+        internal void ReleaseGutters(ref List<Exception>? errors) { foreach (var gutter in Gutters) gutter.Layout.ReleaseContent(ref errors); }
+        internal void Release(ref List<Exception>? errors) { Layout.ReleaseContent(ref errors); ReleaseGutters(ref errors); }
         internal Color Background = new(0, 0, 0, 0);
         internal bool Hidden = false;
         internal int Scalars, Index;
@@ -208,6 +210,7 @@ public partial class TextEdit : Control
             if (_highlighter != null) { _highlighter.Disposed -= _resourceDisposed; if (!_highlighter.IsDisposed) try { _highlighter.Bind(null); } catch (Exception error) { CollectException(ref errors, error); } }
             try { _storedHighlighter?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
             _storedHighlighter = null;
+            foreach (var line in _lines) line.Release(ref errors); _placeholderLayout.ReleaseContent(ref errors);
             _lines.Clear(); _carets.Clear(); _history.Clear(); _visual.Clear(); _publisherTextChanged.Handlers = _publisherTextSet.Handlers = _publisherCaretChanged.Handlers = _publisherGutterAdded.Handlers = _publisherGutterRemoved.Handlers = null; _publisherLinesEditedFrom.Handlers = _publisherGutterClicked.Handlers = null;
         }
         try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }

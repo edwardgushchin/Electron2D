@@ -61,15 +61,17 @@ public partial class RichTextLabel
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
+        List<Exception>? retirementErrors = null;
         try
         {
             if (disposing)
             {
-                _disposingRich = true; StopWorker(); _publisherFinished.Handlers = null; _publisherMetaClicked.Handlers = _publisherMetaHoverStarted.Handlers = _publisherMetaHoverEnded.Handlers = null; _effects = [];
+                _disposingRich = true; StopWorker(); ReleaseFrameLayouts(_renderRoot, ref retirementErrors); ReleaseFrameLayouts(_main, ref retirementErrors); _publisherFinished.Handlers = null; _publisherMetaClicked.Handlers = _publisherMetaHoverStarted.Handlers = _publisherMetaHoverEnded.Handlers = null; _effects = [];
                 try { ReleaseFX(); }
                 finally { try { RetireScriptEffects(all: true); } finally { _stack.Clear(); _drawParagraphs.Clear(); _lines.Clear(); _fontVersions.Clear(); _main.Paragraphs.Clear(); _renderRoot.Paragraphs.Clear(); } }
             }
         }
-        finally { base.Dispose(disposing); }
+        finally { try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref retirementErrors, error); } }
+        if (retirementErrors is not null) throw new AggregateException("Rich-text layout retirement failed.", retirementErrors);
     }
 }

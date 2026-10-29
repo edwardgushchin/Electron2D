@@ -113,7 +113,16 @@ public partial class CodeEdit : TextEdit
     private static Node CreateCodeEdit() => new CodeEdit();
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
-    { if (disposing) { _codeDisposing = true; _publisherBreakpointToggled.Handlers = null; _publisherCodeCompletionRequested.Handlers = null; _publisherSymbolHovered.Handlers = _publisherSymbolLookup.Handlers = null; _publisherSymbolValidate.Handlers = null; _regions.Clear(); _folded.Clear(); _numberLayouts.Clear(); _submitted.Clear(); _options.Clear(); } base.Dispose(disposing); }
+    {
+        List<Exception>? errors = null;
+        if (disposing)
+        {
+            _codeDisposing = true; foreach (var layout in _numberLayouts) layout.ReleaseContent(ref errors); foreach (var layout in _optionLayouts) layout.ReleaseContent(ref errors); _hintLayout.ReleaseContent(ref errors);
+            _publisherBreakpointToggled.Handlers = null; _publisherCodeCompletionRequested.Handlers = null; _publisherSymbolHovered.Handlers = _publisherSymbolLookup.Handlers = null; _publisherSymbolValidate.Handlers = null; _regions.Clear(); _folded.Clear(); _numberLayouts.Clear(); _optionLayouts.Clear(); _submitted.Clear(); _options.Clear();
+        }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Code layout cleanup failed.", errors);
+    }
     private sealed class OwnedSymbolTimer(CodeEdit owner) : Timer
     { protected override void ValidateDisposal() { if (!owner.IsDisposed && !owner._codeDisposing) throw new InvalidOperationException("The hover timer belongs to CodeEdit."); base.ValidateDisposal(); } }
 }

@@ -1,6 +1,6 @@
 # FontVariation
 
-Last updated: 2026-10-20
+Last updated: 2026-10-29
 
 **Inherits:** [Font](Font.md), [Resource](Resource.md), ElectronObject · **Inherited By:** —
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-20
 ## Description and example
 
 Borrows a base Font and creates an independent native face, shaping font and glyph cache. OpenType design coordinates, collection face, synthetic bold/thinning, outline transform, baseline and color palette affect actual glyphs. Spacing affects shared Font layout. [Font.FindVariation](Font.md#findvariation) creates a caller-owned instance with the same configuration.
+
+An opaque base font creates a lazily configured independent source through its original implementation. Replacement and disposal retire superseded sources after captured readers; native variants preserve the same lifetime. See [external implementations](../components/text-server.md#external-implementations).
 
 ```csharp
 using var source = new FontFile();

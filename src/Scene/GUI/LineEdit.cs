@@ -181,7 +181,18 @@ public partial class LineEdit : Control
     protected override Func<Node> CreateSceneInstanceFactory() => GetType() == typeof(LineEdit) ? CreateLineEdit : base.CreateSceneInstanceFactory();
     private static Node CreateLineEdit() => new LineEdit();
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { _disposingLineEdit = true; ReleaseIconResidency(); if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; } if (_rightIcon is not null) { _rightIcon.Changed -= _resourceChanged; _rightIcon.Disposed -= _resourceDisposed; } _publisherEditingToggled.Handlers = null; _publisherTextChanged.Handlers = null; _publisherTextSubmitted.Handlers = null; _publisherTextChangeRejected.Handlers = null; _history.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing)
+    {
+        List<Exception>? errors = null;
+        if (disposing) { _layout.ReleaseContent(ref errors); _sourceLayout.ReleaseContent(ref errors); }
+        try
+        {
+            if (disposing) { _disposingLineEdit = true; ReleaseIconResidency(); if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; } if (_rightIcon is not null) { _rightIcon.Changed -= _resourceChanged; _rightIcon.Disposed -= _resourceDisposed; } _publisherEditingToggled.Handlers = null; _publisherTextChanged.Handlers = null; _publisherTextSubmitted.Handlers = null; _publisherTextChangeRejected.Handlers = null; _history.Clear(); }
+        }
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
+    }
 }
 
 /// <summary>Controls how a LineEdit trailing icon fits its available height.</summary>

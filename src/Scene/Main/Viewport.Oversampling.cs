@@ -36,8 +36,7 @@ public abstract partial class Viewport
     {
         var next = CanvasRasterScale.Quantize(GetOversampling());
         if (next == _dpiScaleKey) return;
-        var previous = _dpiScaleKey; _dpiScaleKey = next;
-        CanvasRasterScale.ChangeReference(previous, next);
+        CanvasRasterScale.ChangeReference(ref _dpiScaleKey, next);
     }
     private static readonly PropertyDescriptor[] OversamplingProperties = [
         new PropertyDescriptor<Viewport,bool>(nameof(Oversampling), v => v.Oversampling, (v,x) => v.Oversampling=x, _ => true, stored:true),

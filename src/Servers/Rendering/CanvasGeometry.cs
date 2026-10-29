@@ -7,7 +7,9 @@ internal readonly record struct CanvasVertex(Vector2 Position, Color Color, Vect
 
 internal readonly record struct CanvasCommand(bool Line, Vector2 A, Vector2 B, Color Color,
     float Width, bool Antialiased, Transform Transform, Texture? Texture = null, Rect2 Source = default,
-    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null, CanvasNinePatch? NinePatch = null, bool ConstantSource = false, CanvasMesh? Mesh = null, CanvasMultiMesh? MultiMesh = null, Color? ParticleCustom = null, bool? ClipIgnore = null, CanvasGlyph Glyph = default, CanvasParticles? Particles = null);
+    bool Transpose = false, bool ClipUV = false, bool Tile = false, CanvasPolygon? Polygon = null, CanvasStroke? Stroke = null, bool SetTransform = false, CanvasAnimationSlice? AnimationSlice = null, CanvasNinePatch? NinePatch = null, bool ConstantSource = false, CanvasMesh? Mesh = null, CanvasMultiMesh? MultiMesh = null, Color? ParticleCustom = null, bool? ClipIgnore = null, CanvasGlyph Glyph = default, CanvasParticles? Particles = null, CanvasTextClip? TextClip = null);
+
+internal readonly record struct CanvasTextClip(Rect2? Rect);
 
 internal readonly record struct CanvasAnimationSlice(double Length, double Begin, double End, double Offset)
 {

@@ -5,8 +5,9 @@ namespace Electron2D;
 
 public abstract partial class Font
 {
-    private ConcurrentQueue<FontFile>? _retiredSources;
+    private ConcurrentQueue<Font>? _retiredSources;
     private int _drainingSources;
+    private int _retireProviderLayouts;
     [ThreadStatic] internal static int ActiveFontReads;
     [ThreadStatic] private static List<Font>? _pendingSourceOwners;
 
@@ -31,9 +32,9 @@ public abstract partial class Font
         if (errors is not null) throw new AggregateException("Font source retirement callbacks failed.", errors);
     }
 
-    internal void QueueSourceRetirement(FontFile file)
+    internal void QueueSourceRetirement(Font file)
     {
-        file.MarkSourceRetiring();
+        if (file is FontFile native) native.MarkSourceRetiring(); else file.MarkRetiredSource();
         var queue = LazyInitializer.EnsureInitialized(ref _retiredSources);
         queue.Enqueue(file); DeferSourceRetirements();
     }
@@ -41,19 +42,23 @@ public abstract partial class Font
     internal void DrainSourceRetirements()
     {
         var queue = _retiredSources;
-        if (queue is null || queue.IsEmpty) { _pendingSourceOwners?.Remove(this); return; }
+        if ((queue is null || queue.IsEmpty) && Volatile.Read(ref _retireProviderLayouts) == 0) { _pendingSourceOwners?.Remove(this); return; }
         if (Monitor.IsEntered(FontGate) || ActiveFontReads != 0 || FontData.NativeCleanupDepth != 0) { DeferSourceRetirements(); return; }
+        lock (FontGate)
+            foreach (var read in _callbackReads) if (read.CallbackActive) { DeferSourceRetirements(); return; }
         List<Exception>? errors = null;
         do
         {
             if (Interlocked.CompareExchange(ref _drainingSources, 1, 0) != 0) return;
             try
             {
-                while (queue.TryDequeue(out var file))
-                    try { file.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+                if (Interlocked.Exchange(ref _retireProviderLayouts, 0) != 0)
+                    try { TextLayout.RetireProviderFont(this); } catch (Exception error) { (errors ??= []).Add(error); }
+                while (queue is not null && queue.TryDequeue(out var file))
+                    try { file.DisposeRetiredSource(); } catch (Exception error) { (errors ??= []).Add(error); }
             }
             finally { Volatile.Write(ref _drainingSources, 0); }
-        } while (!queue.IsEmpty);
+        } while (queue is { IsEmpty: false } || Volatile.Read(ref _retireProviderLayouts) != 0);
         _pendingSourceOwners?.Remove(this);
         if (errors is { Count: 1 }) ExceptionDispatchInfo.Capture(errors[0]).Throw();
         if (errors is not null) throw new AggregateException("Font source retirement callbacks failed.", errors);
@@ -68,6 +73,7 @@ public abstract partial class Font
 
     internal void EmitFontChanged()
     {
+        Interlocked.Exchange(ref _retireProviderLayouts, 1);
         Exception? failure = null;
         try { DrainSourceRetirements(); } catch (Exception error) { failure = error; }
         try { base.EmitChanged(); }

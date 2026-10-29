@@ -47,7 +47,11 @@ internal static class FontVariationTests
         try { for (var i = 0; i < 64; i++) { var next = new FontVariation { BaseFont = current }; chain.Add(next); current = next; } Check(current.GetStringSize("A").X > 0, "maximum base depth executes"); using var excessive = new FontVariation(); Reject<ArgumentException>(() => excessive.BaseFont = current); using var fallback = new FontFile(); Reject<ArgumentException>(() => fallback.Fallbacks = [current]); }
         finally { for (var i = chain.Count - 1; i >= 0; i--) chain[i].Dispose(); }
     }
-    private static TextLayout Layout(Font font, string text) => font.GetLayout(text, HorizontalAlignment.Left, -1, 16, -1, TextLineBreakFlags.None, TextJustificationFlags.None, TextDirection.LTR, TextOrientation.Horizontal, false);
+    private static TextLayout Layout(Font font, string text)
+    {
+        using var read = font.PrepareLayout(text, HorizontalAlignment.Left, -1, 16, -1, TextLineBreakFlags.None, TextJustificationFlags.None, TextDirection.LTR, TextOrientation.Horizontal, false);
+        return read.Layout;
+    }
     private static void Synthetic(FontFile source)
     {
         using var normal = new FontVariation { BaseFont = source }; using var bold = new FontVariation { BaseFont = source, VariationEmbolden = 1 }; using var thin = new FontVariation { BaseFont = source, VariationEmbolden = -.5f }; using var slant = new FontVariation { BaseFont = source, VariationTransform = new(new(1, .3f), new(0, 1), new(500, 500)) };

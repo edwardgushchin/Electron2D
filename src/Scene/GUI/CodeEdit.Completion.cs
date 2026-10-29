@@ -28,7 +28,12 @@ public partial class CodeEdit
     /// <summary>Changes selection while completion is active.</summary><param name="index">Existing visible candidate index.</param>
     public void SetCodeCompletionSelectedIndex(int index) { MutableCode(); if (!_completionActive) return; if ((uint)index >= _options.Count) throw new ArgumentOutOfRangeException(nameof(index)); _selectedOption = index; FitCompletionSelection(); QueueRedraw(); }
     /// <summary>Cancels the menu and clears visible candidates.</summary>
-    public void CancelCodeCompletion() { MutableCode(); if (_filtering) _filterCanceled = true; _completionActive = false; _completionScrollPressed = false; _completionForced = false; _options.Clear(); _completionBase = ""; _optionOffset = 0; QueueRedraw(); }
+    public void CancelCodeCompletion()
+    {
+        MutableCode(); if (_filtering) _filterCanceled = true; _completionActive = false; _completionScrollPressed = false; _completionForced = false; _options.Clear(); _completionBase = ""; _optionOffset = 0;
+        List<Exception>? errors = null; foreach (var layout in _optionLayouts) layout.ReleaseContent(ref errors); _optionLayouts.Clear();
+        QueueRedraw(); ThrowCollected("Completion layout cleanup failed.", errors);
+    }
     private static bool Identifier(Rune rune) => Rune.IsLetterOrDigit(rune) || rune.Value == '_';
     private string CompletionPrefix()
     {

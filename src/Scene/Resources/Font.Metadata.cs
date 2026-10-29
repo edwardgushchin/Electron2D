@@ -11,6 +11,7 @@ public partial class Font
     /// <exception cref="InvalidDataException">Native source tables exceed a supported count or text range.</exception>
     public Dictionary<uint, FontFeatureInfo> GetSupportedFeatureList()
     {
+        if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontSupportedFeatureList(rid));
         lock (FontGate) { ThrowIfDisposed(); return PrimaryData is { } data ? new(data.SupportedFeatures) : []; }
     }
 
@@ -24,6 +25,7 @@ public partial class Font
     /// <exception cref="InvalidDataException">Native source tables exceed a supported count or text range.</exception>
     public Dictionary<string, Dictionary<string, string>> GetOTNameStrings()
     {
+        if (TryGetCallbackSource(out _)) return QueryCallbackSource(static (server, rid) => server.FontGetOTNameStrings(rid));
         lock (FontGate)
         {
             ThrowIfDisposed(); var result = new Dictionary<string, Dictionary<string, string>>(StringComparer.Ordinal);

@@ -57,7 +57,7 @@ public abstract partial class CanvasItem
         if (commands._canvasCommands is not null) foreach (var command in commands._canvasCommands)
             {
                 if (command.SetTransform) { drawing = command.Transform; continue; }
-                if (command.AnimationSlice is not null || command.ClipIgnore is not null) continue;
+                if (command.AnimationSlice is not null || command.ClipIgnore is not null || command.TextClip is not null) continue;
                 Rect2? value = command.Mesh?.GetDrawBounds(this) ?? command.MultiMesh?.Bounds() ?? command.Particles?.Bounds();
                 if (value is null && command.Stroke is { } stroke) value = stroke.GetLocalBounds();
                 if (value is null && command.Polygon is { } polygon) value = polygon.GetLocalBounds();

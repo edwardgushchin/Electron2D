@@ -149,11 +149,20 @@ public partial class LinkButton
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
+        List<Exception>? errors = null;
+        if (disposing) { _layout.ReleaseContent(ref errors); }
+        try
         {
-            if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; }
-            _resourceTree = null; _resourceDispatch = null; _entryGeneration++; _contexts.Clear();
+            if (disposing)
+            {
+                if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; }
+                _resourceTree = null; _resourceDispatch = null; _entryGeneration++; _contexts.Clear();
+            }
+
+
         }
-        base.Dispose(disposing);
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
     }
 }

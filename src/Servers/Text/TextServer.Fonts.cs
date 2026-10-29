@@ -9,6 +9,22 @@ public abstract partial class TextServer
     /// <returns>A stable identity; release it with FreeRID.</returns>
     public RID CreateFont()
     {
+        var implementationCall = EnterImplementation();
+        Exception? callbackFailure = null;
+        try
+        {
+            return CreateOwnedRID(true, OnCreateFont);
+        }
+        catch (Exception failure) { callbackFailure = failure; throw; }
+        finally { implementationCall.Dispose(callbackFailure); }
+    }
+
+
+    /// <summary>Creates an owned empty font source and cache.</summary>
+    /// <returns>A stable identity; release it with FreeRID.</returns>
+    protected virtual RID OnCreateFont()
+    {
+        using var nativeTextScope = EnterNativeBackend();
         var file = new FontFile { MSDFPixelRange = 14 };
         try { return OwnFont(new ServerFont(this, file)); }
         catch { file.Dispose(); throw; }
@@ -19,6 +35,23 @@ public abstract partial class TextServer
     /// <exception cref="InvalidOperationException">The identity or its root has retired.</exception>
     public RID CreateFontLinkedVariation(RID fontRID)
     {
+        var implementationCall = EnterImplementation(fontRID, true);
+        Exception? callbackFailure = null;
+        try
+        {
+            return CreateOwnedRID(true, () => OnCreateFontLinkedVariation(fontRID));
+        }
+        catch (Exception failure) { callbackFailure = failure; throw; }
+        finally { implementationCall.Dispose(callbackFailure); }
+    }
+
+    /// <summary>Creates a linked font sharing the original source, configuration and cache.</summary>
+    /// <param name="fontRID">Live root or linked font identity.</param>
+    /// <returns>A new owned identity with independent zero spacing and baseline offset.</returns>
+    /// <exception cref="InvalidOperationException">The identity or its root has retired.</exception>
+    protected virtual RID OnCreateFontLinkedVariation(RID fontRID)
+    {
+        using var nativeTextScope = EnterNativeBackend();
         lock (_fontsGate)
         {
             if (FontFile.TryResolveSource(fontRID, out var resource)) return OwnFont(new ServerFont(this, resource, fontRID));
@@ -31,16 +64,26 @@ public abstract partial class TextServer
     /// <remarks>Disposing a service-owned projection releases its entry. Disposing a resource-owned projection preserves its borrowed source. Use FontFile for persistent source assets.
     /// Duplicate retains an independent source snapshot. Freeing a root invalidates source operations on its links.</remarks>
     /// <exception cref="InvalidOperationException">The identity or its root has retired.</exception>
-    public Font FontGetResource(RID fontRID) => FontFile.TryResolveSource(fontRID, out var resource) ? resource.SourceResource : FontSource(fontRID);
+    public Font FontGetResource(RID fontRID)
+    {
+        var implementationCall = EnterImplementation(fontRID, true);
+        Exception? callbackFailure = null;
+        try
+        {
+            return ExternalFontResource(fontRID) ?? (FontFile.TryResolveSource(fontRID, out var resource) ? resource.SourceResource : FontSource(fontRID));
+        }
+        catch (Exception failure) { callbackFailure = failure; throw; }
+        finally { implementationCall.Dispose(callbackFailure); }
+    }
     private RID OwnFont(ServerFont font)
     {
-        try { lock (_fontsGate) { font.Identity = RID.Allocate(); _fonts.Add(font.Identity, font); return font.Identity; } }
+        try { CheckFactoryAllocation(); lock (_fontsGate) { font.Identity = RID.Allocate(); _fonts.Add(font.Identity, font); lock (NativeFontsGate) NativeFonts.Add(font.Identity, new(font)); RecordAllocation(font.Identity, true); return font.Identity; } }
         catch { font.Dispose(); throw; }
     }
     private ServerFont FontEntry(RID rid)
     {
-        lock (_fontsGate)
-            return _fonts.TryGetValue(rid, out var font) && !font.IsDisposalCommitted && !font.IsDisposed ? font : throw new InvalidOperationException("Font identity is absent or retired.");
+        lock (NativeFontsGate)
+            return TryGetNativeFontLocked(rid, out var font) ? font : throw new InvalidOperationException("Font identity is absent or retired.");
     }
     private ServerFont FontSource(RID rid)
     {
@@ -55,13 +98,12 @@ public abstract partial class TextServer
     private float SourceBaseline(RID rid) => FontFile.TryResolveSource(rid, out var resource) ? resource.GetExtraBaselineOffset(0) : FontEntry(rid).Baseline;
     private void SourceBaseline(RID rid, float value)
     { if (FontFile.TryResolveSource(rid, out var resource)) resource.SetExtraBaselineOffset(0, value); else FontEntry(rid).Baseline = value; }
-    private void ForgetFont(RID rid) { lock (_fontsGate) _fonts.Remove(rid); }
-    private bool HasFont(RID rid) { lock (_fontsGate) return _fonts.TryGetValue(rid, out var font) && !font.IsDisposalCommitted && !font.IsDisposed; }
+    private void ForgetFont(RID rid) { lock (_fontsGate) _fonts.Remove(rid); lock (NativeFontsGate) NativeFonts.Remove(rid); }
     private bool FreeFont(RID rid)
     {
         ServerFont? font; lock (_fontsGate) _fonts.TryGetValue(rid, out font);
         if (font is null) return false;
-        font.Dispose(); return true;
+        font.Dispose(); if (!font.IsDisposed) throw new InvalidOperationException("Font retirement was canceled."); return true;
     }
 
     private sealed class ServerFont : Font
@@ -75,6 +117,15 @@ public abstract partial class TextServer
         private readonly RID _borrowedRoot;
         private readonly int[] _spacing = new int[4];
         private float _baseline;
+        internal int Readers, FamilyReaders;
+        internal bool Retiring;
+        private protected override void ValidateDisposalTransition()
+        {
+            base.ValidateDisposalTransition();
+            lock (NativeFontsGate) CheckCanRetire();
+        }
+        internal void CheckCanRetire()
+        { if (Readers != 0 || ReferenceEquals(Root, this) && FamilyReaders != 0) throw new InvalidOperationException("An active font source cannot retire."); }
         internal ServerFont(TextServer? server, FontFile file)
         { _server = server; Root = this; Source = file; _ownsSource = true; Watch(); }
         internal ServerFont(TextServer server, FontFile file, RID borrowedRoot)
@@ -87,7 +138,7 @@ public abstract partial class TextServer
         internal override Font? BaseDependency => Source;
         internal void EnsureSourceLive()
         {
-            if (Root.IsDisposalCommitted || Root.IsDisposed || Source.IsDisposalCommitted || Source.IsDisposed || Source.SourceRetiring ||
+            if (Root.Retiring || Root.IsDisposalCommitted || Root.IsDisposed || Source.IsDisposalCommitted || Source.IsDisposed || Source.SourceRetiring ||
                 _borrowedRoot != default && !FontFile.TryResolveSource(_borrowedRoot, out _))
                 throw new InvalidOperationException("The linked font source has retired.");
         }
@@ -101,7 +152,7 @@ public abstract partial class TextServer
         {
             ValidateSpacing(spacing);
             lock (FontGate) { ThrowIfDisposed(); if (_spacing[(int)spacing] == value) return; _spacing[(int)spacing] = value; InvalidateFontStateLocked(); }
-            try { Source.InvalidateAutomaticSources(); } finally { EmitFontChanged(); }
+            try { if (!Source.IsDisposed && !Source.SourceRetiring) Source.InvalidateAutomaticSources(); } finally { EmitFontChanged(); }
         }
         private static void ValidateSpacing(TextSpacingType spacing)
         { if (spacing is < TextSpacingType.Glyph or >= TextSpacingType.Max) throw new ArgumentOutOfRangeException(nameof(spacing)); }
@@ -112,7 +163,7 @@ public abstract partial class TextServer
             {
                 if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
                 lock (FontGate) { ThrowIfDisposed(); if (_baseline == value) return; _baseline = value; InvalidateFontStateLocked(); }
-                try { Source.InvalidateAutomaticSources(); } finally { EmitFontChanged(); }
+                try { if (!Source.IsDisposed && !Source.SourceRetiring) Source.InvalidateAutomaticSources(); } finally { EmitFontChanged(); }
             }
         }
         internal override int GetShapingSpacing(FontData? source, TextSpacingType spacing)

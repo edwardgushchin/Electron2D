@@ -41,6 +41,7 @@ public partial class ItemList : Control
         internal Vector2 MinimumSize;
         internal Rect2 Rect;
         internal object? Metadata;
+        internal void Release(ref List<Exception>? errors) { Layout.ReleaseContent(ref errors); Measurement.ReleaseContent(ref errors); }
     }
 
     private readonly List<Item> _items = [];
@@ -84,15 +85,15 @@ public partial class ItemList : Control
             EnsureMutable();
             if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
             if (value == _items.Count) return;
-            _shiftAnchor = _deferSelectSingle = -1;
+            _shiftAnchor = _deferSelectSingle = -1; List<Exception>? errors = null;
             if (value < _items.Count)
             {
-                for (var index = value; index < _items.Count; index++) UnwatchIcon(_items[index].Icon);
+                for (var index = value; index < _items.Count; index++) { UnwatchIcon(_items[index].Icon); _items[index].Release(ref errors); }
                 _items.RemoveRange(value, _items.Count - value);
                 if (_current >= value) _current = -1;
             }
             else while (_items.Count < value) _items.Add(new Item());
-            InvalidateListLayout();
+            InvalidateListLayout(); ThrowCollected("Item layout cleanup failed.", errors);
         }
     }
 
@@ -258,11 +259,11 @@ public partial class ItemList : Control
     /// <param name="index">A valid zero-based index.</param>
     public void RemoveItem(int index)
     {
-        EnsureMutable(); ValidateIndex(index); UnwatchIcon(_items[index].Icon); _items.RemoveAt(index);
+        EnsureMutable(); ValidateIndex(index); var removed = _items[index]; UnwatchIcon(removed.Icon); _items.RemoveAt(index);
         _shiftAnchor = _deferSelectSingle = -1;
         if (_current == index) _current = -1;
         else if (_current > index) _current--;
-        InvalidateListLayout();
+        List<Exception>? errors = null; removed.Release(ref errors); InvalidateListLayout(); ThrowCollected("Item layout cleanup failed.", errors);
     }
 
     /// <summary>Removes all entries without disposing borrowed resources.</summary>
@@ -270,8 +271,9 @@ public partial class ItemList : Control
     {
         EnsureMutable();
         foreach (var icon in _watchedIcons.Keys) { icon.Changed -= IconChanged; icon.Disposed -= IconDisposed; }
+        List<Exception>? errors = null; foreach (var item in _items) item.Release(ref errors);
         _watchedIcons.Clear(); _items.Clear(); _current = -1; _searchLength = 0;
-        _shiftAnchor = _deferSelectSingle = -1; InvalidateListLayout();
+        _shiftAnchor = _deferSelectSingle = -1; InvalidateListLayout(); ThrowCollected("Item layout cleanup failed.", errors);
     }
 
     /// <summary>Sorts items by source text using ordinal string order, carrying their state with them.</summary>

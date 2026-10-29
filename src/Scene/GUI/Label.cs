@@ -331,13 +331,22 @@ public partial class Label : Control
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
+        List<Exception>? errors = null;
+        if (disposing) { foreach (var paragraph in _paragraphs) paragraph.Layout.ReleaseContent(ref errors); }
+        try
         {
-            _entryGeneration++; _resourceTree = null; _resourceDispatch = null; _resourcePending = 0;
-            if (_labelSettings is not null) { _labelSettings.Changed -= _resourceChanged; _labelSettings.Disposed -= _resourceDisposed; }
-            if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; }
-            MaximumSizeChanged -= _maximumChanged; _paragraphs.Clear(); _lines.Clear(); _textCache.Clear();
+            if (disposing)
+            {
+                _entryGeneration++; _resourceTree = null; _resourceDispatch = null; _resourcePending = 0;
+                if (_labelSettings is not null) { _labelSettings.Changed -= _resourceChanged; _labelSettings.Disposed -= _resourceDisposed; }
+                if (_font is not null) { _font.Changed -= _resourceChanged; _font.Disposed -= _resourceDisposed; }
+                MaximumSizeChanged -= _maximumChanged; _paragraphs.Clear(); _lines.Clear(); _textCache.Clear();
+            }
+
+
         }
-        base.Dispose(disposing);
+        catch (Exception error) { CollectException(ref errors, error); }
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        if (errors is not null) throw new AggregateException("Text consumer cleanup failed.", errors);
     }
 }

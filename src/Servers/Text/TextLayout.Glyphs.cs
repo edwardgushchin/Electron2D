@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Electron2D;
 
 internal sealed partial class TextLayout
@@ -12,23 +14,41 @@ internal sealed partial class TextLayout
         var count = 0;
         if (leader) for (var i = index; i < limit && SameSnapshotCluster(glyph, _glyphs[i]); i++) count++;
         var flags = ellipsis ? TextGraphemeFlags.Virtual | (glyph.Space ? TextGraphemeFlags.Space | TextGraphemeFlags.BreakSoft : TextGraphemeFlags.Punctuation) | (glyph.RTL ? TextGraphemeFlags.RTL : 0) : ServerGraphemeFlags(glyph);
-        if (!leader) flags &= TextGraphemeFlags.Connected | TextGraphemeFlags.SafeToInsertTatweel;
-        var span = ellipsis ? -1 : TextLine.FindGlyphSpan(spans, glyph.Start + offset, glyph.End + offset).Index;
+        if (glyph.ProviderCount is { } providerCount) count = providerCount;
+        if (glyph.ProviderFlags is { } providerFlags) flags = providerFlags;
+        else if (!leader) flags &= TextGraphemeFlags.Connected | TextGraphemeFlags.SafeToInsertTatweel;
+        var span = glyph.ProviderSpanIndex ?? (ellipsis ? -1 : TextLine.FindGlyphSpan(spans, glyph.Start + offset, glyph.End + offset).Index);
         return new(ellipsis ? -1 : glyph.Start + offset, ellipsis ? -1 : glyph.End + offset, glyph.Repeat, count,
-            flags, glyph.Offset, glyph.Advance, glyph.SourceRID, glyph.ObjectIndex >= 0 ? 0 : GlyphSize(glyph), checked((int)glyph.Index), span);
+            flags, glyph.Offset, glyph.Advance, glyph.SourceRID, glyph.ProviderFlags is not null ? glyph.Size : glyph.ObjectIndex >= 0 ? 0 : GlyphSize(glyph), checked((int)glyph.Index), span);
     }
     private static bool SameSnapshotCluster(Glyph left, Glyph right) => left.Start == right.Start && left.End == right.End &&
         left.Virtual == right.Virtual && left.ObjectIndex == right.ObjectIndex && left.Ellipsis == right.Ellipsis && left.SourceRID == right.SourceRID;
 
-    internal TextGlyph[] ServerGlyphSnapshot(int lineIndex, int offset, List<TextLine.GlyphSpan> spans, bool ellipsis = false)
+    private readonly List<TextGlyph> _visualSnapshot = [], _logicalSnapshot = [], _ellipsisSnapshot = [];
+    private readonly List<(TextGlyph Glyph, int Order)> _logicalGlyphOrder = [];
+    internal ReadOnlySpan<TextGlyph> ServerGlyphSpan(int lineIndex, int offset, List<TextLine.GlyphSpan> spans, bool ellipsis = false, bool logical = false)
     {
+        var result = ellipsis ? _ellipsisSnapshot : logical ? _logicalSnapshot : _visualSnapshot;
+        result.Clear();
         if (_lines.Count == 0) return [];
         var line = _lines[lineIndex]; var end = line.GlyphStart + line.GlyphCount;
-        var size = 0; for (var i = line.GlyphStart; i < end; i++) if (_glyphs[i].Ellipsis == ellipsis) size++;
-        var result = new TextGlyph[size]; var at = 0;
+        result.EnsureCapacity(line.GlyphCount);
         for (var i = line.GlyphStart; i < end; i++)
-            if (_glyphs[i].Ellipsis == ellipsis) result[at++] = SnapshotGlyph(i, line.GlyphStart, end, offset, spans, ellipsis);
-        return result;
+            if (_glyphs[i].Ellipsis == ellipsis) result.Add(SnapshotGlyph(i, line.GlyphStart, end, offset, spans, ellipsis));
+        if (logical)
+        {
+            _logicalGlyphOrder.Clear(); _logicalGlyphOrder.EnsureCapacity(result.Count);
+            for (var i = 0; i < result.Count; i++) _logicalGlyphOrder.Add((result[i], i));
+            _logicalGlyphOrder.Sort(static (left, right) =>
+            {
+                var order = left.Glyph.Start.CompareTo(right.Glyph.Start); if (order != 0) return order;
+                order = right.Glyph.Count.CompareTo(left.Glyph.Count); if (order != 0) return order;
+                order = ((left.Glyph.Flags & TextGraphemeFlags.Virtual) != 0).CompareTo((right.Glyph.Flags & TextGraphemeFlags.Virtual) != 0);
+                return order != 0 ? order : left.Order.CompareTo(right.Order);
+            });
+            for (var i = 0; i < result.Count; i++) result[i] = _logicalGlyphOrder[i].Glyph;
+        }
+        return CollectionsMarshal.AsSpan(result);
     }
     internal int ServerObjectGlyph(int lineIndex, int start)
     {

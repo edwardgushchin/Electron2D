@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Creates independent font instances with OpenType coordinates, synthetic outlines, palettes and spacing.</summary>
 /// <remarks>The base font and fallbacks remain borrowed. Null BaseFont selects the theme fallback.
 /// Numeric coordinates use four-byte OpenType tags; SetVariationOpenType accepts readable axis aliases.
-/// Configuration/source changes retire native caches after active readers complete.</remarks>
+/// Native and external source configuration changes retire independent caches after active readers complete.</remarks>
 public partial class FontVariation : Font
 {
     private Font? _baseFont, _watchedBase;
@@ -39,7 +39,7 @@ public partial class FontVariation : Font
     }
     private void BackendChanged(Resource source)
     {
-        lock (FontGate) { if (IsDisposalCommitted || IsDisposed || !ReferenceEquals(source, _sourceFile)) return; InvalidateFontStateLocked(); }
+        lock (FontGate) { if (IsDisposalCommitted || IsDisposed || !ReferenceEquals(source, _sourceFile) && !ReferenceEquals(source, _externalFont)) return; InvalidateFontStateLocked(); }
         EmitFontChanged();
     }
     internal override int GetShapingSpacing(FontData? source, TextSpacingType spacing)
@@ -70,7 +70,7 @@ public partial class FontVariation : Font
             return font;
         }
     }
-    internal override Font? SourceDependency => _sourceFile;
+    internal override Font? SourceDependency => _externalFont ?? _sourceFile;
     internal override Font? BaseDependency => _baseFont ?? _watchedBase;
     internal override Font?[] EffectiveFallbacks => LocalFallbacks.Length > 0 ? LocalFallbacks : ResolveBase()?.EffectiveFallbacks ?? [];
     internal override FontData? PrimaryData
@@ -79,7 +79,7 @@ public partial class FontVariation : Font
         {
             lock (FontGate)
             {
-                ThrowIfDisposed(); var source = ResolveBase();
+                ThrowIfDisposed(); if (_externalFont is not null) return null; var source = ResolveBase();
                 var sourceGeneration = source?.GetContentGeneration() ?? -1;
                 if (!_dirty && _sourceBaseGeneration != sourceGeneration) RetireLocked();
                 var cursor = source; for (var depth = 0; cursor is FontVariation variation; depth++) { if (depth >= 64 || ReferenceEquals(cursor, this)) throw new InvalidOperationException("Cyclic or excessive font base chain."); cursor = variation.ResolveBase(); }
@@ -108,7 +108,7 @@ public partial class FontVariation : Font
     }
     private void Unwatch() { if (_watchedBase != null) { _watchedBase.Changed -= _baseChanged; _watchedBase.Disposed -= _baseDisposed; } _watchedBase = null; }
     private void BaseChanged(Resource _) { if (IsDisposed) return; lock (FontGate) { if (IsDisposed) return; RetireLocked(); } EmitFontChanged(); }
-    private void RetireLocked() { _shapingFeatures.Clear(); var old = _sourceFile; if (old is not null) old.Changed -= _backendChanged; _sourceFile = null; _dirty = true; InvalidateFontStateLocked(); if (old is not null) QueueSourceRetirement(old); }
+    private void RetireLocked() { RetireExternalSourceLocked(); _shapingFeatures.Clear(); var old = _sourceFile; if (old is not null) old.Changed -= _backendChanged; _sourceFile = null; _dirty = true; InvalidateFontStateLocked(); if (old is not null) QueueSourceRetirement(old); }
     /// <summary>Gets or sets the borrowed base font; null uses the current theme fallback.</summary>
     /// <value>Null initially. The source remains borrowed; equal assignments are silent.</value>
     /// <exception cref="ObjectDisposedException">This font is disposed.</exception>
@@ -193,7 +193,7 @@ public partial class FontVariation : Font
     {
         if (spacing is < TextSpacingType.Glyph or >= TextSpacingType.Max) throw new ArgumentOutOfRangeException(nameof(spacing));
         FontFile? backend;
-        lock (FontGate) { ThrowIfDisposed(); if (_spacing[(int)spacing] == value) return; _spacing[(int)spacing] = value; backend = _sourceFile; backend?.MirrorSpacing(_spacing); InvalidateFontStateLocked(); }
+        lock (FontGate) { ThrowIfDisposed(); if (_spacing[(int)spacing] == value) return; _spacing[(int)spacing] = value; RetireExternalSourceLocked(); backend = _sourceFile; backend?.MirrorSpacing(_spacing); InvalidateFontStateLocked(); }
         try { EmitFontChanged(); } finally { backend?.NotifyMirroredSpacing(); }
     }
     /// <inheritdoc />
@@ -245,7 +245,7 @@ public partial class FontVariation : Font
     protected override void Dispose(bool disposing)
     {
         FontFile? data;
-        lock (FontGate) { Unwatch(); if (_themeSubscribed) ThemeDB.FallbackChanged -= _themeChanged; _themeSubscribed = false; data = _sourceFile; if (data is not null) data.Changed -= _backendChanged; _sourceFile = null; _baseFont = null; }
+        lock (FontGate) { RetireExternalSourceLocked(); Unwatch(); if (_themeSubscribed) ThemeDB.FallbackChanged -= _themeChanged; _themeSubscribed = false; data = _sourceFile; if (data is not null) data.Changed -= _backendChanged; _sourceFile = null; _baseFont = null; }
         try { data?.Dispose(); } finally { base.Dispose(disposing); }
     }
 }

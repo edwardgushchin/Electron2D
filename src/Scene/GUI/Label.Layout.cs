@@ -156,6 +156,9 @@ public partial class Label
             }
             prepared.Key = key;
         }
+        List<Exception>? errors = null;
+        for (var i = prepared.Paragraphs.Count; i < _paragraphCount; i++) _paragraphs[i].Layout.ReleaseContent(ref errors);
+        ThrowCollected("Label paragraph cleanup failed.", errors);
         prepared.Access = ++_textCacheAccess; _paragraphCount = prepared.Paragraphs.Count; _textDirty = false;
         for (var i = 0; i < _paragraphCount; i++)
         {

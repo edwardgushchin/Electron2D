@@ -81,8 +81,11 @@ internal static class FontTests
     }
 
     private static TextLayout Layout(Font font, string text, float width = -1, TextLineBreakFlags breaks = TextLineBreakFlags.None,
-        HorizontalAlignment alignment = HorizontalAlignment.Left, TextDirection direction = TextDirection.Auto, TextJustificationFlags justification = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound) =>
-        font.GetLayout(text, alignment, width, 16, -1, breaks, justification, direction, TextOrientation.Horizontal, breaks != TextLineBreakFlags.None);
+        HorizontalAlignment alignment = HorizontalAlignment.Left, TextDirection direction = TextDirection.Auto, TextJustificationFlags justification = TextJustificationFlags.Kashida | TextJustificationFlags.WordBound)
+    {
+        using var read = font.PrepareLayout(text, alignment, width, 16, -1, breaks, justification, direction, TextOrientation.Horizontal, breaks != TextLineBreakFlags.None);
+        return read.Layout;
+    }
 
     private static void VerifyLayout(byte[] data, byte[] arabicData)
     {
@@ -93,10 +96,10 @@ internal static class FontTests
         var rtl = Layout(font, "אבג", direction: TextDirection.RTL);
         Check(rtl.GetCharacterBounds(0).Position.X > rtl.GetCharacterBounds(1).Position.X && rtl.GetCharacterBounds(1).Position.X > rtl.GetCharacterBounds(2).Position.X,
             "Visual glyph order reverses RTL scalars while public character indices remain logical.");
-        var verticalRTL = arabic.GetLayout("بب", HorizontalAlignment.Left, -1, 16, -1, TextLineBreakFlags.None,
-            TextJustificationFlags.None, TextDirection.RTL, TextOrientation.Vertical, false);
-        Check(verticalRTL.GetCharacterBounds(0).Position.Y > verticalRTL.GetCharacterBounds(1).Position.Y,
-            "Vertical RTL runs use bottom-to-top shaping rather than reusing top-to-bottom glyph order.");
+        using (var read = arabic.PrepareLayout("بب", HorizontalAlignment.Left, -1, 16, -1, TextLineBreakFlags.None,
+            TextJustificationFlags.None, TextDirection.RTL, TextOrientation.Vertical, false))
+            Check(read.Layout.GetCharacterBounds(0).Position.Y > read.Layout.GetCharacterBounds(1).Position.Y,
+                "Vertical RTL runs use bottom-to-top shaping rather than reusing top-to-bottom glyph order.");
         var mixed = Layout(font, "A אב B");
         Check(mixed.GetCharacterBounds(2).Position.X > mixed.GetCharacterBounds(3).Position.X && mixed.GetCharacterBounds(0).Position.X < mixed.GetCharacterBounds(5).Position.X,
             "A mixed-direction paragraph reorders only the embedded RTL run.");
