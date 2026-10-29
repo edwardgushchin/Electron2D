@@ -1,6 +1,6 @@
 # StreamPeerTLS
 
-Last updated: 2026-10-05
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.StreamPeerTLS`. **Inherits:** [StreamPeer](StreamPeer.md). **Source:** [StreamPeerTLS.cs](../../src/Core/Networking/StreamPeerTLS.cs).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-05
 
 Encrypts ordered bytes over a borrowed StreamPeer through a polled TLS session.
 
-Calls require the constructing thread. The native backend uses host OpenSSL 3 on Linux and private packaged OpenSSL on Windows/macOS, with TLS 1.2/1.3, system/custom trust and expected-name validation. Poll processes handshake/control records and buffered output. Full I/O may wait; partial I/O retains bounded record buffers. Close notification disconnects after preceding plaintext drains; abrupt transport EOF is an authentication error. Disconnect/Dispose never disposes the borrowed stream. Independent SslStream TLS 1.2 and OpenSSL TLS 1.3 oracles cover both roles locally; complete Windows/macOS target execution remains pending.
+Calls require the constructing thread. The native backend uses the shared [OpenSSL 4.1.0 source profile](../components/tls.md#unified-openssl-source-profile) on desktop targets, with TLS 1.2/1.3, system/custom trust and expected-name validation. Poll processes handshake/control records and buffered output. Full I/O may wait; partial I/O retains bounded record buffers. Close notification disconnects after preceding plaintext drains; abrupt transport EOF is an authentication error. Disconnect/Dispose never disposes the borrowed stream. Independent SslStream TLS 1.2 and OpenSSL TLS 1.3 oracles cover both roles locally; complete Windows/macOS target execution remains pending.
 
 The [TLS component](../components/tls.md) and [ADR 0094](../decisions/networking.md#adr-0094) specify trust, owner/lifetime, preparation, failure and platform boundaries.
 
@@ -178,4 +178,4 @@ Returns: The sent byte count.
 
 ## Verification and limits
 
-[TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) exercises the TLS/security resource contract, native Linux OpenSSL 3 streams, independent .NET SslStream interoperability and warmed managed-allocation boundaries. Other-platform TLS backend/packaging, system-wide trust variation, native OpenSSL allocation totals, routed throughput and owner acceptance remain separate. See [coverage](../coverage/classes/StreamPeerTLS.md).
+[TLSTests](../../tests/Electron2D.Tests/TLSTests.cs) exercises the TLS/security resource contract, native Linux TLS streams, independent .NET SslStream interoperability and warmed managed-allocation boundaries. Other-platform TLS backend/packaging, system-wide trust variation, native OpenSSL allocation totals, routed throughput and owner acceptance remain separate. See [coverage](../coverage/classes/StreamPeerTLS.md).

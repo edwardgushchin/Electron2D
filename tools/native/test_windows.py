@@ -51,7 +51,7 @@ class WindowsNativeTests(unittest.TestCase):
                     package.windows_exports(Path("FAudio.dll"), "win-x64", "FAudio.dll")
         with patch.object(windows, "inspect", return_value=(set(), {"libcrypto-3.dll"})):
             with self.assertRaises(ValueError):
-                package.windows_exports(Path("libssl-3-Electron2D.dll"), "win-x64", "libssl-3-Electron2D.dll")
+                package.windows_exports(Path("libssl-4-Electron2D.dll"), "win-x64", "libssl-4-Electron2D.dll")
 
 
 if __name__ == "__main__":

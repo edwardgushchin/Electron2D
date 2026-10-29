@@ -21,3 +21,4 @@ _e2d_rtc_channel_string
 _e2d_rtc_channel_size
 _e2d_rtc_channel_read
 _e2d_rtc_channel_send
+_e2d_rtc_tls_version

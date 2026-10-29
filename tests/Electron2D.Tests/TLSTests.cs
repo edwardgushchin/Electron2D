@@ -73,6 +73,13 @@ internal static class TLSTests
         var deliveries = 0; Action<Resource> failedObserver = _ => { deliveries++; throw new CryptographicException("Observer failure."); }; copy.Changed += failedObserver; Reject<CryptographicException>(() => copy.LoadFromString(key.SaveToString())); copy.Changed -= failedObserver; Check(deliveries == 1 && copy.SaveToString(true) == key.SaveToString(true), "Key observer failure occurs once after commitment.");
         using var ec = ECDsa.Create(ECCurve.NamedCurves.nistP256); using var ecKey = new CryptoKey(); ecKey.LoadFromString(ec.ExportECPrivateKeyPem()); using var ecPublic = new CryptoKey(); ecPublic.LoadFromString(ecKey.SaveToString(true), true); Check(ecPublic.IsPublicOnly(), "Elliptic key import/export.");
         var ecRequest = new CertificateRequest("CN=localhost", ec, HashAlgorithmName.SHA256); using var ecIdentity = ecRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddHours(-1), DateTimeOffset.UtcNow.AddHours(1)); using var ecChain = new Certificate(); ecChain.LoadFromString(ecIdentity.ExportCertificatePem()); Attempt(TLSOptions.Client(ecChain), "localhost", ecChain, ecKey, TLSStatus.Connected);
+        var names = new SubjectAlternativeNameBuilder(); names.AddDnsName("wrong.invalid"); ecRequest.CertificateExtensions.Add(names.Build());
+        using var namedIdentity = ecRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddHours(-1), DateTimeOffset.UtcNow.AddHours(1)); using var namedChain = new Certificate(); namedChain.LoadFromString(namedIdentity.ExportCertificatePem());
+        Attempt(TLSOptions.Client(namedChain), "localhost", namedChain, ecKey, TLSStatus.ErrorHostnameMismatch);
+        ecRequest.CertificateExtensions.Clear(); names = new SubjectAlternativeNameBuilder(); names.AddIpAddress(System.Net.IPAddress.Loopback); ecRequest.CertificateExtensions.Add(names.Build());
+        using var ipIdentity = ecRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddHours(-1), DateTimeOffset.UtcNow.AddHours(1)); using var ipChain = new Certificate(); ipChain.LoadFromString(ipIdentity.ExportCertificatePem());
+        Attempt(TLSOptions.Client(ipChain), "localhost", ipChain, ecKey, TLSStatus.Connected);
+        Attempt(TLSOptions.Client(ipChain), "127.0.0.2", ipChain, ecKey, TLSStatus.ErrorHostnameMismatch);
     }
     private sealed class Duplex : StreamPeer
     {

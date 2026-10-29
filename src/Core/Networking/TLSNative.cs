@@ -19,10 +19,21 @@ internal static unsafe partial class TLSNative
     private const string SSL = NativeLibraries.SSLLibrary, Crypto = NativeLibraries.CryptoLibrary;
     internal static void CheckBackend(bool datagram = false)
     {
-        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("TLS requires a packaged desktop, Android or Apple OpenSSL 3 backend.");
-        try { if (datagram && BIO_s_dgram_pair() == 0) throw new PlatformNotSupportedException("OpenSSL datagram BIOs are unavailable."); if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable."); }
-        catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
-        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires system Linux or packaged desktop/mobile OpenSSL 3 libraries.", error); }
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsAndroid() && ((!OperatingSystem.IsLinux() && !OperatingSystem.IsMacOS() && !OperatingSystem.IsIOS() && !OperatingSystem.IsTvOS()) || IntPtr.Size != 8)) throw new PlatformNotSupportedException("TLS requires a packaged desktop, Android or Apple OpenSSL backend.");
+        try
+        {
+            if (OperatingSystem.IsLinux())
+            {
+                if (InitializeRuntimeSSL() != 0) throw new PlatformNotSupportedException("The runtime cryptography provider could not initialize.");
+                if (RuntimeOpenSSLVersion() != 0x40100000)
+                    throw new PlatformNotSupportedException("TLS requires the .NET cryptography provider and native bundle to share OpenSSL 4.1.0. Configure the process native runtime before using cryptography.");
+            }
+            if (OpenSSL_version_num() != (nuint)0x40100000) throw new PlatformNotSupportedException("TLS requires the matching OpenSSL 4.1.0 native libraries.");
+            if (datagram && BIO_s_dgram_pair() == 0) throw new PlatformNotSupportedException("OpenSSL datagram BIOs are unavailable.");
+            if (TLS_method() == 0) throw new PlatformNotSupportedException("OpenSSL TLS is unavailable.");
+        }
+        catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("TLS requires the matching native OpenSSL exports.", error); }
+        catch (DllNotFoundException error) { throw new PlatformNotSupportedException("TLS requires the packaged private OpenSSL libraries.", error); }
     }
     internal static TLSHandle CreateContext(TLSOptions options, bool datagram = false)
     {
@@ -31,7 +42,10 @@ internal static unsafe partial class TLSNative
         try
         {
             Require(SSLContextControl(pointer, 123, datagram ? 0xfefd : 0x303, 0), datagram ? "DTLS 1.2 minimum configuration failed." : "TLS 1.2 minimum configuration failed.");
+            // Keep the established datagram wire profile across native upgrades.
+            if (datagram) Require(SSLContextControl(pointer, 124, 0xfefd, 0), "DTLS 1.2 maximum configuration failed.");
             SSL_CTX_set_verify(pointer, options.IsServer() || options.IsUnsafeClient() && options.GetTrustedCAChain() is null ? 0 : 1, 0);
+            SSL_CTX_set_cert_verify_callback(pointer, &VerifyCertificate, 0);
             if (!options.IsServer() && options.GetTrustedCAChain() is null && !options.IsUnsafeClient())
             {
                 if (OperatingSystem.IsMacOS() || OperatingSystem.IsWindows() || OperatingSystem.IsAndroid() || OperatingSystem.IsIOS() || OperatingSystem.IsTvOS()) ConfigureSystemTrust(pointer);
@@ -118,6 +132,9 @@ internal static unsafe partial class TLSNative
     internal static long BIO_ctrl(nint bio, int command, long value, nint pointer) => LongResult(BIOControl(bio, command, new CLong(checked((nint)value)), pointer));
     private static long SSLContextControl(nint context, int command, long value, nint pointer) => LongResult(SSLContextControlNative(context, command, new CLong(checked((nint)value)), pointer));
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint TLS_method();
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nuint OpenSSL_version_num();
+    [LibraryImport("System.Security.Cryptography.Native.OpenSsl", EntryPoint = "CryptoNative_EnsureOpenSslInitialized"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int InitializeRuntimeSSL();
+    [LibraryImport("System.Security.Cryptography.Native.OpenSsl", EntryPoint = "CryptoNative_OpenSslVersionNumber"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial long RuntimeOpenSSLVersion();
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint DTLS_method();
     [LibraryImport(SSL), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial ulong SSL_set_options(nint ssl, ulong options);
     [LibraryImport(SSL, EntryPoint = "SSL_ctrl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint SSLControl(nint ssl, int command, CLong value, nint pointer);

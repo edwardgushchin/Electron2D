@@ -70,7 +70,16 @@ internal static class CryptoTests
     private static void NativeCertificate(Crypto crypto, CryptoKey key, Certificate certificate, X509Certificate2 publicCertificate)
     {
         using var stop = new CancellationTokenSource(10000); using var listener = new TCPServer(); listener.Listen(0, "127.0.0.1"); var port = listener.GetLocalPort();
-        var oracle = Task.Run(async () => { using var socket = new TcpClient(); await socket.ConnectAsync(IPAddress.Loopback, port, stop.Token); using var ssl = new SslStream(socket.GetStream(), false); var policy = new X509ChainPolicy { TrustMode = X509ChainTrustMode.CustomRootTrust, RevocationMode = X509RevocationMode.NoCheck }; policy.CustomTrustStore.Add(publicCertificate); await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = "localhost", CertificateChainPolicy = policy, EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13 }, stop.Token); await ssl.WriteAsync("generated"u8.ToArray(), stop.Token); var response = new byte[2]; await ssl.ReadExactlyAsync(response, stop.Token); Check(response.AsSpan().SequenceEqual("OK"u8), "Independent TLS client trusts generated key/certificate."); });
+        var oracle = Task.Run(async () =>
+        {
+            using var socket = new TcpClient(); await socket.ConnectAsync(IPAddress.Loopback, port, stop.Token); using var ssl = new SslStream(socket.GetStream(), false, (_, peer, _, errors) =>
+        {
+            // This exact generated fixture has only a CN; newer peers require an explicit opt-in.
+            return errors is SslPolicyErrors.None or SslPolicyErrors.RemoteCertificateNameMismatch &&
+                peer is not null && peer.GetRawCertData().AsSpan().SequenceEqual(publicCertificate.RawData) &&
+                publicCertificate.GetNameInfo(X509NameType.SimpleName, false) == "localhost";
+        }); var policy = new X509ChainPolicy { TrustMode = X509ChainTrustMode.CustomRootTrust, RevocationMode = X509RevocationMode.NoCheck }; policy.CustomTrustStore.Add(publicCertificate); await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions { TargetHost = "localhost", CertificateChainPolicy = policy, EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13 }, stop.Token); await ssl.WriteAsync("generated"u8.ToArray(), stop.Token); var response = new byte[2]; await ssl.ReadExactlyAsync(response, stop.Token); Check(response.AsSpan().SequenceEqual("OK"u8), "Independent TLS client trusts generated key/certificate.");
+        });
         Wait(listener.IsConnectionAvailable); using var tcp = listener.TakeConnection()!; using var options = TLSOptions.Server(key, certificate); using var tls = new StreamPeerTLS(); tls.AcceptStream(tcp, options); Wait(() => { tls.Poll(); return tls.GetStatus() == TLSStatus.Connected; }); var digest = SHA256.HashData("retained"u8); Check(crypto.Verify(HashType.SHA256, digest, crypto.Sign(HashType.SHA256, digest, key), key), "Crypto snapshots work while TLS retains the same resource."); Reject<InvalidOperationException>(key.Dispose); Reject<InvalidOperationException>(certificate.Dispose); var received = new byte[9]; var count = 0; Wait(() => { tls.Poll(); count += tls.GetPartialData(received.AsSpan(count)); return count == received.Length; }); Check(received.AsSpan().SequenceEqual("generated"u8), "Generated TLS native data."); tls.PutData("OK"u8); oracle.GetAwaiter().GetResult();
     }
 }

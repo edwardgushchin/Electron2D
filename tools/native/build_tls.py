@@ -11,15 +11,17 @@ import subprocess
 import tarfile
 import urllib.request
 
-VERSION = "3.6.5"
-SHA256 = "a2157c2830efdec3788939b00c9b0638306d3f0bbb76dc4832ee503bb397df98"
+VERSION = "4.1.0"
+SHA256 = "50c17baf54cb008f6ce42d50deb4b28050a1aad711636cabd4b241c7e90cc2fd"
 TARGETS = {"osx-x64": ("x86_64", "darwin64-x86_64-cc"),
            "osx-arm64": ("arm64", "darwin64-arm64-cc"),
+           "linux-x64": ("x86_64", "linux-x86_64"),
+           "linux-arm64": ("aarch64", "linux-aarch64"),
            "win-x86": ("x86", "electron2d-win-x86"),
            "win-x64": ("x64", "electron2d-win-x64"),
            "win-arm64": ("arm64", "electron2d-win-arm64")}
-LIBRARIES = {"libcrypto.3.dylib": "libElectron2DCrypto.3.dylib",
-             "libssl.3.dylib": "libElectron2DSSL.3.dylib"}
+LIBRARIES = {"libcrypto.4.dylib": "libElectron2DCrypto.4.dylib",
+             "libssl.4.dylib": "libElectron2DSSL.4.dylib"}
 
 
 def checked_archive(path):
@@ -30,24 +32,33 @@ def checked_archive(path):
 def build(rid, output):
     machine, target = TARGETS[rid]
     windows = rid.startswith("win-")
+    linux = rid.startswith("linux-")
     if windows:
         if platform.system() != "Windows" or os.environ.get("VSCMD_ARG_TGT_ARCH") != machine:
             raise RuntimeError("OpenSSL native production requires the selected Windows compiler architecture")
-    elif platform.system() != "Darwin" or platform.machine() != machine:
-        raise RuntimeError("OpenSSL native production requires the matching macOS runner")
+    elif platform.system() != ("Linux" if linux else "Darwin") or platform.machine() != machine:
+        raise RuntimeError("OpenSSL native production requires the matching target runner")
     source, directory = prepare(output)
     if windows:
         environment = dict(os.environ, OPENSSL_LOCAL_CONFIG_DIR=str(Path(__file__).resolve().parent))
         subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs", "no-asm", "no-uplink",
                         "--prefix=" + str(output / "install")], cwd=directory, env=environment, check=True)
         subprocess.run(["nmake", "/nologo", "build_libs"], cwd=directory, check=True)
-        for name in ("libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll"):
+        for name in ("libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll"):
             shutil.copy2(directory / name, output / name)
         print(f"{rid}: pinned OpenSSL {VERSION} built with private DLL identities")
         return
     subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs",
                     "--prefix=/Electron2D", "--openssldir=/etc/ssl"], cwd=directory, check=True)
     subprocess.run(["make", "-j4", "build_libs"], cwd=directory, check=True)
+    if linux:
+        # Standard major identities let the .NET PAL share these exact files.
+        for original in ("crypto", "ssl"):
+            path = output / ("lib" + original + ".so.4")
+            shutil.copy2(directory / ("lib" + original + ".so"), path)
+            subprocess.run(["patchelf", "--set-rpath", "$ORIGIN", str(path)], check=True)
+        print(f"{rid}: pinned OpenSSL {VERSION} and relative crypto dependency built")
+        return
     for original, name in LIBRARIES.items():
         path = output / name
         shutil.copy2(directory / original, path)
@@ -77,6 +88,8 @@ def prepare(output):
             contents.extractall(output, filter="data")
     directory = output / "build"
     directory.mkdir(exist_ok=True)
+    # Configure generates the app header even with no-apps in the 4.1 archive.
+    (directory / "apps/include").mkdir(parents=True, exist_ok=True)
     return source, directory
 
 

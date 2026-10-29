@@ -8,8 +8,8 @@ internal static unsafe class TLSSystemTrustTests
 {
     internal static void Run()
     {
-        var name = OperatingSystem.IsWindows() ? "libcrypto-3-Electron2D.dll" : OperatingSystem.IsMacOS() ? "libElectron2DCrypto.3.dylib" : "libcrypto.so.3";
-        var path = OperatingSystem.IsLinux() ? name : Path.Combine(AppContext.BaseDirectory, "runtimes", NativeLibraries.RuntimeRID, "native", name);
+        var name = OperatingSystem.IsWindows() ? "libcrypto-4-Electron2D.dll" : OperatingSystem.IsMacOS() ? "libElectron2DCrypto.4.dylib" : "libcrypto.so.4";
+        var path = Path.Combine(AppContext.BaseDirectory, "runtimes", NativeLibraries.RuntimeRID, "native", name);
         var library = NativeLibrary.Load(path);
         try
         {

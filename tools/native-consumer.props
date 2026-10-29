@@ -22,6 +22,29 @@
     <ProjectReference Remove="$(MSBuildThisFileDirectory)../Electron2D.csproj" />
     <PackageReference Include="Electron2D" Version="[$(Electron2DVersion)]" />
   </ItemGroup>
+  <PropertyGroup>
+    <_Electron2DConsumerCryptoName>libcrypto.so.4</_Electron2DConsumerCryptoName>
+    <_Electron2DConsumerSSLName>libssl.so.4</_Electron2DConsumerSSLName>
+    <_Electron2DConsumerCryptoName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DCrypto.4.dylib</_Electron2DConsumerCryptoName>
+    <_Electron2DConsumerSSLName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DSSL.4.dylib</_Electron2DConsumerSSLName>
+    <_Electron2DConsumerCryptoName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">libcrypto-4-Electron2D.dll</_Electron2DConsumerCryptoName>
+    <_Electron2DConsumerSSLName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">libssl-4-Electron2D.dll</_Electron2DConsumerSSLName>
+    <_Electron2DConsumerCryptoPath Condition="'$(Electron2DTLSNativeDirectory)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DTLSNativeDirectory)/$(_Electron2DConsumerCryptoName)'))</_Electron2DConsumerCryptoPath>
+    <_Electron2DConsumerSSLPath Condition="'$(Electron2DTLSNativeDirectory)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DTLSNativeDirectory)/$(_Electron2DConsumerSSLName)'))</_Electron2DConsumerSSLPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerTLSOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DTLSNativeDirectory)' != ''">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerCryptoName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerCryptoName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerCryptoPath)'" />
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerSSLName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerSSLName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerSSLPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerTLSOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DTLSNativeDirectory)' != ''">
+    <ItemGroup>
+      <_Electron2DConsumerTLS Include="$(Electron2DTLSNativeDirectory)/$(_Electron2DConsumerCryptoName);$(Electron2DTLSNativeDirectory)/$(_Electron2DConsumerSSLName)" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_Electron2DConsumerTLS)" DestinationFolder="$(TargetDir)runtimes/$(RuntimeIdentifier)/native" />
+    <Copy SourceFiles="@(_Electron2DConsumerTLS)" DestinationFolder="$(PublishDir)runtimes/$(RuntimeIdentifier)/native" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
   <Target Name="CopyElectron2DConsumerRenderOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DRenderNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
     <PropertyGroup>
       <_Electron2DConsumerRenderName>libElectron2DRender.so</_Electron2DConsumerRenderName>
@@ -135,5 +158,20 @@
   <Target Name="CopyElectron2DConsumerOGVOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DOGVNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
     <Copy SourceFiles="$(Electron2DOGVNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)" />
     <Copy SourceFiles="$(Electron2DOGVNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
+  <PropertyGroup>
+    <_Electron2DConsumerWebRTCName>libElectron2DWebRTC.so</_Electron2DConsumerWebRTCName>
+    <_Electron2DConsumerWebRTCName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DWebRTC.dylib</_Electron2DConsumerWebRTCName>
+    <_Electron2DConsumerWebRTCName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DWebRTC.dll</_Electron2DConsumerWebRTCName>
+    <_Electron2DConsumerWebRTCPath Condition="'$(Electron2DWebRTCNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DWebRTCNativeLibrary)'))</_Electron2DConsumerWebRTCPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerWebRTCOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DWebRTCNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebRTCName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerWebRTCName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerWebRTCPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerWebRTCOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DWebRTCNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <Copy SourceFiles="$(Electron2DWebRTCNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebRTCName)" />
+    <Copy SourceFiles="$(Electron2DWebRTCNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebRTCName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
 </Project>

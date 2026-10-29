@@ -8,7 +8,7 @@ Last updated: 2026-10-19
 
 Source-only C# builds can use an older locally cached platform package for unrelated features; native WebRTC execution requires the matching fresh platform payload or an explicit source/prebuilt bridge.
 
-The engine-owned C ABI bridge statically links unchanged libdatachannel 0.24.6, libjuice, usrsctp and plog. The vendored manifest pins every source file; platform packages carry the corresponding notices and source-access statement. Media and the dependency's independent WebSocket backend are disabled. OpenSSL 3 supplies the cryptographic transport. Linux uses its existing system OpenSSL boundary; macOS and Windows producer recipes select the pinned private OpenSSL pair. Foreign execution remains a separate platform gate under [ADR 0021](../decisions/product.md#adr-0021).
+The engine-owned C ABI bridge statically links unchanged libdatachannel 0.24.6, libjuice, usrsctp and plog. The vendored manifest pins every source file; platform packages carry the corresponding notices and source-access statement. Media and the dependency's independent WebSocket backend are disabled. The shared [OpenSSL 4.1.0 source profile](tls.md#unified-openssl-source-profile) supplies cryptographic transport. All desktop producer recipes select that same pair; configuration and runtime initialization reject a stale provider. Foreign execution remains a separate platform gate under [ADR 0021](../decisions/product.md#adr-0021).
 
 ## Runtime flow and ownership
 

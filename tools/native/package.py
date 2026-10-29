@@ -19,11 +19,11 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
              "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
              "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
-LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so"),
+LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so", "libcrypto.so.4", "libssl.so.4"),
              "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DWebRTC.dylib", "libElectron2DMesh.dylib", "libElectron2DRender.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
-                       "libElectron2DCrypto.3.dylib", "libElectron2DSSL.3.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib"),
+                       "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib"),
              "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DWebRTC.dll", "Electron2DMesh.dll", "Electron2DRender.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
-                         "libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")}
+                         "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")}
 LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so",
                         "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
 ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DMesh.a", "libElectron2DRender.a", "libElectron2DWebP.a", "libElectron2DOGV.a", "libElectron2DKTX.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
@@ -47,7 +47,7 @@ def required_exports(name):
         return {"FT_Init_FreeType", "FT_New_Library", "FT_Add_Default_Modules", "FT_Set_Default_Properties",
                 "FT_Done_Library", "FT_New_Memory_Face", "FT_Load_Glyph", "e2d_ft_hb_memory", "e2d_ft_hb_version"}
     if "Crypto" in name or "crypto" in name:
-        return {"BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"}
+        return {"OpenSSL_version_num", "BIO_s_dgram_pair", "BIO_new_bio_dgram_pair", "ERR_get_error"}
     if "SSL" in name or "ssl" in name:
         return {"TLS_method", "DTLS_method", "SSL_CTX_new"}
     if "TextBreak" in name:
@@ -116,7 +116,7 @@ def windows_exports(path, rid, name):
         raise ValueError(f"Unbundled private DLL dependency: {path}: {imports - system - private}")
     if name == "FAudio.dll" and "sdl3.dll" not in imports:
         raise ValueError("FAudio must share the packaged SDL3 core")
-    if name == "libssl-3-Electron2D.dll" and "libcrypto-3-electron2d.dll" not in imports:
+    if name == "libssl-4-Electron2D.dll" and "libcrypto-4-electron2d.dll" not in imports:
         raise ValueError("Private OpenSSL must resolve its own bundled crypto library")
     if "FreeType" in name and imports & (private - {name.lower()}):
         raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")
@@ -141,7 +141,7 @@ def macos_exports(path, rid, name):
     imports = subprocess.check_output(["otool", "-L", str(path)], text=True)
     if "libFAudio" in name and "@rpath/libSDL3.0.dylib" not in imports:
         raise ValueError("FAudio must share the packaged SDL3 core")
-    if "Electron2DSSL" in name and "@loader_path/libElectron2DCrypto.3.dylib" not in imports:
+    if "Electron2DSSL" in name and "@loader_path/libElectron2DCrypto.4.dylib" not in imports:
         raise ValueError("Private OpenSSL must resolve its own bundled crypto library")
     if "libicu" in imports.lower():
         raise ValueError("Private text must not depend on global ICU")
@@ -183,6 +183,10 @@ def elf_exports(path):
 
 
 def inspect(rid, directory):
+    expected = set(LIBRARIES[platform(rid)])
+    for path in directory.iterdir():
+        if re.match(r"^lib(?:ssl[.-]|crypto[.-]|Electron2D(?:SSL|Crypto)\.)", path.name) and path.name not in expected:
+            raise ValueError(f"Unselected OpenSSL library in target payload: {path}")
     if rid not in RIDS:
         raise ValueError(f"Unsupported native RID: {rid}")
     libraries = LIBRARIES[platform(rid)]
@@ -217,8 +221,14 @@ def inspect(rid, directory):
         dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(path)], text=True)
         if re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) != [name]:
             raise ValueError(f"Wrong SONAME: {path}")
-        if re.search(r"\((RPATH|RUNPATH)\)", dynamic):
+        relative_tls = rid.startswith("linux-") and name in ("libElectron2DWebRTC.so", "libcrypto.so.4", "libssl.so.4")
+        paths = re.findall(r"\((?:RPATH|RUNPATH)\).*\[([^]]+)\]", dynamic)
+        if paths != (["$ORIGIN"] if relative_tls else []):
             raise ValueError(f"Native package must not retain a build-machine search path: {path}")
+        if relative_tls and re.search(r"\(NEEDED\).*\[lib(?:ssl|crypto)\.so\.(?!4\])", dynamic):
+            raise ValueError(f"Private TLS must not resolve a second system OpenSSL: {path}")
+        if relative_tls and name == "libssl.so.4" and "[libcrypto.so.4]" not in dynamic:
+            raise ValueError("Private OpenSSL must resolve its own bundled crypto library")
         if rid.startswith("linux-") and "FreeType" in name and re.search(
                 r"\(NEEDED\).*\[(libharfbuzz|libpng|libbrotli|libz\.)", dynamic, re.IGNORECASE):
             raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")

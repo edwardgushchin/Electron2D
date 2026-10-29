@@ -1,4 +1,5 @@
 { global:
+  e2d_rtc_tls_version;
   e2d_rtc_error;
   e2d_rtc_create;
   e2d_rtc_destroy;

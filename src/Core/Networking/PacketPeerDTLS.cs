@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace Electron2D;
 
 /// <summary>Transfers authenticated DTLS datagrams over a borrowed connected PacketPeerUDP.</summary>
-/// <remarks>Calls/disposal require the constructing thread. Linux OpenSSL 3.2 or later supplies DTLS 1.2 and
+/// <remarks>Calls/disposal require the constructing thread. The matching native cryptography profile supplies DTLS 1.2 and
 /// fixed datagram BIO storage. Poll preserves packet boundaries, progresses cookies/handshake/timers and
 /// remote closure. Preparation allocates; warmed span packet/poll cycles reuse bounded storage. The borrowed
 /// UDP peer must remain connected to its original endpoint and exclusively used for this session.</remarks>
@@ -40,7 +40,7 @@ public class PacketPeerDTLS : PacketPeer
             using var context = TLSNative.CreateContext(options, true); var trust = options.GetTrustedCAChain(); if (trust is not null) { var certificates = trust.RetainCertificates(); _trust = trust; TLSNative.AddTrust(context.Pointer, certificates); }
             Attach(peer, TLSNative.CreateSession(context.Pointer, false, expected, !options.IsUnsafeClient(), out var network, true), network); Poll();
         }
-        catch (EntryPointNotFoundException error) { Cleanup(); _status = TLSStatus.Error; throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
+        catch (EntryPointNotFoundException error) { Cleanup(); _status = TLSStatus.Error; throw new PlatformNotSupportedException("DTLS requires the matching native datagram BIO backend.", error); }
         catch { Fail(); throw; }
     }
     internal unsafe void Accept(PacketPeerUDP peer, nint context, CryptoKey key, X509Certificate certificate, ReadOnlySpan<byte> cookie)
@@ -51,7 +51,7 @@ public class PacketPeerDTLS : PacketPeer
             _ = certificate.RetainCertificates(); _certificate = certificate; var bytes = key.RetainPrivateKey(); _key = key; CryptographicOperations.ZeroMemory(bytes);
             Attach(peer, TLSNative.CreateSession(context, true, "", false, out var network, true), network); _cookie = (nint)NativeAllocation.Alloc(32); cookie.CopyTo(new Span<byte>((void*)_cookie, 32)); TLSNative.Require(TLSNative.SSL_set_ex_data(_session!.Pointer, 0, _cookie), "DTLS cookie binding failed."); TLSNative.SSL_set_options(_session.Pointer, 1UL << 13); Poll();
         }
-        catch (EntryPointNotFoundException error) { Cleanup(); _status = TLSStatus.Error; throw new PlatformNotSupportedException("DTLS requires OpenSSL 3.2 datagram BIO support.", error); }
+        catch (EntryPointNotFoundException error) { Cleanup(); _status = TLSStatus.Error; throw new PlatformNotSupportedException("DTLS requires the matching native datagram BIO backend.", error); }
         catch { Fail(); throw; }
     }
     private void Attach(PacketPeerUDP peer, TLSHandle session, TLSHandle network) { _session = session; _network = network; _udp = peer; _generation = peer.ConnectionGeneration; _status = TLSStatus.Handshaking; }

@@ -145,6 +145,11 @@ jobs:
       - name: Verify x64 application architecture
         if: inputs.tests && inputs.rid == 'osx-x64'
         run: lipo -archs "bin/ci-tests/$CI_RID/Electron2D.Tests" | grep -Fx x86_64
+      - name: Select the shared Linux cryptography provider
+        if: inputs.tests && startsWith(inputs.rid, 'linux-') && (inputs.suite == 'full' || inputs.suite == 'portable')
+        run: |
+          echo "DOTNET_OPENSSL_VERSION_OVERRIDE=4" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/bin/ci-tests/$CI_RID/runtimes/$CI_RID/native" >> "$GITHUB_ENV"
       - name: Install audited Windows software GPU for runtime checks
         if: inputs.tests && inputs.suite == 'full' && startsWith(inputs.rid, 'win-')
         shell: pwsh

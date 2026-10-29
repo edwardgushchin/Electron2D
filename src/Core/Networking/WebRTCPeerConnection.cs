@@ -79,6 +79,7 @@ public class WebRTCPeerConnection : ElectronObject
     /// <summary>Reinitializes the connection with a copied set of ICE endpoints.</summary>
     /// <param name="configuration">Null uses host candidates without STUN/TURN servers.</param>
     /// <remarks>Invalid input/setup preserves the old cohort. Successful replacement closes its channels without disposing their caller-owned wrappers.</remarks>
+    /// <exception cref="PlatformNotSupportedException">The native transport and runtime cryptography providers are unavailable or incompatible.</exception>
     public virtual unsafe void Initialize(WebRTCConfiguration? configuration = null)
     {
         CheckPeerAccess(); _preparing = true; var allocations = new List<nint>();

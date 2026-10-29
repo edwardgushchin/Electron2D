@@ -18,7 +18,7 @@ public enum TLSStatus
 }
 
 /// <summary>Encrypts ordered bytes over a borrowed StreamPeer through a polled TLS session.</summary>
-/// <remarks>Calls require the constructing thread. The current native backend is Linux OpenSSL 3 with TLS 1.2/1.3,
+/// <remarks>Calls require the constructing thread. Native cryptography and runtime providers must match. TLS 1.2/1.3 use
 /// system/custom trust and expected-name validation. Poll processes handshake/control records and buffered output.
 /// Full I/O may wait; partial I/O retains bounded record buffers. Disconnect/Dispose never disposes the borrowed stream.</remarks>
 public class StreamPeerTLS : StreamPeer

@@ -53,7 +53,7 @@ def build(rid, sdl, artifacts):
         destination.mkdir(parents=True, exist_ok=True)
         shutil.copy2(directory / name, destination / name)
     build_tls.build(rid, output / "tls")
-    for name in ("libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll"):
+    for name in ("libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll"):
         shutil.copy2(output / "tls" / name, destination / name)
     build_webrtc.build(rid, output / "webrtc", output / "tls")
     shutil.copy2(output / "webrtc/Electron2DWebRTC.dll", destination / "Electron2DWebRTC.dll")

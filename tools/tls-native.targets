@@ -1,17 +1,27 @@
 <Project>
   <PropertyGroup>
     <_Electron2DTLSBuild>$(MSBuildThisFileDirectory)../obj/tls-native/$(_Electron2DPrivateNativeRID)</_Electron2DTLSBuild>
+    <_Electron2DCryptoName>libcrypto.so.4</_Electron2DCryptoName>
+    <_Electron2DSSLName>libssl.so.4</_Electron2DSSLName>
+    <_Electron2DCryptoName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DCrypto.4.dylib</_Electron2DCryptoName>
+    <_Electron2DSSLName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DSSL.4.dylib</_Electron2DSSLName>
+    <_Electron2DCryptoName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libcrypto-4-Electron2D.dll</_Electron2DCryptoName>
+    <_Electron2DSSLName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libssl-4-Electron2D.dll</_Electron2DSSLName>
+    <_Electron2DTLSDirectory>$(_Electron2DTLSBuild)</_Electron2DTLSDirectory>
+    <_Electron2DTLSDirectory Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'Linux'">$(PkgElectron2D_Linux)/runtimes/$(_Electron2DPrivateNativeRID)/native</_Electron2DTLSDirectory>
+    <_Electron2DTLSDirectory Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native</_Electron2DTLSDirectory>
+    <_Electron2DTLSDirectory Condition="'$(Electron2DNativePlatform)' == 'Windows' and '$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Windows)/runtimes/$(_Electron2DPrivateNativeRID)/native</_Electron2DTLSDirectory>
+    <_Electron2DTLSDirectory Condition="'$(Electron2DTLSNativeDirectory)' != ''">$(Electron2DTLSNativeDirectory)</_Electron2DTLSDirectory>
   </PropertyGroup>
-  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'MacOS'">
-    <_Electron2DTLSNative Include="$(_Electron2DTLSBuild)/libElectron2DCrypto.3.dylib;$(_Electron2DTLSBuild)/libElectron2DSSL.3.dylib" />
-    <_Electron2DTLSNative Remove="@(_Electron2DTLSNative)" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
-    <_Electron2DTLSNative Include="$(PkgElectron2D_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libElectron2DCrypto.3.dylib;$(PkgElectron2D_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libElectron2DSSL.3.dylib" Condition="'$(Electron2DBuildNativeFromSource)' != 'true'" />
+  <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Windows'">
+    <_Electron2DTLSNative Include="$(_Electron2DTLSDirectory)/$(_Electron2DCryptoName);$(_Electron2DTLSDirectory)/$(_Electron2DSSLName)" />
     <None Include="@(_Electron2DTLSNative)" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativePlatform)' == 'Windows'">
-    <_Electron2DTLSNative Include="$(_Electron2DTLSBuild)/libcrypto-3-Electron2D.dll;$(_Electron2DTLSBuild)/libssl-3-Electron2D.dll" />
-  </ItemGroup>
-  <Target Name="BuildElectron2DTLSNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and ('$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Windows')" Inputs="$(MSBuildThisFileDirectory)native/build_tls.py;$(MSBuildThisFileDirectory)native/openssl-windows.conf;$(MSBuildThisFileDirectory)native-package.props" Outputs="@(_Electron2DTLSNative)">
+  <Target Name="ValidateElectron2DTLSOverride" BeforeTargets="PrepareForBuild" Condition="'$(Electron2DTLSNativeDirectory)' != ''">
+    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS' and '$(Electron2DNativePlatform)' != 'Windows'" Text="The TLS directory override requires a desktop target profile." />
+    <Error Condition="!Exists('$(_Electron2DTLSDirectory)/$(_Electron2DCryptoName)') or !Exists('$(_Electron2DTLSDirectory)/$(_Electron2DSSLName)')" Text="Electron2DTLSNativeDirectory must contain both matching target TLS libraries." />
+  </Target>
+  <Target Name="BuildElectron2DTLSNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DTLSNativeDirectory)' == '' and ('$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Windows' or '$(Electron2DNativePlatform)' == 'Linux')" Inputs="$(MSBuildThisFileDirectory)native/build_tls.py;$(MSBuildThisFileDirectory)native/openssl-windows.conf;$(MSBuildThisFileDirectory)native-package.props" Outputs="@(_Electron2DTLSNative)">
     <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)native/build_tls.py&quot; $(_Electron2DPrivateNativeRID) &quot;$(_Electron2DTLSBuild)&quot;" />
   </Target>
 </Project>

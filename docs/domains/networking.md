@@ -50,7 +50,7 @@ Synchronizer root/configuration replacement preflights typed targets and budgets
 
 [UPNP gateway discovery/control](../components/upnp.md) now supplies synchronous SSDP and per-device description/connection assessment plus typed SOAP query/add/delete commands. Borrowed membership and owner-thread lifetimes are explicit. Independent native multicast and IPv4/IPv6 SOAP fixtures execute; a real IPv4 gateway passed read-only querying. Actual gateway mapping changes, routed IPv6 discovery/connectivity, foreign hosts and owner acceptance remain separate.
 
-[Native DTLS packets](../components/dtls.md) now supplies PacketPeerDTLS and DTLSServer over borrowed connected UDP peers, with shared TLSStatus, existing TLSOptions/security resources, cookie exchange, retransmission timers and complete authenticated packet delivery. Native Linux OpenSSL 3.2+ is required. Independent OpenSSL processes in both roles and prepared allocation/public-scene checks execute; ENet/routed/foreign/native allocator/human gates remain separate.
+[Native DTLS packets](../components/dtls.md) now supplies PacketPeerDTLS and DTLSServer over borrowed connected UDP peers, with shared TLSStatus, existing TLSOptions/security resources, cookie exchange, retransmission timers and complete authenticated packet delivery. The shared [OpenSSL source profile](../components/tls.md#unified-openssl-source-profile) supplies the native backend. Independent OpenSSL processes in both roles and prepared allocation/public-scene checks execute; ENet/routed/foreign/native allocator/human gates remain separate.
 
 ## Authoritative physics consumer
 

@@ -22,7 +22,18 @@ internal static unsafe partial class WebRTCNative
     internal static nint Require(nint value) { if (value == 0) throw new IOException(Message()); return value; }
     internal static void CheckError() { if (*(byte*)Error() != 0) throw new IOException(Message()); }
     [LibraryImport(Library, EntryPoint = "e2d_rtc_error"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint Error();
-    [LibraryImport(Library, EntryPoint = "e2d_rtc_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint Create(nint* urls, nint* users, nint* passwords, int count);
+    internal static nint Create(nint* urls, nint* users, nint* passwords, int count)
+    {
+        TLSNative.CheckBackend();
+        try
+        {
+            if (TLSVersion() != 0x40100000) throw new PlatformNotSupportedException("WebRTC requires the matching OpenSSL 4.1.0 native libraries.");
+        }
+        catch (EntryPointNotFoundException error) { throw new PlatformNotSupportedException("WebRTC requires the matching native transport bundle.", error); }
+        return CreateNative(urls, users, passwords, count);
+    }
+    [LibraryImport(Library, EntryPoint = "e2d_rtc_tls_version"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial ulong TLSVersion();
+    [LibraryImport(Library, EntryPoint = "e2d_rtc_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint CreateNative(nint* urls, nint* users, nint* passwords, int count);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void Destroy(nint peer);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_close"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Close(WebRTCPeerHandle peer);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_state"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int State(WebRTCPeerHandle peer, int kind);

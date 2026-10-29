@@ -21,6 +21,14 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_target_payload_rejects_parallel_tls_versions(self):
+        for rid, name in (("linux-x64", "libssl.so.3"), ("win-x64", "libcrypto-3-Electron2D.dll"), ("osx-arm64", "libElectron2DSSL.3.dylib")):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / name).write_bytes(b"stale TLS")
+                with self.assertRaisesRegex(ValueError, "Unselected OpenSSL"):
+                    package.inspect(rid, root)
+
     @unittest.skipUnless(sys.platform == "linux" and all(shutil.which(tool) for tool in ("cc", "nm", "readelf")), "Linux ELF tools are unavailable")
     def test_webp_publish_rejects_encoder_only_and_nonportable_assets(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -58,7 +66,7 @@ class NativePackageTests(unittest.TestCase):
             headers = tls / ("openssl-" + build_tls.VERSION) / "include/openssl"
             headers.mkdir(parents=True)
             (headers / "ssl.h").write_text("")
-            (headers / "opensslv.h").write_text("#define OPENSSL_VERSION_MAJOR 3\n#define OPENSSL_VERSION_MINOR 6\n#define OPENSSL_VERSION_PATCH 5\n")
+            (headers / "opensslv.h").write_text("#define OPENSSL_VERSION_MAJOR 4\n#define OPENSSL_VERSION_MINOR 1\n#define OPENSSL_VERSION_PATCH 0\n#define OPENSSL_VERSION_STR \"4.1.0\"\n")
             (tls / "build/include").mkdir(parents=True)
             for name in ("libcrypto.lib", "libssl.lib"):
                 (tls / "build" / name).write_bytes(b"selected private import library")
@@ -73,13 +81,17 @@ set(WIN32 TRUE)
 set(MSVC TRUE)
 set(CMAKE_FIND_LIBRARY_PREFIXES "")
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
-find_package(OpenSSL REQUIRED)
+find_package(OpenSSL 4.1.0 EXACT REQUIRED)
 if(NOT OPENSSL_CRYPTO_LIBRARY STREQUAL "${EXPECTED}/libcrypto.lib" OR NOT OPENSSL_SSL_LIBRARY STREQUAL "${EXPECTED}/libssl.lib")
   message(FATAL_ERROR "A foreign OpenSSL import library was selected")
 endif()
 ''')
             command = ["cmake", "-S", str(project), "-B", str(root / "found"), "-DEXPECTED=" + str(tls / "build"), *options]
             subprocess.run(command, check=True, capture_output=True, text=True)
+            selected_header = root / "bridge/openssl-include/openssl/opensslv.h"
+            selected_header.write_text(selected_header.read_text().replace("4.1.0", "4.0.0"))
+            wrong_version = [arg.replace(str(root / "found"), str(root / "wrong-version")) for arg in command]
+            self.assertNotEqual(subprocess.run(wrong_version, capture_output=True).returncode, 0)
             missing = [arg.replace(str(root / "found"), str(root / "missing")) for arg in command if not arg.startswith("-DOPENSSL_ROOT_DIR=")]
             self.assertNotEqual(subprocess.run(missing, capture_output=True).returncode, 0)
 
@@ -193,7 +205,7 @@ endif()
         for profile in ("Linux", "MacOS", "Windows"):
             name = next(name for name in package.LIBRARIES[profile] if "Electron2DWebRTC" in name)
             self.assertEqual(package.required_exports(name), package.WEBRTC_EXPORTS)
-            self.assertEqual(len(package.required_exports(name)), 23)
+            self.assertEqual(len(package.required_exports(name)), 24)
         root = package.ROOT / "src/Vendor/libdatachannel"
         manifest = json.loads((root / "manifest.json").read_text())
         self.assertEqual(manifest["commit"], "6b1e2e620f1e37f0eafeee702eaea0043cb305fd")
@@ -208,6 +220,33 @@ endif()
                 build_webrtc.build("win-x64", root / "bridge", root / "missing-tls")
             with self.assertRaises(ValueError):
                 build_webrtc.build("browser-wasm", root / "bridge", root / "tls")
+
+    def test_webrtc_reuses_and_updates_readonly_generated_headers(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source, target = root / "source.h", root / "target.h"
+            source.write_text("first"); source.chmod(0o444)
+            build_webrtc.copy_header(source, target)
+            first = target.stat().st_mtime_ns
+            build_webrtc.copy_header(source, target)
+            self.assertEqual(target.stat().st_mtime_ns, first)
+            source.chmod(0o644); source.write_text("second"); source.chmod(0o444)
+            build_webrtc.copy_header(source, target)
+            self.assertEqual(target.read_text(), "second")
+
+    def test_linux_tls_production_keeps_the_crypto_pair_private(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch.object(build_tls.platform, "system", return_value="Linux"), \
+                    patch.object(build_tls.platform, "machine", return_value="x86_64"), \
+                    patch.object(build_tls, "prepare", return_value=(root / "source", root / "build")), \
+                    patch.object(build_tls.subprocess, "run") as run, patch.object(build_tls.shutil, "copy2") as copy:
+                build_tls.build("linux-x64", root)
+            self.assertEqual([call.args[1].name for call in copy.call_args_list],
+                             ["libcrypto.so.4", "libssl.so.4"])
+            commands = [call.args[0] for call in run.call_args_list]
+            for name in ("libcrypto.so.4", "libssl.so.4"):
+                self.assertIn(["patchelf", "--set-rpath", "$ORIGIN", str(root / name)], commands)
 
     def test_webp_decoder_and_animation_closure_are_required(self):
         for profile, names in package.LIBRARIES.items():
@@ -270,7 +309,7 @@ endif()
                 build_windows.build("win-x64", root / "SDL3.dll", root / "artifacts")
             sources = [call.args[0] for call in copy.call_args_list]
             self.assertEqual([path.name for path in sources if path.parent.name == "tls"],
-                             ["libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll"])
+                             ["libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll"])
             self.assertIn("Electron2DMesh.dll", [path.name for path in sources])
 
     def test_default_elf_symbol_versions_resolve_but_nondefault_versions_do_not(self):
@@ -428,7 +467,9 @@ endif()
                 def dynamic(command, **kwargs):
                     name = Path(command[-1]).name
                     needed = "libSDL3.so.0" if name == "libFAudio.so.0" else dependency if "FreeType" in name else "libc.so.6"
-                    return f"(SONAME) [{name}]\n(NEEDED) [{needed}]\n"
+                    paths = "(RUNPATH) [$ORIGIN]\n" if name in ("libElectron2DWebRTC.so", "libcrypto.so.4", "libssl.so.4") else ""
+                    if name == "libssl.so.4": needed = "libcrypto.so.4"
+                    return f"(SONAME) [{name}]\n(NEEDED) [{needed}]\n" + paths
                 with patch.object(package.subprocess, "check_output", side_effect=dynamic), \
                         patch.object(package, "elf_exports", side_effect=lambda path: package.required_exports(path.name)), \
                         patch.object(package, "check_private_text"), patch.object(package, "check_private_webrtc"), \

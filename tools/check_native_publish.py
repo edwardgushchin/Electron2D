@@ -19,6 +19,7 @@ TEXT_EXPORTS = {
 
 
 WEBRTC_EXPORTS = {"e2d_rtc_" + name for name in (
+    "tls_version",
     "error", "create", "destroy", "close", "state", "offer", "local", "remote", "candidate", "event",
     "event_kind", "event_string", "event_channel", "event_release", "channel_create", "channel_destroy",
     "channel_close", "channel_poll", "channel_info", "channel_string", "channel_size", "channel_read", "channel_send")}
@@ -44,10 +45,11 @@ def check_private_webrtc(rid: str, library: Path) -> None:
     assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "WebRTC ELF architecture mismatch"
     dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(library)], text=True)
     assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libElectron2DWebRTC.so"], "WebRTC SONAME mismatch"
-    assert not re.search(r"\((RPATH|RUNPATH)\)", dynamic), "WebRTC retains a build-machine search path"
+    paths = re.findall(r"\((?:RPATH|RUNPATH)\).*\[([^]]+)\]", dynamic)
+    assert paths == ["$ORIGIN"], "WebRTC must resolve its packaged TLS pair beside the bridge"
     dependencies = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
-    allowed = {"libssl.so.3", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6", "libpthread.so.0", "libdl.so.2", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}
-    assert {"libssl.so.3", "libcrypto.so.3"} <= dependencies <= allowed, f"Unreviewed WebRTC dependencies: {dependencies}"
+    allowed = {"libssl.so.4", "libcrypto.so.4", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6", "libpthread.so.0", "libdl.so.2", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}
+    assert {"libssl.so.4", "libcrypto.so.4"} <= dependencies <= allowed, f"Unreviewed WebRTC dependencies: {dependencies}"
     symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(library)], text=True)
     assert {line.split()[-1] for line in symbols.splitlines()} == WEBRTC_EXPORTS, "WebRTC private ABI mismatch"
 

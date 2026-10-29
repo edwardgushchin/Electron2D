@@ -1448,6 +1448,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WEBSOCKET") == "1") { We
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HTTP") == "1") { HTTPTests.Run(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TLS_VERSION") is { } tlsVersionProfile) { TLSVersionTests.Reject(tlsVersionProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TLS") == "1") { TLSTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NETWORKING") == "1") { NetworkingTests.Run(); return; }

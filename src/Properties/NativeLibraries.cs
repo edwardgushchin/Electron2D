@@ -69,11 +69,11 @@ internal static partial class NativeLibraries
             {
                 if (name == "HarfBuzzSharp") return LoadRuntime("libHarfBuzzSharp.dll", assembly, path);
                 if (name == "freetype") return LoadRuntime("Electron2DFreeType.dll", assembly, path);
-                if (name == "Electron2DCrypto") return LoadRuntime("libcrypto-3-Electron2D.dll", assembly, path);
+                if (name == "Electron2DCrypto") return LoadRuntime("libcrypto-4-Electron2D.dll", assembly, path);
                 if (name == "Electron2DSSL")
                 {
-                    LoadRuntime("libcrypto-3-Electron2D.dll", assembly, path);
-                    return LoadRuntime("libssl-3-Electron2D.dll", assembly, path);
+                    LoadRuntime("libcrypto-4-Electron2D.dll", assembly, path);
+                    return LoadRuntime("libssl-4-Electron2D.dll", assembly, path);
                 }
                 if (name == "Electron2DENet") return LoadRuntime("Electron2DENet.dll", assembly, path);
                 if (name == "Electron2DWebRTC") return LoadRuntime("Electron2DWebRTC.dll", assembly, path);
@@ -97,8 +97,8 @@ internal static partial class NativeLibraries
             if (OperatingSystem.IsMacOS())
             {
                 if (name == "freetype") return LoadRuntime("libElectron2DFreeType.dylib", assembly, path);
-                if (name == "Electron2DCrypto") return LoadRuntime("libElectron2DCrypto.3.dylib", assembly, path);
-                if (name == "Electron2DSSL") return LoadRuntime("libElectron2DSSL.3.dylib", assembly, path);
+                if (name == "Electron2DCrypto") return LoadRuntime("libElectron2DCrypto.4.dylib", assembly, path);
+                if (name == "Electron2DSSL") return LoadRuntime("libElectron2DSSL.4.dylib", assembly, path);
                 if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.dylib", assembly, path);
                 if (name == "Electron2DWebRTC") return LoadRuntime("libElectron2DWebRTC.dylib", assembly, path);
                 if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.dylib", assembly, path);
@@ -119,8 +119,12 @@ internal static partial class NativeLibraries
             }
             if (!OperatingSystem.IsLinux()) return 0;
             if (name == "freetype") return LoadRuntime("libElectron2DFreeType.so", assembly, path);
-            if (name == "Electron2DCrypto") return NativeLibrary.Load("libcrypto.so.3", assembly, path);
-            if (name == "Electron2DSSL") return NativeLibrary.Load("libssl.so.3", assembly, path);
+            if (name == "Electron2DCrypto") return LoadRuntime("libcrypto.so.4", assembly, path);
+            if (name == "Electron2DSSL")
+            {
+                LoadRuntime("libcrypto.so.4", assembly, path);
+                return LoadRuntime("libssl.so.4", assembly, path);
+            }
             if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.so", assembly, path);
             if (name == "Electron2DWebRTC") return LoadRuntime("libElectron2DWebRTC.so", assembly, path);
             if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.so", assembly, path);

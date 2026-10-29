@@ -12,12 +12,42 @@ internal static unsafe partial class TLSNative
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static int VerifySystemTrust(nint context, nint argument) => VerifySystemCertificate(context);
 
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static int VerifyCertificate(nint context, nint argument)
+    {
+        try { PrepareCommonNameFallback(context); return X509_verify_cert(context); }
+        catch { X509_STORE_CTX_set_error(context, 50); return 0; }
+    }
+
+    private static void PrepareCommonNameFallback(nint context)
+    {
+        // Preserve DNS SAN precedence; OpenSSL 4 requires an explicit CN opt-in.
+        var certificate = X509_STORE_CTX_get0_cert(context);
+        if (certificate == 0) throw new CryptographicException("The native TLS certificate is missing.");
+        var names = X509_get_ext_d2i(certificate, 85, out var critical, 0);
+        var flags = 1u;
+        try
+        {
+            if (names == 0 && critical != -1) throw new CryptographicException("Invalid native TLS alternative names.");
+            var count = names == 0 ? 0 : OPENSSL_sk_num(names);
+            if (count < 0) throw new CryptographicException("Invalid native TLS alternative name count.");
+            for (var index = 0; index < count; index++)
+            {
+                GENERAL_NAME_get0_value(OPENSSL_sk_value(names, index), out var type);
+                if (type == 2) { flags = 0; break; }
+            }
+            X509_VERIFY_PARAM_set_hostflags(X509_STORE_CTX_get0_param(context), flags);
+        }
+        finally { GENERAL_NAMES_free(names); }
+    }
+
     internal static int VerifySystemCertificate(nint context)
     {
         var certificates = new List<X509Certificate2>();
         using var chain = new X509Chain();
         try
         {
+            PrepareCommonNameFallback(context);
             using var leaf = ReadCertificate(X509_STORE_CTX_get0_cert(context));
             var untrusted = X509_STORE_CTX_get0_untrusted(context);
             var count = untrusted == 0 ? 0 : OPENSSL_sk_num(untrusted);
@@ -73,4 +103,8 @@ internal static unsafe partial class TLSNative
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int OPENSSL_sk_num(nint stack);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint OPENSSL_sk_value(nint stack, int index);
     [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int i2d_X509(nint certificate, byte** data);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint X509_get_ext_d2i(nint certificate, int nid, out int critical, nint index);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint GENERAL_NAME_get0_value(nint name, out int type);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void GENERAL_NAMES_free(nint names);
+    [LibraryImport(Crypto), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void X509_VERIFY_PARAM_set_hostflags(nint parameters, uint flags);
 }

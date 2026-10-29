@@ -1,4 +1,5 @@
 #include <rtc/rtc.hpp>
+#include <openssl/crypto.h>
 #include <atomic>
 #include <cstring>
 #include <deque>
@@ -13,6 +14,7 @@
 #else
 #define API extern "C" __attribute__((visibility("default")))
 #endif
+API uint64_t e2d_rtc_tls_version(void) { return OpenSSL_version_num(); }
 namespace {
 thread_local std::string error;
 template<class F, class T> T attempt(F function, T failure) noexcept {

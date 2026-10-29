@@ -1,6 +1,6 @@
 # PacketPeerDTLS
 
-Last updated: 2026-10-04
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.PacketPeerDTLS`. **Source:** [PacketPeerDTLS.cs](../../src/Core/Networking/PacketPeerDTLS.cs).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-04
 
 Transfers authenticated DTLS datagrams over a borrowed connected PacketPeerUDP.
 
-Calls/disposal require the constructing thread. Linux OpenSSL 3.2 or later supplies DTLS 1.2 and fixed datagram BIO storage. Poll preserves packet boundaries, progresses cookies/handshake/timers and remote closure. Preparation allocates; warmed span packet/poll cycles reuse bounded storage. The borrowed UDP peer must remain connected to its original endpoint and exclusively used for this session.
+Calls/disposal require the constructing thread. The shared OpenSSL 4.1.0 profile supplies DTLS 1.2 and fixed datagram BIO storage. Poll preserves packet boundaries, progresses cookies/handshake/timers and remote closure. Preparation allocates; warmed span packet/poll cycles reuse bounded storage. The borrowed UDP peer must remain connected to its original endpoint and exclusively used for this session.
 
 **Inherits:** [PacketPeer](PacketPeer.md).
 
@@ -189,4 +189,4 @@ Remarks: This method can run concurrently in multiple callers and can race with 
 
 Constructing-thread operations/disposal reject a foreign thread before state mutation. Polling/send/disconnect/disposal reentry is guarded; UDP generation changes invalidate borrowed sessions. Security resources stay retained until helper and independent sessions release them. No wrapper closes the caller-owned UDP socket. Preparation/cookies/identity/snapshots allocate; prepared record/span/queue polling reuses bounded storage.
 
-[DTLSTests](../../tests/Electron2D.Tests/DTLSTests.cs) verifies native public UDPServer/Node/SceneTree packets, cookie challenge, first-hello loss/retry, 488-byte and empty/oversized/undersized edges, anti-replay/bad-MAC recovery, name/chain/system/unsafe policy, rollback/reentry/owner/lifetime and independent OpenSSL s_server/s_client roles. Sixty-four warmed active/idle intervals report zero managed bytes. OpenSSL3.2+ native backend is currently Linux64; other platforms/browser, native allocation/routed performance, ENet and human/editor/rendered acceptance remain separate. See [platform verification](../platform-verification.md).
+[DTLSTests](../../tests/Electron2D.Tests/DTLSTests.cs) verifies native public UDPServer/Node/SceneTree packets, cookie challenge, first-hello loss/retry, 488-byte and empty/oversized/undersized edges, anti-replay/bad-MAC recovery, name/chain/system/unsafe policy, rollback/reentry/owner/lifetime and independent OpenSSL s_server/s_client roles. Sixty-four warmed active/idle intervals report zero managed bytes. Earlier OpenSSL3.2+ evidence was Linux64; current source/version selection follows the shared TLS profile; other platforms/browser, native allocation/routed performance, ENet and human/editor/rendered acceptance remain separate. See [platform verification](../platform-verification.md).

@@ -148,3 +148,5 @@ public-verification and checksum files; a mismatch stops publication.
 See [Releasing](releasing.md) for release notes, version selection, GitHub assets,
 Wiki publication and the remaining manual acceptance steps. A fast-only CI result
 cannot authorize publication.
+
+The Linux native producer now builds the shared pinned OpenSSL pair with Perl/make/patchelf, and the RID runner selects that major-4 pair for the .NET PAL before cryptography. Local source-profile results and remaining runtime/package/foreign gates are recorded in [TLS qualification](maintaining.md#unified-native-tls-qualification). This changes pipeline wiring; only actual CI receipts establish remote execution.

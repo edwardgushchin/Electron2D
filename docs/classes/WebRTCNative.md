@@ -1,12 +1,12 @@
 # WebRTCNative
 
-Last updated: 2026-10-19
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Visibility:** internal. **Source:** [WebRTCNative.cs](../../src/Core/Networking/WebRTCNative.cs).
 
 ## Description
 
-Binds the private 23-function C ABI with LibraryImport/cdecl, typed SafeHandle parameters and caller spans. Thread-local native diagnostics become IOException. No public callback pointer, backend type or raw handle is exposed.
+Binds the private 24-function C ABI with LibraryImport/cdecl, typed SafeHandle parameters and caller spans. Initialization verifies the matching TLS/crypto provider before creating a transport; stale exports or versions reject. Thread-local native diagnostics become IOException. No public callback pointer, backend type or raw handle is exposed.
 
 ## Dependencies and verification
 
