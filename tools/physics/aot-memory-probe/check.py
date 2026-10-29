@@ -100,7 +100,8 @@ def main():
         command = [str(executable), *arguments]
         started = time.monotonic()
         mappings = set()
-        child_environment = environment | ({'DOTNET_GCHeapHardLimit': '8000000'} if 'common-oom' in label else {})
+        memory_library = executable.parent / 'runtimes/linux-x64/native/libElectron2DENet.so'
+        child_environment = environment | {'LD_LIBRARY_PATH': str(memory_library.parent)} | ({'DOTNET_GCHeapHardLimit': '8000000'} if 'common-oom' in label else {})
         with (output / (label + '.log')).open('w') as log:
             child = subprocess.Popen(command, env=child_environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
             try:
@@ -121,6 +122,7 @@ def main():
                 raise
         receipt = {'command': command, 'exit': child.returncode, 'seconds': time.monotonic() - started,
                    'GCHeapHardLimit': child_environment.get('DOTNET_GCHeapHardLimit'),
+                   'memoryLibrarySHA256': digest(memory_library),
                    'executableSHA256': digest(executable), 'mappings': sorted(mappings)}
         (output / (label + '.json')).write_text(json.dumps(receipt, indent=2) + '\n')
         assert child.returncode == expected, (label, child.returncode)
@@ -135,6 +137,7 @@ def main():
             assert ('aot-memory-producer: ' in text or 'aot-frozen-fixture: ' in text) and reason in text, label
             continue
         assert str(executable) in mappings and not any('libcoreclr' in path.lower() for path in mappings)
+        assert {path for path in mappings if path.endswith('/libElectron2DENet.so')} == {str(memory_library)}, label
         report = json.loads(text.splitlines()[-1])
         if 'common-oom' in label:
             assert report['Runtime'] == '.NET 10.0.1' and report['ServerGC'] == (image == 'server')
@@ -198,6 +201,7 @@ def main():
     summary = {'reports': reports, 'runtimeInputs': runtime_inputs, 'bridgeSHA256': digest(workspace / 'producer.o'),
                'deferredBridgeSHA256': digest(workspace / 'producer-deferred.o'),
                'frozenFixtureSHA256': digest(workspace / 'frozen-fixture.o'),
+               'memoryLibrarySHA256': digest(workspace / 'native/libElectron2DENet.so'),
                'sourceSHA256': {path.name: digest(path) for path in Path(__file__).parent.iterdir() if path.is_file()}}
     (output / 'checks.json').write_text(json.dumps(summary, indent=2) + '\n')
     print('NativeAOT raw common/fast/frozen/native commits, delayed-peak RED control, bounded OOM and lifecycle witnesses passed.')

@@ -53,13 +53,13 @@ states; this source trace does not implement that separate public enum.
 
 ## Direct owned native storage
 
-The internal NativeAllocation ledger now replaces direct NativeMemory and HGlobal payload allocation in the managed runtime. It owns the raw pointer and requested byte size in a private prefix, preserves ordinary fundamental or requested power-of-two alignment, and serializes successful allocation/resize/free publication with coherent current/peak reads. The peak updates at each successful boundary and survives frees; failed requests retain both the old block and counters. Requested payload bytes exclude allocator prefixes/padding. Zero-byte blocks remain releasable with a zero payload contribution. This is CPU native storage; GPU memory and managed wrapper objects are not counted again.
+The internal NativeAllocation ledger replaces direct NativeMemory and HGlobal payload allocation in the managed runtime. Its pure-C core lives in the existing private ENet/file-codec bundle; both the engine and source-instrumented NativeAOT producer call this same allocation/resize/free/snapshot ABI and native gate. Loading it opens no networking or device. Managed-side preparation checks ABI 1 before supplying callbacks; missing/mismatched bundles fail before entering an unmanaged allocator callback. It owns the raw pointer and requested byte size in a private prefix, preserves ordinary fundamental or requested power-of-two alignment, and serializes successful allocation/resize/free publication with coherent current/peak reads. The peak updates at each successful boundary and survives frees; failed requests retain both the old block and counters. Requested payload bytes exclude allocator prefixes/padding. Zero-byte blocks remain releasable with a zero payload contribution. This is CPU native storage; GPU memory and managed wrapper objects are not counted again.
 
 Current consumers include [ENet hosts/packets/codecs and file blocks](#enet-owned-allocation-domain), FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
 
 This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. The StreamPeerGZIP domain now supplies its internal zlib storage as described below; BCL compression consumers retain their separate allocator boundary. It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
 
-NativeAllocationTests passes on Linux x64 CLR and strict full-trim NativeAOT, including native allocation/reallocation failure, zero-size blocks, alignment 1–4096, four concurrent workers, an unobserved transient high-water mark and 1024 warmed alloc/resize/free/read cycles at strict 0/0 owner/all-thread managed bytes. Sixteen source-bound root profiles also pass for native allocation, file identity, networking, fonts/60 independent raster oracle cases, text, dialogs, audio, accessibility and CPU/GPU owner/separate physics. Receipts and exact payload/PDB/source hashes are under `bin/native-allocation-accounting/2026-10-28/`. The full ordinary suite also passes on that unchanged cohort in 951.475 seconds with one completion marker. Other platforms and total-memory producers remain open.
+Before the shared-core extraction, NativeAllocationTests passed on Linux x64 CLR and strict full-trim NativeAOT, including native allocation/reallocation failure, zero-size blocks, alignment 1–4096, four concurrent workers, an unobserved transient high-water mark and 1024 warmed alloc/resize/free/read cycles at strict 0/0 owner/all-thread managed bytes. Sixteen source-bound root profiles also pass for native allocation, file identity, networking, fonts/60 independent raster oracle cases, text, dialogs, audio, accessibility and CPU/GPU owner/separate physics. Receipts and exact payload/PDB/source hashes are under `bin/native-allocation-accounting/2026-10-28/`. The full ordinary suite also passed on that unchanged cohort in 951.475 seconds with one completion marker. Other platforms and total-memory producers remain open.
 
 ## FreeType-owned allocation domain
 
@@ -461,8 +461,9 @@ a composition. The full exact contract remains accepted; physics coverage stays
 
 The [source-runtime probe](../../tools/physics/aot-memory-probe/README.md) executes
 allocation/GC lifetime instrumentation in a separate v10.0.1 NativeAOT runtime
-copy on Linux x64. The installed SDK archives and production engine remain
-unchanged. Four pinned source edits observe successful ordinary and shared
+copy on Linux x64. The installed SDK archives remain unchanged. The production
+engine now shares the native ledger described below; its ordinary managed runtime
+is not instrumented. Four pinned source edits observe successful ordinary and shared
 string/array fast paths, the common GcAllocInternal success path (including
 pinned/direct and finalizable objects), and stopped-EE GC completion. Helper entry
 attempts alone are no longer the measurement for this fixture.
@@ -563,11 +564,30 @@ Both GC profiles also exercise a 256-MiB request under a verified 128-MiB heap
 limit, including GC, OOM and scope rollback. This is bounded allocator exhaustion,
 not exhausted host RAM. See the source-runtime probe for commands and boundaries.
 Receipts are under `bin/aot-common-memory/2026-10-29/`; earlier composed witnesses
-remain under `bin/aot-composed-memory/2026-10-29/`. The production C# allocator and
-native-library domains have not moved into this gate, so complete process/host
-acceptance remains open.
+remain under `bin/aot-composed-memory/2026-10-29/`.
 
-Production integration still needs CoreCLR image/frozen accounting and actual
+The production NativeAllocation now delegates to the same pure-C core, replacing
+the fixture's duplicate native allocator. A real strict full-trim NativeAOT engine
+host uses only public StreamPeerGZIP operations: compressor startup contributes
+350456 requested native bytes to the composed ledger, Clear returns native usage
+to zero, 64 further sessions drain and 20000 prepared reads allocate zero managed
+caller bytes. Its maps contain exactly one copied native bundle and no CoreCLR.
+The twelve-child probe matrix retains all success and rejection witnesses with
+that same bundle. The standalone assert-enabled C oracle independently checks
+alignment, failure preservation, ownership drain and composed-peak arithmetic;
+its synthetic managed values are not managed-runtime acceptance. Current CLR
+regressions pass native allocation, GZIP (ordinary and calibrated native probe),
+HTTP/HTTPS, ENet allocation, FreeType (1172/1180 unhinted/hinted failure positions),
+audio and native export preflight. CPU without a device and NVIDIA GPU each pass
+owner/separate execution: 128 measured complete frames per profile, strict 0/0
+managed bytes (512 frames total). An old-bundle control rejects ABI preparation
+before native use. Eleven assembly/PDB cohorts match their current authored
+sources. New receipts are under `bin/shared-native-memory/2026-10-29/`.
+
+This closes one shared native publication boundary for the accounted domains,
+not complete process/host acceptance.
+
+Production integration still needs CoreCLR image/frozen accounting and full
 engine/module-host acceptance, concurrent collector support, qualified large sizes
 and OS failures, the complete shared
 native/managed publication boundary and complete native-library domains. The

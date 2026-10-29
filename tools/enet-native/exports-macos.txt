@@ -18,3 +18,12 @@ _e2d_gzip_create
 _e2d_gzip_process
 _e2d_gzip_reset
 _e2d_gzip_destroy
+_e2d_memory_abi
+_e2d_memory_allocate
+_e2d_memory_reallocate
+_e2d_memory_release
+_e2d_memory_snapshot
+_e2d_memory_lock
+_e2d_memory_unlock
+_e2d_memory_managed_locked
+_e2d_memory_snapshot_locked

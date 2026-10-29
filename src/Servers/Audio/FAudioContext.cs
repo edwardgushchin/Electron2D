@@ -64,9 +64,9 @@ internal sealed unsafe partial class FAudioContext : IDisposable
     [LibraryImport(NativeLibraries.AudioLibrary, EntryPoint = "FAudioCreateWithCustomAllocatorEXT")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint Create(out nint engine, uint flags, uint processor, nint malloc, nint free, nint realloc);
-    internal static nint AllocateAddress => (nint)(delegate* unmanaged[Cdecl]<nuint, void*>)&Allocate;
-    internal static nint FreeAddress => (nint)(delegate* unmanaged[Cdecl]<void*, void>)&Free;
-    internal static nint ReallocateAddress => (nint)(delegate* unmanaged[Cdecl]<void*, nuint, void*>)&Reallocate;
+    internal static nint AllocateAddress { get { NativeAllocation.Prepare(); return (nint)(delegate* unmanaged[Cdecl]<nuint, void*>)&Allocate; } }
+    internal static nint FreeAddress { get { NativeAllocation.Prepare(); return (nint)(delegate* unmanaged[Cdecl]<void*, void>)&Free; } }
+    internal static nint ReallocateAddress { get { NativeAllocation.Prepare(); return (nint)(delegate* unmanaged[Cdecl]<void*, nuint, void*>)&Reallocate; } }
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     internal static void* Allocate(nuint size) { try { return AllocateStorage(size); } catch (OutOfMemoryException) { return null; } }
     internal static void* AllocateStorage(nuint size) { Interlocked.Increment(ref _allocations); return NativeAllocation.Alloc(size); }

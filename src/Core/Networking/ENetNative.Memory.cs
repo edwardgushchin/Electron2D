@@ -8,6 +8,7 @@ internal static unsafe partial class ENetNative
     private static bool _memoryReady;
     internal static void PrepareMemory()
     {
+        NativeAllocation.Prepare();
         lock (Gate)
         {
             if (_memoryReady) return;

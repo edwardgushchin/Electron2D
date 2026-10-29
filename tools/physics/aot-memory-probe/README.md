@@ -18,7 +18,8 @@ A separate 13-phase frozen fixture checks registration failure, empty registrati
 growth/shrink, commit-only/no-op updates, actual object payloads, unregister, an
 unobserved peak and disjoint/overlapping dynamic/frozen peaks. Its 64-cycle worker
 keeps one segment live at the forced-GC midpoint.
-A further 14-phase native fixture shares the observer's native gate with managed
+A further 14-phase native fixture uses the production pure-C allocator in the
+existing private ENet/file-codec bundle and shares its native gate with managed
 and frozen publication. Native malloc/realloc/free and their ledger commit occur
 inside the same critical section, with no managed callbacks. Fast object and
 string/array paths acquire that gate before changing their allocation pointer;
@@ -27,7 +28,9 @@ preserves the live volatile GPRs and stack alignment across acquisition. A
 thread-local assertion rejects a fast publication that missed this gate.
 
 Only the copied runtime is instrumented. The installed SDK, package archives and
-Electron2D runtime are unchanged. The patcher checks all four source hashes and
+ordinary managed runtime are unchanged. The engine NativeAllocation delegates
+to the shared native core; this diagnostic does not instrument its shipping GC.
+The patcher checks all four source hashes and
 replacement anchors before writing. Its checker also rejects a bad pin without
 partial writes and rejects reapplication. The consumer project replaces both the
 NativeLibrary input and its already-materialized linker argument in the original
@@ -54,6 +57,9 @@ after inspecting the new output:
 ```bash
 set -e
 probe_root=$(mktemp -d /tmp/e2d-aot-memory-XXXXXX)
+cmake -S tools/enet-native -B "$probe_root/native" -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build "$probe_root/native" --target Electron2DENet Electron2DMemoryCheck -j 4
+"$probe_root/native/Electron2DMemoryCheck"
 curl -fsSL https://codeload.github.com/dotnet/runtime/tar.gz/refs/tags/v10.0.1 -o "$probe_root/runtime.tar.gz"
 printf '%s  %s\n' 4c0b3aa0fda67c304762a572d6172ca5b2d29bb62191cf7c0fcef40a15223092 "$probe_root/runtime.tar.gz" | sha256sum --check
 # Python's data filter rejects archive entries escaping the owned extraction root.
@@ -85,12 +91,21 @@ for role in probe server source-baseline sdk-baseline concurrent deferred-common
   esac
   dotnet publish tools/physics/aot-memory-probe/AOTMemoryProbe.csproj -c Release -r linux-x64 \
     -p:ProbeNativeObject="$native_object" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
-    -p:ProbeRuntimeArchive="$archive" \
+    -p:ProbeRuntimeArchive="$archive" -p:ProbeMemoryLibrary="$probe_root/native/libElectron2DENet.so" \
     -p:ServerGarbageCollection="$server_gc" -p:ConcurrentGarbageCollection="$concurrent_gc" \
     --artifacts-path "$probe_root/$artifact" -o "$probe_root/$role"
 done
 python3 -B tools/physics/aot-memory-probe/check.py "$probe_root" bin/aot-memory-new
-rm -rf "$probe_root"
+# Exercise the real engine against the same ledger; supply the matching font bundle.
+Electron2DENetNativeLibrary="$probe_root/native/libElectron2DENet.so" \
+  dotnet publish tests/NativeMemory.SharedHost/NativeMemory.SharedHost.csproj -c Release -r linux-x64 \
+    -p:ProbeNativeObject="$probe_root/producer.o" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
+    -p:ProbeMemoryLibrary="$probe_root/native/libElectron2DENet.so" \
+    -p:ProbeRuntimeArchive="$runtime_libs/libRuntime.WorkstationGC.a" \
+    --artifacts-path "$probe_root/shared-managed" -o "$probe_root/shared-host"
+LD_LIBRARY_PATH="$probe_root/shared-host/runtimes/linux-x64/native" \
+  "$probe_root/shared-host/NativeMemory.SharedHost"
+# Retain receipts and inspect live references before removing the owned folder.
 ```
 
 Workstation and two-heap server GC use the same 29 dynamic, 13 frozen, 14 native and seven common witness phases. Twelve

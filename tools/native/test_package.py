@@ -240,12 +240,15 @@ endif()
             self.assertEqual(package.required_exports(name), {"e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
                                                             "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"})
 
-    def test_file_codec_exports_are_part_of_every_enet_payload(self):
+    def test_memory_and_codec_exports_are_part_of_every_enet_payload(self):
         for name in ['libElectron2DENet.so', 'Electron2DENet.dll', 'libElectron2DENet.a']:
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 20)
+            self.assertEqual(len(exports), 29)
             self.assertTrue({'e2d_enet_memory', 'e2d_enet_callbacks', 'e2d_file_encode', 'e2d_file_decode',
-                             'e2d_gzip_create', 'e2d_gzip_process', 'e2d_gzip_reset', 'e2d_gzip_destroy'} <= exports)
+                             'e2d_gzip_create', 'e2d_gzip_process', 'e2d_gzip_reset', 'e2d_gzip_destroy',
+                             'e2d_memory_abi', 'e2d_memory_allocate', 'e2d_memory_reallocate', 'e2d_memory_release',
+                             'e2d_memory_snapshot', 'e2d_memory_lock', 'e2d_memory_unlock',
+                             'e2d_memory_managed_locked', 'e2d_memory_snapshot_locked'} <= exports)
 
     def test_windows_producer_copies_tls_by_name_after_mesh_insertion(self):
         with patch.dict("sys.modules", {"windows": Mock()}):

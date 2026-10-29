@@ -37,7 +37,8 @@ set(E2D_ENET_KIND SHARED)
 if(ELECTRON2D_STATIC_NATIVE)
   set(E2D_ENET_KIND STATIC)
 endif()
-add_library(Electron2DENet ${E2D_ENET_KIND} bridge.c
+find_package(Threads REQUIRED)
+add_library(Electron2DENet ${E2D_ENET_KIND} bridge.c memory.c
   "${base}/ENet/callbacks.c" "${base}/ENet/compress.c" "${base}/ENet/host.c"
   "${base}/ENet/list.c" "${base}/ENet/packet.c" "${base}/ENet/peer.c" "${base}/ENet/protocol.c"
   "${base}/FastLZ/fastlz.c")
@@ -45,9 +46,13 @@ target_include_directories(Electron2DENet PRIVATE "${base}/ENet/include" "${base
 if(APPLE OR WIN32 OR ANDROID OR EMSCRIPTEN)
   target_include_directories(Electron2DENet PRIVATE "${zstd_SOURCE_DIR}/lib")
 endif()
-target_link_libraries(Electron2DENet PRIVATE ZLIB::ZLIB "${ZSTD_LIBRARY}")
+target_compile_features(Electron2DENet PRIVATE c_std_11)
+target_link_libraries(Electron2DENet PRIVATE ZLIB::ZLIB "${ZSTD_LIBRARY}" Threads::Threads)
 set_target_properties(Electron2DENet PROPERTIES C_VISIBILITY_PRESET hidden LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
   ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+add_executable(Electron2DMemoryCheck EXCLUDE_FROM_ALL check_allocator.c memory.c)
+target_compile_features(Electron2DMemoryCheck PRIVATE c_std_11)
+target_link_libraries(Electron2DMemoryCheck PRIVATE Threads::Threads)
 
 if(ELECTRON2D_STATIC_NATIVE)
   # The application linker resolves the platform-specific socket adapter.

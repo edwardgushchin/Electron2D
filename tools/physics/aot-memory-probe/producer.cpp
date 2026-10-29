@@ -2,23 +2,21 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <atomic>
 #include <limits>
 #include <new>
 #include <pthread.h>
 #include <sched.h>
 #include <unistd.h>
+#include "../../enet-native/memory.h"
 struct Counts { uint64_t current, peak, allocated, retired, count, collections, fastObjects, fastArrays, slow, frozenCount, frozenBytes, failures; };
 static_assert(sizeof(Counts) == 96 && sizeof(uintptr_t) == 8);
 struct Watch { uintptr_t type; int64_t length; Counts totals; uint64_t survivors, survivorCount; };
 struct FrozenCounts { uint64_t current, peak, allocated, retired, segments, registrations, updates, removals, failures, managedCurrent, managedPeak; };
 static_assert(sizeof(FrozenCounts) == 88);
 struct Segment { void *handle; uintptr_t start; uint64_t bytes; Segment *next; };
-struct ProcessCounts { uint64_t managedCurrent, managedPeak, nativeCurrent, nativePeak, current, peak, allocated, retired, allocations, resizes, frees, failures; };
+using ProcessCounts = E2DMemorySnapshot;
 static_assert(sizeof(ProcessCounts) == 96);
-struct NativeHeader { void *allocation; size_t size, alignment; };
-static_assert(sizeof(NativeHeader) <= 32);
 struct CommonCounts { uint64_t attempts, soh, freeList, segment, completed, failed, reverted, bytes, pending; };
 static_assert(sizeof(CommonCounts) == 72);
 struct CommonScope { CommonScope *previous; void *object; uint64_t bytes; uintptr_t type, elements; unsigned route; bool canceled, delayed; };
@@ -26,9 +24,7 @@ static_assert(sizeof(CommonScope) <= 64 && alignof(CommonScope) <= alignof(uint6
 struct DelayCounts { uint64_t expectedPeak, freedBeforeTyped, completed; };
 static Watch watches[16];
 static FrozenCounts frozen;
-static ProcessCounts processTotals;
 static Segment *segments;
-static pthread_mutex_t gate = PTHREAD_MUTEX_INITIALIZER;
 static bool collecting;
 static thread_local bool fastCommit;
 static thread_local CommonScope *commonScope;
@@ -44,86 +40,37 @@ static bool rejectFrozen;
 [[noreturn]] static void fail(const char *message, int code = 135) {
     std::fprintf(stderr, "aot-memory-producer: %s\n", message); _exit(code);
 }
-static void enter() { if (pthread_mutex_lock(&gate)) fail("mutex lock failed"); }
-static void leave() { if (pthread_mutex_unlock(&gate)) fail("mutex unlock failed"); }
+static void enter() { e2d_memory_lock(); }
+static void leave() { e2d_memory_unlock(); }
 static uint64_t add(uint64_t a, uint64_t b) {
     if (b > std::numeric_limits<uint64_t>::max() - a) fail("counter overflow");
     return a + b;
 }
 static uint64_t aligned(size_t size) { return add(size, 7) & ~uint64_t{7}; }
-static void publishProcess() {
-    auto &p = processTotals;
-    p.managedCurrent = frozen.managedCurrent; p.managedPeak = frozen.managedPeak;
-    p.current = add(p.managedCurrent, p.nativeCurrent);
-    if (p.current > INT64_MAX) fail("process payload exceeds signed monitor range");
-    if (p.current > p.peak) p.peak = p.current;
+static ProcessCounts processSnapshotLocked() {
+    ProcessCounts result; e2d_memory_snapshot_locked(&result); return result;
 }
 static void publishManaged() {
     frozen.managedCurrent = add(watches[0].totals.current, frozen.current);
     if (frozen.managedCurrent > frozen.managedPeak) frozen.managedPeak = frozen.managedCurrent;
-    publishProcess();
-}
-static bool nativeRequest(size_t size, size_t prefix, size_t previous, size_t alignment, size_t &bytes) {
-    if (size > INT64_MAX - (processTotals.current - previous) || size > SIZE_MAX - prefix) return false;
-    bytes = size + prefix;
-    if (alignment) {
-        if (bytes > SIZE_MAX - (alignment - 1)) return false;
-        bytes = (bytes + alignment - 1) & ~(alignment - 1);
-    }
-    return true;
-}
-static void nativeCommit(size_t previous, size_t size) {
-    auto &p = processTotals;
-    if (size >= previous) p.allocated = add(p.allocated, size - previous);
-    else p.retired = add(p.retired, previous - size);
-    p.nativeCurrent = p.nativeCurrent - previous + size;
-    if (p.nativeCurrent > p.nativePeak) p.nativePeak = p.nativeCurrent;
-    publishProcess();
+    if (e2d_memory_managed_locked(frozen.managedCurrent)) fail("process payload exceeds signed monitor range");
 }
 extern "C" void *e2d_aot_native_alloc(size_t size, size_t alignment, uint32_t zero) {
-    enter();
-    if ((alignment && (alignment & (alignment - 1))) || zero > 1) fail("invalid native allocation", 132);
-    size_t prefix = alignment > 32 ? alignment : 32, bytes;
-    void *raw = nullptr;
-    if (nativeRequest(size, prefix, 0, alignment, bytes)) {
-        if (alignment) {
-            if (posix_memalign(&raw, alignment < sizeof(void*) ? sizeof(void*) : alignment, bytes)) raw = nullptr;
-            if (raw && zero) std::memset(raw, 0, bytes);
-        } else raw = zero ? std::calloc(1, bytes) : std::malloc(bytes);
-    }
-    if (!raw) { ++processTotals.failures; leave(); return nullptr; }
-    auto value = static_cast<char*>(raw) + prefix;
-    *reinterpret_cast<NativeHeader*>(value - 32) = NativeHeader{raw, size, alignment};
-    nativeCommit(0, size); ++processTotals.allocations;
-    leave(); return value;
+    int32_t error;
+    void *result = e2d_memory_allocate(size, alignment, zero, &error);
+    if (error == 1) fail("invalid native allocation", 132);
+    return result;
 }
 extern "C" void *e2d_aot_native_resize(void *value, size_t size) {
-    if (!value) return e2d_aot_native_alloc(size, 0, 0);
-    enter();
-    auto header = reinterpret_cast<NativeHeader*>(static_cast<char*>(value) - 32);
-    if (header->alignment) fail("invalid aligned native resize", 132);
-    size_t previous = header->size, bytes;
-    void *raw = nativeRequest(size, 32, previous, 0, bytes) ? std::realloc(header->allocation, bytes) : nullptr;
-    if (!raw) { ++processTotals.failures; leave(); return nullptr; }
-    auto result = static_cast<char*>(raw) + 32;
-    *reinterpret_cast<NativeHeader*>(result - 32) = NativeHeader{raw, size, 0};
-    nativeCommit(previous, size); ++processTotals.resizes;
-    leave(); return result;
+    int32_t error;
+    void *result = e2d_memory_reallocate(value, size, &error);
+    if (error == 1) fail("invalid aligned native resize", 132);
+    return result;
 }
-extern "C" void e2d_aot_native_free(void *value) {
-    if (!value) return;
-    enter();
-    auto header = reinterpret_cast<NativeHeader*>(static_cast<char*>(value) - 32);
-    size_t size = header->size;
-    std::free(header->allocation);
-    nativeCommit(size, 0); ++processTotals.frees;
-    leave();
-}
+extern "C" void e2d_aot_native_free(void *value) { e2d_memory_release(value); }
 extern "C" void e2d_aot_process_read(ProcessCounts *result) {
-    enter();
     if (!result) fail("invalid process snapshot", 132);
-    *result = processTotals;
-    leave();
+    e2d_memory_snapshot(result);
 }
 static bool matches(const Watch &watch, void *object) {
     return watch.type && watch.type == *static_cast<uintptr_t*>(object) &&
@@ -167,7 +114,7 @@ extern "C" void e2d_aot_common_commit(void *object) {
     allocate(watches[0].totals, commonScope->bytes, 3);
     publishManaged();
 #endif
-    if (commonScope->delayed) delayCounts.expectedPeak = processTotals.current;
+    if (commonScope->delayed) delayCounts.expectedPeak = processSnapshotLocked().current;
     leave();
 }
 extern "C" void e2d_aot_common_abort() {

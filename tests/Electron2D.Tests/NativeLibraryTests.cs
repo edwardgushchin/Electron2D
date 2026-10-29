@@ -18,7 +18,9 @@ internal static class NativeLibraryTests
                 try
                 {
                     var exports = name.Contains("FreeType", StringComparison.Ordinal) ? new[] { "e2d_ft_hb_memory" } :
-                        name.Contains("ENet", StringComparison.Ordinal) ? ["e2d_enet_memory", "e2d_file_encode", "e2d_file_decode", "e2d_gzip_create", "e2d_gzip_process", "e2d_gzip_reset", "e2d_gzip_destroy"] : ["e2d_webp_encode", "e2d_webp_decode"];
+                        name.Contains("ENet", StringComparison.Ordinal) ? ["e2d_enet_memory", "e2d_file_encode", "e2d_file_decode", "e2d_gzip_create", "e2d_gzip_process", "e2d_gzip_reset", "e2d_gzip_destroy",
+                            "e2d_memory_abi", "e2d_memory_allocate", "e2d_memory_reallocate", "e2d_memory_release", "e2d_memory_snapshot",
+                            "e2d_memory_lock", "e2d_memory_unlock", "e2d_memory_managed_locked", "e2d_memory_snapshot_locked"] : ["e2d_webp_encode", "e2d_webp_decode"];
                     foreach (var export in exports)
                         if (!NativeLibrary.TryGetExport(library, export, out _))
                             throw new InvalidOperationException($"Native bridge is missing {export}; use the matching native bundle: {file}");
@@ -26,6 +28,6 @@ internal static class NativeLibraryTests
                 finally { NativeLibrary.Free(library); }
             }
         }
-        Console.WriteLine("Project-referenced native libraries retain their runtime directory without root copies; WebP, font allocation and ENet/file/GZIP exports are present.");
+        Console.WriteLine("Project-referenced native libraries retain their runtime directory without root copies; WebP, font allocation and ENet/file/GZIP/memory exports are present.");
     }
 }

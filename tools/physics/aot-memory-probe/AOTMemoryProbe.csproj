@@ -14,22 +14,5 @@
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
     <EventSourceSupport>true</EventSourceSupport>
   </PropertyGroup>
-  <ItemGroup>
-    <DirectPInvoke Include="Electron2DAOTMemory" />
-    <NativeLibrary Include="$(ProbeNativeObject)" />
-    <NativeLibrary Include="$(ProbeFrozenObject)" />
-  </ItemGroup>
-  <Target Name="ReplaceDiagnosticRuntime" AfterTargets="SetupOSSpecificProps">
-    <ItemGroup Condition="'$(ProbeRuntimeArchive)' != ''">
-      <NativeLibrary Remove="$(IlcSdkPath)$(FullRuntimeName).a" />
-      <NativeLibrary Include="$(ProbeRuntimeArchive)" />
-      <_ProbeLinkerArg Include="@(LinkerArg)">
-        <Path Condition="'%(Identity)' == '$(IlcSdkPath)$(FullRuntimeName).a'">$(ProbeRuntimeArchive)</Path>
-        <Path Condition="'%(Identity)' != '$(IlcSdkPath)$(FullRuntimeName).a'">%(Identity)</Path>
-      </_ProbeLinkerArg>
-      <LinkerArg Remove="@(LinkerArg)" />
-      <LinkerArg Include="@(_ProbeLinkerArg->'%(Path)')" />
-    </ItemGroup>
-    <WriteLinesToFile File="$(NativeIntermediateOutputPath)e2d-runtime-inputs.txt" Lines="@(LinkerArg)" Overwrite="true" />
-  </Target>
+  <Import Project="runtime.targets" />
 </Project>
