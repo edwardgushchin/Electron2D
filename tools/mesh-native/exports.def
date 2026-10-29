@@ -1,3 +1,4 @@
 EXPORTS
     e2d_mesh_scale
     e2d_mesh_simplify
+    e2d_mesh_memory

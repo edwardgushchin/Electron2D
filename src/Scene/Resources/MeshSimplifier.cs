@@ -1,12 +1,41 @@
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace Electron2D;
 
 internal static partial class MeshSimplifier
 {
-    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_scale")]
+    private static readonly object MemoryGate = new();
+    private static bool _memoryReady;
+    private static unsafe void PrepareMemory()
+    {
+        if (Volatile.Read(ref _memoryReady)) return;
+        NativeAllocation.Prepare();
+        lock (MemoryGate)
+        {
+            if (_memoryReady) return;
+            try
+            {
+                if (InstallMemory(&AllocateMemory, &ReleaseMemory) != 0)
+                    throw new InvalidOperationException("The native mesh allocator has another owner.");
+            }
+            catch (EntryPointNotFoundException error)
+            { throw new PlatformNotSupportedException("Mesh allocation accounting requires the matching source-built native bundle.", error); }
+            Volatile.Write(ref _memoryReady, true);
+        }
+    }
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static unsafe void* AllocateMemory(nuint size)
+    {
+        try { return NativeAllocation.Alloc(size); } catch (OutOfMemoryException) { return null; }
+    }
+    [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+    private static unsafe void ReleaseMemory(void* value) => NativeAllocation.Free(value);
+    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static unsafe partial int InstallMemory(delegate* unmanaged[Cdecl]<nuint, void*> allocate, delegate* unmanaged[Cdecl]<void*, void> release);
+    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_scale"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial float Scale(float* positions, nuint count);
-    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_simplify")]
+    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_simplify"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial nuint Simplify(int* output, int* indices, nuint count, float* positions, nuint vertices, float* attributes, float* weights, nuint attributeCount, nuint target, uint options, float* error);
     internal static unsafe MeshLOD[] Generate(MeshSurfaceData data, MeshSurfaceData[] shapes, Mesh.PrimitiveType primitive, MeshLOD[] old, float mergeAngle, IReadOnlyList<Transform>? boneTransforms)
     {
@@ -54,6 +83,7 @@ internal static partial class MeshSimplifier
         for (var i = 0; i < current.Length; i++) current[i] = remap[data.Indices[i]];
         float[] weights = [1, 1, 1, data.Colors.Length == 0 ? 0 : 1, data.Colors.Length == 0 ? 0 : 1, data.Colors.Length == 0 ? 0 : 1];
         var levels = new Dictionary<float, int[]>(); var error = 0f; var previous = 0f; var prune = true;
+        PrepareMemory();
         fixed (float* p = positions, a = attributes, w = weights)
         {
             var scale = Scale(p, (nuint)vertices); if (!float.IsFinite(scale)) throw new ArgumentException("Simplifier scale must remain finite."); if (scale <= 0) return [];

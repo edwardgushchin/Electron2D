@@ -79,4 +79,18 @@
     <Copy SourceFiles="$(Electron2DWebPNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)" />
     <Copy SourceFiles="$(Electron2DWebPNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
+  <PropertyGroup>
+    <_Electron2DConsumerMeshName>libElectron2DMesh.so</_Electron2DConsumerMeshName>
+    <_Electron2DConsumerMeshName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DMesh.dylib</_Electron2DConsumerMeshName>
+    <_Electron2DConsumerMeshPath Condition="'$(Electron2DMeshNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DMeshNativeLibrary)'))</_Electron2DConsumerMeshPath>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerMeshOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DMeshNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerMeshName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerMeshPath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerMeshOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DMeshNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
+    <Copy SourceFiles="$(Electron2DMeshNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)" />
+    <Copy SourceFiles="$(Electron2DMeshNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+  </Target>
 </Project>

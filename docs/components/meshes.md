@@ -120,6 +120,17 @@ The scale is zero for wholly [0,1] coordinates, otherwise twice each component's
 
 Merge retains applicable 2D Transform authoring with independent source snapshots. Targets/levels are discarded; compatible unskinned groups retain their first material. Schema mismatches and line strips remain independent. Mixed index presence, reflected unindexed skin/custom records and strip winding/joins preserve actual geometry. These boundaries correct malformed or lost source geometry rather than carrying inert data. Lightmap hints are excluded with the 3D atlas role; the shared empty-position flag remains the exact remaining import prerequisite.
 
+The simplifier now installs one immutable allocator owner before native use.
+Scratch allocations/free operations update the existing native payload ledger;
+allocation failure unwinds the pinned kernel's prior blocks and becomes the
+existing managed OutOfMemoryException. It leaves all prior levels, thresholds,
+compiled-cache identity and Changed publication untouched. Matching private
+bundles require `e2d_mesh_memory` alongside scale/simplify. Explicit source
+selection reaches consumer build and publish outputs even when packaged assets
+have newer timestamps. Cold generation remains allocating work; this domain
+does not complete either total-memory monitor. See
+[allocation qualification](../coverage/performance-producers.md#mesh-simplification-allocation-domain-2026-10-29).
+
 Managed checks cover raw precision, cache/ownership/listener state, six independent C++ index fixtures, UV seams, pose rollback, all five merged/reflected topologies, raw archives, duplicate/local graphs and fresh scene generation/replay. Linux GLSL/HLSL/compatibility pixels cover generated geometry, numeric UV/frame/custom fields, reflected tangents, silhouette/gaps, morph, eighth-slot skin, groups, repeated instances and owned service import. Twenty-four warmup frames precede 64 active and 64 idle complete frames with zero managed bytes. Cold generation and native allocator totals are separate, as are foreign platforms and owner acceptance. Native package/consumer verification must exercise the public generator with all native compilers blocked; local platform packing is not publication. Evidence lives in `bin/importer-mesh-validation/2026-10-12/`.
 
 ## Live index buffer updates

@@ -15,12 +15,13 @@ internal static unsafe class Program
     private static Counts Read() { Counts value; _snapshot(&value); Check(value.Allocated - value.Retired == value.NativeCurrent, "Native conservation failed."); return value; }
     private static void Main(string[] args)
     {
-        if (args.Length != 1) throw new ArgumentException("Expected deflate, gzip, zlib, brotli or webp.");
+        if (args.Length != 1) throw new ArgumentException("Expected deflate, gzip, zlib, brotli, webp, mesh or mesh-fault.");
         var library = NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DENet.so"));
         _snapshot = (delegate* unmanaged[Cdecl]<Counts*, void>)NativeLibrary.GetExport(library, "e2d_memory_snapshot");
         var mode = args[0]; var source = new byte[65536];
         for (var i = 0; i < source.Length; i++) source[i] = (byte)(i * 113 + i / 7);
         var baseline = Read();
+        if (mode is "mesh" or "mesh-fault") { Mesh(baseline, mode == "mesh-fault" ? library : 0); Finish("mesh", baseline); return; }
         if (mode == "webp") { WebP(source, baseline); Finish(mode, baseline); return; }
         using var encoded = new MemoryStream();
         using (var stream = Codec(encoded, mode, true))
@@ -54,12 +55,52 @@ internal static unsafe class Program
         var allBytes = GC.GetTotalAllocatedBytes(true) - all; var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
         Check(ownerBytes == 0 && allBytes == 0, "Prepared native reads allocated managed storage.");
         var paths = System.IO.File.ReadLines("/proc/self/maps").Select(line => line[(line.LastIndexOf(' ') + 1)..]).Distinct().ToArray();
-        var codecLibrary = mode == "webp" ? "libElectron2DWebP.so" : "libSystem.IO.Compression.Native.so";
+        var codecLibrary = mode == "mesh" ? "libElectron2DMesh.so" : mode == "webp" ? "libElectron2DWebP.so" : "libSystem.IO.Compression.Native.so";
         Check(paths.Count(path => path.EndsWith(codecLibrary, StringComparison.Ordinal)) == 1 && paths.Count(path => path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal)) == 1, "Expected one codec and one common ledger.");
         Check(paths.Any(path => path.EndsWith("libcoreclr.so", StringComparison.Ordinal)) == RuntimeFeature.IsDynamicCodeSupported, "Runtime identity mismatch.");
-        var exercised = mode == "webp" ? "public WebP 14 encoding/decoding profiles" : "streaming/public file/finalization; ZIP=" + (mode == "deflate" ? "passed" : "separate deflate role");
+        var exercised = mode == "mesh" ? "public LOD generation" : mode == "webp" ? "public WebP 14 encoding/decoding profiles" : "streaming/public file/finalization; ZIP=" + (mode == "deflate" ? "passed" : "separate deflate role");
         Console.WriteLine($"Codec {mode}: nativePeak={Read().NativePeak}, currentDelta={Read().NativeCurrent - baseline.NativeCurrent}; {exercised} passed; prepared20000={ownerBytes}/{allBytes}; dynamicCode={RuntimeFeature.IsDynamicCodeSupported}.");
         foreach (var path in paths.Where(path => path.EndsWith(codecLibrary, StringComparison.Ordinal) || path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal))) Console.WriteLine(path);
+    }
+    private static void Mesh(Counts baseline, nint faultLibrary)
+    {
+        const int cells = 16;
+        var data = new MeshSurfaceData { Vertices = new Vector2[(cells + 1) * (cells + 1)], Indices = new int[cells * cells * 6] };
+        for (var y = 0; y <= cells; y++) for (var x = 0; x <= cells; x++) data.Vertices[y * (cells + 1) + x] = new(x * 2, y * 2);
+        var at = 0;
+        for (var y = 0; y < cells; y++) for (var x = 0; x < cells; x++)
+            {
+                var a = y * (cells + 1) + x;
+                foreach (var index in new[] { a, a + 1, a + cells + 2, a, a + cells + 2, a + cells + 1 }) data.Indices[at++] = index;
+            }
+        using var importer = new ImporterMesh();
+        importer.AddSurface(Electron2D.Mesh.PrimitiveType.Triangles, data);
+        importer.AddSurface(Electron2D.Mesh.PrimitiveType.Triangles, data);
+        importer.GenerateLODs(60);
+        Check(importer.GetSurfaceLODCount(0) > 0 && Read().NativePeak > baseline.NativePeak && Read().NativeCurrent == baseline.NativeCurrent, "Public LOD generation lost native ownership or output.");
+        if (faultLibrary == 0) return;
+        var arm = (delegate* unmanaged[Cdecl]<nuint, void>)NativeLibrary.GetExport(faultLibrary, "e2d_test_arm");
+        var attempts = (delegate* unmanaged[Cdecl]<nuint>)NativeLibrary.GetExport(faultLibrary, "e2d_test_attempts");
+        arm(0); importer.GenerateLODs(60); var maximum = attempts();
+        var old = Enumerable.Range(0, 2).Select(surface => Enumerable.Range(0, importer.GetSurfaceLODCount(surface)).Select(lod => importer.GetSurfaceLODIndices(surface, lod)).ToArray()).ToArray();
+        var sizes = Enumerable.Range(0, 2).Select(surface => Enumerable.Range(0, importer.GetSurfaceLODCount(surface)).Select(lod => importer.GetSurfaceLODSize(surface, lod)).ToArray()).ToArray();
+        using var compiled = importer.GetMesh();
+        var changed = 0; importer.Changed += _ => changed++;
+        for (nuint position = 1; position <= maximum; position++)
+        {
+            var failed = false; arm(position);
+            try { importer.GenerateLODs(60); }
+            catch (OutOfMemoryException) { failed = true; }
+            finally { arm(0); }
+            Check(failed && changed == 0 && Read().NativeCurrent == baseline.NativeCurrent && ReferenceEquals(compiled, importer.GetMesh()), "Failed LOD generation published state, replaced its cache or leaked.");
+            for (var surface = 0; surface < 2; surface++)
+            {
+                Check(importer.GetSurfaceLODCount(surface) == old[surface].Length, "Failed LOD generation changed its level count.");
+                for (var lod = 0; lod < old[surface].Length; lod++) Check(importer.GetSurfaceLODIndices(surface, lod).AsSpan().SequenceEqual(old[surface][lod]) && importer.GetSurfaceLODSize(surface, lod) == sizes[surface][lod], "Failed LOD generation replaced an earlier surface.");
+            }
+        }
+        importer.GenerateLODs(60); Check(changed == 1, "Healthy LOD retry did not publish exactly once.");
+        Console.WriteLine($"Public LOD allocation failures: {maximum}; both surfaces retained indices/thresholds/events and native drain.");
     }
     private static void WebP(byte[] source, Counts baseline)
     {

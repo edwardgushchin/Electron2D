@@ -8,6 +8,8 @@ public sealed partial class ImporterMesh
     /// <remarks>Nontriangle and shader-generated levels remain intact; unindexed/small triangles produce no generated levels.
     /// All surfaces preflight before publication. Generation may allocate managed/native temporary storage and needs the matching native mesh library.</remarks>
     /// <exception cref="ArgumentException">Coordinates, pose, thresholds or generated data are invalid.</exception>
+    /// <exception cref="OutOfMemoryException">Temporary native simplification storage could not be allocated; existing levels remain intact.</exception>
+    /// <exception cref="PlatformNotSupportedException">The native mesh bundle does not support allocation ownership.</exception>
     public void GenerateLODs(float normalMergeAngle, IReadOnlyList<Transform>? boneTransformArray = null)
     {
         if (!float.IsFinite(normalMergeAngle)) throw new ArgumentOutOfRangeException(nameof(normalMergeAngle));

@@ -10,6 +10,11 @@ replacement](../components/extensions.md) closes a different inherited row; curr
 physics declaration coverage after the [Resource audit](../components/resource-contract-audit.md)
 is **1365/1369 (99.71%)**, four open, 92 Excluded.
 
+The [native ownership inventory](native-memory-inventory.md) routes every
+compiled import family and the observed native dependency closure. It records
+unqualified library, platform and runtime boundaries explicitly; domain-specific
+checks below must not be read as whole-library or whole-monitor acceptance.
+
 ## Pipeline source ownership
 
 The public monitor descriptions alone do not identify every renderer domain.
@@ -464,6 +469,48 @@ allocates. Remaining native ownership, managed collection/composition, runtime
 delivery and foreign-platform/package execution remain open. The complete
 GetMonitor contract stays Partial; physics declaration coverage remains
 **1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
+## Mesh simplification allocation domain (2026-10-29)
+
+The private mesh bridge installs the pinned simplifier's allocator hook once,
+after managed ABI preparation. Native scratch requests use the existing common
+ledger. The adapter converts a null allocation result into the library's ordinary
+throwing-new failure contract, allowing its scoped prior blocks to unwind before
+the existing failure sentinel reaches the managed caller. No process-global C++
+allocator replacement or vendor-source change is introduced. Concurrent
+identical registration succeeds; incomplete or different owners reject. Old
+native bundles fail before simplification. All three private imports declare
+the C calling convention.
+
+Linux x64 Release and ASan/UBSan/leak profiles each pass **562 cases, 556
+allocation-failure positions** across all six grid/deformable fixtures and their
+complete generated LOD chains. Each healthy retry reproduces the pristine
+oracle's exact index lists and drains native storage. These local identity
+checks protect an unchanged simplification algorithm; they do not constrain
+the CPU/GPU physics architecture.
+
+Public CLR and strict full-trim NativeAOT consumers pass **216** injected
+allocation failures each across a two-surface GenerateLODs operation. Failure
+preserves both surfaces' indices/thresholds, compiled-cache identity and absence
+of Changed; healthy retry publishes once. The real production ledger observes
+**82235 bytes** of native high-water storage and **zero current delta** after
+generation. Both real/fault-core roles pass **20000** prepared snapshot reads at
+strict **0/0 owner/all-thread managed bytes** and require one mesh/ledger mapping;
+NativeAOT maps contain no CoreCLR. The fault core is used only in isolated test
+hosts. Consumer source selection also overrides newer packaged mesh assets at
+build/publish and resolves conflicts only for the selected destination.
+Existing ImporterMesh/LOD regressions pass. X11 GLSL/HLSL/Compatibility
+retained-window checks preserve generated pixels and warmed zero-byte frames.
+The default Wayland importer window rejects its equal min/max limits at the
+current pixel density before rendering; that path is not qualified by the X11
+result.
+
+Receipts, source/binary/PDB identities and retained inputs are under
+`bin/mesh-allocation-accounting/2026-10-29/`. Cold generation remains allocating.
+This closes the owned simplifier scratch domain, not the
+[remaining native/runtime inventory](native-memory-inventory.md) or the composed
+public monitor. Physics declaration coverage remains **1365/1369 (99.71%)**,
+four Partial and 92 Excluded.
 
 ## Allocation producers remain open
 

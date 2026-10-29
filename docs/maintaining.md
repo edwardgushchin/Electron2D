@@ -2,6 +2,20 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For mesh simplifier allocation changes, run
+`python3 -B tools/mesh-native/check_sources.py`, build Electron2DMeshOracle and
+Electron2DMeshMemoryCheck, then run
+`python3 -O -B tools/mesh-native/check_memory.py BUILD REPORT.json` in Release
+and ASan/UBSan/leak profiles. Preserve throwing allocation semantics, immutable
+registration, pristine indices, every observed failed request, full scratch
+drain and retry. Run NativeMemory.CompressionHost `mesh` with the production
+ledger and `mesh-fault` with only the test fault ledger, on CLR/full-trim
+NativeAOT. Require old indices/thresholds/cache identity and no Changed event
+across both surfaces on every failure. Run ImporterMesh and adjacent LOD/native
+checks and the mesh/WebP delivery/package tests. See the
+[native inventory](coverage/native-memory-inventory.md) and
+[mesh allocation domain](coverage/performance-producers.md#mesh-simplification-allocation-domain-2026-10-29).
+
 For WebP allocation changes, run
 `python3 -O -B tools/webp-native/check_sources.py PINNED_SOURCE`, then build
 Electron2DWebPCheck and Electron2DWebPMemoryCheck. Run the former and
