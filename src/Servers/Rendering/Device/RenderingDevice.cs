@@ -292,7 +292,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (group.Any(p => p.binding.Type == UniformType.SamplerWithTextureBuffer) && group.All(p => p.binding.Type is UniformType.TextureBuffer or UniformType.SamplerWithTextureBuffer))
                 foreach (var item in group) layout[item.index] = item.binding with { Type = UniformType.SamplerWithTextureBuffer };
         foreach (var group in layout.GroupBy(b => (b.Set, b.Slot)))
-        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || !b.DynamicCount && !first.DynamicCount && b.Count != first.Count || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
+        { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.Multisample != first.Multisample || !b.DynamicCount && !first.DynamicCount && b.Count != first.Count || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         ValidateGraphicsStorage(layout);
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };

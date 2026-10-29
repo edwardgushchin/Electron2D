@@ -1,6 +1,6 @@
 # RDTextureView
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureView`. **Source:** [RDTextureView.cs](../../src/Servers/Rendering/Device/RDTextureView.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -115,3 +115,5 @@ Initially RenderingDevice.TextureSwizzle.R; copied when the device creates its r
 Configurations are independent caller-owned ElectronObject values; disposing a description does not free an already-created RID. Device identities belong to the creating thread/device and are freed through FreeRID or device disposal. Borrowed sampler/image bindings expire when either identity is freed. Enum values own no native state.
 
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
+
+Shared and sliced sampled MSAA views preserve their source sample count and native root lifetime. The consuming shader must declare the matching ordinary/MS and image/array role; see [multisample shader reads](../components/local-compute.md#multisample-shader-reads).

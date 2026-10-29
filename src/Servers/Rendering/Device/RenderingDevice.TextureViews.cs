@@ -46,7 +46,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private void RequireTextureViews()
     {
-        if (GPUTextureViews.Support(Device, 1) != 1) throw new NotSupportedException("Shared texture views require the pinned native image/view adapter.");
+        if (GPUTextureViews.Support(Device, 1) != 1) throw new NotSupportedException("This texture role requires the pinned native image/view adapter.");
     }
     private RID CreateTextureView(RDTextureView view, RID ownerID, Entry owner, uint layer, uint layers, uint mip, uint mips, TextureType type)
     {
@@ -96,9 +96,10 @@ public sealed unsafe partial class RenderingDevice
         if (shareable.Length != 0 && !shareable.Contains(entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat)) throw new ArgumentException("Shareable formats must include the allocation format.", nameof(shareable));
         var mutable = shareable.Any(f => NativeFormat(f) != allocationFormat);
         RenderHandle storage;
-        if (mutable)
+        if (mutable || create.SampleCount != SDL.GPUSampleCount.SampleCount1 && (create.Usage & SDL.GPUTextureUsageFlags.Sampler) != 0)
         {
-            RequireTextureViews(); var formats = new SDL.GPUTextureFormat[shareable.Length];
+            RequireTextureViews(); if (shareable.Length == 0) shareable = [entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat];
+            var formats = new SDL.GPUTextureFormat[shareable.Length];
             for (var i = 0; i < formats.Length; i++) { formats[i] = NativeFormat(shareable[i]); if (GPUTextureViews.FormatSupport(Device, 1, in create, formats[i]) != 1) throw new NotSupportedException("A shareable native format is incompatible or lacks the requested usage/sample roles."); }
             fixed (SDL.GPUTextureFormat* p = formats) storage = new(GPUTextureViews.Create(Device, 1, in create, (nint)p, (uint)formats.Length), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
         }

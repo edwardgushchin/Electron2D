@@ -106,7 +106,7 @@ public sealed unsafe partial class RenderingDevice
                     layout.Add(new(inputOrigin.Set, inputOrigin.Slot, UniformType.InputAttachment, imageSlot, PixelType: pixelType, Stage: stage, Attachment: input.Index, Multisample: input.Multisample));
                     words[imageSet] = nativeSet; words[imageBinding] = (uint)imageSlot++; continue;
                 }
-                if (image.Multisample != 0) throw new NotSupportedException("Multisample shader images require their input-attachment/sample-load adapter.");
+                if (image.Multisample != 0 && image.Sampled == 2) throw new NotSupportedException("Multisample storage images require their native read/write image adapter.");
                 var writable = image.Sampled == 2;
                 if (image.Depth == 1 && (writable || pixelType != 0)) throw new NotSupportedException("Depth comparison requires a sampled floating-point image.");
                 if (combined && writable) throw new ArgumentException("A storage image cannot contain a combined sampler.", nameof(code));
@@ -114,7 +114,7 @@ public sealed unsafe partial class RenderingDevice
                 if (imageSlot > 8 || textureSlot > 16) throw new NotSupportedException("Compute image bindings exceed backend limits.");
                 var origin = logical[variable.ID];
                 if (layout.Any(b => b.Set == origin.Set && b.Slot == origin.Slot)) throw new ArgumentException("Duplicate image binding.", nameof(code));
-                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage, Depth: image.Depth == 1, Writable: !compute && writable && !readOnly.Contains(variable.ID), NativeImage: !compute && writable));
+                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage, Depth: image.Depth == 1, Writable: !compute && writable && !readOnly.Contains(variable.ID), NativeImage: !compute && writable, Multisample: image.Multisample != 0));
                 if (!writable && !combined)
                 {
                     var paired = variables.SingleOrDefault(v => pointers.TryGetValue(v.Type, out var ty) && samplerTypes.Contains(ty) && logical.TryGetValue(v.ID, out var loc) && loc == origin);

@@ -5,7 +5,7 @@ namespace Electron2D;
 internal static partial class CanvasSamplerArrays
 {
     internal readonly record struct DeviceSource(uint Set, int Binding, RenderingDevice.UniformType Type, int Count = 1, int Element = 0, bool Dynamic = false);
-    internal readonly record struct DeviceShape(bool Array, bool Depth, int PixelType);
+    internal readonly record struct DeviceShape(bool Array, bool Depth, int PixelType, bool Multisample);
     internal readonly record struct DevicePair(uint Image, uint Sampler, uint ImageIndex, uint SamplerIndex, bool UsesSampler, int ImageElement = 0, int SamplerElement = 0);
     internal sealed record DevicePlan(uint Set, uint Stride, uint ImageCount, Dictionary<uint, uint> Values, Dictionary<uint, DeviceSource> Sources, Dictionary<uint, DeviceShape> Shapes, HashSet<(uint Image, uint Sampler)> Comparisons, DevicePair[] Pairs, uint[]? Swizzles = null);
 
@@ -80,7 +80,7 @@ internal static partial class CanvasSamplerArrays
             var type = types[Element(image)]; if (Op(type) == 27) type = types[type[2]];
             var scalar = types[type[2]];
             if (scalar.Length < 3 || scalar[2] != 32 || Op(scalar) is not (21 or 22)) throw new NotSupportedException("Sampled device images require 32-bit scalar components.");
-            shapes.Add(image[2], new(type[5] != 0, type[4] == 1 || comparisons.Any(p => p.Image == image[2]), Op(scalar) == 22 ? 0 : scalar[3] == 1 ? 1 : 2));
+            shapes.Add(image[2], new(type[5] != 0, type[4] == 1 || comparisons.Any(p => p.Image == image[2]), Op(scalar) == 22 ? 0 : scalar[3] == 1 ? 1 : 2, type[6] != 0));
         }
         var plan = new DevicePlan(nativeSet, stride, imageTotal, values, origins, shapes, comparisons, expanded.ToArray(), swizzles is null ? null : expanded.Select(p => { var origin = origins[p.Image]; return swizzles.GetValueOrDefault((origin.Set, origin.Binding, p.ImageElement)); }).ToArray());
         return (Lower(code, [], device: plan), plan);

@@ -1,6 +1,6 @@
 # RDTextureFormat
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureFormat`. **Source:** [RDTextureFormat.cs](../../src/Servers/Rendering/Device/RDTextureFormat.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -198,3 +198,5 @@ Initially RenderingDevice.TextureSamples.Samples1; copied and validated at alloc
 Combining Sampling and Storage preserves a private readonly GPU snapshot for graphics-image consumers, while writes and public snapshots address the original allocation. The native sampling allocation carries no conflicting graphics-read flag; the [device coherence contract](../components/local-compute.md#readonly-graphics-image-coherence) describes copy and lifetime boundaries.
 
 Ordinary signed/unsigned R32 Image descriptors now execute compute atomics, including fixed arrays. StorageAtomic validates allocation capability, while Image binding independently requires Storage. See [integer image atomics](../components/local-compute.md#integer-image-atomics) for ordering, lifetime and native verification limits.
+
+Samples may be combined with the color/depth attachment and Sampling roles for explicit per-sample shader reads. Empty data, one mip, exact native count support and the native image/view adapter remain required. See [multisample shader reads](../components/local-compute.md#multisample-shader-reads).

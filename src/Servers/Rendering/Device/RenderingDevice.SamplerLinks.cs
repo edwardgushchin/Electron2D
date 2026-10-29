@@ -21,7 +21,7 @@ public sealed unsafe partial class RenderingDevice
             var origin = group.Key; var image = group.FirstOrDefault(p => plan.Shapes.ContainsKey(p.Key)); var shape = plan.Shapes.GetValueOrDefault(image.Key);
             if (layout.Any(b => b.Set == origin.Set && b.Slot == origin.Binding)) throw new ArgumentException("Duplicate logical sampled resource binding.");
             for (var element = 0; element < origin.Count; element++)
-                layout.Add(new(origin.Set, origin.Binding, origin.Type, -1, shape.Array, PixelType: shape.PixelType, Stage: stage, Depth: shape.Depth, Count: origin.Count, Element: element, DynamicCount: origin.Dynamic));
+                layout.Add(new(origin.Set, origin.Binding, origin.Type, -1, shape.Array, PixelType: shape.PixelType, Stage: stage, Depth: shape.Depth, Count: origin.Count, Element: element, DynamicCount: origin.Dynamic, Multisample: shape.Multisample));
         }
         return (layout.ToArray(), links.ToArray());
     }
@@ -40,9 +40,9 @@ public sealed unsafe partial class RenderingDevice
             if (!group.Any(b => b.Type == UniformType.SamplerWithTexture) || group.Any(b => b.Type is not (UniformType.Texture or UniformType.Sampler or UniformType.SamplerWithTexture))) continue;
             var shape = group.First(b => b.Type != UniformType.Sampler);
             foreach (var binding in group.Where(b => b.Type != UniformType.Sampler))
-                if (binding.Array != shape.Array || binding.PixelType != shape.PixelType) throw new ArgumentException("A shared sampled image has inconsistent stage types.");
+                if (binding.Array != shape.Array || binding.PixelType != shape.PixelType || binding.Multisample != shape.Multisample) throw new ArgumentException("A shared sampled image has inconsistent stage types.");
             for (var i = 0; i < layout.Length; i++) if (layout[i].Set == group.Key.Set && layout[i].Slot == group.Key.Slot)
-                    layout[i] = layout[i] with { Type = UniformType.SamplerWithTexture, Array = shape.Array, PixelType = shape.PixelType };
+                    layout[i] = layout[i] with { Type = UniformType.SamplerWithTexture, Array = shape.Array, PixelType = shape.PixelType, Multisample = shape.Multisample };
             for (var i = 0; i < links.Length; i++)
             {
                 var link = links[i];

@@ -33,11 +33,12 @@ public sealed unsafe partial class RenderingDevice
             return;
         }
         if ((texture.Type == TextureType.TextureArray) != binding.Array) throw new ArgumentException("The texture array role does not match the shader.", nameof(ids));
-        if (texture.Samples != TextureSamples.Samples1) throw new NotSupportedException("Multisample shader images require their sample-load descriptor adapter.");
+        if ((texture.Samples != TextureSamples.Samples1) != binding.Multisample) throw new ArgumentException("The texture sample role does not match the shader declaration.", nameof(ids));
         if (binding.Type == UniformType.Texture) { if ((texture.Usage & TextureUsageBits.Sampling) == 0 || binding.Depth && !DepthFormat(texture.Format)) throw new ArgumentException("The image lacks its required sampling/depth role.", nameof(ids)); return; }
         if (binding.Type == UniformType.SamplerWithTexture)
         {
             var sampler = Get(ids[0], Kind.Sampler); if ((texture.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("Texture lacks the sampling role.", nameof(ids));
+            if (binding.Multisample) return;
             if (binding.Native >= 0 && (sampler.CompareSampling != binding.Depth || binding.Depth && !DepthFormat(texture.Format))) throw new ArgumentException("Comparison samplers require a depth image and a depth-comparison shader descriptor.", nameof(ids));
             if (binding.Native >= 0 && binding.UsesSampler) ValidateFormatFilter(Get(ids[1], Kind.Texture).NativeHandle, sampler.LinearFormatSampling, sampler.CompareSampling);
             if (binding.Native >= 0 && binding.UsesSampler && sampler.UnnormalizedSampling) SamplerConfiguration.RequireUnnormalizedView(Device, Get(ids[1], Kind.Texture).NativeHandle, binding.UnnormalizedUnsafe);
@@ -156,6 +157,7 @@ public sealed unsafe partial class RenderingDevice
     /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
     /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
+    /// Multisample color/depth targets may include Sampling for explicit per-sample shader loads and size/sample queries. They require empty data, one mip and the native image/view adapter; storage, raw sample transfers and direct canvas sampling retain their separate adapters.
     /// Storage-image descriptors, input attachments and framebuffer attachments require identity mappings.</remarks>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Image extents or layers exceed the effective device limits.</exception>
@@ -179,8 +181,8 @@ public sealed unsafe partial class RenderingDevice
         if (samples != TextureSamples.Samples1)
         {
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
-            var allowedUsage = targetRole | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment);
-            if (mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets; sampling, storage and raw transfers require separate adapters.");
+            var allowedUsage = targetRole | TextureUsageBits.Sampling | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment);
+            if (mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets with optional sampling; storage and raw transfers require separate adapters.");
             var multi = new Entry { Kind = Kind.Texture, Texture = new(viewedFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, Swizzle: TextureSwizzles.Capture(view), StoredFormat: pixelFormat) };
             try
             {

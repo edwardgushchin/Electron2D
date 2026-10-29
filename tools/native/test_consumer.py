@@ -328,4 +328,5 @@ def check(feed, rid, managed=False):
 
 
 if __name__ == "__main__":
+    subprocess.run([sys.executable, "-B", str(Path(__file__).with_name("test_consumer_overrides.py"))], check=True)
     check(Path(sys.argv[1]).resolve(), sys.argv[2], managed='--managed' in sys.argv[3:])

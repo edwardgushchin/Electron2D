@@ -1,6 +1,6 @@
 # RDSamplerState
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDSamplerState`. **Component:** [Local device](../components/local-compute.md#depthstencil-graphics-and-sampling). **Source:** [RDSamplerState.cs](../../src/Servers/Rendering/Device/RDSamplerState.cs).
 
@@ -218,3 +218,5 @@ Selects texel coordinates without changing other description fields. Creation/Sh
 Copied descriptions borrow no native state and can be disposed after creation. Device RIDs remain owner-thread resources. Unknown enum selectors and nonfinite bias/clear values reject. References must fit eight bits for visible stencil faces; both visible faces require equal effective masks/reference. Depth-bounds and raw aspect-transfer adapters remain explicit prerequisites in coverage. [RenderingDeviceDepthTests](../../tests/Electron2D.Tests/RenderingDeviceDepthTests.cs) verifies native pixels and warmed managed allocation on Linux/Vulkan; foreign platforms and native allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).
 
 [Shader.SetTextureSamplerState](Shader.md#texture-sampler-state) copies this configuration without borrowing the object. Its getter returns a fresh disposable copy. High-level shader images reject enabled comparison; device depth images retain comparison support. Setting UseAnisotropy with AnisotropyMax equal to one disables the native anisotropy flag and remains legal for nearest integer sampling and relaxed devices. [SamplerConfigurationTests](../../tests/Electron2D.Tests/SamplerConfigurationTests.cs) checks this exact projection and backend guards; [the public consumer](../../tests/ShaderSamplers.Consumer/ShaderSamplers.Consumer.csproj) checks persistence and real sampled pixels.
+
+Explicit MSAA sample loads ignore filtering/address/border/comparison state. Combined descriptors still borrow a live sampler; ordinary sampler creation validation remains in effect. See [multisample shader reads](../components/local-compute.md#multisample-shader-reads).

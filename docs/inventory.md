@@ -2437,3 +2437,5 @@ ProjectSettings.Accessibility.cs now registers native AccessibilityDriver and Ac
 The retained OS MIDI owner is implemented in [OS.MIDI.cs](../src/Core/OS/OS.MIDI.cs); its native and platform boundaries are recorded in [MIDI input](components/midi-input.md).
 
 Custom AnimationNode endpoint delivery extends the existing AnimationNode/AnimationTree/AnimationMixer and Animation track families. Internal [AnimationEventRange](../src/Scene/Animation/AnimationEventRange.cs) and transient AnimationMixFrame metadata implement the [shared event traversal](components/scene-animation.md#custom-clip-event-boundaries); no public type or persisted schema is added.
+
+MSAA shader sampling extends existing RenderingDevice/RDTextureFormat/RDTextureView resources with internal copied sample-role metadata; it adds no public type or stored schema. See [multisample shader reads](components/local-compute.md#multisample-shader-reads).
