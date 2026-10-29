@@ -3,8 +3,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <atomic>
 #include <limits>
+#include <new>
 #include <pthread.h>
+#include <sched.h>
 #include <unistd.h>
 struct Counts { uint64_t current, peak, allocated, retired, count, collections, fastObjects, fastArrays, slow, frozenCount, frozenBytes, failures; };
 static_assert(sizeof(Counts) == 96 && sizeof(uintptr_t) == 8);
@@ -16,6 +19,11 @@ struct ProcessCounts { uint64_t managedCurrent, managedPeak, nativeCurrent, nati
 static_assert(sizeof(ProcessCounts) == 96);
 struct NativeHeader { void *allocation; size_t size, alignment; };
 static_assert(sizeof(NativeHeader) <= 32);
+struct CommonCounts { uint64_t attempts, soh, freeList, segment, completed, failed, reverted, bytes, pending; };
+static_assert(sizeof(CommonCounts) == 72);
+struct CommonScope { CommonScope *previous; void *object; uint64_t bytes; uintptr_t type, elements; unsigned route; bool canceled, delayed; };
+static_assert(sizeof(CommonScope) <= 64 && alignof(CommonScope) <= alignof(uint64_t));
+struct DelayCounts { uint64_t expectedPeak, freedBeforeTyped, completed; };
 static Watch watches[16];
 static FrozenCounts frozen;
 static ProcessCounts processTotals;
@@ -23,6 +31,14 @@ static Segment *segments;
 static pthread_mutex_t gate = PTHREAD_MUTEX_INITIALIZER;
 static bool collecting;
 static thread_local bool fastCommit;
+static thread_local CommonScope *commonScope;
+static CommonCounts common;
+static uint32_t rejectFinalizerTag, delayTag;
+static void *delayBlock;
+static pthread_t delayThread;
+static bool delayActive;
+static std::atomic<unsigned> delayStage;
+static DelayCounts delayCounts;
 static uint32_t rejectTag;
 static bool rejectFrozen;
 [[noreturn]] static void fail(const char *message, int code = 135) {
@@ -122,6 +138,104 @@ static void allocate(Counts &c, uint64_t bytes, uint32_t route) {
     else if (route == 3) ++c.slow;
     else fail("invalid allocation route");
 }
+extern "C" void e2d_aot_common_prepare(void *storage, size_t size, void *type, uintptr_t elements, bool concurrent) {
+    enter();
+    if (concurrent) fail("heap walk requires stopped EE and non-concurrent GC");
+    if (!storage || !size || !type || fastCommit) fail("invalid common allocation scope");
+    auto scope = new (storage) CommonScope{commonScope, nullptr, aligned(size), reinterpret_cast<uintptr_t>(type), elements, 0, false, false};
+    if (delayTag && watches[delayTag].type == scope->type &&
+        (watches[delayTag].length < 0 || static_cast<uint64_t>(watches[delayTag].length) == elements)) {
+        scope->delayed = true; delayTag = 0;
+    }
+    commonScope = scope; ++common.attempts;
+    leave();
+}
+extern "C" void e2d_aot_common_begin(unsigned route) {
+    enter();
+    if (!commonScope || commonScope->object || commonScope->route || route < 1 || route > 3 || collecting)
+        fail("invalid common reservation interval");
+    commonScope->route = route;
+}
+extern "C" void e2d_aot_common_commit(void *object) {
+    if (!commonScope || commonScope->object || !commonScope->route || !object) fail("invalid common reservation commit");
+    commonScope->object = object;
+    if (commonScope->route == 1) ++common.soh;
+    else if (commonScope->route == 2) ++common.freeList;
+    else ++common.segment;
+    common.bytes = add(common.bytes, commonScope->bytes);
+#ifndef E2D_TEST_DEFER_COMMON_COMMIT
+    allocate(watches[0].totals, commonScope->bytes, 3);
+    publishManaged();
+#endif
+    if (commonScope->delayed) delayCounts.expectedPeak = processTotals.current;
+    leave();
+}
+extern "C" void e2d_aot_common_abort() {
+    enter();
+    if (!commonScope || commonScope->object) fail("common failure retained reserved payload");
+    ++watches[0].totals.failures;
+    for (unsigned i = 1; i < 16; ++i)
+        if (watches[i].type == commonScope->type &&
+            (watches[i].length < 0 || static_cast<uint64_t>(watches[i].length) == commonScope->elements)) ++watches[i].totals.failures;
+    commonScope = commonScope->previous; ++common.failed;
+    leave();
+}
+extern "C" void e2d_aot_common_cancel_begin(void *object) {
+    enter();
+    if (!commonScope || commonScope->object != object || commonScope->canceled) fail("invalid common reservation cancellation");
+}
+extern "C" void e2d_aot_common_cancel_end() {
+#ifndef E2D_TEST_DEFER_COMMON_COMMIT
+    auto &c = watches[0].totals;
+    if (c.current < commonScope->bytes || !c.count) fail("common cancellation underflow");
+    c.current -= commonScope->bytes; --c.count; c.retired = add(c.retired, commonScope->bytes);
+    publishManaged();
+#endif
+    commonScope->object = nullptr; commonScope->canceled = true; ++common.reverted;
+    leave();
+}
+extern "C" bool e2d_aot_finalizer_reject() {
+    enter();
+    bool reject = rejectFinalizerTag && commonScope && watches[rejectFinalizerTag].type == commonScope->type;
+    if (reject) rejectFinalizerTag = 0;
+    leave(); return reject;
+}
+extern "C" void e2d_aot_finalizer_fail_next(uint32_t tag) {
+    enter();
+    if (!tag || tag >= 16 || !watches[tag].type || rejectFinalizerTag) fail("invalid finalizer failure arm", 132);
+    rejectFinalizerTag = tag;
+    leave();
+}
+extern "C" void e2d_aot_common_read(CommonCounts *result) {
+    enter();
+    if (!result) fail("invalid common snapshot", 132);
+    *result = common; result->pending = common.attempts - common.completed - common.failed;
+    leave();
+}
+static void *delayWorker(void*) {
+    delayStage.store(10, std::memory_order_release);
+    while (delayStage.load(std::memory_order_acquire) != 1) sched_yield();
+    e2d_aot_native_free(delayBlock);
+    delayStage.store(2, std::memory_order_release);
+    return nullptr;
+}
+extern "C" void e2d_aot_delay_arm(uint32_t tag, void *block) {
+    enter();
+    if (!tag || tag >= 16 || !watches[tag].type || !block || delayActive) fail("invalid common delay arm", 132);
+    delayTag = tag; delayBlock = block; delayActive = true; delayCounts = {}; delayStage.store(0);
+    leave();
+    if (pthread_create(&delayThread, nullptr, delayWorker, nullptr)) fail("native delay worker creation failed");
+    while (delayStage.load(std::memory_order_acquire) != 10) sched_yield();
+}
+extern "C" void e2d_aot_delay_join(DelayCounts *result) {
+    enter();
+    if (!result || !delayActive || delayStage.load(std::memory_order_acquire) != 2) fail("common delay did not complete");
+    leave();
+    if (pthread_join(delayThread, nullptr)) fail("native delay worker join failed");
+    enter();
+    delayCounts.completed = 1; *result = delayCounts; delayActive = false;
+    leave();
+}
 extern "C" void e2d_aot_begin_fast() {
     enter();
     if (collecting || fastCommit) fail("invalid fast allocation interval");
@@ -130,12 +244,27 @@ extern "C" void e2d_aot_begin_fast() {
 extern "C" void e2d_aot_allocated(void *object, size_t size, uint32_t route) {
     if (route == 3) {
         if (fastCommit) fail("common allocation inside fast commit");
+        if (!commonScope || commonScope->object != object || commonScope->bytes != aligned(size))
+            fail("common typed completion missed reservation");
+        if (commonScope->delayed) {
+            delayStage.store(1, std::memory_order_release);
+            while (delayStage.load(std::memory_order_acquire) != 2) sched_yield();
+        }
         enter();
     } else if ((route != 1 && route != 2) || !fastCommit) fail("fast allocation missed commit gate");
     if (collecting || !object || !size) fail("invalid allocation interval");
     auto bytes = aligned(size);
-    allocate(watches[0].totals, bytes, route);
-    publishManaged();
+    if (route != 3) {
+        allocate(watches[0].totals, bytes, route);
+        publishManaged();
+    } else {
+#ifdef E2D_TEST_DEFER_COMMON_COMMIT
+        allocate(watches[0].totals, bytes, 3);
+        publishManaged();
+#endif
+        if (commonScope->delayed) delayCounts.freedBeforeTyped = 1;
+        commonScope = commonScope->previous; ++common.completed;
+    }
     for (unsigned i = 1; i < 16; ++i)
         if (matches(watches[i], object)) allocate(watches[i].totals, bytes, route);
     fastCommit = false;

@@ -547,12 +547,25 @@ native peak, and disjoint/overlapping native and managed lifetimes. A sparse
 this qualifies width rather than a physical 4-GiB working set. The prepared native
 allocate/resize/free/read cycle also requires zero managed caller bytes.
 
-This closes the fast-path commit interval only in the instrumented single-image
-fixture. The common GC-capable allocator still notifies after returning, so its
-overlap with native ownership remains open; holding the observer gate across that
-allocator would block its own GC. The shipping C# allocator/native-library domains
-have not moved into this gate. Do not infer a complete process peak from the
-controlled compositions. Receipts are under `bin/aot-composed-memory/2026-10-29/`.
+The common path now also publishes at reservation: SOH pointer commit, UOH
+free-list removal and UOH segment-end commit. Caller-owned native scope storage
+survives retries/GC without retaining the bookkeeping gate; initialized-object
+callbacks only complete typed watches. Failed finalizer registration converts its
+uninitialized slot to a free object under the gate and retires its contribution,
+retaining the actual transient peak. Memory clearing, event emission and
+GC-capable allocation remain outside that critical section.
+
+Seven common phases force a UOH hole reuse, finalizer failure/retry/retirement and
+zero-byte prepared reads. A native worker frees a sparse 5-GiB block between a
+4120-byte pinned reservation and its typed callback. The exact overlapping peak
+must survive; a deliberately deferred producer must fail the same assertion.
+Both GC profiles also exercise a 256-MiB request under a verified 128-MiB heap
+limit, including GC, OOM and scope rollback. This is bounded allocator exhaustion,
+not exhausted host RAM. See the source-runtime probe for commands and boundaries.
+Receipts are under `bin/aot-common-memory/2026-10-29/`; earlier composed witnesses
+remain under `bin/aot-composed-memory/2026-10-29/`. The production C# allocator and
+native-library domains have not moved into this gate, so complete process/host
+acceptance remains open.
 
 Production integration still needs CoreCLR image/frozen accounting and actual
 engine/module-host acceptance, concurrent collector support, qualified large sizes

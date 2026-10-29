@@ -72,7 +72,7 @@ def main():
     native = workspace / 'runtime-10.0.1/artifacts/obj/coreclr/linux.x64.Release/nativeaot/Runtime/Full'
     reports = {}
     runtime_inputs = {}
-    for name in ['probe', 'server', 'source-baseline', 'sdk-baseline', 'concurrent']:
+    for name in ['probe', 'server', 'source-baseline', 'sdk-baseline', 'concurrent', 'deferred-common']:
         artifact = 'managed' if name == 'probe' else 'managed-' + name
         link = workspace / artifact / 'obj/AOTMemoryProbe/release_linux-x64/native/e2d-runtime-inputs.txt'
         paths = [Path(line.strip()) for line in link.read_text().splitlines()
@@ -91,14 +91,18 @@ def main():
              ('concurrent', 'concurrent', [], 135), ('invalid-watch', 'probe', ['--invalid-watch'], 132),
              ('invalid-snapshot', 'probe', ['--invalid-snapshot'], 132),
              ('invalid-frozen', 'probe', ['--invalid-frozen'], 132),
-             ('invalid-native', 'probe', ['--invalid-native'], 132)]
+             ('invalid-native', 'probe', ['--invalid-native'], 132),
+             ('deferred-common', 'deferred-common', [], -signal.SIGABRT),
+             ('common-oom', 'probe', ['--common-oom'], 0),
+             ('server-common-oom', 'server', ['--common-oom'], 0)]
     for label, image, arguments, expected in cases:
         executable = workspace / image / 'AOTMemoryProbe'
         command = [str(executable), *arguments]
         started = time.monotonic()
         mappings = set()
+        child_environment = environment | ({'DOTNET_GCHeapHardLimit': '8000000'} if 'common-oom' in label else {})
         with (output / (label + '.log')).open('w') as log:
-            child = subprocess.Popen(command, env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            child = subprocess.Popen(command, env=child_environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
             try:
                 while child.poll() is None:
                     try:
@@ -116,10 +120,14 @@ def main():
                 child.wait()
                 raise
         receipt = {'command': command, 'exit': child.returncode, 'seconds': time.monotonic() - started,
+                   'GCHeapHardLimit': child_environment.get('DOTNET_GCHeapHardLimit'),
                    'executableSHA256': digest(executable), 'mappings': sorted(mappings)}
         (output / (label + '.json')).write_text(json.dumps(receipt, indent=2) + '\n')
         assert child.returncode == expected, (label, child.returncode)
         text = (output / (label + '.log')).read_text()
+        if label == 'deferred-common':
+            assert 'Delayed common peak missed reservation' in text, label
+            continue
         if expected:
             reason = ('hooks are absent' if 'baseline' in label else 'stopped EE and non-concurrent GC' if label == 'concurrent'
                       else 'invalid type watch' if label == 'invalid-watch' else 'invalid frozen resize' if label == 'invalid-frozen'
@@ -128,6 +136,11 @@ def main():
             continue
         assert str(executable) in mappings and not any('libcoreclr' in path.lower() for path in mappings)
         report = json.loads(text.splitlines()[-1])
+        if 'common-oom' in label:
+            assert report['Runtime'] == '.NET 10.0.1' and report['ServerGC'] == (image == 'server')
+            assert 0 < report['HeapLimit'] <= 134217728 and report['CollectionsAfter'] > report['CollectionsBefore']
+            assert report['Failed'] == 1 and report['Reverted'] == report['TaggedCurrent'] == report['TaggedAllocated'] == 0
+            continue
         assert report['Runtime'] == '.NET 10.0.1' and not report['DynamicCode']
         assert report['ServerGC'] == (label == 'server') and report['ReadBytes'] == 0
         assert report['Allocated'] - report['Retired'] == report['Current'] and report['Peak'] >= report['Current']
@@ -172,12 +185,22 @@ def main():
         assert native['wide-allocation']['NativeCurrent'] == (1 << 32) + 17
         assert native['wide-resize']['NativeCurrent'] == (1 << 32) + 33
         assert native['wide-retired']['NativeCurrent'] == 0 and native['wide-retired']['Peak'] >= native['wide-resize']['Peak']
+        common = report['Common']
+        assert common['ReadBytes'] == 0 and common['ExpectedDelayedPeak'] == common['ObservedDelayedPeak']
+        assert common['ObservedDelayedPeak'] > 5 << 30 and len(common['Rows']) == 7
+        assert all(row['Pending'] == 0 and row['Attempts'] == row['Completed'] + row['Failed'] and
+                   row['SOH'] + row['FreeList'] + row['Segment'] == row['Completed'] + row['Reverted'] for row in common['Rows'])
+        phases = {row['Phase']: row for row in common['Rows']}
+        assert phases['free-list-reuse']['FreeList'] > phases['startup']['FreeList']
+        assert phases['finalizer-failure']['Failed'] == phases['delayed-completion']['Failed'] + 1
+        assert phases['finalizer-failure']['Reverted'] == phases['delayed-completion']['Reverted'] + 1
         reports[label] = report
     summary = {'reports': reports, 'runtimeInputs': runtime_inputs, 'bridgeSHA256': digest(workspace / 'producer.o'),
+               'deferredBridgeSHA256': digest(workspace / 'producer-deferred.o'),
                'frozenFixtureSHA256': digest(workspace / 'frozen-fixture.o'),
                'sourceSHA256': {path.name: digest(path) for path in Path(__file__).parent.iterdir() if path.is_file()}}
     (output / 'checks.json').write_text(json.dumps(summary, indent=2) + '\n')
-    print('NativeAOT guarded fast/frozen/native ledger, composed witnesses, wide native sizes and host controls passed.')
+    print('NativeAOT raw common/fast/frozen/native commits, delayed-peak RED control, bounded OOM and lifecycle witnesses passed.')
 
 
 if __name__ == '__main__':

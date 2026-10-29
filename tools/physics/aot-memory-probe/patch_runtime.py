@@ -85,10 +85,28 @@ LEAF_END E2DMemoryBeginFast, _TEXT
         mov         rax, rbx
 
         .cfi_remember_state''')
-    replace(helpers, 'static Object* GcAllocInternal(', 'extern "C" void e2d_aot_allocated(void*, size_t, uint32_t);\nextern "C" bool e2d_aot_reject(void*, uintptr_t);\n\nstatic Object* GcAllocInternal(')
+    replace(helpers, 'static Object* GcAllocInternal(', '''extern "C" void e2d_aot_allocated(void*, size_t, uint32_t);
+extern "C" bool e2d_aot_reject(void*, uintptr_t);
+extern "C" void e2d_aot_common_prepare(void*, size_t, void*, uintptr_t, bool);
+extern "C" void e2d_aot_common_abort();
+
+static Object* GcAllocInternal(''')
     replace(helpers, '    Object* pObject = GCHeapUtilities::GetGCHeap()->Alloc(pAllocContext, cbSize, uFlags);', '''    if (e2d_aot_reject(pEEType, numElements))
         return NULL;
+    alignas(uint64_t) unsigned char e2dScope[64];
+    e2d_aot_common_prepare(e2dScope, cbSize, pEEType, numElements,
+        GCHeapUtilities::GetGCHeap()->IsConcurrentGCEnabled());
     Object* pObject = GCHeapUtilities::GetGCHeap()->Alloc(pAllocContext, cbSize, uFlags);''')
+    replace(helpers, '''    if (pObject == NULL)
+        return NULL;
+
+    pObject->set_EEType(pEEType);''', '''    if (pObject == NULL)
+    {
+        e2d_aot_common_abort();
+        return NULL;
+    }
+
+    pObject->set_EEType(pEEType);''')
     replace(helpers, '''    return pObject;
 }
 
@@ -116,7 +134,48 @@ void GCToEEInterface::GcDone(int condemned)
 ''')
     replace(heap, '#include "gceventstatus.h"', '''#include "gceventstatus.h"
 extern "C" bool e2d_aot_frozen_reject();
-extern "C" void e2d_aot_frozen_change(unsigned, void*, uintptr_t, uintptr_t, uintptr_t, uintptr_t);''')
+extern "C" void e2d_aot_frozen_change(unsigned, void*, uintptr_t, uintptr_t, uintptr_t, uintptr_t);
+extern "C" void e2d_aot_common_begin(unsigned);
+extern "C" void e2d_aot_common_commit(void*);
+extern "C" bool e2d_aot_finalizer_reject();
+extern "C" void e2d_aot_common_cancel_begin(void*);
+extern "C" void e2d_aot_common_cancel_end();''')
+    replace(heap, '''        acontext->alloc_ptr+=size;
+        if (acontext->alloc_ptr <= acontext->alloc_limit)
+        {
+            CObjectHeader* obj''', '''        uint8_t* next = result + size;
+        if (next <= acontext->alloc_limit)
+        {
+            e2d_aot_common_begin(1);
+            acontext->alloc_ptr = next;
+            e2d_aot_common_commit(result);
+            CObjectHeader* obj''')
+    replace(heap, '''            acontext->alloc_ptr -= size;
+
+#ifdef _MSC_VER''', '''#ifdef _MSC_VER''')
+    replace(heap, '''                allocator->unlink_item (a_l_idx, free_list, prev_free_item, FALSE);
+                remove_gen_free (gen_number, free_list_size);''', '''                e2d_aot_common_begin(2);
+                allocator->unlink_item (a_l_idx, free_list, prev_free_item, FALSE);
+                remove_gen_free (gen_number, free_list_size);''')
+    replace(heap, '''                dprintf (3, ("found fit on loh at %p", free_list));''', '''                e2d_aot_common_commit(free_list);
+                dprintf (3, ("found fit on loh at %p", free_list));''')
+    replace(heap, '''found_fit:
+    dd_new_allocation (dynamic_data_of (gen_number)) -= limit;''', '''found_fit:
+    if (gen_number != 0) e2d_aot_common_begin(3);
+    dd_new_allocation (dynamic_data_of (gen_number)) -= limit;''')
+    replace(heap, '''        allocated += limit;
+        adjust_limit_clr (old_alloc, limit, size, acontext, flags, seg, align_const, gen_number);''', '''        allocated += limit;
+        if (gen_number != 0) e2d_aot_common_commit(old_alloc);
+        adjust_limit_clr (old_alloc, limit, size, acontext, flags, seg, align_const, gen_number);''')
+    replace(heap, '''    if ((*s_i) == SegQueueLimit(FreeListSeg))
+    {
+        if (!GrowArray())''', '''    bool e2dRejectFinalizer = e2d_aot_finalizer_reject();
+    if ((*s_i) == SegQueueLimit(FreeListSeg) || e2dRejectFinalizer)
+    {
+        if (e2dRejectFinalizer || !GrowArray())''')
+    replace(heap, '''                ((CObjectHeader*)obj)->SetFree(size);''', '''                e2d_aot_common_cancel_begin(obj);
+                ((CObjectHeader*)obj)->SetFree(size);
+                e2d_aot_common_cancel_end();''')
     replace(heap, '''    enter_spin_lock (&gc_heap::gc_lock);
 
     if (!gc_heap::seg_table->ensure_space_for_insert ()''', '''    enter_spin_lock (&gc_heap::gc_lock);

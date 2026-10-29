@@ -68,20 +68,23 @@ cmake --build "$runtime_root/artifacts/obj/coreclr/linux.x64.Release" \
   --target Runtime.WorkstationGC Runtime.ServerGC -j 4
 c++ -std=c++17 -O2 -Wall -Wextra -Werror -fPIC -pthread -c \
   tools/physics/aot-memory-probe/producer.cpp -o "$probe_root/producer.o"
+c++ -std=c++17 -O2 -Wall -Wextra -Werror -fPIC -pthread -DE2D_TEST_DEFER_COMMON_COMMIT -c \
+  tools/physics/aot-memory-probe/producer.cpp -o "$probe_root/producer-deferred.o"
 c++ -std=c++17 -O2 -Wall -Wextra -Werror -fPIC -c \
   tools/physics/aot-memory-probe/frozen_fixture.cpp -o "$probe_root/frozen-fixture.o"
-for role in probe server source-baseline sdk-baseline concurrent; do
+for role in probe server source-baseline sdk-baseline concurrent deferred-common; do
   server_gc=false; concurrent_gc=false; archive="$runtime_libs/libRuntime.WorkstationGC.a"
-  artifact="managed-$role"
+  artifact="managed-$role"; native_object="$probe_root/producer.o"
   case "$role" in
     probe) artifact=managed ;;
     server) server_gc=true; archive="$runtime_libs/libRuntime.ServerGC.a" ;;
     source-baseline) archive="$probe_root/unmodified.WorkstationGC.a" ;;
     sdk-baseline) archive= ;;
     concurrent) concurrent_gc=true ;;
+    deferred-common) native_object="$probe_root/producer-deferred.o" ;;
   esac
   dotnet publish tools/physics/aot-memory-probe/AOTMemoryProbe.csproj -c Release -r linux-x64 \
-    -p:ProbeNativeObject="$probe_root/producer.o" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
+    -p:ProbeNativeObject="$native_object" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
     -p:ProbeRuntimeArchive="$archive" \
     -p:ServerGarbageCollection="$server_gc" -p:ConcurrentGarbageCollection="$concurrent_gc" \
     --artifacts-path "$probe_root/$artifact" -o "$probe_root/$role"
@@ -90,9 +93,9 @@ python3 -B tools/physics/aot-memory-probe/check.py "$probe_root" bin/aot-memory-
 rm -rf "$probe_root"
 ```
 
-Workstation and two-heap server GC use the same 29 dynamic, 13 frozen and 14 native witness phases. Nine
+Workstation and two-heap server GC use the same 29 dynamic, 13 frozen, 14 native and seven common witness phases. Twelve
 isolated children include the two uninstrumented runtime controls, concurrent-GC
-refusal, an invalid watch, an invalid snapshot, an invalid frozen resize and an invalid native alignment. Each has a 90-second process-group
+refusal, an invalid watch, an invalid snapshot, an invalid frozen resize and an invalid native alignment, a deliberately late common producer and two bounded-heap OOM controls. Each has a 90-second process-group
 deadline. The checker retains maps, actual link arguments and source/archive/binary
 hashes, and requires native execution without CoreCLR. Rebuilding from a fresh
 archive is required after changing the patcher; it intentionally refuses to patch
@@ -132,12 +135,30 @@ content across resize; only endpoint pages are touched, so this is not a physica
 4-GiB working-set test. Twenty thousand prepared native allocation/resize/free/read
 cycles must allocate zero managed caller bytes.
 
-These are controlled single-image accounting domains. Common slow managed
-allocations still publish after the GC allocator returns: their native overlap
-window remains unqualified. Holding this gate across a GC-capable allocator would
-deadlock collection and is not an accepted fix. The shipping C# NativeAllocation
-and native-library callbacks have not been moved to this fixture's gate. No
-complete production managed/native peak is claimed.
+Common allocations now publish at the actual reservation: the SOH allocation
+pointer, UOH free-list removal or UOH segment-end commit. A caller-owned 64-byte
+scope retains requested size and nested-call identity across allocator retries;
+its preparation releases the observer gate before any GC-capable work. The late
+initialized-object notification only updates type watches. No gate is held while
+waiting for GC, acquiring allocator locks, clearing memory or emitting events.
+Uninitialized slots converted to free objects after finalizer registration failure
+retire under the same gate; the real transient peak remains retained.
+
+The common fixture forces UOH free-list reuse, a failed finalizer registration
+before constructor execution, a successful retry/finalization and 20000 zero-byte
+prepared snapshot reads. Its native worker frees a sparse 5-GiB block after a
+4120-byte pinned reservation but before its typed notification. The peak must
+still include both lifetimes. The baseline is taken only after the worker reports
+ready, excluding setup from that exact allocation interval. The deliberately
+late producer must fail this same peak assertion. Separate WKS/server children
+set DOTNET_GCHeapHardLimit=8000000 (hexadecimal without a 0x prefix for the pinned
+runtime parser), verify the actual 128-MiB limit, and request 256 MiB. The allocator
+must collect and return OOM with no tagged reservation and no pending scope.
+These are controlled allocator and finalizer failures, not OS memory exhaustion.
+
+These remain single-image accounting domains. Shipping C# NativeAllocation and
+native-library callbacks have not moved to this fixture's gate. CoreCLR, actual
+host/module integration and complete production managed/native peaks remain open.
 
 The full heap walk still requires non-concurrent GC. Its O(total heap) collection
 cost, native observer overhead and changed runtime build must be measured before
