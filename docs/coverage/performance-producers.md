@@ -1105,8 +1105,8 @@ state before and after packing each header, before copying bytes. It also checks
 header-copy allocation results. The standalone comment packet uses the same
 tracked allocator as its Ogg packet-clear function; mixing its original libc
 allocation with tracked retirement is rejected by an address-sanitizer control.
-Backend-owned analysis header copies retain their paired Vorbis allocator and
-teardown, outside this domain. The original info.c input is
+Backend-owned analysis header copies are qualified separately in the following
+[header domain](#vorbis-header-allocation-domain-2026-10-29). The original info.c input is
 `03af6059fe7e50d0b37a0370707139227e6cd4cc74be56473cd22f0300739fca`.
 An original comment-header refusal control incorrectly publishes an invalid
 packet; the adapted path fails, drains and retries. Encoder call boundaries
@@ -1143,4 +1143,48 @@ native and consumer identities, 32-bit controls and receipts live under
 retained. No package or wiki is published.
 
 Vorbis/Theora working heaps, remaining providers, coherent managed/native
+composition, GetMonitor and release/foreign-host qualification remain open.
+
+
+### Vorbis header allocation domain (2026-10-29)
+
+The [packet adapter](../../tools/ogv-native/vorbis-packets.cmake) now routes the
+three DSP-owned analysis-header copies to the same immutable pure-C allocator.
+Their complete lifetime spans info.c replacement/error cleanup and block.c DSP
+teardown or first analysis-buffer acquisition. All twelve retirement sites use
+the same owner. Both pristine source hashes and target membership are validated
+before either generated copy is written. The additional block.c input is
+`7f65c7031c2b94405d2c1b5f0a73cc19efe9506e95736ba0b38d86bd42170a7e`.
+The existing info.c pin, header validity checks and single libvorbis 1.3.7 closure
+remain unchanged. Other DSP/setup/working heaps are outside this domain.
+
+The direct header check fails against the preceding producer because the three
+published packets have no ledger contribution. The qualified producer counts
+exactly their combined borrowed packet lengths after publication. The test
+decodes all three packets, verifies channel/rate/comment/packet metadata and
+exercises replacement, first-PCM retirement and final destruction. Its 108
+allocation positions each run in a fresh process; failure leaves no published
+packet or tracked header storage. Explicit same-DSP and new-DSP retry both pass.
+Its high-water is 20882 requested payload bytes. Public encoder refusal remains
+terminal through the existing native-thread epoch boundary.
+
+Shared/static Release and address/undefined/leak-sanitizer checks each cover
+1807 refusal positions: 56 ordinary encode, 1265 large-noise encode, 262 decode,
+40 container, 42 LSB/MSB bit-buffer, 34 standalone-comment and 108 DSP-header
+requests. All drain and permit healthy retry. The ordinary encoder high-water
+increases from 205568 to 209891 bytes, accounting for 4323 previously invisible
+header bytes. The larger noise peak stays 1226465 because those headers retire
+before that later peak; independently observed maxima are not added.
+
+Thirteen encoded files remain byte-for-byte equal to the preceding producer.
+The independent FFmpeg picture/PCM/chroma/channel/multi-track oracles, 24 residue
+profiles and 64 prepared replay loops over 28 fixtures remain connected checks.
+Hash-qualified CLR/full-trim NativeAOT consumers use the same managed inputs with
+one replaced canonical native module and repeat public preparation/refusal,
+atomic replacement, collection, older-ABI rejection, 20000 prepared operations
+and GPU/Compatibility window-first recording. Source-bound receipts, exact
+native/consumer identities and the retained consumer delta are under
+`bin/vorbis-header-allocation/2026-10-29/`.
+
+Other Vorbis/Theora working storage, remaining providers, coherent managed/native
 composition, GetMonitor and release/foreign-host qualification remain open.

@@ -34,6 +34,9 @@ def check(checker, fixtures, output):
     packets = checker.with_name("Electron2DVorbisPacketCheck")
     packet_baseline = json.loads(subprocess.check_output([str(packets.resolve()), "0"], text=True))
     sweep([str(packets.resolve())], packet_baseline["attempts"], "Comment packet")
+    headers = checker.with_name("Electron2DVorbisHeadersCheck")
+    header_baseline = json.loads(subprocess.check_output([str(headers.resolve()), "0"], text=True))
+    sweep([str(headers.resolve())], header_baseline["attempts"], "DSP headers")
     oracles = []
     for name in ("Electron2DOGGBitwiseReference", "Electron2DOGGBitwiseOracle"):
         oracle = checker.with_name(name)
@@ -52,8 +55,9 @@ def check(checker, fixtures, output):
                                  "container_checker_sha256": hashlib.sha256(container.read_bytes()).hexdigest(),
                                  "container": container_baseline, "bitwise_checker_sha256": hashlib.sha256(bits.read_bytes()).hexdigest(),
                                  "bitwise": bit_results, "packet_checker_sha256": hashlib.sha256(packets.read_bytes()).hexdigest(),
-                                 "packet": packet_baseline, "oracles": oracles, "results": results}, indent=2) + "\n")
-    print(f"OGV allocations: {sum(row['attempts'] for row in results)} bridge, {container_baseline['attempts']} container, {sum(row['attempts'] for row in bit_results)} bit-buffer and {packet_baseline['attempts']} comment-header refusal positions; preparation/growth/retirement/retry passed.")
+                                 "packet": packet_baseline, "headers_checker_sha256": hashlib.sha256(headers.read_bytes()).hexdigest(),
+                                 "headers": header_baseline, "oracles": oracles, "results": results}, indent=2) + "\n")
+    print(f"OGV allocations: {sum(row['attempts'] for row in results)} bridge, {container_baseline['attempts']} container, {sum(row['attempts'] for row in bit_results)} bit-buffer, {packet_baseline['attempts']} comment-header and {header_baseline['attempts']} DSP-header refusal positions; preparation/growth/retirement/retry passed.")
 
 
 if __name__ == "__main__":

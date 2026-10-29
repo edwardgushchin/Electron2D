@@ -40,7 +40,9 @@ all bridge/container/bit-buffer/header refusal positions in fresh processes. Inc
 independently round-trips a 512-KiB packet through 500-byte chunks and sweeps all
 container growth failures. Electron2DOGGBitwiseCheck exercises both packing orders,
 scalar/copy/truncation paths and prepared reuse. Electron2DVorbisPacketCheck tests
-large comment-header growth and failure before publication. Reference/adapted
+large comment-header growth and failure before publication. Electron2DVorbisHeadersCheck
+verifies DSP-owned header bytes, decoding, replacement, first-PCM retirement,
+partial teardown and same-DSP/new-DSP retry at every header refusal position. Reference/adapted
 bitwise oracles execute the pinned upstream byte vectors. The script checks
 immutable registration, terminal encoder refusal,
 independent decoder workers, prepared allocation-free replay and full drain/retry.
@@ -73,8 +75,8 @@ integer-width check does not establish execution on another platform.
 vorbis-packets.cmake compiles a hash-checked info.c copy that checks bit-buffer
 validity before and after header packing and checks packet-copy allocation before
 memcpy. The standalone comment packet is allocated through the same ledger as
-its Ogg packet-clear function. Backend-owned analysis headers retain their paired
-Vorbis allocator/teardown. Encoder block/header/frame/packet calls retain a thread-local refusal
+its Ogg packet-clear function. DSP-owned analysis headers also use the ledger; guarded block.c retirement
+covers header replacement, the first PCM buffer request and DSP destruction. Encoder block/header/frame/packet calls retain a thread-local refusal
 epoch and stop with -2 before publishing invalid packets. Partially initialized
 block and encoder owners remain available for normal teardown. Other codec
 working allocation remains outside this qualified domain.
