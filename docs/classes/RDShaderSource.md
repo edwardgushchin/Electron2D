@@ -1,5 +1,7 @@
 # RDShaderSource
 
+[Native FP32 atomics](../components/float-atomics.md) preserve original modules and require the enabled storage-specific base/add feature before device shader or binary publication.
+
 Last updated: 2026-10-28
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSource`. **Component:** [Source authoring](../components/local-compute.md#source-authoring-and-build-imports).

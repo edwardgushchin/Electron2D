@@ -34,7 +34,7 @@ internal static partial class ShaderPrecision
         for (var at = 5; at < words.Length; at += (int)(words[at] >> 16))
         {
             var op = words[at] & 65535; var count = words[at] >> 16;
-            var pointer = op is 62 or 63 or 64 or 228 ? 1 : op is >= 229 and <= 242 ? 3 : 0;
+            var pointer = op is 62 or 63 or 64 or 228 ? 1 : op is >= 229 and <= 242 or 6035 ? 3 : 0;
             if (pointer != 0 && count > pointer && values.TryGetValue(words[at + pointer], out var type) && pointers[type].Storage == 5349) return true;
         }
         return false;

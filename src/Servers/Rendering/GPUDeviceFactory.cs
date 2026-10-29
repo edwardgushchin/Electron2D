@@ -5,6 +5,7 @@ namespace Electron2D;
 
 internal static unsafe partial class GPUDeviceFactory
 {
+    internal const string FloatAtomicProperty = "Electron2D.gpu.float32_atomics";
     internal const string AddressProperty = "Electron2D.gpu.buffer_device_address";
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
     internal const string GraphicsStorageProperty = "Electron2D.gpu.graphics_storage";
@@ -47,6 +48,16 @@ internal static unsafe partial class GPUDeviceFactory
         internal nint Next;
         internal fixed uint Flags[12];
     }
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FloatAtomicFeatures
+    {
+        internal uint Type;
+        internal nint Next;
+        internal fixed uint Flags[12];
+    }
+    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_float_atomic_support")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    private static partial int ReadFloatAtomicSupport(nint device, uint abi);
     private static readonly object Gate = new();
     private static SharedDevice? _shared;
 
@@ -156,22 +167,27 @@ internal static unsafe partial class GPUDeviceFactory
             var addresses = 0;
             try { addresses = ReadAddressSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (addresses is < 0 or > 1) throw new InvalidOperationException("Native buffer addresses could not be queried.");
+            var floating = 0;
+            try { floating = ReadFloatAtomicSupport(device, 1); } catch (EntryPointNotFoundException) { }
+            if (floating is < 0 or > 63) throw new InvalidOperationException("Native floating atomic features could not be queried.");
             available |= addresses << 12;
             var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
-            if ((available | raster) == 0) return device;
+            if ((available | raster | floating) == 0) return device;
             // Retire the unpublished probe before another device initializes Wayland Vulkan state.
             SDL.DestroyGPUDevice(device); device = 0;
             for (var requested = available; requested != 0; requested = (requested - 1) & available)
             {
                 if ((requested & 3) == 2 || (requested & 384) == 256) continue; // Each uniform-storage capability includes its buffer capability.
-                var upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster);
+                var upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster, floating);
+                if (upgraded == 0 && floating != 0) upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster);
                 if (upgraded == 0) continue;
                 return upgraded;
             }
-            device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster);
+            device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster, floating: floating);
+            if (device == 0 && floating != 0) device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster);
             if (device == 0) throw new InvalidOperationException("The native shader precision device could not be restored: " + SDL.GetError());
             return device;
         }
@@ -216,7 +232,7 @@ internal static unsafe partial class GPUDeviceFactory
         return 0;
     }
 
-    private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed, bool float64, bool int64, int atomics, int narrow = 0, int raster = 0)
+    private static nint Attempt(SDL.GPUShaderFormat formats, bool sizedPoints, bool relaxed, bool float64, bool int64, int atomics, int narrow = 0, int raster = 0, int floating = 0)
     {
         var props = SDL.CreateProperties();
         if (props == 0) throw new InvalidOperationException("GPU device properties could not be created: " + SDL.GetError());
@@ -248,11 +264,14 @@ internal static unsafe partial class GPUDeviceFactory
             for (var i = 0; i < 3; i++) advanced.Flags[i + 1] = ((uint)narrow >> (i + 7)) & 1;
             advanced.Flags[38] = (uint)addresses;
             advanced.Flags[0] = 1; advanced.Flags[5] = (uint)atomics & 1; advanced.Flags[6] = ((uint)atomics >> 1) & 1;
+            var floatFeatures = new FloatAtomicFeatures { Type = 1000260000, Next = (nint)(&advanced) };
+            for (var i = 0; i < 6; i++) floatFeatures.Flags[(i / 2) * 4 + i % 2] = ((uint)floating >> i) & 1;
             fixed (uint* pointer = features)
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
+            fixed (byte* floatExtensionName = "VK_EXT_shader_atomic_float\0"u8)
             {
-                var extension = (nint)extensionName;
-                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | ((atomics | precision | addresses) == 0 ? 0u : 2u << 12), FeatureList = (atomics | precision | addresses) == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)(&extension) };
+                nint* extensions = stackalloc nint[2]; extensions[0] = (nint)extensionName; extensions[1] = (nint)floatExtensionName;
+                var options = new SDL.GPUVulkanOptions { VulkanApiVersion = (1u << 22) | ((atomics | precision | addresses | floating) == 0 ? 0u : 2u << 12), FeatureList = floating != 0 ? (nint)(&floatFeatures) : (atomics | precision | addresses) == 0 ? 0 : (nint)(&advanced), Vulkan10PhysicalDeviceFeatures = (nint)pointer, DeviceExtensionCount = 1, DeviceExtensionNames = (nint)extensions };
                 if (!SDL.SetPointerProperty(props, SDL.Props.GPUDeviceCreateVulkanOptionsPointer, (nint)(&options)))
                     throw new InvalidOperationException("GPU capabilities could not be requested: " + SDL.GetError());
                 nint device = 0; var mirror = false;
@@ -260,11 +279,11 @@ internal static unsafe partial class GPUDeviceFactory
                 {
                     features[15] = (uint)selected & 1; features[6] = ((uint)selected >> 1) & 1; features[17] = ((uint)selected >> 2) & 1; features[14] = ((uint)selected >> 3) & 1;
                     features[8] = ((uint)selected >> 4) & 1; features[30] = ((uint)selected >> 5) & 1;
-                    options.DeviceExtensionCount = 1; options.DeviceExtensionNames = (nint)(&extension); advanced.Flags[0] = 1;
+                    options.DeviceExtensionCount = floating == 0 ? 1u : 2u; options.DeviceExtensionNames = (nint)extensions; advanced.Flags[0] = 1;
                     device = SDL.CreateGPUDeviceWithProperties(props); mirror = device != 0;
                     if (device == 0)
                     {
-                        options.DeviceExtensionCount = 0; options.DeviceExtensionNames = 0; advanced.Flags[0] = 0;
+                        options.DeviceExtensionCount = floating == 0 ? 0u : 1u; options.DeviceExtensionNames = (nint)(extensions + 1); advanced.Flags[0] = 0;
                         device = SDL.CreateGPUDeviceWithProperties(props);
                     }
                     if (device != 0) break;
@@ -272,7 +291,8 @@ internal static unsafe partial class GPUDeviceFactory
                     if (selected == 0) return 0;
                 }
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
-                    (addresses != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), AddressProperty, true) ||
+                    (floating != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), FloatAtomicProperty, floating) ||
+                     addresses != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), AddressProperty, true) ||
                      mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
                      float64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Float64Property, true) ||
                      int64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Int64Property, true) ||

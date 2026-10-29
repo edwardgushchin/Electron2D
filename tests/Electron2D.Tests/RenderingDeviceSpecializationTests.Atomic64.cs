@@ -24,14 +24,14 @@ internal static partial class RenderingDeviceSpecializationTests
         }
         for (uint op = 227; op <= 242; op++)
         {
-            Check(Parse(2, op) == (true, true, false) && Parse(12, op) == (true, true, false), "Both buffer encodings classify every integer atomic opcode.");
+            Check(Parse(2, op) == (true, true, false) && Parse(12, op) == (true, true, false) && Parse(5349, op) == (true, true, false), "Logical and physical buffers classify every integer atomic opcode.");
             Check(Parse(4, op) == (true, false, true), "Workgroup atomics require their independent feature.");
             Reject<ArgumentException>(() => Parse(12, op, false));
             Reject<ArgumentException>(() => Parse(12, op, shortInstruction: true));
         }
         foreach (var op in new uint[] { 55, 57, 59, 60, 61, 65, 66, 67, 70, 83, 120, 169, 245 })
             Check(Parse(12, 234, pointerOperation: op) == (true, true, false), "Pointer-producing instructions retain atomic storage identity.");
-        foreach (var storage in new uint[] { 0, 1, 3, 6, 7, 9, 11, 5349 }) Reject<NotSupportedException>(() => Parse(storage, 234));
+        foreach (var storage in new uint[] { 0, 1, 3, 6, 7, 9, 11 }) Reject<NotSupportedException>(() => Parse(storage, 234));
         Check(Parse(11, 234, wide: false) == (true, false, false), "32-bit image atomics do not require a 64-bit storage adapter.");
         var layout = typeof(RenderingDevice).Assembly.GetType("Electron2D.GPUDeviceFactory+Vulkan12Features")!;
         Check(Marshal.OffsetOf(layout, "Flags").ToInt32() == (IntPtr.Size == 8 ? 16 : 8) && Marshal.SizeOf(layout) == (IntPtr.Size == 8 ? 208 : 196), "Vulkan 1.2 feature header and 47 flags match the host ABI.");

@@ -91,7 +91,7 @@ public sealed unsafe partial class RenderingDevice
                 if (samplerTypes.Contains(imageType)) continue;
                 var combined = sampled.TryGetValue(imageType, out var underlying); if (combined) imageType = underlying;
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("The image descriptor type has no scalar native adapter.");
-                if (atomicImages.Contains(variable.ID) && (image.Sampled != 2 || image.Format is not (24 or 33))) throw new NotSupportedException("Image atomics require R32SINT or R32UINT storage images.");
+                if (atomicImages.Contains(variable.ID) && (image.Sampled != 2 || image.Format is not (3 or 24 or 33))) throw new NotSupportedException("Image atomics require R32SFLOAT, R32SINT or R32UINT storage images.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 if (readonlyTranslation.Images.TryGetValue(variable.ID, out var originalFormat))
                 {

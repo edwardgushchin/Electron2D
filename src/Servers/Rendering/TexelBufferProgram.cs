@@ -164,7 +164,6 @@ internal static partial class TexelBufferProgram
         {
             var key = "atomic:" + opcode + ":" + imageType + ":" + string.Join(',', memory);
             if (operations.TryGetValue(key, out var existing)) return existing;
-            if (types[imageType][8] is not (24 or 33)) throw new NotSupportedException("Texel atomics require an explicit signed or unsigned single-component 32-bit image format.");
             var store = opcode == 228; var resultType = store ? nothing : integer; var function = next++; operations.Add(key, function);
             var parameterTypes = new uint[] { integer, signed }.Concat(Enumerable.Repeat(integer, values)).ToArray();
             var body = new List<uint[]> { Instruction(54, resultType, function, 0, Type(33, [resultType, .. parameterTypes])) };
@@ -249,6 +248,7 @@ internal static partial class TexelBufferProgram
             }
             if (op == 60 && valueTypes.TryGetValue(i[3], out var atomicImage) && Opaque(atomicImage))
             {
+                if (types[Image(atomicImage)][8] is not (24 or 33)) throw new NotSupportedException("Texel atomics require an explicit signed or unsigned single-component 32-bit image format.");
                 var coordinate = valueTypes[i[4]] == signed ? i[4] : Emit(output, 124, signed, i[4]);
                 atomicPointers.Add(i[2], (Image(atomicImage), i[3], coordinate)); continue;
             }

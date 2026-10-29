@@ -1,5 +1,12 @@
 For [viewport render time](components/viewport-render-time.md), build the matching elapsed-query native bridge and run ELECTRON2D_TEST_VIEWPORT_TIMING=gpu, compatibility and software. Preserve root/SubViewport/RID/native-child pixel evidence, paired publication, CPU process exclusion and single-counted shared child authoring, owner/capture/retirement guards and strict warmed active/idle allocation brackets. Run the native timestamp ABI checker and both existing RenderingDevice timestamp profiles after shared-pool changes; Linux GL/Vulkan execution does not qualify foreign backends or NativeAOT.
 
+For FP32 atomic shader changes, run the public FloatAtomic32.Consumer source/binary,
+managed-package and strict full-trim NativeAOT profiles plus the root requirement
+guards. Validate original and actual lowered SPIR-V. Run the test-only floating
+feature-refusal shim and preceding-bridge missing-export control, preserving ordinary
+FP32 execution. Recheck integer image/64-bit atomics and MS storage; run the native
+render checker and export/package tests. See [the native contract](components/float-atomics.md).
+
 # Maintaining the Electron2D contract
 
 For legacy UTF8 inputs, run `Electron2D.FastTests --utf8-legacy` on CLR and strict

@@ -38,6 +38,8 @@
 
 # Rendering domain
 
+[Native FP32 atomics](../components/float-atomics.md) connect existing shader/storage families to parallel floating reductions and accumulation, including image arrays/samples and both writable graphics stages. Unsupported native features reject before publication.
+
 [Canvas matrix inputs](../components/visual-shaders.md#canvas-matrix-inputs) retain original item/instance transforms through ordinary, mesh, MultiMesh and GPU-particle streams, including singular canvas transforms, and expose renderer-owned numeric model/canvas/screen matrices to canvas vertex programs.
 
 [Completed canvas counters](../components/canvas-counters.md) connect actual GPU/Compatibility geometry submission to shared ViewportRenderInfo/ViewportRenderInfoType selectors, static RenderingServer queries and Performance. Failed/skipped frame boundaries and GPU-authored capacity budgets remain explicit. The [canvas pipeline producer](../components/canvas-counters.md#canvas-pipeline-compilation) separately counts successful native creations across a renderer session; cache hits, retirement, errors and closure preserve its cumulative contract.

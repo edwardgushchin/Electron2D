@@ -67,6 +67,7 @@ internal static partial class ShaderPrecision
     {
         var required = ReadRequirements(code);
         ValidateAddresses(device, code);
+        ValidateFloatAtomics(device, code);
         var narrow = ReadNarrowRequirements(code);
         var sample = ReadSampleRequirements(code);
         if (sample.Shading && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(device), GPUDeviceFactory.MultisampleProperty, 0) & 1) == 0) throw new NotSupportedException("Sample-rate shaders require an enabled native sample-shading feature.");

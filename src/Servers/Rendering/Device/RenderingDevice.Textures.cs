@@ -134,12 +134,13 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Reports whether the selected format supports the requested two-dimensional texture usage.</summary>
     /// <param name="format">A concrete format to query.</param>
     /// <param name="usageFlags">Requested allocation and transfer roles.</param>
-    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT read-modify-write images; raw depth resolve remains unavailable.</returns>
+    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT and feature-enabled R32SFLOAT read-modify-write images; raw depth resolve remains unavailable.</returns>
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
         if ((usageFlags & TextureUsageBits.DepthResolveAttachment) != 0) return false;
-        if ((usageFlags & TextureUsageBits.StorageAtomic) != 0 && format is not (DataFormat.R32SINT or DataFormat.R32UINT)) return false;
+        if ((usageFlags & TextureUsageBits.StorageAtomic) != 0 && format is not (DataFormat.R32SINT or DataFormat.R32UINT) &&
+            (format != DataFormat.R32SFLOAT || (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.FloatAtomicProperty, 0) & 48) == 0)) return false;
         if (DepthFormat(format))
         {
             if ((usageFlags & TextureUsageBits.DepthStencilAttachment) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0) return false;
@@ -155,7 +156,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="view">Copied initial format and sampled component mapping; alternate formats must be declared shareable.</param>
     /// <param name="data">One tightly packed mip chain per layer, or empty for zero initialization. Single-sample depth/stencil data uses the documented portable aspect encoding; D32 floats must be finite and within zero through one. Empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
-    /// <remarks>StorageAtomic validates signed/unsigned R32 atomic format support. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
+    /// <remarks>StorageAtomic validates signed/unsigned R32 or feature-enabled R32SFLOAT atomic format support. Floating base and add operations independently require their enabled native image features. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
     /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
     /// Multisample color/depth targets may include Sampling for explicit per-sample shader loads and size/sample queries. They require empty data, one mip and the native image/view adapter; color storage uses the enabled native multisample-storage feature. Equal-count copies preserve every sample, including both depth/stencil aspects. Raw CPU sample transfers and direct canvas sampling retain their separate adapters.

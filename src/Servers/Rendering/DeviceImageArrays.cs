@@ -79,7 +79,9 @@ internal static class DeviceImageArrays
                 helper.Add(Instruction(247, merge, 0)); helper.Add(Instruction(251, [parameters[0], fallback, .. choices.SelectMany((s, n) => new uint[] { s.Selector, labels[n] }).ToArray()]));
                 for (var n = 0; n < choices.Length; n++)
                 {
-                    helper.Add(Instruction(248, labels[n])); var address = Emit(helper, 60, pointer.PointerType, choices[n].Variable, parameters[1], parameters[2]);
+                    // Ordinary image texel pointers require a constant-zero sample, even inside a selected helper.
+                    var sample = types[pointer.Image][6] == 0 ? pointer.Sample : parameters[2];
+                    helper.Add(Instruction(248, labels[n])); var address = Emit(helper, 60, pointer.PointerType, choices[n].Variable, parameters[1], sample);
                     var operands = new uint[] { address }.Concat(memory).Concat(parameters.Skip(3)).ToArray();
                     if (store) helper.Add(Instruction(opcode, operands)); else { incoming.Add(Emit(helper, opcode, resultType, operands)); incoming.Add(labels[n]); }
                     helper.Add(Instruction(249, merge));
@@ -136,12 +138,12 @@ internal static class DeviceImageArrays
             }
             if (op == 60 && valueTypes.TryGetValue(i[3], out var atomic) && Opaque(atomic))
             {
-                var image = Image(atomic); if (types[image][3] != 1 || types[image][5] > 1 || types[image][8] is not (24 or 33)) throw new NotSupportedException("Image atomics require R32SINT or R32UINT storage images.");
+                var image = Image(atomic); if (types[image][3] != 1 || types[image][5] > 1 || types[image][8] is not (3 or 24 or 33)) throw new NotSupportedException("Image atomics require R32SFLOAT, R32SINT or R32UINT storage images.");
                 atomicPointers.Add(i[2], (image, i[3], i[4], i[5], i[1])); continue;
             }
             if (op == 83 && atomicPointers.TryGetValue(i[3], out var copied)) { atomicPointers.Add(i[2], copied); continue; }
             var pointerOperand = op == 228 ? 1 : 3;
-            if (op is >= 227 and <= 242 && atomicPointers.TryGetValue(i[pointerOperand], out var pointer))
+            if (op is >= 227 and <= 242 or 6035 && atomicPointers.TryGetValue(i[pointerOperand], out var pointer))
             {
                 var function = Atomic(i, pointer); var resultType = op == 228 ? nothing : i[1]; var result = op == 228 ? next++ : i[2]; var memoryCount = op is 230 or 231 ? 3 : 2;
                 body.Add(Instruction(57, [resultType, result, function, pointer.Selector, pointer.Coordinate, pointer.Sample, .. i.AsSpan(pointerOperand + 1 + memoryCount).ToArray()])); continue;

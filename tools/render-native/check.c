@@ -11,6 +11,7 @@ extern int e2d_render_aspect_transfer(SDL_GPUDevice *, uint32_t, SDL_GPUCommandB
 extern int e2d_render_aspect_copy(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, const SDL_GPUTextureLocation *, const SDL_GPUTextureLocation *, uint32_t, uint32_t);
 extern int e2d_render_graphics_storage_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_storage_barrier(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *);
+extern int e2d_render_float_atomic_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_shader16_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_filter_support(SDL_GPUDevice *, uint32_t, uint8_t *, uint32_t);
 extern int e2d_render_texture_format(SDL_GPUDevice *, uint32_t, SDL_GPUTexture *);
@@ -242,6 +243,8 @@ int main(int argc, char **argv)
     require(e2d_render_raster_support(NULL, 1) == -1);
     require(e2d_render_raster_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_raster_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1) == NULL);
+    require(e2d_render_float_atomic_support(NULL, 1) == -1);
+    require(e2d_render_float_atomic_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_graphics_storage_support(NULL, 1) == -1);
     require(e2d_render_graphics_storage_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_storage_barrier(NULL, 1, NULL) == -1);
@@ -291,6 +294,9 @@ int main(int argc, char **argv)
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
+    int floating_features = e2d_render_float_atomic_support(device, 1); require(floating_features >= 0 && floating_features <= 63);
+    require(e2d_render_float_atomic_support(device, 1) == floating_features);
+    printf("Native FP32 atomic feature mask=%d (physical support; logical opt-in independent)\n", floating_features);
     int logic_features = e2d_render_logic_support(device, 1); require(logic_features == 0 || logic_features == 1);
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);

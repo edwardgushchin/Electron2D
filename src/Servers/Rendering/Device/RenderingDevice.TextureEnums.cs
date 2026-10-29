@@ -494,7 +494,7 @@ public sealed unsafe partial class RenderingDevice
         InputAttachment = 512,
         /// <summary>Allows shader sampling with a sampler.</summary>
         Sampling = 1,
-        /// <summary>Checks signed or unsigned R32 storage-image atomic capability; Image bindings also require Storage.</summary>
+        /// <summary>Checks signed/unsigned R32 or feature-enabled R32SFLOAT storage-image atomic capability; Image bindings also require Storage.</summary>
         StorageAtomic = 16,
         /// <summary>Allows read/write compute access where the format supports simultaneous access.</summary>
         Storage = 8,

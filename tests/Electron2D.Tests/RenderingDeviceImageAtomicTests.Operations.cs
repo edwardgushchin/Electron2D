@@ -29,7 +29,7 @@ internal static partial class RenderingDeviceImageAtomicTests
     private static void Capabilities(RenderingDevice device)
     {
         foreach (var format in new[] { DataFormat.R32UINT, DataFormat.R32SINT }) Check(device.TextureIsFormatSupportedForUsage(format, TextureUsageBits.Storage | TextureUsageBits.StorageAtomic | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom), "Atomic format support matches actual allocation/execution.");
-        foreach (var format in new[] { DataFormat.R8UINT, DataFormat.R16UINT, DataFormat.R32SFLOAT, DataFormat.R32G32UINT, DataFormat.R8G8B8A8UNORM, DataFormat.D32SFLOAT })
+        foreach (var format in new[] { DataFormat.R8UINT, DataFormat.R16UINT, DataFormat.R16SFLOAT, DataFormat.R32G32UINT, DataFormat.R8G8B8A8UNORM, DataFormat.D32SFLOAT })
         {
             Check(!device.TextureIsFormatSupportedForUsage(format, TextureUsageBits.Storage | TextureUsageBits.StorageAtomic), "Unsupported atomic formats reject before native allocation.");
             using var description = new RDTextureFormat { Format = format, UsageBits = TextureUsageBits.Storage | TextureUsageBits.StorageAtomic }; using var view = new RDTextureView(); Reject<NotSupportedException>(() => device.TextureCreate(description, view));

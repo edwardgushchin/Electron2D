@@ -1,5 +1,7 @@
 # RenderingDevice
 
+[Native FP32 atomics](../components/float-atomics.md) execute base/add buffer, workgroup and R32SFLOAT image operations with independent feature gates, descriptor/layer/sample selection and ordered compute/graphics consumers. Wider/half/min-max and encoded ImageBuffer floating operations retain their separate adapters.
+
 [Native HDR output](../components/native-hdr-output.md) selects a linear half-float
 screen stage while active. ScreenGetFramebufferFormat identifies that engine-owned
 stage rather than the private final HDR10/extended-linear swapchain. Pending screen

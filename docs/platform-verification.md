@@ -10,6 +10,12 @@ For each capability, the owning component/class page records its common conforma
 
 Unavoidable external capability limits need the owning ADR's exact condition and observable result. Missing engine backends or tests remain gaps rather than new exclusions. An explicit unsupported result does not demonstrate functional parity. This report currently contains bounded receipts and known gaps, not an exhaustive passing feature-by-target matrix. Existing configured CI and `release-qualified` artifacts do not automate that exhaustive acceptance gate; [development CI](development-ci.md) and [release preparation](releasing.md) retain that distinction.
 
+### FP32 shader atomics (2026-10-29)
+
+The common [public scenarios](components/float-atomics.md#verification) execute contending buffer/shared/image accumulation, scoped base operations, descriptor/layer/sample choices, both graphics stages, physical buffers, retirement and feature/adapter refusal. Local source/binary, managed-package and strict full-trim NativeAOT evidence uses Linux x64/Wayland, Vulkan, NVIDIA RTX 3090 Ti. Original/derived modules and exact local package/native/run identities are retained under `bin/float-atomics/2026-10-29`. Prepared buffer cycles measure zero owner managed bytes.
+
+Foreign backend/package/host execution, Linux/X11 and ARM64, mobile/TV/Web, native heap totals, validation layers, broad performance and owner acceptance remain unverified. FP16/FP64/min-max/vector/sparse/encoded ImageBuffer floating atomics require separate adapters. Declaration coverage does not close these platform gates.
+
 ### Equal-count multisample copies (2026-10-29)
 
 The common [public conformance scenarios](components/multisample-copies.md#executable-evidence-and-limits) execute 2X/4X/8X with independently produced color/depth values and per-sample stencil references, shared/array/rectangle/self copies, retirement and failure guards. The checked host is Linux x64/Wayland, Vulkan, NVIDIA RTX 3090 Ti. Source and compiler-free binary profiles, packaged CLR/strict NativeAOT and exact source/native/archive identities are retained under `bin/multisample-copies/2026-10-29`. Prepared loops measure the owner managed boundary.
