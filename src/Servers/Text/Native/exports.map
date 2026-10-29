@@ -1,6 +1,7 @@
 {
     global:
         e2d_text_init;
+        e2d_text_memory;
         e2d_text_versions;
         e2d_text_is_nonprinting;
         e2d_text_case;

@@ -248,6 +248,49 @@ remain open. The complete MEMORY_STATIC/MEMORY_STATIC_MAX producers and Performa
 remain open; physics remains 1364/1369 (99.63%), five Partial
 and 92 Excluded. Other platforms and final whole-goal acceptance remain separate.
 
+## Private ICU allocation domain (2026-10-29)
+
+The private text bridge installs ICU memory callbacks before locale or data
+initialization. They use the same NativeAllocation ledger as direct storage,
+FreeType/HarfBuzz, FAudio and codecs. Requested iterator, dictionary,
+normalization and security-checker payloads now contribute beside the already
+accounted aligned Unicode database. Allocation failure returns null across the
+managed callback boundary; failed resize retains its preceding contribution.
+The callback set is immutable for the process lifetime, including retained ICU
+caches. Missing private registration exports reject before native initialization.
+This follows the [ICU memory callback contract](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/uclean_8h.html).
+
+The pinned upstream files remain unchanged. ICUMemory.cmake generates nine
+bounded source copies for failure handling: fallible locale/cache preparation,
+nonadvancing dictionary traversal, CJK vector/hash errors, compiled-rule adoption
+and reference counts, partial resource cleanup, stack resource copies and
+security-data/set ownership. The iterator bridge reports a failed traversal
+separately from ordinary end-of-input; managed callers propagate the error and
+retire the active iterator. These corrections preserve the ordinary algorithm.
+
+The native oracle executes actual character/word/line iterators, dictionary
+traversal, titlecase and security skeletons, then ICU teardown. Every one of the
+963 observed allocation/reallocation positions is rejected in a fresh process;
+all retained payloads drain. The normal peak is 293141 bytes with 214268 bytes
+retained before teardown, independent of the separately borrowed database.
+Earlier controls exposed infinite retry, null dereferences and partial-owner
+leaks; their failed receipts are retained with the final passing matrix under
+`bin/icu-allocation-accounting/2026-10-29/`.
+
+The public TextServer consumer and root check exercise database initialization,
+dictionaries, scalar ends, locale casing, security, repeated temporary work,
+concurrent calls and 20000 prepared value/snapshot cycles. Ordinary Linux x64 CLR and
+strict full-trim NativeAOT each observe 4815946 initialization bytes, including
+4811936 database bytes, with zero owner/all-thread managed bytes in the prepared
+interval. CPU without a device and NVIDIA GPU pass owner/separate physical
+regressions; current GPU/compatibility windows and fresh children retain actual
+Unicode output. Six DLL/PDB cohorts match 9392 authored documents. Exact identities
+and native-selection receipts remain with the checks.
+This domain does not complete either public composed-memory selector. Other
+native libraries, concurrent managed collection, module/unload lifetime, runtime
+delivery, performance and foreign-platform qualification remain open. Physics declaration coverage
+stays **1365/1369 (99.71%)**, four Partial and 92 Excluded.
+
 ## Streaming GZIP allocation domain
 
 StreamPeerGZIP now uses the existing private bridge's opaque streaming gzip/zlib context instead of the runtime compression PAL. Context and all zlib allocation/free callbacks share NativeAllocation with ENet and file block codecs. Requested payload bytes update coherent current/high-water counters at their actual native boundaries, including lazy decoder storage and short-lived failed initialization. SafeHandle disposal/finalization drains owned storage; no managed heap or GPU bytes enter this producer. These four private exports are required by native packaging and publish checks on every profile; no new public declaration or native dependency is added.

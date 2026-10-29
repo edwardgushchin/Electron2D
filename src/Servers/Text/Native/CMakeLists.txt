@@ -26,6 +26,7 @@ function(read_sources key destination)
     set(${destination} "${values}" PARENT_SCOPE)
 endfunction()
 read_sources(runtimeSources ICU_RUNTIME_SOURCES)
+include("${CMAKE_CURRENT_LIST_DIR}/ICUMemory.cmake")
 
 set(ICU_DEFINITIONS
     U_STATIC_IMPLEMENTATION U_COMMON_IMPLEMENTATION
@@ -76,6 +77,13 @@ else()
     else()
         target_link_options(Electron2DTextBreak PRIVATE -Wl,--gc-sections -Wl,--no-undefined "-Wl,--version-script=${CMAKE_CURRENT_LIST_DIR}/exports.map")
     endif()
+endif()
+
+if(ELECTRON2D_STATIC_NATIVE AND NOT CMAKE_CROSSCOMPILING)
+    add_executable(Electron2DICUMemoryCheck EXCLUDE_FROM_ALL TestMemory.cpp)
+    target_include_directories(Electron2DICUMemoryCheck PRIVATE "${ICU_ROOT}/common" "${ICU_ROOT}/i18n")
+    target_compile_definitions(Electron2DICUMemoryCheck PRIVATE ${ICU_DEFINITIONS})
+    target_link_libraries(Electron2DICUMemoryCheck PRIVATE Electron2DTextBreak)
 endif()
 
 if(ELECTRON2D_ICU_BUILD_TOOL)

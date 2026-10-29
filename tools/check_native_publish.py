@@ -10,7 +10,7 @@ from pathlib import Path
 
 TEXT_EXPORTS = {
     "e2d_regex_create", "e2d_regex_destroy", "e2d_regex_info", "e2d_regex_match", "e2d_regex_substitute", "e2d_regex_error",
-    "e2d_text_init", "e2d_text_versions", "e2d_text_is_nonprinting",
+    "e2d_text_init", "e2d_text_memory", "e2d_text_versions", "e2d_text_is_nonprinting",
     "e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier",
     "e2d_spoof_open", "e2d_spoof_close", "e2d_spoof_skeleton", "e2d_spoof_check",
     "e2d_break_open", "e2d_break_set", "e2d_break_first", "e2d_break_next",

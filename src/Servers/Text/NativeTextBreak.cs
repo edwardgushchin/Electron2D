@@ -129,6 +129,7 @@ internal static unsafe partial class NativeTextBreak
             throw new PlatformNotSupportedException("Native word and line boundaries require a packaged desktop, mobile or browser backend.");
         if (_data == 0)
         {
+            PrepareMemory();
             using var stream = typeof(NativeTextBreak).Assembly.GetManifestResourceStream("Electron2D.TextBreak.dat")
                 ?? throw new InvalidOperationException("The native text boundary data is missing.");
             var length = checked((int)stream.Length);
@@ -149,6 +150,12 @@ internal static unsafe partial class NativeTextBreak
     {
         if (error > 0) throw new InvalidOperationException("Native text boundary processing failed (status " + error + ").");
     }
+    private static int Next(nint iterator)
+    {
+        var result = NextNative(iterator);
+        if (result < -1) Check(-result - 1);
+        return result;
+    }
 
     [LibraryImport(Library, EntryPoint = "e2d_text_init"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int InitializeData(void* data);
     [LibraryImport(Library, EntryPoint = "e2d_text_versions"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void Versions(byte* icu, byte* unicode);
@@ -156,7 +163,7 @@ internal static unsafe partial class NativeTextBreak
     [LibraryImport(Library, EntryPoint = "e2d_break_open"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial nint OpenNative(int kind, byte* locale, char* text, int length, out int error);
     [LibraryImport(Library, EntryPoint = "e2d_break_set"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int Set(nint iterator, char* text, int length);
     [LibraryImport(Library, EntryPoint = "e2d_break_first"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int First(nint iterator);
-    [LibraryImport(Library, EntryPoint = "e2d_break_next"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int Next(nint iterator);
+    [LibraryImport(Library, EntryPoint = "e2d_break_next"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int NextNative(nint iterator);
     [LibraryImport(Library, EntryPoint = "e2d_break_status"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int Status(nint iterator);
     [LibraryImport(Library, EntryPoint = "e2d_break_close"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void Close(nint iterator);
 }

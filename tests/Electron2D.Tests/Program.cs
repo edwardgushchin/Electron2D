@@ -14,6 +14,8 @@ using EngineTimer = Electron2D.Timer;
 System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(
     typeof(object).Assembly.GetType("System.Threading.LowLevelLock", throwOnError: true)!.TypeHandle);
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ICU_ALLOCATION") == "1") { NativeICUAllocationChecks.Run(NativeAllocation.Snapshot, fresh: true); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_GLOBAL_SETTINGS_CHILD") == "1") { NavigationGlobalDebugTests.SettingsChild(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_DIAGNOSTICS") is { } navigationProfile) { NavigationDiagnosticsChecks.Run(navigationProfile); if (navigationProfile == "managed") NavigationGlobalDebugTests.Run(); return; }
@@ -1884,6 +1886,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW") == "1")
 }
 
 NativeAllocationTests.Run();
+NativeICUAllocationChecks.Run(NativeAllocation.Snapshot);
 NativeFontAllocationTests.Run();
 HostMemoryTests.Run(args);
 ManualRenderFrameTests.RunManaged();

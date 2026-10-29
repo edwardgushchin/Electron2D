@@ -7383,7 +7383,7 @@
         "class:Performance"
       ],
       "state": "Partial",
-      "reason": "Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Direct owned CPU native payloads now have an allocation-boundary current/peak ledger, including FAudio and FreeType FT_Memory callbacks, alignment, realloc failure preservation and transient peaks. Coherent managed-heap and remaining native composition remains open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md."
+      "reason": "Live timing/object/canvas/physics/navigation/audio/deferred-memory, canvas compilation and native render-allocation sources execute. Direct owned CPU native payloads now have an allocation-boundary current/peak ledger, including FAudio, FreeType FT_Memory and private ICU callbacks, alignment, realloc failure preservation and transient peaks. Coherent managed-heap and remaining native composition remains open; GetMonitor, its enum and class stay Partial. The four other compilation categories are pinned 3D scene-renderer sources excluded by ADR 0004, not missing planar producers. See docs/coverage/performance-producers.md."
     },
     {
       "godot": [

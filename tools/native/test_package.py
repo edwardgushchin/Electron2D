@@ -139,11 +139,11 @@ endif()
                     self.assertEqual(symbols, expected)
 
     def test_text_unicode_operations_are_in_every_private_abi(self):
-        additions = {"e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier", "e2d_spoof_open", "e2d_spoof_close", "e2d_spoof_skeleton", "e2d_spoof_check"}
+        additions = {"e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier", "e2d_spoof_open", "e2d_spoof_close", "e2d_spoof_skeleton", "e2d_spoof_check", "e2d_text_memory"}
         for profile in ("Linux", "MacOS", "Windows"):
             name = next(name for name in package.LIBRARIES[profile] if "Electron2DTextBreak" in name)
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 25)
+            self.assertEqual(len(exports), 26)
             self.assertTrue(additions <= exports)
         native = package.ROOT / "src/Servers/Text/Native"
         for symbol in additions:
