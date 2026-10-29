@@ -60,7 +60,7 @@ states; this source trace does not implement that separate public enum.
 
 The internal NativeAllocation ledger replaces direct NativeMemory and HGlobal payload allocation in the managed runtime. Its pure-C core lives in the existing private ENet/file-codec bundle; both the engine and source-instrumented NativeAOT producer call this same allocation/resize/free/snapshot ABI and native gate. Loading it opens no networking or device. Managed-side preparation checks ABI 1 before supplying callbacks; missing/mismatched bundles fail before entering an unmanaged allocator callback. It owns the raw pointer and requested byte size in a private prefix, preserves ordinary fundamental or requested power-of-two alignment, and serializes successful allocation/resize/free publication with coherent current/peak reads. The peak updates at each successful boundary and survives frees; failed requests retain both the old block and counters. Requested payload bytes exclude allocator prefixes/padding. Zero-byte blocks remain releasable with a zero payload contribution. This is CPU native storage; GPU memory and managed wrapper objects are not counted again.
 
-Current consumers include [ENet hosts/packets/codecs and file blocks](#enet-owned-allocation-domain), FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
+Current consumers include [the selected TLS original allocator](#tls-original-allocation-domain-2026-10-29), [ENet hosts/packets/codecs and file blocks](#enet-owned-allocation-domain), FAudio's engine/effect allocator callbacks and streaming callback storage, text font/data/table/bitmap callbacks, retained ICU data, accessibility callbacks and temporary byte buffers, DTLS cookies, gzip native wrapper state, filesystem stat buffers and native message-button records. Borrowed native pointers keep their original release functions and never enter this allocator. FAudio allocation failures return null across the unmanaged callback boundary; no managed out-of-memory exception escapes to native code. Ordinary managed callers still receive OutOfMemoryException.
 
 This ledger does not yet count allocations performed inside libraries without the supplied callbacks, marshalled strings, the managed heap, driver memory or allocator bookkeeping. The StreamPeerGZIP domain now supplies its internal zlib storage as described below; BCL compression consumers use a separate runtime boundary, qualified only in the [owned source-runtime profile](#bcl-compression-source-runtime-domain-2026-10-29). It is not either public MemoryStatic monitor and must not be added to an independent managed peak to fabricate a concurrent total. Complete composed producer instrumentation and qualification remain required below.
 
@@ -1074,3 +1074,54 @@ This qualifies the selected portable C closure. Other providers, managed/runtime
 composition, full GetMonitor, release-package and foreign-host acceptance remain
 open. Physics declaration coverage remains 1365/1369 (99.71%), four Partial and
 92 Excluded; this domain does not independently close a declaration.
+
+
+## TLS original allocation domain (2026-10-29)
+
+The selected Linux source profile retains the single OpenSSL 4.1.0 upstream pin
+used by TLS, DTLS, WebRTC and the configured BCL PAL. Five exact source preimages
+route original malloc/realloc/free, aligned allocation, pre-initialization
+configuration strings and directory-context storage to the common pure-C ledger.
+Explicit caller allocators retain their ownership. Compiled SSL/crypto import
+inspection rejects remaining direct libc malloc/calloc/realloc/free/strdup/aligned
+allocation calls; this is not an audit of libc's own service internals.
+
+The secure heap retains original mmap, guard-page protection, locking and
+cleansing. The common native gate covers budget validation, actual mapping and
+publication; unmapping retires the same owned span only on success. The complete
+mapping, including its two guard pages, counts once. Secure suballocations borrow
+that retained storage. Three redundant metadata-null abort assertions now permit
+the original allocation-failure cleanup paths to run. No cryptographic algorithm,
+external resource teardown or caller allocator is replaced.
+
+The native checker passes 426 fresh processes normally and 426 with the entire
+TLS pair/common core built under ASan/UBSan and leak detection. Each matrix covers
+all 404 observed refusal positions: two buffer, one aligned, four secure-heap,
+395 warmed context/BIO and two warmed SHA-256 requests. It verifies intact failed
+resize, valid aligned fallback, usable retry, protected guard pages, secure arena
+budget refusal, four native workers, original custom allocators and early config
+strings. After requested cleanup, the test core's native destructor observes zero
+current bytes and allocated equal to retired. OpenSSL 4.1 defers its global cache
+cleanup to its library destructor; an immediate post-cleanup snapshot correctly
+retains that ownership. The common ledger outlives it without managed callbacks.
+Cold global/provider initialization failures are outside this calibrated matrix.
+
+Six root groups pass with the selected files: TLS allocation, TLS, DTLS, WebRTC,
+crypto and ENet. The BCL RSA/ECDSA check observes live key storage, then exact
+return to its warmed baseline after every Dispose (384882 retained global bytes,
+406702-byte observed high-water in this run). The preceding uninstrumented pair
+of the same upstream version fails that ownership check. Four archived public
+CLR/full-trim NativeAOT TLS/WebRTC consumers pass against the new native files;
+process maps contain one selected TLS pair and one common core. The AOT processes
+contain no CoreCLR. Their prepared record/packet intervals retain zero managed
+allocation. This is functional AOT evidence; the internal BCL counter fixture was
+executed on CLR.
+
+Build/selection commands and lifetime rules are in the
+[source profile](../../tools/tls-native/README.md). Source/native identities,
+compiled imports, failure matrices, consumer maps and preceding rejected checks
+are retained under `bin/openssl-owned-memory/2026-10-29/`. Separate libc/OS/provider
+storage, transport C++ ownership, ordinary runtime/package delivery, foreign
+execution and coherent managed/native composition remain open. The public total
+memory monitors remain incomplete. Physics declaration coverage remains
+1365/1369 (99.71%), four Partial and 92 Excluded.

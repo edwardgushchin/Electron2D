@@ -27,6 +27,9 @@ E2D_MEMORY_API void e2d_memory_unlock(void);
 // Runtime producers already hold the gate across their actual ownership commit.
 E2D_MEMORY_API int e2d_memory_managed_locked(uint64_t current);
 E2D_MEMORY_API void e2d_memory_snapshot_locked(E2DMemorySnapshot *result);
+// External native allocators hold the gate across their real ownership commit.
+E2D_MEMORY_API int e2d_memory_ownership_locked(size_t previous, size_t size);
+E2D_MEMORY_API void e2d_memory_failure_locked(void);
 // Native library defaults must outlive managed execution and keep the same owner.
 E2D_MEMORY_API void *e2d_memory_malloc(size_t size);
 E2D_MEMORY_API void *e2d_memory_calloc(size_t count, size_t size);

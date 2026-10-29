@@ -62,7 +62,7 @@ def required_exports(name):
         return {"e2d_mesh_scale", "e2d_mesh_simplify", "e2d_mesh_memory"}
     if "ENet" in name:
         return {"e2d_enet_" + item for item in ("memory", "callbacks", "create", "destroy", "connect", "service", "flush",
-                                             "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")} | {"e2d_memory_" + name for name in ("abi", "allocate", "reallocate", "release", "snapshot", "lock", "unlock", "managed_locked", "snapshot_locked", "malloc", "calloc", "realloc", "free", "functions", "failure_epoch")}
+                                             "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")} | {"e2d_memory_" + name for name in ("abi", "allocate", "reallocate", "release", "snapshot", "lock", "unlock", "managed_locked", "snapshot_locked", "ownership_locked", "failure_locked", "malloc", "calloc", "realloc", "free", "functions", "failure_epoch")}
     if "HarfBuzz" in name:
         exports = {"hb_shape", "hb_buffer_create", "hb_font_create", "hb_version_string"}
         return exports | {"e2d_shaping_memory"} if "HarfBuzzSharp" in name else exports
@@ -163,7 +163,7 @@ def source_hash():
     files = set()
     for directory in ("src/Vendor/ICU", "src/Vendor/MSDFGen", "src/Vendor/PCRE2", "src/Vendor/FAudio", "src/Vendor/ENet",
                       "src/Vendor/FastLZ", "src/Vendor/libdatachannel", "src/Vendor/meshoptimizer", "src/Servers/Text/Native",
-                      "tools/audio-native", "tools/enet-native", "tools/webrtc-native", "tools/mesh-native", "tools/render-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/shaping-native", "tools/native"):
+                      "tools/audio-native", "tools/enet-native", "tools/webrtc-native", "tools/mesh-native", "tools/render-native", "tools/webp-native", "tools/ogv-native", "tools/ktx-native", "tools/font-native", "tools/shaping-native", "tools/tls-native", "tools/native"):
         files.update(p for p in (ROOT / directory).rglob("*") if p.is_file()
                      and not {"bin", "obj", "__pycache__"} & set(p.relative_to(ROOT).parts))
     files.update((ROOT / "tools").glob("*-native.targets"))

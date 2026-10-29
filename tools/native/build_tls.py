@@ -29,7 +29,7 @@ def checked_archive(path):
         raise ValueError("The OpenSSL source archive does not match its pinned SHA-256")
 
 
-def build(rid, output):
+def build(rid, output, memory_library=None):
     machine, target = TARGETS[rid]
     windows = rid.startswith("win-")
     linux = rid.startswith("linux-")
@@ -38,7 +38,18 @@ def build(rid, output):
             raise RuntimeError("OpenSSL native production requires the selected Windows compiler architecture")
     elif platform.system() != ("Linux" if linux else "Darwin") or platform.machine() != machine:
         raise RuntimeError("OpenSSL native production requires the matching target runner")
+    if memory_library is not None:
+        if not linux or not memory_library.is_file():
+            raise ValueError("The TLS memory source profile requires a matching Linux ledger library")
+        symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(memory_library)], text=True)
+        if not {"e2d_memory_ownership_locked", "e2d_memory_failure_locked"} <= {line.split()[-1] for line in symbols.splitlines()}:
+            raise ValueError("The TLS memory source profile requires the matching native ownership ABI")
     source, directory = prepare(output)
+    memory_options = []
+    if memory_library is not None:
+        import openssl_memory
+        source = openssl_memory.prepare(source, output / ("openssl-memory-" + VERSION))
+        memory_options = ["LDLIBS=" + str(memory_library.resolve())]
     if windows:
         environment = dict(os.environ, OPENSSL_LOCAL_CONFIG_DIR=str(Path(__file__).resolve().parent))
         subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs", "no-asm", "no-uplink",
@@ -49,7 +60,7 @@ def build(rid, output):
         print(f"{rid}: pinned OpenSSL {VERSION} built with private DLL identities")
         return
     subprocess.run(["perl", str(source / "Configure"), target, "shared", "no-apps", "no-tests", "no-docs",
-                    "--prefix=/Electron2D", "--openssldir=/etc/ssl"], cwd=directory, check=True)
+                    "--prefix=/Electron2D", "--openssldir=/etc/ssl", *memory_options], cwd=directory, check=True)
     subprocess.run(["make", "-j4", "build_libs"], cwd=directory, check=True)
     if linux:
         # Standard major identities let the .NET PAL share these exact files.
@@ -123,5 +134,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("rid", choices=TARGETS)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--memory-library", type=Path)
     args = parser.parse_args()
-    build(args.rid, args.output.resolve())
+    build(args.rid, args.output.resolve(), args.memory_library)

@@ -21,6 +21,17 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == "linux", "The owned TLS profile is Linux-only")
+    def test_tls_memory_profile_rejects_preceding_core_before_source_preparation(self):
+        rid = "linux-x64" if platform.machine() == "x86_64" else "linux-arm64"
+        with tempfile.TemporaryDirectory() as temporary:
+            library = Path(temporary) / "libElectron2DENet.so"
+            library.write_bytes(b"preceding core")
+            with patch.object(build_tls.subprocess, "check_output", return_value="0001 T e2d_memory_malloc\n"), patch.object(build_tls, "prepare") as prepare:
+                with self.assertRaisesRegex(ValueError, "ownership ABI"):
+                    build_tls.build(rid, Path(temporary), library)
+                prepare.assert_not_called()
+
     def test_target_payload_rejects_parallel_tls_versions(self):
         for rid, name in (("linux-x64", "libssl.so.3"), ("win-x64", "libcrypto-3-Electron2D.dll"), ("osx-arm64", "libElectron2DSSL.3.dylib")):
             with tempfile.TemporaryDirectory() as directory:
@@ -285,7 +296,8 @@ endif()
     def test_memory_and_codec_exports_are_part_of_every_enet_payload(self):
         for name in ['libElectron2DENet.so', 'Electron2DENet.dll', 'libElectron2DENet.a']:
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 35)
+            self.assertEqual(len(exports), 37)
+            self.assertTrue({"e2d_memory_ownership_locked", "e2d_memory_failure_locked"} <= exports)
             self.assertTrue({'e2d_enet_memory', 'e2d_enet_callbacks', 'e2d_file_encode', 'e2d_file_decode',
                              'e2d_gzip_create', 'e2d_gzip_process', 'e2d_gzip_reset', 'e2d_gzip_destroy',
                              'e2d_memory_abi', 'e2d_memory_allocate', 'e2d_memory_reallocate', 'e2d_memory_release',

@@ -7,6 +7,7 @@
 #include <windows.h>
 #else
 #include <pthread.h>
+#include <sys/mman.h>
 #endif
 
 #if defined(_WIN32)
@@ -56,6 +57,21 @@ int main(void) {
     assert(!e2d_memory_allocate(101, 0, 0, &error) && error == 2);
     e2d_memory_lock(); assert(!e2d_memory_managed_locked(0)); e2d_memory_unlock();
     assert(!read_state().current && read_state().allocated == read_state().retired);
+#if !defined(_WIN32)
+    e2d_memory_lock();
+    void *mapping = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    assert(mapping != MAP_FAILED && !e2d_memory_ownership_locked(0, 4096));
+    assert(!e2d_memory_managed_locked(101));
+    e2d_memory_snapshot_locked(&stable); assert(stable.current == 4197 && stable.nativeCurrent == 4096);
+    assert(e2d_memory_ownership_locked(0, INT64_MAX) == -1);
+    E2DMemorySnapshot rejected;
+    e2d_memory_snapshot_locked(&rejected); assert(rejected.current == stable.current && rejected.peak == stable.peak);
+    memset(mapping, 41, 4096);
+    assert(!munmap(mapping, 4096) && !e2d_memory_ownership_locked(4096, 0));
+    assert(!e2d_memory_managed_locked(0));
+    e2d_memory_unlock();
+    assert(!read_state().current && read_state().allocated == read_state().retired);
+#endif
     uint64_t epoch = e2d_memory_failure_epoch(); assert(epoch > 0);
     assert(!e2d_memory_allocate(1, 3, 0, &error) && e2d_memory_failure_epoch() == epoch);
 #if defined(_WIN32)

@@ -62,6 +62,16 @@ static void commit(size_t previous, size_t size) {
     publish();
 }
 static void failed(int32_t *error) { if (error) *error = 2; ++totals.failures; ++failure_epoch; }
+void e2d_memory_failure_locked(void) { failed(NULL); }
+int e2d_memory_ownership_locked(size_t previous, size_t size) {
+    if (previous > totals.nativeCurrent) abort();
+    if ((uint64_t)size > INT64_MAX - (totals.current - previous)) { failed(NULL); return -1; }
+    commit(previous, size);
+    if (!previous) ++totals.allocations;
+    else if (!size) ++totals.frees;
+    else ++totals.resizes;
+    return 0;
+}
 void *e2d_memory_allocate(size_t size, size_t alignment, uint32_t zero, int32_t *error) {
     if (error) *error = 0;
     if ((alignment && (alignment & (alignment - 1))) || zero > 1) { if (error) *error = 1; return NULL; }
