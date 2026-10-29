@@ -1,3 +1,5 @@
+[UTF8 native inputs](../coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now route source-generated heap arguments and explicit WebRTC/DBus temporary strings through the common allocation gate, retaining stack scratch and failure cleanup. Bootstrap, legacy/provider/runtime ownership and the exact composed memory monitor remain open.
+
 [Native role callbacks](../components/scripting.md#native-resource-and-node-role-hooks) connect Resource reset/raw-path/base-RID and Node warnings/semantic focus to the installed Script set.
 
 [Common native Script callbacks](../components/scripting.md#common-native-object-callbacks) share typed notifications, metadata/string hooks and retirement across plain, resource and physical owners.

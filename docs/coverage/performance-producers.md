@@ -1125,3 +1125,46 @@ storage, transport C++ ownership, ordinary runtime/package delivery, foreign
 execution and coherent managed/native composition remain open. The public total
 memory monitors remain incomplete. Physics declaration coverage remains
 1365/1369 (99.71%), four Partial and 92 Excluded.
+
+## UTF8 input marshalling domain (2026-10-29)
+
+The internal [NativeUTF8StringMarshaller](../classes/NativeUTF8StringMarshaller.md)
+now owns temporary inputs for all 38 existing non-bootstrap source-generated
+UTF8 bindings. This includes WebRTC descriptions/candidates/channel metadata,
+GIO/GTK, fontconfig/shaping, native environment/thread/handle queries and the
+Objective-C selector adapter. A 256-byte pinned caller buffer retains the short
+path; larger strings allocate exactly the encoded byte count plus terminator
+through the common native gate. Reads and cleanup preserve the native call's
+captured error. Only input mode is registered; returned provider strings retain
+their separate ownership and release functions.
+
+Explicit WebRTC ICE URL/user/password arrays and DBus appended strings use the
+same owned heap path. WebRTC reserves its pointer-list capacity before acquiring
+native buffers. Its preparation guard starts after that list exists, and its
+managed SafeHandle exists before native peer creation. A failed preparation
+retires earlier arguments and preserves the previous peer cohort; successful
+replacement retains the existing close/ownership behavior.
+
+The [pinned SDK default](https://github.com/dotnet/runtime/blob/v10.0.1/src/libraries/System.Private.CoreLib/src/System/Runtime/InteropServices/Marshalling/Utf8StringMarshaller.cs)
+allocates its own heap buffers. The native fixture observes correct bytes but no
+ledger contribution on that preceding path, providing an explicit negative
+control. The CLR fixture checks null/empty, the 255/256-byte boundary, multibyte
+and supplementary input, embedded null and invalid-surrogate replacement,
+transient true peak without a memory read during the call or cleanup, either
+argument's refusal before native entry, retry,
+missing-entry cleanup, errno, four workers and 1,024 prepared short/heap pairs
+at zero owner/all-thread managed bytes. Real DBus append/refusal/retry and all
+three WebRTC argument refusals retain the prior native handle. The WebRTC fixture
+first creates a real offer, waiting for its asynchronous certificate before
+comparing ownership; a prior early-baseline check included that still-live native
+work and was rejected. The same complete fixture passes as strict full-trim
+NativeAOT, including both actual native callers.
+
+Source/native identities, scoped binding list, commands and receipts are under
+`bin/utf8-interop-memory/2026-10-29/`. The test-only library includes the production
+ledger and a native refusal injector; it is not a production network bundle.
+The native loader's bootstrap `dlopen` string cannot depend recursively on that
+ledger. Legacy DllImport/delegate/vendor marshalling, other encodings, runtime
+interop internals, provider heaps, foreign execution and ordinary package/runtime
+delivery remain open. This domain does not complete GetMonitor; physics remains
+1365/1369 (99.71%), four Partial and 92 Excluded.

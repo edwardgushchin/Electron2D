@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal static class LinuxPortalDBus
+internal static unsafe class LinuxPortalDBus
 {
     internal const string Library = "libdbus-1.so.3", Destination = "org.freedesktop.portal.Desktop", DesktopPath = "/org/freedesktop/portal/desktop";
     internal const int StringType = 's', PathType = 'o', UInt32Type = 'u', BooleanType = 'b', ArrayType = 'a', StructType = 'r', VariantType = 'v', DictEntryType = 'e';
@@ -45,9 +45,9 @@ internal static class LinuxPortalDBus
     internal static void Check(int result) { if (result == 0) throw new OutOfMemoryException(); }
     internal static void AppendString(ref MessageIter iter, string value)
     {
-        var text = Marshal.StringToCoTaskMemUTF8(value);
+        var text = (nint)NativeUTF8StringMarshaller.Allocate(value);
         try { Check(AppendBasicPointer(ref iter, StringType, ref text)); }
-        finally { Marshal.FreeCoTaskMem(text); }
+        finally { NativeAllocation.Free((void*)text); }
     }
     internal static void AppendByte(ref MessageIter iter, byte value) => Check(AppendBasicByte(ref iter, 'y', ref value));
     internal static void AppendUInt32(ref MessageIter iter, uint value, int type = UInt32Type) => Check(AppendBasicUInt32(ref iter, type, ref value));

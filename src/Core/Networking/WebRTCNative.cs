@@ -4,7 +4,8 @@ namespace Electron2D;
 
 internal sealed class WebRTCPeerHandle : SafeHandle
 {
-    internal WebRTCPeerHandle(nint value) : base(0, true) => SetHandle(value);
+    internal unsafe WebRTCPeerHandle(nint* urls, nint* users, nint* passwords, int count) : base(0, true)
+        => SetHandle(WebRTCNative.Require(WebRTCNative.Create(urls, users, passwords, count)));
     public override bool IsInvalid => handle == 0;
     protected override bool ReleaseHandle() { WebRTCNative.Destroy(handle); return true; }
 }
@@ -38,15 +39,15 @@ internal static unsafe partial class WebRTCNative
     [LibraryImport(Library, EntryPoint = "e2d_rtc_close"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Close(WebRTCPeerHandle peer);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_state"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int State(WebRTCPeerHandle peer, int kind);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_offer"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Offer(WebRTCPeerHandle peer);
-    [LibraryImport(Library, EntryPoint = "e2d_rtc_local", StringMarshalling = StringMarshalling.Utf8), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Local(WebRTCPeerHandle peer, string type, string sdp);
-    [LibraryImport(Library, EntryPoint = "e2d_rtc_remote", StringMarshalling = StringMarshalling.Utf8), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Remote(WebRTCPeerHandle peer, string type, string sdp);
-    [LibraryImport(Library, EntryPoint = "e2d_rtc_candidate", StringMarshalling = StringMarshalling.Utf8), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Candidate(WebRTCPeerHandle peer, string mid, string candidate);
+    [LibraryImport(Library, EntryPoint = "e2d_rtc_local", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller)), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Local(WebRTCPeerHandle peer, string type, string sdp);
+    [LibraryImport(Library, EntryPoint = "e2d_rtc_remote", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller)), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Remote(WebRTCPeerHandle peer, string type, string sdp);
+    [LibraryImport(Library, EntryPoint = "e2d_rtc_candidate", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller)), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Candidate(WebRTCPeerHandle peer, string mid, string candidate);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_event"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint Event(WebRTCPeerHandle peer);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_event_kind"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int EventKind(nint value);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_event_string"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint EventString(nint value, int part);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_event_channel"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint EventChannel(nint value);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_event_release"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void ReleaseEvent(nint value);
-    [LibraryImport(Library, EntryPoint = "e2d_rtc_channel_create", StringMarshalling = StringMarshalling.Utf8), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint CreateChannel(WebRTCPeerHandle peer, string label, string protocol, int ordered, int negotiated, int id, int lifetime, int retransmits);
+    [LibraryImport(Library, EntryPoint = "e2d_rtc_channel_create", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller)), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint CreateChannel(WebRTCPeerHandle peer, string label, string protocol, int ordered, int negotiated, int id, int lifetime, int retransmits);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_channel_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void DestroyChannel(nint value);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_channel_close"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int CloseChannel(WebRTCChannelHandle value);
     [LibraryImport(Library, EntryPoint = "e2d_rtc_channel_poll"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int PollChannel(WebRTCChannelHandle value);

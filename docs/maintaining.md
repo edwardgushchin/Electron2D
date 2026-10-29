@@ -2,6 +2,16 @@ For [viewport render time](components/viewport-render-time.md), build the matchi
 
 # Maintaining the Electron2D contract
 
+For UTF8 input ownership, compile `tools/coverage/utf8_memory_check.c` as a private
+`libElectron2DENet.so` and run `Electron2D.FastTests --utf8-memory` on CLR and strict
+full-trim NativeAOT. Keep it isolated from production network/codec checks. Preserve
+actual wire bytes, the stack/heap boundary, an unseen peak, partial argument refusal,
+retry, errno and failed-entry cleanup, four workers and prepared zero owner/all-thread
+bytes. Real DBus copy and WebRTC owner-preserving refusal must run with the matching
+native bundle; wait for a real offer's certificate before comparing its baseline.
+Recheck production WebRTC, file-portal and font/OS consumers after binding changes.
+See [scope and remaining domains](coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29).
+
 For compact GPU contact publication, run `ELECTRON2D_TEST_GPU_CONTACT_KEYS=1`
 with the Release root runner on owner and separate numerical lanes
 (`ELECTRON2D_TEST_GPU_PUBLICATION_THREAD=0|1`). Preserve frozen single/batch

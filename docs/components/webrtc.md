@@ -1,3 +1,5 @@
+[UTF8 input ownership](../coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now covers descriptions/candidates/channel strings and copied ICE URL/user/password buffers. Preparation reserves pointer capacity before acquiring native strings and creates the managed peer owner before native creation. Refusal at any of the three credential buffers retires earlier arguments and preserves the existing native peer; real transport/container/OS and composed-memory qualification remain separate.
+
 # WebRTC data channels and multiplayer
 
 Last updated: 2026-10-19

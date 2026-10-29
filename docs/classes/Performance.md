@@ -1,3 +1,5 @@
+[Temporary native UTF8 inputs](../coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) now enter the common ledger during source-generated and explicit WebRTC/DBus calls. This closes one allocation domain; the complete current/peak selectors remain Partial.
+
 # Performance
 
 [Object lifetime monitors](../components/object-lifetime-monitors.md) add live object, cached-resource, attached-node and orphan-node populations without owning targets, forcing collection or opening a native device.

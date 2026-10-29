@@ -112,7 +112,7 @@ internal sealed partial class WindowInputRegion
     [LibraryImport("comctl32.dll")] private static partial int RemoveWindowSubclass(nint window, nint callback, nuint id);
     [LibraryImport("comctl32.dll")] private static partial nint DefSubclassProc(nint window, uint message, nuint wParam, nint lParam);
     [LibraryImport("gdi32.dll", SetLastError = true)] private static partial int DeleteObject(nint region);
-    [LibraryImport("/usr/lib/libobjc.A.dylib", EntryPoint = "sel_registerName", StringMarshalling = StringMarshalling.Utf8)] private static partial nint Selector(string name);
+    [LibraryImport("/usr/lib/libobjc.A.dylib", EntryPoint = "sel_registerName", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] private static partial nint Selector(string name);
     [LibraryImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")] private static partial byte CocoaBool(nint instance, nint selector);
     [LibraryImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")] private static partial void CocoaSetBool(nint instance, nint selector, byte value);
 }

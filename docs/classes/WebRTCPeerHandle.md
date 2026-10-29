@@ -1,12 +1,12 @@
 # WebRTCPeerHandle
 
-Last updated: 2026-10-19
+Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Visibility:** internal. **Source:** [WebRTCNative.cs](../../src/Core/Networking/WebRTCNative.cs).
 
 ## Description
 
-Owns one opaque native shared peer-state handle. SafeHandle pins each P/Invoke and releases it through e2d_rtc_destroy, closing the cohort when the last native owner retires.
+Owns one opaque native shared peer-state handle. The managed owner is allocated before native creation, so a managed construction refusal cannot strand a newly created native peer. SafeHandle pins each P/Invoke and releases it through e2d_rtc_destroy, closing the cohort when the last native owner retires.
 
 ## Dependencies and verification
 

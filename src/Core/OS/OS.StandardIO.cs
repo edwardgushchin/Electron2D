@@ -151,7 +151,7 @@ public sealed partial class OS
 
     [LibraryImport("libc", EntryPoint = "isatty")]
     private static partial int IsNativeTerminal(int descriptor);
-    [LibraryImport("libc", EntryPoint = "statx", SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport("libc", EntryPoint = "statx", SetLastError = true, StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
     private static unsafe partial int GetLinuxHandleStatus(int descriptor, string path, int flags, uint mask, byte* status);
     [LibraryImport("kernel32.dll", EntryPoint = "GetStdHandle")]
     private static partial nint GetNativeStandardHandle(int kind);

@@ -31,7 +31,7 @@ public sealed partial class DisplayServer : ElectronObject
     private static readonly object InstanceGate = new();
     private static DisplayServer? _instance;
 
-    [LibraryImport("libc", EntryPoint = "setenv", StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport("libc", EntryPoint = "setenv", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
     private static partial int SetNativeEnvironmentVariable(string name, string value, int overwrite);
 
     private readonly int _ownerThreadId;

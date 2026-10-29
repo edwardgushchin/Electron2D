@@ -58,6 +58,6 @@ public sealed partial class OS
     [LibraryImport("kernel32.dll")] private static partial nint GetCurrentThread();
     [LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16)] private static partial int SetThreadDescription(nint thread, string description);
     [LibraryImport("libc", EntryPoint = "pthread_self")] private static partial nuint GetPOSIXThread();
-    [LibraryImport("libc", EntryPoint = "pthread_setname_np", StringMarshalling = StringMarshalling.Utf8)] private static partial int SetPOSIXThreadName(nuint thread, string name);
-    [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "pthread_setname_np", StringMarshalling = StringMarshalling.Utf8)] private static partial int SetAppleThreadName(string name);
+    [LibraryImport("libc", EntryPoint = "pthread_setname_np", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] private static partial int SetPOSIXThreadName(nuint thread, string name);
+    [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "pthread_setname_np", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))] private static partial int SetAppleThreadName(string name);
 }

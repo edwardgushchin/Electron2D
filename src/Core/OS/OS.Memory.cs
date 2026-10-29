@@ -112,7 +112,7 @@ public sealed partial class OS
     [return: MarshalAs(UnmanagedType.Bool)] private static partial bool GetWindowsMemory(ref WindowsMemoryStatus info, uint size);
     [LibraryImport("kernel32.dll")] private static partial void GetCurrentThreadStackLimits(out nuint low, out nuint high);
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "getrlimit")] private static partial int GetAppleResourceLimit(int resource, out ResourceLimit limit);
-    [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "sysctlbyname", StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "sysctlbyname", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
     private static unsafe partial int GetAppleMemoryValue(string name, void* value, ref nuint size, nint newValue, nuint newSize);
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "mach_host_self")] private static partial uint GetAppleMemoryHost();
     [LibraryImport("/usr/lib/libSystem.B.dylib", EntryPoint = "host_statistics64")] private static partial int GetAppleMemory(uint host, int flavor, out AppleMemoryStatus info, ref uint count);

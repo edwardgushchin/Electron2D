@@ -80,9 +80,10 @@ public class WebRTCPeerConnection : ElectronObject
     /// <param name="configuration">Null uses host candidates without STUN/TURN servers.</param>
     /// <remarks>Invalid input/setup preserves the old cohort. Successful replacement closes its channels without disposing their caller-owned wrappers.</remarks>
     /// <exception cref="PlatformNotSupportedException">The native transport and runtime cryptography providers are unavailable or incompatible.</exception>
+    /// <exception cref="OutOfMemoryException">Configuration argument storage could not be prepared; the previous cohort remains active.</exception>
     public virtual unsafe void Initialize(WebRTCConfiguration? configuration = null)
     {
-        CheckPeerAccess(); _preparing = true; var allocations = new List<nint>();
+        CheckPeerAccess(); var allocations = new List<nint>(); _preparing = true;
         try
         {
             if (OperatingSystem.IsBrowser()) throw new PlatformNotSupportedException("The browser WebRTC adapter is not installed.");
@@ -93,12 +94,13 @@ public class WebRTCPeerConnection : ElectronObject
                 foreach (var url in server.URLs)
                 { Text(url, nameof(configuration), 65535); if (!url.StartsWith("stun:", StringComparison.OrdinalIgnoreCase) && !url.StartsWith("stuns:", StringComparison.OrdinalIgnoreCase) && !url.StartsWith("turn:", StringComparison.OrdinalIgnoreCase) && !url.StartsWith("turns:", StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("Expected a STUN/TURN URL.", nameof(configuration)); entries.Add((url, server.Username, server.Credential)); if (entries.Count > 1024) throw new ArgumentException("Too many ICE URLs.", nameof(configuration)); }
             }
+            allocations.EnsureCapacity(checked(entries.Count * 3));
             nint* urls = stackalloc nint[entries.Count]; nint* users = stackalloc nint[entries.Count]; nint* passwords = stackalloc nint[entries.Count];
-            nint Allocate(string? value) { if (value is null) return 0; var p = Marshal.StringToCoTaskMemUTF8(value); allocations.Add(p); return p; }
+            nint Allocate(string? value) { if (value is null) return 0; var p = (nint)NativeUTF8StringMarshaller.Allocate(value); allocations.Add(p); return p; }
             for (var i = 0; i < entries.Count; i++) { urls[i] = Allocate(entries[i].URL); users[i] = Allocate(entries[i].User); passwords[i] = Allocate(entries[i].Password); }
-            var next = new WebRTCPeerHandle(WebRTCNative.Require(WebRTCNative.Create(urls, users, passwords, entries.Count))); var old = _peer; _peer = next; _closed = false; _channels.Clear(); old?.Dispose();
+            var next = new WebRTCPeerHandle(urls, users, passwords, entries.Count); var old = _peer; _peer = next; _closed = false; _channels.Clear(); old?.Dispose();
         }
-        finally { foreach (var p in allocations) Marshal.FreeCoTaskMem(p); _preparing = false; }
+        finally { foreach (var p in allocations) NativeAllocation.Free((void*)p); _preparing = false; }
     }
     /// <summary>Reports the current connection state without delivering events.</summary><returns>The native or initial New state.</returns>
     public virtual ConnectionState GetConnectionState() { CheckPeerAccess(); return _closed ? ConnectionState.Closed : _peer is null ? ConnectionState.New : (ConnectionState)State(0); }

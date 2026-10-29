@@ -1,3 +1,5 @@
+[NativeUTF8StringMarshaller](classes/NativeUTF8StringMarshaller.md) and its nested In ref struct own source-generated UTF8 input scratch/heap storage. Existing WebRTC and DBus argument arrays use the same native ledger; no public declaration is added. The [qualified domain and open closures](coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) remain separate from composed memory acceptance.
+
 Existing RenderingServer, ServerTexture and RenderingTextureRegistry own [cached test/white textures](components/rendering-builtin-textures.md); no new production type is added.
 
 Existing RenderingDevice and ProjectSettings own [native GPU timestamps](components/gpu-timestamps.md). RenderingServer and both canvas backends now own [viewport render time](components/viewport-render-time.md), sharing private GPUTimestampQueries and retained CanvasRenderTiming state.

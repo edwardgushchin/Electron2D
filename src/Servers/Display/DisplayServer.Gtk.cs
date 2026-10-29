@@ -12,7 +12,7 @@ public sealed partial class DisplayServer
     [LibraryImport("libgtk-3.so.0", EntryPoint = "gtk_css_provider_new")]
     private static partial nint GTKCSSProviderNew();
 
-    [LibraryImport("libgtk-3.so.0", EntryPoint = "gtk_css_provider_load_from_data", StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport("libgtk-3.so.0", EntryPoint = "gtk_css_provider_load_from_data", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
     private static partial int GTKCSSProviderLoadFromData(nint provider, string css, nint length, nint error);
 
     [LibraryImport("libgdk-3.so.0", EntryPoint = "gdk_screen_get_default")]

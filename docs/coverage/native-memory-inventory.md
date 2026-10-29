@@ -70,8 +70,7 @@ Additional boundaries outside the Engine assembly's P/Invoke table remain:
 - CLR/NativeAOT heap reservation, allocation, GC/free/frozen/module lifetime and
   concurrent collection: use the existing source-runtime probes and preserve
   their explicit production limits.
-- Runtime interop, marshalled heap strings/buffers, loader and C/C++ support
-  allocations: establish the actual ownership domain and publication boundary.
+- Runtime interop: the selected [UTF8 input domain](performance-producers.md#utf8-input-marshalling-domain-2026-10-29) owns 38 source-generated bindings and explicit WebRTC/DBus argument buffers. Loader bootstrap, legacy/delegate/vendor marshalling, other encodings, runtime interop internals and C/C++ support allocations still need their actual ownership/publication boundary.
 - Coherent composition: all required managed/native producers must share the
   same boundary and preserve a transient peak, failures, teardown and prepared
   allocation-free reads. Summing independent domain maxima is invalid.
