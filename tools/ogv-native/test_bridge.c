@@ -24,6 +24,8 @@ static void test_failure(int point) {
     CHECK(e2d_ogv_frame(c, rgb, sizeof(rgb), pcm, 813) != 0); CHECK(calls == s.calls); e2d_ogv_destroy(c);
 }
 int main(int argc, char **argv) {
+    E2DMemoryFunctions memory = {malloc, calloc, realloc, free};
+    if (e2d_ogv_memory(&memory)) return 10;
     CHECK(argc == 2); void *c = (void *)1; sink s = {0};
     CHECK(e2d_ogv_create(1, 2, 60, 48000, 2, .75f, .5f, 4, 64, write_output, &s, &c) == -1 && !c);
     CHECK(e2d_ogv_create(INT_MAX, 2, 60, 48000, 2, .75f, .5f, 4, 64, write_output, &s, &c) == -1 && !c);

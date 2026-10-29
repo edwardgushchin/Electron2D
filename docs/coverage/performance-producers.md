@@ -1004,3 +1004,38 @@ receipts under `bin/shaping-allocation-accounting/2026-10-29/` do not qualify th
 version. Final package qualification, foreign native execution, C++/OS provider
 closures and coherent managed/native current and peak remain open. This adds no
 public declaration and does not promote GetMonitor.
+
+
+### OGV bridge allocation domain (2026-10-29)
+
+The [private video bridge](../../tools/ogv-native/README.md) now prepares one
+immutable four-function allocator record from the existing pure-C ledger before
+encoder or decoder creation. Native registration rejects incomplete or changed
+owners and permits concurrent identical registration. Unprepared creation fails
+before publishing a context. Managed preparation rejects an older bridge before
+creating a decoder or opening the encoder destination. No managed allocation or
+release callback remains in a native owner, including SafeHandle finalization.
+
+Direct bridge storage includes both contexts, padded YUV/RGBA buffers, growing
+packet descriptor arrays and copied compressed packet bytes. Failed vector resize
+retains the previous owner until normal partial teardown. Preparation reports
+OutOfMemoryException; a failed track replacement retains the prior live decoder,
+texture, clock and audio track. Encoder refusal remains terminal and cancels staged
+output through the existing movie cleanup. Process high-water survives retirement.
+
+The shared/static Release and address/undefined/leak-sanitizer native checks each cover all 257 direct
+refusal positions (2 encoding, 255 decoding), concurrent identical registration, independent decoder workers,
+full retirement and healthy retry. The growth fixture crosses the 64/128 packet
+capacity boundaries. CLR and strict full-trim NativeAOT consumers exercise public
+factory/replacement failure, independent owners, collection/finalization, rejection
+of an older bridge and 20000 prepared operations with zero managed bytes or native
+growth. Window-first GPU/Compatibility recording also verifies common-core loading
+before SDL, without prior native allocator preparation. Source-bound receipts and exact native/consumer identities are retained in
+`bin/ogv-bridge-allocation/2026-10-29/`.
+
+This covers the bridge's requested CPU payload only. Nested Ogg/Vorbis/Theora
+allocations still use their pinned upstream allocator macros and remain open.
+Prepared whole-codec replay checks do not qualify cold codec ownership. Neither
+this result nor the guarded Vorbis final-band bounds fix completes the remaining
+library/provider inventory, coherent managed/native composition, GetMonitor or
+foreign-platform qualification.

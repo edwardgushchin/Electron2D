@@ -78,3 +78,5 @@ provider allocations remain open. Native dependencies may use their own
 allocators even when they load this SDL core. Retained process caches are not
 asserted to vanish after a public window closes; native SDL shutdown drain is a
 separate check. No managed heap composition or public API row is promoted.
+
+The runtime loader prepares the bundled common allocation core before loading SDL itself. Window-first startup therefore needs no preceding font, video or network call to make SDL's original allocator dependency available. Public CLR/NativeAOT cold-window recording profiles are `video-window-first BACKEND OUTPUT.ogv` in tests/NativeMemory.ICUHost.

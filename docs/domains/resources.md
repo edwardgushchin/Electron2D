@@ -2,7 +2,7 @@
 
 [Function-loaded extension modules](../components/extensions.md) execute typed entry/lifecycle callbacks through ExtensionManager and closed Resource copy/storage through Extension. Class registration and live reload remain open.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-29
 
 [Live-scene authoring saves](../components/resource-files.md#live-scene-authoring-save) now share pre/post notification, RESET-aware packing, atomic persistence and cleanup through ResourceSaver.SaveScene. The programmatic operation retains explicit owner/failure/fresh-process evidence and separate visual-editor/tooling gates.
 
@@ -330,3 +330,5 @@ Typed visual graph routing uses [VisualShaderNodeReroute](../classes/VisualShade
 ## Material recovery
 
 [Material placeholders](../components/material-placeholders.md) connect fresh program-free Material factories with version-8 typed missing-material recovery, opaque graph preservation, cache/worker/local ownership and fresh-process restoration. Current native evidence covers Linux software GPU/Compatibility; physical GPU, native-heap, foreign and owner gates remain distinct.
+
+Video preparation shares the [OGV bridge allocation domain](../coverage/performance-producers.md#ogv-bridge-allocation-domain-2026-10-29) with recording. Pure-C callbacks own direct context/frame/packet storage and survive finalization; nested codec allocation remains open.

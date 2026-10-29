@@ -1,4 +1,5 @@
 #include "bridge.h"
+#include "memory.h"
 #include <theora/theoraenc.h>
 #include <vorbis/vorbisenc.h>
 #include <stdlib.h>
@@ -91,13 +92,14 @@ E2D_API void e2d_ogv_destroy(void *context) {
     vorbis_comment_clear(&c->audio_comment); vorbis_info_clear(&c->audio_info);
     if (c->v.initialized) ogg_stream_clear(&c->v.stream);
     if (c->a.initialized) ogg_stream_clear(&c->a.stream);
-    free(c->yuv); free(c);
+    e2d_ogv_release(c->yuv); e2d_ogv_release(c);
 }
 E2D_API int e2d_ogv_create(int width, int height, int fps, int rate, int channels, float vq, float aq, int speed, int keyframes, e2d_ogv_writer writer, void *user, void **result) {
     if (!result) return -1; *result = NULL;
     if (!writer || width <= 0 || height <= 0 || (width & 1) || (height & 1) || width > 1048560 || height > 1048560 || (uint64_t)width * (uint64_t)height > SIZE_MAX / 3 || fps <= 0 || rate < 1000 || rate > 200000 ||
         (channels != 2 && channels != 4 && channels != 6 && channels != 8) || !isfinite(vq) || vq < 0 || vq > 1 || !isfinite(aq) || aq < -.1f || aq > 1 || speed < 1 || speed > 4 || keyframes < 1 || keyframes > 1024) return -1;
-    e2d_ogv *c = calloc(1, sizeof(*c)); if (!c) return -2; *result = c;
+    if (!e2d_ogv_memory_ready()) return -5;
+    e2d_ogv *c = e2d_ogv_zero(1, sizeof(*c)); if (!c) return -2; *result = c;
     c->writer = writer; c->user = user; c->width = width; c->height = height; c->frame_width = (width + 15) & ~15; c->frame_height = (height + 15) & ~15;
     c->channels = channels; c->output_channels = channels == 4 ? 6 : channels;
     vorbis_info_init(&c->audio_info); vorbis_comment_init(&c->audio_comment);
@@ -120,7 +122,7 @@ E2D_API int e2d_ogv_create(int width, int height, int fps, int rate, int channel
     uint64_t count = (uint64_t)c->frame_width * (uint64_t)c->frame_height;
     if (count > SIZE_MAX / 3 * 2) return fail(c, -2);
     size_t pixels = (size_t)count;
-    c->yuv = malloc(pixels + pixels / 2); if (!c->yuv) return fail(c, -2);
+    c->yuv = e2d_ogv_allocate(pixels + pixels / 2); if (!c->yuv) return fail(c, -2);
     for (int i = 0; i < 3; i++) { c->planes[i].width = c->frame_width >> (i != 0); c->planes[i].height = c->frame_height >> (i != 0); c->planes[i].stride = c->planes[i].width; }
     c->planes[0].data = c->yuv; c->planes[1].data = c->yuv + pixels; c->planes[2].data = c->yuv + pixels + pixels / 4;
     th_comment comment; th_comment_init(&comment); ogg_packet packet; int status;

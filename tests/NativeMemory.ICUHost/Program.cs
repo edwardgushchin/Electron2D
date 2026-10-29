@@ -21,11 +21,21 @@ internal static unsafe class Program
     {
         if (!OperatingSystem.IsLinux() || RuntimeInformation.ProcessArchitecture != Architecture.X64)
             throw new PlatformNotSupportedException("This native measurement host requires Linux x64.");
+        if (args.Length == 3 && args[0] == "video-window-first")
+        {
+            NativeVideoAllocationChecks.ColdWindow(args[1], args[2]); return;
+        }
         var path = Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DENet.so");
         var library = NativeLibrary.Load(path);
         // The runtime retains the same process-owned library and its allocation records.
         _snapshot = (delegate* unmanaged[Cdecl]<Counts*, void>)NativeLibrary.GetExport(library, "e2d_memory_snapshot");
-        if (args.Length == 2 && args[0] == "shaping-mixed")
+        if (args.Length == 2 && args[0] is "video" or "video-fault" or "video-old")
+        {
+            var arm = args[0] == "video-fault" ? (delegate* unmanaged[Cdecl]<nuint, void>)NativeLibrary.GetExport(library, "e2d_test_arm") : null;
+            var attempts = args[0] == "video-fault" ? (delegate* unmanaged[Cdecl]<nuint>)NativeLibrary.GetExport(library, "e2d_test_attempts") : null;
+            NativeVideoAllocationChecks.Run(Read, args[1], arm, attempts, args[0] == "video-old");
+        }
+        else if (args.Length == 2 && args[0] == "shaping-mixed")
         {
             RejectFontBundle(args[1]);
         }

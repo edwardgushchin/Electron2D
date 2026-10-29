@@ -1,6 +1,6 @@
 # VideoStreamTheora
 
-Last updated: 2026-10-16
+Last updated: 2026-10-29
 
 `public sealed class VideoStreamTheora : VideoStream` in [VideoStreamTheora.cs](../../src/Scene/Resources/VideoStreamTheora.cs).
 Part of [video playback](../components/video-playback.md), governed by [ADR 0110](../decisions/video-playback.md#adr-0110).
@@ -14,3 +14,5 @@ Preparation accepts 1 through 512 MiB of compressed Ogg data, at most 64 logical
 The private TheoraPlayback implements all required hooks, raw/presentation time, pending PCM and native ownership. Play samples AudioVideoDelayCompensationMSEC with feature overrides; positive values delay the picture. Seek uses uncompensated source seconds. Stop retains the last picture. Track/queue replacement for unchanged compressed data preserves the existing frame identity, sampled delay and raw time. Its ImageTexture can be duplicated/saved as an independent current snapshot; compatible public pixel edits permit subsequent decoder updates.
 
 OnInstantiatePlayback creates this independent state; CreateDuplicateInstance preserves the concrete resource type. No codec handle or backend type is public. Source imports and seeks are cold work; prepared updates, looping and frame publication reuse storage. [NativeVideoDecoder](NativeVideoDecoder.md) describes the private ABI and [video playback](../components/video-playback.md#verification) records checks and platform limits.
+
+Preparation and audio-track replacement report direct native storage refusal as OutOfMemoryException. A failed replacement preserves the active decoder, texture and timing. The [bridge allocation domain](../coverage/performance-producers.md#ogv-bridge-allocation-domain-2026-10-29) does not yet include nested codec allocators.

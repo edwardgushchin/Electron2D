@@ -14,6 +14,8 @@ void *__wrap_realloc(void *p, size_t n) { if (measuring) { allocations++; bytes 
 void __wrap_free(void *p) { if (measuring && p) releases++; __real_free(p); }
 
 int main(int argc, char **argv) {
+    E2DMemoryFunctions memory = {malloc, calloc, realloc, free};
+    if (e2d_ogv_memory(&memory)) return 10;
     if (argc < 2) return 2;
     for (int file = 1; file < argc; file++) {
         FILE *input = fopen(argv[file], "rb");

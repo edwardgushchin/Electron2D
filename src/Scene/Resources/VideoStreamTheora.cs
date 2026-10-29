@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Preparation validates compressed packets and reserves decoder working storage. The source keeps
 /// compressed data, not a complete decoded movie. Visible 4:2:0, 4:2:2 and 4:4:4 pictures use opaque RGBA8
 /// textures. Source input is bounded to 512 MiB and coded/visible picture axes to 16384 pixels. Borrowed source resources
-/// must remain live until their playbacks are disposed.</remarks>
+/// must remain live until their playbacks are disposed. Preparation reports storage refusal through
+/// <see cref="OutOfMemoryException"/>; a failed audio-track replacement preserves the active playback.</remarks>
 public sealed class VideoStreamTheora : VideoStream
 {
     /// <summary>Creates an empty source; set File before creating playback.</summary>

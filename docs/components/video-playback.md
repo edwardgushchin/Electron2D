@@ -1,6 +1,6 @@
 # Video playback
 
-Last updated: 2026-10-27
+Last updated: 2026-10-29
 
 [ADR 0110](../decisions/video-playback.md#adr-0110) owns the runtime video family.
 [VideoStream](../classes/VideoStream.md) is reusable Resource configuration,
@@ -106,3 +106,5 @@ The public-only package consumer also executes independent decoder pixels, custo
 During the full verification run, PhysicsActivityTests exposed a warmup mismatch: it measured global/local suspension paths after warming only uninterrupted steps. Temporary operation probes isolated one cold active-step allocation; the test now warms the same suspension/resume scenario before its unchanged zero-byte interval. This calibrates the benchmark and changes no physics runtime behavior. RED traces and the passing full-run result remain in the video validation evidence.
 
 [Editor authoring mode](../classes/Engine.md#editor-authoring-mode) distinguishes the editor process from game/scenario execution, preserving authored startup values and explicit preview. The owning contract records scoped timers, automatic-next behavior, native/source verification and remaining acceptance gates.
+
+The [direct OGV bridge allocation domain](../coverage/performance-producers.md#ogv-bridge-allocation-domain-2026-10-29) tracks context, plane and copied-packet storage through immutable pure-C callbacks. Storage refusal preserves normal partial teardown and live track-replacement state; nested codec ownership remains open. The guarded Vorbis final-band interpolation fix removes an out-of-row read at zero weight while preserving exact encoded output.
