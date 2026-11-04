@@ -14,7 +14,7 @@ internal static unsafe class NativeShapingAllocationChecks
         var library = NativeLibrary.Load(path);
         if (!oracle)
         {
-            var core = NativeLibrary.Load(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path)!, "libElectron2DENet.so"));
+            var core = NativeLibrary.Load(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path)!, "libElectron2D.so"));
             var selected = (delegate* unmanaged[Cdecl]<Functions*, void>)NativeLibrary.GetExport(library, "e2d_shaping_memory");
             var expected = (delegate* unmanaged[Cdecl]<Functions*, void>)NativeLibrary.GetExport(core, "e2d_memory_functions");
             Functions actual, normal; selected(&actual); expected(&normal);
@@ -81,7 +81,7 @@ internal static unsafe class NativeShapingAllocationChecks
             $"Prepared public layout/cache reads allocated {ownerBytes}/{allBytes} managed bytes or changed native ownership {baseline.Current}->{after.Current}.");
         var paths = System.IO.File.ReadLines("/proc/self/maps").Select(line => line[(line.LastIndexOf(' ') + 1)..]).Distinct().ToArray();
         Check(paths.Count(value => value.EndsWith("libHarfBuzzSharp.so", StringComparison.Ordinal)) == 1 &&
-            paths.Count(value => value.EndsWith("libElectron2DENet.so", StringComparison.Ordinal)) == 1, "Multiple shaping libraries or ledgers were loaded.");
+            paths.Count(value => value.EndsWith("libElectron2D.so", StringComparison.Ordinal)) == 1, "Multiple shaping libraries or ledgers were loaded.");
         Check(paths.Any(value => value.EndsWith("libcoreclr.so", StringComparison.Ordinal)) == RuntimeFeature.IsDynamicCodeSupported,
             "The exercised runtime does not match its dynamic-code identity.");
         Console.WriteLine(RuntimeFeature.IsDynamicCodeSupported ? "Runtime: CLR" : "Runtime: NativeAOT, no CoreCLR");

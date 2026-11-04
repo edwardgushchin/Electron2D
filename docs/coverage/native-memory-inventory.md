@@ -48,9 +48,7 @@ are not silently covered by this assembly snapshot.
 | `SDL3_shadercross`, `spirv-cross-c-shared` | Shadercross, SPIR-V Cross, DXC and its zlib/runtime closure | The observed shadercross ELF depends on SPIR-V Cross and DXC; DXC also needs libz. Compiler/object/container storage remains open. Prepared render recording is not compilation allocation evidence. |
 | `Electron2DRender` | Private renderer bridge plus SDL backend and graphics driver interfaces | Existing render/GPU allocation selectors cover their documented resources. They do not compose CPU native storage or qualify every SDL/backend/host allocation. Preserve the accepted GPU-versus-CPU accounting boundary. |
 
-All seventeen engine/codec library-name families from the compiled snapshot are
-represented above. Static target aliases may combine them into `__Internal` or
-archive modules; that changes symbol delivery, not ownership.
+The rows above describe allocation ownership domains. Their engine-owned imports now share the single Electron2D native module under [ADR 0012](../decisions/product.md#adr-0012); former subsystem names describe source components, not separately delivered libraries. SDL/shadercross/audio, FreeType/HarfBuzz/OpenSSL and host APIs retain their external identities. Consolidating files does not turn unqualified allocation domains into completed accounting.
 
 ## Platform and runtime boundaries
 

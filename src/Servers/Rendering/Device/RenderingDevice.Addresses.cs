@@ -95,16 +95,16 @@ public sealed unsafe partial class RenderingDevice
                 _addressUniformMask &= ~(1u << index); _addressUniforms[index] = 0;
             }
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_address_uniform")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_address_uniform")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeAddressUniform(nint device, uint abi, nint commands, uint stage, uint slot, nint buffer, ref nint previous);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_address_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_address_create")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeAddressCreate(nint device, uint abi, in SDL.GPUBufferCreateInfo info, uint roles, out ulong address);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_address_destroy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_address_destroy")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void NativeAddressDestroy(nint device, uint abi, nint buffer);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_addresses_prepare")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_addresses_prepare")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeAddressesPrepare(nint device, uint abi, nint commands);
 }

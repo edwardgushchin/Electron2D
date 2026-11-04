@@ -1,4 +1,4 @@
-"""Exercise explicit WebP selection against newer packaged build/publish assets."""
+"""Exercise unified native selection against newer packaged build/publish assets."""
 
 import unittest
 from pathlib import Path
@@ -8,10 +8,10 @@ from xml.sax.saxutils import escape
 import test_audio_delivery
 
 
-class WebPDeliveryTests(test_audio_delivery.AudioDeliveryTests):
-    property_name = "Electron2DWebPNativeLibrary"
-    linux_name = "libElectron2DWebP.so"
-    macos_name = "libElectron2DWebP.dylib"
+class NativeDeliveryTests(test_audio_delivery.AudioDeliveryTests):
+    property_name = "Electron2DNativeLibrary"
+    linux_name = "libElectron2D.so"
+    macos_name = "libElectron2D.dylib"
 
     def test_publish_disambiguates_only_the_selected_destination(self):
         for rid in ("linux-x64", "linux-arm64", "osx-x64", "osx-arm64"):

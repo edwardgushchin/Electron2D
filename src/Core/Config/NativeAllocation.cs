@@ -77,18 +77,18 @@ internal static unsafe partial class NativeAllocation
     }
     internal static void Free(void* value) { if (value is not null) { Prepare(); ReleaseNative(value); } }
     internal static void AlignedFree(void* value) => Free(value);
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_abi"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_abi"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint MemoryABI();
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_allocate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_allocate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void* AllocateNative(nuint size, nuint alignment, uint zero, out int error);
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_reallocate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_reallocate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void* ReallocateNative(void* value, nuint size, out int error);
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_release"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_release"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void ReleaseNative(void* value);
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_snapshot"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_snapshot"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void ReadState(out State state);
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_failure_epoch"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_failure_epoch"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial ulong FailureEpoch();
-    [LibraryImport(NativeLibraries.ENetLibrary, EntryPoint = "e2d_memory_functions"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_memory_functions"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void ReadFunctions(out Functions functions);
 }

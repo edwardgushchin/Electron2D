@@ -30,7 +30,7 @@ assertions are removed, allowing their existing failure/cleanup paths to execute
 No jump frame crosses cryptographic code or resource destructors.
 
 Select the resulting TLS directory and the matching core through
-`Electron2DTLSNativeDirectory` and `Electron2DENetNativeLibrary`. Follow
+`Electron2DTLSNativeDirectory` and `Electron2DNativeLibrary`. Follow
 [unified TLS qualification](../../docs/maintaining.md#unified-native-tls-qualification)
 for the WebRTC bridge and Linux PAL startup. `LD_LIBRARY_PATH` must name the
 consumer's actual `runtimes/linux-x64/native` directory, with

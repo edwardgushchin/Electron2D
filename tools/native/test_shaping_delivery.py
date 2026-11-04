@@ -1,10 +1,10 @@
 """Select the owned shaping library over packaged build/publish assets."""
 
 import unittest
-import test_webp_delivery
+import test_native_delivery
 
 
-class ShapingDeliveryTests(test_webp_delivery.WebPDeliveryTests):
+class ShapingDeliveryTests(test_native_delivery.NativeDeliveryTests):
     property_name = "Electron2DHarfBuzzNativeLibrary"
     linux_name = "libHarfBuzzSharp.so"
     macos_name = "libHarfBuzzSharp.dylib"

@@ -23,6 +23,6 @@ internal static partial class OGVNativeMemory
             Volatile.Write(ref _ready, true);
         }
     }
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_ogv_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ogv_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Install(in NativeAllocation.Functions functions);
 }

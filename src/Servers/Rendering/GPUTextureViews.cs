@@ -33,31 +33,31 @@ internal static unsafe partial class GPUTextureViews
         var x = new TextureRange(a, aLayers, aLevels); var y = new TextureRange(b, bLayers, bLevels, bLevel);
         var result = NativeOverlap(device, 1, in x, in y); if (result < 0) throw GPUPhysicsDevice.Failure("compare texture-view ranges"); return result != 0;
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_view_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial int Support(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_view_format_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_format_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial int FormatSupport(nint device, uint abi, in SDL.GPUTextureCreateInfo info, SDL.GPUTextureFormat format);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_texture_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_texture_create")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial nint Create(nint device, uint abi, in SDL.GPUTextureCreateInfo info, nint formats, uint count);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_view_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_create")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial nint View(nint device, uint abi, nint source, SDL.GPUTextureFormat format, uint layer, uint layers, uint level, uint levels, uint array);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_view_region")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_region")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeRegion(nint device, uint abi, nint texture, ref uint layer, ref uint level);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_view_overlap")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_overlap")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeOverlap(nint device, uint abi, in TextureRange a, in TextureRange b);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_view_destroy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_view_destroy")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial void Destroy(nint device, uint abi, nint texture);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_views_collect")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_views_collect")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial void Collect(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_views_release")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_views_release")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial void Release(nint device, uint abi);
 }

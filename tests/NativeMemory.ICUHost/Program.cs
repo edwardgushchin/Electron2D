@@ -25,7 +25,7 @@ internal static unsafe class Program
         {
             NativeVideoAllocationChecks.ColdWindow(args[1], args[2]); return;
         }
-        var path = Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DENet.so");
+        var path = Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2D.so");
         var library = NativeLibrary.Load(path);
         // The runtime retains the same process-owned library and its allocation records.
         _snapshot = (delegate* unmanaged[Cdecl]<Counts*, void>)NativeLibrary.GetExport(library, "e2d_memory_snapshot");

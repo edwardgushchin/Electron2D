@@ -51,9 +51,15 @@ The shared core retains its no-undefined link check. The matrix sets
 
 ## Managed consumer and lifetime
 
+For a managed consumer, configure the SDL profile with
+`-DELECTRON2D_MEMORY_LIBRARY=/absolute/path/libElectron2D.so` (the dylib on macOS)
+and rebuild SDL and its lifetime check. The standalone allocation-only fixture
+above is for isolated native checks; it must not introduce another ledger into
+a consumer of the complete common module.
+
 Select the resulting `sdl/libSDL3.so.0` through
-`Electron2DSDLNativeLibrary` and its matching `libElectron2DENet.so` through
-`Electron2DENetNativeLibrary`. The consumer targets replace only their canonical
+`Electron2DSDLNativeLibrary` and its matching `libElectron2D.so` through
+`Electron2DNativeLibrary`. The consumer targets replace only their canonical
 destination, even if the packaged SDL file is newer. Do not overwrite installed
 SDK or shared package files. Preserve the other matching native dependencies of
 the consumer; the font, text, mesh, render and image producers have independent

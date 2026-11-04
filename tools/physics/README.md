@@ -154,7 +154,7 @@ python3 -B tools/enet-native/check_file_codecs.py bin/enet-memory/libElectron2DE
 ```
 
 The root fixture selects ELECTRON2D_TEST_ENET_ALLOCATION=1. The focused public/native
-route is `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -p:Electron2DENetNativeLibrary=/absolute/path/to/libElectron2DENet.so -- --enet-allocation`.
+route is `dotnet run --project tests/Electron2D.FastTests -c Release -r linux-x64 -p:Electron2DConsumerPlatform=Linux -p:Electron2DNativeLibrary=/absolute/path/to/libElectron2D.so -- --enet-allocation`.
 Use the matching current bridge. The NativeAOT profile adds PublishAot=true and
 TrimMode=full when publishing that host; standalone native execution supplies the
 same selector. Neither ledger coverage nor zero managed bytes completes total

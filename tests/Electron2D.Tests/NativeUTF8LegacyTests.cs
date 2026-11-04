@@ -5,7 +5,7 @@ using Path = System.IO.Path;
 
 internal static partial class NativeUTF8LegacyTests
 {
-    [LibraryImport("libElectron2DENet.so", EntryPoint = "e2d_test_fail_after")]
+    [LibraryImport("libElectron2D.so", EntryPoint = "e2d_test_fail_after")]
     private static partial void FailAfter(uint count);
     internal static void Run()
     {

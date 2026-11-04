@@ -102,7 +102,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
             throw new ArgumentException("The sampler border color must match the image's integer or floating-point sampling type.");
     }
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_sampler")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_sampler")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial nint CreateNative(nint device, uint abi, in SDL.GPUSamplerCreateInfo info, uint u, uint v, uint border, uint unnormalized);
 
@@ -114,7 +114,7 @@ internal readonly partial record struct SamplerConfiguration(RenderingDevice.Sam
         if (compatible == 0) throw new ArgumentException("Unnormalized sampling requires a single-mip, single-layer ordinary image view.");
     }
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_sampler_view")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_sampler_view")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int CheckView(nint device, uint abi, nint texture);
 

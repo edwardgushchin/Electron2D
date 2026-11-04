@@ -97,12 +97,12 @@ public sealed partial class Image
         catch (Exception failure) { output.Failure = failure; return 0; }
     }
 
-    [LibraryImport(NativeLibraries.WebPLibrary, EntryPoint = "e2d_webp_encode")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_webp_encode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int WebPEncodeNative(byte* pixels, ulong length, int width, int height, int lossy, float quality,
         int method, delegate* unmanaged[Cdecl]<byte*, nuint, nint, int> writer, nint context);
 
-    [LibraryImport(NativeLibraries.WebPLibrary, EntryPoint = "e2d_webp_decode")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_webp_decode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int WebPDecodeNative(byte* bytes, ulong length, byte* pixels, ulong capacity, int width, int height);
 
@@ -133,7 +133,7 @@ public sealed partial class Image
         }
         [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
         private static void Release(void* value) => NativeAllocation.Free(value);
-        [LibraryImport(NativeLibraries.WebPLibrary, EntryPoint = "e2d_webp_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+        [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_webp_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
         private static partial int Install(delegate* unmanaged[Cdecl]<nuint, void*> allocate, delegate* unmanaged[Cdecl]<void*, void> release);
     }
 }

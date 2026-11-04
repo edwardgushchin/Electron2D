@@ -139,6 +139,7 @@ target_include_directories(Electron2DKTX PRIVATE "${electron2dktxcodec_SOURCE_DI
 target_compile_definitions(Electron2DKTX PRIVATE E2D_KTX_BUILD)
 if(ELECTRON2D_STATIC_NATIVE)
   target_compile_definitions(Electron2DKTX PUBLIC E2D_KTX_STATIC)
+  if(NOT ELECTRON2D_UNIFIED_NATIVE)
   # Static link dependencies are order-only; refresh the merged closure when its codec changes.
   set(stamp "${CMAKE_CURRENT_BINARY_DIR}/ktx-closure.stamp")
   add_custom_command(OUTPUT "${stamp}"
@@ -149,6 +150,7 @@ if(ELECTRON2D_STATIC_NATIVE)
   add_custom_command(TARGET Electron2DKTX POST_BUILD
     COMMAND ${CMAKE_COMMAND} "-DOUTPUT=$<TARGET_FILE:Electron2DKTX>" "-DCODEC=$<TARGET_FILE:ktx_read>"
       "-DAR=${CMAKE_AR}" "-DAPPLE_HOST=${APPLE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/merge.cmake")
+  endif()
 elseif(APPLE)
   set_target_properties(Electron2DKTX PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE SKIP_BUILD_RPATH TRUE)
   target_link_options(Electron2DKTX PRIVATE "LINKER:-exported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/exports.macos")

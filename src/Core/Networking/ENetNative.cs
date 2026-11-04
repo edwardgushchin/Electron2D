@@ -15,7 +15,7 @@ internal struct ENetNativeEvent { internal int Type, Peer, Channel; internal uin
 internal unsafe struct ENetNativeBuffer { internal byte* Data; internal nuint Length; }
 internal static unsafe partial class ENetNative
 {
-    private const string Library = NativeLibraries.ENetLibrary;
+    private const string Library = NativeLibraries.EngineLibrary;
     private static readonly object Gate = new();
     private static bool _ready;
     internal static void Prepare()

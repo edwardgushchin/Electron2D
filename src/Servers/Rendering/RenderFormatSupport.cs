@@ -37,11 +37,11 @@ internal sealed unsafe partial class RenderFormatSupport
             throw new ArgumentException("The native texture format does not support the configured sampler filter.");
     }
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_filter_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_filter_support")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int ReadNative(nint device, uint abi, byte* output, uint count);
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_texture_format")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_texture_format")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int TextureFormat(nint device, uint abi, nint texture);
 }

@@ -16,7 +16,7 @@ exports and the private FreeType allocator export before entering the full suite
 only this desktop preflight. An encoder-only cached bundle fails immediately with
 the missing export and selected library path. Use the matching platform bundle or
 the documented [native source build](native-packaging.md#full-native-rebuild);
-`Electron2DWebPNativeLibrary` selects the resulting bridge for project-reference
+`Electron2DNativeLibrary` selects the resulting bridge for project-reference
 builds and publishes. `Electron2DFontNativeLibrary` selects the matching private
 FreeType build; Linux also requires this private payload rather than its former
 MonoGame dependency. A passing preflight verifies loading and exports, not codec

@@ -137,7 +137,7 @@ public sealed unsafe partial class RenderingDevice
         return values;
     }
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_limits")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_limits")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int ReadNativeLimits(nint device, uint abi, ulong* output, uint count);
 }

@@ -21,7 +21,7 @@ public sealed unsafe partial class RenderingDevice
         if (((flags >> 1) & ~enabled) != 0) throw new NotSupportedException("Sample shading and alpha-to-one require their independently enabled native features.");
         return new(masks.IsEmpty ? uint.MaxValue : masks[0], flags, description.MinSampleShading);
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_multisample_pipeline")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_multisample_pipeline")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeMultisamplePipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info, float lineWidth, uint discard, in NativeMultisampleState samples);
 }

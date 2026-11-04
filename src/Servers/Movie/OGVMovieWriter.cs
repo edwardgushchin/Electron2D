@@ -73,17 +73,17 @@ internal sealed partial class OGVMovieWriter : MovieWriter
         try { writer._file!.BorrowStream.Write(new ReadOnlySpan<byte>(bytes, checked((int)length))); return 1; }
         catch (Exception failure) { writer._failure = failure; return 0; }
     }
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_ogv_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ogv_create")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int Create(int width, int height, int fps, int rate, int channels, float videoQuality, float audioQuality,
         int speed, int keyframes, delegate* unmanaged[Cdecl]<byte*, nuint, nint, int> writer, nint user, out nint encoder);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_ogv_frame")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ogv_frame")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int Frame(nint encoder, byte* rgb, nuint bytes, int* pcm, int samples);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_ogv_finish")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ogv_finish")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Finish(nint encoder);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_ogv_destroy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ogv_destroy")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void Destroy(nint encoder);
 }

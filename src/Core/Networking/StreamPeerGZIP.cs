@@ -96,7 +96,7 @@ internal sealed unsafe class GZIPContext : SafeHandle
 
 internal static unsafe partial class GZIPNative
 {
-    private const string Library = NativeLibraries.ENetLibrary;
+    private const string Library = NativeLibraries.EngineLibrary;
     [LibraryImport(Library, EntryPoint = "e2d_gzip_create"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial nint Create(int compress, int window, out int error);
     [LibraryImport(Library, EntryPoint = "e2d_gzip_process"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial int Process(nint stream, byte* input, uint* inputLength, byte* output, uint* outputLength, int finish);
     [LibraryImport(Library, EntryPoint = "e2d_gzip_destroy"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] internal static partial void Destroy(nint stream);

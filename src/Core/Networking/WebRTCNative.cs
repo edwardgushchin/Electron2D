@@ -17,7 +17,7 @@ internal sealed class WebRTCChannelHandle : SafeHandle
 }
 internal static unsafe partial class WebRTCNative
 {
-    private const string Library = NativeLibraries.WebRTCLibrary;
+    private const string Library = NativeLibraries.EngineLibrary;
     internal static void Check(int result) { if (result < 0) throw new IOException(Message()); }
     internal static string Message() => Marshal.PtrToStringUTF8(Error()) ?? "Native WebRTC failure.";
     internal static nint Require(nint value) { if (value == 0) throw new IOException(Message()); return value; }

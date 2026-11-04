@@ -44,16 +44,16 @@ public sealed unsafe partial class RenderingDevice
         _emptySamples ??= NativeEmptySupport(Device, 1);
         if (_emptySamples <= 0 || (_emptySamples.Value & (1 << (int)samples)) == 0) throw new NotSupportedException("Attachmentless framebuffers require the native extent adapter and an available exact sample count.");
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_empty_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_empty_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeEmptySupport(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_empty_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_empty_create")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeEmptyCreate(nint device, uint abi, uint width, uint height, uint samples);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_empty_release")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_empty_release")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void NativeEmptyRelease(nint device, uint abi, nint target);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_empty_begin")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_empty_begin")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeEmptyBegin(nint device, uint abi, nint commands, nint target);
 }

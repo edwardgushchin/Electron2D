@@ -142,7 +142,7 @@ def main():
             assert reason in text, (label, text[-1000:])
             continue
         assert {path for path in mappings if path.endswith('/libcoreclr.so')} == {str(source_root / 'shared/Microsoft.NETCore.App/10.0.1/libcoreclr.so')}
-        assert {path for path in mappings if path.endswith('/libElectron2DENet.so')} == {str(workspace / 'libElectron2DENet.so')}
+        assert {path for path in mappings if path.endswith('/libElectron2D.so')} == {str(workspace / 'libElectron2D.so')}
         assert str(producer) in mappings
         report = json.loads(text.splitlines()[-1])
         if 'common-oom' in label:
@@ -155,7 +155,7 @@ def main():
     runtime = source_root / 'shared/Microsoft.NETCore.App/10.0.1'
     (output / 'checks.json').write_text(json.dumps({'reports': reports, 'abi': abi,
         'runtimeSHA256': {name: digest(runtime / name) for name in ['libcoreclr.so', 'libclrjit.so', 'System.Private.CoreLib.dll']},
-        'memorySHA256': digest(workspace / 'libElectron2DENet.so'),
+        'memorySHA256': digest(workspace / 'libElectron2D.so'),
         'sources': {str(p): digest(p) for folder in [Path(__file__).parent, Path(__file__).parent.parent / 'aot-memory-probe', Path(__file__).parent.parent / 'managed-live-probe'] for p in folder.iterdir() if p.is_file()}}, indent=2) + '\n')
     print('CoreCLR reservation, frozen/image lifetime, native composition, delayed RED and bounded OOM controls passed.')
 

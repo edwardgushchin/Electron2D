@@ -17,6 +17,8 @@ Use several GiB of owned temporary space and retain receipts before cleanup.
 The installed SDK and shared runtime are read-only inputs. Run from the repository
 root with a .NET 10.0.1 SDK selected:
 
+This isolated diagnostic builds an allocation-only fixture and assigns it the current common loader identity. It does not produce or qualify the complete shipped bridge module. The commands require patchelf.
+
 ```bash
 set -e
 clr_probe=$(mktemp -d /tmp/e2d-clr-memory-XXXXXX)
@@ -26,7 +28,8 @@ python3 -c 'import sys,tarfile; tarfile.open(sys.argv[1]).extractall(sys.argv[2]
 runtime_root="$clr_probe/runtime-10.0.1"
 cmake -S tools/enet-native -B "$clr_probe/native" -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build "$clr_probe/native" --target Electron2DENet -j 4
-cp "$clr_probe/native/libElectron2DENet.so" "$clr_probe/libElectron2DENet.so"
+cp "$clr_probe/native/libElectron2DENet.so" "$clr_probe/libElectron2D.so"
+patchelf --set-soname libElectron2D.so "$clr_probe/libElectron2D.so"
 for role in normal deferred concurrent; do
   producer_dir="$clr_probe/$role"; flags=
   case "$role" in
@@ -37,7 +40,7 @@ for role in normal deferred concurrent; do
   mkdir -p "$producer_dir"
   c++ -std=c++17 -O2 -Wall -Wextra -Werror -fPIC -shared -pthread $flags \
     tools/physics/managed-live-probe/profiler.cpp tools/physics/clr-memory-probe/producer.cpp \
-    tools/physics/clr-memory-probe/frozen_fixture.cpp "$clr_probe/libElectron2DENet.so" \
+    tools/physics/clr-memory-probe/frozen_fixture.cpp "$clr_probe/libElectron2D.so" \
     -Wl,-soname,libElectron2DAOTMemory.so -o "$producer_dir/libElectron2DAOTMemory.so"
 done
 bash "$runtime_root/src/coreclr/build-runtime.sh" -release -arch x64 -component coreclr \

@@ -122,13 +122,13 @@ public sealed partial class Image
         protected override bool ReleaseHandle() { KTXDestroy(handle); return true; }
     }
 
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_ktx_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ktx_create")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int KTXCreate(byte* source, ulong length, out KTXInfo info, out nint result);
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_ktx_level")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ktx_level")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int KTXLevel(KTXHandle texture, uint level, byte* output, ulong length, uint rowBytes, uint rows);
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_ktx_destroy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_ktx_destroy")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void KTXDestroy(nint texture);
 }

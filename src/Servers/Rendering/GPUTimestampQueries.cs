@@ -36,10 +36,10 @@ internal sealed unsafe partial class GPUTimestampQueries : IDisposable
         return elapsed;
     }
     public void Dispose() => _pool.Dispose();
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_create")] private static partial int NativeTimestampCreate(nint device, uint abi, uint capacity, out nint pool);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_reset")] private static partial int NativeTimestampReset(nint device, uint abi, nint pool, nint command);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_write")] private static partial int NativeTimestampWrite(nint device, uint abi, nint pool, nint command, uint index);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_read")] private static partial int NativeTimestampRead(nint device, uint abi, nint pool, uint count, ulong* values);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_elapsed")] private static partial int NativeTimestampElapsed(nint device, uint abi, nint pool, out ulong elapsed);
-    [LibraryImport("Electron2DRender", EntryPoint = "e2d_render_timestamp_destroy")] private static partial void NativeTimestampDestroy(nint device, uint abi, nint pool);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_create")] private static partial int NativeTimestampCreate(nint device, uint abi, uint capacity, out nint pool);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_reset")] private static partial int NativeTimestampReset(nint device, uint abi, nint pool, nint command);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_write")] private static partial int NativeTimestampWrite(nint device, uint abi, nint pool, nint command, uint index);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_read")] private static partial int NativeTimestampRead(nint device, uint abi, nint pool, uint count, ulong* values);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_elapsed")] private static partial int NativeTimestampElapsed(nint device, uint abi, nint pool, out ulong elapsed);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_timestamp_destroy")] private static partial void NativeTimestampDestroy(nint device, uint abi, nint pool);
 }

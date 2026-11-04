@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <_Electron2DNativeName>libElectron2D.so</_Electron2DNativeName>
+    <_Electron2DNativeName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2D.dylib</_Electron2DNativeName>
+    <_Electron2DNativeName Condition="'$(Electron2DNativePlatform)' == 'Windows'">libElectron2D.dll</_Electron2DNativeName>
+    <_Electron2DNativeBuild>$(MSBuildThisFileDirectory)../obj/native/$(Electron2DNativePackageVersion)/$(_Electron2DPrivateNativeRID)</_Electron2DNativeBuild>
+    <_Electron2DNativeLibrary>$(_Electron2DNativeBuild)/$(_Electron2DNativeName)</_Electron2DNativeLibrary>
+    <_Electron2DNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DNativeName)</_Electron2DNativeLibrary>
+    <_Electron2DNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DNativeName)</_Electron2DNativeLibrary>
+    <_Electron2DNativeLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'Windows'">$(PkgElectron2D_Windows)/runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DNativeName)</_Electron2DNativeLibrary>
+    <_Electron2DNativeLibrary Condition="'$(Electron2DNativeLibrary)' != ''">$(Electron2DNativeLibrary)</_Electron2DNativeLibrary>
+    <_Electron2DNativeSDL>$(PkgSDL3-CS_Linux)/runtimes/$(_Electron2DPrivateNativeRID)/native/libSDL3.so.0</_Electron2DNativeSDL>
+    <_Electron2DNativeSDL Condition="'$(Electron2DNativePlatform)' == 'MacOS'">$(PkgSDL3-CS_MacOS)/runtimes/$(_Electron2DPrivateNativeRID)/native/libSDL3.0.dylib</_Electron2DNativeSDL>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DNativeInput Include="$(MSBuildThisFileDirectory)native/**/*;$(MSBuildThisFileDirectory)*-native/**/*;$(MSBuildThisFileDirectory)../src/Servers/Text/Native/**/*;$(MSBuildThisFileDirectory)../src/Vendor/**/*;$(MSBuildThisFileFullPath)" Exclude="**/__pycache__/**;**/bin/**;**/obj/**" />
+    <None Include="$(_Electron2DNativeLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Windows') and ('$(Electron2DBuildNativeFromSource)' == 'true' or '$(Electron2DNativeLibrary)' != '' or Exists('$(_Electron2DNativeLibrary)'))" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DNativeName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DNative" DependsOnTargets="BuildElectron2DTLSNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DNativeLibrary)' == ''" Inputs="@(_Electron2DNativeInput)" Outputs="$(_Electron2DNativeLibrary)">
+    <Error Condition="'$(_Electron2DPrivateNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Native source compilation requires the matching host; foreign targets use the target producers." />
+    <Error Condition="'$(Electron2DNativePlatform)' != 'Linux' and '$(Electron2DNativePlatform)' != 'MacOS'" Text="Use the Windows or cross native producer for this target." />
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)native/build.py&quot; $(_Electron2DPrivateNativeRID) &quot;$(_Electron2DNativeSDL)&quot; &quot;$(_Electron2DNativeBuild)&quot; --tls &quot;$(_Electron2DTLSDirectory)&quot;" />
+  </Target>
+</Project>

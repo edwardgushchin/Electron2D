@@ -31,7 +31,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private void PrepareComputeImages(nint* images, uint imageCount, bool prepare)
     { if (NativePrepareComputeImages(Device, 2, _command, images, imageCount, prepare ? 1u : 0u) != 1) throw new InvalidOperationException("Compute image descriptor preparation failed: " + SDL.GetError()); }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_prepare_compute_images")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_prepare_compute_images")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativePrepareComputeImages(nint device, uint abi, nint commands, nint* images, uint count, uint prepare);
 }

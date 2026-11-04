@@ -58,19 +58,19 @@ public sealed unsafe partial class RenderingDevice
         for (var i = 0; i < _generalImages.Count; i++) textures[i] = _generalImages[i].NativeHandle;
         if (NativePrepareImages(Device, 1, _command, program.GraphicsImages, textures, (uint)_generalImages.Count) != 1) throw new InvalidOperationException("The native graphics image descriptors could not be prepared.");
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_image_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_image_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeImageSupport(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_images_pipeline")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_images_pipeline")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeImagesPipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info, float lineWidth, uint discard, in NativeMultisampleState samples, in NativeDepthStencilState depth, uint images);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_image_transition")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_image_transition")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeImageTransition(nint device, uint abi, nint commands, nint* textures, uint count, uint general);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_bind_image")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_bind_image")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeBindImage(nint device, uint abi, nint commands, nint texture, uint slot, uint fragment, uint storage);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_prepare_images")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_prepare_images")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativePrepareImages(nint device, uint abi, nint commands, uint masks, nint* textures, uint count);
 }

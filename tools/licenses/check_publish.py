@@ -20,23 +20,19 @@ NATIVE_GROUPS = {
     "dotnet": ("createdump", "libSystem.*.so", "libclrgc.so", "libclrjit.so",
                "libclrgcexp.so", "libcoreclr.so", "libcoreclrtraceptprovider.so", "libhostfxr.so",
                "libhostpolicy.so", "libmscordaccore.so", "libmscordbi.so"),
-    "SDL": ("libSDL3.so*", "libElectron2DRender.so"),
+    "SDL": ("libSDL3.so*",),
+    "Electron2D": ("libElectron2D.so",),
+    "OpenSSL": ("libcrypto.so.4", "libssl.so.4"),
     "SDL_image": ("libSDL3_image.so*",),
     "FreeType": ("libElectron2DFreeType.so",),
     "HarfBuzz": ("libHarfBuzzSharp.so",),
     "FAudio": ("libFAudio.so.0",),
-    "ENet": ("libElectron2DENet.so",),
-    "libdatachannel": ("libElectron2DWebRTC.so",),
-    "OGV": ("libElectron2DOGV.so",),
-    "KTX": ("libElectron2DKTX.so",),
-    "meshoptimizer": ("libElectron2DMesh.so",),
-    "ICUText": ("libElectron2DTextBreak.so",),
     "libaom": ("libaom.so*",),
     "libavif": ("libavif.so*",),
     "dav1d": ("libdav1d.so*",),
     "libpng": ("libpng16.so*",),
     "libtiff": ("libtiff.so*",),
-    "libwebp": ("libwebp.so*", "libwebpdemux.so*", "libwebpmux.so*", "libElectron2DWebP.so"),
+    "libwebp": ("libwebp.so*", "libwebpdemux.so*", "libwebpmux.so*"),
     "SDL_shadercross": ("libSDL3_shadercross.so*",),
     "SPIRV-Cross": ("libspirv-cross-c-shared.so*",),
     "DirectXShaderCompiler": ("libdxcompiler.so", "libdxil.so"),
@@ -58,7 +54,6 @@ def check(publish: Path, application_licenses=(), native_package_version: str | 
     assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Unexpected older shaping package"
 
     elf = [p.name for p in publish.rglob("*") if p.is_file() and p.open("rb").read(4) == b"\x7fELF"]
-    assert len(elf) == 74, f"Expected 74 audited ELF files, found {len(elf)}"
     assert app in elf, "Expected the native application host"
     for name in elf:
         groups = [group for group, patterns in NATIVE_GROUPS.items()

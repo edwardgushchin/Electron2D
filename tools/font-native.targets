@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
+    <_Electron2DFontOverride Condition="'$(Electron2DFontNativeLibrary)' != ''">true</_Electron2DFontOverride>
     <_Electron2DFontBuild>$(MSBuildThisFileDirectory)../obj/font-native/$(Electron2DNativePackageVersion)/$(_Electron2DPrivateNativeRID)</_Electron2DFontBuild>
     <_Electron2DFontName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DFreeType.dylib</_Electron2DFontName>
     <_Electron2DFontName Condition="'$(Electron2DNativePlatform)' == 'Linux'">libElectron2DFreeType.so</_Electron2DFontName>
@@ -11,7 +12,7 @@
     <Electron2DFontNativeJobs Condition="'$(Electron2DFontNativeJobs)' == ''">2</Electron2DFontNativeJobs>
   </PropertyGroup>
   <ItemGroup Condition="'$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Linux'">
-    <None Include="$(_Electron2DFontLibrary)" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DFontName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+    <None Include="$(_Electron2DFontLibrary)" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' or '$(_Electron2DFontOverride)' == 'true' or Exists('$(_Electron2DFontLibrary)')" Link="runtimes/$(_Electron2DPrivateNativeRID)/native/$(_Electron2DFontName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
   </ItemGroup>
   <Target Name="BuildElectron2DFontNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and ('$(Electron2DNativePlatform)' == 'MacOS' or '$(Electron2DNativePlatform)' == 'Linux')" Inputs="$(MSBuildThisFileDirectory)font-native/CMakeLists.txt;$(MSBuildThisFileDirectory)native/harfbuzz.cmake;$(MSBuildThisFileDirectory)font-native/freetype-woff2-memory.cmake;$(MSBuildThisFileDirectory)font-native/verify-source.cmake;$(MSBuildThisFileDirectory)shaping-native/prepare.cmake;$(MSBuildThisFileDirectory)shaping-native/prepare.py;$(MSBuildThisFileDirectory)font-native/harfbuzz-memory.cc;$(MSBuildThisFileDirectory)font-native/freetype-harfbuzz-memory.c;$(MSBuildThisFileFullPath)" Outputs="$(_Electron2DFontLibrary)">
     <Error Condition="'$(_Electron2DPrivateNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private FreeType requires a matching target-native build host." />

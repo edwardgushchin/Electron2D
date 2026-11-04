@@ -19,21 +19,24 @@ PLATFORMS = {"Linux": ("linux-x64", "linux-arm64"), "MacOS": ("osx-x64", "osx-ar
              "iOS": ("ios-arm64", "iossimulator-arm64", "iossimulator-x64"),
              "tvOS": ("tvos-arm64", "tvossimulator-arm64", "tvossimulator-x64"), "Web": ("browser-wasm",)}
 RIDS = tuple(rid for values in PLATFORMS.values() for rid in values)
-LIBRARIES = {"Linux": ("libElectron2DTextBreak.so", "libFAudio.so.0", "libElectron2DENet.so", "libElectron2DWebRTC.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so", "libcrypto.so.4", "libssl.so.4"),
-             "MacOS": ("libElectron2DTextBreak.dylib", "libFAudio.0.dylib", "libElectron2DENet.dylib", "libElectron2DWebRTC.dylib", "libElectron2DMesh.dylib", "libElectron2DRender.dylib", "libElectron2DWebP.dylib", "libElectron2DOGV.dylib", "libElectron2DKTX.dylib",
-                       "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib"),
-             "Windows": ("Electron2DTextBreak.dll", "FAudio.dll", "Electron2DENet.dll", "Electron2DWebRTC.dll", "Electron2DMesh.dll", "Electron2DRender.dll", "Electron2DWebP.dll", "Electron2DOGV.dll", "Electron2DKTX.dll",
-                         "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")}
-LIBRARIES["Android"] = ("libElectron2DTextBreak.so", "libFAudio.so", "libElectron2DENet.so", "libElectron2DMesh.so", "libElectron2DRender.so", "libElectron2DWebP.so", "libElectron2DOGV.so", "libElectron2DKTX.so",
-                        "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so")
-ARCHIVES = ("libElectron2DTextBreak.a", "libFAudio.a", "libElectron2DENet.a", "libElectron2DMesh.a", "libElectron2DRender.a", "libElectron2DWebP.a", "libElectron2DOGV.a", "libElectron2DKTX.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
-            "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libwebpdemux.a", "libElectron2DZlib.a",
-            "libElectron2DPNG.a", "libElectron2DBrotliDec.a", "libElectron2DBrotliCommon.a", "libElectron2DZstd.a")
-LIBRARIES.update(iOS=ARCHIVES, tvOS=ARCHIVES, Web=(*ARCHIVES, "libSDL3.a", "libElectron2DWasmCompat.a",
-                 "libSDL3_image.a", "libwebpmux.a"))
+ARCHIVES = ("libElectron2D.a", "libFAudio.a", "libwebp.a", "libsharpyuv.a", "libElectron2DCrypto.a",
+            "libElectron2DSSL.a", "libElectron2DFreeType.a", "libElectron2DHarfBuzz.a", "libwebpdemux.a",
+            "libElectron2DZlib.a", "libElectron2DPNG.a", "libElectron2DBrotliDec.a",
+            "libElectron2DBrotliCommon.a", "libElectron2DZstd.a")
+LIBRARIES = {
+    "Linux": ("libElectron2D.so", "libFAudio.so.0", "libElectron2DFreeType.so", "libHarfBuzzSharp.so", "libcrypto.so.4", "libssl.so.4"),
+    "MacOS": ("libElectron2D.dylib", "libFAudio.0.dylib", "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib"),
+    "Windows": ("libElectron2D.dll", "FAudio.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll"),
+    "Android": ("libElectron2D.so", "libFAudio.so", "libElectron2DCrypto.so", "libElectron2DSSL.so", "libElectron2DFreeType.so", "libElectron2DHarfBuzz.so"),
+    "iOS": ARCHIVES, "tvOS": ARCHIVES,
+    "Web": (*ARCHIVES, "libSDL3.a", "libSDL3_image.a", "libwebpmux.a"),
+}
 
 
 def required_exports(name):
+    if name in ("libElectron2D.so", "libElectron2D.dylib", "libElectron2D.dll", "libElectron2D.a"):
+        return set((ROOT / "tools/native/exports.txt").read_text().split())
+
     if "Electron2DWebRTC" in name:
         return WEBRTC_EXPORTS
     if "Electron2DKTX" in name:
@@ -198,17 +201,21 @@ def inspect(rid, directory):
         data = path.read_bytes()
         if name.endswith(".a"):
             exports = archive_exports(path, rid)
-            if not required_exports(name) <= exports:
+            if not {symbol for symbol in required_exports(name) if not symbol.startswith("e2d_rtc_") and symbol != "e2d_native_bind_sdl"} <= exports:
                 raise ValueError(f"Missing engine or dependency ABI in archive: {path}")
+            if rid == "browser-wasm" and name == "libElectron2D.a" and not {"__wasm_setjmp", "__wasm_setjmp_test"} <= exports:
+                raise ValueError("Missing browser jump adapter in common native archive")
             if "Electron2DKTX" in name and any(symbol.startswith(("ZSTD", "XXH", "POOL_", "FSE_", "HUF_", "HIST_", "ZDICT_", "COVER_", "FASTCOVER_", "ERR_")) for symbol in exports):
                 raise ValueError(f"KTX static archive contains global codec symbols: {path}")
-            if "TextBreak" in name and any(symbol.startswith(("pcre2_", "_pcre2_")) for symbol in exports):
+            if ("TextBreak" in name or name == "libElectron2D.a") and any(symbol.startswith(("pcre2_", "_pcre2_")) for symbol in exports):
                 raise ValueError(f"Private text archive contains application-visible PCRE2 symbols: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
             continue
         if rid.startswith(("osx-", "win-")):
             exports = windows_exports(path, rid, name) if rid.startswith("win-") else macos_exports(path, rid, name)
             required = required_exports(name)
+            if name.startswith("libElectron2D.") and exports != required:
+                raise ValueError(f"Unified native ABI mismatch: {path}: {exports ^ required}")
             if not required <= exports or ("TextBreak" in name or "ENet" in name or "Electron2DWebRTC" in name or "Electron2DMesh" in name or "Electron2DRender" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
                 raise ValueError(f"Missing or foreign engine ABI exports: {path}")
             checksums[name] = hashlib.sha256(data).hexdigest()
@@ -221,7 +228,7 @@ def inspect(rid, directory):
         dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(path)], text=True)
         if re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) != [name]:
             raise ValueError(f"Wrong SONAME: {path}")
-        relative_tls = rid.startswith("linux-") and name in ("libElectron2DWebRTC.so", "libcrypto.so.4", "libssl.so.4")
+        relative_tls = rid.startswith("linux-") and name in ("libElectron2D.so", "libElectron2DWebRTC.so", "libcrypto.so.4", "libssl.so.4")
         paths = re.findall(r"\((?:RPATH|RUNPATH)\).*\[([^]]+)\]", dynamic)
         if paths != (["$ORIGIN"] if relative_tls else []):
             raise ValueError(f"Native package must not retain a build-machine search path: {path}")
@@ -234,8 +241,19 @@ def inspect(rid, directory):
             raise ValueError("Private FreeType codecs and auto-hinting dependencies must be statically linked")
         if name == "libFAudio.so.0" and "[libSDL3.so.0]" not in dynamic:
             raise ValueError("FAudio must share the packaged SDL3 core")
+        if rid.startswith("linux-") and name == "libElectron2D.so":
+            dependencies = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
+            loader = "ld-linux-x86-64.so.2" if rid == "linux-x64" else "ld-linux-aarch64.so.1"
+            allowed = {"libz.so.1", "libzstd.so.1", "libcrypto.so.4", "libssl.so.4", "libstdc++.so.6", "libgcc_s.so.1",
+                       "libm.so.6", "libc.so.6", "libpthread.so.0", "libdl.so.2", "librt.so.1", loader}
+            if not dependencies <= allowed:
+                raise ValueError(f"Unified native dependencies must be statically linked: {dependencies - allowed}")
         exports = elf_exports(path)
         required = required_exports(name)
+        if rid.startswith("android-"):
+            required = {symbol for symbol in required if not symbol.startswith("e2d_rtc_")}
+        if name == "libElectron2D.so" and exports != required:
+            raise ValueError(f"Unified native ABI mismatch: {path}: {exports ^ required}")
         if ("Electron2DWebRTC" in name or "Electron2DMesh" in name or "Electron2DRender" in name or "Electron2DOGV" in name or "Electron2DKTX" in name) and exports != required:
             raise ValueError(f"Private codec/mesh must export only its engine bridge: {path}")
         if name != "libElectron2DTextBreak.so" and not required <= exports:
@@ -256,10 +274,6 @@ def inspect(rid, directory):
             if name == "libElectron2DTextBreak.so" and exports != TEXT_EXPORTS:
                 raise ValueError("Private Android ICU must export only its engine bridge")
         checksums[name] = hashlib.sha256(data).hexdigest()
-    if rid.startswith("linux-"):
-        check_private_text(rid, directory / libraries[0])
-        check_private_webrtc(rid, directory / "libElectron2DWebRTC.so")
-        check_private_webp(rid, directory / "libElectron2DWebP.so")
     return checksums
 
 

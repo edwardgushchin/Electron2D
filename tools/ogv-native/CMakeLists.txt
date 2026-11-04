@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 project(Electron2DOGV LANGUAGES C)
+if(MSVC)
+  set_source_files_properties(memory.c PROPERTIES COMPILE_OPTIONS "/experimental:c11atomics")
+endif()
 include(FetchContent)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_VISIBILITY_PRESET hidden)
@@ -69,7 +72,7 @@ elseif(WIN32)
   target_sources(Electron2DOGV PRIVATE exports.def)
 endif()
 # Static application profiles consume one archive with its private codec closure.
-if(ELECTRON2D_STATIC_NATIVE)
+if(ELECTRON2D_STATIC_NATIVE AND NOT ELECTRON2D_UNIFIED_NATIVE)
   set_property(TARGET Electron2DOGV APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/merge.cmake")
   add_custom_command(TARGET Electron2DOGV POST_BUILD
     COMMAND ${CMAKE_COMMAND} -DOUTPUT=$<TARGET_FILE:Electron2DOGV> -DOGG=$<TARGET_FILE:ogg>

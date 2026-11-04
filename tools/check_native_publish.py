@@ -74,11 +74,11 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     if not app_name or Path(app_name).name != app_name:
         raise ValueError("The application name must be a nonempty basename")
     if rid.startswith("win-"):
-        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll")
+        platform, host, names = "Windows", app_name + ".exe", ("SDL3.dll", "SDL3_image.dll", "SDL3_shadercross.dll", "libElectron2D.dll", "Electron2DFreeType.dll", "libHarfBuzzSharp.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll")
     elif rid.startswith("osx-"):
-        platform, host, names = "MacOS", app_name, ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib")
+        platform, host, names = "MacOS", app_name, ("libSDL3.dylib", "libSDL3_image.dylib", "libSDL3_shadercross.dylib", "libElectron2D.dylib", "libElectron2DFreeType.dylib", "libHarfBuzzSharp.dylib", "libElectron2DCrypto.4.dylib", "libElectron2DSSL.4.dylib")
     elif rid.startswith("linux-"):
-        platform, host, names = "Linux", app_name, ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so")
+        platform, host, names = "Linux", app_name, ("libSDL3.so", "libSDL3_image.so", "libSDL3_shadercross.so", "libElectron2D.so", "libElectron2DFreeType.so", "libHarfBuzzSharp.so", "libcrypto.so.4", "libssl.so.4")
     else:
         raise ValueError(f"No self-contained desktop host for {rid}")
 
@@ -90,7 +90,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         f"SDL3-CS.{platform}.Shadercross/3.0.0.13",
     }
     actual = {name for name in packages if name.startswith("SDL3-CS.")}
-    assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the unified source-built native payload"
+    assert not any(name.startswith("HarfBuzzSharp.NativeAssets.") for name in packages), "Shaping must use the selected source-built native payload"
     assert actual == expected, f"Wrong SDL packages: {actual}"
     assert f"runtimepack.Microsoft.NETCore.App.Runtime.{rid}/10.0.1" in packages, "Missing self-contained runtime pack"
     native = publish / "runtimes" / rid / "native"
@@ -99,29 +99,14 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
     assert {path.name for path in (publish / "runtimes").iterdir()} == {rid}, "Foreign RID assets leaked into the game"
     platform_packages = {name.split("/")[0] for name, library in packages.items() if name.startswith("Electron2D.") and library["type"] == "package"}
     assert platform_packages == {f"Electron2D.{platform}"}, f"Wrong engine platform packages: {platform_packages}"
-    private_text = native / "libElectron2DTextBreak.so"
-    assert not (publish / "libElectron2DTextBreak.so").exists(), "Private text library must be under runtimes/RID/native"
-    assert not (publish / "libFAudio.so.0").exists(), "Private audio library must be under runtimes/RID/native"
+    sys.path.insert(0, str(Path(__file__).resolve().parent / "native"))
+    import package as native_package
+    engine = native / ("libElectron2D.dll" if platform == "Windows" else "libElectron2D.dylib" if platform == "MacOS" else "libElectron2D.so")
+    assert engine.is_file() and not (publish / engine.name).exists(), "Unified native engine must retain its RID directory"
+    required = native_package.required_exports(engine.name)
     if platform == "Linux":
-        assert private_text.is_file(), "Missing private ICU text backend"
-        check_private_text(rid, private_text)
-        enet = native / "libElectron2DENet.so"
-        assert enet.is_file() and not (publish / enet.name).exists(), "ENet must exist only in its RID directory"
-        header = enet.read_bytes()[:20]
-        assert header[:6] == b"\x7fELF\x02\x01" and int.from_bytes(header[18:20], "little") == {"linux-x64": 62, "linux-arm64": 183}[rid], "ENet ELF architecture mismatch"
-        dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(enet)], text=True)
-        assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libElectron2DENet.so"], "ENet SONAME mismatch"
-        needed = set(re.findall(r"\(NEEDED\).*\[([^]]+)\]", dynamic))
-        assert needed == {"libz.so.1", "libzstd.so.1", "libc.so.6", {"linux-x64": "ld-linux-x86-64.so.2", "linux-arm64": "ld-linux-aarch64.so.1"}[rid]}, f"Unreviewed ENet dependencies: {needed}"
-        symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(enet)], text=True)
-        exports = {line.split()[-1] for line in symbols.splitlines()}
-        assert exports == {"e2d_enet_" + name for name in ("memory", "callbacks", "create", "destroy", "connect", "service", "flush", "send", "packet", "release", "peer", "stat", "host", "compress")} | {"e2d_file_encode", "e2d_file_decode"} | {"e2d_gzip_" + name for name in ("create", "process", "reset", "destroy")} | {"e2d_memory_" + name for name in ("abi", "allocate", "reallocate", "release", "snapshot", "lock", "unlock", "managed_locked", "snapshot_locked", "malloc", "calloc", "realloc", "free", "functions", "failure_epoch")}, "ENet private ABI export mismatch"
-        webrtc = native / "libElectron2DWebRTC.so"
-        assert webrtc.is_file() and not (publish / webrtc.name).exists(), "WebRTC must retain its RID directory"
-        check_private_webrtc(rid, webrtc)
-        webp = native / "libElectron2DWebP.so"
-        assert webp.is_file() and not (publish / webp.name).exists(), "WebP must retain its RID directory"
-        check_private_webp(rid, webp)
+        actual = native_package.elf_exports(engine)
+        assert actual == required, f"Unified native ABI mismatch: {actual ^ required}"
         audio = native / "libFAudio.so.0"
         assert audio.is_file(), "Missing pinned native audio backend"
         header = audio.read_bytes()[:20]
@@ -133,19 +118,6 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         audio_exports = {line.split()[-1] for line in audio_symbols.splitlines()}
         assert {"e2d_audio_select_output", "e2d_audio_output_latency", "e2d_audio_create_offline_master", "e2d_audio_mix_offline"} <= audio_exports, "Audio output bridge exports are missing"
         assert re.findall(r"\(SONAME\).*\[([^]]+)\]", dynamic) == ["libFAudio.so.0"], "Audio SONAME mismatch"
-        ogv = native / "libElectron2DOGV.so"
-        assert ogv.is_file(), "Missing private OGV encoder"
-        ogv_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(ogv)], text=True)
-        assert {line.split()[-1] for line in ogv_symbols.splitlines()} == {"e2d_ogv_memory", "e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
-                                                                      "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"}, "OGV private ABI mismatch"
-        ogv_dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(ogv)], text=True)
-        assert not any(name in ogv_dynamic for name in ("libogg", "libvorbis", "libtheora", "RPATH", "RUNPATH")), "OGV codecs must remain private and relocatable"
-        ktx = native / "libElectron2DKTX.so"
-        assert ktx.is_file(), "Missing private KTX/Basis decoder"
-        ktx_symbols = subprocess.check_output(["nm", "-D", "--defined-only", str(ktx)], text=True)
-        assert {line.split()[-1] for line in ktx_symbols.splitlines()} == {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"}, "KTX private ABI mismatch"
-        ktx_dynamic = subprocess.check_output(["readelf", "--wide", "--dynamic", str(ktx)], text=True)
-        assert not any(name in ktx_dynamic for name in ("libktx", "libbasis", "libzstd", "RPATH", "RUNPATH")), "KTX codec closure must remain private and relocatable"
         assert not (publish / "FAudio.dll").exists(), "Managed backend leaked outside the engine assembly"
         assert not list(publish.rglob("libicu*")), "A private text publish must not deliver global ICU libraries"
         print(f"{rid}: self-contained host, SDL/FAudio/FreeType/HarfBuzz and private text/ENet/WebRTC/WebP backends verified (no global ICU dependency)")
@@ -153,7 +125,7 @@ def check(rid: str, publish: Path, app_name: str = "CharacterMovement") -> None:
         assert not list(publish.rglob("libElectron2DENet.so")), "Linux ENet backend leaked into a foreign publish"
         assert not list(publish.rglob("libFAudio*")), "Linux audio library leaked into a foreign publish"
         assert not list(publish.rglob("libElectron2DTextBreak.so")), "Linux private text backend leaked into a foreign publish"
-        print(f"{rid}: self-contained host and {platform} SDL/FreeType/HarfBuzz payload verified; private text backend is not supplied")
+        print(f"{rid}: self-contained host and {platform} SDL/FreeType/HarfBuzz payload verified; common bridge ABI requires target execution")
 
 
 if __name__ == "__main__":

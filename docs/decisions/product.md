@@ -162,7 +162,7 @@ Native SDL deployment remains a separate platform constraint outside the verifie
 <a id="adr-0012"></a>
 ## ADR 0012: Vendor SDL3-CS and Box2D.NET managed source
 
-Last updated: 2026-10-16
+Last updated: 2026-11-04
 
 - Status: Accepted
 - Scope: Managed dependency ownership, deployment packaging, and future 2D physics, text and audio
@@ -181,6 +181,8 @@ meshoptimizer 1.1.1 at `b22872835dbabc56a6e4a366ea9917f62b7daf1a` is selected fo
 ### Decision
 
 - Keep all Electron2D runtime code and the managed source of selected backends, including SDL3-CS, Box2D.NET and the FAudio binding, in `Electron2D.csproj`, producing only `Electron2D.dll` as the managed engine artifact. Do not ship these bindings as separate managed runtime assemblies or depend on their managed NuGet packages in a completed integration.
+- Ship the engine-owned native bridges as one module named Electron2D: `libElectron2D.so` on Linux/Android, `libElectron2D.dylib` on macOS, `libElectron2D.dll` on Windows and `libElectron2D.a` on statically linked Apple/Web profiles. The Windows lib prefix prevents a collision with managed `Electron2D.dll`. Combine text/regex/MSDF, mesh, rendering, ENet/compression, WebP, OGV, KTX and desktop WebRTC bridges with their existing private codec closures. Keep C entry points and source/license pins; subsystem targets remain build internals. SDL, SDL_image, SDL_shadercross, FAudio, FreeType, HarfBuzz and OpenSSL retain their existing separate native identities, loader policies and provider contracts. Engine-owned bridge imports use one identity; do not ship per-subsystem aliases. Loading the common allocation core must preserve lazy SDL initialization; dynamic render calls bind the already selected SDL handle through a private dispatch table.
+
 - Platform-specific application bootstrap/JNI adapters may instead be packaged by the owning `Electron2D.{Platform}` package under the ADR 0004 exception. Shared backend bindings remain inside the engine; game consumers use the public engine API. The present minimal Android adapter is generated internally in the Android engine assembly, not in desktop, Apple or Web builds.
 - Keep the SDL3-CS core source vendored under `src/` and refresh it by release tag with `tools/update-sdl3-cs.sh`. Keep the pinned managed source of `ikpil/Box2D.NET` under `src/Vendor/Box2D.NET`, including its MIT notice and scoped patch record; ADR 0054 owns the executing scene-body profile. That decision also authorizes Electron2D-owned GPU physics kernels through SDL GPU/ShaderCross alongside the retained CPU compatibility backend. Kernels and internal host code belong to the same runtime artifact; independent physics/render selection must not add a managed backend assembly or expose binding handles.
 - The first rendering slice must include the complete SDL3-CS ShaderCross binding module from the same pinned release and extend the source-refresh script accordingly. Its types remain internal to `Electron2D.dll`. The common SPIR-V reflection and backend-translation path uses SDL_shadercross under [ADR 0028](rendering.md#adr-0028). HLSL and GLSL source compilation belongs to project import/build tooling; account for those pinned compiler integrations separately from the runtime libraries required for SPIR-V reflection and backend translation. This decision does not restore a Silk.NET/shaderc runtime dependency. Record licenses, versions, delivery and native verification for the components actually integrated.

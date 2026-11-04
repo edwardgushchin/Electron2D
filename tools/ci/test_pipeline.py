@@ -74,7 +74,7 @@ class Pipeline(unittest.TestCase):
                         dynamic = '(SONAME) [libElectron2DWebP.so]\n(NEEDED) [libc.so.6]\n(NEEDED) [libm.so.6]\n'
                         if extra: dynamic += '(NEEDED) [' + extra + ']\n'
                         with patch.object(packages.native.subprocess, 'check_output', side_effect=[dynamic,
-                                '0 T e2d_webp_encode\n0 T e2d_webp_decode\n']):
+                                '0 T e2d_webp_encode\n0 T e2d_webp_decode\n0 T e2d_webp_memory\n']):
                             if extra in ('', loader): packages.native.check_private_webp(rid, library)
                             else:
                                 with self.assertRaisesRegex(AssertionError, 'Unreviewed WebP dependencies'):

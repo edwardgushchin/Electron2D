@@ -41,7 +41,7 @@ option(E2D_COMPRESSION_TESTS "Build the isolated allocator-failure consumer" OFF
 if(E2D_COMPRESSION_TESTS)
     add_library(CompressionFaultCore SHARED fault.c)
     target_link_libraries(CompressionFaultCore PRIVATE pthread)
-    set_target_properties(CompressionFaultCore PROPERTIES OUTPUT_NAME Electron2DENet LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/fault")
+    set_target_properties(CompressionFaultCore PROPERTIES OUTPUT_NAME Electron2D LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/fault")
     add_executable(Electron2DCompressionMemoryCheck check.c)
     target_compile_definitions(Electron2DCompressionMemoryCheck PRIVATE TARGET_UNIX)
     target_include_directories(Electron2DCompressionMemoryCheck PRIVATE "${runtime}/libs/System.IO.Compression.Native" "${runtime}/libs/Common" "${runtime}/external/brotli/c/include")

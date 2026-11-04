@@ -93,6 +93,6 @@ internal sealed unsafe partial class NativeFontPrecision
     }
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Outline_Decompose"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTOutlineDecompose(FTOutline* outline, FTOutlineFunctions* functions, nint user);
     [LibraryImport(NativeLibraries.FreeTypeLibrary, EntryPoint = "FT_Outline_Get_Orientation"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int FTOutlineGetOrientation(FTOutline* outline);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_font_msdf_generate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int GenerateMSDF(MSDFEdge* edges, int count, int range, int reverse, out byte* pixels, out int width, out int height, out double left, out double top);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_font_msdf_free"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FreeMSDF(byte* pixels);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_font_msdf_generate"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial int GenerateMSDF(MSDFEdge* edges, int count, int range, int reverse, out byte* pixels, out int width, out int height, out double left, out double top);
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_font_msdf_free"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])] private static partial void FreeMSDF(byte* pixels);
 }

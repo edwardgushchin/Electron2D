@@ -7,7 +7,7 @@ the correction; its public test now covers automatic, hyphenated, underscored an
 script-qualified languages. Existing prefix/tier rules and glyph output remain.
 The corrected local `en-US` bracket retains zero allocations. Cross-platform runtime and rendered checks are separate from this local bracket.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-04
 
 FontTests drains the existing calibrated collection/finalization warmup after its
 sixteen layout/recording warmups and before measuring the same sixty-four rebuilds.
@@ -133,13 +133,13 @@ The primary realized face supplies OpenType metadata through `GetSupportedFeatur
 
 ## Native MSDF font generation
 
-FontFile and SystemFont expose MultichannelSignedDistanceField, MSDFSize and MSDFPixelRange. The serialized FreeType owner loads the configured source outline, applies native hinting/variation transforms and decomposes linear/quadratic/cubic edges. The pristine msdfgen 1.13 sources are compiled through a checked private allocator/ownership overlay into the existing text-native library; its bounded C ABI returns copied RGBA multichannel/true-distance pixels and fractional bearings, with cold buffers released after copying. Source/license hashes and exact private exports are checked; backend handles remain internal.
+FontFile and SystemFont expose MultichannelSignedDistanceField, MSDFSize and MSDFPixelRange. The serialized FreeType owner loads the configured source outline, applies native hinting/variation transforms and decomposes linear/quadratic/cubic edges. The pristine msdfgen 1.13 sources are compiled through a checked private allocator/ownership overlay into the common native module; its bounded C ABI returns copied RGBA multichannel/true-distance pixels and fractional bearings, with cold buffers released after copying. The private allocator header enables MSVC math constants before transitive standard-library headers, preserving the generator's required include order. Source/license hashes and exact private exports are checked; backend handles remain internal.
 
 One MSDFSize/zero-outline image cache serves different draw sizes, fractional placement and shader outline widths. Public indexed glyph/texture operations address this canonical cache; metric/advance/kerning/scale projections use requested size divided by source size. Common TextLayout submission calls DrawMSDFTextureRectRegion for Font/CanvasItem scalar and string draws, clipped ranges, FontVariation, Label and other shared consumers. Native color/non-scalable automatic fallbacks keep ordinary image generation; explicit authored pages can opt into encoded distance sampling. Pixel budget failure publishes no generated page. Source changes preserve active old readers and caller-authored records, invalidate layouts/variants and retire prior native/texture ownership. Stored integer preferences are checked when canonical/generation use needs them.
 
 FontMSDFTests executes 216 independent stock FreeType/msdfgen image/bearing comparisons with SFNT TrueType and CFF sources, source resolution/range/hinting/emboldening/shear; variable and isolated color fallback cases; authored cache/mipmap/reset/duplicate/import/fresh-process storage; real Linux Wayland GPU, MSAA and Compatibility rejection. Font and direct-region pixels match across scalar/string/variation/outline/clip/Label consumers, with 64 active/64 idle prepared zero-managed-byte intervals. The [MSDF allocation domain](../coverage/performance-producers.md#msdf-owned-allocation-domain-2026-10-29) counts vectors, edges, temporary images and the returned buffer at their ownership boundaries. Foreign execution, publication and human acceptance remain separate.
 
-The native package producer includes both MSDF exports in the text ABI and fingerprints the unmodified generator closure. A source-built test consumer passes Electron2DTextNativeLibrary to the existing consumer props, so the newly built text library replaces the installed package asset after copying. An older native bundle without these exports cannot execute generation; it is not an acceptance result for this slice.
+The native package producer includes both MSDF exports in the text ABI and fingerprints the unmodified generator closure. A source-built test consumer passes Electron2DNativeLibrary to the existing consumer props, so the complete newly built bridge module replaces the installed package asset after copying. An older native bundle without these exports cannot execute generation; it is not an acceptance result for this slice.
 
 ## Type 1 outline and auxiliary metric sources
 

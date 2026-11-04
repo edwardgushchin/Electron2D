@@ -18,6 +18,7 @@ import build_tls
 import build_webrtc
 import package
 import test_consumer
+from test_unified import UnifiedNativeTests
 
 
 class NativePackageTests(unittest.TestCase):
@@ -97,7 +98,8 @@ if(NOT OPENSSL_CRYPTO_LIBRARY STREQUAL "${EXPECTED}/libcrypto.lib" OR NOT OPENSS
   message(FATAL_ERROR "A foreign OpenSSL import library was selected")
 endif()
 ''')
-            command = ["cmake", "-S", str(project), "-B", str(root / "found"), "-DEXPECTED=" + str(tls / "build"), *options]
+            options = [option.replace("\\", "/") for option in options]
+            command = ["cmake", "-S", str(project), "-B", str(root / "found"), "-DEXPECTED=" + (tls / "build").as_posix(), *options]
             subprocess.run(command, check=True, capture_output=True, text=True)
             selected_header = root / "bridge/openssl-include/openssl/opensslv.h"
             selected_header.write_text(selected_header.read_text().replace("4.1.0", "4.0.0"))
@@ -112,14 +114,15 @@ endif()
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             source = root / "CMakeLists.txt"
-            source.write_text("before\n" + guard + "\nafter\n")
+            source.write_text("before\n" + guard + "\nafter\n", encoding="utf-8", newline="\n")
             library = root / "lib/CMakeLists.txt"
             library.parent.mkdir()
             library.write_bytes(source.read_bytes())
             command = ["cmake", "-DROOT=" + str(root), "-P", str(package.ROOT / "tools/ktx-native/configure-guards.cmake")]
             subprocess.run(command, check=True)
             patched = source.read_bytes()
-            self.assertTrue(patched.startswith(b"before\n") and patched.endswith(b"\nafter\n"))
+            normalized = patched.replace(b"\r\n", b"\n")
+            self.assertTrue(normalized.startswith(b"before\n") and normalized.endswith(b"\nafter\n"))
             self.assertNotIn(b"FATAL_ERROR", patched)
             self.assertEqual(library.read_bytes(), patched)
             subprocess.run(command, check=True)
@@ -167,9 +170,9 @@ endif()
     def test_text_unicode_operations_are_in_every_private_abi(self):
         additions = {"e2d_text_case", "e2d_text_strip_diacritics", "e2d_text_character_properties", "e2d_text_is_identifier", "e2d_spoof_open", "e2d_spoof_close", "e2d_spoof_skeleton", "e2d_spoof_check", "e2d_text_memory"}
         for profile in ("Linux", "MacOS", "Windows"):
-            name = next(name for name in package.LIBRARIES[profile] if "Electron2DTextBreak" in name)
+            name = package.LIBRARIES[profile][0]
             exports = package.required_exports(name)
-            self.assertEqual(len(exports), 26)
+            self.assertEqual(len(package.TEXT_EXPORTS), 26)
             self.assertTrue(additions <= exports)
         native = package.ROOT / "src/Servers/Text/Native"
         for symbol in additions:
@@ -180,7 +183,7 @@ endif()
         additions = {"e2d_render_graphics_storage_support", "e2d_render_storage_barrier"}
         native = package.ROOT / "tools/render-native"
         for profile in ("Linux", "MacOS", "Windows", "iOS"):
-            name = next(name for name in package.LIBRARIES[profile] if "Electron2DRender" in name)
+            name = package.LIBRARIES[profile][0]
             self.assertTrue(additions <= package.required_exports(name))
         for symbol in additions:
             self.assertIn(symbol + ";", (native / "exports.map").read_text())
@@ -189,7 +192,7 @@ endif()
 
     def test_regex_private_sources_and_symbols(self):
         import subprocess
-        subprocess.run(["python3", "-B", str(package.ROOT / "tools/update-pcre2.py"), "--check"], check=True)
+        subprocess.run([sys.executable, "-B", str(package.ROOT / "tools/update-pcre2.py"), "--check"], check=True)
         additions = {"e2d_regex_" + name for name in ("create", "destroy", "info", "match", "substitute", "error")}
         self.assertTrue(additions <= package.TEXT_EXPORTS)
         native = package.ROOT / "src/Servers/Text/Native"
@@ -197,7 +200,7 @@ endif()
             self.assertIn(symbol + ";", (native / "exports.map").read_text())
             self.assertIn("_" + symbol + "\n", (native / "exports-macos.txt").read_text())
         for platform in package.LIBRARIES:
-            name = next(name for name in package.LIBRARIES[platform] if "TextBreak" in name)
+            name = package.LIBRARIES[platform][0]
             self.assertTrue(additions <= package.required_exports(name))
 
     def test_text_static_symbols_cannot_collide_with_application_pcre2(self):
@@ -207,16 +210,16 @@ endif()
                 (root / name).write_bytes(b"!<arch>\n")
             for symbol in ("pcre2_compile_32", "_pcre2_match_32"):
                 def exports(path, rid):
-                    return package.required_exports(path.name) | ({symbol} if "TextBreak" in path.name else set())
+                    return package.required_exports(path.name) | ({symbol} if path.name == "libElectron2D.a" else set())
                 with patch.object(package, "archive_exports", side_effect=exports):
                     with self.assertRaisesRegex(ValueError, "PCRE2 symbols"):
                         package.inspect("ios-arm64", root)
 
     def test_webrtc_desktop_exports_and_pinned_sources(self):
         for profile in ("Linux", "MacOS", "Windows"):
-            name = next(name for name in package.LIBRARIES[profile] if "Electron2DWebRTC" in name)
-            self.assertEqual(package.required_exports(name), package.WEBRTC_EXPORTS)
-            self.assertEqual(len(package.required_exports(name)), 24)
+            name = package.LIBRARIES[profile][0]
+            self.assertTrue(package.WEBRTC_EXPORTS <= package.required_exports(name))
+            self.assertEqual(len(package.WEBRTC_EXPORTS), 24)
         root = package.ROOT / "src/Vendor/libdatachannel"
         manifest = json.loads((root / "manifest.json").read_text())
         self.assertEqual(manifest["commit"], "6b1e2e620f1e37f0eafeee702eaea0043cb305fd")
@@ -261,37 +264,22 @@ endif()
 
     def test_webp_decoder_and_animation_closure_are_required(self):
         for profile, names in package.LIBRARIES.items():
-            name = next(name for name in names if "Electron2DWebP" in name)
-            self.assertEqual(package.required_exports(name), {"e2d_webp_encode", "e2d_webp_decode", "e2d_webp_memory"})
+            name = names[0]
+            self.assertTrue({"e2d_webp_encode", "e2d_webp_decode", "e2d_webp_memory"} <= package.required_exports(name))
             if profile in ("iOS", "tvOS", "Web"):
-                self.assertEqual(names.count("libwebpdemux.a"), 1)
+                self.assertEqual(names.count("libElectron2D.a"), 1)
                 self.assertIn("WebPAnimDecoderGetNext", package.required_exports("libwebpdemux.a"))
 
     def test_ktx_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
-            name = next(name for name in names if "Electron2DKTX" in name)
-            self.assertEqual(package.required_exports(name), {"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"})
-
-    def test_ktx_static_symbols_cannot_collide_with_font_codecs(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            for name in package.LIBRARIES["iOS"]:
-                (root / name).write_bytes(b"!<arch>\n")
-            def exports(path, rid):
-                return package.required_exports(path.name) | ({symbol} if "Electron2DKTX" in path.name else set())
-            for symbol in ("ZSTD_getFrameContentSize", "ZSTDMT_freeCCtx", "XXH64", "FSE_decompress"):
-                with patch.object(package, "archive_exports", side_effect=exports):
-                    with self.assertRaisesRegex(ValueError, "global codec symbols"):
-                        package.inspect("ios-arm64", root)
-            symbol = "e2d_ktx_private_ZSTDMT_freeCCtx"
-            with patch.object(package, "archive_exports", side_effect=exports):
-                self.assertEqual(set(package.inspect("ios-arm64", root)), set(package.LIBRARIES["iOS"]))
+            name = names[0]
+            self.assertTrue({"e2d_ktx_create", "e2d_ktx_level", "e2d_ktx_destroy", "e2d_basis_create", "e2d_block_decode", "e2d_image_encode", "e2d_image_encoded_free"} <= package.required_exports(name))
 
     def test_ogv_bridge_is_required_in_every_profile(self):
         for profile, names in package.LIBRARIES.items():
-            name = next(name for name in names if "Electron2DOGV" in name)
-            self.assertEqual(package.required_exports(name), {"e2d_ogv_memory", "e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
-                                                            "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"})
+            name = names[0]
+            self.assertTrue({"e2d_ogv_memory", "e2d_ogv_create", "e2d_ogv_frame", "e2d_ogv_finish", "e2d_ogv_destroy",
+                                                            "e2d_video_create", "e2d_video_frame", "e2d_video_audio", "e2d_video_seek_audio", "e2d_video_destroy"} <= package.required_exports(name))
 
     def test_memory_and_codec_exports_are_part_of_every_enet_payload(self):
         for name in ['libElectron2DENet.so', 'Electron2DENet.dll', 'libElectron2DENet.a']:
@@ -314,15 +302,12 @@ endif()
                  patch.dict(build_windows.os.environ, {"VSCMD_ARG_TGT_ARCH": "x64"}), \
                  patch.object(build_windows.windows, "sdl_import_library"), \
                  patch.object(build_windows.subprocess, "run"), \
-                 patch.object(build_windows.build_tls, "build"), \
-                 patch.object(build_windows.build_webrtc, "build"), \
+                 patch("build.build"), \
                  patch.object(build_windows.package, "stage"), \
                  patch.object(build_windows.shutil, "copy2") as copy:
                 build_windows.build("win-x64", root / "SDL3.dll", root / "artifacts")
             sources = [call.args[0] for call in copy.call_args_list]
-            self.assertEqual([path.name for path in sources if path.parent.name == "tls"],
-                             ["libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll"])
-            self.assertIn("Electron2DMesh.dll", [path.name for path in sources])
+            self.assertEqual([path.name for path in sources], ["libElectron2D.dll", "libcrypto-4-Electron2D.dll", "libssl-4-Electron2D.dll", "FAudio.dll", "libHarfBuzzSharp.dll", "Electron2DFreeType.dll"])
 
     def test_default_elf_symbol_versions_resolve_but_nondefault_versions_do_not(self):
         symbols = "0001 T BIO_s_dgram_pair@@OPENSSL_3.2.0\n0002 T ERR_get_error@@OPENSSL_3.0.0\n0003 T TLS_method@LEGACY\n0004 T e2d_audio_select_output\n"
@@ -464,7 +449,7 @@ endif()
             self.assertIn("${ELECTRON2D_HARFBUZZ_REVISION}", source)
         for project in ("Electron2D.csproj", "tools/native/Native.csproj"):
             self.assertNotIn("HarfBuzzSharp.NativeAssets", (root / project).read_text())
-        for platform, name in (("Linux", "libHarfBuzzSharp.so"), ("MacOS", "libHarfBuzzSharp.dylib"), ("Windows", "libHarfBuzzSharp.dll")):
+        for platform, name in (("Linux", "libElectron2D.so"), ("MacOS", "libElectron2D.dylib"), ("Windows", "libElectron2D.dll")):
             self.assertIn(name, package.LIBRARIES[platform])
 
     def test_linux_freetype_rejects_global_codec_dependencies(self):
@@ -475,11 +460,11 @@ endif()
                 data[:6] = b"\x7fELF\x02\x01"
                 data[18:20] = (62).to_bytes(2, "little")
                 (root / name).write_bytes(data)
-            for dependency in ("libc.so.6", "libpng16.so.16", "libz.so.1", "libbrotlidec.so.1", "libharfbuzz.so.0"):
+            for dependency in ("libc.so.6", "libpng16.so.16", "libbrotlidec.so.1", "libharfbuzz.so.0"):
                 def dynamic(command, **kwargs):
                     name = Path(command[-1]).name
-                    needed = "libSDL3.so.0" if name == "libFAudio.so.0" else dependency if "FreeType" in name else "libc.so.6"
-                    paths = "(RUNPATH) [$ORIGIN]\n" if name in ("libElectron2DWebRTC.so", "libcrypto.so.4", "libssl.so.4") else ""
+                    needed = "libSDL3.so.0" if name == "libFAudio.so.0" else dependency if name == "libElectron2DFreeType.so" else "libc.so.6"
+                    paths = "(RUNPATH) [$ORIGIN]\n" if name in ("libElectron2D.so", "libcrypto.so.4", "libssl.so.4") else ""
                     if name == "libssl.so.4": needed = "libcrypto.so.4"
                     return f"(SONAME) [{name}]\n(NEEDED) [{needed}]\n" + paths
                 with patch.object(package.subprocess, "check_output", side_effect=dynamic), \

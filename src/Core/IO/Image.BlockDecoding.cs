@@ -46,7 +46,7 @@ public sealed partial class Image
         return new(state.Width, state.Height, format, state.HasMIPMaps, output);
     }
 
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_block_decode")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_block_decode")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int DecodeNativeBlock(uint format, uint width, uint height, byte* source,
         ulong sourceSize, byte* output, ulong outputSize);

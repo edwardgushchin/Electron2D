@@ -9,16 +9,16 @@ internal static partial class NativeLibraries
     // Static native references are linked into the application executable.
     internal const string SDLLibrary = "__Internal", SDLImageLibrary = "__Internal", SDLShaderCrossLibrary = "__Internal",
         AudioLibrary = "__Internal", FreeTypeLibrary = "__Internal", HarfBuzzLibrary = "__Internal",
-        SSLLibrary = "__Internal", CryptoLibrary = "__Internal", ENetLibrary = "__Internal", WebRTCLibrary = "__Internal", TextBreakLibrary = "__Internal", WebPLibrary = "__Internal", OGVLibrary = "__Internal", KTXLibrary = "__Internal", MeshLibrary = "__Internal", RenderLibrary = "__Internal";
+        SSLLibrary = "__Internal", CryptoLibrary = "__Internal", EngineLibrary = "__Internal";
 #elif ELECTRON2D_BROWSER_NATIVE
     // Mono/WASM resolves the archive modules through generated P/Invoke tables, not dlopen(self).
     internal const string SDLLibrary = "libSDL3", SDLImageLibrary = "libSDL3_image", SDLShaderCrossLibrary = "libSDL3_shadercross",
         AudioLibrary = "libFAudio", FreeTypeLibrary = "libElectron2DFreeType", HarfBuzzLibrary = "libElectron2DHarfBuzz",
-        SSLLibrary = "libElectron2DSSL", CryptoLibrary = "libElectron2DCrypto", ENetLibrary = "libElectron2DENet", WebRTCLibrary = "libElectron2DWebRTC", TextBreakLibrary = "libElectron2DTextBreak", WebPLibrary = "libElectron2DWebP", KTXLibrary = "libElectron2DKTX", OGVLibrary = "libElectron2DOGV", MeshLibrary = "libElectron2DMesh", RenderLibrary = "libElectron2DRender";
+        SSLLibrary = "libElectron2DSSL", CryptoLibrary = "libElectron2DCrypto", EngineLibrary = "libElectron2D";
 #else
     internal const string SDLLibrary = "SDL3", SDLImageLibrary = "SDL3_image", SDLShaderCrossLibrary = "SDL3_shadercross",
         AudioLibrary = "FAudio", FreeTypeLibrary = "freetype", HarfBuzzLibrary = "HarfBuzzSharp",
-        SSLLibrary = "Electron2DSSL", CryptoLibrary = "Electron2DCrypto", ENetLibrary = "Electron2DENet", WebRTCLibrary = "Electron2DWebRTC", TextBreakLibrary = "Electron2DTextBreak", WebPLibrary = "Electron2DWebP", KTXLibrary = "Electron2DKTX", OGVLibrary = "Electron2DOGV", MeshLibrary = "Electron2DMesh", RenderLibrary = "Electron2DRender";
+        SSLLibrary = "Electron2DSSL", CryptoLibrary = "Electron2DCrypto", EngineLibrary = "Electron2D";
 #endif
     // Distribution runtimes may report arch-x64 or another nonportable RID.
     private static readonly string? DesktopPlatform = OperatingSystem.IsWindows() ? "win" :
@@ -26,14 +26,23 @@ internal static partial class NativeLibraries
     internal static string RuntimeRID { get; } = DesktopPlatform is null ? RuntimeInformation.RuntimeIdentifier :
         DesktopPlatform + "-" + RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
     private static readonly Lazy<nint> Sdl = new(LoadSDLCore);
+    private static readonly Lazy<nint> EngineNative = new(() => LoadRuntime(OperatingSystem.IsWindows() ? "libElectron2D.dll" : OperatingSystem.IsMacOS() ? "libElectron2D.dylib" : "libElectron2D.so", typeof(NativeLibraries).Assembly, null));
     private static nint LoadSDLCore()
     {
         // Original native allocators must resolve before SDL can initialize any service.
         NativeAllocation.Prepare();
         var handle = LoadRuntime(OperatingSystem.IsWindows() ? "SDL3.dll" : OperatingSystem.IsAndroid() ? "libSDL3.so" : OperatingSystem.IsMacOS() ? "libSDL3.0.dylib" : "libSDL3.so.0", typeof(NativeLibraries).Assembly, null);
+#if !IOS && !TVOS && !ELECTRON2D_BROWSER_NATIVE
+        if (BindSDL(handle) != 1) throw new PlatformNotSupportedException("The native engine could not bind the selected SDL core.");
+#endif
         RuntimeDiagnostics.Instance.SDLAvailable(handle);
         return handle;
     }
+
+#if !IOS && !TVOS && !ELECTRON2D_BROWSER_NATIVE
+    [LibraryImport(EngineLibrary, EntryPoint = "e2d_native_bind_sdl"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int BindSDL(nint handle);
+#endif
 
     [ModuleInitializer]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2255", Justification = "Register the assembly's native resolver before any SDL binding can load a second core library.")]
@@ -42,6 +51,7 @@ internal static partial class NativeLibraries
         if (OperatingSystem.IsIOS() || OperatingSystem.IsTvOS() || OperatingSystem.IsBrowser()) return;
         NativeLibrary.SetDllImportResolver(typeof(NativeLibraries).Assembly, (name, assembly, path) =>
         {
+            if (name == EngineLibrary) return EngineNative.Value;
             if (name == "spirv-cross-c-shared")
             {
                 if (OperatingSystem.IsAndroid()) return NativeLibrary.Load("libspirv-cross-c-shared.so", assembly, path);
@@ -59,7 +69,7 @@ internal static partial class NativeLibraries
                     NativeLibrary.Load("libElectron2DCrypto.so", assembly, path);
                     return NativeLibrary.Load("libElectron2DSSL.so", assembly, path);
                 }
-                if (name is "Electron2DCrypto" or "Electron2DENet" or "Electron2DWebRTC" or "Electron2DTextBreak" or "Electron2DMesh" or "Electron2DRender" or "Electron2DWebP" or "Electron2DOGV" or "Electron2DKTX")
+                if (name is "Electron2DCrypto")
                     return NativeLibrary.Load("lib" + name + ".so", assembly, path);
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
                 var androidCore = Sdl.Value;
@@ -75,14 +85,7 @@ internal static partial class NativeLibraries
                     LoadRuntime("libcrypto-4-Electron2D.dll", assembly, path);
                     return LoadRuntime("libssl-4-Electron2D.dll", assembly, path);
                 }
-                if (name == "Electron2DENet") return LoadRuntime("Electron2DENet.dll", assembly, path);
-                if (name == "Electron2DWebRTC") return LoadRuntime("Electron2DWebRTC.dll", assembly, path);
-                if (name == "Electron2DTextBreak") return LoadRuntime("Electron2DTextBreak.dll", assembly, path);
-                if (name == "Electron2DMesh") return LoadRuntime("Electron2DMesh.dll", assembly, path);
-                if (name == "Electron2DRender") return LoadRuntime("Electron2DRender.dll", assembly, path);
-                if (name == "Electron2DWebP") return LoadRuntime("Electron2DWebP.dll", assembly, path);
-                if (name == "Electron2DKTX") return LoadRuntime("Electron2DKTX.dll", assembly, path);
-                if (name == "Electron2DOGV") return LoadRuntime("Electron2DOGV.dll", assembly, path);
+
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
                 var windowsCore = Sdl.Value;
                 return name switch
@@ -99,14 +102,7 @@ internal static partial class NativeLibraries
                 if (name == "freetype") return LoadRuntime("libElectron2DFreeType.dylib", assembly, path);
                 if (name == "Electron2DCrypto") return LoadRuntime("libElectron2DCrypto.4.dylib", assembly, path);
                 if (name == "Electron2DSSL") return LoadRuntime("libElectron2DSSL.4.dylib", assembly, path);
-                if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.dylib", assembly, path);
-                if (name == "Electron2DWebRTC") return LoadRuntime("libElectron2DWebRTC.dylib", assembly, path);
-                if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.dylib", assembly, path);
-                if (name == "Electron2DMesh") return LoadRuntime("libElectron2DMesh.dylib", assembly, path);
-                if (name == "Electron2DRender") return LoadRuntime("libElectron2DRender.dylib", assembly, path);
-                if (name == "Electron2DWebP") return LoadRuntime("libElectron2DWebP.dylib", assembly, path);
-                if (name == "Electron2DKTX") return LoadRuntime("libElectron2DKTX.dylib", assembly, path);
-                if (name == "Electron2DOGV") return LoadRuntime("libElectron2DOGV.dylib", assembly, path);
+
                 if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
                 var macCore = Sdl.Value;
                 return name switch
@@ -125,14 +121,7 @@ internal static partial class NativeLibraries
                 LoadRuntime("libcrypto.so.4", assembly, path);
                 return LoadRuntime("libssl.so.4", assembly, path);
             }
-            if (name == "Electron2DENet") return LoadRuntime("libElectron2DENet.so", assembly, path);
-            if (name == "Electron2DWebRTC") return LoadRuntime("libElectron2DWebRTC.so", assembly, path);
-            if (name == "Electron2DTextBreak") return LoadRuntime("libElectron2DTextBreak.so", assembly, path);
-            if (name == "Electron2DMesh") return LoadRuntime("libElectron2DMesh.so", assembly, path);
-            if (name == "Electron2DRender") return LoadRuntime("libElectron2DRender.so", assembly, path);
-            if (name == "Electron2DWebP") return LoadRuntime("libElectron2DWebP.so", assembly, path);
-            if (name == "Electron2DKTX") return LoadRuntime("libElectron2DKTX.so", assembly, path);
-            if (name == "Electron2DOGV") return LoadRuntime("libElectron2DOGV.so", assembly, path);
+
             if (name is not ("SDL3" or "SDL3_image" or "SDL3_shadercross" or "FAudio")) return 0;
             // NuGet aliases are separate files. Use the same SONAME as native dependents and load core first,
             // otherwise two SDL copies disagree about the ownership of surfaces, windows and GPU objects.

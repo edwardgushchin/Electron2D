@@ -16,7 +16,7 @@ internal static unsafe class Program
     private static void Main(string[] args)
     {
         if (args.Length != 1) throw new ArgumentException("Expected deflate, gzip, zlib, brotli, webp, mesh, mesh-fault or sdl.");
-        var library = NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2DENet.so"));
+        var library = NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native", "libElectron2D.so"));
         _snapshot = (delegate* unmanaged[Cdecl]<Counts*, void>)NativeLibrary.GetExport(library, "e2d_memory_snapshot");
         var mode = args[0]; var source = new byte[65536];
         for (var i = 0; i < source.Length; i++) source[i] = (byte)(i * 113 + i / 7);
@@ -56,12 +56,12 @@ internal static unsafe class Program
         var allBytes = GC.GetTotalAllocatedBytes(true) - all; var ownerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
         Check(ownerBytes == 0 && allBytes == 0, "Prepared native reads allocated managed storage.");
         var paths = System.IO.File.ReadLines("/proc/self/maps").Select(line => line[(line.LastIndexOf(' ') + 1)..]).Distinct().ToArray();
-        var codecLibrary = mode == "sdl" ? "libSDL3.so.0" : mode == "mesh" ? "libElectron2DMesh.so" : mode == "webp" ? "libElectron2DWebP.so" : "libSystem.IO.Compression.Native.so";
-        Check(paths.Count(path => path.EndsWith(codecLibrary, StringComparison.Ordinal)) == 1 && paths.Count(path => path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal)) == 1, "Expected one codec and one common ledger.");
+        var codecLibrary = mode == "sdl" ? "libSDL3.so.0" : mode == "mesh" ? "libElectron2D.so" : mode == "webp" ? "libElectron2D.so" : "libSystem.IO.Compression.Native.so";
+        Check(paths.Count(path => path.EndsWith(codecLibrary, StringComparison.Ordinal)) == 1 && paths.Count(path => path.EndsWith("libElectron2D.so", StringComparison.Ordinal)) == 1, "Expected one codec and one common ledger.");
         Check(paths.Any(path => path.EndsWith("libcoreclr.so", StringComparison.Ordinal)) == RuntimeFeature.IsDynamicCodeSupported, "Runtime identity mismatch.");
         var exercised = mode == "sdl" ? "public window/render/pixels/repeated retirement; process caches retained" : mode == "mesh" ? "public LOD generation" : mode == "webp" ? "public WebP 14 encoding/decoding profiles" : "streaming/public file/finalization; ZIP=" + (mode == "deflate" ? "passed" : "separate deflate role");
         Console.WriteLine($"Codec {mode}: nativePeak={Read().NativePeak}, currentDelta={Read().NativeCurrent - baseline.NativeCurrent}; {exercised} passed; prepared20000={ownerBytes}/{allBytes}; dynamicCode={RuntimeFeature.IsDynamicCodeSupported}.");
-        foreach (var path in paths.Where(path => path.EndsWith(codecLibrary, StringComparison.Ordinal) || path.EndsWith("libElectron2DENet.so", StringComparison.Ordinal))) Console.WriteLine(path);
+        foreach (var path in paths.Where(path => path.EndsWith(codecLibrary, StringComparison.Ordinal) || path.EndsWith("libElectron2D.so", StringComparison.Ordinal))) Console.WriteLine(path);
     }
     private static void SDLWindow(nint core, Counts baseline)
     {

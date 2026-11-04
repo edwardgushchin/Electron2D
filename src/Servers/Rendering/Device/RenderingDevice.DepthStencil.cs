@@ -82,7 +82,7 @@ public sealed unsafe partial class RenderingDevice
             BackStencilState = new() { CompareOp = Compare(state.BackOpCompare), FailOp = Stencil(state.BackOpFail), PassOp = Stencil(state.BackOpPass), DepthFailOp = Stencil(state.BackOpDepthFail) }
         };
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_depth_pipeline")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_depth_pipeline")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeDepthPipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info, float lineWidth, uint discard, in NativeMultisampleState samples, in NativeDepthStencilState depth);
     private void InitializeDepth(Entry entry)

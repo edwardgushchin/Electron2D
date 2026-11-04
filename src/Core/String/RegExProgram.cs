@@ -126,22 +126,22 @@ internal sealed partial class RegExProgram : SafeHandle
         }
     }
     protected override bool ReleaseHandle() { Destroy(handle); return true; }
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_regex_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_regex_create")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial nint Create(uint* pattern, nuint length, out int error, out nuint offset);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_regex_destroy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_regex_destroy")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void Destroy(nint code);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_regex_info")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_regex_info")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Info(RegExProgram code, out uint groups, out uint names, out uint width, out nint table);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_regex_match")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_regex_match")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int Match(RegExProgram code, uint* subject, nuint length, nuint offset, nuint* positions, nuint capacity);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_regex_substitute")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_regex_substitute")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int SubstituteNative(RegExProgram code, uint* subject, nuint length, nuint offset, uint* replacement, nuint replacementLength, int all, int milliseconds, uint* output, ref nuint outputLength);
-    [LibraryImport(NativeLibraries.TextBreakLibrary, EntryPoint = "e2d_regex_error")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_regex_error")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int Error(int error, uint* output, nuint capacity);
 }

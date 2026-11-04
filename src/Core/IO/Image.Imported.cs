@@ -25,7 +25,7 @@ public sealed partial class Image
     internal static int ImportedMIPCount(int width, int height, bool mipmaps) => GetRequiredMIPMapCount(width, height, mipmaps);
     internal static Image FromImportedState(State state) { var image = new Image(); image.SetStateWithoutNotification(state); return image; }
 
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_basis_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_basis_create")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int BasisCreate(byte* source, ulong length, out KTXInfo info, out nint result);
 }

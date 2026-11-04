@@ -22,7 +22,11 @@ add_library(Electron2DRender ${kind} bridge.c timestamps.c addresses.c sampler.c
 target_compile_features(Electron2DRender PRIVATE c_std_11)
 target_include_directories(Electron2DRender PRIVATE "${CMAKE_CURRENT_BINARY_DIR}"
     "${sdlmemory_SOURCE_DIR}/include" "${sdlmemory_SOURCE_DIR}/src/video/khronos")
-target_link_libraries(Electron2DRender PRIVATE ${SDL3_LIBRARIES})
+if(ELECTRON2D_UNIFIED_NATIVE)
+    target_compile_definitions(Electron2DRender PRIVATE SDL_STATIC_LIB)
+else()
+    target_link_libraries(Electron2DRender PRIVATE ${SDL3_LIBRARIES})
+endif()
 set_target_properties(Electron2DRender PROPERTIES C_VISIBILITY_PRESET hidden POSITION_INDEPENDENT_CODE ON SKIP_BUILD_RPATH TRUE)
 if(APPLE AND NOT ELECTRON2D_STATIC_NATIVE)
     set_target_properties(Electron2DRender PROPERTIES INSTALL_NAME_DIR "@rpath" BUILD_WITH_INSTALL_NAME_DIR TRUE SKIP_BUILD_RPATH TRUE)

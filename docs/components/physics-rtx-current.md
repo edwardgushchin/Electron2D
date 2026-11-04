@@ -14,7 +14,7 @@ While measurements were running, main gained `0db48ca32615fb93bce4f2a9f0faef9d63
 
 The final formatted fixture build repeats both small window pairs at that revision, with 384 measured physical ticks and zero owner/all-thread physics/frame bytes. Its PDB checks match all 2415 runtime and 903 test compilation inputs. Earlier measured fixture bytes are retained separately; the final source differs only in whitespace from those fixture copies.
 
-An initial ordinary package build omitted mesh/WebP native assets and failed NativeLibraryTests before the mass test. Rebuilding with the existing supported Electron2DMeshNativeLibrary/Electron2DWebPNativeLibrary development overrides supplied both files without changing any preceding DLL/PDB/native payload byte. Mesh SHA-256 is `ad5e246577a494d0e566a6e4b858c12dcfc5b29ebf9e3db57d4456a74e58e99f`; WebP is `211d381859e12a4bf5ca972e252a450338109cc976ef1a47a8345504b4deb0ac`. NativeLibraryTests then ran normally. This does not certify a newly packaged/published native bundle.
+An initial ordinary package build omitted mesh/WebP native assets and failed NativeLibraryTests before the mass test. Rebuilding with the existing supported Electron2DNativeLibrary/Electron2DNativeLibrary development overrides supplied both files without changing any preceding DLL/PDB/native payload byte. Mesh SHA-256 is `ad5e246577a494d0e566a6e4b858c12dcfc5b29ebf9e3db57d4456a74e58e99f`; WebP is `211d381859e12a4bf5ca972e252a450338109cc976ef1a47a8345504b4deb0ac`. NativeLibraryTests then ran normally. This does not certify a newly packaged/published native bundle.
 
 ## Raw server bodies
 

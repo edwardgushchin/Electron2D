@@ -5,7 +5,7 @@ using System.Text;
 
 internal static unsafe partial class NativeUTF8StringTests
 {
-    private const string Library = "libElectron2DENet.so";
+    private const string Library = "libElectron2D.so";
     [LibraryImport(Library, EntryPoint = "e2d_test_utf8", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(NativeUTF8StringMarshaller))]
     private static partial int Read(string? a, int lengthA, string? b, int lengthB, ulong current, out ulong hashA, out ulong hashB);
     [LibraryImport(Library, EntryPoint = "e2d_test_utf8", StringMarshalling = StringMarshalling.Utf8)]

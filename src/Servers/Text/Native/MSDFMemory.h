@@ -1,4 +1,8 @@
 #pragma once
+// MSVC reads math feature flags through transitive standard-library includes.
+#if defined(_MSC_VER) && !defined(_USE_MATH_DEFINES)
+#define _USE_MATH_DEFINES
+#endif
 #include "TextMemory.h"
 #include <limits>
 #include <new>

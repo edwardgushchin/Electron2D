@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 project(Electron2DWebP LANGUAGES C)
+if(MSVC)
+  set_source_files_properties(memory.c PROPERTIES COMPILE_OPTIONS "/experimental:c11atomics")
+endif()
 include(FetchContent)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(BUILD_SHARED_LIBS OFF)

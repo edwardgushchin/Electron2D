@@ -1099,7 +1099,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [ShaderPrecision](classes/ShaderPrecision.md) | [ShaderPrecision.cs](../src/Servers/Rendering/ShaderPrecision.cs) | [native FP64](components/local-compute.md#native-fp64-arithmetic-and-data) |
 | [ShaderCompiler](classes/ShaderCompiler.md) | [ShaderCompiler.cs](../src/Servers/Rendering/ShaderCompiler.cs) | [shader-materials](components/shader-materials.md) |
 | [SpirvReflection](classes/SpirvReflection.md) | [SpirvReflection.cs](../src/Servers/Rendering/SpirvReflection.cs), [boolean metadata](../src/Servers/Rendering/SpirvReflection.Booleans.cs) | [shader-materials](components/shader-materials.md) |
-| [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [Shader materials](components/shader-materials.md), [Text](components/text.md), [Audio playback](components/audio-playback.md); private dynamic resolution, Apple executable imports and browser archive-module imports, with target gates recorded separately |
+| [NativeLibraries](classes/NativeLibraries.md) | [NativeLibraries.cs](../src/Properties/NativeLibraries.cs) | [Shader materials](components/shader-materials.md), [Text](components/text.md), [Audio playback](components/audio-playback.md); one native Electron2D module with shared SDL initialization, Apple executable imports and browser archive-module imports, with target gates recorded separately |
 
 ## Explicitly absent
 

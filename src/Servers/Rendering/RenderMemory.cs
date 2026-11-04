@@ -26,7 +26,7 @@ internal static partial class RenderMemory
         return memory;
     }
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_memory")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_memory")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int ReadNative(nint device, uint abi, out RenderMemorySnapshot memory);
 }

@@ -99,13 +99,13 @@ public sealed unsafe partial class RenderingDevice
         source = GPUTextureViews.Location(Device, source); destination = GPUTextureViews.Location(Device, destination);
         if (NativeAspectCopy(Device, 1, _command, in source, in destination, width, height) != 1) throw GPUPhysicsDevice.Failure("record depth/stencil image copy");
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_aspect_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_aspect_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeAspectSupport(nint device, uint abi, SDL.GPUTextureFormat format);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_aspect_transfer")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_aspect_transfer")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeAspectTransfer(nint device, uint abi, nint command, in SDL.GPUTextureRegion region, nint transfer, uint offset, uint stencilOffset, uint upload);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_aspect_copy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_aspect_copy")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeAspectCopy(nint device, uint abi, nint command, in SDL.GPUTextureLocation source, in SDL.GPUTextureLocation destination, uint width, uint height);
 }

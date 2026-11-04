@@ -1,8 +1,10 @@
 #ifndef E2D_KTX_H
 #define E2D_KTX_H
 #include <stdint.h>
-#if defined(_WIN32) && !defined(E2D_KTX_STATIC)
-#if defined(E2D_KTX_BUILD)
+#if defined(_WIN32)
+#if defined(E2D_KTX_STATIC)
+#define E2D_KTX_API
+#elif defined(E2D_KTX_BUILD)
 #define E2D_KTX_API __declspec(dllexport)
 #else
 #define E2D_KTX_API __declspec(dllimport)

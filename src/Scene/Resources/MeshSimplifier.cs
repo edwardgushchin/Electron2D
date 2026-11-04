@@ -31,11 +31,11 @@ internal static partial class MeshSimplifier
     }
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe void ReleaseMemory(void* value) => NativeAllocation.Free(value);
-    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_mesh_memory"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int InstallMemory(delegate* unmanaged[Cdecl]<nuint, void*> allocate, delegate* unmanaged[Cdecl]<void*, void> release);
-    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_scale"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_mesh_scale"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial float Scale(float* positions, nuint count);
-    [LibraryImport(NativeLibraries.MeshLibrary, EntryPoint = "e2d_mesh_simplify"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_mesh_simplify"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial nuint Simplify(int* output, int* indices, nuint count, float* positions, nuint vertices, float* attributes, float* weights, nuint attributeCount, nuint target, uint options, float* error);
     internal static unsafe MeshLOD[] Generate(MeshSurfaceData data, MeshSurfaceData[] shapes, Mesh.PrimitiveType primitive, MeshLOD[] old, float mergeAngle, IReadOnlyList<Transform>? boneTransforms)
     {

@@ -21,7 +21,7 @@ public sealed unsafe partial class RenderingDevice
         if (samples.Flags != 0) return NativeMultisamplePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u, in samples);
         return lineWidth == 1 && !outline ? NativeRasterPipeline(Device, 1, in info) : NativeLinePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u);
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_line_pipeline")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_line_pipeline")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeLinePipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info, float lineWidth, uint discard);
     // SDL retains two shader objects; this private unused stage never enters a discard pipeline's native stage list.
@@ -32,10 +32,10 @@ public sealed unsafe partial class RenderingDevice
         0x00020013, 2, 0x00030021, 3, 2,
         0x00050036, 2, 1, 0, 3, 0x000200f8, 4, 0x000100fd, 0x00010038
     ]).ToArray();
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_raster_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_raster_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeRasterSupport(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_raster_pipeline")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_raster_pipeline")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial nint NativeRasterPipeline(nint device, uint abi, in SDL.GPUGraphicsPipelineCreateInfo info);
 }

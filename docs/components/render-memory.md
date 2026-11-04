@@ -53,7 +53,7 @@ This boundary differs from the explicit GPU allocator source.
 
 ## Delivery and verification
 
-`tools/render-native` pins SDL source by archive SHA-256 and exports only
+`tools/render-native` pins SDL source by archive SHA-256 as part of the common native Electron2D module; its allocation query is
 `e2d_render_memory`. Desktop source targets, cross/static and Windows producers,
 platform package inventories and consumer asset layout include the private bridge.
 Games consume the matching platform package; they do not compile this helper.

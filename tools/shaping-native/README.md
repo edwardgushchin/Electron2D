@@ -24,10 +24,10 @@ These different ownership rules must not be interchanged.
 
 ## Build and checks
 
-Build a matching common core from `tools/enet-native` first, then:
+Build the matching common module from `tools/native` first, then:
 
 ```sh
-cmake -S tools/shaping-native -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=Release -DELECTRON2D_MEMORY_LIBRARY=/absolute/path/libElectron2DENet.so
+cmake -S tools/shaping-native -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=Release -DELECTRON2D_MEMORY_LIBRARY=/absolute/path/libElectron2D.so
 cmake --build BUILD --target harfbuzz Electron2DShapingCheck --parallel 2
 ```
 
@@ -47,7 +47,7 @@ checker/library under ASan/UBSan with leak detection; Linux Clang requires
 both error producers, unchanged inputs and rejection before output on drift.
 
 Select the production library with `Electron2DHarfBuzzNativeLibrary`, and select
-the matching core and rebuilt private FreeType with `Electron2DENetNativeLibrary`
+the matching core and rebuilt private FreeType with `Electron2DNativeLibrary`
 and `Electron2DFontNativeLibrary`. Consumer targets replace the canonical native
 destination for builds and publishes even when packaged files are newer. Do not
 change installed SDK or package caches. Run `tests/NativeMemory.ICUHost` in

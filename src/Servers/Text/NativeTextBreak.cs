@@ -8,7 +8,7 @@ namespace Electron2D;
 // ponytail: boundary analysis serializes here; shard iterators only if measured concurrent shaping needs it.
 internal static unsafe partial class NativeTextBreak
 {
-    private const string Library = NativeLibraries.TextBreakLibrary;
+    private const string Library = NativeLibraries.EngineLibrary;
     private const int LineCapacity = 64;
     private static readonly object Gate = new();
     private static readonly Dictionary<string, (nint Handle, ulong Access)> Lines = new(StringComparer.Ordinal);

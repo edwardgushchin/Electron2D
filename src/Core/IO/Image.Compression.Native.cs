@@ -47,9 +47,9 @@ public sealed partial class Image
             finally { NativeImageEncodedFree(output); }
         }
     }
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_image_encode")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_image_encode")]
     private static unsafe partial int NativeImageEncode(uint kind, uint width, uint height, uint levels,
         uint hdr, uint normal, uint quality, float rdo, byte* source, ulong sourceSize, out nint output, out ulong outputSize);
-    [LibraryImport(NativeLibraries.KTXLibrary, EntryPoint = "e2d_image_encoded_free")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_image_encoded_free")]
     private static partial void NativeImageEncodedFree(nint output);
 }

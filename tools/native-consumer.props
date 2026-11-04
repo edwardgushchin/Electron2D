@@ -47,16 +47,22 @@
     </Copy>
     <Copy SourceFiles="@(_Electron2DConsumerTLS)" DestinationFolder="$(PublishDir)runtimes/$(RuntimeIdentifier)/native" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
-  <Target Name="CopyElectron2DConsumerRenderOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DRenderNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
-    <PropertyGroup>
-      <_Electron2DConsumerRenderName>libElectron2DRender.so</_Electron2DConsumerRenderName>
-      <_Electron2DConsumerRenderName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DRender.dylib</_Electron2DConsumerRenderName>
-      <_Electron2DConsumerRenderName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DRender.dll</_Electron2DConsumerRenderName>
-    </PropertyGroup>
-    <Copy SourceFiles="$(Electron2DRenderNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerRenderName)">
+  <PropertyGroup>
+    <_Electron2DConsumerNativePath Condition="'$(Electron2DNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DNativeLibrary)'))</_Electron2DConsumerNativePath>
+    <_Electron2DConsumerNativeName>libElectron2D.so</_Electron2DConsumerNativeName>
+    <_Electron2DConsumerNativeName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2D.dylib</_Electron2DConsumerNativeName>
+    <_Electron2DConsumerNativeName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">libElectron2D.dll</_Electron2DConsumerNativeName>
+  </PropertyGroup>
+  <Target Name="SelectElectron2DConsumerNativeOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerNativeName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerNativeName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerNativePath)'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyElectron2DConsumerNativeOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
+    <Copy SourceFiles="$(Electron2DNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerNativeName)">
       <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
     </Copy>
-    <Copy SourceFiles="$(Electron2DRenderNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerRenderName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
+    <Copy SourceFiles="$(Electron2DNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerNativeName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
   <Target Name="CopyElectron2DConsumerAudioOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DAudioNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
     <PropertyGroup>
@@ -67,70 +73,6 @@
       <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
     </Copy>
     <Copy SourceFiles="$(Electron2DAudioNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerAudioName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <Target Name="CopyElectron2DConsumerENetOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DENetNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <PropertyGroup>
-      <_Electron2DConsumerENetName>libElectron2DENet.so</_Electron2DConsumerENetName>
-      <_Electron2DConsumerENetName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DENet.dylib</_Electron2DConsumerENetName>
-    </PropertyGroup>
-    <Copy SourceFiles="$(Electron2DENetNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerENetName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DENetNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerENetName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <Target Name="CopyElectron2DConsumerTextOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DTextNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
-    <PropertyGroup>
-      <_Electron2DConsumerTextName>libElectron2DTextBreak.so</_Electron2DConsumerTextName>
-      <_Electron2DConsumerTextName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DTextBreak.dylib</_Electron2DConsumerTextName>
-      <_Electron2DConsumerTextName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DTextBreak.dll</_Electron2DConsumerTextName>
-    </PropertyGroup>
-    <Copy SourceFiles="$(Electron2DTextNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerTextName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DTextNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerTextName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <Target Name="CopyElectron2DConsumerKTXOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DKTXNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
-    <PropertyGroup>
-      <_Electron2DConsumerKTXName>libElectron2DKTX.so</_Electron2DConsumerKTXName>
-      <_Electron2DConsumerKTXName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DKTX.dylib</_Electron2DConsumerKTXName>
-      <_Electron2DConsumerKTXName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DKTX.dll</_Electron2DConsumerKTXName>
-    </PropertyGroup>
-    <Copy SourceFiles="$(Electron2DKTXNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerKTXName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DKTXNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerKTXName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <PropertyGroup>
-    <_Electron2DConsumerWebPName>libElectron2DWebP.so</_Electron2DConsumerWebPName>
-    <_Electron2DConsumerWebPName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DWebP.dylib</_Electron2DConsumerWebPName>
-    <_Electron2DConsumerWebPPath Condition="'$(Electron2DWebPNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DWebPNativeLibrary)'))</_Electron2DConsumerWebPPath>
-  </PropertyGroup>
-  <Target Name="SelectElectron2DConsumerWebPOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DWebPNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <ItemGroup>
-      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerWebPName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerWebPPath)'" />
-    </ItemGroup>
-  </Target>
-  <Target Name="CopyElectron2DConsumerWebPOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DWebPNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <Copy SourceFiles="$(Electron2DWebPNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DWebPNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebPName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <PropertyGroup>
-    <_Electron2DConsumerMeshName>libElectron2DMesh.so</_Electron2DConsumerMeshName>
-    <_Electron2DConsumerMeshName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DMesh.dylib</_Electron2DConsumerMeshName>
-    <_Electron2DConsumerMeshPath Condition="'$(Electron2DMeshNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DMeshNativeLibrary)'))</_Electron2DConsumerMeshPath>
-  </PropertyGroup>
-  <Target Name="SelectElectron2DConsumerMeshOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DMeshNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <ItemGroup>
-      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerMeshName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerMeshPath)'" />
-    </ItemGroup>
-  </Target>
-  <Target Name="CopyElectron2DConsumerMeshOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DMeshNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <Copy SourceFiles="$(Electron2DMeshNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DMeshNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerMeshName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
   <PropertyGroup>
     <_Electron2DConsumerSDLName>libSDL3.so.0</_Electron2DConsumerSDLName>
@@ -164,38 +106,5 @@
       <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
     </Copy>
     <Copy SourceFiles="$(Electron2DHarfBuzzNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerHarfBuzzName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <PropertyGroup>
-    <_Electron2DConsumerOGVName>libElectron2DOGV.so</_Electron2DConsumerOGVName>
-    <_Electron2DConsumerOGVName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DOGV.dylib</_Electron2DConsumerOGVName>
-    <_Electron2DConsumerOGVPath Condition="'$(Electron2DOGVNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DOGVNativeLibrary)'))</_Electron2DConsumerOGVPath>
-  </PropertyGroup>
-  <Target Name="SelectElectron2DConsumerOGVOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DOGVNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <ItemGroup>
-      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerOGVName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerOGVPath)'" />
-    </ItemGroup>
-  </Target>
-  <Target Name="CopyElectron2DConsumerOGVOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DOGVNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS')">
-    <Copy SourceFiles="$(Electron2DOGVNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DOGVNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerOGVName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
-  </Target>
-  <PropertyGroup>
-    <_Electron2DConsumerWebRTCName>libElectron2DWebRTC.so</_Electron2DConsumerWebRTCName>
-    <_Electron2DConsumerWebRTCName Condition="'$(Electron2DConsumerPlatform)' == 'MacOS'">libElectron2DWebRTC.dylib</_Electron2DConsumerWebRTCName>
-    <_Electron2DConsumerWebRTCName Condition="'$(Electron2DConsumerPlatform)' == 'Windows'">Electron2DWebRTC.dll</_Electron2DConsumerWebRTCName>
-    <_Electron2DConsumerWebRTCPath Condition="'$(Electron2DWebRTCNativeLibrary)' != ''">$([System.IO.Path]::GetFullPath('$(Electron2DWebRTCNativeLibrary)'))</_Electron2DConsumerWebRTCPath>
-  </PropertyGroup>
-  <Target Name="SelectElectron2DConsumerWebRTCOverride" BeforeTargets="_HandleFileConflictsForPublish" Condition="'$(Electron2DWebRTCNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
-    <ItemGroup>
-      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="('%(ResolvedFileToPublish.RelativePath)' == 'runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebRTCName)' or '%(ResolvedFileToPublish.RelativePath)' == 'runtimes\$(RuntimeIdentifier)\native\$(_Electron2DConsumerWebRTCName)') and '%(ResolvedFileToPublish.FullPath)' != '$(_Electron2DConsumerWebRTCPath)'" />
-    </ItemGroup>
-  </Target>
-  <Target Name="CopyElectron2DConsumerWebRTCOverride" AfterTargets="CopyFilesToOutputDirectory;Publish" Condition="'$(Electron2DWebRTCNativeLibrary)' != '' and ('$(Electron2DConsumerPlatform)' == 'Linux' or '$(Electron2DConsumerPlatform)' == 'MacOS' or '$(Electron2DConsumerPlatform)' == 'Windows')">
-    <Copy SourceFiles="$(Electron2DWebRTCNativeLibrary)" DestinationFiles="$(TargetDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebRTCName)">
-      <Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
-    </Copy>
-    <Copy SourceFiles="$(Electron2DWebRTCNativeLibrary)" DestinationFiles="$(PublishDir)runtimes/$(RuntimeIdentifier)/native/$(_Electron2DConsumerWebRTCName)" Condition="'$(PublishDir)' != '' and Exists('$(PublishDir)')" />
   </Target>
 </Project>

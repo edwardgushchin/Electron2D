@@ -25,13 +25,13 @@ internal static unsafe partial class GPUDeviceFactory
         NativeImageRelease(device, 1);
         SDL.DestroyGPUDevice(device);
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_image_release")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_image_release")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void NativeImageRelease(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_addresses_release")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_addresses_release")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial void ReleaseAddresses(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_address_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_address_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial int ReadAddressSupport(nint device, uint abi);
     [StructLayout(LayoutKind.Sequential)]
@@ -55,7 +55,7 @@ internal static unsafe partial class GPUDeviceFactory
         internal nint Next;
         internal fixed uint Flags[12];
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_float_atomic_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_float_atomic_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadFloatAtomicSupport(nint device, uint abi);
     private static readonly object Gate = new();
@@ -193,27 +193,27 @@ internal static unsafe partial class GPUDeviceFactory
         }
         catch { if (device != 0) SDL.DestroyGPUDevice(device); throw; }
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_shader16_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_shader16_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadNarrow(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_graphics_storage_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_graphics_storage_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadGraphicsStorage(nint device, uint abi);
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_logic_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_logic_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadLogicSupport(nint device, uint abi);
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_multisample_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_multisample_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadMultisampleSupport(nint device, uint abi);
 
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_depth_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_depth_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadDepthSupport(nint device, uint abi);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct LineLimits { internal float Minimum, Maximum, Granularity; }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_line_support")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_line_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     internal static partial int ReadLineSupport(nint device, uint abi, out LineLimits limits);
 

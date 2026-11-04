@@ -45,7 +45,7 @@ public sealed unsafe partial class RenderingDevice
         try { if (!pending) StorageBarrier(); BeginDrawPass(false); }
         catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _sets.Clear(); ResetPush(); throw; }
     }
-    [LibraryImport(NativeLibraries.RenderLibrary, EntryPoint = "e2d_render_storage_barrier")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_storage_barrier")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int NativeStorageBarrier(nint device, uint abi, nint commands);
 }

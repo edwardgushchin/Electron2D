@@ -694,7 +694,7 @@ The existing force-overflow failure, selection/publication and retirement checks
 also pass; no assertion or allocation threshold was relaxed.
 
 The Release build supplies the existing local native KTX bridge through
-`Electron2DKTXNativeLibrary`. Its integer/compressed/block image tests now pass
+`Electron2DNativeLibrary`. Its integer/compressed/block image tests now pass
 inside the full aggregate, beyond the previous missing-dependency stop. The
 frozen payload remains unchanged. Runtime/source/PDB proofs bind 2552 runtime,
 946 root-test and 269 public-consumer documents to this revision: 3766 match Git,

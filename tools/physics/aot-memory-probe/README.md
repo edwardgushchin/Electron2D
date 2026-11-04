@@ -57,12 +57,16 @@ this diagnostic. It does not qualify a stock runtime's tracing configuration.
 Allow about 2 GiB of temporary disk space; remove only your own temporary folder
 after inspecting the new output:
 
+This isolated diagnostic builds an allocation-only fixture and assigns it the current common loader identity. It does not produce or qualify the complete shipped bridge module. The commands require patchelf.
+
 ```bash
 set -e
 probe_root=$(mktemp -d /tmp/e2d-aot-memory-XXXXXX)
 cmake -S tools/enet-native -B "$probe_root/native" -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build "$probe_root/native" --target Electron2DENet Electron2DMemoryCheck -j 4
 "$probe_root/native/Electron2DMemoryCheck"
+cp "$probe_root/native/libElectron2DENet.so" "$probe_root/native/libElectron2D.so"
+patchelf --set-soname libElectron2D.so "$probe_root/native/libElectron2D.so"
 curl -fsSL https://codeload.github.com/dotnet/runtime/tar.gz/refs/tags/v10.0.1 -o "$probe_root/runtime.tar.gz"
 printf '%s  %s\n' 4c0b3aa0fda67c304762a572d6172ca5b2d29bb62191cf7c0fcef40a15223092 "$probe_root/runtime.tar.gz" | sha256sum --check
 # Python's data filter rejects archive entries escaping the owned extraction root.
@@ -94,16 +98,16 @@ for role in probe server source-baseline sdk-baseline concurrent deferred-common
   esac
   dotnet publish tools/physics/aot-memory-probe/AOTMemoryProbe.csproj -c Release -r linux-x64 \
     -p:ProbeNativeObject="$native_object" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
-    -p:ProbeRuntimeArchive="$archive" -p:ProbeMemoryLibrary="$probe_root/native/libElectron2DENet.so" \
+    -p:ProbeRuntimeArchive="$archive" -p:ProbeMemoryLibrary="$probe_root/native/libElectron2D.so" \
     -p:ServerGarbageCollection="$server_gc" -p:ConcurrentGarbageCollection="$concurrent_gc" \
     --artifacts-path "$probe_root/$artifact" -o "$probe_root/$role"
 done
 python3 -B tools/physics/aot-memory-probe/check.py "$probe_root" bin/aot-memory-new
 # Exercise the real engine against the same ledger; supply the matching font bundle.
-Electron2DENetNativeLibrary="$probe_root/native/libElectron2DENet.so" \
+Electron2DNativeLibrary="$probe_root/native/libElectron2D.so" \
   dotnet publish tests/NativeMemory.SharedHost/NativeMemory.SharedHost.csproj -c Release -r linux-x64 \
     -p:ProbeNativeObject="$probe_root/producer.o" -p:ProbeFrozenObject="$probe_root/frozen-fixture.o" \
-    -p:ProbeMemoryLibrary="$probe_root/native/libElectron2DENet.so" \
+    -p:ProbeMemoryLibrary="$probe_root/native/libElectron2D.so" \
     -p:ProbeRuntimeArchive="$runtime_libs/libRuntime.WorkstationGC.a" \
     --artifacts-path "$probe_root/shared-managed" -o "$probe_root/shared-host"
 LD_LIBRARY_PATH="$probe_root/shared-host/runtimes/linux-x64/native" \

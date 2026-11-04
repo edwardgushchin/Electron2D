@@ -58,9 +58,9 @@ if (entries.Select(entry => entry.Id).Distinct(StringComparer.Ordinal).Count() !
     throw new InvalidOperationException("The public API inventory contains duplicate member IDs.");
 
 var json = JsonSerializer.Serialize(entries.OrderBy(entry => entry.Id, StringComparer.Ordinal),
-    new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+    new JsonSerializerOptions { WriteIndented = true, NewLine = "\n", PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 if (args.Length > 0)
-    File.WriteAllText(args[0], json + Environment.NewLine);
+    File.WriteAllText(args[0], json + "\n");
 else
     Console.WriteLine(json);
 

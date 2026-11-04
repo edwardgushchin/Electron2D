@@ -48,19 +48,19 @@ internal sealed partial class NativeVideoDecoder : IDisposable
     }
     internal void SeekAudio(long frame) { ObjectDisposedException.ThrowIf(_handle.IsClosed, this); Check(Seek(_handle, frame)); }
     public void Dispose() => _handle.Dispose();
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_video_create")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_video_create")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int Create(byte* data, nuint bytes, int track, out Metadata info, out nint result);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_video_frame")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_video_frame")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int GetFrame(DecoderHandle decoder, long frame, out nint pixels);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_video_audio")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_video_audio")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static unsafe partial int GetAudio(DecoderHandle decoder, float* pcm, int frames);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_video_seek_audio")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_video_seek_audio")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Seek(DecoderHandle decoder, long frame);
-    [LibraryImport(NativeLibraries.OGVLibrary, EntryPoint = "e2d_video_destroy")]
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_video_destroy")]
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial void Destroy(nint decoder);
 }

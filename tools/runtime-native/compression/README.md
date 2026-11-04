@@ -24,7 +24,7 @@ retain their ownership. Encoder OOM cleanup is enabled instead of process exit.
 There is no global malloc override. Internal symbol binding prevents another
 loaded Brotli library from mixing allocation and release domains. The production
 PAL exports the twenty upstream functions plus one private memory ABI witness.
-It retains a relocatable dependency on `libElectron2DENet.so`; loading the common
+It retains a relocatable dependency on `libElectron2D.so`; loading the common
 ledger opens no networking or device.
 
 Use an existing qualified production memory bundle, never the test fault core:
@@ -36,7 +36,7 @@ curl -fsSL https://codeload.github.com/dotnet/runtime/tar.gz/refs/tags/v10.0.1 \
 cmake -S tools/runtime-native/compression -B "$component_root/native" \
   -DCMAKE_BUILD_TYPE=Release \
   -DE2D_RUNTIME_ARCHIVE="$component_root/runtime.tar.gz" \
-  -DE2D_MEMORY_LIBRARY="$Electron2DENetNativeLibrary" -DE2D_COMPRESSION_TESTS=ON
+  -DE2D_MEMORY_LIBRARY="$Electron2DNativeLibrary" -DE2D_COMPRESSION_TESTS=ON
 cmake --build "$component_root/native" -j 4
 python3 -O -B tools/runtime-native/compression/test_prepare.py "$component_root/runtime.tar.gz"
 python3 -O -B tools/runtime-native/compression/test_memory.py \
@@ -56,7 +56,7 @@ calloc and realloc only inside its test copy of the production ledger. It is
 used solely by the native children through their explicit library search path.
 
 For public consumers, supply the same qualified native overrides as the engine
-cohort, including `Electron2DENetNativeLibrary`. Publish into fresh owned folders:
+cohort, including `Electron2DNativeLibrary`. Publish into fresh owned folders:
 
 ```bash
 dotnet publish tests/NativeMemory.CompressionHost/NativeMemory.CompressionHost.csproj \
