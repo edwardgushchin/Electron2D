@@ -1,4 +1,5 @@
 #include "bridge.h"
+#include "basis.h"
 #include "encoder/basisu_comp.h"
 #include "astcenc.h"
 #include <algorithm>
@@ -104,9 +105,13 @@ int basis(uint32_t kind, bool hdr, bool normal, uint32_t quality, float rdo,
         if (data.empty() || data.size() > limit) return -1;
         output.assign(data.begin(), data.end()); return 0;
     }
-    const auto &data = compressor.get_output_basis_file();
+    const auto &file = compressor.get_output_basis_file();
+    const uint8_t *data = file.data();
+    uint32_t size = file.size();
     basist::basisu_transcoder transcoder;
-    if (!transcoder.start_transcoding(data.data(), data.size())) return -1;
+    std::vector<uint8_t> aligned;
+    if (size < sizeof(basist::basis_file_header) || !transcoder.validate_header(data, size) ||
+        !e2d_basis_align_slices(data, size, aligned, data, size) || !transcoder.start_transcoding(data, size)) return -1;
     auto format = kind == 1 ? basist::transcoder_texture_format::cTFETC1_RGB
         : kind == 2 ? basist::transcoder_texture_format::cTFETC2_RGBA
         : kind == 3 ? basist::transcoder_texture_format::cTFETC2_EAC_R11 : basist::transcoder_texture_format::cTFETC2_EAC_RG11;
@@ -116,7 +121,7 @@ int basis(uint32_t kind, bool hdr, bool normal, uint32_t quality, float rdo,
         uint64_t bytes = static_cast<uint64_t>(blocks) * block_bytes;
         if (bytes > limit - output.size()) return -1;
         auto offset = output.size(); output.resize(offset + static_cast<size_t>(bytes));
-        if (!transcoder.transcode_image_level(data.data(), data.size(), 0, i, output.data() + offset, blocks, format)) return -1;
+        if (!transcoder.transcode_image_level(data, size, 0, i, output.data() + offset, blocks, format)) return -1;
     }
     return 0;
 }

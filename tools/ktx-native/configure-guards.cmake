@@ -15,3 +15,6 @@ foreach(name CMakeLists.txt lib/CMakeLists.txt)
     file(WRITE "${source}" "${text}")
   endif()
 endforeach()
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/prepare_allocations.py" "${ROOT}"
+  COMMAND_ERROR_IS_FATAL ANY)

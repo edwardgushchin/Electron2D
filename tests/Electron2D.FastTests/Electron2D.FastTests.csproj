@@ -13,6 +13,8 @@
     <Compile Include="../Portability/ContractChecks.cs" Link="ContractChecks.cs" />
     <Compile Include="../Electron2D.Tests/CanvasVertexLayoutTests.cs" Link="CanvasVertexLayoutTests.cs" />
     <Compile Include="../Electron2D.Tests/NativeUTF8LegacyTests.cs" Link="NativeUTF8LegacyTests.cs" />
+    <Compile Include="../Electron2D.Tests/NativeKTXMemoryTests.cs" Link="NativeKTXMemoryTests.cs" />
+    <EmbeddedResource Include="../Electron2D.Tests/TestData/KTX/oracle.json" LogicalName="TestKTX.oracle.json" />
     <Compile Include="../Electron2D.Tests/NativeUTF8StringTests.cs" Link="NativeUTF8StringTests.cs" />
     <Compile Include="../Electron2D.Tests/NativeAllocationTests.cs" Link="NativeAllocationTests.cs" />
     <Compile Include="../Electron2D.Tests/ENetAllocationTests.cs" Link="ENetAllocationTests.cs" />

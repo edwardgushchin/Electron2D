@@ -1,6 +1,6 @@
 # Portable compressed textures
 
-Last updated: 2026-10-18
+Last updated: 2026-11-05
 
 [PortableCompressedTexture](../classes/PortableCompressedTexture.md) connects runtime image encoding to the existing ordinary Texture canvas, sprite, atlas, style, RID, resource archive and scene-local paths. ADR 0039 owns the portable envelope and approved encoder closure; ADRs 0004/0045 own public naming, ADR 0012 owns texture sampling, and ADR 0095 owns static process-wide retention access.
 
@@ -9,6 +9,13 @@ Creation is a cold operation. It snapshots the source, encodes all mips, decodes
 The private EPT1 envelope contains mode, source dimensions/format, complete mip count and length-delimited payloads. PNG/WebP carries individual levels, Basis carries one complete UASTC KTX2 chain, and native block families carry exact complete raw blocks. Parsing validates version, dimensions, family, mip counts, lengths, trailing bytes and decoded shape before publication. Input/source/output and codec work retain the bounded Image profile. No arbitrary reflected type or executable is loaded.
 
 The existing pinned KTX dependency supplies BasisU and scalar astcenc. The private ABI adds e2d_image_encode/e2d_image_encoded_free to the decoder's five exports. Encoding runs in process with one worker per operation; initialization is shared and synchronized with the decoder. Basis numeric transfer metadata preserves supplied channel values. ETC1/ETC2/EAC use BasisU's encoder/transcoder, including R/green channel ordering; ASTC uses 4×4/8×8 LDR/HDR. Image.Compress and CompressFromChannels now execute all five supported families, retaining atomic mutation and complete mips. HDR encoders reject nonfinite input. Basis HDR stores RGB, while ASTC HDR preserves alpha within codec precision.
+
+The encoder shares the legacy reader's bounded Basis slice-alignment adapter
+before block transcoding, including complete-mip payloads with unaligned offsets.
+[Allocation-refusal guards](image-ktx.md#allocation-refusal-and-initialization)
+retire partial nested image/vector copies and preserve healthy retry. The private
+seven-mode mip-chain fixture checks every observed C allocation refusal; shipped
+C/C++ allocation accounting and full platform qualification remain open.
 
 Retention governs the actual encoded envelope independently of sampled pixels. Global retention affects future creation/load only. Per-resource false discards the current envelope even if the global flag is true; enabling retention later cannot recover it. A populated resource without an envelope cannot be archived. Duplication still copies independent pixels, policy and compressor settings. Typed archives and scene-local graphs reconstruct through the compiled resource factory.
 

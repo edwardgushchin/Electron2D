@@ -16,7 +16,7 @@ public sealed partial class Image
     /// success emits Changed after publication.</remarks>
     /// <exception cref="InvalidDataException">The container is malformed, incomplete or exceeds image limits.</exception>
     /// <exception cref="NotSupportedException">The image role, storage format or required block transformation is unsupported.</exception>
-    /// <exception cref="IOException">The native decoder cannot allocate its working data.</exception>
+    /// <exception cref="IOException">The native decoder cannot allocate its working data or shared decode tables.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposed.</exception>
     public void LoadKTXFromBuffer(ReadOnlySpan<byte> buffer)
     {

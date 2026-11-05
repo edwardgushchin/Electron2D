@@ -1,6 +1,6 @@
 # KTX images
 
-Last updated: 2026-10-16
+Last updated: 2026-11-05
 
 This component loads flat KTX1 and KTX2 assets through `Image.LoadKTXFromBuffer`, `Image.Load`, `Image.LoadFromFile` and synchronous or threaded `ResourceLoader` image-texture loading. It follows [ADR 0039](../decisions/resources.md#adr-0039) and the private native ownership rules of [ADR 0012](../decisions/product.md#adr-0012).
 
@@ -20,6 +20,57 @@ The private decoder ABI is `e2d_ktx_create`, `e2d_basis_create`, `e2d_ktx_level`
 
 The pinned reader ignored failed Basis palette/table decoding and could dereference empty tables on corrupt content. `tools/ktx-native/decoder-guards.cmake` applies an exact-preimage error-propagation correction to generated build source, preserving the fetched archive. Regression fixtures exercise malformed codebooks and invalid DFD sample lengths. The Zstandard amalgamation and declarations receive a mechanical private symbol namespace so the static closure can coexist with the font codecs. Neither adaptation changes compression/transcoding algorithms. Original notices are retained in `licence/`.
 
+### Allocation refusal and initialization
+
+The same pinned source now handles allocation refusal in common stream construction,
+DFD creation, metadata hash insertion and Basis vector growth. Partial streams,
+textures, metadata tables, prototypes and level indices retire on failure. Shared
+decode tables publish their initialized flag only after completion; failed partial
+initialization can be retried in the same process. DFD allocation refusal reports
+an allocation error rather than malformed input. Public Image loading projects
+these errors as `IOException`, preserving the previous image, input and `Changed`
+boundary. The guards change ownership/error paths, retaining the codec algorithms
+and the single approved source version.
+
+`prepare_allocations.py` verifies eight complete original/output SHA-256 pairs
+before writing the extracted build copy. Unknown input refuses the entire batch;
+repeated preparation is idempotent. `decoder-guards.cmake` adds scoped C++ ownership
+to the generated transcoder. The immutable download remains unchanged.
+
+The Linux `Electron2DKTXMemoryCheck` fixture combines the complete copied static
+codec closure and the common allocation core in one test-only `libElectron2D.so`.
+It selectively remaps the codec's C allocation references; the ledger's backing
+allocator is untouched. It tests original C request ownership, every calibrated
+refusal, independent mip pixels, full temporary drain and a healthy retry. Cold
+ETC1S cases use a fresh process for each failure, checking retry against the healthy
+global-table baseline. `NativeKTXMemoryTests` exercises the public Image boundary
+through the same fixture. See [reproduction commands](../../tools/ktx-native/README.md#allocation-refusal-checks).
+
+The public source/binary checks on self-contained CLR and strict full-trim
+NativeAOT 10.0.14 each exercise 205 warm refusals across nine independent KTX2 mip
+oracles. Seven LDR encoder modes additionally exercise 316 warm refusals with
+complete mip chains, requiring no published output, complete temporary drain and
+byte-identical healthy retry. A separate native container check covers eight
+constructor/copy/shrink roles and 35 element-construction failures; the original
+header fails the same check. Partial nested copies now retain their constructed
+element count, retire both elements and backing storage on unwind, and preserve
+valid shrink bounds. The encoder shares the legacy reader's slice-alignment
+adapter before native block transcoding; codec algorithms and output bytes remain
+unchanged.
+
+The final Linux x64 profile passes 34,999 independent cold refusals/retries and
+1,129 warm requests (813 decoder/metadata and 316 encoder). The warm matrix also
+passes with the entire codec closure instrumented by ASan/UBSan. Standalone native
+decoder, block, encoder and container checks run with leak detection; the Python
+fault driver disables interpreter leak reporting and separately checks native
+temporary drain. The public CLR/NativeAOT checks use that same final native module.
+
+This fixture is isolated from production native output and is never packaged.
+It does not connect the shipped codec's C/C++ allocations to the production
+monitor. C++ allocation operators, support/provider heaps, ordinary delivery,
+foreign hosts and coherent managed/native composition remain open in the
+[allocation audit](../coverage/performance-producers.md#ktx-allocation-refusal-2026-11-05).
+
 Desktop, Windows, Android, Apple and Web producers require the private bridge. Static profiles consume one archive with its codec closure; codec/merge changes force that archive to refresh. An independent link uses only the merged archive, and packaging rejects global codec symbols that could collide with the font closure. Ordinary engine/game builds restore native assets without invoking a native compiler. The compiled managed API contains no codec type, pointer or backend handle.
 
 ## Verification and limits
@@ -27,3 +78,8 @@ Desktop, Windows, Android, Apple and Web producers require the private bridge. S
 `ImageKTXTests` checks nine independent standalone-tool KTX2 pixel oracles, 25 KTX1 raw formats, 17 opaque block roles, all stored mips, row padding, 16/32-bit opposite endian, orientation, swizzles, sRGB, atomic failure, concurrent decoder initialization, threaded resource loading and cache identity. Native checks retire borrowed source memory before level copies, reject every oracle truncation, mutate 2304 headers and 2304 complete containers, and exercise malformed codebook/DFD regressions. ASan, UBSan and leak checks use the same corpus. Clang's function-type sanitizer is disabled only for the upstream C vtable target because that ABI erases derived object pointer types; address and other undefined-behavior instrumentation remain enabled.
 
 Linux Wayland GPU and Compatibility hosts compare rendered pixels with independent decoded Image textures for all nine oracles plus BC source data. GPU retains half precision; Compatibility explicitly converts HDR to RGBA8. The separate block corpus establishes ETC/EAC/ASTC sampling; foreign-target execution, native package publication and owner acceptance remain separate. Fresh Linux source/project/NuGet consumers and self-contained publishes execute public Basis LDR/HDR loading with native compilers blocked. A separate NativeAOT application executes the same public codec consumers. The managed self-contained publish passes the 72-ELF and 92-notice audits. [File-backed arrays](compressed-arrays.md) now consume GSTL, legacy .basis/KTX2 channel roles and the common decoder through resource lifecycle/cache/archive integration and GPU layer/mip texel fetches. Their imported transfer-value policy is separate from public Image input.
+
+Those rendered/package checks predate this allocation-guard update and the combined
+native module. Their ELF/notice counts are historical. The new refusal evidence
+qualifies the isolated Linux codec profile; rebuilt release packages and complete
+platform acceptance remain open.

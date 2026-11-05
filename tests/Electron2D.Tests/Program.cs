@@ -44,6 +44,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CAMERA_FEEDS") is { } ca
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_DEVICE_LIFETIME") == "1") { GPUDeviceLifetimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SERVER_MONITORS") == "1") { ServerMonitorContract.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UTF8_LEGACY") == "1") { NativeUTF8LegacyTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_KTX_MEMORY") == "1") { NativeKTXMemoryTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_UTF8_MEMORY") == "1") { NativeUTF8StringTests.Run(); NativeUTF8StringTests.RunCallers(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_ALLOCATION") == "1") { NativeAllocationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GZIP_CLEANUP") is { } gzipCleanup) { GZIPCleanupTests.Run(gzipCleanup == "native"); return; }

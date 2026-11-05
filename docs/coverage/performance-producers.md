@@ -1,6 +1,6 @@
 # Performance producer audit
 
-Last updated: 2026-10-29
+Last updated: 2026-11-05
 
 This audit follows reference `4.7.2-stable` at
 `ed1daf0bf001b61586d9930840f2f1394092c079`. It separates executable planar
@@ -14,6 +14,18 @@ The [native ownership inventory](native-memory-inventory.md) routes every
 compiled import family and the observed native dependency closure. It records
 unqualified library, platform and runtime boundaries explicitly; domain-specific
 checks below must not be read as whole-library or whole-monitor acceptance.
+
+## KTX allocation refusal (2026-11-05)
+
+The [KTX component](../components/image-ktx.md#allocation-refusal-and-initialization)
+records partial-owner cleanup, recoverable metadata/DFD/vector allocation failure
+and transactional cold decode-table initialization. A private Linux fixture tests
+the original C allocation requests against the common ledger in one native module;
+it retains the same codec source/version as production. This is error-path
+qualification, not a shipped allocation producer. Production C/C++ routing,
+support/provider heaps, foreign targets and coherent managed/native composition
+remain open. No declaration changes state: physics remains **1365/1369 (99.71%)**,
+four Partial and 92 Excluded.
 
 ## Pipeline source ownership
 

@@ -26,3 +26,47 @@ To regenerate block fixtures, build `etc-oracle/Oracle.csproj` with `-p:EtcOracl
 The generated detex header selects __forceinline for the MSVC producer and retains the original inline spelling for other compilers. Source copies include that header consistently; this mechanical adaptation does not change decoder algorithms. Windows execution still requires its own verification.
 
 The encoder adds private e2d_image_encode/e2d_image_encoded_free exports. It reuses the pinned BasisU encoder for UASTC KTX2 and ETC/EAC transcoding, plus scalar astcenc for 4x4/8x8 LDR/HDR. No external process or extra dependency is required. Native compressor miniz uses the read closure's implementation to avoid duplicate symbols. Build Electron2DEncodeCheck to verify complete mip chains, input bounds and concurrent use. Platform bundle producers build and validate all seven exports; source overrides use Electron2DNativeLibrary for both engine and local consumers.
+
+## Allocation refusal checks
+
+`prepare_allocations.py` checks eight original/output SHA-256 pairs before changing
+the extracted build copy. It adds partial stream/texture/DFD/hash cleanup, throwing
+Basis vector failure, partial nested construction cleanup and transactional shared-table initialization. The generated
+transcoder owns its prototype and level indices through C++ unwinding. All roles
+continue using the single pinned archive; these ownership/error guards retain the
+codec algorithms. Check the immutable source, idempotence and atomic drift refusal:
+
+```bash
+python3 -B tools/ktx-native/test_prepare_allocations.py PATH_TO_PINNED_ARCHIVE
+cmake -S tools/ktx-native -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=Release \
+  -DELECTRON2D_STATIC_NATIVE=ON -DELECTRON2D_KTX_MEMORY_CHECK=ON
+cmake --build BUILD --target Electron2DKTXMemoryCheck Electron2DKTXContainerCheck --parallel 4
+BUILD/Electron2DKTXContainerCheck
+python3 -B tools/ktx-native/test_memory.py BUILD/fault/libElectron2D.so \
+  tests/Electron2D.Tests/TestData/KTX/oracle.json \
+  tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json --cold
+```
+
+This Linux-only fixture selectively remaps C allocation references in a copy of
+the merged codec archive, then links that copy and the test fault ledger in one
+`libElectron2D.so`. The original archive, normal checks and production module are
+untouched. Global linker wrapping would also intercept the ledger's backing
+allocator and recurse. The fixture is test-only and must never replace production
+or shared outputs.
+
+The native script also checks all seven LDR encoder modes with complete mip chains: every warm refusal must
+leave null/empty output and unchanged source, drain temporary storage and preserve
+the exact healthy encoded bytes on retry. `Electron2DKTXContainerCheck` injects
+element-construction failures across the vector constructor/copy family, verifies
+partial retirement and retry, and checks shrinking a nontrivial element span.
+The encoder reuses the reader's bounded slice alignment before transcoding its
+internal Basis container; this also covers unaligned complete-mip payload offsets.
+
+Publish FastTests into separate CLR and strict full-trim NativeAOT directories,
+using `Electron2DNativeLibrary=ABSOLUTE_BUILD/fault/libElectron2D.so`. Run each with
+`--ktx-memory`. The public check requires `IOException`, unchanged pixels/format/
+dimensions/input/Changed, full native temporary drain, exact independent mip pixels
+and healthy retry at every warm request. Keep ordinary decoder, block, encoder and
+sanitizer checks. This does not qualify C++ operators, shipped allocation routing,
+foreign hosts or the complete managed/native monitor; see the
+[component limits](../../docs/components/image-ktx.md#allocation-refusal-and-initialization).

@@ -23,6 +23,8 @@ set(KTX_FEATURE_LOADTEST_APPS OFF CACHE STRING "" FORCE)
 set(ASTCENC_ISA_NONE ON CACHE BOOL "" FORCE)
 # Invalidate FetchContent's patch stamp when the guarded adapter changes.
 file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake" configure_guard_sha256)
+file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/prepare_allocations.py" allocation_guard_sha256)
+string(SHA256 configure_guard_sha256 "${configure_guard_sha256}${allocation_guard_sha256}")
 FetchContent_Declare(Electron2DKTXCodec
   URL https://codeload.github.com/KhronosGroup/KTX-Software/tar.gz/refs/tags/v5.0.0-rc2
   URL_HASH SHA256=bce6794bca57d86de2f00683ba8eaa6b3e8875d5abe45ac1136e206eb68aa476
@@ -171,14 +173,48 @@ add_executable(Electron2DBlockCheck EXCLUDE_FROM_ALL test_blocks.cpp)
 target_compile_features(Electron2DBlockCheck PRIVATE cxx_std_17)
 target_link_libraries(Electron2DBlockCheck PRIVATE Electron2DKTX)
 add_executable(Electron2DEncodeCheck EXCLUDE_FROM_ALL test_encode.cpp)
+add_executable(Electron2DKTXContainerCheck EXCLUDE_FROM_ALL test_containers.cpp)
+target_compile_features(Electron2DKTXContainerCheck PRIVATE cxx_std_17)
+target_include_directories(Electron2DKTXContainerCheck PRIVATE "${electron2dktxcodec_SOURCE_DIR}/external/basis_universal/transcoder")
+target_link_libraries(Electron2DKTXContainerCheck PRIVATE Electron2DKTX)
 target_compile_features(Electron2DEncodeCheck PRIVATE cxx_std_17)
 target_link_libraries(Electron2DEncodeCheck PRIVATE Electron2DKTX)
 if(MSVC)
   target_compile_options(Electron2DEncodeCheck PRIVATE /UNDEBUG)
+  target_compile_options(Electron2DKTXContainerCheck PRIVATE /UNDEBUG)
 else()
   target_compile_options(Electron2DEncodeCheck PRIVATE -UNDEBUG)
+  target_compile_options(Electron2DKTXContainerCheck PRIVATE -UNDEBUG -fno-strict-aliasing)
 endif()
 if(Threads_FOUND)
   target_link_libraries(Electron2DBlockCheck PRIVATE Threads::Threads)
   target_link_libraries(Electron2DEncodeCheck PRIVATE Threads::Threads)
+endif()
+
+option(ELECTRON2D_KTX_MEMORY_CHECK "Build the isolated Linux allocation-refusal fixture" OFF)
+if(ELECTRON2D_KTX_MEMORY_CHECK)
+  if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux" OR NOT ELECTRON2D_STATIC_NATIVE OR ELECTRON2D_UNIFIED_NATIVE)
+    message(FATAL_ERROR "The KTX refusal fixture requires a standalone merged Linux static producer")
+  endif()
+  find_package(Threads REQUIRED)
+  find_program(allocation_objcopy NAMES objcopy REQUIRED)
+  set(fault_archive "${CMAKE_CURRENT_BINARY_DIR}/fault/codec.a")
+  set(remap)
+  foreach(symbol malloc calloc realloc free posix_memalign)
+    list(APPEND remap "--redefine-sym" "${symbol}=e2d_ktx_${symbol}")
+  endforeach()
+  # Rewrite only the copied codec closure; wrapping the common ledger recurses.
+  add_custom_command(OUTPUT "${fault_archive}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/fault"
+    COMMAND "${allocation_objcopy}" ${remap} "$<TARGET_FILE:Electron2DKTX>" "${fault_archive}"
+    DEPENDS Electron2DKTX "$<TARGET_FILE:Electron2DKTX>"
+    VERBATIM)
+  add_library(Electron2DKTXMemoryCheck SHARED EXCLUDE_FROM_ALL fault.c memory.c "${fault_archive}")
+  target_compile_features(Electron2DKTXMemoryCheck PRIVATE c_std_11)
+  target_include_directories(Electron2DKTXMemoryCheck PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../enet-native")
+  target_link_libraries(Electron2DKTXMemoryCheck PRIVATE
+    "-Wl,--whole-archive" "${fault_archive}" "-Wl,--no-whole-archive" Threads::Threads m stdc++)
+  target_link_options(Electron2DKTXMemoryCheck PRIVATE "LINKER:-z,defs" "LINKER:-Bsymbolic")
+  set_target_properties(Electron2DKTXMemoryCheck PROPERTIES C_VISIBILITY_PRESET hidden
+    OUTPUT_NAME Electron2D LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/fault")
 endif()

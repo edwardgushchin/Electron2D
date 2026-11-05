@@ -9,6 +9,18 @@ render checker and export/package tests. See [the native contract](components/fl
 
 # Maintaining the Electron2D contract
 
+For KTX allocation guards, run `tools/ktx-native/test_prepare_allocations.py` on
+the pinned archive, then build the isolated `Electron2DKTXMemoryCheck` with the
+merged Linux static closure. Run `test_memory.py --cold` on both KTX and legacy
+Basis oracles, the public FastTests `--ktx-memory` profile on CLR/full-trim
+NativeAOT, `Electron2DKTXContainerCheck` and existing decoder/block/encoder checks. Preserve every calibrated
+refusal, cold same-process retry, independent mip pixels, complete temporary
+drain and Image/source/Changed atomicity. Keep the fixture outside production
+outputs; it does not qualify shipped allocation routing or the composed monitor.
+Run the native encoder against the fully sanitizer-instrumented closure; an
+adapter-only sanitizer build misses the codec's internal alignment violations.
+See [the component](components/image-ktx.md#allocation-refusal-and-initialization).
+
 For legacy UTF8 inputs, run `Electron2D.FastTests --utf8-legacy` on CLR and strict
 full-trim NativeAOT with the private fault ledger. Supply a fresh absolute
 ELECTRON2D_UTF8_TEST_DIRECTORY and private XDG_DATA_HOME on the ordinary home
@@ -148,7 +160,7 @@ For registered extension-class changes, follow [ADR 0116](decisions/extensions.m
 
 For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and run the [public consumer](components/extensions.md). Keep typed module initialization/unloading separate from class registration, state rebinding and reload acceptance; storage must never serialize/activate entry callbacks.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-05
 
 Depth/stencil changes follow [the native state contract](components/depth-stencil-state.md): preserve stored-depth range semantics, independent visible faces, optional feature refusal, ordinary dynamic-reference switching, composed view/pass/MSAA/component variants and the warmed owner-allocation boundary.
 

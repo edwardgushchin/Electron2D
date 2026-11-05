@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-10-16
+Last updated: 2026-11-05
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -641,4 +641,4 @@ Uses FileAccess path resolution and existing atomic replacement. The parent dire
 <a id="loadktxfrombuffer"></a>
 ### `public void LoadKTXFromBuffer(ReadOnlySpan<byte> buffer)`
 
-Loads copied flat KTX1/KTX2 bytes through the private reader and Basis LDR/HDR transcoder. Preserves supported raw precision and complete mip chains, removes KTX1 row padding, normalizes endian/orientation/swizzles and converts RGB8 sRGB data to linear pixels. Failure preserves the image; success emits Changed after publication. Source/output/expanded pixels are bounded to 64 MiB; key/value metadata to 1 MiB and 4096 entries. Unsupported image roles and unavailable block transformations reject explicitly. See [KTX image integration](../components/image-ktx.md) for native ownership, source corrections, packages and verification limits.
+Loads copied flat KTX1/KTX2 bytes through the private reader and Basis LDR/HDR transcoder. Preserves supported raw precision and complete mip chains, removes KTX1 row padding, normalizes endian/orientation/swizzles and converts RGB8 sRGB data to linear pixels. Failure preserves the image; success emits Changed after publication. Decoder working-data/shared-table allocation refusal raises `IOException`; partial initialization retires its temporary storage and permits a healthy retry. Source/output/expanded pixels are bounded to 64 MiB; key/value metadata to 1 MiB and 4096 entries. Unsupported image roles and unavailable block transformations reject explicitly. See [KTX image integration](../components/image-ktx.md) for native ownership, source corrections, packages and verification limits.

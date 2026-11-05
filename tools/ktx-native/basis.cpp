@@ -1,4 +1,5 @@
 #include <ktx.h>
+#include "basis.h"
 #include "transcoder/basisu_transcoder.h"
 #include <memory>
 #include <mutex>
@@ -9,7 +10,7 @@ extern "C" void e2d_ktx_initialize_basis() {
     std::call_once(initialized, basist::basisu_transcoder_init);
 }
 
-static bool align_slices(const uint8_t *source, uint32_t size, std::vector<uint8_t> &storage, const uint8_t *&data, uint32_t &length) {
+bool e2d_basis_align_slices(const uint8_t *source, uint32_t size, std::vector<uint8_t> &storage, const uint8_t *&data, uint32_t &length) {
     constexpr uint32_t limit = 64u * 1024u * 1024u;
     const auto &header = *reinterpret_cast<const basist::basis_file_header *>(source);
     uint32_t count = header.m_total_slices, table = header.m_slice_desc_file_ofs;
@@ -65,7 +66,7 @@ extern "C" int e2d_basis_decode(const uint8_t *data, uint32_t size, ktxTexture2 
     }
     if (expanded > 64u * 1024u * 1024u || !transcoder.validate_file_checksums(data, size, true)) return -1;
     std::vector<uint8_t> aligned;
-    if (!align_slices(data, size, aligned, data, size)) return -1;
+    if (!e2d_basis_align_slices(data, size, aligned, data, size)) return -1;
     e2d_ktx_initialize_basis();
     if (!transcoder.start_transcoding(data, size)) return -1;
     bool hdr = basist::basis_tex_format_is_hdr(transcoder.get_basis_tex_format(data, size));
