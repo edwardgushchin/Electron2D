@@ -1,11 +1,14 @@
 # Physics measurement helpers
 
-## Per-method query timings
+## Public physics timings
 
 The [public query timing consumer](../../tests/PhysicsQueryPerformance.Consumer/README.md)
 covers all nine direct-space query overloads with hit/miss controls, caller-owned
-span storage and allocated array results. Its warmed repeated-query distributions
-remain separate from full-step/window and hardware CPU/GPU qualification.
+span storage and allocated array results. Its `scene` profile also measures complete
+public `SceneTree.PhysicsFrame` calls with physical/publication checks and warmed
+managed allocation brackets. Both profiles run without runtime friend access or
+private backend controls. Query distributions, complete frames, window FPS and
+isolated hardware performance qualification remain distinct evidence.
 
 ## Managed heap observations
 

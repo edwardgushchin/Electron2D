@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using Electron2D;
 
+if (args.Length > 0 && args[0] == "scene") { PublicScenePerformance.Run(args[1..]); return; }
+
 if (args.Length != 3 || args[0] is not ("cpu" or "gpu") ||
     !int.TryParse(args[1], out var count) || count < 2 || count > 16384)
     throw new ArgumentException("Use cpu|gpu body-count output.json; body-count must be 2..16384.");

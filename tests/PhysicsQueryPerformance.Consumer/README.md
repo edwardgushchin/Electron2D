@@ -1,4 +1,29 @@
-# Direct-space query timing
+# Public physics timing
+
+This project references the runtime as an ordinary consumer. It has no friend
+access, backend dependencies, private reflection, internal profiling controls or
+private timing counters. Performance intervals call the public Electron2D API.
+
+## Complete scene frames
+
+The `scene` mode measures `SceneTree.PhysicsFrame` on an explicitly selected CPU
+or GPU world, with four walls, awake rigid bodies, contact events, eight-contact
+caps and interpolation. Each fresh process warms 1600 and measures 256 frames
+at fixed 1/144 second, with sixteen solver iterations. It checks completed ticks,
+scene/direct-state agreement, finite and awake bodies, containment, penetration,
+energy, contacts and zero warmed owner/process managed allocations. Physical
+validation and cleanup are outside the timed interval.
+
+```powershell
+bin/physics-query-timing/PhysicsQueryPerformance.Consumer.exe scene cpu 16384 bin/scene-cpu-16384.json
+bin/physics-query-timing/PhysicsQueryPerformance.Consumer.exe scene gpu 16384 bin/scene-gpu-16384.json
+```
+
+The scene mode also rejects accidental runtime friend access at startup. It does
+not produce private solver-stage timings or window FPS. Native device/driver and
+host-load observations are separate environment evidence, outside physics timing.
+
+## Direct-space queries
 
 This public-only consumer measures every public query overload declared by
 `PhysicsDirectSpaceState`: ray, point (array/span), shape (array/span), motion
@@ -32,6 +57,7 @@ describe retained, native or device memory. Setup, validation, reporting and
 cleanup are outside the clock. No collection is forced in a timed interval.
 
 These repeated warmed queries do not measure cold/edited-world queries, every
-physical API method, solver stages, full steps, networking or window FPS.
-Full CPU/GPU comparison remains open until those required cases and real hardware
-pairs exist. See the [current measurements](../../docs/components/physics-current-performance.md).
+physical API method, solver stages, networking or window FPS. Full steps belong
+to the separate scene profile above. Full per-method CPU/GPU comparison remains
+open until the other physical method families have executable cases and matched
+hardware pairs. See the [current measurements](../../docs/components/physics-current-performance.md).

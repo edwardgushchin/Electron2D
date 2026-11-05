@@ -4,6 +4,75 @@ The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-
 
 Last updated: 2026-11-05
 
+## Public API comparison after driver recovery (2026-11-05)
+
+All physics timing in this series comes from the ordinary [public consumer](../../tests/PhysicsQueryPerformance.Consumer/README.md). It references only Electron2D, has no runtime friend access and uses no private reflection, backend objects, internal profiling controls or private counters. Full frames time `SceneTree.PhysicsFrame`; individual queries call the public `PhysicsDirectSpaceState` overloads. This supersedes internal-stage diagnostics as the method for the requested public-API comparison. The other physical method families remain unmeasured.
+
+### Hardware and installation
+
+Windows originally bound the installed PCI device to Microsoft `display.inf` / `BasicDisplay`. NVIDIA 621.14 WHQL was downloaded from its official server and both package and setup signatures verified. The package matches device `VEN_10DE&DEV_2203`. The first elevation request returned cancellation; after user confirmation the second ran. The active device is now NVIDIA GeForce RTX 3090 Ti, Windows driver `32.0.16.2114`, device problem code zero. `nvidia-smi` and direct SDL Direct3D 12/Vulkan probes identify that card. The GPU callback check passes 128 warm/128 measured frames at 0/0 managed bytes; its full process finishes in 22.074 seconds instead of the earlier software-device deadline.
+
+The installer nevertheless exits `0x80070005` in `CDisplayDriverExtSite::AfterInstall` / `Registry.cpp:1602`. This late registry failure remains unresolved; it is not reported as a clean installer exit. The driver is active and the public physical checks below run without reboot. No registry ACLs, clocks, power limits or user applications were changed.
+
+### Complete public scene frames
+
+Both paths use the same frozen self-contained .NET 10.0.14 host, identical four-wall circle scenes, sixteen solver iterations, awake bodies, eight-contact caps, contact events and interpolation. Each process warms 1600 and measures 256 fixed 1/144-second frames. Both explicit backend checks, completed ticks, published/direct state, containment, penetration, energy and contact checks pass with zero owner/process managed bytes. No real window is rendered.
+
+| Bodies | CPU mean / p95 / p99, ms | GPU mean / p95 / p99, ms | CPU/GPU mean ratio |
+| ---: | --- | --- | ---: |
+| 1536 | 10.040 / 11.849 / 14.130 | 13.580 / 15.937 / 16.607 | 0.739 |
+| 16384 | 125.587 / 132.743 / 137.992 | 97.611 / 118.781 / 128.902 | 1.287 |
+
+A ratio above one favors GPU. These are **single-process desktop diagnostics**, not isolated maximum-throughput or performance acceptance. The series ran GPU/CPU at 1536 and CPU/GPU at 16384; the host retained other applications. External observations cover each whole process, including setup, warmup and validation. Their `background_cores` field is system busy time minus child process CPU time and includes driver/system work; it does not isolate foreign application load. No private numerical-stage timing is part of this comparison.
+
+### Individual public queries
+
+Each unchanged static fixture runs one-collider hit and distant-miss controls for all nine declared overloads. The tables contain unadjusted mean microseconds/call. Percentiles in raw JSON describe batch means, not individual call tails; loop/delegate baselines are separate and not subtracted. GPU query returns include necessary synchronous completion and transfers. These cached, prepared queries do not measure cold or edited geometry.
+
+#### 16 static bodies
+
+| Public method | Hit CPU / GPU, us | Hit CPU/GPU | Miss CPU / GPU, us | Miss CPU/GPU |
+| --- | --- | ---: | --- | ---: |
+| IntersectRay | 2.150 / 110.693 | 0.019 | 2.181 / 113.883 | 0.019 |
+| IntersectPoint (array) | 1.448 / 121.168 | 0.012 | 1.483 / 130.835 | 0.011 |
+| IntersectPoint (span) | 1.475 / 135.048 | 0.011 | 1.431 / 129.500 | 0.011 |
+| IntersectShape (array) | 2.781 / 141.664 | 0.020 | 2.727 / 133.472 | 0.020 |
+| IntersectShape (span) | 2.775 / 138.226 | 0.020 | 3.051 / 140.853 | 0.022 |
+| CastMotion | 3.924 / 130.303 | 0.030 | 4.346 / 132.120 | 0.033 |
+| CollideShape (array) | 3.148 / 128.656 | 0.024 | 3.084 / 134.367 | 0.023 |
+| CollideShape (span) | 3.100 / 125.410 | 0.025 | 3.012 / 125.653 | 0.024 |
+| GetRestInfo | 3.623 / 136.420 | 0.027 | 2.722 / 135.705 | 0.020 |
+
+#### 256 static bodies
+
+| Public method | Hit CPU / GPU, us | Hit CPU/GPU | Miss CPU / GPU, us | Miss CPU/GPU |
+| --- | --- | ---: | --- | ---: |
+| IntersectRay | 44.130 / 115.246 | 0.383 | 35.984 / 117.926 | 0.305 |
+| IntersectPoint (array) | 46.900 / 133.035 | 0.353 | 25.156 / 129.561 | 0.194 |
+| IntersectPoint (span) | 54.178 / 142.160 | 0.381 | 24.502 / 134.214 | 0.183 |
+| IntersectShape (array) | 51.378 / 148.604 | 0.346 | 39.009 / 130.898 | 0.298 |
+| IntersectShape (span) | 47.344 / 142.549 | 0.332 | 41.853 / 134.413 | 0.311 |
+| CastMotion | 65.748 / 137.982 | 0.476 | 56.294 / 135.730 | 0.415 |
+| CollideShape (array) | 50.119 / 133.174 | 0.376 | 42.898 / 147.979 | 0.290 |
+| CollideShape (span) | 43.913 / 131.425 | 0.334 | 43.015 / 139.121 | 0.309 |
+| GetRestInfo | 45.186 / 138.625 | 0.326 | 42.133 / 143.706 | 0.293 |
+
+#### 4096 static bodies
+
+| Public method | Hit CPU / GPU, us | Hit CPU/GPU | Miss CPU / GPU, us | Miss CPU/GPU |
+| --- | --- | ---: | --- | ---: |
+| IntersectRay | 749.032 / 203.012 | 3.690 | 716.834 / 203.174 | 3.528 |
+| IntersectPoint (array) | 556.475 / 239.320 | 2.325 | 547.394 / 210.958 | 2.595 |
+| IntersectPoint (span) | 551.511 / 237.906 | 2.318 | 544.181 / 220.047 | 2.473 |
+| IntersectShape (array) | 858.925 / 256.271 | 3.352 | 848.160 / 223.788 | 3.790 |
+| IntersectShape (span) | 857.577 / 245.357 | 3.495 | 865.549 / 224.072 | 3.863 |
+| CastMotion | 1155.617 / 241.124 | 4.793 | 1145.718 / 220.170 | 5.204 |
+| CollideShape (array) | 983.351 / 219.920 | 4.471 | 959.637 / 227.208 | 4.224 |
+| CollideShape (span) | 938.865 / 232.880 | 4.032 | 916.854 / 224.312 | 4.087 |
+| GetRestInfo | 905.065 / 224.622 | 4.029 | 881.253 / 222.354 | 3.963 |
+
+The comparison currently covers nine query overloads and the full public scene-frame call. It does not claim timing coverage of every physical API method, failure/lifecycle case, raw-server workload, network workload or window FPS. The preliminary method inventory is not a completion metric. Source/run identities, per-frame samples, both allocation scopes, external host observations and the 54 paired query rows are retained under `bin/physics-public-comparison/2026-11-05/`; driver evidence is under `bin/physics-driver/2026-11-05/`. The older CPU-only figures and private phase breakdown below retain their historical diagnostic scope.
+
 ## Current physical task gate (2026-11-05)
 
 The [task-boundary correction](physics-contract-audit.md#physics-task-boundary-2026-11-05)
@@ -12,7 +81,7 @@ states do not replace physical acceptance. A headless Windows CLR 10.0.14 callba
 check passes CPU owner/separate modes with strict 0/0 warmed managed bytes after
 separating the unrelated GUI prerequisite. This is bounded functional evidence.
 
-The current GPU callback preflight emits an HLSL compilation warning but does not
+The initial GPU callback preflight emits an HLSL compilation warning but does not
 finish within 90 seconds. Its child is terminated and no performance sample is
 accepted. The subsequent [Windows probe](#windows-cpu-diagnostics-2026-11-05)
 identifies a software device. Hardware GPU availability and startup/step progress
@@ -21,7 +90,7 @@ not the next step. Preflight receipts are in `bin/physics-task-boundary/2026-11-
 
 ## Windows CPU diagnostics (2026-11-05)
 
-The requested complete per-method and full-step CPU/GPU comparison remains open. A direct device probe using the same SDL binary selects `direct3d12`, `Microsoft Basic Render Driver`, driver `10.0.26100.9711`; it does not supply an RTX hardware result. Explicit Vulkan creation also fails with `SDL_HINT_GPU_DRIVER vulkan unsupported!`. No hardware GPU ratio or window FPS is available.
+This earlier section predates the public-only measurement requirement. Its query fixture is public-only, but its complete-scene phase diagnostics use internal test controls and are not the accepted public comparison above. The complete per-method task remains open. At that point, a direct device probe using the same SDL binary selects `direct3d12`, `Microsoft Basic Render Driver`, driver `10.0.26100.9711`; it does not supply an RTX hardware result. Explicit Vulkan creation also fails with `SDL_HINT_GPU_DRIVER vulkan unsupported!`. No hardware GPU ratio or window FPS is available.
 
 Both current measurement hosts are self-contained Windows x64 / .NET 10.0.14 at runtime source `8e5fa256a44e750e4efd11d9e2cef8d77157ceac`. Their runtime DLL SHA-256 is `90c96a13a18758a2be98427616ea2aef5e16cd65d91fe50b9bf297a1ea29d1fd`. Initial framework-dependent .NET 10.0.1 controls are retained separately and are not combined with this series. These are single-run diagnostics without quiet-host admission or process/owner CPU clocks on this platform; they do not establish performance acceptance.
 
