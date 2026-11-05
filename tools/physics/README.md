@@ -1,5 +1,12 @@
 # Physics measurement helpers
 
+## Per-method query timings
+
+The [public query timing consumer](../../tests/PhysicsQueryPerformance.Consumer/README.md)
+covers all nine direct-space query overloads with hit/miss controls, caller-owned
+span storage and allocated array results. Its warmed repeated-query distributions
+remain separate from full-step/window and hardware CPU/GPU qualification.
+
 ## Managed heap observations
 
 The standalone [managed-memory probe](managed-memory-probe/ManagedMemoryProbe.csproj)

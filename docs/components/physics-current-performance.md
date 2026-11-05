@@ -14,10 +14,68 @@ separating the unrelated GUI prerequisite. This is bounded functional evidence.
 
 The current GPU callback preflight emits an HLSL compilation warning but does not
 finish within 90 seconds. Its child is terminated and no performance sample is
-accepted. Host enumeration reports Microsoft Basic Display Adapter; actual compute
-adapter/driver selection and startup/step progress still need attribution. These
-are physical qualification prerequisites. Full-library memory accounting is not
-the next step. Receipts are in `bin/physics-task-boundary/2026-11-05/`.
+accepted. The subsequent [Windows probe](#windows-cpu-diagnostics-2026-11-05)
+identifies a software device. Hardware GPU availability and startup/step progress
+remain physical qualification prerequisites. Full-library memory accounting is
+not the next step. Preflight receipts are in `bin/physics-task-boundary/2026-11-05/`.
+
+## Windows CPU diagnostics (2026-11-05)
+
+The requested complete per-method and full-step CPU/GPU comparison remains open. A direct device probe using the same SDL binary selects `direct3d12`, `Microsoft Basic Render Driver`, driver `10.0.26100.9711`; it does not supply an RTX hardware result. Explicit Vulkan creation also fails with `SDL_HINT_GPU_DRIVER vulkan unsupported!`. No hardware GPU ratio or window FPS is available.
+
+Both current measurement hosts are self-contained Windows x64 / .NET 10.0.14 at runtime source `8e5fa256a44e750e4efd11d9e2cef8d77157ceac`. Their runtime DLL SHA-256 is `90c96a13a18758a2be98427616ea2aef5e16cd65d91fe50b9bf297a1ea29d1fd`. Initial framework-dependent .NET 10.0.1 controls are retained separately and are not combined with this series. These are single-run diagnostics without quiet-host admission or process/owner CPU clocks on this platform; they do not establish performance acceptance.
+
+### Complete monitored scene
+
+Every case uses the existing complete scene fixture: four walls, 144 Hz, four substeps, sixteen solver sweeps, awake bodies, eight-contact caps, events and interpolation. Each fresh CPU process warms 1600 and measures 256 frames. Physical, publication and zero-managed-allocation checks pass. There is no rendered window in these cases.
+
+| Bodies | CPU full step mean / p50 / p95 / p99 / max, ms | Owner / all-thread managed bytes | Hardware GPU / ratio |
+| ---: | --- | ---: | --- |
+| 1536 | 7.4851 / 7.2557 / 9.0300 / 9.5508 / 9.7950 | 0 / 0 | Unmeasured |
+| 16384 | 115.2630 / 114.6777 / 121.2520 / 128.2468 / 133.7064 | 0 / 0 | Unmeasured |
+
+The existing eight nonoverlapping profile intervals are below. The residual is full-frame work outside those intervals and timer boundary overhead; it is not silently assigned to the solver. Nested completion subphases remain in the raw JSON.
+
+| Interval | CPU 1536 bodies, mean ms | CPU 16384 bodies, mean ms |
+| --- | ---: | ---: |
+| Authoring | 0.199240 | 6.127093 |
+| World policy / fields | 0.000241 | 0.000793 |
+| Body motion / callbacks | 0.459965 | 8.943962 |
+| Solver | 4.921432 | 54.626888 |
+| Result synchronization | 0.000353 | 0.001366 |
+| Pose / contacts | 1.254339 | 30.469077 |
+| Areas / views / statistics | 0.000651 | 0.001918 |
+| Callbacks / events | 0.000818 | 0.001497 |
+| Outside instrumented intervals | 0.648110 | 15.090452 |
+
+### Direct-space query overloads
+
+The [public-only query consumer](../../tests/PhysicsQueryPerformance.Consumer/README.md) measures all nine declared query overloads and rejects a missing or duplicate case against the compiled class. Each unchanged static-circle fixture executes a one-collider hit and a distant miss: 64 warm and 128 measured batches, 64 calls each. The table contains unadjusted mean microseconds per call, including necessary synchronous query completion and loop/delegate overhead. Raw percentiles describe batch means, not individual-call tails. The empty-loop baseline is reported separately and is not subtracted.
+
+| Method | Scenario | CPU 16 bodies, us | CPU 256 bodies, us | CPU 4096 bodies, us |
+| --- | --- | ---: | ---: | ---: |
+| IntersectRay | Hit | 2.097 | 37.704 | 684.354 |
+| IntersectPoint (array) | Hit | 1.377 | 28.441 | 529.930 |
+| IntersectPoint (span) | Hit | 1.349 | 23.825 | 549.309 |
+| IntersectShape (array) | Hit | 2.626 | 38.748 | 882.660 |
+| IntersectShape (span) | Hit | 2.562 | 42.748 | 859.662 |
+| CastMotion | Hit | 3.698 | 56.045 | 1058.567 |
+| CollideShape (array) | Hit | 2.599 | 39.948 | 831.049 |
+| CollideShape (span) | Hit | 2.515 | 40.030 | 852.938 |
+| GetRestInfo | Hit | 2.547 | 40.639 | 875.124 |
+| IntersectRay | Miss | 1.976 | 33.384 | 680.814 |
+| IntersectPoint (array) | Miss | 1.354 | 23.500 | 531.508 |
+| IntersectPoint (span) | Miss | 1.317 | 23.430 | 529.216 |
+| IntersectShape (array) | Miss | 2.603 | 38.317 | 878.839 |
+| IntersectShape (span) | Miss | 2.530 | 38.302 | 844.485 |
+| CastMotion | Miss | 3.342 | 55.587 | 1139.435 |
+| CollideShape (array) | Miss | 2.501 | 40.291 | 842.172 |
+| CollideShape (span) | Miss | 2.490 | 39.613 | 835.375 |
+| GetRestInfo | Miss | 2.438 | 40.436 | 865.195 |
+
+Hit array overloads allocate 64 bytes/call for point/shape results and 40 bytes/call for collision points; the exercised span overloads allocate zero managed bytes. The counts are measured owner/process allocation traffic, not native or retained memory. No hardware GPU query case is accepted. Other physical API families, cold/edited-world queries, detailed numerical kernels, networking and real-window comparison still require measurements.
+
+Reproduction, exact commands, source/binary identities and raw results are under `bin/physics-speed/2026-11-05/`: `run-cpu.py`, `series-net10.0.14.json`, `source-identity.json`, `device.json`, `queries-cpu-*-net10.0.14.json` and `scene-*-cpu-net10.0.14/CPU.json`. Hardware driver/host availability must be resolved before the paired GPU runs. Historical Linux/RTX measurements below keep their own revisions and cannot fill the missing Windows GPU cells.
 
 The [2026-10-27 containment correction](gpu-contact-colors.md#dense-retention-witness-2026-10-27)
 closes the raw benchmark with four walls and adds CPU/GPU open-wall controls. The
