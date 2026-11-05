@@ -15,9 +15,29 @@
     "original": "a3db4bd979663423de00309d1ba07d7fa8576845223d3e02764181bd6da23f90",
     "prepared": "a36d1bf17c37145b99bfe07a90ced6c6d780123bf47e1a649e762f754b52eb66"
   },
+  "external/astc-encoder/Source/astcenc_block_sizes.cpp": {
+    "original": "3cb1f4fa730ad34a5c43a754dc64a82a04acef25bb6a4ddd4890e2c0fdf2a74e",
+    "prepared": "84109ba9c557bf9d261ecc5e9f3f7d790febdf0df03ea8d4390cfed7bd611d88"
+  },
+  "external/astc-encoder/Source/astcenc_entry.cpp": {
+    "original": "15bb5d8077333a2712a92cb656e0769aa0ebd4a3382530e01c65a6639701f907",
+    "prepared": "40a62da56f30a337a2787b39d767b78f31a83d73c4edc8a6187984e2d276f1b2"
+  },
   "external/astc-encoder/Source/astcenc_internal.h": {
     "original": "428c3647bcb3e1d414db36d07ae3b39a37b0771eb1ad040436a6205c27f87705",
     "prepared": "b742d5c88ac27e8258d9e388d6f88ba56c890b8b2a9d32e570d9e37a5a703ef1"
+  },
+  "external/astc-encoder/Source/astcenc_internal_entry.h": {
+    "original": "245df017c17dbc4db7ecf43ae044ab0ed73d9f03a8eaa9a55dbf2e987b3b5f12",
+    "prepared": "dfca990c29ca2f70980cb84ec641657622e9d5214ece26742f60ba9c89c0736e"
+  },
+  "external/astc-encoder/Source/astcenc_partition_tables.cpp": {
+    "original": "5c03b988dbc9825392840b99b5a011d6392bbe62cba3449b15edf47e16bdf0d4",
+    "prepared": "605046a1a17bd7e2028b1c3a1e82edf34da35e514ff3b1827fec3b16333a17d1"
+  },
+  "external/astc-encoder/Source/astcenc_percentile_tables.cpp": {
+    "original": "74e877e62a1141f26b06b68e98236a65b9235539b8f074650a1d656a2d14ea2b",
+    "prepared": "a630793d6e1a6fe461f707710c460b1bf83079380f5cf0591e52fd01f2694ffe"
   },
   "external/astc-encoder/Source/astcenccli_image_external.cpp": {
     "original": "9e90af1a6ccf7750800c9efd17063a9f791a113459a65835fe27a865da446bbc",

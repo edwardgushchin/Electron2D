@@ -1,6 +1,6 @@
 # ETC/EAC and ASTC pixel decoding
 
-Last updated: 2026-10-16
+Last updated: 2026-11-05
 
 `Image.Decompress` executes all 22 stored block formats, retaining the complete
 mip chain. The [BC decoder](image-bcn.md) supplies nine roles. The shared private
@@ -28,6 +28,13 @@ validated. Source bytes and conservative RGBA-float expansion must each fit
 unchanged; successful publication emits Changed once outside locks. Repeating
 Decompress on uncompressed pixels is silent. Other pixel processing still requires
 explicit decompression.
+
+The selected ASTC context and working arrays use the common native allocator
+through the [checked codec storage profile](image-ktx.md#allocation-refusal-and-initialization).
+Native and public CLR/NativeAOT checks inject 60 block allocation refusals across
+all LDR/HDR footprints and mip levels, preserving borrowed input, output guards,
+published Image state and healthy independent-pixel retry. This qualifies that
+storage domain; complete native/runtime composition remains open.
 
 ImageTexture, TextureArray, CompressedTextureArray and RenderingServer use the same
 prepared pixel snapshots. Their source reads and archives preserve original blocks.
@@ -78,4 +85,4 @@ acceptance require separate evidence.
 
 Fresh source, ProjectReference and NuGet consumers execute all thirteen public block roles with native compilers blocked. A separate NativeAOT package consumer executes the same decoder/texture/array flow. A self-contained managed Linux publish passes the 72-ELF and 92-notice audits; AOT retains all 92 notices byte-for-byte. These local checks do not establish foreign execution or public package availability.
 
-The generated detex header selects __forceinline for the MSVC producer and retains the original inline spelling for other compilers. Source copies include that header consistently; this mechanical adaptation does not change decoder algorithms. Windows execution still requires its own verification.
+The generated detex header selects __forceinline for the MSVC producer and retains the original inline spelling for other compilers. Source copies include that header consistently; this mechanical adaptation does not change decoder algorithms. Standalone Windows native checks pass under MSVC; packaged/rendered Windows consumers remain separate.

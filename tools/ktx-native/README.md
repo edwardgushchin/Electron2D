@@ -23,7 +23,7 @@ Build `Electron2DBlockCheck`, then run `python3 -B tools/ktx-native/test_blocks.
 
 To regenerate block fixtures, build `etc-oracle/Oracle.csproj` with `-p:EtcOracleSource=PATH` pointing at the AssetRipper.TextureDecoder project from commit 13b4f6ee4906877402ab69fc5a0b51b83c15db44. That standalone oracle compiles upstream test-only source without packages. Build the standalone scalar astcenc CLI from the pinned KTX archive. Then run `generate_block_fixtures.py ETC_ORACLE_DLL ASTCENC EXR_ORACLE OUTPUT_JSON`. ETC byte pixels come from the independent oracle, signed EAC from explicit numerical vectors, and ASTC pixels from the official CLI plus OpenEXR. The fixture records tool hashes; these tools are absent from the runtime and packages.
 
-The generated detex header selects __forceinline for the MSVC producer and retains the original inline spelling for other compilers. Source copies include that header consistently; this mechanical adaptation does not change decoder algorithms. Windows execution still requires its own verification.
+The generated detex header selects __forceinline for the MSVC producer and retains the original inline spelling for other compilers. Source copies include that header consistently; this mechanical adaptation does not change decoder algorithms. Standalone Windows native checks pass under MSVC; packaged/rendered Windows consumers remain separate.
 
 The encoder adds private e2d_image_encode/e2d_image_encoded_free exports. It reuses the pinned BasisU encoder for UASTC KTX2 and ETC/EAC transcoding, plus scalar astcenc for 4x4/8x8 LDR/HDR. No external process or extra dependency is required. Native compressor miniz uses the read closure's implementation to avoid duplicate symbols. Build Electron2DEncodeCheck to verify complete mip chains, input bounds and concurrent use. Platform bundle producers build and validate all seven exports; source overrides use Electron2DNativeLibrary for both engine and local consumers.
 
@@ -41,19 +41,29 @@ python3 -B tools/ktx-native/test_prepare_allocations.py PATH_TO_PINNED_ARCHIVE
 python3 -B tools/ktx-native/test_prepare_memory.py PATH_TO_PINNED_ARCHIVE
 cmake -S tools/ktx-native -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DELECTRON2D_STATIC_NATIVE=ON -DELECTRON2D_KTX_MEMORY_CHECK=ON
-cmake --build BUILD --target Electron2DKTXMemoryCheck Electron2DKTXContainerCheck --parallel 4
+cmake --build BUILD --target Electron2DKTXMemoryCheck Electron2DKTXContainerCheck \
+  Electron2DKTXCPPCheck Electron2DASTCMemoryCheck --parallel 2
 BUILD/Electron2DKTXContainerCheck
+BUILD/Electron2DKTXCPPCheck
+BUILD/Electron2DASTCMemoryCheck
 python3 -B tools/ktx-native/test_memory.py BUILD/fault/libElectron2D.so \
   tests/Electron2D.Tests/TestData/KTX/oracle.json \
-  tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json --cold
+  tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json \
+  --blocks-oracle tests/Electron2D.Tests/TestData/Blocks/oracle.json --cold
 ```
 
 `prepare_memory.py` composes the ownership guards with a lexical C allocation
-namespace in the extracted build source, verifying 45 complete input/output hash
-pairs. It preserves comments, literals, includes and allocator attributes, rejects
-unregistered allocation-bearing sources, and validates the profile on every
+namespace and `prepare_cpp.py`'s ASTC ownership guards in the extracted build
+source, verifying 50 complete input/output hash
+pairs. Its lexical C pass preserves comments, literals, includes and allocator
+attributes, rejects unregistered C allocation-bearing sources, and validates the profile on every
 configuration. Its C/aligned allocation calls and returned encoder buffers use
 `allocator.h`/`memory.c` and the process-lifetime native ledger before first use.
+`memory.hpp` routes bridge/transcoder vectors, level indices and selected ASTC
+context/working arrays through that same ledger with aligned scoped ownership.
+Synchronous ASTC init/term callbacks use templates, eliminating function boxing.
+The selected ASTC archive must have no default C++ new/delete references;
+Basis STL/runtime allocation remains open. Diagnostics are disabled in this profile.
 No managed callback registration is needed. The immutable source archive is retained.
 
 The Linux-only refusal fixture links that production codec profile to the test
@@ -70,15 +80,25 @@ element-construction failures across the vector constructor/copy family, verifie
 partial retirement and retry, and checks shrinking a nontrivial element span.
 The encoder reuses the reader's bounded slice alignment before transcoding its
 internal Basis container; this also covers unaligned complete-mip payload offsets.
+`Electron2DKTXCPPCheck` exercises aligned object/array and nested construction/copy
+retirement. `Electron2DASTCMemoryCheck` injects real context/array failures with
+alpha preprocessing across LDR/HDR and both block footprints. Block refusal checks
+require unchanged borrowed input/output guards, independent pixels and retry for
+every mip. Windows Ninja builds use the raw localized include-prefix probe from
+`tools/native/msvc-dependencies.cmake`; verify header invalidation after changing
+the compiler/toolchain.
 
 Publish FastTests into separate CLR and strict full-trim NativeAOT directories,
 using `Electron2DNativeLibrary=ABSOLUTE_BUILD/fault/libElectron2D.so`. Run each with
 `--ktx-memory`. The public check requires `IOException`, unchanged pixels/format/
 dimensions/input/Changed, full native temporary drain, exact independent mip pixels
-and healthy retry at every warm request. Keep ordinary decoder, block, encoder and
+and healthy retry at every warm request. It also checks Image normalization/block/
+encoder working storage and portable Basis/ETC2/ASTC LDR/HDR RID, envelope, mip,
+metadata and notification atomicity. Keep ordinary decoder, block, encoder and
 sanitizer checks. Separately run FastTests `--ktx-production-memory` against the
 rebuilt unified module, on CLR and strict NativeAOT. Its first raw Image load must
-record a native peak after decoder retirement; independent mip loads must drain
-without changing concurrent GZIP ownership. This does not qualify C++ operators,
+record a native peak after decoder retirement; legacy luminance normalization
+must count overlapping C++ scratch and native pixels. Independent mip loads must drain
+without changing concurrent GZIP ownership. This does not qualify remaining Basis STL/runtime allocation,
 foreign hosts, release packages or the complete managed/native monitor; see the
 [component limits](../../docs/components/image-ktx.md#allocation-refusal-and-initialization).

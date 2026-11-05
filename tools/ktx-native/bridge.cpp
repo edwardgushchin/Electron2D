@@ -2,7 +2,7 @@
 #include <ktx.h>
 #include <cstring>
 #include <new>
-#include <vector>
+#include "memory.hpp"
 
 static constexpr uint64_t limit = 64u * 1024u * 1024u;
 
@@ -160,7 +160,7 @@ extern "C" int e2d_ktx_create(const uint8_t *data, uint64_t size, e2d_ktx_info *
     ktxTexture *texture = nullptr;
     try {
         uint32_t legacy = 0;
-        std::vector<uint8_t> normalized;
+        e2d_ktx::vector<uint8_t> normalized;
         if (data[5] == 0x31) {
             bool big = word(data + 12) == 0x01020304;
             auto format = word(data + 28, big);

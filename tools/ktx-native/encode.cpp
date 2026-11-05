@@ -9,7 +9,7 @@
 #include <cstring>
 #include <memory>
 #include <mutex>
-#include <vector>
+#include "memory.hpp"
 
 extern "C" void e2d_ktx_initialize_basis();
 
@@ -18,7 +18,7 @@ constexpr uint64_t limit = 64u * 1024u * 1024u;
 struct level { uint32_t width, height; uint64_t offset, bytes; };
 
 bool levels_for(uint32_t width, uint32_t height, uint32_t count, uint32_t stride,
-    uint64_t size, std::vector<level> &levels) {
+    uint64_t size, e2d_ktx::vector<level> &levels) {
     if (!width || !height || width > 16384 || height > 16384 || !count || count > 15) return false;
     uint64_t total = 0;
     for (uint32_t mip = 0; mip < count; ++mip) {
@@ -31,8 +31,8 @@ bool levels_for(uint32_t width, uint32_t height, uint32_t count, uint32_t stride
     return total == size && (count == 1 || (levels.back().width == 1 && levels.back().height == 1));
 }
 
-int astc(uint32_t kind, bool hdr, const uint8_t *source, const std::vector<level> &levels,
-    std::vector<uint8_t> &output) {
+int astc(uint32_t kind, bool hdr, const uint8_t *source, const e2d_ktx::vector<level> &levels,
+    e2d_ktx::vector<uint8_t> &output) {
     uint32_t block = kind == 5 ? 4 : 8;
     for (const auto &mip : levels) {
         uint64_t bytes = static_cast<uint64_t>((mip.width + block - 1) / block) * ((mip.height + block - 1) / block) * 16;
@@ -45,8 +45,8 @@ int astc(uint32_t kind, bool hdr, const uint8_t *source, const std::vector<level
         auto status = astcenc_context_alloc(&config, 1, &raw, nullptr);
         if (status != ASTCENC_SUCCESS) return status == ASTCENC_ERR_OUT_OF_MEM ? -3 : -1;
         std::unique_ptr<astcenc_context, decltype(&astcenc_context_free)> context(raw, astcenc_context_free);
-        std::vector<uint8_t> aligned;
-        std::vector<float> floating;
+        e2d_ktx::vector<uint8_t> aligned;
+        e2d_ktx::vector<float> floating;
         void *pixels;
         if (hdr) { floating.resize(static_cast<size_t>(mip.bytes / 4)); std::memcpy(floating.data(), source + mip.offset, static_cast<size_t>(mip.bytes)); pixels = floating.data(); }
         else { aligned.assign(source + mip.offset, source + mip.offset + mip.bytes); pixels = aligned.data(); }
@@ -60,7 +60,7 @@ int astc(uint32_t kind, bool hdr, const uint8_t *source, const std::vector<level
 }
 
 int basis(uint32_t kind, bool hdr, bool normal, uint32_t quality, float rdo,
-    const uint8_t *source, const std::vector<level> &levels, std::vector<uint8_t> &output) {
+    const uint8_t *source, const e2d_ktx::vector<level> &levels, e2d_ktx::vector<uint8_t> &output) {
     e2d_ktx_initialize_basis();
     static std::once_flag initialized;
     std::call_once(initialized, [] { if (!basisu::basisu_encoder_init(false)) throw std::bad_alloc(); });
@@ -110,7 +110,7 @@ int basis(uint32_t kind, bool hdr, bool normal, uint32_t quality, float rdo,
     const uint8_t *data = file.data();
     uint32_t size = file.size();
     basist::basisu_transcoder transcoder;
-    std::vector<uint8_t> aligned;
+    e2d_ktx::vector<uint8_t> aligned;
     if (size < sizeof(basist::basis_file_header) || !transcoder.validate_header(data, size) ||
         !e2d_basis_align_slices(data, size, aligned, data, size) || !transcoder.start_transcoding(data, size)) return -1;
     auto format = kind == 1 ? basist::transcoder_texture_format::cTFETC1_RGB
@@ -136,10 +136,10 @@ extern "C" int e2d_image_encode(uint32_t kind, uint32_t width, uint32_t height, 
     try {
         if (!source || !output || !output_size || kind > 6 || hdr > 1 || normal > 1 || quality > 4 ||
             !std::isfinite(rdo) || rdo < 0 || rdo > 50 || (hdr && kind >= 1 && kind <= 4)) return -1;
-        std::vector<level> levels;
+        e2d_ktx::vector<level> levels;
         if (!levels_for(width, height, count, hdr ? 16 : 4, source_size, levels)) return -1;
         if (hdr) for (uint64_t i = 0; i < source_size; i += 4) { float value; std::memcpy(&value, source + i, 4); if (!std::isfinite(value)) return -1; }
-        std::vector<uint8_t> bytes;
+        e2d_ktx::vector<uint8_t> bytes;
         int status = kind >= 5 ? astc(kind, hdr != 0, source, levels, bytes)
             : basis(kind, hdr != 0, normal != 0, quality, rdo, source, levels, bytes);
         if (status != 0) return status;

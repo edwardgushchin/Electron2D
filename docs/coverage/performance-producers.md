@@ -20,12 +20,13 @@ checks below must not be read as whole-library or whole-monitor acceptance.
 The [KTX component](../components/image-ktx.md#allocation-refusal-and-initialization)
 records partial-owner cleanup, recoverable metadata/DFD/vector allocation failure
 and transactional cold decode-table initialization. The production source profile
-now routes libktx, DFD, Basis vector/miniz/Zstandard, ASTC C/aligned storage and
-returned encoder buffers directly to the common pure-C ledger. A checked namespace
-pass validates 45 complete input/output SHA-256 pairs and rejects newly introduced
+now routes libktx, DFD, Basis vector/miniz/Zstandard, returned encoder buffers,
+bridge/transcoder working vectors and selected ASTC context/working arrays directly
+to the common pure-C ledger. Synchronous ASTC callbacks avoid heap boxing. Checked
+source preparation validates 50 complete input/output SHA-256 pairs and rejects newly introduced
 allocation-bearing sources. The unified module retains one common allocation core;
 the Linux refusal fixture uses the same codec profile with a test backing core.
-C++ operators/STL, support/provider heaps, qualified release packages, foreign targets and coherent managed/native composition
+Remaining Basis STL/runtime allocation, support/provider heaps, qualified release packages, foreign targets and coherent managed/native composition
 remain open. No declaration changes state: physics remains **1365/1369 (99.71%)**,
 four Partial and 92 Excluded.
 

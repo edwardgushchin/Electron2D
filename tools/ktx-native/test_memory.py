@@ -76,6 +76,8 @@ def child(library, fixture, failure):
     ledger.e2d_test_attempts.restype = C.c_size_t
     if fixture.get("container") == "encode":
         return encoders(codec)
+    if fixture.get("container") == "block":
+        return blocks(codec, fixture)
     create = codec.e2d_basis_create if fixture.get("container") == "basis" else codec.e2d_ktx_create
     create.argtypes = [C.c_void_p, C.c_uint64, C.POINTER(Info), C.POINTER(C.c_void_p)]
     codec.e2d_ktx_destroy.argtypes = [C.c_void_p]
@@ -135,6 +137,57 @@ def child(library, fixture, failure):
             "baseline": baseline, "live": healthy[2], "peak": snapshot().nativePeak}
 
 
+def blocks(codec, fixture):
+    decode = codec.e2d_block_decode
+    decode.argtypes = [C.c_uint32] * 3 + [C.c_void_p, C.c_uint64, C.c_void_p, C.c_uint64]
+    source, expected = base64.b64decode(fixture["encoded"]), base64.b64decode(fixture["pixels"])
+    mode = fixture["mode"]
+    block, stride = (8 if mode >= 10 else 4), (16 if mode in (5, 7) else 8 if mode in (9, 11) else 4)
+    block_bytes = 16 if mode >= 8 or mode in (2, 6, 7) else 8
+    width, height = fixture["width"], fixture["height"]
+    encoded_offset = decoded_offset = refusals = 0
+
+    def current():
+        state = Snapshot()
+        codec.e2d_memory_snapshot(C.byref(state))
+        return state.nativeCurrent
+
+    while True:
+        encoded_size = ((width + block - 1) // block) * ((height + block - 1) // block) * block_bytes
+        decoded_size = width * height * stride
+        borrowed = b"!" + source[encoded_offset:encoded_offset + encoded_size] + b"!"
+        data = C.create_string_buffer(borrowed)
+        oracle = expected[decoded_offset:decoded_offset + decoded_size]
+        baseline = current()
+
+        def call(failure):
+            output = C.create_string_buffer(b"?" * (decoded_size + 4))
+            codec.e2d_test_arm(failure)
+            status = decode(mode, width, height, C.byref(data, 1), encoded_size, C.byref(output, 2), decoded_size)
+            attempts = codec.e2d_test_attempts()
+            assert current() == baseline and data.raw[:-1] == borrowed
+            assert output.raw[:2] == b"??" and output.raw[-3:-1] == b"??"
+            if status:
+                assert status == -3 and output.raw[:-1] == b"?" * (decoded_size + 4), ("block refusal publication", fixture["name"], failure, status)
+            else:
+                assert output.raw[2:2 + decoded_size] == oracle, fixture["name"]
+            return status, attempts
+
+        healthy = call(0)
+        assert healthy[0] == 0
+        for refusal in range(1, healthy[1] + 1):
+            assert call(refusal)[0] != 0, ("block refusal", fixture["name"], refusal)
+            assert call(0)[0] == 0
+            refusals += 1
+        encoded_offset += encoded_size
+        decoded_offset += decoded_size
+        if width == 1 and height == 1:
+            break
+        width, height = max(1, width // 2), max(1, height // 2)
+    assert encoded_offset == len(source) and decoded_offset == len(expected)
+    return {"name": fixture["name"], "blockRefusals": refusals}
+
+
 def raw_fixture(metadata):
     entries = bytearray()
     for index in range(metadata):
@@ -151,6 +204,7 @@ def main():
     parser.add_argument("library", type=Path)
     parser.add_argument("oracles", type=Path, nargs="*")
     parser.add_argument("--cold", action="store_true")
+    parser.add_argument("--blocks-oracle", type=Path)
     parser.add_argument("--child", type=int)
     args = parser.parse_args()
     if args.child is not None:
@@ -165,6 +219,10 @@ def main():
         return json.loads(result.stdout.strip().splitlines()[-1])
 
     print(json.dumps(run({"name": "encoders", "container": "encode"}, 0)), flush=True)
+    if args.blocks_oracle:
+        for fixture in json.loads(args.blocks_oracle.read_text())["fixtures"]:
+            if fixture["source_format"] != "Etc2RaAsRg":
+                print(json.dumps(run(dict(fixture, container="block"), 0)), flush=True)
     fixtures = [raw_fixture(0), raw_fixture(512)]
     for oracle in args.oracles:
         fixtures.extend(json.loads(oracle.read_text())["fixtures"])

@@ -7,6 +7,7 @@ import re
 import sys
 
 from prepare_allocations import PINS as OWNERSHIP, prepare as prepare_ownership
+from prepare_cpp import prepare as prepare_cpp
 
 NOTICE = "/* Generated Electron2D C allocation profile; the downloaded archive is unchanged. */\n#include \"allocator.h\"\n"
 NAMES = ("malloc", "calloc", "realloc", "free", "posix_memalign", "_aligned_malloc", "_aligned_free", "strdup", "_strdup")
@@ -37,7 +38,7 @@ def prepare(name, contents):
     if name in OWNERSHIP:
         contents = prepare_ownership(name, contents.decode("utf-8")).encode("utf-8")
     # Preserve vendor comment encodings byte-for-byte; allocator identifiers are ASCII.
-    return NOTICE.encode("ascii") + namespace(contents.decode("latin-1")).encode("latin-1")
+    return NOTICE.encode("ascii") + prepare_cpp(name, namespace(contents.decode("latin-1"))).encode("latin-1")
 
 
 def main(root):
@@ -59,7 +60,7 @@ def main(root):
         if digest == pins["original"]:
             result = prepare(name, contents)
         elif name in OWNERSHIP and digest == OWNERSHIP[name][1]:
-            result = NOTICE.encode("ascii") + namespace(contents.decode("latin-1")).encode("latin-1")
+            result = NOTICE.encode("ascii") + prepare_cpp(name, namespace(contents.decode("latin-1"))).encode("latin-1")
         else:
             raise ValueError("Pinned C allocation input changed: " + name)
         if hashlib.sha256(result).hexdigest() != pins["prepared"]:

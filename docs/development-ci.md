@@ -1,6 +1,6 @@
 # Development feedback and package qualification
 
-Last updated: 2026-10-29
+Last updated: 2026-11-05
 
 The [CI workflow](../.github/workflows/ci.yml) separates fast development feedback
 from complete package qualification. This preserves the configured platform
@@ -21,6 +21,15 @@ builds and publishes. `Electron2DFontNativeLibrary` selects the matching private
 FreeType build; Linux also requires this private payload rather than its former
 MonoGame dependency. A passing preflight verifies loading and exports, not codec
 behavior, the complete native bundle, platform execution or physics acceptance.
+
+Windows Ninja native builds probe the raw localized MSVC include prefix before
+subsystems configure. This preserves header dependencies when CMake's automatic
+console decoding differs from compiler output. The prefix hash enters the compile
+command through an environment launcher, invalidating previously empty dependency
+records while preserving configured compiler launchers. After a compiler/toolchain change,
+check `ninja -t deps` and actual header invalidation as described in the
+[native producer guide](../tools/native/README.md). A successful build with an
+empty dependency list does not establish that changed headers were compiled.
 
 ## When work runs
 

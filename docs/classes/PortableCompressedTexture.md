@@ -29,4 +29,4 @@ Populated archives require the encoded buffer retained before creation. Missing 
 
 Source and encoded payloads are bounded to 64 MiB. Image's codec-work budget applies before block encoding/decoding. Errors before publication preserve pixels, mode, size and RID. PropertyListChanged precedes Changed outside the resource lock after publication; subscriber failure retains committed state. Readback/encoding are cold operations. Prepared ordinary rendering reuses immutable pixels.
 
-Linux Wayland GPU and Compatibility checks and native/managed checks are described in the component page. Foreign platform execution and native allocation totals remain separate gates.
+Linux Wayland GPU and Compatibility checks and native/managed checks are described in the component page. CLR/NativeAOT allocation-refusal checks preserve RID, retained envelope, mips, metadata and notifications across Basis/ETC2/ASTC LDR/HDR failures. Encoder working vectors and ASTC contexts/arrays feed the shared native ledger; remaining Basis STL/runtime storage, foreign platform execution and complete native allocation totals remain separate gates.

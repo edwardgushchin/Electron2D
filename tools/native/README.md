@@ -21,6 +21,16 @@ CMakeLists.txt composes the retained static subsystem targets; exports.txt defin
 
 On Windows, MSVC uses the build-time import library Electron2D.lib, which refers to libElectron2D.dll. The DLL keeps its lib prefix to avoid colliding with managed Electron2D.dll; the import library is not shipped as a runtime asset.
 
+Ninja builds probe MSVC's raw localized `/showIncludes` prefix through
+`msvc-dependencies.cmake`. This avoids console decoding corrupting header
+dependencies on installations without an English compiler language pack.
+An environment launcher includes the prefix hash in compile commands, preserving
+existing launchers and invalidating stale empty dependency records. Run
+`python -B tools/native/test_msvc_dependencies.py BUILD` from a developer shell
+to check cache migration and subsequent header changes. Check
+`ninja -t deps OBJECT` after compiler/toolchain changes; a touched included header
+must invalidate its consumer object.
+
 Use Electron2DNativeLibrary to select a complete source-built module for a desktop consumer. Games consume the platform package and do not build native code. External font/shaping/TLS overrides and the existing .NET TLS provider contract remain unchanged. Native source integration and local tests do not qualify foreign targets or publish a package.
 
 See [native delivery](../../docs/native-packaging.md) and the rendering, mesh, text, networking and codec producer directories for their specific behavior and checks.

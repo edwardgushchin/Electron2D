@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(Electron2DKTX LANGUAGES C CXX)
+include("${CMAKE_CURRENT_LIST_DIR}/../native/msvc-dependencies.cmake")
 include(FetchContent)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_VISIBILITY_PRESET hidden)
@@ -21,12 +22,14 @@ set(BASISU_SSE OFF CACHE BOOL "" FORCE)
 set(BASISU_OPENCL OFF CACHE BOOL "" FORCE)
 set(KTX_FEATURE_LOADTEST_APPS OFF CACHE STRING "" FORCE)
 set(ASTCENC_ISA_NONE ON CACHE BOOL "" FORCE)
+set(ASTCENC_DIAGNOSTICS OFF CACHE BOOL "" FORCE)
 # Invalidate FetchContent's patch stamp when the guarded adapter changes.
 file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake" configure_guard_sha256)
 file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/prepare_allocations.py" allocation_guard_sha256)
 file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/prepare_memory.py" memory_guard_sha256)
 file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/memory-sources.json" memory_sources_sha256)
-string(SHA256 configure_guard_sha256 "${configure_guard_sha256}${allocation_guard_sha256}${memory_guard_sha256}${memory_sources_sha256}")
+file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/prepare_cpp.py" cpp_guard_sha256)
+string(SHA256 configure_guard_sha256 "${configure_guard_sha256}${allocation_guard_sha256}${memory_guard_sha256}${memory_sources_sha256}${cpp_guard_sha256}")
 FetchContent_Declare(Electron2DKTXCodec
   URL https://codeload.github.com/KhronosGroup/KTX-Software/tar.gz/refs/tags/v5.0.0-rc2
   URL_HASH SHA256=bce6794bca57d86de2f00683ba8eaa6b3e8875d5abe45ac1136e206eb68aa476
@@ -34,7 +37,8 @@ FetchContent_Declare(Electron2DKTXCodec
 FetchContent_MakeAvailable(Electron2DKTXCodec)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
   "${CMAKE_CURRENT_SOURCE_DIR}/prepare_allocations.py" "${CMAKE_CURRENT_SOURCE_DIR}/prepare_memory.py"
-  "${CMAKE_CURRENT_SOURCE_DIR}/memory-sources.json" "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake")
+  "${CMAKE_CURRENT_SOURCE_DIR}/memory-sources.json" "${CMAKE_CURRENT_SOURCE_DIR}/prepare_cpp.py"
+  "${CMAKE_CURRENT_SOURCE_DIR}/configure-guards.cmake")
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_SOURCE_DIR}/prepare_memory.py" "${electron2dktxcodec_SOURCE_DIR}"
   COMMAND_ERROR_IS_FATAL ANY)
@@ -192,6 +196,17 @@ add_executable(Electron2DBlockCheck EXCLUDE_FROM_ALL test_blocks.cpp)
 target_compile_features(Electron2DBlockCheck PRIVATE cxx_std_17)
 target_link_libraries(Electron2DBlockCheck PRIVATE Electron2DKTX)
 add_executable(Electron2DEncodeCheck EXCLUDE_FROM_ALL test_encode.cpp)
+if(ELECTRON2D_STATIC_NATIVE AND NOT ELECTRON2D_UNIFIED_NATIVE)
+  add_executable(Electron2DKTXCPPCheck EXCLUDE_FROM_ALL test_cpp_memory.cpp)
+  target_compile_features(Electron2DKTXCPPCheck PRIVATE cxx_std_17)
+  target_include_directories(Electron2DKTXCPPCheck PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../enet-native")
+  target_link_libraries(Electron2DKTXCPPCheck PRIVATE Electron2DKTX)
+  if(MSVC)
+    target_compile_options(Electron2DKTXCPPCheck PRIVATE /UNDEBUG)
+  else()
+    target_compile_options(Electron2DKTXCPPCheck PRIVATE -UNDEBUG)
+  endif()
+endif()
 add_executable(Electron2DKTXContainerCheck EXCLUDE_FROM_ALL test_containers.cpp)
 target_compile_features(Electron2DKTXContainerCheck PRIVATE cxx_std_17)
 target_include_directories(Electron2DKTXContainerCheck PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${electron2dktxcodec_SOURCE_DIR}/external/basis_universal/transcoder")
@@ -226,4 +241,13 @@ if(ELECTRON2D_KTX_MEMORY_CHECK)
   target_link_options(Electron2DKTXMemoryCheck PRIVATE "LINKER:-z,defs" "LINKER:-Bsymbolic")
   set_target_properties(Electron2DKTXMemoryCheck PROPERTIES C_VISIBILITY_PRESET hidden
     OUTPUT_NAME Electron2D LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/fault")
+  add_executable(Electron2DASTCMemoryCheck EXCLUDE_FROM_ALL test_astc_memory.cpp fault.c)
+  add_dependencies(Electron2DASTCMemoryCheck Electron2DKTX)
+  set_property(TARGET Electron2DASTCMemoryCheck APPEND PROPERTY LINK_DEPENDS "$<TARGET_FILE:Electron2DKTX>")
+  target_compile_features(Electron2DASTCMemoryCheck PRIVATE c_std_11 cxx_std_17)
+  target_include_directories(Electron2DASTCMemoryCheck PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../enet-native"
+    "${electron2dktxcodec_SOURCE_DIR}/external/astc-encoder/Source")
+  target_compile_options(Electron2DASTCMemoryCheck PRIVATE -UNDEBUG)
+  target_link_libraries(Electron2DASTCMemoryCheck PRIVATE
+    "-Wl,--whole-archive" "$<TARGET_FILE:Electron2DKTX>" "-Wl,--no-whole-archive" Threads::Threads m stdc++)
 endif()

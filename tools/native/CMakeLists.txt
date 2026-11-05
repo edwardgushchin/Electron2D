@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(Electron2DNative LANGUAGES C CXX)
+include("${CMAKE_CURRENT_LIST_DIR}/msvc-dependencies.cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(ELECTRON2D_UNIFIED_NATIVE ON)
 set(ELECTRON2D_STATIC_NATIVE ON)
