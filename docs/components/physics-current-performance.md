@@ -6,7 +6,7 @@ Last updated: 2026-11-05
 
 ## Public API comparison after driver recovery (2026-11-05)
 
-All physics timing in this series comes from the ordinary [public consumer](../../tests/PhysicsQueryPerformance.Consumer/README.md). It references only Electron2D, has no runtime friend access and uses no private reflection, backend objects, internal profiling controls or private counters. Full frames time `SceneTree.PhysicsFrame`; individual queries call the public `PhysicsDirectSpaceState` overloads. This supersedes internal-stage diagnostics as the method for the requested public-API comparison. The other physical method families remain unmeasured.
+All physics timing in this series comes from the ordinary [public consumer](../../tests/PhysicsQueryPerformance.Consumer/README.md). It references only Electron2D, has no runtime friend access and uses no private reflection, backend objects, internal profiling controls or private counters. Full frames time `SceneTree.PhysicsFrame`; individual queries call the public `PhysicsDirectSpaceState` overloads. This supersedes internal-stage diagnostics as the method for the requested public-API comparison. The [per-method report](physics-public-method-performance.md) adds 475 paired server, direct-body, node, resource and physical skeleton method/accessor rows.
 
 ### Hardware and installation
 
@@ -20,8 +20,8 @@ Both paths use the same frozen self-contained .NET 10.0.14 host, identical four-
 
 | Bodies | CPU mean / p95 / p99, ms | GPU mean / p95 / p99, ms | CPU/GPU mean ratio |
 | ---: | --- | --- | ---: |
-| 1536 | 10.040 / 11.849 / 14.130 | 13.580 / 15.937 / 16.607 | 0.739 |
-| 16384 | 125.587 / 132.743 / 137.992 | 97.611 / 118.781 / 128.902 | 1.287 |
+| 1536 | 8.472 / 9.874 / 10.246 | 13.710 / 15.870 / 17.852 | 0.618 |
+| 16384 | 113.275 / 118.583 / 121.615 | 90.405 / 107.451 / 112.086 | 1.253 |
 
 A ratio above one favors GPU. These are **single-process desktop diagnostics**, not isolated maximum-throughput or performance acceptance. The series ran GPU/CPU at 1536 and CPU/GPU at 16384; the host retained other applications. External observations cover each whole process, including setup, warmup and validation. Their `background_cores` field is system busy time minus child process CPU time and includes driver/system work; it does not isolate foreign application load. No private numerical-stage timing is part of this comparison.
 
@@ -33,45 +33,45 @@ Each unchanged static fixture runs one-collider hit and distant-miss controls fo
 
 | Public method | Hit CPU / GPU, us | Hit CPU/GPU | Miss CPU / GPU, us | Miss CPU/GPU |
 | --- | --- | ---: | --- | ---: |
-| IntersectRay | 2.150 / 110.693 | 0.019 | 2.181 / 113.883 | 0.019 |
-| IntersectPoint (array) | 1.448 / 121.168 | 0.012 | 1.483 / 130.835 | 0.011 |
-| IntersectPoint (span) | 1.475 / 135.048 | 0.011 | 1.431 / 129.500 | 0.011 |
-| IntersectShape (array) | 2.781 / 141.664 | 0.020 | 2.727 / 133.472 | 0.020 |
-| IntersectShape (span) | 2.775 / 138.226 | 0.020 | 3.051 / 140.853 | 0.022 |
-| CastMotion | 3.924 / 130.303 | 0.030 | 4.346 / 132.120 | 0.033 |
-| CollideShape (array) | 3.148 / 128.656 | 0.024 | 3.084 / 134.367 | 0.023 |
-| CollideShape (span) | 3.100 / 125.410 | 0.025 | 3.012 / 125.653 | 0.024 |
-| GetRestInfo | 3.623 / 136.420 | 0.027 | 2.722 / 135.705 | 0.020 |
+| IntersectRay | 2.065 / 100.808 | 0.020 | 2.108 / 99.434 | 0.021 |
+| IntersectPoint (array) | 1.379 / 110.259 | 0.013 | 1.352 / 116.150 | 0.012 |
+| IntersectPoint (span) | 1.367 / 122.328 | 0.011 | 1.333 / 117.988 | 0.011 |
+| IntersectShape (array) | 2.429 / 132.122 | 0.018 | 2.403 / 128.231 | 0.019 |
+| IntersectShape (span) | 2.459 / 138.115 | 0.018 | 2.432 / 126.293 | 0.019 |
+| CastMotion | 3.595 / 130.937 | 0.027 | 3.221 / 119.028 | 0.027 |
+| CollideShape (array) | 2.521 / 125.711 | 0.020 | 2.439 / 124.027 | 0.020 |
+| CollideShape (span) | 2.504 / 119.219 | 0.021 | 2.440 / 115.475 | 0.021 |
+| GetRestInfo | 2.626 / 123.985 | 0.021 | 2.537 / 126.080 | 0.020 |
 
 #### 256 static bodies
 
 | Public method | Hit CPU / GPU, us | Hit CPU/GPU | Miss CPU / GPU, us | Miss CPU/GPU |
 | --- | --- | ---: | --- | ---: |
-| IntersectRay | 44.130 / 115.246 | 0.383 | 35.984 / 117.926 | 0.305 |
-| IntersectPoint (array) | 46.900 / 133.035 | 0.353 | 25.156 / 129.561 | 0.194 |
-| IntersectPoint (span) | 54.178 / 142.160 | 0.381 | 24.502 / 134.214 | 0.183 |
-| IntersectShape (array) | 51.378 / 148.604 | 0.346 | 39.009 / 130.898 | 0.298 |
-| IntersectShape (span) | 47.344 / 142.549 | 0.332 | 41.853 / 134.413 | 0.311 |
-| CastMotion | 65.748 / 137.982 | 0.476 | 56.294 / 135.730 | 0.415 |
-| CollideShape (array) | 50.119 / 133.174 | 0.376 | 42.898 / 147.979 | 0.290 |
-| CollideShape (span) | 43.913 / 131.425 | 0.334 | 43.015 / 139.121 | 0.309 |
-| GetRestInfo | 45.186 / 138.625 | 0.326 | 42.133 / 143.706 | 0.293 |
+| IntersectRay | 36.740 / 106.679 | 0.344 | 34.174 / 104.749 | 0.326 |
+| IntersectPoint (array) | 27.639 / 115.874 | 0.239 | 23.324 / 121.333 | 0.192 |
+| IntersectPoint (span) | 22.852 / 128.352 | 0.178 | 23.445 / 123.532 | 0.190 |
+| IntersectShape (array) | 38.427 / 145.805 | 0.264 | 40.866 / 140.125 | 0.292 |
+| IntersectShape (span) | 37.419 / 136.854 | 0.273 | 38.835 / 132.206 | 0.294 |
+| CastMotion | 51.997 / 131.842 | 0.394 | 56.434 / 127.500 | 0.443 |
+| CollideShape (array) | 39.901 / 123.944 | 0.322 | 43.394 / 127.183 | 0.341 |
+| CollideShape (span) | 40.557 / 118.790 | 0.341 | 41.483 / 119.299 | 0.348 |
+| GetRestInfo | 41.193 / 129.403 | 0.318 | 42.592 / 136.639 | 0.312 |
 
 #### 4096 static bodies
 
 | Public method | Hit CPU / GPU, us | Hit CPU/GPU | Miss CPU / GPU, us | Miss CPU/GPU |
 | --- | --- | ---: | --- | ---: |
-| IntersectRay | 749.032 / 203.012 | 3.690 | 716.834 / 203.174 | 3.528 |
-| IntersectPoint (array) | 556.475 / 239.320 | 2.325 | 547.394 / 210.958 | 2.595 |
-| IntersectPoint (span) | 551.511 / 237.906 | 2.318 | 544.181 / 220.047 | 2.473 |
-| IntersectShape (array) | 858.925 / 256.271 | 3.352 | 848.160 / 223.788 | 3.790 |
-| IntersectShape (span) | 857.577 / 245.357 | 3.495 | 865.549 / 224.072 | 3.863 |
-| CastMotion | 1155.617 / 241.124 | 4.793 | 1145.718 / 220.170 | 5.204 |
-| CollideShape (array) | 983.351 / 219.920 | 4.471 | 959.637 / 227.208 | 4.224 |
-| CollideShape (span) | 938.865 / 232.880 | 4.032 | 916.854 / 224.312 | 4.087 |
-| GetRestInfo | 905.065 / 224.622 | 4.029 | 881.253 / 222.354 | 3.963 |
+| IntersectRay | 674.695 / 202.591 | 3.330 | 702.638 / 187.301 | 3.751 |
+| IntersectPoint (array) | 530.275 / 223.966 | 2.368 | 532.561 / 200.185 | 2.660 |
+| IntersectPoint (span) | 525.351 / 221.363 | 2.373 | 580.395 / 211.303 | 2.747 |
+| IntersectShape (array) | 792.135 / 235.350 | 3.366 | 792.894 / 208.592 | 3.801 |
+| IntersectShape (span) | 789.332 / 233.905 | 3.375 | 791.779 / 211.332 | 3.747 |
+| CastMotion | 1045.175 / 226.204 | 4.620 | 1073.771 / 215.453 | 4.984 |
+| CollideShape (array) | 844.236 / 205.901 | 4.100 | 838.647 / 219.571 | 3.819 |
+| CollideShape (span) | 842.379 / 213.302 | 3.949 | 840.157 / 218.713 | 3.841 |
+| GetRestInfo | 860.704 / 213.927 | 4.023 | 848.828 / 206.112 | 4.118 |
 
-The comparison currently covers nine query overloads and the full public scene-frame call. It does not claim timing coverage of every physical API method, failure/lifecycle case, raw-server workload, network workload or window FPS. The preliminary method inventory is not a completion metric. Source/run identities, per-frame samples, both allocation scopes, external host observations and the 54 paired query rows are retained under `bin/physics-public-comparison/2026-11-05/`; driver evidence is under `bin/physics-driver/2026-11-05/`. The older CPU-only figures and private phase breakdown below retain their historical diagnostic scope.
+The [per-method report](physics-public-method-performance.md) retains 475 paired method/accessor rows and the four explicit timing omissions in the preliminary 436-method inventory. These timings do not change declaration implementation states or establish full physical/product acceptance. Failure/cold/edited-world variants, isolated throughput, separate-process transport and window FPS remain outside this diagnostic series. The final twenty processes use one frozen consumer, runtime and native payload. The runtime DLL SHA-256 is `15445206f48d1c057d2d71ca85bb8f4ca3bdbe10e24965d4763745c020420da7`. Source/run identities, per-frame samples, allocations, whole-process host observations and 54 paired query rows are in `bin/physics-public-comparison/2026-11-05/qualified/`; driver evidence is in `bin/physics-driver/2026-11-05/`. Earlier cohorts remain controls, including the rejected staging copy which contained both OpenSSL 3 and 4. The final native load path contains only the OpenSSL 4 provider pair; it does not qualify the whole release bundle. Older CPU-only and private-stage figures below retain their historical scope.
 
 ## Current physical task gate (2026-11-05)
 

@@ -6,8 +6,12 @@ The [public query timing consumer](../../tests/PhysicsQueryPerformance.Consumer/
 covers all nine direct-space query overloads with hit/miss controls, caller-owned
 span storage and allocated array results. Its `scene` profile also measures complete
 public `SceneTree.PhysicsFrame` calls with physical/publication checks and warmed
-managed allocation brackets. Both profiles run without runtime friend access or
-private backend controls. Query distributions, complete frames, window FPS and
+managed allocation brackets. Server, direct-body, physical node/resource and
+physical skeleton profiles add public per-method timings with explicit fixtures,
+real lifecycle cleanup and allocation results. All profiles run without runtime
+friend access or private backend controls. See the
+[per-method results](../../docs/components/physics-public-method-performance.md).
+Query distributions, complete frames, window FPS and
 isolated hardware performance qualification remain distinct evidence.
 
 ## Managed heap observations

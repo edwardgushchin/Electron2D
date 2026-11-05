@@ -1,10 +1,21 @@
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Electron2D;
 
+var consumerName = typeof(Program).Assembly.GetName().Name;
+if (typeof(PhysicsServer).Assembly.GetCustomAttributes(typeof(InternalsVisibleToAttribute), false)
+    .Cast<InternalsVisibleToAttribute>().Any(friend => friend.AssemblyName.Split(',')[0] == consumerName))
+    throw new InvalidOperationException("Public performance consumers must have no friend access to the runtime.");
+
 if (args.Length > 0 && args[0] == "scene") { PublicScenePerformance.Run(args[1..]); return; }
+if (args.Length > 0 && args[0] == "server") { PublicServerPerformance.Run(args[1..]); return; }
+if (args.Length > 0 && args[0] == "body") { PublicServerPerformance.RunBody(args[1..]); return; }
+if (args.Length > 0 && args[0] == "nodes") { PublicServerPerformance.RunNodes(args[1..]); return; }
+if (args.Length > 0 && args[0] == "resources") { PublicServerPerformance.RunResources(args[1..]); return; }
+if (args.Length > 0 && args[0] == "bones") { PublicServerPerformance.RunBones(args[1..]); return; }
 
 if (args.Length != 3 || args[0] is not ("cpu" or "gpu") ||
     !int.TryParse(args[1], out var count) || count < 2 || count > 16384)

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Electron2D;
@@ -11,11 +10,6 @@ internal static class PublicScenePerformance
         if (args.Length != 3 || args[0] is not ("cpu" or "gpu") ||
             !int.TryParse(args[1], out var count) || count < 16 || count > 16384)
             throw new ArgumentException("Use scene cpu|gpu body-count output.json; body-count must be 16..16384.");
-        var consumer = typeof(PublicScenePerformance).Assembly.GetName().Name;
-        if (typeof(PhysicsServer).Assembly.GetCustomAttributes(typeof(InternalsVisibleToAttribute), false)
-            .Cast<InternalsVisibleToAttribute>().Any(friend => friend.AssemblyName.Split(',')[0] == consumer))
-            throw new InvalidOperationException("Public performance consumers must have no friend access to the runtime.");
-
         const int warmup = 1600, samples = 256;
         const double delta = 1d / 144;
         const float radius = 6, mass = .2f;
