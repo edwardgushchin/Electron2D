@@ -27,6 +27,10 @@ source preparation validates 63 complete input/output SHA-256 pairs and rejects 
 allocation-bearing sources. The unified module retains one common allocation core;
 the Linux refusal fixture uses the same codec profile with a test backing core.
 Resampler construction failure now retires partial channel owners before row use.
+The [static bridge guards](../components/image-ktx.md#allocation-refusal-and-initialization)
+also reject default C++ allocation on the exercised Linux/Windows codec paths;
+the preceding prepared profile supplies a failing control. They do not observe
+direct CRT allocation or establish a whole-library allocation closure.
 Remaining utility/thread/exception/locale runtime allocation, support/provider heaps,
 qualified release packages, foreign targets and coherent managed/native composition
 remain open. No declaration changes state: physics remains **1365/1369 (99.71%)**,

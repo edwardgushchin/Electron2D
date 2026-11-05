@@ -110,6 +110,18 @@ verifies string/stream/map/hash/queue storage, independent callable copies and
 failed assignment. `Electron2DBasisMemoryCheck` passes four parameter, six job,
 50 byte-resampler and 50 float-resampler refusals, with full native drain and retry.
 
+Standalone static decoder, block and encoder checks now calibrate all eight
+default C++ allocation operator forms and reject any use during each calling-thread
+bridge operation. Linux x64 and Windows x64 MSVC pass all nine KTX and three Basis
+mip oracles, their truncation/mutation/error paths, mixed cold initialization,
+twelve block roles and LDR/HDR/RDO encoding. A matching preceding working-vector
+profile fails encoding with 24 default C++ allocations, proving the guard reaches
+the linked codec. The current archive still references default operators in
+TinyEXR/file utilities and the optional multithread job branch; these exercised
+bridge paths do not reach them. This is a regression boundary, not a proof about
+every input or CRT/exception/locale/provider storage. The test operators never
+enter production. Receipts are in `bin/codec-default-new/2026-11-05/`.
+
 The final Linux x64 profile passes 35,002 independent cold refusals/retries and
 1,497 warm requests (823 decoder/metadata, 486 ordinary encoder, 128 nonconstant
 RDO encoder and 60 ASTC block).

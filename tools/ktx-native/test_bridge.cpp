@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <thread>
 #include <vector>
+#include "test_default_new.hpp"
 
 static void check(bool value, const char *message) { if (!value) throw std::runtime_error(message); }
 

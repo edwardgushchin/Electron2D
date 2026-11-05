@@ -6,6 +6,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include "test_default_new.hpp"
 
 int main() {
     std::array<uint8_t, 4 * 4 * 4 + 2 * 2 * 4 + 4> rgba;
@@ -35,6 +36,22 @@ int main() {
         uint8_t *output = nullptr; uint64_t bytes = 0;
         assert(e2d_image_encode(kind, 4, 4, 1, 1, 1, 1, 0, reinterpret_cast<uint8_t *>(hdr.data()), sizeof(hdr), &output, &bytes) == 0);
         assert(output && bytes); e2d_image_encoded_free(output);
+    }
+    {
+        std::array<uint8_t, 8 * 8 * 4 + 4 * 4 * 4 + 2 * 2 * 4 + 4> gradient;
+        for (size_t i = 0; i < gradient.size(); i += 4) {
+            gradient[i] = static_cast<uint8_t>(i * 7);
+            gradient[i + 1] = static_cast<uint8_t>(i * 13);
+            gradient[i + 2] = static_cast<uint8_t>(i * 23);
+            gradient[i + 3] = 255;
+        }
+        auto original = gradient;
+        uint8_t *encoded = nullptr; uint64_t size = 0;
+        assert(e2d_image_encode(0, 8, 8, 4, 0, 0, 1, 1.25f, gradient.data(), gradient.size(), &encoded, &size) == 0);
+        assert(gradient == original && encoded && size);
+        e2d_ktx_info info{}; void *context = nullptr;
+        assert(e2d_ktx_create(encoded, size, &info, &context) == 0 && info.width == 8 && info.height == 8 && info.levels == 4);
+        e2d_ktx_destroy(context); e2d_image_encoded_free(encoded);
     }
     uint8_t *output = reinterpret_cast<uint8_t *>(1); uint64_t bytes = 123;
     assert(e2d_image_encode(0, 4, 4, 3, 0, 0, 1, 0, rgba.data(), rgba.size() - 1, &output, &bytes) != 0 && !output && !bytes);

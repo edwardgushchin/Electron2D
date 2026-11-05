@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <cstdio>
+#include "test_default_new.hpp"
 
 static void check(bool condition, const char *message) { if (!condition) throw std::runtime_error(message); }
 static std::vector<uint8_t> read(const char *path) {

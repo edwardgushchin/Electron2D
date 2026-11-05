@@ -13,6 +13,17 @@ python3 -B tools/ktx-native/test_bridge.py obj/ktx-native/Electron2DKTXCheck tes
 
 `-DELECTRON2D_STATIC_NATIVE=ON` embeds the codec closure in the component archive; standalone consumers also link the common `Electron2DKTXCore` CMake dependency. The unified static product embeds that common core once through its existing engine component. The pinned `ktx_read` archive already embeds the complete BasisU encoder closure, so the merge includes it once. Appending `basisu_encoder` again duplicates strong symbols when Apple applications load the complete archive. The native check validates owner/input/output failure paths and compares all mips against the independent tool oracles. Set `ELECTRON2D_KTX_REPRO` to an ignored output path to retain the last deterministic mutation when diagnosing a test failure.
 
+Standalone static `Electron2DKTXCheck`, `Electron2DBlockCheck` and
+`Electron2DEncodeCheck` also reject default C++ allocation inside each bridge call.
+Their test-only operators use ordinary CRT allocation; no production allocator is
+replaced. Every calling thread calibrates all eight scalar/array, aligned and
+nothrow forms before its first measured call. Harness allocation stays outside
+the call windows. This relies on the bridge's single-thread codec job pool and
+does not observe direct CRT allocation, exception storage or arbitrary worker
+threads. Shared-library checks omit it because Windows DLL calls would bypass
+the executable's operators. The encoder includes a nonconstant 8x8 four-mip RDO
+input. See [the qualified boundary](../../docs/components/image-ktx.md#allocation-refusal-and-initialization).
+
 `generate_fixtures.py` regenerates the small test corpus with the official standalone 5.0.0-rc2 `ktx` tool. It records the tool hash and creates raw, Zstandard, ZLIB, ETC1S, UASTC LDR and two HDR profiles, plus corrupted codebook/DFD regression inputs. Only fixtures and recipe belong in Git; downloaded tools, archives and build products stay ignored.
 
 `generate_basis_fixtures.py BASISU EXR_ORACLE OUTPUT_JSON` uses the pinned standalone Basis tool and independent OpenEXR reader for legacy ETC1S/UASTC LDR/HDR mip oracles. Tests cover every truncation, unaligned borrowed input, checksum-repaired payload mutations and mixed cold initialization (`--mixed-oracle PATH` with the KTX oracle). The adapter privately materializes aligned legacy slices within 64 MiB; no codec source modification is needed for unaligned container offsets.

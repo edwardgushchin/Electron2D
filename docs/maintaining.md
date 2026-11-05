@@ -16,7 +16,9 @@ Basis oracles with `--blocks-oracle` for the independent block corpus, the publi
 FastTests `--ktx-memory` profile on CLR/full-trim NativeAOT,
 `Electron2DKTXContainerCheck`, `Electron2DKTXCPPCheck`, `Electron2DASTCMemoryCheck`,
 `Electron2DBasisMemoryCheck`
-and existing decoder/block/encoder checks. Preserve every calibrated
+and existing decoder/block/encoder checks. Keep the guards against default C++
+allocation in standalone static checks and their failing preceding-profile control;
+shared-library execution cannot replace them. Preserve every calibrated
 refusal, cold same-process retry, independent mip pixels, complete temporary
 drain and Image/source/Changed atomicity, plus portable RID/envelope/metadata and
 both notification boundaries, including nonconstant RDO. Keep parameter-string,
