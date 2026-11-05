@@ -654,6 +654,84 @@ CCD checks cover this internal optimization; no declaration state changes.
 
 The built-in world ownership boundary now executes through a fresh internal CPU/GPU implementation object. It owns solver resources and complete interval dispatch, with independent world identities and failure-aware teardown. [Ownership checks](physics-backends.md#runtime-flow-and-ownership) cover 512 bodies, 64 warmed full steps at zero owner/all-thread managed allocation, native release despite an injected worker cleanup error and no-device CPU/fallback startup. Public manager registration, factory-selected direct states and bounded custom annulus geometry now execute through the independent public-only consumer. Complete external numerical-operation and inherited acceptance remain open; this ownership check alone does not establish them.
 
+## Physics task boundary (2026-11-05)
+
+The declaration census is an inventory of applicable API and dependencies. Its
+full inheritance closure does not assign every owning subsystem to the physics
+task. The physics completion criteria are the requested CPU/GPU behavior,
+integration, failure/lifetime, networking and performance checks. A shared gap
+belongs in this task only when an identified required physical scenario fails
+because of it; retain that scenario and its executable evidence with the blocker.
+
+The four shared Partial rows remain open and keep their owning contracts:
+
+| Shared audit row | Owning work | Physics dependency |
+| --- | --- | --- |
+| Object class | [Object lifecycle](object-lifecycle.md) and its complete class audit | Identity, association and disposal used by bodies, shapes, queries and callbacks must work. The whole root class is not a physics completion gate. |
+| Object.SetScript | [Typed script bindings](scripting.md#live-typed-bindings) | Required physical callbacks and their installation/retirement must work; unrelated callback families and fixed CLR class replacement stay in scripting work. |
+| Object.ScriptChanged | [Script publication](scripting.md#source-publication-notifications) | Physical consumers must preserve the relevant notification/lifetime contract; the complete engine-wide workflow remains a scripting dependency. |
+| Performance.GetMonitor | [Performance producers](../coverage/performance-producers.md) | Validate the physical counters and measure the requested physical workloads. Completing every monitor or all libraries' memory accounting is separate diagnostics work. |
+
+The exact managed/native memory-monitor contract is unchanged. Its partial
+implementation must not be presented as a total, but it is not a prerequisite
+for scoped physics allocation measurements. Use the existing owner/all-thread
+managed-byte brackets and explicitly scoped native/transfer/history measurements;
+state their observation limits. Do not implement codec, font, transport or other
+general allocator domains here without a concrete physical blocker.
+
+Physics completion still requires all of the following:
+
+1. Publicly selectable full CPU and resident GPU backends, independent of the
+   renderer; actual no-GPU CPU startup, optional startup fallback and defined
+   failure after a started GPU step.
+2. Applicable bodies/shapes, CCD, fields, materials, contacts/events, joints,
+   queries, picking/debug, scene/server roles and backend extensions, with shared
+   behavioral/invariant/lifetime/error checks and justified numerical tolerances.
+3. Public authoritative networking in separate processes: ticks/commands/stable
+   IDs, capture/apply, prediction/correction/replay, interpolation, event identity,
+   topology/authority changes and late join under delivery impairments, including
+   a CPU server with GPU clients.
+4. Same-revision complete CPU/GPU workloads and real-window FPS, including full
+   step distributions, CPU work, transfers/waits, allocation and history/traffic
+   costs. Warmed physical intervals require zero managed allocations on owner and
+   participating threads. GPU advantage must preserve the requested body count
+   and features; narrow stage controls remain diagnostics.
+5. The applicable physical platform/package and hardware acceptance evidence.
+   Shared integration checks remain necessary where they exercise these scenarios.
+   An unrelated subsystem failure is recorded in its own backlog rather than
+   silently expanding this task.
+
+No declaration state is promoted or omitted by this clarification. Direct physics
+families currently show 837/837 applicable declarations Implemented; the complete
+census with shared rows remains 1365/1369 (99.71%), four Partial and 92 Excluded.
+Neither figure certifies behavior or completion of the gates above.
+
+The next physical frontier is current-revision CPU/GPU requalification and the
+[complete-step/window comparison](physics-current-performance.md#current-monitored-scene-diagnostic).
+The last eight-case comparison stopped at admission before any physical case;
+it provides no current GPU speedup evidence. Retest the required physical paths
+and actual host prerequisites, then take the matched full-path measurements.
+
+The current Windows x64 / self-contained CLR 10.0.14 callback consumer now keeps
+its general GUI/array/catalog fixture in the explicit `--aot-prerequisites` mode.
+Before this split, GraphEdit/font setup failed on the missing native DLL before
+any physical case. CPU owner and separate-thread physical profiles both pass
+without that general native cohort, with 128 warm plus 128 measured complete steps
+and strict 0/0 owner/all-thread managed bytes. After installing the retained native
+cohort into the test output, both physical profiles and the separate shared fixture
+pass. No runtime behavior or shared declaration state was changed to obtain those
+results.
+
+A GPU functional preflight with the retained, hash-verified Windows native cohort
+reaches HLSL compilation but exceeds its 90-second deadline without a completion
+marker; its child is terminated. The relevant native render/dispatch/export source
+matches the retained cohort, but this does not qualify the whole newer bundle.
+Host enumeration reports only Microsoft Basic Display Adapter. The next concrete
+physical investigation is GPU startup/step progress and actual adapter selection,
+followed by same-revision complete-frame/window measurement on a suitable host.
+No GPU correctness, hardware benefit or timing acceptance is inferred from this
+timeout. Logs and source/binary identities are in `bin/physics-task-boundary/2026-11-05/`.
+
 ## Baseline and scope
 
 Original audit baseline: `8e4f876d70782c7ec5473d3107c4c2d1b01ed902`.
@@ -1068,13 +1146,17 @@ static/native/driver/traffic-peak/AOT/platform and hardware performance gates.
    counts, awake/sleeping population, substeps/settings, seeds and environment.
    Record full-step mean/median/p95/p99/max, CPU preparation/publication, GPU work,
    transfers and wait distributions, owner/all-thread managed allocations. Check
-   physical invariants over long runs; require zero warmed engine allocations and
+   physical invariants over long runs; require zero warmed managed allocations on
+   the owner and participating threads, attribute native allocation observations, and require
    measurable GPU benefit without reducing bodies or features. Single-stage
    controls remain labeled diagnostics. No unmeasured mirror/wait is free.
 
 The goal remains open until both complete implementations are publicly selectable,
-the applicable contract is closed and the semantic, failure, allocation and full
-   performance gates pass. This audit changes no runtime behavior or public API.
+the applicable physical behavior and required shared integration work, and the
+semantic, failure, allocation, networking and full performance gates pass. The
+[task boundary](#physics-task-boundary-2026-11-05) distinguishes this from closing
+the entire cross-domain declaration census. This audit changes no runtime behavior
+or public API.
 
 World contact bias/slack and Shape.CustomSolverBias now execute under [ADR 0098](../decisions/physics-contacts.md#adr-0098), with policy/storage/response tests on CPU and independent resident GPU. Iteration controls now execute with PhysicsSolverIterationTests; geometric contact recycling/max separation now execute with PhysicsContactPersistenceTests; public independent-GPU binding now executes. This addition does not close the full backend or networking goal.
 

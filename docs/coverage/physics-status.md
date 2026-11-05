@@ -10,6 +10,8 @@ States are reused from the class tables, including accepted representation/depre
 
 The scope takes every descendant of the explicit physics roots, follows the full inheritance chain, and adds selected settings, picking, debug and tile consumers. Shared base rows are counted once; they remain requirements of the inherited public contract. General consumer API is linked from its class page. Deprecated TileMap is superseded by TileMapLayer; renderer particle effects and 3D physics are outside this solver scope.
 
+The census is not the physics task boundary. Shared rows stay open in their owning subsystem audits; they block physics acceptance only when a specific required physical scenario cannot execute correctly. In particular, whole-class Object/script completion and all Performance.GetMonitor selectors are not prerequisites for closing physics. Preserve the used identity, callback and physical-monitor contracts and record concrete dependencies. See [physics task acceptance](../components/physics-contract-audit.md#physics-task-boundary-2026-11-05).
+
 ## Physics families and descendants
 
 | Declaring type | Base | Implemented | Partial | Blocked | Unimplemented | Excluded |

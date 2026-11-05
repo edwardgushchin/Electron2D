@@ -85,6 +85,12 @@ def render_physics(upstream, classified, coverage_target):
              "and adds selected settings, picking, debug and tile consumers. Shared base rows are counted once; "
              "they remain requirements of the inherited public contract. General consumer API is linked from its class page. "
              "Deprecated TileMap is superseded by TileMapLayer; renderer particle effects and 3D physics are outside this solver scope.", ""]
+    lines.extend([
+        "The census is not the physics task boundary. Shared rows stay open in their owning subsystem audits; "
+        "they block physics acceptance only when a specific required physical scenario cannot execute correctly. "
+        "In particular, whole-class Object/script completion and all Performance.GetMonitor selectors are not prerequisites "
+        "for closing physics. Preserve the used identity, callback and physical-monitor contracts and record concrete dependencies. "
+        "See [physics task acceptance](../components/physics-contract-audit.md#physics-task-boundary-2026-11-05).", ""])
     seen = set()
     for heading, names in groups:
         lines.extend([f"## {heading}", "", "| Declaring type | Base | " + " | ".join(STATES) + " |",

@@ -2,7 +2,22 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-05
+
+## Current physical task gate (2026-11-05)
+
+The [task-boundary correction](physics-contract-audit.md#physics-task-boundary-2026-11-05)
+keeps whole-engine Object/script/memory rows in their owning audits. Their census
+states do not replace physical acceptance. A headless Windows CLR 10.0.14 callback
+check passes CPU owner/separate modes with strict 0/0 warmed managed bytes after
+separating the unrelated GUI prerequisite. This is bounded functional evidence.
+
+The current GPU callback preflight emits an HLSL compilation warning but does not
+finish within 90 seconds. Its child is terminated and no performance sample is
+accepted. Host enumeration reports Microsoft Basic Display Adapter; actual compute
+adapter/driver selection and startup/step progress still need attribution. These
+are physical qualification prerequisites. Full-library memory accounting is not
+the next step. Receipts are in `bin/physics-task-boundary/2026-11-05/`.
 
 The [2026-10-27 containment correction](gpu-contact-colors.md#dense-retention-witness-2026-10-27)
 closes the raw benchmark with four walls and adds CPU/GPU open-wall controls. The

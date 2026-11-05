@@ -6,7 +6,7 @@ if (args.Contains("--resource-identity-child"))
     BackendChecks.ReadResourceIdentity(args[Array.IndexOf(args, "--resource-identity-child") + 1], args[0] == "gpu" ? PhysicsServer.Backend.GPU : args[0] == "cpu" ? PhysicsServer.Backend.CPU : null, args.Contains("threaded"));
     return;
 }
-PhysicsAOTPrerequisiteTests.Run();
+if (args.Contains("--aot-prerequisites")) { PhysicsAOTPrerequisiteTests.Run(); return; }
 
 var backend = args.Length > 0 && args[0] == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
 if (args.Contains("--process-groups")) BackendChecks.RunProcessGroups(args.Length > 0 && args[0] == "registered" ? null : backend, args.Contains("threaded"));
