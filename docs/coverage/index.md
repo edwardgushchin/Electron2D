@@ -1,4 +1,4 @@
-[KTX allocation refusal](performance-producers.md#ktx-allocation-refusal-2026-11-05) fixes decoder crashes, partial-owner leaks and cold initialization retry. It changes no declaration state: physics remains **1365/1369 (99.71%)**, four Partial and 92 Excluded. Production allocation routing and the exact composed monitor remain open.
+[KTX C allocation routing](performance-producers.md#ktx-allocation-refusal-2026-11-05) connects the checked codec C allocation domain to the shared native ledger while preserving refusal cleanup and cold retry. It changes no declaration state: physics remains **1365/1369 (99.71%)**, four Partial and 92 Excluded. C++/provider/runtime closure and the exact composed monitor remain open.
 
 [Native FP32 atomics](../components/float-atomics.md) now execute base/add buffer, workgroup and R32SFLOAT image operations, including descriptor/layer/sample selection, graphics and physical buffers. Declaration totals remain **13,711/18,853 (72.7258%)**: wider connected shader/resource contracts and full platform qualification remain open. The owning component records source/binary, package, NativeAOT and refusal evidence.
 

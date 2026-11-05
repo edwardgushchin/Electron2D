@@ -37,10 +37,21 @@ before writing the extracted build copy. Unknown input refuses the entire batch;
 repeated preparation is idempotent. `decoder-guards.cmake` adds scoped C++ ownership
 to the generated transcoder. The immutable download remains unchanged.
 
-The Linux `Electron2DKTXMemoryCheck` fixture combines the complete copied static
-codec closure and the common allocation core in one test-only `libElectron2D.so`.
-It selectively remaps the codec's C allocation references; the ledger's backing
-allocator is untouched. It tests original C request ownership, every calibrated
+`prepare_memory.py` composes those ownership guards with a checked C allocation
+namespace in the extracted build source. Its 45 original/output SHA-256 pairs
+cover libktx, DFD, Basis vector/miniz/Zstandard and ASTC C/aligned storage.
+Comments, literals, includes and allocator attributes retain their original text;
+an unknown allocation-bearing source or changed pinned file refuses configuration.
+`allocator.h` and `memory.c` route those requests and the encoder's returned buffer
+directly to the common native ledger before first use. The ledger's own backing
+allocator and C++ allocation operators are outside that namespace. No managed
+callback registration, global allocator interposition or additional module is used.
+The unified producer uses the existing common core; standalone component checks
+link the same core as a separate CMake static dependency.
+
+The Linux `Electron2DKTXMemoryCheck` fixture links this same production codec
+profile to a test-only refusal core in one `libElectron2D.so`.
+It tests original C request ownership, every calibrated
 refusal, independent mip pixels, full temporary drain and a healthy retry. Cold
 ETC1S cases use a fresh process for each failure, checking retry against the healthy
 global-table baseline. `NativeKTXMemoryTests` exercises the public Image boundary
@@ -65,13 +76,24 @@ decoder, block, encoder and container checks run with leak detection; the Python
 fault driver disables interpreter leak reporting and separately checks native
 temporary drain. The public CLR/NativeAOT checks use that same final native module.
 
-This fixture is isolated from production native output and is never packaged.
-It does not connect the shipped codec's C/C++ allocations to the production
-monitor. C++ allocation operators, support/provider heaps, ordinary delivery,
+The refusal core is never packaged. Production source now routes the documented
+C allocation domain to the shared ledger; this does not cover C++ operators/STL,
+support/provider heaps or the complete monitor. Rebuilt release packages,
 foreign hosts and coherent managed/native composition remain open in the
 [allocation audit](../coverage/performance-producers.md#ktx-allocation-refusal-2026-11-05).
 
-Desktop, Windows, Android, Apple and Web producers require the private bridge. Static profiles consume one archive with its codec closure; codec/merge changes force that archive to refresh. An independent link uses only the merged archive, and packaging rejects global codec symbols that could collide with the font closure. Ordinary engine/game builds restore native assets without invoking a native compiler. The compiled managed API contains no codec type, pointer or backend handle.
+The rebuilt Linux x64 unified module retains exactly 166 engine exports. Public
+CLR and strict full-trim NativeAOT consumers record a 262,497-byte unsampled native
+peak from a raw Image load, validate nine independent mip oracles and repeat 72
+loads while preserving live GZIP ownership in the same ledger. A control using
+the preceding untracked codec archive fails the peak assertion after decoding the
+correct pixels. Windows x64 MSVC standalone decoder, block, encoder and container
+checks pass against the same prepared source profile; its archive merge uses the
+native library manager. These checks qualify the documented C domain, rather than
+C++/provider closure or the complete monitor. Local receipts are retained in
+`bin/ktx-production-accounting/2026-11-05`.
+
+Desktop, Windows, Android, Apple and Web producers require the private bridge. The unified static product includes its codec and common-core closure in one archive; codec/merge changes force it to refresh. The standalone component archive embeds its codec closure and links Electron2DKTXCore through CMake. Packaging rejects global codec symbols that could collide with the font closure. Ordinary engine/game builds restore native assets without invoking a native compiler. The compiled managed API contains no codec type, pointer or backend handle.
 
 ## Verification and limits
 
@@ -79,7 +101,8 @@ Desktop, Windows, Android, Apple and Web producers require the private bridge. S
 
 Linux Wayland GPU and Compatibility hosts compare rendered pixels with independent decoded Image textures for all nine oracles plus BC source data. GPU retains half precision; Compatibility explicitly converts HDR to RGBA8. The separate block corpus establishes ETC/EAC/ASTC sampling; foreign-target execution, native package publication and owner acceptance remain separate. Fresh Linux source/project/NuGet consumers and self-contained publishes execute public Basis LDR/HDR loading with native compilers blocked. A separate NativeAOT application executes the same public codec consumers. The managed self-contained publish passes the 72-ELF and 92-notice audits. [File-backed arrays](compressed-arrays.md) now consume GSTL, legacy .basis/KTX2 channel roles and the common decoder through resource lifecycle/cache/archive integration and GPU layer/mip texel fetches. Their imported transfer-value policy is separate from public Image input.
 
-Those rendered/package checks predate this allocation-guard update and the combined
-native module. Their ELF/notice counts are historical. The new refusal evidence
-qualifies the isolated Linux codec profile; rebuilt release packages and complete
-platform acceptance remain open.
+Those rendered/package checks predate this allocation update and the combined
+native module. Their ELF/notice counts are historical. Current evidence qualifies
+the Linux unified C allocation domain, isolated refusal profile and Windows
+standalone codec profile; rebuilt release packages and complete platform
+acceptance remain open.

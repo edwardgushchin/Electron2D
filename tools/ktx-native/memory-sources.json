@@ -1,0 +1,182 @@
+{
+  "external/astc-encoder/Source/ThirdParty/stb_image.h": {
+    "original": "594c2fe35d49488b4382dbfaec8f98366defca819d916ac95becf3e75f4200b3",
+    "prepared": "12e59dbe44726731d2824d3e338fc4f1e95a8dfd53e2d5588da3cb4933d3ff44"
+  },
+  "external/astc-encoder/Source/ThirdParty/stb_image_write.h": {
+    "original": "cbd5f0ad7a9cf4468affb36354a1d2338034f2c12473cf1a8e32053cb6914a05",
+    "prepared": "3574bcfd65bfe3b8801ba7f4268dbc3f158eed84eced295936b82761883df75e"
+  },
+  "external/astc-encoder/Source/ThirdParty/tinyexr.h": {
+    "original": "8a517a2f5a0b0cfa009b715b5e6c919b00390fa14a062f76c90298a863f0a87a",
+    "prepared": "a7cc8e3d060e8715623ed504b8bdfe10c00ecfad7181193e2e994db9152493be"
+  },
+  "external/astc-encoder/Source/ThirdParty/wuffs-v0.3.c": {
+    "original": "a3db4bd979663423de00309d1ba07d7fa8576845223d3e02764181bd6da23f90",
+    "prepared": "a36d1bf17c37145b99bfe07a90ced6c6d780123bf47e1a649e762f754b52eb66"
+  },
+  "external/astc-encoder/Source/astcenc_internal.h": {
+    "original": "428c3647bcb3e1d414db36d07ae3b39a37b0771eb1ad040436a6205c27f87705",
+    "prepared": "b742d5c88ac27e8258d9e388d6f88ba56c890b8b2a9d32e570d9e37a5a703ef1"
+  },
+  "external/astc-encoder/Source/astcenccli_image_external.cpp": {
+    "original": "9e90af1a6ccf7750800c9efd17063a9f791a113459a65835fe27a865da446bbc",
+    "prepared": "7d173812ecb3b22f0e23ac1a2e98f50fd8a75ed53fdc5474c97bb42e88942e51"
+  },
+  "external/astc-encoder/Source/astcenccli_image_load_store.cpp": {
+    "original": "6431de45b7befcb004b8e6592214a510028dfc6e15e4eeace631bc208935939c",
+    "prepared": "2625f3232e15a7100a9cdb2e7bdc1a2b45878ecf7bde74b09b90af0b612a41fb"
+  },
+  "external/basis_universal/encoder/3rdparty/qoi.h": {
+    "original": "ce6f7ff43433e5beb91cb0b77aa4200390ed3e3fdadcf693bae37303b67a3530",
+    "prepared": "63119ef11cd1f8184999bb8f19a9a74202abd6f6739e8a22aeb419970e89f7a4"
+  },
+  "external/basis_universal/encoder/3rdparty/tinydds.h": {
+    "original": "5d10a6f2f851f8c8780c3f1ad8484c8b0ca8f7670671a7a21df1b324946a2c9a",
+    "prepared": "987e88b74c035f52047495a3455856ae61fd29bd774b43d58582f3fabfff779f"
+  },
+  "external/basis_universal/encoder/3rdparty/tinyexr.h": {
+    "original": "9335a2496545300aa634003ba8fb502565197b43faae1be120c2de4b7f8f3ba7",
+    "prepared": "064edd6e36cfd7000d2a7c161a216328bd51772a89d62050f75535d0dceb9778"
+  },
+  "external/basis_universal/encoder/basisu_comp.cpp": {
+    "original": "3f7e5bf6c15dc583d146f95c30391042941ab63f2947f0f1fc1edcacdd3bac14",
+    "prepared": "d48889acd8815b9662998ece3d909b566f7528a11a10f9bd767aae660c8162e3"
+  },
+  "external/basis_universal/encoder/basisu_enc.cpp": {
+    "original": "45ed06a4f8680f1ba7bcdb02fd6d18d91b48b7a1a6a1914f9af527943d6b2ccf",
+    "prepared": "e66057ad1f0968aaeea75494cea121e6216678d10f35ce9faffa9fa575425039"
+  },
+  "external/basis_universal/encoder/basisu_gpu_texture.cpp": {
+    "original": "f01957ee7734431f52e87184b0e5725d9d4964fb4fc3635122044b1d26fe790b",
+    "prepared": "a1ad6e2393994d09829ea6cff71e52fa11125b8a9f0a6196f8bb9115ab973517"
+  },
+  "external/basis_universal/encoder/basisu_miniz.h": {
+    "original": "96bb1cc709ef4465fe76513ee56a10cd56e1643c7898275f18d3cf6960b849e4",
+    "prepared": "4fbab5f988bd7e22b6ed4c5dfd17f88fec5bd895cdfb94a2901db49926c75bc5"
+  },
+  "external/basis_universal/encoder/basisu_opencl.cpp": {
+    "original": "762eec61f4dbe443fd79f34d6fd622a41befea6c7629d088c0523f8d7a12180d",
+    "prepared": "2ce015128f0113ece3334b8368b35fcc1cafc1b2735c0606b2fe81a3a4ab24e7"
+  },
+  "external/basis_universal/encoder/basisu_resampler.cpp": {
+    "original": "f3bcaf9facf049b0e3c08d3ad3432a908d8707e68e536140e15d913dd967ec70",
+    "prepared": "4a640028a8deaf011ef7b49443d1611ca4251ef31563c9dfad02c8372d7aa1ea"
+  },
+  "external/basis_universal/encoder/basisu_resampler.h": {
+    "original": "0f157726034d750267b3e62c0b001cc2e32057e90aaa26ce25e98d8f7f40c0a2",
+    "prepared": "c7011151c04d7c4adaa9d04be1683a069e61f76a451a200f20a51a34c9fbc875"
+  },
+  "external/basis_universal/encoder/basisu_wasm_api.cpp": {
+    "original": "46a4489d3416192436d68928dc1e8084ebe26c924b958b32c4cfe0f1bd59154c",
+    "prepared": "c3e61f0b4eda8f6839435820d349faf4cd65d3e326c4d250c10e6c8832cfae78"
+  },
+  "external/basis_universal/encoder/basisu_wasm_transcoder_api.cpp": {
+    "original": "ee87cbb985187391e5457dc9c8e9b976d1d0604333f4dbe73f69f9bd74b29662",
+    "prepared": "34d5457ea99754d19953c86ca909f746c539b48d606faaf53f4176234faeef53"
+  },
+  "external/basis_universal/encoder/jpgd.cpp": {
+    "original": "96b5bddee685552ce5365b9fb9216bab0ccb9bb84860e919ffdf2fa0be177aee",
+    "prepared": "20303f2ab7e07b349dbf826c1b879dc65abb8a62315d80a3867c4da4643ec605"
+  },
+  "external/basis_universal/encoder/pvpngreader.cpp": {
+    "original": "977a60c819f067ba7197d0d962137acb6b86c0c5ed03ee30efef48f8589d7c6b",
+    "prepared": "c1dee98214cb388058283819a9dfe81900b427044b553cc9bcf27425c783348b"
+  },
+  "external/basis_universal/transcoder/basisu_containers.h": {
+    "original": "b9681f9b1cbf96a07a2d88d6bb013720029d7f8b87cbd1e88c8f8f1c97740a9d",
+    "prepared": "9a913899869881e0b5dc271b319374553199bf97374660bd59143df702cd8c8d"
+  },
+  "external/basis_universal/transcoder/basisu_containers_impl.h": {
+    "original": "4815d5ae9681516ceb89f7ba75d4f1225b5f5488485c025be64d5cec04e09555",
+    "prepared": "d93e3edbef2cc254b89a00d543f7f974411e0c995990a4e077cfa2f7d50fee2f"
+  },
+  "external/basis_universal/transcoder/basisu_transcoder.cpp": {
+    "original": "564ba05990ea0855c1683bc5aec285b522e9a7e65abb4ce5b27451d2981f294e",
+    "prepared": "5bc51f995321d2de23f8df40487a7bb4ea79654a141ab664275f86fc6b14d40c"
+  },
+  "external/basis_universal/zstd/zstd.c": {
+    "original": "37045a972b773425ce477a218fb7b4167da83a93ba6fd7e4baf79f5558c8424f",
+    "prepared": "dc2a32a2c224112f9f7823328591e654308f9ed0bc11aa67658b4b05b7d23003"
+  },
+  "external/basis_universal/zstd/zstddeclib.c": {
+    "original": "3a007442219d631e3748113518dd723d577647c8c00ca3f70371d0c2f7bda5a8",
+    "prepared": "ac1f31f66899d52857c5032f9055c001328eff3bad8fc79b87b61aca62adf1b0"
+  },
+  "external/dfdutils/createdfd.c": {
+    "original": "5f625c9ea86e5439342627036255cb6488c95a2bb1943e8c68023983f43a5092",
+    "prepared": "f4d0ed025c05cec3d2d958296cd5bcf4fad5d39f3ea6d9d6513f9ffb16c83b26"
+  },
+  "external/dfdutils/endswap.c": {
+    "original": "6e2309b77de708b5b4d288e36a50f309b56ad9098f5458d14b453e9bc4a5eaa5",
+    "prepared": "73849831bbf93cc3376c81c1d1e4961294eaec80ba2a624c1cb0a4410493c577"
+  },
+  "external/dfdutils/testbidirectionalmapping.c": {
+    "original": "ba03598f847d1420d1e7d0f7104c0a7912a990b9c1ad529440acb0428c2568c4",
+    "prepared": "59d83acb75883bd2eb232aa123b90d1d66c0609414b2c1ee710a7451f4f347f2"
+  },
+  "lib/src/astc_codec.cpp": {
+    "original": "f4eb0343655d3a28f39143685ebe29db5b1130f22f5af3c741ff78fb2f9b8fba",
+    "prepared": "383455eca70dfc5c42cd682906e0839c2e5cf3f708c8ef7668cd44d30ffffe88"
+  },
+  "lib/src/basis_encode.cpp": {
+    "original": "3e9f5b6c813592cf4cc7d117bcbb365ad10aedbf589e46c7d0398ecce68fb3cc",
+    "prepared": "83e9ec23c8efc2fd28228220a37d0eafb36150242f87222a5c1fb69acb41215e"
+  },
+  "lib/src/basis_transcode.cpp": {
+    "original": "f9268fbdb6ceb00fa8e223da4a9156597ac2ed59a0dac751e0181f3c8df055a2",
+    "prepared": "e92df023a695586ca8b7086d7468e3260489b3dc2c08ee99f37a01c568f4a7fd"
+  },
+  "lib/src/etcunpack.cxx": {
+    "original": "bc97698504e2922f6714db1bf335886952e681caf3d389c3058c847e05c74190",
+    "prepared": "a36ac830b76125f5189eb7f2bb173a659ef548c972b19d89193a8b98e46ac313"
+  },
+  "lib/src/glloader.c": {
+    "original": "c6303c37c3b053ecd313d766507c0b327df711b494bd513f8162320907cb3f78",
+    "prepared": "5fe80c08347d10d642914b442814663d9e7f86ccb540389e356ce8a5f4d58af5"
+  },
+  "lib/src/hashlist.c": {
+    "original": "f4cf7aeab9d45220741741ced4eb3f960a164b5675fbdce144f991bcf3ed33e7",
+    "prepared": "ae3a6ebeac972d3b70e9611e6c3df2a60a3ab1df3e88b884675c5fd904ac227e"
+  },
+  "lib/src/info.c": {
+    "original": "cdd621766c46033f9c7b8d03493d491779ae52c4532b90b7b4023fbfe609e93c",
+    "prepared": "127fc8d281878147dc727fbf3596bd25af19f5f74622595c3b2d5b4f5ebe1b97"
+  },
+  "lib/src/ktxint.h": {
+    "original": "1c5bd9c1a11d51502f1f425c81237953f34c7336d821f8a7124d82b79ca15002",
+    "prepared": "a8f77461934022fa253fbe33918fba84d60728af8cf59f7002daa88013ba2d30"
+  },
+  "lib/src/memstream.c": {
+    "original": "959adc4513dc3311e9e645bc0ccf95e300d05107d93c69527ed6ad587d3aa7e3",
+    "prepared": "c5b0bef175cdd6c360aa1905b9783ad0604f0697145727f0d7bc9e11603c6b87"
+  },
+  "lib/src/texture.c": {
+    "original": "52ba8727684c566551012b800397c33ad5f0b975e9d5a866ac443c9512f1ba8a",
+    "prepared": "83dad4fbd751ca15ced2c11d33f57a59d804eb90c396e9171dc4ba86465a5aa8"
+  },
+  "lib/src/texture1.c": {
+    "original": "a4d188578b6ea36eb15cb5fce952f56abfb41bab2885e464eb9c37c79d96c17d",
+    "prepared": "a3a2eef2dabedfd9c7e63595577945b73420d86e8beb35e62f2ccd6519902681"
+  },
+  "lib/src/texture2.c": {
+    "original": "3fd9f85588b002f585faadadf90cc435be9da97c8b09c39a45ff678dd0d0495b",
+    "prepared": "8523cc29b715e93c22f4c4b9440ac40e78faba47a1fceef3b4a3a417a302e453"
+  },
+  "lib/src/uthash.h": {
+    "original": "965161b818b4da54d252399d4af6b6bb7869160e8ab21efee1938f546bf3d57f",
+    "prepared": "4de0b43a768c47c327b4318448752423502a1b951dc331ad4d110be38b017f33"
+  },
+  "lib/src/vkloader.c": {
+    "original": "610a4200f94ce73abf069210188ebcedcf80e49cf195003d64a545d28e8f1420",
+    "prepared": "f90fe51ff4462728868a612c3150e0725a342d9844a0167fea2ae1ed154c5d18"
+  },
+  "lib/src/writer1.c": {
+    "original": "aca55e7215f573042dc757f2cf42444263e2895fe6979c17f9c375e85c08be25",
+    "prepared": "a7cfe01eb4cb0bd145dce14f953f42495ad249e6e8477f412686d73d7c2ddd60"
+  },
+  "lib/src/writer2.c": {
+    "original": "3beb2f285bf8adbc87783a9d6a0ea055934e4054460758b4efb72206936fb182",
+    "prepared": "f6ce7a641c2379414ca5d49bbd15dcab72c1a3dfd3ec51a9250bcb2dcd9eaa50"
+  }
+}

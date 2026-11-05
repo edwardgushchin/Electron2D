@@ -11,7 +11,7 @@ python3 -B tools/ktx-native/test_bridge.py obj/ktx-native/Electron2DKTXCheck tes
 python3 -B tools/ktx-native/test_bridge.py obj/ktx-native/Electron2DKTXCheck tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json
 ```
 
-`-DELECTRON2D_STATIC_NATIVE=ON` produces one merged archive; no separate codec archive is needed by a consumer. The pinned `ktx_read` archive already embeds the complete BasisU encoder closure, so the merge includes it once. Appending `basisu_encoder` again duplicates strong symbols when Apple applications load the complete archive. The native check validates owner/input/output failure paths and compares all mips against the independent tool oracles. Set `ELECTRON2D_KTX_REPRO` to an ignored output path to retain the last deterministic mutation when diagnosing a test failure.
+`-DELECTRON2D_STATIC_NATIVE=ON` embeds the codec closure in the component archive; standalone consumers also link the common `Electron2DKTXCore` CMake dependency. The unified static product embeds that common core once through its existing engine component. The pinned `ktx_read` archive already embeds the complete BasisU encoder closure, so the merge includes it once. Appending `basisu_encoder` again duplicates strong symbols when Apple applications load the complete archive. The native check validates owner/input/output failure paths and compares all mips against the independent tool oracles. Set `ELECTRON2D_KTX_REPRO` to an ignored output path to retain the last deterministic mutation when diagnosing a test failure.
 
 `generate_fixtures.py` regenerates the small test corpus with the official standalone 5.0.0-rc2 `ktx` tool. It records the tool hash and creates raw, Zstandard, ZLIB, ETC1S, UASTC LDR and two HDR profiles, plus corrupted codebook/DFD regression inputs. Only fixtures and recipe belong in Git; downloaded tools, archives and build products stay ignored.
 
@@ -38,6 +38,7 @@ codec algorithms. Check the immutable source, idempotence and atomic drift refus
 
 ```bash
 python3 -B tools/ktx-native/test_prepare_allocations.py PATH_TO_PINNED_ARCHIVE
+python3 -B tools/ktx-native/test_prepare_memory.py PATH_TO_PINNED_ARCHIVE
 cmake -S tools/ktx-native -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DELECTRON2D_STATIC_NATIVE=ON -DELECTRON2D_KTX_MEMORY_CHECK=ON
 cmake --build BUILD --target Electron2DKTXMemoryCheck Electron2DKTXContainerCheck --parallel 4
@@ -47,12 +48,20 @@ python3 -B tools/ktx-native/test_memory.py BUILD/fault/libElectron2D.so \
   tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json --cold
 ```
 
-This Linux-only fixture selectively remaps C allocation references in a copy of
-the merged codec archive, then links that copy and the test fault ledger in one
-`libElectron2D.so`. The original archive, normal checks and production module are
-untouched. Global linker wrapping would also intercept the ledger's backing
-allocator and recurse. The fixture is test-only and must never replace production
-or shared outputs.
+`prepare_memory.py` composes the ownership guards with a lexical C allocation
+namespace in the extracted build source, verifying 45 complete input/output hash
+pairs. It preserves comments, literals, includes and allocator attributes, rejects
+unregistered allocation-bearing sources, and validates the profile on every
+configuration. Its C/aligned allocation calls and returned encoder buffers use
+`allocator.h`/`memory.c` and the process-lifetime native ledger before first use.
+No managed callback registration is needed. The immutable source archive is retained.
+
+The Linux-only refusal fixture links that production codec profile to the test
+fault core in one `libElectron2D.so`. It changes no allocation call sites at link
+time and must never replace production output. Global linker wrapping would also
+intercept the ledger's backing allocator and recurse. The production unified module
+uses the existing common core once; standalone checks link that same core through
+`Electron2DKTXCore`.
 
 The native script also checks all seven LDR encoder modes with complete mip chains: every warm refusal must
 leave null/empty output and unchanged source, drain temporary storage and preserve
@@ -67,6 +76,9 @@ using `Electron2DNativeLibrary=ABSOLUTE_BUILD/fault/libElectron2D.so`. Run each 
 `--ktx-memory`. The public check requires `IOException`, unchanged pixels/format/
 dimensions/input/Changed, full native temporary drain, exact independent mip pixels
 and healthy retry at every warm request. Keep ordinary decoder, block, encoder and
-sanitizer checks. This does not qualify C++ operators, shipped allocation routing,
-foreign hosts or the complete managed/native monitor; see the
+sanitizer checks. Separately run FastTests `--ktx-production-memory` against the
+rebuilt unified module, on CLR and strict NativeAOT. Its first raw Image load must
+record a native peak after decoder retirement; independent mip loads must drain
+without changing concurrent GZIP ownership. This does not qualify C++ operators,
+foreign hosts, release packages or the complete managed/native monitor; see the
 [component limits](../../docs/components/image-ktx.md#allocation-refusal-and-initialization).

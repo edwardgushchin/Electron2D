@@ -1,9 +1,57 @@
+using System.Buffers.Binary;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using Electron2D;
 
 internal static unsafe class NativeKTXMemoryTests
 {
+    internal static void RunProduction()
+    {
+        const int edge = 256, bytes = edge * edge * 4;
+        var source = new byte[68 + bytes];
+        byte[] magic = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x31, 0x31, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a];
+        magic.CopyTo(source, 0);
+        uint[] header = [0x04030201, 0x1401, 1, 0x1908, 0x8058, 0x1908, edge, edge, 0, 0, 1, 1, 0, bytes];
+        for (var i = 0; i < header.Length; i++) BinaryPrimitives.WriteUInt32LittleEndian(source.AsSpan(12 + i * 4), header[i]);
+        source.AsSpan(68).Fill(127);
+        var before = NativeAllocation.Snapshot();
+        using (var image = new Image())
+        {
+            image.LoadKTXFromBuffer(source);
+            Check(image.GetData().AsSpan().SequenceEqual(source.AsSpan(68)), "Production raw KTX pixels");
+        }
+        var retired = NativeAllocation.Snapshot();
+        Check(retired.Current == before.Current && retired.Peak >= before.Current + bytes && retired.Peak > before.Peak,
+            "Production KTX records an unsampled native peak and retires decoder storage before publication");
+
+        using var stream = typeof(NativeKTXMemoryTests).Assembly.GetManifestResourceStream("TestKTX.oracle.json")!;
+        using var oracle = JsonDocument.Parse(stream);
+        foreach (var entry in oracle.RootElement.GetProperty("fixtures").EnumerateArray())
+        {
+            using var image = new Image();
+            image.LoadKTXFromBuffer(entry.GetProperty("encoded").GetBytesFromBase64());
+            Check(image.GetData().AsSpan().SequenceEqual(entry.GetProperty("pixels").GetBytesFromBase64()), "Production independent mip pixels");
+        }
+        var baseline = NativeAllocation.Snapshot().Current;
+        using (var gzip = new StreamPeerGZIP())
+        {
+            gzip.StartCompression();
+            var active = NativeAllocation.Snapshot().Current;
+            Check(active > baseline, "GZIP shares the production native ledger");
+            for (var iteration = 0; iteration < 8; iteration++)
+                foreach (var entry in oracle.RootElement.GetProperty("fixtures").EnumerateArray())
+                {
+                    using var image = new Image();
+                    image.LoadKTXFromBuffer(entry.GetProperty("encoded").GetBytesFromBase64());
+                    Check(image.GetData().AsSpan().SequenceEqual(entry.GetProperty("pixels").GetBytesFromBase64()) &&
+                        NativeAllocation.Snapshot().Current == active, "KTX temporary drain preserves live GZIP ownership");
+                }
+            gzip.Clear();
+        }
+        Check(NativeAllocation.Snapshot().Current == baseline, "Production owners retire into the same ledger");
+        Console.WriteLine($"Production KTX: raw unsampled peak {retired.Peak}, nine mip oracles, 72 repeated loads with overlapping GZIP ownership passed.");
+    }
+
     internal static void Run()
     {
         if (!OperatingSystem.IsLinux()) throw new PlatformNotSupportedException("The KTX allocation-refusal fixture requires Linux.");

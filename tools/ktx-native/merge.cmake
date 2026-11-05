@@ -5,6 +5,8 @@ file(COPY_FILE "${CODEC}" "${work}/codec.a")
 # ktx_read already embeds the complete BasisU encoder archive.
 if(APPLE_HOST)
   execute_process(COMMAND /usr/bin/libtool -static -o merged.a bridge.a codec.a WORKING_DIRECTORY "${work}" COMMAND_ERROR_IS_FATAL ANY)
+elseif(MSVC_HOST)
+  execute_process(COMMAND "${AR}" /NOLOGO /OUT:merged.a bridge.a codec.a WORKING_DIRECTORY "${work}" COMMAND_ERROR_IS_FATAL ANY)
 else()
   file(WRITE "${work}/merge.mri" "CREATE merged.a\nADDLIB bridge.a\nADDLIB codec.a\nSAVE\nEND\n")
   execute_process(COMMAND "${AR}" -M INPUT_FILE "${work}/merge.mri" WORKING_DIRECTORY "${work}" COMMAND_ERROR_IS_FATAL ANY)

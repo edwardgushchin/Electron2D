@@ -1,5 +1,6 @@
 #include "bridge.h"
 #include "basis.h"
+#include "allocator.h"
 #include "encoder/basisu_comp.h"
 #include "astcenc.h"
 #include <algorithm>
@@ -143,11 +144,11 @@ extern "C" int e2d_image_encode(uint32_t kind, uint32_t width, uint32_t height, 
             : basis(kind, hdr != 0, normal != 0, quality, rdo, source, levels, bytes);
         if (status != 0) return status;
         if (bytes.empty() || bytes.size() > limit) return -1;
-        auto *allocation = static_cast<uint8_t *>(std::malloc(bytes.size()));
+        auto *allocation = static_cast<uint8_t *>(e2d_ktx_malloc(bytes.size()));
         if (!allocation) return -3;
         std::memcpy(allocation, bytes.data(), bytes.size());
         *output_size = bytes.size(); *output = allocation; return 0;
     } catch (const std::bad_alloc &) { return -3; }
     catch (...) { return -1; }
 }
-extern "C" void e2d_image_encoded_free(uint8_t *output) { std::free(output); }
+extern "C" void e2d_image_encoded_free(uint8_t *output) { e2d_ktx_free(output); }

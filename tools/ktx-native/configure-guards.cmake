@@ -16,5 +16,5 @@ foreach(name CMakeLists.txt lib/CMakeLists.txt)
   endif()
 endforeach()
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
-execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/prepare_allocations.py" "${ROOT}"
+execute_process(COMMAND "${Python3_EXECUTABLE}" -B "${CMAKE_CURRENT_LIST_DIR}/prepare_memory.py" "${ROOT}"
   COMMAND_ERROR_IS_FATAL ANY)

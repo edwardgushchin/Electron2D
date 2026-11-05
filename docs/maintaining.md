@@ -9,14 +9,18 @@ render checker and export/package tests. See [the native contract](components/fl
 
 # Maintaining the Electron2D contract
 
-For KTX allocation guards, run `tools/ktx-native/test_prepare_allocations.py` on
+For KTX allocation guards, run `tools/ktx-native/test_prepare_allocations.py` and `test_prepare_memory.py` on
 the pinned archive, then build the isolated `Electron2DKTXMemoryCheck` with the
 merged Linux static closure. Run `test_memory.py --cold` on both KTX and legacy
 Basis oracles, the public FastTests `--ktx-memory` profile on CLR/full-trim
 NativeAOT, `Electron2DKTXContainerCheck` and existing decoder/block/encoder checks. Preserve every calibrated
 refusal, cold same-process retry, independent mip pixels, complete temporary
-drain and Image/source/Changed atomicity. Keep the fixture outside production
-outputs; it does not qualify shipped allocation routing or the composed monitor.
+drain and Image/source/Changed atomicity. Keep the refusal core outside production
+outputs. Rebuild the unified production module and run FastTests
+`--ktx-production-memory` on CLR/strict NativeAOT: preserve its unsampled raw-load
+peak, independent mip pixels and repeated native drain with live GZIP ownership.
+Audit compiled codec allocator references separately from the core's raw backing
+allocator. C++/provider heaps, release packages and the composed monitor remain open.
 Run the native encoder against the fully sanitizer-instrumented closure; an
 adapter-only sanitizer build misses the codec's internal alignment violations.
 See [the component](components/image-ktx.md#allocation-refusal-and-initialization).

@@ -2112,7 +2112,7 @@ current processing-group access and exact physical/file consumers. Physical
 mutations retain their owner guard before virtual consumer hooks. Runtime
 Node duplication retains its separate ADR 0091 binding/identity prerequisite.
 
-The [shared ETC/EAC/ASTC decoder](components/image-block-decoding.md) lives in Image.BlockDecoding.cs and the private tools/ktx-native/blocks.cpp bridge. It adds no public production type; Image and ordinary/layered texture snapshots share its complete-mip prepared pixel path. Original block source archives remain exact. [KTX refusal guards](components/image-ktx.md#allocation-refusal-and-initialization) retain partial ownership and retryable shared initialization; their isolated test fixture does not complete production allocation accounting.
+The [shared ETC/EAC/ASTC decoder](components/image-block-decoding.md) lives in Image.BlockDecoding.cs and the private tools/ktx-native/blocks.cpp bridge. It adds no public production type; Image and ordinary/layered texture snapshots share its complete-mip prepared pixel path. Original block source archives remain exact. The [checked KTX C profile](components/image-ktx.md#allocation-refusal-and-initialization) routes codec C/aligned storage and returned encoder buffers to the common native ledger, with partial ownership and retryable initialization. C++/provider closure and the composed monitor remain open.
 
 [Unsigned image texture sampling](components/integer-textures.md) extends existing TexturePixels/GPUTexture, ordinary/layered resources, imports and rendering identities without adding a public type.
 
