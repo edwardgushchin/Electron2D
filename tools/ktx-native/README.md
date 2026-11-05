@@ -42,10 +42,11 @@ python3 -B tools/ktx-native/test_prepare_memory.py PATH_TO_PINNED_ARCHIVE
 cmake -S tools/ktx-native -B BUILD -G Ninja -DCMAKE_BUILD_TYPE=Release \
   -DELECTRON2D_STATIC_NATIVE=ON -DELECTRON2D_KTX_MEMORY_CHECK=ON
 cmake --build BUILD --target Electron2DKTXMemoryCheck Electron2DKTXContainerCheck \
-  Electron2DKTXCPPCheck Electron2DASTCMemoryCheck --parallel 2
+  Electron2DKTXCPPCheck Electron2DASTCMemoryCheck Electron2DBasisMemoryCheck --parallel 2
 BUILD/Electron2DKTXContainerCheck
 BUILD/Electron2DKTXCPPCheck
 BUILD/Electron2DASTCMemoryCheck
+BUILD/Electron2DBasisMemoryCheck
 python3 -B tools/ktx-native/test_memory.py BUILD/fault/libElectron2D.so \
   tests/Electron2D.Tests/TestData/KTX/oracle.json \
   tests/Electron2D.Tests/TestData/CompressedArray/basis-oracle.json \
@@ -54,7 +55,7 @@ python3 -B tools/ktx-native/test_memory.py BUILD/fault/libElectron2D.so \
 
 `prepare_memory.py` composes the ownership guards with a lexical C allocation
 namespace and `prepare_cpp.py`'s ASTC ownership guards in the extracted build
-source, verifying 50 complete input/output hash
+source, verifying 63 complete input/output hash
 pairs. Its lexical C pass preserves comments, literals, includes and allocator
 attributes, rejects unregistered C allocation-bearing sources, and validates the profile on every
 configuration. Its C/aligned allocation calls and returned encoder buffers use
@@ -63,7 +64,12 @@ configuration. Its C/aligned allocation calls and returned encoder buffers use
 context/working arrays through that same ledger with aligned scoped ownership.
 Synchronous ASTC init/term callbacks use templates, eliminating function boxing.
 The selected ASTC archive must have no default C++ new/delete references;
-Basis STL/runtime allocation remains open. Diagnostics are disabled in this profile.
+`basis-memory.hpp` routes Basis standard strings, streams, vectors, maps/sets,
+priority queues and queued callable captures through the existing allocator.
+Callable copies retain independent state and deferred LIFO order. Resampler owners
+retire across sample-vector exceptions and constructor status failure before row use.
+`prepare_basis.py` verifies 22 complete inputs; nine preceding prepared states
+have exact upgrade hashes. Diagnostics are disabled in this profile.
 No managed callback registration is needed. The immutable source archive is retained.
 
 The Linux-only refusal fixture links that production codec profile to the test
@@ -88,6 +94,15 @@ every mip. Windows Ninja builds use the raw localized include-prefix probe from
 `tools/native/msvc-dependencies.cmake`; verify header invalidation after changing
 the compiler/toolchain.
 
+`Electron2DBasisMemoryCheck` checks actual parameter-string storage, deferred jobs
+and LDR/HDR resampling at every allocation position, with full drain and exact
+retry. The production-core C++ check includes actual Basis parameter strings;
+the preceding matching source/archive graph reports zero tracked bytes instead
+of their 49-byte minimum on the qualified Linux profile. The native Python driver
+also uses nonconstant complete-mip RDO input to exercise hash-history allocation.
+Remaining raw utility owners and thread/exception/locale runtime allocation are
+separate domains; no global C++ operator is replaced.
+
 Publish FastTests into separate CLR and strict full-trim NativeAOT directories,
 using `Electron2DNativeLibrary=ABSOLUTE_BUILD/fault/libElectron2D.so`. Run each with
 `--ktx-memory`. The public check requires `IOException`, unchanged pixels/format/
@@ -99,6 +114,6 @@ sanitizer checks. Separately run FastTests `--ktx-production-memory` against the
 rebuilt unified module, on CLR and strict NativeAOT. Its first raw Image load must
 record a native peak after decoder retirement; legacy luminance normalization
 must count overlapping C++ scratch and native pixels. Independent mip loads must drain
-without changing concurrent GZIP ownership. This does not qualify remaining Basis STL/runtime allocation,
+without changing concurrent GZIP ownership. This does not qualify remaining utility/runtime/provider allocation,
 foreign hosts, release packages or the complete managed/native monitor; see the
 [component limits](../../docs/components/image-ktx.md#allocation-refusal-and-initialization).

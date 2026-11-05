@@ -8,16 +8,19 @@ import sys
 
 from prepare_allocations import PINS as OWNERSHIP, prepare as prepare_ownership
 from prepare_cpp import prepare as prepare_cpp
+from prepare_basis import FILES as BASIS_FILES, prepare as prepare_basis
 
 NOTICE = "/* Generated Electron2D C allocation profile; the downloaded archive is unchanged. */\n#include \"allocator.h\"\n"
 NAMES = ("malloc", "calloc", "realloc", "free", "posix_memalign", "_aligned_malloc", "_aligned_free", "strdup", "_strdup")
-TOKENS = re.compile(
+LEXICAL = (
     r'^[ \t]*#[ \t]*include[ \t]*<[^>\n]+>|//[^\n]*|/\*[\s\S]*?\*/|'
     r'(?:u8|u|U|L)?R"(?P<delimiter>[^ ()\\\t\r\n]{0,16})\([\s\S]*?\)(?P=delimiter)"|'
     r'"(?:\\[\s\S]|[^"\\])*"|\'(?:\\[\s\S]|[^\'\\])*\'|'
     r'__attribute__\s*\(\(\s*malloc\s*\)\)|'
-    r'(?:__has_attribute|XXH_HAS_ATTRIBUTE)\s*\(\s*malloc\s*\)|'
+    r'(?:__has_attribute|XXH_HAS_ATTRIBUTE)\s*\(\s*malloc\s*\)|')
+TOKENS = re.compile(LEXICAL +
     r'(?P<name>\b(?:std\s*::\s*)?(?:' + "|".join(NAMES) + r')\b)', re.MULTILINE)
+CPP_TOKENS = re.compile(LEXICAL + r'(?P<name>\bstd\s*::\s*(?:vector|string|wstring|stringstream|ostringstream|map|set|unordered_map|unordered_set|priority_queue)\b)', re.MULTILINE)
 
 FOLDERS = ("lib/src", "external/dfdutils", "external/basis_universal/transcoder",
     "external/basis_universal/encoder", "external/astc-encoder/Source", "external/basis_universal/zstd")
@@ -34,11 +37,22 @@ def namespace(text):
     return TOKENS.sub(replace, text)
 
 
+def namespace_cpp(text):
+    return CPP_TOKENS.sub(lambda m: "e2d_ktx::" + re.sub(r"^std\s*::\s*", "", m.group("name"))
+                         if m.group("name") else m.group(), text)
+
+
+def cpp_ownership(name, text):
+    if name in BASIS_FILES:
+        text = prepare_basis(name, namespace_cpp(text))
+    return prepare_cpp(name, text)
+
+
 def prepare(name, contents):
     if name in OWNERSHIP:
         contents = prepare_ownership(name, contents.decode("utf-8")).encode("utf-8")
     # Preserve vendor comment encodings byte-for-byte; allocator identifiers are ASCII.
-    return NOTICE.encode("ascii") + prepare_cpp(name, namespace(contents.decode("latin-1"))).encode("latin-1")
+    return NOTICE.encode("ascii") + cpp_ownership(name, namespace(contents.decode("latin-1"))).encode("latin-1")
 
 
 def main(root):
@@ -60,7 +74,10 @@ def main(root):
         if digest == pins["original"]:
             result = prepare(name, contents)
         elif name in OWNERSHIP and digest == OWNERSHIP[name][1]:
-            result = NOTICE.encode("ascii") + prepare_cpp(name, namespace(contents.decode("latin-1"))).encode("latin-1")
+            result = NOTICE.encode("ascii") + cpp_ownership(name, namespace(contents.decode("latin-1"))).encode("latin-1")
+        elif digest == pins.get("previous"):
+            assert contents.startswith(NOTICE.encode("ascii"))
+            result = NOTICE.encode("ascii") + cpp_ownership(name, contents[len(NOTICE):].decode("latin-1")).encode("latin-1")
         else:
             raise ValueError("Pinned C allocation input changed: " + name)
         if hashlib.sha256(result).hexdigest() != pins["prepared"]:

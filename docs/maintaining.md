@@ -14,18 +14,21 @@ the pinned archive, then build the isolated `Electron2DKTXMemoryCheck` with the
 merged Linux static closure. Run `test_memory.py --cold` on both KTX and legacy
 Basis oracles with `--blocks-oracle` for the independent block corpus, the public
 FastTests `--ktx-memory` profile on CLR/full-trim NativeAOT,
-`Electron2DKTXContainerCheck`, `Electron2DKTXCPPCheck`, `Electron2DASTCMemoryCheck`
+`Electron2DKTXContainerCheck`, `Electron2DKTXCPPCheck`, `Electron2DASTCMemoryCheck`,
+`Electron2DBasisMemoryCheck`
 and existing decoder/block/encoder checks. Preserve every calibrated
 refusal, cold same-process retry, independent mip pixels, complete temporary
 drain and Image/source/Changed atomicity, plus portable RID/envelope/metadata and
-both notification boundaries. Keep the refusal core outside production
+both notification boundaries, including nonconstant RDO. Keep parameter-string,
+deferred LIFO job and LDR/HDR resampler refusal/drain/retry checks. Preserve the
+preceding matched source/archive accounting control. Keep the refusal core outside production
 outputs. Rebuild the unified production module and run FastTests
 `--ktx-production-memory` on CLR/strict NativeAOT: preserve its unsampled raw-load
 peak, overlapping legacy-normalization C++/pixel peak, independent mip pixels and
 repeated native drain with live GZIP ownership. Run the full codec closure under
 ASan/UBSan; standalone checks keep leak detection enabled.
 Audit compiled codec allocator references separately from the core's raw backing
-allocator. Remaining Basis STL/runtime, provider heaps, release packages and the
+allocator. Remaining raw utility owners, thread/exception/locale runtime, provider heaps, release packages and the
 composed monitor remain open.
 Run the native encoder against the fully sanitizer-instrumented closure; an
 adapter-only sanitizer build misses the codec's internal alignment violations.

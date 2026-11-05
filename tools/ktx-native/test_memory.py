@@ -24,11 +24,15 @@ class Info(C.Structure):
         "width", "height", "levels", "version", "format", "flags", "swizzle", "reserved")]
 
 
-def encoders(codec):
+def encoders(codec, rdo=False):
     encode = codec.e2d_image_encode
     encode.argtypes = [C.c_uint32] * 7 + [C.c_float, C.c_void_p, C.c_uint64, C.POINTER(C.c_void_p), C.POINTER(C.c_uint64)]
     codec.e2d_image_encoded_free.argtypes = [C.c_void_p]
     pixels = bytes([224, 64, 32, 255] * (16 + 4 + 1))
+    if rdo:
+        pixels = bytes(channel for edge in (8, 4, 2, 1) for y in range(edge) for x in range(edge)
+                       for channel in ((x * 31 + y * 17) % 256, (x * 7 + y * 43) % 256,
+                                       (x * 11 + y * 13) % 256, 255 - (x + y) % 4 * 31))
     source = C.create_string_buffer(pixels)
 
     def current():
@@ -39,7 +43,8 @@ def encoders(codec):
     def call(kind, failure):
         codec.e2d_test_arm(failure)
         output, size = C.c_void_p(1), C.c_uint64(123)
-        status = encode(kind, 4, 4, 3, 0, 0, 1, 0, source, len(pixels), C.byref(output), C.byref(size))
+        status = encode(kind, 8 if rdo else 4, 8 if rdo else 4, 4 if rdo else 3, 0, 0, 1,
+                        1.25 if rdo else 0, source, len(pixels), C.byref(output), C.byref(size))
         attempts = codec.e2d_test_attempts()
         try:
             if status:
@@ -54,7 +59,7 @@ def encoders(codec):
         return status, attempts, encoded
 
     requests, digests = [], []
-    for kind in range(7):
+    for kind in ([0] if rdo else range(7)):
         assert call(kind, 0)[0] == 0
         baseline = current()
         healthy = call(kind, 0)
@@ -66,7 +71,7 @@ def encoders(codec):
             assert retry[0] == 0 and retry[2] == healthy[2] and current() == baseline, ("encoder retry", kind, failure)
         requests.append(healthy[1])
         digests.append(hashlib.sha256(healthy[2]).hexdigest())
-    return {"name": "encoders", "requests": requests, "refusals": sum(requests), "sha256": digests}
+    return {"name": "rdo-encoder" if rdo else "encoders", "requests": requests, "refusals": sum(requests), "sha256": digests}
 
 
 def child(library, fixture, failure):
@@ -76,6 +81,8 @@ def child(library, fixture, failure):
     ledger.e2d_test_attempts.restype = C.c_size_t
     if fixture.get("container") == "encode":
         return encoders(codec)
+    if fixture.get("container") == "encode-rdo":
+        return encoders(codec, rdo=True)
     if fixture.get("container") == "block":
         return blocks(codec, fixture)
     create = codec.e2d_basis_create if fixture.get("container") == "basis" else codec.e2d_ktx_create
@@ -219,6 +226,7 @@ def main():
         return json.loads(result.stdout.strip().splitlines()[-1])
 
     print(json.dumps(run({"name": "encoders", "container": "encode"}, 0)), flush=True)
+    print(json.dumps(run({"name": "rdo-encoder", "container": "encode-rdo"}, 0)), flush=True)
     if args.blocks_oracle:
         for fixture in json.loads(args.blocks_oracle.read_text())["fixtures"]:
             if fixture["source_format"] != "Etc2RaAsRg":

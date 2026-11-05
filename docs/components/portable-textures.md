@@ -15,10 +15,12 @@ before block transcoding, including complete-mip payloads with unaligned offsets
 [Allocation-refusal guards](image-ktx.md#allocation-refusal-and-initialization)
 retire partial nested image/vector copies and preserve healthy retry. The private
 seven-mode mip-chain fixture checks every observed routed allocation refusal.
-Encoder working vectors and ASTC contexts/arrays share the native ledger.
-Public CLR/NativeAOT checks exercise 365 Basis/ETC2/ASTC LDR/HDR refusals with
+Encoder working vectors, Basis standard containers/queued captures and ASTC
+contexts/arrays share the native ledger. Resampler construction failure retires
+partial channels before any row submission.
+Public CLR/NativeAOT checks exercise 566 Basis/ETC2/ASTC LDR/HDR/RDO refusals with
 stable RID, retained bytes, complete mips and notification atomicity. Remaining
-Basis STL/runtime storage and full platform qualification remain open.
+utility/runtime/provider storage and full platform qualification remain open.
 
 Retention governs the actual encoded envelope independently of sampled pixels. Global retention affects future creation/load only. Per-resource false discards the current envelope even if the global flag is true; enabling retention later cannot recover it. A populated resource without an envelope cannot be archived. Duplication still copies independent pixels, policy and compressor settings. Typed archives and scene-local graphs reconstruct through the compiled resource factory.
 

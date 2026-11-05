@@ -47,6 +47,10 @@
     "original": "6431de45b7befcb004b8e6592214a510028dfc6e15e4eeace631bc208935939c",
     "prepared": "2625f3232e15a7100a9cdb2e7bdc1a2b45878ecf7bde74b09b90af0b612a41fb"
   },
+  "external/basis_universal/encoder/3rdparty/android_astc_decomp.cpp": {
+    "original": "7494fbcf73c7801e80f3e9069ea375fce47aa1875d996e5cb783f6f726227990",
+    "prepared": "b602b1294e51f3eebd23b40eca961ebd2670f2fb648f8f0ebe79c0c2cca9b5a1"
+  },
   "external/basis_universal/encoder/3rdparty/qoi.h": {
     "original": "ce6f7ff43433e5beb91cb0b77aa4200390ed3e3fdadcf693bae37303b67a3530",
     "prepared": "63119ef11cd1f8184999bb8f19a9a74202abd6f6739e8a22aeb419970e89f7a4"
@@ -57,19 +61,51 @@
   },
   "external/basis_universal/encoder/3rdparty/tinyexr.h": {
     "original": "9335a2496545300aa634003ba8fb502565197b43faae1be120c2de4b7f8f3ba7",
-    "prepared": "064edd6e36cfd7000d2a7c161a216328bd51772a89d62050f75535d0dceb9778"
+    "prepared": "fba8f020e5999069855c9f6097c78631f2d41e74c0d9816a70c83d8212e8f2c7",
+    "previous": "064edd6e36cfd7000d2a7c161a216328bd51772a89d62050f75535d0dceb9778"
+  },
+  "external/basis_universal/encoder/basisu_astc_hdr_6x6_enc.h": {
+    "original": "42886973bef8906f9e6535542809779489e5a605f19de54a7f70818122ec012b",
+    "prepared": "f0ea4d88f0db4b24d8a6e0a17d786c7e81a0e63947673c99a995cc1f9a4b866c"
+  },
+  "external/basis_universal/encoder/basisu_astc_hdr_common.cpp": {
+    "original": "16fed85aa25d9a729075433cd98756a60e85b39f84616843cd40c39d28ff64c5",
+    "prepared": "9a66f75f12c1c0b2c00fb56f308c0e40f857a9e13a6d4bdcada5c714f5016dba"
+  },
+  "external/basis_universal/encoder/basisu_astc_ldr_encode.cpp": {
+    "original": "cd285ac5ad580f8281180e5b1c7d77eda03a27e98dc7862a1b6a145e91ba640e",
+    "prepared": "463d002433abe799039818da1ecca76ab101394f2aec98e6ac1f07799f9c2f5a"
+  },
+  "external/basis_universal/encoder/basisu_astc_ldr_encode.h": {
+    "original": "fc4d06cf5166697e65655fc669adfb428b155840719c410dd682e33d2a94d2ac",
+    "prepared": "334aa4c1326934762e0c21052bcf29c17d1a1f20b1a3cdf20e6cf0fa1f9974a8"
   },
   "external/basis_universal/encoder/basisu_comp.cpp": {
     "original": "3f7e5bf6c15dc583d146f95c30391042941ab63f2947f0f1fc1edcacdd3bac14",
-    "prepared": "d48889acd8815b9662998ece3d909b566f7528a11a10f9bd767aae660c8162e3"
+    "prepared": "c97b463ea838785d68a24317a7fc3b54fcf0eecbf0292a6acfaa89e851909b71",
+    "previous": "d48889acd8815b9662998ece3d909b566f7528a11a10f9bd767aae660c8162e3"
+  },
+  "external/basis_universal/encoder/basisu_comp.h": {
+    "original": "f706ee2ff421e0f7086895eeeca2772d4180b3b56f9b2996f469f1506717d857",
+    "prepared": "76a9427cf06a02f97d8948b4f0141f61405a9a562cb42fdc475ad234a752020f"
   },
   "external/basis_universal/encoder/basisu_enc.cpp": {
     "original": "45ed06a4f8680f1ba7bcdb02fd6d18d91b48b7a1a6a1914f9af527943d6b2ccf",
-    "prepared": "e66057ad1f0968aaeea75494cea121e6216678d10f35ce9faffa9fa575425039"
+    "prepared": "9349bbdd42738358e1ae3d0c365411141575f43af1010f0618a989d291305536",
+    "previous": "e66057ad1f0968aaeea75494cea121e6216678d10f35ce9faffa9fa575425039"
+  },
+  "external/basis_universal/encoder/basisu_enc.h": {
+    "original": "90bcf4babcfd3de2493854c57de5f7c2769a017165246a506698bb234ecb310c",
+    "prepared": "c341f9034d8d451047ff1fb6f85da369950277b6db4640e874dcb0d8435a6dc7"
+  },
+  "external/basis_universal/encoder/basisu_frontend.cpp": {
+    "original": "39b55d58b1da44273e107b261b89b8f9fc7aff302c681c252d7ac62d6525d9e8",
+    "prepared": "31569b6f648e0e4dbd68940d0a4bd477b65d339eb196839c48ba7ee5190e110a"
   },
   "external/basis_universal/encoder/basisu_gpu_texture.cpp": {
     "original": "f01957ee7734431f52e87184b0e5725d9d4964fb4fc3635122044b1d26fe790b",
-    "prepared": "a1ad6e2393994d09829ea6cff71e52fa11125b8a9f0a6196f8bb9115ab973517"
+    "prepared": "eae3dfd92cc279103a088bf339fa37c7da71b82f96c9d34ef217c4a0053e9659",
+    "previous": "a1ad6e2393994d09829ea6cff71e52fa11125b8a9f0a6196f8bb9115ab973517"
   },
   "external/basis_universal/encoder/basisu_miniz.h": {
     "original": "96bb1cc709ef4465fe76513ee56a10cd56e1643c7898275f18d3cf6960b849e4",
@@ -77,7 +113,8 @@
   },
   "external/basis_universal/encoder/basisu_opencl.cpp": {
     "original": "762eec61f4dbe443fd79f34d6fd622a41befea6c7629d088c0523f8d7a12180d",
-    "prepared": "2ce015128f0113ece3334b8368b35fcc1cafc1b2735c0606b2fe81a3a4ab24e7"
+    "prepared": "b0889bcc794389033b7f3cab78507709fd06fab3bb59a050741c52cc400c4284",
+    "previous": "2ce015128f0113ece3334b8368b35fcc1cafc1b2735c0606b2fe81a3a4ab24e7"
   },
   "external/basis_universal/encoder/basisu_resampler.cpp": {
     "original": "f3bcaf9facf049b0e3c08d3ad3432a908d8707e68e536140e15d913dd967ec70",
@@ -86,6 +123,10 @@
   "external/basis_universal/encoder/basisu_resampler.h": {
     "original": "0f157726034d750267b3e62c0b001cc2e32057e90aaa26ce25e98d8f7f40c0a2",
     "prepared": "c7011151c04d7c4adaa9d04be1683a069e61f76a451a200f20a51a34c9fbc875"
+  },
+  "external/basis_universal/encoder/basisu_uastc_enc.cpp": {
+    "original": "1ab8c429c9b43a58b63515094b7b619066a56db5653be8d59abc4d2b0bfb7ab0",
+    "prepared": "ca2d37b8c2bce7306475f32e932db57a8e2627565e0807dc98fb3b1049bd44dc"
   },
   "external/basis_universal/encoder/basisu_wasm_api.cpp": {
     "original": "46a4489d3416192436d68928dc1e8084ebe26c924b958b32c4cfe0f1bd59154c",
@@ -101,19 +142,39 @@
   },
   "external/basis_universal/encoder/pvpngreader.cpp": {
     "original": "977a60c819f067ba7197d0d962137acb6b86c0c5ed03ee30efef48f8589d7c6b",
-    "prepared": "c1dee98214cb388058283819a9dfe81900b427044b553cc9bcf27425c783348b"
+    "prepared": "dac58142b99309d1546b6adeb56eeae682829df301e49e4535953dd4c0e75502",
+    "previous": "c1dee98214cb388058283819a9dfe81900b427044b553cc9bcf27425c783348b"
+  },
+  "external/basis_universal/transcoder/basisu.h": {
+    "original": "2724dd59acbd332d43dde5f15a9b546ed851c45c7c2acbcdcab4a288c58628e0",
+    "prepared": "7b5a67ee6256bc55ab6f1ed38700175903fa2c4980214f17c9c445667f3775d7"
+  },
+  "external/basis_universal/transcoder/basisu_astc_helpers.h": {
+    "original": "a5f86db332fe2c9060dd77889203aa4c01cf8d0bea6a8754fc11939018c6c553",
+    "prepared": "35c927a8606773ef16f20cd7d1c2a5e9b395c94189cedf808bc0a421ed862449"
   },
   "external/basis_universal/transcoder/basisu_containers.h": {
     "original": "b9681f9b1cbf96a07a2d88d6bb013720029d7f8b87cbd1e88c8f8f1c97740a9d",
-    "prepared": "9a913899869881e0b5dc271b319374553199bf97374660bd59143df702cd8c8d"
+    "prepared": "50a404b75384f1a1a35c4ac9ddbc84fa29d68884931e46b91e588e7082cdc723",
+    "previous": "9a913899869881e0b5dc271b319374553199bf97374660bd59143df702cd8c8d"
   },
   "external/basis_universal/transcoder/basisu_containers_impl.h": {
     "original": "4815d5ae9681516ceb89f7ba75d4f1225b5f5488485c025be64d5cec04e09555",
-    "prepared": "d93e3edbef2cc254b89a00d543f7f974411e0c995990a4e077cfa2f7d50fee2f"
+    "prepared": "86195a9df80d7b8e68b63426c22d760d46843f5e77ef4e2338269e37f84ed1e2",
+    "previous": "d93e3edbef2cc254b89a00d543f7f974411e0c995990a4e077cfa2f7d50fee2f"
   },
   "external/basis_universal/transcoder/basisu_transcoder.cpp": {
     "original": "564ba05990ea0855c1683bc5aec285b522e9a7e65abb4ce5b27451d2981f294e",
-    "prepared": "5bc51f995321d2de23f8df40487a7bb4ea79654a141ab664275f86fc6b14d40c"
+    "prepared": "f1f2844c686795bf3c5ef34357c858ce26351a2d6f98153ad14434cee33062d1",
+    "previous": "5bc51f995321d2de23f8df40487a7bb4ea79654a141ab664275f86fc6b14d40c"
+  },
+  "external/basis_universal/transcoder/basisu_transcoder.h": {
+    "original": "217b2e545c597e40b963123a900ba6f338ad20fb79cf2d6811ada2240483a122",
+    "prepared": "178569e22e17b8a202db4d663fa384e106ac604a9e999378fccb8f3758e9a8af"
+  },
+  "external/basis_universal/transcoder/basisu_transcoder_internal.h": {
+    "original": "8c7f8ee40adb46d0e5f4d947e0b00401bbe3b803ae5641b49710102cace6ca5f",
+    "prepared": "0b83647c32ca1f633e99a00d32551463c0f6feb39b9859b172cf7744d617b693"
   },
   "external/basis_universal/zstd/zstd.c": {
     "original": "37045a972b773425ce477a218fb7b4167da83a93ba6fd7e4baf79f5558c8424f",

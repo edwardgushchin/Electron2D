@@ -20,7 +20,7 @@ Plain compiled object sources use Script.RegisterObject and the existing identit
 
 Direct `ElectronObject` construction provides the concrete root role through the existing identity, typed metadata and lifetime path, including weak raw physics associations. See [direct root construction](../components/object-lifecycle.md#direct-root-construction); live script reassignment remains separate.
 
-[KTX working-storage accounting](../components/image-ktx.md#allocation-refusal-and-initialization) connects codec C storage, bridge/transcoder vectors and ASTC contexts/arrays to the shared ledger, preserves Image and portable-texture state and permits retry after partial initialization. Remaining Basis STL/runtime, provider heaps and exact composed memory monitoring remain open.
+[KTX working-storage accounting](../components/image-ktx.md#allocation-refusal-and-initialization) connects codec C storage, bridge/transcoder vectors, Basis standard containers/queued captures and ASTC contexts/arrays to the shared ledger. Image and portable-texture state survive refusal; partial resamplers retire before row use. Remaining utility/runtime/provider heaps and exact composed memory monitoring remain open.
 
 [Compiled C# initialization](../components/scripting.md#compiled-c-initialization) supports explicitly supplied constructor arguments without inventing a default factory, with ordinary constructor ordering and failures. Live assignment/change/reload remain open.
 

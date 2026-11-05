@@ -8,7 +8,8 @@ import tarfile
 import tempfile
 
 from prepare_allocations import PINS as OWNERSHIP, prepare as prepare_ownership
-from prepare_memory import main, namespace
+from prepare_cpp import prepare as prepare_cpp
+from prepare_memory import NOTICE, main, namespace, namespace_cpp
 
 
 def check(archive):
@@ -28,6 +29,8 @@ auto name = strdup("free"); auto windows = _strdup("malloc");
     expected = expected.replace("strdup(\"free\")", "e2d_ktx_strdup(\"free\")").replace("_strdup(\"malloc\")", "e2d_ktx_strdup(\"malloc\")")
     assert namespace(example) == expected
     assert namespace(expected) == expected
+    cpp = '#include <string>\n// std::vector\n"std::map"; std::string value; using std::vector;'
+    assert namespace_cpp(cpp) == cpp.replace('std::string value', 'e2d_ktx::string value').replace('using std::vector', 'using e2d_ktx::vector')
     assert hashlib.sha256(archive.read_bytes()).hexdigest() == "bce6794bca57d86de2f00683ba8eaa6b3e8875d5abe45ac1136e206eb68aa476"
     pins = json.loads(Path(__file__).with_name("memory-sources.json").read_text())
     originals = {}
@@ -53,6 +56,18 @@ auto name = strdup("free"); auto windows = _strdup("malloc");
         restore()
         main(root)
         prepared = {name: (root / name).read_bytes() for name in pins}
+        main(root)
+        assert prepared == {name: (root / name).read_bytes() for name in pins}
+        restore()
+        for name, pin in pins.items():
+            if "previous" not in pin:
+                continue
+            contents = originals[name]
+            if name in OWNERSHIP:
+                contents = prepare_ownership(name, contents.decode("utf-8")).encode("utf-8")
+            previous = NOTICE.encode("ascii") + prepare_cpp(name, namespace(contents.decode("latin-1"))).encode("latin-1")
+            assert hashlib.sha256(previous).hexdigest() == pin["previous"], name
+            (root / name).write_bytes(previous)
         main(root)
         assert prepared == {name: (root / name).read_bytes() for name in pins}
         restore()

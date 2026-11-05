@@ -38,7 +38,7 @@ repeated preparation is idempotent. `decoder-guards.cmake` adds scoped C++ owner
 to the generated transcoder. The immutable download remains unchanged.
 
 `prepare_memory.py` composes those ownership guards with a checked C allocation
-namespace in the extracted build source. Its 50 original/output SHA-256 pairs
+namespace in the extracted build source. Its 63 original/output SHA-256 pairs
 cover libktx, DFD, Basis vector/miniz/Zstandard and ASTC storage/ownership.
 The lexical C namespace pass preserves comments, literals, includes and allocator
 attributes; unknown C allocation-bearing sources or changed pinned files refuse configuration.
@@ -59,8 +59,24 @@ percentile, partition and alpha-preprocessing storage on exceptions; publication
 occurs only after successful initialization. Immediate init/term callbacks are
 templates, avoiding `std::function` heap boxing without retaining callbacks.
 Diagnostics are disabled in this profile. Its ASTC archive has no remaining
-default C++ new/delete references. Basis STL/string/map/thread/function and
-support/provider/runtime ownership remain separate open domains.
+default C++ new/delete references.
+
+`basis-memory.hpp` applies that allocator to Basis strings, formatting streams,
+vectors, ordered/unordered maps and sets, and priority queues. Its queued callable
+retains independent value copies, strong assignment failure and deferred LIFO
+execution; it owns its captures through the same native core. The adapter changes
+storage ownership without replacing global C++ operators or codec algorithms.
+`prepare_basis.py` covers 22 pinned implementation/header inputs. Nine preceding
+prepared states have exact upgrade hashes; unknown drift still refuses the batch.
+A UTF8 BOM is removed from the prepared build copy before prefixing includes.
+
+Both byte and float resampling paths now own all channel resamplers before growing
+sample vectors. Constructor status is checked before borrowing contributor lists
+or submitting rows. An injected C allocation refusal previously reached
+`Resampler::put_line` with incomplete state and crashed; it now returns failure,
+retires every partial owner and permits exact retry. Remaining raw TinyEXR utility
+owners, thread/exception/locale runtime storage, support/provider heaps and full
+platform/package qualification remain open.
 
 The Linux `Electron2DKTXMemoryCheck` fixture links this same production codec
 profile to a test-only refusal core in one `libElectron2D.so`.
@@ -70,13 +86,13 @@ ETC1S cases use a fresh process for each failure, checking retry against the hea
 global-table baseline. `NativeKTXMemoryTests` exercises the public Image boundary
 through the same fixture. See [reproduction commands](../../tools/ktx-native/README.md#allocation-refusal-checks).
 
-The public source/binary checks on self-contained CLR and strict full-trim
+The public binary checks on self-contained CLR and strict full-trim
 NativeAOT 10.0.14 each exercise 212 warm refusals across nine independent KTX2 mip
-oracles, six legacy-normalization, 60 block-decoder and 417 Image encoder refusals.
-The portable Basis/ETC2/ASTC LDR/HDR consumer adds 365 refusals preserving RID,
+oracles, six legacy-normalization, 60 block-decoder and 507 Image encoder refusals.
+The portable Basis/ETC2/ASTC LDR/HDR/RDO consumer adds 566 refusals preserving RID,
 retained envelope, size/override, complete mips, alpha, source and both notification
 boundaries. Every failed operation drains temporary storage and permits exact
-healthy retry. Seven native LDR encoder modes additionally exercise 390 warm refusals with
+healthy retry. Seven native LDR encoder modes additionally exercise 486 warm refusals with
 complete mip chains, requiring no published output, complete temporary drain and
 byte-identical healthy retry. A separate native container check covers eight
 constructor/copy/shrink roles and 35 element-construction failures; the original
@@ -86,8 +102,17 @@ valid shrink bounds. The encoder shares the legacy reader's slice-alignment
 adapter before native block transcoding; codec algorithms and output bytes remain
 unchanged.
 
-The Linux x64 profile passes 35,002 independent cold refusals/retries and
-1,273 warm requests (823 decoder/metadata, 390 encoder and 60 ASTC block).
+A nonconstant complete-mip RDO input adds 128 native refusals, exercising hash
+history rather than the solid-block bypass. A production-core control observes
+49 live bytes for the actual default Basis parameter strings; the matching
+preceding graph observes zero and fails the same check. The C++ owner check also
+verifies string/stream/map/hash/queue storage, independent callable copies and
+failed assignment. `Electron2DBasisMemoryCheck` passes four parameter, six job,
+50 byte-resampler and 50 float-resampler refusals, with full native drain and retry.
+
+The final Linux x64 profile passes 35,002 independent cold refusals/retries and
+1,497 warm requests (823 decoder/metadata, 486 ordinary encoder, 128 nonconstant
+RDO encoder and 60 ASTC block).
 The native C++ owner check covers 128-byte alignment, nested-constructor,
 partial-vector-copy and array-constructor failures with full retirement and retry.
 A separate actual ASTC alpha-preprocessing check covers 32 refusals across
@@ -95,13 +120,13 @@ LDR/HDR and 4x4/8x8 footprints. The public CLR/NativeAOT checks use the same
 final refusal module.
 
 The entire codec closure also passes the warm refusal matrix under ASan/UBSan.
-Native decoder, block, encoder, container, C++ owner and ASTC alpha checks keep
+Native decoder, block, encoder, container, C++ owner, Basis and ASTC alpha checks keep
 leak detection enabled. The Python driver disables interpreter leak reporting
 and independently requires exact native temporary drain.
 
 The refusal core is never packaged. Production source now routes the documented
 C allocation domain and the described C++ working storage to the shared ledger;
-this does not cover remaining Basis STL/runtime allocation,
+this does not cover the remaining utility/runtime allocation,
 support/provider heaps or the complete monitor. Rebuilt release packages,
 foreign hosts and coherent managed/native composition remain open in the
 [allocation audit](../coverage/performance-producers.md#ktx-allocation-refusal-2026-11-05).
@@ -120,7 +145,8 @@ localized compiler include prefix so Ninja retains header dependencies. Its hash
 enters compile commands to refresh old empty dependency records; regression checks
 cover cache migration and later header invalidation. These checks qualify the
 described domains, with complete provider/runtime composition still open.
-Local receipts are retained in `bin/ktx-cpp-accounting/2026-11-05`;
+The standard-storage update's local receipts are in `bin/basis-cpp-accounting/2026-11-05`.
+The preceding working-vector/ASTC profile is in `bin/ktx-cpp-accounting/2026-11-05`;
 the preceding C-only profile is in `bin/ktx-production-accounting/2026-11-05`.
 
 Desktop, Windows, Android, Apple and Web producers require the private bridge. The unified static product includes its codec and common-core closure in one archive; codec/merge changes force it to refresh. The standalone component archive embeds its codec closure and links Electron2DKTXCore through CMake. Packaging rejects global codec symbols that could collide with the font closure. Ordinary engine/game builds restore native assets without invoking a native compiler. The compiled managed API contains no codec type, pointer or backend handle.

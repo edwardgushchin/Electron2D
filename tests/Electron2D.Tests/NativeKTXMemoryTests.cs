@@ -163,57 +163,60 @@ internal static unsafe class NativeKTXMemoryTests
     private static void RunPortableStorage(delegate* unmanaged[Cdecl]<nuint, void> arm, delegate* unmanaged[Cdecl]<nuint> attempts)
     {
         nuint total = 0;
-        foreach (var hdr in new[] { false, true })
-            foreach (var mode in new[] { PortableCompressedTexture.CompressionMode.BasisUniversal,
-                PortableCompressedTexture.CompressionMode.ETC2, PortableCompressedTexture.CompressionMode.ASTC })
+        foreach (var (hdr, mode, rdo) in new[] {
+            (false, PortableCompressedTexture.CompressionMode.BasisUniversal, 0f),
+            (false, PortableCompressedTexture.CompressionMode.ETC2, 0f),
+            (false, PortableCompressedTexture.CompressionMode.ASTC, 0f),
+            (true, PortableCompressedTexture.CompressionMode.BasisUniversal, 0f),
+            (true, PortableCompressedTexture.CompressionMode.ASTC, 0f),
+            (false, PortableCompressedTexture.CompressionMode.BasisUniversal, 1.25f) })
+        {
+            using var source = WorkingSource(hdr, rdo > 0); var originalSource = source.GetData();
+            using var texture = new PortableCompressedTexture { KeepCompressedBuffer = true };
+            texture.SetBASISUCompressorParams(0, rdo);
+            var data = (PropertyDescriptor<PortableCompressedTexture, byte[]>)texture.GetPropertyList().Single(p => p.Name == "portable_data");
+            texture.CreateFromImage(source, mode);
+            using var healthy = texture.GetImage()!;
+            var expected = healthy.GetData(); var expectedFormat = healthy.PixelFormat; var encoded = data.GetValue(texture);
+            arm(0); texture.CreateFromImage(source, mode); var requests = attempts();
+            using var oldSource = Image.CreateFromData(2, 2, false, Image.Format.Rgba8, new byte[16]);
+            texture.CreateFromImage(oldSource, PortableCompressedTexture.CompressionMode.ETC2);
+            texture.SizeOverride = new(9, 7);
+            using var old = texture.GetImage()!;
+            var oldPixels = old.GetData(); var oldEncoded = data.GetValue(texture); var oldAlpha = texture.HasAlpha;
+            var identity = texture.GetRID(); var changes = 0; var properties = 0;
+            texture.Changed += _ => changes++; texture.PropertyListChanged += _ => properties++;
+            var baseline = NativeAllocation.Snapshot().Current;
+            for (nuint failure = 1; failure <= requests; failure++)
             {
-                if (hdr && mode == PortableCompressedTexture.CompressionMode.ETC2) continue;
-                using var source = WorkingSource(hdr); var originalSource = source.GetData();
-                using var texture = new PortableCompressedTexture { KeepCompressedBuffer = true };
-                texture.SetBASISUCompressorParams(0, 0);
-                var data = (PropertyDescriptor<PortableCompressedTexture, byte[]>)texture.GetPropertyList().Single(p => p.Name == "portable_data");
-                texture.CreateFromImage(source, mode);
-                using var healthy = texture.GetImage()!;
-                var expected = healthy.GetData(); var expectedFormat = healthy.PixelFormat; var encoded = data.GetValue(texture);
-                arm(0); texture.CreateFromImage(source, mode); var requests = attempts();
-                using var oldSource = Image.CreateFromData(2, 2, false, Image.Format.Rgba8, new byte[16]);
-                texture.CreateFromImage(oldSource, PortableCompressedTexture.CompressionMode.ETC2);
-                texture.SizeOverride = new(9, 7);
-                using var old = texture.GetImage()!;
-                var oldPixels = old.GetData(); var oldEncoded = data.GetValue(texture); var oldAlpha = texture.HasAlpha;
-                var identity = texture.GetRID(); var changes = 0; var properties = 0;
-                texture.Changed += _ => changes++; texture.PropertyListChanged += _ => properties++;
-                var baseline = NativeAllocation.Snapshot().Current;
-                for (nuint failure = 1; failure <= requests; failure++)
-                {
-                    arm(failure); var rejected = false;
-                    try { texture.CreateFromImage(source, mode); }
-                    catch (IOException) { rejected = true; }
-                    finally { arm(0); }
-                    using var preserved = texture.GetImage()!;
-                    Check(rejected && texture.GetSize() == new Vector2(2, 2) && texture.SizeOverride == new Vector2(9, 7) &&
-                        texture.GetRID() == identity && texture.GetCompressionMode() == PortableCompressedTexture.CompressionMode.ETC2 &&
-                        texture.MIPMapCount == 0 && texture.HasAlpha == oldAlpha && changes == 0 && properties == 0 &&
-                        preserved.PixelFormat == old.PixelFormat && preserved.GetData().AsSpan().SequenceEqual(oldPixels) &&
-                        data.GetValue(texture).AsSpan().SequenceEqual(oldEncoded) && source.GetData().AsSpan().SequenceEqual(originalSource) &&
-                        NativeAllocation.Snapshot().Current == baseline, "Portable refusal preserves published state and retires working storage: " + mode);
-                    using var retry = new PortableCompressedTexture { KeepCompressedBuffer = true };
-                    retry.SetBASISUCompressorParams(0, 0); retry.CreateFromImage(source, mode);
-                    using var pixels = retry.GetImage()!;
-                    Check(pixels.PixelFormat == expectedFormat && pixels.GetData().AsSpan().SequenceEqual(expected) &&
-                        data.GetValue(retry).AsSpan().SequenceEqual(encoded) && NativeAllocation.Snapshot().Current == baseline,
-                        "Portable refusal permits byte-identical retry: " + mode);
-                }
-                texture.CreateFromImage(source, mode);
-                using var published = texture.GetImage()!;
-                Check(texture.GetRID() == identity && texture.GetSize() == new Vector2(4, 4) && texture.SizeOverride == new Vector2(4, 4) &&
-                    texture.MIPMapCount == 2 && texture.GetCompressionMode() == mode && changes == 1 && properties == 1 &&
-                    published.PixelFormat == expectedFormat && published.GetData().AsSpan().SequenceEqual(expected) &&
-                    data.GetValue(texture).AsSpan().SequenceEqual(encoded) && NativeAllocation.Snapshot().Current == baseline,
-                    "Portable creation publishes complete mips once after refusal: " + mode);
-                total += requests;
+                arm(failure); var rejected = false;
+                try { texture.CreateFromImage(source, mode); }
+                catch (IOException) { rejected = true; }
+                finally { arm(0); }
+                using var preserved = texture.GetImage()!;
+                Check(rejected && texture.GetSize() == new Vector2(2, 2) && texture.SizeOverride == new Vector2(9, 7) &&
+                    texture.GetRID() == identity && texture.GetCompressionMode() == PortableCompressedTexture.CompressionMode.ETC2 &&
+                    texture.MIPMapCount == 0 && texture.HasAlpha == oldAlpha && changes == 0 && properties == 0 &&
+                    preserved.PixelFormat == old.PixelFormat && preserved.GetData().AsSpan().SequenceEqual(oldPixels) &&
+                    data.GetValue(texture).AsSpan().SequenceEqual(oldEncoded) && source.GetData().AsSpan().SequenceEqual(originalSource) &&
+                    NativeAllocation.Snapshot().Current == baseline, "Portable refusal preserves published state and retires working storage: " + mode);
+                using var retry = new PortableCompressedTexture { KeepCompressedBuffer = true };
+                retry.SetBASISUCompressorParams(0, rdo); retry.CreateFromImage(source, mode);
+                using var pixels = retry.GetImage()!;
+                Check(pixels.PixelFormat == expectedFormat && pixels.GetData().AsSpan().SequenceEqual(expected) &&
+                    data.GetValue(retry).AsSpan().SequenceEqual(encoded) && NativeAllocation.Snapshot().Current == baseline,
+                    "Portable refusal permits byte-identical retry: " + mode);
             }
-        Console.WriteLine($"Public portable texture: {total} Basis/ETC2/ASTC LDR/HDR refusals preserve RID/buffer/mips/metadata/events, drain storage and retry.");
+            texture.CreateFromImage(source, mode);
+            using var published = texture.GetImage()!;
+            Check(texture.GetRID() == identity && texture.GetSize() == new Vector2(4, 4) && texture.SizeOverride == new Vector2(4, 4) &&
+                texture.MIPMapCount == 2 && texture.GetCompressionMode() == mode && changes == 1 && properties == 1 &&
+                published.PixelFormat == expectedFormat && published.GetData().AsSpan().SequenceEqual(expected) &&
+                data.GetValue(texture).AsSpan().SequenceEqual(encoded) && NativeAllocation.Snapshot().Current == baseline,
+                "Portable creation publishes complete mips once after refusal: " + mode);
+            total += requests;
+        }
+        Console.WriteLine($"Public portable texture: {total} Basis/ETC2/ASTC LDR/HDR/RDO refusals preserve RID/buffer/mips/metadata/events, drain storage and retry.");
     }
 
     private static byte[] RawKTXL8(int edge)
@@ -225,7 +228,7 @@ internal static unsafe class NativeKTXMemoryTests
         data.AsSpan(68).Fill(127); return data;
     }
 
-    private static Image WorkingSource(bool hdr)
+    private static Image WorkingSource(bool hdr, bool gradient = false)
     {
         var data = new byte[21 * (hdr ? 16 : 4)];
         for (var pixel = 0; pixel < 21; pixel++)
@@ -235,6 +238,9 @@ internal static unsafe class NativeKTXMemoryTests
                 for (var channel = 0; channel < 4; channel++) BinaryPrimitives.WriteSingleLittleEndian(data.AsSpan(pixel * 16 + channel * 4), channels[channel]);
             }
             else { data[pixel * 4] = 224; data[pixel * 4 + 1] = 64; data[pixel * 4 + 2] = 32; data[pixel * 4 + 3] = 255; }
+        if (gradient)
+            for (var pixel = 0; pixel < 21; pixel++)
+            { data[pixel * 4] = (byte)(pixel * 31); data[pixel * 4 + 1] = (byte)(pixel * 17); data[pixel * 4 + 2] = (byte)(pixel * 11); }
         return Image.CreateFromData(4, 4, true, hdr ? Image.Format.Rgbaf : Image.Format.Rgba8, data);
     }
 
