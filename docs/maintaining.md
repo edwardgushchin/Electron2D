@@ -9,6 +9,13 @@ render checker and export/package tests. See [the native contract](components/fl
 
 # Maintaining the Electron2D contract
 
+For WebRTC bridge ownership changes, run the [native refusal fixture and both consumer profiles](../tools/webrtc-native/README.md).
+Keep real peer creation, same-owner event/channel retry, queue byte accounting,
+allocation-free close, diagnostic fallback and thread/weak retirement. Run FastTests
+`--webrtc` and the injected `--webrtc-close-error` on matching CLR/full-trim NativeAOT
+hosts, preserving the preceding native/managed failing controls and single-provider
+process maps. RTC/core-only test modules do not qualify the full native bundle.
+
 For KTX allocation guards, run `tools/ktx-native/test_prepare_allocations.py` and `test_prepare_memory.py` on
 the pinned archive, then build the isolated `Electron2DKTXMemoryCheck` with the
 merged Linux static closure. Run `test_memory.py --cold` on both KTX and legacy

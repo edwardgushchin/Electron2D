@@ -14,6 +14,7 @@
     <Compile Include="../Electron2D.Tests/CanvasVertexLayoutTests.cs" Link="CanvasVertexLayoutTests.cs" />
     <Compile Include="../Electron2D.Tests/NativeUTF8LegacyTests.cs" Link="NativeUTF8LegacyTests.cs" />
     <Compile Include="../Electron2D.Tests/NativeKTXMemoryTests.cs" Link="NativeKTXMemoryTests.cs" />
+    <Compile Include="../Electron2D.Tests/WebRTCTests*.cs" Exclude="../Electron2D.Tests/WebRTCTests.Browser.cs" Link="%(Filename)%(Extension)" />
     <EmbeddedResource Include="../Electron2D.Tests/TestData/KTX/oracle.json" LogicalName="TestKTX.oracle.json" />
     <EmbeddedResource Include="../Electron2D.Tests/TestData/Blocks/oracle.json" LogicalName="TestBlocks.oracle.json" />
     <Compile Include="../Electron2D.Tests/NativeUTF8StringTests.cs" Link="NativeUTF8StringTests.cs" />

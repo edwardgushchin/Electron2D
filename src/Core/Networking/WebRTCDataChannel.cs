@@ -42,6 +42,7 @@ public abstract class WebRTCDataChannel : PacketPeer
     /// <summary>Reports whether delivered messages preserve ordering.</summary><returns>True for ordered delivery.</returns>
     public abstract bool IsOrdered();
     /// <summary>Observes native channel errors without consuming queued packets.</summary>
+    /// <exception cref="IOException">The native receive queue exceeded its capacity or could not allocate storage.</exception>
     public abstract void Poll();
     /// <summary>Reports the type of the last successfully received packet.</summary><returns>True for UTF-8 text, false for binary or before any read.</returns>
     public abstract bool WasStringPacket();

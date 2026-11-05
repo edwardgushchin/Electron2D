@@ -2,7 +2,7 @@
 
 # WebRTC data channels and multiplayer
 
-Last updated: 2026-10-19
+Last updated: 2026-11-05
 
 ## Scope and dependencies
 
@@ -27,6 +27,45 @@ Channels select binary versus strict outgoing UTF-8 text through shared PacketWr
 CreateServer uses identity one; CreateClient requires a local identity greater than one and registers server one; CreateMesh accepts explicit positive identities. AddPeer borrows a new connection and owns its generated channel cohort. IDs 1/2/3 provide reliable ordered, lifetime-limited ordered and lifetime-limited unordered delivery. Reserved unreliable lifetime defaults to one millisecond. Configured extra modes use IDs 4 onward and lifetime one for unreliable delivery. TransferChannel zero selects a reserved channel by TransferMode; positive channels select their configured mode. Packets have a conservative 1200-byte payload ceiling. Positive targets address one peer, zero broadcasts, and negative targets exclude that identity.
 
 GetPeer/GetPeers copy membership and expose borrowed connection/channel identities through WebRTCPeerInfo. Removing a peer releases generated channels and preserves the caller connection. Normal DisconnectPeer closes that connection and Poll retires membership; force removes membership immediately without a disconnected event. Close clears local membership without disposing borrowed connections. Setup rollback attempts every created channel and preserves setup plus cleanup exceptions. Poll retires failed channel cohorts and publishes membership state before callbacks; callbacks may remove themselves. The selected next packet retains consistent source, channel and delivery metadata until a successful read, including after a small-buffer failure.
+
+## Bridge-owned native storage (2026-11-05)
+
+The [native source profile](../../tools/webrtc-native/README.md) routes peer/channel
+control blocks and handles, event objects, queue backing storage, weak-channel
+capacity and persistent proposal/event/metadata/diagnostic strings through the
+common pure-C ledger. Weak control blocks and thread-local capacity remain counted
+until their actual retirement. No managed callback or global allocator replacement
+is involved. libdatachannel remains the unchanged pinned 0.24.6 release, with the
+same OpenSSL 4.1.0 pair.
+
+Failed event/channel extraction preserves ownership for retry. Failed receive
+insertion preserves the accepted byte count and becomes a sticky polling error.
+Closing moves the existing weak list without allocating, retires event-owned
+channels outside the peer gate and attempts every channel plus the peer before
+reporting the first native error. Logical closed state and managed membership
+commit even on that error. Diagnostic allocation failure uses a static fallback.
+
+Linux x64 checks reject four real native-peer and 22 container allocation positions,
+then require complete temporary drain and healthy retry. Separate witnesses cover
+queue insertion, diagnostic refusal, exact handle/event payload bytes, weak lifetime,
+allocation-free close and thread-local retirement. The bridge/core fixture passes
+ASan/UBSan with leak detection; dependency archives retain their ordinary Release
+instrumentation profile.
+
+Self-contained CLR and full-trim NativeAOT 10.0.14 run the complete native channel,
+multiplayer, configuration, extension and SceneTree RPC profile, including both
+32-frame zero-managed-owner-byte intervals. Both observe 768 bytes for a new peer
+and another 8937 bytes for a channel with long metadata. The injected post-close
+error releases dropped managed channels on both hosts. Matching preceding native
+and managed controls fail the accounting and close-retirement witnesses respectively.
+Process maps show one ledger module and one selected SSL/crypto pair. Receipts are
+in `bin/webrtc-memory/2026-11-05/`.
+
+The consumer modules are RTC/core-only test fixtures, not the complete native
+product. A rebuilt unified bundle/package and foreign execution remain open.
+Compatible packet payloads, send/SDP conversion temporaries, backend objects and
+captures, SCTP/ICE, CRT and provider heaps retain their own allocation domains.
+This does not establish total native memory or coherent managed/native monitoring.
 
 ## Verification
 

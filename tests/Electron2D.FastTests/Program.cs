@@ -1,3 +1,5 @@
+if (args.Contains("--webrtc")) { WebRTCTests.Run(); return; }
+if (args.Contains("--webrtc-close-error")) { WebRTCTests.CloseError(); return; }
 if (args.Contains("--ktx-production-memory")) { NativeKTXMemoryTests.RunProduction(); return; }
 if (args.Contains("--ktx-memory")) { NativeKTXMemoryTests.Run(); return; }
 if (args.Contains("--utf8-legacy")) { NativeUTF8LegacyTests.Run(); return; }

@@ -1,10 +1,12 @@
+[WebRTC bridge ownership](../components/webrtc.md#bridge-owned-native-storage-2026-11-05) now counts retained metadata and queue backing through the common native ledger. Allocation refusal preserves queue ownership, and close errors retire managed membership. Backend packet/provider domains and complete composed memory remain open.
+
 [Streaming GZIP native storage](../coverage/performance-producers.md#streaming-gzip-allocation-domain) now shares the existing bridge allocator, preserving strict gzip/zlib validation and complete cleanup. Composed memory selectors and foreign-host qualification remain open.
 
 # Networking
 
 [ENet-owned native allocations](../coverage/performance-producers.md#enet-owned-allocation-domain) now share the engine allocator ledger, with checked partial failure and finalizer cleanup. Complete memory monitors and foreign-platform qualification remain open.
 
-Last updated: 2026-10-19
+Last updated: 2026-11-05
 
 The [WebRTC component](../components/webrtc.md) implements native peer/channel negotiation, typed extension providers and WebRTCMultiplayerPeer consumed by SceneMultiplayer/SceneTree. It shares PacketWriteMode with WebSocketPeer. Configuration and peer observations use typed records; signaling remains application-owned. Linux native and independent browser packet checks passed; routed and foreign adapter gates remain explicit.
 

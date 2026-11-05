@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <string_view>
+#include "memory.hpp"
 #ifdef _WIN32
 #define API extern "C" __declspec(dllexport)
 #else
@@ -16,62 +18,89 @@
 #endif
 API uint64_t e2d_rtc_tls_version(void) { return OpenSSL_version_num(); }
 namespace {
-thread_local std::string error;
+thread_local e2d_rtc::String error;
+thread_local bool errorStorageFailed;
 template<class F, class T> T attempt(F function, T failure) noexcept {
-    error.clear(); try { return function(); } catch (const std::exception& e) { error=e.what(); } catch (...) { error="Unknown native transport failure"; } return failure;
+    error.clear(); errorStorageFailed=false;
+    try { return function(); }
+    catch (const std::exception& e) { try { error=e.what(); } catch (...) { errorStorageFailed=true; } }
+    catch (...) { try { error="Unknown native transport failure"; } catch (...) { errorStorageFailed=true; } }
+    return failure;
 }
+size_t size(const rtc::message_variant& message) {return std::visit([](auto& value){return value.size();},message);}
 struct Channel {
     std::shared_ptr<rtc::DataChannel> value;
     std::mutex gate;
-    std::deque<rtc::message_variant> packets;
+    e2d_rtc::Queue<rtc::message_variant> packets;
     size_t bytes=0;
     bool overflow=false,closed=false;
     explicit Channel(std::shared_ptr<rtc::DataChannel> source):value(std::move(source)){}
-    ~Channel() { try { value->close(); } catch (...) {} }
+    void push(rtc::message_variant message) {
+        std::lock_guard lock(gate); if(closed||overflow)return; auto length=size(message);
+        if(packets.size()>=1024||length>4*1024*1024-bytes){overflow=true;return;}
+        try { packets.push_back(std::move(message)); bytes+=length; }
+        catch (...) { overflow=true; }
+    }
+    void close() {
+        {std::lock_guard lock(gate);closed=true;packets.clear();bytes=0;}
+        if(value)value->close();
+    }
+    ~Channel() { try { close(); } catch (...) {} }
 };
-struct Event { int kind; std::string first,second; std::shared_ptr<Channel> channel; };
+struct Event: e2d_rtc::Owned {
+    int kind=0; e2d_rtc::String first,second; std::shared_ptr<Channel> channel;
+    Event()=default;
+    Event(int kind,std::string_view first,std::string_view second,std::shared_ptr<Channel> channel)
+        :kind(kind),first(first),second(second),channel(std::move(channel)){}
+};
 struct Peer {
     std::shared_ptr<rtc::PeerConnection> value;
     std::mutex gate;
-    std::deque<Event> events;
-    std::vector<std::weak_ptr<Channel>> channels;
+    e2d_rtc::Queue<Event> events;
+    e2d_rtc::Vector<std::weak_ptr<Channel>> channels;
     bool closed=false,overflow=false;
-    std::string proposal,proposalType;
-    void push(Event item) { std::lock_guard lock(gate); if(closed)return; if(events.size()>=4096){overflow=true;return;} events.push_back(std::move(item)); }
+    e2d_rtc::String proposal,proposalType;
+    void push(Event item) { std::lock_guard lock(gate); if(closed||overflow)return; if(events.size()>=4096){overflow=true;return;} events.push_back(std::move(item)); }
+    void failed() { std::lock_guard lock(gate); if(!closed)overflow=true; }
     void close() {
-        std::vector<std::shared_ptr<Channel>> live;
-        {std::lock_guard lock(gate);if(closed)return;closed=true;events.clear();for(auto& weak:channels)if(auto c=weak.lock())live.push_back(std::move(c));channels.clear();}
-        for(auto& c:live){{std::lock_guard lock(c->gate);c->closed=true;c->packets.clear();c->bytes=0;}c->value->close();}
-        value->close();
+        e2d_rtc::Vector<std::weak_ptr<Channel>> live;
+        {std::lock_guard lock(gate);if(closed)return;closed=true;live.swap(channels);}
+        // Retire event-owned channels outside the peer gate; closing can call back.
+        for(;;){Event item;{std::lock_guard lock(gate);if(events.empty())break;item=std::move(events.front());events.pop_front();}}
+        std::exception_ptr failure;
+        for(auto& weak:live)if(auto c=weak.lock()){
+            try{c->close();}catch(...){if(!failure)failure=std::current_exception();}
+        }
+        try{if(value)value->close();}catch(...){if(!failure)failure=std::current_exception();}
+        if(failure)std::rethrow_exception(failure);
     }
     ~Peer(){try{close();}catch(...){}}
 };
-struct PeerHandle {std::shared_ptr<Peer> value;};
-struct ChannelHandle {std::shared_ptr<Channel> value;};
-size_t size(const rtc::message_variant& message) {return std::visit([](auto& value){return value.size();},message);}
+struct PeerHandle: e2d_rtc::Owned {std::shared_ptr<Peer> value;explicit PeerHandle(std::shared_ptr<Peer> value):value(std::move(value)) {}};
+struct ChannelHandle: e2d_rtc::Owned {std::shared_ptr<Channel> value;explicit ChannelHandle(std::shared_ptr<Channel> value):value(std::move(value)) {}};
 std::shared_ptr<Channel> wrapChannel(const std::shared_ptr<Peer>& peer,std::shared_ptr<rtc::DataChannel> value) {
-    auto result=std::make_shared<Channel>(std::move(value));std::weak_ptr<Channel> weak=result;
-    result->value->onMessage([weak](rtc::message_variant message){if(auto c=weak.lock()){std::lock_guard lock(c->gate);if(c->closed)return;auto length=size(message);if(c->packets.size()>=1024||length>4*1024*1024-c->bytes){c->overflow=true;return;}c->bytes+=length;c->packets.push_back(std::move(message));}});
+    auto result=e2d_rtc::shared<Channel>(std::move(value));std::weak_ptr<Channel> weak=result;
+    result->value->onMessage([weak](rtc::message_variant message){if(auto c=weak.lock())c->push(std::move(message));});
     {std::lock_guard lock(peer->gate);if(peer->closed)throw std::runtime_error("Peer is closed");peer->channels.push_back(result);}
     return result;
 }
 std::shared_ptr<Peer> peer(void* handle){if(!handle)throw std::invalid_argument("Null peer");return static_cast<PeerHandle*>(handle)->value;}
 std::shared_ptr<Channel> channel(void* handle){if(!handle)throw std::invalid_argument("Null channel");return static_cast<ChannelHandle*>(handle)->value;}
 }
-API const char* e2d_rtc_error(){return error.c_str();}
+API const char* e2d_rtc_error(){return errorStorageFailed?"Native transport diagnostic allocation failed":error.c_str();}
 API void* e2d_rtc_create(const char** urls,const char** users,const char** passwords,int count){return attempt([&]()->void*{
     if(count<0||count>1024)throw std::invalid_argument("Invalid ICE server count");
     rtc::Configuration config;config.disableAutoNegotiation=true;config.maxMessageSize=65536;
     for(int i=0;i<count;i++){rtc::IceServer server(urls[i]);if(users[i])server.username=users[i];if(passwords[i])server.password=passwords[i];config.iceServers.push_back(std::move(server));}
-    auto state=std::make_shared<Peer>();state->value=std::make_shared<rtc::PeerConnection>(config);std::weak_ptr<Peer> weak=state;
-    state->value->onLocalCandidate([weak](rtc::Candidate candidate){if(auto p=weak.lock())p->push({2,candidate.mid(),candidate.candidate(),nullptr});});
-    state->value->onDataChannel([weak](std::shared_ptr<rtc::DataChannel> data){if(auto p=weak.lock()){try{p->push({3,"","",wrapChannel(p,std::move(data))});}catch(...){std::lock_guard lock(p->gate);p->overflow=true;}}});
+    auto state=e2d_rtc::shared<Peer>();state->value=std::make_shared<rtc::PeerConnection>(config);std::weak_ptr<Peer> weak=state;
+    state->value->onLocalCandidate([weak](rtc::Candidate candidate){if(auto p=weak.lock()){try{p->push({2,candidate.mid(),candidate.candidate(),nullptr});}catch(...){p->failed();}}});
+    state->value->onDataChannel([weak](std::shared_ptr<rtc::DataChannel> data){if(auto p=weak.lock()){try{p->push({3,"","",wrapChannel(p,std::move(data))});}catch(...){p->failed();}}});
     return new PeerHandle{state};},static_cast<void*>(nullptr));}
 API void e2d_rtc_destroy(void* handle){delete static_cast<PeerHandle*>(handle);}
 API int e2d_rtc_close(void* handle){return attempt([&]{peer(handle)->close();return 0;},-1);}
 API int e2d_rtc_state(void* handle,int kind){return attempt([&]{auto p=peer(handle);if(kind==0)return int(p->value->state());if(kind==1)return int(p->value->gatheringState());if(kind==2){std::lock_guard lock(p->gate);return p->closed?5:int(p->value->signalingState());}throw std::invalid_argument("Invalid state kind");},-1);}
 API int e2d_rtc_offer(void* handle){return attempt([&]{auto p=peer(handle);auto description=p->value->createOffer();p->proposal=std::string(description);p->proposalType="offer";p->push({1,"offer",p->proposal,nullptr});return 0;},-1);}
-API int e2d_rtc_local(void* handle,const char* type,const char* sdp){return attempt([&]{auto p=peer(handle);if(p->proposalType!=type||std::string(rtc::Description(p->proposal,type))!=std::string(rtc::Description(sdp,type)))throw std::invalid_argument("Local SDP is not the current emitted proposal");p->value->setLocalDescription(rtc::Description::stringToType(type));p->proposal.clear();p->proposalType.clear();return 0;},-1);}
+API int e2d_rtc_local(void* handle,const char* type,const char* sdp){return attempt([&]{auto p=peer(handle);if(p->proposalType!=type||std::string(rtc::Description(std::string(p->proposal.data(),p->proposal.size()),type))!=std::string(rtc::Description(sdp,type)))throw std::invalid_argument("Local SDP is not the current emitted proposal");p->value->setLocalDescription(rtc::Description::stringToType(type));p->proposal.clear();p->proposalType.clear();return 0;},-1);}
 API int e2d_rtc_remote(void* handle,const char* type,const char* sdp){return attempt([&]{auto p=peer(handle);p->value->setRemoteDescription(rtc::Description(sdp,type));if(std::string(type)=="offer"){auto description=p->value->createAnswer();p->proposal=std::string(description);p->proposalType="answer";p->push({1,"answer",p->proposal,nullptr});}return 0;},-1);}
 API int e2d_rtc_candidate(void* handle,const char* mid,const char* candidate){return attempt([&]{peer(handle)->value->addRemoteCandidate(rtc::Candidate(candidate,mid));return 0;},-1);}
 API void* e2d_rtc_event(void* handle){return attempt([&]()->void*{auto p=peer(handle);std::lock_guard lock(p->gate);if(p->overflow)throw std::runtime_error("Peer event queue overflow");if(p->events.empty())return nullptr;auto value=new Event(std::move(p->events.front()));p->events.pop_front();return value;},static_cast<void*>(nullptr));}
@@ -84,10 +113,10 @@ API void* e2d_rtc_channel_create(void* handle,const char* label,const char* prot
     if(lifetime>=0)init.reliability.maxPacketLifeTime=std::chrono::milliseconds(lifetime);if(retransmits>=0)init.reliability.maxRetransmits=static_cast<unsigned>(retransmits);
     return new ChannelHandle{wrapChannel(p,p->value->createDataChannel(label,init))};},static_cast<void*>(nullptr));}
 API void e2d_rtc_channel_destroy(void* handle){delete static_cast<ChannelHandle*>(handle);}
-API int e2d_rtc_channel_close(void* handle){return attempt([&]{auto c=channel(handle);{std::lock_guard lock(c->gate);c->closed=true;c->packets.clear();c->bytes=0;}c->value->close();return 0;},-1);}
-API int e2d_rtc_channel_poll(void* handle){return attempt([&]{auto c=channel(handle);bool overflow;{std::lock_guard lock(c->gate);overflow=c->overflow;}if(overflow){c->value->close();throw std::runtime_error("Channel receive queue overflow");}return 0;},-1);}
-API int e2d_rtc_channel_info(void* handle,int kind){return attempt([&]{auto c=channel(handle);auto value=c->value;switch(kind){case 0:return value->isClosed()?3:value->isOpen()?1:0;case 1:return value->id()?int(*value->id()):65535;case 2:return int(value->maxMessageSize());case 3:return int(value->bufferedAmount());case 4:return value->reliability().unordered?0:1;case 5:return value->reliability().maxPacketLifeTime?int(value->reliability().maxPacketLifeTime->count()):65535;case 6:return value->reliability().maxRetransmits?int(*value->reliability().maxRetransmits):65535;case 7:{std::lock_guard lock(c->gate);return int(c->packets.size());}}throw std::invalid_argument("Invalid channel info kind");},-1);}
-API const char* e2d_rtc_channel_string(void* handle,int kind){static thread_local std::string text;return attempt([&]()->const char*{auto c=channel(handle);text=kind?c->value->protocol():c->value->label();return text.c_str();},static_cast<const char*>(nullptr));}
+API int e2d_rtc_channel_close(void* handle){return attempt([&]{channel(handle)->close();return 0;},-1);}
+API int e2d_rtc_channel_poll(void* handle){return attempt([&]{auto c=channel(handle);bool overflow;{std::lock_guard lock(c->gate);overflow=c->overflow;}if(overflow){c->close();throw std::runtime_error("Channel receive queue overflow");}return 0;},-1);}
+API int e2d_rtc_channel_info(void* handle,int kind){return attempt([&]{auto c=channel(handle);auto value=c->value;switch(kind){case 0:{bool closed;{std::lock_guard lock(c->gate);closed=c->closed;}return closed||value->isClosed()?3:value->isOpen()?1:0;}case 1:return value->id()?int(*value->id()):65535;case 2:return int(value->maxMessageSize());case 3:return int(value->bufferedAmount());case 4:return value->reliability().unordered?0:1;case 5:return value->reliability().maxPacketLifeTime?int(value->reliability().maxPacketLifeTime->count()):65535;case 6:return value->reliability().maxRetransmits?int(*value->reliability().maxRetransmits):65535;case 7:{std::lock_guard lock(c->gate);return int(c->packets.size());}}throw std::invalid_argument("Invalid channel info kind");},-1);}
+API const char* e2d_rtc_channel_string(void* handle,int kind){static thread_local e2d_rtc::String text;return attempt([&]()->const char*{auto c=channel(handle);text=kind?c->value->protocol():c->value->label();return text.c_str();},static_cast<const char*>(nullptr));}
 API int e2d_rtc_channel_size(void* handle){return attempt([&]{auto c=channel(handle);std::lock_guard lock(c->gate);return c->packets.empty()?-1:int(size(c->packets.front()));},-2);}
 API int e2d_rtc_channel_read(void* handle,void* destination,int capacity,int* text){return attempt([&]{auto c=channel(handle);std::lock_guard lock(c->gate);if(c->packets.empty())throw std::runtime_error("No packet available");auto& packet=c->packets.front();auto length=size(packet);if(capacity<0||size_t(capacity)<length)throw std::invalid_argument("Packet destination is too small");*text=std::holds_alternative<rtc::string>(packet)?1:0;std::visit([&](auto& value){if(length)std::memcpy(destination,value.data(),length);},packet);c->bytes-=length;c->packets.pop_front();return int(length);},-1);}
 API int e2d_rtc_channel_send(void* handle,const void* source,int length,int text){return attempt([&]{auto c=channel(handle);if(length<0||size_t(length)>c->value->maxMessageSize())throw std::invalid_argument("Packet exceeds remote capacity");auto bytes=static_cast<const char*>(source);if(text)c->value->send(std::string(bytes?bytes:"",size_t(length)));else{rtc::binary data(size_t(length),std::byte{0});if(length)std::memcpy(data.data(),source,size_t(length));c->value->send(std::move(data));}return 0;},-1);}

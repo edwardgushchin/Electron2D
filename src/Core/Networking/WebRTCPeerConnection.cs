@@ -165,7 +165,13 @@ public class WebRTCPeerConnection : ElectronObject
     /// <summary>Publishes a typed offer/answer event on the owner thread.</summary><param name="type">Proposal type.</param><param name="sdp">Proposal text.</param>
     protected void EmitSessionDescriptionCreated(string type, string sdp) { CheckPeerAccess(); var handlers = BeginEventEmission(_publisherSessionDescriptionCreated.Handlers); List<Exception>? errors = null; if (handlers is not null) foreach (Action<string, string> handler in handlers.GetInvocationList()) try { handler(type, sdp); } catch (Exception e) { Node.CollectException(ref errors, e); } Node.ThrowCollected("Description callbacks failed.", errors); }
     /// <summary>Closes native transport and pending observations without disposing channel wrappers.</summary>
-    public virtual void Close() { CheckPeerAccess(); if (_peer is not null) WebRTCNative.Check(WebRTCNative.Close(_peer)); _closed = true; _channels.Clear(); }
+    /// <remarks>All native channels are attempted and local membership retires even when native closure reports an error.</remarks>
+    public virtual void Close()
+    {
+        CheckPeerAccess();
+        try { if (_peer is not null) WebRTCNative.Check(WebRTCNative.Close(_peer)); }
+        finally { _closed = true; _channels.Clear(); }
+    }
     /// <inheritdoc />
     protected override void ValidateDisposal() { base.ValidateDisposal(); CheckPeerAccess(); }
     /// <inheritdoc />

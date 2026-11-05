@@ -1,3 +1,5 @@
+[WebRTC bridge storage](performance-producers.md#webrtc-bridge-storage-2026-11-05) now shares the native ledger, including owner/control blocks, queue backing and retained strings. Native refusals and CLR/NativeAOT packet/RPC plus close-error checks execute. Physics remains **1365/1369 (99.71%)**, four Partial and 92 Excluded; packet/backend/provider closure and exact composition remain open.
+
 [KTX working-storage accounting](performance-producers.md#ktx-allocation-refusal-2026-11-05) connects codec C storage, bridge/transcoder vectors, Basis standard containers/queued captures and ASTC contexts/arrays to the shared native ledger. Resampler allocation failure now retires partial channels before row use. It changes no declaration state: physics remains **1365/1369 (99.71%)**, four Partial and 92 Excluded. Remaining utility/provider/runtime closure and the exact composed monitor remain open.
 
 [Native FP32 atomics](../components/float-atomics.md) now execute base/add buffer, workgroup and R32SFLOAT image operations, including descriptor/layer/sample selection, graphics and physical buffers. Declaration totals remain **13,711/18,853 (72.7258%)**: wider connected shader/resource contracts and full platform qualification remain open. The owning component records source/binary, package, NativeAOT and refusal evidence.
@@ -470,7 +472,7 @@ status changes; full retained/native/device history budgets remain open.
 
 [Resident GPU buffer accounting](../components/gpu-memory.md) now covers all storage/transfer allocations, growth peaks and replay retirement. This internal measurement changes no public declaration status and leaves complete retained/native/device budgets open.
 
-Last updated: 2026-10-28
+Last updated: 2026-11-05
 
 [Native portal file choosers](../components/native-file-portal.md) execute Linux MIME-aware open/save/directory selection through DisplayServer and FileDialog. The connected [checkbox/choice options slice](../components/native-file-portal.md#native-checkbox-and-choice-controls) adds FileDialogWithOptionsShow and captures actual option defaults/results before scene events. This slice moves one more Blocked row to Implemented: **13,387/18,855 applicable declarations (70.9997%)**, 1,090 Partial, 395 Unimplemented, 3,983 Blocked, 8,438 Excluded and zero unmapped. Typed exceptions replace native Error returns; root and empty captions retain the custom browser. Private protocol, rendered scene and installed Wayland chooser checks retain the documented foreign/NativeAOT/native-heap gates.
 

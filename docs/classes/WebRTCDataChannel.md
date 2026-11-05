@@ -1,6 +1,6 @@
 # WebRTCDataChannel
 
-Last updated: 2026-10-19
+Last updated: 2026-11-05
 
 **Namespace:** `Electron2D`. **Declaration:** `public abstract class Electron2D.WebRTCDataChannel`. **Source:** [WebRTCDataChannel.cs](../../src/Core/Networking/WebRTCDataChannel.cs). **Component:** [WebRTC](../components/webrtc.md).
 
@@ -13,6 +13,11 @@ Last updated: 2026-10-19
 Exchanges complete WebRTC messages through the common packet span contract.
 
 PacketPeer owns exact message reads and caller-span retry. Outgoing text payloads are strict UTF-8 and preserve embedded NUL; binary payloads and empty packets preserve their boundaries. Close retires transport while Dispose releases the wrapper. Owner access, negotiated IDs, reliability sentinels and native receive budgets follow the component contract. This abstract base is created by a peer or implemented by an extension.
+
+Native receive-queue allocation failure preserves accepted byte accounting and
+becomes a sticky polling error. Close commits logical closed state before provider
+cleanup. Owner/queue metadata uses the [shared native ledger](../components/webrtc.md#bridge-owned-native-storage-2026-11-05);
+compatible packet payloads retain a separate backend allocation domain.
 
 ## Example
 

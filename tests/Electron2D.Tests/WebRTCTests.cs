@@ -16,6 +16,7 @@ internal static partial class WebRTCTests
     }
     internal static void Run()
     {
+        NativeMemory();
         using var a = WebRTCPeerConnection.Create(); using var b = WebRTCPeerConnection.Create(); a.Initialize(); b.Initialize(); Link(a, b);
         using var send = a.CreateDataChannel("payload\u2603", new() { Protocol = "test" }); WebRTCDataChannel? received = null; b.DataChannelReceived += channel => received = channel;
         a.CreateOffer(); Check(a.GetSignalingState() == WebRTCPeerConnection.SignalingState.Stable, "Generating an offer does not commit local signaling.");
@@ -37,5 +38,31 @@ internal static partial class WebRTCTests
         Extensions();
         Configuration();
         Scene();
+    }
+    private static void NativeMemory()
+    {
+        var before = NativeAllocation.Snapshot();
+        using var peer = WebRTCPeerConnection.Create();
+        peer.Initialize();
+        var created = NativeAllocation.Snapshot();
+        Check(created.Current > before.Current, "Native peer owners and event storage enter the common ledger.");
+        var label = new string('l', 4096); var protocol = new string('p', 8192);
+        using var channel = peer.CreateDataChannel(label, new() { Protocol = protocol });
+        var live = NativeAllocation.Snapshot();
+        Check(channel.GetLabel() == label && channel.GetProtocol() == protocol && live.Current >= created.Current + 8193,
+            "Native channel/queue ownership and retained UTF-8 metadata use the same ledger.");
+        Console.WriteLine($"WebRTC native owners: peer +{created.Current - before.Current}, channel/TLS metadata +{live.Current - created.Current} bytes.");
+    }
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference<WebRTCDataChannel> DroppedChannel(WebRTCPeerConnection peer) => new(peer.CreateDataChannel("dropped"));
+    internal static void CloseError()
+    {
+        using var peer = WebRTCPeerConnection.Create();
+        var channel = DroppedChannel(peer);
+        Reject<IOException>(peer.Close);
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect();
+        Check(!channel.TryGetTarget(out _) && peer.GetConnectionState() == WebRTCPeerConnection.ConnectionState.Closed,
+            "Failed native close retires managed channel membership and preserves closed state.");
+        Console.WriteLine("WebRTC native close failure: managed membership and channel identity retired.");
     }
 }

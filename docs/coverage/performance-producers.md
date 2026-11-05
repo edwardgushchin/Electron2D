@@ -15,6 +15,16 @@ compiled import family and the observed native dependency closure. It records
 unqualified library, platform and runtime boundaries explicitly; domain-specific
 checks below must not be read as whole-library or whole-monitor acceptance.
 
+## WebRTC bridge storage (2026-11-05)
+
+The [WebRTC bridge profile](../components/webrtc.md#bridge-owned-native-storage-2026-11-05)
+now counts persistent owner/control-block, queue-backing and string storage in the
+common native ledger. Native refusal/drain/retry, bridge/core sanitizer checks and
+CLR/NativeAOT packet/RPC plus close-error workflows execute. Compatible packet
+payloads, provider/backend/SCTP/ICE/runtime storage and full bundle/foreign delivery
+remain separate prerequisites. No declaration changes state: physics remains
+**1365/1369 (99.71%)**, four Partial and 92 Excluded; exact composition remains open.
+
 ## KTX allocation refusal (2026-11-05)
 
 The [KTX component](../components/image-ktx.md#allocation-refusal-and-initialization)

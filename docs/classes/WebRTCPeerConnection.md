@@ -1,6 +1,6 @@
 # WebRTCPeerConnection
 
-Last updated: 2026-10-19
+Last updated: 2026-11-05
 
 **Namespace:** `Electron2D`. **Declaration:** `public class Electron2D.WebRTCPeerConnection`. **Source:** [WebRTCPeerConnection.cs](../../src/Core/Networking/WebRTCPeerConnection.cs). **Component:** [WebRTC](../components/webrtc.md).
 
@@ -13,6 +13,11 @@ Last updated: 2026-10-19
 Negotiates owner-polled WebRTC data channels over a retained native peer or typed extension.
 
 Create selects the retained native backend or the typed default extension factory. Initialize snapshots ICE configuration before native setup and replaces the old cohort only after success. Returned channels are caller-owned. Close/disposal closes their transport without disposing or rebinding those identities. Native protocol workers enqueue observations; Poll alone emits owner-thread events and aggregates selected subscriber errors. Reinitialize/disposal ends old-cohort delivery. See the component for explicit SDP commitment, bounded queues and application signaling.
+
+Native close attempts every channel and commits closed state and managed membership
+retirement even when it reports an error. Persistent native metadata uses the
+[shared allocation ledger](../components/webrtc.md#bridge-owned-native-storage-2026-11-05);
+backend packet/provider ownership remains separately qualified.
 
 ## Example
 
