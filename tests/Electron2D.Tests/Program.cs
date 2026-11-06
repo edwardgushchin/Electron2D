@@ -10,6 +10,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOW_CAPTURE") is { } captureBackend) { if (captureBackend == "unavailable") WindowCaptureChecks.Unavailable(); else WindowCaptureChecks.Run(captureBackend, args[0]); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_MENU") is { } menuOracle) { if (menuOracle == "unavailable") NativeMenuChecks.Unavailable(); else NativeMenuChecks.Run(menuOracle, args[0]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_STATUS_INDICATOR") is { } statusOracle) { if (statusOracle == "unavailable") StatusIndicatorChecks.Unavailable(); else StatusIndicatorChecks.Run(statusOracle, args[0]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TTS") is { } speechTools) { if (speechTools == "protocol") TTSSSIPChecks.Run(); else if (speechTools == "disabled") TTSChecks.Disabled(); else TTSChecks.Run(speechTools, args[0]); return; }

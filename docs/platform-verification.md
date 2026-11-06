@@ -1,6 +1,6 @@
 # Platform verification matrix
 
-Last updated: 2026-11-06
+Last updated: 2026-11-07
 
 ## Cross-platform parity acceptance
 
@@ -833,3 +833,37 @@ The current Linux x64 private library supplies unchanged ENet1.3.18/FastLZ0.5.0 
 Historical deployment checks passed for the former host example, published self-contained for linux-x64 into `/tmp/e2d-enet-host-publish`, with both native/license audits; `dotnet publish tests/Electron2D.Tests/Electron2D.Tests.csproj -c Release -r linux-x64 --self-contained true -o /tmp/e2d-enet-tests-publish`, then the deployed ENet selector from `/tmp` with `LD_LIBRARY_PATH` unset and the stock oracle supplied. The three public excerpts compiled and executed in `/tmp/e2d-enet-consumer`. No external application or owner acceptance is inferred.
 
 The source manifest check verifies 20 unchanged ENet/FastLZ files and two original license copies. The publish profile requires 68 audited ELF files and 56 bundled notices, with libElectron2DENet.so only under runtimes/linux-x64/native, exactly thirteen engine exports, a unique SONAME and host libz/libzstd/libc/ELF-loader dependencies. Public class-page excerpts have a compiled executable consumer. Foreign/browser/routed/performance/human/editor/rendered/agent acceptance remain separate; no foreign execution is inferred from Linux tests. See [native ENet](components/enet.md).
+
+## Windows native window capture exclusion (2026-11-07)
+
+The shared `WindowCaptureChecks` passes 37 checks per Windows x64 profile on
+root/source consumers, a freshly restored Core package, and strict full-trim
+NativeAOT, each with Vulkan GPU and Compatibility presentation. Independent
+Windows Graphics Capture reads actual red HWND pixels before/after exclusion;
+excluded root, recreated child and native popup windows produce no frame during
+the bounded wait. Other windows remain capturable; offscreen texture readback
+remains available. The independent GDI control captures 100,188 red pixels,
+observes affinity 17, receives no excluded frame and restores the same pixels.
+
+Scene packing/duplication, detached defaults, child hide/show, native versus
+configured state, embedded isolation, invalid/retired IDs, owner/disposal and
+fresh-lifetime defaults are covered. After 32 warmup cycles, 128 active toggle cycles
+and 128 idle observations allocate 0/0 managed owner/all-thread bytes per profile.
+This corrected repeated native-handle lookup's SDL driver-string allocation.
+External native/provider heap costs remain unmeasured.
+
+Linux x64 Wayland and X11 each pass 15 explicit unsupported checks using the
+same managed consumer: absent capability, read/write refusal, failed configured
+startup cleanup and active mutation rollback. These are refusal receipts, not
+portable capture parity. macOS needs its native sharing/capture implementation
+and independent capture consumer. Earlier Windows, other targets, actual release
+native bundles, physical/hardware and owner acceptance remain open. The default
+Windows D3D12 profile fails during graphics pipeline creation before capture;
+Vulkan was explicitly selected for this bounded GPU receipt.
+
+Receipts: `C:/Users/eduar/.codex/artifacts/Electron2D/window-capture-20261107/`;
+`qualification.json` retains exact source/package/managed/native/helper identities
+and individual logs. NativeAOT publication disables debug-symbol generation and application PDB copying
+to fit the bounded host; strict compilation/trim warning gates remain enabled. Dependency debug symbols
+remain compressed after automatic cleanup approval was refused. See
+[the component](components/window-capture.md) for commands and policy limits.

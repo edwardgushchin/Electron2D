@@ -859,3 +859,10 @@ For native popup changes, run the [public NativeMenu consumer](../tests/NativeMe
 For status-indicator changes, run the [public consumer](../tests/StatusIndicator.Consumer/README.md) on source, a fresh package and strict full-trim NativeAOT, plus the root profile and unsupported-driver control. Preserve independent Shell registration/text/rect observations, actual Shell left activation, explicitly injected button channels, native bound popup cancellation and scoped recovery. Keep snapshot/reentry/lifetime/failure/retry cases. The foreground-guarded activation profile, actual icon pixels/physical right click, Explorer restart and ADR 0021 foreign-host/package acceptance remain separate evidence.
 
 For speech changes, run the [public TTS consumer](../tests/TTS.Consumer/README.md) and root profile on source, a fresh package and strict NativeAOT. Require independent native voice metadata and process-scoped PCM captures, including one-LSB silence, buffered pause/resume, real duration/frequency and scalar source coordinates. Preserve queue/callback/failure/reentry/retirement cases, disabled restart controls and Windows dummy-video COM ownership. For Linux, use the [Speech Dispatcher consumer](../tests/TTS.SpeechDispatcher.Consumer/README.md), independently enumerate libspeechd voices and capture only an explicitly private service sink. Require real resume after sentence checkpoints, malformed/partial SSIP and disconnected paused-queue controls, plus warmed active/idle zero-allocation dispatch. Do not call separate-provider capture engine-process loopback. Keep physical listening, native heap and foreign host/package parity separate.
+
+For native capture-policy changes, run shared `WindowCaptureChecks` through the
+root, source consumer, fresh Core package and strict full-trim NativeAOT on both
+Windows renderers. Preserve independent Windows Graphics Capture pixels,
+root/child/popup isolation, persistence/recreation, texture readback, guards and
+warmed active/idle allocation brackets. Linux refusal checks do not qualify
+macOS capture behavior. See [capture exclusion](components/window-capture.md).

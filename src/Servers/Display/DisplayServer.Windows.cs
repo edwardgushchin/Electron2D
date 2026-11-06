@@ -109,7 +109,7 @@ public sealed partial class DisplayServer
             return _graphicsHandleQuery?.Invoke(handleType) ??
                 throw new NotSupportedException("This window has no active graphics-context provider.");
 
-        var driver = SDL.GetCurrentVideoDriver();
+        var driver = _videoDriver;
         var property = (handleType, driver) switch
         {
             (HandleType.DisplayHandle, "x11") => SDL.Props.WindowX11DisplayPointer,
@@ -428,6 +428,7 @@ public sealed partial class DisplayServer
         EnsureOwner();
         var window = GetWindow(windowId);
         if (flag == WindowFlag.MousePassthrough) return _mousePassthrough;
+        if (flag == WindowFlag.ExcludeFromCapture) return GetCaptureExclusion();
         if (SDL.GetCurrentVideoDriver() == "wayland" && (flag == WindowFlag.AlwaysOnTop || flag == WindowFlag.NoFocus && !IsNativePopup))
             throw new NotSupportedException($"Window flag {flag} is unavailable for a Wayland top-level window.");
         var native = SDL.GetWindowFlags(window);
@@ -452,6 +453,7 @@ public sealed partial class DisplayServer
         EnsureOwner();
         var window = GetWindow(windowId);
         if (flag == WindowFlag.MousePassthrough) { SetMousePassthrough(enabled); return; }
+        if (flag == WindowFlag.ExcludeFromCapture) { SetCaptureExclusion(enabled); return; }
         if (IsNativePopup && flag is WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled or WindowFlag.Borderless or WindowFlag.ResizeDisabled)
         {
             if (!enabled) throw new NotSupportedException("A native popup cannot enable top-level decoration or presentation policies.");

@@ -1376,14 +1376,14 @@
     },
     {
       "state": "Blocked",
-      "reason": "Wayland native checks cover Borderless and ResizeDisabled; AlwaysOnTop has no SDL Wayland hook and NoFocus is supported only for popup-menu windows, so both now reject before SDL mutation. Remaining flags need exact first-slice triggers: Transparent a transparent renderer/window; Popup and PopupWmHint a multiwindow popup role; ExtendToTitle, SharpCorners, MinimizeDisabled, and MaximizeDisabled native window-style integration; MousePassthrough native hit testing; ExcludeFromCapture a capture-policy bridge. An optional Wayland topmost layer role needs a separately accepted native integration (ADR 0040).",
+      "reason": "Wayland native checks cover Borderless and ResizeDisabled; AlwaysOnTop has no SDL Wayland hook and NoFocus is supported only for popup-menu windows, so both now reject before SDL mutation. Remaining flags need exact first-slice triggers: Transparent a transparent renderer/window; Popup and PopupWmHint a multiwindow popup role; ExtendToTitle, SharpCorners, MinimizeDisabled, and MaximizeDisabled native window-style integration; MousePassthrough native hit testing; ExcludeFromCapture executes on Windows 10 version 2004+ with DWM; macOS still needs a native sharing/capture bridge. An optional Wayland topmost layer role needs a separately accepted native integration (ADR 0040).",
       "godot": [
         "DisplayServer::method:window_set_flag(int:DisplayServer.WindowFlags,bool:,int:)"
       ]
     },
     {
       "state": "Blocked",
-      "reason": "Wayland native checks cover Borderless and ResizeDisabled; AlwaysOnTop and NoFocus reject unavailable top-level policy rather than reporting inert SDL state. Remaining flags need exact first-slice triggers: Transparent a transparent renderer/window; Popup and PopupWmHint a multiwindow popup role; ExtendToTitle, SharpCorners, MinimizeDisabled, and MaximizeDisabled native window-style integration; MousePassthrough native hit testing; ExcludeFromCapture a capture-policy bridge. Wayland topmost support requires a separately accepted native layer role (ADR 0040).",
+      "reason": "Wayland native checks cover Borderless and ResizeDisabled; AlwaysOnTop and NoFocus reject unavailable top-level policy rather than reporting inert SDL state. Remaining flags need exact first-slice triggers: Transparent a transparent renderer/window; Popup and PopupWmHint a multiwindow popup role; ExtendToTitle, SharpCorners, MinimizeDisabled, and MaximizeDisabled native window-style integration; MousePassthrough native hit testing; ExcludeFromCapture executes on Windows 10 version 2004+ with DWM; macOS still needs a native sharing/capture bridge. Wayland topmost support requires a separately accepted native layer role (ADR 0040).",
       "godot": [
         "DisplayServer::method:window_get_flag(int:DisplayServer.WindowFlags,int:)"
       ]

@@ -24,6 +24,7 @@ public partial class Window : Viewport
         new PropertyDescriptor<Window, bool>(nameof(Borderless), w => w.Borderless, (w, v) => w.Borderless = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(AlwaysOnTop), w => w.AlwaysOnTop, (w, v) => w.AlwaysOnTop = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(Unfocusable), w => w.Unfocusable, (w, v) => w.Unfocusable = v, _ => false, stored: true),
+        new PropertyDescriptor<Window, bool>(nameof(ExcludeFromCapture), w => w.ExcludeFromCapture, (w, v) => w.ExcludeFromCapture = v, _ => false, stored: true),
         new PropertyDescriptor<Window, bool>(nameof(MousePassthrough), w => w.MousePassthrough, (w, v) => w.MousePassthrough = v, _ => false, stored: true),
         new PropertyDescriptor<Window, Vector2[]>(nameof(MousePassthroughPolygon), w => w.MousePassthroughPolygon, (w, v) => w.MousePassthroughPolygon = v, _ => [], stored: true),
     ];
@@ -332,7 +333,7 @@ public partial class Window : Viewport
             display.WindowSetMaxSizeCore(_maxSize);
             display.WindowSetSizeCore(_size);
         }
-        foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.MousePassthrough, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus, WindowFlag.Popup, WindowFlag.Transparent, WindowFlag.PopupWmHint, WindowFlag.MinimizeDisabled, WindowFlag.MaximizeDisabled })
+        foreach (var flag in new[] { WindowFlag.ResizeDisabled, WindowFlag.Borderless, WindowFlag.MousePassthrough, WindowFlag.AlwaysOnTop, WindowFlag.NoFocus, WindowFlag.Popup, WindowFlag.Transparent, WindowFlag.PopupWmHint, WindowFlag.MinimizeDisabled, WindowFlag.MaximizeDisabled, WindowFlag.ExcludeFromCapture })
             if (GetFlag(flag))
                 display.WindowSetFlagCore(flag, true);
         display.WindowSetMousePassthroughCore(_mousePassthroughPolygon);

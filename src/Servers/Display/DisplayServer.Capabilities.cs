@@ -59,7 +59,7 @@ public sealed partial class DisplayServer
         NativeDialogFileExtra = 26,
         /// <summary>Interactive native window dragging and resizing.</summary>
         WindowDrag = 27,
-        /// <summary>Window exclusion from ordinary screen capture.</summary>
+        /// <summary>Native window capture exclusion; requires Windows 10 version 2004 or later with desktop composition.</summary>
         ScreenExcludeFromCapture = 28,
         /// <summary>Embedding of external native windows.</summary>
         WindowEmbedding = 29,
@@ -91,6 +91,7 @@ public sealed partial class DisplayServer
             Feature.HdrOutput => _output.Available,
             Feature.SwapBuffers => _renderingAttached,
             Feature.Subwindows => desktop,
+            Feature.ScreenExcludeFromCapture => HasCaptureExclusion(),
             Feature.Touchscreen => IsTouchscreenAvailableCore(),
             Feature.Mouse => SDL.HasMouse(),
             Feature.MouseWarp => driver is "windows" or "x11" or "cocoa" && SDL.HasMouse(),

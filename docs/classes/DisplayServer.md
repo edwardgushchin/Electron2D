@@ -1,6 +1,8 @@
 # DisplayServer
 
-Last updated: 2026-10-27
+[Native Windows capture exclusion](../components/window-capture.md) applies WindowFlag.ExcludeFromCapture to the selected HWND and reads observed OS state. ScreenExcludeFromCapture requires Windows 10 version 2004 or later and DWM composition; other native backends currently reject this flag.
+
+Last updated: 2026-11-07
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 

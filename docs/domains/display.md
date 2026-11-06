@@ -1,12 +1,14 @@
 [Status indicators](../components/status-indicators.md) now execute Windows Shell registration, nullable copied icons, Unicode tooltips, native rectangles and typed button callbacks through the owner pump. Right-button menu bindings reuse NativeMenu; exact native/visual/platform verification limits remain in that component.
 
+[Native window capture exclusion](../components/window-capture.md) connects stored Window requests and observed DisplayServer flags to per-HWND Windows capture policy.
+
 [Native popup menus](../components/native-menus.md) execute through the display-owned NativeMenu service and the existing PopupMenu identity. Native tracking reserves the actual containing window and root display; Windows popup capability is separate from global/system menu registration.
 
 # Display domain
 
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.
 
-Last updated: 2026-10-27
+Last updated: 2026-11-07
 
 Native driver identity is retained per opened display context for capability queries; device-dependent availability remains live. The [physics window allocation check](../components/physics-window-allocations.md) covers its passive-pointer hot path.
 

@@ -1,5 +1,7 @@
 The existing static OS service owns [system certificate snapshots](components/system-certificates.md) through OS.Certificates.cs and its private native helpers. It adds no public type or trust-store owner.
 
+The existing Window/DisplayServer family owns [native Windows capture exclusion](components/window-capture.md) through DisplayServer.Capture.cs; no production type is added.
+
 [DisplayServer status indicators](components/status-indicators.md) use private per-session indicator/press records and a Windows Shell/GDI observer in DisplayServer.StatusIndicators*.cs. Public API remains on the existing static service; copied HICONs retire before native menus/window ownership.
 
 [NativeMenu](classes/NativeMenu.md) is a display-owned static service for [Windows OS popup trees](components/native-menus.md). Its private Menu/Item/tag/callback records and User32/GDI observer own native lifetime; existing PopupMenu adds persisted native preference and a temporary tree bridge.
@@ -121,7 +123,7 @@ AndroidGameActivity/AndroidWindowHost now produce actual framework system back r
 
 CanvasItem TopLevel rebinding now connects to the existing recursive presentation reset, with allocation-free sampling propagation and [physical/pixel verification](components/canvas-rendering.md#toplevel-transition-resets-2026-10-18). This adds no production type or public declaration.
 
-Last updated: 2026-11-05
+Last updated: 2026-11-07
 
 [Animation movie completion](components/movie-writing.md#animation-completion) adds AnimationPlayer.MovieQuitOnFinish and connects the existing Engine/MovieWriter owners. No production type is added.
 

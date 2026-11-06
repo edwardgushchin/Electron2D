@@ -69,6 +69,15 @@ public partial class Window
     /// when preconfigured; a rejected request leaves the policy unchanged.</remarks>
     public bool Unfocusable { get => GetFlag(WindowFlag.NoFocus); set => SetFlag(WindowFlag.NoFocus, value); }
 
+    /// <summary>Gets or sets the request to exclude this native window from ordinary operating-system capture.</summary>
+    /// <value>False by default. The last accepted request, including while detached or embedded.</value>
+    /// <remarks>Uses GetFlag and SetFlag. Native execution requires Windows 10 version 2004 or later
+    /// with desktop composition. Embedded windows retain the request without changing their host's policy.
+    /// The policy does not prevent engine texture readback and is not a security guarantee.</remarks>
+    /// <exception cref="NotSupportedException">The active native backend cannot exclude the window.</exception>
+    /// <exception cref="IOException">The operating system rejects the native request.</exception>
+    public bool ExcludeFromCapture { get => GetFlag(WindowFlag.ExcludeFromCapture); set => SetFlag(WindowFlag.ExcludeFromCapture, value); }
+
     /// <summary>Gets a configured window policy.</summary>
     /// <param name="flag">One individual policy identifier.</param>
     /// <returns>The last accepted request, initially false; native window-manager overrides do not change it.</returns>
@@ -87,6 +96,7 @@ public partial class Window
     /// <param name="enabled">The desired state.</param>
     /// <remarks>An unchanged request does nothing. Failed native requests do not commit the configured policy.
     /// Detached configuration is checked against platform capabilities during Engine.Run startup.</remarks>
+    /// <exception cref="IOException">Changing the operating-system capture policy fails.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The identifier is undefined or Max.</exception>
     /// <exception cref="NotSupportedException">The policy has no executable integration or the native platform rejects it.</exception>
     /// <exception cref="InvalidOperationException">The caller is not the owner or the native request fails.</exception>
@@ -216,7 +226,7 @@ public partial class Window
     {
         if (flag < WindowFlag.ResizeDisabled || flag >= WindowFlag.Max)
             throw new ArgumentOutOfRangeException(nameof(flag), flag, "Unknown window flag.");
-        if (flag is WindowFlag.MousePassthrough or WindowFlag.Transparent or WindowFlag.Popup or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled) return;
+        if (flag is WindowFlag.MousePassthrough or WindowFlag.Transparent or WindowFlag.Popup or WindowFlag.PopupWmHint or WindowFlag.MinimizeDisabled or WindowFlag.MaximizeDisabled or WindowFlag.ExcludeFromCapture) return;
         if (flag is not (WindowFlag.ResizeDisabled or WindowFlag.Borderless or WindowFlag.AlwaysOnTop or WindowFlag.NoFocus))
             throw new NotSupportedException($"Window flag {flag} requires a native capability that is not integrated.");
     }

@@ -1635,7 +1635,7 @@
       "electron2d": "method:Electron2D.Window.GetFlag(Electron2D.WindowFlag)",
       "godot": "Window::method:get_flag(int:Window.Flags)",
       "state": "Partial",
-      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native capture/mouse-pass/titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs."
+      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs. Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
     },
     {
       "electron2d": "method:Electron2D.Window.GetPositionWithDecorations()",
@@ -1665,7 +1665,7 @@
       "electron2d": "method:Electron2D.Window.SetFlag(Electron2D.WindowFlag,System.Boolean)",
       "godot": "Window::method:set_flag(int:Window.Flags,bool:)",
       "state": "Partial",
-      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native capture/mouse-pass/titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs."
+      "reason": "Configured Window policies execute through embedded, independent native and parent-relative popup hosts. Failed native requests preserve stored values; visible native popup-role mutation rejects. NativePopupWindowTests covers role flags, no-focus, fixed decoration/modes, transparent compatibility and explicit unsupported GPU alpha requests on Wayland/X11. Still Partial for remaining native titlebar/sharp-corner policies, ordinary top-level popup input without PopupWMHint and platform-specific decoration capabilities under ADRs 0008/0040; these are not closed by declaring their IDs. Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
     },
     {
       "electron2d": "method:Electron2D.Window.SetIMEActive(System.Boolean)",
@@ -6078,6 +6078,12 @@
       "godot": "ProjectSettings::property:rendering/textures/default_filters/texture_mipmap_bias",
       "electron2d": "property:Electron2D.ProjectSettings.TextureMIPMapBias()",
       "reason": "ADR 0028: native next-image mip selection through scene/server/project policy, additive explicit normalized samplers, base-level/unnormalized exclusions, retained target identity and bounded sampler retirement. Owner/capture/RID, finite values, scene storage and backend/native limits reject explicitly. See docs/components/viewport-mipmap-bias.md for executable evidence and remaining platform/native-heap limits."
+    },
+    {
+      "godot": "Window::property:exclude_from_capture",
+      "electron2d": "property:Electron2D.Window.ExcludeFromCapture()",
+      "state": "Partial",
+      "reason": "Windows 10 version 2004+ with DWM composition executes per-HWND capture exclusion and observed reads through Set/GetWindowDisplayAffinity. WindowCaptureChecks shares root/package/AOT scenarios and an independent Windows Graphics Capture pixel consumer. Stored Window requests survive packing, duplication and native child recreation; embedded requests do not affect the host. macOS needs its native sharing/capture bridge and actual capture verification; other platform/package/hardware gates remain open (ADRs 0040/0021)."
     }
   ],
   "extras": [
@@ -8619,7 +8625,15 @@
     }
   ],
   "statusGroups": [
-    {"state": "Implemented", "reason": "ADRs 0093/0109: current playback selection is distinct from mixer scheduling; IsAnimationActive retains paused/completed selection and Stop clears it. Stop and finite terminal completion emit empty CurrentAnimationChanged after committed state, with revision guards for newer callback controls. AnimationMovieCompletionTests adds selection/state, event ordering, callback restart/Stop and real movie consumers alongside the existing scene/blending profiles. See docs/components/movie-writing.md#animation-completion.", "godot": ["AnimationPlayer::method:is_animation_active()", "AnimationPlayer::signal:current_animation_changed(StringName:)", "AnimationPlayer::method:stop(bool:)"]},
+    {
+      "state": "Implemented",
+      "reason": "ADRs 0093/0109: current playback selection is distinct from mixer scheduling; IsAnimationActive retains paused/completed selection and Stop clears it. Stop and finite terminal completion emit empty CurrentAnimationChanged after committed state, with revision guards for newer callback controls. AnimationMovieCompletionTests adds selection/state, event ordering, callback restart/Stop and real movie consumers alongside the existing scene/blending profiles. See docs/components/movie-writing.md#animation-completion.",
+      "godot": [
+        "AnimationPlayer::method:is_animation_active()",
+        "AnimationPlayer::signal:current_animation_changed(StringName:)",
+        "AnimationPlayer::method:stop(bool:)"
+      ]
+    },
     {
       "godot": [
         "class:Node"
@@ -10359,7 +10373,6 @@
       "state": "Unimplemented",
       "reason": "Next Window native-control projection and platform capability audit over the existing DisplayServer, including modes, flags, IME, native notifications and geometry (ADR 0040).",
       "godot": [
-        "Window::property:exclude_from_capture",
         "Window::property:extend_to_title",
         "Window::property:sharp_corners"
       ]

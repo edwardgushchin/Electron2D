@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-27
+Last updated: 2026-11-07
 
 [Native HDR output](../components/native-hdr-output.md) now provides stored
 HDROutputRequested, GetOutputMaxLinearValue() and the typed
@@ -71,6 +71,7 @@ Call `Tree!.Quit()` from a scene callback to exit. Run returns the requested cod
 | [`public Vector2[] MousePassthroughPolygon { get; set; }`](#native-mouse-input) | Copies the native client-coordinate polygon accepting mouse input. |
 | [`public bool AlwaysOnTop { get; set; }`](#alwaysontop) | Gets or sets the policy requesting placement above ordinary windows. |
 | [`public bool Unfocusable { get; set; }`](#unfocusable) | Gets or sets the policy preventing keyboard focus. |
+| [`public bool ExcludeFromCapture { get; set; }`](#exclude-from-capture) | Excludes the native window from ordinary OS capture where supported. |
 | [`public bool ForceNative { get; set; }`](#forcenative) | Overrides a containing embedding viewport while hidden. |
 | [`public bool TransientToFocused { get; set; }`](#transienttofocused) | Chooses the focused native transient owner on the next show. |
 
@@ -146,6 +147,23 @@ Creates a detached visible window with an empty title and a 100 by 100 client ar
 No native resources are acquired until `Engine.Run(Window)`.
 
 ## Property Descriptions
+
+<a id="exclude-from-capture"></a>
+### `public bool ExcludeFromCapture { get; set; }`
+
+False by default. Shares `GetFlag`/`SetFlag` storage and is preserved by scene
+packing and duplication. Windows 10 version 2004 or later with DWM composition
+applies the request to this native HWND, including recreated child and popup
+windows. Embedded windows retain the request without changing their native host.
+Unsupported native activation fails explicitly; failed active requests preserve
+authored state. Engine texture readback remains available. This policy provides
+no security guarantee. See [capture exclusion](../components/window-capture.md)
+for native capability, errors and verification limits.
+
+```csharp
+var window = new Window { ExcludeFromCapture = true };
+// Pass the detached window to Engine.Run on a supported Windows host.
+```
 
 <a id="maxsize"></a>
 ### `public Vector2i MaxSize { get; set; }`

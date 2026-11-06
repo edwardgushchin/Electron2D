@@ -1,6 +1,6 @@
 # WindowFlag
 
-Last updated: 2026-10-27
+Last updated: 2026-11-07
 
 **Source:** [`src/Core/PublicEnumDomains.cs`](../../src/Core/PublicEnumDomains.cs)
 **Declaration:** `public enum WindowFlag` in `Electron2D`
@@ -8,6 +8,9 @@ Last updated: 2026-10-27
 **Inherited By:** —
 
 ## Description
+
+`ExcludeFromCapture` executes through [native Windows capture policy](../components/window-capture.md).
+Other native backends currently reject direct capture-policy operations.
 
 Identifies a native window policy; values are indices, not a bit mask. Used by [Window](Window.md) and [DisplayServer](DisplayServer.md). Values identify policies, not bit positions; `Max` is not selectable.
 
