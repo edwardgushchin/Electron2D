@@ -851,3 +851,5 @@ existing LightingTests native/MSAA and material/light-surface composition checks
 validate original/generated SPIR-V independently. Keep automatic simulation/input,
 native heaps, other backends/platforms and owner acceptance separate. See
 [the owning component](components/canvas-shadow-atlas.md).
+
+For native popup changes, run the [public NativeMenu consumer](../tests/NativeMenu.Consumer/README.md) with its independent Win32/MSAA inspector on source, a fresh candidate package and strict full-trim NativeAOT. Preserve live native geometry/flags/pixels, submenu ownership, typed callback failures/reentry, icon failure retry, actual containing-window reservations, scene preference and unsupported-driver canvas fallback. Keep remaining global/key/presentation/platform dependencies explicit in coverage.

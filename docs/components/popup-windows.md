@@ -94,7 +94,7 @@ window.Ready += _ => popup.PopupCentered();
 Engine.Run(window);
 ```
 
-The [PopupMenu consumer](popup-menus.md) now executes with item, shortcut, submenu, scroll and search behavior. [TabContainer](tab-panels.md) now consumes the popup host; MenuButton, OptionButton and LineEdit context actions remain dependent consumers. Native popup-menu hints do not imply a NativeMenu service or platform menu integration; ADR 0041 retains their separate decision gate.
+The [PopupMenu consumer](popup-menus.md) now executes with item, shortcut, submenu, scroll and search behavior. [TabContainer](tab-panels.md) now consumes the popup host; MenuButton, OptionButton and LineEdit context actions remain dependent consumers. Native popup-menu hints remain custom canvas surfaces. The separate [NativeMenu service](native-menus.md) now executes Windows OS popup trees under ADR 0117.
 
 Command menu buttons now use underlying menu-bar hover while their popup owns pointer input. Nested embedded hosts route through each Window to the final target and release intermediate event copies. The shared behavior is exercised by MenuButton and OptionButton nested tests.
 

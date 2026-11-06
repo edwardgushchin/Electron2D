@@ -1,3 +1,5 @@
+[Native popup menus](../components/native-menus.md) execute through the display-owned NativeMenu service and the existing PopupMenu identity. Native tracking reserves the actual containing window and root display; Windows popup capability is separate from global/system menu registration.
+
 # Display domain
 
 [Android system back](../components/window-runtime.md#system-back-navigation) uses actual framework callbacks and a retained display-owner request batch, including drop-input pumps and lifetime/error handling.

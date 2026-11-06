@@ -625,6 +625,8 @@ public sealed partial class DisplayServer : ElectronObject
             foreach (var child in _childWindows.Values.ToArray())
                 try { child.Dispose(); }
                 catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
+            try { _nativeMenus?.Retire(); } catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
+            _nativeMenus = null;
             AccessibilityServer.RetireDisplay();
             SceneWindow = null;
             _mouseInputRegion?.Dispose(); _mouseInputRegion = null; _mouseInputPolygon = [];

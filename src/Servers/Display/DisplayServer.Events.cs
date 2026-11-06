@@ -62,7 +62,7 @@ public sealed partial class DisplayServer
     private void ProcessEventsCore(bool dropInput)
     {
         EnsureOwner();
-        if (_processingEvents || _nativeTextInputActive)
+        if (_processingEvents || _nativeTextInputActive || _nativeMenuTracking)
             throw new InvalidOperationException("Display event processing cannot be re-entered.");
         if (!dropInput)
             Engine.MainLoop?.ValidateInputEventDispatch();

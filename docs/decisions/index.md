@@ -50,6 +50,7 @@ This file routes architecture work to bounded domain decision documents. Start h
 | Audio | [audio.md](audio.md) | 0047 |
 | Networking | [networking.md](networking.md) | 0094 |
 | Input | [input.md](input.md) | 0038 |
+| Native menus | [native-menus.md](native-menus.md) | 0117 |
 | Native accessibility and semantic scene output | [accessibility.md](accessibility.md) | 0114 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |
 | Physics canvas diagnostics | [physics-debug.md](physics-debug.md) | 0100 |

@@ -260,6 +260,7 @@ public sealed partial class ThemeDB
         ["MultiplayerSpawner"] = ["MultiplayerSpawner", "Node", "ElectronObject"],
         ["MultiplayerSynchronizer"] = ["MultiplayerSynchronizer", "Node", "ElectronObject"],
         ["Mutex"] = ["Mutex", "ElectronObject"],
+        ["NativeMenu"] = ["NativeMenu", "ElectronObject"],
         ["NavigationAgent"] = ["NavigationAgent", "Node", "ElectronObject"],
         ["NavigationLink"] = ["NavigationLink", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["NavigationMeshSourceGeometryData"] = ["NavigationMeshSourceGeometryData", "Resource", "ElectronObject"],

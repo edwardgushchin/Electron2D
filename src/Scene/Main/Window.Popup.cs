@@ -102,7 +102,7 @@ public partial class Window
     }
     private void PopupAt(Rect2i rect, bool centered, bool nativeRelative = false)
     {
-        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); var placementRoot = _popupPlacementRoot; BeginEventEmission(_publisherAboutToPopup.Handlers)?.Invoke(); if (IsDisposed || !IsInsideTree) return; if (nativeRelative) _popupPlacementRoot = placementRoot;
+        EnsureMutable(); if (TryNativePopup()) return; CheckPopup(); var placementRoot = _popupPlacementRoot; BeginEventEmission(_publisherAboutToPopup.Handlers)?.Invoke(); if (IsDisposed || !IsInsideTree) return; if (TryNativePopup(rect, nativeRelative)) return; if (nativeRelative) _popupPlacementRoot = placementRoot;
         if (rect != default) { Size = rect.Size; if (nativeRelative) PopupPosition = rect.Position; else Position = rect.Position; }
         PreparePopup();
         UpdateEmbeddedContents(); if (centered) { var area = GetPopupCenterRect(); Position = area.Position + (area.Size - Size) / 2; }
@@ -205,6 +205,17 @@ public partial class Window
     private void CheckPopup() { EnsureMutable(); if (!IsInsideTree || Parent is null) throw new InvalidOperationException("Popup requires an attached child window."); if (Embedder is null && (Tree?.Root is not Window { NativeDisplay: not null } || RenderingServer.Service is null)) throw new NotSupportedException("Popup presentation requires an embedded viewport or an active native scene host."); }
     internal virtual bool TryNativeVisibility(bool visible) => false;
     internal virtual bool TryNativePopup() => false;
+    internal virtual bool TryNativePopup(Rect2i rect, bool nativeRelative) => false;
+    internal DisplayServer NativeMenuParent() => PopupParentDisplay();
+    private static Vector2i AddMenuPosition(Vector2i first, Vector2i second) => new(checked(first.X + second.X), checked(first.Y + second.Y));
+    internal Vector2i NativeMenuPosition(Rect2i rect, bool relative)
+    {
+        CheckPopup(); var position = rect == default ? Position : rect.Position;
+        var parent = PopupParentDisplay();
+        if (relative) return AddMenuPosition((_popupPlacementRoot?._display ?? parent.NativePopupRoot).WindowGetPositionCore(), position);
+        if (Embedder is { } embedder) return AddMenuPosition(parent.NativePopupRoot.WindowGetPositionCore(), CheckedPopupRectangle(embedder.GetScreenTransform() * new Rect2(position, Vector2.One)).Position);
+        return position;
+    }
     internal virtual void AfterVisibilityChanged(bool visible) { }
     internal virtual bool AcceptEmbeddedPointer(Vector2 point, InputEvent input) => true;
     internal virtual void PreparePopup() { }

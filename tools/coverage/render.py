@@ -18,7 +18,7 @@ UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 MIDI_INPUT_TRIGGER = "Trigger: missing WinMM/CoreMIDI/Android/Web MIDI producers and tvOS acquisition resolution under ADRs 0038 and 0021; Linux ALSA input executes, physical and full platform acceptance remain open."
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "midi", "extensions", "file_save_swap", "byte_buffers", "host_delta", "movie_writing", "video_playback", "camera_feeds", "diagnostics", "zip", "resource_packs", "jobs", "display", "hdr_output", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "render_memory", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "device_limits", "device_caches", "navigation", "navigation_diagnostics", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "midi", "extensions", "file_save_swap", "byte_buffers", "host_delta", "movie_writing", "video_playback", "camera_feeds", "diagnostics", "zip", "resource_packs", "jobs", "display", "hdr_output", "accessibility", "key_names", "joy_motion", "rendering", "visual_shaders", "visual_shader_parameters", "visual_shader_derivatives", "visual_shader_images", "visual_shader_effects", "visual_shader_sdf", "visual_shader_expressions", "visual_shader_custom", "visual_shader_domains", "canvas_counters", "render_memory", "project_shader_globals", "texture_arrays", "compressed_arrays", "compressed_textures", "device", "device_limits", "device_caches", "navigation", "navigation_diagnostics", "navigation_baking", "polygon_path", "resources", "dpi_textures", "preloader", "threaded_resources", "physics", "text", "line_breaking", "text_objects", "text_server", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "native_menus", "menu_button", "link_button", "gui_primitives", "undo", "menu_bar", "file_dialog", "spinbox", "progress_bar", "touch_controls", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "mesh_texture", "drawable_textures", "portable_textures", "particles", "skeleton", "networking", "ip", "jsonrpc", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -296,7 +296,7 @@ def reason_for_type(item, lookup):
     if name == "AccessibilityServer":
         return "Blocked", "Trigger: first semantic accessibility-tree, focus and native screen-reader bridge slice (ADR 0041)."
     if name == "NativeMenu":
-        return "Blocked", "Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041)."
+        return "Blocked", "Trigger: supply remaining global-menu, keyboard/presentation and foreign-platform native-menu producers under ADR 0117."
     if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
         return "Blocked", "Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021)."
     if name in {"BlitMaterial", "DrawableTexture2D"}:
@@ -738,6 +738,8 @@ def render():
             updated = "2026-10-28"
         if name in {"Node", "StreamPeerGZIP"}:
             updated = "2026-10-28"
+        if name in {"NativeMenu", "PopupMenu"}:
+            updated = "2026-11-06"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:

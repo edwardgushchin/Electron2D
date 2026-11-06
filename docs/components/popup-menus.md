@@ -1,6 +1,6 @@
 # Popup menus
 
-Last updated: 2026-10-19
+Last updated: 2026-11-06
 
 Owns [PopupMenu](../classes/PopupMenu.md) under ADRs 0004, 0008, 0038 and 0083, using existing popup targets, text layout, themes, resources, scroll/search controls and Timer.
 
@@ -58,3 +58,7 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 `NativePopupWindowTests` uses `ELECTRON2D_TEST_NATIVE_POPUPS=gpu` or `compatibility` with the Release runner. It exercises native nested parenting, IDs, outside dismissal, owner-safe rectangles, no-focus and exclusive policies, forced retirement, callback failure, real menu/option/panel/context output, and fresh-process public scene loading. Active focus/render and idle/render measurements cover 64 owner-thread intervals after 32 warmup intervals. SDL event construction, cold model edits/readback, native allocator counts, compositor screenshot acceptance, physical input and other platforms are outside the measured interval.
 
 [Native live and popup accessibility](../classes/AccessibilityServer.md#native-live-and-popups) connects typed live policy, explicit tooltip/context actions and real PopupMenu/OptionButton selection. Authored policy survives scenes; runtime menu and native identities retain their own lifetime.
+
+## Operating-system popup preference
+
+`PreferNativeMenu` persists an explicit opt-in to [NativeMenu](../classes/NativeMenu.md) on supported Windows displays. `IsNativeMenu()` reports actual modal native participation, including PopupHide. Eligible plain/check/icon/submenu trees use the OS menu; unsupported item policies retain canvas presentation. AboutToPopup occurs once, native closure precedes PopupHide/IDPressed/IndexPressed, and temporary native owners retire after callbacks. See [the native component](../components/native-menus.md) for placement, ownership, fallback, verification and remaining platform/global-menu dependencies.

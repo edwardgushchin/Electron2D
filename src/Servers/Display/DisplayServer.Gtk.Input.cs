@@ -22,7 +22,7 @@ public sealed partial class DisplayServer
     internal void DialogInputTextCore(string title, string description, string existingText, Action<string> callback)
     {
         EnsureOwner(); OS.ValidateNativeMessage(title, nameof(title)); OS.ValidateNativeMessage(description, nameof(description)); OS.ValidateNativeMessage(existingText, nameof(existingText)); ArgumentNullException.ThrowIfNull(callback);
-        if (_nativeTextInputActive) throw new InvalidOperationException("A native text dialog is already active.");
+        if (_nativeTextInputActive || _nativeMenuTracking) throw new InvalidOperationException("A native text dialog is already active.");
         if (!CanUseGTKInput()) throw new NotSupportedException("Native text input requires a matching GTK 3.22 desktop backend.");
         var parent = GetWindow(MainWindowId); string? result;
         _nativeTextInputActive = true; Interlocked.Increment(ref _pendingNativeDialogs); Interlocked.Increment(ref _pendingOwnedNativeDialogs);

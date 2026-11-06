@@ -21,12 +21,14 @@ public sealed partial class DisplayServer
     internal nint GetAlertParentWindow()
     {
         EnsureOwner();
+        if (_nativeMenuTracking) throw new InvalidOperationException("A native popup menu is active.");
         return GetWindow(MainWindowId);
     }
 
     internal unsafe void DialogShowCore(string title, string description, IReadOnlyList<string> buttons, Action<int> callback)
     {
         EnsureOwner();
+        if (_nativeMenuTracking) throw new InvalidOperationException("A native popup menu is active.");
         OS.ValidateNativeMessage(title, nameof(title));
         OS.ValidateNativeMessage(description, nameof(description));
         ArgumentNullException.ThrowIfNull(buttons);
@@ -95,6 +97,7 @@ public sealed partial class DisplayServer
     Action<bool, IReadOnlyList<string>, int, IReadOnlyDictionary<string, FileDialogOptionValue>>? optionsCallback = null)
     {
         EnsureOwner();
+        if (_nativeMenuTracking) throw new InvalidOperationException("A native popup menu is active.");
         ArgumentNullException.ThrowIfNull(title);
         ArgumentNullException.ThrowIfNull(currentDirectory);
         ArgumentNullException.ThrowIfNull(filename);

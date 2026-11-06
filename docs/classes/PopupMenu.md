@@ -1,6 +1,6 @@
 # PopupMenu
 
-Last updated: 2026-10-26
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class PopupMenu : Popup`. **Inherits:** [Popup](Popup.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/PopupMenu.cs), [layout](../../src/Scene/GUI/PopupMenu.Layout.cs), [input](../../src/Scene/GUI/PopupMenu.Input.cs), [search](../../src/Scene/GUI/PopupMenu.Search.cs), [storage](../../src/Scene/GUI/PopupMenu.Storage.cs). **Component:** [Popup menus](../components/popup-menus.md).
 
@@ -1220,3 +1220,7 @@ Transparent native PopupPanel/PopupMenu output executes through the compatibilit
 Native accessibility exposes real popup capability and owned menu item selection/activation through [the native popup contract](AccessibilityServer.md#native-live-and-popups). Menu records follow their semantic owner and actual rendered item canvas; native surface retirement invalidates identities.
 
 [Contextual native navigation](AccessibilityServer.md#contextual-navigation) publishes retained source help/container fragments and actual button/menu keybindings. Class/role attributes retain the native taxonomy; source changes, override precedence and callback retirement have their own verification.
+
+## Operating-system popup preference
+
+`PreferNativeMenu` persists an explicit opt-in to [NativeMenu](NativeMenu.md) on supported Windows displays. `IsNativeMenu()` reports actual modal native participation, including PopupHide. Eligible plain/check/icon/submenu trees use the OS menu; unsupported item policies retain canvas presentation. AboutToPopup occurs once, native closure precedes PopupHide/IDPressed/IndexPressed, and temporary native owners retire after callbacks. See [the native component](../components/native-menus.md) for placement, ownership, fallback, verification and remaining platform/global-menu dependencies.

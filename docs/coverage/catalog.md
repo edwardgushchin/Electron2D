@@ -467,7 +467,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MultiplayerSpawner](classes/MultiplayerSpawner.md) | Node | Implemented | 10 |
 | [MultiplayerSynchronizer](classes/MultiplayerSynchronizer.md) | Node | Implemented | 18 |
 | [Mutex](classes/Mutex.md) | RefCounted | Implemented | 3 |
-| [NativeMenu](classes/NativeMenu.md) | Object | Blocked | 82 |
+| [NativeMenu](classes/NativeMenu.md) | Object | Partial | 82 |
 | [NavigationAgent2D](classes/NavigationAgent2D.md) | Node | Implemented | 56 |
 | [NavigationAgent3D](classes/NavigationAgent3D.md) | Node | Excluded | 59 |
 | [NavigationLink2D](classes/NavigationLink2D.md) | Node2D | Implemented | 16 |

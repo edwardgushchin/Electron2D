@@ -925,6 +925,10 @@ def main():
     assert not item_partial
     assert all(" | Implemented | " in row for row in item_rows if "[`signal " in row or "[`class ItemList`]" in row)
     assert "native-menu service" in class_rows["NativeMenu"]
+    native_rows = [row for row in pages[CLASS_PAGES / "NativeMenu.md"].splitlines() if row.startswith("| [`")]
+    assert sum(" | Implemented | " in row for row in native_rows) >= 40
+    assert all(" | Partial | " in row for row in native_rows if "[`method add_item" in row)
+    assert any(" | Blocked | " in row and "get_system_menu" in row for row in native_rows)
     packed_types = [item["name"] for item in upstream["types"]
                     if item["name"].startswith("Packed") and item["name"].endswith("Array")]
     assert len(packed_types) == 10

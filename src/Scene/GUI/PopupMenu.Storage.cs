@@ -16,6 +16,7 @@ public partial class PopupMenu
             else if (property.Name == nameof(CanvasItemDefaultTextureRepeat)) yield return new PropertyDescriptor<PopupMenu, DefaultCanvasItemTextureRepeat>(property.Name, m => m.CanvasItemDefaultTextureRepeat, (m, v) => m.CanvasItemDefaultTextureRepeat = v, _ => DefaultCanvasItemTextureRepeat.ParentNode, stored: true);
             else yield return property;
         }
+        yield return new PropertyDescriptor<PopupMenu, bool>(nameof(PreferNativeMenu), m => m.PreferNativeMenu, (m, v) => m.PreferNativeMenu = v, _ => false, stored: true);
         yield return new PropertyDescriptor<PopupMenu, bool>(nameof(AllowSearch), m => m.AllowSearch, (m, v) => m.AllowSearch = v, _ => true, stored: true);
         yield return new PropertyDescriptor<PopupMenu, bool>(nameof(HideOnCheckableItemSelection), m => m.HideOnCheckableItemSelection, (m, v) => m.HideOnCheckableItemSelection = v, _ => true, stored: true);
         yield return new PropertyDescriptor<PopupMenu, bool>(nameof(HideOnItemSelection), m => m.HideOnItemSelection, (m, v) => m.HideOnItemSelection = v, _ => true, stored: true);
