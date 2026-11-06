@@ -1,7 +1,8 @@
-# Native FP32 shader atomics
+# Native floating-point shader atomics
 
 The existing RenderingDevice shader, StorageBuffer and Image families execute
-native FP32 atomic load, store, exchange and addition. This supports parallel
+native FP32 atomic load, store, exchange and addition. The FP64 buffer/workgroup
+branch below adds double accumulation through the same API. This supports parallel
 floating accumulation and reductions without moving their counters to the CPU.
 No public type or signature is added. [ADR 0028](../decisions/rendering.md#adr-0028)
 owns the existing source/import/runtime boundary.
@@ -60,9 +61,79 @@ not a reproducible summation guarantee. Exchange preserves the transferred scala
 bits. Physical pointers retain the [address ownership contract](buffer-device-addresses.md).
 FreeRID invalidates dependent sets and retires pending native storage normally.
 
-FP16/FP64, floating min/max, vector atomics, sparse images and encoded ImageBuffer
-floating atomics retain separate native precision/resource adapters. Integer
+FP16, floating min/max, vector atomics, sparse images, floating images beyond
+R32SFLOAT and encoded ImageBuffer floating atomics retain separate native
+precision/resource adapters. Integer
 ImageBuffer operations remain available. This slice does not add those adapters.
+
+## FP64 buffer and workgroup atomics
+
+The Vulkan branch executes double atomic load/store/exchange/add in storage
+buffers and workgroup memory, with native arithmetic and atomic flags enabled
+independently. FP64 images and encoded ImageBuffer floating operations keep their
+resource gates; this adds no double texture/vertex format or public declaration.
+The existing raw buffer, copied double specialization, ordinary graphics storage
+and physical-address contracts remain authoritative.
+
+The native query ABI1 retains its six FP32 bits. ABI2 appends four independent
+buffer/shared base/add bits. The factory retries ABI1 only for the older bridge's
+unsupported-ABI status; ABI2 allocation failure has a distinct error status and
+propagates. It requests double atomic flags only with an enabled shaderFloat64
+profile. Logical FP32 and FP64 masks are retained separately. If the wide optional
+device request fails, retry the existing FP32 atomic profile before dropping its
+optional extension. Ordinary FP64 arithmetic does not depend on FP64 atomics.
+
+Shader validation classifies 32/64-bit typed pointers, matching result types and
+the separate AtomicFloat32AddEXT/AtomicFloat64AddEXT declarations. A declared but
+unused add capability still requires an enabled add feature of that precision.
+Buffer atomics include logical and physical-storage pointers; shared atomics use
+their own bits. Source modules, scope/memory operands and eight-byte array strides
+remain unchanged. The native operation retains double rounding and ordering,
+including order-dependent addition; it is not a reproducible summation algorithm.
+
+[FloatAtomic64.Consumer](../../tests/FloatAtomic64.Consumer/README.md) supplies the
+common scenarios: 64 contending increments of 2^-52 above one, unique prior values,
+NaN payload/signed zero, infinity/subnormal exchange, explicit scoped base operations,
+add-only/shared-only profiles, mixed precision, helper arrays and stale descriptors,
+double specialization, both graphics stages with actual color pixels, a following
+compute consumer, physical buffers and an unused capability. Prepared buffer cycles
+assert zero owner-thread managed bytes. The test shim exercises base/add and
+buffer/shared logical gates separately, real wide-request and arithmetic refusal,
+and healthy FP32 buffer/shared/image consumers. The actual preceding ABI1 bridge
+checks fallback and continued ordinary double arithmetic.
+
+Historical Linux x64/Wayland Vulkan execution on RTX 3090 Ti passed source authoring
+(48 assertions) and the six refusal profiles plus the preceding ABI1 bridge.
+The interrupted qualification did not establish managed-package or strict full-trim
+NativeAOT execution, and its ignored native/fixture receipts were not retained in
+the Windows migration. These results are partial platform progress under ADR 0021.
+Windows x64/Vulkan requalification on RTX 3090 Ti (driver 621.14) passes 48 source
+and 25 compiler-free binary assertions in each of ProjectReference, fresh managed
+package and strict full-trim NativeAOT execution (.NET 10.0.14, SDK 10.0.403 for
+AOT). All six refusal profiles pass in CLR and AOT: base 28, add 23, buffer 26,
+shared 25, wide 29 and precision 29 assertions. A complete module relinked with the
+exact preceding ABI1 query passes 29 assertions in each host; qualified module
+bytes are restored afterward. The root guards pass 152 checks. Pinned spirv-val
+validates 13 original and 14 production-adapted stages, including the double
+specialization override. FP32 atomics (74 assertions), Int64 atomics and ordinary
+GLSL/HLSL FP64 compute/graphics also pass. The native checker reports physical
+FP32 mask 63 / FP64 mask 15 and passes its ABI/resource/lifetime guards.
+
+The Windows x64 native closure passes architecture, exact exports, private loader
+identities and SHA-256 audit. The managed-package consumer uses this source-built
+closure through explicit overrides of the preceding platform package; this is
+not qualification of the complete Windows package/RID cohort. Windows D3D12,
+other desktop architectures, macOS, Linux/X11 and ARM64, Android, Android TV, iOS,
+tvOS and Web delivered-package/host behavior remain open;
+missing adapters and absent evidence do not establish equivalent behavior. Other
+native/driver heap totals, validation layers, broad performance and physical owner
+acceptance also remain unverified. Receipts, fixtures, rendered pixels and exact
+source/native/package identities are retained outside the repository under
+`C:/Users/eduar/.codex/artifacts/Electron2D/float64-20261106`.
+The current common module SHA-256 is
+`75ec47177a2fd62b241424c59d07779366b7052b2ae2b95e6c17f4a60c91cbc0`;
+the managed package SHA-256 is
+`a870df8333130b6e801048a28d355e9d6d83bf46602a5a8d008d3cc703e95af8`.
 
 ## Verification
 

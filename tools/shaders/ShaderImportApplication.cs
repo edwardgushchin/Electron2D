@@ -150,7 +150,7 @@ public static class ShaderImportApplication
 
     static async Task<string> Execute(string executable, params string[] arguments)
     {
-        var tool = IOPath.Combine(AppContext.BaseDirectory, "toolchain", "bin", executable);
+        var tool = IOPath.Combine(AppContext.BaseDirectory, "toolchain", "bin", executable + (OperatingSystem.IsWindows() ? ".exe" : ""));
         if (!File.Exists(tool))
             throw new FileNotFoundException($"The pinned shader import tool '{executable}' is missing. Run python3 tools/shaders/build_toolchain.py before building or publishing ShaderImport.", tool);
         var start = new ProcessStartInfo(tool) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };

@@ -1,8 +1,8 @@
 # RDShaderSource
 
-[Native FP32 atomics](../components/float-atomics.md) preserve original modules and require the enabled storage-specific base/add feature before device shader or binary publication.
+[Native floating atomics](../components/float-atomics.md) preserve original modules and require the precision/storage-specific base/add features before shader or binary publication. The [FP64 branch](../components/float-atomics.md#fp64-buffer-and-workgroup-atomics) has bounded Vulkan evidence; full platform parity remains open.
 
-Last updated: 2026-10-28
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSource`. **Component:** [Source authoring](../components/local-compute.md#source-authoring-and-build-imports).
 

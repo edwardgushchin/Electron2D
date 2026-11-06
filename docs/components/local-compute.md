@@ -1,8 +1,10 @@
 # Local compute
 
+[FP64 buffer/workgroup atomics](float-atomics.md#fp64-buffer-and-workgroup-atomics) extend double numerical producers through independent arithmetic/base/add gates, preserving FP32 and ordinary double fallback. The owning contract distinguishes historical Linux execution from current package/AOT qualification and full platform gaps.
+
 [Native FP32 atomics](float-atomics.md) execute load/store/exchange and addition over buffer, shared and R32SFLOAT image storage, including descriptor/layer/sample selection and graphics/address consumers. The linked contract owns independent feature negotiation, ordering, unsupported precision/resource gates and Linux qualification.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 The public [RenderingDevice](../classes/RenderingDevice.md) compute slice is created by `RenderingServer.CreateLocalRenderingDevice()` under [ADR 0028](../decisions/rendering.md#adr-0028). It supplies a portable compute path for application algorithms without exposing native handles or adding domain-specific fluid API. [RDShaderSPIRV](../classes/RDShaderSPIRV.md) owns copied bytecode and compiler diagnostics; [RDUniform](../classes/RDUniform.md) describes borrowed resource bindings. [ShaderStage](../classes/RenderingDevice.ShaderStage.md) and [UniformType](../classes/RenderingDevice.UniformType.md) retain their applicable numeric identities.
 
@@ -325,6 +327,13 @@ Sources are limited to 1,048,576 UTF-16 characters per stage without embedded nu
 AllowCache=false bypasses lookup and storage. True permits successful dependency-free module caching, with copied returned bytes, at most sixteen entries and sixteen MiB. Compiler executable, packaged managed/native/toolchain contents and source/language/stage define the cache identity. Preprocessing beyond GLSL version declarations conservatively bypasses cache, so include/macro changes cannot be hidden by unchanged timestamps or source strings. Shader authoring, footprint hashing and structural edits allocate cold storage; prepared draw/dispatch continues through the measured existing path. Device disposal releases its retained module cache.
 
 The ShaderImport CLI accepts its existing canvas profile and optional `--device` for vertex/fragment/compute, plus an optional include root. The packaged Electron2D.Shaders.targets accepts Profile="device" with Stage="compute", "vertex" or "fragment"; the default canvas profile retains its material/type metadata and interface checks. Profile/stage/path validation, argument-list invocation and atomic output replacement remain shared. Published games receive compiled resources and do not receive source compiler executables or the import-tool assembly.
+
+Windows host publication, frontend lookup and the MSBuild target's default tool
+selection use `.exe` filenames. The FP64 atomic slice executes pinned GLSL source
+authoring and sibling GLSL/HLSL compute/graphics imports on Windows x64/Vulkan.
+The default MSBuild import executes, and a missing validator rejects while keeping
+the preceding usable output. These bounded checks do not qualify every authoring
+profile or the complete platform matrix.
 
 [RenderingDeviceSourceTests](../../tests/Electron2D.Tests/RenderingDeviceSourceTests.cs) verifies typed defaults/reversion, source errors with successful siblings, missing frontend, invalid descriptions, copies, cache/bypass/compiler invalidation/entry bounds, malformed output, bounded diagnostics, timeout cleanup, changed-include arithmetic, actual GLSL/HLSL compute/graphics and retained canvas. Thirty-two prepared compute and graphics cycles per language after collection and sixteen warmups allocate zero owner-thread managed bytes. The standalone importer regression remains green; the fresh public consumer build/publish check exercises both canvas/device profiles and shader compiler absence in the game output. Linux x64/Vulkan is verified; other hosts/backends, native/driver allocation totals and the complete unified agent-native project workflow remain unverified.
 

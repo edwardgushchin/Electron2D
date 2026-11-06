@@ -7,6 +7,18 @@ feature-refusal shim and preceding-bridge missing-export control, preserving ord
 FP32 execution. Recheck integer image/64-bit atomics and MS storage; run the native
 render checker and export/package tests. See [the native contract](components/float-atomics.md).
 
+For FP64 atomic changes, run FloatAtomic64.Consumer source/binary, package and strict
+full-trim NativeAOT scenarios plus the shared root requirement guards. Validate all
+original/lowered modules. Exercise the test shim's base/add/buffer/shared/wide/precision
+profiles and the actual ABI1 bridge fallback, preserving ordinary FP64 and FP32
+buffer/shared/image execution. Recheck FP32/Int64 atomics and FP64 compute/graphics.
+Retain exact source/package/native identities and the full ADR 0021 target gaps;
+these bounded receipts are partial platform progress. See [the shared contract](components/float-atomics.md#fp64-buffer-and-workgroup-atomics).
+
+On Windows, publish and execute the pinned ShaderImport tool with its `.exe`
+toolchain paths, including the MSBuild target's default executable selection.
+Keep missing-tool failure checks and compiler-free binary execution separate.
+
 # Maintaining the Electron2D contract
 
 For WebRTC bridge ownership changes, run the [native refusal fixture and both consumer profiles](../tools/webrtc-native/README.md).

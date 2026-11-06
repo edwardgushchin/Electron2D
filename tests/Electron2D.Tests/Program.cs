@@ -128,6 +128,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_BACK") is { } sys
 }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FLOAT_ATOMIC_REQUIREMENTS") == "1") { FloatAtomicRequirementTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FLOAT_ATOMICS64") is { } floatAtomic64Profile) { FloatAtomic64Tests.Run(floatAtomic64Profile == "1" ? null : floatAtomic64Profile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FLOAT_ATOMICS") is { } floatAtomicProfile) { FloatAtomic32Tests.Run(floatAtomicProfile == "1" ? null : floatAtomicProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_IMAGE_ATOMICS") is { } imageAtomicProfile) { if (imageAtomicProfile == "1") RenderingDeviceImageAtomicTests.Run(); else RenderingDeviceImageAtomicTests.Canvas(imageAtomicProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_ARRAYS") is { } descriptorProfile) { if (descriptorProfile == "1") RenderingDeviceDescriptorArrayTests.Run(); else RenderingDeviceDescriptorArrayTests.Canvas(descriptorProfile); return; }

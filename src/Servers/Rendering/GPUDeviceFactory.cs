@@ -5,6 +5,7 @@ namespace Electron2D;
 
 internal static unsafe partial class GPUDeviceFactory
 {
+    internal const string FloatAtomic64Property = "Electron2D.gpu.float64_atomics";
     internal const string FloatAtomicProperty = "Electron2D.gpu.float32_atomics";
     internal const string AddressProperty = "Electron2D.gpu.buffer_device_address";
     internal const string MirrorClampProperty = "Electron2D.gpu.sampler_mirror_clamp";
@@ -168,12 +169,13 @@ internal static unsafe partial class GPUDeviceFactory
             try { addresses = ReadAddressSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (addresses is < 0 or > 1) throw new InvalidOperationException("Native buffer addresses could not be queried.");
             var floating = 0;
-            try { floating = ReadFloatAtomicSupport(device, 1); } catch (EntryPointNotFoundException) { }
-            if (floating is < 0 or > 63) throw new InvalidOperationException("Native floating atomic features could not be queried.");
+            try { floating = ReadFloatAtomicSupport(device, 2); if (floating == -1) floating = ReadFloatAtomicSupport(device, 1); } catch (EntryPointNotFoundException) { }
+            if (floating is < 0 or > 1023) throw new InvalidOperationException("Native floating atomic features could not be queried.");
             available |= addresses << 12;
             var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
+            if (!fp64) floating &= 63;
             var atomic = (SDL.GetBooleanProperty(properties, BufferAtomic64Property, false) ? 1 : 0) | (SDL.GetBooleanProperty(properties, SharedAtomic64Property, false) ? 2 : 0);
             if ((available | raster | floating) == 0) return device;
             // Retire the unpublished probe before another device initializes Wayland Vulkan state.
@@ -182,12 +184,14 @@ internal static unsafe partial class GPUDeviceFactory
             {
                 if ((requested & 3) == 2 || (requested & 384) == 256) continue; // Each uniform-storage capability includes its buffer capability.
                 var upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster, floating);
-                if (upgraded == 0 && floating != 0) upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster);
+                if (upgraded == 0 && (floating & ~63) != 0) upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster, floating & 63);
+                if (upgraded == 0 && (floating & 63) != 0) upgraded = Attempt(formats, sized, relaxed, fp64, int64, atomic, requested, raster);
                 if (upgraded == 0) continue;
                 return upgraded;
             }
             device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster, floating: floating);
-            if (device == 0 && floating != 0) device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster);
+            if (device == 0 && (floating & ~63) != 0) device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster, floating: floating & 63);
+            if (device == 0 && (floating & 63) != 0) device = Attempt(formats, sized, relaxed, fp64, int64, atomic, raster: raster);
             if (device == 0) throw new InvalidOperationException("The native shader precision device could not be restored: " + SDL.GetError());
             return device;
         }
@@ -266,6 +270,8 @@ internal static unsafe partial class GPUDeviceFactory
             advanced.Flags[0] = 1; advanced.Flags[5] = (uint)atomics & 1; advanced.Flags[6] = ((uint)atomics >> 1) & 1;
             var floatFeatures = new FloatAtomicFeatures { Type = 1000260000, Next = (nint)(&advanced) };
             for (var i = 0; i < 6; i++) floatFeatures.Flags[(i / 2) * 4 + i % 2] = ((uint)floating >> i) & 1;
+            floatFeatures.Flags[2] = ((uint)floating >> 6) & 1; floatFeatures.Flags[3] = ((uint)floating >> 7) & 1;
+            floatFeatures.Flags[6] = ((uint)floating >> 8) & 1; floatFeatures.Flags[7] = ((uint)floating >> 9) & 1;
             fixed (uint* pointer = features)
             fixed (byte* extensionName = "VK_KHR_sampler_mirror_clamp_to_edge\0"u8)
             fixed (byte* floatExtensionName = "VK_EXT_shader_atomic_float\0"u8)
@@ -291,7 +297,8 @@ internal static unsafe partial class GPUDeviceFactory
                     if (selected == 0) return 0;
                 }
                 if (SDL.GetGPUDeviceDriver(device) == "vulkan" &&
-                    (floating != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), FloatAtomicProperty, floating) ||
+                    ((floating & 63) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), FloatAtomicProperty, floating & 63) ||
+                     (floating >> 6) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), FloatAtomic64Property, floating >> 6) ||
                      addresses != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), AddressProperty, true) ||
                      mirror && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), MirrorClampProperty, true) ||
                      float64 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), Float64Property, true) ||

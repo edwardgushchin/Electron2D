@@ -1,6 +1,6 @@
 # Platform verification matrix
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 ## Cross-platform parity acceptance
 
@@ -10,11 +10,17 @@ For each capability, the owning component/class page records its common conforma
 
 Unavoidable external capability limits need the owning ADR's exact condition and observable result. Missing engine backends or tests remain gaps rather than new exclusions. An explicit unsupported result does not demonstrate functional parity. This report currently contains bounded receipts and known gaps, not an exhaustive passing feature-by-target matrix. Existing configured CI and `release-qualified` artifacts do not automate that exhaustive acceptance gate; [development CI](development-ci.md) and [release preparation](releasing.md) retain that distinction.
 
+### FP64 buffer/workgroup atomics (2026-11-06)
+
+The [common public scenarios and exact identities](components/float-atomics.md#fp64-buffer-and-workgroup-atomics) now execute on Windows x64/Vulkan, RTX 3090 Ti: source 48 / compiler-free binary 25 assertions through ProjectReference, fresh managed package and strict full-trim NativeAOT. All six refusal profiles and the complete module with its preceding ABI1 query pass in CLR/AOT. The root guards pass 152 checks; 27 original/production-adapted stages pass spirv-val. The complete x64 native closure passes export/architecture/loader/hash audits. The managed-package consumer uses recorded source-built native overrides; the complete Windows platform package/RID cohort is not qualified. Historical Linux source/refusal execution remains distinct from its interrupted package/AOT qualification and receipts lost during migration.
+
+This is partial platform progress: Windows D3D12/other architectures and complete package delivery, macOS, Linux/X11 and ARM64, Android, Android TV, iOS, tvOS and Web packaged-host execution remain open under ADR 0021. Missing adapters and truthful feature refusal do not establish parity. FP64 image/encoded-buffer atomics, half/min-max/vector operations, total native heaps, validation layers, broad performance and owner acceptance remain separate gaps. Declaration totals do not prove full platform completion.
+
 ### FP32 shader atomics (2026-10-29)
 
 The common [public scenarios](components/float-atomics.md#verification) execute contending buffer/shared/image accumulation, scoped base operations, descriptor/layer/sample choices, both graphics stages, physical buffers, retirement and feature/adapter refusal. Local source/binary, managed-package and strict full-trim NativeAOT evidence uses Linux x64/Wayland, Vulkan, NVIDIA RTX 3090 Ti. Original/derived modules and exact local package/native/run identities are retained under `bin/float-atomics/2026-10-29`. Prepared buffer cycles measure zero owner managed bytes.
 
-Foreign backend/package/host execution, Linux/X11 and ARM64, mobile/TV/Web, native heap totals, validation layers, broad performance and owner acceptance remain unverified. FP16/FP64/min-max/vector/sparse/encoded ImageBuffer floating atomics require separate adapters. Declaration coverage does not close these platform gates.
+Foreign backend/package/host execution, Linux/X11 and ARM64, mobile/TV/Web, native heap totals, validation layers, broad performance and owner acceptance remain unverified. FP16, FP64 image, min-max/vector/sparse/encoded ImageBuffer floating atomics require separate adapters; the FP64 buffer/workgroup branch is recorded above. Declaration coverage does not close these platform gates.
 
 ### Equal-count multisample copies (2026-10-29)
 

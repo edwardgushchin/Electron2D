@@ -1,6 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Electron2DShaderImportTool Condition="'$(Electron2DShaderImportTool)' == ''">$(MSBuildThisFileDirectory)Electron2D.ShaderImport</Electron2DShaderImportTool>
+    <_Electron2DShaderImportExecutableSuffix Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</_Electron2DShaderImportExecutableSuffix>
+    <Electron2DShaderImportTool Condition="'$(Electron2DShaderImportTool)' == ''">$(MSBuildThisFileDirectory)Electron2D.ShaderImport$(_Electron2DShaderImportExecutableSuffix)</Electron2DShaderImportTool>
     <Electron2DShaderImportTimeoutMS Condition="'$(Electron2DShaderImportTimeoutMS)' == ''">300000</Electron2DShaderImportTimeoutMS>
   </PropertyGroup>
   <UsingTask TaskName="Electron2DImportShaders" TaskFactory="RoslynCodeTaskFactory"

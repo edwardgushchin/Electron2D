@@ -1,6 +1,6 @@
 # RenderingDevice
 
-[Native FP32 atomics](../components/float-atomics.md) execute base/add buffer, workgroup and R32SFLOAT image operations with independent feature gates, descriptor/layer/sample selection and ordered compute/graphics consumers. Wider/half/min-max and encoded ImageBuffer floating operations retain their separate adapters.
+[Native FP32 atomics](../components/float-atomics.md) execute base/add buffer, workgroup and R32SFLOAT image operations with independent feature gates, descriptor/layer/sample selection and ordered compute/graphics consumers. [FP64 buffer/workgroup atomics](../components/float-atomics.md#fp64-buffer-and-workgroup-atomics) also execute with independent base/add flags and existing double specialization/graphics/address consumers. Half/min-max/vector, wider floating images and encoded ImageBuffer floating operations retain separate adapters. Packaged host parity remains open under ADR 0021.
 
 [Native HDR output](../components/native-hdr-output.md) selects a linear half-float
 screen stage while active. ScreenGetFramebufferFormat identifies that engine-owned
@@ -9,7 +9,7 @@ contents retain their recorded encoding across output changes and transfer on GP
 new screen lists use the current format. Existing owner/list/window lifetime guards
 and framebuffer-format identities remain in effect.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 [Copied native depth/stencil state](../components/depth-stencil-state.md) extends pipeline creation with stored-depth bounds and independent visible-face masks/reference, including derived native variants.
 

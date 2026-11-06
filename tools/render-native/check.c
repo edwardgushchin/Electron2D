@@ -244,6 +244,8 @@ int main(int argc, char **argv)
     require(e2d_render_raster_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_raster_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1) == NULL);
     require(e2d_render_float_atomic_support(NULL, 1) == -1);
+    require(e2d_render_float_atomic_support(NULL, 2) == -1);
+    require(e2d_render_float_atomic_support((SDL_GPUDevice *)(uintptr_t)1, 3) == -1);
     require(e2d_render_float_atomic_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_graphics_storage_support(NULL, 1) == -1);
     require(e2d_render_graphics_storage_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
@@ -297,6 +299,9 @@ int main(int argc, char **argv)
     int floating_features = e2d_render_float_atomic_support(device, 1); require(floating_features >= 0 && floating_features <= 63);
     require(e2d_render_float_atomic_support(device, 1) == floating_features);
     printf("Native FP32 atomic feature mask=%d (physical support; logical opt-in independent)\n", floating_features);
+    int double_features = e2d_render_float_atomic_support(device, 2); require(double_features >= 0 && double_features <= 1023 && (double_features & 63) == floating_features);
+    require(e2d_render_float_atomic_support(device, 2) == double_features);
+    printf("Native FP64 atomic feature mask=%d (ABI2, FP32 low mask preserved)\n", double_features >> 6);
     int logic_features = e2d_render_logic_support(device, 1); require(logic_features == 0 || logic_features == 1);
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);

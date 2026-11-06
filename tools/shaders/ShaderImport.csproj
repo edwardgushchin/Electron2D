@@ -9,6 +9,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <ShaderToolchainDirectory>$(MSBuildThisFileDirectory)obj/toolchain/$(NETCoreSdkRuntimeIdentifier)</ShaderToolchainDirectory>
+    <ShaderToolExecutableSuffix Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</ShaderToolExecutableSuffix>
   </PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /></ItemGroup>
   <ItemGroup>
@@ -20,7 +21,7 @@
   </ItemGroup>
   <Import Project="../native-consumer.props" />
   <Target Name="RequireShaderToolchain" BeforeTargets="ComputeFilesToPublish">
-    <Error Condition="!Exists('$(ShaderToolchainDirectory)/bin/glslangValidator') or !Exists('$(ShaderToolchainDirectory)/bin/spirv-val')"
+    <Error Condition="!Exists('$(ShaderToolchainDirectory)/bin/glslangValidator$(ShaderToolExecutableSuffix)') or !Exists('$(ShaderToolchainDirectory)/bin/spirv-val$(ShaderToolExecutableSuffix)')"
            Text="Build the pinned import tools first: python3 tools/shaders/build_toolchain.py" />
     <Error Condition="'$(RuntimeIdentifier)' != '' and '$(RuntimeIdentifier)' != '$(NETCoreSdkRuntimeIdentifier)'"
            Text="The shader import toolchain must be published for the host runtime identifier." />

@@ -136,7 +136,7 @@ internal static partial class FloatAtomic32Tests
             using var raw = new RDShaderSPIRV { BytecodeCompute = bytes }; Reject<NotSupportedException>(() => device.ShaderCreateFromSPIRV(raw)); Reject<NotSupportedException>(() => device.ShaderCompileBinaryFromSPIRV(raw));
         }
         foreach (var (extension, declaration, operation) in new[] {
-            ("GL_EXT_shader_atomic_float", "double cell;", "atomicAdd(b.cell,.5lf)"),
+            ("GL_EXT_shader_atomic_float2", "double cell;", "atomicMin(b.cell,.5lf)"),
             ("GL_EXT_shader_atomic_float2", "float cell;", "atomicMin(b.cell,.5)") })
         {
             using var source = new RDShaderSource { SourceCompute = "#version 450\n#extension " + extension + ":require\nlayout(local_size_x=1)in;layout(set=0,binding=0,std430)buffer B{" + declaration + "}b;void main(){" + operation + ";}" };
