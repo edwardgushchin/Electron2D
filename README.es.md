@@ -1,11 +1,5 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · Español · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-El desplazamiento nativo admite pasos, páginas y elementos fuera del área visible, conservando el foco y la selección. Véase el [contrato](docs/classes/AccessibilityServer.md#native-scrolling).
-
-La accesibilidad nativa en Linux publica nombres, roles, estados, acciones de botones y foco y valores numéricos de Range mediante AT-SPI. Slider, ScrollBar y SpinBox editables aceptan solicitudes numéricas; los indicadores de progreso son de solo lectura. Configure `ProjectSettings.AccessibilitySupport` antes de abrir una ventana; los protocolos de tablas y los adaptadores de otras plataformas siguen en desarrollo. AT-SPI también publica relaciones de etiquetas, descripciones y controles, grupos de radio, errores de validación, descendientes activos y enlaces internos. Las relaciones siguen las rutas y la vida útil de sus destinos.
-
-Text/EditableText nativos permiten leer y editar LineEdit/TextEdit/CodeEdit, con selección Unicode, geometría del texto y contraseñas enmascaradas. Véase el [contrato de accesibilidad](docs/classes/AccessibilityServer.md#native-text).
-
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">
@@ -58,6 +52,7 @@ Este es un resumen de las principales funciones ya implementadas en el motor. La
 - [Mallas](docs/components/meshes.md) y [mapas de teselas](docs/components/tiles.md). Geometría indexada y procedural, instancias de mallas, atlas animados, conexiones de terreno y cuadrículas cuadradas, isométricas o hexagonales con capas de colisión y navegación.
 - [Física](docs/domains/physics.md). Backends de CPU y GPU independiente, cuerpos rígidos y personajes, áreas, fuerzas, articulaciones y resortes. Consultas de rayos y formas, detección continua de colisiones y [puntos de control del estado](docs/components/physics-space-checkpoints.md).
 - [Interfaz de juego](docs/domains/scene.md) y [texto](docs/components/text.md). Botones, menús, listas, árboles, contenedores, desplazamiento, editores de texto y código y texto enriquecido. Temas, composición Unicode, texto bidireccional y fuentes alternativas.
+- [Accesibilidad](docs/components/accessibility.md). Soporte nativo de AT-SPI en Linux para la semántica de escenas, acciones de controles, edición de texto y desplazamiento. Los adaptadores de otras plataformas siguen en desarrollo.
 - [Audio](docs/domains/audio.md). WAV, MP3 y Ogg Vorbis, flujos procedurales, micrófono y audio posicional. Buses de audio, mezcla, efectos y grabación.
 - [Reproducción de vídeo](docs/components/video-playback.md) y [grabación de películas](docs/components/movie-writing.md). Vídeo Ogg Theora con audio; captura sin tiempo real de fotogramas renderizados y audio mezclado en PNG/WAV, AVI u OGV.
 - [Controles](docs/domains/input.md). Teclado, ratón, entrada táctil, mandos, asignación de acciones, atajos y entrada de texto con composición IME.

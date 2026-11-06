@@ -15,6 +15,7 @@ These instructions apply to the whole repository. Keep this file about how to wo
 - Keep tool output focused: locate relevant declarations with `rg`, read the ranges needed for the audit, and inspect every result of a batch while returning a compact summary. Read full files when necessary. For broad API work, finish one connected vertical slice and update coverage before moving on.
 - Load documentation progressively: entry/index, relevant contract, then implementation detail or evidence as needed. Do not preload every ADR, class page, skill reference or journal entry. Search before reading large files; narrow a truncated query instead of repeatedly dumping it. Carry source paths, anchors and revisions into continuation notes.
 - Update the canonical affected document with the behavior/decision change, repair its links and distinguish implemented, planned and unverified claims. Keep summaries brief and link to the owning detail; do not copy a full contract into multiple guides or turn the journal into the product manual.
+- Preserve the shared [README layout](docs/design/identity.md#assets-and-communication) across all locales. Keep feature summaries in the existing Features section and technical details in their owning documentation; never insert them before the logo.
 
 ## Implementation discipline
 

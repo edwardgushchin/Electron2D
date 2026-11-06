@@ -1,9 +1,5 @@
 <p align="right">English · <a href="README.ru.md">Русский</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-Native scrolling connects existing scrollable controls to item/page and viewport-placement requests while preserving focus and selection. See the [scroll contract](docs/classes/AccessibilityServer.md#native-scrolling).
-
-Native accessibility on Linux publishes scene names, roles, state, button/focus actions and numeric Range values through AT-SPI. Editable sliders, scroll bars and spin boxes accept native numeric requests; progress displays are read-only. Set `ProjectSettings.AccessibilitySupport` before opening a window; native table protocols and other platform adapters remain in progress. Native Text/EditableText reads and edits LineEdit/TextEdit/CodeEdit, including Unicode selections, shaped geometry and password masking. AT-SPI also exposes stored labels/descriptions/control links, radio groups, validation errors, active descendants and internal hyperlink anchors. Relations follow node paths and target lifetime.
-
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">
@@ -56,6 +52,7 @@ This is an overview of the main features already implemented in the engine. Indi
 - [Meshes](docs/components/meshes.md) and [tile maps](docs/components/tiles.md). Indexed and procedural geometry, instanced meshes, animated tile atlases, terrain connections and square, isometric or hexagonal grids with collision and navigation layers.
 - [Physics](docs/domains/physics.md). CPU and independent GPU backends, rigid and character bodies, areas, forces, joints and springs. Ray/shape queries, continuous collision detection and [state checkpoints](docs/components/physics-space-checkpoints.md).
 - [Game UI](docs/domains/scene.md) and [text](docs/components/text.md). Buttons, menus, lists, trees, layout containers, scrolling, text/code editors and rich text. Themes, Unicode shaping, bidirectional layout and font fallbacks.
+- [Accessibility](docs/components/accessibility.md). Native Linux AT-SPI support for scene semantics, control actions, text editing and scrolling. Other platform adapters remain in development.
 - [Audio](docs/domains/audio.md). WAV, MP3 and Ogg Vorbis, procedural streams, microphone input and positional playback. Audio buses, mixing, effects and recording.
 - [Video playback](docs/components/video-playback.md) and [movie recording](docs/components/movie-writing.md). Ogg Theora video with audio; offline capture of rendered frames and mixed audio to PNG/WAV, AVI or OGV.
 - [Input](docs/domains/input.md). Keyboard, mouse, touch, controllers, action mappings, shortcuts and text input with IME composition.

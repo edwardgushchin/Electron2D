@@ -1,11 +1,5 @@
 <p align="right"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · 简体中文 · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português (BR)</a></p>
 
-原生滚动支持步进、翻页和将元素移入可见区域，并保留焦点与选择。详见[滚动约定](docs/classes/AccessibilityServer.md#native-scrolling)。
-
-Linux 原生无障碍功能通过 AT-SPI 发布场景名称、角色、状态、按钮和焦点操作以及 Range 数值。可编辑的 Slider、ScrollBar 和 SpinBox 接受原生数值请求；进度指示器为只读。请在打开窗口前设置 `ProjectSettings.AccessibilitySupport`；表格协议以及其他平台适配器仍在开发中。 AT-SPI 还提供可保存的标签、描述和控件关系、单选组、验证错误、活动后代及内部链接锚点。关系会随节点路径和目标生命周期更新。
-
-原生 Text/EditableText 支持读取和编辑 LineEdit/TextEdit/CodeEdit，包括 Unicode 选择、文本几何信息和密码掩码。具体约定与验证范围见 [AccessibilityServer](docs/classes/AccessibilityServer.md#native-text)。
-
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark) and (max-width: 480px)" srcset="docs/design/assets/sprite/logo-compact-dark.svg">
@@ -58,6 +52,7 @@ Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与
 - [网格](docs/components/meshes.md)与[瓦片地图](docs/components/tiles.md)。索引和程序化几何、网格实例化、动画图集、地形连接，以及带碰撞和导航层的方形、等距和六边形网格。
 - [物理](docs/domains/physics.md)。CPU 和独立 GPU 后端、刚体和角色运动、区域、力、关节及弹簧。射线和形状查询、连续碰撞检测及[状态检查点](docs/components/physics-space-checkpoints.md)。
 - [游戏界面](docs/domains/scene.md)与[文本](docs/components/text.md)。按钮、菜单、列表、树、布局容器、滚动、文本和代码编辑器及富文本。支持主题、Unicode 字形整形、双向排版和后备字体。
+- [无障碍](docs/components/accessibility.md)。Linux 原生 AT-SPI 支持场景语义、控件操作、文本编辑和滚动。其他平台的适配器仍在开发中。
 - [音频](docs/domains/audio.md)。WAV、MP3 和 Ogg Vorbis、程序化音频流、麦克风输入及位置音效。支持音频总线、混音、效果和录音。
 - [视频播放](docs/components/video-playback.md)与[影片录制](docs/components/movie-writing.md)。播放带音频的 Ogg Theora 视频；以非实时方式将实际渲染帧和混合音频录制为 PNG/WAV、AVI 或 OGV。
 - [输入](docs/domains/input.md)。键盘、鼠标、触控、控制器、操作映射、快捷键，以及带 IME 组合输入的文本输入。

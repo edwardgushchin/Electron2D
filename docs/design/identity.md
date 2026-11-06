@@ -1,6 +1,6 @@
 # Electron2D identity design
 
-Last updated: 2026-10-05
+Last updated: 2026-11-06
 
 Status: **Sprite is the approved Electron2D identity**, selected by the owner on 2026-10-02 from concept 02.8. The Code direction has been removed from active designs, source assets and the delivery package.
 
@@ -100,6 +100,8 @@ The [1280×640 GitHub social preview](assets/sprite/github-social-preview.png) a
 Desktop identity uses app-icon.svg without text: Linux registers a PNG rasterization with an absolute file path, Windows embeds the refreshed [ICO](../../editor/Assets/Electron2D.ico), and macOS packages the refreshed [ICNS](../../editor/Assets/Electron2D.icns). The rounded [app-icon.svg](assets/sprite/app-icon.svg) is the desktop application identity. Raster containers are generated from this SVG at each icon size; editor build/publish needs no graphics-conversion tool.
 
 The five README editions share the refreshed primary and compact SVGs through their existing light/dark picture sources. Their logo alternative text includes the current descriptor and the primary image reserves a 640×148 slot. Their prose, language navigation and dynamic status badges retain their existing meaning.
+
+Preserve the shared README layout in every locale: language navigation, centered logo, status badges, section navigation and star invitation, then the existing content sections. The logo immediately follows the language navigation; do not insert feature announcements or technical prose between them. Add concise feature summaries inside the existing Features list and link to the owning component or class page for API details, verification evidence and platform limits.
 
 The eight README section icons were approved by the owner on 2026-10-05. Their editable source is the [README icon page in Penpot](http://localhost:9001/#/workspace?team-id=50386cfd-724b-8089-8008-929cf6ab0402&file-id=25be5f50-4fa1-80d7-8008-b98e1f25e65f&page-id=b500948f-af59-8076-8008-be692d9942c6). SVG exports from the canonical 24×24 designs are `readme-about.svg`, `readme-features.svg`, `readme-quick-start.svg`, `readme-platforms.svg`, `readme-development.svg`, `readme-documentation.svg`, `readme-contributing.svg` and `readme-license.svg` under `assets/sprite`. They use the shaded Sprite palette, square pixels and transparent backgrounds; the same colored icons serve both themes. The exports preserve the approved artwork within a 24×24 area and add 4 px of transparent space below it, producing a 24×28 image canvas. Square viewboxes and `preserveAspectRatio="xMidYMin meet"` retain the previous artwork scale and horizontal position without clipping. Heading images use `width="24" height="28" align="absmiddle"`: middle alignment centers the full canvas, raising the visible artwork by 2 px relative to the text compared with the unpadded export. This optical correction was checked on 2026-10-06 in local browser previews using GitHub heading metrics and the installed VS Code Markdown stylesheet. GitHub Markdown preserves these image attributes. SVG crisp-edge rendering preserves the pixel edges. The GitHub star invitation uses the standard star emoji. These icons are decorative and use empty alternative text because the adjacent text carries the meaning. Heading text and existing navigation anchors are preserved in all five editions.
 
