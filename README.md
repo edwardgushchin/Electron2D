@@ -24,6 +24,7 @@
 
 <p align="center">
   <a href="#quick-start">Get started</a> ·
+  <a href="#philosophy">Philosophy</a> ·
   <a href="#features">Features</a> ·
   <a href="#platforms">Platforms</a> ·
   <a href="#documentation">Documentation</a> ·
@@ -38,243 +39,144 @@
 
 Electron2D is a **free and open-source cross-platform 2D engine written in C# for developers and AI agents to build games together**.
 
-Create game worlds and mechanics with familiar .NET tools. Codex, Claude Code and other AI assistants can help with the code.
+Build game worlds and mechanics with familiar .NET tools, on your own or with a coding assistant.
+
+<a id="philosophy"></a>
+
+## Philosophy
+
+Electron2D is built around a **tree of nodes — a node-tree**. A node can represent a character, an image, a sound source, a timer or a UI element. Combining nodes defines the structure of a game object; the engine provides the active hierarchy's lifecycle, frame processing and input.
+
+For example, a character can consist of these parts:
+
+```text
+Player (CharacterBody)
+├── Sprite
+├── CollisionShape
+├── AudioStreamPlayer
+└── Timer
+```
+
+The character's movement and collisions, visuals, sound and timer are divided between nodes. You can replace the visuals, add a weapon or change the sound while keeping the rest of the structure. The tree makes the object's composition visible and helps separate the responsibilities of its parts.
+
+A branch of the tree can become a **reusable scene**, saved and instantiated in different parts of the game. A scene can be a button, a weapon, an enemy or an entire level. Small scenes combine into larger game systems.
+
+Three principles complement this approach:
+
+- **Standard, strongly typed C#.** Game logic uses .NET classes, properties and events. Familiar IDE tools help catch type errors, explore the API and change code.
+- **A focus on 2D.** Scenes, cameras, graphics, physics and tools are designed around the needs of two-dimensional games.
+- **One project for humans and agents.** The architecture is designed for working with the same scenes, resources and code through shared editing, build, run and result-verification operations.
 
 <a id="features"></a>
 
 ## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="28" align="absmiddle" alt=""> Features
 
-This is an overview of the main features already implemented in the engine. Individual subsystem APIs are still evolving; the linked documentation describes their scope and limitations.
+Scenes and game logic are created in C#. The following tools support the other parts of your game.
 
-- [Graphics](docs/domains/rendering.md). Sprites and atlases, cameras and parallax, shapes and text, clipping, offscreen viewports, lighting, shadows and HDR. HLSL/GLSL materials, visual shader graphs and CPU/GPU particles.
-- [Scenes](docs/domains/scene.md). Node hierarchies, reusable and linked scenes, groups, events, deferred calls and timers. Create scenes in C#, save them with their resources and instantiate them again.
-- [Animation](docs/components/scene-animation.md). Frame and property tracks, Bézier curves, tweens, blending graphs and state machines. [Skeletons and IK](docs/components/skeletal-animation.md) animate bones and deform weighted polygons and meshes.
-- [Meshes](docs/components/meshes.md) and [tile maps](docs/components/tiles.md). Indexed and procedural geometry, instanced meshes, animated tile atlases, terrain connections and square, isometric or hexagonal grids with collision and navigation layers.
-- [Physics](docs/domains/physics.md). CPU and independent GPU backends, rigid and character bodies, areas, forces, joints and springs. Ray/shape queries, continuous collision detection and [state checkpoints](docs/components/physics-space-checkpoints.md).
-- [Game UI](docs/domains/scene.md) and [text](docs/components/text.md). Buttons, menus, lists, trees, layout containers, scrolling, text/code editors and rich text. Themes, Unicode shaping, bidirectional layout and font fallbacks.
-- [Accessibility](docs/components/accessibility.md). Native Linux AT-SPI support for scene semantics, control actions, text editing and scrolling. Other platform adapters remain in development.
-- [Audio](docs/domains/audio.md). WAV, MP3 and Ogg Vorbis, procedural streams, microphone input and positional playback. Audio buses, mixing, effects and recording.
-- [Video playback](docs/components/video-playback.md) and [movie recording](docs/components/movie-writing.md). Ogg Theora video with audio; offline capture of rendered frames and mixed audio to PNG/WAV, AVI or OGV.
-- [Input](docs/domains/input.md). Keyboard, mouse, touch, controllers, action mappings, shortcuts and text input with IME composition.
-- [Windows and displays](docs/domains/display.md). Window and fullscreen modes, multiple viewports, embedded and native popup windows, display queries, scaling and presentation controls.
-- [Navigation](docs/domains/navigation.md). A-star point/grid searches, polygon regions, links, navigation baking, agent path following and reciprocal obstacle avoidance.
-- [Resources](docs/domains/resources.md). Typed loading/saving, background loading, images, fonts, audio, gradients, curves and noise textures. [PCK/ZIP packs](docs/components/resource-packs.md) mount assets into the resource filesystem. [Missing material recovery](docs/components/material-placeholders.md) preserves scene resource data for later restoration.
-- [Core services and files](docs/domains/core.md). Project settings, JSON/XML and configuration files, directory operations, compression, encryption and ZIP archives. Math, random generation, worker tasks and runtime diagnostics.
-- [Localization](docs/domains/localization.md). Translation domains and contexts, PO/MO catalogs, locale fallback, integer plural rules, pseudolocalization and localized resource selection.
-- [Networking](docs/domains/networking.md). TCP/UDP/local sockets, TLS/DTLS, HTTP/HTTPS, WebSocket and ENet. [WebRTC data channels](docs/components/webrtc.md), typed RPC, authority, scene spawning and [property replication](docs/components/scene-replication.md).
-- [Shared project workflow](docs/components/project-jobs.md). Create/open a source project, edit one shared unsaved scene and C# buffer, then build/run immutable snapshots and inspect real captures with stale attribution. Jobs currently require Linux; rendered capture requires a native window and renderer.
-- [Agent in the editor](docs/components/project-agent.md). A native task/conversation panel connects the qualified local Codex CLI to shared unsaved documents through authenticated MCP operations, with guarded history, cancellation, reconnect and real snapshot evidence. Current executor/transport qualification requires Linux and an existing CLI login.
+### Worlds, visuals and game mechanics
 
-Shader materials, GPU particles, lighting/shadows and HDR require the GPU renderer; the compatibility renderer supports its documented 2D profile. Physics backend selection is independent of renderer selection. See the linked subsystem documents and [platform report](docs/platform-verification.md) for exact support and verification limits.
+- **[Scenes and levels](docs/domains/scene.md).** Build characters, items and levels from node hierarchies; save and instantiate scenes again. Events, groups, timers and deferred calls support game logic.
+- **[Graphics and cameras](docs/domains/rendering.md).** Sprites and atlases, shapes and text, parallax, clipping and independent viewports support game worlds, minimaps and multiple camera views.
+- **[Shaders and effects](docs/components/shader-materials.md).** HLSL/GLSL materials, [visual shader graphs](docs/components/visual-shaders.md), lighting, shadows, HDR and CPU/GPU particles let you define the appearance of objects and environments.
+- **[Maps](docs/components/tiles.md) and [geometry](docs/components/meshes.md).** Square, isometric and hexagonal grids, animated tiles, terrain connections, collision and navigation layers. Meshes can be generated procedurally and drawn as many instances.
+- **[Animation](docs/components/scene-animation.md).** Frame and property animation, Bézier curves, tweens, blending and state machines; [skeletons and IK](docs/components/skeletal-animation.md) support bones and character deformation.
+- **[Physics](docs/domains/physics.md).** CPU and independent GPU backends provide rigid bodies, controllable characters, trigger areas, forces, joints and springs. Ray and shape queries help inspect surroundings and collisions.
+- **[Pathfinding](docs/domains/navigation.md).** A-star on graphs or grids, navigation regions and links, navigation baking from geometry, path following and obstacle avoidance support character movement.
+
+### Interface and player interaction
+
+- **[UI and text](docs/domains/scene.md).** Build menus, HUDs, inventories and dialogs from buttons, lists, trees, containers and text fields. Themes, scrolling, text/code editors, rich text, Unicode, bidirectional layout and font fallbacks are available.
+- **[Input](docs/domains/input.md) and [windows](docs/domains/display.md).** Keyboard, mouse, touch, controllers, action mappings and IME input. Windowed and fullscreen modes, scaling, multiple windows and embedded or native popups.
+- **[Audio](docs/domains/audio.md) and [video](docs/components/video-playback.md).** Positional audio, buses, mixing, effects, microphone input and procedural streams; Ogg Theora playback with audio. [Movie recording](docs/components/movie-writing.md) saves frames and audio to PNG/WAV, AVI or OGV without a real-time constraint.
+- **[Localization](docs/domains/localization.md) and [accessibility](docs/components/accessibility.md).** Translations, contexts, plural forms, PO/MO catalogs and localized resources. Linux AT-SPI exposes UI semantics and supports actions, text and scrolling; other platform adapters remain in development.
+
+### Resources, networking and developer tools
+
+- **[Resources and scene saving](docs/domains/resources.md).** Typed and background loading, scenes saved with their resources, and [PCK/ZIP packs](docs/components/resource-packs.md). Images, gradients, curves and noise textures provide building blocks for procedural content.
+- **[Files, settings and background tasks](docs/domains/core.md).** JSON/XML, configuration files and file I/O support settings and saved-game data. Compression, encryption, ZIP archives, math, random generation, worker threads and runtime diagnostics are available.
+- **[Networking and multiplayer](docs/domains/networking.md).** TCP/UDP, TLS/DTLS, HTTP/HTTPS, WebSocket, ENet and WebRTC. Networked game objects can use RPC, node authority, spawning and [property replication](docs/components/scene-replication.md).
+- **[GPU compute and low-level graphics](docs/components/local-compute.md).** RenderingDevice provides buffers, textures, compute and graphics pipelines for custom GPU algorithms and procedural data processing.
+- **[Shared project and result verification](docs/components/project-jobs.md).** Shared unsaved scenes and C# code, change history, immutable snapshot builds/runs and capture of real frames. The current profile requires Linux; capture needs a native window and renderer.
+
+Shader materials, GPU particles, lighting with shadows and HDR require the GPU renderer. Support depends on the platform and selected backend; exact capabilities and limits are documented in the links above and the [platform report](docs/platform-verification.md).
 
 <a id="agent-support"></a>
 
 ## Agent providers and clients
 
-Support is scoped to tested client/version/platform profiles. See the [support matrix and limits](docs/components/project-agent.md#provider-and-client-support).
+A bounded editor integration workflow with Codex CLI has been verified on Linux. Support for other clients is in development; current capabilities and plans are listed in the [support matrix](docs/components/project-agent.md#provider-and-client-support).
 
-- **OpenAI / Codex:** qualified bounded editor executor, Codex CLI 0.163.0 on Linux. External CLI real-model acceptance remains separate.
-- **Anthropic / Claude Code:** planned editor executor and operations/skill profile; not yet qualified.
-- **Google / Gemini CLI:** planned editor executor and operations/skill profile; not yet qualified.
-- **DeepSeek:** planned backend through a compatible executor; not yet qualified.
-- **Moonshot AI / Kimi:** planned Kimi Code CLI editor/MCP/skill profile; not yet qualified.
-- **Alibaba / Qwen:** planned Qwen Code editor/MCP/skill profile; not yet qualified.
-- **Z.ai / GLM:** planned backend through a compatible executor; not yet qualified.
-- **MiniMax / M-series:** planned backend through a compatible executor; not yet qualified.
-- **GitHub / Copilot CLI:** planned external operations/skill client; not yet qualified.
-- **Cursor / Cursor Agent:** planned external operations/skill client; not yet qualified.
-
-A bundled development skill, bounded documentation context and the [editor Git workspace](docs/decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host), including branches, commits, push and worktrees, are accepted architecture and remain unimplemented. Manual development and ordinary .NET game builds require no agent provider.
+Ordinary development and game builds do not require an agent.
 
 <a id="quick-start"></a>
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> Quick start
 
-Start with [CharacterMovement](examples/CharacterMovement/README.md). Move the character with arrow keys on a computer, drag it with your finger on a phone, or use the remote's direction buttons on a TV. The same example targets all engine platforms.
-
 <a id="installation"></a>
 
-### Requirements
-
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Git is needed only to build from source.
-
-Install the main `Electron2D` package and the package for your target platform through NuGet using the [commands below](#use-electron2d-in-your-game). NuGet restores native dependencies automatically. [Platform package version rules](docs/native-packaging.md).
-
-Prerelease packages require `--prerelease`. Use matching engine and platform package versions. Published versions are listed on [NuGet](https://www.nuget.org/packages/Electron2D).
-
-### Build and run
-
-To create your own project, follow [Create a game project](#use-electron2d-in-your-game). The commands below build and run the existing repository example.
-
-To build from source, clone the repository and build the library:
+Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Git. Then run the example on Windows, Linux or macOS:
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
 cd Electron2D
-dotnet build Electron2D.csproj -c Release
-```
-
-Run the example on a computer:
-
-```bash
 dotnet run --project examples/CharacterMovement
 ```
 
-A fixed 800 × 600 window opens with a pink character on a grid. Arrow keys move it within the field; Escape or closing the window exits. The window and character do not resize. Try changing the movement speed in `Player.cs` and run the example again.
+A scene opens with a character on a grid. Move with the arrow keys; change the speed in `Player.cs` and run the example again.
 
-For macOS, use the [application bundle](examples/CharacterMovement/README.md#macos). Instructions for [Android](examples/CharacterMovement/README.md#android-phone-or-tablet), [Android TV](examples/CharacterMovement/README.md#android-tv), [Web](examples/CharacterMovement/README.md#web), [iOS](examples/CharacterMovement/README.md#ios) and [Apple TV](examples/CharacterMovement/README.md#apple-tv-tvos) are in the example README.
+<a id="examples"></a>
 
-![CharacterMovement: a character on a grid](docs/images/character-movement.png)
-
-[Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
-
-[WaterPlayground](examples/WaterPlayground/README.md) is a resizable water playground: 65,536 particles, CPU/GPU liquid comparison, and a draggable duck and sailboat. It uses public compute, physics, input and rendering APIs with a soft pastel palette.
-
-```bash
-dotnet run --project examples/WaterPlayground -c Release
-```
+![CharacterMovement: character on a grid](docs/images/character-movement.png)
 
 <a id="use-electron2d-in-your-game"></a>
 
-### Create a game project
-
-For a game targeting Windows, Linux or macOS, create a .NET 10 console project and add the engine package:
-
-```bash
-dotnet new console -n MyGame --framework net10.0
-cd MyGame
-dotnet add package Electron2D --prerelease
-```
-
-Alternatively, use the engine source. Run these commands from the repository root instead:
-
-```bash
-dotnet new console -n MyGame -o ../MyGame --framework net10.0
-dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
-cd ../MyGame
-```
-
-Then install the package for your target platform:
-
-| Platform | Command |
-| --- | --- |
-| Windows | `dotnet add package Electron2D.Windows --prerelease` |
-| Linux | `dotnet add package Electron2D.Linux --prerelease` |
-| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
-| Web | `dotnet add package Electron2D.Web --prerelease` |
-| Android and Android TV | `dotnet add package Electron2D.Android --prerelease` |
-| iOS | `dotnet add package Electron2D.iOS --prerelease` |
-| Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
-
-For several game targets, add each required platform package. Web, Android, iOS and tvOS need the corresponding .NET workloads and platform application entry points. Platform packages do not include ready-made application projects. The console example below is for Windows, Linux and macOS.
-
-Replace the contents of `Program.cs` with this code:
-
-```csharp
-using Electron2D;
-
-var window = new Window
-{
-    Title = "My game",
-    Size = new Vector2i(800, 600)
-};
-
-return Engine.Run(window);
-```
-
-Run the application:
-
-```bash
-dotnet build -c Release
-dotnet run -c Release
-```
-
-Add game objects to the window with `AddChild`. The example above shows frame updates and keyboard handling.
-
-Building the engine produces `Electron2D.dll`. Publishing a game includes the engine library and native dependencies; a self-contained publish also includes the .NET runtime.
-
-#### Phones, TVs and browsers
-
-Use [CharacterMovement](examples/CharacterMovement/README.md#start-your-own-project) as the starting project. Copy its source and platform files to `examples/MyGame`, rename the project to `MyGame.csproj` and set your own application identifier. The example README covers copying, app icons and installation on a device.
-
-Then choose a target:
-
-| Target | Command from the repository root | Install and run |
-| --- | --- | --- |
-| Android, ARM64 phone or tablet | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm64` | [USB, APK and touch](examples/CharacterMovement/README.md#android-phone-or-tablet) |
-| Android TV, 32-bit ARM | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm` | [Network ADB and remote](examples/CharacterMovement/README.md#android-tv) |
-| Web | `dotnet publish examples/MyGame/MyGame.csproj -c Release -r browser-wasm -o bin/my-game/web` | [HTTP server and Chrome](examples/CharacterMovement/README.md#web) |
-| iOS, simulator on an ARM64 Mac | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [Simulator and signed app](examples/CharacterMovement/README.md#ios) |
-| Apple TV, simulator on an ARM64 Mac | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [tvOS simulator and device](examples/CharacterMovement/README.md#apple-tv-tvos) |
-
-Phones and TVs also use other architectures; the example README lists every option. iOS and tvOS builds require macOS and Xcode.
-
-The app fills the screen on phones and TVs. The browser has a fullscreen button. The field adapts to the aspect ratio, while the character, text and grid scale together.
+Creating your own game and running on a phone, TV or browser are covered in the [CharacterMovement guide](examples/CharacterMovement/README.md).
 
 <a id="platforms"></a>
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> Platforms
 
-The table lists what has been checked on each game target. The visual editor targets Windows, Linux and macOS.
-
-| Game target | Checked in this repository |
+| Platform | Current verification status |
 | --- | --- |
-| Windows, x86 / x64 / ARM64 | Full headless suites and available trimmed/AOT checks passed in CI. Rendering has not been checked |
-| Linux, x64 / ARM64 | Full headless suites and trimmed/AOT checks passed on both architectures. On x64, windowing, input and rendering have been checked under Wayland, and rendering under XWayland. ARM64 rendering has not been checked |
-| macOS, x64 / ARM64 | Full headless suites and trimmed/AOT checks passed in CI. Rendering has not been checked |
-| Android, phones and tablets | CharacterMovement startup, fullscreen layout and touch dragging have been checked on one ARM64 phone. Shader materials and physics were checked separately |
-| Android TV | CharacterMovement and remote direction buttons have been checked on one 32-bit TV. The compatibility renderer and physics were checked separately |
-| iOS and tvOS, devices and simulators | Native contracts passed in all four simulator profiles. Device bundles build without signing; physical-device execution and rendering have not been checked |
-| Browsers | CharacterMovement, adaptive layout and arrow keys have been checked in Chrome. Portrait layout and touch dragging were checked with phone emulation; a physical mobile browser has not been checked. Rendering and physics were checked separately |
+| Windows | Automated checks; visual acceptance is not yet complete |
+| Linux | Window, input and rendering verified on x64; automated checks on ARM64 |
+| macOS | Automated checks; visual acceptance is not yet complete |
+| Android | Startup, scene and touch controls verified on an ARM64 phone |
+| Android TV | Startup and remote controls verified on one 32-bit TV |
+| iOS | Native-library checks in simulators; rendering and physical devices are not yet verified |
+| tvOS | Native-library checks in simulators; rendering and physical devices are not yet verified |
+| Web | Example and input verified in local Chrome |
 
-The Android and browser checks cover the example on specific devices and in Chrome. See [native library delivery](docs/native-packaging.md) for availability on your target.
-
-The Build and Tests badges show the status of automated code checks and test applications. Running on real devices is checked separately. [Automated check details](docs/platform-verification.md#automated-rid-checks).
-
-See the [platform report](docs/platform-verification.md) for device models, commands and verification limits.
+Exact configurations and limits are listed in the [platform report](docs/platform-verification.md).
 
 <a id="development"></a>
 
 ## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> Project status
 
-Electron2D is in alpha. Its public API is still evolving and may change between releases.
+**Alpha:** the public API is evolving and may change between releases.
 
-Create scenes in code, save them with `PackedScene` and reload them from [resource and scene files](docs/components/resource-files.md). The visual editor currently shows a startup screen; game project editing is not implemented yet.
+Games can be created in C#. The visual editor is in development; available workflows are described in the [editor documentation](docs/components/project-jobs.md).
 
 <a id="documentation"></a>
 
 ## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="28" align="absmiddle" alt=""> Documentation
 
-| You want to | Read |
-| --- | --- |
-| Find a class or method | [API reference](docs/inventory.md) |
-| Understand a subsystem | [Documentation index](docs/README.md) |
-| Prepare shaders | [HLSL and GLSL import tool](tools/shaders/README.md) |
-| Build/run unsaved projects and inspect captures | [Shared project jobs](docs/components/project-jobs.md) |
-| Prepare a release | [Release runbook](docs/releasing.md) |
-
-<a id="examples"></a>
-
-Separate instructions are available for reproducing the [Android](tests/Electron2D.AndroidProbe/README.md) and [WebGPU](tests/Electron2D.WebGpuProbe/README.md) checks. The WebGPU test checks browser capabilities separately from the engine.
+- [Subsystem guides](docs/README.md)
+- [API reference](docs/inventory.md)
+- [Shader preparation](tools/shaders/README.md)
 
 <a id="feedback-and-contributing"></a>
 
 ## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="28" align="absmiddle" alt=""> Contributing
 
-[Ask a question](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [Report an issue](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [Contribution guide](CONTRIBUTING.md) · [Support](SUPPORT.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Security policy](SECURITY.md)
-
-Report bugs and suggest features in [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). For a bug report, include the engine version or commit, operating system and renderer. Attach a minimal example and the error output.
-
-Send fixes through [pull requests](https://github.com/edwardgushchin/Electron2D/pulls). See the [contribution guide](CONTRIBUTING.md) for the development workflow.
+Report bugs and suggest features in [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues). Include a minimal example, engine version and system details in bug reports.
 
 <a id="contributors"></a>
 
-The project is maintained by [Eduard Gushchin](https://github.com/edwardgushchin). All contributors are listed on the [GitHub contributors page](https://github.com/edwardgushchin/Electron2D/graphs/contributors).
+The contribution process is described in the [contributor guide](CONTRIBUTING.md).
 
 <a id="license"></a>
 
 ## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="28" align="absmiddle" alt=""> License
 
-Electron2D is distributed under the [MIT license](licence/Electron2D-LICENSE.txt). You can use the engine in commercial games; retain the copyright notice and license text.
-
-Dependency licenses are listed in the [third-party notices](licence/THIRD_PARTY_NOTICES.md). When distributing a game, include the license texts required by those dependencies from the `licence/` directory.
+[MIT](licence/Electron2D-LICENSE.txt). You can use the engine in open-source and commercial projects. Third-party licenses are in the [licence directory](licence).

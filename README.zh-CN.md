@@ -24,6 +24,7 @@
 
 <p align="center">
   <a href="#quick-start">开始使用</a> ·
+  <a href="#philosophy">设计理念</a> ·
   <a href="#features">功能</a> ·
   <a href="#platforms">平台</a> ·
   <a href="#documentation">文档</a> ·
@@ -38,237 +39,144 @@
 
 Electron2D 是一款**开源、跨平台的 C# 2D 游戏引擎，供开发者与 AI 智能体共同开发游戏**。
 
-使用熟悉的 .NET 工具创作游戏世界和玩法。Codex、Claude Code 和其他 AI 助手可以协助编写代码。
+使用熟悉的 .NET 工具创作游戏世界和玩法，可以独立开发，也可以与编程助手协作。
+
+<a id="philosophy"></a>
+
+## 设计理念
+
+Electron2D 以**节点树 — node-tree** 为基础。节点可以表示角色、图像、声源、计时器或界面元素。组合节点即可定义游戏对象的组成；引擎负责活动层级的生命周期、帧处理和输入。
+
+例如，一个角色可以由以下部分组成：
+
+```text
+Player (CharacterBody)
+├── Sprite
+├── CollisionShape
+├── AudioStreamPlayer
+└── Timer
+```
+
+角色的移动与碰撞、图像、声音和计时器分别由不同节点承担。你可以替换外观、添加武器或修改声音，同时保留其余结构。节点树让对象的组成清晰可见，也有助于划分各部分的职责。
+
+树中的一个分支可以保存为**可复用的场景**，并在游戏的不同位置创建实例。场景可以是按钮、武器、敌人，也可以是完整关卡。小场景组合成更大的游戏系统。
+
+这一方式还遵循三个原则：
+
+- **常规的强类型 C#。** 游戏逻辑使用 .NET 的类、属性和事件。熟悉的 IDE 工具可以帮助发现类型错误、了解 API 和修改代码。
+- **专注于 2D。** 场景、摄像机、图形、物理和工具围绕二维游戏的需求设计。
+- **开发者与智能体共享一个项目。** 架构旨在让双方通过共同的编辑、构建、运行和结果验证操作，处理同一套场景、资源与代码。
 
 <a id="features"></a>
 
 ## <img src="docs/design/assets/sprite/readme-features.svg" width="24" height="28" align="absmiddle" alt=""> 功能
 
-这里概述引擎已经实现的主要功能。各子系统的 API 仍在开发中，具体范围和限制见对应文档。
+场景和游戏逻辑使用 C# 创建。其他任务可以使用以下工具。
 
-- [图形](docs/domains/rendering.md)。精灵和纹理图集、摄像机与视差、图形和文字、裁剪、离屏视口、光照、阴影及 HDR。支持 HLSL/GLSL 材质、可视化着色器图和 CPU/GPU 粒子。
-- [场景](docs/domains/scene.md)。节点层级、可复用和链接场景、分组、事件、延迟调用及计时器。通过 C# 创建场景，连同资源一起保存，并再次实例化。
-- [动画](docs/components/scene-animation.md)。逐帧和属性轨道、贝塞尔曲线、补间、混合图及状态机。[骨骼与 IK](docs/components/skeletal-animation.md) 驱动骨骼，按顶点权重变形多边形和网格。
-- [网格](docs/components/meshes.md)与[瓦片地图](docs/components/tiles.md)。索引和程序化几何、网格实例化、动画图集、地形连接，以及带碰撞和导航层的方形、等距和六边形网格。
-- [物理](docs/domains/physics.md)。CPU 和独立 GPU 后端、刚体和角色运动、区域、力、关节及弹簧。射线和形状查询、连续碰撞检测及[状态检查点](docs/components/physics-space-checkpoints.md)。
-- [游戏界面](docs/domains/scene.md)与[文本](docs/components/text.md)。按钮、菜单、列表、树、布局容器、滚动、文本和代码编辑器及富文本。支持主题、Unicode 字形整形、双向排版和后备字体。
-- [无障碍](docs/components/accessibility.md)。Linux 原生 AT-SPI 支持场景语义、控件操作、文本编辑和滚动。其他平台的适配器仍在开发中。
-- [音频](docs/domains/audio.md)。WAV、MP3 和 Ogg Vorbis、程序化音频流、麦克风输入及位置音效。支持音频总线、混音、效果和录音。
-- [视频播放](docs/components/video-playback.md)与[影片录制](docs/components/movie-writing.md)。播放带音频的 Ogg Theora 视频；以非实时方式将实际渲染帧和混合音频录制为 PNG/WAV、AVI 或 OGV。
-- [输入](docs/domains/input.md)。键盘、鼠标、触控、控制器、操作映射、快捷键，以及带 IME 组合输入的文本输入。
-- [窗口与显示](docs/domains/display.md)。窗口和全屏模式、多视口、嵌入式及原生弹出窗口、显示信息查询、缩放和画面呈现控制。
-- [导航](docs/domains/navigation.md)。点图和网格 A-star 寻路、多边形区域、导航链接、从几何数据烘焙导航、代理沿路径移动及相互避障。
-- [资源](docs/domains/resources.md)。类型化加载与保存、后台加载、图像、字体、音频、渐变、曲线及噪声纹理。[PCK/ZIP 资源包](docs/components/resource-packs.md)将文件挂载到资源文件系统。 [缺失材质恢复](docs/components/material-placeholders.md)保留场景资源数据，供原始类型恢复后使用。
-- [核心服务与文件](docs/domains/core.md)。项目设置、JSON/XML 和配置文件、目录操作、压缩、加密及 ZIP 归档。数学、随机数、后台任务和运行时诊断。
-- [本地化](docs/domains/localization.md)。翻译域与上下文、PO/MO 目录、语言回退、整数复数规则、伪本地化及本地化资源选择。
-- [网络](docs/domains/networking.md)。TCP/UDP 和本地套接字、TLS/DTLS、HTTP/HTTPS、WebSocket 及 ENet。[WebRTC 数据通道](docs/components/webrtc.md)、类型化 RPC、权限控制、联网对象生成及[属性复制](docs/components/scene-replication.md)。
-- [共享项目工作流](docs/components/project-jobs.md)。创建或打开项目，共享编辑未保存的场景与 C# 代码，构建和运行不可变快照，并检查带有过期状态的实际截图。任务目前需要 Linux；截图需要原生窗口和渲染器。
-- [编辑器中的智能体](docs/components/project-agent.md)。原生任务与对话面板通过经过身份验证的 MCP 操作，将已验证版本的 Codex CLI 连接到共享的未保存文档，支持受保护的历史记录、取消、重新连接和实际运行截图。当前执行器配置需要 Linux 和已有 CLI 登录。
+### 世界、画面与游戏机制
 
-着色器材质、GPU 粒子、光照与阴影及 HDR 需要 GPU 渲染器；兼容渲染器提供其文档所述的 2D 功能。物理后端与渲染器分别选择。具体支持范围和验证限制见各子系统文档及[平台报告](docs/platform-verification.md)。
+- **[场景与关卡](docs/domains/scene.md)。** 通过节点层级组合角色、物品和关卡；保存场景并再次创建实例。事件、分组、计时器和延迟调用可用于组织逻辑。
+- **[图形与摄像机](docs/domains/rendering.md)。** 精灵与图集、图形与文字、视差、裁剪和独立视口，可用于游戏世界、小地图和多摄像机画面。
+- **[着色器与特效](docs/components/shader-materials.md)。** HLSL/GLSL 材质、[可视化着色器图](docs/components/visual-shaders.md)、光照、阴影、HDR 和 CPU/GPU 粒子，可用于定制对象与环境的外观。
+- **[地图](docs/components/tiles.md)与[几何体](docs/components/meshes.md)。** 方形、等距和六边形网格、动画图块、地形连接、碰撞层与导航层。网格可以通过程序生成，并以多个实例绘制。
+- **[动画](docs/components/scene-animation.md)。** 逐帧与属性动画、贝塞尔曲线、补间、混合和状态机；[骨骼与 IK](docs/components/skeletal-animation.md)用于骨骼控制与角色变形。
+- **[物理](docs/domains/physics.md)。** CPU 与独立 GPU 后端提供刚体、可控制角色、触发区域、力、关节和弹簧。射线与形状查询可用于检测周围环境和碰撞。
+- **[寻路](docs/domains/navigation.md)。** 图与网格上的 A-star、导航区域与连接、从几何体烘焙导航、路径跟随和避障，可用于游戏角色移动。
+
+### 界面与玩家交互
+
+- **[界面与文本](docs/domains/scene.md)。** 使用按钮、列表、树、容器和文本框组合菜单、HUD、背包与对话界面。提供主题、滚动、文本和代码编辑器、富文本、Unicode、双向排版及后备字体。
+- **[输入](docs/domains/input.md)与[窗口](docs/domains/display.md)。** 键盘、鼠标、触摸、手柄、动作映射和 IME 输入。支持窗口与全屏模式、缩放、多窗口，以及嵌入式或原生弹出窗口。
+- **[音频](docs/domains/audio.md)与[视频](docs/components/video-playback.md)。** 位置音效、音频总线、混音、效果、麦克风和程序化音频流；播放带声音的 Ogg Theora 视频。[影片录制](docs/components/movie-writing.md)可不受实时速度限制，将画面与声音保存为 PNG/WAV、AVI 或 OGV。
+- **[本地化](docs/domains/localization.md)与[无障碍](docs/components/accessibility.md)。** 翻译、上下文、复数形式、PO/MO 目录和本地化资源。Linux AT-SPI 提供界面语义，并支持操作、文本和滚动；其他平台适配器仍在开发中。
+
+### 资源、网络与开发工具
+
+- **[资源与场景保存](docs/domains/resources.md)。** 类型化加载、后台加载、将场景与资源一同保存，以及 [PCK/ZIP 资源包](docs/components/resource-packs.md)。图像、渐变、曲线和噪声纹理可作为程序化内容的基础。
+- **[文件、设置与后台任务](docs/domains/core.md)。** JSON/XML、配置文件与文件输入输出，可用于设置和游戏存档数据。提供压缩、加密、ZIP 归档、数学、随机数、工作线程和运行时诊断。
+- **[网络与多人游戏](docs/domains/networking.md)。** TCP/UDP、TLS/DTLS、HTTP/HTTPS、WebSocket、ENet 和 WebRTC。联网游戏对象可以使用 RPC、节点权限、对象生成和[属性复制](docs/components/scene-replication.md)。
+- **[GPU 计算与底层图形](docs/components/local-compute.md)。** RenderingDevice 提供缓冲区、纹理、计算管线和图形管线，可用于自定义 GPU 算法与程序化数据处理。
+- **[共享项目与结果验证](docs/components/project-jobs.md)。** 共享未保存的场景和 C# 代码、变更历史、不可变快照的构建与运行，以及真实帧捕获。当前配置要求 Linux；捕获需要原生窗口和渲染器。
+
+着色器材质、GPU 粒子、带阴影的光照和 HDR 需要 GPU 渲染器。支持范围取决于平台和所选后端；确切能力与限制见以上链接及[平台报告](docs/platform-verification.md)。
 
 <a id="agent-support"></a>
 
 ## 智能体提供商与客户端
 
-支持范围仅限于经过验证的客户端版本和平台。详见[支持矩阵及限制](docs/components/project-agent.md#provider-and-client-support)。
+已在 Linux 上验证编辑器与 Codex CLI 集成的有限工作流程。其他客户端的支持仍在开发；当前能力与计划列于[支持表](docs/components/project-agent.md#provider-and-client-support)。
 
-- **OpenAI / Codex：** 已验证有限工作流的编辑器执行器，使用 Linux 上的 Codex CLI 0.163.0。外部 CLI 的真实模型验收仍需单独进行。
-- **Anthropic / Claude Code：** 计划提供编辑器执行器及操作/skill 配置，尚未验证。
-- **Google / Gemini CLI：** 计划提供编辑器执行器及操作/skill 配置，尚未验证。
-- **DeepSeek：** 计划通过兼容执行器接入模型提供商，尚未验证。
-- **Moonshot AI / Kimi：** 计划提供 Kimi Code CLI 的编辑器、MCP 和 skill 配置，尚未验证。
-- **Alibaba / Qwen：** 计划提供 Qwen Code 的编辑器、MCP 和 skill 配置，尚未验证。
-- **Z.ai / GLM：** 计划通过兼容执行器接入模型提供商，尚未验证。
-- **MiniMax / M-series：** 计划通过兼容执行器接入模型提供商，尚未验证。
-- **GitHub / Copilot CLI：** 计划作为操作/skill 的外部客户端，尚未验证。
-- **Cursor / Cursor Agent：** 计划作为操作/skill 的外部客户端，尚未验证。
-
-随附的开发 skill、按需限量加载文档上下文，以及支持分支、提交、push 和 worktree 的[编辑器 Git 工作区](docs/decisions/agent-native.md#git-workspace-in-the-editor-and-operation-host)，均已纳入架构决策，目前尚未实现。手动开发和常规 .NET 游戏构建无需智能体提供商。
+常规开发和游戏构建无需智能体。
 
 <a id="quick-start"></a>
 
 ## <img src="docs/design/assets/sprite/readme-quick-start.svg" width="24" height="28" align="absmiddle" alt=""> 快速开始
 
-从 [CharacterMovement](examples/CharacterMovement/README.md) 开始。在电脑上用方向键移动角色，在手机上用手指拖动，在电视上用遥控器的方向按钮。同一个示例面向引擎的所有目标平台。
-
 <a id="installation"></a>
 
-### 所需工具
-
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)。仅从源码构建时需要 Git。
-
-通过 NuGet 安装主包 `Electron2D` 和目标平台的包，命令见[下方表格](#use-electron2d-in-your-game)。NuGet 会自动还原原生依赖。[平台包版本规则](docs/native-packaging.md)。
-
-安装预发布包时需要 `--prerelease`。请使用版本匹配的引擎包和平台包。已发布的版本见 [NuGet](https://www.nuget.org/packages/Electron2D)。
-
-### 构建与运行
-
-创建自己的项目，请参阅[创建游戏项目](#use-electron2d-in-your-game)。以下命令用于构建和运行仓库中的现有示例。
-
-从源码构建时，克隆仓库并构建库：
+安装 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) 和 Git，然后在 Windows、Linux 或 macOS 上运行示例：
 
 ```bash
 git clone https://github.com/edwardgushchin/Electron2D.git
 cd Electron2D
-dotnet build Electron2D.csproj -c Release
-```
-
-在电脑上运行示例：
-
-```bash
 dotnet run --project examples/CharacterMovement
 ```
 
-程序会打开一个固定为 800 × 600 的窗口，网格上有一个粉色角色。方向键让角色在区域内移动，按 Escape 或关闭窗口可退出。窗口和角色的大小保持不变。试着修改 `Player.cs` 中的移动速度，然后重新运行示例。
+程序将打开一个角色位于网格上的场景。使用方向键移动；修改 `Player.cs` 中的速度后再次运行示例。
 
-macOS 请使用[应用包](examples/CharacterMovement/README.md#macos)。示例 README 中提供了 [Android](examples/CharacterMovement/README.md#android-phone-or-tablet)、[Android TV](examples/CharacterMovement/README.md#android-tv)、[Web](examples/CharacterMovement/README.md#web)、[iOS](examples/CharacterMovement/README.md#ios) 和 [Apple TV](examples/CharacterMovement/README.md#apple-tv-tvos) 的操作步骤。
+<a id="examples"></a>
 
 ![CharacterMovement：网格上的角色](docs/images/character-movement.png)
 
-[示例源码](examples/CharacterMovement/CharacterMovementScene.cs) · [运行说明](examples/CharacterMovement/README.md)
-
 <a id="use-electron2d-in-your-game"></a>
 
-### 创建游戏项目
-
-为面向 Windows、Linux 或 macOS 的游戏创建一个 .NET 10 控制台项目，并添加引擎包：
-
-```bash
-dotnet new console -n MyGame --framework net10.0
-cd MyGame
-dotnet add package Electron2D --prerelease
-```
-
-也可以使用引擎源码。此时改为在仓库根目录执行以下命令：
-
-```bash
-dotnet new console -n MyGame -o ../MyGame --framework net10.0
-dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
-cd ../MyGame
-```
-
-然后安装目标平台的包：
-
-| 平台 | 命令 |
-| --- | --- |
-| Windows | `dotnet add package Electron2D.Windows --prerelease` |
-| Linux | `dotnet add package Electron2D.Linux --prerelease` |
-| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
-| Web | `dotnet add package Electron2D.Web --prerelease` |
-| Android 和 Android TV | `dotnet add package Electron2D.Android --prerelease` |
-| iOS | `dotnet add package Electron2D.iOS --prerelease` |
-| Apple TV (tvOS) | `dotnet add package Electron2D.tvOS --prerelease` |
-
-面向多个平台时，请添加每个所需的平台包。Web、Android、iOS 和 tvOS 需要对应的 .NET 工作负载和平台应用入口。平台包不包含现成的应用项目。下方控制台示例适用于 Windows、Linux 和 macOS。
-
-将 `Program.cs` 的内容替换为以下代码：
-
-```csharp
-using Electron2D;
-
-var window = new Window
-{
-    Title = "我的游戏",
-    Size = new Vector2i(800, 600)
-};
-
-return Engine.Run(window);
-```
-
-运行程序：
-
-```bash
-dotnet build -c Release
-dotnet run -c Release
-```
-
-使用 `AddChild` 将游戏对象添加到窗口。上方示例展示了帧更新和键盘输入处理。
-
-构建引擎会生成 `Electron2D.dll`。发布游戏时会包含引擎库和原生依赖；自包含发布还会包含 .NET 运行时。
-
-#### 手机、电视和浏览器
-
-以 [CharacterMovement](examples/CharacterMovement/README.md#start-your-own-project) 为起点。将其源码和平台文件复制到 `examples/MyGame`，将项目重命名为 `MyGame.csproj`，并设置自己的应用标识符。示例 README 说明了复制步骤、应用图标和设备安装方法。
-
-然后选择目标：
-
-| 目标 | 在仓库根目录执行的命令 | 安装与运行 |
-| --- | --- | --- |
-| Android，ARM64 手机或平板 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm64` | [USB、APK 和触摸](examples/CharacterMovement/README.md#android-phone-or-tablet) |
-| Android TV，32 位 ARM | `dotnet build examples/MyGame/MyGame.csproj -c Release -r android-arm` | [网络 ADB 和遥控器](examples/CharacterMovement/README.md#android-tv) |
-| Web | `dotnet publish examples/MyGame/MyGame.csproj -c Release -r browser-wasm -o bin/my-game/web` | [HTTP 服务器和 Chrome](examples/CharacterMovement/README.md#web) |
-| iOS，ARM64 Mac 上的模拟器 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r iossimulator-arm64 -p:EnableCodeSigning=false` | [模拟器和已签名应用](examples/CharacterMovement/README.md#ios) |
-| Apple TV，ARM64 Mac 上的模拟器 | `dotnet build examples/MyGame/MyGame.csproj -c Release -r tvossimulator-arm64 -p:EnableCodeSigning=false` | [tvOS 模拟器和设备](examples/CharacterMovement/README.md#apple-tv-tvos) |
-
-手机和电视也有其他架构，示例 README 列出了全部选项。构建 iOS 和 tvOS 需要 macOS 和 Xcode。
-
-手机和电视上的应用占满屏幕。浏览器提供全屏按钮。游戏区域适应屏幕宽高比，角色、文字和网格统一缩放。
+创建自己的游戏，以及在手机、电视或浏览器中运行的方法，见 [CharacterMovement 指南](examples/CharacterMovement/README.md)。
 
 <a id="platforms"></a>
 
 ## <img src="docs/design/assets/sprite/readme-platforms.svg" width="24" height="28" align="absmiddle" alt=""> 平台
 
-下表列出各游戏目标平台已完成的验证。可视化编辑器面向 Windows、Linux 和 macOS。
-
-| 游戏目标平台 | 本仓库已完成的验证 |
+| 平台 | 当前验证情况 |
 | --- | --- |
-| Windows，x86 / x64 / ARM64 | 完整无界面测试及可用的裁剪/AOT 检查已通过 CI。尚未验证渲染 |
-| Linux，x64 / ARM64 | 两种架构的完整无界面测试和裁剪/AOT 检查均已通过。已在 x64 上验证 Wayland 窗口、输入和渲染，也验证了 XWayland 渲染。尚未验证 ARM64 渲染 |
-| macOS，x64 / ARM64 | 完整无界面测试和裁剪/AOT 检查已通过 CI。尚未验证渲染 |
-| Android，手机和平板 | 已在一台 ARM64 手机上验证 CharacterMovement 启动、全屏布局和触摸拖动。着色器材质和物理已单独验证 |
-| Android TV | 已在一台 32 位电视上验证 CharacterMovement 和遥控器方向按钮。兼容渲染器和物理已单独验证 |
-| iOS 和 tvOS，设备与模拟器 | 四种模拟器配置的原生契约检查均已通过。设备应用包可进行未签名构建；尚未验证真机运行或渲染 |
-| 浏览器 | 已在 Chrome 中验证 CharacterMovement、自适应布局和方向键。竖屏布局和触摸拖动通过手机模拟验证，尚未在真实移动浏览器中验证。渲染和物理已单独验证 |
+| Windows | 自动化检查；视觉验收尚未完成 |
+| Linux | 已在 x64 验证窗口、输入与渲染；ARM64 已执行自动化检查 |
+| macOS | 自动化检查；视觉验收尚未完成 |
+| Android | 已在一部 ARM64 手机上验证启动、场景和触摸控制 |
+| Android TV | 已在一台 32 位电视上验证启动和遥控器控制 |
+| iOS | 已在模拟器中检查原生库；渲染与真实设备尚未验证 |
+| tvOS | 已在模拟器中检查原生库；渲染与真实设备尚未验证 |
+| Web | 已在本地 Chrome 中验证示例与输入 |
 
-Android 和浏览器验证涵盖指定设备及 Chrome 中的示例。各目标平台的原生库可用情况见[原生库交付说明](docs/native-packaging.md)。
-
-构建和测试徽章显示代码自动检查及测试应用的状态。真实设备上的运行需要单独验证。[自动检查详情](docs/platform-verification.md#automated-rid-checks)。
-
-设备型号、命令和验证范围见[平台报告](docs/platform-verification.md)。
+确切配置与限制列于[平台报告](docs/platform-verification.md)。
 
 <a id="development"></a>
 
 ## <img src="docs/design/assets/sprite/readme-development.svg" width="24" height="28" align="absmiddle" alt=""> 项目状态
 
-Electron2D 处于 alpha 阶段。公共 API 仍在开发中，可能随版本变化。
+**Alpha：**公共 API 仍在演进，可能在版本之间发生变化。
 
-可以在代码中创建场景，通过 `PackedScene` 保存，再从[资源及场景文件](docs/components/resource-files.md)中加载。目前可视化编辑器仅显示启动画面，游戏项目编辑尚未实现。
+可以使用 C# 创建游戏。可视化编辑器仍在开发中；已有工作流程见[编辑器文档](docs/components/project-jobs.md)。
 
 <a id="documentation"></a>
 
 ## <img src="docs/design/assets/sprite/readme-documentation.svg" width="24" height="28" align="absmiddle" alt=""> 文档
 
-| 需求 | 文档 |
-| --- | --- |
-| 查找类或方法 | [API 参考](docs/inventory.md) |
-| 了解子系统 | [文档目录](docs/README.md) |
-| 准备着色器 | [HLSL 和 GLSL 导入工具](tools/shaders/README.md) |
-| 构建和运行未保存的项目并检查截图 | [共享项目任务](docs/components/project-jobs.md) |
-| 准备发布 | [发布流程](docs/releasing.md) |
-
-<a id="examples"></a>
-
-复现验证的说明分别见 [Android](tests/Electron2D.AndroidProbe/README.md) 和 [WebGPU](tests/Electron2D.WebGpuProbe/README.md) 文档。WebGPU 测试独立于引擎，用于验证浏览器能力。
+- [子系统指南](docs/README.md)
+- [API 参考](docs/inventory.md)
+- [着色器准备](tools/shaders/README.md)
 
 <a id="feedback-and-contributing"></a>
 
 ## <img src="docs/design/assets/sprite/readme-contributing.svg" width="24" height="28" align="absmiddle" alt=""> 参与项目
 
-[提问](https://github.com/edwardgushchin/Electron2D/discussions/categories/q-a) · [报告问题](https://github.com/edwardgushchin/Electron2D/issues/new/choose) · [贡献指南](CONTRIBUTING.md) · [获取帮助](SUPPORT.md) · [行为准则](CODE_OF_CONDUCT.md) · [安全政策](SECURITY.md)
-
-通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告错误或提出功能建议。报告错误时，请注明引擎版本或提交、操作系统和渲染器，并附上最小复现示例及错误输出。
-
-通过 [Pull Request](https://github.com/edwardgushchin/Electron2D/pulls) 提交修复。工作流程见[贡献指南](CONTRIBUTING.md)。
+通过 [GitHub Issues](https://github.com/edwardgushchin/Electron2D/issues) 报告问题和提出功能建议。报告问题时请附上最小示例、引擎版本与系统信息。
 
 <a id="contributors"></a>
 
-项目由 [Eduard Gushchin](https://github.com/edwardgushchin) 维护。所有贡献者均列于 [GitHub 贡献者页面](https://github.com/edwardgushchin/Electron2D/graphs/contributors)。
+参与流程见[贡献指南](CONTRIBUTING.md)。
 
 <a id="license"></a>
 
 ## <img src="docs/design/assets/sprite/readme-license.svg" width="24" height="28" align="absmiddle" alt=""> 许可证
 
-Electron2D 采用 [MIT 许可证](licence/Electron2D-LICENSE.txt)。可用于商业游戏，但须保留版权声明和许可证文本。
-
-依赖项的许可证列于[第三方声明](licence/THIRD_PARTY_NOTICES.md)。分发游戏时，请附上这些依赖项要求的许可证文本，文件位于 `licence/` 目录。
+[MIT](licence/Electron2D-LICENSE.txt)。可用于开源和商业项目。第三方许可证位于 [licence 目录](licence)。

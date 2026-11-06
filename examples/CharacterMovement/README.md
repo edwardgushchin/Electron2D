@@ -17,7 +17,7 @@ git clone https://github.com/edwardgushchin/Electron2D.git
 cd Electron2D
 ```
 
-The example references the engine source in this checkout. NuGet restores the selected `Electron2D.{Platform}` package and native dependencies automatically. The `0.2.0-alpha` release includes the `Engine.RunAsync` host used by mobile, TV and browser entry points. A desktop project using the published packages is described in the [main README](../../README.md#use-electron2d-in-your-game).
+The example references the engine source in this checkout. NuGet restores the selected `Electron2D.{Platform}` package and native dependencies automatically. The `0.2.0-alpha` release includes the `Engine.RunAsync` host used by mobile, TV and browser entry points. To use published packages in a desktop game, follow [Create a desktop game with NuGet](#create-a-desktop-game-with-nuget).
 
 | Target | Additional tools |
 | --- | --- |
@@ -202,6 +202,52 @@ The app fills the TV surface and uses directional input delivered by the platfor
 All assets derive from the existing [app-icon.svg](../../docs/design/assets/sprite/app-icon.svg). Windows embeds the ICO, Linux registers the PNG and desktop entry, macOS bundles the ICNS, Android uses a launcher icon and TV banner, iOS/tvOS use asset catalogs, and Web has an SVG favicon.
 
 Apple catalogs and the TV banner are checked in; normal builds need no image conversion tool. After an approved icon change, regenerate them with Pillow and `python3 tools/examples/character_movement_icons.py` from the repository root.
+
+## Create A Desktop Game With NuGet
+
+For Windows, Linux or macOS, create a .NET 10 console project and add the engine package:
+
+```bash
+dotnet new console -n MyGame --framework net10.0
+cd MyGame
+dotnet add package Electron2D --prerelease
+```
+
+Add the package for your target platform:
+
+| Platform | Command |
+| --- | --- |
+| Windows | `dotnet add package Electron2D.Windows --prerelease` |
+| Linux | `dotnet add package Electron2D.Linux --prerelease` |
+| macOS | `dotnet add package Electron2D.MacOS --prerelease` |
+
+Use matching engine and platform package versions. NuGet restores native dependencies automatically. The [native package guide](../../docs/native-packaging.md) describes platform delivery and version rules; published versions are listed on [NuGet](https://www.nuget.org/packages/Electron2D).
+
+Replace `Program.cs` with:
+
+```csharp
+using Electron2D;
+
+var window = new Window
+{
+    Title = "My game",
+    Size = new Vector2i(800, 600)
+};
+
+return Engine.Run(window);
+```
+
+Run `dotnet run -c Release` to open the window. Add game objects with `AddChild`; [Player.cs](Player.cs) demonstrates frame updates and input.
+
+To reference this checkout instead of the engine package, run the following from the repository root, then add the target platform package from the table above:
+
+```bash
+dotnet new console -n MyGame -o ../MyGame --framework net10.0
+dotnet add ../MyGame/MyGame.csproj reference Electron2D.csproj
+cd ../MyGame
+```
+
+Publishing the game includes `Electron2D.dll` and native dependencies; a self-contained publish also includes the .NET runtime. Phones, TVs and browsers require their platform workloads and application entry points; use the source-project instructions below for those targets.
 
 ## Start Your Own Project
 
