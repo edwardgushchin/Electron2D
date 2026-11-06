@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Owns process-wide operating-system operations through a retained service object.</summary>
 /// <remarks>Independent process launch/capture and owned native pipes are cold operations; child termination is explicit.
 /// Process environment edits synchronize managed and SDL child launch paths. Desktop directory queries do not create folders.
-/// The trash operation uses the Linux desktop's recoverable trash service.
+/// The trash operation uses recoverable desktop Linux and Windows system services.
 /// Unavailable platform services fail explicitly. Native libraries are system facilities and remain process-owned.</remarks>
 public sealed partial class OS : ElectronObject
 {
@@ -14,7 +14,7 @@ public sealed partial class OS : ElectronObject
     /// <summary>Moves a file, directory or symbolic link to the desktop trash without permanently deleting it.</summary>
     /// <param name="path">An ordinary, res:// or user:// path identifying the entry itself.</param>
     /// <remarks>This blocking operation may perform filesystem I/O and is unsuitable for a real-time callback.
-    /// Linux delegates recovery metadata, mount policy, collisions and link handling to GIO. Other profiles require
+    /// Linux delegates recovery metadata, mount policy, collisions and link handling to GIO. Windows uses the Shell recycle service on a private STA without changing the caller apartment; permanent-delete requests are refused before commitment. Other profiles require
     /// their native trash backend; a failed request preserves the source and is never replaced with permanent deletion.</remarks>
     /// <exception cref="ArgumentException">The path is empty or contains a null character.</exception>
     /// <exception cref="ArgumentNullException">The path is null.</exception>
@@ -47,6 +47,7 @@ public sealed partial class OS : ElectronObject
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(path); if (path.Length == 0 || path.Contains('\0')) throw new ArgumentException("Expected a nonempty path without null characters.", nameof(path));
         var absolute = System.IO.Path.GetFullPath(ProjectSettings.GlobalizePath(path));
+        if (OperatingSystem.IsWindows()) { WindowsTrash.Move(absolute); return; }
         if (!OperatingSystem.IsLinux() || OperatingSystem.IsAndroid()) throw new NotSupportedException("This platform requires a native recoverable trash backend.");
         var native = TrashNative.Instance.Value; var file = native.NewFile(absolute);
         if (file == 0) throw new IOException("The native trash service could not create a file identity.");

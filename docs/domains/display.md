@@ -170,3 +170,5 @@ Native Wayland verification uses an isolated compositor and external producer.
 [Native text input](../components/native-text-input.md) executes single-line confirmation with exact UTF-8 text, empty results, cancellation, owner/lifetime guards and resumed engine rendering. Linux GTK availability remains an explicit capability.
 
 [Native driver selection and scene scheduling](../components/accessibility.md#native-driver-and-scene-scheduling) now consume typed project preferences. The scene rate follows monotonic wall time while requests and retirement continue through the native owner pump.
+
+[Windows recoverable trash](../components/windows-trash.md) connects FileDialog confirmation/error/list refresh to the actual Shell recycle service.

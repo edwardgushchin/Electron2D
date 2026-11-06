@@ -163,3 +163,5 @@ in ignored bin/float-atomics/2026-10-29 evidence, outside the engine commit.
 
 Native requirements follow the [Vulkan feature contract](https://docs.vulkan.org/refpages/latest/refpages/source/VkPhysicalDeviceShaderAtomicFloatFeaturesEXT.html)
 and [SPIR-V addition extension](https://raw.githubusercontent.com/KhronosGroup/SPIRV-Registry/main/extensions/EXT/SPV_EXT_shader_atomic_float_add.asciidoc).
+
+The 2026-11-06 Windows/Vulkan physical probe on RTX 3090 Ti reports no VK_EXT_shader_atomic_float2 extension and zero flags for all of its buffer/shared Half base/add/min-max, FP32/FP64 min-max and FP32 image min-max operations. This exact extension/feature support remains a prerequisite for the native floating-min/max/Half-atomic candidate on this host; baseline FP32/FP64 base/add execution is unaffected. Selection evidence is retained under C:/Users/eduar/.codex/artifacts/Electron2D/atomic-float2-selection-20261106.

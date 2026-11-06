@@ -110,3 +110,5 @@ Native dropdown/context anchors now resolve through the containing viewport into
 The [Linux native file portal](../components/native-file-portal.md) applies MIME-only and combined filters through UseNativeDialog, including both rule families in All Recognized. Native root restrictions keep the existing custom browser fallback; typed options execute through the portal.
 
 Native [checkbox/choice options](../components/native-file-portal.md#native-checkbox-and-choice-controls) now execute on the Linux portal. GetSelectedOptions publishes captured defaults after launch and accepted results before selection events. RootSubfolder, virtual access and empty native labels/captions retain the working custom browser.
+
+[Windows recoverable trash](../components/windows-trash.md) executes the existing confirmation and partial-failure refresh flow against the real native recycle service.

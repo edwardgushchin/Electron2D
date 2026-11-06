@@ -2465,3 +2465,5 @@ RenderingDevice.DepthResolve.cs caches native per-layer depth/stencil resolve at
 [Depth framebuffer inputs](components/depth-inputs.md) extend existing RenderingDevice/RDTextureFormat/RDFramebufferPass/RDUniform resources. InputAttachments owns per-view aspect snapshots, DepthTransfers negotiates query ABI2, and the native aspects/views adapters retain readonly layouts and sampled format capabilities. No public type is added.
 
 Existing RenderingDevice/RDTextureFormat/RDTextureView/RDPipelineDepthStencilState and TextureRD/TextureArrayRD own [stencil-only textures](components/stencil-textures.md). StencilTextures retains native properties and pass routing; existing native views/aspects/raster adapters own allocation, transfers and copied state. No public production type is added.
+
+OS.WindowsTrash supplies the existing static OS/FileDialog trash workflow on Windows with an internal generated COM progress sink, per-call STA ownership and deterministic native releases. See [the component](components/windows-trash.md).

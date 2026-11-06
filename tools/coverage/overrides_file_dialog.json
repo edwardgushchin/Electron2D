@@ -3,7 +3,7 @@
     {
       "godot": "class:FileDialog",
       "electron2d": "T:Electron2D.FileDialog",
-      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md."
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md. Windows now executes recoverable Shell trash through an independently owned STA/generated COM sink, permanent-delete veto, aborted/result/recycle-identity checks and native restoration. Managed/package/NativeAOT and browser failure evidence plus exact foreign/UI/heap limits: docs/components/windows-trash.md."
     },
     {
       "godot": "FileDialog::enum:Access",
@@ -568,7 +568,7 @@
     {
       "godot": "OS::method:move_to_trash(String:)",
       "electron2d": "method:Electron2D.OS.MoveToTrash(System.String)",
-      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md."
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md. Windows now executes recoverable Shell trash through an independently owned STA/generated COM sink, permanent-delete veto, aborted/result/recycle-identity checks and native restoration. Managed/package/NativeAOT and browser failure evidence plus exact foreign/UI/heap limits: docs/components/windows-trash.md."
     },
     {
       "godot": "OS::method:shell_open(String:)",
@@ -583,7 +583,7 @@
     {
       "godot": "class:OS",
       "electron2d": "T:Electron2D.OS",
-      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md."
+      "reason": "ADRs 0004/0008/0038/0040/0051/0095: executable scoped DirAccess browser, modes, filtering/sorting/layout, favorites/recents, typed checkbox/choice results, menus, folder creation, overwrite validation, recoverable GIO trash, embedded input and fresh scene factories. FileDialogTests and native GPU/compatibility render checks cover current Linux profile; Native checkbox/choice controls execute through the Linux portal; exact root/virtual fallback and platform limits are documented in docs/components/native-file-portal.md. Windows now executes recoverable Shell trash through an independently owned STA/generated COM sink, permanent-delete veto, aborted/result/recycle-identity checks and native restoration. Managed/package/NativeAOT and browser failure evidence plus exact foreign/UI/heap limits: docs/components/windows-trash.md."
     }
   ],
   "extras": [
@@ -806,7 +806,7 @@
         "class:FileDialog"
       ],
       "state": "Partial",
-      "reason": "Full custom browser own API and Linux native checkbox/choice options execute. Resource/user native confinement needs a chooser backend that can enforce scoped roots; the current portal cannot and retains the custom browser under ADR 0040. Automatic sandbox-native preference needs an OS sandbox probe; native combined file/directory selection needs a backend supporting OpenAny. Inherited independent native child Window, accessibility/scaling and foreign profiles retain their owner gates. Protocol, GPU/Compatibility scene and installed Wayland option/file/filter/cancel checks are recorded in docs/components/native-file-portal.md."
+      "reason": "Full custom browser own API and Linux native checkbox/choice options execute. Resource/user native confinement needs a chooser backend that can enforce scoped roots; the current portal cannot and retains the custom browser under ADR 0040. Automatic sandbox-native preference needs an OS sandbox probe; native combined file/directory selection needs a backend supporting OpenAny. Inherited independent native child Window, accessibility/scaling and foreign profiles retain their owner gates. Protocol, GPU/Compatibility scene and installed Wayland option/file/filter/cancel checks are recorded in docs/components/native-file-portal.md. Windows custom-browser recycle confirmation, cancellation, partial failure and list refresh execute through the real Shell service; see docs/components/windows-trash.md."
     },
     {
       "godot": [
@@ -820,16 +820,22 @@
         "class:OS"
       ],
       "state": "Partial",
-      "reason": "Retained permanent static service implements recoverable desktop Linux trash and URI/file-manager launch. The rest of the operating-system API remains in its existing owner-specific rows."
+      "reason": "Retained permanent static service implements recoverable desktop Linux GIO and Windows Shell trash plus URI/file-manager launch. Windows native source/package/NativeAOT recovery and failure evidence is in docs/components/windows-trash.md. Other operating-system API remains in its owner-specific rows."
     },
     {
       "godot": [
-        "OS::method:move_to_trash(String:)",
         "OS::method:shell_open(String:)",
         "OS::method:shell_show_in_file_manager(String:,bool:)"
       ],
       "state": "Partial",
-      "reason": "Linux desktop MoveToTrash delegates to system GIO with recoverable metadata and link policy, verified in an isolated XDG child process. ShellOpen delegates SDL; Linux file manager uses folder URI fallback. Windows/macOS recoverable trash/item-selection backends and mobile/browser equivalent capabilities require target implementation. External application launch is not exercised during automated fixtures."
+      "reason": "ShellOpen delegates SDL; Linux file-manager navigation uses the folder URI fallback. Windows/macOS native item-selection backends and equivalent mobile/browser behavior retain their target implementation/acceptance gates. External application launch is not exercised by automated fixtures."
+    },
+    {
+      "godot": [
+        "OS::method:move_to_trash(String:)"
+      ],
+      "state": "Partial",
+      "reason": "Desktop Linux GIO and Windows Shell recycle operations preserve native recovery metadata and link targets. Windows uses a private STA/generated COM sink, refuses permanent-delete steps and verifies operation/item/abort/recycle identity; controlled native undelete, source/package/NativeAOT, concurrency, sharing/long-path refusal and browser evidence is in docs/components/windows-trash.md. macOS/mobile/browser recoverable-trash backends, foreign Windows architecture/volume qualification, native heaps and full ADR 0021 delivery remain separate gates."
     }
   ]
 }

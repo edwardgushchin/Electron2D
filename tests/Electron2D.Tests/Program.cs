@@ -1330,6 +1330,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX_CHILD") is { } n
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPINBOX") == "1") { SpinBoxTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DISPLAY_DIALOG") == "1") { DisplayServerDialogTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WINDOWS_TRASH") is { } trashOracle) { WindowsTrashTests.Run(trashOracle, Environment.GetEnvironmentVariable("ELECTRON2D_WINDOWS_TRASH_WORKSPACE") ?? System.IO.Path.Combine(AppContext.BaseDirectory, "windows-trash-fixtures")); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_CHILD") is { } fileDialogPath) { FileDialogTests.RunChild(fileDialogPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_TRASH") is { } trashPath) { FileDialogTests.RunTrashChild(trashPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }

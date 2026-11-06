@@ -4,7 +4,7 @@ Last updated: 2026-10-29
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
-Retained permanent process operating-system service with static operations and named Engine lookup. It cannot be independently constructed, disposed or unregistered. MoveToTrash uses system GIO on desktop Linux with native recovery metadata/mount/link policies; no permanent deletion fallback exists. ShellOpen delegates URI/path requests to SDL. Linux ShellShowInFileManager opens the appropriate folder URI; Windows/macOS native selection requires its backend.
+Retained permanent process operating-system service with static operations and named Engine lookup. It cannot be independently constructed, disposed or unregistered. MoveToTrash uses system GIO on desktop Linux and the [Windows Shell recycle adapter](../components/windows-trash.md), preserving native recovery metadata/mount/link policies; no permanent deletion fallback exists. ShellOpen delegates URI/path requests to SDL. Linux ShellShowInFileManager opens the appropriate folder URI; Windows/macOS native selection requires its backend.
 
 Empty/null/NUL inputs fail before external work. Recoverable trash failure throws IOException or unavailable-service NotSupportedException. Launch failure throws InvalidOperationException. These blocking native operations are unsuitable for real-time callbacks. FileDialog invokes trash only after its confirmation; the caller decides when to launch an external application.
 
@@ -365,3 +365,5 @@ Launches a chosen desktop application with literal ordered host file/directory p
 ## MIDI inputs
 
 `OpenMIDIInputs()`, `GetConnectedMIDIInputs() -> string[]` and `CloseMIDIInputs()` operate an explicit retained input session. Desktop Linux uses system ALSA; other native adapters remain missing. Open/close are repeat-safe, the names array is a copy indexed by event Device, and failures never masquerade as an empty successful acquisition. [MIDI input](../components/midi-input.md) owns the lifecycle, exceptions, thread/delivery contract, executable evidence and platform limits.
+
+Windows trash executes source, managed-package and NativeAOT native recovery/restore, caller apartment, concurrency, data-safety and managed browser confirmation/failure checks. Other target and native-heap gates remain open; see [the owning component](../components/windows-trash.md).

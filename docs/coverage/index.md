@@ -1614,3 +1614,5 @@ The TextServer editing slice (2026-10-19) implements twelve caret/selection/navi
 [Performance producer audit](performance-producers.md) traces the pinned canvas/scene compilation sources and the remaining current/peak allocation requirements.
 
 [Stencil-only S8UINT](../components/stencil-textures.md) now executes on Windows/Vulkan through the existing texture/graphics/input/resolve family. The enum was already counted: declaration totals remain unchanged; broader family Partial rows and ADR 0021 target gates remain open.
+
+[Windows recoverable trash](../components/windows-trash.md) now executes OS.MoveToTrash and the FileDialog confirmation/failure flow. Existing declaration states/totals remain unchanged; this is bounded native Windows platform progress.

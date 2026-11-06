@@ -405,3 +405,5 @@ Standard-handle and managed process-termination helpers reject unsupported Apple
 Specified desktop application launch now uses [OS.OpenWithProgram](../components/processes.md#specified-application-launch), sharing literal process argv, native ownership and reaping. Native Linux execution is verified separately from macOS bundle, foreign sandbox and application acceptance.
 
 Owned movie runs now preserve the last successful simulation pose and PCM on process/physics quit before writer finalization; [animation completion](../components/movie-writing.md#animation-completion) owns the precise before-step/failure boundary.
+
+[Windows recoverable trash](../components/windows-trash.md) adds native Shell recovery, apartment/lifetime ownership and safe refusal through the existing OS service.
