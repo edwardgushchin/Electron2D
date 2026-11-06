@@ -467,7 +467,7 @@ public sealed unsafe partial class RenderingDevice
         R8UNORM = 8,
         /// <summary>R8USCALED encoded pixel/block format; query support before creation.</summary>
         R8USCALED = 10,
-        /// <summary>S8UINT encoded pixel/block format; query support before creation.</summary>
+        /// <summary>One unsigned stencil byte per texel; query native attachment, input, resolve and transfer support before creation.</summary>
         S8UINT = 126,
         /// <summary>X8D24UNORMPACK32 encoded pixel/block format; query support before creation.</summary>
         X8D24UNORMPACK32 = 124,

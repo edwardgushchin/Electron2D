@@ -1,0 +1,9 @@
+# Stencil-only texture consumer
+
+Uses only public Electron2D API. Run `dotnet run --project tests/StencilTextures.Consumer -c Release` with a matching native module, `SDL_GPU_DRIVER=vulkan` and the published `ELECTRON2D_SHADER_IMPORT_TOOL`. Set `ELECTRON2D_STENCIL_OUTPUT` to a new artifact directory to retain original stage SPIR-V, binary capsules and the rendered canvas PNG. Pass the directory as the single argument for compiler-free replay. The root runner exposes `ELECTRON2D_TEST_STENCIL_TEXTURES=1|DIRECTORY`.
+
+Exercises one-byte mip/layer chains and views, independent faces, all pass/fail stencil operations, exact masked MSAA samples/copies, explicit/automatic resolve, ordered/multiview unsigned inputs, request-time snapshots, lifetime/role guards, zero warmed owner managed bytes, canvas and resource/server metadata. See [the contract](../../docs/components/stencil-textures.md).
+
+The Windows test-only `tools/render-native/test_stencil_mask.c` compiles against the pinned generated memory layout, SDL include/dynapi and Khronos headers. Set `SDL3_DYNAMIC_API` to that shim and `ELECTRON2D_STENCIL_REFUSAL=format|pass|resolve-only|resolve-missing`. For format refusal also set `ELECTRON2D_STENCIL_FAULT=format`; pass tests toggle failures and retry in-process. Resolve controls set ELECTRON2D_STENCIL_FAULT to the corresponding profile and independently mask the enabled aspect bits. `ELECTRON2D_STENCIL_REFUSAL=bridge` instead uses the preceding complete native module. Ordinary R8 color rendering and depth transfers must survive every control.
+
+Use `Electron2DUsePackage=true` with a fresh managed package/cache; publish with `PublishAot=true`, `PublishTrimmed=true`, `TrimMode=full`. Execute binary replay and refusal controls again. This Windows/Vulkan receipt does not qualify the full release matrix, other backends or native heap behavior.

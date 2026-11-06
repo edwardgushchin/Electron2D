@@ -2463,3 +2463,5 @@ RenderingDevice.TextureTransfers.cs now preserves equal-count native samples thr
 RenderingDevice.DepthResolve.cs caches native per-layer depth/stencil resolve attachments, connecting explicit transfers and inferred framebuffer pass closure to original image/view lifetime. GPUDeviceFactory negotiates the optional Vulkan 1.2 resolve profile independently. No public declaration is added. See [depth/stencil resolve](components/depth-resolve.md).
 
 [Depth framebuffer inputs](components/depth-inputs.md) extend existing RenderingDevice/RDTextureFormat/RDFramebufferPass/RDUniform resources. InputAttachments owns per-view aspect snapshots, DepthTransfers negotiates query ABI2, and the native aspects/views adapters retain readonly layouts and sampled format capabilities. No public type is added.
+
+Existing RenderingDevice/RDTextureFormat/RDTextureView/RDPipelineDepthStencilState and TextureRD/TextureArrayRD own [stencil-only textures](components/stencil-textures.md). StencilTextures retains native properties and pass routing; existing native views/aspects/raster adapters own allocation, transfers and copied state. No public production type is added.

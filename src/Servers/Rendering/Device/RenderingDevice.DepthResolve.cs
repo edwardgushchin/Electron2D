@@ -9,7 +9,7 @@ public sealed unsafe partial class RenderingDevice
     private bool DepthResolveSupported(DataFormat format)
     {
         if (!DepthFormat(format)) return false;
-        var required = StencilFormat(format) ? 3 : 1;
+        var required = format == DataFormat.S8UINT ? 2 : StencilFormat(format) ? 3 : 1;
         return (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.DepthResolveProperty, 0) & required) == required;
     }
     private void RequireDepthResolve(DataFormat format)

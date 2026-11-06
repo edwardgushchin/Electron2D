@@ -128,6 +128,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_BACK") is { } sys
 }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FLOAT_ATOMIC_REQUIREMENTS") == "1") { FloatAtomicRequirementTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_STENCIL_TEXTURES") is { } stencilProfile) { StencilTexturesTests.Run(stencilProfile == "1" ? null : stencilProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BLEND_FACTORS") is { } blendFactorsProfile) { BlendFactorsTests.Run(blendFactorsProfile == "1" ? null : blendFactorsProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEPTH_INPUTS") is { } depthInputsProfile) { DepthInputsTests.Run(depthInputsProfile == "1" ? null : depthInputsProfile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEPTH_RESOLVE") is { } depthResolveProfile) { DepthResolveTests.Run(depthResolveProfile == "1" ? null : depthResolveProfile); return; }

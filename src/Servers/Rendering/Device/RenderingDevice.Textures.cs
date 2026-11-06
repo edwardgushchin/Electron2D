@@ -54,7 +54,7 @@ public sealed unsafe partial class RenderingDevice
     }
     internal static int PixelType(DataFormat format) => format switch
     {
-        DataFormat.R8UINT => 2,
+        DataFormat.R8UINT or DataFormat.S8UINT => 2,
         DataFormat.R8G8UINT => 2,
         DataFormat.R8G8B8A8UINT => 2,
         DataFormat.R16UINT => 2,
@@ -147,6 +147,7 @@ public sealed unsafe partial class RenderingDevice
         }
         else if ((usageFlags & TextureUsageBits.DepthStencilAttachment) != 0) return false;
         var native = NativeFormat(format);
+        if (format == DataFormat.S8UINT) return StencilSupported(usageFlags);
         if (DepthFormat(format) && (usageFlags & (TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0 && !DepthTransfersSupported(format)) return false;
         if ((usageFlags & TextureUsageBits.InputAttachment) != 0 && (DepthFormat(format) ? !DepthTransfersSupported(format, graphicsInputs: true) : native == SDL.GPUTextureFormat.Invalid || !SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.Sampler))) return false;
         var privateTarget = DepthFormat(format) && (usageFlags & TextureUsageBits.InputAttachment) != 0 ? TextureUsageBits.DepthStencilAttachment : 0;
@@ -158,7 +159,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
     /// <param name="view">Copied initial format and sampled component mapping; alternate formats must be declared shareable.</param>
-    /// <param name="data">One tightly packed mip chain per layer, or empty for zero initialization. Single-sample depth/stencil data uses the documented portable aspect encoding; D32 floats must be finite and within zero through one. Empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
+    /// <param name="data">One tightly packed mip chain per layer, or empty for zero initialization. S8UINT data uses one unsigned stencil byte per texel. Other single-sample depth/stencil data uses the documented portable aspect encoding; D32 floats must be finite and within zero through one. Empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
     /// <remarks>InputAttachment accepts single-mip color and depth images or arrays. Input-only depth retains a private initialization target without public render/copy permissions. Shared, layered and sampled inputs use readonly per-view GPU snapshots.
     /// StorageAtomic validates signed/unsigned R32 or feature-enabled R32SFLOAT atomic format support. Floating base and add operations independently require their enabled native image features. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.

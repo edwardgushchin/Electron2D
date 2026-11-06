@@ -31,7 +31,7 @@ public sealed class RDTextureFormat : ElectronObject
     public RenderingDevice.TextureType TextureType { get { ThrowIfDisposed(); return _textureType; } set { ThrowIfDisposed(); _textureType = RDTextureConfiguration.TextureKind(value); } }
     private RenderingDevice.TextureUsageBits _usageBits = 0;
     /// <summary>Gets or sets required allocation, sampling and transfer roles.</summary>
-    /// <remarks>Single-sample depth/stencil targets may add upload/copy/readback roles when the native aspect adapter supports the format.</remarks>
+    /// <remarks>Single-sample depth/stencil targets may add upload/copy/readback roles when the native aspect adapter supports the format. S8UINT uses one unsigned stencil byte per texel, stencil state and unsigned sampled/input reads; depth state requires a depth aspect.</remarks>
     /// <value>Initially 0; copied when the device creates its resource.</value>
     public RenderingDevice.TextureUsageBits UsageBits { get { ThrowIfDisposed(); return _usageBits; } set { ThrowIfDisposed(); _usageBits = RDTextureConfiguration.Usage(value); } }
     private RenderingDevice.TextureSamples _samples = RenderingDevice.TextureSamples.Samples1;

@@ -631,3 +631,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 The local device also executes [multisample shader reads](../components/local-compute.md#multisample-shader-reads) on sampled render targets; exact sample/descriptor roles, native allocation and lifetime remain in that component.
 
 [Depth framebuffer inputs](../components/depth-inputs.md) connect depth producers, ordered input passes and copied output through the existing device API, including layered/shared images and input-only allocations. The owning component records native ABI/refusal, package and platform limits.
+
+[Stencil-only textures](../components/stencil-textures.md) connect native eight-bit stencil storage, graphics, unsigned inputs, transfers, resolves and retained canvas through the existing device API.

@@ -60,3 +60,6 @@ _e2d_render_depth_resolve_support
 _e2d_render_depth_resolve_create
 _e2d_render_depth_resolve_record
 _e2d_render_depth_resolve_release
+
+_e2d_render_stencil_support
+_e2d_render_stencil_begin

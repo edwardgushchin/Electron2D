@@ -135,6 +135,7 @@ public sealed unsafe partial class RenderingDevice
         DataFormat.D32SFLOAT => SDL.GPUTextureFormat.D32Float,
         DataFormat.D24UNORMS8UINT => SDL.GPUTextureFormat.D24UnormS8Uint,
         DataFormat.D32SFLOATS8UINT => SDL.GPUTextureFormat.D32FloatS8Uint,
+        DataFormat.S8UINT => SDL.GPUTextureFormat.R8Uint,
         _ => SDL.GPUTextureFormat.Invalid
     };
     private static (uint Width, uint Height) BlockDimensions(SDL.GPUTextureFormat format) => format switch

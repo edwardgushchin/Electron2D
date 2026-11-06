@@ -89,9 +89,10 @@ public sealed unsafe partial class RenderingDevice
         var info = entry.Texture!; var format = NativeFormat(info.Format);
         if (entry.TextureScratch is null)
         {
-            entry.ScratchColorTarget = SDL.GPUTextureSupportsFormat(Device, format, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget);
+            entry.ScratchColorTarget = !DepthFormat(info.Format) && SDL.GPUTextureSupportsFormat(Device, format, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget);
             if (clear && !entry.ScratchColorTarget) throw new NotSupportedException("This format requires a color-clear adapter; encoded blocks cannot be rendered as color targets.");
-            entry.TextureScratch = new(SDL.CreateGPUTexture(Device, new() { Type = SDL.GPUTextureType.TextureType2D, Format = format, Width = info.Width, Height = info.Height, LayerCountOrDepth = 1, NumLevels = info.Mips, SampleCount = (SDL.GPUSampleCount)info.Samples, Usage = DepthFormat(info.Format) ? SDL.GPUTextureUsageFlags.DepthStencilTarget : entry.ScratchColorTarget ? SDL.GPUTextureUsageFlags.ColorTarget : SDL.GPUTextureUsageFlags.Sampler }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+            var create = new SDL.GPUTextureCreateInfo { Type = SDL.GPUTextureType.TextureType2D, Format = format, Width = info.Width, Height = info.Height, LayerCountOrDepth = 1, NumLevels = info.Mips, SampleCount = (SDL.GPUSampleCount)info.Samples, Usage = DepthFormat(info.Format) ? SDL.GPUTextureUsageFlags.DepthStencilTarget : entry.ScratchColorTarget ? SDL.GPUTextureUsageFlags.ColorTarget : SDL.GPUTextureUsageFlags.Sampler };
+            entry.TextureScratch = info.Format == DataFormat.S8UINT ? CreateStencilTexture(create) : new(SDL.CreateGPUTexture(Device, in create), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
         }
         if (clear && !entry.ScratchColorTarget) throw new NotSupportedException("This format requires a color-clear adapter.");
         return entry.TextureScratch;

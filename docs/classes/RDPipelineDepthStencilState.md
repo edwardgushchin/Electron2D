@@ -304,3 +304,5 @@ Zero initially. Finite zero through one is accepted; other values throw Argument
 ## Lifecycle, errors and verification
 
 Copied descriptions borrow no native state and can be disposed after creation. Device RIDs remain owner-thread resources. Unknown enum selectors and nonfinite bias/clear values reject. References must fit eight bits for visible stencil faces; independent visible-face values are copied through native state. Depth bounds require ordered normalized finite bounds and the enabled native feature. Raw aspect-transfer adapters remain explicit prerequisites in coverage. [RenderingDeviceDepthTests](../../tests/Electron2D.Tests/RenderingDeviceDepthTests.cs) and [the depth consumer](../../tests/DeviceGraphicsStorage.Consumer/GraphicsStorage.Depth.cs) verify native pixels and warmed managed allocation on Linux/Vulkan; foreign platforms and native allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028).
+
+[Stencil-only S8UINT targets](../components/stencil-textures.md) execute stencil operations and independent face state; enabled depth test, write or bounds reject without a depth aspect.

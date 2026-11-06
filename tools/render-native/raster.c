@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <math.h>
 #include "memory-layout.h"
+#include "stencil.h"
 #include <SDL3/SDL_vulkan.h>
 
 #if defined(_WIN32)
@@ -45,12 +46,18 @@ typedef struct DepthStencilState { uint32_t flags, front_mask, front_write, fron
 typedef struct BlendState { uint32_t count, factors[8][4]; } BlendState;
 extern VulkanGraphicsPipelineResourceLayout *e2d_images_layout(SDL_GPUDevice *, const uint32_t *, uint32_t);
 extern int e2d_render_image_support(SDL_GPUDevice *, uint32_t);
-typedef struct RasterState { PFN_vkCreateGraphicsPipelines create; float width; bool discard; MultisampleState samples; DepthStencilState depth; SDL_GPUDevice *device; const uint32_t *counts; uint32_t images, logic; const BlendState *blend; VulkanGraphicsPipelineResourceLayout *image_layout; } RasterState;
+typedef struct RasterState { PFN_vkCreateGraphicsPipelines create; PFN_vkCreateRenderPass create_pass; float width; bool discard, pass_failed; MultisampleState samples; DepthStencilState depth; SDL_GPUDevice *device; const uint32_t *counts; uint32_t images, logic; const BlendState *blend; VulkanGraphicsPipelineResourceLayout *image_layout; } RasterState;
 static E2D_THREAD_LOCAL RasterState state;
+static VkResult VKAPI_CALL stencil_pipeline_pass(VkDevice device, const VkRenderPassCreateInfo *info, const VkAllocationCallbacks *allocator, VkRenderPass *pass)
+{
+    VkResult result = e2d_stencil_render_pass(state.create_pass, device, info, allocator, pass);
+    state.pass_failed = result != VK_SUCCESS; return result;
+}
 
 static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cache, uint32_t count,
     const VkGraphicsPipelineCreateInfo *infos, const VkAllocationCallbacks *allocator, VkPipeline *pipelines)
 {
+    if (state.pass_failed) return VK_ERROR_INITIALIZATION_FAILED;
     if (count != 1 || !infos || !infos->pRasterizationState || !state.create) return VK_ERROR_INITIALIZATION_FAILED;
     VkGraphicsPipelineCreateInfo info = *infos;
     VkPipelineRasterizationStateCreateInfo raster = *info.pRasterizationState;
@@ -204,13 +211,13 @@ static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, co
     SDL_SetAtomicInt(&local.layoutResourceID, layout->next_id);
     local.vkCreateDescriptorSetLayout = renderer->vkCreateDescriptorSetLayout;
     local.vkCreatePipelineLayout = renderer->vkCreatePipelineLayout; local.vkDestroyPipelineLayout = renderer->vkDestroyPipelineLayout;
-    local.vkCreateRenderPass = renderer->vkCreateRenderPass; local.vkDestroyRenderPass = renderer->vkDestroyRenderPass;
+    local.vkCreateRenderPass = depth && (depth->flags & 4) ? stencil_pipeline_pass : renderer->vkCreateRenderPass; local.vkDestroyRenderPass = renderer->vkDestroyRenderPass;
     local.vkSetDebugUtilsObjectNameEXT = renderer->vkSetDebugUtilsObjectNameEXT;
     local.vkCreateGraphicsPipelines = raster_pipeline;
     PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetDeviceProcAddr device_proc = (PFN_vkGetDeviceProcAddr)proc(renderer->instance, "vkGetDeviceProcAddr");
     RasterState previous = state;
-    state = (RasterState){.create = (PFN_vkCreateGraphicsPipelines)device_proc(renderer->logicalDevice, "vkCreateGraphicsPipelines"), .width = width, .discard = discard, .samples = samples ? *samples : (MultisampleState){0}, .depth = depth ? *depth : (DepthStencilState){0}, .device = device, .counts = counts, .images = images, .logic = logic, .blend = blend};
+    state = (RasterState){.create = (PFN_vkCreateGraphicsPipelines)device_proc(renderer->logicalDevice, "vkCreateGraphicsPipelines"), .create_pass = renderer->vkCreateRenderPass, .width = width, .discard = discard, .samples = samples ? *samples : (MultisampleState){0}, .depth = depth ? *depth : (DepthStencilState){0}, .device = device, .counts = counts, .images = images, .logic = logic, .blend = blend};
     SDL_GPUGraphicsPipeline *pipeline = device->CreateGraphicsPipeline((SDL_GPURenderer *)&local, info);
     if (pipeline && images) ((VulkanGraphicsPipeline *)pipeline)->resourceLayout = state.image_layout;
     state = previous;
@@ -275,11 +282,13 @@ E2D_EXPORT int e2d_render_logic_support(SDL_GPUDevice *device, uint32_t abi)
 static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic, const BlendState *blend)
 {
     uint32_t required = ((images & 255) ? 1 : 0) | ((images & 65280) ? 2 : 0);
-    if (abi == 2) {
+    bool stencil = abi == 3;
+    if (stencil && (!depth || !(depth->flags & 4) || !info || info->target_info.depth_stencil_format != SDL_GPU_TEXTUREFORMAT_R8_UINT || e2d_render_stencil_support(device, 1, SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET, info->multisample_state.sample_count) != 1)) return NULL;
+    if (abi == 2 || stencil) {
         if ((images >> 18) || ((images >> 16) & ~required)) return NULL;
         required = images >> 16; images &= 65535; abi = 1;
     }
-    if (!depth || (depth->flags & ~3u) || !isfinite(depth->minimum) || !isfinite(depth->maximum) || depth->minimum < 0 || depth->maximum > 1 || depth->minimum > 1 || depth->maximum < 0 ||
+    if (!depth || (depth->flags & ~(stencil ? 7u : 3u)) || !isfinite(depth->minimum) || !isfinite(depth->maximum) || depth->minimum < 0 || depth->maximum > 1 || depth->minimum > 1 || depth->maximum < 0 ||
         (depth->front_mask | depth->front_write | depth->front_reference | depth->back_mask | depth->back_write | depth->back_reference) > 255 || images > 65535 || logic > 16) return NULL;
     if (!valid_multisample(device, abi, info, samples)) return NULL;
     if (depth->flags && !info->target_info.has_depth_stencil_target) return NULL;

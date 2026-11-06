@@ -170,7 +170,7 @@ Configurations are independent caller-owned ElectronObject values; disposing a d
 
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
 
-Depth/stencil formats accept only DepthStencilAttachment and optional Sampling usage on this profile. Empty data initializes every depth layer/mip to zero through native passes. Single-sample native aspect transfers execute through the [depth transfer adapter](../components/depth-texture-transfers.md); copied depth-bound state uses the [native depth/stencil feature](../components/depth-stencil-state.md). See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).
+Depth/stencil formats accept queried attachment/input/resolve roles and independent Sampling and transfer permissions. [Stencil-only S8UINT](../components/stencil-textures.md) uses one byte per texel and unsigned sampling. Empty data initializes every depth layer/mip to zero through native passes. Single-sample native aspect transfers execute through the [depth transfer adapter](../components/depth-texture-transfers.md); copied depth-bound state uses the [native depth/stencil feature](../components/depth-stencil-state.md). See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).
 
 <a id="member-17c8de36cbaa"></a>
 ### IsResolveBuffer

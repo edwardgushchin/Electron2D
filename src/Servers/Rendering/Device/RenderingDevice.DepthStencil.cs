@@ -51,14 +51,16 @@ public sealed unsafe partial class RenderingDevice
     }
     private static SDL.GPUCompareOp Compare(CompareOperator value) => value is >= CompareOperator.Never and < CompareOperator.Max ? (SDL.GPUCompareOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
     private static SDL.GPUStencilOp Stencil(StencilOperation value) => value is >= StencilOperation.Keep and < StencilOperation.Max ? (SDL.GPUStencilOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
-    private static bool DepthFormat(DataFormat format) => format is DataFormat.D16UNORM or DataFormat.X8D24UNORMPACK32 or DataFormat.D32SFLOAT or DataFormat.D16UNORMS8UINT or DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
-    private static bool StencilFormat(DataFormat format) => format is DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
+    private static bool DepthFormat(DataFormat format) => format is DataFormat.S8UINT or DataFormat.D16UNORM or DataFormat.X8D24UNORMPACK32 or DataFormat.D32SFLOAT or DataFormat.D16UNORMS8UINT or DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
+    private static bool StencilFormat(DataFormat format) => format is DataFormat.S8UINT or DataFormat.D24UNORMS8UINT or DataFormat.D32SFLOATS8UINT;
     [StructLayout(LayoutKind.Sequential)]
     private readonly record struct NativeDepthStencilState(uint Flags, uint FrontMask, uint FrontWrite, uint FrontReference, uint BackMask, uint BackWrite, uint BackReference, float Minimum, float Maximum);
     private SDL.GPUDepthStencilState DepthState(RDPipelineDepthStencilState state, RDPipelineRasterizationState raster, FramebufferPassLayout target, out byte reference, out NativeDepthStencilState native)
     {
         var enabled = state.EnableDepthTest || state.EnableDepthWrite || state.EnableStencil || state.EnableDepthRange;
         if (enabled && target.DepthIndex < 0) throw new ArgumentException("Depth/stencil state requires a depth attachment.", nameof(state));
+        var stencilOnly = target.DepthIndex >= 0 && target.Formats[target.DepthIndex] == DataFormat.S8UINT;
+        if (stencilOnly && (state.EnableDepthTest || state.EnableDepthWrite || state.EnableDepthRange)) throw new ArgumentException("Stencil-only attachments have no depth aspect.", nameof(state));
         if (state.EnableStencil && !StencilFormat(target.Formats[target.DepthIndex])) throw new ArgumentException("Stencil testing requires a stencil aspect.", nameof(state));
         if (state.EnableDepthRange && state.DepthRangeMin > state.DepthRangeMax) throw new ArgumentException("An enabled depth range must have an ordered lower and upper bound.", nameof(state));
         if (state.EnableDepthRange && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.DepthBoundsProperty, false)) throw new NotSupportedException("Depth bounds require the independently enabled native depth-bounds feature.");
@@ -67,7 +69,7 @@ public sealed unsafe partial class RenderingDevice
         var frontMask = unchecked((byte)state.FrontOpCompareMask); var backMask = unchecked((byte)state.BackOpCompareMask);
         var frontWrite = unchecked((byte)state.FrontOpWriteMask); var backWrite = unchecked((byte)state.BackOpWriteMask);
         var separate = state.EnableStencil && raster.CullMode == PolygonCullMode.Disabled && (frontReference != backReference || frontMask != backMask || frontWrite != backWrite);
-        native = new((state.EnableDepthRange ? 1u : 0u) | (separate ? 2u : 0u), frontMask, frontWrite, unchecked((byte)frontReference), backMask, backWrite, unchecked((byte)backReference), state.DepthRangeMin, state.DepthRangeMax);
+        native = new((state.EnableDepthRange ? 1u : 0u) | (separate ? 2u : 0u) | (stencilOnly ? 4u : 0u), frontMask, frontWrite, unchecked((byte)frontReference), backMask, backWrite, unchecked((byte)backReference), state.DepthRangeMin, state.DepthRangeMax);
         var back = raster.CullMode == PolygonCullMode.Front;
         reference = (byte)(back ? backReference : frontReference);
         return new()
@@ -92,7 +94,7 @@ public sealed unsafe partial class RenderingDevice
             for (uint mip = 0; mip < info.Mips; mip++)
             {
                 var depth = new SDL.GPUDepthStencilTargetInfo { Texture = entry.NativeHandle, Layer = (byte)layer, MipLevel = (byte)mip, ClearDepth = 0, ClearStencil = 0, LoadOp = SDL.GPULoadOp.Clear, StencilLoadOp = SDL.GPULoadOp.Clear, StoreOp = SDL.GPUStoreOp.Store, StencilStoreOp = SDL.GPUStoreOp.Store };
-                var pass = SDL.BeginGPURenderPass(Commands(), 0, 0, (nint)(&depth));
+                var pass = BeginGraphicsPass(Commands(), 0, 0, (nint)(&depth), info.Format);
                 if (pass == 0) throw GPUPhysicsDevice.Failure("initialize depth attachment");
                 SDL.EndGPURenderPass(pass);
             }

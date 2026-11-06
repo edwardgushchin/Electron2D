@@ -27,3 +27,5 @@ Recording transitions both aspects to attachment layouts, performs the native re
 Ignored receipts at `C:/Users/eduar/.codex/artifacts/Electron2D/depth-resolve-20261106` retain source/binary runs, the native checker, independent depth/stencil and optional API refusal controls, the preceding full-module missing-export control, package/AOT checks and exact identities. The exercised host is Windows x64, Vulkan, NVIDIA GeForce RTX 3090 Ti. The native checker also guards the private ABI/null arguments and existing views, allocator retirement and aspect commands.
 
 These receipts are bounded platform progress. Other operating systems, non-Vulkan backends, validation layers, native heap/driver allocation accounting, performance and human acceptance retain their separate checks. They do not qualify the complete release RID matrix under ADR 0021.
+
+[Stencil-only S8UINT](stencil-textures.md) resolves sample zero using only the enabled stencil bit. It retains the same explicit/inferred framebuffer ownership and ordering.

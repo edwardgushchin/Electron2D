@@ -19,7 +19,8 @@ public sealed unsafe partial class RenderingDevice
             SampleCount = ExactSamples(info.Format, info.Samples),
             Usage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | (DepthFormat(info.Format) ? SDL.GPUTextureUsageFlags.DepthStencilTarget : 0)
         };
-        if (DepthFormat(info.Format))
+        if (info.Format == DataFormat.S8UINT) entry.InputShadow = CreateStencilTexture(create);
+        else if (DepthFormat(info.Format))
         {
             var format = create.Format;
             entry.InputShadow = new(GPUTextureViews.Create(Device, 1, in create, (nint)(&format), 1), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);

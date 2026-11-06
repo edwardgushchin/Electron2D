@@ -117,3 +117,5 @@ Configurations are independent caller-owned ElectronObject values; disposing a d
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
 
 Shared and sliced sampled MSAA views preserve their source sample count and native root lifetime. The consuming shader must declare the matching ordinary/MS and image/array role; see [multisample shader reads](../components/local-compute.md#multisample-shader-reads).
+
+[Stencil-only views](../components/stencil-textures.md) retain S8UINT storage and unsigned sampled values. Color reinterpretation rejects; shared selections retain original-owner physical coordinates.

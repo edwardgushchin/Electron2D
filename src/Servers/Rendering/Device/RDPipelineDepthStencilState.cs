@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Describes copied depth testing, depth writes and eight-bit two-sided stencil operations.</summary>
 /// <remarks>Independent face masks/references and stored-depth bounds use the native pipeline adapter.
-/// Visible stencil references must fit eight bits. Depth writes require an enabled depth test.</remarks>
+/// Visible stencil references must fit eight bits. Depth writes require an enabled depth test. Stencil-only S8UINT attachments execute stencil operations; enabled depth comparison, writes or bounds require a depth aspect.</remarks>
 public sealed class RDPipelineDepthStencilState : ElectronObject
 {
     /// <summary>Creates the default disabled tests and zeroing stencil operations.</summary>

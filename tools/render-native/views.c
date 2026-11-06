@@ -2,6 +2,7 @@
 #include <stdint.h>
 #define E2D_RENDER_FILTERING
 #include "memory-layout.h"
+#include "stencil.h"
 #include <SDL3/SDL_vulkan.h>
 
 #if defined(_WIN32)
@@ -76,6 +77,7 @@ static VkFormat native_format(SDL_GPUTextureFormat format)
 {
     return (uint32_t)format < SDL_arraysize(SDLToVK_TextureFormat) ? SDLToVK_TextureFormat[format] : VK_FORMAT_UNDEFINED;
 }
+static VkFormat info_format(const SDL_GPUTextureCreateInfo *info) { return e2d_stencil_info(info) ? VK_FORMAT_S8_UINT : native_format(info->format); }
 static bool depth_format(VkFormat format) { return format >= VK_FORMAT_D16_UNORM && format <= VK_FORMAT_D32_SFLOAT_S8_UINT; }
 static bool format_supported(SDL_GPUDevice *device, SDL_GPUTextureFormat format, SDL_GPUTextureType type, SDL_GPUTextureUsageFlags usage)
 {
@@ -103,6 +105,7 @@ static VkComponentMapping swizzle(SDL_GPUTextureFormat format)
 }
 static VkImageAspectFlags aspects(VkFormat format)
 {
+    if (format == VK_FORMAT_S8_UINT) return VK_IMAGE_ASPECT_STENCIL_BIT;
     if (!depth_format(format)) return VK_IMAGE_ASPECT_COLOR_BIT;
     return VK_IMAGE_ASPECT_DEPTH_BIT | ((format == VK_FORMAT_D24_UNORM_S8_UINT || format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D16_UNORM_S8_UINT) ? VK_IMAGE_ASPECT_STENCIL_BIT : 0);
 }
@@ -147,24 +150,25 @@ static bool wrap(SDL_GPUDevice *device, View *v, VkImage image, const SDL_GPUTex
     if (!c || !t) return false;
     c->header.info = *info; c->header.info.props = SDL_CreateProperties(); c->textures = SDL_malloc(sizeof(VulkanTexture *));
     if (!c->header.info.props || !c->textures) return false;
+    if (e2d_stencil_info(info) && !SDL_SetBooleanProperty(c->header.info.props, E2D_STENCIL_PROPERTY, true)) return false;
     c->textures[0] = t; c->activeTexture = t; c->textureCount = c->textureCapacity = 1;
-    t->container = c; t->image = image; t->aspectFlags = aspects(native_format(info->format)); t->swizzle = swizzle(info->format);
+    t->container = c; t->image = image; t->aspectFlags = aspects(info_format(info)); t->swizzle = swizzle(info->format);
     t->depth = 1; t->levelCount = v->levels; t->layerCount = v->layers; t->type = info->type; t->usage = info->usage;
     t->subresourceCount = info->num_levels * info->layer_count_or_depth;
     t->subresources = SDL_calloc(t->subresourceCount, sizeof(*t->subresources)); if (!t->subresources) { t->subresourceCount = 0; return false; }
-    VkImageAspectFlags sampled_aspect = t->aspectFlags & ~VK_IMAGE_ASPECT_STENCIL_BIT;
-    if (!image_view(r, image, native_format(info->format), t->swizzle, sampled_aspect, v->base_layer, info->layer_count_or_depth, v->base_level, info->num_levels, info->type == SDL_GPU_TEXTURETYPE_2D ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_2D_ARRAY, &t->fullView)) return false;
+    VkImageAspectFlags sampled_aspect = (t->aspectFlags & VK_IMAGE_ASPECT_DEPTH_BIT) ? VK_IMAGE_ASPECT_DEPTH_BIT : t->aspectFlags;
+    if (!image_view(r, image, info_format(info), t->swizzle, sampled_aspect, v->base_layer, info->layer_count_or_depth, v->base_level, info->num_levels, info->type == SDL_GPU_TEXTURETYPE_2D ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_2D_ARRAY, &t->fullView)) return false;
     for (uint32_t layer = 0; layer < info->layer_count_or_depth; layer++) for (uint32_t level = 0; level < info->num_levels; level++) {
         VulkanTextureSubresource *s = &t->subresources[layer * info->num_levels + level];
         s->parent = t; s->layer = v->base_layer + layer; s->level = v->base_level + level;
         if (info->usage & SDL_GPU_TEXTUREUSAGE_COLOR_TARGET) {
             s->renderTargetViews = SDL_calloc(1, sizeof(VkImageView));
-            if (!s->renderTargetViews || !image_view(r, image, native_format(info->format), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, s->renderTargetViews)) return false;
+            if (!s->renderTargetViews || !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, s->renderTargetViews)) return false;
         }
         if ((info->usage & (SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE)) && (!v->storage_array || layer == 0) &&
-            !image_view(r, image, native_format(info->format), t->swizzle, t->aspectFlags, s->layer, v->storage_array ? info->layer_count_or_depth : 1, s->level, 1, v->storage_array ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D, &s->computeWriteView)) return false;
+            !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, v->storage_array ? info->layer_count_or_depth : 1, s->level, 1, v->storage_array ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D, &s->computeWriteView)) return false;
         if ((info->usage & SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET) &&
-            !image_view(r, image, native_format(info->format), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, &s->depthStencilView)) return false;
+            !image_view(r, image, info_format(info), t->swizzle, t->aspectFlags, s->layer, 1, s->level, 1, VK_IMAGE_VIEW_TYPE_2D, &s->depthStencilView)) return false;
     }
     return true;
 }
@@ -229,7 +233,8 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VulkanTextureContainer *src = (VulkanTextureContainer *)source;
     if (!src->activeTexture || !compatible_format(src->header.info.format, format) ||
         layer >= src->header.info.layer_count_or_depth || layers > src->header.info.layer_count_or_depth - layer || level >= src->header.info.num_levels || levels > src->header.info.num_levels - level) return NULL;
-    if (!format_supported(device, format, array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D, src->header.info.usage)) return NULL;
+    if (e2d_stencil_info(&src->header.info)) { if (format != SDL_GPU_TEXTUREFORMAT_R8_UINT || e2d_render_stencil_support(device, 1, src->header.info.usage, src->header.info.sample_count) != 1) return NULL; }
+    else if (!format_supported(device, format, array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D, src->header.info.usage)) return NULL;
     View *v = SDL_calloc(1, sizeof(*v)); if (!v) return NULL;
     v->root = source; v->base_layer = layer; v->base_level = level; v->storage_array = array == 2;
     ViewCache *cache = view_cache(device, false);
@@ -258,10 +263,14 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
 }
 E2D_EXPORT SDL_GPUTexture *e2d_render_texture_create(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, const SDL_GPUTextureFormat *formats, uint32_t count)
 {
-    if (e2d_render_view_support(device, abi) != 1 || !info || !formats || !count || count > 256 || !info->width || !info->height || !info->num_levels || !info->layer_count_or_depth || info->num_levels > 32 || info->layer_count_or_depth > 2048 ||
+    if ((abi != 1 && abi != 2 && abi != 3) || e2d_render_view_support(device, abi == 3 ? 2 : abi) != 1 || !info) return NULL;
+    bool stencil = e2d_stencil_info(info);
+    if (stencil && (abi != 3 || count != 1 || info->format != SDL_GPU_TEXTUREFORMAT_R8_UINT || e2d_render_stencil_support(device, 1, info->usage, info->sample_count) != 1)) return NULL;
+    if (!stencil && abi == 3) return NULL;
+    if (!formats || !count || count > 256 || !info->width || !info->height || !info->num_levels || !info->layer_count_or_depth || info->num_levels > 32 || info->layer_count_or_depth > 2048 ||
         (info->type != SDL_GPU_TEXTURETYPE_2D && info->type != SDL_GPU_TEXTURETYPE_2D_ARRAY) || (info->type == SDL_GPU_TEXTURETYPE_2D && info->layer_count_or_depth != 1) || info->sample_count > SDL_GPU_SAMPLECOUNT_8) return NULL;
     bool base = false;
-    for (uint32_t i = 0; i < count; i++) { base |= formats[i] == info->format; if (!compatible_format(info->format, formats[i]) || !format_supported(device, formats[i], info->type, info->usage)) return NULL; }
+    for (uint32_t i = 0; i < count; i++) { base |= formats[i] == info->format; if (!compatible_format(info->format, formats[i]) || (!stencil && !format_supported(device, formats[i], info->type, info->usage))) return NULL; }
     if (!base) return NULL;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     View *v = SDL_calloc(1, sizeof(*v)); if (!v) return NULL;
@@ -272,7 +281,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_texture_create(SDL_GPUDevice *device, uint
     if (info->usage & SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET) usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     if (info->usage & (SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_WRITE | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE)) usage |= VK_IMAGE_USAGE_STORAGE_BIT;
     VkImageCreateInfo create = {.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO, .flags = count > 1 ? VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT : 0, .imageType = VK_IMAGE_TYPE_2D,
-        .format = native_format(info->format), .extent = {info->width, info->height, 1}, .mipLevels = info->num_levels, .arrayLayers = info->layer_count_or_depth,
+        .format = info_format(info), .extent = {info->width, info->height, 1}, .mipLevels = info->num_levels, .arrayLayers = info->layer_count_or_depth,
         .samples = (VkSampleCountFlagBits)(1u << info->sample_count), .tiling = VK_IMAGE_TILING_OPTIMAL, .usage = usage, .sharingMode = VK_SHARING_MODE_EXCLUSIVE, .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED};
     VkImageFormatProperties supported;
     if (r->vkGetPhysicalDeviceImageFormatProperties(r->physicalDevice, create.format, create.imageType, create.tiling, create.usage, create.flags, &supported) != VK_SUCCESS ||
@@ -325,7 +334,9 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_region(SDL_GPUDevice *device, uint32_
 E2D_EXPORT int e2d_render_view_format_support(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
 {
     if (!info || e2d_render_view_support(device, abi) != 1) return 0;
-    if (!compatible_format(info->format, format) || !format_supported(device, format, info->type, info->usage) || info->sample_count > SDL_GPU_SAMPLECOUNT_8) return 0;
+    if (info->sample_count > SDL_GPU_SAMPLECOUNT_8) return 0;
+    if (e2d_stencil_info(info)) return info->format == SDL_GPU_TEXTUREFORMAT_R8_UINT && format == info->format ? e2d_render_stencil_support(device, 1, info->usage, info->sample_count) : 0;
+    if (!compatible_format(info->format, format) || !format_supported(device, format, info->type, info->usage)) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
     if (info->usage & (SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ)) usage |= VK_IMAGE_USAGE_SAMPLED_BIT;

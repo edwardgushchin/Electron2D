@@ -2,7 +2,7 @@
 
 Last updated: 2026-11-06
 
-[ADR 0028](../decisions/rendering.md#adr-0028) extends existing ordered framebuffer inputs to depth images. GLSL/HLSL `subpassLoad` reads the depth component at the current fragment pixel and selected sample. D16UNORM, X8D24UNORMPACK32, D32SFLOAT, D24UNORMS8UINT and D32SFLOATS8UINT retain their stored formats. Combined formats expose depth to floating inputs and preserve their stored stencil. A native stencil-only format/view remains a separate capability; this does not reinterpret stencil as floating depth.
+[ADR 0028](../decisions/rendering.md#adr-0028) extends existing ordered framebuffer inputs to depth images. GLSL/HLSL `subpassLoad` reads the depth component at the current fragment pixel and selected sample. D16UNORM, X8D24UNORMPACK32, D32SFLOAT, D24UNORMS8UINT and D32SFLOATS8UINT retain their stored formats. Combined formats expose depth to floating inputs and preserve their stored stencil. A separate [stencil-only capability](stencil-textures.md) supplies unsigned inputs; combined formats never reinterpret stencil as floating depth.
 
 ## Public allocation and binding
 
@@ -23,3 +23,5 @@ Depth inputs and their snapshots use the existing native image/view allocator. T
 [DepthInputs.Consumer](../../tests/DepthInputs.Consumer/README.md) exercises real native depth producers and inputs in both source/SPIR-V and compiler-free binary profiles. Its basic matrix covers five formats, 1X/2X/4X/8X, GLSL/HLSL and direct/sampled snapshots with independently expected per-pixel/sample values. Additional scenarios cover layered views, shared/nested physical selection, descriptor arrays, input-only upload/update/MS copies, source/stencil preservation, request-time output snapshots, owner/list/role guards, retirement and prepared zero owner managed bytes. Linear/sRGB shared color inputs exercise the common readonly capability correction. A failing alias-feedback control guards the shared framebuffer validator.
 
 Ignored receipts under `C:/Users/eduar/.codex/artifacts/Electron2D/depth-inputs-20261106` retain exact source/native/package/run identities, native ABI checks, preceding-module refusal and the package/NativeAOT qualification. The exercised host is Windows x64/Vulkan, NVIDIA RTX 3090 Ti. Managed measurements cover the creating thread; native heap/driver allocations, validation layers, performance and human acceptance remain separate. Full release RID/package delivery and foreign operating systems/backends retain the ADR 0021 completion gate. Declaration coverage does not establish that matrix.
+
+[Stencil-only S8UINT](stencil-textures.md) now supplies unsigned inputs through its separate ABI4 capability and stencil-only views; combined formats continue to supply floating depth.

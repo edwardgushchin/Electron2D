@@ -108,7 +108,7 @@ public sealed unsafe partial class RenderingDevice
                     StoreOp = SDL.GPUStoreOp.Store,
                     StencilStoreOp = SDL.GPUStoreOp.Store
                 };
-                for (var view = 0; view < FramebufferLayouts(target.Format).ViewCount; view++) { depth.Layer = (byte)view; var pass = SDL.BeginGPURenderPass(Commands(), 0, 0, (nint)(&depth)); if (pass == 0) throw GPUPhysicsDevice.Failure("clear framebuffer depth/stencil"); SDL.EndGPURenderPass(pass); }
+                for (var view = 0; view < FramebufferLayouts(target.Format).ViewCount; view++) { depth.Layer = (byte)view; var pass = BeginGraphicsPass(Commands(), 0, 0, (nint)(&depth), image.Texture!.Format); if (pass == 0) throw GPUPhysicsDevice.Failure("clear framebuffer depth/stencil"); SDL.EndGPURenderPass(pass); }
             }
         }
     }
@@ -139,7 +139,7 @@ public sealed unsafe partial class RenderingDevice
             depth.StoreOp = SDL.GPUStoreOp.Store; depth.StencilStoreOp = depth.StoreOp;
         }
         if (_graphicsPipeline is not null && (PipelineProgram(_graphicsPipeline).PhysicalAddresses || NativeUniformsUsed(PipelineProgram(_graphicsPipeline)))) PrepareAddressBuffers();
-        var pass = target.Empty != 0 ? NativeEmptyBegin(Device, 1, Commands(), target.Empty) : SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.ColorSlots.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
+        var pass = target.Empty != 0 ? NativeEmptyBegin(Device, 1, Commands(), target.Empty) : BeginGraphicsPass(Commands(), (nint)colors, (uint)layout.ColorSlots.Length, depthIndex >= 0 ? (nint)(&depth) : 0, depthIndex >= 0 ? layout.Formats[depthIndex] : DataFormat.Max);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
         _drawPass = pass; target.Visited[_drawView] = true;
         if (resetBindings) { _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush(); }

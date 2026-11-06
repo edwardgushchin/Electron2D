@@ -15,10 +15,11 @@ public sealed unsafe partial class RenderingDevice
         if (_rasterSupport != 1) throw new NotSupportedException("Raster state requires the native graphics-pipeline adapter.");
         uint abi = 1;
         if (images != 0 && imageWrites != (((images & 255) != 0 ? 1u : 0u) | ((images >> 8) != 0 ? 2u : 0u))) { RequireStorageArrayViews(); abi = 2; images |= imageWrites << 16; }
+        if ((depth.Flags & 4) != 0) { images = (images & 65535) | imageWrites << 16; abi = 3; }
         if (blend.Count != 0) return NativeBlendPipeline(Device, abi, in info, lineWidth, discard ? 1u : 0u, in samples, in depth, images, logic, in blend);
         if (logic != 0) return NativeLogicPipeline(Device, abi, in info, lineWidth, discard ? 1u : 0u, in samples, in depth, images, logic);
         if (images != 0) return NativeImagesPipeline(Device, abi, in info, lineWidth, discard ? 1u : 0u, in samples, in depth, images);
-        if (depth.Flags != 0) return NativeDepthPipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u, in samples, in depth);
+        if (depth.Flags != 0) return NativeDepthPipeline(Device, abi, in info, lineWidth, discard ? 1u : 0u, in samples, in depth);
         if (samples.Flags != 0) return NativeMultisamplePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u, in samples);
         return lineWidth == 1 && !outline ? NativeRasterPipeline(Device, 1, in info) : NativeLinePipeline(Device, 1, in info, lineWidth, discard ? 1u : 0u);
     }

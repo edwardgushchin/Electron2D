@@ -199,3 +199,5 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 RenderingServer.TextureGetRDTexture exposes actual uploaded ordinary/array storage and completed viewport images to the retained device. Compatible updates keep identity; source allocation replacement/disposal or viewport target retirement expires it. Device writes affect GPU pixels while authored CPU snapshots remain unchanged. TextureRD/TextureArrayRD can sample an exported RID directly. Wrapper disposal does not own the source. See [ordering, lifetime and executed checks](../components/local-compute.md#renderer-texture-export-checkpoint).
 
 Shared subresource/format RIDs follow the [native view contract](../components/shared-texture-views.md). GetImage returns raw effective-format pixels; incomplete mip intervals produce a base-only Image while HasMIPMaps describes the GPU interval. Original-owner retirement invalidates this borrowed resource.
+
+[Stencil-only textures](../components/stencil-textures.md) sample raw unsigned stencil through nearest native canvas reads and expose exact one-byte values as float32 RGBA snapshots.

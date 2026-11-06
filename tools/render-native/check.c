@@ -5,6 +5,9 @@
 #include "memory-layout.h"
 #include <SDL3/SDL_vulkan.h>
 
+extern int e2d_render_stencil_support(SDL_GPUDevice *, uint32_t, SDL_GPUTextureUsageFlags, uint32_t);
+extern SDL_GPURenderPass *e2d_render_stencil_begin(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, const SDL_GPUColorTargetInfo *, uint32_t, const SDL_GPUDepthStencilTargetInfo *);
+
 typedef struct { uint64_t textures, buffers, total; } Memory;
 extern int e2d_render_aspect_support(SDL_GPUDevice *, uint32_t, SDL_GPUTextureFormat);
 extern int e2d_render_depth_resolve_support(SDL_GPUDevice *, uint32_t);
@@ -232,7 +235,7 @@ int main(int argc, char **argv)
     depth.minimum = 0; depth.back_reference = 256; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     require(e2d_render_aspect_support(NULL, 1, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
     require(e2d_render_aspect_support(NULL, 2, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
-    require(e2d_render_aspect_support((SDL_GPUDevice *)(uintptr_t)1, 3, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
+    require(e2d_render_aspect_support((SDL_GPUDevice *)(uintptr_t)1, 5, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
     require(e2d_render_depth_resolve_support(NULL, 1) == -1);
     require(e2d_render_depth_resolve_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_depth_resolve_create(NULL, 1, NULL, NULL, 1, 1) == NULL);
@@ -340,6 +343,18 @@ int main(int argc, char **argv)
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);
     aspect_copy_guards(device);
+    require(e2d_render_stencil_support(NULL, 1, SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET, 0) == -1);
+    require(e2d_render_stencil_support((SDL_GPUDevice *)(uintptr_t)1, 0, 0, 0) == -1);
+    require(e2d_render_stencil_support(device, 1, 0, 4) == -1);
+    require(e2d_render_stencil_support(device, 1, SDL_GPU_TEXTUREUSAGE_COLOR_TARGET, 0) == 0);
+    require(e2d_render_stencil_begin((SDL_GPUDevice *)(uintptr_t)1, 0, (void *)(uintptr_t)1, NULL, 0, (void *)(uintptr_t)1) == NULL);
+    require(e2d_render_stencil_begin(device, 1, NULL, NULL, 0, NULL) == NULL);
+    int stencil_support = e2d_render_stencil_support(device, 1, SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER, 0);
+    require(stencil_support >= 0 && stencil_support <= 1);
+    require(e2d_render_aspect_support(device, 3, SDL_GPU_TEXTUREFORMAT_R8_UINT) == stencil_support);
+    require(e2d_render_aspect_support(device, 3, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM) == 0);
+    int stencil_input = e2d_render_aspect_support(device, 4, SDL_GPU_TEXTUREFORMAT_R8_UINT); require(stencil_input >= 0 && stencil_input <= stencil_support);
+    printf("Native S8 stencil support=%d, input=%d; independent format/ABI guards passed\n", stencil_support, stencil_input);
     int depth_resolve = e2d_render_depth_resolve_support(device, 1); require(depth_resolve >= 0 && depth_resolve <= 3);
     require(e2d_render_depth_resolve_support(device, 1) == depth_resolve);
     require(e2d_render_depth_resolve_create(device, 1, NULL, NULL, 1, 1) == NULL);

@@ -9,11 +9,11 @@ public sealed unsafe partial class RenderingDevice
     private uint _depthTransferChecked, _depthTransferSupported;
     private bool DepthTransfersSupported(DataFormat format, bool graphicsInputs = false)
     {
-        var native = NativeFormat(format); var index = (int)native - (int)SDL.GPUTextureFormat.D16Unorm;
-        if ((uint)index >= 5) return false; var bit = 1u << (index + (graphicsInputs ? 5 : 0));
+        var native = NativeFormat(format); var index = format == DataFormat.S8UINT ? 5 : (int)native - (int)SDL.GPUTextureFormat.D16Unorm;
+        if ((uint)index >= 6) return false; var bit = 1u << (index + (graphicsInputs ? 6 : 0));
         if ((_depthTransferChecked & bit) == 0)
         {
-            try { if (NativeAspectSupport(Device, graphicsInputs ? 2u : 1u, native) == 1) _depthTransferSupported |= bit; }
+            try { if (NativeAspectSupport(Device, format == DataFormat.S8UINT ? graphicsInputs ? 4u : 3u : graphicsInputs ? 2u : 1u, native) == 1) _depthTransferSupported |= bit; }
             catch (EntryPointNotFoundException) { }
             _depthTransferChecked |= bit;
         }
@@ -21,8 +21,8 @@ public sealed unsafe partial class RenderingDevice
     }
     private void RequireDepthTransfers(DataFormat format)
     { if (!DepthTransfersSupported(format)) throw new NotSupportedException("Depth/stencil transfers require the native aspect adapter and format support."); }
-    private static uint DepthBytes(DataFormat format) => format == DataFormat.D16UNORM ? 2u : 4u;
-    private static uint DepthPackedBytes(DataFormat format) => format == DataFormat.D32SFLOATS8UINT ? 8u : DepthBytes(format);
+    private static uint DepthBytes(DataFormat format) => format == DataFormat.S8UINT ? 0u : format == DataFormat.D16UNORM ? 2u : 4u;
+    private static uint DepthPackedBytes(DataFormat format) => format == DataFormat.S8UINT ? 1u : format == DataFormat.D32SFLOATS8UINT ? 8u : DepthBytes(format);
     private static uint AlignAspect(uint value) => checked((value + 3) & ~3u);
     private static uint StencilOffset(TextureInfo info, int mip)
     { return AlignAspect(checked(info.Offsets[mip] + Math.Max(1, info.Width >> mip) * Math.Max(1, info.Height >> mip) * DepthBytes(info.Format))); }
@@ -55,6 +55,7 @@ public sealed unsafe partial class RenderingDevice
             var depthBytes = (int)DepthBytes(info.Format); var stride = (int)DepthPackedBytes(info.Format); var pixels = source.Length / stride;
             var target = new Span<byte>((void*)(pointer + (nint)info.Offsets[mip]), pixels * depthBytes);
             var stencil = StencilFormat(info.Format) ? new Span<byte>((void*)(pointer + (nint)StencilOffset(info, mip)), pixels) : default;
+            if (info.Format == DataFormat.S8UINT) { source.CopyTo(stencil); continue; }
             for (var i = 0; i < pixels; i++)
             {
                 source.Slice(i * stride, depthBytes).CopyTo(target.Slice(i * depthBytes, depthBytes));
@@ -72,6 +73,7 @@ public sealed unsafe partial class RenderingDevice
             var stride = (int)DepthPackedBytes(info.Format); var bytes = (int)DepthBytes(info.Format); var pixels = target.Length / stride;
             var source = new ReadOnlySpan<byte>((void*)(pointer + (nint)info.Offsets[mip]), pixels * bytes);
             var stencil = StencilFormat(info.Format) ? new ReadOnlySpan<byte>((void*)(pointer + (nint)StencilOffset(info, mip)), pixels) : default;
+            if (info.Format == DataFormat.S8UINT) { stencil.CopyTo(target); continue; }
             target.Clear();
             for (var i = 0; i < pixels; i++)
             {

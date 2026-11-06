@@ -41,3 +41,5 @@ After sixteen warmups, each format runs thirty-two upload/copy/span-read/Memory-
 The exercised host is Linux/Wayland, Vulkan, NVIDIA RTX 3090 Ti. Native heap traffic, validation layers, foreign backend/platform behavior and physical/owner acceptance are unverified. Existing color transfers, shared views, MSAA sampling/storage, depth graphics, source authoring and ordinary readback regressions remain relevant checks.
 
 [Depth/stencil resolve](depth-resolve.md) adds matching single-sample destinations, including the DepthResolveAttachment role. This role retains a private native depth/stencil target and uses the same portable aspect readback; raw CPU multisample transfers remain separate.
+
+[Stencil-only S8UINT](stencil-textures.md) adds tight one-byte chains, native stencil aspects and matching scratch/copy/view behavior to this transfer family. Combined format packing is unchanged.

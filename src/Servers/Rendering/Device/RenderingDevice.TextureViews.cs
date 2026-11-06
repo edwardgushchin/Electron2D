@@ -54,7 +54,11 @@ public sealed unsafe partial class RenderingDevice
         var format = view.FormatOverride == DataFormat.Max ? stored : view.FormatOverride;
         if (format != stored && !original.Shareable.Contains(format)) throw new ArgumentException("The view format is not declared shareable.", nameof(view));
         var create = NativeTextureInfo(original with { Format = stored });
-        if (GPUTextureViews.FormatSupport(Device, 1, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
+        if (stored == DataFormat.S8UINT)
+        {
+            if (format != DataFormat.S8UINT || !StencilSupported(original.Usage, original.Samples)) throw new NotSupportedException("A stencil-only view retains its native format and supported roles.");
+        }
+        else if (GPUTextureViews.FormatSupport(Device, 1, in create, NativeFormat(format)) != 1) throw new NotSupportedException("The shared native format is incompatible or lacks the requested usage/sample roles.");
         var info = CaptureTextureInfo(format, type, Math.Max(1, original.Width >> (int)mip), Math.Max(1, original.Height >> (int)mip), layers, mips, original.Usage, original.Shareable, original.Samples, original.Resolve, TextureSwizzles.Capture(view), stored);
         var ownedViews = owner.TextureViews ??= []; ownedViews.EnsureCapacity(ownedViews.Count + 1);
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = info.Total, TextureOwner = ownerID, TextureSource = owner };
@@ -94,6 +98,11 @@ public sealed unsafe partial class RenderingDevice
     };
     private RenderHandle CreateTextureStorage(Entry entry, in SDL.GPUTextureCreateInfo create, DataFormat[] shareable, DataFormat viewedFormat)
     {
+        if (entry.Texture!.Format == DataFormat.S8UINT)
+        {
+            if (viewedFormat != DataFormat.S8UINT || shareable.Any(format => format != DataFormat.S8UINT)) throw new ArgumentException("Stencil-only views retain their exact format.", nameof(shareable));
+            return CreateStencilTexture(create);
+        }
         var allocationFormat = create.Format;
         if (shareable.Length != 0 && !shareable.Contains(entry.Texture!.StoredFormat == DataFormat.Max ? entry.Texture.Format : entry.Texture.StoredFormat)) throw new ArgumentException("Shareable formats must include the allocation format.", nameof(shareable));
         var mutable = shareable.Any(f => NativeFormat(f) != allocationFormat);

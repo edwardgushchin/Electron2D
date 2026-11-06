@@ -9,6 +9,7 @@ public sealed unsafe partial class RenderingDevice
         if (samples is < TextureSamples.Samples1 or >= TextureSamples.Max) throw new ArgumentOutOfRangeException(nameof(samples));
         if (samples > TextureSamples.Samples8) throw new NotSupportedException("This native backend exposes sample counts up to eight.");
         var native = (SDL.GPUSampleCount)samples;
+        if (format == DataFormat.S8UINT) { if (!StencilSupported(TextureUsageBits.DepthStencilAttachment, samples)) throw new NotSupportedException("The exact stencil-only sample count is unavailable."); return native; }
         if (samples == TextureSamples.Samples1) return native;
         if (!SDL.GPUTextureSupportsSampleCount(Device, NativeFormat(format), native)) throw new NotSupportedException("The requested exact sample count is unavailable for this format.");
         return native;

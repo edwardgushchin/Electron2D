@@ -170,3 +170,6 @@ e2d_render_depth_resolve_support
 e2d_render_depth_resolve_create
 e2d_render_depth_resolve_record
 e2d_render_depth_resolve_release
+
+e2d_render_stencil_support
+e2d_render_stencil_begin

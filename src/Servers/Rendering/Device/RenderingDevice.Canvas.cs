@@ -47,7 +47,7 @@ public sealed unsafe partial class RenderingDevice
         var pixelBytes = SDL.GPUTextureFormatTexelBlockSize(native);
         var componentBytes = info.Format switch
         {
-            DataFormat.R8UINT or DataFormat.R8SINT or DataFormat.R8G8UINT or DataFormat.R8G8SINT or DataFormat.R8G8B8A8UINT or DataFormat.R8G8B8A8SINT => 1,
+            DataFormat.S8UINT or DataFormat.R8UINT or DataFormat.R8SINT or DataFormat.R8G8UINT or DataFormat.R8G8SINT or DataFormat.R8G8B8A8UINT or DataFormat.R8G8B8A8SINT => 1,
             DataFormat.R16UINT or DataFormat.R16SINT or DataFormat.R16G16UINT or DataFormat.R16G16SINT or DataFormat.R16G16B16A16UINT or DataFormat.R16G16B16A16SINT => 2,
             _ => 4
         };

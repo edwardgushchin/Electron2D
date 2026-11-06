@@ -251,7 +251,7 @@ var selection = RenderingDevice.DataFormat.A1R5G5B5UNORMPACK16;
 | `public const Electron2D.RenderingDevice.DataFormat R8UINT = 12` | R8UINT encoded pixel/block format; query support before creation. |
 | `public const Electron2D.RenderingDevice.DataFormat R8UNORM = 8` | R8UNORM encoded pixel/block format; query support before creation. |
 | `public const Electron2D.RenderingDevice.DataFormat R8USCALED = 10` | R8USCALED encoded pixel/block format; query support before creation. |
-| `public const Electron2D.RenderingDevice.DataFormat S8UINT = 126` | S8UINT encoded pixel/block format; query support before creation. |
+| `public const Electron2D.RenderingDevice.DataFormat S8UINT = 126` | S8UINT stores one unsigned stencil byte per texel; query native attachment/input/resolve and transfer support before creation. See [stencil-only textures](../components/stencil-textures.md). |
 | `public const Electron2D.RenderingDevice.DataFormat X8D24UNORMPACK32 = 124` | X8D24UNORMPACK32 encoded pixel/block format; query support before creation. |
 
 ## Member descriptions
@@ -2342,7 +2342,7 @@ R8USCALED encoded pixel/block format; query support before creation.
 public const Electron2D.RenderingDevice.DataFormat S8UINT = 126
 ```
 
-S8UINT encoded pixel/block format; query support before creation.
+S8UINT stores one unsigned stencil byte per texel; query native attachment/input/resolve and transfer support before creation. See [stencil-only textures](../components/stencil-textures.md).
 
 <a id="member-cc5bec60491b"></a>
 ### X8D24UNORMPACK32
