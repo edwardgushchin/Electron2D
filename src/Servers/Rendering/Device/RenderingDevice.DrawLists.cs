@@ -74,6 +74,7 @@ public sealed unsafe partial class RenderingDevice
         var views = (uint)FramebufferLayouts(target.Format).ViewCount;
         foreach (var index in layout.Colors) if (index >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[index], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
         if (layout.DepthIndex >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[layout.DepthIndex], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
+        if (layout.DepthResolveIndex >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[layout.DepthResolveIndex], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
         foreach (var index in layout.Resolves) if (index >= 0 && GPUTextureViews.Overlap(Device, Get(target.Textures[index], Kind.Texture).NativeHandle, views, 1, entry.NativeHandle, entry.Texture!.Layers, entry.Texture.Mips)) return true;
         return false;
     }
@@ -95,7 +96,7 @@ public sealed unsafe partial class RenderingDevice
                 if (slot < 8 && (((uint)flags >> slot) & 1) != 0) for (uint view = 0; view < FramebufferLayouts(target.Format).ViewCount; view++) ClearMultisample(image, values[slot], view);
                 slot++;
             }
-            else if (DepthFormat(image.Texture!.Format) && (flags & (DrawFlags.ClearDepth | DrawFlags.ClearStencil)) != 0)
+            else if ((layout.Usage[i] & TextureUsageBits.DepthStencilAttachment) != 0 && (flags & (DrawFlags.ClearDepth | DrawFlags.ClearStencil)) != 0)
             {
                 var depth = new SDL.GPUDepthStencilTargetInfo
                 {
@@ -144,6 +145,7 @@ public sealed unsafe partial class RenderingDevice
         if (resetBindings) { _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush(); }
         foreach (var index in layout.Colors) if (index >= 0) target.Touched[_drawView * target.Textures.Length + index] = true;
         if (depthIndex >= 0) target.Touched[_drawView * target.Textures.Length + depthIndex] = true;
+        if (layout.DepthResolveIndex >= 0) target.Touched[_drawView * target.Textures.Length + layout.DepthResolveIndex] = true;
         foreach (var index in layout.Resolves) if (index >= 0) target.Touched[_drawView * target.Textures.Length + index] = true;
         foreach (var index in layout.Inputs) if (index >= 0) target.Touched[_drawView * target.Textures.Length + index] = true;
         var actual = _drawRegion;

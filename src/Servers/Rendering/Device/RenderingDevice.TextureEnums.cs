@@ -486,7 +486,7 @@ public sealed unsafe partial class RenderingDevice
         ColorAttachment = 2,
         /// <summary>Allows explicit synchronous or queued CPU readback.</summary>
         CPURead = 32,
-        /// <summary>Requires depth resolve attachment integration.</summary>
+        /// <summary>Marks a single-sample depth/stencil resolve destination, inferred by single-pass framebuffers when paired with a matching multisample depth target.</summary>
         DepthResolveAttachment = 4096,
         /// <summary>Allows a depth/stencil attachment with supported native sampling.</summary>
         DepthStencilAttachment = 4,

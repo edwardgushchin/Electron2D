@@ -22,18 +22,20 @@ public sealed unsafe partial class RenderingDevice
     }
     private static void ResolvePair(TextureInfo source, TextureInfo destination)
     {
-        if (source.Samples == TextureSamples.Samples1 || destination.Samples != TextureSamples.Samples1 || !destination.Resolve || DepthFormat(source.Format) || source.Format != destination.Format || source.Width != destination.Width || source.Height != destination.Height || source.Type != destination.Type || source.Layers != destination.Layers || source.Mips != 1 || destination.Mips != 1) throw new ArgumentException("Resolve requires a matching multisample color source and marked single-sample destination.");
+        var marked = destination.Resolve || DepthFormat(destination.Format) && (destination.Usage & TextureUsageBits.DepthResolveAttachment) != 0;
+        if (source.Samples == TextureSamples.Samples1 || destination.Samples != TextureSamples.Samples1 || !marked || source.Format != destination.Format || source.Width != destination.Width || source.Height != destination.Height || source.Type != destination.Type || source.Layers != destination.Layers || source.Mips != 1 || destination.Mips != 1) throw new ArgumentException("Resolve requires a matching multisample source and marked single-sample destination.");
     }
-    /// <summary>Resolves a complete multisample color image into its marked single-sample destination on the GPU timeline.</summary>
-    /// <param name="fromTexture">A multisample color image or array with CanCopyFrom usage.</param>
-    /// <param name="toTexture">A matching marked resolve color target with CanCopyTo usage.</param>
-    /// <remarks>Resolves every layer and preserves the source samples for later passes or resolves. Results are available to subsequent sampling, copies and readback. Depth resolve requires a native aspect adapter.</remarks>
+    /// <summary>Resolves a complete multisample color or depth/stencil image into its marked single-sample destination on the GPU timeline.</summary>
+    /// <param name="fromTexture">A multisample image or array with CanCopyFrom usage.</param>
+    /// <param name="toTexture">A matching marked resolve target with CanCopyTo usage.</param>
+    /// <remarks>Resolves every layer and preserves the source samples for later passes or resolves. Color uses native color resolve; depth and stencil each select sample zero through their enabled native adapter. Results are available to subsequent sampling, copies and readback. A depth destination is marked with IsResolveBuffer or DepthResolveAttachment.</remarks>
     /// <exception cref="ArgumentException">Dimensions, formats, roles or sample counts disagree.</exception>
     /// <exception cref="InvalidOperationException">A transfer role, owner thread or device state is invalid.</exception>
     public void TextureResolveMultisample(RID fromTexture, RID toTexture)
     {
         IdleList(); var source = Get(fromTexture, Kind.Texture); var destination = Get(toTexture, Kind.Texture);
         ResolvePair(source.Texture!, destination.Texture!); TextureRole(source, TextureUsageBits.CanCopyFrom); TextureRole(destination, TextureUsageBits.CanCopyTo);
+        if (DepthFormat(source.Texture!.Format)) { ResolveDepth(source, destination); return; }
         var target = new SDL.GPUColorTargetInfo { Texture = source.NativeHandle, LoadOp = SDL.GPULoadOp.Load, StoreOp = SDL.GPUStoreOp.ResolveAndStore, ResolveTexture = destination.NativeHandle };
         for (uint layer = 0; layer < source.Texture!.Layers; layer++)
         {

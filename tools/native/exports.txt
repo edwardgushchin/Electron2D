@@ -164,3 +164,7 @@ e2d_video_seek_audio
 e2d_webp_decode
 e2d_webp_encode
 e2d_webp_memory
+e2d_render_depth_resolve_support
+e2d_render_depth_resolve_create
+e2d_render_depth_resolve_record
+e2d_render_depth_resolve_release

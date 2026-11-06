@@ -56,3 +56,7 @@ EXPORTS
 e2d_render_aspect_support
 e2d_render_aspect_transfer
 e2d_render_aspect_copy
+e2d_render_depth_resolve_support
+e2d_render_depth_resolve_create
+e2d_render_depth_resolve_record
+e2d_render_depth_resolve_release

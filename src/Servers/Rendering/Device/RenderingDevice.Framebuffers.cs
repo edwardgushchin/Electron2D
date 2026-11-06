@@ -5,14 +5,14 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private sealed record FramebufferPassLayout(DataFormat[] Formats, TextureUsageBits[] Usage, TextureSamples[] AttachmentSamples,
-        int[] Colors, int[] ColorSlots, int DepthIndex, int[] Resolves, TextureSamples Samples, int[] Inputs, int[] Preserves);
+        int[] Colors, int[] ColorSlots, int DepthIndex, int DepthResolveIndex, int[] Resolves, TextureSamples Samples, int[] Inputs, int[] Preserves);
     private sealed record FramebufferLayout(FramebufferPassLayout[] Passes, int ViewCount);
     private FramebufferLayout FramebufferLayouts(int format) => _framebufferFormats.TryGetValue(format, out var layout) ? layout : throw new ArgumentException("Unknown framebuffer format.", nameof(format));
     private sealed record Framebuffer(RID[] Textures, int Format, Vector2i Size, nint Empty = 0)
     { internal bool[] Touched = []; internal bool[] Visited = []; }
     private readonly Dictionary<int, FramebufferLayout> _framebufferFormats = [];
     /// <summary>Creates a copied single-pass color and depth/stencil attachment layout.</summary>
-    /// <param name="attachments">Up to eight render color targets and one depth/stencil target with the same exact sample count.</param>
+    /// <param name="attachments">Up to eight render color targets and one depth/stencil target with the same exact sample count, plus an optional matching single-sample DepthResolveAttachment.</param>
     /// <param name="viewCount">One through 256 ordered views, each targeting the corresponding image layer.</param>
     /// <returns>A device-local framebuffer format identifier.</returns>
     /// <exception cref="NotSupportedException">A format or exact sample count is unavailable.</exception>
@@ -57,12 +57,14 @@ public sealed unsafe partial class RenderingDevice
     }
     private static FramebufferPassLayout AttachmentLayout(DataFormat[] formats, TextureUsageBits[] usage, TextureSamples[] samples, RDFramebufferPass? pass)
     {
-        var depth = -1; int[] colors, resolves;
+        var depth = -1; var depthResolve = -1; int[] colors, resolves;
         if (pass is null)
         {
             var indices = new List<int>();
             for (var i = 0; i < formats.Length; i++)
-                if (DepthFormat(formats[i])) { if (depth >= 0) throw new ArgumentException("Provide at most one depth/stencil target."); depth = i; } else if ((usage[i] & TextureUsageBits.ColorAttachment) != 0) indices.Add(i);
+                if ((usage[i] & TextureUsageBits.DepthStencilAttachment) != 0) { if (depth >= 0) throw new ArgumentException("Provide at most one depth/stencil target."); depth = i; }
+                else if ((usage[i] & TextureUsageBits.DepthResolveAttachment) != 0) { if (depthResolve >= 0) throw new ArgumentException("Provide at most one depth/stencil resolve target."); depthResolve = i; }
+                else if ((usage[i] & TextureUsageBits.ColorAttachment) != 0) indices.Add(i);
             colors = indices.ToArray(); resolves = new int[colors.Length]; Array.Fill(resolves, RDFramebufferPass.AttachmentUnused);
         }
         else
@@ -85,6 +87,11 @@ public sealed unsafe partial class RenderingDevice
             Index(depth, formats.Length);
             if (!used.Add(depth) || !DepthFormat(formats[depth]) || (usage[depth] & TextureUsageBits.DepthStencilAttachment) == 0 || samples[depth] != rasterSamples) throw new ArgumentException("Depth target must match the raster sample count and depth role.");
         }
+        if (depthResolve != -1)
+        {
+            if (depth < 0 || !used.Add(depthResolve) || rasterSamples == TextureSamples.Samples1 || samples[depthResolve] != TextureSamples.Samples1 || formats[depthResolve] != formats[depth])
+                throw new ArgumentException("Depth resolve requires a matching multisample depth/stencil target and a distinct single-sample destination.");
+        }
         for (var i = 0; i < resolves.Length; i++)
         {
             var resolve = resolves[i]; if (resolve == -1) continue; Index(resolve, formats.Length);
@@ -100,7 +107,7 @@ public sealed unsafe partial class RenderingDevice
                 throw new ArgumentException("Inputs require distinct color input attachments, separate from the pass outputs.");
         }
         foreach (var preserve in preserves) Index(preserve, formats.Length);
-        return new(formats, usage, samples, colors, slots, depth, resolves, rasterSamples, inputs, preserves);
+        return new(formats, usage, samples, colors, slots, depth, depthResolve, resolves, rasterSamples, inputs, preserves);
     }
     private static void ValidateViewCount(int viewCount) { if (viewCount is < 1 or > 256) throw new ArgumentOutOfRangeException(nameof(viewCount), "A framebuffer supports one through 256 views."); }
     private static int Index(int index, int length) => index >= 0 && index < length ? index : throw new ArgumentOutOfRangeException(nameof(index));
@@ -114,6 +121,7 @@ public sealed unsafe partial class RenderingDevice
             var pass = passes[i] = AttachmentLayout(formats, usage, samples, description);
             foreach (var color in pass.Colors) if (color >= 0) used.Add(color);
             if (pass.DepthIndex >= 0) used.Add(pass.DepthIndex);
+            if (pass.DepthResolveIndex >= 0) used.Add(pass.DepthResolveIndex);
             foreach (var resolve in pass.Resolves) if (resolve >= 0) used.Add(resolve);
             foreach (var input in pass.Inputs) if (input >= 0) used.Add(input);
         }
@@ -123,7 +131,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private FramebufferPassLayout FramebufferFormat(int format, uint renderPass = 0)
     { var passes = FramebufferLayouts(format).Passes; if (renderPass >= passes.Length) throw new ArgumentOutOfRangeException(nameof(renderPass)); return passes[renderPass]; }
-    private static bool SamePass(FramebufferPassLayout a, FramebufferPassLayout b) => a.Samples == b.Samples && a.DepthIndex == b.DepthIndex && a.Colors.AsSpan().SequenceEqual(b.Colors) && a.Resolves.AsSpan().SequenceEqual(b.Resolves) && a.Inputs.AsSpan().SequenceEqual(b.Inputs) && a.Preserves.AsSpan().SequenceEqual(b.Preserves);
+    private static bool SamePass(FramebufferPassLayout a, FramebufferPassLayout b) => a.Samples == b.Samples && a.DepthIndex == b.DepthIndex && a.DepthResolveIndex == b.DepthResolveIndex && a.Colors.AsSpan().SequenceEqual(b.Colors) && a.Resolves.AsSpan().SequenceEqual(b.Resolves) && a.Inputs.AsSpan().SequenceEqual(b.Inputs) && a.Preserves.AsSpan().SequenceEqual(b.Preserves);
 
     /// <summary>Reports the exact raster sample count of a framebuffer pass.</summary>
     /// <param name="framebufferFormat">A live framebuffer format identifier.</param>
@@ -133,7 +141,7 @@ public sealed unsafe partial class RenderingDevice
     { Access(); return FramebufferFormat(framebufferFormat, renderPass).Samples; }
     /// <summary>Creates a framebuffer borrowing device-owned color and depth/stencil images.</summary>
     /// <param name="textures">Distinct single-mip images with enough layers for all views with matching dimensions; empty RID slots must remain unused by every pass.</param>
-    /// <param name="validateWithFormat">An existing matching layout including resolve roles, or -1 for an implicit render-only pass.</param>
+    /// <param name="validateWithFormat">An existing matching layout including resolve roles, or -1 to infer color/depth targets and an optional depth resolve destination.</param>
     /// <param name="viewCount">One through 256 views; attachments must supply at least that many layers.</param>
     /// <returns>A framebuffer invalidated when any borrowed image is freed.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The view count is outside one through 256.</exception>
@@ -178,7 +186,7 @@ public sealed unsafe partial class RenderingDevice
         }
         foreach (var pass in layout.Passes)
         {
-            var outputs = pass.Colors.Concat(pass.Resolves).Append(pass.DepthIndex).Where(i => i >= 0).ToArray();
+            var outputs = pass.Colors.Concat(pass.Resolves).Append(pass.DepthIndex).Append(pass.DepthResolveIndex).Where(i => i >= 0).ToArray();
             for (var a = 0; a < outputs.Length; a++) for (var b = a + 1; b < outputs.Length; b++)
                     if (GPUTextureViews.Overlap(Device, Get(textures[outputs[a]], Kind.Texture).NativeHandle, (uint)viewCount, 1, Get(textures[outputs[b]], Kind.Texture).NativeHandle, (uint)viewCount, 1)) throw new ArgumentException("Framebuffer output views must address disjoint image subresources.", nameof(textures));
             foreach (var preserved in pass.Preserves) Get(textures[preserved], Kind.Texture);
@@ -186,6 +194,8 @@ public sealed unsafe partial class RenderingDevice
                 if (pass.Resolves[i] >= 0) ResolvePair(Get(textures[pass.Colors[i]], Kind.Texture).Texture!, Get(textures[pass.Resolves[i]], Kind.Texture).Texture!);
             foreach (var color in pass.Colors) if (color >= 0 && Get(textures[color], Kind.Texture).Texture!.Resolve) throw new ArgumentException("Marked resolve images must occupy resolve slots, not render slots.", nameof(textures));
         }
+        foreach (var pass in layout.Passes)
+            if (pass.DepthResolveIndex >= 0) PrepareDepthResolve(Get(textures[pass.DepthIndex], Kind.Texture), Get(textures[pass.DepthResolveIndex], Kind.Texture));
         if (validateWithFormat == -1) format = RetainFramebufferFormat(layout);
         return Add(new Entry { Kind = Kind.Framebuffer, Target = new(textures.ToArray(), format, size) { Touched = new bool[checked(textures.Length * viewCount)], Visited = new bool[viewCount] } });
     }

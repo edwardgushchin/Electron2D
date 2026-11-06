@@ -2455,3 +2455,5 @@ MSAA storage extends the existing RenderingDevice/RDTextureFormat family without
 RenderingDevice.DepthTransfers.cs owns portable depth/stencil bytes and shared upload/readback packing; the private render-native/aspects.c adapter records actual aspect transfers and retains SDL resources/allocator regions. Existing public types are unchanged. See [depth/stencil transfers](components/depth-texture-transfers.md).
 
 RenderingDevice.TextureTransfers.cs now preserves equal-count native samples through the existing copy API, including depth/stencil and matching-count scratch. No public types are added. See [multisample copies](components/multisample-copies.md).
+
+RenderingDevice.DepthResolve.cs caches native per-layer depth/stencil resolve attachments, connecting explicit transfers and inferred framebuffer pass closure to original image/view lifetime. GPUDeviceFactory negotiates the optional Vulkan 1.2 resolve profile independently. No public declaration is added. See [depth/stencil resolve](components/depth-resolve.md).

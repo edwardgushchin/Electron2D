@@ -1,12 +1,12 @@
 # RenderingDevice.TextureUsageBits
 
-Last updated: 2026-10-11
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.TextureUsageBits`. **Source:** [RenderingDevice.TextureEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.TextureEnums.cs). **Component:** [Local compute](../components/local-compute.md).
 
 ## Description
 
-Bit flags describing allocation, sampling, storage and transfer roles. Sampling and Storage are checked against the native format. CPURead or CanCopyFrom permits readback; CanUpdate permits a complete layer update. TextureCopy and TextureClear execute on selected color subresources. Color/depth attachments and ordered framebuffer inputs execute in their owning graphics profile. StorageAtomic queries and allocates ordinary signed/unsigned R32 atomic storage; Image bindings still require Storage. DepthResolveAttachment retains its native depth-resolve prerequisite.
+Bit flags describing allocation, sampling, storage and transfer roles. Sampling and Storage are checked against the native format. CPURead or CanCopyFrom permits readback; CanUpdate permits a complete layer update. TextureCopy and TextureClear execute on selected color subresources. Color/depth attachments and ordered framebuffer inputs execute in their owning graphics profile. StorageAtomic queries and allocates ordinary signed/unsigned R32 atomic storage; Image bindings still require Storage. DepthResolveAttachment enables the queried native sample-zero profile; see [depth/stencil resolve](../components/depth-resolve.md).
 
 ## Example
 
@@ -25,7 +25,7 @@ var selection = RenderingDevice.TextureUsageBits.CPURead;
 | `public const Electron2D.RenderingDevice.TextureUsageBits CanCopyTo = 256` | Allows image region copies and selected mip/layer clears as a destination. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits CanUpdate = 64` | Allows replacement of one complete layer mip chain. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits ColorAttachment = 2` | Allows a color attachment in an executable framebuffer. |
-| `public const Electron2D.RenderingDevice.TextureUsageBits DepthResolveAttachment = 4096` | Requires depth resolve attachment integration. |
+| `public const Electron2D.RenderingDevice.TextureUsageBits DepthResolveAttachment = 4096` | Marks an exact single-sample depth/stencil resolve destination; inferred single-pass framebuffers pair it with a matching multisample depth target. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits DepthStencilAttachment = 4` | Allows a depth/stencil attachment with supported native sampling. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits InputAttachment = 512` | Allows ordered single-sample or multisample framebuffer input reads. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits Sampling = 1` | Allows shader sampling with a sampler. |
@@ -86,7 +86,7 @@ Allows a color attachment in an executable framebuffer.
 public const Electron2D.RenderingDevice.TextureUsageBits DepthResolveAttachment = 4096
 ```
 
-Requires depth resolve attachment integration.
+Marks an exact single-sample depth/stencil resolve destination; inferred single-pass framebuffers pair it with a matching multisample depth target.
 
 <a id="member-9fd462bf597b"></a>
 ### DepthStencilAttachment

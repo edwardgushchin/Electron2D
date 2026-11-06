@@ -7,6 +7,10 @@
 
 typedef struct { uint64_t textures, buffers, total; } Memory;
 extern int e2d_render_aspect_support(SDL_GPUDevice *, uint32_t, SDL_GPUTextureFormat);
+extern int e2d_render_depth_resolve_support(SDL_GPUDevice *, uint32_t);
+extern void *e2d_render_depth_resolve_create(SDL_GPUDevice *, uint32_t, const SDL_GPUTextureLocation *, const SDL_GPUTextureLocation *, uint32_t, uint32_t);
+extern int e2d_render_depth_resolve_record(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, void *);
+extern void e2d_render_depth_resolve_release(SDL_GPUDevice *, uint32_t, void *);
 extern int e2d_render_aspect_transfer(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, const SDL_GPUTextureRegion *, SDL_GPUTransferBuffer *, uint32_t, uint32_t, uint32_t);
 extern int e2d_render_aspect_copy(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBuffer *, const SDL_GPUTextureLocation *, const SDL_GPUTextureLocation *, uint32_t, uint32_t);
 extern int e2d_render_graphics_storage_support(SDL_GPUDevice *, uint32_t);
@@ -224,6 +228,13 @@ int main(int argc, char **argv)
     depth.flags = 0; depth.minimum = -1; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     depth.minimum = 0; depth.back_reference = 256; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     require(e2d_render_aspect_support(NULL, 1, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
+    require(e2d_render_depth_resolve_support(NULL, 1) == -1);
+    require(e2d_render_depth_resolve_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
+    require(e2d_render_depth_resolve_create(NULL, 1, NULL, NULL, 1, 1) == NULL);
+    require(e2d_render_depth_resolve_create((SDL_GPUDevice *)(uintptr_t)1, 0, NULL, NULL, 1, 1) == NULL);
+    require(e2d_render_depth_resolve_record(NULL, 1, NULL, NULL) == -1);
+    require(e2d_render_depth_resolve_record((SDL_GPUDevice *)(uintptr_t)1, 0, NULL, NULL) == -1);
+    e2d_render_depth_resolve_release(NULL, 1, NULL);
     require(e2d_render_aspect_support((SDL_GPUDevice *)(uintptr_t)1, 0, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
     require(e2d_render_aspect_transfer((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, NULL, NULL, 0, 0, 0) == -1);
     require(e2d_render_aspect_copy((SDL_GPUDevice *)(uintptr_t)1, 0, (SDL_GPUCommandBuffer *)(uintptr_t)1, NULL, NULL, 1, 1) == -1);
@@ -306,6 +317,11 @@ int main(int argc, char **argv)
     printf("Native logical color feature=%d; ABI and operation-range guards passed\n", logic_features);
     raster_check(device);
     aspect_copy_guards(device);
+    int depth_resolve = e2d_render_depth_resolve_support(device, 1); require(depth_resolve >= 0 && depth_resolve <= 3);
+    require(e2d_render_depth_resolve_support(device, 1) == depth_resolve);
+    require(e2d_render_depth_resolve_create(device, 1, NULL, NULL, 1, 1) == NULL);
+    require(e2d_render_depth_resolve_record(device, 1, NULL, NULL) == -1);
+    printf("Native sample-zero depth/stencil resolve mask=%d; ABI/null guards passed\n", depth_resolve);
     require(e2d_render_aspect_support(device, 1, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM) == 0);
     for (int format = SDL_GPU_TEXTUREFORMAT_D16_UNORM; format <= SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT; format++) {
         int support = e2d_render_aspect_support(device, 1, (SDL_GPUTextureFormat)format); require(support >= 0 && support <= 1);

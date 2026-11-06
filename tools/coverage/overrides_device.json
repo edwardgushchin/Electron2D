@@ -1960,7 +1960,7 @@
       "godot": "RenderingDevice::enum_value:TextureUsageBits.TEXTURE_USAGE_DEPTH_RESOLVE_ATTACHMENT_BIT",
       "electron2d": "enumValue:Electron2D.RenderingDevice.TextureUsageBits.DepthResolveAttachment()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Numeric format/selector identity; allocation capability is queried or rejected explicitly rather than claimed universally supported."
+      "reason": "ADR 0028: native sample-zero depth/stencil resolve executes for five exact formats, arrays and original-owner shared slices, preserving source samples and ordinary image layouts. Explicit copy roles and inferred single-pass DepthResolveAttachment use cached retained native attachments with independent optional Vulkan 1.2/depth/stencil gates. Public multipass descriptions expose color resolve slots only. DepthResolve.Consumer source/binary checks native sample-index producers, GPU sampling, automatic multiview, snapshots/lifetime/refusal and prepared zero owner managed bytes on Windows/Vulkan. See docs/components/depth-resolve.md for package/AOT receipts and remaining native-heap/foreign/full ADR 0021 platform gates."
     },
     {
       "godot": "RenderingDevice::enum_value:TextureUsageBits.TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT",
@@ -3425,7 +3425,7 @@
       "godot": "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureResolveMultisample(Electron2D.RID,Electron2D.RID)",
       "state": "Implemented",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Typed exceptions replace Error results; source CanCopyFrom and marked destination CanCopyTo are required. Native depth resolve is a distinct unavailable aspect adapter."
+      "reason": "ADR 0028: native sample-zero depth/stencil resolve executes for five exact formats, arrays and original-owner shared slices, preserving source samples and ordinary image layouts. Explicit copy roles and inferred single-pass DepthResolveAttachment use cached retained native attachments with independent optional Vulkan 1.2/depth/stencil gates. Public multipass descriptions expose color resolve slots only. DepthResolve.Consumer source/binary checks native sample-index producers, GPU sampling, automatic multiview, snapshots/lifetime/refusal and prepared zero owner managed bytes on Windows/Vulkan. See docs/components/depth-resolve.md for package/AOT receipts and remaining native-heap/foreign/full ADR 0021 platform gates."
     },
     {
       "godot": "RDFramebufferPass::property:color_attachments",
@@ -3461,7 +3461,7 @@
       "godot": "RDTextureFormat::property:is_resolve_buffer",
       "electron2d": "property:Electron2D.RDTextureFormat.IsResolveBuffer()",
       "state": "Implemented",
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+      "reason": "ADR 0028: native sample-zero depth/stencil resolve executes for five exact formats, arrays and original-owner shared slices, preserving source samples and ordinary image layouts. Explicit copy roles and inferred single-pass DepthResolveAttachment use cached retained native attachments with independent optional Vulkan 1.2/depth/stencil gates. Public multipass descriptions expose color resolve slots only. DepthResolve.Consumer source/binary checks native sample-index producers, GPU sampling, automatic multiview, snapshots/lifetime/refusal and prepared zero owner managed bytes on Windows/Vulkan. See docs/components/depth-resolve.md for package/AOT receipts and remaining native-heap/foreign/full ADR 0021 platform gates."
     },
     {
       "godot": "RDTextureFormat::property:samples",
@@ -5045,7 +5045,7 @@
         "RDTextureFormat::property:is_resolve_buffer",
         "RDTextureFormat::property:samples"
       ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Depth/stencil resolve now executes with exact optional native gates; see docs/components/depth-resolve.md."
     },
     {
       "state": "Implemented",
@@ -5069,7 +5069,7 @@
       "godot": [
         "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)"
       ],
-      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Typed exceptions replace Error results; source CanCopyFrom and marked destination CanCopyTo are required. Native depth resolve is a distinct unavailable aspect adapter."
+      "reason": "ADR 0028: native sample-zero depth/stencil resolve executes for five exact formats, arrays and original-owner shared slices, preserving source samples and ordinary image layouts. Explicit copy roles and inferred single-pass DepthResolveAttachment use cached retained native attachments with independent optional Vulkan 1.2/depth/stencil gates. Public multipass descriptions expose color resolve slots only. DepthResolve.Consumer source/binary checks native sample-index producers, GPU sampling, automatic multiview, snapshots/lifetime/refusal and prepared zero owner managed bytes on Windows/Vulkan. See docs/components/depth-resolve.md for package/AOT receipts and remaining native-heap/foreign/full ADR 0021 platform gates."
     },
     {
       "state": "Implemented",

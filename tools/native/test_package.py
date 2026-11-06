@@ -118,7 +118,14 @@ endif()
             library = root / "lib/CMakeLists.txt"
             library.parent.mkdir()
             library.write_bytes(source.read_bytes())
-            command = ["cmake", "-DROOT=" + str(root), "-P", str(package.ROOT / "tools/ktx-native/configure-guards.cmake")]
+            # This synthetic fixture checks architecture guards; pinned allocator sources have their own suite.
+            adapter = root / "adapter"
+            adapter.mkdir()
+            shutil.copyfile(package.ROOT / "tools/ktx-native/configure-guards.cmake", adapter / "configure-guards.cmake")
+            (adapter / "prepare_memory.py").write_text(
+                "from pathlib import Path\nimport sys\np = Path(sys.argv[1]) / 'memory-called'\n"
+                "p.write_text(str(int(p.read_text()) + 1) if p.exists() else '1')\n", encoding="utf-8")
+            command = ["cmake", "-DROOT=" + str(root), "-P", str(adapter / "configure-guards.cmake")]
             subprocess.run(command, check=True)
             patched = source.read_bytes()
             normalized = patched.replace(b"\r\n", b"\n")
@@ -128,6 +135,7 @@ endif()
             subprocess.run(command, check=True)
             self.assertEqual(source.read_bytes(), patched)
             self.assertEqual(library.read_bytes(), patched)
+            self.assertEqual((root / "memory-called").read_text(), "2")
             source.write_text("unknown upstream source\n")
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertNotEqual(result.returncode, 0)

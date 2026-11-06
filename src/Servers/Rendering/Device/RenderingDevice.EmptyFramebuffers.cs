@@ -13,7 +13,7 @@ public sealed unsafe partial class RenderingDevice
     public int FramebufferFormatCreateEmpty(TextureSamples samples = TextureSamples.Samples1)
     {
         IdleList(); ValidateEmptySamples(samples);
-        return RetainFramebufferFormat(new([new([], [], [], [], [], -1, [], samples, [], [])], 1));
+        return RetainFramebufferFormat(new([new([], [], [], [], [], -1, -1, [], samples, [], [])], 1));
     }
     /// <summary>Creates a framebuffer with an explicit raster extent and no image attachments.</summary>
     /// <param name="size">Positive framebuffer dimensions within device limits.</param>

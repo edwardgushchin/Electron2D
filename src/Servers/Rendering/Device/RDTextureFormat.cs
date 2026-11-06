@@ -40,7 +40,7 @@ public sealed class RDTextureFormat : ElectronObject
     /// <value>Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.</value>
     public RenderingDevice.TextureSamples Samples { get { ThrowIfDisposed(); return _samples; } set { ThrowIfDisposed(); _samples = value; } }
     private bool _isResolveBuffer = false;
-    /// <summary>Marks a single-sample color image or array as a resolve destination.</summary>
+    /// <summary>Marks a single-sample color or depth/stencil image or array as an explicit resolve destination.</summary>
     /// <value>Initially false; copied and validated at allocation.</value>
     public bool IsResolveBuffer { get { ThrowIfDisposed(); return _isResolveBuffer; } set { ThrowIfDisposed(); _isResolveBuffer = value; } }
     private readonly HashSet<RenderingDevice.DataFormat> _shareable = [];

@@ -60,7 +60,7 @@
 
 [Global shader parameters](../components/global-shader-parameters.md) now connect static typed session values and overrides to both authored stages, numeric matrices and ordinary/array image bindings shared by separate canvas materials. Registered project definitions prepare typed bases before scene readiness and own loaded images through session shutdown. The registry has explicit owner/session lifetime and no material-property aliases.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 [Viewport mipmap bias](../components/viewport-mipmap-bias.md) controls next-image mip selection through scene, RenderingServer and project policies while preserving authored sampler and target identities.
 
@@ -333,7 +333,7 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 
 Ordered framebuffer passes now execute color/depth/resolve outputs, readonly single/multisample input attachments and preservation through inactive intermediate passes. Pipelines select their pass; transitions reset bindings while retaining list identity. The [ordered pass contract](../components/local-compute.md#ordered-framebuffer-passes-and-inputs) records clear ordering, GPU snapshots for sampled inputs, exact integer loads, native pixel checks and remaining multiview prerequisites.
 
-The [local device component](../components/local-compute.md#color-graphics-and-compute-integration) executes paired vertex/fragment shaders, borrowed vertex/index arrays and color/depth/stencil framebuffer passes with exact MSAA and color resolve, including procedural/instanced/indexed/indirect draws. Compute-generated geometry and commands remain on the GPU timeline. Retained device textures feed ordinary canvas consumers. Depth bounds, independent visible-face stencil masks/reference, raw aspect transfers/depth resolve, multiview and additional shader interfaces retain explicit prerequisites in coverage.
+The [local device component](../components/local-compute.md#color-graphics-and-compute-integration) executes paired vertex/fragment shaders, borrowed vertex/index arrays and color/depth/stencil framebuffer passes with exact MSAA and color resolve, including procedural/instanced/indexed/indirect draws. Compute-generated geometry and commands remain on the GPU timeline. Retained device textures feed ordinary canvas consumers. Depth bounds, independent visible-face stencil masks/reference, additional shader interfaces retain explicit prerequisites in coverage. Native aspect transfers, sequential multiview and [sample-zero depth/stencil resolve](../components/depth-resolve.md) execute with their documented gates.
 
 The local and retained device pipelines now accept compiled push blocks and copied per-draw/per-dispatch binary parameters. Original compact 32-bit layouts, paired graphics stages and public uniform bindings remain coherent; [the push contract](../components/local-compute.md#binary-push-parameters) defines the portable 128-byte capacity, initialization, native uniform quota and verified limits.
 

@@ -1,6 +1,6 @@
 # Depth/stencil texture transfers
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 The existing RenderingDevice texture family executes copied single-sample depth/stencil data on the pinned Vulkan backend: TextureCreate, TextureUpdate, TextureCopy, TextureGetData and both TextureGetDataAsync forms. No public type, native handle or configuration switch is added. [ADR 0028](../decisions/rendering.md#adr-0028) owns the rendering boundary.
 
@@ -18,7 +18,7 @@ One input/output buffer contains one layer's tightly packed mip chain, largest m
 
 Unused input bits are ignored; output is canonical. D32 values must be finite and in the inclusive unit range. Validate every initial chain before allocation and each update before command recording; invalid bytes do not change existing pixels. Empty data initializes every depth/stencil layer/mip to zero through existing native passes. The existing 256-layer depth-target bound remains. D16/S8 has no selected SDL representation and queries false.
 
-DepthStencilAttachment remains required. Sampling, CanUpdate, CanCopyFrom, CanCopyTo and CPURead are independent roles. Exact native format/usage support and the aspect adapter gate allocation; format capability is cached for the device lifetime. TextureIsFormatSupportedForUsage has no sample-count argument: a successful ordinary-format query does not permit raw multisample data. [Equal-count MS copies](multisample-copies.md) preserve native samples; CPU MS upload/readback and depth resolve retain their separate prerequisites.
+DepthStencilAttachment or the queried DepthResolveAttachment role is required. Sampling, CanUpdate, CanCopyFrom, CanCopyTo and CPURead are independent roles. Exact native format/usage support and the aspect adapter gate allocation; format capability is cached for the device lifetime. TextureIsFormatSupportedForUsage has no sample-count argument: a successful ordinary-format query does not permit raw multisample data. [Equal-count MS copies](multisample-copies.md) preserve native samples; CPU MS upload/readback retains its separate prerequisite; [depth/stencil resolve](depth-resolve.md) now executes through its optional native profile.
 
 TextureCopy requires matching depth/stencil formats and preserves both aspects. Color/depth reinterpretation is rejected even when byte footprints match. Existing region, usage, overlap and list guards apply. Disjoint same-subresource copies use a retained depth scratch image. Shared views map to the original physical layer/mip; uploads and reads expose the selected view's own tight chain. Neighboring mips/layers remain unchanged. TextureClear remains a color operation; draw passes own depth/stencil clears.
 
@@ -39,3 +39,5 @@ A missing adapter or unsupported format returns false for transfer queries and r
 After sixteen warmups, each format runs thirty-two upload/copy/span-read/Memory-read/submit/completion cycles with zero owner-thread managed bytes. The native C check covers format capability and ABI guards. Source authoring and compiler-free binary replay are separate profiles; package and strict NativeAOT receipts retain their actual code/native identities under ignored bin/depth-aspect-transfers/2026-10-29.
 
 The exercised host is Linux/Wayland, Vulkan, NVIDIA RTX 3090 Ti. Native heap traffic, validation layers, foreign backend/platform behavior and physical/owner acceptance are unverified. Existing color transfers, shared views, MSAA sampling/storage, depth graphics, source authoring and ordinary readback regressions remain relevant checks.
+
+[Depth/stencil resolve](depth-resolve.md) adds matching single-sample destinations, including the DepthResolveAttachment role. This role retains a private native depth/stencil target and uses the same portable aspect readback; raw CPU multisample transfers remain separate.

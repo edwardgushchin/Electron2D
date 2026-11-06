@@ -54,3 +54,7 @@ _e2d_render_timestamp_elapsed
 _e2d_render_aspect_support
 _e2d_render_aspect_transfer
 _e2d_render_aspect_copy
+_e2d_render_depth_resolve_support
+_e2d_render_depth_resolve_create
+_e2d_render_depth_resolve_record
+_e2d_render_depth_resolve_release

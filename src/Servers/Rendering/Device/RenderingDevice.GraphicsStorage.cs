@@ -33,7 +33,12 @@ public sealed unsafe partial class RenderingDevice
     {
         try { RestoreAddressUniforms(); } finally { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
         var writes = _drawStorageWrites; _drawStorageWrites = false;
-        try { RestoreGraphicsImages(); if (writes) StorageBarrier(); }
+        try
+        {
+            RestoreGraphicsImages(); if (writes) StorageBarrier();
+            var layout = DrawPassLayout;
+            if (layout.DepthResolveIndex >= 0) ResolveDepth(Get(_drawTarget!.Textures[layout.DepthIndex], Kind.Texture), Get(_drawTarget.Textures[layout.DepthResolveIndex], Kind.Texture), _drawView);
+        }
         catch { _activeList = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear(); ResetPush(); throw; }
     }
     private void PrepareGraphicsStorage()

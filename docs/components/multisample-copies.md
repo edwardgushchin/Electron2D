@@ -1,12 +1,12 @@
 # Multisample texture copies
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 `RenderingDevice.TextureCopy` preserves every native sample when source and destination have the same sample count. This extends the existing rectangular transfer operation, without a new public type or an implicit resolve. [ADR 0028](../decisions/rendering.md#adr-0028) owns the rendering contract.
 
 ## Regions, formats and roles
 
-Both images require their respective CanCopyFrom/CanCopyTo roles. Sample counts must match, including single-sample pairs. Use TextureResolveMultisample to reduce a color image to one sample. CPU MS sample upload/readback and depth resolve retain their separate native prerequisites.
+Both images require their respective CanCopyFrom/CanCopyTo roles. Sample counts must match, including single-sample pairs. Use TextureResolveMultisample to reduce color or [depth/stencil](depth-resolve.md) to one sample. CPU MS sample upload/readback retains its separate native prerequisites.
 
 Color copies preserve encoded texel/block values. Matching footprints may be reinterpreted on the executing Vulkan profile, without numeric conversion; other native drivers retain their compatible-format adapter gate. Depth/stencil copies require the same exact format and preserve both aspects. A color image cannot substitute for a depth image with the same byte footprint. The complete format vocabulary remains a capability-query domain, rather than a promise that every native format/sample tuple is available.
 

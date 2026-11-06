@@ -1236,7 +1236,7 @@ public System.Void TextureResolveMultisample(Electron2D.RID fromTexture, Electro
 
 Resolves a complete multisample color image into its marked single-sample destination on the GPU timeline.
 
-Preserves the source samples for later passes or resolves. Results are available to subsequent sampling, copies and readback. Depth resolve requires a native aspect adapter.
+Preserves the source samples for later passes or resolves. Results are available to subsequent sampling, copies and readback. Depth and stencil each select sample zero through the enabled Vulkan 1.2 adapter; see [depth/stencil resolve](../components/depth-resolve.md).
 
 | Parameter | Contract |
 | --- | --- |
@@ -1508,4 +1508,4 @@ Multisample sampled color/depth targets now support explicit compute/vertex/frag
 
 [Multisample storage images](../components/graphics-storage-images.md#multisample-storage-images) extend existing Image descriptors to explicit per-sample loads/stores, queries and signed/unsigned R32 atomics in compute and graphics. Public storage-only descriptions retain their roles and native owner/view lifetime.
 
-[Depth/stencil transfers](../components/depth-texture-transfers.md) extend TextureCreate/TextureUpdate/TextureCopy and both synchronous/queued readback forms to exact single-sample depth encodings. Native queries, shared mip/layer views, independent request snapshots and callback/retirement rules retain the ordinary device contract. Raw MS sample transfers and depth resolve remain separate.
+[Depth/stencil transfers](../components/depth-texture-transfers.md) extend TextureCreate/TextureUpdate/TextureCopy and both synchronous/queued readback forms to exact single-sample depth encodings. Native queries, shared mip/layer views, independent request snapshots and callback/retirement rules retain the ordinary device contract. Raw MS CPU sample transfers remain separate; [depth/stencil resolve](../components/depth-resolve.md) now executes.

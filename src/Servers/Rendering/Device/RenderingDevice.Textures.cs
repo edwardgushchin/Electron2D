@@ -126,7 +126,7 @@ public sealed unsafe partial class RenderingDevice
         if ((usage & TextureUsageBits.Sampling) != 0) native |= SDL.GPUTextureUsageFlags.Sampler;
         if ((usage & TextureUsageBits.InputAttachment) != 0 && (usage & (TextureUsageBits.Sampling | TextureUsageBits.Storage)) == 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead;
         if ((usage & (TextureUsageBits.Storage | TextureUsageBits.StorageAtomic)) != 0) native |= ((usage & TextureUsageBits.Sampling) == 0 ? SDL.GPUTextureUsageFlags.GraphicsStorageRead : 0) | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
-        if ((usage & TextureUsageBits.DepthStencilAttachment) != 0) native |= SDL.GPUTextureUsageFlags.DepthStencilTarget;
+        if ((usage & (TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment)) != 0) native |= SDL.GPUTextureUsageFlags.DepthStencilTarget;
         if ((usage & TextureUsageBits.ColorAttachment) != 0) native |= SDL.GPUTextureUsageFlags.ColorTarget;
         if (native == 0) native = SDL.GPUTextureUsageFlags.Sampler;
         return native;
@@ -134,16 +134,16 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Reports whether the selected format supports the requested two-dimensional texture usage.</summary>
     /// <param name="format">A concrete format to query.</param>
     /// <param name="usageFlags">Requested allocation and transfer roles.</param>
-    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT and feature-enabled R32SFLOAT read-modify-write images; raw depth resolve remains unavailable.</returns>
+    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT and feature-enabled R32SFLOAT read-modify-write images. DepthResolveAttachment requires the enabled sample-zero modes for every stored aspect.</returns>
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
-        if ((usageFlags & TextureUsageBits.DepthResolveAttachment) != 0) return false;
+        if ((usageFlags & TextureUsageBits.DepthResolveAttachment) != 0 && !DepthResolveSupported(format)) return false;
         if ((usageFlags & TextureUsageBits.StorageAtomic) != 0 && format is not (DataFormat.R32SINT or DataFormat.R32UINT) &&
             (format != DataFormat.R32SFLOAT || (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.FloatAtomicProperty, 0) & 48) == 0)) return false;
         if (DepthFormat(format))
         {
-            if ((usageFlags & TextureUsageBits.DepthStencilAttachment) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0) return false;
+            if ((usageFlags & (TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment)) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0) return false;
         }
         else if ((usageFlags & TextureUsageBits.DepthStencilAttachment) != 0) return false;
         var native = NativeFormat(format);
@@ -179,7 +179,9 @@ public sealed unsafe partial class RenderingDevice
         if ((usage & TextureUsageBits.InputAttachment) != 0 && (mips != 1)) throw new ArgumentException("Input attachments require single-mip textures.", nameof(format));
         if (DepthFormat(pixelFormat) && layers > 256) throw new NotSupportedException("Depth initialization requires native eight-bit layer selection.");
         var nativeSamples = ExactSamples(pixelFormat, samples);
-        if (resolve && (samples != TextureSamples.Samples1 || DepthFormat(pixelFormat) || mips != 1 || (usage & TextureUsageBits.ColorAttachment) == 0)) throw new ArgumentException("Resolve destinations require single-sample color targets.", nameof(format));
+        var resolveRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment : TextureUsageBits.ColorAttachment;
+        if ((resolve || (usage & TextureUsageBits.DepthResolveAttachment) != 0) && (samples != TextureSamples.Samples1 || mips != 1 || (usage & resolveRole) == 0)) throw new ArgumentException("Resolve destinations require single-sample attachment images with one mip.", nameof(format));
+        if (DepthFormat(pixelFormat) && (resolve || (usage & TextureUsageBits.DepthResolveAttachment) != 0)) RequireDepthResolve(pixelFormat);
         if (samples != TextureSamples.Samples1)
         {
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
