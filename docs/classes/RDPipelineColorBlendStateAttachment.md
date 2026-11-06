@@ -1,6 +1,6 @@
 # RDPipelineColorBlendStateAttachment
 
-Last updated: 2026-10-11
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDPipelineColorBlendStateAttachment`. **Source:** [RDPipelineColorBlendStateAttachment.cs](../../src/Servers/Rendering/Device/RDPipelineColorBlendStateAttachment.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-11
 ## Description
 
 A caller-owned per-target blend description copied by RenderPipelineCreate. RGB and alpha operations/factors are separate. Channel write masks execute even when blending is disabled. SetAsMix enables source-alpha color mixing with accumulated alpha. Invalid factors/operations and integer-target blending reject before native creation.
+
+All nineteen [blend factors](../components/blend-factors.md) execute in the four independent factor fields. Separate constant alpha requires the native adapter; second-source factors require matching primary/secondary output types, an enabled dual-source feature and its active attachment limit. Pipeline variants retain these copied values.
 
 ## Example
 

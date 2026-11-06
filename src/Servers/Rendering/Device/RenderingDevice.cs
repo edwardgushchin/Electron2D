@@ -295,6 +295,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         { var first = group.First(); if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.Multisample != first.Multisample || !b.DynamicCount && !first.DynamicCount && b.Count != first.Count || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared descriptor has inconsistent stage types."); }
         var interfaces = modules.Length == 2 ? ShaderCompiler.ValidateDeviceGraphics(modules[0], modules[1]) : default;
         ValidateGraphicsStorage(layout);
+        if (interfaces.Outputs?.Any(output => output.Index == 1) == true && !SDL.GetBooleanProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.DualSourceProperty, false)) throw new NotSupportedException("Secondary fragment outputs require an enabled native dual-source blending feature.");
         var entry = new Entry { Kind = Kind.Shader, Stage = modules.Length == 1 ? ShaderStage.Compute : ShaderStage.Vertex, Layout = layout, Samplers = samplerLinks, Push = pushes.SelectMany(p => p).ToArray(), Name = name, Inputs = interfaces.Inputs ?? [], Outputs = interfaces.Outputs ?? [] };
         foreach (var binding in layout) if (binding.NativeImage) { entry.GraphicsImages |= 1u << (binding.Native + (binding.Stage == ShaderStage.Fragment ? 8 : 0)); if (binding.Writable) entry.GraphicsImageWrites |= binding.Stage == ShaderStage.Fragment ? 2u : 1u; }
         entry.PhysicalAddresses = sources.Any(ShaderPrecision.ReadAddressRequirement);

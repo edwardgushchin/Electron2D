@@ -1,12 +1,12 @@
 # RenderingDevice.BlendFactor
 
-Last updated: 2026-10-11
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.BlendFactor`. **Source:** [RenderingDevice.GraphicsEnums.cs](../../src/Servers/Rendering/Device/RenderingDevice.GraphicsEnums.cs). **Component:** [Local device](../components/local-compute.md).
 
 ## Description
 
-Identifies BlendFactor values for executable graphics operations. Numeric identities are retained. Unknown or extent selectors reject when consumed. Only executable roles are accepted by the current device; missing backend/attachment families remain coverage prerequisites.
+Identifies BlendFactor values for executable graphics operations. Numeric identities are retained. Unknown or extent selectors reject when consumed. All nineteen factors execute independently for source/destination RGB and alpha. ConstantAlpha replicates the blend constant alpha across RGB; ConstantColor retains separate RGB components. Second-source factors consume a matching fragment output with Index=1. See [native factors](../components/blend-factors.md) for feature/attachment limits and source syntax.
 
 ## Example
 
@@ -16,6 +16,12 @@ Use this selector through the owning [RenderingDevice](RenderingDevice.md) opera
 
 | Declaration | Contract |
 | --- | --- |
+| `public const Electron2D.RenderingDevice.BlendFactor OneMinusSrc1Alpha = 18` | Uses one minus the second fragment output alpha for every component. |
+| `public const Electron2D.RenderingDevice.BlendFactor Src1Alpha = 17` | Uses the second fragment output alpha for every component. |
+| `public const Electron2D.RenderingDevice.BlendFactor OneMinusSrc1Color = 16` | Uses one minus the second fragment output RGB or alpha. |
+| `public const Electron2D.RenderingDevice.BlendFactor Src1Color = 15` | Uses the second fragment output RGB, or its alpha for the alpha equation. |
+| `public const Electron2D.RenderingDevice.BlendFactor OneMinusConstantAlpha = 13` | Multiplies every component by one minus the blend constant alpha. |
+| `public const Electron2D.RenderingDevice.BlendFactor ConstantAlpha = 12` | Multiplies every component by the blend constant alpha. |
 | `public const Electron2D.RenderingDevice.BlendFactor ConstantColor = 10` | Selects ConstantColor. |
 | `public const Electron2D.RenderingDevice.BlendFactor DstAlpha = 8` | Selects DstAlpha. |
 | `public const Electron2D.RenderingDevice.BlendFactor DstColor = 4` | Selects DstColor. |
@@ -172,6 +178,62 @@ public const Electron2D.RenderingDevice.BlendFactor Zero = 0
 
 Selects Zero.
 
+<a id="member-constantalpha"></a>
+### ConstantAlpha
+
+```csharp
+public const Electron2D.RenderingDevice.BlendFactor ConstantAlpha = 12
+```
+
+Multiplies every component by the blend constant alpha. Copied by the pipeline; unsupported native roles reject before publication.
+
+<a id="member-oneminusconstantalpha"></a>
+### OneMinusConstantAlpha
+
+```csharp
+public const Electron2D.RenderingDevice.BlendFactor OneMinusConstantAlpha = 13
+```
+
+Multiplies every component by one minus the blend constant alpha. Copied by the pipeline; unsupported native roles reject before publication.
+
+<a id="member-src1color"></a>
+### Src1Color
+
+```csharp
+public const Electron2D.RenderingDevice.BlendFactor Src1Color = 15
+```
+
+Uses the second fragment output RGB, or its alpha for the alpha equation. Copied by the pipeline; unsupported native roles reject before publication.
+
+<a id="member-oneminussrc1color"></a>
+### OneMinusSrc1Color
+
+```csharp
+public const Electron2D.RenderingDevice.BlendFactor OneMinusSrc1Color = 16
+```
+
+Uses one minus the second fragment output RGB or alpha. Copied by the pipeline; unsupported native roles reject before publication.
+
+<a id="member-src1alpha"></a>
+### Src1Alpha
+
+```csharp
+public const Electron2D.RenderingDevice.BlendFactor Src1Alpha = 17
+```
+
+Uses the second fragment output alpha for every component. Copied by the pipeline; unsupported native roles reject before publication.
+
+<a id="member-oneminussrc1alpha"></a>
+### OneMinusSrc1Alpha
+
+```csharp
+public const Electron2D.RenderingDevice.BlendFactor OneMinusSrc1Alpha = 18
+```
+
+Uses one minus the second fragment output alpha for every component. Copied by the pipeline; unsupported native roles reject before publication.
+
 ## Lifetime and verification
 
 Device-owned resources remain on their creating thread. Descriptions are caller-owned and copied at creation; inherited disposal guards apply. Invalid configurations, foreign/freed RIDs and list-state errors reject explicitly. Native creation failures propagate. RenderingDeviceGraphicsTests checks Linux/Vulkan pixels, resource storage, lifetime and prepared owner-thread allocation boundaries. Other platforms and native/driver allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028) and [coverage](../coverage/classes/RenderingDevice.md) for absent roles.
+
+[BlendFactors.Consumer](../../tests/BlendFactors.Consumer/README.md) checks every factor in all four fields against independent floating-point pixel equations, including dynamic constant alpha, secondary output interface failures and native refusal.

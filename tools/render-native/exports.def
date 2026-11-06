@@ -28,6 +28,8 @@ EXPORTS
     e2d_render_bind_image
     e2d_render_prepare_images
     e2d_render_images_pipeline
+    e2d_render_blend_support
+    e2d_render_blend_pipeline
     e2d_render_logic_support
     e2d_render_logic_pipeline
     e2d_render_view_support

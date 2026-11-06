@@ -1,6 +1,6 @@
 # RDPipelineColorBlendState
 
-Last updated: 2026-10-28
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDPipelineColorBlendState`. **Source:** [RDPipelineColorBlendState.cs](../../src/Servers/Rendering/Device/RDPipelineColorBlendState.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-28
 ## Description
 
 A caller-owned container copied by RenderPipelineCreate. Attachments getters/setters copy the array while borrowing its elements until creation. The pipeline copies active attachment values and finite initial BlendConstant. Attachments cover logical color slots, including unused holes; unused slots and extra trailing entries are ignored. Active integer targets reject arithmetic blending unless EnableLogicOp is true. Copied LogicOp then selects one bitwise operation for all attachments, preserves their write masks and disables arithmetic blending. Floating-point and sRGB targets receive the source without a logical operation. See [logical color operations](../components/logic-operations.md) for feature negotiation and exact encoded semantics.
+
+All nineteen [blend factors](../components/blend-factors.md) execute in the four independent factor fields. Separate constant alpha requires the native adapter; second-source factors require matching primary/secondary output types, an enabled dual-source feature and its active attachment limit. Pipeline variants retain these copied values.
 
 ## Example
 

@@ -2427,8 +2427,8 @@
     {
       "godot": "RenderingDevice::enum:BlendFactor",
       "electron2d": "T:Electron2D.RenderingDevice.BlendFactor",
-      "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
     },
     {
       "godot": "RenderingDevice::enum:BlendOperation",
@@ -3990,6 +3990,42 @@
       "electron2d": "enumValue:Electron2D.RenderingDevice.Features.SupportsRayQuery()",
       "state": "Partial",
       "reason": "ADR 0028: typed capability selector reports the integrated native path through HasFeature. The underlying native scaling/inline acceleration-query adapter is absent and reports unavailable; implement that executing adapter before this value is fully qualified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.ConstantAlpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusConstantAlpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC1_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.Src1Color()",
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrc1Color()",
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC1_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.Src1Alpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrc1Alpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
     }
   ],
   "extras": [
@@ -4552,18 +4588,6 @@
       "reason": "Trigger: first executable owning slice under ADR 0028. Geometry/tessellation stages require a backend stage adapter; raytracing stages are excluded by ADR 0001."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA",
-        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA",
-        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA",
-        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_COLOR",
-        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC1_ALPHA",
-        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC1_COLOR"
-      ],
-      "reason": "Trigger: first separate constant-alpha or dual-source per-target blending adapter slice (ADR 0028)."
-    },
-    {
       "state": "Excluded",
       "godot": [
         "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT"
@@ -4791,7 +4815,6 @@
     {
       "state": "Partial",
       "godot": [
-        "RenderingDevice::enum:BlendFactor",
         "RenderingDevice::enum:PipelineDynamicStateFlags",
         "RenderingDevice::enum:RenderPrimitive",
         "RenderingDevice::enum:ShaderStage",
@@ -5522,6 +5545,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0028: validated native rectangular copies preserve all samples at equal source/destination counts, including exact depth/stencil aspects, arrays/shared views, original-coordinate alias guards, retained matching-count self-copy scratch and GPU ordering/lifetime. Matching color footprints preserve encoded values without conversion on the Vulkan profile; missing compatible-format adapters on other drivers reject explicitly. Typed exceptions replace Error results. MultisampleCopy.Consumer verifies independent pixel/sample values, 2X/4X/8X color/depth/stencil, GLSL/HLSL readers, stencil references, source retirement, failure guards and zero prepared owner managed bytes. Existing single-sample/compressed-edge checks remain relevant. See docs/components/multisample-copies.md for exact native/platform qualification limits; this state is audited executable semantics, not full platform acceptance."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::enum:BlendFactor"
+      ],
+      "reason": "ADR 0028: all nineteen blend factors execute independently for source/destination RGB and alpha. Separate constant alpha and dual-source outputs use the copied native raster adapter; enabled feature/attachment limits, sparse locations, views/passes/MSAA, component maps, logical operations, lifetime, binary replay and prepared zero owner managed bytes are checked on Windows/Vulkan. See docs/components/blend-factors.md for frontend and platform limits."
     }
   ]
 }

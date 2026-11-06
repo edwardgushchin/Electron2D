@@ -50759,6 +50759,19 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.ConstantAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "ConstantAlpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor ConstantAlpha = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "12"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.ConstantColor()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.BlendFactor",
@@ -50824,6 +50837,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusConstantAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusConstantAlpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusConstantAlpha = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "13"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusConstantColor()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.BlendFactor",
@@ -50863,6 +50889,32 @@
     "value": "5"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrc1Alpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusSrc1Alpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusSrc1Alpha = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "18"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrc1Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusSrc1Color",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusSrc1Color = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "16"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrcAlpha()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.BlendFactor",
@@ -50887,6 +50939,32 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.BlendFactor",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.Src1Alpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "Src1Alpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor Src1Alpha = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "17"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.Src1Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "Src1Color",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor Src1Color = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "15"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcAlpha()",

@@ -42,9 +42,10 @@ static RasterCache *raster_cache(SDL_GPUDevice *device)
 }
 typedef struct MultisampleState { uint32_t mask, flags; float minimum; } MultisampleState;
 typedef struct DepthStencilState { uint32_t flags, front_mask, front_write, front_reference, back_mask, back_write, back_reference; float minimum, maximum; } DepthStencilState;
+typedef struct BlendState { uint32_t count, factors[8][4]; } BlendState;
 extern VulkanGraphicsPipelineResourceLayout *e2d_images_layout(SDL_GPUDevice *, const uint32_t *, uint32_t);
 extern int e2d_render_image_support(SDL_GPUDevice *, uint32_t);
-typedef struct RasterState { PFN_vkCreateGraphicsPipelines create; float width; bool discard; MultisampleState samples; DepthStencilState depth; SDL_GPUDevice *device; const uint32_t *counts; uint32_t images, logic; VulkanGraphicsPipelineResourceLayout *image_layout; } RasterState;
+typedef struct RasterState { PFN_vkCreateGraphicsPipelines create; float width; bool discard; MultisampleState samples; DepthStencilState depth; SDL_GPUDevice *device; const uint32_t *counts; uint32_t images, logic; const BlendState *blend; VulkanGraphicsPipelineResourceLayout *image_layout; } RasterState;
 static E2D_THREAD_LOCAL RasterState state;
 
 static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cache, uint32_t count,
@@ -88,9 +89,22 @@ static VkResult VKAPI_CALL raster_pipeline(VkDevice device, VkPipelineCache cach
         info.pDepthStencilState = &depth;
     }
     VkPipelineColorBlendStateCreateInfo color = {.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
-    if (state.logic) {
+    VkPipelineColorBlendAttachmentState attachments[8];
+    if (state.logic || state.blend) {
         if (info.pColorBlendState) color = *info.pColorBlendState;
-        color.logicOpEnable = true; color.logicOp = (VkLogicOp)(state.logic - 1); info.pColorBlendState = &color;
+        if (state.logic) { color.logicOpEnable = true; color.logicOp = (VkLogicOp)(state.logic - 1); }
+        if (state.blend) {
+            if (color.attachmentCount != state.blend->count || color.attachmentCount > SDL_arraysize(attachments) || (color.attachmentCount && !color.pAttachments)) return VK_ERROR_INITIALIZATION_FAILED;
+            for (uint32_t i = 0; i < color.attachmentCount; i++) {
+                attachments[i] = color.pAttachments[i];
+                attachments[i].srcColorBlendFactor = (VkBlendFactor)state.blend->factors[i][0];
+                attachments[i].dstColorBlendFactor = (VkBlendFactor)state.blend->factors[i][1];
+                attachments[i].srcAlphaBlendFactor = (VkBlendFactor)state.blend->factors[i][2];
+                attachments[i].dstAlphaBlendFactor = (VkBlendFactor)state.blend->factors[i][3];
+            }
+            color.pAttachments = attachments;
+        }
+        info.pColorBlendState = &color;
     }
     if (state.discard) info.stageCount = 1;
     if (state.images) {
@@ -158,7 +172,7 @@ E2D_EXPORT int e2d_render_line_support(SDL_GPUDevice *device, uint32_t abi, Line
     return 1;
 }
 
-static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, bool discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic)
+static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, bool discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic, const BlendState *blend)
 {
     if (!device || !info || !info->vertex_shader || !info->fragment_shader || e2d_render_raster_support(device, 1) != 1) return NULL;
     VulkanRenderer *renderer = (VulkanRenderer *)device->driverData;
@@ -196,7 +210,7 @@ static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, co
     PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
     PFN_vkGetDeviceProcAddr device_proc = (PFN_vkGetDeviceProcAddr)proc(renderer->instance, "vkGetDeviceProcAddr");
     RasterState previous = state;
-    state = (RasterState){.create = (PFN_vkCreateGraphicsPipelines)device_proc(renderer->logicalDevice, "vkCreateGraphicsPipelines"), .width = width, .discard = discard, .samples = samples ? *samples : (MultisampleState){0}, .depth = depth ? *depth : (DepthStencilState){0}, .device = device, .counts = counts, .images = images, .logic = logic};
+    state = (RasterState){.create = (PFN_vkCreateGraphicsPipelines)device_proc(renderer->logicalDevice, "vkCreateGraphicsPipelines"), .width = width, .discard = discard, .samples = samples ? *samples : (MultisampleState){0}, .depth = depth ? *depth : (DepthStencilState){0}, .device = device, .counts = counts, .images = images, .logic = logic, .blend = blend};
     SDL_GPUGraphicsPipeline *pipeline = device->CreateGraphicsPipeline((SDL_GPURenderer *)&local, info);
     if (pipeline && images) ((VulkanGraphicsPipeline *)pipeline)->resourceLayout = state.image_layout;
     state = previous;
@@ -212,10 +226,10 @@ static SDL_GPUGraphicsPipeline *create_raster_pipeline(SDL_GPUDevice *device, co
 
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info)
 {
-    return abi == 1 ? create_raster_pipeline(device, info, 1, true, NULL, NULL, 0, 0) : NULL;
+    return abi == 1 ? create_raster_pipeline(device, info, 1, true, NULL, NULL, 0, 0, NULL) : NULL;
 }
 
-static SDL_GPUGraphicsPipeline *create_line_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic)
+static SDL_GPUGraphicsPipeline *create_line_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic, const BlendState *blend)
 {
     if (!device || abi != 1 || !info || discard > 1 || !isfinite(width) || width <= 0) return NULL;
     if (width != 1) {
@@ -225,12 +239,12 @@ static SDL_GPUGraphicsPipeline *create_line_pipeline(SDL_GPUDevice *device, uint
             !isfinite(limits.minimum) || !isfinite(limits.maximum) || limits.minimum <= 0 || limits.maximum < limits.minimum) return NULL;
         width = SDL_clamp(width, limits.minimum, limits.maximum);
     }
-    return create_raster_pipeline(device, info, width, discard != 0, samples, depth, images, logic);
+    return create_raster_pipeline(device, info, width, discard != 0, samples, depth, images, logic, blend);
 }
 
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_line_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard)
 {
-    return create_line_pipeline(device, abi, info, width, discard, NULL, NULL, 0, 0);
+    return create_line_pipeline(device, abi, info, width, discard, NULL, NULL, 0, 0, NULL);
 }
 
 static bool valid_multisample(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, const MultisampleState *samples)
@@ -244,7 +258,7 @@ static bool valid_multisample(SDL_GPUDevice *device, uint32_t abi, const SDL_GPU
 
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_multisample_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples)
 {
-    return valid_multisample(device, abi, info, samples) ? create_line_pipeline(device, abi, info, width, discard, samples, NULL, 0, 0) : NULL;
+    return valid_multisample(device, abi, info, samples) ? create_line_pipeline(device, abi, info, width, discard, samples, NULL, 0, 0, NULL) : NULL;
 }
 
 _Static_assert(offsetof(VkPhysicalDeviceFeatures, logicOp) == 8 * sizeof(VkBool32), "logic operation feature word");
@@ -258,7 +272,7 @@ E2D_EXPORT int e2d_render_logic_support(SDL_GPUDevice *device, uint32_t abi)
     if (!query) return 0;
     VkPhysicalDeviceFeatures features; query(renderer->physicalDevice, &features); return features.logicOp ? 1 : 0;
 }
-static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic)
+static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic, const BlendState *blend)
 {
     uint32_t required = ((images & 255) ? 1 : 0) | ((images & 65280) ? 2 : 0);
     if (abi == 2) {
@@ -276,17 +290,44 @@ static SDL_GPUGraphicsPipeline *create_state_pipeline(SDL_GPUDevice *device, uin
         if (required & ~(uint32_t)SDL_GetNumberProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.graphics_storage", 0)) { SDL_SetError("Graphics image stores require an enabled feature for each writing stage"); return NULL; }
     }
     if (logic && (e2d_render_logic_support(device, 1) != 1 || !SDL_GetBooleanProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.logic_op", false))) return NULL;
-    return create_line_pipeline(device, abi, info, width, discard, samples, depth, images, logic);
+    return create_line_pipeline(device, abi, info, width, discard, samples, depth, images, logic, blend);
 }
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_depth_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth)
 {
-    return create_state_pipeline(device, abi, info, width, discard, samples, depth, 0, 0);
+    return create_state_pipeline(device, abi, info, width, discard, samples, depth, 0, 0, NULL);
 }
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_images_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images)
 {
-    return images ? create_state_pipeline(device, abi, info, width, discard, samples, depth, images, 0) : NULL;
+    return images ? create_state_pipeline(device, abi, info, width, discard, samples, depth, images, 0, NULL) : NULL;
 }
 E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_logic_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic)
 {
-    return logic ? create_state_pipeline(device, abi, info, width, discard, samples, depth, images, logic) : NULL;
+    return logic ? create_state_pipeline(device, abi, info, width, discard, samples, depth, images, logic, NULL) : NULL;
+}
+
+_Static_assert(offsetof(VkPhysicalDeviceFeatures, dualSrcBlend) == 7 * sizeof(VkBool32), "dual source feature word");
+E2D_EXPORT int e2d_render_blend_support(SDL_GPUDevice *device, uint32_t abi, uint32_t *maximum)
+{
+    if (!device || abi != 1 || !maximum) return -1;
+    *maximum = 0;
+    if (e2d_render_raster_support(device, 1) != 1) return 0;
+    const VulkanRenderer *renderer = (const VulkanRenderer *)device->driverData;
+    PFN_vkGetInstanceProcAddr proc = (PFN_vkGetInstanceProcAddr)SDL_Vulkan_GetVkGetInstanceProcAddr();
+    PFN_vkGetPhysicalDeviceFeatures query = proc ? (PFN_vkGetPhysicalDeviceFeatures)proc(renderer->instance, "vkGetPhysicalDeviceFeatures") : NULL;
+    PFN_vkGetPhysicalDeviceProperties properties = proc ? (PFN_vkGetPhysicalDeviceProperties)proc(renderer->instance, "vkGetPhysicalDeviceProperties") : NULL;
+    if (!query || !properties) return 0;
+    VkPhysicalDeviceFeatures features; query(renderer->physicalDevice, &features);
+    VkPhysicalDeviceProperties limits; properties(renderer->physicalDevice, &limits);
+    *maximum = features.dualSrcBlend ? limits.limits.maxFragmentDualSrcAttachments : 0;
+    return 1 | (*maximum ? 2 : 0);
+}
+E2D_EXPORT SDL_GPUGraphicsPipeline *e2d_render_blend_pipeline(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUGraphicsPipelineCreateInfo *info, float width, uint32_t discard, const MultisampleState *samples, const DepthStencilState *depth, uint32_t images, uint32_t logic, const BlendState *blend)
+{
+    uint32_t maximum;
+    if (!device || (abi != 1 && abi != 2) || !blend || !info || blend->count == 0 || blend->count > 8 || blend->count != info->target_info.num_color_targets || e2d_render_blend_support(device, 1, &maximum) < 1) return NULL;
+    for (uint32_t i = 0; i < blend->count; i++) for (uint32_t j = 0; j < 4; j++) {
+        if (blend->factors[i][j] > VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA) return NULL;
+        if (blend->factors[i][j] >= VK_BLEND_FACTOR_SRC1_COLOR && (blend->count > maximum || !SDL_GetBooleanProperty(SDL_GetGPUDeviceProperties(device), "Electron2D.gpu.dual_source_blend", false))) return NULL;
+    }
+    return create_state_pipeline(device, abi, info, width, discard, samples, depth, images, logic, blend);
 }

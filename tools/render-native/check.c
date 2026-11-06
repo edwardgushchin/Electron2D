@@ -44,6 +44,9 @@ extern int e2d_render_prepare_images(SDL_GPUDevice *, uint32_t, SDL_GPUCommandBu
 extern SDL_GPUGraphicsPipeline *e2d_render_images_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t);
 extern int e2d_render_raster_support(SDL_GPUDevice *, uint32_t);
 extern int e2d_render_logic_support(SDL_GPUDevice *, uint32_t);
+typedef struct BlendState { uint32_t count, factors[8][4]; } BlendState;
+extern int e2d_render_blend_support(SDL_GPUDevice *, uint32_t, uint32_t *);
+extern SDL_GPUGraphicsPipeline *e2d_render_blend_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t, uint32_t, const BlendState *);
 extern SDL_GPUGraphicsPipeline *e2d_render_logic_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *, float, uint32_t, const MultisampleState *, const DepthStencilState *, uint32_t, uint32_t);
 extern SDL_GPUGraphicsPipeline *e2d_render_raster_pipeline(SDL_GPUDevice *, uint32_t, const SDL_GPUGraphicsPipelineCreateInfo *);
 
@@ -309,6 +312,24 @@ int main(int argc, char **argv)
     require(SDL_Init(SDL_INIT_VIDEO));
     SDL_GPUDevice *device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
     require(device != NULL);
+    uint32_t blend_maximum = 0xAAAAAAAA;
+    require(e2d_render_blend_support(NULL, 1, &blend_maximum) == -1 && blend_maximum == 0xAAAAAAAA);
+    require(e2d_render_blend_support((SDL_GPUDevice *)(uintptr_t)1, 0, &blend_maximum) == -1 && blend_maximum == 0xAAAAAAAA);
+    require(e2d_render_blend_support(device, 1, NULL) == -1);
+    int blend_support = e2d_render_blend_support(device, 1, &blend_maximum);
+    require(blend_support == 1 || blend_support == 3);
+    require((blend_support == 3) == (blend_maximum > 0));
+    printf("Native color factors support=%d, dual-source targets=%u (physical support; logical opt-in independent)\n", blend_support, blend_maximum);
+    SDL_GPUGraphicsPipelineCreateInfo blend_info = {0}; blend_info.target_info.num_color_targets = 1;
+    BlendState blend_state = {0}; MultisampleState blend_samples = {0}; DepthStencilState blend_depth = {0};
+    require(e2d_render_blend_pipeline((SDL_GPUDevice *)(uintptr_t)1, 0, (void *)(uintptr_t)1, 1, 0, &blend_samples, &blend_depth, 0, 0, (void *)(uintptr_t)1) == NULL);
+    require(e2d_render_blend_pipeline(device, 1, &blend_info, 1, 0, &blend_samples, &blend_depth, 0, 0, &blend_state) == NULL);
+    blend_state.count = 9;
+    require(e2d_render_blend_pipeline(device, 1, &blend_info, 1, 0, &blend_samples, &blend_depth, 0, 0, &blend_state) == NULL);
+    blend_state.count = 1; blend_state.factors[0][0] = 19;
+    require(e2d_render_blend_pipeline(device, 1, &blend_info, 1, 0, &blend_samples, &blend_depth, 0, 0, &blend_state) == NULL);
+    blend_state.factors[0][0] = 15;
+    require(e2d_render_blend_pipeline(device, 1, &blend_info, 1, 0, &blend_samples, &blend_depth, 0, 0, &blend_state) == NULL);
     int floating_features = e2d_render_float_atomic_support(device, 1); require(floating_features >= 0 && floating_features <= 63);
     require(e2d_render_float_atomic_support(device, 1) == floating_features);
     printf("Native FP32 atomic feature mask=%d (physical support; logical opt-in independent)\n", floating_features);

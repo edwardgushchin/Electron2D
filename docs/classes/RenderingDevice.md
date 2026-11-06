@@ -44,6 +44,8 @@ Shader binaries and reserved shader RIDs use the same validated runtime program 
 
 [BufferCreationBits](RenderingDevice.BufferCreationBits.md) and [Features](RenderingDevice.Features.md) define native address/storage roles and live capability queries. See [buffer addresses](../components/buffer-device-addresses.md) for execution and lifetime.
 
+All nineteen [blend factors](../components/blend-factors.md) execute in the four independent factor fields. Separate constant alpha requires the native adapter; second-source factors require matching primary/secondary output types, an enabled dual-source feature and its active attachment limit. Pipeline variants retain these copied values.
+
 ## Example
 
 The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/WaterPlayground/WaterSimulation.GPU.cs).

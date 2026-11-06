@@ -130,11 +130,12 @@ internal static unsafe partial class ShaderCompiler
         return count;
     }
 
-    internal readonly record struct DeviceIO(uint Location, int Type, uint Width, uint BitWidth = 32);
+    internal readonly record struct DeviceIO(uint Location, int Type, uint Width, uint BitWidth = 32, uint Index = 0);
     internal static (DeviceIO[] Inputs, DeviceIO[] Outputs) ValidateDeviceGraphics(byte[] vertex, byte[] fragment) => Run(() =>
     {
-        (DeviceIO[] Inputs, DeviceIO[] Outputs) Reflect(byte[] code)
+        (DeviceIO[] Inputs, DeviceIO[] Outputs) Reflect(byte[] code, bool fragment = false)
         {
+            if (fragment) code = ReflectDeviceOutputs(code);
             fixed (byte* pointer = code)
             {
                 var memory = ShaderCross.ReflectGraphicsSPIRV((nint)pointer, (nuint)code.Length, 0);
@@ -145,10 +146,10 @@ internal static unsafe partial class ShaderCompiler
                     var resources = metadata.ResourceInfo;
                     if (resources.NumSamplers > 16 || resources.NumStorageBuffers > 8 || resources.NumStorageTextures > 8 || resources.NumUniformBuffers > 4)
                         throw new NotSupportedException("Graphics resources exceed per-stage native binding limits.");
-                    DeviceIO[] Read(nint fields, uint count)
+                    DeviceIO[] Read(nint fields, uint count, bool outputs = false)
                     {
                         if (count > 16) throw new NotSupportedException("Graphics interfaces support sixteen locations per stage.");
-                        var result = new DeviceIO[count]; var mask = 0u;
+                        var result = new DeviceIO[count]; var mask = 0UL;
                         for (var i = 0; i < count; i++)
                         {
                             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(fields + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
@@ -166,19 +167,22 @@ internal static unsafe partial class ShaderCompiler
                                 _ => throw new NotSupportedException("Graphics interfaces require supported scalar or vector fields.")
                             };
                             var locations = bits == 64 && field.VectorSize > 2 ? 2u : 1u;
-                            if (field.Location > 16 - locations || field.VectorSize is < 1 or > 4) throw new ArgumentException("Invalid graphics interface location.");
-                            var occupied = ((1u << (int)locations) - 1) << (int)field.Location;
+                            var index = fragment && outputs ? field.Location / 16 : 0; var location = field.Location - index * 16;
+                            if (index > 1 || location > 16 - locations || field.VectorSize is < 1 or > 4) throw new ArgumentException("Invalid graphics interface location.");
+                            var occupied = ((1UL << (int)locations) - 1) << (int)field.Location;
                             if ((mask & occupied) != 0) throw new ArgumentException("Graphics interface locations overlap.");
-                            mask |= occupied; result[i] = new(field.Location, type, field.VectorSize, bits);
+                            mask |= occupied; result[i] = new(location, type, field.VectorSize, bits, index);
                         }
                         return result;
                     }
-                    return (Read(metadata.Inputs, metadata.NumInputs), Read(metadata.Outputs, metadata.NumOutputs));
+                    return (Read(metadata.Inputs, metadata.NumInputs), Read(metadata.Outputs, metadata.NumOutputs, true));
                 }
                 finally { SDL.Free(memory); }
             }
         }
-        var v = Reflect(vertex); var f = Reflect(fragment);
+        var v = Reflect(vertex); var f = Reflect(fragment, true);
+        foreach (var secondary in f.Outputs.Where(output => output.Index == 1))
+            if (!f.Outputs.Any(primary => primary.Index == 0 && primary.Location == secondary.Location && primary.Type == secondary.Type && primary.BitWidth == secondary.BitWidth)) throw new ArgumentException("A secondary fragment output requires a matching primary scalar type and location.");
         if (v.Inputs.Any(i => i.BitWidth != 32) || f.Outputs.Any(i => i.BitWidth != 32)) throw new NotSupportedException("Non-32-bit vertex attributes and color outputs require their native format adapters.");
         foreach (var input in f.Inputs)
             if (!v.Outputs.Contains(input)) throw new ArgumentException("Fragment inputs require matching vertex outputs.");

@@ -9,6 +9,7 @@ public sealed unsafe partial class RenderingDevice
     {
         >= BlendFactor.Zero and <= BlendFactor.OneMinusConstantColor => (SDL.GPUBlendFactor)((int)value + 1),
         BlendFactor.SrcAlphaSaturate => SDL.GPUBlendFactor.SrcAlphaSaturate,
+        BlendFactor.ConstantAlpha or BlendFactor.OneMinusConstantAlpha or >= BlendFactor.Src1Color and < BlendFactor.Max => SDL.GPUBlendFactor.Zero,
         _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
     private static SDL.GPUBlendOp Blend(BlendOperation value) => Enum.IsDefined(value) && value != BlendOperation.Max ? (SDL.GPUBlendOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
@@ -26,7 +27,7 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="forRenderPass">Zero-based framebuffer pass whose outputs and inputs this pipeline consumes.</param>
     /// <returns>A pipeline borrowing the shader identity and owning specialized native stages when needed.</returns>
     /// <exception cref="ArgumentException">Shader interfaces, layouts or configurations disagree.</exception>
-    /// <remarks>Depth-bounds tests require their native state adapter. Sample shading and alpha-to-one require independently enabled native features. Ordered passes select forRenderPass. Typed specialization freezes constants before native creation. Without primitive discard, fragment outputs must exactly match active logical color slots; sparse slots use private native output remapping.</remarks>
+    /// <remarks>Depth-bounds tests require their native state adapter. Sample shading and alpha-to-one require independently enabled native features. Ordered passes select forRenderPass. Typed specialization freezes constants before native creation. Without primitive discard, primary fragment outputs must exactly match active logical color slots; secondary Index=1 outputs require matching primary types and the enabled dual-source feature. Separate constant-alpha factors require the native blending adapter. Sparse slots use private native output remapping.</remarks>
     public RID RenderPipelineCreate(RID shader, int framebufferFormat, int vertexFormat, RenderPrimitive primitive,
         RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null, RDPipelineMultisampleState? multisampleState = null, ReadOnlySpan<RDPipelineSpecializationConstant> specializationConstants = default, uint forRenderPass = 0)
     {
@@ -48,7 +49,7 @@ public sealed unsafe partial class RenderingDevice
             var vertex = vertexFormat == -1 ? new VertexLayout([], [], []) : VertexFormat(vertexFormat);
             ValidateVertexInterface(program, vertex);
             if (!discard) ValidateInputLayout(program, target);
-            if (!discard && program.Outputs.Length != target.ColorSlots.Length) throw new ArgumentException("Fragment outputs must exactly match the active framebuffer color slots.", nameof(framebufferFormat));
+            if (!discard && program.Outputs.Count(output => output.Index == 0) != target.ColorSlots.Length) throw new ArgumentException("Fragment outputs must exactly match the active framebuffer color slots.", nameof(framebufferFormat));
             if (!discard) foreach (var output in program.Outputs)
                     if (output.Location >= target.Colors.Length || target.Colors[output.Location] < 0 || output.Type != PixelType(target.Formats[target.Colors[output.Location]])) throw new ArgumentException("Fragment outputs must match the framebuffer scalar formats.", nameof(framebufferFormat));
             var topology = primitive switch
@@ -64,6 +65,7 @@ public sealed unsafe partial class RenderingDevice
             var attachments = colorBlendState.Attachments;
             var logic = CaptureLogicOp(colorBlendState);
             if (attachments.Length < target.Colors.Length) throw new ArgumentException("Provide blending for every logical color slot.", nameof(colorBlendState));
+            var nativeBlend = CaptureBlend(program, target, attachments, discard);
             var colors = stackalloc SDL.GPUColorTargetDescription[8];
             for (var native = 0; native < target.ColorSlots.Length; native++)
             {
@@ -111,19 +113,19 @@ public sealed unsafe partial class RenderingDevice
                     TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)target.ColorSlots.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
                 };
                 var entry = new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Variant = variant, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference, forRenderPass) };
-                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState, nativeDepth, logic);
+                entry.Recipe = new(info, vertex.Attributes, vertex.Buffers, new ReadOnlySpan<SDL.GPUColorTargetDescription>(colors, target.ColorSlots.Length).ToArray(), discard, lineWidth, sampleState, nativeDepth, logic, nativeBlend);
                 var views = FramebufferLayouts(framebufferFormat).ViewCount;
                 entry.ViewPipelines = new RenderHandle[views - 1]; entry.ViewPrograms = new Entry[views - 1];
                 try
                 {
-                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, program.GraphicsImages, program.GraphicsImageWrites, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                    entry.Handle = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, program.GraphicsImages, program.GraphicsImageWrites, logic, nativeBlend), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     for (var view = 1; view < views; view++)
                     {
                         var source = Get(shader, Kind.Shader);
                         var viewProgram = CreateDeviceProgram(source.Sources, source.Name, CaptureSpecialization(specializationConstants), outputSlots: discard ? null : target.ColorSlots, viewIndex: (uint)view);
                         entry.ViewPrograms[view - 1] = viewProgram;
                         info.VertexShader = viewProgram.Handle!.DangerousGetHandle(); info.FragmentShader = viewProgram.FragmentHandle!.DangerousGetHandle();
-                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, viewProgram.GraphicsImages, viewProgram.GraphicsImageWrites, logic), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
+                        entry.ViewPipelines[view - 1] = new(CreateGraphicsPipeline(in info, discard, lineWidth, sampleState, nativeDepth, viewProgram.GraphicsImages, viewProgram.GraphicsImageWrites, logic, nativeBlend), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
                     }
                     return Add(entry);
                 }

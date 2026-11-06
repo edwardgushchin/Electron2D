@@ -1,3 +1,5 @@
+Existing RenderingDevice, ShaderCompiler and copied blend resources own the complete [native blend factor family](components/blend-factors.md); six enum values complete the public selector without adding a production type.
+
 Existing directory/xattr, OS process/MIDI/trash and DBus owners now share [UTF8 input ownership](coverage/performance-producers.md#legacy-platform-input-conversion-2026-10-29). The GIO delegate borrows a scoped raw pointer; generated xattr calls pin real data arrays/spans. No new production type or public declaration is added.
 
 [NativeUTF8StringMarshaller](classes/NativeUTF8StringMarshaller.md) and its nested In ref struct own source-generated UTF8 input scratch/heap storage. Existing WebRTC and DBus argument arrays use the same native ledger; no public declaration is added. The [qualified domain and open closures](coverage/performance-producers.md#utf8-input-marshalling-domain-2026-10-29) remain separate from composed memory acceptance.

@@ -1,6 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Describes copied PipelineColorBlendStateAttachment configuration for graphics resources.</summary>
+/// <remarks>All nineteen factors apply independently to source/destination RGB and alpha. Constant-alpha factors require the native blending adapter. Second-source factors require matching indexed fragment output and an enabled dual-source feature. Values are copied when a pipeline is created.</remarks>
 public sealed class RDPipelineColorBlendStateAttachment : ElectronObject
 {
     /// <summary>Creates the default configuration.</summary>

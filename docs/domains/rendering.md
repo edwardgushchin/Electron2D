@@ -1,3 +1,5 @@
+The complete [blend factor family](../components/blend-factors.md) executes constant-alpha and dual-source equations with copied pipeline state, sparse logical locations and independent optional feature negotiation.
+
 [Multisample copies](../components/multisample-copies.md) preserve individual color/depth/stencil samples through native rectangles, array layers, shared slices and same-count scratch.
 
 [Depth/stencil transfers](../components/depth-texture-transfers.md) connect existing texture allocation/update/copy/readback APIs to real native depth and stencil aspects, with portable bytes and shared-view/queued lifetime.

@@ -169,6 +169,9 @@ internal static unsafe partial class GPUDeviceFactory
             var depthResolve = 0;
             try { depthResolve = ReadDepthResolveSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (depthResolve is < 0 or > 3) throw new InvalidOperationException("Native depth/stencil resolve modes could not be queried.");
+            var blend = 0;
+            try { blend = ReadBlendSupport(device, 1, out _); } catch (EntryPointNotFoundException) { }
+            if (blend is not (0 or 1 or 3)) throw new InvalidOperationException("Native color blending could not be queried.");
             var addresses = 0;
             try { addresses = ReadAddressSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (addresses is < 0 or > 1) throw new InvalidOperationException("Native buffer addresses could not be queried.");
@@ -176,7 +179,7 @@ internal static unsafe partial class GPUDeviceFactory
             try { floating = ReadFloatAtomicSupport(device, 2); if (floating == -1) floating = ReadFloatAtomicSupport(device, 1); } catch (EntryPointNotFoundException) { }
             if (floating is < 0 or > 1023) throw new InvalidOperationException("Native floating atomic features could not be queried.");
             available |= addresses << 12;
-            var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4) | (depthResolve << 6); available |= graphics << 10;
+            var raster = wide | ((multisample & 3) << 1) | ((multisample & 4) << 3) | ((depth & 2) << 2) | (logic << 4) | (depthResolve << 6) | ((blend & 2) << 7); available |= graphics << 10;
             var properties = SDL.GetGPUDeviceProperties(device);
             var fp64 = SDL.GetBooleanProperty(properties, Float64Property, false); var int64 = SDL.GetBooleanProperty(properties, Int64Property, false);
             if (!fp64) floating &= 63;
@@ -210,6 +213,10 @@ internal static unsafe partial class GPUDeviceFactory
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_logic_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadLogicSupport(nint device, uint abi);
+    internal const string DualSourceProperty = "Electron2D.gpu.dual_source_blend";
+    [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_blend_support")]
+    [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
+    internal static partial int ReadBlendSupport(nint device, uint abi, out uint maximum);
     [LibraryImport(NativeLibraries.EngineLibrary, EntryPoint = "e2d_render_depth_resolve_support")]
     [UnmanagedCallConv(CallConvs = [typeof(System.Runtime.CompilerServices.CallConvCdecl)])]
     private static partial int ReadDepthResolveSupport(nint device, uint abi);
@@ -292,7 +299,7 @@ internal static unsafe partial class GPUDeviceFactory
                 {
                     options.VulkanApiVersion = (1u << 22) | ((atomics | precision | addresses | floating | (selected & 192)) == 0 ? 0u : 2u << 12);
                     features[15] = (uint)selected & 1; features[6] = ((uint)selected >> 1) & 1; features[17] = ((uint)selected >> 2) & 1; features[14] = ((uint)selected >> 3) & 1;
-                    features[8] = ((uint)selected >> 4) & 1; features[30] = ((uint)selected >> 5) & 1;
+                    features[8] = ((uint)selected >> 4) & 1; features[30] = ((uint)selected >> 5) & 1; features[7] = ((uint)selected >> 8) & 1;
                     options.DeviceExtensionCount = floating == 0 ? 1u : 2u; options.DeviceExtensionNames = (nint)extensions; advanced.Flags[0] = 1;
                     device = SDL.CreateGPUDeviceWithProperties(props); mirror = device != 0;
                     if (device == 0)
@@ -319,6 +326,7 @@ internal static unsafe partial class GPUDeviceFactory
                      features[15] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), WideLinesProperty, true) ||
                      features[14] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DepthBoundsProperty, true) ||
                      features[8] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), LogicOpProperty, true) ||
+                     features[7] != 0 && !SDL.SetBooleanProperty(SDL.GetGPUDeviceProperties(device), DualSourceProperty, true) ||
                      (features[6] | features[17] | features[30]) != 0 && !SDL.SetNumberProperty(SDL.GetGPUDeviceProperties(device), MultisampleProperty, features[6] | features[17] << 1 | features[30] << 2)))
                 {
                     var error = SDL.GetError(); SDL.DestroyGPUDevice(device);

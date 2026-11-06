@@ -162,8 +162,20 @@ public sealed unsafe partial class RenderingDevice
         ConstantColor = 10,
         /// <summary>Selects OneMinusConstantColor.</summary>
         OneMinusConstantColor = 11,
+        /// <summary>Multiplies every component by the blend constant alpha.</summary>
+        ConstantAlpha = 12,
+        /// <summary>Multiplies every component by one minus the blend constant alpha.</summary>
+        OneMinusConstantAlpha = 13,
         /// <summary>Selects SrcAlphaSaturate.</summary>
         SrcAlphaSaturate = 14,
+        /// <summary>Uses the second fragment output color, or its alpha for alpha blending.</summary>
+        Src1Color = 15,
+        /// <summary>Uses one minus the second fragment output color or alpha.</summary>
+        OneMinusSrc1Color = 16,
+        /// <summary>Multiplies every component by the second fragment output alpha.</summary>
+        Src1Alpha = 17,
+        /// <summary>Multiplies every component by one minus the second fragment output alpha.</summary>
+        OneMinusSrc1Alpha = 18,
         /// <summary>Marks the exclusive numeric extent; it is not an executable selection.</summary>
         Max = 19,
     }
