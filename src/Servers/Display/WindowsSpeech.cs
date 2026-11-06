@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal sealed unsafe partial class WindowsSpeech : IDisposable
+internal sealed unsafe partial class WindowsSpeech : INativeSpeech
 {
     internal const ushort StartedEvent = 1, EndedEvent = 2, WordEvent = 5;
     private static readonly Guid VoiceClass = new("96749377-3391-11d2-9ee3-00c04f797396"), VoiceInterface = new("6c44df74-72b9-4992-a1ec-ef996e0422d4");
@@ -45,7 +45,7 @@ internal sealed unsafe partial class WindowsSpeech : IDisposable
         }
         catch { Dispose(); throw; }
     }
-    internal TTSVoice[] GetVoices()
+    public TTSVoice[] GetVoices()
     {
         var voices = new List<TTSVoice>(); var enumeration = OpenEnumeration();
         try
@@ -113,7 +113,9 @@ internal sealed unsafe partial class WindowsSpeech : IDisposable
         }
         finally { CoTaskMemFree(text); }
     }
-    internal uint Speak(string voiceID, string text, int volume, float rate)
+    public NativeSpeechText Prepare(string text, float pitch, string language) => NativeSpeechText.Windows(text, pitch);
+    public bool IsAvailable => _voice != 0;
+    public uint Speak(string voiceID, NativeSpeechText text, int volume, float pitch, float rate)
     {
         var enumeration = OpenEnumeration(); nint selected = 0;
         try
@@ -129,30 +131,36 @@ internal sealed unsafe partial class WindowsSpeech : IDisposable
             var nativeRate = Math.Clamp((int)(10 * Math.Log(rate) / Math.Log(3)), -10, 10);
             Check(((delegate* unmanaged[Stdcall]<nint, int, int>)Methods(_voice)[28])(_voice, nativeRate), "set speech rate");
             uint stream = 0;
-            fixed (char* input = text) Check(((delegate* unmanaged[Stdcall]<nint, char*, uint, uint*, int>)Methods(_voice)[20])(_voice, input, 9, &stream), "start speech synthesis");
+            fixed (char* input = text.Content) Check(((delegate* unmanaged[Stdcall]<nint, char*, uint, uint*, int>)Methods(_voice)[20])(_voice, input, 9, &stream), "start speech synthesis");
             return stream;
         }
         finally { Release(selected); Release(enumeration); }
     }
-    internal bool IsSpeaking
+    public bool IsSpeaking
     {
         get { var status = GetStatus(); return status.State is 0 or 2; }
     }
-    internal int LastResult => GetStatus().Result;
+    public int LastResult => GetStatus().Result;
     private SpeechStatus GetStatus()
     {
         SpeechStatus status = default;
         Check(((delegate* unmanaged[Stdcall]<nint, SpeechStatus*, nint, int>)Methods(_voice)[22])(_voice, &status, 0), "query speech state");
         return status;
     }
-    internal void Pause() => Check(((delegate* unmanaged[Stdcall]<nint, int>)Methods(_voice)[16])(_voice), "pause speech");
-    internal void Resume() => Check(((delegate* unmanaged[Stdcall]<nint, int>)Methods(_voice)[17])(_voice), "resume speech");
-    internal void Purge() => Check(((delegate* unmanaged[Stdcall]<nint, nint, uint, nint, int>)Methods(_voice)[20])(_voice, 0, 2, 0), "stop speech");
-    internal bool TryGetEvent(out SpeechEvent value)
+    public void Pause() => Check(((delegate* unmanaged[Stdcall]<nint, int>)Methods(_voice)[16])(_voice), "pause speech");
+    public void Resume() => Check(((delegate* unmanaged[Stdcall]<nint, int>)Methods(_voice)[17])(_voice), "resume speech");
+    public void Purge() => Check(((delegate* unmanaged[Stdcall]<nint, nint, uint, nint, int>)Methods(_voice)[20])(_voice, 0, 2, 0), "stop speech");
+    public bool TryGetEvent(out NativeSpeechEvent value)
     {
-        uint count = 0; value = default;
-        fixed (SpeechEvent* output = &value) Check(((delegate* unmanaged[Stdcall]<nint, uint, SpeechEvent*, uint*, int>)Methods(_voice)[11])(_voice, 1, output, &count), "read speech events");
-        return count != 0;
+        uint count = 0; SpeechEvent raw = default; value = default;
+        Check(((delegate* unmanaged[Stdcall]<nint, uint, SpeechEvent*, uint*, int>)Methods(_voice)[11])(_voice, 1, &raw, &count), "read speech events");
+        if (count == 0) return false;
+        try
+        {
+            var kind = raw.ID switch { StartedEvent => DisplayServer.TTSUtteranceEvent.Started, EndedEvent => DisplayServer.TTSUtteranceEvent.Ended, WordEvent => DisplayServer.TTSUtteranceEvent.Boundary, _ => (DisplayServer.TTSUtteranceEvent)(-1) };
+            value = new(kind, raw.Stream, (long)raw.Position); return true;
+        }
+        finally { ClearEvent(raw); }
     }
     internal static void ClearEvent(SpeechEvent value)
     {

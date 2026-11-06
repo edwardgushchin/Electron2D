@@ -1,6 +1,3 @@
-using System.Globalization;
-using System.Text;
-
 namespace Electron2D;
 
 public sealed partial class DisplayServer
@@ -19,7 +16,9 @@ public sealed partial class DisplayServer
     }
     /// <summary>Gets an independent snapshot of installed native speech voices.</summary>
     /// <returns>Voice IDs, names and language codes; empty when speech is disabled or unavailable.</returns>
-    /// <remarks>Requires the opening thread. AudioGeneralTextToSpeech is sampled when this display opens.</remarks>
+    /// <remarks>Requires the opening thread. AudioGeneralTextToSpeech is sampled when this display opens.
+    /// Windows uses system speech; Linux/FreeBSD require an available Speech Dispatcher service.
+    /// Its voice catalog loads once per producer; reopen the display to refresh host catalog changes.</remarks>
     /// <exception cref="InvalidOperationException">The display is absent, retiring or accessed off its opening thread.</exception>
     /// <exception cref="IOException">A native speech operation failed.</exception>
     public static TTSVoice[] TTSGetVoices() => RequireService().GetTTSVoices();
@@ -37,11 +36,11 @@ public sealed partial class DisplayServer
     /// <returns>False when speech is disabled, unavailable or idle.</returns>
     /// <exception cref="InvalidOperationException">The display is absent, retiring or accessed off its opening thread.</exception>
     /// <exception cref="IOException">A native speech operation failed.</exception>
-    public static bool TTSIsSpeaking() { var owner = RequireService(); var native = owner.GetTTSBackend(); return owner._speechQueue.Count != 0 || native is not null && owner._speechCurrent is not null && native.IsSpeaking; }
+    public static bool TTSIsSpeaking() { var owner = RequireService(); var native = owner.GetTTSBackend(); return native is not null && (owner._speechQueue.Count != 0 || owner._speechCurrent is not null && native.IsSpeaking); }
     /// <summary>Reports whether the speech producer has been paused.</summary>
     /// <returns>False when speech is disabled, unavailable or not paused.</returns>
     /// <exception cref="InvalidOperationException">The display is absent, retiring or accessed off its opening thread.</exception>
-    public static bool TTSIsPaused() { var owner = RequireService(); owner.EnsureTTSOwner(); return owner._speechPaused; }
+    public static bool TTSIsPaused() { var owner = RequireService(); owner.EnsureTTSOwner(); return owner._speech?.IsAvailable == true && owner._speechPaused; }
     /// <summary>Pauses speech until resumed, stopped or given a nonempty new request.</summary>
     /// <remarks>Idempotent, including while idle. Native output pauses at a provider boundary after buffered audio; accepted notices may still arrive. Requires an enabled producer.</remarks>
     /// <exception cref="InvalidOperationException">The display is absent, retiring or accessed off its opening thread.</exception>
@@ -49,7 +48,8 @@ public sealed partial class DisplayServer
     /// <exception cref="NotSupportedException">Speech is disabled or the producer is unavailable.</exception>
     public static void TTSPause() { var owner = RequireService(); owner.EnsureTTSOwner(); var native = owner.RequireTTS(); if (!owner._speechPaused) { native.Pause(); owner._speechPaused = true; } }
     /// <summary>Resumes a paused speech producer.</summary>
-    /// <remarks>Idempotent. Queued requests start on the next owner event pump.</remarks>
+    /// <remarks>Idempotent. Queued requests start on the next owner event pump.
+    /// A native resume may repeat a preceding source boundary.</remarks>
     /// <exception cref="InvalidOperationException">The display is absent, retiring or accessed off its opening thread.</exception>
     /// <exception cref="IOException">A native speech operation failed.</exception>
     /// <exception cref="NotSupportedException">Speech is disabled or the producer is unavailable.</exception>
@@ -87,6 +87,7 @@ public sealed partial class DisplayServer
     /// <param name="utteranceID">Opaque application ID, including zero, negatives and duplicates.</param>
     /// <param name="interrupt">Cancels active/pending speech before this request.</param>
     /// <remarks>Nonempty requests resume pause. Output and word granularity depend on the native voice.
+    /// Windows reports native word starts; Speech Dispatcher uses source word-end marks and sentence separators.
     /// Callbacks run on the owner event pump; native start failures cancel that request and are reported by the pump.</remarks>
     /// <exception cref="ArgumentException">Text/ID contains NUL, a nonempty request has no installed voice, or a floating value is nonfinite.</exception>
     /// <exception cref="ArgumentNullException">Text or voice is null.</exception>
@@ -96,7 +97,7 @@ public sealed partial class DisplayServer
     public static void TTSSpeak(string text, string voice, int volume = 50, float pitch = 1, float rate = 1, long utteranceID = 0, bool interrupt = false) => RequireService().SpeakTTS(text, voice, volume, pitch, rate, utteranceID, interrupt);
 
     private readonly bool _speechEnabled = ProjectSettings.Get(ProjectSettings.AudioGeneralTextToSpeech);
-    private WindowsSpeech? _speech;
+    private INativeSpeech? _speech;
     private bool _speechUnavailable, _speechPaused;
     private readonly Queue<SpeechRequest> _speechQueue = [];
     private readonly Queue<SpeechNotice> _speechNotices = [];
@@ -104,24 +105,24 @@ public sealed partial class DisplayServer
     private Action<long>? _speechStarted, _speechEnded, _speechCanceled;
     private Action<int, long>? _speechBoundary;
     private readonly record struct SpeechNotice(TTSUtteranceEvent Kind, long ID, int Position, Delegate Callback);
-    private sealed class SpeechRequest(string voice, string xml, int prefix, int[] positions, int positionCount, int volume, float rate, long id)
+    private sealed class SpeechRequest(string voice, NativeSpeechText text, int volume, float pitch, float rate, long id)
     {
-        internal readonly string Voice = voice, XML = xml;
-        internal readonly int Prefix = prefix, PositionCount = positionCount, Volume = volume;
-        internal readonly int[] Positions = positions;
-        internal readonly float Rate = rate;
+        internal readonly string Voice = voice;
+        internal readonly NativeSpeechText Text = text;
+        internal readonly int Volume = volume;
+        internal readonly float Pitch = pitch, Rate = rate;
         internal readonly long ID = id;
         internal uint Stream;
     }
     private void EnsureTTSOwner() { EnsureOwner(); if (_retiringNativeWindow) throw new InvalidOperationException("The speech owner is retiring."); }
-    private WindowsSpeech? GetTTSBackend()
+    private INativeSpeech? GetTTSBackend()
     {
-        EnsureTTSOwner(); if (!_speechEnabled || !OperatingSystem.IsWindows() || _speechUnavailable) return null;
-        if (_speech is not null) return _speech;
-        try { return _speech = new WindowsSpeech(); }
+        EnsureTTSOwner(); if (!_speechEnabled || !(OperatingSystem.IsWindows() || OperatingSystem.IsLinux() && !OperatingSystem.IsAndroid() || OperatingSystem.IsFreeBSD()) || _speechUnavailable) return null;
+        if (_speech is not null) return _speech.IsAvailable ? _speech : null;
+        try { return _speech = OperatingSystem.IsWindows() ? new WindowsSpeech() : new SpeechDispatcherSpeech(); }
         catch (NotSupportedException) { _speechUnavailable = true; return null; }
     }
-    private WindowsSpeech RequireTTS() => GetTTSBackend() ?? throw new NotSupportedException("Enable native text-to-speech for this display on a host with a speech producer.");
+    private INativeSpeech RequireTTS() => GetTTSBackend() ?? throw new NotSupportedException("Enable native text-to-speech for this display on a host with a speech producer.");
     private TTSVoice[] GetTTSVoices() => GetTTSBackend()?.GetVoices() ?? [];
     private void SpeakTTS(string text, string voice, int volume, float pitch, float rate, long id, bool interrupt)
     {
@@ -131,8 +132,12 @@ public sealed partial class DisplayServer
         var native = RequireTTS(); SpeechRequest? request = null;
         if (text.Length != 0)
         {
-            if (!native.GetVoices().Any(value => value.ID == voice)) throw new ArgumentException("The voice is not installed.", nameof(voice));
-            request = PrepareTTS(text, voice, Math.Clamp(volume, 0, 100), Math.Clamp(pitch, 0, 2), Math.Clamp(rate, .1f, 10), id);
+            var selected = native.GetVoices().FirstOrDefault(value => value.ID == voice);
+            if (selected.ID.Length == 0) throw new ArgumentException("The voice is not installed.", nameof(voice));
+            pitch = Math.Clamp(pitch, 0, 2);
+            request = new(voice, native.Prepare(text, pitch, selected.Language), Math.Clamp(volume, 0, 100), pitch, Math.Clamp(rate, .1f, 10), id);
+            EnsureTTSOwner();
+            if (!ReferenceEquals(native, _speech) || !native.IsAvailable) throw new IOException("The speech producer retired during text preparation.");
             _speechQueue.EnsureCapacity(_speechQueue.Count + 1);
         }
         _speechNotices.EnsureCapacity(_speechNotices.Count + _speechQueue.Count + (_speechCurrent is null ? 1 : 2));
@@ -146,9 +151,14 @@ public sealed partial class DisplayServer
         EnsureTTSOwner(); var native = RequireTTS();
         _speechNotices.EnsureCapacity(_speechNotices.Count + _speechQueue.Count + (_speechCurrent is null ? 0 : 1));
         native.Purge();
+        CancelTTSRequests();
+        if (_speechPaused) { native.Resume(); _speechPaused = false; }
+    }
+    private void CancelTTSRequests()
+    {
+        _speechNotices.EnsureCapacity(_speechNotices.Count + _speechQueue.Count + (_speechCurrent is null ? 0 : 1));
         if (_speechCurrent is { } current) { _speechCurrent = null; NoticeTTS(TTSUtteranceEvent.Canceled, current.ID); }
         while (_speechQueue.TryDequeue(out var pending)) NoticeTTS(TTSUtteranceEvent.Canceled, pending.ID);
-        if (_speechPaused) { native.Resume(); _speechPaused = false; }
     }
     private void NoticeTTS(TTSUtteranceEvent kind, long id, int position = 0)
     {
@@ -166,14 +176,13 @@ public sealed partial class DisplayServer
                 try
                 {
                     if (_speechCurrent is not { } current || value.Stream != current.Stream) continue;
-                    if (value.ID == WindowsSpeech.StartedEvent) NoticeTTS(TTSUtteranceEvent.Started, current.ID);
-                    else if (value.ID == WindowsSpeech.WordEvent)
+                    if (value.Kind == TTSUtteranceEvent.Started) NoticeTTS(TTSUtteranceEvent.Started, current.ID);
+                    else if (value.Kind == TTSUtteranceEvent.Boundary)
                     {
-                        var offset = (long)value.Position - current.Prefix;
-                        if (offset < 0 || offset >= current.PositionCount) throw new IOException("The speech provider reported a boundary outside its submitted source.");
-                        NoticeTTS(TTSUtteranceEvent.Boundary, current.ID, current.Positions[(int)offset]);
+                        NoticeTTS(TTSUtteranceEvent.Boundary, current.ID, current.Text.SourcePosition(value.Position));
                     }
-                    else if (value.ID == WindowsSpeech.EndedEvent)
+                    else if (value.Kind == TTSUtteranceEvent.Canceled) { _speechCurrent = null; NoticeTTS(TTSUtteranceEvent.Canceled, current.ID); }
+                    else if (value.Kind == TTSUtteranceEvent.Ended)
                     {
                         _speechCurrent = null; int result;
                         try { result = native.LastResult; } catch { NoticeTTS(TTSUtteranceEvent.Canceled, current.ID); throw; }
@@ -182,17 +191,17 @@ public sealed partial class DisplayServer
                     }
                 }
                 catch (Exception error) { (failures ??= []).Add(error); }
-                finally { WindowsSpeech.ClearEvent(value); }
             }
             var count = _speechQueue.Count;
-            for (var i = 0; i < count && !_speechPaused && _speechCurrent is null && !native.IsSpeaking; i++)
+            for (var i = 0; i < count && native.IsAvailable && !_speechPaused && _speechCurrent is null && !native.IsSpeaking; i++)
             {
                 var request = _speechQueue.Dequeue();
-                try { request.Stream = native.Speak(request.Voice, request.XML, request.Volume, request.Rate); _speechCurrent = request; }
+                try { request.Stream = native.Speak(request.Voice, request.Text, request.Volume, request.Pitch, request.Rate); _speechCurrent = request; }
                 catch (Exception error) { NoticeTTS(TTSUtteranceEvent.Canceled, request.ID); (failures ??= []).Add(error); }
             }
         }
         catch (Exception error) { (failures ??= []).Add(error); }
+        finally { if (!native.IsAvailable) { CancelTTSRequests(); _speechPaused = false; } }
     }
     private void DrainTTS(ref List<Exception>? failures)
     {
@@ -212,60 +221,5 @@ public sealed partial class DisplayServer
             try { native?.Dispose(); }
             finally { _speechCurrent = null; _speechQueue.Clear(); _speechNotices.Clear(); _speechStarted = _speechEnded = _speechCanceled = null; _speechBoundary = null; _speechPaused = false; }
         }
-    }
-    private static SpeechRequest PrepareTTS(string text, string voice, int volume, float pitch, float rate, long id)
-    {
-        var prefix = "<pitch absmiddle=\"" + ((int)(pitch * 10 - 10)).ToString(CultureInfo.InvariantCulture) + "\">";
-        var positions = new int[checked(text.Length + 1)]; var count = 0; var scalar = 0; var literalUntil = 0; var copied = 0;
-        StringBuilder? normalized = null;
-        for (var i = 0; i < text.Length;)
-        {
-            if (i >= literalUntil)
-            {
-                var tail = text.AsSpan(i); var end = tail.StartsWith("<!--") ? "-->" : tail.StartsWith("<![CDATA[") ? "]]>" : tail.StartsWith("<?") ? "?>" : null;
-                if (end is not null) { var at = tail.IndexOf(end); literalUntil = at < 0 ? text.Length : i + at + end.Length; }
-            }
-            if (i >= literalUntil && text[i] == '&' && EntityTTS(text.AsSpan(i), out var length, out var units, out var decoded))
-            {
-                if (text[i + 1] == '#')
-                {
-                    // SAPI handles numeric references inconsistently; canonical literals/predefined entities preserve their XML value.
-                    normalized ??= new(text.Length); normalized.Append(text.AsSpan(copied, i - copied));
-                    normalized.Append(decoded switch { 34 => "&quot;", 38 => "&amp;", 39 => "&apos;", 60 => "&lt;", 62 => "&gt;", _ => new Rune((int)decoded).ToString() });
-                    copied = i + length;
-                }
-                for (var j = 0; j < units; j++) positions[count++] = scalar;
-                scalar += length; i += length;
-            }
-            else
-            {
-                var width = char.IsHighSurrogate(text[i]) && i + 1 < text.Length && char.IsLowSurrogate(text[i + 1]) ? 2 : 1;
-                for (var j = 0; j < width; j++) positions[count++] = scalar;
-                scalar++; i += width;
-            }
-        }
-        positions[count++] = scalar;
-        if (normalized is not null) normalized.Append(text.AsSpan(copied));
-        return new(voice, prefix + (normalized?.ToString() ?? text) + "</pitch>", prefix.Length, positions, count, volume, rate, id);
-    }
-    private static bool EntityTTS(ReadOnlySpan<char> text, out int length, out int units, out uint decoded)
-    {
-        length = 0; units = 1; decoded = 0;
-        if (text.StartsWith("&amp;")) length = 5;
-        else if (text.StartsWith("&lt;") || text.StartsWith("&gt;")) length = 4;
-        else if (text.StartsWith("&quot;") || text.StartsWith("&apos;")) length = 6;
-        else if (text.Length > 3 && text[1] == '#')
-        {
-            var index = 2; var hex = text[index] is 'x' or 'X'; if (hex) index++;
-            var first = index; uint value = 0; var valid = true;
-            for (; index < text.Length; index++)
-            {
-                var c = text[index]; var digit = c is >= '0' and <= '9' ? c - '0' : hex && c is >= 'a' and <= 'f' ? c - 'a' + 10 : hex && c is >= 'A' and <= 'F' ? c - 'A' + 10 : -1;
-                if (digit < 0) break;
-                if (value <= 0x10ffff) value = value * (hex ? 16u : 10u) + (uint)digit; else valid = false;
-            }
-            if (valid && index > first && index < text.Length && text[index] == ';' && value != 0 && Rune.IsValid((int)value)) { length = index + 1; units = value > 0xffff ? 2 : 1; decoded = value; }
-        }
-        return length != 0;
     }
 }

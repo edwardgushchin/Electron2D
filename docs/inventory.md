@@ -2477,4 +2477,4 @@ Existing RenderingDevice/RDTextureFormat/RDTextureView/RDPipelineDepthStencilSta
 
 OS.WindowsTrash supplies the existing static OS/FileDialog trash workflow on Windows with an internal generated COM progress sink, per-call STA ownership and deterministic native releases. See [the component](components/windows-trash.md).
 
-[Native speech](components/text-to-speech.md) adds DisplayServer.Speech.cs, the private WindowsSpeech COM producer and immutable [TTSVoice](classes/TTSVoice.md) descriptors. Native output/queue/callback ownership retires with the display; ProjectSettings owns its restart-required enable policy.
+[Native speech](components/text-to-speech.md) adds DisplayServer.Speech.cs, private WindowsSpeech COM and SpeechDispatcherSpeech SSIP producers, the shared INativeSpeech/NativeSpeechText boundary and immutable [TTSVoice](classes/TTSVoice.md) descriptors. Native output/queue/callback ownership retires with the display; ProjectSettings owns its restart-required enable policy.

@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors><JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault></PropertyGroup>
-  <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /><Compile Include="../Electron2D.Tests/TTSChecks.cs" Link="TTSChecks.cs" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../../Electron2D.csproj" /><Compile Include="../Electron2D.Tests/TTSChecks.cs" Link="TTSChecks.cs" /><Compile Include="../Electron2D.Tests/TTSChecks.Linux.cs" Link="TTSChecks.Linux.cs" /><Compile Include="../Electron2D.Tests/TTSSSIPChecks.cs" Link="TTSSSIPChecks.cs" /></ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
 </Project>

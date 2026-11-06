@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../tools/native-package.props" />
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><TreatWarningsAsErrors>true</TreatWarningsAsErrors><JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Electron2D.csproj" Condition="'$(Electron2DUsePackage)' != 'true'" />
+    <PackageReference Include="Electron2D" Version="[$(Electron2DVersion)]" Condition="'$(Electron2DUsePackage)' == 'true'" />
+    <Compile Include="../TTS.Consumer/Program.cs" Link="Program.cs" />
+    <Compile Include="../Electron2D.Tests/TTSChecks.cs" Link="TTSChecks.cs" />
+    <Compile Include="../Electron2D.Tests/TTSChecks.Linux.cs" Link="TTSChecks.Linux.cs" />
+    <Compile Include="../Electron2D.Tests/TTSSSIPChecks.cs" Link="TTSSSIPChecks.cs" />
+  </ItemGroup>
+</Project>

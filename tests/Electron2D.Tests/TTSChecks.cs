@@ -2,7 +2,7 @@ using Electron2D;
 using System.Diagnostics;
 using IOPath = System.IO.Path;
 
-internal static class TTSChecks
+internal static partial class TTSChecks
 {
     private readonly record struct Notice(DisplayServer.TTSUtteranceEvent Kind, long ID, int Position = -1);
     private static readonly List<Notice> Events = [];
@@ -24,6 +24,7 @@ internal static class TTSChecks
                 var native = File.ReadAllLines(IOPath.Combine(output, "voices.txt"));
                 Check(voices.Select(value => $"{value.ID}|{value.Name}|{value.Language}").SequenceEqual(native), "Independent SDK token metadata agrees with the public typed snapshot.");
                 _voice = voices.FirstOrDefault(value => value.Language.StartsWith("en", StringComparison.Ordinal)).ID;
+                if (!OperatingSystem.IsWindows() && voices.Any(value => value.ID == "English (America)")) _voice = "English (America)";
                 if (_voice.Length == 0) _voice = voices[0].ID;
                 Check(default(TTSVoice).ID.Length == 0 && default(TTSVoice).Name.Length == 0 && default(TTSVoice).Language.Length == 0, "Default typed descriptor is empty.");
                 Check(DisplayServer.TTSGetVoicesForLanguage("").SequenceEqual(voices.Select(value => value.ID)), "Empty language prefix selects all provider IDs in order.");
@@ -33,7 +34,9 @@ internal static class TTSChecks
                 var id = voices[0].ID; voices[0] = default; Check(DisplayServer.TTSGetVoices()[0].ID == id, "Caller array edits cannot mutate provider metadata.");
                 Check(Task.Run(() => { try { DisplayServer.TTSGetVoices(); return false; } catch (InvalidOperationException) { return true; } }).GetAwaiter().GetResult(), "Owner-thread speech access.");
                 ProjectSettings.Set(ProjectSettings.AudioGeneralTextToSpeech, false); Check(DisplayServer.HasFeature(DisplayServer.Feature.TextToSpeech), "Setting changes apply to a new display lifetime.");
-                Callbacks(); Validation(); QueueAndControl(display); AudioAndBoundaries(); Retire(display);
+                Callbacks(); Validation(); QueueAndControl(display);
+                if (OperatingSystem.IsWindows()) AudioAndBoundaries(); else LinuxAudioAndBoundaries();
+                HotDispatch(); Retire(display);
             }
             using (var display = DisplayServer.Open("Disabled next speech lifetime", new(64, 64), hidden: true)) Check(!DisplayServer.HasFeature(DisplayServer.Feature.TextToSpeech) && DisplayServer.TTSGetVoices().Length == 0, "Next lifetime applies the disabled setting.");
             ProjectSettings.Set(ProjectSettings.AudioGeneralTextToSpeech, true);
@@ -43,7 +46,7 @@ internal static class TTSChecks
             }
         }
         finally { ProjectSettings.Set(ProjectSettings.AudioGeneralTextToSpeech, setting); }
-        Console.WriteLine($"TTS: {_checks} public checks; {_capture} independent process-audio captures.");
+        Console.WriteLine($"TTS: {_checks} public checks; {_capture} independent native-audio captures.");
     }
     internal static void Disabled()
     {
@@ -156,7 +159,7 @@ internal static class TTSChecks
         {
             var timer = Stopwatch.StartNew();
             while (!File.Exists(stem + ".ready") && !driver.HasExited && timer.Elapsed.TotalSeconds < 12) Thread.Sleep(10);
-            Check(File.Exists(stem + ".ready"), "Independent own-process capture initialized.");
+            Check(File.Exists(stem + ".ready"), "Independent native speech capture initialized.");
             speech();
         }
         finally { File.WriteAllText(stem + ".stop", ""); Finish(driver); }
