@@ -1,14 +1,14 @@
 # Host platform queries
 
-Last updated: 2026-10-27
+Last updated: 2026-11-06
 
 <a id="adr-0113"></a>
 ## ADR 0113: Retained host identity and feature queries
 
-Last updated: 2026-10-27
+Last updated: 2026-11-06
 
 - Status: Accepted
-- Scope: OS native memory, platform/CPU/locale/sandbox queries, thread identities/native naming, typed project host tags and renderer feature observations
+- Scope: OS native memory, platform/CPU/locale/sandbox queries, thread identities/native naming, typed project host tags, renderer feature observations and system trust-anchor exports
 - Preserves: [0004](product.md#adr-0004), [0019](core-data-io.md#adr-0019), [0021](product.md#adr-0021), [0028](rendering.md#adr-0028), [0095](singleton-services.md#adr-0095)
 
 ### Context
@@ -70,6 +70,16 @@ Native failures preserve other independent fields. Multiplication, addition and
 Apple page subtraction reject overflow or inconsistent readings as unknown.
 Platforms without an adapter fail explicitly. See [host memory](../components/host-memory.md)
 for the public fields, independent native checks and platform qualification limits.
+
+### System CA snapshots
+
+OS.GetSystemCACertificates is a cold, concurrent, fresh export of public trust-anchor encodings as concatenated PEM, independent of display/renderer initialization. It does not install certificates, load private keys, select an application trust policy or replace TLSOptions.Client's existing live OS-chain validation. An explicit X509Certificate loaded from this text supplies a custom anchor snapshot; certificate bytes cannot preserve every native policy, disallow-time change, usage constraint or revocation decision.
+
+Windows opens the effective current-user ROOT collection (including inherited machine roots) read-only and existing-only. Retain provider order and omit a certificate whose CERT_DISALLOWED_FILETIME_PROP_ID has arrived. An empty disallow marker is also omitted: real Windows stores contain this zero-byte form, so treating unwritten FILETIME bytes as a date would use uninitialized data. Other malformed sizes and native read/enumeration failures reject the snapshot. Release every enumerated context, including on failure, and close the store. Native errors become IOException rather than an indistinguishable successful empty result.
+
+Desktop Linux/FreeBSD read the first existing native bundle in this order: /etc/ssl/certs/ca-certificates.crt, /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem, /etc/ca-certificates/extracted/tls-ca-bundle.pem, /var/lib/ca-certificates/ca-bundle.pem and /etc/ssl/cert.pem. No configured compile-time preferred path exists in this product. Preserve the bundle text and return empty only when no standard source exists; a chosen source's I/O error propagates. macOS copies SecTrustCopyAnchorCertificates and certificate DER, releasing copied CoreFoundation objects. Unsupported mobile/TV/browser adapters fail explicitly. Desktop adapter source is not proof of execution on a foreign host.
+
+The [system certificate component](../components/system-certificates.md) owns public/independent native checks, exact-source failure controls and package/AOT evidence. The private fixture uses memory stores only; it never mutates an OS trust store. Empty input, past/future/empty disallow markers, native open/property/enumeration errors and retirement are distinct controls. Full native allocation and ADR 0021 host/package qualification remain open.
 
 ### Verification and remaining gates
 

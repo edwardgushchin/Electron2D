@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+  <ItemGroup><Compile Include="../../src/Core/OS/OS.Certificates.cs" Link="OS.Certificates.cs" /></ItemGroup>
+  <Target Name="UseDynamicFixtureImports" BeforeTargets="WriteIlcRspFileForCompilation" Condition="'$(PublishAot)' == 'true'">
+    <ReadLinesFromFile File="@(DirectPInvokeList)">
+      <Output TaskParameter="Lines" ItemName="FixtureDirectImports" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <FixtureDirectImports Remove="crypt32!CertOpenStore;crypt32!CertEnumCertificatesInStore;crypt32!CertGetCertificateContextProperty;crypt32!CertFreeCertificateContext;crypt32!CertCloseStore" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(IntermediateOutputPath)FixtureDirectImports.txt" Lines="@(FixtureDirectImports)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <DirectPInvokeList Remove="@(DirectPInvokeList)" />
+      <DirectPInvokeList Include="$(IntermediateOutputPath)FixtureDirectImports.txt" />
+    </ItemGroup>
+  </Target>
+</Project>

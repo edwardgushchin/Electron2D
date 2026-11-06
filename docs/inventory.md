@@ -1,3 +1,5 @@
+The existing static OS service owns [system certificate snapshots](components/system-certificates.md) through OS.Certificates.cs and its private native helpers. It adds no public type or trust-store owner.
+
 [DisplayServer status indicators](components/status-indicators.md) use private per-session indicator/press records and a Windows Shell/GDI observer in DisplayServer.StatusIndicators*.cs. Public API remains on the existing static service; copied HICONs retire before native menus/window ownership.
 
 [NativeMenu](classes/NativeMenu.md) is a display-owned static service for [Windows OS popup trees](components/native-menus.md). Its private Menu/Item/tag/callback records and User32/GDI observer own native lifetime; existing PopupMenu adds persisted native preference and a temporary tree bridge.

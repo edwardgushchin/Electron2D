@@ -13,6 +13,7 @@ using EngineTimer = Electron2D.Timer;
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NATIVE_MENU") is { } menuOracle) { if (menuOracle == "unavailable") NativeMenuChecks.Unavailable(); else NativeMenuChecks.Run(menuOracle, args[0]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_STATUS_INDICATOR") is { } statusOracle) { if (statusOracle == "unavailable") StatusIndicatorChecks.Unavailable(); else StatusIndicatorChecks.Run(statusOracle, args[0]); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TTS") is { } speechTools) { if (speechTools == "disabled") TTSChecks.Disabled(); else TTSChecks.Run(speechTools, args[0]); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_CA") is { } caInspector) { SystemCAChecks.Run(caInspector, args[0], args.Length > 1 ? args[1] : null); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_ENDPOINTS") is { } endpointMode) { if (endpointMode == "1") AnimationEndpointTests.Run(); else AnimationEndpointTests.RunAudio(endpointMode == "linear" ? SpriteFrames.LoopMode.Linear : endpointMode == "pingpong" ? SpriteFrames.LoopMode.PingPong : SpriteFrames.LoopMode.None); return; }
 

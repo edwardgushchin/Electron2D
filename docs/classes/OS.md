@@ -1,10 +1,12 @@
 # OS
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.OS`. **Inherits:** `ElectronObject`. **Inherited By:** —. **Source:** [source](../../src/Core/OS/OS.cs). **Component:** [File dialogs](../components/file-dialogs.md).
 
 Retained permanent process operating-system service with static operations and named Engine lookup. It cannot be independently constructed, disposed or unregistered. MoveToTrash uses system GIO on desktop Linux and the [Windows Shell recycle adapter](../components/windows-trash.md), preserving native recovery metadata/mount/link policies; no permanent deletion fallback exists. ShellOpen delegates URI/path requests to SDL. Linux ShellShowInFileManager opens the appropriate folder URI; Windows/macOS native selection requires its backend.
+
+`GetSystemCACertificates()` exports fresh public system CA encodings as PEM for an explicitly selected X509Certificate/TLSOptions trust snapshot. It uses read-only native Windows ROOT/disallow metadata, standard desktop Unix bundles or macOS anchors, without display initialization or trust-store mutation. See [system certificates](../components/system-certificates.md) for source order, native ownership, empty/error behavior, default live OS-trust distinction and verified platform boundaries.
 
 Empty/null/NUL inputs fail before external work. Recoverable trash failure throws IOException or unavailable-service NotSupportedException. Launch failure throws InvalidOperationException. These blocking native operations are unsuitable for real-time callbacks. FileDialog invokes trash only after its confirmation; the caller decides when to launch an external application.
 

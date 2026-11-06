@@ -1,0 +1,6 @@
+EXPORTS
+    CertOpenStore=FixtureOpenStore
+    CertEnumCertificatesInStore=FixtureEnumerate
+    CertGetCertificateContextProperty=FixtureProperty
+    CertFreeCertificateContext=FixtureFree
+    CertCloseStore=FixtureClose
