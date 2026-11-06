@@ -27,7 +27,7 @@ var selection = RenderingDevice.TextureUsageBits.CPURead;
 | `public const Electron2D.RenderingDevice.TextureUsageBits ColorAttachment = 2` | Allows a color attachment in an executable framebuffer. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits DepthResolveAttachment = 4096` | Marks an exact single-sample depth/stencil resolve destination; inferred single-pass framebuffers pair it with a matching multisample depth target. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits DepthStencilAttachment = 4` | Allows a depth/stencil attachment with supported native sampling. |
-| `public const Electron2D.RenderingDevice.TextureUsageBits InputAttachment = 512` | Allows ordered single-sample or multisample framebuffer input reads. |
+| `public const Electron2D.RenderingDevice.TextureUsageBits InputAttachment = 512` | Allows ordered single-sample or multisample color/depth framebuffer input reads. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits Sampling = 1` | Allows shader sampling with a sampler. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits Storage = 8` | Allows read/write compute access where the format supports simultaneous access. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits StorageAtomic = 16` | Checks signed/unsigned R32 atomic storage capability; Image bindings also require Storage. |
@@ -104,7 +104,7 @@ Allows a depth/stencil attachment with supported native sampling.
 public const Electron2D.RenderingDevice.TextureUsageBits InputAttachment = 512
 ```
 
-Allows ordered single-sample or multisample framebuffer input reads.
+Allows ordered single-sample or multisample color/depth framebuffer input reads.
 
 <a id="member-0fdac8edb6d3"></a>
 ### Sampling
@@ -140,3 +140,5 @@ Configurations are independent caller-owned ElectronObject values; disposing a d
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
 
 [Integer image atomics](../components/local-compute.md#integer-image-atomics) records real concurrent kernels, array selectors, memory semantics, native limits and verification boundaries.
+
+[Depth framebuffer inputs](../components/depth-inputs.md) use an independently queried native aspect/view profile; input-only depth does not gain public render/copy permissions.

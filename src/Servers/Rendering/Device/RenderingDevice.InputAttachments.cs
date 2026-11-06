@@ -8,7 +8,7 @@ public sealed unsafe partial class RenderingDevice
     {
         var info = entry.Texture!;
         if (!NeedsGraphicsSnapshot(entry) && ((info.Usage & TextureUsageBits.InputAttachment) == 0 || entry.TextureOwner == default && info.Type != TextureType.TextureArray && (info.Usage & TextureUsageBits.Sampling) == 0)) return;
-        entry.InputShadow = new(SDL.CreateGPUTexture(Device, new()
+        var create = new SDL.GPUTextureCreateInfo
         {
             Type = SDL.GPUTextureType.TextureType2D,
             Format = NativeFormat(info.Format),
@@ -17,8 +17,14 @@ public sealed unsafe partial class RenderingDevice
             LayerCountOrDepth = 1,
             NumLevels = 1,
             SampleCount = ExactSamples(info.Format, info.Samples),
-            Usage = SDL.GPUTextureUsageFlags.GraphicsStorageRead
-        }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+            Usage = SDL.GPUTextureUsageFlags.GraphicsStorageRead | (DepthFormat(info.Format) ? SDL.GPUTextureUsageFlags.DepthStencilTarget : 0)
+        };
+        if (DepthFormat(info.Format))
+        {
+            var format = create.Format;
+            entry.InputShadow = new(GPUTextureViews.Create(Device, 1, in create, (nint)(&format), 1), h => GPUTextureViews.Destroy(Device, 1, h), _context.Handle);
+        }
+        else entry.InputShadow = new(SDL.CreateGPUTexture(Device, in create), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
     }
     private void CaptureInputAttachments(FramebufferPassLayout layout)
     {
@@ -28,8 +34,8 @@ public sealed unsafe partial class RenderingDevice
             var entry = Get(_drawTarget!.Textures[index], Kind.Texture);
             if (entry.InputShadow is null) continue;
             var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("snapshot framebuffer input");
-            GPUTextureViews.Copy(Device, copy, new() { Texture = entry.NativeHandle, Layer = (uint)_drawView }, new() { Texture = entry.InputShadow.DangerousGetHandle() }, entry.Texture!.Width, entry.Texture.Height, 1, false);
-            SDL.EndGPUCopyPass(copy);
+            try { CopyTextureRegion(copy, entry, new() { Texture = entry.NativeHandle, Layer = (uint)_drawView }, new() { Texture = entry.InputShadow.DangerousGetHandle() }, entry.Texture!.Width, entry.Texture.Height); }
+            finally { SDL.EndGPUCopyPass(copy); }
         }
     }
     private static void ValidateInputLayout(Entry program, FramebufferPassLayout layout)

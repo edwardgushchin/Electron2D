@@ -77,6 +77,13 @@ static VkFormat native_format(SDL_GPUTextureFormat format)
     return (uint32_t)format < SDL_arraysize(SDLToVK_TextureFormat) ? SDLToVK_TextureFormat[format] : VK_FORMAT_UNDEFINED;
 }
 static bool depth_format(VkFormat format) { return format >= VK_FORMAT_D16_UNORM && format <= VK_FORMAT_D32_SFLOAT_S8_UINT; }
+static bool format_supported(SDL_GPUDevice *device, SDL_GPUTextureFormat format, SDL_GPUTextureType type, SDL_GPUTextureUsageFlags usage)
+{
+    // The core's format query treats readonly graphics images as writable storage, unlike their allocation.
+    if (usage & SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ)
+        usage = (usage & ~SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ) | SDL_GPU_TEXTUREUSAGE_SAMPLER;
+    return SDL_GPUTextureSupportsFormat(device, format, type, usage);
+}
 static bool compatible_format(SDL_GPUTextureFormat a, SDL_GPUTextureFormat b)
 {
     VkFormat x = native_format(a), y = native_format(b);
@@ -222,7 +229,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_create(SDL_GPUDevice *device, uint32_
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VulkanTextureContainer *src = (VulkanTextureContainer *)source;
     if (!src->activeTexture || !compatible_format(src->header.info.format, format) ||
         layer >= src->header.info.layer_count_or_depth || layers > src->header.info.layer_count_or_depth - layer || level >= src->header.info.num_levels || levels > src->header.info.num_levels - level) return NULL;
-    if (!SDL_GPUTextureSupportsFormat(device, format, array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D, src->header.info.usage)) return NULL;
+    if (!format_supported(device, format, array ? SDL_GPU_TEXTURETYPE_2D_ARRAY : SDL_GPU_TEXTURETYPE_2D, src->header.info.usage)) return NULL;
     View *v = SDL_calloc(1, sizeof(*v)); if (!v) return NULL;
     v->root = source; v->base_layer = layer; v->base_level = level; v->storage_array = array == 2;
     ViewCache *cache = view_cache(device, false);
@@ -254,7 +261,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_texture_create(SDL_GPUDevice *device, uint
     if (e2d_render_view_support(device, abi) != 1 || !info || !formats || !count || count > 256 || !info->width || !info->height || !info->num_levels || !info->layer_count_or_depth || info->num_levels > 32 || info->layer_count_or_depth > 2048 ||
         (info->type != SDL_GPU_TEXTURETYPE_2D && info->type != SDL_GPU_TEXTURETYPE_2D_ARRAY) || (info->type == SDL_GPU_TEXTURETYPE_2D && info->layer_count_or_depth != 1) || info->sample_count > SDL_GPU_SAMPLECOUNT_8) return NULL;
     bool base = false;
-    for (uint32_t i = 0; i < count; i++) { base |= formats[i] == info->format; if (!compatible_format(info->format, formats[i]) || !SDL_GPUTextureSupportsFormat(device, formats[i], info->type, info->usage)) return NULL; }
+    for (uint32_t i = 0; i < count; i++) { base |= formats[i] == info->format; if (!compatible_format(info->format, formats[i]) || !format_supported(device, formats[i], info->type, info->usage)) return NULL; }
     if (!base) return NULL;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     View *v = SDL_calloc(1, sizeof(*v)); if (!v) return NULL;
@@ -318,7 +325,7 @@ E2D_EXPORT SDL_GPUTexture *e2d_render_view_region(SDL_GPUDevice *device, uint32_
 E2D_EXPORT int e2d_render_view_format_support(SDL_GPUDevice *device, uint32_t abi, const SDL_GPUTextureCreateInfo *info, SDL_GPUTextureFormat format)
 {
     if (!info || e2d_render_view_support(device, abi) != 1) return 0;
-    if (!compatible_format(info->format, format) || !SDL_GPUTextureSupportsFormat(device, format, info->type, info->usage) || info->sample_count > SDL_GPU_SAMPLECOUNT_8) return 0;
+    if (!compatible_format(info->format, format) || !format_supported(device, format, info->type, info->usage) || info->sample_count > SDL_GPU_SAMPLECOUNT_8) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData;
     VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
     if (info->usage & (SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ)) usage |= VK_IMAGE_USAGE_SAMPLED_BIT;

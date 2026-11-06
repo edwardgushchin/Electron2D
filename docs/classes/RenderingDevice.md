@@ -1509,3 +1509,5 @@ Multisample sampled color/depth targets now support explicit compute/vertex/frag
 [Multisample storage images](../components/graphics-storage-images.md#multisample-storage-images) extend existing Image descriptors to explicit per-sample loads/stores, queries and signed/unsigned R32 atomics in compute and graphics. Public storage-only descriptions retain their roles and native owner/view lifetime.
 
 [Depth/stencil transfers](../components/depth-texture-transfers.md) extend TextureCreate/TextureUpdate/TextureCopy and both synchronous/queued readback forms to exact single-sample depth encodings. Native queries, shared mip/layer views, independent request snapshots and callback/retirement rules retain the ordinary device contract. Raw MS CPU sample transfers remain separate; [depth/stencil resolve](../components/depth-resolve.md) now executes.
+
+[Depth framebuffer inputs](../components/depth-inputs.md) connect depth producers, ordered input passes and copied output through the existing device API, including layered/shared images and input-only allocations. The owning component records native ABI/refusal, package and platform limits.

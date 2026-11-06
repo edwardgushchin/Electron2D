@@ -490,7 +490,7 @@ public sealed unsafe partial class RenderingDevice
         DepthResolveAttachment = 4096,
         /// <summary>Allows a depth/stencil attachment with supported native sampling.</summary>
         DepthStencilAttachment = 4,
-        /// <summary>Allows ordered single-sample or multisample framebuffer input reads.</summary>
+        /// <summary>Allows ordered single-sample or multisample color/depth framebuffer input reads.</summary>
         InputAttachment = 512,
         /// <summary>Allows shader sampling with a sampler.</summary>
         Sampling = 1,

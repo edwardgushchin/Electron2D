@@ -1,6 +1,6 @@
 # RDFramebufferPass
 
-Last updated: 2026-10-19
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDFramebufferPass`. **Component:** [Local device](../components/local-compute.md#multisample-graphics-and-resolve).
 
@@ -31,7 +31,7 @@ var target = device.FramebufferCreateMultipass([multisampleColor, resolveColor],
 | [`public System.Int32[] ColorAttachments { get; set; }`](#member-1c5793321e5e) | Selects color attachment indices in logical shader output order; AttachmentUnused skips a location. |
 | [`public System.Int32 DepthAttachment { get; set; }`](#member-fde6f81eda57) | Selects the depth/stencil attachment index, or AttachmentUnused. |
 | [`public System.Int32[] ResolveAttachments { get; set; }`](#member-11934a339e55) | Selects one resolve destination index per color slot, or AttachmentUnused. |
-| [`public System.Int32[] InputAttachments { get; set; }`](#member-input-attachments) | Selects input attachment indices in shader input-attachment-index order. |
+| [`public System.Int32[] InputAttachments { get; set; }`](#member-input-attachments) | Selects color/depth input attachment indices in shader input-attachment-index order. |
 | [`public System.Int32[] PreserveAttachments { get; set; }`](#member-preserve-attachments) | Selects attachments whose contents survive this pass without active use. |
 
 ## Member descriptions
@@ -106,7 +106,7 @@ Initially []; copied when the device consumes this configuration.
 public System.Int32[] InputAttachments { get; set; }
 ```
 
-Selects input attachment indices in shader input-attachment-index order.
+Selects color/depth input attachment indices in shader input-attachment-index order.
 
 Initially empty. Reads and writes copy. AttachmentUnused leaves an unbound input slot.
 

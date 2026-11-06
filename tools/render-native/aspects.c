@@ -21,12 +21,13 @@ static VkFormat depth_format(SDL_GPUTextureFormat format)
 }
 E2D_EXPORT int e2d_render_aspect_support(SDL_GPUDevice *device, uint32_t abi, SDL_GPUTextureFormat format)
 {
-    if (!device || abi != 1) return -1;
+    if (!device || (abi != 1 && abi != 2)) return -1;
     if (!e2d_render_pinned_core() || SDL_strcmp(SDL_GetGPUDeviceDriver(device), "vulkan") != 0) return 0;
     VulkanRenderer *r = (VulkanRenderer *)device->driverData; VkFormat native = depth_format(format);
     if (native == VK_FORMAT_UNDEFINED || !r->vkCmdCopyBufferToImage || !r->vkCmdCopyImageToBuffer || !r->vkCmdCopyImage || !r->vkCmdPipelineBarrier) return 0;
     VkFormatProperties properties; r->vkGetPhysicalDeviceFormatProperties(r->physicalDevice, native, &properties);
     VkFormatFeatureFlags required = VK_FORMAT_FEATURE_TRANSFER_SRC_BIT | VK_FORMAT_FEATURE_TRANSFER_DST_BIT;
+    if (abi == 2) required |= VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
     return (properties.optimalTilingFeatures & required) == required;
 }
 static VulkanCommandBuffer *command_for(SDL_GPUDevice *device, uint32_t abi, SDL_GPUCommandBuffer *commands)
@@ -69,7 +70,7 @@ static bool region_valid(VulkanTextureContainer *t, const SDL_GPUTextureRegion *
 }
 static VkImageLayout ordinary(VulkanTexture *t)
 {
-    if (t->usage & SDL_GPU_TEXTUREUSAGE_SAMPLER) return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    if (t->usage & (SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_GRAPHICS_STORAGE_READ | SDL_GPU_TEXTUREUSAGE_COMPUTE_STORAGE_READ)) return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 }
 static void transition(VulkanCommandBuffer *c, VulkanTexture *t, const SDL_GPUTextureRegion *region, VkImageLayout layout, bool restore)

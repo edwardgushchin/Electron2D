@@ -134,7 +134,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Reports whether the selected format supports the requested two-dimensional texture usage.</summary>
     /// <param name="format">A concrete format to query.</param>
     /// <param name="usageFlags">Requested allocation and transfer roles.</param>
-    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT and feature-enabled R32SFLOAT read-modify-write images. DepthResolveAttachment requires the enabled sample-zero modes for every stored aspect.</returns>
+    /// <returns>False for formats or roles unavailable on this backend. StorageAtomic accepts native R32SINT/R32UINT and feature-enabled R32SFLOAT read-modify-write images. DepthResolveAttachment requires the enabled sample-zero modes for every stored aspect. Depth input attachments require the ABI2 aspect/view adapter and readonly sampled format capability.</returns>
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
@@ -143,20 +143,25 @@ public sealed unsafe partial class RenderingDevice
             (format != DataFormat.R32SFLOAT || (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.FloatAtomicProperty, 0) & 48) == 0)) return false;
         if (DepthFormat(format))
         {
-            if ((usageFlags & (TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment)) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0) return false;
+            if ((usageFlags & (TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.InputAttachment)) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.InputAttachment | TextureUsageBits.Sampling | TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0) return false;
         }
         else if ((usageFlags & TextureUsageBits.DepthStencilAttachment) != 0) return false;
         var native = NativeFormat(format);
         if (DepthFormat(format) && (usageFlags & (TextureUsageBits.CanUpdate | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.CPURead)) != 0 && !DepthTransfersSupported(format)) return false;
-        if ((usageFlags & TextureUsageBits.InputAttachment) != 0 && (DepthFormat(format) || native == SDL.GPUTextureFormat.Invalid || !SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.GraphicsStorageRead))) return false;
-        return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, NativeUsage(usageFlags));
+        if ((usageFlags & TextureUsageBits.InputAttachment) != 0 && (DepthFormat(format) ? !DepthTransfersSupported(format, graphicsInputs: true) : native == SDL.GPUTextureFormat.Invalid || !SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, SDL.GPUTextureUsageFlags.ColorTarget | SDL.GPUTextureUsageFlags.Sampler))) return false;
+        var privateTarget = DepthFormat(format) && (usageFlags & TextureUsageBits.InputAttachment) != 0 ? TextureUsageBits.DepthStencilAttachment : 0;
+        var nativeUsage = NativeUsage(usageFlags | privateTarget);
+        // Readonly graphics images allocate sampled storage; query that exact role.
+        if ((nativeUsage & SDL.GPUTextureUsageFlags.GraphicsStorageRead) != 0) nativeUsage = (nativeUsage & ~SDL.GPUTextureUsageFlags.GraphicsStorageRead) | SDL.GPUTextureUsageFlags.Sampler;
+        return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, nativeUsage);
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
     /// <param name="view">Copied initial format and sampled component mapping; alternate formats must be declared shareable.</param>
     /// <param name="data">One tightly packed mip chain per layer, or empty for zero initialization. Single-sample depth/stencil data uses the documented portable aspect encoding; D32 floats must be finite and within zero through one. Empty depth images initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
-    /// <remarks>StorageAtomic validates signed/unsigned R32 or feature-enabled R32SFLOAT atomic format support. Floating base and add operations independently require their enabled native image features. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
+    /// <remarks>InputAttachment accepts single-mip color and depth images or arrays. Input-only depth retains a private initialization target without public render/copy permissions. Shared, layered and sampled inputs use readonly per-view GPU snapshots.
+    /// StorageAtomic validates signed/unsigned R32 or feature-enabled R32SFLOAT atomic format support. Floating base and add operations independently require their enabled native image features. Image descriptors independently require Storage. Ordinary and array R32 Storage allocations retain native simultaneous read-modify-write access.
     /// Array Image descriptors expose every layer of one base mip through a cached native view; higher mip data is preserved. One-layer arrays retain their array shader and canvas role.
     /// Sampled component maps apply to texture operations; updates, copies, clears and readback retain raw storage.
     /// Multisample color/depth targets may include Sampling for explicit per-sample shader loads and size/sample queries. They require empty data, one mip and the native image/view adapter; color storage uses the enabled native multisample-storage feature. Equal-count copies preserve every sample, including both depth/stencil aspects. Raw CPU sample transfers and direct canvas sampling retain their separate adapters.
@@ -185,8 +190,8 @@ public sealed unsafe partial class RenderingDevice
         if (samples != TextureSamples.Samples1)
         {
             var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
-            var allowedUsage = targetRole | TextureUsageBits.Sampling | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.InputAttachment | TextureUsageBits.Storage | TextureUsageBits.StorageAtomic);
-            if (mips != 1 || !data.IsEmpty || (usage & (targetRole | TextureUsageBits.Storage)) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets or color storage images with optional sampling; raw CPU transfers require a separate adapter.");
+            var allowedUsage = targetRole | TextureUsageBits.Sampling | TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo | TextureUsageBits.InputAttachment | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.Storage | TextureUsageBits.StorageAtomic);
+            if (mips != 1 || !data.IsEmpty || (usage & (targetRole | TextureUsageBits.Storage | (DepthFormat(pixelFormat) ? TextureUsageBits.InputAttachment : 0))) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty single-mip render targets, depth inputs or color storage images with optional sampling; raw CPU transfers require a separate adapter.");
             if ((usage & TextureUsageBits.Storage) != 0 && (SDL.GetNumberProperty(SDL.GetGPUDeviceProperties(Device), GPUDeviceFactory.MultisampleProperty, 0) & 4) == 0) throw new NotSupportedException("Multisample storage requires its enabled native shader feature.");
             if (DepthFormat(pixelFormat) && (usage & (TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo)) != 0) RequireDepthTransfers(pixelFormat);
             var multi = new Entry { Kind = Kind.Texture, Texture = new(viewedFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples, Swizzle: TextureSwizzles.Capture(view), StoredFormat: pixelFormat) };
@@ -206,11 +211,12 @@ public sealed unsafe partial class RenderingDevice
             var depthEntry = new Entry { Kind = Kind.Texture, Texture = depthInfo, Size = depthInfo.Total };
             try
             {
-                depthEntry.Handle = CreateTextureStorage(depthEntry, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage & ~(kind == TextureType.TextureArray ? TextureUsageBits.InputAttachment : 0)) }, shareable, viewedFormat);
+                depthEntry.Handle = CreateTextureStorage(depthEntry, NativeTextureInfo(depthInfo with { Format = pixelFormat }), shareable, viewedFormat);
                 if (data.IsEmpty) InitializeDepth(depthEntry); else for (uint layer = 0; layer < layers; layer++) UploadTexture(depthEntry, layer, data[(int)layer]);
+                PrepareInputShadow(depthEntry);
                 return Add(depthEntry);
             }
-            catch { depthEntry.Handle?.Dispose(); depthEntry.TextureAllocation?.Dispose(); depthEntry.Upload?.Dispose(); throw; }
+            catch { depthEntry.InputShadow?.Dispose(); depthEntry.Handle?.Dispose(); depthEntry.TextureAllocation?.Dispose(); depthEntry.Upload?.Dispose(); throw; }
         }
         if (!data.IsEmpty && data.Length != layers) throw new ArgumentException("Provide one mip chain per layer.", nameof(data));
         var info = CaptureTextureInfo(viewedFormat, kind, width, height, layers, mips, usage, shareable, samples, resolve, TextureSwizzles.Capture(view), pixelFormat);

@@ -228,6 +228,8 @@ int main(int argc, char **argv)
     depth.flags = 0; depth.minimum = -1; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     depth.minimum = 0; depth.back_reference = 256; require(e2d_render_depth_pipeline((SDL_GPUDevice *)(uintptr_t)1, 1, (const SDL_GPUGraphicsPipelineCreateInfo *)(uintptr_t)1, 1, 0, &samples, &depth) == NULL);
     require(e2d_render_aspect_support(NULL, 1, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
+    require(e2d_render_aspect_support(NULL, 2, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
+    require(e2d_render_aspect_support((SDL_GPUDevice *)(uintptr_t)1, 3, SDL_GPU_TEXTUREFORMAT_D32_FLOAT) == -1);
     require(e2d_render_depth_resolve_support(NULL, 1) == -1);
     require(e2d_render_depth_resolve_support((SDL_GPUDevice *)(uintptr_t)1, 0) == -1);
     require(e2d_render_depth_resolve_create(NULL, 1, NULL, NULL, 1, 1) == NULL);
@@ -325,7 +327,9 @@ int main(int argc, char **argv)
     require(e2d_render_aspect_support(device, 1, SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM) == 0);
     for (int format = SDL_GPU_TEXTUREFORMAT_D16_UNORM; format <= SDL_GPU_TEXTUREFORMAT_D32_FLOAT_S8_UINT; format++) {
         int support = e2d_render_aspect_support(device, 1, (SDL_GPUTextureFormat)format); require(support >= 0 && support <= 1);
+        int input = e2d_render_aspect_support(device, 2, (SDL_GPUTextureFormat)format); require(input >= 0 && input <= support);
         printf("Native depth transfer format=%d support=%d\n", format, support);
+        printf("Native depth input format=%d support=%d (ABI2, graphics-read layout restoration)\n", format, input);
     }
     int multisample_features = e2d_render_multisample_support(device, 1); require(multisample_features >= 0 && multisample_features <= 3);
     int storage_samples = e2d_render_multisample_support(device, 2);

@@ -103,8 +103,8 @@ public sealed unsafe partial class RenderingDevice
         {
             if (input == RDFramebufferPass.AttachmentUnused) continue;
             Index(input, formats.Length);
-            if (!used.Add(input) || DepthFormat(formats[input]) || (usage[input] & TextureUsageBits.InputAttachment) == 0)
-                throw new ArgumentException("Inputs require distinct color input attachments, separate from the pass outputs.");
+            if (!used.Add(input) || (usage[input] & TextureUsageBits.InputAttachment) == 0)
+                throw new ArgumentException("Inputs require distinct input attachments, separate from the pass outputs.");
         }
         foreach (var preserve in preserves) Index(preserve, formats.Length);
         return new(formats, usage, samples, colors, slots, depth, depthResolve, resolves, rasterSamples, inputs, preserves);
@@ -189,6 +189,8 @@ public sealed unsafe partial class RenderingDevice
             var outputs = pass.Colors.Concat(pass.Resolves).Append(pass.DepthIndex).Append(pass.DepthResolveIndex).Where(i => i >= 0).ToArray();
             for (var a = 0; a < outputs.Length; a++) for (var b = a + 1; b < outputs.Length; b++)
                     if (GPUTextureViews.Overlap(Device, Get(textures[outputs[a]], Kind.Texture).NativeHandle, (uint)viewCount, 1, Get(textures[outputs[b]], Kind.Texture).NativeHandle, (uint)viewCount, 1)) throw new ArgumentException("Framebuffer output views must address disjoint image subresources.", nameof(textures));
+            foreach (var input in pass.Inputs) if (input >= 0) foreach (var output in outputs)
+                        if (GPUTextureViews.Overlap(Device, Get(textures[input], Kind.Texture).NativeHandle, (uint)viewCount, 1, Get(textures[output], Kind.Texture).NativeHandle, (uint)viewCount, 1)) throw new ArgumentException("Framebuffer input and output views must address disjoint image subresources.", nameof(textures));
             foreach (var preserved in pass.Preserves) Get(textures[preserved], Kind.Texture);
             for (var i = 0; i < pass.Resolves.Length; i++)
                 if (pass.Resolves[i] >= 0) ResolvePair(Get(textures[pass.Colors[i]], Kind.Texture).Texture!, Get(textures[pass.Resolves[i]], Kind.Texture).Texture!);

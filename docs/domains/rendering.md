@@ -627,3 +627,5 @@ Formatted graphics producers now store encoded ImageBuffer elements and execute 
 [Concrete text profiles](../components/text-server.md#concrete-implementation-profiles) expose independent Advanced/Fallback/Dummy implementations and project startup selection. Fallback executes real scalar layout; Dummy is an explicit portable disabled-text policy. Bounded receipts remain separate from the full ADR 0021 host/package matrix.
 
 The local device also executes [multisample shader reads](../components/local-compute.md#multisample-shader-reads) on sampled render targets; exact sample/descriptor roles, native allocation and lifetime remain in that component.
+
+[Depth framebuffer inputs](../components/depth-inputs.md) connect depth producers, ordered input passes and copied output through the existing device API, including layered/shared images and input-only allocations. The owning component records native ABI/refusal, package and platform limits.

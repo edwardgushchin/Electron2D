@@ -7,13 +7,13 @@ namespace Electron2D;
 public sealed unsafe partial class RenderingDevice
 {
     private uint _depthTransferChecked, _depthTransferSupported;
-    private bool DepthTransfersSupported(DataFormat format)
+    private bool DepthTransfersSupported(DataFormat format, bool graphicsInputs = false)
     {
         var native = NativeFormat(format); var index = (int)native - (int)SDL.GPUTextureFormat.D16Unorm;
-        if ((uint)index >= 5) return false; var bit = 1u << index;
+        if ((uint)index >= 5) return false; var bit = 1u << (index + (graphicsInputs ? 5 : 0));
         if ((_depthTransferChecked & bit) == 0)
         {
-            try { if (NativeAspectSupport(Device, 1, native) == 1) _depthTransferSupported |= bit; }
+            try { if (NativeAspectSupport(Device, graphicsInputs ? 2u : 1u, native) == 1) _depthTransferSupported |= bit; }
             catch (EntryPointNotFoundException) { }
             _depthTransferChecked |= bit;
         }

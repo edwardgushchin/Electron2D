@@ -20,7 +20,7 @@ public sealed class RDFramebufferPass : ElectronObject
     /// <value>Initially []; copied when the device consumes this configuration.</value>
     public int[] ResolveAttachments { get { ThrowIfDisposed(); return _resolveAttachments.ToArray(); } set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _resolveAttachments = value.ToArray(); } }
     private int[] _inputAttachments = [];
-    /// <summary>Selects input attachment indices in shader input-attachment-index order.</summary>
+    /// <summary>Selects color/depth input attachment indices in shader input-attachment-index order.</summary>
     /// <value>Initially empty. Reads and writes copy; AttachmentUnused leaves an unbound input slot.</value>
     public int[] InputAttachments { get { ThrowIfDisposed(); return _inputAttachments.ToArray(); } set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _inputAttachments = value.ToArray(); } }
     private int[] _preserveAttachments = [];

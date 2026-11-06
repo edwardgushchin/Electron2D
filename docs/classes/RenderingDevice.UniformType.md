@@ -1,6 +1,6 @@
 # RenderingDevice.UniformType
 
-Last updated: 2026-10-20
+Last updated: 2026-11-06
 
 **Namespace:** `Electron2D`. **Declaration:** `public enum Electron2D.RenderingDevice.UniformType`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -140,3 +140,5 @@ A uniform buffer with dynamic offset.
 [RenderingDeviceTests](../../tests/Electron2D.Tests/RenderingDeviceTests.cs) checks actual native computation, buffer/descriptor/barrier semantics, resource copying/storage and invalid lifetime/thread access. [Local compute](../components/local-compute.md) records the supported module/resource profile. Broader device graphics APIs, asynchronous texture transfer APIs and additional platforms are not established by this slice.
 
 Image also executes ordinary signed/unsigned R32 compute atomics through scalar/fixed-array descriptions. The storage role, native format and existing lifetime checks apply; see [integer image atomics](../components/local-compute.md#integer-image-atomics).
+
+[Depth framebuffer inputs](../components/depth-inputs.md) connect depth producers, ordered input passes and copied output through the existing device API, including layered/shared images and input-only allocations. The owning component records native ABI/refusal, package and platform limits.
