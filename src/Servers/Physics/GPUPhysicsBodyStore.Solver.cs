@@ -81,11 +81,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 else if (!batchPosition) Submit(h, default, default, default, 4, _hasPositionCorrections, endTick: substep == substeps - 1);
                 _hasPositionCorrections = false;
             }
+            FlushSolverContinuation();
             EndContactReports();
             _steppedDefaults = defaults; _steppedFieldVersion = _fieldVersion;
             _sleepBodyVersion = _bodyVersion; _sleepShapeVersion = _shapeVersion; _sleepGeometryEpoch = Shape.GeometryEpoch;
         }
-        catch { _failed = true; throw; }
+        catch { CancelSolverContinuation(); _failed = true; throw; }
     }
 
     /// <summary>Solves current contacts, pins, grooves and axial springs on the device without advancing poses.</summary>
@@ -120,6 +121,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 if (_highWater == 0) return;
                 EnsureSpatial(); Grow(ref _contactsGPU, ref _contactCapacity, 1, 64, false);
             }
+            // A world without spatial work has no later completion to share.
+            FlushSolverContinuation();
             var constraintCount = checked(ContactPointCount + (JointCount > 0 ? JointRows * _jointHighWater : 0));
             EnsureSleep();
             _solverPipeline ??= _context.CreatePipeline("PhysicsResidentSolve.comp.spv");
@@ -255,11 +258,24 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             }
             if (finalReports) RecordFinalContactReports(command, resetStatus: false);
             var bodyStatusBytes = bodyWork ? (advancePositions && endTick ? 16u : 8u) : 0u;
+            var defer = advancePositions && !endTick && !SeparateSimulationSubmissions && !ProfileSolverPasses && !PhysicsSpace.ProfilingEnabled;
+            var resultOffset = defer ? SolverCompletionOffset : 0u;
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin solver result");
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
-            if (bodyWork) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = bodyStatusBytes }, new() { TransferBuffer = _spatialDownload.DangerousGetHandle(), Offset = 8 });
-            SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
+            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle(), Offset = resultOffset });
+            if (bodyWork) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = bodyStatusBytes }, new() { TransferBuffer = _spatialDownload.DangerousGetHandle(), Offset = resultOffset + 8 });
+            SDL.EndGPUCopyPass(copy);
+            if (defer)
+            {
+                _solverContinuation = command; command = 0;
+                _solverCompletionPending = true;
+                _failed = false;
+                // Exclusive fenced timings retain the synchronous diagnostic path above.
+                SolverMS += Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+                SolverWaitMS += WaitMS - wait;
+                return;
+            }
+            _failed = true; Finish(ref command);
             UploadBytes += bodyWork ? 16 : 8; ReadbackBytes += 8 + bodyStatusBytes; SolverSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map solver result");

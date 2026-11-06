@@ -227,7 +227,9 @@ and contacts consume velocities. If there are no shapes, it shares the solver
 submission instead. Solver, report capture, position integration and connected sleep
 also share one submission when no continuous-impact interval is needed. This keeps
 all four substeps and all iterations while reducing the ordinary contact pipeline
-from twenty to twelve submissions before color-schedule checks. Current colored
+from twenty to twelve submissions before color-schedule checks in the original
+integration-batching path. The [shared solver/spatial completion](#shared-solver-and-spatial-completion-2026-11-06)
+removes another three intermediate completions. Current colored
 solving adds one completion check per substep in the ordinary case. Pending edits, Area reduction, CCD, queries and
 public-world publication contribute their own measured work.
 
@@ -242,11 +244,12 @@ The opt-in ProfileSolverPasses diagnostic adds a fence after each solver dispatc
 and accumulates seven SolverPassMS counters (clear, prepare, update, gather, save,
 hash clear, hash insert). These measurements include submission/fence overhead and
 perturb batching; they are not device timestamp queries or normal-step timings.
-The flag is false by default and the ordinary submission count is unchanged.
-SolverMS records total solver submission/map/dispatch/wait time, now including batched
-position/sleep and shape-free velocity work; SolverWaitMS isolates that fence wait.
-Broad/narrow work is separate, with velocity work included in the spatial submission
-when shapes exist. Driver overhead
+The flag is false by default and keeps the synchronous solver completion when enabled.
+On the synchronous diagnostic path, SolverMS records solver submission/map/dispatch/wait
+time, including batched position/sleep and shape-free velocity work; SolverWaitMS
+isolates that fence wait. Broad/narrow work is separate on that path, with velocity
+work included in spatial submission when shapes exist. Default shared-wait attribution
+is described below. Driver overhead
 and native allocations are not measured as heap totals; owned buffer capacity is
 retained and no managed allocation occurs in the sampled warm windows.
 
@@ -255,6 +258,40 @@ fails, the store rejects future reads/mutations until disposal; no CPU replay oc
 Finite authored inputs that generate nonrepresentable contact impulses are tested.
 An independent velocity-only SolveConstraints call keeps poses fixed; Simulate consumes
 the separately prepared correction velocities when advancing poses.
+
+## Shared solver and spatial completion (2026-11-06)
+
+An ordinary discrete intermediate substep retains its recorded solver, report and
+position commands. The following spatial discovery appends to that command buffer
+and completes both stages with one fence. Four-substep ticks remove three separate
+solver completions without changing numerical dispatch order, iterations, contacts,
+events or publication. The final substep completes before `Simulate` returns.
+Continuous-impact work and the explicit separate/fenced profiling controls retain
+their existing synchronous path.
+
+Before spatial discovery resets the device summaries, the preceding solver and
+body status are copied to a separate sixteen-byte region at offset 32 of the
+existing download transfer. Its retained minimum capacity grows from 32 to 64
+bytes through the tracked allocator. The shared fence validates those preceding
+statuses and accepts their report counts before validating the current spatial
+result. A previous body/solver error therefore cannot disappear behind a later
+successful spatial status. Capacity growth and absent spatial work flush the
+recorded continuation; failure and disposal cancel an unsubmitted command buffer.
+No pending continuation crosses the completed public tick or checkpoint boundary.
+
+The existing color-schedule readback, final publication and synchronous query
+completions remain. Status payload traffic is unchanged. Default internal phase
+counters charge the shared wait to spatial discovery; exclusive solver attribution
+requires `ProfileSolverPasses`, `PhysicsSpace.ProfilingEnabled` or the separate
+submission control. These diagnostic counters are not the public performance
+comparison.
+
+The Windows Vulkan regression checks three shared completions, physical agreement with
+the separate control and retained contact reports, an independently failing preceding body status
+and 128 warmed ticks at zero owner/all-thread managed bytes. Adjacent contacts,
+shapes, one-way, CCD, sleep, joints, shape/motion queries and checkpoint profiles pass.
+The [public before/after report](physics-current-performance.md#shared-solver-completion-beforeafter-2026-11-06)
+records the speed evidence and its desktop/platform limits.
 
 ## Checks and numerical scope
 

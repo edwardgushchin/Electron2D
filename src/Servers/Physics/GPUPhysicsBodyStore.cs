@@ -533,6 +533,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             var start = Stopwatch.GetTimestamp();
             if (!SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1)) throw GPUPhysicsDevice.Failure("wait for resident body work");
             WaitMS += Stopwatch.GetElapsedTime(start).TotalMilliseconds; SubmissionCount++;
+            AcceptSolverContinuation();
         }
         finally { SDL.ReleaseGPUFence(Device, fence); }
     }
@@ -544,6 +545,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
         if (_checkpointCopyActive) throw new InvalidOperationException("A checkpoint copy cannot be disposed while executing.");
+        CancelSolverContinuation();
         while (_checkpoints.Count != 0) _checkpoints[^1].Dispose();
         _portableOneWays = []; _portableOneWayTable = []; _colliders.Clear();
         _disposed = true; DisposeDebugContacts(); DisposeChanges(); DisposeQueries(); DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeColors(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();

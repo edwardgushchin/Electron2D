@@ -1207,7 +1207,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DORMANT_CAPACITY") is { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_JOINTS") == "1") { GPUPhysicsJointStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_JOINT_DEGREE") is { } jointDegree) { GPUPhysicsJointDegreeTests.Run(jointDegree switch { "1" => false, "measure" => true, _ => throw new ArgumentException("Use 1 or measure for the joint-degree profile.") }); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CONTACT_COLORS") == "1") { GPUPhysicsSolverStoreTests.RunColorScheduling(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SOLVER") == "1") { GPUPhysicsSolverStoreTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SOLVER") is "1" or "functional")
+{ GPUPhysicsSolverStoreTests.Run(measure: Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS") == "1") { GPUPhysicsContactStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SHAPES") == "1") { GPUPhysicsSpatialTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CCD_BATCH") == "1") { GPUPhysicsCCDBatchTests.Run(); return; }

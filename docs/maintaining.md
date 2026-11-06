@@ -194,7 +194,7 @@ For registered extension-class changes, follow [ADR 0116](decisions/extensions.m
 
 For function-loaded extension lifecycle changes, follow [ADR 0116](decisions/extensions.md#adr-0116) and run the [public consumer](components/extensions.md). Keep typed module initialization/unloading separate from class registration, state rebinding and reload acceptance; storage must never serialize/activate entry callbacks.
 
-Last updated: 2026-11-05
+Last updated: 2026-11-06
 
 Depth/stencil changes follow [the native state contract](components/depth-stencil-state.md): preserve stored-depth range semantics, independent visible faces, optional feature refusal, ordinary dynamic-reference switching, composed view/pass/MSAA/component variants and the warmed owner-allocation boundary.
 
@@ -702,6 +702,8 @@ priority and compound profiles. Metal/DXIL four-attempt recovery, translation an
 passes share one submission and existing device scratch; verify target execution
 and strict zero-byte intervals separately from offline compilation. Windows GPU
 diagnostics now runs the production DXIL shaders with only cold-pipeline logging.
+
+For [shared solver/spatial completion](components/gpu-contact-solver.md#shared-solver-and-spatial-completion-2026-11-06), run `ELECTRON2D_TEST_GPU_RESIDENT_SOLVER=functional` with the Release runner. This preserves numerical, color, report and zero-allocation checks while omitting the older private residency timing loops; `1` retains that diagnostic mode. Require three removed waits, shared/separate physical agreement and retained contact reports, independent preceding-error rejection, capacity/terminal cleanup and adjacent contacts/shapes/one-way/CCD/sleep/joints/shape-query/motion-query/checkpoint checks. Speed comparisons use the ordinary public consumer in fresh before/after processes with identical consumer, runtime-framework and native identities; keep private phase counters out of that comparison.
 
 For resident pair/contact completion, run ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS=1 with the Release runner, plus the adjacent solver, one-way, CCD, sleep, spatial/shape/motion-query and checkpoint profiles. Preserve the shared/separate submission control, independent error records, bounded capacity recovery, cold empty-world capacity/release checks and strict allocation gates. PhysicsPipelinePerformance accepts ELECTRON2D_PHYSICS_PERFORMANCE_SEPARATE_CONTACT_SUBMISSIONS=1 only for GPU physics and records separateContactSubmissions; CPU use rejects before simulation. This is a stage control inside a complete physics path. Compare standalone CPU/GPU full scenes separately and keep concurrent diagnostic times distinct from accepted hardware throughput and native-window FPS.
 

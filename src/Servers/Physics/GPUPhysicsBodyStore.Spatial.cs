@@ -115,12 +115,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _shapeEditsGPU, ref _shapeEditCapacity, Math.Max(1, _dirtyShapes.Count), sizeof(ShapeEdit), false);
         var uploadBytes = checked(8 + _vertexEditCount * sizeof(VertexEdit) + _dirtyGeometry.Count * sizeof(GeometryEdit) + _dirtyShapes.Count * sizeof(ShapeEdit));
         GrowTransfer(ref _spatialUpload, ref _spatialUploadBytes, uploadBytes, SDL.GPUTransferBufferUsage.Upload);
-        GrowTransfer(ref _spatialDownload, ref _spatialDownloadBytes, 32, SDL.GPUTransferBufferUsage.Download);
+        GrowTransfer(ref _spatialDownload, ref _spatialDownloadBytes, 64, SDL.GPUTransferBufferUsage.Download);
     }
 
     private void Grow(ref RenderHandle? target, ref int capacity, int count, int stride, bool preserve)
     {
         if (count <= capacity) return;
+        FlushSolverContinuation();
         var next = Capacity(count);
         var replacement = CreateBuffer(checked((uint)(next * stride)));
         try
@@ -151,6 +152,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private void GrowTransfer(ref RenderHandle? target, ref int capacity, int bytes, SDL.GPUTransferBufferUsage usage)
     {
         if (bytes <= capacity) return;
+        FlushSolverContinuation();
         var next = Capacity(bytes);
         var replacement = CreateTransfer((uint)next, usage);
         if (target is null) target = new(replacement, ReleaseBuffer, _context.Handle);
@@ -167,7 +169,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var shapeBytes = retry ? 0 : checked((uint)(_dirtyShapes.Count * sizeof(ShapeEdit)));
         var ccdResetOffset = checked(8 + vertexBytes + geometryBytes + shapeBytes);
         if (continuous) GrowTransfer(ref _spatialUpload, ref _spatialUploadBytes, checked((int)ccdResetOffset + 8), SDL.GPUTransferBufferUsage.Upload);
-        var command = SDL.AcquireGPUCommandBuffer(Device);
+        var sharedSolver = _solverContinuation != 0;
+        var command = AcquireSpatialCommands();
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident spatial work");
         try
         {
@@ -241,6 +244,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             finally { SDL.UnmapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle()); }
             if (count > int.MaxValue) throw new InvalidOperationException("The GPU pair count exceeds addressable storage.");
             _failed = false; _treeTopologyDirty = false;
+            if (sharedSolver) SharedSolverCompletionCount++;
             return ((int)count, contactCounts.Contacts, contactCounts.OneWay, fraction);
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }

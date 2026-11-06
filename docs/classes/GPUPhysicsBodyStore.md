@@ -1,5 +1,9 @@
 # GPUPhysicsBodyStore
 
+[Shared solver/spatial completion](../components/gpu-contact-solver.md#shared-solver-and-spatial-completion-2026-11-06)
+removes three intermediate waits from ordinary four-substep ticks while retaining
+independent error records, final completion and capacity/failure cleanup.
+
 [Compact monitor contacts](../components/gpu-resident-reports.md#compact-monitor-contacts-2026-10-28) retain sixteen-byte keys and full resident selections, preserving late reads after authoring. Raw/full consumers retain their numerical packets.
 
 [Late callback demand](../components/gpu-resident-reports.md#late-callback-demand-2026-10-29) reads selected frozen rows in request order through one packed transfer/fence, with exact lengths, bounds/version checks and metadata/destination alias rejection.

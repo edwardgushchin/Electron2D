@@ -2,7 +2,71 @@
 
 The [2026-10-21 packed contact publication pair](gpu-resident-reports.md#frozen-monitored-scene-pair) measures the complete 16,384-body CPU/GPU scene on its pinned runtime, with unchanged contact/event population and lower selected-report traffic. Its results do not refresh the older revisions below.
 
-Last updated: 2026-11-05
+Last updated: 2026-11-06
+
+## Shared solver completion before/after (2026-11-06)
+
+The [solver/spatial change](gpu-contact-solver.md#shared-solver-and-spatial-completion-2026-11-06)
+removes three intermediate CPU waits from an ordinary four-substep tick. It retains
+all numerical work and independent preceding/current error validation. Color-schedule
+readback, final publication and synchronous query completion remain.
+
+Every timing below comes from the unchanged public-only consumer. Each fixture
+runs in four fresh processes in **before → after → after → before** order, without
+concurrent builds or GPU tests. The baseline is `ab3b7c42463254feff5a5acc64eabe3d75015eca`.
+Both hosts use Windows x64, RTX 3090 Ti, NVIDIA 621.14, SDL Vulkan and the same
+self-contained .NET 10.0.14. Consumer DLL, CoreCLR, configuration and every native
+DLL hash match; only Electron2D changes. Process module captures confirm the NVIDIA
+Vulkan driver and OpenSSL 4 provider pair, with no OpenSSL 3 in either load path.
+This bounded native cohort does not qualify the entire release bundle.
+
+The first series in `paired/` is **rejected**: portable-PDB source checksums exposed
+an unrelated rendering change between its hosts. The corrected baseline compiles
+this same rendering revision with the original three physics completion files,
+using a temporary compile-item substitution and separate output/assets directories.
+PDB checksums now differ only for those three files and the new completion partial;
+all other compiled sources and the complete embedded-resource blob match. The
+identity guard passes before the accepted `controlled/` series starts. The earlier
+pilot/first-series percentages are not evidence for this optimization.
+
+Scene timings include the complete `SceneTree.PhysicsFrame`: four walls, four
+substeps, sixteen iterations, awake bodies, eight-contact caps, events and
+interpolation, with 1600 warm and 256 measured frames per process. Physical state,
+completed ticks, contacts, containment, penetration and energy checks pass.
+`SpaceStep` uses the existing two-body server fixture with an Area, pin and spring;
+32 warm and 64 measured batches contain 32 calls each. Its preparation/cleanup is
+outside the timer. Raw batch means retain separate unsubtracted loop baselines.
+
+| Public call / fixture | Before run means, ms | After run means, ms | Mean of runs, before → after, ms | Time change |
+| --- | --- | --- | --- | ---: |
+| `SceneTree.PhysicsFrame`; 1536 bodies | 12.4201 / 13.0005 | 12.2767 / 12.5394 | 12.7103 → 12.4080 | -2.38% |
+| `SceneTree.PhysicsFrame`; 16384 bodies | 103.2112 / 106.0471 | 105.9792 / 102.1012 | 104.6292 → 104.0402 | -0.56% |
+| `PhysicsServer.SpaceStep`; 2 bodies | 4.2668 / 4.2082 | 3.8512 / 3.8947 | 4.2375 → 3.8729 | -8.60% |
+
+The table reports the observed time change in each fixture. Removing three waits
+is an operation-count result; it does not by itself establish a full-scene speedup.
+Two processes per variant on an active desktop do not establish statistical performance
+acceptance. Other applications, clocks and power limits were not changed.
+External one-second observations cover setup, warmup, measurement and validation;
+`background_cores` includes system/driver work and is not a measurement-window-only
+foreign-process load estimate. No private stage time or counter is used as a speed
+measurement. No rendered window or NativeAOT/foreign backend is qualified here.
+
+Every scene interval and the reported `SpaceStep` intervals retain **0/0 owner/all-thread
+managed bytes**. The identical candidate runtime passes the functional solver
+regression plus contacts, shapes, one-way, CCD, sleep, joints, shape/motion queries
+and checkpoint profiles. API declaration coverage is unchanged. Release build, compiled
+API snapshot, scoped runtime/test formatting and wiki generation/checks pass. The
+global runtime formatter still reports two unchanged lines in `VisualShader.SDF.cs`
+(29/30); its receipt is `format-runtime-verify-retry.log`.
+
+Runtime DLL SHA-256 before: `51aa1ee5f746e8f7da94c2f73c912731572fdcf8241a2d4c2ad6d6df02fb5c78`; after:
+`062dc7d5a39f9bdda1eebff2931c72d9c919c4ca61a3ab35fdd4f4d236c6396f`. Exact source/native/consumer identities,
+per-frame samples, all 215 server rows per process, host observations, module
+captures and gate receipts remain in `bin/gpu-waits/2026-11-06/`, particularly
+`controlled/identity.json`, `controlled/pdb-source-identities.json`,
+`controlled/series.json` and `controlled-summary.json`. Earlier pilot
+and historical figures below are separate cohorts.
 
 ## Public API comparison after driver recovery (2026-11-05)
 

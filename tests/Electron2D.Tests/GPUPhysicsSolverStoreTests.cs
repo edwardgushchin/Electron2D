@@ -5,7 +5,7 @@ using Mode = Electron2D.PhysicsServer.BodyMode;
 
 internal static class GPUPhysicsSolverStoreTests
 {
-    internal static void Run()
+    internal static void Run(bool measure = true)
     {
         RunColorScheduling();
         PhysicsMassPerformance.VerifyDirtyBufferInitialization();
@@ -17,6 +17,7 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyIncidentLists();
         VerifyFailure();
         VerifyBatchedStep();
+        VerifySolverContinuation();
         VerifyBatchedCapacityRetry();
         VerifyColoredContacts();
         for (var layout = 0; layout < 3; layout++) VerifyCoupledLayout(layout);
@@ -26,8 +27,7 @@ internal static class GPUPhysicsSolverStoreTests
             VerifyObliqueFriction(2, 33, saturated);
         }
         VerifyStack();
-        VerifyResidency(64);
-        VerifyResidency(256);
+        if (measure) { VerifyResidency(64); VerifyResidency(256); }
     }
 
     internal static void RunColorScheduling()
@@ -341,6 +341,54 @@ internal static class GPUPhysicsSolverStoreTests
         Reject<InvalidOperationException>(() => store.Simulate(1f / 60, Vector2.Zero));
         Reject<InvalidOperationException>(() => store.Read([a], new GPUPhysicsBodyStore.Snapshot[1]));
         Console.WriteLine("Resident solver rejects a nonrepresentable impulse and all subsequent state use.");
+    }
+
+    private static void VerifySolverContinuation()
+    {
+        using var shared = new GPUPhysicsBodyStore { CaptureContactReports = true };
+        using var separate = new GPUPhysicsBodyStore { CaptureContactReports = true, SeparateSimulationSubmissions = true };
+        using var circle = new CircleShape { Radius = 1 };
+        using var floor = new RectangleShape { Size = new(200, 10) };
+        Body Prepare(GPUPhysicsBodyStore store)
+        {
+            var body = Add(store, velocity: new(10, 0), mode: Mode.RigidLinear);
+            var ground = Add(store, new(0, 6), mode: Mode.Static);
+            store.AddShape(body, circle); store.AddShape(ground, floor);
+            store.SetContactReporting(body, true);
+            return body;
+        }
+        var first = Prepare(shared); var second = Prepare(separate);
+        for (var i = 0; i < 16; i++)
+        { shared.Simulate(.01f, new(0, 98)); separate.Simulate(.01f, new(0, 98)); }
+        var completions = shared.SharedSolverCompletionCount;
+        var sharedSubmissions = shared.SubmissionCount; var separateSubmissions = separate.SubmissionCount;
+        shared.Simulate(.01f, new(0, 98)); separate.Simulate(.01f, new(0, 98));
+        Check(shared.SharedSolverCompletionCount - completions == 3, "Three intermediate solver completions share the next spatial batch");
+        Check((separate.SubmissionCount - separateSubmissions) - (shared.SubmissionCount - sharedSubmissions) == 11,
+            "Shared completion removes three waits in addition to the eight existing integration waits");
+        Span<GPUPhysicsBodyStore.Snapshot> a = stackalloc GPUPhysicsBodyStore.Snapshot[1];
+        Span<GPUPhysicsBodyStore.Snapshot> b = stackalloc GPUPhysicsBodyStore.Snapshot[1];
+        shared.Read([first], a); separate.Read([second], b);
+        Near(a[0].Position.X, b[0].Position.X, .0001f, "Shared completion retains solved position");
+        Near(a[0].Velocity.Y, b[0].Velocity.Y, .0001f, "Shared completion retains contact-supported velocity");
+        var counts = new int[1]; var reports = new GPUPhysicsBodyStore.ContactReport[4];
+        shared.ReadContactReports([first], [4], counts, reports);
+        Check(counts[0] > 0, "Deferred solver report counts survive the next spatial status reset");
+        for (var i = 0; i < 128; i++) shared.Simulate(.01f, new(0, 98));
+        var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 128; i++) shared.Simulate(.01f, new(0, 98));
+        Check(GC.GetAllocatedBytesForCurrentThread() == owner && GC.GetTotalAllocatedBytes(true) == all,
+            "Warmed shared solver completion allocates no owner or process managed storage");
+        using var failed = new GPUPhysicsBodyStore();
+        var invalid = Add(failed, new(float.MaxValue * .75f, 0), new(float.MaxValue * .75f, 0));
+        var staticBody = Add(failed, mode: Mode.Static);
+        failed.AddShape(invalid, circle); failed.AddShape(staticBody, circle);
+        Exception? failure = null;
+        try { failed.Simulate(1, Vector2.Zero, substeps: 2); } catch (InvalidOperationException error) { failure = error; }
+        Check(failure?.Message.Contains("body work", StringComparison.Ordinal) == true && failed.HasFailed,
+            "The preserved solver error is checked before the following spatial result");
+        Reject<InvalidOperationException>(() => failed.Read([invalid], new GPUPhysicsBodyStore.Snapshot[1]));
+        Console.WriteLine("Shared solver completion: three removed waits, physical/report equivalence, independent error and 0/0 warmed allocations passed.");
     }
 
     private static void VerifyBatchedStep()
