@@ -9,8 +9,8 @@ public class DirectionalLight : Light
     /// <summary>Creates a directional light with a 10000-unit shadow range.</summary>
     public DirectionalLight() { }
 
-    /// <summary>Gets or sets the finite maximum distance from a receiving pixel to a shadow contour.</summary>
-    /// <value>10000 initially; nonpositive distances contribute no shadow.</value>
+    /// <summary>Gets or sets the finite upstream distance beyond the viewport used to include shadow contours.</summary>
+    /// <value>10000 initially; nonpositive values restrict contours to the viewport depth range. Shadow length is unchanged.</value>
     public float MaxDistance { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _maxDistance; } set { EnsureMutable(); if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); _maxDistance = value; } }
 
     /// <summary>Gets or sets finite normalized light tilt for normal and specular mapping.</summary>

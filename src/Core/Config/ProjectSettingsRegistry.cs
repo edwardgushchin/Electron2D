@@ -109,6 +109,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(CanvasShadowAtlasSize, isBasic: false);
+        _settings[CanvasShadowAtlasSize.Name].RestartIfChanged = true;
         RegisterInternal(MSAA2D, isBasic: false);
         RegisterInternal(HDR2D, isBasic: false);
         RegisterInternal(HDROutputRequested, isBasic: false);
@@ -1273,6 +1275,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||
         ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, CanvasShadowAtlasSize) ||
         ReferenceEquals(setting, MSAA2D) ||
         ReferenceEquals(setting, HDR2D) ||
         ReferenceEquals(setting, HDROutputRequested) ||

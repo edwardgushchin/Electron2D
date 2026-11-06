@@ -20,28 +20,28 @@ cbuffer Item : register(b0, space3) {
     float4 ambient;
     float4 specular;
     uint4 item; // mask, signed Z, signed layer, shading mode
-    uint4 counts; // lights, segments, normal channel, specular channel
+    uint4 counts; // lights, shadow texels, normal channel, specular channel
     float4 atlas;
 };
 float cross2(float2 a, float2 b) { return a.x * b.y - a.y * b.x; }
-float shadow(float2 position, float2 endpoint, uint mask, int layerMin, int layerMax) {
-    float2 ray = endpoint - position;
-    uint start = counts.x * 9;
-    for (uint i = 0; i < counts.y; i++) {
-        float4 edge = lighting[start + i * 2];
-        float4 meta = lighting[start + i * 2 + 1];
-        int layer = asint(meta.y);
-        if ((asuint(meta.x) & mask) == 0 || layer < layerMin || layer > layerMax) continue;
-        float2 segment = edge.zw - edge.xy;
-        float determinant = cross2(ray, segment);
-        if (abs(determinant) < 0.000001) continue;
-        if (meta.z == 1 && determinant < 0 || meta.z == 2 && determinant > 0) continue;
-        float2 delta = edge.xy - position;
-        float t = cross2(delta, segment) / determinant;
-        float u = cross2(delta, ray) / determinant;
-        if (t > 0.00001 && t < 1 && u >= 0 && u <= 1) return 0;
+float shadow(float2 position, float2 endpoint, float4 origin, float4 range, bool directional, float offset) {
+    float coordinate, depth;
+    if (directional) {
+        float2 center = atlas.zw * 0.5;
+        float2 perpendicular = float2(-origin.w, origin.z);
+        float halfWidth = max(length(atlas.zw) * 0.5, 0.000001);
+        coordinate = dot(position - center, perpendicular) / (halfWidth * 2) + 0.5;
+        depth = dot(position, origin.zw);
+    } else {
+        float2 delta = position - endpoint;
+        coordinate = atan2(delta.y, delta.x) / 6.28318530718 + 0.5;
+        depth = length(delta);
     }
-    return 1;
+    float column = floor(coordinate * counts.y + offset);
+    if (directional && (column < 0 || column >= counts.y)) return 1;
+    column = column - floor(column / counts.y) * counts.y;
+    float stored = LIGHT_ATLAS.Load(int3(int(column), int(asuint(range.w)) - 1, 0)).r;
+    return depth <= stored + max(0.00001, abs(depth) * 0.00001) ? 1 : 0;
 }
 float3 reflection(float3 normal, float3 lightVector, float3 lightColor, float3 base, float3 specularColor, float shininess, bool normalUsed) {
     float ndotl = max(0, dot(normal, lightVector));
@@ -104,12 +104,11 @@ float4 main(float4 position : SV_Position, float4 color : TEXCOORD0, float2 uv :
         float visible = 1;
         if (parameters.x > 0) {
             int samples = parameters.x == 1 ? 1 : parameters.x == 2 ? 5 : 13;
-            float2 delta = endpoint - position.xy;
-            float2 perpendicular = dot(delta, delta) > 0.000001 ? normalize(float2(-delta.y, delta.x)) : float2(1, 0);
+            float spacing = x.w != 0 ? min(abs(1 + parameters.y), float(counts.y)) : fmod(1 + parameters.y, float(counts.y));
             visible = 0;
             for (int sampleIndex = 0; sampleIndex < samples; sampleIndex++) {
-                float offset = (sampleIndex - (samples - 1) * 0.5) * max(1, parameters.y);
-                visible += shadow(position.xy + perpendicular * offset, endpoint, asuint(membership.y), layerMin, layerMax);
+                float offset = (sampleIndex - (samples - 1) * 0.5) * spacing;
+                visible += shadow(position.xy, endpoint, origin, range, x.w != 0, offset);
             }
             visible /= samples;
         }

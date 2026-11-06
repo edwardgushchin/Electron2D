@@ -364,6 +364,12 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> RenderingMethod { get; } =
         new("rendering/renderer/rendering_method", "gpu", value => value is "gpu" or "compatibility");
 
+    /// <summary>Selects canvas shadow texels at renderer startup; the value rounds up to a power of two.</summary>
+    /// <value>2048 initially; valid stored requests are one through 16384.</value>
+    /// <remarks>A nonbasic restart setting with ordinary feature overrides. Runtime shadow resolution changes use RenderingServer.CanvasSetShadowTextureSize.</remarks>
+    public static ProjectSetting<int> CanvasShadowAtlasSize { get; } =
+        new("rendering/2d/shadow_atlas/size", 2048, value => value is >= 1 and <= 16384);
+
     /// <summary>Allows startup to use the compatibility renderer when GPU initialization fails.</summary>
     /// <remarks>Set false to require the programmable GPU path. Shader materials reject compatibility rendering.</remarks>
     public static ProjectSetting<bool> RenderingFallback { get; } =

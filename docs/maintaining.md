@@ -840,3 +840,14 @@ For native blend factors, run BlendFactors.Consumer source/SPIR-V, compiler-free
 For stencil-only image changes, run [StencilTextures.Consumer](../tests/StencilTextures.Consumer/README.md) from source and original bytecode, a fresh managed package and strict full-trim NativeAOT. Preserve exact samples, odd mip alignment, per-face/pass/fail operations, ordered/multiview unsigned inputs, snapshots, canvas/metadata and warmed zero owner managed bytes. Run the native render checker, format/pass failure shim and preceding full-module control, plus ordinary depth/input/copy/resolve/blend regressions. The owning [component](components/stencil-textures.md) retains ABI and target limits.
 
 For Windows trash changes, build tools/windows-trash/oracle.cpp with its longPathAware manifest and run WindowsTrash.Consumer plus ELECTRON2D_TEST_WINDOWS_TRASH with the root runner. Recheck actual recycle metadata/payload and native undelete, junction target preservation, virtual/relative paths, concurrent STA/MTA callers, sharing/long-path refusal and the managed browser confirmation/partial-failure flow. Repeat with a fresh managed package and strict full-trim NativeAOT, plus the preceding managed-engine control. See [the component](components/windows-trash.md); native UI/heap and foreign target gates remain separate.
+
+For canvas shadow-atlas changes, run CanvasShadowAtlas.Consumer in gpu, gpu-msaa,
+gpu-hdr and compatibility profiles from source, a fresh managed package and strict
+full-trim NativeAOT, with an explicitly selected qualified GPU driver. Preserve all
+105 whole-image oracle states, independent scene/server/SubViewport rows, startup
+and runtime rounding, owner/capture failures, finite extreme PCF offsets, target
+retirement and zero managed bytes for complete prepared draw brackets. Run the
+existing LightingTests native/MSAA and material/light-surface composition checks;
+validate original/generated SPIR-V independently. Keep automatic simulation/input,
+native heaps, other backends/platforms and owner acceptance separate. See
+[the owning component](components/canvas-shadow-atlas.md).

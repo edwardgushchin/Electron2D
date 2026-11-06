@@ -5,7 +5,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUCanvasBackend
 {
-    private RenderHandle? _lightAtlas;
+    private RenderHandle? _lightAtlas, _shadowAtlasPipeline;
     private readonly Dictionary<(ShaderProgram Program, int Variant), byte[]> _litPrograms = [];
     private readonly HashSet<(ShaderProgram Program, int Variant)> _usedLitPrograms = [];
     private int[] _lightingOffsets = [];
@@ -63,7 +63,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (channels?.SpecularTexture is { } specular) _ = CanvasBinding(plain with { Texture = specular }, color: false);
     }
 
-    private void PrepareLightingAtlas(CanvasLightingFrame frame)
+    private void PrepareLightingAtlas(CanvasLightingFrame frame, CanvasRenderTarget output)
     {
         foreach (var mask in frame.Masks)
         {
@@ -79,6 +79,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         }
         frame.PackMasks(_lightMaskSize ??= LightMaskSize, initialize: false);
         _ = Sampler(TextureFilter.Linear, TextureRepeat.Disabled);
+        if (frame.ShadowCount != 0) _shadowAtlasPipeline ??= CreatePipeline(BuiltInShaders.ShadowAtlas, BlendMode.Mix, overwrite: true, format: SDL.GPUTextureFormat.R32G32B32A32Float);
+        _lightAtlas = output.LightAtlas; _lightAtlasSize = output.LightAtlasSize;
         if (_lightAtlas is not null && _lightAtlasSize == frame.AtlasSize) return;
         var size = frame.AtlasSize;
         var usage = SDL.GPUTextureUsageFlags.Sampler | SDL.GPUTextureUsageFlags.ColorTarget;
@@ -86,7 +88,7 @@ internal sealed unsafe partial class GPUCanvasBackend
             throw new NotSupportedException("Canvas light masks require a sampleable floating-point color target on this GPU.");
         var info = new SDL.GPUTextureCreateInfo { Type = SDL.GPUTextureType.TextureType2D, Format = SDL.GPUTextureFormat.R32G32B32A32Float, Width = (uint)size.X, Height = (uint)size.Y, LayerCountOrDepth = 1, NumLevels = 1, Usage = usage };
         var replacement = new RenderHandle(SDL.CreateGPUTexture(Device, in info), h => SDL.ReleaseGPUTexture(Device, h), _device);
-        _lightAtlas?.Dispose(); _lightAtlas = replacement; _lightAtlasSize = size;
+        output.LightAtlas?.Dispose(); output.LightAtlas = _lightAtlas = replacement; output.LightAtlasSize = _lightAtlasSize = size;
     }
 
     private Vector2i LightMaskSize(Texture texture)
@@ -122,7 +124,22 @@ internal sealed unsafe partial class GPUCanvasBackend
                 vertices[index * 6 + corner] = new(destination.Position + destination.Size * uv, texture is null ? Colors.Transparent : Colors.White, (source.Position + source.Size * uv) / size);
             }
         }
+        var shadow = frame.Masks.Count;
+        for (var i = 0; i < frame.LightCount; i++)
+        {
+            var row = BitConverter.SingleToInt32Bits(frame.Data[i * 8 + 7].W) - 1;
+            if (row < 0) continue;
+            for (var corner = 0; corner < 6; corner++)
+            {
+                var uv = corner switch { 0 or 3 => Vector2.Zero, 1 => new Vector2(1, 0), 2 or 4 => Vector2.One, _ => new Vector2(0, 1) };
+                vertices[shadow * 6 + corner] = new(new Vector2(uv.X * frame.ShadowSize, row + uv.Y), Colors.White, Vector2.Zero);
+            }
+            shadow++;
+        }
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private readonly record struct ShadowAtlasUniforms(Vector4i Counts, Vector4 Viewport);
 
     private void CopyLightingAtlas(nint command, CanvasLightingFrame frame, int lightingBytes, int first)
     {
@@ -144,6 +161,21 @@ internal sealed unsafe partial class GPUCanvasBackend
                 SDL.BindGPUFragmentSamplers(pass, 0, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(&sampler, 1), 1);
                 SDL.DrawGPUPrimitives(pass, 6, 1, (uint)(first + index * 6), 0);
             }
+            if (frame.ShadowCount != 0)
+            {
+                SDL.BindGPUGraphicsPipeline(pass, _shadowAtlasPipeline!.DangerousGetHandle());
+                var buffer = _vertexBuffer.DangerousGetHandle(); SDL.BindGPUFragmentStorageBuffers(pass, 0, (nint)(&buffer), 1);
+                var shadow = frame.Masks.Count;
+                for (var i = 0; i < frame.LightCount; i++)
+                {
+                    var row = BitConverter.SingleToInt32Bits(frame.Data[i * 8 + 7].W) - 1;
+                    if (row < 0) continue;
+                    var scissor = new SDL.Rect { X = 0, Y = row, W = frame.ShadowSize, H = 1 }; SDL.SetGPUScissor(pass, in scissor);
+                    var uniform = new ShadowAtlasUniforms(new(frame.LightCount, frame.SegmentCount, frame.ShadowSize, i), new(frame.FrameSize.X, frame.FrameSize.Y, 0, 0));
+                    SDL.PushGPUFragmentUniformData(command, 0, (nint)(&uniform), (uint)sizeof(ShadowAtlasUniforms));
+                    SDL.DrawGPUPrimitives(pass, 6, 1, (uint)(first + shadow++ * 6), 0);
+                }
+            }
         }
         finally { SDL.EndGPURenderPass(pass); }
     }
@@ -163,8 +195,8 @@ internal sealed unsafe partial class GPUCanvasBackend
             frame.Data.Add(new(ambient.R, ambient.G, ambient.B, ambient.A));
             frame.Data.Add(CanvasSpecular(batch));
             frame.Data.Add(new(BitConverter.UInt32BitsToSingle(item.Mask), BitConverter.Int32BitsToSingle(item.Z), BitConverter.Int32BitsToSingle(item.Layer), BitConverter.Int32BitsToSingle((int)item.Mode)));
-            frame.Data.Add(new(BitConverter.Int32BitsToSingle(frame.LightCount), BitConverter.Int32BitsToSingle(frame.SegmentCount), BitConverter.Int32BitsToSingle(channels?.NormalTexture is null ? 0 : 1), BitConverter.Int32BitsToSingle(channels?.SpecularTexture is null ? 0 : 1)));
-            frame.Data.Add(new(1f / frame.AtlasSize.X, 1f / frame.AtlasSize.Y, 0, 0));
+            frame.Data.Add(new(BitConverter.Int32BitsToSingle(frame.LightCount), BitConverter.Int32BitsToSingle(frame.ShadowSize), BitConverter.Int32BitsToSingle(channels?.NormalTexture is null ? 0 : 1), BitConverter.Int32BitsToSingle(channels?.SpecularTexture is null ? 0 : 1)));
+            frame.Data.Add(new(1f / frame.AtlasSize.X, 1f / frame.AtlasSize.Y, frame.FrameSize.X, frame.FrameSize.Y));
         }
     }
 
@@ -188,7 +220,7 @@ internal sealed unsafe partial class GPUCanvasBackend
         var uniform = new LightingUniforms(new(ambient.R, ambient.G, ambient.B, ambient.A),
             CanvasSpecular(batch),
             new(unchecked((int)item.Mask), item.Z, item.Layer, (int)item.Mode),
-            new(frame.LightCount, frame.SegmentCount, channels?.NormalTexture is null ? 0 : 1, channels?.SpecularTexture is null ? 0 : 1), new(1f / _lightAtlasSize.X, 1f / _lightAtlasSize.Y, 0, 0));
+            new(frame.LightCount, frame.ShadowSize, channels?.NormalTexture is null ? 0 : 1, channels?.SpecularTexture is null ? 0 : 1), new(1f / _lightAtlasSize.X, 1f / _lightAtlasSize.Y, frame.FrameSize.X, frame.FrameSize.Y));
         SDL.PushGPUFragmentUniformData(command, 0, (nint)(&uniform), (uint)sizeof(LightingUniforms));
         var white = CanvasBinding(batch with { Texture = null });
         var bindings = stackalloc SDL.GPUTextureSamplerBinding[4];

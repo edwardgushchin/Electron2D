@@ -6,12 +6,14 @@ internal sealed class CanvasLightingFrame
 {
     internal readonly List<Vector4> Data = [];
     internal readonly List<(Texture Texture, int Light, Rect2i Region)> Masks = [];
-    internal int LightCount, SegmentCount;
+    internal int LightCount, SegmentCount, ShadowCount;
+    internal int ShadowSize = 2048;
+    internal Vector2i FrameSize;
     private int _contourCount;
     internal Rect2 SDFRect;
     internal Vector2i SDFSize;
     internal Vector2i AtlasSize;
-    internal void Clear() { Data.Clear(); Masks.Clear(); LightCount = SegmentCount = _contourCount = 0; AtlasSize = Vector2i.Zero; }
+    internal void Clear() { Data.Clear(); Masks.Clear(); LightCount = SegmentCount = ShadowCount = _contourCount = 0; AtlasSize = Vector2i.Zero; }
     internal int Bytes => checked(Math.Max(1, Data.Count) * 16);
     internal void CopyTo(Span<byte> target)
     {
@@ -50,6 +52,7 @@ internal sealed class CanvasLightingFrame
         // Atlas regions follow the fixed eight-vector light records in a separate table.
         if (texture is not null) Masks.Add((texture, LightCount, default));
         LightCount++;
+        if (light.ShadowEnabled) ShadowCount++;
         System.Diagnostics.Debug.Assert(Data.Count == first + 8);
     }
 
@@ -67,7 +70,7 @@ internal sealed class CanvasLightingFrame
 
     internal void PackMasks(Func<Texture, Vector2i>? sizeOf = null, bool initialize = true)
     {
-        var widest = 1; long area = 1;
+        var widest = ShadowCount == 0 ? 1 : ShadowSize; long area = 1;
         foreach (var mask in Masks) { var size = sizeOf?.Invoke(mask.Texture) ?? new Vector2i(mask.Texture.GetWidth(), mask.Texture.GetHeight()); widest = Math.Max(widest, size.X); area = checked(area + checked((long)size.X * size.Y)); }
         var width = 1; var desired = Math.Max(widest, (int)Math.Min(16384, Math.Ceiling(Math.Sqrt(area))));
         while (width < desired && width < 16384) width *= 2;
@@ -80,7 +83,17 @@ internal sealed class CanvasLightingFrame
             if ((long)y + h > 16384) throw new NotSupportedException("The combined light-mask atlas exceeds the current 16384-pixel canvas texture bound.");
             Masks[i] = mask with { Region = new(new(x, y), new(w, h)) }; x += w; row = Math.Max(row, h);
         }
-        AtlasSize = new(width, Math.Max(1, checked(y + row)));
+        var maskHeight = Math.Max(1, checked(y + row));
+        var height = checked(maskHeight + ShadowCount);
+        if (height > 16384) throw new NotSupportedException("The combined light and shadow atlas exceeds the 16384-pixel axis bound.");
+        AtlasSize = new(width, height);
+        var shadowRow = maskHeight;
+        for (var i = 0; i < LightCount; i++)
+        {
+            var range = Data[i * 8 + 7];
+            range.W = Data[i * 8 + 5].X > 0 ? Bits(++shadowRow) : 0;
+            Data[i * 8 + 7] = range;
+        }
         if (initialize) for (var i = 0; i < LightCount; i++) Data.Add(default);
         foreach (var mask in Masks)
             Data[LightCount * 8 + mask.Light] = new((float)mask.Region.Position.X / AtlasSize.X, (float)mask.Region.Position.Y / AtlasSize.Y, (float)mask.Region.Size.X / AtlasSize.X, (float)mask.Region.Size.Y / AtlasSize.Y);
@@ -88,6 +101,7 @@ internal sealed class CanvasLightingFrame
 
     internal void ConfigureSDF(Viewport viewport, Vector2i pixels)
     {
+        FrameSize = pixels;
         var oversize = viewport.SDFOversize switch { CanvasSDFOversize.Percent100 => 1f, CanvasSDFOversize.Percent120 => 1.2f, CanvasSDFOversize.Percent150 => 1.5f, _ => 2f };
         var margin = new Vector2(MathF.Floor(pixels.X * (oversize - 1) / 2), MathF.Floor(pixels.Y * (oversize - 1) / 2));
         SDFRect = new(-margin, new Vector2(pixels.X, pixels.Y) + margin * 2);

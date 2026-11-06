@@ -868,6 +868,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REPORT_ONLY") is { } rep
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTERS") == "1") { PhysicsFilterTests.Run(); PhysicsFilterTests.Run(true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_DRAW_NATIVE") == "1") { TileDrawingTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LIGHTING_FILE") is { } lightingFile) { LightingTests.RunFile(lightingFile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHADOW_ATLAS") is { } atlasProfile) { CanvasShadowAtlasChecks.Run(atlasProfile, Environment.GetEnvironmentVariable("ELECTRON2D_SHADOW_ATLAS_SHADERS")!); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LIGHTING") == "1") { LightingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_LIGHTING_NATIVE") == "1") { LightingTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_SCENES_FILE") is { } sceneTileFile) { TileSceneTests.RunFile(sceneTileFile); return; }

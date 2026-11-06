@@ -7,8 +7,8 @@ namespace Electron2D;
 /// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
 /// Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into byte or linear RGBA half-float canvas targets. GPU initialization may fall back according to project settings.
-/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Programmable-material light composition, general canvas clipping and device recovery
-/// are not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Fixed and programmable materials share light masks, normal/specular channels and quantized point/directional shadow rows. Device recovery
+/// is not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
 /// placeholders and explicit free; resource texture RIDs remain borrowed. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed partial class RenderingServer : ElectronObject
 {
@@ -53,6 +53,7 @@ public sealed partial class RenderingServer : ElectronObject
         _viewport = window;
         _backend = backend;
         _clearColor = ProjectSettings.GetWithOverride(ProjectSettings.DefaultClearColor);
+        _canvasShadowTextureSize = CanvasShadowSize(ProjectSettings.GetWithOverride(ProjectSettings.CanvasShadowAtlasSize));
         _globalParameters = ShaderGlobalParameters.PrepareProject(ProjectSettings.Service);
     }
 

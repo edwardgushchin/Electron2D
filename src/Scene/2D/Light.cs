@@ -144,7 +144,7 @@ public abstract class Light : Entity
         set { EnsureMutable(); if (value is < LightShadowFilter.None or >= LightShadowFilter.Max) throw new ArgumentOutOfRangeException(nameof(value)); _shadowFilter = value; }
     }
 
-    /// <summary>Gets or sets the finite shadow sample spacing.</summary>
+    /// <summary>Gets or sets the finite offset added to one for shadow-atlas PCF texel spacing.</summary>
     /// <value>0 initially; changes apply on the next rendered frame.</value>
     public float ShadowFilterSmooth
     {

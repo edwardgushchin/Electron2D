@@ -1,3 +1,5 @@
+[Canvas shadow atlas](../components/canvas-shadow-atlas.md) supplies real session/project resolution, point and directional GPU depth rows, shared fixed/programmed sampling and target-owned retirement.
+
 The complete [blend factor family](../components/blend-factors.md) executes constant-alpha and dual-source equations with copied pipeline state, sparse logical locations and independent optional feature negotiation.
 
 [Multisample copies](../components/multisample-copies.md) preserve individual color/depth/stencil samples through native rectangles, array layers, shared slices and same-count scratch.

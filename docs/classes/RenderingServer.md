@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs), [RenderingServer.Threads.cs](../../src/Servers/Rendering/RenderingServer.Threads.cs)
@@ -1964,3 +1964,7 @@ See [native render memory](../components/render-memory.md) for actual allocation
 ## Canvas follow-scale preview
 
 `public static void CanvasSetDisableScale(bool disable)` selects render-session policy: false applies authored CanvasLayer.FollowViewportScale; true omits its final viewport-center scale while preserving the camera and each layer/item's own transform. The next submission uses the policy in every rendered viewport. Explicit attachment matrices retain their complete transform. Authored follow fields, logical transforms, input and PackedScene data do not change; parent snapping still uses authored follow-scale units. Calls require the live owner and reject active capture/submission or disposal; no active service throws InvalidOperationException. Each new renderer defaults to false. See [the connected behavior and checks](../components/canvas-rendering.md#canvas-follow-scale-preview).
+
+## CanvasSetShadowTextureSize
+
+`public static void CanvasSetShadowTextureSize(int size)` changes the actual point/directional shadow row resolution for the active rendering session. Clamp nonpositive values to one and round upward to a power of two; requests above 16384 throw ArgumentOutOfRangeException before changing state. Every canvas uses the new resolution on its next rendered frame. The call requires the owner thread outside capture/submission and a live service. Equal rounded values preserve retained storage. Renderer startup reads ProjectSettings.CanvasShadowAtlasSize; the runtime operation does not overwrite the stored project setting. [Canvas shadow atlas](../components/canvas-shadow-atlas.md) owns projection, lifetime, filtering and target qualification.

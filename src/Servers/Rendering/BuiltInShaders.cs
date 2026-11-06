@@ -2,6 +2,7 @@ namespace Electron2D;
 
 internal static class BuiltInShaders
 {
+    internal static readonly byte[] ShadowAtlas = Read("ShadowAtlas.frag.spv");
     internal static readonly byte[] LightingVertex = Read("CanvasLighting.vert.spv");
     internal static readonly byte[] LightingInstancedVertex = Read("CanvasLightingInstanced.vert.spv");
     internal static readonly byte[] DrawableVertex = Read("Drawable.vert.spv");

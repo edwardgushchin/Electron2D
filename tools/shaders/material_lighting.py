@@ -33,7 +33,7 @@ def source(lighting, normal, specular, masks, authored=False, surface=False):
         body = body.replace('float3(endpoint - position.xy, y.w)', 'float3(endpoint - lightVertex.xy, y.w - lightVertex.z)')
         body = body.replace('endpoint = position.xy -', 'endpoint = shadowVertex -')
         body = body.replace('float2 delta = endpoint - position.xy;', 'float2 delta = endpoint - shadowVertex;')
-        body = body.replace('shadow(position.xy +', 'shadow(shadowVertex +')
+        body = body.replace('shadow(position.xy,', 'shadow(shadowVertex,')
         body = body.replace('float3(position.xy, 0),', 'lightVertex,').replace(', counts.z != 0);', ', normalUsed);')
     text = text[:main] + 'void main() {\n' + '''
 vec4 position = gl_FragCoord;
@@ -48,6 +48,8 @@ item = floatBitsToUint(lighting[e2d_item+2]); counts = floatBitsToUint(lighting[
             header += f'layout(set=2,binding={slot}) uniform {("sampler2D", "isampler2D", "usampler2D")[scalar]} e2d_{name};\n'
             slot += 1
             text = re.sub(rf'{name}\.Sample\({sampler}, (.*?)\)', rf'texture(e2d_{name}, \1)', text)
+            if name == 'LIGHT_ATLAS':
+                text = text.replace('LIGHT_ATLAS.Load(int3(int(column), int(asuint(range.w)) - 1, 0))', 'texelFetch(e2d_LIGHT_ATLAS, ivec2(int(column), int(asuint(range.w)) - 1), 0)')
         else:
             if name == 'NORMAL_TEXTURE':
                 text = text.replace('counts.z != 0', 'false')
@@ -56,6 +58,8 @@ item = floatBitsToUint(lighting[e2d_item+2]); counts = floatBitsToUint(lighting[
             # The atlas expression contains clamp(), so use the complete fixed call.
             call = {'NORMAL_TEXTURE': 'NORMAL_TEXTURE.Sample(normalSampler, uv)', 'SPECULAR_TEXTURE': 'SPECULAR_TEXTURE.Sample(specularSampler, uv)', 'LIGHT_ATLAS': 'LIGHT_ATLAS.Sample(lightSampler, region.xy + clamp(localUV, margin, 1 - margin) * region.zw)'}[name]
             text = text.replace(call, 'float4(1)')
+            if name == 'LIGHT_ATLAS':
+                text = text.replace('LIGHT_ATLAS.Load(int3(int(column), int(asuint(range.w)) - 1, 0))', 'float4(3.402823466e38)')
     # HLSL scalar/vector reinterpretation is retained in the generated GLSL function.
     header += f'layout(set=2,binding={slot},std430) readonly buffer E2DLighting {{ vec4 lighting[]; }};\n'
     header += 'layout(origin_upper_left) in vec4 gl_FragCoord;\n'
@@ -65,7 +69,7 @@ item = floatBitsToUint(lighting[e2d_item+2]); counts = floatBitsToUint(lighting[
             vec3 light_position, vec3 vertex, vec4 specular_value, inout vec4 shadow_color) { return vec4(0.0); }\n'''
     if surface:
         header += 'void e2d_surface_hook(inout vec3 normal, inout bool used, inout vec3 vertex, inout vec2 shadow_vertex) {}\n'
-    for hlsl, glsl in [('float4','vec4'), ('float3','vec3'), ('float2','vec2'), ('lerp','mix'), ('ddx','dFdx'), ('ddy','dFdy')]:
+    for hlsl, glsl in [('float4','vec4'), ('float3','vec3'), ('float2','vec2'), ('lerp','mix'), ('atan2','atan'), ('fmod','mod'), ('ddx','dFdx'), ('ddy','dFdy')]:
         text = re.sub(rf'\b{hlsl}\b', glsl, text)
     return header + text
 

@@ -1,6 +1,6 @@
 # Canvas fragment surfaces
 
-Last updated: 2026-10-25
+Last updated: 2026-11-06
 
 [ADR 0028](../decisions/rendering.md#adr-0028) connects existing fragment output ports to automatic and authored scene-light composition. This extends the offline VisualShader import path and retained ShaderMaterial programs.
 
@@ -28,7 +28,7 @@ Expressions and global helpers use the same `NORMAL`, `NORMAL_MAP`, `NORMAL_MAP_
 
 After decoding/blending, multiply normal XY first by the independently normalized original model/draw basis columns, then the independently normalized canvas basis columns; normalize the resulting XYZ once. This preserves nonuniform scale/skew order. DrawMesh local transforms participate. MultiMesh poses, skin bones and particle/trail poses affect geometry while the fragment normal retains the original draw basis. Translation never affects normals. Zero basis columns remain finite zero vectors.
 
-The completed surface feeds both automatic lighting and the real authored Light function. Each light receives the same finalized normal and light vertex; local Light-function writes do not leak to following lights. Zero lights retain fragment color, and authored lights retain their established zero-energy behavior. Shadow filtering keeps the existing contour-based adaptation; this change does not claim reference shadow-atlas parity.
+The completed surface feeds both automatic lighting and the real authored Light function. Each light receives the same finalized normal and light vertex; local Light-function writes do not leak to following lights. Zero lights retain fragment color, and authored lights retain their established zero-energy behavior. Shadow positions feed the shared [quantized depth-atlas consumer](canvas-shadow-atlas.md), including point periodic and directional orthographic sampling.
 
 ## Retained implementation
 

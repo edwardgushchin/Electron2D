@@ -8,7 +8,7 @@ effective feature override only to an unassigned root Window before native
 creation. Explicit scene authoring wins; independent SubViewports retain their
 own HDR canvas policy.
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 MovieWriterMixRate is ProjectSetting<int> for editor/movie_writer/mix_rate (48000 Hz, 1000..200000); MovieWriterSpeakerMode is ProjectSetting<AudioServer.SpeakerMode> for editor/movie_writer/speaker_mode (Stereo). MovieWriterVideoQuality is ProjectSetting<float> for editor/movie_writer/video_quality (0.75, finite 0..1); MovieWriterAudioBitDepth is ProjectSetting<int> for editor/movie_writer/audio_bit_depth (16, accepts 16 or 32). These are registered nonbasic settings, support feature overrides and are sampled by the built-in recording handler. See [movie writing](../components/movie-writing.md).
 
@@ -1878,3 +1878,7 @@ then monotonic wall-clock intervals coalesce automatic source updates without
 catch-up bursts. Requests, explicit writes and retirement stay immediate. Both
 settings have restart-required metadata and survive independent project-file
 round trips. See [native scheduling](../components/accessibility.md#native-driver-and-scene-scheduling).
+
+## CanvasShadowAtlasSize
+
+`public static ProjectSetting<int> CanvasShadowAtlasSize { get; }` identifies `rendering/2d/shadow_atlas/size`: default 2048, valid requests 1 through 16384, registered nonbasic restart policy with ordinary feature overrides. The next rendering session rounds the effective request upward to a power of two. [RenderingServer.CanvasSetShadowTextureSize](RenderingServer.md#canvassetshadowtexturesize) changes active rendering independently of stored project configuration. See [the atlas contract](../components/canvas-shadow-atlas.md).

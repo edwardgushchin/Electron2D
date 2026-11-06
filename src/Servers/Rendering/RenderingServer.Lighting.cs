@@ -2,9 +2,28 @@ namespace Electron2D;
 
 public sealed partial class RenderingServer
 {
+    private int _canvasShadowTextureSize;
+
+    /// <summary>Sets the resolution of point and directional canvas shadow rows.</summary>
+    /// <param name="size">Requested texel count, clamped to one and rounded up to a power of two, at most 16384.</param>
+    /// <remarks>The change applies to every canvas in the active rendering session on its next rendered frame.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The rounded size exceeds the supported texture axis bound.</exception>
+    /// <exception cref="InvalidOperationException">There is no active renderer, or owner-thread/frame guards reject the change.</exception>
+    public static void CanvasSetShadowTextureSize(int size)
+    {
+        var server = RequireService(); server.EnsureServerViewportChange();
+        var rounded = CanvasShadowSize(size);
+        if (server._canvasShadowTextureSize == rounded) return;
+        server._canvasShadowTextureSize = rounded; server.MarkChanged();
+    }
+
+    private static int CanvasShadowSize(int size) => size > 16384 ? throw new ArgumentOutOfRangeException(nameof(size)) :
+        (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(1, size));
+
     private void CaptureCanvasLighting(Transform framebuffer)
     {
         _lighting.Clear();
+        _lighting.ShadowSize = _canvasShadowTextureSize;
         foreach (var node in _nodes)
             if (node is Light { Enabled: true } light && light.RenderCanvas() is { } canvas && canvas.View(_viewport, out var basis, out _, out _, _interpolationFraction))
                 _lighting.AddLight(light, framebuffer * basis * light.RenderGlobal(_interpolationFraction), ViewportHDR(_viewport));

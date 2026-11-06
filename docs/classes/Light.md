@@ -1,6 +1,6 @@
 # Light
 
-Last updated: 2026-10-11
+Last updated: 2026-11-06
 
 - Declaration: `public abstract class Light : Entity`
 - Source: [Light.cs](../../src/Scene/2D/Light.cs)
@@ -17,3 +17,7 @@ Shared illumination, receiving ranges, independent shadow selection and height m
 Built-in lighting accepts float, raw signed and raw unsigned device-image channels in every combination. Integer channels require nearest filtering; point-light masks and alpha clipping execute on GPU with their matching scalar samplers. Atlas light masks preserve region coordinates and transparent margins. See [native integer lighting verification](../components/local-compute.md#integer-lighting-checkpoint).
 
 [Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.
+
+## ShadowFilterSmooth
+
+`public float ShadowFilterSmooth { get; set; }` retains a finite offset to unit PCF spacing in shadow-atlas texels; zero is the default. PCF compares depths before averaging visibility. Point rows wrap and directional out-of-range samples remain unshadowed. See [projection, extreme finite offsets and verification](../components/canvas-shadow-atlas.md).

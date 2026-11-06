@@ -5366,6 +5366,11 @@
       "electron2d": "method:Electron2D.RenderingServer.GetWhiteTexture()",
       "godot": "RenderingServer::method:get_white_texture()",
       "reason": "ADR 0028/0095: lazy per-renderer RGB8 test-pattern (256x256) and white (4x4) textures execute through ordinary owned texture RID drawing, native cache uploads, proxies and named GPU samplers. Warm calls retain identity; backing-image getters copy. Updates and destination replacement remain observable. Common FreeRID invalidates either cache, including replacement source consumption, so recreation uses fresh identities and canonical pixels. BuiltinTextureTests checks exact source/boundary pixels, real canvas/shader/proxy output, owner guards, two sessions and 64 active/64 idle full frames at zero prepared owner-managed bytes. Foreign/native-heap qualification remains separate."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_set_shadow_texture_size(int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasSetShadowTextureSize(System.Int32)",
+      "reason": "ADRs 0028/0095: CanvasSetShadowTextureSize changes real retained GPU shadow-depth rows, with upward power-of-two rounding, startup project policy, owner/capture guards, point polar and directional orthographic projection, mask/layer/cull selection, PCF and fixed/programmed material integration. CanvasShadowAtlasChecks verifies 105 full-image states plus independent scene/server/SubViewport rows and retirement on Windows Vulkan, including 64 active/64 idle zero-managed-byte draws. See docs/components/canvas-shadow-atlas.md for adaptations, exact evidence and remaining target/native-heap gates."
     }
   ],
   "statusGroups": [
@@ -7093,7 +7098,7 @@
         "Viewport::property:sdf_oversize",
         "Viewport::property:sdf_scale"
       ],
-      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, retained GPU shadow-atlas and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the original Linux light profile; CanvasShadowAtlasChecks additionally verifies Windows Vulkan shadow rows, PCF and fixed/programmed consumers with prepared zero-managed-byte draws; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
       "state": "Implemented"
     },
     {
@@ -7504,8 +7509,8 @@
       "godot": [
         "RenderingServer::method:canvas_set_shadow_texture_size(int:)"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: a complete native quantized canvas-shadow atlas producer and fragment consumer, including allocation/lifetime, sampling capacity and ordinary/authored-light shader composition. ADR 0028 currently executes direct contour visibility rather than a shadow atlas, so there is no texture whose resolution can be changed. Integrate the real atlas before exposing this control; do not store an ignored size or relabel direct-contour sampling as texture resolution."
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: CanvasSetShadowTextureSize changes real retained GPU shadow-depth rows, with upward power-of-two rounding, startup project policy, owner/capture guards, point polar and directional orthographic projection, mask/layer/cull selection, PCF and fixed/programmed material integration. CanvasShadowAtlasChecks verifies 105 full-image states plus independent scene/server/SubViewport rows and retirement on Windows Vulkan, including 64 active/64 idle zero-managed-byte draws. See docs/components/canvas-shadow-atlas.md for adaptations, exact evidence and remaining target/native-heap gates."
     },
     {
       "state": "Implemented",
@@ -8701,6 +8706,10 @@
       "electron2d": "method:Electron2D.RenderingServer.ShaderGetTextureSamplerState(Electron2D.RID,System.String,System.Int32)",
       "reason": "ADR 0028: typed Shader metadata projects filter/repeat/mip/LOD hints for copied SPIR-V sampled images, without runtime source parsing or new native-handle exposure. Copied RDSamplerState values execute in canvas, both stages, ordinary/layered/indexed/global/engine images, particle compute and drawable blits; owned server mutation and borrowed reads share the resource contract. Public consumer checks JIT/strict NativeAOT storage/reload/failure paths, software Linux Wayland/X11 pixels and 64 active/64 idle zero-managed-byte frames; hardware, foreign platforms and native allocations remain unverified.",
       "adr": "docs/decisions/rendering.md#adr-0028"
+    },
+    {
+      "electron2d": "property:Electron2D.ProjectSettings.CanvasShadowAtlasSize()",
+      "reason": "Typed C# startup projection of rendering/2d/shadow_atlas/size under ADRs 0018/0028: registered nonbasic restart policy with ordinary feature overrides, default 2048 and actual rounded GPU shadow resolution; explicit runtime control remains on RenderingServer. See docs/components/canvas-shadow-atlas.md."
     }
   ]
 }
