@@ -67,12 +67,13 @@ public sealed partial class DisplayServer
         if (!dropInput)
             Engine.MainLoop?.ValidateInputEventDispatch();
 
-        _processingEvents = true;
+        _processingEvents = true; _dropStatusInput = dropInput;
         _hasEventKeyModifiers = false;
         foreach (var child in _childWindows.Values) child._hasEventKeyModifiers = false;
         List<Exception>? failures = null;
         try
         {
+            RefreshStatusIndicators(ref failures);
             try { UpdateMouseInputRegions(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             try { AccessibilityServer.PumpNative(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             try { CameraServer.PumpIfOwned(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
@@ -165,6 +166,7 @@ public sealed partial class DisplayServer
             }
             try
             {
+                DrainStatusPresses(dropInput, ref failures);
                 DrainDialogCallbacks();
             }
             catch (Exception exception)
@@ -174,7 +176,7 @@ public sealed partial class DisplayServer
         }
         finally
         {
-            _processingEvents = false;
+            _processingEvents = false; _dropStatusInput = false;
         }
 
         if (failures is not null)

@@ -36,7 +36,7 @@ public sealed partial class NativeMenu
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
     public static bool HasMenu(RID rid) { var owner = Require(); owner.Check(); return owner._menus.ContainsKey(rid); }
-    /// <summary>Frees an unattached menu and its item/bitmap ownership; submenus remain live.</summary>
+    /// <summary>Frees an unattached menu and its item/bitmap ownership; submenus remain live and borrowed status-indicator bindings are cleared.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
@@ -260,7 +260,7 @@ public sealed partial class NativeMenu
     /// <summary>Attaches an independent submenu with one parent and acyclic ownership.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">The native submenu label.</param>
-    /// <param name="submenu">An unattached live submenu.</param>
+    /// <param name="submenu">An unattached live submenu without status-indicator bindings.</param>
     /// <param name="index">Insertion position; -1 appends.</param>
     /// <returns>The inserted logical index.</returns>
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
@@ -270,7 +270,7 @@ public sealed partial class NativeMenu
     /// <typeparam name="T">The exact runtime tag and callback value type.</typeparam>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="label">The native submenu label.</param>
-    /// <param name="submenu">An unattached live submenu.</param>
+    /// <param name="submenu">An unattached live submenu without status-indicator bindings.</param>
     /// <param name="tag">Borrowed exact-type metadata.</param>
     /// <param name="index">Insertion position; -1 appends.</param>
     /// <returns>The inserted logical index.</returns>
@@ -396,7 +396,7 @@ public sealed partial class NativeMenu
     /// <exception cref="InvalidOperationException">The display, owner thread or active native presentation rejects the operation.</exception>
     /// <exception cref="ArgumentException">An identity, index, text or tag type is invalid.</exception>
     public static void SetItemIcon(RID rid, int index, Texture? value) => Require().IconCore(rid, index, value);
-    /// <summary>Changes the native item submenu value.</summary>
+    /// <summary>Changes the native item submenu value; a nonzero root must be unattached and have no status-indicator bindings.</summary>
     /// <param name="rid">A live menu owned by the active display.</param>
     /// <param name="index">A nonnegative logical item index, including hidden items.</param>
     /// <param name="value">The new value; icon and submenu inputs remain borrowed.</param>

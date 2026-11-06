@@ -49,10 +49,10 @@ public sealed unsafe partial class NativeMenu
         var info = Describe(item); info.Mask &= ~4u;
         fixed (char* text = item.Text) { info.Text = (nint)text; if (Win.SetMenuItemInfo(menu.Handle, (uint)index, 1, in info) == 0) throw Failure("update a native menu item"); }
     }
-    private static nint Bitmap(Texture texture)
+    internal static nint CopyNativeBitmap(Texture texture)
     {
-        using var image = texture.GetImage() ?? throw new NotSupportedException("Native menu icons require readable image pixels.");
-        if ((long)image.Width * image.Height > 16_777_216) throw new NotSupportedException("Native menu icons must fit the 64 MiB pixel budget.");
+        using var image = texture.GetImage() ?? throw new NotSupportedException("Native icons require readable image pixels.");
+        if ((long)image.Width * image.Height > 16_777_216) throw new NotSupportedException("Native icons must fit the 64 MiB pixel budget.");
         image.Decompress(); image.Convert(Image.Format.Rgba8); var data = image.GetData();
         var info = new BitmapInfo { Size = (uint)sizeof(BitmapInfo), Width = image.Width, Height = -image.Height, Planes = 1, Bits = 32, Bytes = checked((uint)(image.Width * image.Height * 4)) };
         var bitmap = Win.CreateDIBSection(0, in info, 0, out var pixels, 0, 0);

@@ -1,3 +1,5 @@
+[DisplayServer status indicators](components/status-indicators.md) use private per-session indicator/press records and a Windows Shell/GDI observer in DisplayServer.StatusIndicators*.cs. Public API remains on the existing static service; copied HICONs retire before native menus/window ownership.
+
 [NativeMenu](classes/NativeMenu.md) is a display-owned static service for [Windows OS popup trees](components/native-menus.md). Its private Menu/Item/tag/callback records and User32/GDI observer own native lifetime; existing PopupMenu adds persisted native preference and a temporary tree bridge.
 
 Existing RenderingServer, CanvasLightingFrame, GPUCanvasBackend and CanvasRenderTarget own [quantized canvas shadow rows](components/canvas-shadow-atlas.md), including project startup policy and target-scoped atlas lifetime. GPUCanvasBackend uses a private value key to avoid nested-tuple hashing allocations in its shared pipeline cache. No public type is added.

@@ -17,6 +17,10 @@ public sealed partial class NativeMenu : ElectronObject
     private Item? _hoverItem;
     private NativeMenu(DisplayServer display) => _display = display;
     internal static NativeMenu CreateOwner(DisplayServer display) => new(display);
+    internal void AcquireStatusMenu(RID rid) { Writable(); var menu = Get(rid); if (menu.Parent is not null) throw new InvalidOperationException("A status indicator requires an unattached root menu."); menu.StatusUsers = checked(menu.StatusUsers + 1); }
+    internal void ReleaseStatusMenu(RID rid) { if (IsDisposed) return; Check(); if (_menus.TryGetValue(rid, out var menu) && menu.StatusUsers > 0) menu.StatusUsers--; }
+    internal bool HasStatusMenu(RID rid) { if (IsDisposed) return false; Check(); return _menus.ContainsKey(rid); }
+    internal bool PresentStatusMenu(RID rid, Vector2i at, DisplayServer display) { if (IsDisposed) return false; Check(); if (!_menus.ContainsKey(rid)) return false; Present(rid, at, display); return true; }
     internal static NativeMenu BorrowOwner() => Require();
     internal void RetirePopupMenus(ReadOnlySpan<RID> identities)
     {
@@ -51,6 +55,7 @@ public sealed partial class NativeMenu : ElectronObject
         internal Item? Parent;
         internal Action? Open, Close;
         internal bool RTL, Opened, Alive = true;
+        internal int StatusUsers;
         internal Vector2 Size;
     }
     private sealed class Item(Menu owner, uint command)
@@ -107,6 +112,7 @@ public sealed partial class NativeMenu : ElectronObject
     private static void ValidateChild(Menu parent, Menu? child, Item? replacing)
     {
         if (child is null) return;
+        if (child.StatusUsers != 0) throw new InvalidOperationException("Detach status indicators before attaching their root as a submenu.");
         if (child.Parent is not null && child.Parent != replacing) throw new InvalidOperationException("A native submenu can have only one parent item.");
         for (Menu? current = parent; current is not null; current = current.Parent?.Owner)
             if (current == child) throw new ArgumentException("Native submenu cycles are not allowed.");
@@ -122,7 +128,7 @@ public sealed partial class NativeMenu : ElectronObject
     {
         Writable(); if (_tracking) throw new InvalidOperationException("A native menu cannot retire during presentation.");
         var menu = Get(rid); if (menu.Parent is not null) throw new InvalidOperationException("Detach a submenu before freeing it.");
-        ClearCore(menu); if (Win.DestroyMenu(menu.Handle) == 0) throw Failure("free a menu"); menu.Alive = false; _menus.Remove(rid);
+        ClearCore(menu); if (Win.DestroyMenu(menu.Handle) == 0) throw Failure("free a menu"); menu.Alive = false; menu.StatusUsers = 0; _display.NativeStatusMenuRetired(rid); _menus.Remove(rid);
     }
     private void Update(Item item)
     {
@@ -216,7 +222,7 @@ public sealed partial class NativeMenu : ElectronObject
             if (Interlocked.Exchange(ref item.IconDirty, 0) == 0) continue;
             try
             {
-                var replacement = item.Icon is { IsDisposed: false } icon ? Bitmap(icon) : 0; var old = item.Bitmap; item.Bitmap = replacement;
+                var replacement = item.Icon is { IsDisposed: false } icon ? CopyNativeBitmap(icon) : 0; var old = item.Bitmap; item.Bitmap = replacement;
                 try { Update(item); } catch { item.Bitmap = old; if (replacement != 0) Win.DeleteObject(replacement); throw; }
                 if (old != 0) Win.DeleteObject(old);
             }

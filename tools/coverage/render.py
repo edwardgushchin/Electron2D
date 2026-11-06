@@ -754,7 +754,7 @@ def render():
         if name == "PackedColorArray":
             lines.extend(["The separate packed container is excluded under [ADR 0001](../../decisions/product.md#adr-0001). Implemented call sites project color sequences to `Color[]` or `ReadOnlySpan<Color>`; see [Gradient](Gradient.md) and [CanvasItem](CanvasItem.md). Their copying and ownership contracts are audited on those APIs. Binary conversion remains a separate row below.", ""])
         if name == "DisplayServer":
-            lines.extend(["Current release verification requires Linux/Wayland only under [ADR 0021](../../decisions/product.md#adr-0021). The earlier self-contained host example, before Window/Engine.Run migration, started on Wayland with packaged SDL and advanced its scene; user-assisted physical arrow-key input and Escape exit passed. See the [class verification](../../classes/DisplayServer.md#verification). Other target platforms remain in the product matrix without blocking this stage.", ""])
+            lines.extend(["Full platform completion requires equivalent behavior and delivered-package evidence across the entire runtime matrix under [ADR 0021](../../decisions/product.md#adr-0021). Earlier Linux/Wayland host and physical-input receipts remain bounded historical evidence; current Windows native-menu/status-indicator receipts and remaining targets are recorded in the owning components. See the [class verification](../../classes/DisplayServer.md#verification).", ""])
         lines.extend(["| Godot API | Electron2D API | State | Reason / implementation trigger |",
                       "| --- | --- | --- | --- |"])
         class_engine = engine_by_id.get(f"T:{owners[0]}") if owners else None

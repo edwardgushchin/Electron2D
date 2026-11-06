@@ -1,0 +1,29 @@
+# Status indicators
+
+Last updated: 2026-11-06
+
+The static [DisplayServer](../classes/DisplayServer.md) family creates real Windows notification-area icons using Shell32, with typed button/desktop-position callbacks and the existing [NativeMenu](native-menus.md) owner. [ADR 0117](../decisions/native-menus.md#adr-0117) owns the contract. This is a bounded Windows implementation, not full platform qualification.
+
+## Ownership and behavior
+
+CreateStatusIndicator returns a positive process-monotonic int. InvalidIndicatorId is -1. Every query/mutation requires the opening thread and a live ID in that exact display session; deleted and previous-session IDs cannot bind another icon. StatusIndicator capability probes the active Windows video driver and actual Shell notification host. Unsupported drivers reject creation before native entry.
+
+The nullable Texture is borrowed. The service owns a copied HICON, watches Changed/Disposed and refreshes on ProcessEvents. SetIcon prepares and modifies before retiring the old image/source; preparation or native failure preserves their ownership. Failed automatic refresh is reported and retried. Disposed sources clear the image while retaining the icon registration. Native bitmap conversion is shared with NativeMenu, including readable-image and 64 MiB limits. Virtual GetImage reserves native lifetime and rejects reentrant status mutation. Null removes the image; it does not fabricate a visible placeholder.
+
+Tooltip input is nonnull and rejects NUL. Windows copies at most 127 UTF16 units without splitting a surrogate pair. Failed updates preserve retained text. GetRect returns actual Shell desktop bounds or zero if the Shell cannot locate the registration. Hidden icons may report the overflow activation rectangle; a visible overflow icon reports its own native bounds. Desktop coordinates come from the OS, independently of engine renderer coordinates.
+
+Native pressed-button messages enqueue the exact indicator, callback, menu owner/RID, desktop cursor position and native menu anchor. ProcessEvents delivers a bounded snapshot on the owner, aggregates failures and continues later accepted callbacks. Replacing a callback does not rewrite already accepted events. ForceProcessAndDropEvents discards activation input; deleting an icon suppresses its queued events. No managed exception leaves the native callback.
+
+SetMenu borrows an unattached root NativeMenu RID from the same session. Multiple indicators can share it. An attached submenu cannot be bound; a bound root cannot become a submenu until all bindings are detached. FreeMenu clears its bindings. A live bound menu takes right presses and opens its actual OS popup at the captured native center; other presses or an absent/retired menu use the captured typed callback. Native menu tracking retains its existing reservation, callback and error rules.
+
+TaskbarCreated marks retained registrations for owner-pump recovery with the same IDs and current images/text. Explicit deletion and display retirement remove native registrations before freeing menu/window ownership, unsubscribe resources and release HICONs. A failed native delete still commits managed retirement and reports uncertain OS removal. Shutdown attempts every icon before reporting failures.
+
+## Verification and limits
+
+The public-only [shared checks](../../tests/Electron2D.Tests/StatusIndicatorChecks.cs) run through the root runner and [standalone consumer](../../tests/StatusIndicator.Consumer/README.md). An independent [Windows inspector](../../tools/status-indicators/oracle.cpp) verifies native Shell registration/absence and rectangle availability, exact Unicode/long tooltip text (long updates inspected after re-registration to avoid cached Shell accessibility names), real Shell UI Automation left activation, scoped button/position channels, actual bound popup creation/cancellation, and scoped TaskbarCreated recovery. Checks cover owner/stale/default IDs, null/disposed/unreadable/throwing images, virtual-read reentry, failure rollback/retry, shared root/submenu ownership, callback replacement/failure/batch continuation, dropped/deleted queues, disposal/reopening and unsupported drivers.
+
+Source/root, the fresh candidate package and strict full-trim NativeAOT each pass 75 public checks and 20 independent Shell/channel inspections. Their unsupported dummy-driver controls also pass. A native DrawIconEx control exposes black output for a fully transparent source with an empty AND mask; the producer now sets transparent mask bits. Actual on-screen icon pixels remain separate evidence.
+
+The baseline profile does not claim physical right-click selection: its right-button messages are explicitly injected into the tested window channel. The opt-in ELECTRON2D_STATUS_MENU_ACTIVATE=1 profile requires the exact own foreground window before native MSAA selection and fails when this prerequisite is absent. The current desktop denies that foreground transition; an independent native-only control also cannot select, so this remains a host acceptance gap rather than a demonstrated engine defect. A separate application obscures the overflow area: actual on-screen icon pixels and physical right-click behavior remain unverified. Shell/UIA text and registration do not establish rendered pixels. No test restarts Explorer; the scoped TaskbarCreated check establishes only the exercised recovery path.
+
+Fresh-package, strict full-trim NativeAOT and source/root receipts must identify the exact runtime and native bundle. Native UI automation is not physical owner acceptance or release qualification. Linux X11/Wayland, Apple desktop, mobile/TV/Web adapters and their equivalent contract/package evidence remain open under ADR 0021. The declaration coverage count does not close those platform gaps.

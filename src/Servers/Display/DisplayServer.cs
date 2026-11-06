@@ -625,6 +625,7 @@ public sealed partial class DisplayServer : ElectronObject
             foreach (var child in _childWindows.Values.ToArray())
                 try { child.Dispose(); }
                 catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
+            try { RetireStatusIndicators(); } catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
             try { _nativeMenus?.Retire(); } catch (Exception error) { retirementFailure = retirementFailure is null ? error : new AggregateException(retirementFailure, error); }
             _nativeMenus = null;
             AccessibilityServer.RetireDisplay();

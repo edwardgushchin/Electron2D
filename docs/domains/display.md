@@ -1,3 +1,5 @@
+[Status indicators](../components/status-indicators.md) now execute Windows Shell registration, nullable copied icons, Unicode tooltips, native rectangles and typed button callbacks through the owner pump. Right-button menu bindings reuse NativeMenu; exact native/visual/platform verification limits remain in that component.
+
 [Native popup menus](../components/native-menus.md) execute through the display-owned NativeMenu service and the existing PopupMenu identity. Native tracking reserves the actual containing window and root display; Windows popup capability is separate from global/system menu registration.
 
 # Display domain

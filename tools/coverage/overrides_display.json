@@ -559,6 +559,46 @@
       "electron2d": "method:Electron2D.DisplayServer.DialogInputText(System.String,System.String,System.String,System.Action<System.String>)",
       "godot": "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)",
       "reason": "ADR 0040: Linux GTK 3.22 matching the active Wayland/X11 display executes native single-line input, localized native buttons, main-window parent retention and exact copied UTF-8 confirmation, including empty strings. Cancel/close invoke no callback. Native modal-loop probes cover owner, retirement, SDL pump/reentry guards; callbacks can throw, reopen or dispose after cleanup. Dummy validation, real Wayland AT-SPI edit/readback and GPU/Compatibility frame-resumption checks cover the executable boundary. Initial text that native storage cannot round-trip rejects before presentation. Typed exceptions replace Error; foreign hosts, physical typing, native-heap and NativeAOT qualification remain separate."
+    },
+    {
+      "godot": "DisplayServer::constant:INVALID_INDICATOR_ID",
+      "electron2d": "constant:Electron2D.DisplayServer.InvalidIndicatorId()",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:create_status_indicator(Texture2D:,String:,Callable:)",
+      "electron2d": "method:Electron2D.DisplayServer.CreateStatusIndicator(Electron2D.Texture,System.String,System.Action<Electron2D.MouseButton, Electron2D.Vector2i>)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:delete_status_indicator(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.DeleteStatusIndicator(System.Int32)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:status_indicator_get_rect(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.StatusIndicatorGetRect(System.Int32)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:status_indicator_set_callback(int:,Callable:)",
+      "electron2d": "method:Electron2D.DisplayServer.StatusIndicatorSetCallback(System.Int32,System.Action<Electron2D.MouseButton, Electron2D.Vector2i>)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:status_indicator_set_icon(int:,Texture2D:)",
+      "electron2d": "method:Electron2D.DisplayServer.StatusIndicatorSetIcon(System.Int32,Electron2D.Texture)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:status_indicator_set_menu(int:,RID:)",
+      "electron2d": "method:Electron2D.DisplayServer.StatusIndicatorSetMenu(System.Int32,Electron2D.RID)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::method:status_indicator_set_tooltip(int:,String:)",
+      "electron2d": "method:Electron2D.DisplayServer.StatusIndicatorSetTooltip(System.Int32,System.String)",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
     }
   ],
   "extras": [
@@ -621,7 +661,7 @@
   "statusGroups": [
     {
       "state": "Implemented",
-      "reason": "The DisplayServer type owns one SDL video connection and main window with an explicit typed-C# Open/Instance lifecycle, owner-thread event pump, and deterministic disposal. Member and enum rows independently record every remaining capability gap and accepted adaptation; the class declaration itself is executable (ADR 0040).",
+      "reason": "The DisplayServer type owns one SDL video connection and main window with an explicit typed-C# Open lifecycle and retained static service, owner-thread event pump, and deterministic disposal. Member and enum rows independently record every remaining capability gap and accepted adaptation; the class declaration itself is executable (ADR 0040).",
       "godot": [
         "class:DisplayServer"
       ]
@@ -1164,19 +1204,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: Separately accepted native UI/menu domain with typed callback ownership, platform capability reporting, and dialog lifetime; include in its first executable slice.",
-      "godot": [
-        "DisplayServer::method:create_status_indicator(Texture2D:,String:,Callable:)",
-        "DisplayServer::method:delete_status_indicator(int:)",
-        "DisplayServer::method:status_indicator_get_rect(int:)",
-        "DisplayServer::method:status_indicator_set_callback(int:,Callable:)",
-        "DisplayServer::method:status_indicator_set_icon(int:,Texture2D:)",
-        "DisplayServer::method:status_indicator_set_menu(int:,RID:)",
-        "DisplayServer::method:status_indicator_set_tooltip(int:,String:)"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: First Windows application-host integration of interprocess foreground permission. Implement the operating-system focus-stealing exception for a validated process ID with explicit failure and native host checks; it is a separate platform capability from tablet input (ADR 0021).",
       "godot": [
         "DisplayServer::method:enable_for_stealing_focus(int:)"
@@ -1233,13 +1260,6 @@
       "reason": "Trigger: first Android/iOS native orientation source in the mobile application host; deliver a typed event (ADR 0021).",
       "godot": [
         "DisplayServer::signal:orientation_changed(int:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: first native status-indicator service with owned indicator IDs and typed callback/menu lifecycle.",
-      "godot": [
-        "DisplayServer::constant:INVALID_INDICATOR_ID"
       ]
     },
     {
@@ -1666,6 +1686,20 @@
       "reason": "ADR 0040: Linux GTK 3.22 matching the active Wayland/X11 display executes native single-line input, localized native buttons, main-window parent retention and exact copied UTF-8 confirmation, including empty strings. Cancel/close invoke no callback. Native modal-loop probes cover owner, retirement, SDL pump/reentry guards; callbacks can throw, reopen or dispose after cleanup. Dummy validation, real Wayland AT-SPI edit/readback and GPU/Compatibility frame-resumption checks cover the executable boundary. Initial text that native storage cannot round-trip rejects before presentation. Typed exceptions replace Error; foreign hosts, physical typing, native-heap and NativeAOT qualification remain separate.",
       "godot": [
         "DisplayServer::method:dialog_input_text(String:,String:,String:,Callable:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021.",
+      "godot": [
+        "DisplayServer::constant:INVALID_INDICATOR_ID",
+        "DisplayServer::method:create_status_indicator(Texture2D:,String:,Callable:)",
+        "DisplayServer::method:delete_status_indicator(int:)",
+        "DisplayServer::method:status_indicator_get_rect(int:)",
+        "DisplayServer::method:status_indicator_set_callback(int:,Callable:)",
+        "DisplayServer::method:status_indicator_set_icon(int:,Texture2D:)",
+        "DisplayServer::method:status_indicator_set_menu(int:,RID:)",
+        "DisplayServer::method:status_indicator_set_tooltip(int:,String:)"
       ]
     }
   ]

@@ -1501,3 +1501,5 @@ OutputMaxLinearValueChanged after scene recipients. Feature.HdrOutput retains it
 existing identity 35 and reports integrated composition availability. Requested,
 supported and enabled states remain distinct; unsupported compatibility requests
 reject. See the component for native/observer failures and qualification limits.
+
+The [status-indicator family](../components/status-indicators.md) creates Windows Shell icons with borrowed nullable textures, Unicode tooltips, actual native bounds, typed owner-pump button/desktop-position callbacks and borrowed root NativeMenu bindings. IDs never rebind a later session. Failed image/text updates preserve prior ownership; changed/disposed sources refresh on the owner. TaskbarCreated recovery, queued-event snapshots, drop/delete suppression and deterministic retirement share the native lifetime. Other adapters and current native UI acceptance limits remain explicit in the component.
