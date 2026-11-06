@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-10-29
+Last updated: 2026-11-06
 
 This file routes architecture work to bounded domain decision documents. Start here, locate the affected ADR headings and read the relevant sections plus needed cross-domain contracts. Use search/ranges before loading a whole document; follow links only when the task requires their contract. Class, component, and domain documents remain authoritative for implemented behavior.
 
@@ -51,6 +51,7 @@ This file routes architecture work to bounded domain decision documents. Start h
 | Networking | [networking.md](networking.md) | 0094 |
 | Input | [input.md](input.md) | 0038 |
 | Native menus | [native-menus.md](native-menus.md) | 0117 |
+| Native text-to-speech | [text-to-speech.md](text-to-speech.md) | 0118 |
 | Native accessibility and semantic scene output | [accessibility.md](accessibility.md) | 0114 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |
 | Physics canvas diagnostics | [physics-debug.md](physics-debug.md) | 0100 |

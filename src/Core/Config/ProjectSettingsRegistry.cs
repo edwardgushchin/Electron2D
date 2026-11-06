@@ -71,6 +71,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(GUIThemeCustom, isBasic: true);
         RegisterInternal(GUIThemeCustomFont, isBasic: true);
         RegisterInternal(AudioDriverEnableInput, isBasic: true);
+        RegisterInternal(AudioGeneralTextToSpeech, isBasic: true);
+        _settings[AudioGeneralTextToSpeech.Name].RestartIfChanged = true;
         RegisterInternal(AudioGeneralDefaultPlaybackType, isBasic: true);
         RegisterInternal(AudioGeneral2DPanningStrength, isBasic: false);
         RegisterInternal(AudioBusesChannelDisableThresholdDB, isBasic: false);
@@ -1250,6 +1252,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, MaxTimestampQueryElements) ||
         ReferenceEquals(setting, ApplicationVersion) ||
         ReferenceEquals(setting, AudioDriverEnableInput) ||
+        ReferenceEquals(setting, AudioGeneralTextToSpeech) ||
         ReferenceEquals(setting, AudioGeneralDefaultPlaybackType) ||
         ReferenceEquals(setting, AudioGeneral2DPanningStrength) ||
         ReferenceEquals(setting, AudioBusesChannelDisableThresholdDB) ||

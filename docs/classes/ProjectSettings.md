@@ -1882,3 +1882,5 @@ round trips. See [native scheduling](../components/accessibility.md#native-drive
 ## CanvasShadowAtlasSize
 
 `public static ProjectSetting<int> CanvasShadowAtlasSize { get; }` identifies `rendering/2d/shadow_atlas/size`: default 2048, valid requests 1 through 16384, registered nonbasic restart policy with ordinary feature overrides. The next rendering session rounds the effective request upward to a power of two. [RenderingServer.CanvasSetShadowTextureSize](RenderingServer.md#canvassetshadowtexturesize) changes active rendering independently of stored project configuration. See [the atlas contract](../components/canvas-shadow-atlas.md).
+
+[Native speech](../components/text-to-speech.md) uses AudioGeneralTextToSpeech, a basic restart-required bool at audio/general/text_to_speech, initially false. The opening display samples it; later edits apply to its next lifetime.

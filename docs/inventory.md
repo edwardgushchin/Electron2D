@@ -2474,3 +2474,5 @@ RenderingDevice.DepthResolve.cs caches native per-layer depth/stencil resolve at
 Existing RenderingDevice/RDTextureFormat/RDTextureView/RDPipelineDepthStencilState and TextureRD/TextureArrayRD own [stencil-only textures](components/stencil-textures.md). StencilTextures retains native properties and pass routing; existing native views/aspects/raster adapters own allocation, transfers and copied state. No public production type is added.
 
 OS.WindowsTrash supplies the existing static OS/FileDialog trash workflow on Windows with an internal generated COM progress sink, per-call STA ownership and deterministic native releases. See [the component](components/windows-trash.md).
+
+[Native speech](components/text-to-speech.md) adds DisplayServer.Speech.cs, the private WindowsSpeech COM producer and immutable [TTSVoice](classes/TTSVoice.md) descriptors. Native output/queue/callback ownership retires with the display; ProjectSettings owns its restart-required enable policy.

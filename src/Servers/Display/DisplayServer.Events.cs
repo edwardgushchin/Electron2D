@@ -74,6 +74,7 @@ public sealed partial class DisplayServer
         try
         {
             RefreshStatusIndicators(ref failures);
+            PumpTTS(ref failures);
             try { UpdateMouseInputRegions(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             try { AccessibilityServer.PumpNative(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
             try { CameraServer.PumpIfOwned(); } catch (Exception error) { (failures ??= new List<Exception>()).Add(error); }
@@ -167,6 +168,7 @@ public sealed partial class DisplayServer
             try
             {
                 DrainStatusPresses(dropInput, ref failures);
+                DrainTTS(ref failures);
                 DrainDialogCallbacks();
             }
             catch (Exception exception)

@@ -4284,6 +4284,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DisplayServer.TTSUtteranceEvent",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "name": "TTSUtteranceEvent",
+    "signature": "public enum Electron2D.DisplayServer.TTSUtteranceEvent",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DisplayServer.VSyncMode",
     "kind": "type",
     "declaringType": "Electron2D.DisplayServer.VSyncMode",
@@ -13036,6 +13054,19 @@
       "System.IFormattable",
       "System.ISpanFormattable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TTSVoice",
+    "kind": "type",
+    "declaringType": "Electron2D.TTSVoice",
+    "name": "TTSVoice",
+    "signature": "public struct Electron2D.TTSVoice",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -37166,6 +37197,58 @@
     "parameters": [],
     "returnType": "Electron2D.DisplayServer.ProgressState",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Boundary()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "name": "Boundary",
+    "signature": "public const Electron2D.DisplayServer.TTSUtteranceEvent Boundary = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Canceled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "name": "Canceled",
+    "signature": "public const Electron2D.DisplayServer.TTSUtteranceEvent Canceled = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Ended()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "name": "Ended",
+    "signature": "public const Electron2D.DisplayServer.TTSUtteranceEvent Ended = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Started()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "name": "Started",
+    "signature": "public const Electron2D.DisplayServer.TTSUtteranceEvent Started = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.TTSUtteranceEvent",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.DisplayServer.VSyncMode.Adaptive()",
@@ -110898,6 +110981,200 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSGetVoices()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSGetVoices",
+    "signature": "public static Electron2D.TTSVoice[] TTSGetVoices()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TTSVoice[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSGetVoicesForLanguage(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSGetVoicesForLanguage",
+    "signature": "public static System.String[] TTSGetVoicesForLanguage(System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSIsPaused()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSIsPaused",
+    "signature": "public static System.Boolean TTSIsPaused()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSIsSpeaking()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSIsSpeaking",
+    "signature": "public static System.Boolean TTSIsSpeaking()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSPause()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSPause",
+    "signature": "public static System.Void TTSPause()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSResume()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSResume",
+    "signature": "public static System.Void TTSResume()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSSetUtteranceCallback(Electron2D.DisplayServer.TTSUtteranceEvent,System.Action\u003CSystem.Int32, System.Int64\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSSetUtteranceCallback",
+    "signature": "public static System.Void TTSSetUtteranceCallback(Electron2D.DisplayServer.TTSUtteranceEvent eventType, System.Action\u003CSystem.Int32, System.Int64\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "eventType",
+        "type": "Electron2D.DisplayServer.TTSUtteranceEvent",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Int32, System.Int64\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSSetUtteranceCallback(Electron2D.DisplayServer.TTSUtteranceEvent,System.Action\u003CSystem.Int64\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSSetUtteranceCallback",
+    "signature": "public static System.Void TTSSetUtteranceCallback(Electron2D.DisplayServer.TTSUtteranceEvent eventType, System.Action\u003CSystem.Int64\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "eventType",
+        "type": "Electron2D.DisplayServer.TTSUtteranceEvent",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Int64\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSSpeak(System.String,System.String,System.Int32,System.Single,System.Single,System.Int64,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSSpeak",
+    "signature": "public static System.Void TTSSpeak(System.String text, System.String voice, System.Int32 volume = 50, System.Single pitch = 1f, System.Single rate = 1f, System.Int64 utteranceID = 0, System.Boolean interrupt = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "voice",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "volume",
+        "type": "System.Int32",
+        "default": "50"
+      },
+      {
+        "name": "pitch",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "rate",
+        "type": "System.Single",
+        "default": "1f"
+      },
+      {
+        "name": "utteranceID",
+        "type": "System.Int64",
+        "default": "0"
+      },
+      {
+        "name": "interrupt",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.TTSStop()",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "TTSStop",
+    "signature": "public static System.Void TTSStop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -291581,6 +291858,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.AudioGeneralTextToSpeech()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "AudioGeneralTextToSpeech",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E AudioGeneralTextToSpeech { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.AudioVideoDelayCompensationMSEC()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -299755,6 +300045,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.FontSubpixelPositioning",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TTSVoice.ID()",
+    "kind": "property",
+    "declaringType": "Electron2D.TTSVoice",
+    "name": "ID",
+    "signature": "public System.String ID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TTSVoice.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.TTSVoice",
+    "name": "Language",
+    "signature": "public System.String Language { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TTSVoice.Name()",
+    "kind": "property",
+    "declaringType": "Electron2D.TTSVoice",
+    "name": "Name",
+    "signature": "public System.String Name { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
     "value": null
   },
   {

@@ -176,3 +176,5 @@ Native Wayland verification uses an isolated compositor and external producer.
 [Native driver selection and scene scheduling](../components/accessibility.md#native-driver-and-scene-scheduling) now consume typed project preferences. The scene rate follows monotonic wall time while requests and retirement continue through the native owner pump.
 
 [Windows recoverable trash](../components/windows-trash.md) connects FileDialog confirmation/error/list refresh to the actual Shell recycle service.
+
+[Native speech](../components/text-to-speech.md) adds real Windows synthesis/playback, typed voice snapshots, queue/control operations and owner-pump utterance callbacks. Provider capacity, source-coordinate and actual audio/platform receipts remain in the owning component.

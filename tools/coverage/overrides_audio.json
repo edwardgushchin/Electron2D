@@ -2449,6 +2449,11 @@
       "godot": "ProjectSettings::property:audio/buses/default_bus_layout",
       "electron2d": "property:Electron2D.ProjectSettings.AudioBusesDefaultBusLayout()",
       "reason": "Typed projection of audio/buses/default_bus_layout: optional e2dres bus archive applied before MainLoop initialization or Window autoplay; missing/empty paths preserve configuration (ADRs 0019/0047/0090)."
+    },
+    {
+      "godot": "ProjectSettings::property:audio/general/text_to_speech",
+      "electron2d": "property:Electron2D.ProjectSettings.AudioGeneralTextToSpeech()",
+      "reason": "ADR 0118: typed basic bool defaults false, persists in the ordinary registry, is marked restart-required and is sampled by the actual display-owned speech producer. Disabled/current/next display and source/package/strict NativeAOT native output controls verify consumption; broader host/package qualification remains separate."
     }
   ],
   "extras": [
@@ -4612,6 +4617,13 @@
       "godot": [
         "ProjectSettings::property:audio/buses/default_bus_layout"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "ProjectSettings::property:audio/general/text_to_speech"
+      ],
+      "reason": "ADR 0118: typed basic bool defaults false, persists in the ordinary registry, is marked restart-required and is sampled by the actual display-owned speech producer. Disabled/current/next display and source/package/strict NativeAOT native output controls verify consumption; broader host/package qualification remains separate."
     }
   ]
 }

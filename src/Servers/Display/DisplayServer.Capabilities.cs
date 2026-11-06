@@ -97,6 +97,7 @@ public sealed partial class DisplayServer
             Feature.Clipboard => true,
             Feature.CursorShape or Feature.CustomCursorShape => desktop && SDL.HasMouse(),
             Feature.StatusIndicator => HasStatusIndicatorHost(),
+            Feature.TextToSpeech => GetTTSBackend() is not null,
             Feature.NativeDialog => desktop,
             Feature.NativeDialogInput => CanUseGTKInput(),
             Feature.NativeDialogFile => UsesPortalFileChooser ? LinuxPortalDBus.QueryVersion(LinuxPortalFileChooser.Interface) >= 1 : desktop,

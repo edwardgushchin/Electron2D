@@ -192,6 +192,10 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     /// <summary>Allows recording-device activation by AudioServer and microphone playbacks.</summary>
     /// <value>The typed audio/driver/enable_input setting, false initially; checked before each new capture request.</value>
     public static ProjectSetting<bool> AudioDriverEnableInput { get; } = new("audio/driver/enable_input", false);
+
+    /// <summary>Enables native speech synthesis when a display session opens.</summary>
+    /// <value>False by default; changes require a new display lifetime.</value>
+    public static ProjectSetting<bool> AudioGeneralTextToSpeech { get; } = new("audio/general/text_to_speech", false);
     /// <summary>Selects streaming or native sampling for scene players using Default playback type.</summary>
     /// <value>audio/general/default_playback_type; Stream (zero) initially, Sample is one.</value>
     public static ProjectSetting<AudioDefaultPlaybackType> AudioGeneralDefaultPlaybackType { get; } = new("audio/general/default_playback_type", AudioDefaultPlaybackType.Stream, value => value is AudioDefaultPlaybackType.Stream or AudioDefaultPlaybackType.Sample);

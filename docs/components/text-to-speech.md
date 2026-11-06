@@ -1,0 +1,35 @@
+# Native text-to-speech
+
+Last updated: 2026-11-06
+
+The static DisplayServer TTS family and immutable TTSVoice descriptors execute Windows system speech through the display-owned native producer. [ADR 0118](../decisions/text-to-speech.md#adr-0118) owns the typed projection, queue, provider and platform contract. This is bounded Windows progress under ADR 0021.
+
+## Configuration and public behavior
+
+Set ProjectSettings.AudioGeneralTextToSpeech before opening a display. The registry defaults `audio/general/text_to_speech` to false, marks it basic and restart-required, and persists it through ordinary typed settings. An existing display retains its sampled policy. Feature.TextToSpeech probes a real native producer; disabled/absent queries return no voices and false speaking/paused state. Unsupported execution controls fail explicitly. Native speech does not require a visible window or a graphical renderer, so Windows dummy video still uses its real speech provider.
+
+TTSGetVoices returns an independent array of immutable TTSVoice values: ID is the exact provider identifier, Name is installed display metadata and Language uses native ISO language/variant codes such as en_US. A default descriptor has empty fields. TTSGetVoicesForLanguage uses ordinal case-sensitive prefix matching and retains provider order; an empty prefix selects all voices. Voice IDs can remain valid across display sessions, independently of opaque application utterance IDs.
+
+TTSSpeak accepts original text/native-supported speech markup, an installed voice ID, volume (default 50), pitch (1), rate (1), signed long utteranceID (0) and interrupt (false). Text and voice must be nonnull and contain no NUL; pitch/rate must be finite. Clamp volume to 0..100, pitch to 0..2 and rate to 0.1..10. Prepare and validate before changing earlier queued work. Empty text schedules Canceled without native output. Interrupt first cancels active/pending requests. Duplicate and negative IDs are ordinary independent requests, not deduplication keys.
+
+TTSPause/TTSResume are idempotent, including idle pause. A nonempty new request resumes pause; empty text does not. Native pause takes effect at a provider boundary after buffered output, not at the exact managed call instant. Native notices queued earlier can arrive afterward. TTSStop purges active/pending work, emits one Canceled notice for each request and resets pause after successful native resume. Requests execute FIFO with per-request voice/volume/pitch/rate, independently of the engine audio bus graph. System speech is not automatically included in engine movie/audio-bus capture.
+
+Two TTSSetUtteranceCallback overloads preserve callback arities. Started/Ended/Canceled take Action with a long ID; Boundary takes Action with int position and long ID. Enum/arity mismatch rejects before replacing state; a typed null clears it. The native provider is polled by ProcessEvents, and accepted notices retain the exact callback snapshot. Delivery stays on the display owner; callbacks can enqueue/control speech. Pump/disposal reentry still rejects. Errors aggregate while required later notices/requests remain eligible. ForceProcessAndDropEvents retains speech notices because they are not input.
+
+Boundary positions are Unicode-scalar indices in the original submitted source. The mapper removes the generated pitch wrapper, handles surrogate pairs and predefined/hex/decimal entities, and retains literal comment/CDATA source lengths. Numeric references are canonicalized before native synthesis because SAPI handles their spellings and offsets inconsistently. Provider markup support and word granularity remain native observations. Windows converts pitch to SAPI markup and rate logarithmically into its supported -10..10 range; high requested rates saturate at native capacity rather than silently leaving a previous native rate after an invalid setter. This does not promise an exact tenfold acoustic rate or identical voices across hosts.
+
+## Native ownership and retirement
+
+WindowsSpeech is private backend code using exact blittable COM vtables and System32 imports. No new managed/native dependency or public COM/audio handle is shipped. The producer balances only COM initialization it acquired, borrows a pre-existing apartment, releases enumerator/token/data-key objects and task-memory strings, and keeps native stream identity separate from application IDs. No managed callback runs through a native speech callback. Native preparation/start errors cancel the failed request and remain reported through the owner pump; later queued work can proceed.
+
+Display close attempts native purge, releases the synthesizer/COM reference even after failure, and clears requests, notices and delegates. Speech is asynchronous rather than modal and does not prevent ordinary display retirement. No callbacks transfer to a later display.
+
+## Verification and remaining work
+
+[Shared public checks](../../tests/Electron2D.Tests/TTSChecks.cs) run through the root profile and [standalone consumer](../../tests/TTS.Consumer/README.md). The independent [SDK voice inspector](../../tools/text-to-speech/voices.cpp) compares actual token metadata. The [process loopback inspector](../../tools/text-to-speech/loopback.cpp) captures only the tested process tree, with real signal, zero-volume, buffered pause/resume, output duration and voiced-frequency controls. It records raw PCM16 stereo at 44.1 kHz and native capture metadata. Silence permits at most one conversion LSB; initial pause settling is measured separately from native buffered output.
+
+Tests cover disabled/restarted settings, snapshot independence, language filtering, owner/null/NUL/finite/voice/arity failures, signed/duplicate IDs, queue order, accepted delegate replacement, callback failure/reentry, stop/interrupt, Unicode/entity/markup source coordinates and active retirement/reopening. Compilation and callbacks alone do not qualify speech audio: source, fresh-package and strict NativeAOT profiles require the independent native captures.
+
+On Windows build 26300, source/root, a fresh Core package, strict full-trim NativeAOT and NativeAOT with dummy video each passed 81 public checks with seven independent process-audio captures. Three installed voices agreed with SDK enumeration. Captured controls measured signal peak 22574, zero-volume peak one conversion LSB, normal/fast active durations of 93711/36078 frames and low/high voiced frequencies of approximately 136/244 Hz. Buffered pause reached the conversion-noise floor before output resumed. Disabled profiles also passed, and status-indicator regression retained 75 checks with 20 independent Shell inspections. These are local Windows receipts, not foreign-host or physical-listening acceptance.
+
+Foreign Linux X11/Wayland, Apple, Android/mobile/TV/Web adapters and actual delivered-package host receipts remain open. Windows host PCM is not physical listening, acoustic voice-quality acceptance, exact cross-provider rate equivalence, complete native allocation accounting or full product-platform qualification. The declaration count does not close these gaps.

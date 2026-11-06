@@ -75,7 +75,7 @@ Electron2D previously had no native display host. Engine accepted elapsed time f
 - Desktop hit testing uses the main window's client rectangle on X11, excluding the native border and title bar. Other desktop drivers retain decorated-bounds approximation until native topmost hit testing exists; Wayland continues to reject unavailable global-position lookup. The SDL resizable flag is only a partial answer to whether the native window manager permits maximization; current fullscreen mode is not a permanent prohibition. A future SDL-owned Wayland capability bridge must observe xdg_toplevel wm_capabilities and integrate MaximizeDisabled.
 - Native SDL ownership uses private `SafeHandle` wrappers and deterministic disposal. SDL thread-affine handles must not be released by a finalizer thread; the owning `DisplayServer` must be explicitly disposed.
 - SDL3-CS core source is compiled internally into `Electron2D.dll` and refreshed by release tag with `tools/update-sdl3-cs.sh`. The Linux x64 example packages native SDL beside its executable; other target packages remain unverified under ADR 0021.
-- Missing renderer, native menus and advanced dialogs, accessibility, speech, mobile, theme, scene window composition, and platform-specialized controls are recorded by exact triggers in the coverage inventory; no inert public methods represent them.
+- Missing renderer, native menus and advanced dialogs, accessibility, mobile, theme, scene window composition, and platform-specialized controls are recorded by exact triggers in the coverage inventory; no inert public methods represent them.
 
 The normal game-facing owner is now Window, opened and closed by Engine.Run. DisplayServer remains available for lower-level services and embedding. Window delegates native operations here and exposes no SDL types; scene/input viewport behavior belongs to Scene.
 
@@ -261,3 +261,5 @@ Dummy-driver tests cover scale-event order and foreign-window filtering, wheel c
 
 - [0040: SDL display server and typed main-window host](#adr-0040)
 - [0021: runtime target platforms](product.md#adr-0021)
+
+[ADR 0118](text-to-speech.md#adr-0118) now owns the executable typed speech family, its display lifetime and Windows native provider; foreign adapters and full acoustic/platform qualification remain explicit.

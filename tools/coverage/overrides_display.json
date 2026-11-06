@@ -599,6 +599,81 @@
       "godot": "DisplayServer::method:status_indicator_set_tooltip(int:,String:)",
       "electron2d": "method:Electron2D.DisplayServer.StatusIndicatorSetTooltip(System.Int32,System.String)",
       "reason": "ADR 0117: executable Windows Shell registration with process-unique session IDs, borrowed nullable Texture/HICON snapshots, surrogate-safe Unicode tooltips, actual native rectangles, typed owner-pump button/desktop-position callbacks, snapshot/drop/delete rules and shared NativeMenu root bindings. Public source/fresh-package/strict NativeAOT scenarios verify native registration/text, actual Shell left activation, injected right/menu opening/cancellation, scoped recovery and failure/lifetime/retry cases. Exact own foreground is unavailable for menu selection; obscured on-screen icon pixels, physical right click, actual Explorer restart and foreign adapters/packages remain unverified. See docs/components/status-indicators.md; this is bounded progress under ADR 0021."
+    },
+    {
+      "godot": "DisplayServer::enum:TTSUtteranceEvent",
+      "electron2d": "T:Electron2D.DisplayServer.TTSUtteranceEvent",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_STARTED",
+      "electron2d": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Started()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_ENDED",
+      "electron2d": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Ended()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_CANCELED",
+      "electron2d": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Canceled()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_BOUNDARY",
+      "electron2d": "enumValue:Electron2D.DisplayServer.TTSUtteranceEvent.Boundary()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_get_voices()",
+      "electron2d": "method:Electron2D.DisplayServer.TTSGetVoices()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_get_voices_for_language(String:)",
+      "electron2d": "method:Electron2D.DisplayServer.TTSGetVoicesForLanguage(System.String)",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_is_paused()",
+      "electron2d": "method:Electron2D.DisplayServer.TTSIsPaused()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_is_speaking()",
+      "electron2d": "method:Electron2D.DisplayServer.TTSIsSpeaking()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_pause()",
+      "electron2d": "method:Electron2D.DisplayServer.TTSPause()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_resume()",
+      "electron2d": "method:Electron2D.DisplayServer.TTSResume()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_stop()",
+      "electron2d": "method:Electron2D.DisplayServer.TTSStop()",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_speak(String:,String:,int:,float:,float:,int:,bool:)",
+      "electron2d": "method:Electron2D.DisplayServer.TTSSpeak(System.String,System.String,System.Int32,System.Single,System.Single,System.Int64,System.Boolean)",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_set_utterance_callback(int:DisplayServer.TTSUtteranceEvent,Callable:)",
+      "electron2d": "method:Electron2D.DisplayServer.TTSSetUtteranceCallback(Electron2D.DisplayServer.TTSUtteranceEvent,System.Action<System.Int64>)",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
+    },
+    {
+      "godot": "DisplayServer::method:tts_set_utterance_callback(int:DisplayServer.TTSUtteranceEvent,Callable:)",
+      "electron2d": "method:Electron2D.DisplayServer.TTSSetUtteranceCallback(Electron2D.DisplayServer.TTSUtteranceEvent,System.Action<System.Int32, System.Int64>)",
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
     }
   ],
   "extras": [
@@ -656,6 +731,22 @@
       "electron2d": "method:Electron2D.DisplayWindowEvents.GetPropertyDescriptors()",
       "reason": "ADRs 0002/0038/0044/0095: static GetWindowEvents selects a borrowed native-window publisher with standard typed subscriptions. Native child routing, owner validation, explicit/native retirement, callback replacement and failure continuation execute on existing SDL contexts. Input commits before publisher callbacks and scene delivery; untagged events broadcast to a retained cohort. DisplayWindowEventsTests and the public native consumer cover the contract; specialized platform producers and real IME/data offers retain their separate triggers.",
       "adr": "ADR 0002/0038/0044/0095"
+    },
+    {
+      "electron2d": "T:Electron2D.TTSVoice",
+      "reason": "ADR 0004/0118: immutable typed projection of the ID/name/language entries in DisplayServer::method:tts_get_voices(); snapshots own no native resource or independent game capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TTSVoice.ID()",
+      "reason": "ADR 0004/0118: immutable typed projection of the ID/name/language entries in DisplayServer::method:tts_get_voices(); snapshots own no native resource or independent game capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TTSVoice.Name()",
+      "reason": "ADR 0004/0118: immutable typed projection of the ID/name/language entries in DisplayServer::method:tts_get_voices(); snapshots own no native resource or independent game capability."
+    },
+    {
+      "electron2d": "property:Electron2D.TTSVoice.Language()",
+      "reason": "ADR 0004/0118: immutable typed projection of the ID/name/language entries in DisplayServer::method:tts_get_voices(); snapshots own no native resource or independent game capability."
     }
   ],
   "statusGroups": [
@@ -1221,32 +1312,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: Separately accepted speech domain with typed utterance callbacks and native/audio backend; first executable slice.",
-      "godot": [
-        "DisplayServer::enum:TTSUtteranceEvent",
-        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_BOUNDARY",
-        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_CANCELED",
-        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_ENDED",
-        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_STARTED"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: Separately accepted speech domain with voices, utterance state, native/audio backend, and typed callbacks; include in its first executable slice.",
-      "godot": [
-        "DisplayServer::method:tts_get_voices()",
-        "DisplayServer::method:tts_get_voices_for_language(String:)",
-        "DisplayServer::method:tts_is_paused()",
-        "DisplayServer::method:tts_is_speaking()",
-        "DisplayServer::method:tts_pause()",
-        "DisplayServer::method:tts_resume()",
-        "DisplayServer::method:tts_set_utterance_callback(int:DisplayServer.TTSUtteranceEvent,Callable:)",
-        "DisplayServer::method:tts_speak(String:,String:,int:,float:,float:,int:,bool:)",
-        "DisplayServer::method:tts_stop()"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "ADR 0041/0114: core semantic tree/AT-SPI output now executes. These nondeprecated host queries still require actual platform reader-process, high-contrast, reduced-animation and reduced-transparency preference observation, change/lifetime tests and defined unavailable-value behavior. Per-application Always output and the accessibility-enabled bus setting do not establish those desktop preference values.",
       "godot": [
         "DisplayServer::method:accessibility_screen_reader_active()",
@@ -1701,6 +1766,26 @@
         "DisplayServer::method:status_indicator_set_menu(int:,RID:)",
         "DisplayServer::method:status_indicator_set_tooltip(int:,String:)"
       ]
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "DisplayServer::enum:TTSUtteranceEvent",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_BOUNDARY",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_CANCELED",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_ENDED",
+        "DisplayServer::enum_value:TTSUtteranceEvent.TTS_UTTERANCE_STARTED",
+        "DisplayServer::method:tts_get_voices()",
+        "DisplayServer::method:tts_get_voices_for_language(String:)",
+        "DisplayServer::method:tts_is_paused()",
+        "DisplayServer::method:tts_is_speaking()",
+        "DisplayServer::method:tts_pause()",
+        "DisplayServer::method:tts_resume()",
+        "DisplayServer::method:tts_set_utterance_callback(int:DisplayServer.TTSUtteranceEvent,Callable:)",
+        "DisplayServer::method:tts_speak(String:,String:,int:,float:,float:,int:,bool:)",
+        "DisplayServer::method:tts_stop()"
+      ],
+      "reason": "ADR 0118: executable Windows native speech with typed immutable voice metadata, ordinal language filtering, full signed 64-bit application IDs, FIFO queue/pause/resume/stop/interrupt and exact callback arities. Owner-pump snapshots preserve replacement/error/drop/lifetime rules. Public source/fresh-package/strict NativeAOT tests require independent SDK metadata and own-process PCM signal/silence, buffered pause/resume, real duration/pitch and original-scalar markup/entity coordinates. Native voice/rate/SSML capacities, physical listening, provider heaps and foreign adapters/package hosts remain explicit limits; bounded progress under ADR 0021, not full platform completion."
     }
   ]
 }
